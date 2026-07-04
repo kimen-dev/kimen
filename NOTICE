@@ -3,3 +3,64 @@ Copyright 2026 Marcela Gotta
 
 This product includes software developed as part of the Kimen project
 (https://github.com/kimen-dev/kimen).
+
+================================================================================
+Third-party notices: Superpowers (MIT)
+================================================================================
+
+Portions of the agent skills in this repository are vendored and adapted from
+the "Superpowers" project:
+
+  Superpowers — https://github.com/obra/superpowers
+  Version pinned: release v5.1.0
+  (commit f2cbfbefebbfef77321e4c9abc9e949826bea9d7)
+  Copyright (c) 2025 Jesse Vincent (Prime Radiant)
+  License: MIT — https://github.com/obra/superpowers/blob/v5.1.0/LICENSE
+
+Vendored and adapted files (each carries a header identifying its upstream
+source and the Kimen adaptations):
+
+  - .claude/skills/systematic-debugging/SKILL.md
+      from skills/systematic-debugging/SKILL.md
+  - .claude/skills/systematic-debugging/references/root-cause-tracing.md
+      from skills/systematic-debugging/root-cause-tracing.md
+  - .claude/skills/systematic-debugging/references/defense-in-depth.md
+      from skills/systematic-debugging/defense-in-depth.md
+  - .claude/skills/systematic-debugging/references/condition-based-waiting.md
+      from skills/systematic-debugging/condition-based-waiting.md
+  - .claude/skills/requesting-code-review/SKILL.md
+      from skills/requesting-code-review/SKILL.md
+  - .claude/skills/requesting-code-review/code-reviewer.md
+      from skills/requesting-code-review/code-reviewer.md
+  - .claude/skills/frontend-qa/SKILL.md
+      section 9 (rationalization/red-flags tables) adapted from
+      skills/test-driven-development/SKILL.md; the rest of the file is
+      original Kimen material
+  - .claude/skills/requesting-code-review/scripts/review-package.sh
+      Kimen-original script implementing the review-packet pattern described
+      by the upstream skill (upstream ships no script)
+
+All listed material is modified from the originals to fit the Kimen
+constitution and workflow.
+
+MIT License (applies to the upstream material identified above):
+
+  Permission is hereby granted, free of charge, to any person obtaining a
+  copy of this software and associated documentation files (the "Software"),
+  to deal in the Software without restriction, including without limitation
+  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  and/or sell copies of the Software, and to permit persons to whom the
+  Software is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+  DEALINGS IN THE SOFTWARE.
+
+================================================================================
