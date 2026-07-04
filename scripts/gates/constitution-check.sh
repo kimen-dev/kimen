@@ -16,7 +16,7 @@ else
   echo "GATE constitution: version stamps in sync (v$ROOT_V)"
 fi
 
-for f in kimen-constitution.md AGENTS.md LICENSE SECURITY.md CONTRIBUTING.md .specify/memory/constitution.md .specify/templates/overrides/spec-template.md .specify/templates/overrides/tasks-template.md; do
+for f in kimen-constitution.md AGENTS.md LICENSE SECURITY.md CONTRIBUTING.md .specify/memory/constitution.md .specify/templates/overrides/spec-template.md .specify/templates/overrides/tasks-template.md .specify/templates/overrides/plan-template.md; do
   if [ ! -f "$f" ]; then
     echo "GATE constitution: FAIL — required governance file missing: $f"
     FAIL=1

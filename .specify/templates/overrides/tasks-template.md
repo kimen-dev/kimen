@@ -16,9 +16,13 @@ description: "Task list template for feature implementation (Kimen override)"
 **Tests**: MANDATORY, never optional (constitution Art. II/III). Tests are written
 FIRST and verified failing for the right reason before any implementation. Every
 scenario ID (S1..Sn) from feature.feature appears in at least one test
-(traceability is a CI gate). Tests run in a REAL browser for components, are
-deterministic (fake timers, seeded randomness, no live network) and assert
-behavior through public APIs only.
+(traceability is a CI gate). Traceability convention: each test file declares the
+feature it traces with a file-level marker comment `@spec:[###-feature-name]`
+(e.g. `// @spec:007-ki-button`); bare S-IDs inside a marked file count toward
+that feature only, so S1 of one feature never satisfies S1 of another
+(scripts/gates/check-traceability.sh). Tests run in a REAL browser for
+components, are deterministic (fake timers, seeded randomness, no live network)
+and assert behavior through public APIs only.
 
 **Organization**: Tasks are grouped by user story to enable independent
 implementation and testing of each story.

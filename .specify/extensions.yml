@@ -1,0 +1,40 @@
+# Kimen gates extension: mandatory pre-hooks for direct /speckit-* skill
+# invocations (constitution Art. II/III + Workflow; design:
+# docs/kimen-harness-speckit.md, capa 2).
+#
+# CONTRACT: the installed speckit-* skills' "Pre-Execution Checks" parse this
+# file directly (.claude/skills/speckit-plan/SKILL.md and
+# .claude/skills/speckit-implement/SKILL.md are the reference parsers). They:
+#   - read the entries under hooks.before_plan / hooks.before_implement,
+#   - treat a missing `enabled` field as enabled (we set it explicitly),
+#   - execute `optional: false` entries as MANDATORY pre-hooks and wait for
+#     the result before proceeding,
+#   - map the command id to a slash command by replacing dots with hyphens:
+#     kimen.gates.pre-plan → /kimen-gates-pre-plan
+#     (skill dir .claude/skills/kimen-gates-pre-plan/).
+#
+# NEVER add a `condition` field here: the hooks guide marks it "future" and
+# the installed skills skip any hook that defines one — a mandatory gate
+# would silently vanish (docs/kimen-harness-speckit.md).
+
+extensions:
+  kimen-gates:
+    version: "0.1.0"
+    description: "Kimen constitutional pre-gates: spec lint before plan, founder approval (human gate 1) before implement"
+
+hooks:
+  before_plan:
+    - extension: kimen-gates
+      command: kimen.gates.pre-plan
+      description: "HARD gate (Art. II): specs/<feature>/feature.feature exists, Gherkin lint and scenario-family coverage are green before any planning."
+      prompt: "Run the Kimen pre-plan gate (bash scripts/gates/pre-plan-check.sh) and hard-stop if it exits non-zero."
+      optional: false
+      enabled: true
+
+  before_implement:
+    - extension: kimen-gates
+      command: kimen.gates.pre-implement
+      description: "HARD gate (Art. II/III, Workflow): founder approval marker specs/<feature>/.approved matches spec.md, spec lint green, constitution digest in sync — before any implementation."
+      prompt: "Run the Kimen pre-implement gate (bash scripts/gates/pre-implement-check.sh) and hard-stop if it exits non-zero."
+      optional: false
+      enabled: true

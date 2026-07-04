@@ -31,6 +31,9 @@ nx_graph() {
 }
 
 run_gate constitution bash scripts/gates/constitution-check.sh
+# Scenario-to-test traceability is a CI gate (Art. II). SKIPs loudly (exit 0)
+# while specs/ has no feature files yet; arms itself with the first feature.
+run_gate traceability bash scripts/gates/check-traceability.sh
 run_gate nx-graph nx_graph
 run_gate format pnpm run format:check
 run_gate lint pnpm run lint

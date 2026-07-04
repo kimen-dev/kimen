@@ -13,14 +13,16 @@ Sync Impact Report
   Human Gates & Emergency Procedure
 - Removed sections: none
 - Templates requiring updates:
-  ⚠ pending: .specify/templates/plan-template.md (Constitution Check section
-    should reference the 11 articles and the deterministic-gates definition
-    of done)
-  ⚠ pending: .specify/templates/spec-template.md (must require the five
-    Gherkin scenario families for UI components, Art. II)
-  ⚠ pending: .specify/templates/tasks-template.md (task categories should
-    include: failing-test-first, a11y walkthrough, catalog/manifest
-    regeneration, budget check)
+  ✅ resolved: plan-template.md via .specify/templates/overrides/plan-template.md
+    (Constitution Check enumerates the 11 articles, the deterministic-gates
+    definition of done — gates exit 0, never self-assessed — and echoes the
+    Constitutional Surface from spec.md)
+  ✅ resolved: spec-template.md via .specify/templates/overrides/spec-template.md
+    (mandatory Gherkin section with stable S-IDs and the five scenario
+    families table for UI components, Art. II)
+  ✅ resolved: tasks-template.md via .specify/templates/overrides/tasks-template.md
+    (RED→GREEN→gates task structure: failing-test-first, a11y walkthrough,
+    catalog/manifest regeneration, budget check)
 - Follow-up TODOs: none
 -->
 
