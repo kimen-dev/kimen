@@ -64,3 +64,16 @@ MIT License (applies to the upstream material identified above):
   DEALINGS IN THE SOFTWARE.
 
 ================================================================================
+
+Third-party notices: vendored Agent Skills
+------------------------------------------
+
+Skills vendored under .claude/skills/ from third-party sources carry their own
+license and provenance record in a LICENSE-NOTICE.md file inside each skill
+directory (source URL, pinned commit, upstream author, local modifications).
+
+Note in particular: agentic-actions-auditor and supply-chain-risk-auditor
+(Trail of Bits, https://github.com/trailofbits/skills) are licensed
+CC-BY-SA-4.0; those files remain under CC-BY-SA-4.0 (share-alike) even though
+this repository is otherwise Apache-2.0. Remaining vendored skills are MIT or
+Apache-2.0 as recorded per directory.
