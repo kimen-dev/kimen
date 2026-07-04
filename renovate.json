@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "rangeStrategy": "pin",
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "deps",
+  "separateMajorMinor": true,
+  "lockFileMaintenance": { "enabled": true },
+  "packageRules": [
+    {
+      "description": "Group non-major devDependency bumps into one PR",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "dev dependencies (non-major)"
+    },
+    {
+      "description": "Keep the pinned pnpm packageManager field current",
+      "matchDepTypes": ["packageManager"],
+      "enabled": true
+    }
+  ]
+}
