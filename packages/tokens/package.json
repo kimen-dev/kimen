@@ -9,8 +9,7 @@
     "dist"
   ],
   "exports": {
-    "./css": "./dist/css/tokens.css",
-    "./css/mars": "./dist/css/theme-mars.css"
+    "./css": "./dist/css/tokens.css"
   },
   "scripts": {
     "build": "style-dictionary build --config ./style-dictionary.config.mjs"
