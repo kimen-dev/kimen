@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "stencil build",
-    "test": "echo 'test wiring lands with @stencil/vitest in the first real component spec' && exit 0"
+    "test": "vitest run"
   },
   "nx": {
     "tags": [
@@ -23,6 +23,10 @@
   },
   "dependencies": {
     "@stencil/core": "4.43.5"
+  },
+  "devDependencies": {
+    "@stencil/vitest": "1.13.3",
+    "vitest": "4.1.9"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
