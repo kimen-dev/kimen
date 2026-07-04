@@ -1,0 +1,106 @@
+schema_version: "1.0"
+workflow:
+  id: "kimen"
+  name: "Kimen Constitutional SDD Cycle"
+  version: "0.1.0"
+  author: "Kimen"
+  description: "specify → clarify → deterministic spec lint → founder gate → plan → checklist → analyze → constitution check → tasks → implement/converge loop terminated by deterministic gates (onmars-spec)"
+
+# NOTE: run locally (human gates cannot be approved headless). CI runs the
+# same shell gates directly via .github/workflows/ci.yml.
+# Failed shell gates halt the run; `specify workflow resume <run_id>` retries
+# from the failed step after you fix the cause.
+
+requires:
+  speckit_version: ">=0.12.0"
+  integrations:
+    any:
+      - "claude"
+
+inputs:
+  spec:
+    type: string
+    required: true
+    prompt: "Describe the feature (it will flow through the constitutional pipeline)"
+
+steps:
+  - id: specify
+    command: speckit.specify
+    input:
+      args: "{{ inputs.spec }}"
+
+  - id: clarify
+    command: speckit.clarify
+    input:
+      args: "{{ inputs.spec }}"
+
+  # Deterministic gate: Gherkin shape (stable S-IDs, one When per scenario)
+  - id: lint-spec
+    type: shell
+    run: "bash scripts/gates/lint-feature.sh"
+
+  # HUMAN GATE 1 (constitution Workflow): spec + Gherkin approval by the founder
+  - id: approve-spec
+    type: gate
+    message: "Spec y Gherkin listos y con lint verde. Aprobación constitucional del founder (gate humana 1 de 2)."
+    options: [approve, reject]
+    on_reject: abort
+
+  - id: plan
+    command: speckit.plan
+    input:
+      args: "{{ inputs.spec }}"
+
+  - id: checklist
+    command: speckit.checklist
+    input:
+      args: "{{ inputs.spec }}"
+
+  - id: analyze
+    command: speckit.analyze
+    input:
+      args: "{{ inputs.spec }}"
+
+  # Deterministic gate: governance consistency before any implementation
+  - id: constitution-check
+    type: shell
+    run: "bash scripts/gates/constitution-check.sh"
+
+  - id: tasks
+    command: speckit.tasks
+    input:
+      args: "{{ inputs.spec }}"
+
+  # onmars-spec loop: implement → converge → deterministic suite, until green.
+  # max_iterations is the stuck-threshold; exhausting it escalates to the founder.
+  - id: implement-loop
+    type: do-while
+    condition: "{{ steps.gates-recheck.output.exit_code != 0 }}"
+    max_iterations: 3
+    steps:
+      - id: implement-round
+        command: speckit.implement
+        input:
+          args: "{{ inputs.spec }}"
+      - id: converge-round
+        command: speckit.converge
+        input:
+          args: "{{ inputs.spec }}"
+      - id: gates-recheck
+        type: shell
+        run: "bash scripts/gates/gates-suite.sh"
+        continue_on_error: true
+
+  - id: escalation-check
+    type: if
+    condition: "{{ steps.gates-recheck.output.exit_code != 0 }}"
+    then:
+      # Stuck-threshold exhausted: halt with a failed step so the run surfaces
+      # as failed for founder escalation (onmars-spec contract).
+      - id: escalate-to-founder
+        type: shell
+        run: "echo 'ESCALATION: deterministic gates still red after loop budget (onmars-spec stuck-threshold). Founder review required.' && exit 1"
+    else:
+      - id: done
+        type: shell
+        run: "echo 'All gates green. Traceability check:' && bash scripts/gates/check-traceability.sh"

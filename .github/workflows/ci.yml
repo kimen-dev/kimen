@@ -1,0 +1,46 @@
+# Kimen CI: deterministic gates (constitution Art. X).
+#
+# TODO(constitutional, before first release): pin actions to commit SHAs by
+# running `bash scripts/pin-actions.sh` locally (needs `gh`). Tag pins below
+# are a bootstrap deviation, documented per Governance ("deviations must be
+# justified"): the setup sandbox cannot reach api.github.com to resolve SHAs.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Harden runner (egress audit; switch to block after baseline)
+        uses: step-security/harden-runner@v2 # TODO-pin-sha
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@v5 # TODO-pin-sha
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v4 # TODO-pin-sha
+
+      - uses: actions/setup-node@v5 # TODO-pin-sha
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Deterministic gates suite
+        run: bash scripts/gates/gates-suite.sh

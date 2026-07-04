@@ -1,0 +1,60 @@
+{
+  "timestamp": "2026-07-04T18:47:22",
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "4.43.5",
+    "typescriptVersion": "5.8.3"
+  },
+  "components": [
+    {
+      "filePath": "src/components/ki-hello/ki-hello.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-hello",
+      "docs": "Factory smoke-test component. Proves the Fase 0 gate wiring end to end and\nis deleted when the first real component lands (see docs/kimen-roadmap.md).\n\nWhen to use: never in production. When NOT to use: always in production.",
+      "docsTags": [],
+      "usage": {},
+      "props": [
+        {
+          "name": "name",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": false,
+          "docs": "Name to greet.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Kimen'"
+            }
+          ],
+          "default": "'Kimen'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    }
+  ],
+  "typeLibrary": {}
+}

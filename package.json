@@ -1,0 +1,51 @@
+{
+  "name": "kimen-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.12.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "eslint .",
+    "lint:styles": "stylelint \"packages/**/*.css\" --allow-empty-input",
+    "typecheck": "tsc -b --pretty false && tsc -p packages/elements --noEmit --pretty false",
+    "deadcode": "knip",
+    "gates": "bash scripts/gates/gates-suite.sh",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.2",
+    "@commitlint/cli": "21.2.0",
+    "@commitlint/config-conventional": "21.2.0",
+    "@eslint/js": "10.0.1",
+    "@nx/eslint-plugin": "23.0.1",
+    "eslint": "10.6.0",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "husky": "9.1.7",
+    "knip": "6.24.0",
+    "lint-staged": "17.0.8",
+    "nx": "23.0.1",
+    "style-dictionary": "5.5.0",
+    "stylelint": "17.14.0",
+    "stylelint-config-standard": "40.0.0",
+    "stylelint-declaration-strict-value": "1.11.1",
+    "stylelint-use-logical": "2.1.3",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.62.1"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,json,md,yml,yaml}": [
+      "biome format --write --no-errors-on-unmatched"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix --no-warn-ignored"
+    ],
+    "*.css": [
+      "stylelint --fix --allow-empty-input"
+    ]
+  }
+}

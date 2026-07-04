@@ -1,0 +1,34 @@
+{
+  "ki": {
+    "surface": {
+      "$type": "color",
+      "base": { "$value": "{ki.color.neutral.0}" },
+      "raised": { "$value": "{ki.color.neutral.100}" }
+    },
+    "text": {
+      "$type": "color",
+      "base": { "$value": "{ki.color.neutral.900}" },
+      "muted": { "$value": "{ki.color.neutral.700}" },
+      "danger": { "$value": "{ki.color.red.500}" }
+    },
+    "spacing": {
+      "$type": "dimension",
+      "inline": { "$value": "{ki.space.2}" },
+      "block": { "$value": "{ki.space.3}" }
+    },
+    "corner": {
+      "$type": "dimension",
+      "control": { "$value": "{ki.radius.md}" }
+    },
+    "typography": {
+      "family": {
+        "$type": "fontFamily",
+        "base": { "$value": "{ki.font.family.base}" }
+      },
+      "size": {
+        "$type": "dimension",
+        "body": { "$value": "{ki.font.size.200}" }
+      }
+    }
+  }
+}

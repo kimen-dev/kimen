@@ -1,0 +1,18 @@
+{
+  "name": "@kimen/catalog",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Kimen neutral catalog and guardrail boundary: schema-constrained specs rendered from a closed component catalog. The durable asset (constitution Art. VIII).",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b --pretty false"
+  },
+  "nx": {
+    "tags": [
+      "scope:catalog"
+    ]
+  }
+}

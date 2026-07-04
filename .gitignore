@@ -7,6 +7,11 @@ build/
 out/
 *.tsbuildinfo
 
+# Stencil build artifacts (generated/docs.json IS committed, Art. I)
+packages/elements/loader/
+packages/elements/www/
+.stencil/
+
 # Nx
 .nx/cache
 .nx/workspace-data

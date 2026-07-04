@@ -1,0 +1,45 @@
+{
+  "name": "@kimen/elements",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Kimen web components (ki-*). Standards-first Stencil components, tokens-only styling, agent-legible by contract.",
+  "type": "module",
+  "files": [
+    "dist",
+    "loader"
+  ],
+  "scripts": {
+    "build": "stencil build",
+    "test": "echo 'test wiring lands with @stencil/vitest in the first real component spec' && exit 0"
+  },
+  "nx": {
+    "tags": [
+      "scope:elements"
+    ],
+    "implicitDependencies": [
+      "@kimen/tokens"
+    ]
+  },
+  "dependencies": {
+    "@stencil/core": "4.43.5"
+  },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "unpkg": "dist/kimen/kimen.esm.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./loader": {
+      "types": "./loader/index.d.ts",
+      "import": "./loader/index.js",
+      "require": "./loader/index.cjs.js"
+    }
+  }
+}

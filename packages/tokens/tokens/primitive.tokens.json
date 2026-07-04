@@ -1,0 +1,39 @@
+{
+  "ki": {
+    "color": {
+      "$type": "color",
+      "neutral": {
+        "0": { "$value": "#ffffff" },
+        "100": { "$value": "#f4f4f5" },
+        "700": { "$value": "#3f3f46" },
+        "900": { "$value": "#18181b" }
+      },
+      "red": {
+        "500": { "$value": "#dc2626" }
+      }
+    },
+    "space": {
+      "$type": "dimension",
+      "1": { "$value": "0.25rem" },
+      "2": { "$value": "0.5rem" },
+      "3": { "$value": "0.75rem" },
+      "4": { "$value": "1rem" }
+    },
+    "radius": {
+      "$type": "dimension",
+      "sm": { "$value": "0.25rem" },
+      "md": { "$value": "0.5rem" }
+    },
+    "font": {
+      "family": {
+        "$type": "fontFamily",
+        "base": { "$value": ["system-ui", "sans-serif"] }
+      },
+      "size": {
+        "$type": "dimension",
+        "100": { "$value": "0.875rem" },
+        "200": { "$value": "1rem" }
+      }
+    }
+  }
+}

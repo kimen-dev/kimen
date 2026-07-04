@@ -8,6 +8,14 @@
       "source": "bundled",
       "installed_at": "2026-07-04T18:04:21.957271+00:00",
       "updated_at": "2026-07-04T18:04:21.957276+00:00"
+    },
+    "kimen": {
+      "name": "Kimen Constitutional SDD Cycle",
+      "version": "0.1.0",
+      "description": "Constitutional pipeline with deterministic shell gates and founder approval",
+      "source": "local",
+      "installed_at": "2026-07-04T21:00:00.000000+00:00",
+      "updated_at": "2026-07-04T21:00:00.000000+00:00"
     }
   }
 }
