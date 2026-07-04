@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Nx
+.nx/cache
+.nx/workspace-data
+
+# Test artifacts
+coverage/
+.stryker-tmp/
+reports/
+playwright-report/
+test-results/
+
+# Spec Kit run state (local, per-run)
+.specify/workflows/runs/
+
+# Environment and secrets (never committed, Art. XI)
+.env
+.env.*
+*.pem
+*.key
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json
