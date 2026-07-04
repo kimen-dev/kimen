@@ -1,7 +1,15 @@
 {
-  "$schema": "https://unpkg.com/knip@latest/schema.json",
-  "entry": ["packages/*/src/index.ts", "scripts/**/*.mjs"],
-  "project": ["packages/**/*.{ts,tsx}", "scripts/**/*.mjs"],
-  "ignore": ["**/dist/**", ".specify/**", ".claude/**"],
-  "ignoreDependencies": ["husky"]
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignore": ["**/dist/**", "**/generated/**", ".specify/**", ".claude/**"],
+  "ignoreDependencies": ["husky", "nx"],
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/**/*.mjs"],
+      "project": ["scripts/**/*.mjs"]
+    },
+    "packages/*": {
+      "entry": ["src/index.ts", "*.config.{ts,mjs}", "vitest.setup.mjs"],
+      "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"]
+    }
+  }
 }
