@@ -1,9 +1,9 @@
 # Kimen CI: deterministic gates (constitution Art. X).
 #
-# TODO(constitutional, before first release): pin actions to commit SHAs by
-# running `bash scripts/pin-actions.sh` locally (needs `gh`). Tag pins below
-# are a bootstrap deviation, documented per Governance ("deviations must be
-# justified"): the setup sandbox cannot reach api.github.com to resolve SHAs.
+# Actions are pinned to commit SHAs (Art. X supply-chain determinism); the
+# trailing comment records the tag each SHA was resolved from. To re-pin
+# after a bump, run `bash scripts/pin-actions.sh` (needs `gh`) or resolve
+# tags with `git ls-remote https://github.com/<owner>/<repo> refs/tags/<tag>^{}`.
 name: ci
 
 on:
@@ -24,17 +24,17 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Harden runner (egress audit; switch to block after baseline)
-        uses: step-security/harden-runner@v2 # TODO-pin-sha
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@v5 # TODO-pin-sha
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           persist-credentials: false
 
-      - uses: pnpm/action-setup@v4 # TODO-pin-sha
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
 
-      - uses: actions/setup-node@v5 # TODO-pin-sha
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: 22
           cache: pnpm
