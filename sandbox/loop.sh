@@ -40,8 +40,8 @@ if [ "$VERDICT" -eq 0 ]; then
   echo "  git -C $CLONE diff $BRANCH --stat"
   echo "To keep it:       git fetch \"$CLONE\" \"$BRANCH\":loop/$STAMP"
 else
-  echo "LOOP ROJO (escalación onmars-spec): las gates no llegaron a 0."
-  echo "Inspecciona $CLONE si quieres entender el atasco."
+  echo "LOOP RED (onmars-spec escalation): gates did not reach exit 0."
+  echo "Inspect $CLONE if you want to understand the failure."
 fi
-echo "Para desechar:    rm -rf $CLONE"
+echo "To discard:       rm -rf \"$CLONE\""
 exit $VERDICT
