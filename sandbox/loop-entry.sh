@@ -5,6 +5,11 @@ set -uo pipefail
 
 sudo /usr/local/bin/init-firewall.sh
 
+# No ~/.gitconfig is mounted (credential-free by design): give the loop a
+# local, clearly-labeled identity so its commits are attributable to it.
+git config user.name "kimen-loop"
+git config user.email "loop@kimen.local"
+
 pnpm install --frozen-lockfile || exit 1
 pnpm --filter @kimen/elements exec playwright install chromium || exit 1
 
