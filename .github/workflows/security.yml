@@ -94,7 +94,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
 
+      # The action passes --fail by default; only narrow to verified findings.
       - name: TruffleHog (verified findings block)
         uses: trufflesecurity/trufflehog@00155c9dc586f34d189adc83d3ac2698c2ec551f # v3.95.8
         with:
-          extra_args: --results=verified --fail
+          extra_args: --results=verified

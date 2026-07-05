@@ -9,6 +9,11 @@
   "lockFileMaintenance": { "enabled": true },
   "packageRules": [
     {
+      "description": "Supply-chain hardening (Art. X): wait 7 days before proposing newly published versions",
+      "matchPackageNames": ["*"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
       "description": "Group non-major devDependency bumps into one PR",
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor", "patch"],

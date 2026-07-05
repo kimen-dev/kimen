@@ -1,3 +1,12 @@
 packages:
   - "packages/*"
   - "tools/*"
+
+# Supply-chain hardening (constitution Art. X)
+# Wait 7 days (in minutes) before resolving newly published versions:
+# malicious releases are usually caught within days.
+minimumReleaseAge: 10080
+# A dependency update may never silently downgrade security settings.
+trustPolicy: no-downgrade
+# Transitive dependencies may not be installed from exotic/untrusted sources.
+blockExoticSubdeps: true
