@@ -37,7 +37,8 @@ approves specs and merges.
 ## Repo map
 
 - `/kimen-constitution.md`: normative governance (v1.4.2)
-- `/docs/`: product strategy, build roadmap, Spec Kit harness design
+- `/docs/`: product strategy, build roadmap, Spec Kit harness design, and
+  `kimen-onmars-spec.md` (the binding unattended-loop contract)
 - `/.specify/`: Spec Kit (memory digest, templates + Kimen overrides, scripts, workflows)
 - `/.claude/skills/`: Spec Kit skills + constitutional skills
   (`gherkin-use-cases`, `frontend-best-practices`, `frontend-qa`)
