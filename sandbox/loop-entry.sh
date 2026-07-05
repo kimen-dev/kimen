@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Runs INSIDE the sandbox container: firewall, deps, agent loop, verdict.
 # The exit code of this script IS the loop verdict (gates, nothing else).
-set -uo pipefail
+set -euo pipefail
 
 sudo /usr/local/bin/init-firewall.sh
 
