@@ -45,6 +45,8 @@ approves specs and merges.
 - `/specs/`: feature specs (created by `/speckit-specify`)
 - `/tools/kimen-plugin/`: Nx generators (`component`, `feature-spec`,
   `adapter`): `pnpm exec nx g @kimen/nx-plugin:component ki-x --spec NNN-ki-x`
+- `/sandbox/`: Art. XI unattended-loop sandbox (credential-free, egress
+  allowlist); see `docs/kimen-sandbox.md`
 - `packages/`: (Fase 0 pending) `tokens`, `elements`, `catalog`, `adapter-*`
 
 ## Conventions
