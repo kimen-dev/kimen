@@ -17,12 +17,14 @@
       "description": "Group non-major devDependency bumps into one PR",
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "dev dependencies (non-major)"
+      "groupName": "dev dependencies (non-major)",
+      "minimumReleaseAge": "7 days"
     },
     {
       "description": "Keep the pinned pnpm packageManager field current",
       "matchDepTypes": ["packageManager"],
-      "enabled": true
+      "enabled": true,
+      "minimumReleaseAge": "7 days"
     }
   ]
 }
