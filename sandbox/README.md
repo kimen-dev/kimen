@@ -9,8 +9,10 @@ here, because there is nothing to exfiltrate.
 ## Usage
 
 ```bash
-# dedicated worktree for the feature branch (single writer per feature)
-git worktree add ../kimen-<feature> <feature-branch>
+# dedicated LOCAL CLONE for the feature branch (single writer per feature).
+# Not a worktree: a worktree's .git file points at the main repo, which is
+# not mounted inside the container.
+git clone --branch <feature-branch> . ../kimen-<feature>
 
 ANTHROPIC_API_KEY=<low-privilege-key> bash sandbox/run.sh ../kimen-<feature>
 ```

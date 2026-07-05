@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Launch the Kimen unattended-loop sandbox (constitution Art. XI).
 #
-# Usage: bash sandbox/run.sh [worktree-path]
-#   worktree-path: a DEDICATED git worktree for the loop's feature branch
-#                  (single writer per feature, onmars-spec C7).
-#                  Default: current repo root (fine for a smoke test).
+# Usage: bash sandbox/run.sh [clone-path]
+#   clone-path: a DEDICATED local clone on the loop's feature branch
+#                  (single writer per feature; a worktree would not work:
+#                  its .git file points outside the mount). Default: repo root.
 #
 # What this guarantees (Art. XI / onmars-spec C5):
 #   - disposable container (--rm), no volumes beyond the worktree
@@ -18,14 +18,14 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-WORKTREE="${1:-$(pwd)}"
+WORKDIR_HOST="${1:-$(pwd)}"
 IMAGE=kimen-sandbox
 
 docker build -t "$IMAGE" sandbox/
 
 exec docker run --rm -it \
   --cap-add=NET_ADMIN --cap-add=NET_RAW \
-  -v "$WORKTREE":/workspace \
+  -v "$WORKDIR_HOST":/workspace \
   -w /workspace \
   ${ANTHROPIC_API_KEY:+-e ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY"} \
   "$IMAGE" \
