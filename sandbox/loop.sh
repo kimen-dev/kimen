@@ -35,10 +35,10 @@ set -e
 
 echo ""
 if [ "$VERDICT" -eq 0 ]; then
-  echo "LOOP VERDE (gates exit 0). Revisa el resultado FUERA del sandbox:"
+  echo "LOOP GREEN (gates exit 0). Review the result OUTSIDE the sandbox:"
   echo "  git -C $CLONE log --oneline -3"
   echo "  git -C $CLONE diff $BRANCH --stat"
-  echo "Para traértelo:   git fetch $CLONE $BRANCH:loop/$STAMP"
+  echo "To keep it:       git fetch \"$CLONE\" \"$BRANCH\":loop/$STAMP"
 else
   echo "LOOP ROJO (escalación onmars-spec): las gates no llegaron a 0."
   echo "Inspecciona $CLONE si quieres entender el atasco."
