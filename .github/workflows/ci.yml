@@ -42,5 +42,8 @@ jobs:
       - name: Install (frozen lockfile)
         run: pnpm install --frozen-lockfile
 
+      - name: Install Playwright Chromium (real-browser gate, Art. III)
+        run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
+
       - name: Deterministic gates suite
         run: bash scripts/gates/gates-suite.sh

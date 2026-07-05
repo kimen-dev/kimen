@@ -11,8 +11,25 @@
   ],
   "scripts": {
     "build": "stencil build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test-browser": "vitest run --config vitest.browser.config.ts",
+    "size": "size-limit"
   },
+  "size-limit": [
+    {
+      "name": "ki-hello marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": "dist/components/ki-hello.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-hello worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-hello.js",
+      "limit": "25 KB"
+    }
+  ],
   "nx": {
     "tags": [
       "scope:elements"
@@ -25,7 +42,12 @@
     "@stencil/core": "4.43.5"
   },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "12.1.0",
     "@stencil/vitest": "1.13.3",
+    "@vitest/browser-playwright": "4.1.9",
+    "axe-core": "4.12.1",
+    "playwright": "1.61.1",
+    "size-limit": "12.1.0",
     "vitest": "4.1.9"
   },
   "module": "dist/index.js",

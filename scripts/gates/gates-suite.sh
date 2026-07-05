@@ -48,6 +48,13 @@ run_gate build pnpm exec nx run-many -t build
 # loader/index.d.ts with extensionless imports (upstream quirk, Art. I forbids
 # hand-editing it); the main entrypoint stays fully strict.
 run_gate packaging pnpm run packaging
+# Per-component budgets (Art. IV): marginal cost single-digit KB; the shared
+# Stencil runtime is a separately-capped line item (see size-limit config).
+run_gate budgets pnpm exec nx run-many -t size
 run_gate test pnpm exec nx run-many -t test
+# Real-browser suite (Art. III: never mock-doc/jsdom alone; Art. IV baseline).
+# Prerequisite once per machine: pnpm --filter @kimen/elements exec playwright install chromium
+# Pre-release engine matrix: KIMEN_BROWSER_MATRIX=1 (chromium + firefox + webkit).
+run_gate test-browser pnpm exec nx run-many -t test-browser
 
 echo "ALL GATES GREEN — done is done (Art. III)"

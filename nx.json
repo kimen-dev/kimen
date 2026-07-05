@@ -17,6 +17,14 @@
     "test": {
       "dependsOn": ["build"],
       "cache": true
+    },
+    "test-browser": {
+      "dependsOn": ["build"],
+      "cache": true
+    },
+    "size": {
+      "dependsOn": ["build"],
+      "cache": true
     }
   },
   "namedInputs": {
