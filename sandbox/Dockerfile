@@ -9,9 +9,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Playwright system deps for the real-browser gate (Chromium, Art. IV PR gate)
 RUN npx -y playwright@1.61.1 install-deps chromium
 
-# The agent driving the loop. Installed at build time (root): the node user
-# cannot install globals, and the loop must not depend on runtime installs.
-RUN npm install -g @anthropic-ai/claude-code
+# The agents that can drive the loop (Art. XI is vendor-agnostic). Installed
+# at build time (root): the node user cannot install globals, and the loop
+# must not depend on runtime installs.
+RUN npm install -g @anthropic-ai/claude-code @openai/codex
 
 COPY init-firewall.sh /usr/local/bin/init-firewall.sh
 RUN chmod +x /usr/local/bin/init-firewall.sh \

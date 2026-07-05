@@ -16,9 +16,13 @@ ALLOWED_DOMAINS=(
   # Playwright browser downloads
   cdn.playwright.dev
   playwright.azureedge.net
-  # Claude Code (agent driving the loop)
+  # Loop agents (Art. XI is vendor-agnostic): Claude Code
   api.anthropic.com
   statsig.anthropic.com
+  # Loop agents: Codex CLI
+  api.openai.com
+  auth.openai.com
+  chatgpt.com
 )
 
 ipset destroy kimen-allow 2>/dev/null || true

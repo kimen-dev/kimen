@@ -1,10 +1,12 @@
 # Kimen loop sandbox
 
 Disposable, credential-free container where unattended agent loops run
-(constitution digest, Art. XI): no npm or GitHub credentials inside, egress
-restricted to an allowlist (npm registry, GitHub, Playwright CDN, Anthropic
-API) by `init-firewall.sh`. Permission-bypass agent execution is allowed only
-here, because there is nothing to exfiltrate.
+(constitution digest, Art. XI). Vendor-agnostic: Claude Code and Codex CLI
+are baked into the image; use whichever model fits the task. No npm or
+GitHub credentials inside; egress restricted to an allowlist (npm registry,
+GitHub, Playwright CDN, Anthropic + OpenAI APIs) by `init-firewall.sh`.
+Permission-bypass agent execution is allowed only here, because there is
+nothing to exfiltrate.
 
 ## Usage
 
@@ -14,11 +16,16 @@ here, because there is nothing to exfiltrate.
 # not mounted inside the container.
 git clone --branch <feature-branch> . ../kimen-<feature>
 
+# with Claude Code driving the loop:
 ANTHROPIC_API_KEY=<low-privilege-key> bash sandbox/run.sh ../kimen-<feature>
+# or with Codex CLI driving it:
+OPENAI_API_KEY=<low-privilege-key> bash sandbox/run.sh ../kimen-<feature>
 ```
 
-Inside: `pnpm install --frozen-lockfile`, run the loop, verify with
-`bash scripts/gates/gates-suite.sh`.
+Inside: `pnpm install --frozen-lockfile`, run the loop (`claude` or
+`codex exec`), verify with `bash scripts/gates/gates-suite.sh`. Whoever
+writes, the reviewer should be a strong model from a DIFFERENT vendor
+(constitution Workflow), and the gates are the only definition of done.
 
 ## Notes
 
