@@ -11,6 +11,10 @@
       "entry": ["src/index.ts", "*.config.{ts,mjs}", "vitest.setup.mjs"],
       "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"]
     },
+    "packages/kimen": {
+      "entry": ["index.mjs"],
+      "project": ["**/*.mjs"]
+    },
     "tools/*": {
       "entry": ["src/generators/*/generator.js"],
       "project": ["**/*.js"]

@@ -1,0 +1,26 @@
+{
+  "name": "kimen",
+  "version": "0.0.1",
+  "description": "Kimen: the neutral, multi-protocol GenUI catalog in web components. Placeholder while pre-v1; the real packages ship under the @kimen scope.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "files": [
+    "index.mjs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimen-dev/kimen.git"
+  },
+  "homepage": "https://github.com/kimen-dev/kimen",
+  "keywords": [
+    "genui",
+    "generative-ui",
+    "web-components",
+    "design-tokens",
+    "a2ui",
+    "mcp-apps"
+  ]
+}
