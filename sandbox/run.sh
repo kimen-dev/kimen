@@ -32,4 +32,4 @@ exec docker run --rm -it \
   ${ANTHROPIC_API_KEY:+-e ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY"} \
   ${OPENAI_API_KEY:+-e OPENAI_API_KEY="$OPENAI_API_KEY"} \
   "$IMAGE" \
-  bash -lc 'sudo /usr/local/bin/init-firewall.sh && corepack enable pnpm 2>/dev/null; exec bash'
+  bash -lc 'sudo /usr/local/bin/init-firewall.sh; exec bash'

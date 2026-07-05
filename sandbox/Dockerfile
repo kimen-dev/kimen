@@ -14,6 +14,16 @@ RUN npx -y playwright@1.61.1 install-deps chromium
 # must not depend on runtime installs.
 RUN npm install -g @anthropic-ai/claude-code @openai/codex
 
+# pnpm via corepack, enabled at BUILD time (the node user cannot symlink into
+# /usr/local/bin at runtime). The pinned version (keep in sync with the root
+# package.json packageManager field) is pre-fetched into COREPACK_HOME, which
+# stays node-writable for future packageManager bumps.
+ENV COREPACK_HOME=/opt/corepack \
+    COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable pnpm \
+    && corepack prepare pnpm@10.34.4 --activate \
+    && chown -R node:node /opt/corepack
+
 # --chmod: the build-context files may be mode 0600 (COPY preserves it and
 # chmod +x alone would leave them unreadable by the node user).
 COPY --chmod=755 init-firewall.sh /usr/local/bin/init-firewall.sh

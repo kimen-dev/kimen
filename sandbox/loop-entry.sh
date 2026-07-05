@@ -4,7 +4,6 @@
 set -uo pipefail
 
 sudo /usr/local/bin/init-firewall.sh
-corepack enable pnpm 2>/dev/null || true
 
 pnpm install --frozen-lockfile || exit 1
 pnpm --filter @kimen/elements exec playwright install chromium || exit 1
