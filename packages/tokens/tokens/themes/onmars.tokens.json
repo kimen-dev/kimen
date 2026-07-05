@@ -1,0 +1,109 @@
+{
+  "ki": {
+    "color": {
+      "brand": {
+        "$type": "color",
+        "$description": "onmars brand ramp. Source: MarsUI Figma, Color Type collection, Brand/MarsUI (Primary mode).",
+        "50": { "$value": "#f7f4fb" },
+        "100": { "$value": "#ece4f5" },
+        "200": { "$value": "#cebee6" },
+        "300": { "$value": "#b59cd8" },
+        "400": { "$value": "#9873c9" },
+        "500": { "$value": "#845abe" },
+        "500-alpha-1": { "$value": "#845abe1f" },
+        "500-alpha-2": { "$value": "#845abe33" },
+        "500-alpha-3": { "$value": "#845abe3d" },
+        "500-alpha-4": { "$value": "#845abe66" },
+        "500-alpha-5": { "$value": "#845abe8f" },
+        "600": { "$value": "#5f3993" },
+        "700": { "$value": "#472b6e" },
+        "800": { "$value": "#2f1d49" },
+        "900": { "$value": "#1f1331" },
+        "950": { "$value": "#170e25" },
+        "high-em": { "$value": "{ki.color.gray.950}" },
+        "med-em": { "$value": "{ki.color.gray.700}" },
+        "low-em": { "$value": "{ki.color.gray.600}" },
+        "base-em": { "$value": "{ki.color.gray.400}" },
+        "primary-text-on-primary": { "$value": "{ki.color.white.100}" },
+        "primary-text-on-primary-light": { "$value": "#5f3993" },
+        "secondary-text-on-primary": { "$value": "{ki.color.white.72}" },
+        "secondary-text-on-primary-light": { "$value": "#7648b7" },
+        "primary-text-on-success": { "$value": "{ki.color.white.100}" },
+        "secondary-text-on-success": { "$value": "{ki.color.white.72}" }
+      }
+    },
+    "font": {
+      "family": {
+        "$type": "fontFamily",
+        "display": { "$value": ["Inter", "system-ui", "sans-serif"] },
+        "body": { "$value": ["Inter", "system-ui", "sans-serif"] },
+        "serif": { "$value": ["Merriweather", "Georgia", "serif"] },
+        "mono": { "$value": ["JetBrains Mono", "ui-monospace", "monospace"] }
+      },
+      "size": {
+        "$type": "dimension",
+        "caption-1": { "$value": "0.625rem" },
+        "overline": { "$value": "0.6875rem" },
+        "caption-2": { "$value": "0.75rem" },
+        "body-1": { "$value": "0.8125rem" },
+        "body-2": { "$value": "0.9375rem" },
+        "title-1": { "$value": "0.9375rem" },
+        "title-2": { "$value": "1.125rem" },
+        "heading-1": { "$value": "1.375rem" },
+        "heading-2": { "$value": "1.5625rem" },
+        "heading-3": { "$value": "2rem" },
+        "heading-4": { "$value": "2.625rem" },
+        "heading-5": { "$value": "3.25rem" },
+        "heading-6": { "$value": "3.875rem" },
+        "display-1": { "$value": "4.75rem" },
+        "display-2": { "$value": "5.5rem" },
+        "display-3": { "$value": "6.5rem" }
+      },
+      "line-height": {
+        "$type": "dimension",
+        "overline": { "$value": "0.75rem" },
+        "caption-1": { "$value": "1rem" },
+        "caption-2": { "$value": "1rem" },
+        "para": { "$value": "1.25rem" },
+        "body-1": { "$value": "1.5rem" },
+        "body-2": { "$value": "1.5rem" },
+        "title-1": { "$value": "1.5rem" },
+        "title-2": { "$value": "1.5rem" },
+        "heading-1": { "$value": "1.75rem" },
+        "heading-2": { "$value": "2.25rem" },
+        "heading-3": { "$value": "2.5rem" },
+        "heading-4": { "$value": "3rem" },
+        "heading-5": { "$value": "3.5rem" },
+        "heading-6": { "$value": "4.25rem" },
+        "display-1": { "$value": "5rem" },
+        "display-2": { "$value": "5rem" },
+        "display-3": { "$value": "6rem" }
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "display": {
+          "normal": { "$value": 400 },
+          "medium": { "$value": 500 },
+          "semibold": { "$value": 600 },
+          "bold": { "$value": 700 }
+        },
+        "body": {
+          "normal": { "$value": 500 },
+          "medium": { "$value": 600 },
+          "semibold": { "$value": 700 },
+          "bold": { "$value": 800 }
+        }
+      },
+      "letter-spacing": {
+        "$type": "dimension",
+        "$description": "Figma stores these as percentages; compiled to em.",
+        "none": { "$value": "0em" },
+        "spaced-out": { "$value": "0.02em" },
+        "xs": { "$value": "-0.01em" },
+        "sm": { "$value": "-0.03em" },
+        "md": { "$value": "-0.05em" },
+        "lg": { "$value": "-0.07em" }
+      }
+    }
+  }
+}
