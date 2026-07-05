@@ -2,7 +2,7 @@
   display: block;
 }
 
-.greeting {
+.message {
   color: var(--ki-text-base);
   background: var(--ki-surface-base);
   font-family: var(--ki-typography-family-base);
