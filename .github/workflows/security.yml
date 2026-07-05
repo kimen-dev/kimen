@@ -1,0 +1,100 @@
+# Kimen security gates (constitution Art. X): SAST (Semgrep), dependency CVEs
+# (osv-scanner + dependency review), secret scanning (gitleaks + trufflehog).
+# Actions pinned to commit SHAs; trailing comment records the resolved tag.
+# Malicious-package detection on new dependencies: Socket (GitHub App, no
+# workflow — installed by the founder on the org).
+name: security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1' # weekly, Monday 06:00 UTC
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Harden runner (egress audit; switch to block after baseline)
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      # Engine pinned (Art. X determinism). Registry rulesets update server-side:
+      # accepted for breadth; vendor rules locally if a flaky finding ever blocks.
+      - name: Install Semgrep (pinned)
+        run: pipx install semgrep==1.168.0
+
+      - name: Semgrep scan (findings block)
+        run: >-
+          semgrep scan --config p/default --error --metrics=off
+          --exclude .specify --exclude .claude
+
+  osv-scan:
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@9a498708959aeaef5ef730655706c5a1df1edbc2 # v2.3.8
+    with:
+      scan-args: |-
+        --recursive
+        ./
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden runner (egress audit; switch to block after baseline)
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      - name: Dependency review (CVEs + licenses on the PR diff)
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: low
+
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Harden runner (egress audit; switch to block after baseline)
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+          fetch-depth: 0 # full history: secrets hide in old commits
+
+      # Org repos need GITLEAKS_LICENSE (free for OSS): founder action, see PR.
+      - name: Gitleaks (full history)
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+      - name: TruffleHog (verified findings block)
+        uses: trufflesecurity/trufflehog@00155c9dc586f34d189adc83d3ac2698c2ec551f # v3.95.8
+        with:
+          extra_args: --results=verified --fail
