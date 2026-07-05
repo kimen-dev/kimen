@@ -37,5 +37,8 @@ RUN echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudo
     && chown -R node:node /home/node
 
 ENV KIMEN_SANDBOX=1
+# The container has no IPv6 route: prefer A records so downloads (Playwright
+# CDN) do not die on ENETUNREACH before trying IPv4.
+ENV NODE_OPTIONS=--dns-result-order=ipv4first
 USER node
 WORKDIR /workspace
