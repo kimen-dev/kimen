@@ -2,8 +2,9 @@ import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // Real-browser tests consume the BUILT custom-elements output (what ships is
-// what is asserted), never internals (constitution Art. III).
-import { defineCustomElement } from '../../../dist/components/ki-hello.js';
+// what is asserted), never internals (constitution Art. III). They live
+// outside src/ so Stencil never compiles them (they import build output).
+import { defineCustomElement } from '../dist/components/ki-hello.js';
 
 type KiHelloElement = HTMLElement & { name: string };
 

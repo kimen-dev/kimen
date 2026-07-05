@@ -11,7 +11,7 @@ const browsers = process.env['KIMEN_BROWSER_MATRIX']
 
 export default defineConfig({
   test: {
-    include: ['src/**/*.browser.spec.{ts,tsx}'],
+    include: ['browser-tests/**/*.browser.spec.{ts,tsx}'],
     browser: {
       enabled: true,
       headless: true,

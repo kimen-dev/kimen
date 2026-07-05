@@ -36,11 +36,14 @@ run_gate constitution bash scripts/gates/constitution-check.sh
 run_gate traceability bash scripts/gates/check-traceability.sh
 run_gate nx-graph nx_graph
 run_gate format pnpm run format:check
+# Build runs BEFORE lint/typecheck: browser tests import the built dist
+# output (they assert what ships, Art. III), so type-aware analysis needs
+# dist/ to exist — a fresh CI clone has none until this gate.
+run_gate build pnpm exec nx run-many -t build
 run_gate lint pnpm run lint
 run_gate styles pnpm run lint:styles
 run_gate typecheck pnpm run typecheck
 run_gate deadcode pnpm run deadcode
-run_gate build pnpm exec nx run-many -t build
 # Packaging correctness is validated mechanically before publish (Art. IX/X):
 # publint on every publishable package + are-the-types-wrong (esm-only profile:
 # @kimen ships ESM; Stencil's dual .cjs.js output mistypes under type:module).
