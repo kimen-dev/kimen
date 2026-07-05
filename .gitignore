@@ -28,6 +28,9 @@ test-results/
 # Spec Kit run state (local, per-run)
 .specify/workflows/runs/
 
+# Internal operational docs (founder machines only, never committed)
+internal/
+
 # Environment and secrets (never committed, Art. XI)
 .env
 .env.*

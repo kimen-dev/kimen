@@ -1,7 +1,7 @@
 # Gherkin authoring guide (reference)
 
 Deeper material behind `../SKILL.md`. Kimen-normative rules live in
-`/kimen-constitution.md` Art. II and the gates under `scripts/gates/`; this
+the constitution digest (`.specify/memory/constitution.md`) Art. II and the gates under `scripts/gates/`; this
 guide explains the craft and cites its sources.
 
 ## Why Gherkin at Kimen
@@ -142,7 +142,7 @@ scheduled, never merge-blocking (Art. III).
 
 Normative (repo):
 
-- `/kimen-constitution.md` Art. II (Specs Before Code), Art. III, V, VI, VIII
+- the constitution digest (`.specify/memory/constitution.md`) Art. II (Specs Before Code), Art. III, V, VI, VIII
 - `scripts/gates/lint-feature.sh`, `scripts/gates/check-traceability.sh`
 - `.specify/templates/overrides/spec-template.md` (Gherkin section + family table)
 

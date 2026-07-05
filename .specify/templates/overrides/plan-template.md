@@ -1,7 +1,7 @@
 # Implementation Plan: [FEATURE]
 
 <!-- KIMEN OVERRIDE of plan-template. Resolved with priority 1 by resolve_template().
-     Constitutional basis: /kimen-constitution.md Articles I-XI (Constitution
+     Constitutional basis: .specify/memory/constitution.md Articles I-XI (Constitution
      Check below enumerates all of them) and Art. III's definition of done.
      Kept in sync with constitutional amendments (no-drift rule). -->
 
@@ -45,9 +45,8 @@
 
 *GATE: must pass before Phase 0 research. Re-check after Phase 1 design.
 Verdict per article: PASS, N/A (with justification), or VIOLATION (must be
-justified in Complexity Tracking or the plan is rejected). The full articles
-live in `/kimen-constitution.md`; the digest in
-`.specify/memory/constitution.md`.*
+justified in Complexity Tracking or the plan is rejected). The articles live in
+`.specify/memory/constitution.md` (the constitution digest).*
 
 Declare, one line per article, what this plan does about it:
 

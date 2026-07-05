@@ -2,7 +2,7 @@ import { Component, Prop, h } from '@stencil/core';
 
 /**
  * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
- * is deleted when the first real component lands (see docs/kimen-roadmap.md).
+ * is deleted when the first real component lands (see docs/roadmap.md).
  *
  * When to use: never in production. When NOT to use: always in production.
  */

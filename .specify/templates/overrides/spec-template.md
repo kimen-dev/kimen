@@ -1,7 +1,7 @@
 # Feature Specification: [FEATURE NAME]
 
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
-     Constitutional basis: /kimen-constitution.md Art. II (Specs Before Code).
+     Constitutional basis: .specify/memory/constitution.md Art. II (Specs Before Code).
      Kept in sync with constitutional amendments (no-drift rule). -->
 
 **Feature Branch**: `[###-feature-name]`

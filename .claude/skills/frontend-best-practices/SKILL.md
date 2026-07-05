@@ -13,7 +13,7 @@ description: >-
 
 # Frontend Best Practices (Kimen)
 
-Executable elaboration of the Kimen constitution (`/kimen-constitution.md`,
+Executable elaboration of the Kimen constitution (the constitution digest (`.specify/memory/constitution.md`),
 Articles I, IV, V, VI, VII, IX). On conflict, the constitution wins. Tags:
 
 - **[Always]** — non-negotiable; most are mechanically enforced by the

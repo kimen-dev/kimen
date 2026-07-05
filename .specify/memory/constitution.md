@@ -1,13 +1,14 @@
 <!--
 Sync Impact Report
-- Version change: template (unfilled) → 1.4.2 (mirrors /kimen-constitution.md v1.4.2)
+- Version change: template (unfilled) → 1.4.2 (mirrors the constitution master v1.4.2)
 - Nature: DERIVED ARTIFACT. This file is the operational digest that Spec Kit
-  commands load. The normative source is /kimen-constitution.md at the repo
-  root. On any conflict, the root document prevails. This digest is
-  regenerated as part of every constitutional amendment (no-drift rule,
-  Art. I applied to governance). A version-stamp mismatch between this file
-  and the root document means this digest is stale and MUST be regenerated
-  before running any /speckit.* command.
+  commands load, and the operative governance text of this repository. The
+  normative source is the constitution master, maintained by the founder
+  outside this repository; on any conflict, the master prevails. This digest
+  is regenerated as part of every constitutional amendment (no-drift rule,
+  Art. I applied to governance). A version-stamp mismatch against the master
+  means this digest is stale and MUST be regenerated before running any
+  /speckit.* command.
 - Modified principles: all placeholders filled (11 principles, Articles I-XI)
 - Added sections: Technology Standards & Declared Bets; Development Workflow,
   Human Gates & Emergency Procedure
@@ -36,9 +37,10 @@ founder is the only human reviewer. Automated gates substitute for a team and
 are therefore strict and non-negotiable; the founder's attention is the
 scarcest resource and is spent only where leverage is highest.
 
-**Normative source**: `/kimen-constitution.md` (v1.4.2). This digest exists so
-Spec Kit commands can perform constitution checks efficiently; the full
-articles, rationales and amendment log live in the root document, which
+**Normative source**: the constitution master (v1.4.2), maintained by the
+founder outside this repository. This digest is the operative in-repo text:
+Spec Kit commands load it, gates check it, and contributions are reviewed
+against it. Full rationales and the amendment log live in the master, which
 prevails on any conflict.
 
 ## Core Principles
@@ -191,9 +193,10 @@ it. Vulnerability reports follow coordinated disclosure per SECURITY.md.
 This constitution supersedes all other practices and agent instructions;
 skills (`gherkin-use-cases`, `frontend-best-practices`, `frontend-qa`) are its
 executable elaboration and never drift: an amendment that changes guidance a
-skill elaborates updates that skill in the same change. Amendments: a PR
-touching `/kimen-constitution.md` (plus any artifacts it makes stale,
-including this digest), written rationale, migration notes, founder approval.
+skill elaborates updates that skill in the same change. Amendments: the
+founder amends the constitution master and regenerates this digest in the
+same change (plus any artifacts the amendment makes stale), with written
+rationale and migration notes.
 Versioning: MAJOR = principle removed/redefined, MINOR = principle added,
 PATCH = clarification. Two version lines must never be confused: this
 constitution's version and the library's public API SemVer. Every PR review

@@ -1,6 +1,6 @@
 # Kimen gates extension: mandatory pre-hooks for direct /speckit-* skill
-# invocations (constitution Art. II/III + Workflow; design:
-# docs/kimen-harness-speckit.md, capa 2).
+# invocations (constitution Art. II/III + Workflow;
+# design: internal harness note, capa 2).
 #
 # CONTRACT: the installed speckit-* skills' "Pre-Execution Checks" parse this
 # file directly (.claude/skills/speckit-plan/SKILL.md and
@@ -15,7 +15,7 @@
 #
 # NEVER add a `condition` field here: the hooks guide marks it "future" and
 # the installed skills skip any hook that defines one — a mandatory gate
-# would silently vanish (docs/kimen-harness-speckit.md).
+# would silently vanish (internal harness note).
 
 extensions:
   kimen-gates:

@@ -6,7 +6,7 @@ description: "Task list template for feature implementation (Kimen override)"
 # Tasks: [FEATURE NAME]
 
 <!-- KIMEN OVERRIDE of tasks-template. Resolved with priority 1 by resolve_template().
-     Constitutional basis: /kimen-constitution.md Art. II, III, X.
+     Constitutional basis: .specify/memory/constitution.md Art. II, III, X.
      Kept in sync with constitutional amendments (no-drift rule). -->
 
 **Input**: Design documents from `/specs/[###-feature-name]/`

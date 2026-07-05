@@ -2,30 +2,56 @@
 
 > *Kimen* (Norwegian/Danish): the seed, the germ from which something grows.
 
-**The neutral, multi-protocol GenUI catalog in web components.** Agents emit
-schema-constrained UI specs; Kimen validates them against a closed catalog and
-renders them with standard web components (`<ki-*>`) that re-theme via design
-tokens in a single step. Protocol adapters (A2UI, MCP Apps, AG-UI, json-render)
-are disposable; the catalog is the durable asset.
+**A neutral, multi-protocol GenUI catalog in web components.** An agent emits
+a schema-constrained UI spec; Kimen validates it against a closed catalog and
+renders it with standard web components (`<ki-*>`). Because it is built on web
+standards, the same components work in any host, whatever the framework, and
+re-theme to any brand by reassigning one layer of design tokens.
 
-**Status**: pre-v1 · Fase 0 (factory setup) · nothing published yet.
+```
+agent → JSON spec → guardrail (validate against the catalog) → <ki-*> render
+```
 
-## Governance
+**Status**: pre-v1, under active construction. Nothing is published yet;
+star/watch the repo to follow along.
 
-This project is run as a one-person, AI-First operation under a binding
-constitution: [`kimen-constitution.md`](./kimen-constitution.md). Agents
-implement, deterministic gates verify, one founder approves. Start there;
-everything else follows from it.
+## Why
 
-- Product strategy: [`docs/kimen-estrategia-producto.md`](./docs/kimen-estrategia-producto.md)
-- Build roadmap: [`docs/kimen-roadmap.md`](./docs/kimen-roadmap.md)
-- Automation harness design: [`docs/kimen-harness-speckit.md`](./docs/kimen-harness-speckit.md)
-- Contributing: [`CONTRIBUTING.md`](./CONTRIBUTING.md) · Security: [`SECURITY.md`](./SECURITY.md)
+Runtime GenUI (A2UI, MCP Apps, AG-UI, json-render) injects agent-generated UI
+into applications you don't control. Web components are the one component
+technology that behaves identically in every host, and a closed, validated
+catalog is safer than letting an agent emit open HTML. Kimen puts those two
+ideas together: protocol adapters are disposable by design; the catalog and
+the components are the durable assets.
 
-## Planned packages
+## Packages
 
-`@kimen/tokens` · `@kimen/elements` · `@kimen/catalog` · `@kimen/adapter-*` ·
-generated wrappers (`@kimen/react`, ...)
+| Package | What it is |
+| --- | --- |
+| `@kimen/elements` | The `<ki-*>` Stencil web components |
+| `@kimen/catalog` | The neutral catalog schema + guardrail renderer |
+| `@kimen/tokens` | Design tokens (DTCG), primitive → semantic → component |
+| `@kimen/adapter-*` | Protocol adapters (A2UI first), each with a compatibility matrix |
+| `@kimen/react`, ... | Generated framework wrappers |
+| `kimen` | CLI / meta package (name placeholder today) |
+
+## Quality bar
+
+Every component ships with real-browser tests (three engines at release),
+zero axe-core violations (WCAG 2.2 AA + EN 301 549 target), a single-digit-KB
+size budget, tokens-only styling (no hardcoded visual values), and RTL support
+by construction. The whole repo is guarded by a deterministic gate suite that
+runs identically locally and in CI: `bash scripts/gates/gates-suite.sh`.
+
+## Roadmap
+
+See [`docs/roadmap.md`](./docs/roadmap.md) for where the project is headed.
+
+## Contributing
+
+External contributions are welcome and pass exactly the same gates as
+everything else: see [`CONTRIBUTING.md`](./CONTRIBUTING.md). Security reports:
+[`SECURITY.md`](./SECURITY.md).
 
 ## License
 

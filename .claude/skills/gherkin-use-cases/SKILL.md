@@ -6,7 +6,7 @@ description: Writes and reviews Gherkin .feature files as Kimen behavior contrac
 # Gherkin use cases — Kimen behavior contracts
 
 Constitutional skill: the executable elaboration of Art. II (Specs Before
-Code) of `/kimen-constitution.md`. On any conflict, the constitution wins.
+Code) of the constitution digest (`.specify/memory/constitution.md`). On any conflict, the constitution wins.
 
 Behavior enters the system exactly once, as an approved `.feature`, BEFORE any
 implementation. Reading 10 scenarios costs the founder minutes; reviewing 800

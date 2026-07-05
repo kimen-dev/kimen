@@ -6,8 +6,10 @@ the same bar as agent-written code.
 
 ## The short version
 
-1. **Read `/kimen-constitution.md`.** It governs every contribution. PRs that
-   conflict with it are declined with a pointer to the relevant article.
+1. **Read `AGENTS.md` and the constitution digest**
+   (`.specify/memory/constitution.md`). They govern every contribution. PRs
+   that conflict with them are declined with a pointer to the relevant
+   article.
 2. **Specs before code** (Art. II): new behavior needs an approved Gherkin
    `.feature` first. Open an issue or draft spec before writing code; typos,
    dependency bumps, mechanical refactors and docs are exempt.

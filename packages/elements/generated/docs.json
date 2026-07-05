@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-04T18:47:22",
+  "timestamp": "2026-07-05T12:24:25",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -10,7 +10,7 @@
       "filePath": "src/components/ki-hello/ki-hello.tsx",
       "encapsulation": "shadow",
       "tag": "ki-hello",
-      "docs": "Factory smoke-test component. Proves the Fase 0 gate wiring end to end and\nis deleted when the first real component lands (see docs/kimen-roadmap.md).\n\nWhen to use: never in production. When NOT to use: always in production.",
+      "docs": "Factory smoke-test component. Proves the Fase 0 gate wiring end to end and\nis deleted when the first real component lands (see docs/roadmap.md).\n\nWhen to use: never in production. When NOT to use: always in production.",
       "docsTags": [],
       "usage": {},
       "props": [
