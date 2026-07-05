@@ -41,6 +41,13 @@ run_gate styles pnpm run lint:styles
 run_gate typecheck pnpm run typecheck
 run_gate deadcode pnpm run deadcode
 run_gate build pnpm exec nx run-many -t build
+# Packaging correctness is validated mechanically before publish (Art. IX/X):
+# publint on every publishable package + are-the-types-wrong (esm-only profile:
+# @kimen ships ESM; Stencil's dual .cjs.js output mistypes under type:module).
+# The loader entrypoint ignores internal-resolution-error: Stencil GENERATES
+# loader/index.d.ts with extensionless imports (upstream quirk, Art. I forbids
+# hand-editing it); the main entrypoint stays fully strict.
+run_gate packaging pnpm run packaging
 run_gate test pnpm exec nx run-many -t test
 
 echo "ALL GATES GREEN — done is done (Art. III)"
