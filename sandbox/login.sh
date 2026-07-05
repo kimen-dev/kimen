@@ -16,4 +16,4 @@ exec docker run --rm -it \
   -p 1455:1455 \
   -v kimen-codex-auth:/home/node/.codex \
   kimen-sandbox \
-  bash -lc 'sudo /usr/local/bin/init-firewall.sh >/dev/null && codex login'
+  bash -lc 'sudo /usr/local/bin/init-firewall.sh >/dev/null && codex login --device-auth'

@@ -29,7 +29,7 @@ docker run --rm \
   -v kimen-pnpm-store:/home/node/.local/share/pnpm \
   -e KIMEN_TASK="$TASK" \
   kimen-sandbox \
-  bash -lc '/usr/local/bin/loop-entry.sh'
+  bash -lc 'bash /usr/local/bin/loop-entry.sh'
 VERDICT=$?
 set -e
 
