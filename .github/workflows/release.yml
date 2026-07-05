@@ -1,0 +1,77 @@
+# Kimen release: nx release + npm trusted publishing (constitution Art. IX/X).
+#
+# - The public API carries ONE version line (release.projects in nx.json,
+#   projectsRelationship: fixed). Catalog and llms.txt version alongside it.
+# - Publishing credentials exist only as short-lived OIDC inside CI (trusted
+#   publishing, Art. XI): id-token: write, no long-lived npm token anywhere.
+# - Founder prerequisites before the first REAL release:
+#     1. Configure each @kimen package as a Trusted Publisher on npmjs.com
+#        (package settings → Trusted Publisher → this repo + this workflow).
+#     2. Flip "private": false in the packages being released.
+# - Default is dry-run: the Fase 0 exit criterion is this pipeline running
+#   green end to end without publishing anything.
+# Actions pinned to commit SHAs; trailing comment records the resolved tag.
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'Dry run (no tags, no changelog commit, no publish)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write # tags + changelog commit on a real release
+      id-token: write # npm trusted publishing (OIDC + provenance)
+    steps:
+      - name: Harden runner (egress audit; switch to block after baseline)
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0 # nx release reads conventional commits + tags
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium (real-browser gate)
+        run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
+
+      # A release NEVER skips the gates: done is gates exit 0 (Art. III).
+      - name: Deterministic gates suite
+        run: bash scripts/gates/gates-suite.sh
+
+      - name: nx release (dry-run)
+        if: ${{ inputs.dry-run }}
+        run: pnpm exec nx release --first-release --dry-run
+
+      - name: nx release (version + changelog + publish with provenance)
+        if: ${{ !inputs.dry-run }}
+        env:
+          NPM_CONFIG_PROVENANCE: 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          pnpm exec nx release --first-release --yes

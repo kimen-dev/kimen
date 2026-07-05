@@ -27,6 +27,16 @@
       "cache": true
     }
   },
+  "release": {
+    "projects": ["@kimen/tokens", "@kimen/elements", "@kimen/catalog"],
+    "projectsRelationship": "fixed",
+    "version": {
+      "conventionalCommits": true
+    },
+    "changelog": {
+      "workspaceChangelog": true
+    }
+  },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "sharedGlobals": [
