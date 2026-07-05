@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "name": "@kimen/nx-plugin",
+  "version": "0.0.0",
+  "generators": {
+    "component": {
+      "factory": "./src/generators/component/generator",
+      "schema": "./src/generators/component/schema.json",
+      "description": "Scaffold a ki-* Stencil component with every gate wired: tokens-only CSS, mock-doc spec, real-browser + axe spec, public-entry export."
+    },
+    "feature-spec": {
+      "factory": "./src/generators/feature-spec/generator",
+      "schema": "./src/generators/feature-spec/schema.json",
+      "description": "Scaffold specs/<NNN>-<slug>/feature.feature with the five constitutional scenario families (stable S-IDs, one When per scenario)."
+    },
+    "adapter": {
+      "factory": "./src/generators/adapter/generator",
+      "schema": "./src/generators/adapter/schema.json",
+      "description": "Scaffold @kimen/adapter-<name>: isolated protocol adapter (scope:adapter boundaries) with its COMPAT.md protocol matrix (Art. VIII)."
+    }
+  }
+}

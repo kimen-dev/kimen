@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "KimenFeatureSpec",
+  "title": "Kimen feature-spec generator",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Feature slug (kebab-case, e.g. ki-button)",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "Feature slug?"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable feature title (defaults to the slug)"
+    }
+  },
+  "required": ["name"]
+}

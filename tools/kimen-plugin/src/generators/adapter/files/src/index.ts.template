@@ -1,0 +1,8 @@
+/**
+ * @kimen/adapter-<%= name %>: placeholder entry point.
+ *
+ * The real adapter enters through the Spec Kit flow with its own approved
+ * spec (Art. II). Protocol types never leak into @kimen/elements (Art. VIII:
+ * enforced by scope:adapter module boundaries).
+ */
+export const ADAPTER_<%= constName %>_VERSION = '0.0.0';

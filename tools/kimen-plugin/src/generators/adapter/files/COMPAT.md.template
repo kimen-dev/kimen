@@ -1,0 +1,10 @@
+# @kimen/adapter-<%= name %>: protocol compatibility matrix
+
+Constitution Art. VIII: each adapter declares the exact protocol version(s) it
+supports, versioned with the adapter. A protocol's breaking release is
+absorbed here and never forces a core change; an adapter that cannot absorb
+it is retired.
+
+| Adapter version | <%= name %> protocol version(s) | Status |
+| --- | --- | --- |
+| 0.0.0 | TODO(spec) | placeholder |

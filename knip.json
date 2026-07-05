@@ -1,7 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "ignore": ["**/dist/**", "**/generated/**", ".specify/**", ".claude/**"],
-  "ignoreDependencies": ["husky", "nx"],
+  "ignoreDependencies": ["husky", "nx", "@kimen/nx-plugin"],
   "workspaces": {
     ".": {
       "entry": ["scripts/**/*.mjs"],
@@ -10,6 +10,10 @@
     "packages/*": {
       "entry": ["src/index.ts", "*.config.{ts,mjs}", "vitest.setup.mjs"],
       "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"]
+    },
+    "tools/*": {
+      "entry": ["src/generators/*/generator.js"],
+      "project": ["**/*.js"]
     }
   }
 }

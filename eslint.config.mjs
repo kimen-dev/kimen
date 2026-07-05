@@ -86,7 +86,25 @@ export default tseslint.config(
   },
   {
     // Config and script files: relax type-aware rules (not part of shipped code)
-    files: ['**/*.mjs', '**/*.config.ts', 'scripts/**'],
+    files: ['**/*.mjs', '**/*.config.ts', 'scripts/**', 'tools/**'],
     extends: [tseslint.configs.disableTypeChecked],
+  },
+  {
+    // Nx generator implementations are CommonJS (Nx loads them via require)
+    files: ['tools/**/*.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        require: 'readonly',
+        module: 'writable',
+        exports: 'writable',
+        __dirname: 'readonly',
+        process: 'readonly',
+        console: 'readonly',
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
   },
 );

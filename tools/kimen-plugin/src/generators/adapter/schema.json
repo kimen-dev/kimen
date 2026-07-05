@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "KimenAdapter",
+  "title": "Kimen adapter generator",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Protocol name (kebab-case, e.g. a2ui, mcp-apps, json-render)",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "Protocol name (adapter will be @kimen/adapter-<name>)?"
+    }
+  },
+  "required": ["name"]
+}

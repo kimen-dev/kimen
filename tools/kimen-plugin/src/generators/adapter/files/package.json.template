@@ -1,0 +1,28 @@
+{
+  "name": "@kimen/adapter-<%= name %>",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Kimen adapter for <%= name %>: disposable by design (constitution Art. VIII). Supported protocol versions live in COMPAT.md, versioned with the adapter.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b --pretty false"
+  },
+  "nx": {
+    "tags": [
+      "scope:adapter"
+    ]
+  }
+}

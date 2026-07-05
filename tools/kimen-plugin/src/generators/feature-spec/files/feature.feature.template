@@ -1,0 +1,41 @@
+# Gherkin contract (Art. II): declarative business language, stable S-IDs,
+# one When per scenario, observable outcomes only. The five families below are
+# the UI-component minimum; non-applicable families need a written N/A
+# justification in spec.md's Scenario Family Coverage table, not deletion here.
+Feature: <%= title %>
+  TODO(spec): business value in one sentence.
+
+  # Family: core behavior
+  # S1
+  Scenario: TODO core behavior
+    Given TODO precondition
+    When TODO the single user-observable action
+    Then TODO observable outcome
+
+  # Family: keyboard path
+  # S2
+  Scenario: TODO keyboard path
+    Given TODO precondition
+    When TODO keyboard-only interaction
+    Then TODO observable outcome with visible focus
+
+  # Family: assistive-tech outcome
+  # S3
+  Scenario: TODO assistive-tech outcome
+    Given TODO precondition
+    When TODO interaction
+    Then TODO outcome exposed through the accessibility tree
+
+  # Family: form participation
+  # S4
+  Scenario: TODO form participation
+    Given TODO the component inside a native form
+    When TODO the form is submitted or reset
+    Then TODO the component participates via ElementInternals
+
+  # Family: theming
+  # S5
+  Scenario: TODO theming
+    Given TODO a second theme reassigning the semantic token layer
+    When TODO the theme is applied
+    Then TODO the component restyles with no component change

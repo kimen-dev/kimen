@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "KimenComponent",
+  "title": "Kimen component generator",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Custom element tag (must start with ki-, e.g. ki-button)",
+      "pattern": "^ki-[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "Component tag (ki-*)?"
+    },
+    "spec": {
+      "type": "string",
+      "description": "Approved feature directory under specs/ (e.g. 001-ki-button): stamps the @spec: traceability marker in the generated tests (Art. II)"
+    }
+  },
+  "required": ["name"]
+}
