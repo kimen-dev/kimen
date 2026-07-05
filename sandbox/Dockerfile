@@ -15,10 +15,15 @@ RUN npx -y playwright@1.61.1 install-deps chromium
 RUN npm install -g @anthropic-ai/claude-code @openai/codex
 
 COPY init-firewall.sh /usr/local/bin/init-firewall.sh
-RUN chmod +x /usr/local/bin/init-firewall.sh \
+COPY loop-entry.sh /usr/local/bin/loop-entry.sh
+RUN chmod +x /usr/local/bin/init-firewall.sh /usr/local/bin/loop-entry.sh \
     # The node user may ONLY run the firewall script as root: nothing else.
     && echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/kimen-firewall \
-    && chmod 0440 /etc/sudoers.d/kimen-firewall
+    && chmod 0440 /etc/sudoers.d/kimen-firewall \
+    # Pre-create the volume mountpoints with node ownership (named volumes
+    # inherit ownership from the image on first use).
+    && mkdir -p /home/node/.codex /home/node/.cache/ms-playwright /home/node/.local/share/pnpm \
+    && chown -R node:node /home/node
 
 ENV KIMEN_SANDBOX=1
 USER node

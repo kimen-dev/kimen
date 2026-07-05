@@ -8,24 +8,26 @@ GitHub, Playwright CDN, Anthropic + OpenAI APIs) by `init-firewall.sh`.
 Permission-bypass agent execution is allowed only here, because there is
 nothing to exfiltrate.
 
-## Usage
+## Usage: two commands, total
 
 ```bash
-# dedicated LOCAL CLONE for the feature branch (single writer per feature).
-# Not a worktree: a worktree's .git file points at the main repo, which is
-# not mounted inside the container.
-git clone --branch <feature-branch> . ../kimen-<feature>
+# ONCE: sign Codex in with your ChatGPT subscription (persists in a volume)
+bash sandbox/login.sh
 
-# with Claude Code driving the loop:
-ANTHROPIC_API_KEY=<low-privilege-key> bash sandbox/run.sh ../kimen-<feature>
-# or with Codex CLI driving it:
-OPENAI_API_KEY=<low-privilege-key> bash sandbox/run.sh ../kimen-<feature>
+# PER LOOP: branch + task. Everything else is automatic (disposable clone,
+# firewall, install, Codex under the loop contract, gates verdict).
+bash sandbox/loop.sh <feature-branch> "the task"
 ```
 
-Inside: `pnpm install --frozen-lockfile`, run the loop (`claude` or
-`codex exec`), verify with `bash scripts/gates/gates-suite.sh`. Whoever
-writes, the reviewer should be a strong model from a DIFFERENT vendor
-(constitution Workflow), and the gates are the only definition of done.
+When it finishes it prints the verdict and the exact commands to review the
+diff, keep the result (`git fetch`) or discard the clone. Whoever writes,
+the reviewer should be a strong model from a DIFFERENT vendor (constitution
+Workflow), and the gates are the only definition of done.
+
+For interactive debugging there is also `sandbox/run.sh <clone-path>`, which
+drops you in a shell inside the same containment (pass ANTHROPIC_API_KEY or
+OPENAI_API_KEY if you want an agent available by API instead of the
+subscription volume).
 
 ## Notes
 
