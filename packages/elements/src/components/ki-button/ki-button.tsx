@@ -63,7 +63,8 @@ export class KiButton {
    * `reset` restores field defaults, `button` never touches the form.
    * Cancel a submission from the form's `submit` event (`preventDefault()`);
    * unlike a native button, `preventDefault()` on the `click` event does not
-   * cancel it.
+   * cancel it. During submission `event.submitter` is a transient native
+   * button carrying this element's `name`/`value`, not the `ki-button` host.
    * When NOT to use: use `button` when the action must never submit a form.
    *
    * @default 'submit'

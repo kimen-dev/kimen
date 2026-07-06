@@ -239,6 +239,13 @@ describe('ki-button in a real browser', () => {
       slot.getAttribute('name'),
     );
     expect(slots).toEqual(['start', null, 'end']);
+
+    // Rendered geometry, not just slot order: under RTL the start content
+    // must sit visually to the RIGHT of the end content (leading edge), which
+    // physical properties or a forced direction would break silently.
+    const startRect = start.getBoundingClientRect();
+    const endRect = end.getBoundingClientRect();
+    expect(startRect.left, 'start leads (right side) under RTL').toBeGreaterThan(endRect.left);
   });
 
   it('S7 submits its form with field data and the submitter name value', async () => {

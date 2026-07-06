@@ -159,12 +159,14 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
   return resolveCustomProperty(reference[1], declarations, new Set([...seen, name]));
 }
 
-// Component-layer sweep: every interactive fg/bg cell of every component
-// matrix must clear AA in every theme x scheme. Disabled cells are exempt
+// Component-layer sweep: every interactive fg/bg cell of a component matrix
+// must clear AA in every theme x scheme. Disabled cells are exempt
 // (WCAG 1.4.3). Added after the 002-ki-button clean-context review found
 // dark-scheme failures the 4 hardcoded pairs could not see (incident-to-gate
-// rule): the pair list is DERIVED from the built CSS, so new component
-// tokens are swept automatically.
+// rule). The pair list is DERIVED from the built CSS, but the pattern below
+// is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
+// (or this gate silently ignores that component; the zero-match guard only
+// protects the patterns listed here).
 const COMPONENT_BG_PATTERN =
   /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u;
 
