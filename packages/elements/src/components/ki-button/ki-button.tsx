@@ -1,4 +1,5 @@
-import { Component, Prop, h } from '@stencil/core';
+import { AttachInternals, Component, Prop, State, h } from '@stencil/core';
+import { normalizeKiButtonType } from './ki-button.form';
 
 export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';
 export type KiButtonTone = 'neutral' | 'success' | 'danger';
@@ -23,8 +24,11 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
   tag: 'ki-button',
   styleUrl: 'ki-button.css',
   shadow: { delegatesFocus: true },
+  formAssociated: true,
 })
 export class KiButton {
+  @AttachInternals() private readonly internals!: ElementInternals;
+
   /**
    * Visual hierarchy for the action. Use `primary` for the single main action
    * in a view and lower-emphasis variants for supporting actions.
@@ -83,18 +87,68 @@ export class KiButton {
    */
   @Prop({ reflect: true }) disabled = false;
 
+  @State() private formDisabled = false;
+
+  private get effectiveDisabled(): boolean {
+    return this.disabled || this.formDisabled;
+  }
+
   private readonly handleClick = (event: MouseEvent): void => {
-    if (!this.disabled) {
+    if (this.effectiveDisabled) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
       return;
     }
 
-    event.preventDefault();
-    event.stopImmediatePropagation();
+    queueMicrotask(() => {
+      if (event.defaultPrevented) {
+        return;
+      }
+
+      this.activateFormAction();
+    });
   };
+
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+  }
+
+  private activateFormAction(): void {
+    const form = this.internals.form;
+    if (!form) {
+      return;
+    }
+
+    const type = normalizeKiButtonType(this.type);
+    if (type === 'button') {
+      return;
+    }
+
+    if (type === 'reset') {
+      form.reset();
+      return;
+    }
+
+    const submitter = document.createElement('button');
+    submitter.type = 'submit';
+    submitter.hidden = true;
+    if (this.name) {
+      submitter.name = this.name;
+      submitter.value = this.value ?? '';
+    }
+    form.append(submitter);
+    submitter.click();
+    submitter.remove();
+  }
 
   render() {
     return (
-      <button part="button" type="button" disabled={this.disabled} onClick={this.handleClick}>
+      <button
+        part="button"
+        type="button"
+        disabled={this.effectiveDisabled}
+        onClick={this.handleClick}
+      >
         <slot name="start" />
         <span part="label">
           <slot />

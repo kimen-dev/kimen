@@ -108,6 +108,10 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
           * Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
          */
         "name"?: string;

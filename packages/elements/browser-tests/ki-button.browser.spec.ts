@@ -191,8 +191,13 @@ describe('ki-button in a real browser', () => {
     let submittedData: Record<string, string> | undefined;
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      const submitter = (event).submitter;
-      submittedData = Object.fromEntries(new FormData(form, submitter));
+      const submitter = event.submitter;
+      submittedData = Object.fromEntries(
+        [...new FormData(form, submitter)].map(([name, value]) => [
+          name,
+          value instanceof File ? value.name : value,
+        ]),
+      );
     });
 
     await userEvent.click(button);
