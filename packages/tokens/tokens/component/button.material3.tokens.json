@@ -25,6 +25,9 @@
         "radius": {
           "$value": "{ki.radius.round}"
         }
+      },
+      "border-width": {
+        "$value": "0.0625rem"
       }
     }
   }

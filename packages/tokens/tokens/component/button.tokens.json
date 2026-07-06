@@ -163,7 +163,7 @@
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.primary-med-em}"
+              "$value": "{ki.surface.primary-high-em-hover}"
             },
             "fg": {
               "$value": "{ki.text.primary-on-primary}"
@@ -209,7 +209,7 @@
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.success-med-em}"
+              "$value": "{ki.surface.success-high-em-hover}"
             },
             "fg": {
               "$value": "{ki.text.primary-on-success}"
@@ -247,7 +247,7 @@
               "$value": "{ki.surface.danger-high-em}"
             },
             "fg": {
-              "$value": "{ki.text.white}"
+              "$value": "{ki.text.primary-on-danger}"
             },
             "border": {
               "$value": "{ki.outline.none}"
@@ -255,10 +255,10 @@
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.danger-med-em}"
+              "$value": "{ki.surface.danger-high-em-hover}"
             },
             "fg": {
-              "$value": "{ki.text.white}"
+              "$value": "{ki.text.primary-on-danger}"
             },
             "border": {
               "$value": "{ki.outline.none}"
@@ -269,7 +269,7 @@
               "$value": "{ki.surface.danger-high-em}"
             },
             "fg": {
-              "$value": "{ki.text.white}"
+              "$value": "{ki.text.primary-on-danger}"
             },
             "border": {
               "$value": "{ki.outline.none}"
@@ -654,7 +654,7 @@
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.primary-low-em-alpha}"
+              "$value": "{ki.surface.primary-low-em}"
             },
             "fg": {
               "$value": "{ki.text.primary-high-em}"
@@ -700,7 +700,7 @@
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.success-low-em-alpha}"
+              "$value": "{ki.surface.success-low-em}"
             },
             "fg": {
               "$value": "{ki.text.success-high-em}"
@@ -746,7 +746,7 @@
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.danger-low-em-alpha}"
+              "$value": "{ki.surface.danger-low-em}"
             },
             "fg": {
               "$value": "{ki.text.danger-high-em}"
@@ -814,7 +814,7 @@
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.primary-low-em-alpha}"
+              "$value": "{ki.surface.primary-low-em}"
             },
             "fg": {
               "$value": "{ki.text.primary-high-em}"
@@ -860,7 +860,7 @@
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.success-low-em-alpha}"
+              "$value": "{ki.surface.success-low-em}"
             },
             "fg": {
               "$value": "{ki.text.success-high-em}"
@@ -906,7 +906,7 @@
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.danger-low-em-alpha}"
+              "$value": "{ki.surface.danger-low-em}"
             },
             "fg": {
               "$value": "{ki.text.danger-high-em}"
@@ -947,6 +947,9 @@
             "$value": "none"
           }
         }
+      },
+      "border-width": {
+        "$value": "{ki.space.xxs}"
       }
     }
   }

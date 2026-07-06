@@ -346,6 +346,9 @@
   --ki-surface-disabled-base-em: var(--ki-color-gray-100);
   --ki-surface-hover-overlay: var(--ki-color-white-5);
   --ki-surface-hover-overlay-inverse: var(--ki-color-black-3);
+  --ki-surface-primary-high-em-hover: var(--ki-color-brand-500);
+  --ki-surface-success-high-em-hover: var(--ki-color-success-800);
+  --ki-surface-danger-high-em-hover: var(--ki-color-danger-800);
   --ki-text-primary-on-primary-light: var(--ki-color-brand-primary-text-on-primary-light);
   --ki-text-secondary-on-primary-light: var(--ki-color-brand-secondary-text-on-primary-light);
   --ki-text-text-on-neutral: var(--ki-color-white-100);
@@ -374,6 +377,7 @@
   --ki-text-danger-low-em: var(--ki-color-danger-300);
   --ki-text-danger-base-em: var(--ki-color-danger-100);
   --ki-text-none: var(--ki-color-transparent-white);
+  --ki-text-primary-on-danger: var(--ki-color-white-100);
   --ki-outline-high-em: var(--ki-color-black-12);
   --ki-outline-med-em: var(--ki-color-black-8);
   --ki-outline-low-em: var(--ki-color-black-5);
@@ -542,6 +546,7 @@
   --ki-button-xl-min-target: var(--ki-space-7xl);
   --ki-button-focus-ring-width: var(--ki-space-xxs);
   --ki-button-focus-ring-offset: var(--ki-space-xxs);
+  --ki-button-border-width: var(--ki-space-xxs);
   --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s0);
@@ -582,7 +587,7 @@
   --ki-button-focus-ring-color: var(--ki-outline-primary-high-em);
   --ki-button-primary-neutral-rest-bg: var(--ki-surface-primary-high-em);
   --ki-button-primary-neutral-rest-border: var(--ki-outline-none);
-  --ki-button-primary-neutral-hover-bg: var(--ki-surface-primary-med-em);
+  --ki-button-primary-neutral-hover-bg: var(--ki-surface-primary-high-em-hover);
   --ki-button-primary-neutral-hover-border: var(--ki-outline-none);
   --ki-button-primary-neutral-active-bg: var(--ki-surface-primary-high-em);
   --ki-button-primary-neutral-active-border: var(--ki-outline-none);
@@ -590,20 +595,20 @@
   --ki-button-primary-neutral-disabled-border: var(--ki-outline-none);
   --ki-button-primary-success-rest-bg: var(--ki-surface-success-high-em);
   --ki-button-primary-success-rest-border: var(--ki-outline-none);
-  --ki-button-primary-success-hover-bg: var(--ki-surface-success-med-em);
+  --ki-button-primary-success-hover-bg: var(--ki-surface-success-high-em-hover);
   --ki-button-primary-success-hover-border: var(--ki-outline-none);
   --ki-button-primary-success-active-bg: var(--ki-surface-success-high-em);
   --ki-button-primary-success-active-border: var(--ki-outline-none);
   --ki-button-primary-success-disabled-bg: var(--ki-surface-disabled-low-em);
   --ki-button-primary-success-disabled-border: var(--ki-outline-none);
   --ki-button-primary-danger-rest-bg: var(--ki-surface-danger-high-em);
-  --ki-button-primary-danger-rest-fg: var(--ki-text-white);
+  --ki-button-primary-danger-rest-fg: var(--ki-text-primary-on-danger);
   --ki-button-primary-danger-rest-border: var(--ki-outline-none);
-  --ki-button-primary-danger-hover-bg: var(--ki-surface-danger-med-em);
-  --ki-button-primary-danger-hover-fg: var(--ki-text-white);
+  --ki-button-primary-danger-hover-bg: var(--ki-surface-danger-high-em-hover);
+  --ki-button-primary-danger-hover-fg: var(--ki-text-primary-on-danger);
   --ki-button-primary-danger-hover-border: var(--ki-outline-none);
   --ki-button-primary-danger-active-bg: var(--ki-surface-danger-high-em);
-  --ki-button-primary-danger-active-fg: var(--ki-text-white);
+  --ki-button-primary-danger-active-fg: var(--ki-text-primary-on-danger);
   --ki-button-primary-danger-active-border: var(--ki-outline-none);
   --ki-button-primary-danger-disabled-bg: var(--ki-surface-disabled-low-em);
   --ki-button-primary-danger-disabled-border: var(--ki-outline-none);
@@ -679,7 +684,7 @@
   --ki-button-quaternary-neutral-hover-bg: var(--ki-surface-primary-base-em-alpha);
   --ki-button-quaternary-neutral-hover-fg: var(--ki-text-primary-high-em);
   --ki-button-quaternary-neutral-hover-border: var(--ki-outline-primary-high-em);
-  --ki-button-quaternary-neutral-active-bg: var(--ki-surface-primary-low-em-alpha);
+  --ki-button-quaternary-neutral-active-bg: var(--ki-surface-primary-low-em);
   --ki-button-quaternary-neutral-active-fg: var(--ki-text-primary-high-em);
   --ki-button-quaternary-neutral-active-border: var(--ki-outline-primary-high-em);
   --ki-button-quaternary-neutral-disabled-bg: var(--ki-transparent-inverse);
@@ -690,7 +695,7 @@
   --ki-button-quaternary-success-hover-bg: var(--ki-surface-success-base-em-alpha);
   --ki-button-quaternary-success-hover-fg: var(--ki-text-success-high-em);
   --ki-button-quaternary-success-hover-border: var(--ki-outline-success-high-em);
-  --ki-button-quaternary-success-active-bg: var(--ki-surface-success-low-em-alpha);
+  --ki-button-quaternary-success-active-bg: var(--ki-surface-success-low-em);
   --ki-button-quaternary-success-active-fg: var(--ki-text-success-high-em);
   --ki-button-quaternary-success-active-border: var(--ki-outline-success-high-em);
   --ki-button-quaternary-success-disabled-bg: var(--ki-transparent-inverse);
@@ -701,7 +706,7 @@
   --ki-button-quaternary-danger-hover-bg: var(--ki-surface-danger-base-em-alpha);
   --ki-button-quaternary-danger-hover-fg: var(--ki-text-danger-high-em);
   --ki-button-quaternary-danger-hover-border: var(--ki-outline-danger-high-em);
-  --ki-button-quaternary-danger-active-bg: var(--ki-surface-danger-low-em-alpha);
+  --ki-button-quaternary-danger-active-bg: var(--ki-surface-danger-low-em);
   --ki-button-quaternary-danger-active-fg: var(--ki-text-danger-high-em);
   --ki-button-quaternary-danger-active-border: var(--ki-outline-danger-high-em);
   --ki-button-quaternary-danger-disabled-bg: var(--ki-transparent-inverse);
@@ -712,7 +717,7 @@
   --ki-button-ghost-neutral-hover-bg: var(--ki-surface-primary-base-em-alpha);
   --ki-button-ghost-neutral-hover-fg: var(--ki-text-primary-high-em);
   --ki-button-ghost-neutral-hover-border: var(--ki-outline-none);
-  --ki-button-ghost-neutral-active-bg: var(--ki-surface-primary-low-em-alpha);
+  --ki-button-ghost-neutral-active-bg: var(--ki-surface-primary-low-em);
   --ki-button-ghost-neutral-active-fg: var(--ki-text-primary-high-em);
   --ki-button-ghost-neutral-active-border: var(--ki-outline-none);
   --ki-button-ghost-neutral-disabled-bg: var(--ki-transparent-inverse);
@@ -723,7 +728,7 @@
   --ki-button-ghost-success-hover-bg: var(--ki-surface-success-base-em-alpha);
   --ki-button-ghost-success-hover-fg: var(--ki-text-success-high-em);
   --ki-button-ghost-success-hover-border: var(--ki-outline-none);
-  --ki-button-ghost-success-active-bg: var(--ki-surface-success-low-em-alpha);
+  --ki-button-ghost-success-active-bg: var(--ki-surface-success-low-em);
   --ki-button-ghost-success-active-fg: var(--ki-text-success-high-em);
   --ki-button-ghost-success-active-border: var(--ki-outline-none);
   --ki-button-ghost-success-disabled-bg: var(--ki-transparent-inverse);
@@ -734,7 +739,7 @@
   --ki-button-ghost-danger-hover-bg: var(--ki-surface-danger-base-em-alpha);
   --ki-button-ghost-danger-hover-fg: var(--ki-text-danger-high-em);
   --ki-button-ghost-danger-hover-border: var(--ki-outline-none);
-  --ki-button-ghost-danger-active-bg: var(--ki-surface-danger-low-em-alpha);
+  --ki-button-ghost-danger-active-bg: var(--ki-surface-danger-low-em);
   --ki-button-ghost-danger-active-fg: var(--ki-text-danger-high-em);
   --ki-button-ghost-danger-active-border: var(--ki-outline-none);
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
@@ -779,7 +784,7 @@
     --ki-surface-special-secondary-alpha-base: var(--ki-color-dark-700-blur-base-dark);
     --ki-surface-inverse-white: var(--ki-color-white-100);
     --ki-surface-inverse-black: var(--ki-color-black-100);
-    --ki-surface-primary-high-em: var(--ki-color-brand-400);
+    --ki-surface-primary-high-em: var(--ki-color-brand-500);
     --ki-surface-primary-med-em: var(--ki-color-brand-500);
     --ki-surface-primary-low-em: var(--ki-color-brand-900);
     --ki-surface-primary-base-em: var(--ki-color-brand-950);
@@ -791,7 +796,7 @@
     --ki-surface-info-base-em: var(--ki-color-info-950);
     --ki-surface-info-low-em-alpha: var(--ki-color-info-500-alpha-5);
     --ki-surface-info-base-em-alpha: var(--ki-color-info-500-alpha-3);
-    --ki-surface-success-high-em: var(--ki-color-success-400);
+    --ki-surface-success-high-em: var(--ki-color-success-700);
     --ki-surface-success-med-em: var(--ki-color-success-500);
     --ki-surface-success-low-em: var(--ki-color-success-900);
     --ki-surface-success-base-em: var(--ki-color-success-950);
@@ -803,7 +808,7 @@
     --ki-surface-warning-base-em: var(--ki-color-warning-950);
     --ki-surface-warning-low-em-alpha: var(--ki-color-warning-500-alpha-5);
     --ki-surface-warning-base-em-alpha: var(--ki-color-warning-500-alpha-2);
-    --ki-surface-danger-high-em: var(--ki-color-danger-400);
+    --ki-surface-danger-high-em: var(--ki-color-danger-700);
     --ki-surface-danger-med-em: var(--ki-color-danger-500);
     --ki-surface-danger-low-em: var(--ki-color-danger-900);
     --ki-surface-danger-base-em: var(--ki-color-danger-950);
@@ -815,6 +820,9 @@
     --ki-surface-disabled-base-em: var(--ki-color-white-8);
     --ki-surface-hover-overlay: var(--ki-color-black-5);
     --ki-surface-hover-overlay-inverse: var(--ki-color-white-3);
+    --ki-surface-primary-high-em-hover: var(--ki-color-brand-600);
+    --ki-surface-success-high-em-hover: var(--ki-color-success-800);
+    --ki-surface-danger-high-em-hover: var(--ki-color-danger-800);
     --ki-text-high-em: var(--ki-color-white-100);
     --ki-text-med-em: var(--ki-color-white-72);
     --ki-text-low-em: var(--ki-color-white-48);
@@ -953,7 +961,7 @@
   --ki-surface-special-secondary-alpha-base: var(--ki-color-dark-700-blur-base-dark);
   --ki-surface-inverse-white: var(--ki-color-white-100);
   --ki-surface-inverse-black: var(--ki-color-black-100);
-  --ki-surface-primary-high-em: var(--ki-color-brand-400);
+  --ki-surface-primary-high-em: var(--ki-color-brand-500);
   --ki-surface-primary-med-em: var(--ki-color-brand-500);
   --ki-surface-primary-low-em: var(--ki-color-brand-900);
   --ki-surface-primary-base-em: var(--ki-color-brand-950);
@@ -965,7 +973,7 @@
   --ki-surface-info-base-em: var(--ki-color-info-950);
   --ki-surface-info-low-em-alpha: var(--ki-color-info-500-alpha-5);
   --ki-surface-info-base-em-alpha: var(--ki-color-info-500-alpha-3);
-  --ki-surface-success-high-em: var(--ki-color-success-400);
+  --ki-surface-success-high-em: var(--ki-color-success-700);
   --ki-surface-success-med-em: var(--ki-color-success-500);
   --ki-surface-success-low-em: var(--ki-color-success-900);
   --ki-surface-success-base-em: var(--ki-color-success-950);
@@ -977,7 +985,7 @@
   --ki-surface-warning-base-em: var(--ki-color-warning-950);
   --ki-surface-warning-low-em-alpha: var(--ki-color-warning-500-alpha-5);
   --ki-surface-warning-base-em-alpha: var(--ki-color-warning-500-alpha-2);
-  --ki-surface-danger-high-em: var(--ki-color-danger-400);
+  --ki-surface-danger-high-em: var(--ki-color-danger-700);
   --ki-surface-danger-med-em: var(--ki-color-danger-500);
   --ki-surface-danger-low-em: var(--ki-color-danger-900);
   --ki-surface-danger-base-em: var(--ki-color-danger-950);
@@ -989,6 +997,9 @@
   --ki-surface-disabled-base-em: var(--ki-color-white-8);
   --ki-surface-hover-overlay: var(--ki-color-black-5);
   --ki-surface-hover-overlay-inverse: var(--ki-color-white-3);
+  --ki-surface-primary-high-em-hover: var(--ki-color-brand-600);
+  --ki-surface-success-high-em-hover: var(--ki-color-success-800);
+  --ki-surface-danger-high-em-hover: var(--ki-color-danger-800);
   --ki-text-high-em: var(--ki-color-white-100);
   --ki-text-med-em: var(--ki-color-white-72);
   --ki-text-low-em: var(--ki-color-white-48);
