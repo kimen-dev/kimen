@@ -42,6 +42,7 @@
     "@stencil/core": "4.43.5"
   },
   "devDependencies": {
+    "@kimen/tokens": "workspace:*",
     "@size-limit/preset-small-lib": "12.1.0",
     "@stencil/vitest": "1.13.3",
     "@vitest/browser-playwright": "4.1.9",
