@@ -15,7 +15,7 @@
   "scripts": {
     "build": "node ./build.mjs",
     "contrast": "node ./scripts/check-contrast.mjs",
-    "size": "../elements/node_modules/.bin/size-limit",
+    "size": "size-limit",
     "test": "node --test scripts/*.test.mjs"
   },
   "size-limit": [
