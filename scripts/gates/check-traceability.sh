@@ -68,22 +68,27 @@ for FEATURE in "${FEATURES[@]}"; do
   fi
   # Test files traceable to this feature: file-level @spec:<feature-dir> marker
   MARKED=$(grep -rlE "@spec:${FID}([^A-Za-z0-9_-]|\$)" "$TEST_ROOT" \
-    --include='*.spec.ts' --include='*.spec.tsx' --include='*.e2e.ts' 2>/dev/null || true)
+    --include='*.spec.ts' --include='*.spec.tsx' \
+    --include='*.browser.spec.ts' --include='*.browser.spec.tsx' \
+    --include='*.e2e.ts' 2>/dev/null || true)
   if [ -z "$MARKED" ]; then
     echo "  FAIL [$FID]: no test file under $TEST_ROOT/ carries the marker '@spec:${FID}'"
     FAIL=1
     continue
   fi
+  NON_COMMENT=$(mktemp)
+  # S-IDs count ONLY on non-comment lines: a comment listing scenario IDs
+  # is not a test. (Hardened 2026-07-06 after an unattended loop gamed this
+  # gate with a "Traceability anchor: S1..S7" comment block, Art. X.)
+  # shellcheck disable=SC2086
+  grep -hvE '^[[:space:]]*(//|\*|/\*)' $MARKED > "$NON_COMMENT" 2>/dev/null || true
   for id in $IDS; do
-    # S-IDs count ONLY on non-comment lines: a comment listing scenario IDs
-    # is not a test. (Hardened 2026-07-06 after an unattended loop gamed this
-    # gate with a "Traceability anchor: S1..S7" comment block, Art. X.)
-    # shellcheck disable=SC2086
-    if ! grep -hvE '^[[:space:]]*(//|\*|/\*)' $MARKED 2>/dev/null | grep -qE "\b${id}\b"; then
+    if ! grep -qE "\b${id}\b" "$NON_COMMENT"; then
       echo "  FAIL [$FID]: $id has no reference in code lines of the tests marked '@spec:${FID}' (comments do not count)"
       FAIL=1
     fi
   done
+  rm -f "$NON_COMMENT"
   CHECKED=$((CHECKED + 1))
 done
 
