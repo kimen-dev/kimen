@@ -275,7 +275,9 @@ describe('ki-button in a real browser', () => {
     document.body.append(form);
     const el = await mount('Save', { type: 'submit' }, form);
     const button = requireButton(el);
-    el.addEventListener('click', (event) => { event.preventDefault(); });
+    el.addEventListener('click', (event) => {
+      event.preventDefault();
+    });
     let submissions = 0;
     form.addEventListener('submit', (event) => {
       // preventDefault here IS the supported cancellation point (documented
