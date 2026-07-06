@@ -42,6 +42,8 @@ if [ "$VERDICT" -eq 0 ]; then
 else
   echo "LOOP RED (onmars-spec escalation): gates did not reach exit 0."
   echo "Inspect $CLONE if you want to understand the failure."
+  echo "The attempt remains committed in the clone; to resume it:"
+  echo "  git fetch $CLONE $BRANCH:loop/$STAMP-red"
 fi
 echo "To discard:       rm -rf \"$CLONE\""
 exit $VERDICT

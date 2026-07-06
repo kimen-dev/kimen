@@ -2,32 +2,327 @@
   "ki": {
     "surface": {
       "$type": "color",
-      "base": { "$value": "{ki.color.neutral.0}" },
-      "raised": { "$value": "{ki.color.neutral.100}" }
+      "s0": { "$value": "{ki.color.white.100}" },
+      "s1": { "$value": "{ki.color.gray.50}" },
+      "s2": { "$value": "{ki.color.gray.100}" },
+      "s3": { "$value": "{ki.color.gray.200}" },
+      "s4": { "$value": "{ki.color.gray.300}" },
+      "s5": { "$value": "{ki.color.gray.400}" },
+      "special": {
+        "light-s0-dark-s1": { "$value": "{ki.surface.s0}" },
+        "light-s0-dark-s2": { "$value": "{ki.surface.s0}" },
+        "light-s0-dark-s3": { "$value": "{ki.surface.s0}" },
+        "light-s0-dark-s4": { "$value": "{ki.surface.s0}" },
+        "light-s0-dark-s5": { "$value": "{ki.surface.s0}" },
+        "dark-s0-light-s1": { "$value": "{ki.surface.s1}" },
+        "dark-s0-light-s2": { "$value": "{ki.surface.s2}" },
+        "dark-s0-light-s3": { "$value": "{ki.surface.s3}" },
+        "dark-s0-light-s4": { "$value": "{ki.surface.s4}" },
+        "dark-s0-light-s5": { "$value": "{ki.surface.s5}" },
+        "light-s1-dark-s2": { "$value": "{ki.surface.s1}" },
+        "light-s2-dark-s3": { "$value": "{ki.surface.s2}" },
+        "light-s3-dark-s4": { "$value": "{ki.surface.s3}" },
+        "light-s4-dark-s5": { "$value": "{ki.surface.s4}" },
+        "blur-base-light": { "$value": "#ffffffcc" },
+        "blur-base-dark": { "$value": "#ffffffe0" },
+        "secondary-alpha-base": { "$value": "{ki.color.gray.100-alpha-base}" }
+      },
+      "white": { "$value": "{ki.color.white.100}" },
+      "inverse-white": { "$value": "{ki.color.black.100}" },
+      "black": { "$value": "{ki.color.black.100}" },
+      "inverse-black": { "$value": "{ki.color.white.100}" },
+      "primary-high-em": { "$value": "{ki.color.brand.600}" },
+      "primary-med-em": { "$value": "{ki.color.brand.500}" },
+      "primary-low-em": { "$value": "{ki.color.brand.100}" },
+      "primary-base-em": { "$value": "{ki.color.brand.50}" },
+      "primary-low-em-alpha": { "$value": "{ki.color.brand.500-alpha-2}" },
+      "primary-base-em-alpha": { "$value": "{ki.color.brand.500-alpha-1}" },
+      "info-high-em": { "$value": "{ki.color.info.600}" },
+      "info-med-em": { "$value": "{ki.color.info.500}" },
+      "info-low-em": { "$value": "{ki.color.info.100}" },
+      "info-base-em": { "$value": "{ki.color.info.50}" },
+      "info-low-em-alpha": { "$value": "{ki.color.info.500-alpha-2}" },
+      "info-base-em-alpha": { "$value": "{ki.color.info.500-alpha-1}" },
+      "success-high-em": { "$value": "{ki.color.success.600}" },
+      "success-med-em": { "$value": "{ki.color.success.500}" },
+      "success-low-em": { "$value": "{ki.color.success.100}" },
+      "success-base-em": { "$value": "{ki.color.success.50}" },
+      "success-low-em-alpha": { "$value": "{ki.color.success.500-alpha-2}" },
+      "success-base-em-alpha": { "$value": "{ki.color.success.500-alpha-1}" },
+      "warning-high-em": { "$value": "{ki.color.warning.600}" },
+      "warning-med-em": { "$value": "{ki.color.warning.500}" },
+      "warning-low-em": { "$value": "{ki.color.warning.100}" },
+      "warning-base-em": { "$value": "{ki.color.warning.50}" },
+      "warning-low-em-alpha": { "$value": "{ki.color.warning.500-alpha-2}" },
+      "warning-base-em-alpha": { "$value": "{ki.color.warning.500-alpha-1}" },
+      "danger-high-em": { "$value": "{ki.color.danger.600}" },
+      "danger-med-em": { "$value": "{ki.color.danger.500}" },
+      "danger-low-em": { "$value": "{ki.color.danger.100}" },
+      "danger-base-em": { "$value": "{ki.color.danger.50}" },
+      "danger-low-em-alpha": { "$value": "{ki.color.danger.500-alpha-2}" },
+      "danger-base-em-alpha": { "$value": "{ki.color.danger.500-alpha-1}" },
+      "disabled-high-em": { "$value": "{ki.color.gray.500}" },
+      "disabled-med-em": { "$value": "{ki.color.gray.300}" },
+      "disabled-low-em": { "$value": "{ki.color.gray.200}" },
+      "disabled-base-em": { "$value": "{ki.color.gray.100}" },
+      "hover-overlay": { "$value": "{ki.color.white.5}" },
+      "hover-overlay-inverse": { "$value": "{ki.color.black.3}" },
+      "base": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.surface.s0."
+      },
+      "raised": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.surface.s1."
+      }
     },
     "text": {
       "$type": "color",
-      "base": { "$value": "{ki.color.neutral.900}" },
-      "muted": { "$value": "{ki.color.neutral.700}" },
-      "danger": { "$value": "{ki.color.red.500}" }
+      "high-em": { "$value": "{ki.color.brand.high-em}" },
+      "med-em": { "$value": "{ki.color.brand.med-em}" },
+      "low-em": { "$value": "{ki.color.brand.low-em}" },
+      "base-em": { "$value": "{ki.color.brand.base-em}" },
+      "primary-on-primary": { "$value": "{ki.color.brand.primary-text-on-primary}" },
+      "primary-on-primary-light": { "$value": "{ki.color.brand.primary-text-on-primary-light}" },
+      "secondary-on-primary": { "$value": "{ki.color.brand.secondary-text-on-primary}" },
+      "secondary-on-primary-light": {
+        "$value": "{ki.color.brand.secondary-text-on-primary-light}"
+      },
+      "primary-on-success": { "$value": "{ki.color.brand.primary-text-on-success}" },
+      "secondary-on-success": { "$value": "{ki.color.brand.secondary-text-on-success}" },
+      "text-on-neutral": { "$value": "{ki.color.white.100}" },
+      "white": { "$value": "{ki.color.white.100}" },
+      "inverse-white": { "$value": "{ki.color.black.100}" },
+      "black": { "$value": "{ki.color.black.100}" },
+      "inverse-black": { "$value": "{ki.color.white.100}" },
+      "primary-high-em": { "$value": "{ki.color.brand.600}" },
+      "primary-med-em": { "$value": "{ki.color.brand.500}" },
+      "primary-low-em": { "$value": "{ki.color.brand.300}" },
+      "primary-base-em": { "$value": "{ki.color.brand.100}" },
+      "info-high-em": { "$value": "{ki.color.info.600}" },
+      "info-med-em": { "$value": "{ki.color.info.500}" },
+      "info-low-em": { "$value": "{ki.color.info.300}" },
+      "info-base-em": { "$value": "{ki.color.info.100}" },
+      "success-high-em": { "$value": "{ki.color.success.600}" },
+      "success-med-em": { "$value": "{ki.color.success.500}" },
+      "success-low-em": { "$value": "{ki.color.success.300}" },
+      "success-base-em": { "$value": "{ki.color.success.100}" },
+      "warning-high-em": { "$value": "{ki.color.warning.600}" },
+      "warning-med-em": { "$value": "{ki.color.warning.500}" },
+      "warning-low-em": { "$value": "{ki.color.warning.300}" },
+      "warning-base-em": { "$value": "{ki.color.warning.100}" },
+      "danger-high-em": { "$value": "{ki.color.danger.600}" },
+      "danger-med-em": { "$value": "{ki.color.danger.500}" },
+      "danger-low-em": { "$value": "{ki.color.danger.300}" },
+      "danger-base-em": { "$value": "{ki.color.danger.100}" },
+      "none": { "$value": "{ki.color.transparent.white}" },
+      "base": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em."
+      },
+      "muted": {
+        "$value": "{ki.text.med-em}",
+        "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em."
+      },
+      "danger": {
+        "$value": "{ki.text.danger-med-em}",
+        "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.text.danger-med-em."
+      }
     },
-    "spacing": {
-      "$type": "dimension",
-      "inline": { "$value": "{ki.space.2}" },
-      "block": { "$value": "{ki.space.3}" }
+    "outline": {
+      "$type": "color",
+      "high-em": { "$value": "{ki.color.black.12}" },
+      "med-em": { "$value": "{ki.color.black.8}" },
+      "low-em": { "$value": "{ki.color.black.5}" },
+      "base-em": { "$value": "{ki.color.black.3}" },
+      "white": { "$value": "{ki.color.white.100}" },
+      "inverse-white": { "$value": "{ki.color.black.100}" },
+      "black": { "$value": "{ki.color.black.100}" },
+      "inverse-black": { "$value": "{ki.color.white.100}" },
+      "primary-high-em": { "$value": "{ki.color.brand.500}" },
+      "primary-med-em": { "$value": "{ki.color.brand.300}" },
+      "primary-low-em": { "$value": "{ki.color.brand.200}" },
+      "primary-base-em": { "$value": "{ki.color.brand.100}" },
+      "primary-low-em-alpha": { "$value": "{ki.color.brand.500-alpha-4}" },
+      "primary-base-em-alpha": { "$value": "{ki.color.brand.500-alpha-2}" },
+      "info-high-em": { "$value": "{ki.color.info.500}" },
+      "info-med-em": { "$value": "{ki.color.info.300}" },
+      "info-low-em": { "$value": "{ki.color.info.200}" },
+      "info-base-em": { "$value": "{ki.color.info.100}" },
+      "info-low-em-alpha": { "$value": "{ki.color.info.500-alpha-4}" },
+      "info-base-em-alpha": { "$value": "{ki.color.info.500-alpha-2}" },
+      "success-high-em": { "$value": "{ki.color.success.500}" },
+      "success-med-em": { "$value": "{ki.color.success.300}" },
+      "success-low-em": { "$value": "{ki.color.success.200}" },
+      "success-base-em": { "$value": "{ki.color.success.100}" },
+      "success-low-em-alpha": { "$value": "{ki.color.success.500-alpha-4}" },
+      "success-base-em-alpha": { "$value": "{ki.color.success.500-alpha-2}" },
+      "warning-high-em": { "$value": "{ki.color.warning.500}" },
+      "warning-med-em": { "$value": "{ki.color.warning.300}" },
+      "warning-low-em": { "$value": "{ki.color.warning.200}" },
+      "warning-base-em": { "$value": "{ki.color.warning.100}" },
+      "warning-low-em-alpha": { "$value": "{ki.color.warning.500-alpha-4}" },
+      "warning-base-em-alpha": { "$value": "{ki.color.warning.500-alpha-2}" },
+      "danger-high-em": { "$value": "{ki.color.danger.500}" },
+      "danger-med-em": { "$value": "{ki.color.danger.300}" },
+      "danger-low-em": { "$value": "{ki.color.danger.200}" },
+      "danger-base-em": { "$value": "{ki.color.danger.100}" },
+      "danger-low-em-alpha": { "$value": "{ki.color.danger.500-alpha-4}" },
+      "danger-base-em-alpha": { "$value": "{ki.color.danger.500-alpha-2}" },
+      "none": { "$value": "{ki.color.transparent.white}" },
+      "primary-button-top": { "$value": "{ki.color.black.8}" },
+      "primary-button-bottom": { "$value": "{ki.color.black.18}" },
+      "secondary-button-top": { "$value": "{ki.color.black.5}" },
+      "secondary-button-bottom": { "$value": "{ki.color.black.12}" }
     },
-    "corner": {
-      "$type": "dimension",
-      "control": { "$value": "{ki.radius.md}" }
+    "inverse-white": {
+      "$type": "color",
+      "alpha-3": { "$value": "{ki.color.black.3}" },
+      "alpha-6": { "$value": "{ki.color.black.5}" },
+      "alpha-9": { "$value": "{ki.color.black.8}" },
+      "alpha-12": { "$value": "{ki.color.black.12}" },
+      "alpha-18": { "$value": "{ki.color.black.18}" },
+      "alpha-24": { "$value": "{ki.color.black.24}" },
+      "alpha-32": { "$value": "{ki.color.black.32}" },
+      "alpha-40": { "$value": "{ki.color.black.40}" },
+      "alpha-48": { "$value": "{ki.color.black.48}" },
+      "alpha-56": { "$value": "{ki.color.black.56}" },
+      "alpha-64": { "$value": "{ki.color.black.64}" },
+      "alpha-72": { "$value": "{ki.color.black.72}" },
+      "alpha-80": { "$value": "{ki.color.black.80}" },
+      "alpha-88": { "$value": "{ki.color.black.88}" },
+      "alpha-solid": { "$value": "{ki.color.black.100}" }
+    },
+    "inverse-black": {
+      "$type": "color",
+      "alpha-3": { "$value": "{ki.color.white.3}" },
+      "alpha-6": { "$value": "{ki.color.white.5}" },
+      "alpha-9": { "$value": "{ki.color.white.8}" },
+      "alpha-12": { "$value": "{ki.color.white.12}" },
+      "alpha-18": { "$value": "{ki.color.white.18}" },
+      "alpha-24": { "$value": "{ki.color.white.24}" },
+      "alpha-32": { "$value": "{ki.color.white.32}" },
+      "alpha-40": { "$value": "{ki.color.white.40}" },
+      "alpha-48": { "$value": "{ki.color.white.48}" },
+      "alpha-56": { "$value": "{ki.color.white.56}" },
+      "alpha-64": { "$value": "{ki.color.white.64}" },
+      "alpha-72": { "$value": "{ki.color.white.72}" },
+      "alpha-80": { "$value": "{ki.color.white.80}" },
+      "alpha-88": { "$value": "{ki.color.white.88}" },
+      "alpha-solid": { "$value": "{ki.color.white.100}" }
+    },
+    "overlay": {
+      "$type": "color",
+      "high-em": { "$value": "{ki.color.black.40}" },
+      "high-em-inverse": { "$value": "{ki.color.white.12}" },
+      "med-em": { "$value": "{ki.color.black.24}" },
+      "med-em-inverse": { "$value": "{ki.color.white.3}" }
+    },
+    "elevation": {
+      "$type": "color",
+      "shadow": { "$value": "{ki.color.black.3}" },
+      "shadow-med": { "$value": "{ki.color.black.5}" },
+      "shadow-dark": { "$value": "{ki.color.black.32}" }
+    },
+    "transparent-inverse": {
+      "$type": "color",
+      "$value": "{ki.color.transparent.white}"
     },
     "typography": {
       "family": {
         "$type": "fontFamily",
-        "base": { "$value": "{ki.font.family.base}" }
+        "display": { "$value": "{ki.font.family.display}" },
+        "body": { "$value": "{ki.font.family.body}" },
+        "serif": { "$value": "{ki.font.family.serif}" },
+        "mono": { "$value": "{ki.font.family.mono}" },
+        "base": {
+          "$value": "{ki.font.family.body}",
+          "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.typography.family.body."
+        }
       },
       "size": {
         "$type": "dimension",
-        "body": { "$value": "{ki.font.size.200}" }
+        "caption-1": { "$value": "{ki.font.size.caption-1}" },
+        "overline": { "$value": "{ki.font.size.overline}" },
+        "caption-2": { "$value": "{ki.font.size.caption-2}" },
+        "body-1": { "$value": "{ki.font.size.body-1}" },
+        "body-2": { "$value": "{ki.font.size.body-2}" },
+        "title-1": { "$value": "{ki.font.size.title-1}" },
+        "title-2": { "$value": "{ki.font.size.title-2}" },
+        "heading-1": { "$value": "{ki.font.size.heading-1}" },
+        "heading-2": { "$value": "{ki.font.size.heading-2}" },
+        "heading-3": { "$value": "{ki.font.size.heading-3}" },
+        "heading-4": { "$value": "{ki.font.size.heading-4}" },
+        "heading-5": { "$value": "{ki.font.size.heading-5}" },
+        "heading-6": { "$value": "{ki.font.size.heading-6}" },
+        "display-1": { "$value": "{ki.font.size.display-1}" },
+        "display-2": { "$value": "{ki.font.size.display-2}" },
+        "display-3": { "$value": "{ki.font.size.display-3}" },
+        "body": {
+          "$value": "{ki.font.size.body-1}",
+          "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.typography.size.body-1."
+        }
+      },
+      "line-height": {
+        "$type": "dimension",
+        "overline": { "$value": "{ki.font.line-height.overline}" },
+        "caption-1": { "$value": "{ki.font.line-height.caption-1}" },
+        "caption-2": { "$value": "{ki.font.line-height.caption-2}" },
+        "para": { "$value": "{ki.font.line-height.para}" },
+        "body-1": { "$value": "{ki.font.line-height.body-1}" },
+        "body-2": { "$value": "{ki.font.line-height.body-2}" },
+        "title-1": { "$value": "{ki.font.line-height.title-1}" },
+        "title-2": { "$value": "{ki.font.line-height.title-2}" },
+        "heading-1": { "$value": "{ki.font.line-height.heading-1}" },
+        "heading-2": { "$value": "{ki.font.line-height.heading-2}" },
+        "heading-3": { "$value": "{ki.font.line-height.heading-3}" },
+        "heading-4": { "$value": "{ki.font.line-height.heading-4}" },
+        "heading-5": { "$value": "{ki.font.line-height.heading-5}" },
+        "heading-6": { "$value": "{ki.font.line-height.heading-6}" },
+        "display-1": { "$value": "{ki.font.line-height.display-1}" },
+        "display-2": { "$value": "{ki.font.line-height.display-2}" },
+        "display-3": { "$value": "{ki.font.line-height.display-3}" }
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "display": {
+          "normal": { "$value": "{ki.font.weight.display.normal}" },
+          "medium": { "$value": "{ki.font.weight.display.medium}" },
+          "semibold": { "$value": "{ki.font.weight.display.semibold}" },
+          "bold": { "$value": "{ki.font.weight.display.bold}" }
+        },
+        "body": {
+          "normal": { "$value": "{ki.font.weight.body.normal}" },
+          "medium": { "$value": "{ki.font.weight.body.medium}" },
+          "semibold": { "$value": "{ki.font.weight.body.semibold}" },
+          "bold": { "$value": "{ki.font.weight.body.bold}" }
+        }
+      },
+      "letter-spacing": {
+        "$type": "dimension",
+        "none": { "$value": "{ki.font.letter-spacing.none}" },
+        "xs": { "$value": "{ki.font.letter-spacing.xs}" },
+        "sm": { "$value": "{ki.font.letter-spacing.sm}" },
+        "md": { "$value": "{ki.font.letter-spacing.md}" },
+        "lg": { "$value": "{ki.font.letter-spacing.lg}" }
+      }
+    },
+    "spacing": {
+      "$type": "dimension",
+      "inline": {
+        "$value": "{ki.space.md}",
+        "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md."
+      },
+      "block": {
+        "$value": "{ki.space.xl}",
+        "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl."
+      }
+    },
+    "corner": {
+      "$type": "dimension",
+      "control": {
+        "$value": "{ki.radius.md}",
+        "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md."
       }
     }
   }

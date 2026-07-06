@@ -88,6 +88,16 @@ export default tseslint.config(
     // Config and script files: relax type-aware rules (not part of shipped code)
     files: ['**/*.mjs', '**/*.config.ts', 'scripts/**', 'tools/**'],
     extends: [tseslint.configs.disableTypeChecked],
+    languageOptions: {
+      globals: {
+        URL: 'readonly',
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
+    rules: {
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+    },
   },
   {
     // Nx generator implementations are CommonJS (Nx loads them via require)

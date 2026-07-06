@@ -4,9 +4,13 @@
   "useInferencePlugins": false,
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "cache": true,
-      "outputs": ["{projectRoot}/dist"]
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
     },
     "lint": {
       "cache": true
@@ -15,20 +19,30 @@
       "cache": true
     },
     "test": {
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "cache": true
     },
     "test-browser": {
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "cache": true
     },
     "size": {
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "cache": true
     }
   },
   "release": {
-    "projects": ["@kimen/tokens", "@kimen/elements", "@kimen/catalog"],
+    "projects": [
+      "@kimen/tokens",
+      "@kimen/elements",
+      "@kimen/catalog"
+    ],
     "projectsRelationship": "fixed",
     "version": {
       "conventionalCommits": true
@@ -38,11 +52,15 @@
     }
   },
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "sharedGlobals": [
       "{workspaceRoot}/tsconfig.base.json",
       "{workspaceRoot}/eslint.config.mjs",
       "{workspaceRoot}/biome.json"
     ]
-  }
+  },
+  "analytics": false
 }

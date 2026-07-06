@@ -7,6 +7,11 @@ dist/
 build/
 out/
 *.tsbuildinfo
+# EXCEPTION (Art. I, review round 1): the compiled token CSS is the public
+# token contract — committed and diffable; kept in sync by the tokens-sync gate.
+!packages/tokens/dist/
+packages/tokens/dist/*
+!packages/tokens/dist/css/
 
 # Stencil build artifacts (generated/docs.json IS committed, Art. I)
 packages/elements/loader/

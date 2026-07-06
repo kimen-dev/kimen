@@ -1,4 +1,4 @@
-import { playwright } from '@vitest/browser-playwright';
+import { defineBrowserCommand, playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
 // Real-browser suite (constitution Art. III: component suites never run in
@@ -17,7 +17,25 @@ export default defineConfig({
       headless: true,
       provider: playwright(),
       screenshotFailures: false,
-      instances: browsers.map((browser) => ({ browser })),
+      commands: {
+        emulateColorScheme: defineBrowserCommand(
+          async ({ page }, scheme: 'dark' | 'light' | null) => {
+            await page.emulateMedia({ colorScheme: scheme });
+          },
+        ),
+      },
+      instances: [
+        ...browsers.map((browser) => ({
+          browser,
+          name: `${browser}-light`,
+          exclude: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
+        })),
+        ...browsers.map((browser) => ({
+          browser,
+          name: `${browser}-dark`,
+          include: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
+        })),
+      ],
     },
   },
 });

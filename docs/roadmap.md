@@ -3,14 +3,16 @@
 High-level build order, without dates: phases overlap and the exit criteria
 are quality gates, not deadlines.
 
-## 1. Factory (current)
+## 1. Factory (done)
 
 Monorepo (pnpm + Nx), the deterministic gate suite (format, lint, typecheck,
 boundaries, dead code, packaging, budgets, real-browser tests with axe,
 security scanning), Nx generators so every component is scaffolded the same
-way, hardened CI, and a release pipeline with npm trusted publishing.
+way, hardened CI, a release pipeline with npm trusted publishing (dry-run
+verified), and the sandboxed unattended-loop environment, exercised end to
+end. The `@kimen` npm organization is registered.
 
-## 2. Tokens and theming
+## 2. Tokens and theming (current)
 
 `@kimen/tokens`: DTCG tokens compiled to CSS custom properties in three
 layers (primitive → semantic → component). Mars ships as the default theme,

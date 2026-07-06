@@ -40,6 +40,11 @@ run_gate format pnpm run format:check
 # output (they assert what ships, Art. III), so type-aware analysis needs
 # dist/ to exist — a fresh CI clone has none until this gate.
 run_gate build pnpm exec nx run-many -t build
+# The compiled token CSS is committed as the public token contract (Art. I:
+# generated, committed, diffable). After a fresh build it must match the
+# committed copy exactly, or the sources and the contract have drifted.
+run_gate tokens-sync git diff --exit-code -- packages/tokens/dist/css
+run_gate contrast pnpm --filter @kimen/tokens contrast
 run_gate lint pnpm run lint
 run_gate styles pnpm run lint:styles
 run_gate typecheck pnpm run typecheck

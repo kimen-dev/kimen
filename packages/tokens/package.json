@@ -3,20 +3,40 @@
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "description": "Kimen design tokens (DTCG) compiled to CSS custom properties. Primitive → semantic → component layers; Mars is the default theme.",
+  "description": "Kimen design tokens (DTCG) compiled to CSS custom properties. Primitive → theme → semantic layers; onmars is the default theme (light + dark).",
   "type": "module",
   "files": [
     "dist"
   ],
   "exports": {
-    "./css": "./dist/css/tokens.css"
+    "./css": "./dist/css/tokens.css",
+    "./css/material3": "./dist/css/tokens.material3.css"
   },
   "scripts": {
-    "build": "style-dictionary build --config ./style-dictionary.config.mjs"
+    "build": "node ./build.mjs",
+    "contrast": "node ./scripts/check-contrast.mjs",
+    "size": "size-limit",
+    "test": "node --test scripts/*.test.mjs"
   },
+  "size-limit": [
+    {
+      "name": "onmars tokens stylesheet",
+      "path": "dist/css/tokens.css",
+      "limit": "9 KB"
+    },
+    {
+      "name": "material3 tokens stylesheet",
+      "path": "dist/css/tokens.material3.css",
+      "limit": "9 KB"
+    }
+  ],
   "nx": {
     "tags": [
       "scope:tokens"
     ]
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "12.1.0",
+    "size-limit": "12.1.0"
   }
 }
