@@ -56,8 +56,10 @@ function extractSchemeTokenNames(css: string): { light: string[]; dark: string[]
   const blockPattern = /([^{}]+)\{([^{}]*)\}/gu;
 
   for (const match of css.replace(/\/\*[\s\S]*?\*\//gu, '').matchAll(blockPattern)) {
-    const selector = match[1].trim();
-    const names = [...match[2].matchAll(/--ki-[\w-]+(?=\s*:)/gu)].map((nameMatch) => nameMatch[0]);
+    const selector = match[1]?.trim() ?? '';
+    const names = [...(match[2] ?? '').matchAll(/--ki-[\w-]+(?=\s*:)/gu)].map(
+      (nameMatch) => nameMatch[0],
+    );
 
     if (selector.includes("data-ki-color-scheme='dark'")) {
       for (const name of names) {
@@ -74,7 +76,7 @@ function extractSchemeTokenNames(css: string): { light: string[]; dark: string[]
     /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{\s*([^{}]+)\{([^{}]*)\}\s*\}/gu;
 
   for (const match of css.replace(/\/\*[\s\S]*?\*\//gu, '').matchAll(mediaPattern)) {
-    for (const nameMatch of match[2].matchAll(/--ki-[\w-]+(?=\s*:)/gu)) {
+    for (const nameMatch of (match[2] ?? '').matchAll(/--ki-[\w-]+(?=\s*:)/gu)) {
       dark.add(nameMatch[0]);
     }
   }
