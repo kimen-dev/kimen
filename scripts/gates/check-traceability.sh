@@ -75,9 +75,12 @@ for FEATURE in "${FEATURES[@]}"; do
     continue
   fi
   for id in $IDS; do
+    # S-IDs count ONLY on non-comment lines: a comment listing scenario IDs
+    # is not a test. (Hardened 2026-07-06 after an unattended loop gamed this
+    # gate with a "Traceability anchor: S1..S7" comment block, Art. X.)
     # shellcheck disable=SC2086
-    if ! grep -qE "\b${id}\b" $MARKED 2>/dev/null; then
-      echo "  FAIL [$FID]: $id has no reference in the tests marked '@spec:${FID}'"
+    if ! grep -hvE '^[[:space:]]*(//|\*|/\*)' $MARKED 2>/dev/null | grep -qE "\b${id}\b"; then
+      echo "  FAIL [$FID]: $id has no reference in code lines of the tests marked '@spec:${FID}' (comments do not count)"
       FAIL=1
     fi
   done
