@@ -9,14 +9,34 @@
     "dist"
   ],
   "exports": {
-    "./css": "./dist/css/tokens.css"
+    "./css": "./dist/css/tokens.css",
+    "./css/material3": "./dist/css/tokens.material3.css"
   },
   "scripts": {
-    "build": "node ./build.mjs"
+    "build": "node ./build.mjs",
+    "contrast": "node ./scripts/check-contrast.mjs",
+    "size": "../elements/node_modules/.bin/size-limit",
+    "test": "node --test scripts/*.test.mjs"
   },
+  "size-limit": [
+    {
+      "name": "onmars tokens stylesheet",
+      "path": "dist/css/tokens.css",
+      "limit": "9 KB"
+    },
+    {
+      "name": "material3 tokens stylesheet",
+      "path": "dist/css/tokens.material3.css",
+      "limit": "9 KB"
+    }
+  ],
   "nx": {
     "tags": [
       "scope:tokens"
     ]
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "12.1.0",
+    "size-limit": "12.1.0"
   }
 }
