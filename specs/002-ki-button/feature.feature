@@ -60,6 +60,12 @@ Feature: Button
     When the user activates the button
     Then the form does not submit
 
+  # S12
+  Scenario: A reset button restores the form's defaults
+    Given a form whose text field has been edited away from its default
+    When the user activates a button of type "reset"
+    Then the field returns to its default value
+
   # Family: theming
   # S9
   Scenario: A second theme restyles the button through tokens alone
@@ -72,3 +78,9 @@ Feature: Button
     Given a page forcing the dark color scheme under the onmars theme
     When the page renders
     Then the button's appearance resolves from the dark token values
+
+  # S13
+  Scenario: Button content follows the document's writing direction
+    Given a right-to-left document with icons in the start and end slots
+    When the page renders
+    Then the start content leads and the end content trails the label

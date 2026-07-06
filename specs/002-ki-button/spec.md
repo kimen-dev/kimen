@@ -208,6 +208,12 @@ Feature: Button
     When the user activates the button
     Then the form does not submit
 
+  # S12
+  Scenario: A reset button restores the form's defaults
+    Given a form whose text field has been edited away from its default
+    When the user activates a button of type "reset"
+    Then the field returns to its default value
+
   # Family: theming
   # S9
   Scenario: A second theme restyles the button through tokens alone
@@ -220,6 +226,12 @@ Feature: Button
     Given a page forcing the dark color scheme under the onmars theme
     When the page renders
     Then the button's appearance resolves from the dark token values
+
+  # S13
+  Scenario: Button content follows the document's writing direction
+    Given a right-to-left document with icons in the start and end slots
+    When the page renders
+    Then the start content leads and the end content trails the label
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -229,8 +241,8 @@ Feature: Button
 | Core behavior | S1, S2, S11 | |
 | Keyboard path | S3, S4 | |
 | Assistive-tech outcome | S5, S6 | |
-| Form participation | S7, S8 | |
-| Theming | S9, S10 | |
+| Form participation | S7, S8, S12 | |
+| Theming | S9, S10, S13 | |
 
 ## Requirements *(mandatory)*
 
@@ -291,9 +303,21 @@ Feature: Button
   in the repo → manual APG walkthrough documented in the PR. axe zero
   violations across variant × tone × size × state.
 - **Tokens** (Art. VI): introduces the component token layer
-  (`--ki-button-*`) resolving from the semantic layer; both shipped themes
-  (onmars, material3) must resolve the full matrix. No new primitive or
-  semantic tokens are expected beyond what the matrix requires.
+  (`--ki-button-*`, including `border-width` and the focus ring) resolving
+  from the semantic layer; both shipped themes (onmars, material3) must
+  resolve the full matrix. DECLARED SEMANTIC-LAYER DELTAS (implementation
+  finding: WCAG 1.4.3 arithmetic over the built CSS, enforced by the
+  extended contrast gate that now sweeps every interactive button cell in
+  all four theme × scheme contexts): (a) `surface/text.{success,danger}-high-em`
+  darken 600→700 in onmars light; (b) onmars dark keeps white on-colors and
+  raises the high-em fills to steps that carry white (brand.500,
+  success/danger.700), with hover at brand.600 / success.800 / danger.800;
+  (c) new semantic tokens `text.primary-on-danger` and
+  `surface.{primary,success,danger}-high-em-hover` in both schemes;
+  (d) material3 dark gains the success container ramp and dark on-colors
+  (`primary-on-danger` #601410, `primary-on-success` success.950) mirroring
+  its existing danger pattern. These change 001-shipped visual values and
+  require explicit founder sign-off at the merge gate.
 - **Catalog/agent legibility** (Art. I): when-to-use — the single or
   supporting action a person triggers in a view, hierarchy expressed by
   `variant`, destructive/confirming intent by `tone`. When NOT to use —
