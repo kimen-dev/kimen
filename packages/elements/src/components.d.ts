@@ -50,18 +50,6 @@ export namespace Components {
          */
         "variant": KiButtonVariant;
     }
-    /**
-     * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
-     * is deleted when the first real component lands (see docs/roadmap.md).
-     * When to use: never in production. When NOT to use: always in production.
-     */
-    interface KiHello {
-        /**
-          * Name to greet.
-          * @default 'Kimen'
-         */
-        "name": string;
-    }
 }
 declare global {
     /**
@@ -77,20 +65,8 @@ declare global {
         prototype: HTMLKiButtonElement;
         new (): HTMLKiButtonElement;
     };
-    /**
-     * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
-     * is deleted when the first real component lands (see docs/roadmap.md).
-     * When to use: never in production. When NOT to use: always in production.
-     */
-    interface HTMLKiHelloElement extends Components.KiHello, HTMLStencilElement {
-    }
-    var HTMLKiHelloElement: {
-        prototype: HTMLKiHelloElement;
-        new (): HTMLKiHelloElement;
-    };
     interface HTMLElementTagNameMap {
         "ki-button": HTMLKiButtonElement;
-        "ki-hello": HTMLKiHelloElement;
     }
 }
 declare namespace LocalJSX {
@@ -140,18 +116,6 @@ declare namespace LocalJSX {
          */
         "variant"?: KiButtonVariant;
     }
-    /**
-     * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
-     * is deleted when the first real component lands (see docs/roadmap.md).
-     * When to use: never in production. When NOT to use: always in production.
-     */
-    interface KiHello {
-        /**
-          * Name to greet.
-          * @default 'Kimen'
-         */
-        "name"?: string;
-    }
 
     interface KiButtonAttributes {
         "variant": KiButtonVariant;
@@ -162,13 +126,9 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
-    interface KiHelloAttributes {
-        "name": string;
-    }
 
     interface IntrinsicElements {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
-        "ki-hello": Omit<KiHello, keyof KiHelloAttributes> & { [K in keyof KiHello & keyof KiHelloAttributes]?: KiHello[K] } & { [K in keyof KiHello & keyof KiHelloAttributes as `attr:${K}`]?: KiHelloAttributes[K] } & { [K in keyof KiHello & keyof KiHelloAttributes as `prop:${K}`]?: KiHello[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -183,12 +143,6 @@ declare module "@stencil/core" {
              * loading/progress semantics.
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
-            /**
-             * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
-             * is deleted when the first real component lands (see docs/roadmap.md).
-             * When to use: never in production. When NOT to use: always in production.
-             */
-            "ki-hello": LocalJSX.IntrinsicElements["ki-hello"] & JSXBase.HTMLAttributes<HTMLKiHelloElement>;
         }
     }
 }

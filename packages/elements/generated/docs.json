@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-06T21:17:54",
+  "timestamp": "2026-07-06T21:22:09",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -337,55 +337,6 @@
           "docs": "Label wrapper around the default slot."
         }
       ],
-      "states": [],
-      "dependents": [],
-      "dependencies": [],
-      "dependencyGraph": {}
-    },
-    {
-      "filePath": "src/components/ki-hello/ki-hello.tsx",
-      "encapsulation": "shadow",
-      "tag": "ki-hello",
-      "docs": "Factory smoke-test component. Proves the Fase 0 gate wiring end to end and\nis deleted when the first real component lands (see docs/roadmap.md).\n\nWhen to use: never in production. When NOT to use: always in production.",
-      "docsTags": [],
-      "usage": {},
-      "props": [
-        {
-          "name": "name",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "name",
-          "reflectToAttr": false,
-          "docs": "Name to greet.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'Kimen'"
-            }
-          ],
-          "default": "'Kimen'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
-        }
-      ],
-      "methods": [],
-      "events": [],
-      "listeners": [],
-      "styles": [],
-      "slots": [],
-      "parts": [],
       "states": [],
       "dependents": [],
       "dependencies": [],
