@@ -85,7 +85,9 @@
       "primary-on-primary": { "$value": "{ki.color.brand.primary-text-on-primary}" },
       "primary-on-primary-light": { "$value": "{ki.color.brand.primary-text-on-primary-light}" },
       "secondary-on-primary": { "$value": "{ki.color.brand.secondary-text-on-primary}" },
-      "secondary-on-primary-light": { "$value": "{ki.color.brand.secondary-text-on-primary-light}" },
+      "secondary-on-primary-light": {
+        "$value": "{ki.color.brand.secondary-text-on-primary-light}"
+      },
       "primary-on-success": { "$value": "{ki.color.brand.primary-text-on-success}" },
       "secondary-on-success": { "$value": "{ki.color.brand.secondary-text-on-success}" },
       "text-on-neutral": { "$value": "{ki.color.white.100}" },

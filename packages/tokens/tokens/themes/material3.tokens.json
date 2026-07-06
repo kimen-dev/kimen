@@ -1,0 +1,109 @@
+{
+  "ki": {
+    "color": {
+      "brand": {
+        "$type": "color",
+        "$description": "material3 reference brand ramp. Source: Material 3 Design Kit baseline primary tonal palette.",
+        "50": { "$value": "#fffbfe" },
+        "100": { "$value": "#eaddff" },
+        "200": { "$value": "#d0bcff" },
+        "300": { "$value": "#b69df8" },
+        "400": { "$value": "#9a82db" },
+        "500": { "$value": "#6750a4" },
+        "500-alpha-1": { "$value": "#6750a414" },
+        "500-alpha-2": { "$value": "#6750a41a" },
+        "500-alpha-3": { "$value": "#6750a429" },
+        "500-alpha-4": { "$value": "#6750a43d" },
+        "500-alpha-5": { "$value": "#6750a452" },
+        "600": { "$value": "#625b71" },
+        "700": { "$value": "#4f378b" },
+        "800": { "$value": "#381e72" },
+        "900": { "$value": "#21005d" },
+        "950": { "$value": "#1d192b" },
+        "high-em": { "$value": "#1d1b20" },
+        "med-em": { "$value": "#49454f" },
+        "low-em": { "$value": "#79747e" },
+        "base-em": { "$value": "#cac4d0" },
+        "primary-text-on-primary": { "$value": "#ffffff" },
+        "primary-text-on-primary-light": { "$value": "#381e72" },
+        "secondary-text-on-primary": { "$value": "{ki.color.white.72}" },
+        "secondary-text-on-primary-light": { "$value": "#6750a4" },
+        "primary-text-on-success": { "$value": "#ffffff" },
+        "secondary-text-on-success": { "$value": "{ki.color.white.72}" }
+      }
+    },
+    "font": {
+      "family": {
+        "$type": "fontFamily",
+        "display": { "$value": ["Roboto", "system-ui", "sans-serif"] },
+        "body": { "$value": ["Roboto", "system-ui", "sans-serif"] },
+        "serif": { "$value": ["Roboto Slab", "Georgia", "serif"] },
+        "mono": { "$value": ["Roboto Mono", "ui-monospace", "monospace"] }
+      },
+      "size": {
+        "$type": "dimension",
+        "caption-1": { "$value": "0.6875rem" },
+        "overline": { "$value": "0.6875rem" },
+        "caption-2": { "$value": "0.75rem" },
+        "body-1": { "$value": "0.875rem" },
+        "body-2": { "$value": "1rem" },
+        "title-1": { "$value": "0.875rem" },
+        "title-2": { "$value": "1.375rem" },
+        "heading-1": { "$value": "1.5rem" },
+        "heading-2": { "$value": "1.75rem" },
+        "heading-3": { "$value": "2rem" },
+        "heading-4": { "$value": "2.25rem" },
+        "heading-5": { "$value": "2.8125rem" },
+        "heading-6": { "$value": "3.5625rem" },
+        "display-1": { "$value": "4rem" },
+        "display-2": { "$value": "4.5rem" },
+        "display-3": { "$value": "5rem" }
+      },
+      "line-height": {
+        "$type": "dimension",
+        "overline": { "$value": "1rem" },
+        "caption-1": { "$value": "1rem" },
+        "caption-2": { "$value": "1rem" },
+        "para": { "$value": "1.25rem" },
+        "body-1": { "$value": "1.25rem" },
+        "body-2": { "$value": "1.5rem" },
+        "title-1": { "$value": "1.25rem" },
+        "title-2": { "$value": "1.75rem" },
+        "heading-1": { "$value": "2rem" },
+        "heading-2": { "$value": "2.25rem" },
+        "heading-3": { "$value": "2.5rem" },
+        "heading-4": { "$value": "2.75rem" },
+        "heading-5": { "$value": "3.25rem" },
+        "heading-6": { "$value": "4rem" },
+        "display-1": { "$value": "4.5rem" },
+        "display-2": { "$value": "5rem" },
+        "display-3": { "$value": "5.5rem" }
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "display": {
+          "normal": { "$value": 400 },
+          "medium": { "$value": 500 },
+          "semibold": { "$value": 500 },
+          "bold": { "$value": 700 }
+        },
+        "body": {
+          "normal": { "$value": 400 },
+          "medium": { "$value": 500 },
+          "semibold": { "$value": 500 },
+          "bold": { "$value": 700 }
+        }
+      },
+      "letter-spacing": {
+        "$type": "dimension",
+        "$description": "Material 3 tracking values compiled from px to em at the mapped size.",
+        "none": { "$value": "0em" },
+        "spaced-out": { "$value": "0.045em" },
+        "xs": { "$value": "0.03125em" },
+        "sm": { "$value": "0.0179em" },
+        "md": { "$value": "0.00625em" },
+        "lg": { "$value": "-0.0069em" }
+      }
+    }
+  }
+}
