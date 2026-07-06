@@ -109,9 +109,12 @@ function collectSchemeDeclarations(css) {
   const cleanCss = stripComments(css);
   const light = new Map();
   const dark = new Map();
+  const mediaPattern =
+    /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{\s*([^{}]+)\{([^{}]*)\}\s*\}/gu;
+  const cssWithoutMedia = cleanCss.replace(mediaPattern, '');
   const blockPattern = /([^{}]+)\{([^{}]*)\}/gu;
 
-  for (const match of cleanCss.matchAll(blockPattern)) {
+  for (const match of cssWithoutMedia.matchAll(blockPattern)) {
     const selector = match[1].trim();
     const declarations = declarationsFromBlock(match[2]);
 
@@ -125,9 +128,6 @@ function collectSchemeDeclarations(css) {
       mergeDeclarations(light, declarations);
     }
   }
-
-  const mediaPattern =
-    /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{\s*([^{}]+)\{([^{}]*)\}\s*\}/gu;
 
   for (const match of cleanCss.matchAll(mediaPattern)) {
     mergeDeclarations(dark, declarationsFromBlock(match[2]));
