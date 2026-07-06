@@ -173,6 +173,7 @@
     --ki-surface-special-light-s3-dark-s4: var(--ki-surface-s4);
     --ki-surface-special-light-s4-dark-s5: var(--ki-surface-s5);
   }
+}
 
 :root[data-ki-color-scheme='dark'] {
   --ki-surface-s0: var(--ki-color-dark-950);
