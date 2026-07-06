@@ -31,5 +31,20 @@ Rules (binding):
 # Budget guard (onmars-spec C4): the loop can stop or escalate, never hang.
 timeout 3600 codex exec --dangerously-bypass-approvals-and-sandbox "$PROMPT"
 
+# Style is formatted, never reviewed or agent-fixed (Art. X): normalize
+# formatting deterministically BEFORE judging, so the format gate only ever
+# fails on real problems (e.g. files biome cannot parse).
+pnpm run format || true
+
 # The agent's opinion is not the verdict (Art. III). The gates are:
 bash scripts/gates/gates-suite.sh
+VERDICT=$?
+
+# Leave the attempt fetchable regardless of verdict: codex only commits when
+# green, so on red runs the work would otherwise be stranded uncommitted in
+# the disposable clone (learned 2026-07-06, loops 1-2 of 001-tokens-theming).
+if [ -n "$(git status --porcelain)" ]; then
+  git add -A
+  git commit --quiet --no-verify -m "wip(loop): snapshot (gates exit $VERDICT)"
+fi
+exit $VERDICT

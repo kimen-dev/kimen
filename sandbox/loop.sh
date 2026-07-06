@@ -42,6 +42,8 @@ if [ "$VERDICT" -eq 0 ]; then
 else
   echo "LOOP ROJO (escalación onmars-spec): las gates no llegaron a 0."
   echo "Inspecciona $CLONE si quieres entender el atasco."
+  echo "El intento queda commiteado en el clon; para traértelo y retomarlo:"
+  echo "  git fetch $CLONE $BRANCH:loop/$STAMP-rojo"
 fi
 echo "Para desechar:    rm -rf $CLONE"
 exit $VERDICT
