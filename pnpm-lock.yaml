@@ -104,7 +104,14 @@ importers:
 
   packages/kimen: {}
 
-  packages/tokens: {}
+  packages/tokens:
+    devDependencies:
+      '@size-limit/preset-small-lib':
+        specifier: 12.1.0
+        version: 12.1.0(size-limit@12.1.0(jiti@2.7.0))
+      size-limit:
+        specifier: 12.1.0
+        version: 12.1.0(jiti@2.7.0)
 
   tools/kimen-plugin:
     dependencies:
