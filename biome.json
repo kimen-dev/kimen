@@ -41,6 +41,7 @@
       "!.claude/**",
       "!packages/elements/src/components.d.ts",
       "!packages/elements/generated/**",
+      "!packages/tokens/dist/**",
       "!nx.json"
     ]
   }

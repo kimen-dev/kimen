@@ -184,6 +184,9 @@ export function checkContrast() {
 
   for (const theme of THEMES) {
     if (!existsSync(theme.stylesheet)) {
+      // A missing stylesheet is a failure, never a skip: FR-009 requires
+      // every theme × scheme to be verified (clean-context review, round 1).
+      failures.push(`${theme.name}: stylesheet missing at ${theme.stylesheet} — run the build first`);
       continue;
     }
 

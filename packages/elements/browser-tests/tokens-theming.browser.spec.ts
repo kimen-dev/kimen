@@ -103,7 +103,11 @@ describe('S1 onmars light default tokens', () => {
     injectStylesheet(onmarsCss);
 
     for (const name of extractTokenNames(onmarsCss)) {
-      expect(readToken(name), name).not.toBe('');
+      const value = readToken(name);
+      expect(value, name).not.toBe('');
+      // An unresolved reference would surface as a literal var() string —
+      // a concrete value never contains one (clean-context review, round 1).
+      expect(value, name).not.toMatch(/var\(/u);
     }
   });
 });
