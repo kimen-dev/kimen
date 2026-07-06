@@ -7,6 +7,18 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiButton {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label": string;
+    }
+    /**
      * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
      * is deleted when the first real component lands (see docs/roadmap.md).
      * When to use: never in production. When NOT to use: always in production.
@@ -21,6 +33,17 @@ export namespace Components {
 }
 declare global {
     /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface HTMLKiButtonElement extends Components.KiButton, HTMLStencilElement {
+    }
+    var HTMLKiButtonElement: {
+        prototype: HTMLKiButtonElement;
+        new (): HTMLKiButtonElement;
+    };
+    /**
      * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
      * is deleted when the first real component lands (see docs/roadmap.md).
      * When to use: never in production. When NOT to use: always in production.
@@ -32,10 +55,23 @@ declare global {
         new (): HTMLKiHelloElement;
     };
     interface HTMLElementTagNameMap {
+        "ki-button": HTMLKiButtonElement;
         "ki-hello": HTMLKiHelloElement;
     }
 }
 declare namespace LocalJSX {
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiButton {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label"?: string;
+    }
     /**
      * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
      * is deleted when the first real component lands (see docs/roadmap.md).
@@ -49,11 +85,15 @@ declare namespace LocalJSX {
         "name"?: string;
     }
 
+    interface KiButtonAttributes {
+        "label": string;
+    }
     interface KiHelloAttributes {
         "name": string;
     }
 
     interface IntrinsicElements {
+        "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-hello": Omit<KiHello, keyof KiHelloAttributes> & { [K in keyof KiHello & keyof KiHelloAttributes]?: KiHello[K] } & { [K in keyof KiHello & keyof KiHelloAttributes as `attr:${K}`]?: KiHelloAttributes[K] } & { [K in keyof KiHello & keyof KiHelloAttributes as `prop:${K}`]?: KiHello[K] };
     }
 }
@@ -61,6 +101,12 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * TODO(spec): one-line purpose from the approved spec (Art. II).
+             * When to use: TODO(spec): agent-facing guidance (Art. I).
+             * When NOT to use: TODO(spec).
+             */
+            "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
              * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
              * is deleted when the first real component lands (see docs/roadmap.md).

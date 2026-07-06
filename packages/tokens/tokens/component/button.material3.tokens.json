@@ -1,0 +1,31 @@
+{
+  "ki": {
+    "button": {
+      "xs": {
+        "radius": {
+          "$value": "{ki.radius.round}"
+        }
+      },
+      "sm": {
+        "radius": {
+          "$value": "{ki.radius.round}"
+        }
+      },
+      "md": {
+        "radius": {
+          "$value": "{ki.radius.round}"
+        }
+      },
+      "lg": {
+        "radius": {
+          "$value": "{ki.radius.round}"
+        }
+      },
+      "xl": {
+        "radius": {
+          "$value": "{ki.radius.round}"
+        }
+      }
+    }
+  }
+}

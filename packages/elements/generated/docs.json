@@ -1,11 +1,60 @@
 {
-  "timestamp": "2026-07-06T07:47:35",
+  "timestamp": "2026-07-06T20:58:37",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
     "typescriptVersion": "5.8.3"
   },
   "components": [
+    {
+      "filePath": "src/components/ki-button/ki-button.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-button",
+      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
+      "docsTags": [],
+      "usage": {},
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'TODO'"
+            }
+          ],
+          "default": "'TODO'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
     {
       "filePath": "src/components/ki-hello/ki-hello.tsx",
       "encapsulation": "shadow",
