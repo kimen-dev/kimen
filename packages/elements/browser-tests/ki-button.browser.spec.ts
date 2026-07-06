@@ -7,6 +7,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
+import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-button.js';
 
 type KiButtonElement = HTMLElement & {
@@ -20,6 +21,7 @@ type KiButtonElement = HTMLElement & {
 };
 
 const STYLE_ID = 'ki-button-browser-token-style';
+const MATERIAL3_STYLE_ID = 'ki-button-browser-material3-token-style';
 const variants = ['primary', 'secondary', 'tertiary', 'quaternary', 'ghost'] as const;
 const tones = ['neutral', 'success', 'danger'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
@@ -39,9 +41,22 @@ function ensureTokens(): void {
   document.head.append(style);
 }
 
+function ensureMaterial3Tokens(): void {
+  if (document.getElementById(MATERIAL3_STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = MATERIAL3_STYLE_ID;
+  style.textContent = material3Css;
+  document.head.append(style);
+}
+
 function cleanup(): void {
   document.body.replaceChildren();
   document.documentElement.removeAttribute('dir');
+  document.documentElement.removeAttribute('data-ki-theme');
+  document.documentElement.removeAttribute('data-ki-color-scheme');
 }
 
 /** Stencil renders async: wait until the shadow root has content. */
@@ -82,6 +97,19 @@ function requireButton(el: KiButtonElement): HTMLButtonElement {
     throw new Error('ki-button did not render an internal native button');
   }
   return button;
+}
+
+async function waitForStyles(): Promise<void> {
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+function readTokenColor(name: string): string {
+  const probe = document.createElement('div');
+  probe.style.backgroundColor = `var(${name})`;
+  document.body.append(probe);
+  const value = getComputedStyle(probe).backgroundColor;
+  probe.remove();
+  return value;
 }
 
 describe('ki-button in a real browser', () => {
@@ -240,5 +268,39 @@ describe('ki-button in a real browser', () => {
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     expect(input.value).toBe('Mars');
+  });
+
+  it('S9 resolves each variant tone background from material3 component tokens', async () => {
+    cleanup();
+    ensureTokens();
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+
+    for (const variant of variants) {
+      for (const tone of tones) {
+        const el = await mount(`${variant} ${tone}`, { variant, tone });
+        const button = requireButton(el);
+        await waitForStyles();
+
+        const state = button.matches(':hover') ? 'hover' : 'rest';
+        const expected = readTokenColor(`--ki-button-${variant}-${tone}-${state}-bg`);
+        expect(getComputedStyle(button).backgroundColor, `${variant}/${tone}`).toBe(expected);
+      }
+    }
+  });
+
+  it('S10 resolves forced dark appearance from onmars dark component tokens', async () => {
+    cleanup();
+    ensureTokens();
+    document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
+    const el = await mount('Save', { variant: 'primary', tone: 'neutral' });
+    const button = requireButton(el);
+    await waitForStyles();
+
+    expect(getComputedStyle(button).backgroundColor).toBe(
+      readTokenColor(
+        `--ki-button-primary-neutral-${button.matches(':hover') ? 'hover' : 'rest'}-bg`,
+      ),
+    );
   });
 });
