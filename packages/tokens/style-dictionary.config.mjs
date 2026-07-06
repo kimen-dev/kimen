@@ -125,6 +125,7 @@ export const darkConfig = {
           "  :root:not([data-ki-color-scheme='light']) {",
           media,
           '  }',
+          '}',
           '',
           ":root[data-ki-color-scheme='dark'] {",
           attr,
