@@ -303,4 +303,25 @@ describe('ki-button in a real browser', () => {
       ),
     );
   });
+
+  it('S2 renders the disabled appearance from the disabled matrix cells in every variant', async () => {
+    cleanup();
+    ensureTokens();
+
+    for (const variant of variants) {
+      const el = await mount(`${variant} disabled`, { variant, tone: 'neutral', disabled: true });
+      const button = requireButton(el);
+      await waitForStyles();
+
+      expect(getComputedStyle(button).backgroundColor, `${variant} disabled bg`).toBe(
+        readTokenColor(`--ki-button-${variant}-neutral-disabled-bg`),
+      );
+      expect(getComputedStyle(button).color, `${variant} disabled fg`).toBe(
+        readTokenColor(`--ki-button-${variant}-neutral-disabled-fg`),
+      );
+      expect(getComputedStyle(button).borderTopColor, `${variant} disabled border`).toBe(
+        readTokenColor(`--ki-button-${variant}-neutral-disabled-border`),
+      );
+    }
+  });
 });

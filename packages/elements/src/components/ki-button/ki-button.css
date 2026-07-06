@@ -271,11 +271,150 @@
   --_ki-button-shadow: var(--ki-button-secondary-active-shadow);
 }
 
+/* Pressed appearance per variant x tone: mirrors the hover blocks; the
+   generic :host(:active) above only covers the secondary-neutral base. */
+:host([variant="primary"][tone="neutral"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-primary-neutral-active-bg);
+  --_ki-button-fg: var(--ki-button-primary-neutral-active-fg);
+  --_ki-button-border: var(--ki-button-primary-neutral-active-border);
+  --_ki-button-shadow: var(--ki-button-primary-active-shadow);
+}
+
+:host([variant="primary"][tone="success"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-primary-success-active-bg);
+  --_ki-button-fg: var(--ki-button-primary-success-active-fg);
+  --_ki-button-border: var(--ki-button-primary-success-active-border);
+  --_ki-button-shadow: var(--ki-button-primary-active-shadow);
+}
+
+:host([variant="primary"][tone="danger"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-primary-danger-active-bg);
+  --_ki-button-fg: var(--ki-button-primary-danger-active-fg);
+  --_ki-button-border: var(--ki-button-primary-danger-active-border);
+  --_ki-button-shadow: var(--ki-button-primary-active-shadow);
+}
+
+:host([variant="secondary"][tone="success"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-secondary-success-active-bg);
+  --_ki-button-fg: var(--ki-button-secondary-success-active-fg);
+  --_ki-button-border: var(--ki-button-secondary-success-active-border);
+  --_ki-button-shadow: var(--ki-button-secondary-active-shadow);
+}
+
+:host([variant="secondary"][tone="danger"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-secondary-danger-active-bg);
+  --_ki-button-fg: var(--ki-button-secondary-danger-active-fg);
+  --_ki-button-border: var(--ki-button-secondary-danger-active-border);
+  --_ki-button-shadow: var(--ki-button-secondary-active-shadow);
+}
+
+:host([variant="tertiary"][tone="neutral"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-tertiary-neutral-active-bg);
+  --_ki-button-fg: var(--ki-button-tertiary-neutral-active-fg);
+  --_ki-button-border: var(--ki-button-tertiary-neutral-active-border);
+  --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
+}
+
+:host([variant="tertiary"][tone="success"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-tertiary-success-active-bg);
+  --_ki-button-fg: var(--ki-button-tertiary-success-active-fg);
+  --_ki-button-border: var(--ki-button-tertiary-success-active-border);
+  --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
+}
+
+:host([variant="tertiary"][tone="danger"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-tertiary-danger-active-bg);
+  --_ki-button-fg: var(--ki-button-tertiary-danger-active-fg);
+  --_ki-button-border: var(--ki-button-tertiary-danger-active-border);
+  --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
+}
+
+:host([variant="quaternary"][tone="neutral"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-quaternary-neutral-active-bg);
+  --_ki-button-fg: var(--ki-button-quaternary-neutral-active-fg);
+  --_ki-button-border: var(--ki-button-quaternary-neutral-active-border);
+  --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
+}
+
+:host([variant="quaternary"][tone="success"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-quaternary-success-active-bg);
+  --_ki-button-fg: var(--ki-button-quaternary-success-active-fg);
+  --_ki-button-border: var(--ki-button-quaternary-success-active-border);
+  --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
+}
+
+:host([variant="quaternary"][tone="danger"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-quaternary-danger-active-bg);
+  --_ki-button-fg: var(--ki-button-quaternary-danger-active-fg);
+  --_ki-button-border: var(--ki-button-quaternary-danger-active-border);
+  --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
+}
+
+:host([variant="ghost"][tone="neutral"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-ghost-neutral-active-bg);
+  --_ki-button-fg: var(--ki-button-ghost-neutral-active-fg);
+  --_ki-button-border: var(--ki-button-ghost-neutral-active-border);
+  --_ki-button-shadow: var(--ki-button-ghost-active-shadow);
+}
+
+:host([variant="ghost"][tone="success"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-ghost-success-active-bg);
+  --_ki-button-fg: var(--ki-button-ghost-success-active-fg);
+  --_ki-button-border: var(--ki-button-ghost-success-active-border);
+  --_ki-button-shadow: var(--ki-button-ghost-active-shadow);
+}
+
+:host([variant="ghost"][tone="danger"]:active:not([disabled])) {
+  --_ki-button-bg: var(--ki-button-ghost-danger-active-bg);
+  --_ki-button-fg: var(--ki-button-ghost-danger-active-fg);
+  --_ki-button-border: var(--ki-button-ghost-danger-active-border);
+  --_ki-button-shadow: var(--ki-button-ghost-active-shadow);
+}
+
+/* Disabled resolves the disabled matrix cells (tone-independent). These
+   blocks come LAST: [variant][disabled] ties the [variant][tone] rest
+   blocks at 0,3,0 specificity, so source order decides (regression:
+   a lone :host([disabled]) at 0,2,0 lost to every explicit variant). */
 :host([disabled]) {
   --_ki-button-bg: var(--ki-button-secondary-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-secondary-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-secondary-neutral-disabled-border);
   --_ki-button-shadow: var(--ki-button-secondary-disabled-shadow);
+}
+
+:host([variant="primary"][disabled]) {
+  --_ki-button-bg: var(--ki-button-primary-neutral-disabled-bg);
+  --_ki-button-fg: var(--ki-button-primary-neutral-disabled-fg);
+  --_ki-button-border: var(--ki-button-primary-neutral-disabled-border);
+  --_ki-button-shadow: var(--ki-button-primary-disabled-shadow);
+}
+
+:host([variant="secondary"][disabled]) {
+  --_ki-button-bg: var(--ki-button-secondary-neutral-disabled-bg);
+  --_ki-button-fg: var(--ki-button-secondary-neutral-disabled-fg);
+  --_ki-button-border: var(--ki-button-secondary-neutral-disabled-border);
+  --_ki-button-shadow: var(--ki-button-secondary-disabled-shadow);
+}
+
+:host([variant="tertiary"][disabled]) {
+  --_ki-button-bg: var(--ki-button-tertiary-neutral-disabled-bg);
+  --_ki-button-fg: var(--ki-button-tertiary-neutral-disabled-fg);
+  --_ki-button-border: var(--ki-button-tertiary-neutral-disabled-border);
+  --_ki-button-shadow: var(--ki-button-tertiary-disabled-shadow);
+}
+
+:host([variant="quaternary"][disabled]) {
+  --_ki-button-bg: var(--ki-button-quaternary-neutral-disabled-bg);
+  --_ki-button-fg: var(--ki-button-quaternary-neutral-disabled-fg);
+  --_ki-button-border: var(--ki-button-quaternary-neutral-disabled-border);
+  --_ki-button-shadow: var(--ki-button-quaternary-disabled-shadow);
+}
+
+:host([variant="ghost"][disabled]) {
+  --_ki-button-bg: var(--ki-button-ghost-neutral-disabled-bg);
+  --_ki-button-fg: var(--ki-button-ghost-neutral-disabled-fg);
+  --_ki-button-border: var(--ki-button-ghost-neutral-disabled-border);
+  --_ki-button-shadow: var(--ki-button-ghost-disabled-shadow);
 }
 
 button {

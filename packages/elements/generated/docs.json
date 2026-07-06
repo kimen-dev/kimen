@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-06T21:26:27",
+  "timestamp": "2026-07-06T21:39:34",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -99,7 +99,7 @@
             "references": {
               "KiButtonSize": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonSize"
               }
             }
@@ -151,7 +151,7 @@
             "references": {
               "KiButtonTone": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonTone"
               }
             }
@@ -195,7 +195,7 @@
             "references": {
               "KiButtonType": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonType"
               }
             }
@@ -265,7 +265,7 @@
             "references": {
               "KiButtonVariant": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonVariant"
               }
             }
