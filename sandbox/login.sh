@@ -9,7 +9,7 @@ cd "$(dirname "$0")/.."
 
 docker build -t kimen-sandbox sandbox/
 echo ""
-echo "Se abrirá un enlace de login: cópialo en tu navegador si no se abre solo."
+echo "A login link will be opened; copy it into your browser if it doesn't open automatically."
 echo ""
 exec docker run --rm -it \
   --cap-add=NET_ADMIN --cap-add=NET_RAW \
