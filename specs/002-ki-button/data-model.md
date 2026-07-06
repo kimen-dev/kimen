@@ -60,6 +60,7 @@ native button is the single activation signal (S1/S4 observe it).
 --ki-button-{size}-{height|padding-inline|gap|radius|font-size|line-height|icon-size|min-target}
 --ki-button-{variant}-{tone}-{state}-{bg|fg|border}
 --ki-button-{variant}-{state}-shadow
+--ki-button-focus-ring-{color|width|offset}
 ```
 
 - sizes: xs, sm, md, lg, xl (5) → 40 geometry tokens
