@@ -1,5 +1,10 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.2/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
@@ -35,7 +40,8 @@
       "!.specify/**",
       "!.claude/**",
       "!packages/elements/src/components.d.ts",
-      "!packages/elements/generated/**"
+      "!packages/elements/generated/**",
+      "!nx.json"
     ]
   }
 }
