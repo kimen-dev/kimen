@@ -11,8 +11,11 @@ import { defineCustomElement } from '../dist/components/ki-button.js';
 
 type KiButtonElement = HTMLElement & {
   disabled: boolean;
+  name: string;
   size: string;
   tone: string;
+  type: string;
+  value: string;
   variant: string;
 };
 
@@ -44,7 +47,10 @@ function cleanup(): void {
 /** Stencil renders async: wait until the shadow root has content. */
 async function mount(
   label = 'Save',
-  attributes: Partial<Record<'disabled' | 'size' | 'tone' | 'variant', string | boolean>> = {},
+  attributes: Partial<
+    Record<'disabled' | 'name' | 'size' | 'tone' | 'type' | 'value' | 'variant', string | boolean>
+  > = {},
+  parent: ParentNode = document.body,
 ): Promise<KiButtonElement> {
   ensureTokens();
   const el = document.createElement('ki-button') as KiButtonElement;
@@ -56,7 +62,7 @@ async function mount(
     }
   }
   el.textContent = label;
-  document.body.append(el);
+  parent.appendChild(el);
   await customElements.whenDefined('ki-button');
   const deadline = Date.now() + 500;
   while (!el.shadowRoot?.hasChildNodes() && Date.now() < deadline) {
@@ -170,5 +176,64 @@ describe('ki-button in a real browser', () => {
       slot.getAttribute('name'),
     );
     expect(slots).toEqual(['start', null, 'end']);
+  });
+
+  it('S7 submits its form with field data and the submitter name value', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    const input = document.createElement('input');
+    input.name = 'title';
+    input.value = 'Mars';
+    form.append(input);
+    document.body.append(form);
+    const el = await mount('Save', { name: 'intent', type: 'submit', value: 'publish' }, form);
+    const button = requireButton(el);
+    let submittedData: Record<string, string> | undefined;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const submitter = (event).submitter;
+      submittedData = Object.fromEntries(new FormData(form, submitter));
+    });
+
+    await userEvent.click(button);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submittedData).toEqual({ intent: 'publish', title: 'Mars' });
+  });
+
+  it('S8 does not submit when type is button', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount('Save', { type: 'button' }, form);
+    const button = requireButton(el);
+    let submissions = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submissions += 1;
+    });
+
+    await userEvent.click(button);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submissions).toBe(0);
+  });
+
+  it('S7 restores field defaults when type is reset', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    const input = document.createElement('input');
+    input.name = 'title';
+    input.defaultValue = 'Mars';
+    input.value = 'Venus';
+    form.append(input);
+    document.body.append(form);
+    const el = await mount('Reset', { type: 'reset' }, form);
+    const button = requireButton(el);
+
+    await userEvent.click(button);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(input.value).toBe('Mars');
   });
 });
