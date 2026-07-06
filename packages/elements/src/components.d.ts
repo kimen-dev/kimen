@@ -5,18 +5,50 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export namespace Components {
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled action button with native button semantics.
+     * When to use: trigger the single main action of a view, supporting actions
+     * in descending hierarchy, or confirming/destructive actions through tone.
+     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * loading/progress semantics.
      */
     interface KiButton {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
          */
-        "label": string;
+        "disabled": boolean;
+        /**
+          * Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
+         */
+        "name"?: string;
+        /**
+          * Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
+          * @default 'md'
+         */
+        "size": KiButtonSize;
+        /**
+          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+          * @default 'neutral'
+         */
+        "tone": KiButtonTone;
+        /**
+          * Native form action type. Full submit/reset behavior is implemented through ElementInternals by the form-participation task. When NOT to use: use `button` when the action must never submit a form.
+          * @default 'submit'
+         */
+        "type": KiButtonType;
+        /**
+          * Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
+         */
+        "value"?: string;
+        /**
+          * Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * @default 'secondary'
+         */
+        "variant": KiButtonVariant;
     }
     /**
      * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
@@ -33,9 +65,11 @@ export namespace Components {
 }
 declare global {
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled action button with native button semantics.
+     * When to use: trigger the single main action of a view, supporting actions
+     * in descending hierarchy, or confirming/destructive actions through tone.
+     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * loading/progress semantics.
      */
     interface HTMLKiButtonElement extends Components.KiButton, HTMLStencilElement {
     }
@@ -61,16 +95,46 @@ declare global {
 }
 declare namespace LocalJSX {
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled action button with native button semantics.
+     * When to use: trigger the single main action of a view, supporting actions
+     * in descending hierarchy, or confirming/destructive actions through tone.
+     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * loading/progress semantics.
      */
     interface KiButton {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
          */
-        "label"?: string;
+        "disabled"?: boolean;
+        /**
+          * Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
+         */
+        "name"?: string;
+        /**
+          * Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
+          * @default 'md'
+         */
+        "size"?: KiButtonSize;
+        /**
+          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+          * @default 'neutral'
+         */
+        "tone"?: KiButtonTone;
+        /**
+          * Native form action type. Full submit/reset behavior is implemented through ElementInternals by the form-participation task. When NOT to use: use `button` when the action must never submit a form.
+          * @default 'submit'
+         */
+        "type"?: KiButtonType;
+        /**
+          * Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
+         */
+        "value"?: string;
+        /**
+          * Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * @default 'secondary'
+         */
+        "variant"?: KiButtonVariant;
     }
     /**
      * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
@@ -86,7 +150,13 @@ declare namespace LocalJSX {
     }
 
     interface KiButtonAttributes {
-        "label": string;
+        "variant": KiButtonVariant;
+        "tone": KiButtonTone;
+        "size": KiButtonSize;
+        "type": KiButtonType;
+        "name": string;
+        "value": string;
+        "disabled": boolean;
     }
     interface KiHelloAttributes {
         "name": string;
@@ -102,9 +172,11 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A token-styled action button with native button semantics.
+             * When to use: trigger the single main action of a view, supporting actions
+             * in descending hierarchy, or confirming/destructive actions through tone.
+             * When NOT to use: navigation, icon-only actions, persistent toggles, or
+             * loading/progress semantics.
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**

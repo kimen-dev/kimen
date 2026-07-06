@@ -23,7 +23,7 @@ describe('ki-button', () => {
     const button = root.shadowRoot?.querySelector('button');
 
     expect(button).toBeInstanceOf(HTMLButtonElement);
-    expect(button).toHaveProperty('disabled', true);
+    expect(button?.hasAttribute('disabled')).toBe(true);
     button?.click();
 
     expect(onClick).not.toHaveBeenCalled();
@@ -41,6 +41,7 @@ describe('ki-button', () => {
     expect(root.getAttribute('size')).toBe('jumbo');
     expect(button).toBeInstanceOf(HTMLButtonElement);
     expect(button?.getAttribute('type')).toBe('button');
-    expect(label).toHaveTextContent('Save');
+    expect(label?.querySelector('slot')?.nodeName).toBe('SLOT');
+    expect(root).toHaveTextContent('Save');
   });
 });

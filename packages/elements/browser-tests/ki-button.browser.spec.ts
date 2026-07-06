@@ -1,5 +1,5 @@
 import axe from 'axe-core';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:002-ki-button
@@ -124,10 +124,9 @@ describe('ki-button in a real browser', () => {
 
   it('S5 exposes a named native button from slotted label content', async () => {
     cleanup();
-    const el = await mount('Save');
-    const button = requireButton(el);
+    await mount('Save');
 
-    expect(button.textContent.trim()).toBe('Save');
+    await expect.element(page.getByRole('button', { name: 'Save' })).toBeInTheDocument();
   });
 
   it('S6 exposes disabled state as unavailable', async () => {

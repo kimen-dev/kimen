@@ -391,7 +391,7 @@
   --ki-surface-info-base-em: var(--ki-color-info-50);
   --ki-surface-info-low-em-alpha: var(--ki-color-info-500-alpha-2);
   --ki-surface-info-base-em-alpha: var(--ki-color-info-500-alpha-1);
-  --ki-surface-success-high-em: var(--ki-color-success-600);
+  --ki-surface-success-high-em: var(--ki-color-success-700);
   --ki-surface-success-med-em: var(--ki-color-success-500);
   --ki-surface-success-low-em: var(--ki-color-success-100);
   --ki-surface-success-base-em: var(--ki-color-success-50);
@@ -415,7 +415,7 @@
   --ki-text-info-med-em: var(--ki-color-info-500);
   --ki-text-info-low-em: var(--ki-color-info-300);
   --ki-text-info-base-em: var(--ki-color-info-100);
-  --ki-text-success-high-em: var(--ki-color-success-600);
+  --ki-text-success-high-em: var(--ki-color-success-700);
   --ki-text-success-med-em: var(--ki-color-success-500);
   --ki-text-success-low-em: var(--ki-color-success-300);
   --ki-text-success-base-em: var(--ki-color-success-100);
