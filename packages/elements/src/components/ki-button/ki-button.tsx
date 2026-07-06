@@ -58,8 +58,12 @@ export class KiButton {
   @Prop({ reflect: true }) size: KiButtonSize = 'md';
 
   /**
-   * Native form action type. Full submit/reset behavior is implemented through
-   * ElementInternals by the form-participation task.
+   * Native form action type: `submit` submits the owning form (running
+   * constraint validation and contributing `name`/`value` to the form data),
+   * `reset` restores field defaults, `button` never touches the form.
+   * Cancel a submission from the form's `submit` event (`preventDefault()`);
+   * unlike a native button, `preventDefault()` on the `click` event does not
+   * cancel it.
    * When NOT to use: use `button` when the action must never submit a form.
    *
    * @default 'submit'
@@ -100,13 +104,7 @@ export class KiButton {
       return;
     }
 
-    queueMicrotask(() => {
-      if (event.defaultPrevented) {
-        return;
-      }
-
-      this.activateFormAction();
-    });
+    this.activateFormAction();
   };
 
   formDisabledCallback(disabled: boolean): void {
@@ -129,6 +127,10 @@ export class KiButton {
       return;
     }
 
+    // Form-associated custom elements have no native activation behavior, so
+    // a temporary native submitter carries this button's name/value through
+    // requestSubmit: constraint validation runs and the submit event fires
+    // with native semantics, without dispatching any synthetic click.
     const submitter = document.createElement('button');
     submitter.type = 'submit';
     submitter.hidden = true;
@@ -137,8 +139,11 @@ export class KiButton {
       submitter.value = this.value ?? '';
     }
     form.append(submitter);
-    submitter.click();
-    submitter.remove();
+    try {
+      form.requestSubmit(submitter);
+    } finally {
+      submitter.remove();
+    }
   }
 
   render() {

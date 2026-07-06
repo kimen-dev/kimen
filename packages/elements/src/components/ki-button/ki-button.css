@@ -159,112 +159,112 @@
   --_ki-button-shadow: var(--ki-button-ghost-rest-shadow);
 }
 
-:host(:hover:not([disabled])) {
+:host(:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-secondary-neutral-hover-bg);
   --_ki-button-fg: var(--ki-button-secondary-neutral-hover-fg);
   --_ki-button-border: var(--ki-button-secondary-neutral-hover-border);
   --_ki-button-shadow: var(--ki-button-secondary-hover-shadow);
 }
 
-:host([variant="primary"][tone="neutral"]:hover:not([disabled])) {
+:host([variant="primary"][tone="neutral"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-primary-neutral-hover-bg);
   --_ki-button-fg: var(--ki-button-primary-neutral-hover-fg);
   --_ki-button-border: var(--ki-button-primary-neutral-hover-border);
   --_ki-button-shadow: var(--ki-button-primary-hover-shadow);
 }
 
-:host([variant="primary"][tone="success"]:hover:not([disabled])) {
+:host([variant="primary"][tone="success"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-primary-success-hover-bg);
   --_ki-button-fg: var(--ki-button-primary-success-hover-fg);
   --_ki-button-border: var(--ki-button-primary-success-hover-border);
   --_ki-button-shadow: var(--ki-button-primary-hover-shadow);
 }
 
-:host([variant="primary"][tone="danger"]:hover:not([disabled])) {
+:host([variant="primary"][tone="danger"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-primary-danger-hover-bg);
   --_ki-button-fg: var(--ki-button-primary-danger-hover-fg);
   --_ki-button-border: var(--ki-button-primary-danger-hover-border);
   --_ki-button-shadow: var(--ki-button-primary-hover-shadow);
 }
 
-:host([variant="secondary"][tone="success"]:hover:not([disabled])) {
+:host([variant="secondary"][tone="success"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-secondary-success-hover-bg);
   --_ki-button-fg: var(--ki-button-secondary-success-hover-fg);
   --_ki-button-border: var(--ki-button-secondary-success-hover-border);
   --_ki-button-shadow: var(--ki-button-secondary-hover-shadow);
 }
 
-:host([variant="secondary"][tone="danger"]:hover:not([disabled])) {
+:host([variant="secondary"][tone="danger"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-secondary-danger-hover-bg);
   --_ki-button-fg: var(--ki-button-secondary-danger-hover-fg);
   --_ki-button-border: var(--ki-button-secondary-danger-hover-border);
   --_ki-button-shadow: var(--ki-button-secondary-hover-shadow);
 }
 
-:host([variant="tertiary"][tone="neutral"]:hover:not([disabled])) {
+:host([variant="tertiary"][tone="neutral"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-tertiary-neutral-hover-bg);
   --_ki-button-fg: var(--ki-button-tertiary-neutral-hover-fg);
   --_ki-button-border: var(--ki-button-tertiary-neutral-hover-border);
   --_ki-button-shadow: var(--ki-button-tertiary-hover-shadow);
 }
 
-:host([variant="tertiary"][tone="success"]:hover:not([disabled])) {
+:host([variant="tertiary"][tone="success"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-tertiary-success-hover-bg);
   --_ki-button-fg: var(--ki-button-tertiary-success-hover-fg);
   --_ki-button-border: var(--ki-button-tertiary-success-hover-border);
   --_ki-button-shadow: var(--ki-button-tertiary-hover-shadow);
 }
 
-:host([variant="tertiary"][tone="danger"]:hover:not([disabled])) {
+:host([variant="tertiary"][tone="danger"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-tertiary-danger-hover-bg);
   --_ki-button-fg: var(--ki-button-tertiary-danger-hover-fg);
   --_ki-button-border: var(--ki-button-tertiary-danger-hover-border);
   --_ki-button-shadow: var(--ki-button-tertiary-hover-shadow);
 }
 
-:host([variant="quaternary"][tone="neutral"]:hover:not([disabled])) {
+:host([variant="quaternary"][tone="neutral"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-quaternary-neutral-hover-bg);
   --_ki-button-fg: var(--ki-button-quaternary-neutral-hover-fg);
   --_ki-button-border: var(--ki-button-quaternary-neutral-hover-border);
   --_ki-button-shadow: var(--ki-button-quaternary-hover-shadow);
 }
 
-:host([variant="quaternary"][tone="success"]:hover:not([disabled])) {
+:host([variant="quaternary"][tone="success"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-quaternary-success-hover-bg);
   --_ki-button-fg: var(--ki-button-quaternary-success-hover-fg);
   --_ki-button-border: var(--ki-button-quaternary-success-hover-border);
   --_ki-button-shadow: var(--ki-button-quaternary-hover-shadow);
 }
 
-:host([variant="quaternary"][tone="danger"]:hover:not([disabled])) {
+:host([variant="quaternary"][tone="danger"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-quaternary-danger-hover-bg);
   --_ki-button-fg: var(--ki-button-quaternary-danger-hover-fg);
   --_ki-button-border: var(--ki-button-quaternary-danger-hover-border);
   --_ki-button-shadow: var(--ki-button-quaternary-hover-shadow);
 }
 
-:host([variant="ghost"][tone="neutral"]:hover:not([disabled])) {
+:host([variant="ghost"][tone="neutral"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-ghost-neutral-hover-bg);
   --_ki-button-fg: var(--ki-button-ghost-neutral-hover-fg);
   --_ki-button-border: var(--ki-button-ghost-neutral-hover-border);
   --_ki-button-shadow: var(--ki-button-ghost-hover-shadow);
 }
 
-:host([variant="ghost"][tone="success"]:hover:not([disabled])) {
+:host([variant="ghost"][tone="success"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-ghost-success-hover-bg);
   --_ki-button-fg: var(--ki-button-ghost-success-hover-fg);
   --_ki-button-border: var(--ki-button-ghost-success-hover-border);
   --_ki-button-shadow: var(--ki-button-ghost-hover-shadow);
 }
 
-:host([variant="ghost"][tone="danger"]:hover:not([disabled])) {
+:host([variant="ghost"][tone="danger"]:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-ghost-danger-hover-bg);
   --_ki-button-fg: var(--ki-button-ghost-danger-hover-fg);
   --_ki-button-border: var(--ki-button-ghost-danger-hover-border);
   --_ki-button-shadow: var(--ki-button-ghost-hover-shadow);
 }
 
-:host(:active:not([disabled])) {
+:host(:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-secondary-neutral-active-bg);
   --_ki-button-fg: var(--ki-button-secondary-neutral-active-fg);
   --_ki-button-border: var(--ki-button-secondary-neutral-active-border);
@@ -273,98 +273,98 @@
 
 /* Pressed appearance per variant x tone: mirrors the hover blocks; the
    generic :host(:active) above only covers the secondary-neutral base. */
-:host([variant="primary"][tone="neutral"]:active:not([disabled])) {
+:host([variant="primary"][tone="neutral"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-primary-neutral-active-bg);
   --_ki-button-fg: var(--ki-button-primary-neutral-active-fg);
   --_ki-button-border: var(--ki-button-primary-neutral-active-border);
   --_ki-button-shadow: var(--ki-button-primary-active-shadow);
 }
 
-:host([variant="primary"][tone="success"]:active:not([disabled])) {
+:host([variant="primary"][tone="success"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-primary-success-active-bg);
   --_ki-button-fg: var(--ki-button-primary-success-active-fg);
   --_ki-button-border: var(--ki-button-primary-success-active-border);
   --_ki-button-shadow: var(--ki-button-primary-active-shadow);
 }
 
-:host([variant="primary"][tone="danger"]:active:not([disabled])) {
+:host([variant="primary"][tone="danger"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-primary-danger-active-bg);
   --_ki-button-fg: var(--ki-button-primary-danger-active-fg);
   --_ki-button-border: var(--ki-button-primary-danger-active-border);
   --_ki-button-shadow: var(--ki-button-primary-active-shadow);
 }
 
-:host([variant="secondary"][tone="success"]:active:not([disabled])) {
+:host([variant="secondary"][tone="success"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-secondary-success-active-bg);
   --_ki-button-fg: var(--ki-button-secondary-success-active-fg);
   --_ki-button-border: var(--ki-button-secondary-success-active-border);
   --_ki-button-shadow: var(--ki-button-secondary-active-shadow);
 }
 
-:host([variant="secondary"][tone="danger"]:active:not([disabled])) {
+:host([variant="secondary"][tone="danger"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-secondary-danger-active-bg);
   --_ki-button-fg: var(--ki-button-secondary-danger-active-fg);
   --_ki-button-border: var(--ki-button-secondary-danger-active-border);
   --_ki-button-shadow: var(--ki-button-secondary-active-shadow);
 }
 
-:host([variant="tertiary"][tone="neutral"]:active:not([disabled])) {
+:host([variant="tertiary"][tone="neutral"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-tertiary-neutral-active-bg);
   --_ki-button-fg: var(--ki-button-tertiary-neutral-active-fg);
   --_ki-button-border: var(--ki-button-tertiary-neutral-active-border);
   --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
 }
 
-:host([variant="tertiary"][tone="success"]:active:not([disabled])) {
+:host([variant="tertiary"][tone="success"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-tertiary-success-active-bg);
   --_ki-button-fg: var(--ki-button-tertiary-success-active-fg);
   --_ki-button-border: var(--ki-button-tertiary-success-active-border);
   --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
 }
 
-:host([variant="tertiary"][tone="danger"]:active:not([disabled])) {
+:host([variant="tertiary"][tone="danger"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-tertiary-danger-active-bg);
   --_ki-button-fg: var(--ki-button-tertiary-danger-active-fg);
   --_ki-button-border: var(--ki-button-tertiary-danger-active-border);
   --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
 }
 
-:host([variant="quaternary"][tone="neutral"]:active:not([disabled])) {
+:host([variant="quaternary"][tone="neutral"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-quaternary-neutral-active-bg);
   --_ki-button-fg: var(--ki-button-quaternary-neutral-active-fg);
   --_ki-button-border: var(--ki-button-quaternary-neutral-active-border);
   --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
 }
 
-:host([variant="quaternary"][tone="success"]:active:not([disabled])) {
+:host([variant="quaternary"][tone="success"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-quaternary-success-active-bg);
   --_ki-button-fg: var(--ki-button-quaternary-success-active-fg);
   --_ki-button-border: var(--ki-button-quaternary-success-active-border);
   --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
 }
 
-:host([variant="quaternary"][tone="danger"]:active:not([disabled])) {
+:host([variant="quaternary"][tone="danger"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-quaternary-danger-active-bg);
   --_ki-button-fg: var(--ki-button-quaternary-danger-active-fg);
   --_ki-button-border: var(--ki-button-quaternary-danger-active-border);
   --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
 }
 
-:host([variant="ghost"][tone="neutral"]:active:not([disabled])) {
+:host([variant="ghost"][tone="neutral"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-ghost-neutral-active-bg);
   --_ki-button-fg: var(--ki-button-ghost-neutral-active-fg);
   --_ki-button-border: var(--ki-button-ghost-neutral-active-border);
   --_ki-button-shadow: var(--ki-button-ghost-active-shadow);
 }
 
-:host([variant="ghost"][tone="success"]:active:not([disabled])) {
+:host([variant="ghost"][tone="success"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-ghost-success-active-bg);
   --_ki-button-fg: var(--ki-button-ghost-success-active-fg);
   --_ki-button-border: var(--ki-button-ghost-success-active-border);
   --_ki-button-shadow: var(--ki-button-ghost-active-shadow);
 }
 
-:host([variant="ghost"][tone="danger"]:active:not([disabled])) {
+:host([variant="ghost"][tone="danger"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-ghost-danger-active-bg);
   --_ki-button-fg: var(--ki-button-ghost-danger-active-fg);
   --_ki-button-border: var(--ki-button-ghost-danger-active-border);
@@ -374,43 +374,43 @@
 /* Disabled resolves the disabled matrix cells (tone-independent). These
    blocks come LAST: [variant][disabled] ties the [variant][tone] rest
    blocks at 0,3,0 specificity, so source order decides (regression:
-   a lone :host([disabled]) at 0,2,0 lost to every explicit variant). */
-:host([disabled]) {
+   a lone :host(:disabled) at 0,2,0 lost to every explicit variant). */
+:host(:disabled) {
   --_ki-button-bg: var(--ki-button-secondary-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-secondary-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-secondary-neutral-disabled-border);
   --_ki-button-shadow: var(--ki-button-secondary-disabled-shadow);
 }
 
-:host([variant="primary"][disabled]) {
+:host([variant="primary"]:disabled) {
   --_ki-button-bg: var(--ki-button-primary-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-primary-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-primary-neutral-disabled-border);
   --_ki-button-shadow: var(--ki-button-primary-disabled-shadow);
 }
 
-:host([variant="secondary"][disabled]) {
+:host([variant="secondary"]:disabled) {
   --_ki-button-bg: var(--ki-button-secondary-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-secondary-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-secondary-neutral-disabled-border);
   --_ki-button-shadow: var(--ki-button-secondary-disabled-shadow);
 }
 
-:host([variant="tertiary"][disabled]) {
+:host([variant="tertiary"]:disabled) {
   --_ki-button-bg: var(--ki-button-tertiary-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-tertiary-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-tertiary-neutral-disabled-border);
   --_ki-button-shadow: var(--ki-button-tertiary-disabled-shadow);
 }
 
-:host([variant="quaternary"][disabled]) {
+:host([variant="quaternary"]:disabled) {
   --_ki-button-bg: var(--ki-button-quaternary-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-quaternary-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-quaternary-neutral-disabled-border);
   --_ki-button-shadow: var(--ki-button-quaternary-disabled-shadow);
 }
 
-:host([variant="ghost"][disabled]) {
+:host([variant="ghost"]:disabled) {
   --_ki-button-bg: var(--ki-button-ghost-neutral-disabled-bg);
   --_ki-button-fg: var(--ki-button-ghost-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-ghost-neutral-disabled-border);
@@ -424,7 +424,7 @@ button {
   border-color: var(--_ki-button-border);
   border-radius: var(--_ki-button-radius);
   border-style: solid;
-  border-width: var(--ki-space-xxs);
+  border-width: var(--ki-button-border-width);
   box-shadow: var(--_ki-button-shadow);
   color: var(--_ki-button-fg);
   cursor: pointer;
@@ -468,10 +468,4 @@ slot[name="start"]::slotted(*),
 slot[name="end"]::slotted(*) {
   block-size: var(--_ki-button-icon-size);
   inline-size: var(--_ki-button-icon-size);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  button {
-    transition-property: background-color, border-color, box-shadow, color;
-  }
 }

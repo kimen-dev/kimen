@@ -171,7 +171,42 @@ describe('ki-button in a real browser', () => {
     expect(button).toHaveProperty('disabled', true);
   });
 
-  it('S6 has zero axe violations across the variant tone size matrix', async () => {
+  it('S2 observes no activation from a real click on a disabled button', async () => {
+    cleanup();
+    const el = await mount('Save', { disabled: true });
+    let activations = 0;
+    el.addEventListener('click', () => {
+      activations += 1;
+    });
+
+    // Pointer events pass through the disabled native button without
+    // dispatching click; force:true skips actionability so the attempt
+    // itself is what we assert.
+    await userEvent.click(el, { force: true }).catch(() => undefined);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(activations).toBe(0);
+  });
+
+  it('S2 stays inert and takes the disabled appearance inside a disabled fieldset', async () => {
+    cleanup();
+    ensureTokens();
+    const form = document.createElement('form');
+    const fieldset = document.createElement('fieldset');
+    fieldset.disabled = true;
+    form.append(fieldset);
+    document.body.append(form);
+    const el = await mount('Save', { variant: 'primary' }, fieldset);
+    const button = requireButton(el);
+    await waitForStyles();
+
+    expect(button).toHaveProperty('disabled', true);
+    expect(getComputedStyle(button).backgroundColor).toBe(
+      readTokenColor('--ki-button-primary-neutral-disabled-bg'),
+    );
+  });
+
+  it('zero axe violations across the variant tone size matrix (SC-003)', async () => {
     cleanup();
     ensureTokens();
     for (const variant of variants) {
@@ -186,7 +221,7 @@ describe('ki-button in a real browser', () => {
     expect(results.violations).toEqual([]);
   });
 
-  it('S3 keeps start and end slots in logical order under RTL', async () => {
+  it('S13 keeps start and end slots in logical order under RTL', async () => {
     cleanup();
     document.documentElement.setAttribute('dir', 'rtl');
     const el = await mount('Save');
@@ -234,6 +269,27 @@ describe('ki-button in a real browser', () => {
     expect(submittedData).toEqual({ intent: 'publish', title: 'Mars' });
   });
 
+  it('S7 pins the cancellation contract: click preventDefault does not stop submission, the submit event does', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount('Save', { type: 'submit' }, form);
+    const button = requireButton(el);
+    el.addEventListener('click', (event) => { event.preventDefault(); });
+    let submissions = 0;
+    form.addEventListener('submit', (event) => {
+      // preventDefault here IS the supported cancellation point (documented
+      // divergence from native buttons, where click preventDefault cancels).
+      event.preventDefault();
+      submissions += 1;
+    });
+
+    await userEvent.click(button);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submissions).toBe(1);
+  });
+
   it('S8 does not submit when type is button', async () => {
     cleanup();
     const form = document.createElement('form');
@@ -252,7 +308,7 @@ describe('ki-button in a real browser', () => {
     expect(submissions).toBe(0);
   });
 
-  it('S7 restores field defaults when type is reset', async () => {
+  it('S12 restores field defaults when type is reset', async () => {
     cleanup();
     const form = document.createElement('form');
     const input = document.createElement('input');
@@ -273,6 +329,19 @@ describe('ki-button in a real browser', () => {
   it('S9 resolves each variant tone background from material3 component tokens', async () => {
     cleanup();
     ensureTokens();
+
+    // Capture the onmars resolution FIRST so the theme assertion cannot pass
+    // tautologically: if the material3 stylesheet or the data-ki-theme wiring
+    // silently broke, values would stay at the onmars baseline.
+    const onmarsBaseline = new Map<string, string>();
+    for (const variant of variants) {
+      const el = await mount(`${variant} baseline`, { variant, tone: 'neutral' });
+      const button = requireButton(el);
+      await waitForStyles();
+      onmarsBaseline.set(variant, getComputedStyle(button).backgroundColor);
+      el.remove();
+    }
+
     ensureMaterial3Tokens();
     document.documentElement.setAttribute('data-ki-theme', 'material3');
 
@@ -284,7 +353,15 @@ describe('ki-button in a real browser', () => {
 
         const state = button.matches(':hover') ? 'hover' : 'rest';
         const expected = readTokenColor(`--ki-button-${variant}-${tone}-${state}-bg`);
-        expect(getComputedStyle(button).backgroundColor, `${variant}/${tone}`).toBe(expected);
+        const actual = getComputedStyle(button).backgroundColor;
+        expect(actual, `${variant}/${tone}`).toBe(expected);
+        // Brand-colored cells must actually change theme (m3 legitimately
+        // inherits some non-brand values from the shared base layer).
+        if (tone === 'neutral' && (variant === 'primary' || variant === 'secondary')) {
+          expect(actual, `${variant} must restyle under material3`).not.toBe(
+            onmarsBaseline.get(variant),
+          );
+        }
       }
     }
   });
@@ -292,15 +369,34 @@ describe('ki-button in a real browser', () => {
   it('S10 resolves forced dark appearance from onmars dark component tokens', async () => {
     cleanup();
     ensureTokens();
+    const light = await mount('Save', { variant: 'primary', tone: 'neutral' });
+    await waitForStyles();
+    const lightBg = getComputedStyle(requireButton(light)).backgroundColor;
+    light.remove();
+
     document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
     const el = await mount('Save', { variant: 'primary', tone: 'neutral' });
     const button = requireButton(el);
     await waitForStyles();
 
-    expect(getComputedStyle(button).backgroundColor).toBe(
+    const darkBg = getComputedStyle(button).backgroundColor;
+    expect(darkBg).toBe(
       readTokenColor(
         `--ki-button-primary-neutral-${button.matches(':hover') ? 'hover' : 'rest'}-bg`,
       ),
+    );
+    expect(darkBg, 'forced dark must change the resolved fill').not.toBe(lightBg);
+  });
+
+  it('S11 renders an unknown variant with the default variant appearance', async () => {
+    cleanup();
+    ensureTokens();
+    const el = await mount('Save', { variant: 'loud' });
+    const button = requireButton(el);
+    await waitForStyles();
+
+    expect(getComputedStyle(button).backgroundColor).toBe(
+      readTokenColor('--ki-button-secondary-neutral-rest-bg'),
     );
   });
 
