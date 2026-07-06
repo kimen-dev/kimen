@@ -16,9 +16,14 @@ ALLOWED_DOMAINS=(
   # Playwright browser downloads
   cdn.playwright.dev
   playwright.azureedge.net
-  # Claude Code (agent driving the loop)
+  playwright.download.prss.microsoft.com
+  # Loop agents (Art. XI is vendor-agnostic): Claude Code
   api.anthropic.com
   statsig.anthropic.com
+  # Loop agents: Codex CLI
+  api.openai.com
+  auth.openai.com
+  chatgpt.com
 )
 
 ipset destroy kimen-allow 2>/dev/null || true
@@ -41,6 +46,14 @@ iptables -A OUTPUT -p tcp --dport 53 -j ACCEPT
 iptables -A OUTPUT -p tcp --dport 443 -m set --match-set kimen-allow dst -j ACCEPT
 # default deny
 iptables -A OUTPUT -j REJECT
+
+# IPv6: same default-deny (an unfiltered v6 route would bypass everything).
+# No v6 allowlist: the container network is v4; v6 is denied outright.
+if command -v ip6tables >/dev/null 2>&1; then
+  ip6tables -F OUTPUT 2>/dev/null || true
+  ip6tables -A OUTPUT -o lo -j ACCEPT 2>/dev/null || true
+  ip6tables -A OUTPUT -j REJECT 2>/dev/null || true
+fi
 
 echo "kimen sandbox firewall active: default-deny egress, $(ipset list kimen-allow | grep -c '^[0-9]') allowed IPs"
 echo "NOTE: IPs are resolved at start; re-run this script if a CDN rotates."

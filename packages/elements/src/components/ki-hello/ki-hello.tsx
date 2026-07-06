@@ -19,6 +19,6 @@ export class KiHello {
   @Prop() name = 'Kimen';
 
   render() {
-    return <p class="greeting">Hello, {this.name}</p>;
+    return <p class="message">Hello, {this.name}</p>;
   }
 }
