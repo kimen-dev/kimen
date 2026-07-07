@@ -13,7 +13,9 @@
     "build": "stencil build",
     "test": "vitest run",
     "test-browser": "vitest run --config vitest.browser.config.ts",
-    "size": "size-limit"
+    "size": "size-limit",
+    "storybook": "storybook dev -p 6006 --no-open",
+    "build-storybook": "storybook build"
   },
   "size-limit": [
     {
@@ -44,11 +46,15 @@
   "devDependencies": {
     "@kimen/tokens": "workspace:*",
     "@size-limit/preset-small-lib": "12.1.0",
+    "@stencil/storybook-plugin": "0.7.0",
     "@stencil/vitest": "1.13.3",
+    "@storybook/addon-a11y": "10.4.6",
+    "@storybook/addon-docs": "10.4.6",
     "@vitest/browser-playwright": "4.1.9",
     "axe-core": "4.12.1",
     "playwright": "1.61.1",
     "size-limit": "12.1.0",
+    "storybook": "10.4.6",
     "vitest": "4.1.9"
   },
   "module": "dist/index.js",

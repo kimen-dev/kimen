@@ -18,6 +18,10 @@ packages/elements/loader/
 packages/elements/www/
 .stencil/
 
+# Storybook build output and logs
+storybook-static/
+*storybook.log
+
 # Nx
 .nx/cache
 .nx/workspace-data
