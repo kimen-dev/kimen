@@ -16,6 +16,7 @@
     "deadcode": "knip",
     "packaging": "publint packages/tokens && publint packages/elements && publint packages/catalog && publint packages/kimen && attw --pack packages/elements --profile esm-only --entrypoints . && attw --pack packages/elements --profile esm-only --entrypoints ./loader --ignore-rules internal-resolution-error && attw --pack packages/catalog --profile esm-only",
     "gates": "bash scripts/gates/gates-suite.sh",
+    "storybook": "nx storybook @kimen/elements",
     "prepare": "husky"
   },
   "devDependencies": {
