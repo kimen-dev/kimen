@@ -19,6 +19,7 @@ export default tseslint.config(
       '**/loader/**',
       '**/generated/**',
       '**/www/**',
+      '**/storybook-static/**',
     ],
   },
   js.configs.recommended,
@@ -51,6 +52,7 @@ export default tseslint.config(
       // Known type-aware friction with Stencil's JSX factory under projectService;
       // tsc -p packages/elements (gates typecheck) is the type-safety authority for tsx.
       '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
     },
   },
   {
@@ -86,7 +88,7 @@ export default tseslint.config(
   },
   {
     // Config and script files: relax type-aware rules (not part of shipped code)
-    files: ['**/*.mjs', '**/*.config.ts', 'scripts/**', 'tools/**'],
+    files: ['**/*.mjs', '**/*.config.ts', 'scripts/**', 'tools/**', '**/.storybook/**'],
     extends: [tseslint.configs.disableTypeChecked],
     languageOptions: {
       globals: {

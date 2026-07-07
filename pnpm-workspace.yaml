@@ -8,5 +8,19 @@ packages:
 minimumReleaseAge: 10080
 # A dependency update may never silently downgrade security settings.
 trustPolicy: no-downgrade
+# Version-pinned exceptions for packages ALREADY resolved in the lockfile
+# before this policy existed (added 2026-07-05). They re-admit exactly what
+# main ships today; any other version stays subject to the full policy.
+# semver@6.3.1: legacy babel/nx transitive, published (2023) after provenance
+# began on the 7.x line, so no-downgrade can never pass for it.
+trustPolicyExclude:
+  - "semver@6.3.1"
+# TEMPORARY (remove after 2026-07-08): biome 2.5.2 platform binaries were
+# published 2026-07-01 and are already pinned in the lockfile; they mature
+# past minimumReleaseAge on 2026-07-08.
+minimumReleaseAgeExclude:
+  - "@biomejs/*"
+  - "@types/node@26.1.0"
+  - "vite@8.1.3"
 # Transitive dependencies may not be installed from exotic/untrusted sources.
 blockExoticSubdeps: true

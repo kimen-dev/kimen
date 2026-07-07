@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-06T22:16:06",
+  "timestamp": "2026-07-07T08:56:16",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -203,7 +203,7 @@
           "mutable": false,
           "attr": "type",
           "reflectToAttr": true,
-          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it.\nWhen NOT to use: use `button` when the action must never submit a form.",
+          "docs": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
           "docsTags": [
             {
               "name": "default",

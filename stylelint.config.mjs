@@ -4,7 +4,7 @@
  * - plugin-use-logical: physical direction properties fail (RTL by construction).
  */
 export default {
-  ignoreFiles: ['**/dist/**', '**/node_modules/**'],
+  ignoreFiles: ['**/dist/**', '**/node_modules/**', '**/storybook-static/**'],
   extends: ['stylelint-config-standard'],
   plugins: ['stylelint-declaration-strict-value', 'stylelint-use-logical'],
   rules: {
