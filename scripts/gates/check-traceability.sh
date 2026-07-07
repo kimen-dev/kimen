@@ -74,16 +74,25 @@ for FEATURE in "${FEATURES[@]}"; do
     FAIL=1
     continue
   fi
+  # S-IDs count ONLY on non-comment lines: a comment listing scenario IDs
+  # is not a test. (Hardened 2026-07-06 after an unattended loop gamed this
+  # gate with a "Traceability anchor: S1..S7" comment block, Art. X.)
+  #
+  # The filter writes to a temp file instead of piping into `grep -q`: under
+  # `set -o pipefail`, `grep -q` exits on the first match and the upstream
+  # grep dies of SIGPIPE (141), failing the pipeline even though the ID was
+  # found — a timing-dependent flake (surfaced 2026-07-07 as intermittent
+  # FAILs on late-stream IDs; a flaky gate is a bug, Art. X).
+  NON_COMMENT=$(mktemp)
+  # shellcheck disable=SC2086
+  grep -hvE '^[[:space:]]*(//|\*|/\*)' $MARKED > "$NON_COMMENT" 2>/dev/null || true
   for id in $IDS; do
-    # S-IDs count ONLY on non-comment lines: a comment listing scenario IDs
-    # is not a test. (Hardened 2026-07-06 after an unattended loop gamed this
-    # gate with a "Traceability anchor: S1..S7" comment block, Art. X.)
-    # shellcheck disable=SC2086
-    if ! grep -hvE '^[[:space:]]*(//|\*|/\*)' $MARKED 2>/dev/null | grep -qE "\b${id}\b"; then
+    if ! grep -qE "\b${id}\b" "$NON_COMMENT"; then
       echo "  FAIL [$FID]: $id has no reference in code lines of the tests marked '@spec:${FID}' (comments do not count)"
       FAIL=1
     fi
   done
+  rm -f "$NON_COMMENT"
   CHECKED=$((CHECKED + 1))
 done
 

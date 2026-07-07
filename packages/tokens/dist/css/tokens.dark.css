@@ -13,7 +13,7 @@
     --ki-surface-special-secondary-alpha-base: var(--ki-color-dark-700-blur-base-dark);
     --ki-surface-inverse-white: var(--ki-color-white-100);
     --ki-surface-inverse-black: var(--ki-color-black-100);
-    --ki-surface-primary-high-em: var(--ki-color-brand-400);
+    --ki-surface-primary-high-em: var(--ki-color-brand-500);
     --ki-surface-primary-med-em: var(--ki-color-brand-500);
     --ki-surface-primary-low-em: var(--ki-color-brand-900);
     --ki-surface-primary-base-em: var(--ki-color-brand-950);
@@ -25,7 +25,7 @@
     --ki-surface-info-base-em: var(--ki-color-info-950);
     --ki-surface-info-low-em-alpha: var(--ki-color-info-500-alpha-5);
     --ki-surface-info-base-em-alpha: var(--ki-color-info-500-alpha-3);
-    --ki-surface-success-high-em: var(--ki-color-success-400);
+    --ki-surface-success-high-em: var(--ki-color-success-700);
     --ki-surface-success-med-em: var(--ki-color-success-500);
     --ki-surface-success-low-em: var(--ki-color-success-900);
     --ki-surface-success-base-em: var(--ki-color-success-950);
@@ -37,7 +37,7 @@
     --ki-surface-warning-base-em: var(--ki-color-warning-950);
     --ki-surface-warning-low-em-alpha: var(--ki-color-warning-500-alpha-5);
     --ki-surface-warning-base-em-alpha: var(--ki-color-warning-500-alpha-2);
-    --ki-surface-danger-high-em: var(--ki-color-danger-400);
+    --ki-surface-danger-high-em: var(--ki-color-danger-700);
     --ki-surface-danger-med-em: var(--ki-color-danger-500);
     --ki-surface-danger-low-em: var(--ki-color-danger-900);
     --ki-surface-danger-base-em: var(--ki-color-danger-950);
@@ -49,6 +49,9 @@
     --ki-surface-disabled-base-em: var(--ki-color-white-8);
     --ki-surface-hover-overlay: var(--ki-color-black-5);
     --ki-surface-hover-overlay-inverse: var(--ki-color-white-3);
+    --ki-surface-primary-high-em-hover: var(--ki-color-brand-600);
+    --ki-surface-success-high-em-hover: var(--ki-color-success-800);
+    --ki-surface-danger-high-em-hover: var(--ki-color-danger-800);
     --ki-text-high-em: var(--ki-color-white-100);
     --ki-text-med-em: var(--ki-color-white-72);
     --ki-text-low-em: var(--ki-color-white-48);
@@ -187,7 +190,7 @@
   --ki-surface-special-secondary-alpha-base: var(--ki-color-dark-700-blur-base-dark);
   --ki-surface-inverse-white: var(--ki-color-white-100);
   --ki-surface-inverse-black: var(--ki-color-black-100);
-  --ki-surface-primary-high-em: var(--ki-color-brand-400);
+  --ki-surface-primary-high-em: var(--ki-color-brand-500);
   --ki-surface-primary-med-em: var(--ki-color-brand-500);
   --ki-surface-primary-low-em: var(--ki-color-brand-900);
   --ki-surface-primary-base-em: var(--ki-color-brand-950);
@@ -199,7 +202,7 @@
   --ki-surface-info-base-em: var(--ki-color-info-950);
   --ki-surface-info-low-em-alpha: var(--ki-color-info-500-alpha-5);
   --ki-surface-info-base-em-alpha: var(--ki-color-info-500-alpha-3);
-  --ki-surface-success-high-em: var(--ki-color-success-400);
+  --ki-surface-success-high-em: var(--ki-color-success-700);
   --ki-surface-success-med-em: var(--ki-color-success-500);
   --ki-surface-success-low-em: var(--ki-color-success-900);
   --ki-surface-success-base-em: var(--ki-color-success-950);
@@ -211,7 +214,7 @@
   --ki-surface-warning-base-em: var(--ki-color-warning-950);
   --ki-surface-warning-low-em-alpha: var(--ki-color-warning-500-alpha-5);
   --ki-surface-warning-base-em-alpha: var(--ki-color-warning-500-alpha-2);
-  --ki-surface-danger-high-em: var(--ki-color-danger-400);
+  --ki-surface-danger-high-em: var(--ki-color-danger-700);
   --ki-surface-danger-med-em: var(--ki-color-danger-500);
   --ki-surface-danger-low-em: var(--ki-color-danger-900);
   --ki-surface-danger-base-em: var(--ki-color-danger-950);
@@ -223,6 +226,9 @@
   --ki-surface-disabled-base-em: var(--ki-color-white-8);
   --ki-surface-hover-overlay: var(--ki-color-black-5);
   --ki-surface-hover-overlay-inverse: var(--ki-color-white-3);
+  --ki-surface-primary-high-em-hover: var(--ki-color-brand-600);
+  --ki-surface-success-high-em-hover: var(--ki-color-success-800);
+  --ki-surface-danger-high-em-hover: var(--ki-color-danger-800);
   --ki-text-high-em: var(--ki-color-white-100);
   --ki-text-med-em: var(--ki-color-white-72);
   --ki-text-low-em: var(--ki-color-white-48);

@@ -5,56 +5,130 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export namespace Components {
     /**
-     * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
-     * is deleted when the first real component lands (see docs/roadmap.md).
-     * When to use: never in production. When NOT to use: always in production.
+     * A token-styled action button with native button semantics.
+     * When to use: trigger the single main action of a view, supporting actions
+     * in descending hierarchy, or confirming/destructive actions through tone.
+     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * loading/progress semantics.
      */
-    interface KiHello {
+    interface KiButton {
         /**
-          * Name to greet.
-          * @default 'Kimen'
+          * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
          */
-        "name": string;
+        "disabled": boolean;
+        /**
+          * Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
+         */
+        "name"?: string;
+        /**
+          * Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
+          * @default 'md'
+         */
+        "size": KiButtonSize;
+        /**
+          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+          * @default 'neutral'
+         */
+        "tone": KiButtonTone;
+        /**
+          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+          * @default 'submit'
+         */
+        "type": KiButtonType;
+        /**
+          * Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
+         */
+        "value"?: string;
+        /**
+          * Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * @default 'secondary'
+         */
+        "variant": KiButtonVariant;
     }
 }
 declare global {
     /**
-     * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
-     * is deleted when the first real component lands (see docs/roadmap.md).
-     * When to use: never in production. When NOT to use: always in production.
+     * A token-styled action button with native button semantics.
+     * When to use: trigger the single main action of a view, supporting actions
+     * in descending hierarchy, or confirming/destructive actions through tone.
+     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * loading/progress semantics.
      */
-    interface HTMLKiHelloElement extends Components.KiHello, HTMLStencilElement {
+    interface HTMLKiButtonElement extends Components.KiButton, HTMLStencilElement {
     }
-    var HTMLKiHelloElement: {
-        prototype: HTMLKiHelloElement;
-        new (): HTMLKiHelloElement;
+    var HTMLKiButtonElement: {
+        prototype: HTMLKiButtonElement;
+        new (): HTMLKiButtonElement;
     };
     interface HTMLElementTagNameMap {
-        "ki-hello": HTMLKiHelloElement;
+        "ki-button": HTMLKiButtonElement;
     }
 }
 declare namespace LocalJSX {
     /**
-     * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
-     * is deleted when the first real component lands (see docs/roadmap.md).
-     * When to use: never in production. When NOT to use: always in production.
+     * A token-styled action button with native button semantics.
+     * When to use: trigger the single main action of a view, supporting actions
+     * in descending hierarchy, or confirming/destructive actions through tone.
+     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * loading/progress semantics.
      */
-    interface KiHello {
+    interface KiButton {
         /**
-          * Name to greet.
-          * @default 'Kimen'
+          * Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
          */
         "name"?: string;
+        /**
+          * Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
+          * @default 'md'
+         */
+        "size"?: KiButtonSize;
+        /**
+          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+          * @default 'neutral'
+         */
+        "tone"?: KiButtonTone;
+        /**
+          * Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+          * @default 'submit'
+         */
+        "type"?: KiButtonType;
+        /**
+          * Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
+         */
+        "value"?: string;
+        /**
+          * Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * @default 'secondary'
+         */
+        "variant"?: KiButtonVariant;
     }
 
-    interface KiHelloAttributes {
+    interface KiButtonAttributes {
+        "variant": KiButtonVariant;
+        "tone": KiButtonTone;
+        "size": KiButtonSize;
+        "type": KiButtonType;
         "name": string;
+        "value": string;
+        "disabled": boolean;
     }
 
     interface IntrinsicElements {
-        "ki-hello": Omit<KiHello, keyof KiHelloAttributes> & { [K in keyof KiHello & keyof KiHelloAttributes]?: KiHello[K] } & { [K in keyof KiHello & keyof KiHelloAttributes as `attr:${K}`]?: KiHelloAttributes[K] } & { [K in keyof KiHello & keyof KiHelloAttributes as `prop:${K}`]?: KiHello[K] };
+        "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -62,11 +136,13 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             /**
-             * Factory smoke-test component. Proves the Fase 0 gate wiring end to end and
-             * is deleted when the first real component lands (see docs/roadmap.md).
-             * When to use: never in production. When NOT to use: always in production.
+             * A token-styled action button with native button semantics.
+             * When to use: trigger the single main action of a view, supporting actions
+             * in descending hierarchy, or confirming/destructive actions through tone.
+             * When NOT to use: navigation, icon-only actions, persistent toggles, or
+             * loading/progress semantics.
              */
-            "ki-hello": LocalJSX.IntrinsicElements["ki-hello"] & JSXBase.HTMLAttributes<HTMLKiHelloElement>;
+            "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
         }
     }
 }

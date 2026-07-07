@@ -159,15 +159,51 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
   return resolveCustomProperty(reference[1], declarations, new Set([...seen, name]));
 }
 
+// Component-layer sweep: every interactive fg/bg cell of a component matrix
+// must clear AA in every theme x scheme. Disabled cells are exempt
+// (WCAG 1.4.3). Added after the 002-ki-button clean-context review found
+// dark-scheme failures the 4 hardcoded pairs could not see (incident-to-gate
+// rule). The pair list is DERIVED from the built CSS, but the pattern below
+// is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
+// (or this gate silently ignores that component; the zero-match guard only
+// protects the patterns listed here).
+const COMPONENT_BG_PATTERN =
+  /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u;
+
+function componentPairs(declarations) {
+  const pairs = [];
+
+  for (const name of declarations.keys()) {
+    if (COMPONENT_BG_PATTERN.test(name)) {
+      pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
+    }
+  }
+
+  return pairs;
+}
+
 function evaluateStylesheet(theme, stylesheet) {
   const css = readFileSync(stylesheet, 'utf8');
   const schemes = collectSchemeDeclarations(css);
   const failures = [];
 
   for (const [scheme, declarations] of Object.entries(schemes)) {
-    for (const pair of CONTRAST_PAIRS) {
+    const swept = componentPairs(declarations);
+
+    if (swept.length === 0) {
+      failures.push(
+        `${theme}/${scheme}: no component-layer pairs matched — the sweep pattern drifted from the token names`,
+      );
+    }
+
+    // Component cells may be translucent (ghost/quaternary): composite the
+    // cell background over the page surface before measuring.
+    const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+
+    for (const pair of [...CONTRAST_PAIRS, ...swept]) {
       const text = parseColor(resolveCustomProperty(pair.text, declarations));
-      const surface = parseColor(resolveCustomProperty(pair.surface, declarations));
+      const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
+      const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
       const ratio = contrastRatio(text, surface);
 
       if (ratio < MIN_RATIO) {
