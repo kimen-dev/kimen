@@ -14,7 +14,7 @@
     "test": "vitest run",
     "test-browser": "vitest run --config vitest.browser.config.ts",
     "size": "size-limit",
-    "storybook": "storybook dev -p 6006 --no-open",
+    "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "size-limit": [
@@ -38,7 +38,28 @@
     ],
     "implicitDependencies": [
       "@kimen/tokens"
-    ]
+    ],
+    "targets": {
+      "build": {
+        "inputs": [
+          "default",
+          "^default",
+          "!{projectRoot}/generated/**"
+        ]
+      },
+      "storybook": {
+        "dependsOn": [
+          "build"
+        ],
+        "cache": false
+      },
+      "build-storybook": {
+        "dependsOn": [
+          "build"
+        ],
+        "cache": false
+      }
+    }
   },
   "dependencies": {
     "@stencil/core": "4.43.5"
