@@ -1,4 +1,4 @@
-import { AttachInternals, Component, Element, h } from '@stencil/core';
+import { Component, Host, h } from '@stencil/core';
 
 /**
  * A non-interactive vertical list container for read-only collections of
@@ -20,33 +20,19 @@ import { AttachInternals, Component, Element, h } from '@stencil/core';
   shadow: true,
 })
 export class KiList {
-  @Element() private readonly host!: HTMLElement;
-  @AttachInternals() private readonly internals!: ElementInternals;
-
-  componentWillLoad(): void {
-    this.internals.role = 'list';
-    if (this.internals.role !== 'list') {
-      Object.defineProperty(this.internals, 'role', { value: 'list', configurable: true });
-    }
-    this.exposeInternalsForDiagnostics();
-  }
-
-  componentDidLoad(): void {
-    this.exposeInternalsForDiagnostics();
-  }
-
-  private exposeInternalsForDiagnostics(): void {
-    Object.defineProperty(this.host, 'internals', {
-      value: this.internals,
-      configurable: true,
-    });
-  }
-
   render() {
+    // role="list" reflected on the host (verified in the real accessibility
+    // tree, S6). ElementInternals.role was tried first per the plan but the
+    // browser did not expose the default role to the AX tree in this build;
+    // the reflected attribute is the portable, verifiable contract. The
+    // `list` host and its slotted `listitem` children stay co-tree, so the
+    // internal generic wrapper keeps list ownership (ARIA generic pass-through).
     return (
-      <div part="list">
-        <slot />
-      </div>
+      <Host role="list">
+        <div part="list">
+          <slot />
+        </div>
+      </Host>
     );
   }
 }

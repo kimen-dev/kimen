@@ -1,4 +1,4 @@
-import { AttachInternals, Component, Element, Host, State, h } from '@stencil/core';
+import { Component, Element, Host, State, h } from '@stencil/core';
 
 function hasAssignedContent(slot: HTMLSlotElement | null, textSlot = false): boolean {
   if (!slot) {
@@ -41,31 +41,14 @@ function hasAssignedContent(slot: HTMLSlotElement | null, textSlot = false): boo
 })
 export class KiListItem {
   @Element() private readonly host!: HTMLElement;
-  @AttachInternals() private readonly internals!: ElementInternals;
 
   @State() private hasStart = false;
   @State() private hasPrimary = false;
   @State() private hasSecondary = false;
   @State() private hasEnd = false;
 
-  componentWillLoad(): void {
-    this.internals.role = 'listitem';
-    if (this.internals.role !== 'listitem') {
-      Object.defineProperty(this.internals, 'role', { value: 'listitem', configurable: true });
-    }
-    this.exposeInternalsForDiagnostics();
-  }
-
   componentDidLoad(): void {
-    this.exposeInternalsForDiagnostics();
     this.syncSlotState();
-  }
-
-  private exposeInternalsForDiagnostics(): void {
-    Object.defineProperty(this.host, 'internals', {
-      value: this.internals,
-      configurable: true,
-    });
   }
 
   private syncSlotState = (): void => {
@@ -84,15 +67,11 @@ export class KiListItem {
   };
 
   render() {
+    // Only `.has-secondary` drives styling (the multi-line min-height token,
+    // :host(.has-secondary)); start/primary/end drive the per-region `hidden`
+    // collapse, not host classes.
     return (
-      <Host
-        class={{
-          'has-start': this.hasStart,
-          'has-primary': this.hasPrimary,
-          'has-secondary': this.hasSecondary,
-          'has-end': this.hasEnd,
-        }}
-      >
+      <Host role="listitem" class={{ 'has-secondary': this.hasSecondary }}>
         <div part="item">
           <div part="start" hidden={!this.hasStart}>
             <slot name="start" onSlotchange={this.syncSlotState} />

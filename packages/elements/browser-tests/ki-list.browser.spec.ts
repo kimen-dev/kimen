@@ -1,7 +1,11 @@
 // @spec:016-ki-list
 import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
+
+const { ariaSnapshot } = commands as unknown as {
+  ariaSnapshot: (selector: string) => Promise<string>;
+};
 
 import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
@@ -198,28 +202,26 @@ describe('ki-list in a real browser', () => {
     expect(results.violations).toEqual([]);
   });
 
-  it('S6 exposes one list with exactly three named list items and no interactive list role', async () => {
-    const list = await mountList(`
-      <ki-list>
+  it('S6 exposes one list that OWNS exactly three named list items in the accessibility tree', async () => {
+    await mountList(`
+      <ki-list id="s6-list">
         <ki-list-item>Email</ki-list-item>
         <ki-list-item>Notifications</ki-list-item>
         <ki-list-item>Storage</ki-list-item>
       </ki-list>
     `);
-    const items = [...list.querySelectorAll('ki-list-item')];
 
-    expect((list as unknown as { internals: ElementInternals }).internals.role).toBe('list');
-    expect(items).toHaveLength(3);
-    expect(
-      items.map((item) => ({
-        name: item.textContent.trim(),
-        role: (item as unknown as { internals: ElementInternals }).internals.role,
-      })),
-    ).toEqual([
-      { name: 'Email', role: 'listitem' },
-      { name: 'Notifications', role: 'listitem' },
-      { name: 'Storage', role: 'listitem' },
-    ]);
+    // The REAL computed accessibility tree (Playwright ariaSnapshot) — not a
+    // read-back of ElementInternals.role, which the platform may silently
+    // ignore and which axe/getByRole cannot see. This proves list ownership
+    // survives the generic wrapper div between the `list` host and its
+    // `listitem` children. The YAML outline is `- list:` then the owned
+    // `- listitem:` rows.
+    const snapshot = await ariaSnapshot('#s6-list');
+    expect(snapshot).toMatch(/^\s*- list:/);
+    const listItems = [...snapshot.matchAll(/- listitem:\s*(.+)/g)].map((m) => m[1]?.trim());
+    expect(listItems).toEqual(['Email', 'Notifications', 'Storage']);
+
     await expect.element(page.getByRole('button')).not.toBeInTheDocument();
     await expect.element(page.getByRole('link')).not.toBeInTheDocument();
   });

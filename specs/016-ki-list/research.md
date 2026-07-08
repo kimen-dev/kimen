@@ -283,3 +283,22 @@ files; the browser suite asserts what ships (`dist/components/ki-list.js` +
 `dist/components/ki-list-item.js`); mock-doc covers the pure predicate
 branches. RED first per Art. III. All 11 approved scenarios (S1–S11) map to
 test tasks (tasks.md Notes carries the full map).
+
+## Addendum (review round 1): role delivery corrected to reflected attribute
+
+D1 originally set `list`/`listitem` via `ElementInternals.role`. Verification
+against the REAL accessibility tree (Playwright `ariaSnapshot`, added as a
+reusable browser command) proved the browser did NOT expose those default
+roles to the AX tree in the shipped custom-elements build — the list rendered
+as bare text, with no `list`/`listitem` nodes. The original S6 test masked
+this by reading `ElementInternals.role` back (circular: the getter returns the
+value set regardless of AX application) and was additionally backed by an
+`Object.defineProperty` fallback that forced the read-back to succeed.
+
+Corrected decision: reflect `role="list"` / `role="listitem"` on the hosts
+(rendered via `<Host role=…>`). This is portable and verifiable, and keeps the
+`list`→`listitem` ownership co-tree through the internal generic wrapper. S6
+now asserts the Playwright `ariaSnapshot` shows a `list` owning exactly the
+three named `listitem`s — the component's defining contract (FR-005) is proven
+in the accessibility tree, not read back. The gaming fallback and the
+`element.internals` test seam were removed.
