@@ -7,6 +7,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
+import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement as defineRadio } from '../dist/components/ki-radio.js';
 import { defineCustomElement as defineRadioGroup } from '../dist/components/ki-radio-group.js';
 
@@ -18,6 +19,7 @@ type KiRadioGroupElement = HTMLElement & {
 };
 
 const STYLE_ID = 'ki-radio-group-browser-token-style';
+const MATERIAL3_STYLE_ID = 'ki-radio-group-browser-material3-token-style';
 
 beforeAll(() => {
   defineRadioGroup();
@@ -31,6 +33,16 @@ function ensureTokens(): void {
   const style = document.createElement('style');
   style.id = STYLE_ID;
   style.textContent = tokensCss;
+  document.head.append(style);
+}
+
+function ensureMaterial3Tokens(): void {
+  if (document.getElementById(MATERIAL3_STYLE_ID)) {
+    return;
+  }
+  const style = document.createElement('style');
+  style.id = MATERIAL3_STYLE_ID;
+  style.textContent = material3Css;
   document.head.append(style);
 }
 
@@ -469,5 +481,36 @@ describe('ki-radio-group in a real browser', () => {
     expect(new FormData(form).has('contact')).toBe(false);
     expect(radioAt(el, 1).tabIndex).toBe(0);
     expect(eventCount).toBe(0);
+  });
+
+  it('S16 material3 restyles the group through token values alone', async () => {
+    cleanup();
+    ensureMaterial3Tokens();
+    const el = await mount({ value: 'email' });
+    const before = getComputedStyle(radioAt(el, 0)).getPropertyValue('--ki-radio-selected-rest-fg');
+
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    const after = getComputedStyle(radioAt(el, 0)).getPropertyValue('--ki-radio-selected-rest-fg');
+    const groupGap = getComputedStyle(el).getPropertyValue('--ki-radio-group-gap');
+    expect(after).not.toBe(before);
+    expect(groupGap.trim()).not.toBe('');
+  });
+
+  it('S18 option layout follows the document writing direction under RTL', async () => {
+    cleanup();
+    document.documentElement.setAttribute('dir', 'rtl');
+    const el = await mount();
+    const radio = el.querySelector('ki-radio');
+    const control = radio?.shadowRoot?.querySelector('[part="control"]');
+    const label = radio?.shadowRoot?.querySelector('[part="label"]');
+    if (!control || !label) {
+      throw new Error('Missing radio parts for RTL geometry assertion');
+    }
+
+    expect(control.getBoundingClientRect().left).toBeGreaterThan(
+      label.getBoundingClientRect().left,
+    );
   });
 });
