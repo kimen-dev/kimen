@@ -48,7 +48,28 @@
         }
       ],
       "methods": [],
-      "events": [],
+      "events": [
+        {
+          "event": "kiDemo",
+          "detail": "KiDemoDetail",
+          "bubbles": true,
+          "cancelable": false,
+          "composed": true,
+          "docs": "Fires in the fixture to pin event reference normalization.",
+          "docsTags": [],
+          "complexType": {
+            "original": "KiDemoDetail",
+            "resolved": "KiDemoDetail",
+            "references": {
+              "KiDemoDetail": {
+                "location": "local",
+                "path": "/home/ci/build/kimen/packages/elements/src/components/ki-fixture/ki-fixture.tsx",
+                "id": "src/components/ki-fixture/ki-fixture.tsx::KiDemoDetail"
+              }
+            }
+          }
+        }
+      ],
       "styles": [],
       "slots": [
         {

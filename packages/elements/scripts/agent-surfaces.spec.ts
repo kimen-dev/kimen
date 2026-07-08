@@ -11,7 +11,7 @@ import {
   serializeJson,
   validateDocs,
 } from './agent-surfaces.mjs';
-import { compareSurfaceBytes, runBuildSurfaces } from './build-surfaces.mjs';
+import { runBuildSurfaces } from './build-surfaces.mjs';
 
 const packageRoot = new URL('..', import.meta.url);
 const docsUrl = new URL('./generated/docs.json', packageRoot);
@@ -209,26 +209,11 @@ describe('agent surfaces', () => {
       await readFile(new URL('./generated/custom-elements.json', packageRoot), 'utf8').catch(
         () => '',
       ),
-      await readFile(new URL('./llms.txt', packageRoot), 'utf8').catch(() => ''),
+      await readFile(new URL('./llms.txt', packageRoot), 'utf8'),
     ]) {
       expect(artifact).not.toContain('"timestamp"');
       expect(artifact).not.toMatch(/\/Users\/|\/home\/|[A-Z]:\\/);
     }
-  });
-
-  it('S5 compareSurfaceBytes names exactly the stale generated file', async () => {
-    const expected = new Map([
-      ['packages/elements/generated/docs.json', 'same\n'],
-      ['packages/elements/generated/custom-elements.json', 'fresh\n'],
-      ['packages/elements/llms.txt', 'same\n'],
-      ['llms.txt', 'same\n'],
-    ]);
-    const actual = new Map(expected);
-    actual.set('packages/elements/generated/custom-elements.json', 'stale\n');
-
-    expect(compareSurfaceBytes(expected, actual)).toEqual([
-      'packages/elements/generated/custom-elements.json',
-    ]);
   });
 
   it('S5 gates-suite wires a surfaces-sync gate over every committed surface', async () => {

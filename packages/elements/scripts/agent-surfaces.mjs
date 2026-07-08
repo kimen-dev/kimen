@@ -17,10 +17,15 @@ export function normalizeDocs(docs, options = {}) {
       }
     }
 
-    for (const prop of component.props ?? []) {
-      for (const reference of Object.values(prop.complexType?.references ?? {})) {
-        if (reference.path) {
-          reference.path = normalizePath(reference.path, options.packageRoot);
+    // Review round 1: events and methods carry the same complexType.references
+    // shape as props — walk every facet generically so the first evented
+    // component cannot commit absolute paths (FR-006/FR-007).
+    for (const facet of [component.props ?? [], component.events ?? [], component.methods ?? []]) {
+      for (const member of facet) {
+        for (const reference of Object.values(member.complexType?.references ?? {})) {
+          if (reference.path) {
+            reference.path = normalizePath(reference.path, options.packageRoot);
+          }
         }
       }
     }
@@ -164,10 +169,12 @@ export function buildManifest(docs) {
           name: part.name,
           description: part.docs ?? '',
         })),
-        cssProperties: (component.styles ?? []).map((style) => ({
-          name: style.name ?? style.annotation,
-          description: style.docs ?? '',
-        })),
+        cssProperties: (component.styles ?? [])
+          .filter((style) => (style.annotation ?? 'prop') === 'prop')
+          .map((style) => ({
+            name: style.name ?? style.annotation,
+            description: style.docs ?? '',
+          })),
       };
 
       for (const key of FACET_KEYS) {
@@ -258,7 +265,7 @@ function normalizePath(value, packageRoot) {
   }
 
   const marker = '/packages/elements/';
-  const markerIndex = posixValue.indexOf(marker);
+  const markerIndex = posixValue.lastIndexOf(marker);
   if (markerIndex >= 0) {
     return posixValue.slice(markerIndex + marker.length);
   }

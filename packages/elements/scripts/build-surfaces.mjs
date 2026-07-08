@@ -59,19 +59,16 @@ export async function runBuildSurfaces(options = {}) {
   };
 }
 
-export function compareSurfaceBytes(expected, actual) {
-  return [...expected.entries()]
-    .filter(([name, bytes]) => actual.get(name) !== bytes)
-    .map(([name]) => name);
-}
-
 function formatViolations(violations) {
   return `agent-surfaces: documentation incomplete (Art. I):\n${violations
     .map((violation) => `  ${violation}`)
     .join('\n')}\n`;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Review round 1: import.meta.url percent-encodes what process.argv[1] does
+// not — compare real filesystem paths so a checkout under a path with spaces
+// or non-ASCII characters cannot silently skip generation (S6).
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const result = await runBuildSurfaces();
   if (!result.ok) {
     process.stderr.write(result.stderr);
