@@ -5,20 +5,32 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export namespace Components {
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A static, non-interactive status pill.
+     * When to use: annotate an entity with short status text (a state, a
+     * category) whose meaning is carried by the label itself; the tone color
+     * only reinforces the text, it never replaces it.
+     * When NOT to use: never for feedback that must be announced (that is
+     * ki-alert's job — the badge has no live region), never as an interactive
+     * chip, filter or button, never empty (the label IS the meaning), never as
+     * a notification-counter overlay (a future, separate concern).
      */
     interface KiBadge {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value falls back to the `md` metrics the same way.
+          * @default 'md'
          */
-        "label": string;
+        "size": KiBadgeSize;
+        /**
+          * Semantic intent, never appearance: each tone resolves its colors from the `--ki-badge-{tone}-*` tokens. An unrecognized value matches no style selector, so the badge keeps the neutral appearance (fallback by CSS construction — no validation code).
+          * @default 'neutral'
+         */
+        "tone": KiBadgeTone;
     }
     /**
      * A token-styled action button with native button semantics.
@@ -65,9 +77,14 @@ export namespace Components {
 }
 declare global {
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A static, non-interactive status pill.
+     * When to use: annotate an entity with short status text (a state, a
+     * category) whose meaning is carried by the label itself; the tone color
+     * only reinforces the text, it never replaces it.
+     * When NOT to use: never for feedback that must be announced (that is
+     * ki-alert's job — the badge has no live region), never as an interactive
+     * chip, filter or button, never empty (the label IS the meaning), never as
+     * a notification-counter overlay (a future, separate concern).
      */
     interface HTMLKiBadgeElement extends Components.KiBadge, HTMLStencilElement {
     }
@@ -95,16 +112,26 @@ declare global {
 }
 declare namespace LocalJSX {
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A static, non-interactive status pill.
+     * When to use: annotate an entity with short status text (a state, a
+     * category) whose meaning is carried by the label itself; the tone color
+     * only reinforces the text, it never replaces it.
+     * When NOT to use: never for feedback that must be announced (that is
+     * ki-alert's job — the badge has no live region), never as an interactive
+     * chip, filter or button, never empty (the label IS the meaning), never as
+     * a notification-counter overlay (a future, separate concern).
      */
     interface KiBadge {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value falls back to the `md` metrics the same way.
+          * @default 'md'
          */
-        "label"?: string;
+        "size"?: KiBadgeSize;
+        /**
+          * Semantic intent, never appearance: each tone resolves its colors from the `--ki-badge-{tone}-*` tokens. An unrecognized value matches no style selector, so the badge keeps the neutral appearance (fallback by CSS construction — no validation code).
+          * @default 'neutral'
+         */
+        "tone"?: KiBadgeTone;
     }
     /**
      * A token-styled action button with native button semantics.
@@ -154,7 +181,8 @@ declare namespace LocalJSX {
     }
 
     interface KiBadgeAttributes {
-        "label": string;
+        "tone": KiBadgeTone;
+        "size": KiBadgeSize;
     }
     interface KiButtonAttributes {
         "variant": KiButtonVariant;
@@ -176,9 +204,14 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A static, non-interactive status pill.
+             * When to use: annotate an entity with short status text (a state, a
+             * category) whose meaning is carried by the label itself; the tone color
+             * only reinforces the text, it never replaces it.
+             * When NOT to use: never for feedback that must be announced (that is
+             * ki-alert's job — the badge has no live region), never as an interactive
+             * chip, filter or button, never empty (the label IS the meaning), never as
+             * a notification-counter overlay (a future, separate concern).
              */
             "ki-badge": LocalJSX.IntrinsicElements["ki-badge"] & JSXBase.HTMLAttributes<HTMLKiBadgeElement>;
             /**

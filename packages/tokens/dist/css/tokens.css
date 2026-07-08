@@ -360,7 +360,7 @@
   --ki-text-primary-med-em: var(--ki-color-brand-500);
   --ki-text-primary-low-em: var(--ki-color-brand-300);
   --ki-text-primary-base-em: var(--ki-color-brand-100);
-  --ki-text-info-high-em: var(--ki-color-info-600);
+  --ki-text-info-high-em: var(--ki-color-info-800); /** Darkened 600->800 in light (badge AA on the base-em tint; founder sign-off at merge, 010 D2 contingency). */
   --ki-text-info-med-em: var(--ki-color-info-500);
   --ki-text-info-low-em: var(--ki-color-info-300);
   --ki-text-info-base-em: var(--ki-color-info-100);
@@ -368,7 +368,7 @@
   --ki-text-success-med-em: var(--ki-color-success-500);
   --ki-text-success-low-em: var(--ki-color-success-300);
   --ki-text-success-base-em: var(--ki-color-success-100);
-  --ki-text-warning-high-em: var(--ki-color-warning-600);
+  --ki-text-warning-high-em: var(--ki-color-warning-800); /** Darkened 600->800 in light (badge AA on the base-em tint; founder sign-off at merge, 010 D2 contingency). */
   --ki-text-warning-med-em: var(--ki-color-warning-500);
   --ki-text-warning-low-em: var(--ki-color-warning-300);
   --ki-text-warning-base-em: var(--ki-color-warning-100);
@@ -864,7 +864,7 @@
     --ki-text-primary-med-em: var(--ki-color-brand-400);
     --ki-text-primary-low-em: var(--ki-color-brand-700);
     --ki-text-primary-base-em: var(--ki-color-brand-900);
-    --ki-text-info-high-em: var(--ki-color-info-300);
+    --ki-text-info-high-em: var(--ki-color-info-300); /** Darkened 600->800 in light (badge AA on the base-em tint; founder sign-off at merge, 010 D2 contingency). */
     --ki-text-info-med-em: var(--ki-color-info-400);
     --ki-text-info-low-em: var(--ki-color-info-700);
     --ki-text-info-base-em: var(--ki-color-info-900);
@@ -872,7 +872,7 @@
     --ki-text-success-med-em: var(--ki-color-success-400);
     --ki-text-success-low-em: var(--ki-color-success-700);
     --ki-text-success-base-em: var(--ki-color-success-900);
-    --ki-text-warning-high-em: var(--ki-color-warning-300);
+    --ki-text-warning-high-em: var(--ki-color-warning-300); /** Darkened 600->800 in light (badge AA on the base-em tint; founder sign-off at merge, 010 D2 contingency). */
     --ki-text-warning-med-em: var(--ki-color-warning-400);
     --ki-text-warning-low-em: var(--ki-color-warning-700);
     --ki-text-warning-base-em: var(--ki-color-warning-900);
@@ -1041,7 +1041,7 @@
   --ki-text-primary-med-em: var(--ki-color-brand-400);
   --ki-text-primary-low-em: var(--ki-color-brand-700);
   --ki-text-primary-base-em: var(--ki-color-brand-900);
-  --ki-text-info-high-em: var(--ki-color-info-300);
+  --ki-text-info-high-em: var(--ki-color-info-300); /** Darkened 600->800 in light (badge AA on the base-em tint; founder sign-off at merge, 010 D2 contingency). */
   --ki-text-info-med-em: var(--ki-color-info-400);
   --ki-text-info-low-em: var(--ki-color-info-700);
   --ki-text-info-base-em: var(--ki-color-info-900);
@@ -1049,7 +1049,7 @@
   --ki-text-success-med-em: var(--ki-color-success-400);
   --ki-text-success-low-em: var(--ki-color-success-700);
   --ki-text-success-base-em: var(--ki-color-success-900);
-  --ki-text-warning-high-em: var(--ki-color-warning-300);
+  --ki-text-warning-high-em: var(--ki-color-warning-300); /** Darkened 600->800 in light (badge AA on the base-em tint; founder sign-off at merge, 010 D2 contingency). */
   --ki-text-warning-med-em: var(--ki-color-warning-400);
   --ki-text-warning-low-em: var(--ki-color-warning-700);
   --ki-text-warning-base-em: var(--ki-color-warning-900);
