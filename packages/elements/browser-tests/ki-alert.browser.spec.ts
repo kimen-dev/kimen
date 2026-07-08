@@ -293,4 +293,89 @@ describe('ki-alert in a real browser', () => {
     expect(part(el, 'alert')).toBeInstanceOf(HTMLElement);
     expect(liveWrapper(el).querySelector('[part="message"] slot')).toBeInstanceOf(HTMLSlotElement);
   });
+
+  it('S6 reaches the dismiss control with Tab and shows visible focus', async () => {
+    cleanup();
+    const el = await mount('Backup completed', { dismissible: true });
+    const button = dismissButton(el);
+
+    await userEvent.keyboard('{Tab}');
+
+    expect(button).toBeInstanceOf(HTMLButtonElement);
+    expect(el.shadowRoot?.activeElement).toBe(button);
+    if (!button) {
+      throw new Error('ki-alert did not render a dismiss button');
+    }
+    const focused = getComputedStyle(button);
+    expect(`${focused.outlineStyle} ${focused.boxShadow}`).not.toBe('none none');
+  });
+
+  it('S7 keyboard activation with Enter and Space dismisses exactly once each', async () => {
+    cleanup();
+    const enterAlert = await mount('Backup completed', { dismissible: true });
+    const enterButton = dismissButton(enterAlert);
+    let enterEvents = 0;
+    enterAlert.addEventListener('ki-dismiss', () => {
+      enterEvents += 1;
+    });
+    enterButton?.focus();
+    await userEvent.keyboard('{Enter}');
+    await nextFrame();
+
+    cleanup();
+    const spaceAlert = await mount('Backup completed', { dismissible: true });
+    const spaceButton = dismissButton(spaceAlert);
+    let spaceEvents = 0;
+    spaceAlert.addEventListener('ki-dismiss', () => {
+      spaceEvents += 1;
+    });
+    spaceButton?.focus();
+    await userEvent.keyboard(' ');
+    await nextFrame();
+
+    expect(enterEvents).toBe(1);
+    expect(spaceEvents).toBe(1);
+  });
+
+  it('S8 non-dismissible alerts add no tab stop before Save', async () => {
+    cleanup();
+    await mount('Read only');
+    const save = document.createElement('button');
+    save.textContent = 'Save';
+    document.body.append(save);
+
+    await userEvent.keyboard('{Tab}');
+
+    expect(document.activeElement).toBe(save);
+  });
+
+  it('S16 keyboard dismissal hands focus to the following Save button', async () => {
+    cleanup();
+    const el = await mount('Backup completed', { dismissible: true });
+    const save = document.createElement('button');
+    save.textContent = 'Save';
+    document.body.append(save);
+    const button = dismissButton(el);
+
+    button?.focus();
+    await userEvent.keyboard('{Enter}');
+    await nextFrame();
+
+    expect(document.activeElement).toBe(save);
+    expect(el.shadowRoot?.activeElement).not.toBe(button);
+  });
+
+  it('S6 keeps the dismiss target at least 24 by 24 CSS pixels', async () => {
+    cleanup();
+    const el = await mount('Backup completed', { dismissible: true });
+    const button = dismissButton(el);
+
+    expect(button).toBeInstanceOf(HTMLButtonElement);
+    if (!button) {
+      throw new Error('ki-alert did not render a dismiss button');
+    }
+    const rect = button.getBoundingClientRect();
+    expect(rect.width).toBeGreaterThanOrEqual(24);
+    expect(rect.height).toBeGreaterThanOrEqual(24);
+  });
 });
