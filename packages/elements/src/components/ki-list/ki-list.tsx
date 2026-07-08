@@ -1,10 +1,18 @@
-import { Component, Prop, h } from '@stencil/core';
+import { AttachInternals, Component, h } from '@stencil/core';
 
 /**
- * TODO(spec): one-line purpose from the approved spec (Art. II).
+ * A non-interactive vertical list container for read-only collections of
+ * similar entries composed with `ki-list-item` children.
  *
- * When to use: TODO(spec): agent-facing guidance (Art. I).
- * When NOT to use: TODO(spec).
+ * When to use: settings, contacts, results or activity feeds where each item
+ * composes leading media, primary text, optional secondary text and trailing
+ * meta or a slotted control.
+ * When NOT to use: menus, selectable option lists, tabular data, navigation,
+ * whole-item clickable rows or lone items outside a list.
+ *
+ * @slot - `ki-list-item` children. Other children are unsupported.
+ * @part list - List surface that owns background, padding, item gap and
+ * between-item divider styling.
  */
 @Component({
   tag: 'ki-list',
@@ -12,14 +20,17 @@ import { Component, Prop, h } from '@stencil/core';
   shadow: true,
 })
 export class KiList {
-  /**
-   * TODO(spec): every public prop carries JSDoc with description, default and
-   * when-to-use guidance; an undocumented API member is a build failure (Art. I).
-   * @default 'TODO'
-   */
-  @Prop() label = 'TODO';
+  @AttachInternals() private readonly internals!: ElementInternals;
+
+  componentWillLoad(): void {
+    this.internals.role = 'list';
+  }
 
   render() {
-    return <span class="label">{this.label}</span>;
+    return (
+      <div part="list">
+        <slot />
+      </div>
+    );
   }
 }
