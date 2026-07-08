@@ -103,6 +103,13 @@ function requireField(el: KiInputElement): HTMLElement {
   return field;
 }
 
+function submitButton(): HTMLButtonElement {
+  const button = document.createElement('button');
+  button.type = 'submit';
+  button.textContent = 'Submit';
+  return button;
+}
+
 async function waitForStyles(): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(resolve));
 }
@@ -272,5 +279,186 @@ describe('ki-input in a real browser', () => {
 
     const results = await axe.run(document.body);
     expect(results.violations).toEqual([]);
+  });
+
+  it('S12 submitted FormData contains the field name and value', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    form.append(submitButton());
+    document.body.append(form);
+    await mount({ label: 'Email', name: 'email', value: 'ada@example.com' }, form);
+    let submittedData: Record<string, string> | undefined;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submittedData = Object.fromEntries(
+        [...new FormData(form)].map(([name, value]) => [
+          name,
+          value instanceof File ? value.name : value,
+        ]),
+      );
+    });
+
+    form.requestSubmit();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submittedData).toEqual({ email: 'ada@example.com' });
+  });
+
+  it('S8 Enter inside the focused field submits its form', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount({ label: 'Email', name: 'email', value: 'ada@example.com' }, form);
+    const input = requireInput(el);
+    let submissions = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submissions += 1;
+    });
+
+    input.focus();
+    await userEvent.keyboard('{Enter}');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submissions).toBe(1);
+  });
+
+  it('S13 reset restores the attribute-declared initial value', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount({ label: 'Email', name: 'email', value: 'ada@example.com' }, form);
+    const input = requireInput(el);
+
+    await userEvent.clear(input);
+    await userEvent.type(input, 'grace@example.com');
+    form.reset();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(el.value).toBe('ada@example.com');
+    expect(input.value).toBe('ada@example.com');
+  });
+
+  it('S14 empty required field blocks submission and reports invalid', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    form.append(submitButton());
+    document.body.append(form);
+    const el = await mount({ label: 'Email', name: 'email', required: true }, form);
+    let submissions = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submissions += 1;
+    });
+
+    form.requestSubmit();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submissions).toBe(0);
+    expect(el.matches(':invalid')).toBe(true);
+  });
+
+  it('S21 invalid appearance appears only after a blocked submission attempt', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    form.append(submitButton());
+    document.body.append(form);
+    const el = await mount({ label: 'Email', name: 'email', required: true }, form);
+    const field = requireField(el);
+    await waitForStyles();
+    const initialBorder = getComputedStyle(field).borderBlockEndColor;
+
+    form.requestSubmit();
+    await waitForStyles();
+
+    expect(getComputedStyle(field).borderBlockEndColor).not.toBe(initialBorder);
+  });
+
+  it('S15 disabled fieldset removes the entry from FormData', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    const fieldset = document.createElement('fieldset');
+    fieldset.disabled = true;
+    form.append(fieldset, submitButton());
+    document.body.append(form);
+    await mount({ label: 'Email', name: 'email', value: 'ada@example.com' }, fieldset);
+    let submittedData: Record<string, string> | undefined;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submittedData = Object.fromEntries(
+        [...new FormData(form)].map(([name, value]) => [
+          name,
+          value instanceof File ? value.name : value,
+        ]),
+      );
+    });
+
+    form.requestSubmit();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submittedData).toEqual({});
+  });
+
+  it('S26 readonly field still submits its value', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    form.append(submitButton());
+    document.body.append(form);
+    await mount({ label: 'Membership ID', name: 'id', readonly: true, value: 'KMN-0042' }, form);
+    let submittedData: Record<string, string> | undefined;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submittedData = Object.fromEntries(
+        [...new FormData(form)].map(([name, value]) => [
+          name,
+          value instanceof File ? value.name : value,
+        ]),
+      );
+    });
+
+    form.requestSubmit();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submittedData).toEqual({ id: 'KMN-0042' });
+  });
+
+  it('S27 empty readonly required field does not block submission', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    form.append(submitButton());
+    document.body.append(form);
+    await mount({ label: 'Membership ID', name: 'id', readonly: true, required: true }, form);
+    let submissions = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submissions += 1;
+    });
+
+    form.requestSubmit();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submissions).toBe(1);
+  });
+
+  it('S28 email kind mismatch blocks submission and reports invalid', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    form.append(submitButton());
+    document.body.append(form);
+    const el = await mount(
+      { label: 'Email', name: 'email', type: 'email', value: 'not-an-email' },
+      form,
+    );
+    let submissions = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submissions += 1;
+    });
+
+    form.requestSubmit();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submissions).toBe(0);
+    expect(el.matches(':invalid')).toBe(true);
   });
 });

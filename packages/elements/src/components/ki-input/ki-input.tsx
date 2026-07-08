@@ -1,4 +1,4 @@
-import { Component, Element, Prop, Watch, h } from '@stencil/core';
+import { AttachInternals, Component, Element, Listen, Prop, State, Watch, h } from '@stencil/core';
 import { type KiInputType, normalizeKiInputType } from './ki-input.form';
 
 let inputIds = 0;
@@ -22,12 +22,16 @@ let inputIds = 0;
   tag: 'ki-input',
   styleUrl: 'ki-input.css',
   shadow: { delegatesFocus: true },
+  formAssociated: true,
 })
 export class KiInput {
   private readonly inputId = `ki-input-${String(++inputIds)}`;
   private input: HTMLInputElement | undefined;
 
   @Element() private readonly host!: HTMLKiInputElement;
+  @AttachInternals() private readonly internals!: ElementInternals;
+
+  @State() private formDisabled = false;
 
   /**
    * Entry kind with native single-line input semantics. Unknown runtime
@@ -99,18 +103,59 @@ export class KiInput {
    */
   @Prop({ reflect: true }) autocomplete?: string;
 
+  componentDidLoad(): void {
+    this.syncFormValue();
+    this.syncValidity();
+  }
+
   @Watch('value')
   protected valueChanged(): void {
     if (this.input && this.input.value !== this.value) {
       this.input.value = this.value;
     }
+    this.syncFormValue();
+    this.syncValidity();
+  }
+
+  @Watch('type')
+  @Watch('required')
+  @Watch('readonly')
+  @Watch('disabled')
+  protected validityAffectingPropChanged(): void {
+    this.syncFormValue();
+    requestAnimationFrame(() => {
+      this.syncValidity();
+    });
+  }
+
+  formResetCallback(): void {
+    this.value = this.host.getAttribute('value') ?? '';
+    this.clearUserInvalid();
+    this.syncFormValue();
+    requestAnimationFrame(() => {
+      this.syncValidity();
+    });
+  }
+
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+    this.syncFormValue();
+    requestAnimationFrame(() => {
+      this.syncValidity();
+    });
   }
 
   private readonly handleInput = (event: Event): void => {
     this.value = (event.target as HTMLInputElement).value;
+    if (this.input?.validity.valid) {
+      this.clearUserInvalid();
+    }
   };
 
   private readonly handleChange = (): void => {
+    if (this.input && !this.input.validity.valid) {
+      this.setUserInvalid();
+    }
     this.host.dispatchEvent(
       new Event('change', {
         bubbles: true,
@@ -118,6 +163,67 @@ export class KiInput {
       }),
     );
   };
+
+  private readonly handleKeyDown = (event: KeyboardEvent): void => {
+    if (
+      event.key !== 'Enter' ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      event.isComposing
+    ) {
+      return;
+    }
+    event.preventDefault();
+    this.internals.form?.requestSubmit();
+  };
+
+  @Listen('invalid')
+  protected handleInvalid(): void {
+    this.setUserInvalid();
+  }
+
+  private get effectiveDisabled(): boolean {
+    return this.disabled || this.formDisabled;
+  }
+
+  private get supportsFormInternals(): boolean {
+    return typeof this.internals.setFormValue === 'function';
+  }
+
+  private syncFormValue(): void {
+    if (!this.supportsFormInternals) {
+      return;
+    }
+    this.internals.setFormValue(this.effectiveDisabled ? null : this.value);
+  }
+
+  private syncValidity(): void {
+    if (!this.supportsFormInternals) {
+      return;
+    }
+    if (!this.input || this.effectiveDisabled) {
+      this.internals.setValidity({});
+      return;
+    }
+
+    if (this.input.validity.valid) {
+      this.internals.setValidity({});
+      this.clearUserInvalid();
+      return;
+    }
+
+    this.internals.setValidity(this.input.validity, this.input.validationMessage, this.input);
+  }
+
+  private setUserInvalid(): void {
+    this.internals.states.add('user-invalid');
+  }
+
+  private clearUserInvalid(): void {
+    this.internals.states.delete('user-invalid');
+  }
 
   render() {
     const type = normalizeKiInputType(this.type);
@@ -137,12 +243,13 @@ export class KiInput {
             value={this.value}
             required={this.required}
             readOnly={this.readonly}
-            disabled={this.disabled}
+            disabled={this.effectiveDisabled}
             {...(this.name !== undefined ? { name: this.name } : {})}
             {...(this.placeholder !== undefined ? { placeholder: this.placeholder } : {})}
             {...(this.autocomplete !== undefined ? { autocomplete: this.autocomplete } : {})}
             onInput={this.handleInput}
             onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
           />
           <slot name="end" />
         </div>
