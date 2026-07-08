@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T15:33:17",
+  "timestamp": "2026-07-08T19:08:32",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -99,7 +99,7 @@
             "references": {
               "KiButtonSize": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-input/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonSize"
               }
             }
@@ -151,7 +151,7 @@
             "references": {
               "KiButtonTone": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-input/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonTone"
               }
             }
@@ -195,7 +195,7 @@
             "references": {
               "KiButtonType": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-input/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonType"
               }
             }
@@ -265,7 +265,7 @@
             "references": {
               "KiButtonVariant": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-input/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonVariant"
               }
             }
@@ -571,7 +571,7 @@
             "references": {
               "KiInputType": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-input/ki-input.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-input/packages/elements/src/components/ki-input/ki-input.tsx",
                 "id": "src/components/ki-input/ki-input.tsx::KiInputType"
               }
             }
@@ -629,7 +629,7 @@
           "mutable": true,
           "attr": "value",
           "reflectToAttr": false,
-          "docs": "Live text value. The attribute declares the initial default; the property\nis the current value and programmatic assignments are silent.\nWhen NOT to use: do not observe user edits by polling; listen for `input`\nand `change`.",
+          "docs": "Live text value. The attribute declares the initial default; the property\nis the current value and programmatic assignments are silent.\nDeviation from native (deliberate, research D2): assigning the ATTRIBUTE\nprogrammatically also replaces the displayed value, silently — native\ninputs would keep the user's dirty value. Form reset restores the\nattribute's current value.\nWhen NOT to use: do not observe user edits by polling; listen for `input`\nand `change` (both re-dispatched composed across the shadow boundary).",
           "docsTags": [
             {
               "name": "default",
@@ -680,6 +680,10 @@
         {
           "name": "label",
           "docs": "Visible label that provides the accessible name."
+        },
+        {
+          "name": "root",
+          "docs": ""
         }
       ],
       "states": [],

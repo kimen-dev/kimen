@@ -97,3 +97,11 @@ API changes. Removing or renaming anything above after first publish is
 MAJOR per Art. IX. Deferred additive candidates recorded by the spec:
 helper/supporting text, on-screen validation messages, `type="number"`,
 size axis, slotted rich label.
+
+## Declared deviation (review round 1, Important-4)
+
+Programmatically assigning the `value` ATTRIBUTE after a user edit replaces
+the displayed value (silently — no `input`/`change`); a native input would
+keep the user's dirty value. Deliberate (research D2, Art. VII): Stencil
+syncs attribute to prop unconditionally, and no approved scenario observes
+the native nuance. Form reset restores the attribute's current value.

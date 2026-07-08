@@ -3,8 +3,6 @@ import { normalizeKiInputType } from './ki-input.form';
 
 export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
 
-let inputIds = 0;
-
 /**
  * A token-styled single-line text field with native input semantics.
  *
@@ -27,7 +25,8 @@ let inputIds = 0;
   formAssociated: true,
 })
 export class KiInput {
-  private readonly inputId = `ki-input-${String(++inputIds)}`;
+  // IDs are scoped per shadow root; a static id is unambiguous (review round 1).
+  private readonly inputId = 'input';
   private input: HTMLInputElement | undefined;
 
   @Element() private readonly host!: HTMLKiInputElement;
@@ -60,8 +59,12 @@ export class KiInput {
   /**
    * Live text value. The attribute declares the initial default; the property
    * is the current value and programmatic assignments are silent.
+   * Deviation from native (deliberate, research D2): assigning the ATTRIBUTE
+   * programmatically also replaces the displayed value, silently — native
+   * inputs would keep the user's dirty value. Form reset restores the
+   * attribute's current value.
    * When NOT to use: do not observe user edits by polling; listen for `input`
-   * and `change`.
+   * and `change` (both re-dispatched composed across the shadow boundary).
    *
    * @default ''
    */
@@ -125,26 +128,20 @@ export class KiInput {
   @Watch('disabled')
   protected validityAffectingPropChanged(): void {
     this.syncFormValue();
-    requestAnimationFrame(() => {
-      this.syncValidity();
-    });
+    this.pendingValiditySync = true;
   }
 
   formResetCallback(): void {
     this.value = this.host.getAttribute('value') ?? '';
     this.clearUserInvalid();
     this.syncFormValue();
-    requestAnimationFrame(() => {
-      this.syncValidity();
-    });
+    this.pendingValiditySync = true;
   }
 
   formDisabledCallback(disabled: boolean): void {
     this.formDisabled = disabled;
     this.syncFormValue();
-    requestAnimationFrame(() => {
-      this.syncValidity();
-    });
+    this.pendingValiditySync = true;
   }
 
   private readonly handleInput = (event: Event): void => {
@@ -169,6 +166,7 @@ export class KiInput {
   private readonly handleKeyDown = (event: KeyboardEvent): void => {
     if (
       event.key !== 'Enter' ||
+      event.defaultPrevented ||
       event.altKey ||
       event.ctrlKey ||
       event.metaKey ||
@@ -219,6 +217,17 @@ export class KiInput {
     this.internals.setValidity(this.input.validity, this.input.validationMessage, this.input);
   }
 
+  // Review round 1 (Important-5): rAF is throttled in background tabs; the
+  // render commit hook is the deterministic moment the Watch was waiting for.
+  private pendingValiditySync = false;
+
+  componentDidUpdate(): void {
+    if (this.pendingValiditySync) {
+      this.pendingValiditySync = false;
+      this.syncValidity();
+    }
+  }
+
   private setUserInvalid(): void {
     this.internals.states.add('user-invalid');
   }
@@ -231,8 +240,13 @@ export class KiInput {
     const type = normalizeKiInputType(this.type);
 
     return (
-      <label part="label" htmlFor={this.inputId}>
-        {this.label}
+      <div part="root">
+        {/* Review round 1 (Critical-1): the label is a SIBLING of the field so
+            slotted adornments never join the control's accessible name
+            (research D1 anatomy); for/id keeps click-to-focus. */}
+        <label part="label" htmlFor={this.inputId}>
+          {this.label}
+        </label>
         <div part="field">
           <slot name="start" />
           <input
@@ -255,7 +269,7 @@ export class KiInput {
           />
           <slot name="end" />
         </div>
-      </label>
+      </div>
     );
   }
 }

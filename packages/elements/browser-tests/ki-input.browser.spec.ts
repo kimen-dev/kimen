@@ -244,6 +244,53 @@ describe('ki-input in a real browser', () => {
     await expect.element(page.getByRole('textbox', { name: 'Email' })).toBeInTheDocument();
   });
 
+  // Review round 1 (Critical-1): slotted adornments must NEVER join the
+  // control's accessible name — the label is the name, exactly (FR-002).
+  it('S9 keeps the accessible name equal to the label with slotted text affixes', async () => {
+    cleanup();
+    const el = await mount({ label: 'Email' });
+    const start = document.createElement('span');
+    start.slot = 'start';
+    start.textContent = 'https://';
+    const end = document.createElement('span');
+    end.slot = 'end';
+    end.textContent = '.example.com';
+    el.append(start, end);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    await expect.element(page.getByRole('textbox', { name: 'Email' })).toBeInTheDocument();
+    expect(el.shadowRoot.querySelector('label')?.textContent.trim()).toBe('Email');
+  });
+
+  // Review round 1 (Minor-7): S19's visibility observable belongs in the
+  // authoritative browser suite, not only mock-doc.
+  it('S19 renders the label visibly on screen', async () => {
+    cleanup();
+    const el = await mount({ label: 'Email' });
+    const label = el.shadowRoot.querySelector('label');
+    expect(label).toBeTruthy();
+    const computed = getComputedStyle(label as Element);
+    expect(computed.display).not.toBe('none');
+    expect(computed.visibility).not.toBe('hidden');
+    expect((label as HTMLElement).getBoundingClientRect().height).toBeGreaterThan(0);
+  });
+
+  // Review round 1 (Minor-7): S20's silence contract verified in a real
+  // browser — programmatic assignment emits neither input nor change.
+  it('S20 stays silent on programmatic value assignment in a real browser', async () => {
+    cleanup();
+    const el = await mount({ label: 'Email', value: 'first' });
+    const events: string[] = [];
+    el.addEventListener('input', () => events.push('input'));
+    el.addEventListener('change', () => events.push('change'));
+
+    el.value = 'second';
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(requireInput(el).value).toBe('second');
+    expect(events).toEqual([]);
+  });
+
   it('S10 exposes required state to assistive technology', async () => {
     cleanup();
     await mount({ label: 'Email', required: true });

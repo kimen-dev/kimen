@@ -48,7 +48,6 @@ Invariants:
 
 | State | Type | Set by | Consumed by |
 |---|---|---|---|
-| `dirty` | boolean | first user edit or programmatic value assignment | reset semantics (cleared by `formResetCallback`) |
 | `formDisabled` | boolean | `formDisabledCallback` (`fieldset[disabled]`, `form[disabled]` ancestry) | effective-disabled = `disabled \|\| formDisabled` → internal input `disabled`, exclusion from form data (S15) |
 | `user-invalid` | custom state (`internals.states`) | host `invalid` event (blocked submission attempt) or user commit while invalid | CSS `:host(:state(user-invalid))` (S21); cleared when valid again or on reset |
 
@@ -120,3 +119,5 @@ composed re-dispatched `change` are the only signals (S1, S2, S20).
 
 No default slot: the label is an attribute (accessible-name wiring by
 construction, spec assumption).
+
+> Review round 1 note: the planned internal `dirty` flag was never needed — the shipped model tracks no dirty state (the attribute→prop sync deviation in research D2 makes it observable-equivalent). Doc aligned with the simpler implementation.

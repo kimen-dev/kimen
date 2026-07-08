@@ -36,7 +36,7 @@
   --_ki-input-placeholder-fg: var(--ki-input-readonly-placeholder-fg);
 }
 
-:host([disabled]) {
+:host(:disabled) {
   --_ki-input-bg: var(--ki-input-disabled-bg);
   --_ki-input-fg: var(--ki-input-disabled-fg);
   --_ki-input-border: var(--ki-input-disabled-border);
@@ -52,9 +52,12 @@
   --_ki-input-placeholder-fg: var(--ki-input-invalid-placeholder-fg);
 }
 
-[part="label"] {
+[part="root"] {
   display: grid;
   gap: var(--ki-input-label-gap);
+}
+
+[part="label"] {
   color: var(--_ki-input-label-fg);
   font-size: var(--ki-input-label-font-size);
   font-weight: var(--ki-input-label-font-weight);
@@ -103,6 +106,12 @@
 
 slot::slotted(*) {
   flex: 0 0 auto;
+}
+
+/* Icon-shaped adornments get the icon box; text affixes size intrinsically
+   (review round 1, Important-3). */
+slot::slotted(svg),
+slot::slotted(img) {
   inline-size: var(--ki-input-icon-size);
   block-size: var(--ki-input-icon-size);
 }

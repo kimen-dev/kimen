@@ -98,7 +98,7 @@ export namespace Components {
          */
         "type": KiInputType;
         /**
-          * Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. When NOT to use: do not observe user edits by polling; listen for `input` and `change`.
+          * Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
           * @default ''
          */
         "value": string;
@@ -234,7 +234,7 @@ declare namespace LocalJSX {
          */
         "type"?: KiInputType;
         /**
-          * Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. When NOT to use: do not observe user edits by polling; listen for `input` and `change`.
+          * Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
           * @default ''
          */
         "value"?: string;
