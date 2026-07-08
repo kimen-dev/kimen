@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T21:14:10",
+  "timestamp": "2026-07-08T23:21:59",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -99,7 +99,7 @@
             "references": {
               "KiButtonSize": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen-w-list/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonSize"
               }
             }
@@ -151,7 +151,7 @@
             "references": {
               "KiButtonTone": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen-w-list/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonTone"
               }
             }
@@ -195,7 +195,7 @@
             "references": {
               "KiButtonType": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen-w-list/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonType"
               }
             }
@@ -265,7 +265,7 @@
             "references": {
               "KiButtonVariant": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen-w-list/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonVariant"
               }
             }
@@ -346,46 +346,35 @@
       "filePath": "src/components/ki-list/ki-list.tsx",
       "encapsulation": "shadow",
       "tag": "ki-list",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
-      "usage": {},
-      "props": [
+      "docs": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.\n\nWhen to use: settings, contacts, results or activity feeds where each item\ncomposes leading media, primary text, optional secondary text and trailing\nmeta or a slotted control.\nWhen NOT to use: menus, selectable option lists, tabular data, navigation,\nwhole-item clickable rows or lone items outside a list.",
+      "docsTags": [
         {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'TODO'"
-            }
-          ],
-          "default": "'TODO'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
+          "name": "slot",
+          "text": "- `ki-list-item` children. Other children are unsupported."
+        },
+        {
+          "name": "part",
+          "text": "list - List surface that owns background, padding, item gap and\nbetween-item divider styling."
         }
       ],
+      "usage": {},
+      "props": [],
       "methods": [],
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
-      "parts": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "`ki-list-item` children. Other children are unsupported."
+        }
+      ],
+      "parts": [
+        {
+          "name": "list",
+          "docs": "List surface that owns background, padding, item gap and\nbetween-item divider styling."
+        }
+      ],
       "states": [],
       "dependents": [],
       "dependencies": [],
@@ -395,46 +384,83 @@
       "filePath": "src/components/ki-list-item/ki-list-item.tsx",
       "encapsulation": "shadow",
       "tag": "ki-list-item",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
-      "usage": {},
-      "props": [
+      "docs": "A non-interactive item inside `ki-list`, composed from leading media,\nprimary text, optional secondary text and trailing media or meta.\n\nWhen to use: only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection.\nWhen NOT to use: outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
+      "docsTags": [
         {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'TODO'"
-            }
-          ],
-          "default": "'TODO'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
+          "name": "slot",
+          "text": "start - Leading media such as an icon, avatar or image."
+        },
+        {
+          "name": "slot",
+          "text": "- Primary text line."
+        },
+        {
+          "name": "slot",
+          "text": "secondary - Supporting text below the primary line. Its presence\nselects the multi-line min-height token."
+        },
+        {
+          "name": "slot",
+          "text": "end - Trailing media, meta text or a slotted control."
+        },
+        {
+          "name": "part",
+          "text": "item - Item row surface and layout container."
+        },
+        {
+          "name": "part",
+          "text": "start - Leading region wrapper."
+        },
+        {
+          "name": "part",
+          "text": "content - Text column containing primary and secondary lines."
+        },
+        {
+          "name": "part",
+          "text": "end - Trailing region wrapper."
         }
       ],
+      "usage": {},
+      "props": [],
       "methods": [],
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
-      "parts": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Primary text line."
+        },
+        {
+          "name": "end",
+          "docs": "Trailing media, meta text or a slotted control."
+        },
+        {
+          "name": "secondary",
+          "docs": "Supporting text below the primary line. Its presence\nselects the multi-line min-height token."
+        },
+        {
+          "name": "start",
+          "docs": "Leading media such as an icon, avatar or image."
+        }
+      ],
+      "parts": [
+        {
+          "name": "content",
+          "docs": "Text column containing primary and secondary lines."
+        },
+        {
+          "name": "end",
+          "docs": "Trailing region wrapper."
+        },
+        {
+          "name": "item",
+          "docs": "Item row surface and layout container."
+        },
+        {
+          "name": "start",
+          "docs": "Leading region wrapper."
+        }
+      ],
       "states": [],
       "dependents": [],
       "dependencies": [],

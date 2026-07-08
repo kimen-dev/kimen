@@ -51,28 +51,25 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A non-interactive vertical list container for read-only collections of
+     * similar entries composed with `ki-list-item` children.
+     * When to use: settings, contacts, results or activity feeds where each item
+     * composes leading media, primary text, optional secondary text and trailing
+     * meta or a slotted control.
+     * When NOT to use: menus, selectable option lists, tabular data, navigation,
+     * whole-item clickable rows or lone items outside a list.
      */
     interface KiList {
-        /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
-         */
-        "label": string;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A non-interactive item inside `ki-list`, composed from leading media,
+     * primary text, optional secondary text and trailing media or meta.
+     * When to use: only as a child of `ki-list`, for one read-only entry in a
+     * similar vertical collection.
+     * When NOT to use: outside `ki-list`, as a menu item, selectable option,
+     * tabular row, navigation link or whole-item clickable control.
      */
     interface KiListItem {
-        /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
-         */
-        "label": string;
     }
 }
 declare global {
@@ -90,9 +87,13 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A non-interactive vertical list container for read-only collections of
+     * similar entries composed with `ki-list-item` children.
+     * When to use: settings, contacts, results or activity feeds where each item
+     * composes leading media, primary text, optional secondary text and trailing
+     * meta or a slotted control.
+     * When NOT to use: menus, selectable option lists, tabular data, navigation,
+     * whole-item clickable rows or lone items outside a list.
      */
     interface HTMLKiListElement extends Components.KiList, HTMLStencilElement {
     }
@@ -101,9 +102,12 @@ declare global {
         new (): HTMLKiListElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A non-interactive item inside `ki-list`, composed from leading media,
+     * primary text, optional secondary text and trailing media or meta.
+     * When to use: only as a child of `ki-list`, for one read-only entry in a
+     * similar vertical collection.
+     * When NOT to use: outside `ki-list`, as a menu item, selectable option,
+     * tabular row, navigation link or whole-item clickable control.
      */
     interface HTMLKiListItemElement extends Components.KiListItem, HTMLStencilElement {
     }
@@ -165,28 +169,25 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A non-interactive vertical list container for read-only collections of
+     * similar entries composed with `ki-list-item` children.
+     * When to use: settings, contacts, results or activity feeds where each item
+     * composes leading media, primary text, optional secondary text and trailing
+     * meta or a slotted control.
+     * When NOT to use: menus, selectable option lists, tabular data, navigation,
+     * whole-item clickable rows or lone items outside a list.
      */
     interface KiList {
-        /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
-         */
-        "label"?: string;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A non-interactive item inside `ki-list`, composed from leading media,
+     * primary text, optional secondary text and trailing media or meta.
+     * When to use: only as a child of `ki-list`, for one read-only entry in a
+     * similar vertical collection.
+     * When NOT to use: outside `ki-list`, as a menu item, selectable option,
+     * tabular row, navigation link or whole-item clickable control.
      */
     interface KiListItem {
-        /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
-         */
-        "label"?: string;
     }
 
     interface KiButtonAttributes {
@@ -198,17 +199,11 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
-    interface KiListAttributes {
-        "label": string;
-    }
-    interface KiListItemAttributes {
-        "label": string;
-    }
 
     interface IntrinsicElements {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
-        "ki-list": Omit<KiList, keyof KiListAttributes> & { [K in keyof KiList & keyof KiListAttributes]?: KiList[K] } & { [K in keyof KiList & keyof KiListAttributes as `attr:${K}`]?: KiListAttributes[K] } & { [K in keyof KiList & keyof KiListAttributes as `prop:${K}`]?: KiList[K] };
-        "ki-list-item": Omit<KiListItem, keyof KiListItemAttributes> & { [K in keyof KiListItem & keyof KiListItemAttributes]?: KiListItem[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `attr:${K}`]?: KiListItemAttributes[K] } & { [K in keyof KiListItem & keyof KiListItemAttributes as `prop:${K}`]?: KiListItem[K] };
+        "ki-list": KiList;
+        "ki-list-item": KiListItem;
     }
 }
 export { LocalJSX as JSX };
@@ -224,15 +219,22 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A non-interactive vertical list container for read-only collections of
+             * similar entries composed with `ki-list-item` children.
+             * When to use: settings, contacts, results or activity feeds where each item
+             * composes leading media, primary text, optional secondary text and trailing
+             * meta or a slotted control.
+             * When NOT to use: menus, selectable option lists, tabular data, navigation,
+             * whole-item clickable rows or lone items outside a list.
              */
             "ki-list": LocalJSX.IntrinsicElements["ki-list"] & JSXBase.HTMLAttributes<HTMLKiListElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A non-interactive item inside `ki-list`, composed from leading media,
+             * primary text, optional secondary text and trailing media or meta.
+             * When to use: only as a child of `ki-list`, for one read-only entry in a
+             * similar vertical collection.
+             * When NOT to use: outside `ki-list`, as a menu item, selectable option,
+             * tabular row, navigation link or whole-item clickable control.
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
         }
