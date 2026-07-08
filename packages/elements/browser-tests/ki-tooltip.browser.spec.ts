@@ -1,6 +1,6 @@
 import axe from 'axe-core';
-import { page, userEvent } from 'vitest/browser';
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { commands, page, userEvent } from 'vitest/browser';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:013-ki-tooltip
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -23,13 +23,17 @@ interface MountOptions {
 }
 
 const STYLE_ID = 'ki-tooltip-browser-token-style';
+const browserCommands = commands as unknown as {
+  installClock: () => Promise<void>;
+  fastForwardClock: (milliseconds: number) => Promise<void>;
+  resumeClock: () => Promise<void>;
+};
 
 beforeAll(() => {
   defineCustomElement();
 });
 
 afterEach(() => {
-  vi.useRealTimers();
   cleanup();
 });
 
@@ -124,7 +128,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
     await userEvent.unhover(trigger);
     await nextFrame();
 
-    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).not.toBeVisible();
+    await expect.element(requireTooltip(host)).not.toBeVisible();
   });
 
   it('S12 moving the pointer from the trigger onto the tooltip keeps it visible', async () => {
@@ -140,27 +144,31 @@ describe('ki-tooltip pointer path in a real browser', () => {
   });
 
   it('S1 honors tokenized hover-intent and linger delays with fake timers', async () => {
-    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
-    const { host, trigger } = await mount({ showDelay: '150ms', hideDelay: '75ms' });
+    await browserCommands.installClock();
+    try {
+      const { host, trigger } = await mount({ showDelay: '150ms', hideDelay: '75ms' });
 
-    requireTriggerSlot(host);
-    await userEvent.hover(trigger);
-    await vi.advanceTimersByTimeAsync(149);
-    await nextFrame();
-    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).not.toBeVisible();
+      requireTriggerSlot(host);
+      await userEvent.hover(trigger);
+      await browserCommands.fastForwardClock(149);
+      await nextFrame();
+      await expect.element(requireTooltip(host)).not.toBeVisible();
 
-    await vi.advanceTimersByTimeAsync(1);
-    await nextFrame();
-    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+      await browserCommands.fastForwardClock(1);
+      await nextFrame();
+      await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
 
-    await userEvent.unhover(trigger);
-    await vi.advanceTimersByTimeAsync(74);
-    await nextFrame();
-    expect(requireTooltip(host)).toBeVisible();
+      await userEvent.unhover(trigger);
+      await browserCommands.fastForwardClock(74);
+      await nextFrame();
+      await expect.element(requireTooltip(host)).toBeVisible();
 
-    await vi.advanceTimersByTimeAsync(1);
-    await nextFrame();
-    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).not.toBeVisible();
+      await browserCommands.fastForwardClock(1);
+      await nextFrame();
+      await expect.element(requireTooltip(host)).not.toBeVisible();
+    } finally {
+      await browserCommands.resumeClock();
+    }
   });
 
   it('S3 an unrecognized placement value renders above the trigger', async () => {
@@ -206,7 +214,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
     await userEvent.keyboard('{Escape}');
     await nextFrame();
 
-    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).not.toBeVisible();
+    await expect.element(requireTooltip(host)).not.toBeVisible();
     expect(document.activeElement).toBe(trigger);
     expect(activations).toBe(0);
   });

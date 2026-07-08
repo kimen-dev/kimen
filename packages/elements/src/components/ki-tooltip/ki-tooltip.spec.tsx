@@ -47,9 +47,10 @@ describe('ki-tooltip', () => {
     if (!slot) {
       throw new Error('Expected a default trigger slot');
     }
-    if (!(tooltip instanceof HTMLDivElement)) {
+    if (!tooltip) {
       throw new Error('Expected a tooltip bubble');
     }
+    expect(tooltip.nodeName).toBe('DIV');
     expect(slot.nodeName).toBe('SLOT');
     expect(tooltip.getAttribute('role')).toBe('tooltip');
     expect(tooltip.textContent).toBe('Send immediately');

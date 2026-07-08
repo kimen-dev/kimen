@@ -23,6 +23,15 @@ export default defineConfig({
             await page.emulateMedia({ colorScheme: scheme });
           },
         ),
+        installClock: defineBrowserCommand(async ({ page }) => {
+          await page.clock.install();
+        }),
+        fastForwardClock: defineBrowserCommand(async ({ page }, milliseconds: number) => {
+          await page.clock.fastForward(milliseconds);
+        }),
+        resumeClock: defineBrowserCommand(async ({ page }) => {
+          await page.clock.resume();
+        }),
       },
       instances: [
         ...browsers.map((browser) => ({
