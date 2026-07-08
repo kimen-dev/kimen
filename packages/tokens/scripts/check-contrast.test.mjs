@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  componentPairs,
   compositeOver,
   contrastRatio,
   parseColor,
@@ -12,6 +13,30 @@ import {
 test('relative luminance matches WCAG anchors', () => {
   assert.equal(relativeLuminance(parseColor('#000000')), 0);
   assert.equal(relativeLuminance(parseColor('#ffffff')), 1);
+});
+
+test('component sweep includes the tooltip text pair', () => {
+  const declarations = new Map([
+    ['--ki-button-primary-neutral-rest-bg', '#000000'],
+    ['--ki-tooltip-bg', '#000000'],
+  ]);
+
+  const swept = componentPairs(declarations);
+
+  assert.deepEqual(swept.missingPatterns, []);
+  assert.deepEqual(
+    swept.pairs.map((pair) => [pair.text, pair.surface]),
+    [
+      ['--ki-button-primary-neutral-rest-fg', '--ki-button-primary-neutral-rest-bg'],
+      ['--ki-tooltip-fg', '--ki-tooltip-bg'],
+    ],
+  );
+});
+
+test('component sweep reports each missing component pattern', () => {
+  const swept = componentPairs(new Map([['--ki-tooltip-bg', '#000000']]));
+
+  assert.deepEqual(swept.missingPatterns, ['ki-button']);
 });
 
 test('contrast ratio matches WCAG anchors', () => {

@@ -167,19 +167,34 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
 // (or this gate silently ignores that component; the zero-match guard only
 // protects the patterns listed here).
-const COMPONENT_BG_PATTERN =
-  /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u;
+const COMPONENT_PAIR_PATTERNS = [
+  {
+    name: 'ki-button',
+    surface: /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u,
+  },
+  {
+    name: 'ki-tooltip',
+    surface: /^--ki-tooltip-bg$/u,
+  },
+];
 
-function componentPairs(declarations) {
+export function componentPairs(declarations) {
   const pairs = [];
+  const matchCounts = new Map(COMPONENT_PAIR_PATTERNS.map((pattern) => [pattern.name, 0]));
 
   for (const name of declarations.keys()) {
-    if (COMPONENT_BG_PATTERN.test(name)) {
-      pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
+    for (const pattern of COMPONENT_PAIR_PATTERNS) {
+      if (pattern.surface.test(name)) {
+        matchCounts.set(pattern.name, (matchCounts.get(pattern.name) ?? 0) + 1);
+        pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
+      }
     }
   }
 
-  return pairs;
+  return {
+    pairs,
+    missingPatterns: [...matchCounts].filter(([, count]) => count === 0).map(([name]) => name),
+  };
 }
 
 function evaluateStylesheet(theme, stylesheet) {
@@ -190,9 +205,9 @@ function evaluateStylesheet(theme, stylesheet) {
   for (const [scheme, declarations] of Object.entries(schemes)) {
     const swept = componentPairs(declarations);
 
-    if (swept.length === 0) {
+    for (const name of swept.missingPatterns) {
       failures.push(
-        `${theme}/${scheme}: no component-layer pairs matched — the sweep pattern drifted from the token names`,
+        `${theme}/${scheme}: no ${name} component-layer pairs matched — the sweep pattern drifted from the token names`,
       );
     }
 
@@ -200,7 +215,7 @@ function evaluateStylesheet(theme, stylesheet) {
     // cell background over the page surface before measuring.
     const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
 
-    for (const pair of [...CONTRAST_PAIRS, ...swept]) {
+    for (const pair of [...CONTRAST_PAIRS, ...swept.pairs]) {
       const text = parseColor(resolveCustomProperty(pair.text, declarations));
       const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
       const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
