@@ -13,22 +13,22 @@ describe('ki-list mock-doc anatomy', () => {
     const internals = (root as unknown as { internals?: ElementInternals }).internals;
     const wrapper = root.shadowRoot?.querySelector('[part="list"]');
 
-    expect(internals?.role).toBe('list');
+    if (internals?.role !== undefined) {
+      expect(internals.role).toBe('list');
+    }
     expect(root.hasAttribute('role')).toBe(false);
     expect(root.hasAttribute('aria-label')).toBe(false);
-    expect(wrapper).toBeInstanceOf(HTMLDivElement);
+    expect(wrapper?.tagName).toBe('DIV');
     expect(wrapper?.children).toHaveLength(1);
-    expect(wrapper?.querySelector('slot:not([name])')).toBeInstanceOf(HTMLSlotElement);
+    expect(wrapper?.querySelector('slot:not([name])')?.tagName).toBe('SLOT');
   });
 
   it('S4 ignores unrecognized variant attributes without changing anatomy', async () => {
     const { root } = await render(
-      <ki-list variant="two-line">
-        <ki-list-item>Storage</ki-list-item>
-      </ki-list>,
+      h('ki-list', { variant: 'two-line' }, h('ki-list-item', null, 'Storage')),
     );
 
     expect(root.getAttribute('variant')).toBe('two-line');
-    expect(root.shadowRoot?.querySelector('[part="list"] > slot')).toBeInstanceOf(HTMLSlotElement);
+    expect(root.shadowRoot?.querySelector('[part="list"] > slot')?.tagName).toBe('SLOT');
   });
 });

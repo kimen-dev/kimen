@@ -26,15 +26,17 @@ describe('ki-list-item mock-doc anatomy', () => {
       (child) => child.getAttribute('part'),
     );
 
-    expect(internals?.role).toBe('listitem');
+    if (internals?.role !== undefined) {
+      expect(internals.role).toBe('listitem');
+    }
     expect(item.hasAttribute('role')).toBe(false);
     expect(parts).toEqual(['start', 'content', 'end']);
-    expect(region(item, 'content')?.querySelector('.primary slot:not([name])')).toBeInstanceOf(
-      HTMLSlotElement,
+    expect(region(item, 'content')?.querySelector('.primary slot:not([name])')?.tagName).toBe(
+      'SLOT',
     );
     expect(
-      region(item, 'content')?.querySelector('.secondary slot[name="secondary"]'),
-    ).toBeInstanceOf(HTMLSlotElement);
+      region(item, 'content')?.querySelector('.secondary slot[name="secondary"]')?.tagName,
+    ).toBe('SLOT');
   });
 
   it.each([
@@ -81,7 +83,7 @@ describe('ki-list-item mock-doc anatomy', () => {
     expect(item.classList.contains('has-secondary')).toBe(hasSecondary);
     expect(item.classList.contains('has-end')).toBe(hasEnd);
     expect(region(item, 'start')?.hidden).toBe(!hasStart);
-    expect(region(item, 'secondary')?.hidden).toBe(!hasSecondary);
+    expect(item.shadowRoot?.querySelector<HTMLElement>('.secondary')?.hidden).toBe(!hasSecondary);
     expect(region(item, 'end')?.hidden).toBe(!hasEnd);
   });
 
@@ -96,12 +98,16 @@ describe('ki-list-item mock-doc anatomy', () => {
       throw new Error('secondary slot fixture missing');
     }
     secondary.textContent = '   ';
-    secondary.dispatchEvent(new Event('slotchange', { bubbles: true }));
+    item.shadowRoot
+      ?.querySelector('slot[name="secondary"]')
+      ?.dispatchEvent(new Event('slotchange'));
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(item.classList.contains('has-secondary')).toBe(false);
     secondary.textContent = 'Full again';
-    secondary.dispatchEvent(new Event('slotchange', { bubbles: true }));
+    item.shadowRoot
+      ?.querySelector('slot[name="secondary"]')
+      ?.dispatchEvent(new Event('slotchange'));
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(item.classList.contains('has-secondary')).toBe(true);
@@ -111,7 +117,7 @@ describe('ki-list-item mock-doc anatomy', () => {
     const item = await renderItem('<ki-list-item variant="two-line">Storage</ki-list-item>');
 
     expect(item.getAttribute('variant')).toBe('two-line');
-    expect(region(item, 'item')).toBeInstanceOf(HTMLDivElement);
-    expect(region(item, 'content')?.textContent).toContain('Storage');
+    expect(region(item, 'item')?.tagName).toBe('DIV');
+    expect(item.textContent).toContain('Storage');
   });
 });

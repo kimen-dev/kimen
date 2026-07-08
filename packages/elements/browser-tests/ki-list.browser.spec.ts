@@ -131,7 +131,7 @@ describe('ki-list in a real browser', () => {
     const style = getComputedStyle(parts.item);
 
     expect(parts.start.offsetParent).toBeNull();
-    expect(item.shadowRoot?.querySelector('[part="secondary"]')?.textContent.trim()).toBe('');
+    expect(item.shadowRoot?.querySelector('.secondary')?.textContent.trim()).toBe('');
     expect(parts.end.offsetParent).toBeNull();
     expect(Math.round(item.getBoundingClientRect().height)).toBe(
       Math.round(Number.parseFloat(style.minBlockSize)),

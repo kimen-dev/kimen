@@ -1,11 +1,72 @@
 /* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
+  --_ki-list-item-min-height: var(--ki-list-item-min-height);
+  --_ki-list-item-padding-inline: var(--ki-list-item-padding-inline);
+  --_ki-list-item-padding-block: var(--ki-list-item-padding-block);
+  --_ki-list-item-gap: var(--ki-list-item-gap);
+  --_ki-list-item-radius: var(--ki-list-item-radius);
+  --_ki-list-item-primary-font-size: var(--ki-list-item-primary-font-size);
+  --_ki-list-item-primary-line-height: var(--ki-list-item-primary-line-height);
+  --_ki-list-item-primary-font-weight: var(--ki-list-item-primary-font-weight);
+  --_ki-list-item-primary-fg: var(--ki-list-item-primary-fg);
+  --_ki-list-item-secondary-font-size: var(--ki-list-item-secondary-font-size);
+  --_ki-list-item-secondary-line-height: var(--ki-list-item-secondary-line-height);
+  --_ki-list-item-secondary-font-weight: var(--ki-list-item-secondary-font-weight);
+  --_ki-list-item-secondary-fg: var(--ki-list-item-secondary-fg);
+
   display: block;
 }
 
-.label {
-  color: var(--ki-text-base);
-  font-family: var(--ki-typography-family-base);
-  font-size: var(--ki-typography-size-body);
+:host(.has-secondary) {
+  --_ki-list-item-min-height: var(--ki-list-item-min-height-multiline);
+}
+
+[part="item"] {
+  display: flex;
+  align-items: center;
+  gap: var(--_ki-list-item-gap);
+  min-block-size: var(--_ki-list-item-min-height);
+  padding-block: var(--_ki-list-item-padding-block);
+  padding-inline: var(--_ki-list-item-padding-inline);
+  border-radius: var(--_ki-list-item-radius);
+  box-sizing: border-box;
+}
+
+[part="start"],
+[part="end"] {
+  flex: none;
+}
+
+[part="content"] {
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+  min-inline-size: 0;
+  overflow: visible;
+}
+
+[hidden] {
+  display: none;
+}
+
+.primary,
+.secondary {
+  display: block;
+  overflow: visible;
+  white-space: normal;
+}
+
+.primary {
+  color: var(--_ki-list-item-primary-fg);
+  font-size: var(--_ki-list-item-primary-font-size);
+  font-weight: var(--_ki-list-item-primary-font-weight);
+  line-height: var(--_ki-list-item-primary-line-height);
+}
+
+.secondary {
+  color: var(--_ki-list-item-secondary-fg);
+  font-size: var(--_ki-list-item-secondary-font-size);
+  font-weight: var(--_ki-list-item-secondary-font-weight);
+  line-height: var(--_ki-list-item-secondary-line-height);
 }
