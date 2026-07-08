@@ -1,6 +1,7 @@
 // @spec:016-ki-list
 import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
@@ -183,5 +184,66 @@ describe('ki-list in a real browser', () => {
 
     const results = await axe.run(document.querySelector('main') ?? document.body);
     expect(results.violations).toEqual([]);
+  });
+
+  it('S6 exposes one list with exactly three named list items and no interactive list role', async () => {
+    await mountList(`
+      <ki-list>
+        <ki-list-item>Email</ki-list-item>
+        <ki-list-item>Notifications</ki-list-item>
+        <ki-list-item>Storage</ki-list-item>
+      </ki-list>
+    `);
+
+    await expect.element(page.getByRole('list')).toBeInTheDocument();
+    await expect.element(page.getByRole('listitem', { name: 'Email' })).toBeInTheDocument();
+    await expect.element(page.getByRole('listitem', { name: 'Notifications' })).toBeInTheDocument();
+    await expect.element(page.getByRole('listitem', { name: 'Storage' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button')).not.toBeInTheDocument();
+    await expect.element(page.getByRole('link')).not.toBeInTheDocument();
+  });
+
+  it('S5 tabs to a slotted switch while skipping the list and items', async () => {
+    const list = await mountList(`
+      <ki-list>
+        <ki-list-item>
+          Email
+          <input slot="end" role="switch" aria-label="Email alerts" type="checkbox" />
+        </ki-list-item>
+      </ki-list>
+    `);
+    const control = list.querySelector<HTMLInputElement>('input[role="switch"]');
+    if (!control) {
+      throw new Error('switch fixture missing');
+    }
+
+    await userEvent.keyboard('{Tab}');
+
+    expect(document.activeElement).toBe(control);
+  });
+
+  it('S11 operates a slotted switch exactly once from the keyboard', async () => {
+    const list = await mountList(`
+      <ki-list>
+        <ki-list-item>
+          Email
+          <input slot="end" role="switch" aria-label="Email alerts" type="checkbox" />
+        </ki-list-item>
+      </ki-list>
+    `);
+    const control = list.querySelector<HTMLInputElement>('input[role="switch"]');
+    if (!control) {
+      throw new Error('switch fixture missing');
+    }
+    let changes = 0;
+    control.addEventListener('change', () => {
+      changes += 1;
+    });
+
+    control.focus();
+    await userEvent.keyboard(' ');
+
+    expect(control.checked).toBe(true);
+    expect(changes).toBe(1);
   });
 });
