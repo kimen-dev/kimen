@@ -26,6 +26,17 @@
           "$value": "{ki.outline.danger-high-em}"
         }
       },
+      "success": {
+        "bg": {
+          "$value": "{ki.surface.s1}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.med-em}"
+        }
+      },
       "info": {
         "bg": {
           "$value": "{ki.surface.s3}"
