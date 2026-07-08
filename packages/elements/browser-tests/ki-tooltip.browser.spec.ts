@@ -1,45 +1,204 @@
 import axe from 'axe-core';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 // @spec:013-ki-tooltip
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
+import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
 
-type KiTooltipElement = HTMLElement & { label: string };
+type KiTooltipElement = HTMLElement & {
+  label: string;
+  placement: string;
+};
+
+interface MountOptions {
+  label?: string;
+  placement?: string;
+  style?: Partial<CSSStyleDeclaration>;
+  showDelay?: string;
+  hideDelay?: string;
+}
+
+const STYLE_ID = 'ki-tooltip-browser-token-style';
 
 beforeAll(() => {
   defineCustomElement();
 });
 
-/** Stencil renders async: wait until the shadow root has content. */
-async function mount(): Promise<KiTooltipElement> {
-  const el = document.createElement('ki-tooltip') as KiTooltipElement;
-  document.body.appendChild(el);
-  await customElements.whenDefined('ki-tooltip');
-  const deadline = Date.now() + 2000;
-  while (!el.shadowRoot?.textContent && Date.now() < deadline) {
-    await new Promise((resolve) => requestAnimationFrame(resolve));
+afterEach(() => {
+  vi.useRealTimers();
+  cleanup();
+});
+
+function ensureTokens(): void {
+  if (document.getElementById(STYLE_ID)) {
+    return;
   }
-  return el;
+
+  const style = document.createElement('style');
+  style.id = STYLE_ID;
+  style.textContent = tokensCss;
+  document.head.append(style);
 }
 
-describe('ki-tooltip in a real browser', () => {
-  // TODO(spec): S1 core behavior from the approved scenario.
-  it('renders its label', async () => {
-    const el = await mount();
-    expect(el.shadowRoot?.textContent).toContain('TODO');
-    el.remove();
+function cleanup(): void {
+  document.body.replaceChildren();
+  document.documentElement.removeAttribute('dir');
+  document.documentElement.removeAttribute('data-ki-theme');
+  document.documentElement.removeAttribute('data-ki-color-scheme');
+}
+
+async function nextFrame(): Promise<void> {
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+async function mount(options: MountOptions = {}): Promise<{
+  host: KiTooltipElement;
+  trigger: HTMLButtonElement;
+}> {
+  ensureTokens();
+  const host = document.createElement('ki-tooltip') as KiTooltipElement;
+  host.label = options.label ?? 'Send immediately';
+  host.placement = options.placement ?? 'top';
+  host.style.setProperty('--ki-tooltip-show-delay', options.showDelay ?? '0ms');
+  host.style.setProperty('--ki-tooltip-hide-delay', options.hideDelay ?? '0ms');
+  Object.assign(host.style, options.style ?? {});
+
+  const trigger = document.createElement('button');
+  trigger.textContent = 'Send';
+  host.append(trigger);
+  document.body.append(host);
+
+  await customElements.whenDefined('ki-tooltip');
+  const deadline = Date.now() + 500;
+  while (!host.shadowRoot?.hasChildNodes() && Date.now() < deadline) {
+    await nextFrame();
+  }
+
+  return { host, trigger };
+}
+
+function tooltipBubble(host: KiTooltipElement): HTMLDivElement | null {
+  return host.shadowRoot?.querySelector('[part="tooltip"]') ?? null;
+}
+
+function requireTooltip(host: KiTooltipElement): HTMLDivElement {
+  const tooltip = tooltipBubble(host);
+  expect(tooltip).toBeInstanceOf(HTMLDivElement);
+  if (!tooltip) {
+    throw new Error('ki-tooltip did not render its tooltip bubble');
+  }
+  return tooltip;
+}
+
+function requireTriggerSlot(host: KiTooltipElement): void {
+  const slot = host.shadowRoot?.querySelector('slot');
+  if (!slot) {
+    throw new Error('ki-tooltip did not render the default trigger slot');
+  }
+}
+
+async function hoverTrigger(host: KiTooltipElement, trigger: HTMLButtonElement): Promise<void> {
+  requireTriggerSlot(host);
+  await userEvent.hover(trigger);
+  await nextFrame();
+  expect(requireTooltip(host)).toHaveTextContent('Send immediately');
+}
+
+describe('ki-tooltip pointer path in a real browser', () => {
+  it('S1 hovering the Send trigger shows Send immediately', async () => {
+    const { host, trigger } = await mount();
+
+    await hoverTrigger(host, trigger);
+
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
   });
 
-  // TODO(spec): S2 keyboard path, S3 assistive-tech outcome, S4 form
-  // participation (if applicable), S5 theming: the five families (Art. II).
+  it('S2 moving the pointer away from trigger and tooltip hides it', async () => {
+    const { host, trigger } = await mount();
+    await hoverTrigger(host, trigger);
 
-  it('has zero axe violations (Art. V floor)', async () => {
-    const el = await mount();
-    const results = await axe.run(el);
+    await userEvent.unhover(trigger);
+    await nextFrame();
+
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).not.toBeVisible();
+  });
+
+  it('S12 moving the pointer from the trigger onto the tooltip keeps it visible', async () => {
+    const { host, trigger } = await mount({ hideDelay: '100ms' });
+    await hoverTrigger(host, trigger);
+    const tooltip = requireTooltip(host);
+
+    await userEvent.unhover(trigger);
+    await userEvent.hover(tooltip);
+    await nextFrame();
+
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+  });
+
+  it('S1 honors tokenized hover-intent and linger delays with fake timers', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    const { host, trigger } = await mount({ showDelay: '150ms', hideDelay: '75ms' });
+
+    requireTriggerSlot(host);
+    await userEvent.hover(trigger);
+    await vi.advanceTimersByTimeAsync(149);
+    await nextFrame();
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).not.toBeVisible();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await nextFrame();
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+
+    await userEvent.unhover(trigger);
+    await vi.advanceTimersByTimeAsync(74);
+    await nextFrame();
+    expect(requireTooltip(host)).toBeVisible();
+
+    await vi.advanceTimersByTimeAsync(1);
+    await nextFrame();
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).not.toBeVisible();
+  });
+
+  it('S3 an unrecognized placement value renders above the trigger', async () => {
+    const { host, trigger } = await mount({
+      placement: 'sideways',
+      style: { marginBlockStart: '120px', marginInlineStart: '120px' },
+    });
+    await hoverTrigger(host, trigger);
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const tooltipRect = requireTooltip(host).getBoundingClientRect();
+
+    expect(tooltipRect.bottom).toBeLessThanOrEqual(triggerRect.top);
+  });
+
+  it('S14 top-edge preferred top placement flips below and stays in the viewport', async () => {
+    const { host, trigger } = await mount({
+      placement: 'top',
+      style: { position: 'fixed', insetBlockStart: '0px', insetInlineStart: '120px' },
+    });
+    await hoverTrigger(host, trigger);
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const tooltipRect = requireTooltip(host).getBoundingClientRect();
+
+    expect(tooltipRect.top).toBeGreaterThanOrEqual(0);
+    expect(tooltipRect.bottom).toBeLessThanOrEqual(window.innerHeight);
+    expect(tooltipRect.top).toBeGreaterThanOrEqual(triggerRect.bottom);
+  });
+
+  it('S1 has zero axe violations in the pointer fixture', async () => {
+    const { host, trigger } = await mount();
+    await hoverTrigger(host, trigger);
+
+    const main = document.createElement('main');
+    main.append(host);
+    document.body.append(main);
+    const results = await axe.run(main);
     expect(results.violations).toEqual([]);
-    el.remove();
   });
 });
