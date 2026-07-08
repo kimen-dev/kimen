@@ -1,5 +1,5 @@
 import axe from 'axe-core';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:011-ki-alert
@@ -377,5 +377,38 @@ describe('ki-alert in a real browser', () => {
     const rect = button.getBoundingClientRect();
     expect(rect.width).toBeGreaterThanOrEqual(24);
     expect(rect.height).toBeGreaterThanOrEqual(24);
+  });
+
+  it('S11 exposes the default dismiss label as the button accessible name', async () => {
+    cleanup();
+    await mount('Backup completed', { dismissible: true });
+
+    await expect.element(page.getByRole('button', { name: 'Dismiss' })).toBeInTheDocument();
+  });
+
+  it('S12 exposes a localized dismiss label as the button accessible name', async () => {
+    cleanup();
+    const el = await mount('Backup completed', {
+      dismissible: true,
+      'dismiss-label': 'Descartar',
+    });
+    const button = dismissButton(el);
+    const svg = button?.querySelector('svg');
+
+    await expect.element(page.getByRole('button', { name: 'Descartar' })).toBeInTheDocument();
+    expect(svg?.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('S11 S12 have zero axe violations on dismissible variants', async () => {
+    cleanup();
+    ensureTokens();
+    const main = document.createElement('main');
+    document.body.append(main);
+
+    await mount('Backup completed', { dismissible: true }, main);
+    await mount('Copia completada', { dismissible: true, 'dismiss-label': 'Descartar' }, main);
+
+    const results = await axe.run(main);
+    expect(results.violations).toEqual([]);
   });
 });
