@@ -232,4 +232,126 @@ describe('ki-radio-group in a real browser', () => {
     const results = await axe.run(el);
     expect(results.violations).toEqual([]);
   });
+
+  it('S5 Tab reaches the group as a single stop on the selected option with visible focus', async () => {
+    cleanup();
+    const el = await mount({ value: 'sms' });
+    const sms = radioAt(el, 1);
+
+    await userEvent.keyboard('{Tab}');
+
+    expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(sms);
+    const control = el
+      .querySelectorAll('ki-radio')[1]
+      ?.shadowRoot?.querySelector('[part="control"]');
+    if (!control) {
+      throw new Error('Missing focused radio control part');
+    }
+    const focused = getComputedStyle(control);
+    expect(`${focused.outlineStyle} ${focused.boxShadow}`).not.toBe('none none');
+  });
+
+  it('S25 Tab enters an unselected group on the first enabled option without selecting', async () => {
+    cleanup();
+    const el = await mount();
+    el.querySelectorAll('ki-radio')[0]?.setAttribute('disabled', '');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const sms = radioAt(el, 1);
+
+    await userEvent.keyboard('{Tab}');
+
+    expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(sms);
+    expect(radios(el).some((input) => input.checked)).toBe(false);
+  });
+
+  it('S6 ArrowDown moves focus and selection to the next option with one input and change', async () => {
+    cleanup();
+    const el = await mount({ value: 'email' });
+    const email = radioAt(el, 0);
+    const sms = radioAt(el, 1);
+    const events: string[] = [];
+    el.addEventListener('input', () => {
+      events.push('input');
+    });
+    el.addEventListener('change', () => {
+      events.push('change');
+    });
+    email.focus();
+
+    await userEvent.keyboard('{ArrowDown}');
+
+    expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(sms);
+    expect(sms.checked).toBe(true);
+    expect(events).toEqual(['input', 'change']);
+  });
+
+  it('S7 Arrow navigation wraps and skips disabled options', async () => {
+    cleanup();
+    const el = await mount({ value: 'sms' });
+    el.querySelectorAll('ki-radio')[2]?.setAttribute('disabled', '');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const sms = radioAt(el, 1);
+    const email = radioAt(el, 0);
+    sms.focus();
+
+    await userEvent.keyboard('{ArrowDown}');
+
+    expect(el.querySelectorAll('ki-radio')[0]?.shadowRoot?.activeElement).toBe(email);
+    expect(email.checked).toBe(true);
+  });
+
+  it('S8 Space selects the focused option when none is selected', async () => {
+    cleanup();
+    const el = await mount();
+    const email = radioAt(el, 0);
+    email.focus();
+
+    await userEvent.keyboard(' ');
+
+    expect(email.checked).toBe(true);
+    expect(el.value).toBe('email');
+  });
+
+  it('S9 Tab leaves the group in a single step', async () => {
+    cleanup();
+    const before = document.createElement('button');
+    before.textContent = 'Before';
+    const after = document.createElement('button');
+    after.textContent = 'After';
+    document.body.append(before);
+    const el = await mount({ value: 'email' });
+    document.body.append(after);
+
+    await userEvent.keyboard('{Tab}');
+    expect(el.querySelectorAll('ki-radio')[0]?.shadowRoot?.activeElement).toBe(radioAt(el, 0));
+    await userEvent.keyboard('{Tab}');
+
+    expect(document.activeElement).toBe(after);
+  });
+
+  it('S20 Tab skips a disabled group entirely', async () => {
+    cleanup();
+    const after = document.createElement('button');
+    after.textContent = 'After';
+    document.body.append(after);
+    await mount({ disabled: true, value: 'email' });
+
+    await userEvent.keyboard('{Tab}');
+
+    expect(document.activeElement).toBe(after);
+  });
+
+  it('S21 ArrowLeft moves to the next option in RTL', async () => {
+    cleanup();
+    document.documentElement.setAttribute('dir', 'rtl');
+    const el = await mount({ value: 'email' });
+    const email = radioAt(el, 0);
+    const sms = radioAt(el, 1);
+    email.focus();
+
+    await userEvent.keyboard('{ArrowLeft}');
+
+    expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(sms);
+    expect(sms.checked).toBe(true);
+  });
 });
