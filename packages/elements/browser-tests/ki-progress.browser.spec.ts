@@ -1,4 +1,5 @@
 import tokensCss from '@kimen/tokens/css?raw';
+import material3Css from '@kimen/tokens/css/material3?raw';
 import axe from 'axe-core';
 import { commands, page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
@@ -18,6 +19,7 @@ type KiProgressElement = HTMLElement & {
 };
 
 const STYLE_ID = 'ki-progress-browser-token-style';
+const MATERIAL3_STYLE_ID = 'ki-progress-browser-material3-token-style';
 const browserCommands = commands as unknown as {
   emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
 };
@@ -34,6 +36,17 @@ function ensureTokens(): void {
   const style = document.createElement('style');
   style.id = STYLE_ID;
   style.textContent = tokensCss;
+  document.head.append(style);
+}
+
+function ensureMaterial3Tokens(): void {
+  if (document.getElementById(MATERIAL3_STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = MATERIAL3_STYLE_ID;
+  style.textContent = material3Css;
   document.head.append(style);
 }
 
@@ -143,6 +156,11 @@ function linearFillRatio(el: KiProgressElement): number {
 
 function circularDash(el: KiProgressElement): string {
   return getComputedStyle(indicator(el)).strokeDasharray;
+}
+
+function partColor(el: Element): string {
+  const styles = getComputedStyle(el);
+  return styles.stroke === 'none' ? styles.backgroundColor : styles.stroke;
 }
 
 function runningInfiniteAnimations(el: Element): Animation[] {
@@ -339,5 +357,51 @@ describe('ki-progress in a real browser', () => {
 
     const results = await axe.run(requireMain());
     expect(results.violations).toEqual([]);
+  });
+
+  it('S10 restyles the shape mode matrix from material3 progress tokens without markup changes', async () => {
+    cleanup();
+    await cleanupMedia();
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+
+    for (const shape of ['linear', 'circular'] as const) {
+      for (const indeterminate of [false, true]) {
+        const el = await mount({
+          label: `${shape} ${indeterminate ? 'indeterminate' : 'determinate'}`,
+          shape,
+          indeterminate,
+          value: '40',
+          max: '100',
+        });
+
+        expect(partColor(track(el))).toBe(readToken('--ki-progress-track-color'));
+        expect(partColor(indicator(el))).toBe(readToken('--ki-progress-indicator-color'));
+        expect(progressbar(el).outerHTML).toContain('role="progressbar"');
+
+        if (shape === 'linear') {
+          expect(getComputedStyle(track(el)).blockSize).toBe(
+            readToken('--ki-progress-linear-thickness', 'inlineSize'),
+          );
+        } else {
+          const svg = requireElement(requireShadow(el), 'svg');
+          expect(getComputedStyle(svg).inlineSize).toBe(
+            readToken('--ki-progress-circular-size', 'inlineSize'),
+          );
+        }
+      }
+    }
+  });
+
+  it('S12 grows the linear fill from the right edge under RTL', async () => {
+    cleanup();
+    await cleanupMedia();
+    document.documentElement.setAttribute('dir', 'rtl');
+    const el = await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
+
+    const trackRect = track(el).getBoundingClientRect();
+    const indicatorRect = indicator(el).getBoundingClientRect();
+    expect(indicatorRect.right).toBeCloseTo(trackRect.right, 1);
+    expect(indicatorRect.left).toBeGreaterThan(trackRect.left);
   });
 });
