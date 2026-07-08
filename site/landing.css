@@ -1,0 +1,636 @@
+/* Kimen landing — every visual value resolves from @kimen/tokens (Art. VI
+   spirit: the page IS the re-theming demo). Logical properties only. */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: light dark;
+
+  /* Page-local type ratios: the token line-height scale is absolute and pairs
+     1:1 with fixed token sizes; the landing's fluid clamp() sizes need ratios. */
+  --_site-leading-display: 1.08;
+
+  /* Fluid type bounds (Codex review, PR #7): the clamp() endpoints and
+     interpolation factors are named here so the type scale stays declared
+     in one token-like place instead of scattered magic numbers. */
+  --_site-hero-type-min: 2.4rem;
+  --_site-hero-type-fluid: 7.5vi;
+  --_site-heading-type-fluid: 3.5vi;
+  --_site-leading-heading: 1.15;
+  --_site-leading-card-title: 1.3;
+  --_site-leading-body: 1.55;
+  --_site-leading-lede: 1.6;
+  --_site-code-scale: 0.92em;
+}
+
+:root[data-ki-color-scheme="light"] {
+  color-scheme: light;
+}
+
+:root[data-ki-color-scheme="dark"] {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--ki-surface-s0);
+  color: var(--ki-text-high-em);
+  font-family: var(--ki-typography-family-body);
+  font-size: var(--ki-typography-size-body-2);
+  line-height: var(--ki-typography-line-height-body-2);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ------------------------------ a11y utils ------------------------------ */
+
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  inset-block-start: var(--ki-space-sm);
+  inset-inline-start: var(--ki-space-sm);
+  z-index: 10;
+  padding: var(--ki-space-sm) var(--ki-space-lg);
+  background: var(--ki-surface-primary-high-em);
+  color: var(--ki-text-primary-on-primary);
+  border-radius: var(--ki-radius-component-md);
+  text-decoration: none;
+  transform: translateY(calc(-100% - var(--ki-space-4xl)));
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+:is(a, button, input, summary):focus-visible {
+  outline: 2px solid var(--ki-outline-primary-med-em);
+  outline-offset: 2px;
+  border-radius: var(--ki-radius-xs);
+}
+
+/* ------------------------------- aurora -------------------------------- */
+
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora::before,
+.aurora::after {
+  content: "";
+  position: absolute;
+  inline-size: 60vmax;
+  block-size: 60vmax;
+  border-radius: var(--ki-radius-round);
+  filter: blur(90px);
+  opacity: 0.55;
+}
+
+.aurora::before {
+  background: radial-gradient(circle at center, var(--ki-color-brand-500-alpha-4), transparent 65%);
+  inset-block-start: -25vmax;
+  inset-inline-end: -15vmax;
+  animation: drift-a 26s ease-in-out infinite alternate;
+}
+
+.aurora::after {
+  background: radial-gradient(circle at center, var(--ki-color-info-500-alpha-3), transparent 65%);
+  inset-block-end: -30vmax;
+  inset-inline-start: -20vmax;
+  animation: drift-b 32s ease-in-out infinite alternate;
+}
+
+@keyframes drift-a {
+  to {
+    transform: translate(-8vmax, 6vmax) scale(1.15);
+  }
+}
+
+@keyframes drift-b {
+  to {
+    transform: translate(10vmax, -8vmax) scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .aurora::before,
+  .aurora::after {
+    animation: none;
+  }
+}
+
+/* ------------------------------- header -------------------------------- */
+
+.site-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ki-space-lg);
+  padding: var(--ki-space-md) clamp(var(--ki-space-lg), 4vi, var(--ki-space-7xl));
+  background: color-mix(in srgb, var(--ki-surface-s0) 82%, transparent);
+  backdrop-filter: blur(12px);
+  border-block-end: 1px solid var(--ki-outline-low-em);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ki-space-sm);
+  color: var(--ki-text-high-em);
+  text-decoration: none;
+  font-family: var(--ki-typography-family-display);
+  font-weight: var(--ki-typography-weight-display-semibold);
+  font-size: var(--ki-typography-size-title-2);
+}
+
+.brand-mark {
+  color: var(--ki-text-primary-high-em);
+}
+
+.brand-stage {
+  font-family: var(--ki-typography-family-mono);
+  font-size: var(--ki-typography-size-caption-2);
+  font-weight: var(--ki-typography-weight-body-medium);
+  color: var(--ki-text-primary-high-em);
+  background: var(--ki-surface-primary-low-em);
+  border: 1px solid var(--ki-outline-primary-low-em);
+  border-radius: var(--ki-radius-round);
+  padding: calc(var(--ki-space-xxs) / 2) var(--ki-space-sm);
+}
+
+.site-nav {
+  display: flex;
+  gap: var(--ki-space-xl);
+}
+
+.site-nav a {
+  color: var(--ki-text-med-em);
+  text-decoration: none;
+  font-weight: var(--ki-typography-weight-body-medium);
+}
+
+.site-nav a:hover {
+  color: var(--ki-text-high-em);
+}
+
+/* -------------------------------- layout ------------------------------- */
+
+main {
+  max-inline-size: 72rem;
+  margin-inline: auto;
+  padding-inline: clamp(var(--ki-space-lg), 4vi, var(--ki-space-7xl));
+}
+
+.section {
+  padding-block: clamp(var(--ki-space-8xl), 9vb, var(--ki-space-14xl));
+  border-block-start: 1px solid var(--ki-outline-low-em);
+}
+
+.section h2 {
+  font-family: var(--ki-typography-family-display);
+  font-size: clamp(
+    var(--ki-typography-size-heading-3),
+    var(--_site-heading-type-fluid),
+    var(--ki-typography-size-heading-4)
+  );
+  line-height: var(--_site-leading-heading);
+  font-weight: var(--ki-typography-weight-display-semibold);
+  margin-block: 0 var(--ki-space-4xl);
+  letter-spacing: var(--ki-typography-letter-spacing-sm);
+}
+
+.section-lede {
+  color: var(--ki-text-med-em);
+  max-inline-size: 46rem;
+  font-size: var(--ki-typography-size-title-2);
+  line-height: var(--_site-leading-lede);
+}
+
+code {
+  font-family: var(--ki-typography-family-mono);
+  font-size: var(--_site-code-scale);
+  background: var(--ki-surface-s2);
+  border-radius: var(--ki-radius-xs);
+  padding-inline: var(--ki-space-xxs);
+}
+
+/* --------------------------------- hero -------------------------------- */
+
+.hero {
+  padding-block: clamp(var(--ki-space-10xl), 12vb, var(--ki-space-18xl))
+    clamp(var(--ki-space-8xl), 8vb, var(--ki-space-12xl));
+  text-align: center;
+}
+
+.eyebrow {
+  font-family: var(--ki-typography-family-mono);
+  font-size: var(--ki-typography-size-caption-2);
+  letter-spacing: var(--ki-typography-letter-spacing-spaced-out);
+  text-transform: uppercase;
+  color: var(--ki-text-primary-high-em);
+  margin-block: 0 var(--ki-space-2xl);
+}
+
+.hero h1 {
+  font-family: var(--ki-typography-family-display);
+  font-size: clamp(
+    var(--_site-hero-type-min),
+    var(--_site-hero-type-fluid),
+    var(--ki-typography-size-display-1)
+  );
+
+  /* Unitless ratio: the display line-height token is absolute and pairs with
+     the full display size, which the clamp() below can shrink. */
+  line-height: var(--_site-leading-display);
+  text-wrap: balance;
+  max-inline-size: 24ch;
+  margin-inline: auto;
+  font-weight: var(--ki-typography-weight-display-bold);
+  letter-spacing: var(--ki-typography-letter-spacing-md);
+  margin-block: 0 var(--ki-space-3xl);
+}
+
+/* Gradient title only where the standard property exists: engines without it
+   keep the solid high-emphasis color (never transparent-on-nothing). */
+@supports (background-clip: text) {
+  .hero h1 {
+    background: linear-gradient(135deg, var(--ki-text-high-em) 30%, var(--ki-text-primary-high-em));
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.lede {
+  color: var(--ki-text-med-em);
+  font-size: clamp(var(--ki-typography-size-body-2), 2vi, var(--ki-typography-size-title-2));
+  line-height: var(--_site-leading-lede);
+  max-inline-size: 44rem;
+  margin-inline: auto;
+  margin-block: 0 var(--ki-space-5xl);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ki-space-lg);
+  margin-block-end: clamp(var(--ki-space-7xl), 8vb, var(--ki-space-11xl));
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 48px;
+  padding-inline: var(--ki-space-3xl);
+  border-radius: var(--ki-radius-component-lg);
+  font-weight: var(--ki-typography-weight-body-semibold);
+  text-decoration: none;
+}
+
+.cta-primary {
+  background: var(--ki-surface-primary-high-em);
+  color: var(--ki-text-primary-on-primary);
+}
+
+.cta-primary:hover {
+  background: var(--ki-surface-primary-high-em-hover);
+}
+
+.cta-ghost {
+  color: var(--ki-text-high-em);
+  border: 1px solid var(--ki-outline-med-em);
+}
+
+.cta-ghost:hover {
+  background: var(--ki-surface-hover-overlay);
+}
+
+/* ---------------------------- theme console ---------------------------- */
+
+.theme-console {
+  max-inline-size: 40rem;
+  margin-inline: auto;
+  padding: var(--ki-space-4xl);
+  background: color-mix(in srgb, var(--ki-surface-s1) 88%, transparent);
+  border: 1px solid var(--ki-outline-low-em);
+  border-radius: var(--ki-radius-big-component-md);
+  box-shadow: var(--ki-elevation-shadow-med);
+  backdrop-filter: blur(10px);
+}
+
+.console-title {
+  margin-block: 0 var(--ki-space-xl);
+  font-size: var(--ki-typography-size-body-1);
+  font-weight: var(--ki-typography-weight-body-medium);
+}
+
+.console-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ki-space-lg);
+}
+
+.segmented {
+  display: inline-flex;
+  gap: var(--ki-space-xxs);
+  margin: 0;
+  padding: var(--ki-space-xxs);
+  border: 1px solid var(--ki-outline-low-em);
+  border-radius: var(--ki-radius-round);
+  background: var(--ki-surface-s0);
+}
+
+.segmented label {
+  position: relative;
+  display: inline-flex;
+}
+
+.segmented input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.segmented span {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 36px;
+  padding-inline: var(--ki-space-xl);
+  border-radius: var(--ki-radius-round);
+  color: var(--ki-text-med-em);
+  font-size: var(--ki-typography-size-body-2);
+  font-weight: var(--ki-typography-weight-body-medium);
+}
+
+.segmented input:hover + span {
+  color: var(--ki-text-high-em);
+}
+
+.segmented input:checked + span {
+  background: var(--ki-surface-primary-high-em);
+  color: var(--ki-text-primary-on-primary);
+}
+
+.segmented input:focus-visible + span {
+  outline: 2px solid var(--ki-outline-primary-med-em);
+  outline-offset: 2px;
+}
+
+.console-note {
+  margin-block: var(--ki-space-2xl) 0;
+  color: var(--ki-text-med-em);
+  font-size: var(--ki-typography-size-body-2);
+  line-height: var(--_site-leading-body);
+}
+
+/* --------------------------------- cards ------------------------------- */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: var(--ki-space-2xl);
+}
+
+.card {
+  padding: var(--ki-space-4xl);
+  background: var(--ki-surface-s1);
+  border: 1px solid var(--ki-outline-low-em);
+  border-radius: var(--ki-radius-big-component-md);
+}
+
+.card:hover {
+  border-color: var(--ki-outline-primary-low-em);
+  box-shadow: var(--ki-elevation-shadow-med);
+}
+
+.card h3 {
+  margin-block: 0 var(--ki-space-lg);
+  font-family: var(--ki-typography-family-display);
+  font-size: var(--ki-typography-size-heading-1);
+  line-height: var(--_site-leading-card-title);
+  font-weight: var(--ki-typography-weight-display-semibold);
+}
+
+.card p {
+  margin-block: 0;
+  color: var(--ki-text-med-em);
+  line-height: var(--_site-leading-body);
+}
+
+/* ------------------------------- specimen ------------------------------ */
+
+.specimen-panel {
+  display: grid;
+  gap: var(--ki-space-3xl);
+  padding: var(--ki-space-5xl) var(--ki-space-4xl);
+  margin-block-start: var(--ki-space-4xl);
+  background: var(--ki-surface-s1);
+  border: 1px solid var(--ki-outline-low-em);
+  border-radius: var(--ki-radius-big-component-md);
+}
+
+.specimen-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ki-space-lg);
+}
+
+.specimen-row::before {
+  content: attr(data-label);
+  flex-basis: 100%;
+  text-align: center;
+  font-family: var(--ki-typography-family-mono);
+  font-size: var(--ki-typography-size-caption-2);
+  letter-spacing: var(--ki-typography-letter-spacing-spaced-out);
+  text-transform: uppercase;
+  color: var(--ki-text-low-em);
+}
+
+/* Skeleton while the custom element registers (or before JS loads it). */
+ki-button:not(:defined) {
+  display: inline-block;
+  min-inline-size: 6.5rem;
+  min-block-size: 40px;
+  border-radius: var(--ki-radius-component-md);
+  background: var(--ki-surface-s2);
+  color: transparent;
+  overflow: hidden;
+}
+
+.code-block {
+  margin-block: var(--ki-space-4xl) 0;
+  padding: var(--ki-space-3xl);
+  background: var(--ki-surface-s1);
+  border: 1px solid var(--ki-outline-low-em);
+  border-radius: var(--ki-radius-big-component-sm);
+  overflow-x: auto;
+}
+
+.code-block code {
+  background: none;
+  padding: 0;
+  font-size: var(--ki-typography-size-body-2);
+  line-height: var(--ki-typography-line-height-body-2);
+  color: var(--ki-text-high-em);
+}
+
+/* -------------------------------- agents ------------------------------- */
+
+.agent-list {
+  margin-block: var(--ki-space-4xl) 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--ki-space-lg);
+  max-inline-size: 46rem;
+}
+
+.agent-list li {
+  padding: var(--ki-space-xl) var(--ki-space-2xl);
+  background: var(--ki-surface-s1);
+  border: 1px solid var(--ki-outline-low-em);
+  border-radius: var(--ki-radius-big-component-sm);
+  color: var(--ki-text-med-em);
+  line-height: var(--_site-leading-body);
+}
+
+/* ------------------------------- roadmap ------------------------------- */
+
+.roadmap {
+  margin-block: 0 var(--ki-space-4xl);
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--ki-space-md);
+  max-inline-size: 46rem;
+}
+
+.roadmap li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ki-space-lg);
+  padding: var(--ki-space-lg) var(--ki-space-2xl);
+  border-radius: var(--ki-radius-big-component-sm);
+  border: 1px solid var(--ki-outline-low-em);
+  color: var(--ki-text-med-em);
+  line-height: var(--_site-leading-body);
+}
+
+.roadmap li::before {
+  flex-shrink: 0;
+  font-family: var(--ki-typography-family-mono);
+  font-size: var(--ki-typography-size-caption-1);
+}
+
+.roadmap li[data-state="done"] {
+  border-color: var(--ki-outline-success-low-em);
+}
+
+.roadmap li[data-state="done"]::before {
+  content: "✓";
+  color: var(--ki-text-success-high-em);
+}
+
+.roadmap li[data-state="current"] {
+  border-color: var(--ki-outline-primary-med-em);
+  background: var(--ki-surface-primary-low-em-alpha);
+  color: var(--ki-text-high-em);
+}
+
+.roadmap li[data-state="current"]::before {
+  content: "●";
+  color: var(--ki-text-primary-high-em);
+}
+
+.roadmap li[data-state="next"]::before {
+  content: "○";
+  color: var(--ki-text-low-em);
+}
+
+.roadmap .phase {
+  font-weight: var(--ki-typography-weight-body-semibold);
+  color: var(--ki-text-high-em);
+  margin-inline-end: var(--ki-space-sm);
+}
+
+.text-link {
+  color: var(--ki-text-primary-high-em);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* -------------------------------- footer ------------------------------- */
+
+.site-footer {
+  margin-block-start: var(--ki-space-8xl);
+  padding: var(--ki-space-6xl) clamp(var(--ki-space-lg), 4vi, var(--ki-space-7xl));
+  border-block-start: 1px solid var(--ki-outline-low-em);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ki-space-2xl);
+  align-items: center;
+  justify-content: space-between;
+  color: var(--ki-text-low-em);
+  font-size: var(--ki-typography-size-body-2);
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer .site-footer-nav {
+  display: flex;
+  gap: var(--ki-space-xl);
+}
+
+.site-footer .site-footer-nav a {
+  color: var(--ki-text-med-em);
+}
+
+/* Theme flip: a brief, page-wide morph. Applied by JS, skipped when the
+   user prefers reduced motion. */
+html.theme-anim,
+html.theme-anim body,
+html.theme-anim .card,
+html.theme-anim .site-header,
+html.theme-anim .theme-console,
+html.theme-anim .specimen-panel,
+html.theme-anim .code-block,
+html.theme-anim .cta,
+html.theme-anim .segmented span {
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}

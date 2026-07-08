@@ -15,6 +15,10 @@ agent → JSON spec → guardrail (validate against the catalog) → <ki-*> rend
 **Status**: pre-v1, under active construction. Nothing is published yet;
 star/watch the repo to follow along.
 
+**Site**: [kimen-dev.github.io/kimen](https://kimen-dev.github.io/kimen/) —
+landing with live re-theming, and the component workshop under
+[/storybook/](https://kimen-dev.github.io/kimen/storybook/).
+
 ## Why
 
 Runtime GenUI (A2UI, MCP Apps, AG-UI, json-render) injects agent-generated UI
