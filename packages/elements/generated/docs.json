@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T20:22:19",
+  "timestamp": "2026-07-08T20:25:11",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -378,7 +378,7 @@
           "mutable": true,
           "attr": "checked",
           "reflectToAttr": true,
-          "docs": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
+          "docs": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
           "docsTags": [
             {
               "name": "default",
@@ -407,7 +407,7 @@
           "mutable": false,
           "attr": "disabled",
           "reflectToAttr": true,
-          "docs": "Prevents toggling, removes the switch from keyboard reach, excludes it\nfrom form data, and exposes the unavailable state to assistive technology.\nWhen NOT to use: do not use disabled for pending or loading states.",
+          "docs": "Prevents toggling, removes the switch from keyboard reach, excludes it\nfrom form data, and exposes the unavailable state to assistive technology.\nWhen to use: make a setting temporarily unavailable while preserving its\ncurrent state.\nWhen NOT to use: do not use disabled for pending or loading states.",
           "docsTags": [
             {
               "name": "default",
@@ -436,8 +436,13 @@
           "mutable": false,
           "attr": "name",
           "reflectToAttr": true,
-          "docs": "Form-data key contributed while the switch is on.\nWhen NOT to use: omit when no form entry should be submitted.",
-          "docsTags": [],
+          "docs": "Form-data key contributed while the switch is on.\nWhen to use: include the immediate setting in native form data when on.\nWhen NOT to use: omit when no form entry should be submitted.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
           "values": [
             {
               "type": "string"
@@ -462,8 +467,13 @@
           "mutable": false,
           "attr": "value",
           "reflectToAttr": true,
-          "docs": "Form-data value submitted while on. Omit for native checkbox parity: the\nsubmitted value defaults to `on`.\nWhen NOT to use: do not set a value to represent off; off contributes\nnothing.",
-          "docsTags": [],
+          "docs": "Form-data value submitted while on. Omit for native checkbox parity: the\nsubmitted value defaults to `on`.\nWhen to use: submit a domain-specific value instead of the default `on`.\nWhen NOT to use: do not set a value to represent off; off contributes\nnothing.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'on'"
+            }
+          ],
           "values": [
             {
               "type": "string"

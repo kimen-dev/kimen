@@ -27,6 +27,8 @@ export class KiSwitch {
    * Live on/off state. Boolean presence semantics apply: any present
    * `checked` attribute value, including `checked="false"` or malformed
    * agent output, means on. Omit the attribute to express off.
+   * When to use: set the initial on state for a setting that applies
+   * immediately.
    * When NOT to use: do not use a switch for choices saved only on submit;
    * use ki-checkbox for that pattern.
    *
@@ -37,6 +39,8 @@ export class KiSwitch {
   /**
    * Prevents toggling, removes the switch from keyboard reach, excludes it
    * from form data, and exposes the unavailable state to assistive technology.
+   * When to use: make a setting temporarily unavailable while preserving its
+   * current state.
    * When NOT to use: do not use disabled for pending or loading states.
    *
    * @default false
@@ -45,15 +49,21 @@ export class KiSwitch {
 
   /**
    * Form-data key contributed while the switch is on.
+   * When to use: include the immediate setting in native form data when on.
    * When NOT to use: omit when no form entry should be submitted.
+   *
+   * @default undefined
    */
   @Prop({ reflect: true }) name?: string;
 
   /**
    * Form-data value submitted while on. Omit for native checkbox parity: the
    * submitted value defaults to `on`.
+   * When to use: submit a domain-specific value instead of the default `on`.
    * When NOT to use: do not set a value to represent off; off contributes
    * nothing.
+   *
+   * @default 'on'
    */
   @Prop({ reflect: true }) value?: string;
 
