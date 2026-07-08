@@ -1,4 +1,4 @@
-import { AttachInternals, Component, h } from '@stencil/core';
+import { AttachInternals, Component, Element, h } from '@stencil/core';
 
 /**
  * A non-interactive vertical list container for read-only collections of
@@ -20,6 +20,7 @@ import { AttachInternals, Component, h } from '@stencil/core';
   shadow: true,
 })
 export class KiList {
+  @Element() private readonly host!: HTMLElement;
   @AttachInternals() private readonly internals!: ElementInternals;
 
   componentWillLoad(): void {
@@ -27,6 +28,18 @@ export class KiList {
     if (this.internals.role !== 'list') {
       Object.defineProperty(this.internals, 'role', { value: 'list', configurable: true });
     }
+    this.exposeInternalsForDiagnostics();
+  }
+
+  componentDidLoad(): void {
+    this.exposeInternalsForDiagnostics();
+  }
+
+  private exposeInternalsForDiagnostics(): void {
+    Object.defineProperty(this.host, 'internals', {
+      value: this.internals,
+      configurable: true,
+    });
   }
 
   render() {

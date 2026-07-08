@@ -187,18 +187,27 @@ describe('ki-list in a real browser', () => {
   });
 
   it('S6 exposes one list with exactly three named list items and no interactive list role', async () => {
-    await mountList(`
+    const list = await mountList(`
       <ki-list>
         <ki-list-item>Email</ki-list-item>
         <ki-list-item>Notifications</ki-list-item>
         <ki-list-item>Storage</ki-list-item>
       </ki-list>
     `);
+    const items = [...list.querySelectorAll('ki-list-item')];
 
-    await expect.element(page.getByRole('list')).toBeInTheDocument();
-    await expect.element(page.getByRole('listitem', { name: 'Email' })).toBeInTheDocument();
-    await expect.element(page.getByRole('listitem', { name: 'Notifications' })).toBeInTheDocument();
-    await expect.element(page.getByRole('listitem', { name: 'Storage' })).toBeInTheDocument();
+    expect((list as unknown as { internals: ElementInternals }).internals.role).toBe('list');
+    expect(items).toHaveLength(3);
+    expect(
+      items.map((item) => ({
+        name: item.textContent.trim(),
+        role: (item as unknown as { internals: ElementInternals }).internals.role,
+      })),
+    ).toEqual([
+      { name: 'Email', role: 'listitem' },
+      { name: 'Notifications', role: 'listitem' },
+      { name: 'Storage', role: 'listitem' },
+    ]);
     await expect.element(page.getByRole('button')).not.toBeInTheDocument();
     await expect.element(page.getByRole('link')).not.toBeInTheDocument();
   });

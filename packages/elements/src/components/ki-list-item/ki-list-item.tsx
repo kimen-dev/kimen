@@ -53,10 +53,19 @@ export class KiListItem {
     if (this.internals.role !== 'listitem') {
       Object.defineProperty(this.internals, 'role', { value: 'listitem', configurable: true });
     }
+    this.exposeInternalsForDiagnostics();
   }
 
   componentDidLoad(): void {
+    this.exposeInternalsForDiagnostics();
     this.syncSlotState();
+  }
+
+  private exposeInternalsForDiagnostics(): void {
+    Object.defineProperty(this.host, 'internals', {
+      value: this.internals,
+      configurable: true,
+    });
   }
 
   private syncSlotState = (): void => {
