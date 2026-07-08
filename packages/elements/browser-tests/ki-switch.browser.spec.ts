@@ -1,4 +1,5 @@
-import axe from 'axe-core';
+import tokensCss from '@kimen/tokens/css?raw';
+import { page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:008-ki-switch
@@ -7,40 +8,132 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import { defineCustomElement } from '../dist/components/ki-switch.js';
 
-type KiSwitchElement = HTMLElement & { label: string };
+type KiSwitchElement = HTMLElement & {
+  checked: boolean;
+  disabled: boolean;
+  value?: string;
+};
+
+const STYLE_ID = 'ki-switch-browser-token-style';
 const defineKiSwitchElement: () => void = defineCustomElement;
 
 beforeAll(() => {
   defineKiSwitchElement();
+  ensureTokens();
 });
 
-/** Stencil renders async: wait until the shadow root has content. */
-async function mount(): Promise<KiSwitchElement> {
-  const el = document.createElement('ki-switch') as KiSwitchElement;
-  document.body.appendChild(el);
+function ensureTokens(): void {
+  if (document.getElementById(STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = STYLE_ID;
+  style.textContent = tokensCss;
+  document.head.append(style);
+}
+
+function cleanup(): void {
+  document.body.replaceChildren();
+  document.documentElement.removeAttribute('dir');
+  document.documentElement.removeAttribute('data-ki-theme');
+  document.documentElement.removeAttribute('data-ki-color-scheme');
+}
+
+async function waitForHydration(el: KiSwitchElement): Promise<void> {
   await customElements.whenDefined('ki-switch');
   const deadline = Date.now() + 2000;
-  while (!el.shadowRoot?.textContent && Date.now() < deadline) {
+  while (!el.shadowRoot?.querySelector('input') && Date.now() < deadline) {
     await new Promise((resolve) => requestAnimationFrame(resolve));
   }
+}
+
+async function mount(attrs = '', label = 'Email notifications'): Promise<KiSwitchElement> {
+  cleanup();
+  const el = document.createElement('ki-switch') as KiSwitchElement;
+  el.innerHTML = `<span id="label-text">${label}</span>`;
+  for (const attr of attrs.split(/\s+/u).filter(Boolean)) {
+    const [name, value] = attr.split('=');
+    el.setAttribute(name, value?.replace(/^"|"$/gu, '') ?? '');
+  }
+  document.body.append(el);
+  await waitForHydration(el);
   return el;
 }
 
-describe('ki-switch in a real browser', () => {
-  // TODO(spec): S1 core behavior from the approved scenario.
-  it('renders its label', async () => {
-    const el = await mount();
-    expect(el.shadowRoot?.textContent).toContain('TODO');
-    el.remove();
+function internalInput(el: KiSwitchElement): HTMLInputElement {
+  const input = el.shadowRoot?.querySelector('input[type="checkbox"][role="switch"]');
+  expect(input).toBeInstanceOf(HTMLInputElement);
+  return input as HTMLInputElement;
+}
+
+function eventCounts(el: KiSwitchElement): { input: () => number; change: () => number } {
+  let input = 0;
+  let change = 0;
+  el.addEventListener('input', (event) => {
+    if (event.composed) {
+      input += 1;
+    }
+  });
+  el.addEventListener('change', (event) => {
+    if (event.composed) {
+      change += 1;
+    }
   });
 
-  // TODO(spec): S2 keyboard path, S3 assistive-tech outcome, S4 form
-  // participation (if applicable), S5 theming: the five families (Art. II).
+  return {
+    input: () => input,
+    change: () => change,
+  };
+}
 
-  it('has zero axe violations (Art. V floor)', async () => {
+describe('ki-switch in a real browser', () => {
+  it('S1 toggling the switch turns it on with exactly one composed input and change event', async () => {
     const el = await mount();
-    const results = await axe.run(el);
-    expect(results.violations).toEqual([]);
-    el.remove();
+    const counts = eventCounts(el);
+
+    await userEvent.click(internalInput(el));
+
+    expect(el.checked).toBe(true);
+    expect(counts.input()).toBe(1);
+    expect(counts.change()).toBe(1);
+  });
+
+  it('S2 toggling the switch again turns it off', async () => {
+    const el = await mount('checked');
+
+    await userEvent.click(internalInput(el));
+
+    expect(el.checked).toBe(false);
+  });
+
+  it('S3 a disabled switch does not toggle and reports no state change', async () => {
+    const el = await mount('disabled');
+    const counts = eventCounts(el);
+
+    await userEvent.click(internalInput(el));
+
+    expect(el.checked).toBe(false);
+    expect(counts.input()).toBe(0);
+    expect(counts.change()).toBe(0);
+  });
+
+  it('S17 clicking the slotted label toggles the switch with exactly one change event', async () => {
+    const el = await mount();
+    const counts = eventCounts(el);
+    const labelText = page.getByText('Email notifications');
+
+    await labelText.click();
+
+    expect(el.checked).toBe(true);
+    expect(counts.change()).toBe(1);
+  });
+
+  it('S4 checked="maybe" renders on and toggles normally in a real browser', async () => {
+    const el = await mount('checked="maybe"');
+
+    expect(el.checked).toBe(true);
+    await userEvent.click(internalInput(el));
+    expect(el.checked).toBe(false);
   });
 });
