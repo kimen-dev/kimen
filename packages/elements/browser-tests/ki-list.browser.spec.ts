@@ -79,14 +79,21 @@ describe('ki-list in a real browser', () => {
     `);
     const items = [...list.querySelectorAll('ki-list-item')];
     const rects = items.map((item) => item.getBoundingClientRect());
+    const [emailRect, notificationsRect, storageRect] = rects;
 
     expect(items.map((item) => item.textContent.trim())).toEqual([
       'Email',
       'Notifications',
       'Storage',
     ]);
-    expect(rects[0].top).toBeLessThan(rects[1].top);
-    expect(rects[1].top).toBeLessThan(rects[2].top);
+    expect(emailRect).toBeDefined();
+    expect(notificationsRect).toBeDefined();
+    expect(storageRect).toBeDefined();
+    if (!emailRect || !notificationsRect || !storageRect) {
+      throw new Error('expected three item rects');
+    }
+    expect(emailRect.top).toBeLessThan(notificationsRect.top);
+    expect(notificationsRect.top).toBeLessThan(storageRect.top);
   });
 
   it('S2 composes avatar, primary, secondary and trailing meta in reading order', async () => {

@@ -53,10 +53,6 @@ export class KiListItem {
     if (this.internals.role !== 'listitem') {
       Object.defineProperty(this.internals, 'role', { value: 'listitem', configurable: true });
     }
-    Object.defineProperty(this.host, 'internals', {
-      value: { role: 'listitem' },
-      configurable: true,
-    });
   }
 
   componentDidLoad(): void {
