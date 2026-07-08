@@ -26,6 +26,28 @@
           "$value": "{ki.outline.danger-high-em}"
         }
       },
+      "info": {
+        "bg": {
+          "$value": "{ki.surface.s3}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.med-em}"
+        }
+      },
+      "warning": {
+        "bg": {
+          "$value": "{ki.surface.s4}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.high-em}"
+        }
+      },
       "dismiss": {
         "rest": {
           "fg": {

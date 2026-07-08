@@ -547,6 +547,15 @@
   --ki-button-focus-ring-width: var(--ki-space-xxs);
   --ki-button-focus-ring-offset: var(--ki-space-xxs);
   --ki-button-border-width: var(--ki-space-xxs);
+  --ki-alert-padding-inline: var(--ki-space-lg);
+  --ki-alert-padding-block: var(--ki-space-md);
+  --ki-alert-gap: var(--ki-space-sm);
+  --ki-alert-radius: var(--ki-radius-lg);
+  --ki-alert-border-width: var(--ki-space-xxs);
+  --ki-alert-dismiss-size: var(--ki-space-7xl);
+  --ki-alert-dismiss-icon-size: var(--ki-space-4xl);
+  --ki-alert-focus-ring-width: var(--ki-space-xxs);
+  --ki-alert-focus-ring-offset: var(--ki-space-xxs);
   --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s0);
@@ -744,6 +753,23 @@
   --ki-button-ghost-danger-active-border: var(--ki-outline-none);
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+  --ki-alert-font-size: var(--ki-typography-size-body-1);
+  --ki-alert-line-height: var(--ki-typography-line-height-body-1);
+  --ki-alert-heading-font-size: var(--ki-typography-size-body-2);
+  --ki-alert-heading-font-weight: var(--ki-typography-weight-body-semibold);
+  --ki-alert-neutral-bg: var(--ki-surface-s1);
+  --ki-alert-neutral-border: var(--ki-outline-none);
+  --ki-alert-success-bg: var(--ki-surface-success-base-em);
+  --ki-alert-success-fg: var(--ki-text-success-high-em);
+  --ki-alert-success-border: var(--ki-outline-success-med-em);
+  --ki-alert-danger-bg: var(--ki-surface-danger-base-em);
+  --ki-alert-danger-fg: var(--ki-text-danger-high-em);
+  --ki-alert-danger-border: var(--ki-outline-danger-med-em);
+  --ki-alert-info-bg: var(--ki-surface-info-base-em);
+  --ki-alert-info-border: var(--ki-outline-info-med-em);
+  --ki-alert-warning-bg: var(--ki-surface-warning-base-em);
+  --ki-alert-warning-border: var(--ki-outline-warning-med-em);
+  --ki-alert-focus-ring-color: var(--ki-outline-primary-high-em);
   --ki-text-base: var(--ki-text-high-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. */
   --ki-text-muted: var(--ki-text-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. */
   --ki-button-primary-neutral-rest-fg: var(--ki-text-primary-on-primary);
@@ -752,6 +778,12 @@
   --ki-button-primary-success-rest-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-hover-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-active-fg: var(--ki-text-primary-on-success);
+  --ki-alert-neutral-fg: var(--ki-text-high-em);
+  --ki-alert-info-fg: var(--ki-text-high-em);
+  --ki-alert-warning-fg: var(--ki-text-high-em);
+  --ki-alert-dismiss-rest-fg: var(--ki-text-high-em);
+  --ki-alert-dismiss-hover-fg: var(--ki-text-high-em);
+  --ki-alert-dismiss-active-fg: var(--ki-text-high-em);
   --ki-button-primary-neutral-disabled-fg: var(--ki-text-muted);
   --ki-button-primary-success-disabled-fg: var(--ki-text-muted);
   --ki-button-primary-danger-disabled-fg: var(--ki-text-muted);

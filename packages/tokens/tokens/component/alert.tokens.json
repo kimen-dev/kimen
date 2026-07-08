@@ -72,7 +72,7 @@
           "$value": "{ki.surface.info-base-em}"
         },
         "fg": {
-          "$value": "{ki.text.info-high-em}"
+          "$value": "{ki.text.high-em}"
         },
         "border": {
           "$value": "{ki.outline.info-med-em}"
@@ -83,7 +83,7 @@
           "$value": "{ki.surface.warning-base-em}"
         },
         "fg": {
-          "$value": "{ki.text.warning-high-em}"
+          "$value": "{ki.text.high-em}"
         },
         "border": {
           "$value": "{ki.outline.warning-med-em}"
