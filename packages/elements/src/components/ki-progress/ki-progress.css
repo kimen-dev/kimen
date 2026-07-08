@@ -19,6 +19,7 @@
 .base-linear [part="track"] {
   display: block;
   overflow: hidden;
+  position: relative;
   block-size: var(--_ki-progress-linear-thickness);
   border-radius: var(--_ki-progress-linear-radius);
   background: var(--_ki-progress-track-color);
@@ -52,4 +53,44 @@
 .base-circular [part="indicator"] {
   stroke: var(--_ki-progress-indicator-color);
   stroke-dasharray: calc(var(--_ki-progress-fraction) * 100) 100;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+:host([indeterminate]) .base-linear [part="indicator"] {
+  position: relative;
+  inset-inline-start: 0%;
+  inline-size: 40%;
+}
+
+:host([indeterminate]) .base-circular [part="indicator"] {
+  stroke-dasharray: 25 100;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :host([indeterminate]) .base-linear [part="indicator"] {
+    animation: ki-progress-linear-indeterminate var(--_ki-progress-indeterminate-duration) linear
+      infinite;
+  }
+
+  :host([indeterminate]) .base-circular [part="indicator"] {
+    animation: ki-progress-circular-indeterminate var(--_ki-progress-indeterminate-duration) linear
+      infinite;
+  }
+}
+
+@keyframes ki-progress-linear-indeterminate {
+  from {
+    inset-inline-start: -40%;
+  }
+
+  to {
+    inset-inline-start: 100%;
+  }
+}
+
+@keyframes ki-progress-circular-indeterminate {
+  to {
+    transform: rotate(360deg);
+  }
 }

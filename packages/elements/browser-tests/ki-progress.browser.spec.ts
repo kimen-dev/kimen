@@ -259,10 +259,7 @@ describe('ki-progress in a real browser', () => {
     });
 
     expect(progressbar(el).hasAttribute('aria-valuenow')).toBe(false);
-    expect(indicator(el).getBoundingClientRect().width).not.toBeCloseTo(
-      track(el).getBoundingClientRect().width * 0.4,
-      1,
-    );
+    expect(progressbar(el).style.getPropertyValue('--_ki-progress-fraction')).toBe('');
   });
 
   it('S6 renders indeterminate without running infinite animation under reduced motion', async () => {
