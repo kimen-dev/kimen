@@ -1,3 +1,4 @@
+import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:011-ki-alert
@@ -89,6 +90,15 @@ function readTokenColor(name: string): string {
   return value;
 }
 
+function liveWrapper(el: KiAlertElement): HTMLElement {
+  const node = el.shadowRoot?.querySelector<HTMLElement>('.live');
+  expect(node, 'missing live wrapper').toBeInstanceOf(HTMLElement);
+  if (!node) {
+    throw new Error('ki-alert did not render its live wrapper');
+  }
+  return node;
+}
+
 describe('ki-alert in a real browser', () => {
   it('S1 presents the danger message with the danger tone appearance', async () => {
     cleanup();
@@ -123,5 +133,92 @@ describe('ki-alert in a real browser', () => {
     expect(heading.getBoundingClientRect().top).toBeLessThanOrEqual(
       message.getBoundingClientRect().top,
     );
+  });
+
+  it('S9 exposes a dynamically appended danger alert assertively without moving focus', async () => {
+    cleanup();
+    const button = document.createElement('button');
+    button.textContent = 'Save';
+    document.body.append(button);
+    button.focus();
+
+    const el = await mount('We could not save your changes', {
+      heading: 'Save failed',
+      tone: 'danger',
+    });
+
+    expect(liveWrapper(el).getAttribute('role')).toBe('alert');
+    expect([...liveWrapper(el).children].map((node) => node.getAttribute('part'))).toEqual([
+      'heading',
+      'message',
+    ]);
+    expect(document.activeElement).toBe(button);
+  });
+
+  it('S17 exposes a dynamically appended warning alert assertively without moving focus', async () => {
+    cleanup();
+    const button = document.createElement('button');
+    button.textContent = 'Continue';
+    document.body.append(button);
+    button.focus();
+
+    const el = await mount('Your session expires in one minute', { tone: 'warning' });
+
+    expect(liveWrapper(el).getAttribute('role')).toBe('alert');
+    expect(document.activeElement).toBe(button);
+  });
+
+  it('S10 exposes a dynamically appended success alert as a polite status without moving focus', async () => {
+    cleanup();
+    const button = document.createElement('button');
+    button.textContent = 'Continue';
+    document.body.append(button);
+    button.focus();
+
+    const el = await mount('Profile saved', { tone: 'success' });
+
+    expect(liveWrapper(el).getAttribute('role')).toBe('status');
+    expect(document.activeElement).toBe(button);
+  });
+
+  it('S18 exposes info and neutral alerts as polite status updates', async () => {
+    cleanup();
+
+    const info = await mount('Maintenance starts at midnight', { tone: 'info' });
+    const neutral = await mount('Maintenance starts at midnight', { tone: 'neutral' });
+
+    expect(liveWrapper(info).getAttribute('role')).toBe('status');
+    expect(liveWrapper(neutral).getAttribute('role')).toBe('status');
+  });
+
+  it('S9 exposes an alert present since initial load with its role', async () => {
+    cleanup();
+
+    const el = await mount('We could not save your changes', { tone: 'danger' });
+
+    expect(liveWrapper(el).getAttribute('role')).toBe('alert');
+  });
+
+  it('S18 exposes an empty alert as an empty live region with no phantom content', async () => {
+    cleanup();
+
+    const el = await mount('', { tone: 'neutral' });
+
+    expect(liveWrapper(el).getAttribute('role')).toBe('status');
+    expect(liveWrapper(el).textContent.trim()).toBe('');
+  });
+
+  it('S9 S10 S17 S18 have zero axe violations across five tones', async () => {
+    cleanup();
+    ensureTokens();
+    const main = document.createElement('main');
+    document.body.append(main);
+
+    for (const tone of tones) {
+      await mount(`${tone} alert`, { heading: `${tone} heading`, tone }, main);
+    }
+
+    const results = await axe.run(main);
+    expect(results.violations).toEqual([]);
   });
 });
