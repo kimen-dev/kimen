@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  componentPairs,
   compositeOver,
   contrastRatio,
   parseColor,
@@ -12,6 +13,39 @@ import {
 test('relative luminance matches WCAG anchors', () => {
   assert.equal(relativeLuminance(parseColor('#000000')), 0);
   assert.equal(relativeLuminance(parseColor('#ffffff')), 1);
+});
+
+test('component sweep derives textarea text placeholder and label pairs per state', () => {
+  const declarations = new Map([
+    ['--ki-button-primary-neutral-rest-bg', '#000000'],
+    ['--ki-textarea-rest-bg', '#ffffff'],
+    ['--ki-textarea-focus-bg', '#ffffff'],
+  ]);
+
+  assert.deepEqual(
+    componentPairs(declarations).filter((pair) => pair.text.startsWith('--ki-textarea')),
+    [
+      { text: '--ki-textarea-rest-fg', surface: '--ki-textarea-rest-bg' },
+      { text: '--ki-textarea-rest-placeholder-fg', surface: '--ki-textarea-rest-bg' },
+      { text: '--ki-textarea-rest-label-fg', surface: '--ki-surface-s0' },
+      { text: '--ki-textarea-focus-fg', surface: '--ki-textarea-focus-bg' },
+      { text: '--ki-textarea-focus-placeholder-fg', surface: '--ki-textarea-focus-bg' },
+      { text: '--ki-textarea-focus-label-fg', surface: '--ki-surface-s0' },
+    ],
+  );
+});
+
+test('component sweep reports missing patterns per component', () => {
+  assert.deepEqual(componentPairs(new Map()), [
+    {
+      text: '__missing_component_sweep__:ki-button',
+      surface: '__missing_component_sweep__:ki-button',
+    },
+    {
+      text: '__missing_component_sweep__:ki-textarea',
+      surface: '__missing_component_sweep__:ki-textarea',
+    },
+  ]);
 });
 
 test('contrast ratio matches WCAG anchors', () => {

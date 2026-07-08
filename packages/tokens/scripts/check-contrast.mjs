@@ -167,15 +167,41 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
 // (or this gate silently ignores that component; the zero-match guard only
 // protects the patterns listed here).
-const COMPONENT_BG_PATTERN =
-  /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u;
+const COMPONENT_SWEEPS = [
+  {
+    name: 'ki-button',
+    bgPattern: /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u,
+    pairsForBg: (name) => [{ text: name.replace(/-bg$/u, '-fg'), surface: name }],
+  },
+  {
+    name: 'ki-textarea',
+    bgPattern: /^--ki-textarea-(?:rest|hover|focus|readonly|invalid)-bg$/u,
+    pairsForBg: (name) => [
+      { text: name.replace(/-bg$/u, '-fg'), surface: name },
+      { text: name.replace(/-bg$/u, '-placeholder-fg'), surface: name },
+      { text: name.replace(/-bg$/u, '-label-fg'), surface: '--ki-surface-s0' },
+    ],
+  },
+];
 
-function componentPairs(declarations) {
+export function componentPairs(declarations) {
   const pairs = [];
 
-  for (const name of declarations.keys()) {
-    if (COMPONENT_BG_PATTERN.test(name)) {
-      pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
+  for (const sweep of COMPONENT_SWEEPS) {
+    let matches = 0;
+
+    for (const name of declarations.keys()) {
+      if (sweep.bgPattern.test(name)) {
+        matches += 1;
+        pairs.push(...sweep.pairsForBg(name));
+      }
+    }
+
+    if (matches === 0) {
+      pairs.push({
+        text: `__missing_component_sweep__:${sweep.name}`,
+        surface: `__missing_component_sweep__:${sweep.name}`,
+      });
     }
   }
 
@@ -190,17 +216,19 @@ function evaluateStylesheet(theme, stylesheet) {
   for (const [scheme, declarations] of Object.entries(schemes)) {
     const swept = componentPairs(declarations);
 
-    if (swept.length === 0) {
-      failures.push(
-        `${theme}/${scheme}: no component-layer pairs matched — the sweep pattern drifted from the token names`,
-      );
-    }
-
     // Component cells may be translucent (ghost/quaternary): composite the
     // cell background over the page surface before measuring.
     const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
 
     for (const pair of [...CONTRAST_PAIRS, ...swept]) {
+      if (pair.text.startsWith('__missing_component_sweep__:')) {
+        const sweep = pair.text.replace('__missing_component_sweep__:', '');
+        failures.push(
+          `${theme}/${scheme}: no ${sweep} component-layer pairs matched — the sweep pattern drifted from the token names`,
+        );
+        continue;
+      }
+
       const text = parseColor(resolveCustomProperty(pair.text, declarations));
       const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
       const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
