@@ -50,6 +50,30 @@ export namespace Components {
          */
         "variant": KiButtonVariant;
     }
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiRadio {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label": string;
+    }
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiRadioGroup {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label": string;
+    }
 }
 declare global {
     /**
@@ -65,8 +89,32 @@ declare global {
         prototype: HTMLKiButtonElement;
         new (): HTMLKiButtonElement;
     };
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface HTMLKiRadioElement extends Components.KiRadio, HTMLStencilElement {
+    }
+    var HTMLKiRadioElement: {
+        prototype: HTMLKiRadioElement;
+        new (): HTMLKiRadioElement;
+    };
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface HTMLKiRadioGroupElement extends Components.KiRadioGroup, HTMLStencilElement {
+    }
+    var HTMLKiRadioGroupElement: {
+        prototype: HTMLKiRadioGroupElement;
+        new (): HTMLKiRadioGroupElement;
+    };
     interface HTMLElementTagNameMap {
         "ki-button": HTMLKiButtonElement;
+        "ki-radio": HTMLKiRadioElement;
+        "ki-radio-group": HTMLKiRadioGroupElement;
     }
 }
 declare namespace LocalJSX {
@@ -116,6 +164,30 @@ declare namespace LocalJSX {
          */
         "variant"?: KiButtonVariant;
     }
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiRadio {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label"?: string;
+    }
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiRadioGroup {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label"?: string;
+    }
 
     interface KiButtonAttributes {
         "variant": KiButtonVariant;
@@ -126,9 +198,17 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
+    interface KiRadioAttributes {
+        "label": string;
+    }
+    interface KiRadioGroupAttributes {
+        "label": string;
+    }
 
     interface IntrinsicElements {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
+        "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
+        "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -143,6 +223,18 @@ declare module "@stencil/core" {
              * loading/progress semantics.
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
+            /**
+             * TODO(spec): one-line purpose from the approved spec (Art. II).
+             * When to use: TODO(spec): agent-facing guidance (Art. I).
+             * When NOT to use: TODO(spec).
+             */
+            "ki-radio": LocalJSX.IntrinsicElements["ki-radio"] & JSXBase.HTMLAttributes<HTMLKiRadioElement>;
+            /**
+             * TODO(spec): one-line purpose from the approved spec (Art. II).
+             * When to use: TODO(spec): agent-facing guidance (Art. I).
+             * When NOT to use: TODO(spec).
+             */
+            "ki-radio-group": LocalJSX.IntrinsicElements["ki-radio-group"] & JSXBase.HTMLAttributes<HTMLKiRadioGroupElement>;
         }
     }
 }
