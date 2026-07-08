@@ -1,0 +1,65 @@
+{
+  "ki": {
+    "list": {
+      "bg": {
+        "$value": "{ki.surface.s0}"
+      },
+      "padding": {
+        "$value": "{ki.space.zero}"
+      },
+      "gap": {
+        "$value": "{ki.space.zero}"
+      },
+      "item": {
+        "min-height": {
+          "$value": "{ki.space.14xl}"
+        },
+        "min-height-multiline": {
+          "$value": "{ki.space.18xl}"
+        },
+        "padding-inline": {
+          "$value": "{ki.space.3xl}"
+        },
+        "padding-block": {
+          "$value": "{ki.space.md}"
+        },
+        "gap": {
+          "$value": "{ki.space.3xl}"
+        },
+        "radius": {
+          "$value": "{ki.radius.0}"
+        },
+        "divider-width": {
+          "$value": "0.0625rem"
+        },
+        "divider-color": {
+          "$value": "{ki.outline.med-em}"
+        },
+        "primary-font-size": {
+          "$value": "{ki.typography.size.body-1}"
+        },
+        "primary-line-height": {
+          "$value": "{ki.typography.line-height.body-1}"
+        },
+        "primary-font-weight": {
+          "$value": "{ki.typography.weight.body.regular}"
+        },
+        "primary-fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "secondary-font-size": {
+          "$value": "{ki.typography.size.caption-1}"
+        },
+        "secondary-line-height": {
+          "$value": "{ki.typography.line-height.caption-1}"
+        },
+        "secondary-font-weight": {
+          "$value": "{ki.typography.weight.body.regular}"
+        },
+        "secondary-fg": {
+          "$value": "{ki.text.med-em}"
+        }
+      }
+    }
+  }
+}
