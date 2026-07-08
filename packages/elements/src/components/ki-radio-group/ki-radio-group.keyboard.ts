@@ -1,5 +1,3 @@
-export type ArrowKey = 'ArrowDown' | 'ArrowLeft' | 'ArrowRight' | 'ArrowUp';
-
 export function nextEnabledIndex(
   disabledStates: readonly boolean[],
   currentIndex: number,
