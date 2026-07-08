@@ -50,6 +50,18 @@ export namespace Components {
          */
         "variant": KiButtonVariant;
     }
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiTextarea {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label": string;
+    }
 }
 declare global {
     /**
@@ -65,8 +77,20 @@ declare global {
         prototype: HTMLKiButtonElement;
         new (): HTMLKiButtonElement;
     };
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface HTMLKiTextareaElement extends Components.KiTextarea, HTMLStencilElement {
+    }
+    var HTMLKiTextareaElement: {
+        prototype: HTMLKiTextareaElement;
+        new (): HTMLKiTextareaElement;
+    };
     interface HTMLElementTagNameMap {
         "ki-button": HTMLKiButtonElement;
+        "ki-textarea": HTMLKiTextareaElement;
     }
 }
 declare namespace LocalJSX {
@@ -116,6 +140,18 @@ declare namespace LocalJSX {
          */
         "variant"?: KiButtonVariant;
     }
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiTextarea {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label"?: string;
+    }
 
     interface KiButtonAttributes {
         "variant": KiButtonVariant;
@@ -126,9 +162,13 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
+    interface KiTextareaAttributes {
+        "label": string;
+    }
 
     interface IntrinsicElements {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
+        "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -143,6 +183,12 @@ declare module "@stencil/core" {
              * loading/progress semantics.
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
+            /**
+             * TODO(spec): one-line purpose from the approved spec (Art. II).
+             * When to use: TODO(spec): agent-facing guidance (Art. I).
+             * When NOT to use: TODO(spec).
+             */
+            "ki-textarea": LocalJSX.IntrinsicElements["ki-textarea"] & JSXBase.HTMLAttributes<HTMLKiTextareaElement>;
         }
     }
 }
