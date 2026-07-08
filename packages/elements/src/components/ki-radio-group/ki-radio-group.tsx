@@ -8,6 +8,7 @@ type KiRadioElement = HTMLElement & {
 };
 interface MaybeFormValueInternals {
   setFormValue?: unknown;
+  setValidity?: unknown;
 }
 
 /**
@@ -36,9 +37,11 @@ export class KiRadioGroup {
   @State() private roster: KiRadioElement[] = [];
   @State() private selectedRadio: KiRadioElement | null = null;
   @State() private formDisabled = false;
+  @State() private userInvalid = false;
 
   private readonly labelId = `label-${Math.random().toString(36).slice(2)}`;
   private disabledObserver?: MutationObserver;
+  private resetValue = '';
   private suppressValueWatch = false;
 
   /**
@@ -83,6 +86,16 @@ export class KiRadioGroup {
    */
   @Prop({ reflect: true, mutable: true }) disabled = false;
 
+  /**
+   * Platform validation message for the current group validity state. Empty
+   * when the group is valid.
+   * When NOT to use: do not parse or localize this value in application code;
+   * it is provided by the browser.
+   */
+  get validationMessage(): string {
+    return this.internals.validationMessage;
+  }
+
   @Watch('value')
   protected handleValueChange(): void {
     if (this.suppressValueWatch) {
@@ -121,13 +134,19 @@ export class KiRadioGroup {
   componentDidLoad(): void {
     this.host.addEventListener('input', this.handleInput, { capture: true });
     this.host.addEventListener('keydown', this.handleKeyDown);
+    this.host.addEventListener('invalid', this.handleInvalid);
     this.syncRoster();
   }
 
   disconnectedCallback(): void {
     this.host.removeEventListener('input', this.handleInput, { capture: true });
     this.host.removeEventListener('keydown', this.handleKeyDown);
+    this.host.removeEventListener('invalid', this.handleInvalid);
     this.disabledObserver?.disconnect();
+  }
+
+  formAssociatedCallback(): void {
+    this.resetValue = this.value;
   }
 
   formDisabledCallback(disabled: boolean): void {
@@ -135,8 +154,17 @@ export class KiRadioGroup {
     this.syncInputs();
   }
 
+  formResetCallback(): void {
+    this.userInvalid = false;
+    this.selectByValue(this.resetValue, false);
+  }
+
   private readonly handleSlotChange = (): void => {
     this.syncRoster();
+  };
+
+  private readonly handleInvalid = (): void => {
+    this.userInvalid = true;
   };
 
   private readonly handleInput = (event: Event): void => {
@@ -258,6 +286,7 @@ export class KiRadioGroup {
       const unavailable = this.effectiveDisabled || radio.disabled;
       input.checked = radio === this.selectedRadio;
       input.disabled = unavailable;
+      input.required = this.required && !this.selectedRadio && !this.effectiveDisabled;
       input.tabIndex = unavailable || radio !== this.tabStopRadio() ? -1 : 0;
     }
 
@@ -265,6 +294,38 @@ export class KiRadioGroup {
     if (typeof setFormValue === 'function') {
       setFormValue.call(this.internals, radioGroupFormValue(this.selectedFormOption()));
     }
+    this.syncValidity();
+  }
+
+  private syncValidity(): void {
+    const setValidity = (this.internals as MaybeFormValueInternals).setValidity;
+    if (typeof setValidity !== 'function') {
+      return;
+    }
+
+    if (this.roster.length === 0) {
+      return;
+    }
+
+    if (!this.required || this.selectedRadio || this.effectiveDisabled) {
+      setValidity.call(this.internals, {});
+      this.userInvalid = false;
+      return;
+    }
+
+    const anchorRadio = this.tabStopRadio() ?? this.roster[0];
+    const anchor = anchorRadio ? this.inputFor(anchorRadio) : null;
+    if (!anchor) {
+      return;
+    }
+
+    setValidity.call(this.internals, { valueMissing: true }, this.valueMissingMessage(), anchor);
+  }
+
+  private valueMissingMessage(): string {
+    const probe = document.createElement('input');
+    probe.required = true;
+    return probe.validationMessage;
   }
 
   private selectedFormOption(): { disabled: boolean; value?: string } | null {
@@ -314,6 +375,8 @@ export class KiRadioGroup {
           role="radiogroup"
           aria-labelledby={this.labelId}
           aria-disabled={this.effectiveDisabled ? 'true' : null}
+          aria-required={this.required ? 'true' : null}
+          aria-invalid={this.userInvalid ? 'true' : null}
         >
           <slot onSlotchange={this.handleSlotChange} />
         </div>

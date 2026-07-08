@@ -43,6 +43,7 @@ function cleanup(): void {
 
 async function mount(
   attributes: Record<string, string | boolean> = {},
+  parent: ParentNode = document.body,
 ): Promise<KiRadioGroupElement> {
   ensureTokens();
   const el = document.createElement('ki-radio-group') as unknown as KiRadioGroupElement;
@@ -59,7 +60,7 @@ async function mount(
     <ki-radio value="sms">SMS</ki-radio>
     <ki-radio value="phone">Phone</ki-radio>
   `;
-  document.body.appendChild(el);
+  parent.appendChild(el);
   await customElements.whenDefined('ki-radio-group');
   await customElements.whenDefined('ki-radio');
   const deadline = Date.now() + 2000;
