@@ -78,7 +78,12 @@ describe('ki-alert under the dark scheme', () => {
     const alerts = await mountMatrix();
 
     for (const [index, tone] of tones.entries()) {
-      expect(getComputedStyle(alertPart(alerts[index])).backgroundColor).toBe(
+      const alert = alerts[index];
+      expect(alert).toBeInstanceOf(HTMLElement);
+      if (!alert) {
+        throw new Error(`missing alert for tone ${tone}`);
+      }
+      expect(getComputedStyle(alertPart(alert)).backgroundColor).toBe(
         readTokenColor(`--ki-alert-${tone}-bg`),
       );
     }
