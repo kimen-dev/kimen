@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  componentPairs,
   compositeOver,
   contrastRatio,
   parseColor,
@@ -40,4 +41,55 @@ test('contrast pair table covers the declared data-model pairs', () => {
       ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
     ],
   );
+});
+
+test('component contrast sweep pairs switch thumbs over tracks at 3:1', () => {
+  const declarations = new Map([
+    ['--ki-button-primary-neutral-rest-bg', '#000000'],
+    ['--ki-switch-unchecked-rest-track', '#ffffff'],
+    ['--ki-switch-checked-hover-track', '#000000'],
+  ]);
+
+  const result = componentPairs(declarations);
+
+  assert.deepEqual(result.failures, []);
+  assert.deepEqual(
+    result.pairs.filter((pair) => pair.surface.startsWith('--ki-switch')),
+    [
+      {
+        text: '--ki-switch-unchecked-rest-thumb',
+        surface: '--ki-switch-unchecked-rest-track',
+        minRatio: 3,
+      },
+      {
+        text: '--ki-switch-checked-hover-thumb',
+        surface: '--ki-switch-checked-hover-track',
+        minRatio: 3,
+      },
+    ],
+  );
+});
+
+test('component contrast sweep keeps button text pairs at 4.5:1', () => {
+  const declarations = new Map([
+    ['--ki-button-primary-neutral-rest-bg', '#000000'],
+    ['--ki-switch-unchecked-rest-track', '#ffffff'],
+  ]);
+
+  const result = componentPairs(declarations);
+
+  assert.deepEqual(result.failures, []);
+  assert.deepEqual(result.pairs[0], {
+    text: '--ki-button-primary-neutral-rest-fg',
+    surface: '--ki-button-primary-neutral-rest-bg',
+    minRatio: 4.5,
+  });
+});
+
+test('component contrast sweep reports zero matches per component pattern', () => {
+  const result = componentPairs(new Map([['--ki-button-primary-neutral-rest-bg', '#000000']]));
+
+  assert.deepEqual(result.failures, [
+    'no ki-switch thumb/track pairs matched — the sweep pattern drifted from the token names',
+  ]);
 });
