@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T20:53:27",
+  "timestamp": "2026-07-08T20:56:36",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -206,7 +206,22 @@
         }
       ],
       "methods": [],
-      "events": [],
+      "events": [
+        {
+          "event": "ki-dismiss",
+          "detail": "null",
+          "bubbles": true,
+          "complexType": {
+            "original": "null",
+            "resolved": "null",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "",
+          "docsTags": []
+        }
+      ],
       "listeners": [],
       "styles": [],
       "slots": [

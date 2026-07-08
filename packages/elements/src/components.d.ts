@@ -94,7 +94,14 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
 }
+export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiAlertElement;
+}
 declare global {
+    interface HTMLKiAlertElementEventMap {
+        "ki-dismiss": null;
+    }
     /**
      * A persistent inline status message with token-backed tone semantics.
      * When to use: show a persistent inline message about the state of a page or
@@ -111,6 +118,14 @@ declare global {
      * guaranteed.
      */
     interface HTMLKiAlertElement extends Components.KiAlert, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiAlertElementEventMap>(type: K, listener: (this: HTMLKiAlertElement, ev: KiAlertCustomEvent<HTMLKiAlertElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiAlertElementEventMap>(type: K, listener: (this: HTMLKiAlertElement, ev: KiAlertCustomEvent<HTMLKiAlertElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLKiAlertElement: {
         prototype: HTMLKiAlertElement;
@@ -170,6 +185,7 @@ declare namespace LocalJSX {
           * Optional emphasized text rendered before the message inside the live region. Empty strings render no heading. The heading is a `strong` element, not a document heading, so it never changes page outline.  When to use: add a short label when it helps identify the status message. When NOT to use: do not use heading for page structure; use a real heading outside the alert when the document needs one.
          */
         "heading"?: string;
+        "onKi-dismiss"?: (event: KiAlertCustomEvent<null>) => void;
         /**
           * Semantic intent for visual styling and live-region urgency. `danger` and `warning` expose `role="alert"`; `neutral`, `success`, `info`, absent, and unrecognized values expose `role="status"`. Unknown values keep rendering and fall back to the neutral token matrix by CSS construction.  When to use: choose the tone that describes the page or section state. When NOT to use: do not use tone for layout, density, or filled-vs-outlined styling; those are token/theme decisions.
           * @default 'neutral'

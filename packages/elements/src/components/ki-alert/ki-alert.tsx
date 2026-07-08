@@ -1,4 +1,5 @@
-import { Component, Prop, h } from '@stencil/core';
+import { Component, Element, Event, type EventEmitter, Prop, h } from '@stencil/core';
+import { resolveDismissFocusTarget } from './ki-alert.focus';
 import { liveExposureForTone, type KiAlertTone } from './ki-alert.tone';
 
 /**
@@ -31,6 +32,8 @@ import { liveExposureForTone, type KiAlertTone } from './ki-alert.tone';
   shadow: true,
 })
 export class KiAlert {
+  @Element() private readonly host!: HTMLElement;
+
   /**
    * Semantic intent for visual styling and live-region urgency. `danger` and
    * `warning` expose `role="alert"`; `neutral`, `success`, `info`, absent, and
@@ -96,6 +99,17 @@ export class KiAlert {
    */
   @Prop({ mutable: true, reflect: true }) dismissed = false;
 
+  @Event({ eventName: 'ki-dismiss', bubbles: true, composed: true, cancelable: false })
+  private readonly kiDismiss!: EventEmitter<null>;
+
+  private readonly handleDismiss = (): void => {
+    const focusTarget = resolveDismissFocusTarget(this.host);
+
+    this.dismissed = true;
+    focusTarget?.focus();
+    this.kiDismiss.emit(null);
+  };
+
   render() {
     if (this.dismissed) {
       return null;
@@ -111,6 +125,21 @@ export class KiAlert {
             <slot />
           </div>
         </div>
+        {this.dismissible ? (
+          <button
+            type="button"
+            part="dismiss"
+            aria-label={this.dismissLabel}
+            onClick={this.handleDismiss}
+          >
+            <svg aria-hidden="true" viewBox="0 0 16 16">
+              <path
+                fill="currentColor"
+                d="M3.3 2.3 8 7l4.7-4.7 1 1L9 8l4.7 4.7-1 1L8 9l-4.7 4.7-1-1L7 8 2.3 3.3z"
+              />
+            </svg>
+          </button>
+        ) : null}
       </div>
     );
   }
