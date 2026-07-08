@@ -12,3 +12,5 @@
 - T009 browser RED: the same focused run exits 1 after adding S5/S13 because
   the built scaffold still has no default trigger slot, so Escape and
   blank-label browser paths cannot interact with a rendered trigger.
+- T013 browser RED: the focused tooltip browser run exits 1 on S6 because
+  after real Tab moves focus to the next button, the tooltip remains visible.

@@ -60,7 +60,10 @@ async function nextFrame(): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
-async function mount(options: MountOptions = {}): Promise<{
+async function mount(
+  options: MountOptions = {},
+  parent: ParentNode = document.body,
+): Promise<{
   host: KiTooltipElement;
   trigger: HTMLButtonElement;
 }> {
@@ -75,7 +78,7 @@ async function mount(options: MountOptions = {}): Promise<{
   const trigger = document.createElement('button');
   trigger.textContent = 'Send';
   host.append(trigger);
-  document.body.append(host);
+  parent.appendChild(host);
 
   await customElements.whenDefined('ki-tooltip');
   const deadline = Date.now() + 500;
@@ -230,6 +233,66 @@ describe('ki-tooltip pointer path in a real browser', () => {
 
     expect(tooltipBubble(host)).toBeNull();
     expect(trigger.getAttribute('aria-description')).toBeNull();
+  });
+
+  it('S4 Tab focus shows the tooltip immediately even when show-delay is non-zero', async () => {
+    const { trigger } = await mount({ showDelay: '60000ms' });
+
+    await userEvent.keyboard('{Tab}');
+    await nextFrame();
+
+    expect(document.activeElement).toBe(trigger);
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+  });
+
+  it('S6 moving focus to the next interactive element hides the tooltip', async () => {
+    const { host, trigger } = await mount();
+    const next = document.createElement('button');
+    next.textContent = 'Next';
+    document.body.append(next);
+
+    trigger.focus();
+    await nextFrame();
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+
+    await userEvent.keyboard('{Tab}');
+    await nextFrame();
+
+    expect(document.activeElement).toBe(next);
+    await expect.element(requireTooltip(host)).not.toBeVisible();
+  });
+
+  it('S15 Escape hides a hover-shown tooltip while focus stays elsewhere', async () => {
+    const other = document.createElement('button');
+    other.textContent = 'Other';
+    document.body.append(other);
+    other.focus();
+    const { host, trigger } = await mount();
+    await hoverTrigger(host, trigger);
+
+    await userEvent.keyboard('{Escape}');
+    await nextFrame();
+
+    await expect.element(requireTooltip(host)).not.toBeVisible();
+    expect(document.activeElement).toBe(other);
+  });
+
+  it('S16 Escape over a tooltip inside an open dialog dismisses only the tooltip', async () => {
+    const dialog = document.createElement('dialog');
+    document.body.append(dialog);
+    const { host, trigger } = await mount({}, dialog);
+    dialog.showModal();
+    await hoverTrigger(host, trigger);
+
+    await userEvent.keyboard('{Escape}');
+    await nextFrame();
+
+    await expect.element(requireTooltip(host)).not.toBeVisible();
+    expect(dialog.open).toBe(true);
+
+    await userEvent.keyboard('{Escape}');
+    await nextFrame();
+    expect(dialog.open).toBe(false);
   });
 
   it('S1 has zero axe violations across placements shown and hidden', async () => {
