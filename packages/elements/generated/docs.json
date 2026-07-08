@@ -1,11 +1,60 @@
 {
-  "timestamp": "2026-07-07T08:56:16",
+  "timestamp": "2026-07-08T20:35:52",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
     "typescriptVersion": "5.8.3"
   },
   "components": [
+    {
+      "filePath": "src/components/ki-alert/ki-alert.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-alert",
+      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
+      "docsTags": [],
+      "usage": {},
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'TODO'"
+            }
+          ],
+          "default": "'TODO'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
     {
       "filePath": "src/components/ki-button/ki-button.tsx",
       "encapsulation": "shadow",
@@ -99,7 +148,7 @@
             "references": {
               "KiButtonSize": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-alert/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonSize"
               }
             }
@@ -151,7 +200,7 @@
             "references": {
               "KiButtonTone": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-alert/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonTone"
               }
             }
@@ -195,7 +244,7 @@
             "references": {
               "KiButtonType": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-alert/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonType"
               }
             }
@@ -265,7 +314,7 @@
             "references": {
               "KiButtonVariant": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-alert/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonVariant"
               }
             }

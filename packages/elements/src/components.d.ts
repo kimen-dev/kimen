@@ -9,6 +9,18 @@ import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./com
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export namespace Components {
     /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiAlert {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label": string;
+    }
+    /**
      * A token-styled action button with native button semantics.
      * When to use: trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
@@ -53,6 +65,17 @@ export namespace Components {
 }
 declare global {
     /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface HTMLKiAlertElement extends Components.KiAlert, HTMLStencilElement {
+    }
+    var HTMLKiAlertElement: {
+        prototype: HTMLKiAlertElement;
+        new (): HTMLKiAlertElement;
+    };
+    /**
      * A token-styled action button with native button semantics.
      * When to use: trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
@@ -66,10 +89,23 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     interface HTMLElementTagNameMap {
+        "ki-alert": HTMLKiAlertElement;
         "ki-button": HTMLKiButtonElement;
     }
 }
 declare namespace LocalJSX {
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiAlert {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label"?: string;
+    }
     /**
      * A token-styled action button with native button semantics.
      * When to use: trigger the single main action of a view, supporting actions
@@ -117,6 +153,9 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
 
+    interface KiAlertAttributes {
+        "label": string;
+    }
     interface KiButtonAttributes {
         "variant": KiButtonVariant;
         "tone": KiButtonTone;
@@ -128,6 +167,7 @@ declare namespace LocalJSX {
     }
 
     interface IntrinsicElements {
+        "ki-alert": Omit<KiAlert, keyof KiAlertAttributes> & { [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K] };
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
     }
 }
@@ -135,6 +175,12 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * TODO(spec): one-line purpose from the approved spec (Art. II).
+             * When to use: TODO(spec): agent-facing guidance (Art. I).
+             * When NOT to use: TODO(spec).
+             */
+            "ki-alert": LocalJSX.IntrinsicElements["ki-alert"] & JSXBase.HTMLAttributes<HTMLKiAlertElement>;
             /**
              * A token-styled action button with native button semantics.
              * When to use: trigger the single main action of a view, supporting actions
