@@ -1,0 +1,40 @@
+{
+  "ki": {
+    "badge": {
+      "sm": {
+        "radius": {
+          "$value": "{ki.radius.round}"
+        }
+      },
+      "md": {
+        "radius": {
+          "$value": "{ki.radius.round}"
+        }
+      },
+      "border-width": {
+        "$value": "0.0625rem"
+      },
+      "neutral": {
+        "border": {
+          "$value": "{ki.outline.low-em}"
+        }
+      },
+      "success": {
+        "border": {
+          "$value": "{ki.outline.success-low-em}"
+        }
+      },
+      "danger": {
+        "bg": {
+          "$value": "{ki.surface.danger-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.danger-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.danger-low-em}"
+        }
+      }
+    }
+  }
+}

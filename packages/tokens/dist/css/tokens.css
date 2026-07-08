@@ -547,6 +547,13 @@
   --ki-button-focus-ring-width: var(--ki-space-xxs);
   --ki-button-focus-ring-offset: var(--ki-space-xxs);
   --ki-button-border-width: var(--ki-space-xxs);
+  --ki-badge-sm-height: var(--ki-space-7xl);
+  --ki-badge-sm-padding-inline: var(--ki-space-sm);
+  --ki-badge-sm-radius: var(--ki-radius-round);
+  --ki-badge-md-height: var(--ki-space-8xl);
+  --ki-badge-md-padding-inline: var(--ki-space-md);
+  --ki-badge-md-radius: var(--ki-radius-round);
+  --ki-badge-border-width: var(--ki-space-xxs);
   --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s0);
@@ -744,6 +751,26 @@
   --ki-button-ghost-danger-active-border: var(--ki-outline-none);
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+  --ki-badge-sm-font-size: var(--ki-typography-size-caption-2);
+  --ki-badge-sm-line-height: var(--ki-typography-line-height-caption-2);
+  --ki-badge-md-font-size: var(--ki-typography-size-body-1);
+  --ki-badge-md-line-height: var(--ki-typography-line-height-body-1);
+  --ki-badge-font-family: var(--ki-typography-family-body);
+  --ki-badge-font-weight: var(--ki-typography-weight-body-medium);
+  --ki-badge-neutral-bg: var(--ki-surface-s2);
+  --ki-badge-neutral-border: var(--ki-outline-none);
+  --ki-badge-success-bg: var(--ki-surface-success-base-em);
+  --ki-badge-success-fg: var(--ki-text-success-high-em);
+  --ki-badge-success-border: var(--ki-outline-none);
+  --ki-badge-danger-bg: var(--ki-surface-danger-base-em);
+  --ki-badge-danger-fg: var(--ki-text-danger-high-em);
+  --ki-badge-danger-border: var(--ki-outline-none);
+  --ki-badge-info-bg: var(--ki-surface-info-base-em);
+  --ki-badge-info-fg: var(--ki-text-info-high-em);
+  --ki-badge-info-border: var(--ki-outline-none);
+  --ki-badge-warning-bg: var(--ki-surface-warning-base-em);
+  --ki-badge-warning-fg: var(--ki-text-warning-high-em);
+  --ki-badge-warning-border: var(--ki-outline-none);
   --ki-text-base: var(--ki-text-high-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. */
   --ki-text-muted: var(--ki-text-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. */
   --ki-button-primary-neutral-rest-fg: var(--ki-text-primary-on-primary);
@@ -752,6 +779,7 @@
   --ki-button-primary-success-rest-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-hover-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-active-fg: var(--ki-text-primary-on-success);
+  --ki-badge-neutral-fg: var(--ki-text-high-em);
   --ki-button-primary-neutral-disabled-fg: var(--ki-text-muted);
   --ki-button-primary-success-disabled-fg: var(--ki-text-muted);
   --ki-button-primary-danger-disabled-fg: var(--ki-text-muted);
