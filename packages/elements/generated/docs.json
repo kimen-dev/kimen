@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T20:05:30",
+  "timestamp": "2026-07-08T20:22:19",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -346,35 +346,133 @@
       "filePath": "src/components/ki-switch/ki-switch.tsx",
       "encapsulation": "shadow",
       "tag": "ki-switch",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
+      "docs": "A token-styled switch for immediate on/off settings.\n\nWhen to use: binary settings whose change takes effect immediately, always\nwith a slotted label.\nWhen NOT to use: selections collected for later form submission; use\nki-checkbox for recorded choices, ki-radio-group for mutually exclusive\nchoices, and ki-button for actions.",
+      "docsTags": [
+        {
+          "name": "slot",
+          "text": "- Label content. This is the accessible name source."
+        },
+        {
+          "name": "part",
+          "text": "track - On/off channel."
+        },
+        {
+          "name": "part",
+          "text": "thumb - Traveling handle."
+        },
+        {
+          "name": "part",
+          "text": "label - Label wrapper around the default slot."
+        }
+      ],
       "usage": {},
       "props": [
         {
-          "name": "label",
-          "type": "string",
+          "name": "checked",
+          "type": "boolean",
           "complexType": {
-            "original": "string",
-            "resolved": "string",
+            "original": "boolean",
+            "resolved": "boolean",
             "references": {}
           },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
+          "mutable": true,
+          "attr": "checked",
+          "reflectToAttr": true,
+          "docs": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
           "docsTags": [
             {
               "name": "default",
-              "text": "'TODO'"
+              "text": "false"
             }
           ],
-          "default": "'TODO'",
+          "default": "false",
           "values": [
             {
-              "type": "string"
+              "type": "boolean"
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Prevents toggling, removes the switch from keyboard reach, excludes it\nfrom form data, and exposes the unavailable state to assistive technology.\nWhen NOT to use: do not use disabled for pending or loading states.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form-data key contributed while the switch is on.\nWhen NOT to use: omit when no form entry should be submitted.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Form-data value submitted while on. Omit for native checkbox parity: the\nsubmitted value defaults to `on`.\nWhen NOT to use: do not set a value to represent off; off contributes\nnothing.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -384,8 +482,26 @@
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
-      "parts": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Label content. This is the accessible name source."
+        }
+      ],
+      "parts": [
+        {
+          "name": "label",
+          "docs": "Label wrapper around the default slot."
+        },
+        {
+          "name": "thumb",
+          "docs": "Traveling handle."
+        },
+        {
+          "name": "track",
+          "docs": "On/off channel."
+        }
+      ],
       "states": [],
       "dependents": [],
       "dependencies": [],

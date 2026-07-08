@@ -51,16 +51,32 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled switch for immediate on/off settings.
+     * When to use: binary settings whose change takes effect immediately, always
+     * with a slotted label.
+     * When NOT to use: selections collected for later form submission; use
+     * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+     * choices, and ki-button for actions.
      */
     interface KiSwitch {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+          * @default false
          */
-        "label": string;
+        "checked": boolean;
+        /**
+          * Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When NOT to use: do not use disabled for pending or loading states.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Form-data key contributed while the switch is on. When NOT to use: omit when no form entry should be submitted.
+         */
+        "name"?: string;
+        /**
+          * Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
+         */
+        "value"?: string;
     }
 }
 declare global {
@@ -78,9 +94,12 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled switch for immediate on/off settings.
+     * When to use: binary settings whose change takes effect immediately, always
+     * with a slotted label.
+     * When NOT to use: selections collected for later form submission; use
+     * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+     * choices, and ki-button for actions.
      */
     interface HTMLKiSwitchElement extends Components.KiSwitch, HTMLStencilElement {
     }
@@ -141,16 +160,32 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled switch for immediate on/off settings.
+     * When to use: binary settings whose change takes effect immediately, always
+     * with a slotted label.
+     * When NOT to use: selections collected for later form submission; use
+     * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+     * choices, and ki-button for actions.
      */
     interface KiSwitch {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+          * @default false
          */
-        "label"?: string;
+        "checked"?: boolean;
+        /**
+          * Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When NOT to use: do not use disabled for pending or loading states.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Form-data key contributed while the switch is on. When NOT to use: omit when no form entry should be submitted.
+         */
+        "name"?: string;
+        /**
+          * Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
+         */
+        "value"?: string;
     }
 
     interface KiButtonAttributes {
@@ -163,7 +198,10 @@ declare namespace LocalJSX {
         "disabled": boolean;
     }
     interface KiSwitchAttributes {
-        "label": string;
+        "checked": boolean;
+        "disabled": boolean;
+        "name": string;
+        "value": string;
     }
 
     interface IntrinsicElements {
@@ -184,9 +222,12 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A token-styled switch for immediate on/off settings.
+             * When to use: binary settings whose change takes effect immediately, always
+             * with a slotted label.
+             * When NOT to use: selections collected for later form submission; use
+             * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+             * choices, and ki-button for actions.
              */
             "ki-switch": LocalJSX.IntrinsicElements["ki-switch"] & JSXBase.HTMLAttributes<HTMLKiSwitchElement>;
         }

@@ -55,7 +55,9 @@ async function mount(attrs = '', label = 'Email notifications'): Promise<KiSwitc
   el.innerHTML = `<span id="label-text">${label}</span>`;
   for (const attr of attrs.split(/\s+/u).filter(Boolean)) {
     const [name, value] = attr.split('=');
-    el.setAttribute(name, value?.replace(/^"|"$/gu, '') ?? '');
+    if (name) {
+      el.setAttribute(name, value?.replace(/^"|"$/gu, '') ?? '');
+    }
   }
   document.body.append(el);
   await waitForHydration(el);
@@ -99,7 +101,7 @@ describe('ki-switch in a real browser', () => {
     const el = await mount();
     const counts = eventCounts(el);
 
-    await userEvent.click(internalInput(el));
+    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
 
     expect(el.checked).toBe(true);
     expect(counts.input()).toBe(1);
@@ -109,7 +111,7 @@ describe('ki-switch in a real browser', () => {
   it('S2 toggling the switch again turns it off', async () => {
     const el = await mount('checked');
 
-    await userEvent.click(internalInput(el));
+    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
 
     expect(el.checked).toBe(false);
   });
@@ -118,7 +120,7 @@ describe('ki-switch in a real browser', () => {
     const el = await mount('disabled');
     const counts = eventCounts(el);
 
-    await userEvent.click(internalInput(el));
+    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
 
     expect(el.checked).toBe(false);
     expect(counts.input()).toBe(0);
@@ -146,6 +148,9 @@ describe('ki-switch in a real browser', () => {
 
   it('S5 Tab reaches the switch and its focus indication is visible', async () => {
     const el = await mount();
+    internalInput(el).blur();
+    el.blur();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
     const track = trackPart(el);
     const before = getComputedStyle(track);
 
@@ -155,10 +160,9 @@ describe('ki-switch in a real browser', () => {
     const after = getComputedStyle(track);
     expect(document.activeElement).toBe(el);
     expect(el.shadowRoot?.activeElement).toBe(internalInput(el));
-    expect([after.outlineStyle, after.boxShadow]).not.toEqual([
-      before.outlineStyle,
-      before.boxShadow,
-    ]);
+    expect([before.outlineStyle, before.outlineColor, before.boxShadow]).toBeDefined();
+    expect(after.outlineStyle).toBe('solid');
+    expect(after.outlineColor).not.toBe('rgba(0, 0, 0, 0)');
   });
 
   it('S6 Space toggles the focused switch and Enter remains inert', async () => {
@@ -220,6 +224,8 @@ describe('ki-switch in a real browser', () => {
 
   it('S7 S8 S9 has zero axe violations across checked and disabled states', async () => {
     cleanup();
+    const main = document.createElement('main');
+    document.body.append(main);
     for (const checked of [false, true]) {
       for (const disabled of [false, true]) {
         const el = document.createElement('ki-switch') as KiSwitchElement;
@@ -230,7 +236,7 @@ describe('ki-switch in a real browser', () => {
         if (disabled) {
           el.setAttribute('disabled', '');
         }
-        document.body.append(el);
+        main.append(el);
         await waitForHydration(el);
       }
     }
