@@ -1,6 +1,8 @@
 import axe from 'axe-core';
+import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { page, userEvent } from 'vitest/browser';
+import { commands } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:008-ki-switch
@@ -16,7 +18,11 @@ type KiSwitchElement = HTMLElement & {
 };
 
 const STYLE_ID = 'ki-switch-browser-token-style';
+const MATERIAL3_STYLE_ID = 'ki-switch-browser-material3-token-style';
 const defineKiSwitchElement: () => void = defineCustomElement;
+const browserCommands = commands as unknown as {
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
+};
 
 beforeAll(() => {
   defineKiSwitchElement();
@@ -39,6 +45,17 @@ function cleanup(): void {
   document.documentElement.removeAttribute('dir');
   document.documentElement.removeAttribute('data-ki-theme');
   document.documentElement.removeAttribute('data-ki-color-scheme');
+}
+
+function ensureMaterial3Tokens(): void {
+  if (document.getElementById(MATERIAL3_STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = MATERIAL3_STYLE_ID;
+  style.textContent = material3Css;
+  document.head.append(style);
 }
 
 async function waitForHydration(el: KiSwitchElement): Promise<void> {
@@ -322,5 +339,60 @@ describe('ki-switch in a real browser', () => {
     const { form } = await mountInForm('name="newsletter" value="weekly" checked');
 
     expect(formValue(form, 'newsletter')).toBe('weekly');
+  });
+
+  it('S14 material3 restyles checked and unchecked switch token values without markup changes', async () => {
+    await mount();
+    const rootStyle = getComputedStyle(document.documentElement);
+    const onmarsOffTrack = rootStyle.getPropertyValue('--ki-switch-unchecked-rest-track');
+    const onmarsOnTrack = rootStyle.getPropertyValue('--ki-switch-checked-rest-track');
+
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    const materialStyle = getComputedStyle(document.documentElement);
+    expect(materialStyle.getPropertyValue('--ki-switch-unchecked-rest-track')).not.toBe(
+      onmarsOffTrack,
+    );
+    expect(materialStyle.getPropertyValue('--ki-switch-checked-rest-track')).not.toBe(
+      onmarsOnTrack,
+    );
+  });
+
+  it('S16 mirrors label order and on-state thumb travel under RTL', async () => {
+    cleanup();
+    document.documentElement.setAttribute('dir', 'rtl');
+    const el = document.createElement('ki-switch') as KiSwitchElement;
+    el.setAttribute('checked', '');
+    el.textContent = 'Email notifications';
+    document.body.append(el);
+    await waitForHydration(el);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const track = trackPart(el);
+    const thumb = el.shadowRoot?.querySelector('[part="thumb"]');
+    const label = el.shadowRoot?.querySelector('[part="label"]');
+    expect(thumb).toBeInstanceOf(HTMLElement);
+    expect(label).toBeInstanceOf(HTMLElement);
+
+    const trackRect = track.getBoundingClientRect();
+    const thumbRect = (thumb as HTMLElement).getBoundingClientRect();
+    const labelRect = (label as HTMLElement).getBoundingClientRect();
+
+    expect(trackRect.left).toBeGreaterThan(labelRect.left);
+    expect(Math.abs(thumbRect.left - trackRect.left)).toBeLessThanOrEqual(8);
+  });
+
+  it('S19 suppresses thumb travel transition under reduced motion', async () => {
+    await browserCommands.emulateReducedMotion('reduce');
+    const el = await mount();
+    const thumb = el.shadowRoot?.querySelector('[part="thumb"]');
+    expect(thumb).toBeInstanceOf(HTMLElement);
+
+    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
+    const transition = getComputedStyle(thumb as HTMLElement).transitionDuration;
+
+    expect(transition).toBe('0s');
+    await browserCommands.emulateReducedMotion(null);
   });
 });
