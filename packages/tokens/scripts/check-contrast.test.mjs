@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  componentPairs,
   compositeOver,
   contrastRatio,
   parseColor,
@@ -40,4 +41,22 @@ test('contrast pair table covers the declared data-model pairs', () => {
       ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
     ],
   );
+});
+
+test('component contrast sweep covers button matrix cells and list text pairs', () => {
+  const declarations = new Map([
+    ['--ki-button-primary-neutral-rest-bg', '#000000'],
+    ['--ki-list-bg', '#ffffff'],
+    ['--ki-list-item-primary-fg', '#000000'],
+    ['--ki-list-item-secondary-fg', '#333333'],
+  ]);
+
+  assert.deepEqual(componentPairs(declarations), [
+    {
+      text: '--ki-button-primary-neutral-rest-fg',
+      surface: '--ki-button-primary-neutral-rest-bg',
+    },
+    { text: '--ki-list-item-primary-fg', surface: '--ki-list-bg' },
+    { text: '--ki-list-item-secondary-fg', surface: '--ki-list-bg' },
+  ]);
 });

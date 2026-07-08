@@ -42,7 +42,7 @@
           "$value": "{ki.typography.line-height.body-1}"
         },
         "primary-font-weight": {
-          "$value": "{ki.typography.weight.body.regular}"
+          "$value": "{ki.typography.weight.body.normal}"
         },
         "primary-fg": {
           "$value": "{ki.text.high-em}"
@@ -54,7 +54,7 @@
           "$value": "{ki.typography.line-height.caption-1}"
         },
         "secondary-font-weight": {
-          "$value": "{ki.typography.weight.body.regular}"
+          "$value": "{ki.typography.weight.body.normal}"
         },
         "secondary-fg": {
           "$value": "{ki.text.med-em}"

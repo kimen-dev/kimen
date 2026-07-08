@@ -54,7 +54,7 @@
           "$value": "{ki.typography.line-height.caption-1}"
         },
         "secondary-font-weight": {
-          "$value": "{ki.typography.weight.body.regular}"
+          "$value": "{ki.typography.weight.body.normal}"
         },
         "secondary-fg": {
           "$value": "{ki.text.med-em}"
