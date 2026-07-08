@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T20:52:06",
+  "timestamp": "2026-07-08T20:52:54",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -10,19 +10,19 @@
       "filePath": "src/components/ki-alert/ki-alert.tsx",
       "encapsulation": "shadow",
       "tag": "ki-alert",
-      "docs": "A persistent inline status message with token-backed tone semantics.\n\nWhen to use: keep a page or section state visible until the condition is\nresolved or a person dismisses it.\nWhen NOT to use: transient confirmations, tiny status descriptors, blocking\ndecisions, or field-level validation messages.",
+      "docs": "A persistent inline status message with token-backed tone semantics.\n\nWhen to use: show a persistent inline message about the state of a page or\nsection, such as a failed save, completed operation, or service notice, that\nremains until the condition is resolved or the person dismisses it. Express\nseverity with `tone`, never custom styling.\n\nWhen NOT to use: transient confirmations that expire on their own belong to\nthe future `ki-toast`; tiny status descriptors attached to another element\nbelong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline\nfield-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed.",
       "docsTags": [
         {
           "name": "slot",
-          "text": "- Message body."
+          "text": "- Message body. It lives inside the live-region boundary."
         },
         {
           "name": "part",
-          "text": "alert - Alert container."
+          "text": "alert - Outer alert surface: tone background, border, radius, and padding."
         },
         {
           "name": "part",
-          "text": "heading - Optional emphasized heading."
+          "text": "heading - Optional emphasized heading, rendered only when non-empty."
         },
         {
           "name": "part",
@@ -30,7 +30,7 @@
         },
         {
           "name": "part",
-          "text": "dismiss - Dismiss button, rendered only when dismissible."
+          "text": "dismiss - Native dismiss button, rendered only when dismissible."
         }
       ],
       "usage": {},
@@ -46,7 +46,7 @@
           "mutable": false,
           "attr": "dismiss-label",
           "reflectToAttr": true,
-          "docs": "Accessible name for the dismiss control.",
+          "docs": "Accessible name for the dismiss button. Override for localization; the\ndefault English string is the component's only built-in user-visible text.\n\nWhen to use: provide a localized action name whenever the document language\nis not English.\nWhen NOT to use: do not put the alert message here; use the default slot.",
           "docsTags": [
             {
               "name": "default",
@@ -75,7 +75,7 @@
           "mutable": true,
           "attr": "dismissed",
           "reflectToAttr": true,
-          "docs": "Hides the alert while keeping the host in the document.",
+          "docs": "Reflected dismissed state. User dismissal sets it; applications may also\nset or clear it. While true, the host remains in the document but renders no\nalert subtree and leaves the accessibility tree. Clearing it re-shows the\nalert and creates a dynamic live-region appearance.\n\nWhen to use: persist or restore acknowledgement state from application\ndata.\nWhen NOT to use: do not listen for programmatic changes as dismissal\nevents; `ki-dismiss` is only for user activation.",
           "docsTags": [
             {
               "name": "default",
@@ -104,7 +104,7 @@
           "mutable": false,
           "attr": "dismissible",
           "reflectToAttr": true,
-          "docs": "Renders a dismiss control when true.",
+          "docs": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior.",
           "docsTags": [
             {
               "name": "default",
@@ -133,7 +133,7 @@
           "mutable": false,
           "attr": "heading",
           "reflectToAttr": true,
-          "docs": "Optional emphasized text rendered before the message.",
+          "docs": "Optional emphasized text rendered before the message inside the live\nregion. Empty strings render no heading. The heading is a `strong`\nelement, not a document heading, so it never changes page outline.\n\nWhen to use: add a short label when it helps identify the status message.\nWhen NOT to use: do not use heading for page structure; use a real heading\noutside the alert when the document needs one.",
           "docsTags": [],
           "values": [
             {
@@ -166,7 +166,7 @@
           "mutable": false,
           "attr": "tone",
           "reflectToAttr": true,
-          "docs": "Semantic tone for visual styling and live-region urgency.",
+          "docs": "Semantic intent for visual styling and live-region urgency. `danger` and\n`warning` expose `role=\"alert\"`; `neutral`, `success`, `info`, absent, and\nunrecognized values expose `role=\"status\"`. Unknown values keep rendering\nand fall back to the neutral token matrix by CSS construction.\n\nWhen to use: choose the tone that describes the page or section state.\nWhen NOT to use: do not use tone for layout, density, or filled-vs-outlined\nstyling; those are token/theme decisions.",
           "docsTags": [
             {
               "name": "default",
@@ -212,21 +212,21 @@
       "slots": [
         {
           "name": "",
-          "docs": "Message body."
+          "docs": "Message body. It lives inside the live-region boundary."
         }
       ],
       "parts": [
         {
           "name": "alert",
-          "docs": "Alert container."
+          "docs": "Outer alert surface: tone background, border, radius, and padding."
         },
         {
           "name": "dismiss",
-          "docs": "Dismiss button, rendered only when dismissible."
+          "docs": "Native dismiss button, rendered only when dismissible."
         },
         {
           "name": "heading",
-          "docs": "Optional emphasized heading."
+          "docs": "Optional emphasized heading, rendered only when non-empty."
         },
         {
           "name": "message",
