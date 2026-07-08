@@ -64,6 +64,36 @@ async function mount(attrs = '', label = 'Email notifications'): Promise<KiSwitc
   return el;
 }
 
+async function mountInForm(
+  attrs = '',
+  fieldsetDisabled = false,
+): Promise<{
+  form: HTMLFormElement;
+  el: KiSwitchElement;
+}> {
+  cleanup();
+  const form = document.createElement('form');
+  const fieldset = document.createElement('fieldset');
+  fieldset.disabled = fieldsetDisabled;
+  const el = document.createElement('ki-switch') as KiSwitchElement;
+  el.textContent = 'Newsletter';
+  for (const attr of attrs.split(/\s+/u).filter(Boolean)) {
+    const [name, value] = attr.split('=');
+    if (name) {
+      el.setAttribute(name, value?.replace(/^"|"$/gu, '') ?? '');
+    }
+  }
+  fieldset.append(el);
+  form.append(fieldset);
+  document.body.append(form);
+  await waitForHydration(el);
+  return { form, el };
+}
+
+function formValue(form: HTMLFormElement, name: string): FormDataEntryValue | null {
+  return new FormData(form).get(name);
+}
+
 function internalInput(el: KiSwitchElement): HTMLInputElement {
   const input = el.shadowRoot?.querySelector('input[type="checkbox"][role="switch"]');
   expect(input).toBeInstanceOf(HTMLInputElement);
@@ -243,5 +273,54 @@ describe('ki-switch in a real browser', () => {
 
     const results = await axe.run(document.body);
     expect(results.violations).toEqual([]);
+  });
+
+  it('S10 submitted FormData contains newsletter=on when the switch is on', async () => {
+    const { form } = await mountInForm('name="newsletter" checked');
+
+    expect(formValue(form, 'newsletter')).toBe('on');
+  });
+
+  it('S11 submitted FormData omits newsletter when the switch is off', async () => {
+    const { form } = await mountInForm('name="newsletter"');
+
+    expect(formValue(form, 'newsletter')).toBeNull();
+  });
+
+  it('S12 resetting restores an initially on switch after it was toggled off', async () => {
+    const { form, el } = await mountInForm('name="newsletter" checked');
+
+    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
+    expect(el.checked).toBe(false);
+    form.reset();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(el.checked).toBe(true);
+  });
+
+  it('S21 resetting restores an initially off switch after it was toggled on', async () => {
+    const { form, el } = await mountInForm('name="newsletter"');
+
+    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
+    expect(el.checked).toBe(true);
+    form.reset();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(el.checked).toBe(false);
+  });
+
+  it('S13 a switch inside disabled fieldset stays unchanged and contributes nothing', async () => {
+    const { form, el } = await mountInForm('name="newsletter" checked', true);
+
+    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
+
+    expect(el.checked).toBe(true);
+    expect(formValue(form, 'newsletter')).toBeNull();
+  });
+
+  it('S18 value="weekly" submits newsletter=weekly when on', async () => {
+    const { form } = await mountInForm('name="newsletter" value="weekly" checked');
+
+    expect(formValue(form, 'newsletter')).toBe('weekly');
   });
 });
