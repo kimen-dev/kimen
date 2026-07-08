@@ -1,4 +1,5 @@
 import axe from 'axe-core';
+import { userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:011-ki-alert
@@ -97,6 +98,10 @@ function liveWrapper(el: KiAlertElement): HTMLElement {
     throw new Error('ki-alert did not render its live wrapper');
   }
   return node;
+}
+
+function dismissButton(el: KiAlertElement): HTMLButtonElement | null {
+  return el.shadowRoot?.querySelector<HTMLButtonElement>('[part="dismiss"]') ?? null;
 }
 
 describe('ki-alert in a real browser', () => {
@@ -225,5 +230,67 @@ describe('ki-alert in a real browser', () => {
 
     const results = await axe.run(main);
     expect(results.violations).toEqual([]);
+  });
+
+  it('S3 dismissing a dismissible alert hides it and dispatches one non-cancelable event', async () => {
+    cleanup();
+    const el = await mount('Backup completed', { dismissible: true });
+    const button = dismissButton(el);
+    const events: CustomEvent<null>[] = [];
+    el.addEventListener('ki-dismiss', (event) => {
+      event.preventDefault();
+      events.push(event as CustomEvent<null>);
+    });
+
+    expect(button).toBeInstanceOf(HTMLButtonElement);
+    if (!button) {
+      throw new Error('ki-alert did not render a dismiss button');
+    }
+    await userEvent.click(button);
+    await nextFrame();
+
+    expect(el.dismissed).toBe(true);
+    expect(el.hasAttribute('dismissed')).toBe(true);
+    expect(getComputedStyle(el).display).toBe('none');
+    expect(el.shadowRoot?.querySelector('[part="alert"]')).toBeNull();
+    expect(events).toHaveLength(1);
+    expect(events[0]?.bubbles).toBe(true);
+    expect(events[0]?.composed).toBe(true);
+    expect(events[0]?.cancelable).toBe(false);
+    expect(events[0]?.detail).toBeNull();
+    expect(el.dismissed).toBe(true);
+  });
+
+  it('S3 programmatic dismissed changes fire no ki-dismiss event', async () => {
+    cleanup();
+    const el = await mount('Backup completed', { dismissible: true });
+    let events = 0;
+    el.addEventListener('ki-dismiss', () => {
+      events += 1;
+    });
+
+    el.dismissed = true;
+    await nextFrame();
+
+    expect(events).toBe(0);
+  });
+
+  it('S4 non-dismissible alerts render no dismiss control', async () => {
+    cleanup();
+    const el = await mount('Backup completed');
+
+    expect(dismissButton(el)).toBeNull();
+  });
+
+  it('S19 clearing dismissed displays the alert again with a populated live wrapper', async () => {
+    cleanup();
+    const el = await mount('Backup completed', { dismissed: true });
+
+    expect(el.shadowRoot?.querySelector('[part="alert"]')).toBeNull();
+    el.dismissed = false;
+    await nextFrame();
+
+    expect(part(el, 'alert')).toBeInstanceOf(HTMLElement);
+    expect(liveWrapper(el).querySelector('[part="message"] slot')).toBeInstanceOf(HTMLSlotElement);
   });
 });
