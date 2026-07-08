@@ -23,6 +23,7 @@ interface MountOptions {
 }
 
 const STYLE_ID = 'ki-tooltip-browser-token-style';
+const placements = ['top', 'bottom', 'start', 'end'] as const;
 const browserCommands = commands as unknown as {
   installClock: () => Promise<void>;
   fastForwardClock: (milliseconds: number) => Promise<void>;
@@ -231,13 +232,24 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(trigger.getAttribute('aria-description')).toBeNull();
   });
 
-  it('S1 has zero axe violations in the pointer fixture', async () => {
-    const { host, trigger } = await mount();
-    await hoverTrigger(host, trigger);
-
+  it('S1 has zero axe violations across placements shown and hidden', async () => {
     const main = document.createElement('main');
-    main.append(host);
     document.body.append(main);
+
+    for (const placement of placements) {
+      const { host, trigger } = await mount({ placement });
+      main.append(host);
+      await hoverTrigger(host, trigger);
+      await userEvent.unhover(trigger);
+      await nextFrame();
+    }
+
+    for (const placement of placements) {
+      const { host, trigger } = await mount({ placement });
+      main.append(host);
+      await hoverTrigger(host, trigger);
+    }
+
     const results = await axe.run(main);
     expect(results.violations).toEqual([]);
   });

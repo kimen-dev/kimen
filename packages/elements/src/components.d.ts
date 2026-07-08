@@ -6,7 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position";
 export namespace Components {
     /**
      * A token-styled action button with native button semantics.
@@ -51,16 +53,26 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A transient, text-only description bubble for one slotted trigger.
+     * When to use: add a brief clarifying hint for an icon-only, abbreviated, or
+     * otherwise ambiguous control when the same information is discoverable
+     * elsewhere in the interface.
+     * When NOT to use: never put essential or unique information in a tooltip;
+     * never put interactive or rich content in a tooltip; do not use tooltips for
+     * form validation messages, disabled controls, or touch-primary flows. Use
+     * visible layout text or a future `ki-popover` pattern for those cases.
      */
     interface KiTooltip {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * The entire tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a future popover.
+          * @default ''
          */
         "label": string;
+        /**
+          * Preferred placement for the tooltip. The component may flip or clamp the rendered placement to keep the bubble inside the viewport; unknown runtime values fall back to `top`. When NOT to use: do not depend on placement for meaning or reading order.
+          * @default 'top'
+         */
+        "placement": KiTooltipPlacement;
     }
 }
 declare global {
@@ -78,9 +90,14 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A transient, text-only description bubble for one slotted trigger.
+     * When to use: add a brief clarifying hint for an icon-only, abbreviated, or
+     * otherwise ambiguous control when the same information is discoverable
+     * elsewhere in the interface.
+     * When NOT to use: never put essential or unique information in a tooltip;
+     * never put interactive or rich content in a tooltip; do not use tooltips for
+     * form validation messages, disabled controls, or touch-primary flows. Use
+     * visible layout text or a future `ki-popover` pattern for those cases.
      */
     interface HTMLKiTooltipElement extends Components.KiTooltip, HTMLStencilElement {
     }
@@ -141,16 +158,26 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A transient, text-only description bubble for one slotted trigger.
+     * When to use: add a brief clarifying hint for an icon-only, abbreviated, or
+     * otherwise ambiguous control when the same information is discoverable
+     * elsewhere in the interface.
+     * When NOT to use: never put essential or unique information in a tooltip;
+     * never put interactive or rich content in a tooltip; do not use tooltips for
+     * form validation messages, disabled controls, or touch-primary flows. Use
+     * visible layout text or a future `ki-popover` pattern for those cases.
      */
     interface KiTooltip {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * The entire tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a future popover.
+          * @default ''
          */
         "label"?: string;
+        /**
+          * Preferred placement for the tooltip. The component may flip or clamp the rendered placement to keep the bubble inside the viewport; unknown runtime values fall back to `top`. When NOT to use: do not depend on placement for meaning or reading order.
+          * @default 'top'
+         */
+        "placement"?: KiTooltipPlacement;
     }
 
     interface KiButtonAttributes {
@@ -164,6 +191,7 @@ declare namespace LocalJSX {
     }
     interface KiTooltipAttributes {
         "label": string;
+        "placement": KiTooltipPlacement;
     }
 
     interface IntrinsicElements {
@@ -184,9 +212,14 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A transient, text-only description bubble for one slotted trigger.
+             * When to use: add a brief clarifying hint for an icon-only, abbreviated, or
+             * otherwise ambiguous control when the same information is discoverable
+             * elsewhere in the interface.
+             * When NOT to use: never put essential or unique information in a tooltip;
+             * never put interactive or rich content in a tooltip; do not use tooltips for
+             * form validation messages, disabled controls, or touch-primary flows. Use
+             * visible layout text or a future `ki-popover` pattern for those cases.
              */
             "ki-tooltip": LocalJSX.IntrinsicElements["ki-tooltip"] & JSXBase.HTMLAttributes<HTMLKiTooltipElement>;
         }
