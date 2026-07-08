@@ -14,6 +14,7 @@ type KiRadioGroupElement = HTMLElement & {
   disabled: boolean;
   label: string;
   value: string;
+  validationMessage: string;
 };
 
 const STYLE_ID = 'ki-radio-group-browser-token-style';
@@ -350,5 +351,122 @@ describe('ki-radio-group in a real browser', () => {
 
     expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(sms);
     expect(sms.checked).toBe(true);
+  });
+
+  it('S12 submits the selected option value with the group name', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    await mount({ name: 'contact', value: 'email' }, form);
+
+    const data = new FormData(form);
+
+    expect(data.get('contact')).toBe('email');
+  });
+
+  it('S13 blocks submission for a required group with no selection', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount({ name: 'contact', required: true }, form);
+
+    expect(form.checkValidity()).toBe(false);
+    expect(el.matches(':invalid')).toBe(true);
+    expect(el.validationMessage.length).toBeGreaterThan(0);
+  });
+
+  it('S22 exposes required state to assistive technology', async () => {
+    cleanup();
+    const el = await mount({ required: true });
+
+    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.getAttribute('aria-required')).toBe(
+      'true',
+    );
+  });
+
+  it('S23 exposes invalid only after a blocked submission and clears on selection', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount({ name: 'contact', required: true }, form);
+
+    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.hasAttribute('aria-invalid')).toBe(
+      false,
+    );
+    form.reportValidity();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.getAttribute('aria-invalid')).toBe(
+      'true',
+    );
+
+    await userEvent.click(radioAt(el, 0));
+
+    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.hasAttribute('aria-invalid')).toBe(
+      false,
+    );
+  });
+
+  it('S14 form reset restores the initial selection silently', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount({ name: 'contact', value: 'email' }, form);
+    let eventCount = 0;
+    el.addEventListener('input', () => {
+      eventCount += 1;
+    });
+    el.addEventListener('change', () => {
+      eventCount += 1;
+    });
+    await userEvent.click(radioAt(el, 1));
+
+    eventCount = 0;
+    form.reset();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(radioAt(el, 0).checked).toBe(true);
+    expect(el.value).toBe('email');
+    expect(eventCount).toBe(0);
+  });
+
+  it('S15 a disabled fieldset makes the group inert and contributes nothing', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    const fieldset = document.createElement('fieldset');
+    fieldset.disabled = true;
+    form.append(fieldset);
+    document.body.append(form);
+    const el = await mount({ name: 'contact', value: 'email' }, fieldset);
+
+    await userEvent.click(radioAt(el, 1), { force: true }).catch(() => undefined);
+
+    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.getAttribute('aria-disabled')).toBe(
+      'true',
+    );
+    expect(new FormData(form).has('contact')).toBe(false);
+    expect(el.value).toBe('email');
+  });
+
+  it('S24 disabling the selected option withholds entry without blocking required submission', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount({ name: 'contact', required: true, value: 'email' }, form);
+    let eventCount = 0;
+    el.addEventListener('input', () => {
+      eventCount += 1;
+    });
+    el.addEventListener('change', () => {
+      eventCount += 1;
+    });
+
+    el.querySelectorAll('ki-radio')[0]?.setAttribute('disabled', '');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(el.value).toBe('email');
+    expect(form.checkValidity()).toBe(true);
+    expect(new FormData(form).has('contact')).toBe(false);
+    expect(radioAt(el, 1).tabIndex).toBe(0);
+    expect(eventCount).toBe(0);
   });
 });
