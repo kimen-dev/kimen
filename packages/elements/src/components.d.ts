@@ -6,7 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+import { KiInputType } from "./components/ki-input/ki-input.form";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiInputType } from "./components/ki-input/ki-input.form";
 export namespace Components {
     /**
      * A token-styled action button with native button semantics.
@@ -51,16 +53,55 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled single-line text field with native input semantics.
+     * When to use: collect one line of free text from a person, always with a
+     * visible `label`; choose the `type` and `autocomplete` that match the entry
+     * purpose.
+     * When NOT to use: multiline text, predefined choices, boolean state, numeric
+     * stepper entry, or placeholder-only labeling.
      */
     interface KiInput {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
          */
-        "label": string;
+        "autocomplete"?: string;
+        /**
+          * Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
+         */
+        "label"?: string;
+        /**
+          * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
+         */
+        "name"?: string;
+        /**
+          * Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
+          * @default false
+         */
+        "readonly": boolean;
+        /**
+          * Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
+          * @default 'text'
+         */
+        "type": KiInputType;
+        /**
+          * Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. When NOT to use: do not observe user edits by polling; listen for `input` and `change`.
+          * @default ''
+         */
+        "value": string;
     }
 }
 declare global {
@@ -78,9 +119,12 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled single-line text field with native input semantics.
+     * When to use: collect one line of free text from a person, always with a
+     * visible `label`; choose the `type` and `autocomplete` that match the entry
+     * purpose.
+     * When NOT to use: multiline text, predefined choices, boolean state, numeric
+     * stepper entry, or placeholder-only labeling.
      */
     interface HTMLKiInputElement extends Components.KiInput, HTMLStencilElement {
     }
@@ -141,16 +185,55 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled single-line text field with native input semantics.
+     * When to use: collect one line of free text from a person, always with a
+     * visible `label`; choose the `type` and `autocomplete` that match the entry
+     * purpose.
+     * When NOT to use: multiline text, predefined choices, boolean state, numeric
+     * stepper entry, or placeholder-only labeling.
      */
     interface KiInput {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
+         */
+        "autocomplete"?: string;
+        /**
+          * Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
          */
         "label"?: string;
+        /**
+          * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
+         */
+        "name"?: string;
+        /**
+          * Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
+          * @default false
+         */
+        "readonly"?: boolean;
+        /**
+          * Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
+          * @default 'text'
+         */
+        "type"?: KiInputType;
+        /**
+          * Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. When NOT to use: do not observe user edits by polling; listen for `input` and `change`.
+          * @default ''
+         */
+        "value"?: string;
     }
 
     interface KiButtonAttributes {
@@ -163,7 +246,15 @@ declare namespace LocalJSX {
         "disabled": boolean;
     }
     interface KiInputAttributes {
+        "type": KiInputType;
         "label": string;
+        "placeholder": string;
+        "value": string;
+        "name": string;
+        "required": boolean;
+        "readonly": boolean;
+        "disabled": boolean;
+        "autocomplete": string;
     }
 
     interface IntrinsicElements {
@@ -184,9 +275,12 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A token-styled single-line text field with native input semantics.
+             * When to use: collect one line of free text from a person, always with a
+             * visible `label`; choose the `type` and `autocomplete` that match the entry
+             * purpose.
+             * When NOT to use: multiline text, predefined choices, boolean state, numeric
+             * stepper entry, or placeholder-only labeling.
              */
             "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;
         }

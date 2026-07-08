@@ -30,6 +30,19 @@
       "name": "ki-button worst case (component + full Stencil runtime, first component on a page)",
       "path": "dist/components/ki-button.js",
       "limit": "25 KB"
+    },
+    {
+      "name": "ki-input marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": "dist/components/ki-input.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-input worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-input.js",
+      "limit": "25 KB"
     }
   ],
   "nx": {
