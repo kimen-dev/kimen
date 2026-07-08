@@ -51,16 +51,44 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A form-associated checkbox for selecting independent options.
+     * When to use: selecting one or more independent options that a form submits
+     * later, including a "select all" parent that presents partial selection with
+     * `indeterminate`. Always provide a visible label in the default slot.
+     * When NOT to use: a single mutually exclusive choice, an immediate on/off
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
      */
     interface KiCheckbox {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+          * @default false
          */
-        "label": string;
+        "checked": boolean;
+        /**
+          * Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
+          * @default false
+         */
+        "indeterminate": boolean;
+        /**
+          * Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
+         */
+        "name"?: string;
+        /**
+          * Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
+         */
+        "value"?: string;
     }
 }
 declare global {
@@ -78,9 +106,14 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A form-associated checkbox for selecting independent options.
+     * When to use: selecting one or more independent options that a form submits
+     * later, including a "select all" parent that presents partial selection with
+     * `indeterminate`. Always provide a visible label in the default slot.
+     * When NOT to use: a single mutually exclusive choice, an immediate on/off
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
      */
     interface HTMLKiCheckboxElement extends Components.KiCheckbox, HTMLStencilElement {
     }
@@ -141,16 +174,48 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A form-associated checkbox for selecting independent options.
+     * When to use: selecting one or more independent options that a form submits
+     * later, including a "select all" parent that presents partial selection with
+     * `indeterminate`. Always provide a visible label in the default slot.
+     * When NOT to use: a single mutually exclusive choice, an immediate on/off
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
      */
     interface KiCheckbox {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+          * @default false
          */
-        "label"?: string;
+        "checked"?: boolean;
+        /**
+          * Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
+          * @default false
+         */
+        "indeterminate"?: boolean;
+        /**
+          * Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
+         */
+        "name"?: string;
+        /**
+          * Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
+         */
+        "value"?: string;
     }
 
     interface KiButtonAttributes {
@@ -163,7 +228,12 @@ declare namespace LocalJSX {
         "disabled": boolean;
     }
     interface KiCheckboxAttributes {
-        "label": string;
+        "checked": boolean;
+        "indeterminate": boolean;
+        "disabled": boolean;
+        "required": boolean;
+        "name": string;
+        "value": string;
     }
 
     interface IntrinsicElements {
@@ -184,9 +254,14 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A form-associated checkbox for selecting independent options.
+             * When to use: selecting one or more independent options that a form submits
+             * later, including a "select all" parent that presents partial selection with
+             * `indeterminate`. Always provide a visible label in the default slot.
+             * When NOT to use: a single mutually exclusive choice, an immediate on/off
+             * effect, triggering an action, unlabeled/icon-only usage, or
+             * `checked="false"` to mean unchecked. Boolean attributes use presence
+             * semantics; omit `checked` to express unchecked.
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
         }

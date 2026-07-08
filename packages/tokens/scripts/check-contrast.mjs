@@ -167,14 +167,20 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
 // (or this gate silently ignores that component; the zero-match guard only
 // protects the patterns listed here).
-const COMPONENT_BG_PATTERN =
-  /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u;
+const COMPONENT_BG_PATTERNS = [
+  /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u,
+  /^--ki-checkbox-(?:checked|indeterminate)-(?:rest|hover|active)-bg$/u,
+];
+
+export function componentBgPatterns() {
+  return COMPONENT_BG_PATTERNS;
+}
 
 function componentPairs(declarations) {
   const pairs = [];
 
   for (const name of declarations.keys()) {
-    if (COMPONENT_BG_PATTERN.test(name)) {
+    if (COMPONENT_BG_PATTERNS.some((pattern) => pattern.test(name))) {
       pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
     }
   }

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 import {
   compositeOver,
+  componentBgPatterns,
   contrastRatio,
   parseColor,
   relativeLuminance,
@@ -12,6 +13,33 @@ import {
 test('relative luminance matches WCAG anchors', () => {
   assert.equal(relativeLuminance(parseColor('#000000')), 0);
   assert.equal(relativeLuminance(parseColor('#ffffff')), 1);
+});
+
+test('component sweep covers button and checkbox matrices independently', () => {
+  const patterns = componentBgPatterns();
+
+  assert.ok(
+    patterns.some((pattern) => pattern.test('--ki-button-primary-neutral-rest-bg')),
+    'button matrix must be swept',
+  );
+  assert.ok(
+    patterns.some((pattern) => pattern.test('--ki-checkbox-checked-rest-bg')),
+    'checkbox checked matrix must be swept',
+  );
+  assert.ok(
+    patterns.some((pattern) => pattern.test('--ki-checkbox-indeterminate-hover-bg')),
+    'checkbox indeterminate matrix must be swept',
+  );
+  assert.equal(
+    patterns.some((pattern) => pattern.test('--ki-checkbox-unchecked-rest-bg')),
+    false,
+    'unchecked has no rendered mark ink and stays out of the text sweep',
+  );
+  assert.equal(
+    patterns.some((pattern) => pattern.test('--ki-checkbox-checked-disabled-bg')),
+    false,
+    'disabled cells stay exempt from WCAG 1.4.3 text contrast',
+  );
 });
 
 test('contrast ratio matches WCAG anchors', () => {

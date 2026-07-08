@@ -547,6 +547,13 @@
   --ki-button-focus-ring-width: var(--ki-space-xxs);
   --ki-button-focus-ring-offset: var(--ki-space-xxs);
   --ki-button-border-width: var(--ki-space-xxs);
+  --ki-checkbox-control-size: var(--ki-space-5xl);
+  --ki-checkbox-min-target: var(--ki-space-7xl);
+  --ki-checkbox-gap: var(--ki-space-sm);
+  --ki-checkbox-radius: var(--ki-radius-xs);
+  --ki-checkbox-border-width: var(--ki-space-xxs);
+  --ki-checkbox-focus-ring-width: var(--ki-space-xxs);
+  --ki-checkbox-focus-ring-offset: var(--ki-space-xxs);
   --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s0);
@@ -744,6 +751,37 @@
   --ki-button-ghost-danger-active-border: var(--ki-outline-none);
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+  --ki-checkbox-label-font-size: var(--ki-typography-size-body-1);
+  --ki-checkbox-label-font-weight: var(--ki-typography-weight-body-normal);
+  --ki-checkbox-label-line-height: var(--ki-typography-line-height-body-1);
+  --ki-checkbox-unchecked-rest-bg: var(--ki-surface-s0);
+  --ki-checkbox-unchecked-rest-border: var(--ki-outline-high-em);
+  --ki-checkbox-unchecked-hover-bg: var(--ki-surface-s1);
+  --ki-checkbox-unchecked-hover-border: var(--ki-outline-primary-high-em);
+  --ki-checkbox-unchecked-active-bg: var(--ki-surface-s2);
+  --ki-checkbox-unchecked-active-border: var(--ki-outline-primary-high-em);
+  --ki-checkbox-unchecked-disabled-bg: var(--ki-surface-disabled-low-em);
+  --ki-checkbox-unchecked-disabled-border: var(--ki-outline-med-em);
+  --ki-checkbox-checked-rest-bg: var(--ki-surface-primary-high-em);
+  --ki-checkbox-checked-rest-border: var(--ki-outline-none);
+  --ki-checkbox-checked-hover-bg: var(--ki-surface-primary-high-em-hover);
+  --ki-checkbox-checked-hover-border: var(--ki-outline-none);
+  --ki-checkbox-checked-active-bg: var(--ki-surface-primary-high-em);
+  --ki-checkbox-checked-active-border: var(--ki-outline-none);
+  --ki-checkbox-checked-disabled-bg: var(--ki-surface-disabled-low-em);
+  --ki-checkbox-checked-disabled-border: var(--ki-outline-none);
+  --ki-checkbox-indeterminate-rest-bg: var(--ki-surface-primary-high-em);
+  --ki-checkbox-indeterminate-rest-border: var(--ki-outline-none);
+  --ki-checkbox-indeterminate-hover-bg: var(--ki-surface-primary-high-em-hover);
+  --ki-checkbox-indeterminate-hover-border: var(--ki-outline-none);
+  --ki-checkbox-indeterminate-active-bg: var(--ki-surface-primary-high-em);
+  --ki-checkbox-indeterminate-active-border: var(--ki-outline-none);
+  --ki-checkbox-indeterminate-disabled-bg: var(--ki-surface-disabled-low-em);
+  --ki-checkbox-indeterminate-disabled-border: var(--ki-outline-none);
+  --ki-checkbox-invalid-bg: var(--ki-surface-danger-low-em);
+  --ki-checkbox-invalid-fg: var(--ki-text-danger-high-em);
+  --ki-checkbox-invalid-border: var(--ki-outline-danger-high-em);
+  --ki-checkbox-focus-ring-color: var(--ki-outline-primary-high-em);
   --ki-text-base: var(--ki-text-high-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. */
   --ki-text-muted: var(--ki-text-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. */
   --ki-button-primary-neutral-rest-fg: var(--ki-text-primary-on-primary);
@@ -752,6 +790,15 @@
   --ki-button-primary-success-rest-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-hover-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-active-fg: var(--ki-text-primary-on-success);
+  --ki-checkbox-unchecked-rest-fg: var(--ki-text-high-em);
+  --ki-checkbox-unchecked-hover-fg: var(--ki-text-high-em);
+  --ki-checkbox-unchecked-active-fg: var(--ki-text-high-em);
+  --ki-checkbox-checked-rest-fg: var(--ki-text-primary-on-primary);
+  --ki-checkbox-checked-hover-fg: var(--ki-text-primary-on-primary);
+  --ki-checkbox-checked-active-fg: var(--ki-text-primary-on-primary);
+  --ki-checkbox-indeterminate-rest-fg: var(--ki-text-primary-on-primary);
+  --ki-checkbox-indeterminate-hover-fg: var(--ki-text-primary-on-primary);
+  --ki-checkbox-indeterminate-active-fg: var(--ki-text-primary-on-primary);
   --ki-button-primary-neutral-disabled-fg: var(--ki-text-muted);
   --ki-button-primary-success-disabled-fg: var(--ki-text-muted);
   --ki-button-primary-danger-disabled-fg: var(--ki-text-muted);
@@ -767,4 +814,7 @@
   --ki-button-ghost-neutral-disabled-fg: var(--ki-text-muted);
   --ki-button-ghost-success-disabled-fg: var(--ki-text-muted);
   --ki-button-ghost-danger-disabled-fg: var(--ki-text-muted);
+  --ki-checkbox-unchecked-disabled-fg: var(--ki-text-muted);
+  --ki-checkbox-checked-disabled-fg: var(--ki-text-muted);
+  --ki-checkbox-indeterminate-disabled-fg: var(--ki-text-muted);
 }
