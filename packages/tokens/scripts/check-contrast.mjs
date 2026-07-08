@@ -1,16 +1,20 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const MIN_RATIO = 4.5;
+const DEFAULT_MIN_RATIO = 4.5;
 const THEMES = [
   { name: 'onmars', stylesheet: new URL('../dist/css/tokens.css', import.meta.url) },
   { name: 'material3', stylesheet: new URL('../dist/css/tokens.material3.css', import.meta.url) },
 ];
 const CONTRAST_PAIRS = [
-  { text: '--ki-text-high-em', surface: '--ki-surface-s0' },
-  { text: '--ki-text-med-em', surface: '--ki-surface-s0' },
-  { text: '--ki-text-high-em', surface: '--ki-surface-s1' },
-  { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
+  { text: '--ki-text-high-em', surface: '--ki-surface-s0', min: DEFAULT_MIN_RATIO },
+  { text: '--ki-text-med-em', surface: '--ki-surface-s0', min: DEFAULT_MIN_RATIO },
+  { text: '--ki-text-high-em', surface: '--ki-surface-s1', min: DEFAULT_MIN_RATIO },
+  {
+    text: '--ki-text-primary-on-primary',
+    surface: '--ki-surface-primary-med-em',
+    min: DEFAULT_MIN_RATIO,
+  },
 ];
 
 export function parseColor(value) {
@@ -167,15 +171,49 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
 // (or this gate silently ignores that component; the zero-match guard only
 // protects the patterns listed here).
-const COMPONENT_BG_PATTERN =
-  /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u;
+const COMPONENT_PAIR_PATTERNS = [
+  {
+    name: 'ki-button interactive text',
+    pattern: /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u,
+    textFor: (surface) => surface.replace(/-bg$/u, '-fg'),
+    min: DEFAULT_MIN_RATIO,
+  },
+  {
+    name: 'ki-dialog text',
+    pattern: /^--ki-dialog-bg$/u,
+    textFor: () => '--ki-dialog-fg',
+    min: DEFAULT_MIN_RATIO,
+  },
+  {
+    name: 'ki-dialog focus ring',
+    pattern: /^--ki-dialog-bg$/u,
+    textFor: () => '--ki-dialog-focus-ring-color',
+    min: 3,
+  },
+];
 
-function componentPairs(declarations) {
+export function componentPairs(declarations) {
   const pairs = [];
 
-  for (const name of declarations.keys()) {
-    if (COMPONENT_BG_PATTERN.test(name)) {
-      pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
+  for (const config of COMPONENT_PAIR_PATTERNS) {
+    let matches = 0;
+
+    for (const name of declarations.keys()) {
+      if (config.pattern.test(name)) {
+        matches += 1;
+        pairs.push({
+          text: config.textFor(name),
+          surface: name,
+          min: config.min,
+          source: config.name,
+        });
+      }
+    }
+
+    if (matches === 0) {
+      pairs.push({
+        missingPattern: config.name,
+      });
     }
   }
 
@@ -189,25 +227,28 @@ function evaluateStylesheet(theme, stylesheet) {
 
   for (const [scheme, declarations] of Object.entries(schemes)) {
     const swept = componentPairs(declarations);
-
-    if (swept.length === 0) {
-      failures.push(
-        `${theme}/${scheme}: no component-layer pairs matched — the sweep pattern drifted from the token names`,
-      );
-    }
+    const missingPatterns = swept.filter((pair) => pair.missingPattern);
+    const componentContrastPairs = swept.filter((pair) => !pair.missingPattern);
 
     // Component cells may be translucent (ghost/quaternary): composite the
     // cell background over the page surface before measuring.
     const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
 
-    for (const pair of [...CONTRAST_PAIRS, ...swept]) {
+    for (const pair of missingPatterns) {
+      failures.push(
+        `${theme}/${scheme}: no component-layer pairs matched for ${pair.missingPattern} — the sweep pattern drifted from the token names`,
+      );
+    }
+
+    for (const pair of [...CONTRAST_PAIRS, ...componentContrastPairs]) {
       const text = parseColor(resolveCustomProperty(pair.text, declarations));
       const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
       const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
       const ratio = contrastRatio(text, surface);
+      const min = pair.min ?? DEFAULT_MIN_RATIO;
 
-      if (ratio < MIN_RATIO) {
-        failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio}`);
+      if (ratio < min) {
+        failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio} < ${min}`);
       }
     }
   }
@@ -238,12 +279,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const failures = checkContrast();
 
   if (failures.length > 0) {
-    console.error(`Contrast check failed. Minimum ratio: ${MIN_RATIO}:1`);
+    console.error(`Contrast check failed. Default minimum ratio: ${DEFAULT_MIN_RATIO}:1`);
     for (const failure of failures) {
       console.error(`- ${failure}`);
     }
     process.exit(1);
   }
 
-  console.log(`Contrast check passed. Minimum ratio: ${MIN_RATIO}:1`);
+  console.log(`Contrast check passed. Default minimum ratio: ${DEFAULT_MIN_RATIO}:1`);
 }
