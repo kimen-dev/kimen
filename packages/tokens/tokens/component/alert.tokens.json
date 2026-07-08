@@ -1,0 +1,122 @@
+{
+  "ki": {
+    "alert": {
+      "padding-inline": {
+        "$value": "{ki.space.lg}"
+      },
+      "padding-block": {
+        "$value": "{ki.space.md}"
+      },
+      "gap": {
+        "$value": "{ki.space.sm}"
+      },
+      "radius": {
+        "$value": "{ki.radius.lg}"
+      },
+      "border-width": {
+        "$value": "{ki.space.xxs}"
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-1}"
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}"
+      },
+      "heading-font-size": {
+        "$value": "{ki.typography.size.body-2}"
+      },
+      "heading-font-weight": {
+        "$value": "{ki.typography.weight.body.semibold}"
+      },
+      "dismiss-size": {
+        "$value": "{ki.space.7xl}"
+      },
+      "dismiss-icon-size": {
+        "$value": "{ki.space.4xl}"
+      },
+      "neutral": {
+        "bg": {
+          "$value": "{ki.surface.s1}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.none}"
+        }
+      },
+      "success": {
+        "bg": {
+          "$value": "{ki.surface.success-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.success-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.success-med-em}"
+        }
+      },
+      "danger": {
+        "bg": {
+          "$value": "{ki.surface.danger-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.danger-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.danger-med-em}"
+        }
+      },
+      "info": {
+        "bg": {
+          "$value": "{ki.surface.info-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.info-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.info-med-em}"
+        }
+      },
+      "warning": {
+        "bg": {
+          "$value": "{ki.surface.warning-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.warning-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.warning-med-em}"
+        }
+      },
+      "dismiss": {
+        "rest": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          }
+        },
+        "hover": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          }
+        },
+        "active": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          }
+        }
+      },
+      "focus-ring": {
+        "color": {
+          "$value": "{ki.outline.primary-high-em}"
+        },
+        "width": {
+          "$value": "{ki.space.xxs}"
+        },
+        "offset": {
+          "$value": "{ki.space.xxs}"
+        }
+      }
+    }
+  }
+}
