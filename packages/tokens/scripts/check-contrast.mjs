@@ -1,16 +1,20 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const MIN_RATIO = 4.5;
+const DEFAULT_MIN_RATIO = 4.5;
 const THEMES = [
   { name: 'onmars', stylesheet: new URL('../dist/css/tokens.css', import.meta.url) },
   { name: 'material3', stylesheet: new URL('../dist/css/tokens.material3.css', import.meta.url) },
 ];
 const CONTRAST_PAIRS = [
-  { text: '--ki-text-high-em', surface: '--ki-surface-s0' },
-  { text: '--ki-text-med-em', surface: '--ki-surface-s0' },
-  { text: '--ki-text-high-em', surface: '--ki-surface-s1' },
-  { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
+  { text: '--ki-text-high-em', surface: '--ki-surface-s0', min: DEFAULT_MIN_RATIO },
+  { text: '--ki-text-med-em', surface: '--ki-surface-s0', min: DEFAULT_MIN_RATIO },
+  { text: '--ki-text-high-em', surface: '--ki-surface-s1', min: DEFAULT_MIN_RATIO },
+  {
+    text: '--ki-text-primary-on-primary',
+    surface: '--ki-surface-primary-med-em',
+    min: DEFAULT_MIN_RATIO,
+  },
 ];
 
 export function parseColor(value) {
@@ -167,19 +171,56 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
 // (or this gate silently ignores that component; the zero-match guard only
 // protects the patterns listed here).
-const COMPONENT_BG_PATTERN =
-  /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u;
+const COMPONENT_CONTRAST_PATTERNS = [
+  {
+    name: 'ki-button interactive cells',
+    bgPattern: /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u,
+    pairsForBg: (name) => [{ text: name.replace(/-bg$/u, '-fg'), surface: name }],
+    min: DEFAULT_MIN_RATIO,
+  },
+  {
+    name: 'ki-alert tone cells',
+    bgPattern: /^--ki-alert-(?:neutral|success|danger|info|warning)-bg$/u,
+    pairsForBg: (name) => [{ text: name.replace(/-bg$/u, '-fg'), surface: name }],
+    min: DEFAULT_MIN_RATIO,
+  },
+  {
+    name: 'ki-alert dismiss indicators',
+    bgPattern: /^--ki-alert-(?:neutral|success|danger|info|warning)-bg$/u,
+    pairsForBg: (name) =>
+      ['rest', 'hover', 'active'].map((state) => ({
+        text: `--ki-alert-dismiss-${state}-fg`,
+        surface: name,
+      })),
+    min: 3,
+  },
+];
 
-function componentPairs(declarations) {
+export function resolveComponentContrastPairs(declarations) {
   const pairs = [];
+  const unmatchedPatterns = [];
 
-  for (const name of declarations.keys()) {
-    if (COMPONENT_BG_PATTERN.test(name)) {
-      pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
+  for (const pattern of COMPONENT_CONTRAST_PATTERNS) {
+    let matches = 0;
+
+    for (const name of declarations.keys()) {
+      if (pattern.bgPattern.test(name)) {
+        matches += 1;
+        pairs.push(
+          ...pattern.pairsForBg(name).map((pair) => ({
+            ...pair,
+            min: pattern.min,
+          })),
+        );
+      }
+    }
+
+    if (matches === 0) {
+      unmatchedPatterns.push(pattern.name);
     }
   }
 
-  return pairs;
+  return { pairs, unmatchedPatterns };
 }
 
 function evaluateStylesheet(theme, stylesheet) {
@@ -188,11 +229,11 @@ function evaluateStylesheet(theme, stylesheet) {
   const failures = [];
 
   for (const [scheme, declarations] of Object.entries(schemes)) {
-    const swept = componentPairs(declarations);
+    const swept = resolveComponentContrastPairs(declarations);
 
-    if (swept.length === 0) {
+    for (const pattern of swept.unmatchedPatterns) {
       failures.push(
-        `${theme}/${scheme}: no component-layer pairs matched — the sweep pattern drifted from the token names`,
+        `${theme}/${scheme}: no component-layer pairs matched for ${pattern} — the sweep pattern drifted from the token names`,
       );
     }
 
@@ -200,13 +241,13 @@ function evaluateStylesheet(theme, stylesheet) {
     // cell background over the page surface before measuring.
     const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
 
-    for (const pair of [...CONTRAST_PAIRS, ...swept]) {
+    for (const pair of [...CONTRAST_PAIRS, ...swept.pairs]) {
       const text = parseColor(resolveCustomProperty(pair.text, declarations));
       const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
       const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
       const ratio = contrastRatio(text, surface);
 
-      if (ratio < MIN_RATIO) {
+      if (ratio < pair.min) {
         failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio}`);
       }
     }
@@ -238,12 +279,16 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const failures = checkContrast();
 
   if (failures.length > 0) {
-    console.error(`Contrast check failed. Minimum ratio: ${MIN_RATIO}:1`);
+    console.error(
+      `Contrast check failed. Minimum ratio: ${DEFAULT_MIN_RATIO}:1 unless a pair declares its own minimum`,
+    );
     for (const failure of failures) {
       console.error(`- ${failure}`);
     }
     process.exit(1);
   }
 
-  console.log(`Contrast check passed. Minimum ratio: ${MIN_RATIO}:1`);
+  console.log(
+    `Contrast check passed. Minimum ratio: ${DEFAULT_MIN_RATIO}:1 unless a pair declares its own minimum`,
+  );
 }
