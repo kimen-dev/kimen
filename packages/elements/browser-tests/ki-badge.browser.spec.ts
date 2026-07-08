@@ -40,6 +40,15 @@ function ensureMaterial3Tokens(): void {
   document.head.appendChild(style);
 }
 
+function landmark(): HTMLElement {
+  let main = document.querySelector('main');
+  if (!main) {
+    main = document.createElement('main');
+    document.body.appendChild(main);
+  }
+  return main;
+}
+
 function cleanup(): void {
   document.documentElement.removeAttribute('data-ki-theme');
   document.documentElement.removeAttribute('data-ki-color-scheme');
@@ -58,7 +67,7 @@ async function mount(
     el.setAttribute(name, value);
   }
   el.textContent = label;
-  document.body.appendChild(el);
+  landmark().appendChild(el);
   await customElements.whenDefined('ki-badge');
   const deadline = Date.now() + 2000;
   while (!el.shadowRoot?.querySelector('[part="badge"]') && Date.now() < deadline) {
@@ -94,7 +103,9 @@ describe('ki-badge', () => {
 
     expect(el.textContent).toBe('Beta');
     expect(computed.whiteSpace).toBe('nowrap');
-    expect(computed.display).toBe('inline-flex');
+    // The pill is a flex item (blockified); the inline formatting contract
+    // lives on the host.
+    expect(getComputedStyle(el).display).toBe('inline-flex');
   });
 
   it('S2 resolves each tone from its own token pair', async () => {
@@ -124,11 +135,11 @@ describe('ki-badge', () => {
     cleanup();
     const before = document.createElement('button');
     before.textContent = 'before';
-    document.body.appendChild(before);
+    landmark().appendChild(before);
     const el = await mount('Static');
     const after = document.createElement('button');
     after.textContent = 'after';
-    document.body.appendChild(after);
+    landmark().appendChild(after);
 
     before.focus();
     await userEvent.keyboard('{Tab}');
@@ -139,12 +150,23 @@ describe('ki-badge', () => {
 
   it('S5 exposes its meaning to assistive technology as plain text', async () => {
     cleanup();
-    await mount('Payment overdue');
+    // The approved Given: a success badge labeled "Active".
+    await mount('Active', { tone: 'success' });
 
-    await expect.element(page.getByText('Payment overdue')).toBeInTheDocument();
+    await expect.element(page.getByText('Active')).toBeInTheDocument();
     const el = document.querySelector('ki-badge');
     expect(el?.getAttribute('role')).toBeNull();
     expect(el?.getAttribute('aria-label')).toBeNull();
+  });
+
+  // Review round 1 gate-gap pin: size must have an observable effect.
+  it('S1 renders sm strictly smaller than md from the size tokens', async () => {
+    cleanup();
+    const md = await mount('Beta');
+    const sm = await mount('Beta', { size: 'sm' });
+    const mdHeight = Number.parseFloat(getComputedStyle(pillOf(md)).blockSize);
+    const smHeight = Number.parseFloat(getComputedStyle(pillOf(sm)).blockSize);
+    expect(smHeight).toBeLessThan(mdHeight);
   });
 
   it('S5 has zero axe violations across the tone matrix', async () => {
@@ -160,7 +182,7 @@ describe('ki-badge', () => {
     cleanup();
     ensureTokens();
     const onmars = await mount('Beta', { tone: 'success' });
-    const onmarsBg = getComputedStyle(pillOf(onmars)).backgroundColor;
+    const onmarsBorder = getComputedStyle(pillOf(onmars)).borderTopColor;
     const markup = onmars.outerHTML;
     onmars.remove();
 
@@ -171,7 +193,10 @@ describe('ki-badge', () => {
 
     expect(el.outerHTML).toBe(markup);
     expect(computed.backgroundColor).toBe(readTokenColor('--ki-badge-success-bg'));
-    expect(computed.backgroundColor, 'material3 must restyle the pill').not.toBe(onmarsBg);
+    // material3 deliberately keeps the success tint and differentiates via
+    // the outline (badge.material3 tokens override border, radius, width).
+    expect(computed.borderTopColor).toBe(readTokenColor('--ki-badge-success-border'));
+    expect(computed.borderTopColor, 'material3 must restyle the outline').not.toBe(onmarsBorder);
   });
 
   it('S8 renders an empty badge without error and exposes no stray text', async () => {

@@ -11,7 +11,7 @@ precedent for non-interactive components.
 ## D1 — Anatomy and zero logic: host + one part, fallback by CSS construction
 
 **Decision**: the shadow root renders a single wrapper around the default
-slot: `<span part="badge"><slot/></span>`. Host `display: inline-block`;
+slot: `<span part="badge"><slot/></span>`. Host `display: inline-flex`;
 the pill itself is the part (`inline-flex`, centered). Two typed, reflected
 props exist — `tone` (`neutral | success | danger | info | warning`, default
 `neutral`) and `size` (`sm | md`, default `md`) — and nothing else: no

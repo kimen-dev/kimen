@@ -360,7 +360,7 @@
   --ki-text-primary-med-em: var(--ki-color-brand-500);
   --ki-text-primary-low-em: var(--ki-color-brand-300);
   --ki-text-primary-base-em: var(--ki-color-brand-100);
-  --ki-text-info-high-em: var(--ki-color-info-800); /** Darkened 600->800 in light (badge AA on the base-em tint; founder sign-off at merge, 010 D2 contingency). */
+  --ki-text-info-high-em: var(--ki-color-info-800); /** Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. */
   --ki-text-info-med-em: var(--ki-color-info-500);
   --ki-text-info-low-em: var(--ki-color-info-300);
   --ki-text-info-base-em: var(--ki-color-info-100);
@@ -368,7 +368,7 @@
   --ki-text-success-med-em: var(--ki-color-success-500);
   --ki-text-success-low-em: var(--ki-color-success-300);
   --ki-text-success-base-em: var(--ki-color-success-100);
-  --ki-text-warning-high-em: var(--ki-color-warning-800); /** Darkened 600->800 in light (badge AA on the base-em tint; founder sign-off at merge, 010 D2 contingency). */
+  --ki-text-warning-high-em: var(--ki-color-warning-800); /** Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. */
   --ki-text-warning-med-em: var(--ki-color-warning-500);
   --ki-text-warning-low-em: var(--ki-color-warning-300);
   --ki-text-warning-base-em: var(--ki-color-warning-100);

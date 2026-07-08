@@ -27,11 +27,20 @@ function injectStylesheet(): void {
   document.head.appendChild(style);
 }
 
+function landmark(): HTMLElement {
+  let main = document.querySelector('main');
+  if (!main) {
+    main = document.createElement('main');
+    document.body.appendChild(main);
+  }
+  return main;
+}
+
 async function mount(tone: string): Promise<HTMLElement> {
   const el = document.createElement('ki-badge');
   el.setAttribute('tone', tone);
   el.textContent = tone;
-  document.body.appendChild(el);
+  landmark().appendChild(el);
   await customElements.whenDefined('ki-badge');
   const deadline = Date.now() + 2000;
   while (!el.shadowRoot?.querySelector('[part="badge"]') && Date.now() < deadline) {
