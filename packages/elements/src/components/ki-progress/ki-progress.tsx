@@ -1,5 +1,7 @@
 import { Component, Prop, h } from '@stencil/core';
-import { clampValue, normalizeMax, resolveShape, type KiProgressShape } from './ki-progress.math';
+import { clampValue, normalizeMax, resolveShape } from './ki-progress.math';
+
+export type KiProgressShape = 'linear' | 'circular';
 
 interface ProgressBaseAttributes {
   'aria-label'?: string | undefined;

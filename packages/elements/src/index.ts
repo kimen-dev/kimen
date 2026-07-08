@@ -8,4 +8,4 @@ export type {
   KiButtonVariant,
 } from './components/ki-button/ki-button.js';
 export { KiProgress } from './components/ki-progress/ki-progress.js';
-export type { KiProgressShape } from './components/ki-progress/ki-progress.math.js';
+export type { KiProgressShape } from './components/ki-progress/ki-progress.js';

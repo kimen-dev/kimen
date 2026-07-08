@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T23:20:58",
+  "timestamp": "2026-07-08T23:22:19",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -451,10 +451,9 @@
             "resolved": "\"circular\" | \"linear\"",
             "references": {
               "KiProgressShape": {
-                "location": "import",
-                "path": "./ki-progress.math",
-                "id": "src/components/ki-progress/ki-progress.math.ts::KiProgressShape",
-                "referenceLocation": "KiProgressShape"
+                "location": "local",
+                "path": "/workspace/packages/elements/src/components/ki-progress/ki-progress.tsx",
+                "id": "src/components/ki-progress/ki-progress.tsx::KiProgressShape"
               }
             }
           },
@@ -556,10 +555,10 @@
       "docstring": "",
       "path": "src/components/ki-button/ki-button.tsx"
     },
-    "src/components/ki-progress/ki-progress.math.ts::KiProgressShape": {
+    "src/components/ki-progress/ki-progress.tsx::KiProgressShape": {
       "declaration": "export type KiProgressShape = 'linear' | 'circular';",
       "docstring": "",
-      "path": "src/components/ki-progress/ki-progress.math.ts"
+      "path": "src/components/ki-progress/ki-progress.tsx"
     }
   }
 }
