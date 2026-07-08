@@ -483,6 +483,35 @@ describe('ki-radio-group in a real browser', () => {
     expect(eventCount).toBe(0);
   });
 
+  // Review round 1 (FR-006): disabling the FOCUSED option at runtime must
+  // move focus (not just the tab stop) to the group's new single tab stop,
+  // so a keyboard user is never dropped to the body.
+  it('S24 moving focus off a runtime-disabled option lands on the tab stop', async () => {
+    cleanup();
+    const el = await mount({ name: 'contact', value: 'email' });
+    const hosts = [...el.querySelectorAll('ki-radio')];
+    radioAt(el, 0).focus();
+    // A slotted radio retargets focus to its host at document level.
+    expect(document.activeElement).toBe(hosts[0]);
+
+    el.querySelectorAll('ki-radio')[0]?.setAttribute('disabled', '');
+    // The MutationObserver reconcile runs in a microtask; the focus restore is
+    // deferred one further frame (after the browser blurs to <body>).
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    await new Promise((resolve) => setTimeout(resolve, 30));
+
+    // Focus retargets to the ki-radio host at the group's shadow boundary; the
+    // new tab stop is the input inside that host.
+    const anchorHost = hosts.find(
+      (radio) => radio.shadowRoot?.querySelector('input')?.tabIndex === 0,
+    );
+    expect(anchorHost, 'a new tab stop must exist').toBeTruthy();
+    expect(document.activeElement, 'focus must follow to the new tab stop, not fall to body').toBe(
+      anchorHost,
+    );
+    expect(document.activeElement).not.toBe(document.body);
+  });
+
   it('S16 material3 restyles the group through token values alone', async () => {
     cleanup();
     ensureMaterial3Tokens();

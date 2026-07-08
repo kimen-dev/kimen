@@ -39,7 +39,9 @@ export class KiRadioGroup {
   @State() private formDisabled = false;
   @State() private userInvalid = false;
 
-  private readonly labelId = `label-${Math.random().toString(36).slice(2)}`;
+  // Scoped to this group's shadow root, so a static id is unambiguous
+  // (review 007 minor; matches the 003 call).
+  private readonly labelId = 'group-label';
   private disabledObserver?: MutationObserver;
   private resetValue = '';
   private suppressValueWatch = false;
@@ -101,7 +103,7 @@ export class KiRadioGroup {
     if (this.suppressValueWatch) {
       return;
     }
-    this.selectByValue(this.value, false);
+    this.selectByValue(this.value);
   }
 
   @Watch('disabled')
@@ -134,6 +136,7 @@ export class KiRadioGroup {
   componentDidLoad(): void {
     this.host.addEventListener('input', this.handleInput, { capture: true });
     this.host.addEventListener('keydown', this.handleKeyDown);
+    this.host.addEventListener('focusin', this.handleFocusIn);
     this.host.addEventListener('invalid', this.handleInvalid);
     this.syncRoster();
   }
@@ -141,6 +144,7 @@ export class KiRadioGroup {
   disconnectedCallback(): void {
     this.host.removeEventListener('input', this.handleInput, { capture: true });
     this.host.removeEventListener('keydown', this.handleKeyDown);
+    this.host.removeEventListener('focusin', this.handleFocusIn);
     this.host.removeEventListener('invalid', this.handleInvalid);
     this.disabledObserver?.disconnect();
   }
@@ -156,7 +160,7 @@ export class KiRadioGroup {
 
   formResetCallback(): void {
     this.userInvalid = false;
-    this.selectByValue(this.resetValue, false);
+    this.selectByValue(this.resetValue);
   }
 
   private readonly handleSlotChange = (): void => {
@@ -165,6 +169,13 @@ export class KiRadioGroup {
 
   private readonly handleInvalid = (): void => {
     this.userInvalid = true;
+  };
+
+  private lastFocusedRadio: KiRadioElement | null = null;
+
+  private readonly handleFocusIn = (event: Event): void => {
+    const target = event.target as Node | null;
+    this.lastFocusedRadio = this.roster.find((radio) => radio === target) ?? null;
   };
 
   private readonly handleInput = (event: Event): void => {
@@ -247,34 +258,55 @@ export class KiRadioGroup {
   }
 
   private reconcileSelection(): void {
+    // FR-006: if the option that HELD focus becomes disabled at runtime, the
+    // browser has already dropped focus to <body> by the time this observer
+    // fires — so we track the last-focused option (focusin retargets slotted
+    // radios to their host) rather than reading a now-stale activeElement, and
+    // move focus to the group's new single tab stop so a keyboard user keeps
+    // their place.
+    // Capture intent from the attribute (synchronous with setAttribute) BEFORE
+    // syncInputs disables the native input. The browser then blurs that input
+    // to <body> ASYNCHRONOUSLY, so the focus restore is deferred to the next
+    // frame (FR-006: keep the keyboard user on the group's new tab stop).
+    const focusedWillDisable =
+      this.lastFocusedRadio !== null &&
+      (this.effectiveDisabled || this.lastFocusedRadio.hasAttribute('disabled'));
+
     if (this.selectedRadio && !this.roster.includes(this.selectedRadio)) {
       this.setSelectedRadio(null);
-      return;
+    } else if (!this.selectedRadio && this.value) {
+      this.selectByValue(this.value);
+    } else {
+      this.syncInputs();
     }
 
-    if (!this.selectedRadio && this.value) {
-      this.selectByValue(this.value, false);
-      return;
+    if (focusedWillDisable) {
+      requestAnimationFrame(() => {
+        if (document.activeElement !== document.body) {
+          return; // focus already went somewhere deliberate; leave it
+        }
+        const anchor = this.tabStopRadio() ?? this.roster[0];
+        if (anchor) {
+          this.inputFor(anchor)?.focus();
+          this.lastFocusedRadio = anchor;
+        }
+      });
     }
-
-    this.syncInputs();
   }
 
-  private selectByValue(value: string, emit: boolean): void {
+  private selectByValue(value: string): void {
     const radio = this.roster.find((candidate) => this.optionValue(candidate) === value) ?? null;
-    this.setSelectedRadio(radio, emit);
+    this.setSelectedRadio(radio);
   }
 
-  private setSelectedRadio(radio: KiRadioElement | null, emit = false): void {
+  private setSelectedRadio(radio: KiRadioElement | null): void {
+    // Selection never dispatches change here; user-driven change is emitted
+    // once from handleInput, programmatic selection stays silent (FR-002).
     this.selectedRadio = radio;
     this.suppressValueWatch = true;
     this.value = radio ? this.optionValue(radio) : '';
     this.suppressValueWatch = false;
     this.syncInputs();
-
-    if (emit) {
-      this.host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
-    }
   }
 
   private syncInputs(): void {
