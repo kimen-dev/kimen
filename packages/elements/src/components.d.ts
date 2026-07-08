@@ -6,7 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export namespace Components {
     /**
      * A token-styled action button with native button semantics.
@@ -51,17 +53,40 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A modal dialog for one interrupting decision or short focused task.
+     * When to use: destructive confirmations, blocking choices, and brief
+     * critical input that must be resolved before returning to the page.
+     * When NOT to use: non-blocking feedback, hints, long flows, menus, or
+     * pickers.
      */
     interface KiDialog {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Closes the dialog and reports `method`. No-op when already closed.
          */
-        "label": string;
+        "close": () => Promise<void>;
+        /**
+          * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it.
+          * @default false
+         */
+        "closeOnBackdrop": boolean;
+        /**
+          * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed.
+         */
+        "heading"?: string;
+        /**
+          * Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Opens the dialog modally. No-op when already open.
+         */
+        "show": () => Promise<void>;
     }
+}
+export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiDialogElement;
 }
 declare global {
     /**
@@ -77,12 +102,25 @@ declare global {
         prototype: HTMLKiButtonElement;
         new (): HTMLKiButtonElement;
     };
+    interface HTMLKiDialogElementEventMap {
+        "ki-close": KiDialogCloseDetail;
+    }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A modal dialog for one interrupting decision or short focused task.
+     * When to use: destructive confirmations, blocking choices, and brief
+     * critical input that must be resolved before returning to the page.
+     * When NOT to use: non-blocking feedback, hints, long flows, menus, or
+     * pickers.
      */
     interface HTMLKiDialogElement extends Components.KiDialog, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiDialogElementEventMap>(type: K, listener: (this: HTMLKiDialogElement, ev: KiDialogCustomEvent<HTMLKiDialogElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiDialogElementEventMap>(type: K, listener: (this: HTMLKiDialogElement, ev: KiDialogCustomEvent<HTMLKiDialogElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLKiDialogElement: {
         prototype: HTMLKiDialogElement;
@@ -141,16 +179,31 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A modal dialog for one interrupting decision or short focused task.
+     * When to use: destructive confirmations, blocking choices, and brief
+     * critical input that must be resolved before returning to the page.
+     * When NOT to use: non-blocking feedback, hints, long flows, menus, or
+     * pickers.
      */
     interface KiDialog {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it.
+          * @default false
          */
-        "label"?: string;
+        "closeOnBackdrop"?: boolean;
+        /**
+          * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed.
+         */
+        "heading"?: string;
+        /**
+          * Post-close notification for every close path. Footer actions report `method` when they call `close()`.
+         */
+        "onKi-close"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;
+        /**
+          * Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close.
+          * @default false
+         */
+        "open"?: boolean;
     }
 
     interface KiButtonAttributes {
@@ -163,7 +216,9 @@ declare namespace LocalJSX {
         "disabled": boolean;
     }
     interface KiDialogAttributes {
-        "label": string;
+        "open": boolean;
+        "heading": string;
+        "closeOnBackdrop": boolean;
     }
 
     interface IntrinsicElements {
@@ -184,9 +239,11 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A modal dialog for one interrupting decision or short focused task.
+             * When to use: destructive confirmations, blocking choices, and brief
+             * critical input that must be resolved before returning to the page.
+             * When NOT to use: non-blocking feedback, hints, long flows, menus, or
+             * pickers.
              */
             "ki-dialog": LocalJSX.IntrinsicElements["ki-dialog"] & JSXBase.HTMLAttributes<HTMLKiDialogElement>;
         }

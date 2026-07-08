@@ -1,10 +1,36 @@
-import { Component, Prop, h } from '@stencil/core';
+import {
+  Component,
+  Element,
+  Event,
+  Method,
+  Prop,
+  State,
+  Watch,
+  h,
+  type EventEmitter,
+} from '@stencil/core';
+import { isOutsideRect } from './ki-dialog.backdrop';
+
+export type KiDialogCloseReason = 'method' | 'escape' | 'backdrop';
+
+export interface KiDialogCloseDetail {
+  reason: KiDialogCloseReason;
+}
 
 /**
- * TODO(spec): one-line purpose from the approved spec (Art. II).
+ * A modal dialog for one interrupting decision or short focused task.
  *
- * When to use: TODO(spec): agent-facing guidance (Art. I).
- * When NOT to use: TODO(spec).
+ * When to use: destructive confirmations, blocking choices, and brief
+ * critical input that must be resolved before returning to the page.
+ * When NOT to use: non-blocking feedback, hints, long flows, menus, or
+ * pickers.
+ *
+ * @slot - Dialog body content.
+ * @slot footer - Dialog actions; applications wire actions to `close()`.
+ * @part dialog - Internal native dialog surface.
+ * @part heading - Visible h2 title, rendered only when `heading` is non-empty.
+ * @part body - Scrollable body region.
+ * @part footer - Action row, collapsed when empty.
  */
 @Component({
   tag: 'ki-dialog',
@@ -12,14 +38,205 @@ import { Component, Prop, h } from '@stencil/core';
   shadow: true,
 })
 export class KiDialog {
+  @Element() private readonly host!: HTMLElement;
+
   /**
-   * TODO(spec): every public prop carries JSDoc with description, default and
-   * when-to-use guidance; an undocumented API member is a build failure (Art. I).
-   * @default 'TODO'
+   * Reflected live modal state. Add it or call `show()` to open; remove it or
+   * call `close()` to close.
+   *
+   * @default false
    */
-  @Prop() label = 'TODO';
+  @Prop({ reflect: true, mutable: true }) open = false;
+
+  /**
+   * Visible dialog title and accessible-name source. Always provide a heading;
+   * an empty value intentionally leaves the native dialog unnamed.
+   */
+  @Prop({ reflect: true }) heading?: string;
+
+  /**
+   * Opts into backdrop light-dismiss. Omit this attribute for critical
+   * confirmations; `close-on-backdrop="false"` still enables it.
+   *
+   * @default false
+   */
+  @Prop({ reflect: true, attribute: 'close-on-backdrop' }) closeOnBackdrop = false;
+
+  /**
+   * Post-close notification for every close path. Footer actions report
+   * `method` when they call `close()`.
+   */
+  @Event({ eventName: 'ki-close', bubbles: true, composed: true, cancelable: false })
+  kiClose!: EventEmitter<KiDialogCloseDetail>;
+
+  @State() private footerHasContent = false;
+
+  private dialog: HTMLDialogElement | undefined;
+  private backdropArmed = false;
+  private openObserver?: MutationObserver;
+  private pendingReason: KiDialogCloseReason = 'method';
+
+  @Watch('open')
+  protected handleOpenChange(): void {
+    this.syncDialogToHost();
+  }
+
+  componentDidLoad(): void {
+    if (typeof MutationObserver !== 'undefined') {
+      this.openObserver = new MutationObserver(this.handleHostMutation);
+      this.openObserver.observe(this.host, { attributeFilter: ['open'] });
+    }
+    this.updateFooterState();
+    this.syncDialogToHost();
+  }
+
+  disconnectedCallback(): void {
+    this.backdropArmed = false;
+    this.openObserver?.disconnect();
+  }
+
+  /**
+   * Opens the dialog modally. No-op when already open.
+   */
+  @Method()
+  show(): Promise<void> {
+    if (this.open) {
+      return Promise.resolve();
+    }
+
+    this.open = true;
+    this.host.setAttribute('open', '');
+    return Promise.resolve();
+  }
+
+  /**
+   * Closes the dialog and reports `method`. No-op when already closed.
+   */
+  @Method()
+  close(): Promise<void> {
+    if (!this.open && !this.dialog?.open) {
+      return Promise.resolve();
+    }
+
+    this.pendingReason = 'method';
+    this.open = false;
+    this.host.removeAttribute('open');
+    return Promise.resolve();
+  }
+
+  private readonly setDialogRef = (dialog?: HTMLDialogElement): void => {
+    this.dialog = dialog;
+  };
+
+  private readonly handleCancel = (): void => {
+    this.pendingReason = 'escape';
+  };
+
+  private readonly handleNativeClose = (): void => {
+    const reason = this.pendingReason;
+    this.pendingReason = 'method';
+    this.backdropArmed = false;
+
+    if (this.open) {
+      this.open = false;
+    }
+    this.host.removeAttribute('open');
+
+    this.kiClose.emit({ reason });
+  };
+
+  private readonly handlePointerDown = (event: PointerEvent): void => {
+    const dialog = this.dialog;
+    if (!this.closeOnBackdrop || !dialog || event.target !== dialog) {
+      this.backdropArmed = false;
+      return;
+    }
+
+    this.backdropArmed = isOutsideRect(
+      event.clientX,
+      event.clientY,
+      dialog.getBoundingClientRect(),
+    );
+  };
+
+  private readonly handleClick = (event: MouseEvent): void => {
+    const dialog = this.dialog;
+    if (!this.closeOnBackdrop || !this.backdropArmed || !dialog || event.target !== dialog) {
+      this.backdropArmed = false;
+      return;
+    }
+
+    this.backdropArmed = false;
+    if (!isOutsideRect(event.clientX, event.clientY, dialog.getBoundingClientRect())) {
+      return;
+    }
+
+    this.pendingReason = 'backdrop';
+    dialog.close();
+  };
+
+  private readonly handleFooterSlotChange = (): void => {
+    this.updateFooterState();
+  };
+
+  private readonly handleHostMutation = (): void => {
+    const hasOpenAttribute = this.host.hasAttribute('open');
+    if (this.open !== hasOpenAttribute) {
+      this.open = hasOpenAttribute;
+      return;
+    }
+
+    this.syncDialogToHost();
+  };
+
+  private updateFooterState(): void {
+    const slot = this.dialog?.querySelector<HTMLSlotElement>('slot[name="footer"]');
+    this.footerHasContent = Boolean(slot?.assignedNodes({ flatten: true }).length);
+  }
+
+  private syncDialogToHost(): void {
+    if (!this.dialog || !this.host.isConnected) {
+      return;
+    }
+
+    if (this.open && !this.dialog.open) {
+      this.dialog.showModal();
+      return;
+    }
+
+    if (!this.open && this.dialog.open) {
+      this.dialog.close();
+    }
+  }
 
   render() {
-    return <span class="label">{this.label}</span>;
+    const heading = this.heading?.trim();
+
+    return (
+      // Native modal <dialog> receives pointer/click events retargeted from
+      // ::backdrop; keyboard behavior is the platform close request.
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
+      <dialog
+        part="dialog"
+        ref={this.setDialogRef}
+        aria-labelledby={heading ? 'heading' : undefined}
+        onCancel={this.handleCancel}
+        onClose={this.handleNativeClose}
+        onPointerDown={this.handlePointerDown}
+        onClick={this.handleClick}
+      >
+        {heading ? (
+          <h2 part="heading" id="heading">
+            {this.heading}
+          </h2>
+        ) : null}
+        <div part="body">
+          <slot />
+        </div>
+        <div part="footer" hidden={!this.footerHasContent}>
+          <slot name="footer" onSlotchange={this.handleFooterSlotChange} />
+        </div>
+      </dialog>
+    );
   }
 }

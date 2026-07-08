@@ -40,16 +40,12 @@ describe('ki-dialog', () => {
     expect(dialog.nodeName).toBe('DIALOG');
     expect(dialog.hasAttribute('open')).toBe(false);
     expect(shadowRoot.querySelector('[part="dialog"]')).toBe(dialog);
-    expect(shadowRoot.querySelector('[part="body"] slot:not([name])')).toBeInstanceOf(
-      HTMLSlotElement,
-    );
-    expect(shadowRoot.querySelector('[part="footer"] slot[name="footer"]')).toBeInstanceOf(
-      HTMLSlotElement,
-    );
+    expect(requireElement(shadowRoot, '[part="body"] slot:not([name])').nodeName).toBe('SLOT');
+    expect(requireElement(shadowRoot, '[part="footer"] slot[name="footer"]').nodeName).toBe('SLOT');
   });
 
   it('S5 renders h2 heading and aria-labelledby only for a non-empty heading', async () => {
-    const withHeading = await render(<ki-dialog heading="Delete account?"></ki-dialog>);
+    const withHeading = await render(h('ki-dialog', { heading: 'Delete account?' }));
     const withHeadingShadow = shadow(withHeading.root);
     const dialog = requireElement(withHeadingShadow, 'dialog');
     const heading = requireElement(withHeadingShadow, 'h2[part="heading"]');
@@ -60,7 +56,7 @@ describe('ki-dialog', () => {
     expect(heading.id).toBeTruthy();
     expect(dialog.getAttribute('aria-labelledby')).toBe(heading.id);
 
-    const withoutHeading = await render(<ki-dialog heading=""></ki-dialog>);
+    const withoutHeading = await render(h('ki-dialog', { heading: '' }));
     const withoutHeadingShadow = shadow(withoutHeading.root);
     const unnamedDialog = requireElement(withoutHeadingShadow, 'dialog');
 

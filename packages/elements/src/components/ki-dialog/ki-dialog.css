@@ -1,11 +1,98 @@
 /* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
-  display: block;
+  --_ki-dialog-radius: var(--ki-dialog-radius);
+  --_ki-dialog-padding: var(--ki-dialog-padding);
+  --_ki-dialog-gap: var(--ki-dialog-gap);
+  --_ki-dialog-min-width: var(--ki-dialog-min-width);
+  --_ki-dialog-max-width: var(--ki-dialog-max-width);
+  --_ki-dialog-bg: var(--ki-dialog-bg);
+  --_ki-dialog-fg: var(--ki-dialog-fg);
+  --_ki-dialog-border: var(--ki-dialog-border);
+  --_ki-dialog-shadow: var(--ki-dialog-shadow);
+  --_ki-dialog-backdrop-bg: var(--ki-dialog-backdrop-bg);
+  --_ki-dialog-heading-font-size: var(--ki-dialog-heading-font-size);
+  --_ki-dialog-heading-font-weight: var(--ki-dialog-heading-font-weight);
+  --_ki-dialog-heading-line-height: var(--ki-dialog-heading-line-height);
+  --_ki-dialog-focus-ring-color: var(--ki-dialog-focus-ring-color);
+  --_ki-dialog-focus-ring-width: var(--ki-dialog-focus-ring-width);
+  --_ki-dialog-focus-ring-offset: var(--ki-dialog-focus-ring-offset);
+  --_ki-dialog-motion-duration: var(--ki-dialog-motion-duration);
+  --_ki-dialog-motion-easing: var(--ki-dialog-motion-easing);
+
+  display: contents;
 }
 
-.label {
-  color: var(--ki-text-base);
-  font-family: var(--ki-typography-family-base);
-  font-size: var(--ki-typography-size-body);
+[part="dialog"] {
+  box-sizing: border-box;
+  inline-size: max-content;
+  min-inline-size: min(var(--_ki-dialog-min-width), calc(100vi - var(--_ki-dialog-padding)));
+  max-inline-size: min(var(--_ki-dialog-max-width), calc(100vi - var(--_ki-dialog-padding)));
+  max-block-size: calc(100vb - var(--_ki-dialog-padding));
+  padding: var(--_ki-dialog-padding);
+  overflow: hidden;
+  color: var(--_ki-dialog-fg);
+  font-family: var(--ki-typography-family-body);
+  background: var(--_ki-dialog-bg);
+  border: var(--_ki-dialog-border);
+  border-radius: var(--_ki-dialog-radius);
+  box-shadow: var(--_ki-dialog-shadow);
+}
+
+[part="dialog"][open] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--_ki-dialog-gap);
+}
+
+[part="dialog"]:focus {
+  outline: none;
+}
+
+[part="dialog"]:focus-visible {
+  outline: var(--_ki-dialog-focus-ring-width) solid var(--_ki-dialog-focus-ring-color);
+  outline-offset: var(--_ki-dialog-focus-ring-offset);
+}
+
+[part="heading"] {
+  margin: 0;
+  color: inherit;
+  font-size: var(--_ki-dialog-heading-font-size);
+  font-weight: var(--_ki-dialog-heading-font-weight);
+  line-height: var(--_ki-dialog-heading-line-height);
+}
+
+[part="body"] {
+  min-block-size: 0;
+  overflow-block: auto;
+  color: inherit;
+}
+
+[part="footer"] {
+  display: flex;
+  flex-flow: row wrap;
+  gap: var(--_ki-dialog-gap);
+  justify-content: flex-end;
+}
+
+[part="footer"][hidden] {
+  display: none;
+}
+
+[part="dialog"]::backdrop {
+  background: var(--_ki-dialog-backdrop-bg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [part="dialog"][open],
+  [part="dialog"][open]::backdrop {
+    transition: opacity var(--_ki-dialog-motion-duration) var(--_ki-dialog-motion-easing);
+  }
+
+  @starting-style {
+    [part="dialog"][open],
+    [part="dialog"][open]::backdrop {
+      opacity: 0;
+    }
+  }
 }
