@@ -1,3 +1,4 @@
+import tokensCss from '@kimen/tokens/css?raw';
 import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 
@@ -7,39 +8,210 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import { defineCustomElement } from '../dist/components/ki-progress.js';
 
-type KiProgressElement = HTMLElement & { label: string };
+type KiProgressElement = HTMLElement & {
+  indeterminate: boolean;
+  label: string;
+  max: number;
+  shape: string;
+  value: number;
+};
+
+const STYLE_ID = 'ki-progress-browser-token-style';
 
 beforeAll(() => {
   defineCustomElement();
 });
 
-/** Stencil renders async: wait until the shadow root has content. */
-async function mount(): Promise<KiProgressElement> {
-  const el = document.createElement('ki-progress') as KiProgressElement;
-  document.body.appendChild(el);
+function ensureTokens(): void {
+  if (document.getElementById(STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = STYLE_ID;
+  style.textContent = tokensCss;
+  document.head.append(style);
+}
+
+function cleanup(): void {
+  document.body.replaceChildren();
+  document.documentElement.removeAttribute('dir');
+  document.documentElement.removeAttribute('data-ki-theme');
+  document.documentElement.removeAttribute('data-ki-color-scheme');
+}
+
+async function waitForRender(el: KiProgressElement): Promise<void> {
   await customElements.whenDefined('ki-progress');
-  const deadline = Date.now() + 2000;
-  while (!el.shadowRoot?.textContent && Date.now() < deadline) {
+  const deadline = Date.now() + 1000;
+  while (!el.shadowRoot?.hasChildNodes() && Date.now() < deadline) {
     await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+async function mount(
+  attributes: Partial<
+    Record<'indeterminate' | 'label' | 'max' | 'shape' | 'value', string | boolean>
+  >,
+): Promise<KiProgressElement> {
+  ensureTokens();
+  const main = document.querySelector('main') ?? document.createElement('main');
+  if (!main.isConnected) {
+    document.body.append(main);
+  }
+  const el = document.createElement('ki-progress') as KiProgressElement;
+  for (const [name, value] of Object.entries(attributes)) {
+    if (typeof value === 'boolean') {
+      el.toggleAttribute(name, value);
+    } else {
+      el.setAttribute(name, value);
+    }
+  }
+  main.append(el);
+  await waitForRender(el);
+  return el;
+}
+
+function requireShadow(el: KiProgressElement): ShadowRoot {
+  const shadow = el.shadowRoot;
+  expect(shadow).toBeInstanceOf(ShadowRoot);
+  if (!shadow) {
+    throw new Error('ki-progress did not attach a shadow root');
+  }
+  return shadow;
+}
+
+function requireElement(root: ParentNode, selector: string): Element {
+  const el = root.querySelector(selector);
+  expect(el).toBeInstanceOf(Element);
+  if (!el) {
+    throw new Error(`Missing ${selector}`);
   }
   return el;
 }
 
+function progressbar(el: KiProgressElement): HTMLDivElement {
+  return requireElement(requireShadow(el), '.base[role="progressbar"]') as HTMLDivElement;
+}
+
+function track(el: KiProgressElement): HTMLElement | SVGElement {
+  return requireElement(requireShadow(el), '[part="track"]') as HTMLElement | SVGElement;
+}
+
+function indicator(el: KiProgressElement): HTMLElement | SVGElement {
+  return requireElement(requireShadow(el), '[part="indicator"]') as HTMLElement | SVGElement;
+}
+
+function requireMain(): HTMLElement {
+  const main = document.querySelector('main');
+  expect(main).toBeInstanceOf(HTMLElement);
+  if (!main) {
+    throw new Error('Missing main test container');
+  }
+  return main;
+}
+
+function readToken(
+  name: string,
+  property: 'backgroundColor' | 'inlineSize' = 'backgroundColor',
+): string {
+  const probe = document.createElement('div');
+  if (property === 'backgroundColor') {
+    probe.style.backgroundColor = `var(${name})`;
+  } else {
+    probe.style.inlineSize = `var(${name})`;
+  }
+  document.body.append(probe);
+  const value = getComputedStyle(probe)[property];
+  probe.remove();
+  return value;
+}
+
+function linearFillRatio(el: KiProgressElement): number {
+  const trackRect = track(el).getBoundingClientRect();
+  const indicatorRect = indicator(el).getBoundingClientRect();
+  return indicatorRect.width / trackRect.width;
+}
+
+function circularDash(el: KiProgressElement): string {
+  return getComputedStyle(indicator(el)).strokeDasharray;
+}
+
 describe('ki-progress in a real browser', () => {
-  // TODO(spec): S1 core behavior from the approved scenario.
-  it('renders its label', async () => {
-    const el = await mount();
-    expect(el.shadowRoot?.textContent).toContain('TODO');
-    el.remove();
+  it('S1 fills a linear progress to 40 percent of the track', async () => {
+    cleanup();
+    const el = await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
+
+    expect(linearFillRatio(el)).toBeCloseTo(0.4, 1);
   });
 
-  // TODO(spec): S2 keyboard path, S3 assistive-tech outcome, S4 form
-  // participation (if applicable), S5 theming: the five families (Art. II).
+  it('S2 presents circular progress as 40 of the normalized circumference', async () => {
+    cleanup();
+    const el = await mount({
+      label: 'Uploading report.pdf',
+      shape: 'circular',
+      value: '40',
+      max: '100',
+    });
 
-  it('has zero axe violations (Art. V floor)', async () => {
-    const el = await mount();
-    const results = await axe.run(el);
+    expect(circularDash(el).replaceAll(',', '')).toContain('40');
+    expect(circularDash(el).replaceAll(',', '')).toContain('100');
+  });
+
+  it('S4 clamps values above max to a full linear indicator', async () => {
+    cleanup();
+    const el = await mount({ label: 'Uploading report.pdf', value: '250', max: '100' });
+
+    expect(linearFillRatio(el)).toBeCloseTo(1, 1);
+    expect(progressbar(el).getAttribute('aria-valuenow')).toBe('100');
+  });
+
+  it('S13 updates fill and exposed value when value changes at runtime', async () => {
+    cleanup();
+    const el = await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
+
+    el.value = 80;
+    await waitForRender(el);
+
+    expect(linearFillRatio(el)).toBeCloseTo(0.8, 1);
+    expect(progressbar(el).getAttribute('aria-valuenow')).toBe('80');
+  });
+
+  it('S14 renders documented malformed rows safely in a real browser', async () => {
+    cleanup();
+    const cases = [
+      { value: '-10', max: '100', expected: '0', ratio: 0 },
+      { value: 'abc', max: '100', expected: '0', ratio: 0 },
+      { value: '40', max: '0', expected: '40', ratio: 0.4, normalizedMax: '100' },
+      { value: '40', max: '-5', expected: '40', ratio: 0.4, normalizedMax: '100' },
+      { value: '40', max: 'abc', expected: '40', ratio: 0.4, normalizedMax: '100' },
+    ];
+
+    for (const row of cases) {
+      const el = await mount({ label: 'Uploading report.pdf', value: row.value, max: row.max });
+      expect(progressbar(el).getAttribute('aria-valuenow')).toBe(row.expected);
+      expect(progressbar(el).getAttribute('aria-valuemax')).toBe(row.normalizedMax ?? row.max);
+      expect(linearFillRatio(el)).toBeCloseTo(row.ratio, 1);
+    }
+  });
+
+  it('S1 resolves track and indicator colors from progress tokens', async () => {
+    cleanup();
+    const el = await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
+
+    expect(getComputedStyle(track(el)).backgroundColor).toBe(
+      readToken('--ki-progress-track-color'),
+    );
+    expect(getComputedStyle(indicator(el)).backgroundColor).toBe(
+      readToken('--ki-progress-indicator-color'),
+    );
+  });
+
+  it('S1 has zero axe violations for labeled determinate progress mounted in main', async () => {
+    cleanup();
+    await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
+
+    const results = await axe.run(requireMain());
     expect(results.violations).toEqual([]);
-    el.remove();
   });
 });
