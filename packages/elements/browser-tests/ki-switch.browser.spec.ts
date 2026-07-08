@@ -67,6 +67,12 @@ function internalInput(el: KiSwitchElement): HTMLInputElement {
   return input as HTMLInputElement;
 }
 
+function trackPart(el: KiSwitchElement): HTMLElement {
+  const track = el.shadowRoot?.querySelector('[part="track"]');
+  expect(track).toBeInstanceOf(HTMLElement);
+  return track as HTMLElement;
+}
+
 function eventCounts(el: KiSwitchElement): { input: () => number; change: () => number } {
   let input = 0;
   let change = 0;
@@ -135,5 +141,48 @@ describe('ki-switch in a real browser', () => {
     expect(el.checked).toBe(true);
     await userEvent.click(internalInput(el));
     expect(el.checked).toBe(false);
+  });
+
+  it('S5 Tab reaches the switch and its focus indication is visible', async () => {
+    const el = await mount();
+    const track = trackPart(el);
+    const before = getComputedStyle(track);
+
+    await userEvent.tab();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    const after = getComputedStyle(track);
+    expect(document.activeElement).toBe(el);
+    expect(el.shadowRoot?.activeElement).toBe(internalInput(el));
+    expect([after.outlineStyle, after.boxShadow]).not.toEqual([
+      before.outlineStyle,
+      before.boxShadow,
+    ]);
+  });
+
+  it('S6 Space toggles the focused switch and Enter remains inert', async () => {
+    const el = await mount();
+
+    await userEvent.tab();
+    await userEvent.keyboard('{Enter}');
+    expect(el.checked).toBe(false);
+
+    await userEvent.keyboard(' ');
+    expect(el.checked).toBe(true);
+  });
+
+  it('S20 Tab skips a disabled switch and lands on the following button', async () => {
+    cleanup();
+    const el = document.createElement('ki-switch') as KiSwitchElement;
+    el.disabled = true;
+    el.textContent = 'Email notifications';
+    const button = document.createElement('button');
+    button.textContent = 'Next';
+    document.body.append(el, button);
+    await waitForHydration(el);
+
+    await userEvent.tab();
+
+    expect(document.activeElement).toBe(button);
   });
 });
