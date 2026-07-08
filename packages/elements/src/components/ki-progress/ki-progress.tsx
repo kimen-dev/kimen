@@ -14,14 +14,20 @@ interface ProgressBaseAttributes {
  * A token-styled, non-interactive progress indicator for known or unknown
  * duration work.
  *
- * When to use: communicate advancement of an ongoing task with `value`/`max`
- * when the fraction is known, or ongoing activity of unknown duration with
- * `indeterminate`.
- * When NOT to use: static measurements, wizard steps, skeleton placeholders,
- * or sub-second operations.
+ * When to use: communicate advancement of an ongoing task such as upload,
+ * download, installation or multi-step processing. Use `value`/`max` when
+ * the completed fraction is known; use `indeterminate` when work is ongoing
+ * but its duration cannot be measured, including loading-indicator use cases.
+ * Choose `linear` in page flows and lists, and `circular` in compact or
+ * centered placements. Always set `label` to what is progressing.
+ * When NOT to use: static measurements within a known range such as disk
+ * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
+ * skeleton placeholders while content loads, or operations that finish in
+ * under about one second.
  *
- * @part track - Full channel or ring behind the advancing indicator.
- * @part indicator - Advancing fill or arc that represents current progress.
+ * @part track - The full channel or ring: track ink and radius/stroke geometry.
+ * @part indicator - The advancing fill or arc: indicator ink and indeterminate
+ * animation.
  */
 @Component({
   tag: 'ki-progress',
@@ -31,7 +37,10 @@ interface ProgressBaseAttributes {
 export class KiProgress {
   /**
    * Completed amount. Presentation and ARIA clamp this value to `0..max`;
-   * malformed values fall back to `0`.
+   * malformed values fall back to `0`. Ignored while `indeterminate` is set.
+   * When to use: set with `max` for determinate task advancement.
+   * When NOT to use: do not set a fabricated value for unknown-duration work;
+   * set `indeterminate` instead.
    *
    * @default 0
    */
@@ -40,6 +49,8 @@ export class KiProgress {
   /**
    * Total amount. Non-finite, zero or negative values normalize to `100` for
    * presentation and ARIA.
+   * When to use: set when a determinate task's total is not 100.
+   * When NOT to use: omit for conventional percentage-style progress.
    *
    * @default 100
    */
@@ -47,7 +58,9 @@ export class KiProgress {
 
   /**
    * Unknown-duration mode. When set, no completed fraction or current value is
-   * exposed; use when work is ongoing but cannot be measured.
+   * exposed. Its motion is declared only when reduced motion is not requested.
+   * When to use: show ongoing work whose duration or total cannot be measured.
+   * When NOT to use: do not use for known fractions; use `value` and `max`.
    *
    * @default false
    */
@@ -56,6 +69,7 @@ export class KiProgress {
   /**
    * Structural presentation. Use `linear` in page flows and lists; use
    * `circular` in compact or centered placements. Unknown values render linear.
+   * When NOT to use: do not use shape to encode semantic status or task intent.
    *
    * @default 'linear'
    */
@@ -63,7 +77,10 @@ export class KiProgress {
 
   /**
    * Accessible name applied to the internal progressbar. Always set this to
-   * what is progressing, such as "Uploading report.pdf".
+   * what is progressing, such as "Uploading report.pdf". Without it the
+   * element renders but exposes no accessible name.
+   * When NOT to use: do not use a generic label such as "Loading" when the
+   * task can be named more specifically.
    */
   @Prop({ reflect: true }) label?: string;
 
