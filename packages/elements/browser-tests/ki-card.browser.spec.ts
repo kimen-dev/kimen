@@ -244,6 +244,27 @@ describe('ki-card in a real browser', () => {
     expect(computed.backgroundColor, 'material3 must restyle the surface').not.toBe(onmarsSurface);
   });
 
+  // Review round 1 (SC-003 / Art. V surface): the axe matrix must cover the
+  // material3 theme, not only onmars.
+  it('S6 has zero axe violations under the material3 theme', async () => {
+    cleanup();
+    ensureTokens();
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+
+    await mount(`
+      <ki-card>
+        <div slot="media">media</div>
+        <h2 slot="header">Monthly report</h2>
+        <p>Revenue increased.</p>
+        <ki-button slot="footer">Share</ki-button>
+      </ki-card>
+    `);
+
+    const results = await axe.run(document.body);
+    expect(results.violations).toEqual([]);
+  });
+
   it('stacks regions in block order and resolves region padding under RTL', async () => {
     cleanup();
     document.documentElement.setAttribute('dir', 'rtl');

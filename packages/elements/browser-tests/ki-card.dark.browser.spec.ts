@@ -7,6 +7,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 
 import onmarsCss from '@kimen/tokens/css?raw';
+import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-card.js';
 
 const browserCommands = commands as unknown as {
@@ -100,6 +101,28 @@ describe('ki-card under the dark scheme', () => {
     document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
 
     await mount();
+
+    const results = await axe.run(document.body);
+    expect(results.violations).toEqual([]);
+  });
+
+  // Review round 1 (SC-003): material3 × dark was declared in the spec's
+  // constitutional surface but never exercised.
+  it('S7 resolves material3 dark appearance from tokens with zero axe violations', async () => {
+    cleanup();
+    injectStylesheet(onmarsCss, 'ki-card-dark-tokens');
+    injectStylesheet(material3Css, 'ki-card-dark-material3-tokens');
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    document.documentElement.setAttribute('data-ki-color-scheme', 'light');
+    let el = await mount();
+    const lightBg = getComputedStyle(cardPart(el)).backgroundColor;
+
+    document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
+    el = await mount();
+    const darkBg = getComputedStyle(cardPart(el)).backgroundColor;
+
+    expect(darkBg).toBe(readTokenColor('--ki-card-bg'));
+    expect(darkBg, 'material3 forced dark must change the resolved surface').not.toBe(lightBg);
 
     const results = await axe.run(document.body);
     expect(results.violations).toEqual([]);

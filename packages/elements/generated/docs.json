@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T15:22:09",
+  "timestamp": "2026-07-08T18:57:34",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -99,7 +99,7 @@
             "references": {
               "KiButtonSize": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-card/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonSize"
               }
             }
@@ -151,7 +151,7 @@
             "references": {
               "KiButtonTone": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-card/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonTone"
               }
             }
@@ -195,7 +195,7 @@
             "references": {
               "KiButtonType": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-card/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonType"
               }
             }
@@ -265,7 +265,7 @@
             "references": {
               "KiButtonVariant": {
                 "location": "local",
-                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen-w-card/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonVariant"
               }
             }
@@ -346,7 +346,7 @@
       "filePath": "src/components/ki-card/ki-card.tsx",
       "encapsulation": "shadow",
       "tag": "ki-card",
-      "docs": "A non-interactive card surface for grouping related content.\n\nWhen to use: group related media, heading, supporting text and actions into\none scannable surface visually distinct from the page; fill any subset of\nregions. Supply the heading element yourself in the `header` slot.\nWhen NOT to use: never use as a button or link target, form control,\nfieldset, page landmark, section replacement or nested card.",
+      "docs": "A non-interactive card surface for grouping related content.\n\nWhen to use: group related media, heading, supporting text and actions into\none scannable surface visually distinct from the page; fill any subset of\nregions. Supply the heading element yourself in the `header` slot — plain\ntext slotted there carries no heading semantics for assistive technology.\nWhen NOT to use: never use as a button or link target, form control,\nfieldset, page landmark, section replacement or nested card. For an\ninteractive card, slot the button or link INSIDE a region (whole-card\ninteractivity is a future feature, not this component).",
       "docsTags": [
         {
           "name": "slot",
@@ -354,7 +354,7 @@
         },
         {
           "name": "slot",
-          "text": "header - Title region. The author supplies the heading element at the surrounding document level."
+          "text": "header - Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics."
         },
         {
           "name": "slot",
@@ -402,7 +402,7 @@
         },
         {
           "name": "header",
-          "docs": "Title region. The author supplies the heading element at the surrounding document level."
+          "docs": "Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics."
         },
         {
           "name": "media",

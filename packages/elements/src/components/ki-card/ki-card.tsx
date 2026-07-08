@@ -25,12 +25,15 @@ function hasAssignedContent(slot: HTMLSlotElement): boolean {
  *
  * When to use: group related media, heading, supporting text and actions into
  * one scannable surface visually distinct from the page; fill any subset of
- * regions. Supply the heading element yourself in the `header` slot.
+ * regions. Supply the heading element yourself in the `header` slot — plain
+ * text slotted there carries no heading semantics for assistive technology.
  * When NOT to use: never use as a button or link target, form control,
- * fieldset, page landmark, section replacement or nested card.
+ * fieldset, page landmark, section replacement or nested card. For an
+ * interactive card, slot the button or link INSIDE a region (whole-card
+ * interactivity is a future feature, not this component).
  *
  * @slot media - Leading visual region for an image, video or illustration.
- * @slot header - Title region. The author supplies the heading element at the surrounding document level.
+ * @slot header - Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics.
  * @slot - Body region for supporting text or arbitrary composed content.
  * @slot footer - Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1.
  * @part card - Card surface: background, border, radius, elevation and region gap.

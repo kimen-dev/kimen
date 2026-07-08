@@ -102,3 +102,15 @@ Guarantees:
 
 First release of the element (pre-1.0 line): additive MINOR. Removing or
 renaming anything above after first publish is MAJOR per Art. IX.
+
+## Composition constraints (review round 1 additions)
+
+- **Whitespace collapse scope**: the empty-region collapse treats
+  whitespace-only TEXT NODES as empty. Text nodes can only reach the default
+  (body) slot — named slots require elements, and any slotted ELEMENT counts
+  as content even if visually empty (an `<img>` has no text; the component
+  cannot judge visual emptiness).
+- **Clipping**: the card surface clips its regions to the radius
+  (`overflow: hidden`) so full-bleed media honors the corner shape. Slotted
+  absolutely-positioned overlays that escape the card box will be clipped;
+  top-layer content (`popover`, `<dialog>`) is unaffected.
