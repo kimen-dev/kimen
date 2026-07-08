@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T23:06:11",
+  "timestamp": "2026-07-08T23:14:45",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -346,32 +346,166 @@
       "filePath": "src/components/ki-progress/ki-progress.tsx",
       "encapsulation": "shadow",
       "tag": "ki-progress",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
+      "docs": "A token-styled, non-interactive progress indicator for known or unknown\nduration work.\n\nWhen to use: communicate advancement of an ongoing task such as upload,\ndownload, installation or multi-step processing. Use `value`/`max` when\nthe completed fraction is known; use `indeterminate` when work is ongoing\nbut its duration cannot be measured, including loading-indicator use cases.\nChoose `linear` in page flows and lists, and `circular` in compact or\ncentered placements. Always set `label` to what is progressing.\nWhen NOT to use: static measurements within a known range such as disk\nusage or scores (gauge/meter), step-by-step wizard navigation (stepper),\nskeleton placeholders while content loads, or operations that finish in\nunder about one second.",
+      "docsTags": [
+        {
+          "name": "part",
+          "text": "track - The full channel or ring: track ink and radius/stroke geometry."
+        },
+        {
+          "name": "part",
+          "text": "indicator - The advancing fill or arc: indicator ink and indeterminate\nanimation."
+        }
+      ],
       "usage": {},
       "props": [
         {
+          "name": "indeterminate",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "indeterminate",
+          "reflectToAttr": true,
+          "docs": "Unknown-duration mode. When set, no completed fraction or current value is\nexposed. Its motion is declared only when reduced motion is not requested.\nWhen to use: show ongoing work whose duration or total cannot be measured.\nWhen NOT to use: do not use for known fractions; use `value` and `max`.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
           "name": "label",
-          "type": "string",
+          "type": "string | undefined",
           "complexType": {
             "original": "string",
-            "resolved": "string",
+            "resolved": "string | undefined",
             "references": {}
           },
           "mutable": false,
           "attr": "label",
-          "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'TODO'"
-            }
-          ],
-          "default": "'TODO'",
+          "reflectToAttr": true,
+          "docs": "Accessible name applied to the internal progressbar. Always set this to\nwhat is progressing, such as \"Uploading report.pdf\". Without it the\nelement renders but exposes no accessible name.\nWhen NOT to use: do not use a generic label such as \"Loading\" when the\ntask can be named more specifically.",
+          "docsTags": [],
           "values": [
             {
               "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "max",
+          "reflectToAttr": true,
+          "docs": "Total amount. Non-finite, zero or negative values normalize to `100` for\npresentation and ARIA.\nWhen to use: set when a determinate task's total is not 100.\nWhen NOT to use: omit for conventional percentage-style progress.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "100"
+            }
+          ],
+          "default": "100",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "shape",
+          "type": "\"circular\" | \"linear\"",
+          "complexType": {
+            "original": "KiProgressShape",
+            "resolved": "\"circular\" | \"linear\"",
+            "references": {
+              "KiProgressShape": {
+                "location": "import",
+                "path": "./ki-progress.math",
+                "id": "src/components/ki-progress/ki-progress.math.ts::KiProgressShape",
+                "referenceLocation": "KiProgressShape"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "shape",
+          "reflectToAttr": true,
+          "docs": "Structural presentation. Use `linear` in page flows and lists; use\n`circular` in compact or centered placements. Unknown values render linear.\nWhen NOT to use: do not use shape to encode semantic status or task intent.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'linear'"
+            }
+          ],
+          "default": "'linear'",
+          "values": [
+            {
+              "value": "circular",
+              "type": "string"
+            },
+            {
+              "value": "linear",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Completed amount. Presentation and ARIA clamp this value to `0..max`;\nmalformed values fall back to `0`. Ignored while `indeterminate` is set.\nWhen to use: set with `max` for determinate task advancement.\nWhen NOT to use: do not set a fabricated value for unknown-duration work;\nset `indeterminate` instead.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "0"
+            }
+          ],
+          "default": "0",
+          "values": [
+            {
+              "type": "number"
             }
           ],
           "optional": false,
@@ -385,7 +519,16 @@
       "listeners": [],
       "styles": [],
       "slots": [],
-      "parts": [],
+      "parts": [
+        {
+          "name": "indicator",
+          "docs": "The advancing fill or arc: indicator ink and indeterminate\nanimation."
+        },
+        {
+          "name": "track",
+          "docs": "The full channel or ring: track ink and radius/stroke geometry."
+        }
+      ],
       "states": [],
       "dependents": [],
       "dependencies": [],
@@ -412,6 +555,11 @@
       "declaration": "export type KiButtonType = 'submit' | 'reset' | 'button';",
       "docstring": "",
       "path": "src/components/ki-button/ki-button.tsx"
+    },
+    "src/components/ki-progress/ki-progress.math.ts::KiProgressShape": {
+      "declaration": "export type KiProgressShape = 'linear' | 'circular';",
+      "docstring": "",
+      "path": "src/components/ki-progress/ki-progress.math.ts"
     }
   }
 }

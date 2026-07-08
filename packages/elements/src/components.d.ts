@@ -6,7 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+import { KiProgressShape } from "./components/ki-progress/ki-progress.math";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiProgressShape } from "./components/ki-progress/ki-progress.math";
 export namespace Components {
     /**
      * A token-styled action button with native button semantics.
@@ -51,16 +53,44 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled, non-interactive progress indicator for known or unknown
+     * duration work.
+     * When to use: communicate advancement of an ongoing task such as upload,
+     * download, installation or multi-step processing. Use `value`/`max` when
+     * the completed fraction is known; use `indeterminate` when work is ongoing
+     * but its duration cannot be measured, including loading-indicator use cases.
+     * Choose `linear` in page flows and lists, and `circular` in compact or
+     * centered placements. Always set `label` to what is progressing.
+     * When NOT to use: static measurements within a known range such as disk
+     * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
+     * skeleton placeholders while content loads, or operations that finish in
+     * under about one second.
      */
     interface KiProgress {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Unknown-duration mode. When set, no completed fraction or current value is exposed. Its motion is declared only when reduced motion is not requested. When to use: show ongoing work whose duration or total cannot be measured. When NOT to use: do not use for known fractions; use `value` and `max`.
+          * @default false
          */
-        "label": string;
+        "indeterminate": boolean;
+        /**
+          * Accessible name applied to the internal progressbar. Always set this to what is progressing, such as "Uploading report.pdf". Without it the element renders but exposes no accessible name. When NOT to use: do not use a generic label such as "Loading" when the task can be named more specifically.
+         */
+        "label"?: string;
+        /**
+          * Total amount. Non-finite, zero or negative values normalize to `100` for presentation and ARIA. When to use: set when a determinate task's total is not 100. When NOT to use: omit for conventional percentage-style progress.
+          * @default 100
+         */
+        "max": number;
+        /**
+          * Structural presentation. Use `linear` in page flows and lists; use `circular` in compact or centered placements. Unknown values render linear. When NOT to use: do not use shape to encode semantic status or task intent.
+          * @default 'linear'
+         */
+        "shape": KiProgressShape;
+        /**
+          * Completed amount. Presentation and ARIA clamp this value to `0..max`; malformed values fall back to `0`. Ignored while `indeterminate` is set. When to use: set with `max` for determinate task advancement. When NOT to use: do not set a fabricated value for unknown-duration work; set `indeterminate` instead.
+          * @default 0
+         */
+        "value": number;
     }
 }
 declare global {
@@ -78,9 +108,18 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled, non-interactive progress indicator for known or unknown
+     * duration work.
+     * When to use: communicate advancement of an ongoing task such as upload,
+     * download, installation or multi-step processing. Use `value`/`max` when
+     * the completed fraction is known; use `indeterminate` when work is ongoing
+     * but its duration cannot be measured, including loading-indicator use cases.
+     * Choose `linear` in page flows and lists, and `circular` in compact or
+     * centered placements. Always set `label` to what is progressing.
+     * When NOT to use: static measurements within a known range such as disk
+     * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
+     * skeleton placeholders while content loads, or operations that finish in
+     * under about one second.
      */
     interface HTMLKiProgressElement extends Components.KiProgress, HTMLStencilElement {
     }
@@ -141,16 +180,44 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled, non-interactive progress indicator for known or unknown
+     * duration work.
+     * When to use: communicate advancement of an ongoing task such as upload,
+     * download, installation or multi-step processing. Use `value`/`max` when
+     * the completed fraction is known; use `indeterminate` when work is ongoing
+     * but its duration cannot be measured, including loading-indicator use cases.
+     * Choose `linear` in page flows and lists, and `circular` in compact or
+     * centered placements. Always set `label` to what is progressing.
+     * When NOT to use: static measurements within a known range such as disk
+     * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
+     * skeleton placeholders while content loads, or operations that finish in
+     * under about one second.
      */
     interface KiProgress {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Unknown-duration mode. When set, no completed fraction or current value is exposed. Its motion is declared only when reduced motion is not requested. When to use: show ongoing work whose duration or total cannot be measured. When NOT to use: do not use for known fractions; use `value` and `max`.
+          * @default false
+         */
+        "indeterminate"?: boolean;
+        /**
+          * Accessible name applied to the internal progressbar. Always set this to what is progressing, such as "Uploading report.pdf". Without it the element renders but exposes no accessible name. When NOT to use: do not use a generic label such as "Loading" when the task can be named more specifically.
          */
         "label"?: string;
+        /**
+          * Total amount. Non-finite, zero or negative values normalize to `100` for presentation and ARIA. When to use: set when a determinate task's total is not 100. When NOT to use: omit for conventional percentage-style progress.
+          * @default 100
+         */
+        "max"?: number;
+        /**
+          * Structural presentation. Use `linear` in page flows and lists; use `circular` in compact or centered placements. Unknown values render linear. When NOT to use: do not use shape to encode semantic status or task intent.
+          * @default 'linear'
+         */
+        "shape"?: KiProgressShape;
+        /**
+          * Completed amount. Presentation and ARIA clamp this value to `0..max`; malformed values fall back to `0`. Ignored while `indeterminate` is set. When to use: set with `max` for determinate task advancement. When NOT to use: do not set a fabricated value for unknown-duration work; set `indeterminate` instead.
+          * @default 0
+         */
+        "value"?: number;
     }
 
     interface KiButtonAttributes {
@@ -163,6 +230,10 @@ declare namespace LocalJSX {
         "disabled": boolean;
     }
     interface KiProgressAttributes {
+        "value": number;
+        "max": number;
+        "indeterminate": boolean;
+        "shape": KiProgressShape;
         "label": string;
     }
 
@@ -184,9 +255,18 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A token-styled, non-interactive progress indicator for known or unknown
+             * duration work.
+             * When to use: communicate advancement of an ongoing task such as upload,
+             * download, installation or multi-step processing. Use `value`/`max` when
+             * the completed fraction is known; use `indeterminate` when work is ongoing
+             * but its duration cannot be measured, including loading-indicator use cases.
+             * Choose `linear` in page flows and lists, and `circular` in compact or
+             * centered placements. Always set `label` to what is progressing.
+             * When NOT to use: static measurements within a known range such as disk
+             * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
+             * skeleton placeholders while content loads, or operations that finish in
+             * under about one second.
              */
             "ki-progress": LocalJSX.IntrinsicElements["ki-progress"] & JSXBase.HTMLAttributes<HTMLKiProgressElement>;
         }
