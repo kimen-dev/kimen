@@ -181,6 +181,10 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
           * Form-data key contributed while the switch is on. When to use: include the immediate setting in native form data when on. When NOT to use: omit when no form entry should be submitted.
           * @default undefined
          */

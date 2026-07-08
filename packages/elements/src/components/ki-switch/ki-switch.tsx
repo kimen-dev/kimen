@@ -1,5 +1,5 @@
-import { Component, Element, Prop, State, Watch, h } from '@stencil/core';
-import { checkedFromMarkup } from './ki-switch.form';
+import { AttachInternals, Component, Element, Prop, State, Watch, h } from '@stencil/core';
+import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
 
 /**
  * A token-styled switch for immediate on/off settings.
@@ -19,9 +19,11 @@ import { checkedFromMarkup } from './ki-switch.form';
   tag: 'ki-switch',
   styleUrl: 'ki-switch.css',
   shadow: { delegatesFocus: true },
+  formAssociated: true,
 })
 export class KiSwitch {
   @Element() private readonly host!: HTMLElement;
+  @AttachInternals() private readonly internals!: ElementInternals;
 
   /**
    * Live on/off state. Boolean presence semantics apply: any present
@@ -70,6 +72,7 @@ export class KiSwitch {
   @State() private formDisabled = false;
 
   private input: HTMLInputElement | undefined;
+  private resetChecked = false;
 
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
@@ -81,16 +84,40 @@ export class KiSwitch {
 
   componentDidLoad(): void {
     this.syncInput();
+    this.syncFormValue();
   }
 
   @Watch('checked')
   protected checkedChanged(): void {
     this.syncInput();
+    this.syncFormValue();
   }
 
   @Watch('disabled')
   protected disabledChanged(): void {
     this.syncInput();
+  }
+
+  @Watch('value')
+  protected valueChanged(): void {
+    this.syncFormValue();
+  }
+
+  formAssociatedCallback(): void {
+    this.resetChecked = checkedFromMarkup(this.host.hasAttribute('checked'), this.checked);
+    this.syncFormValue();
+  }
+
+  formResetCallback(): void {
+    this.checked = this.resetChecked;
+    this.syncInput();
+    this.syncFormValue();
+  }
+
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+    this.syncInput();
+    this.syncFormValue();
   }
 
   private readonly setInput = (input: HTMLInputElement | undefined): void => {
@@ -107,8 +134,20 @@ export class KiSwitch {
     this.input.disabled = this.effectiveDisabled;
   }
 
+  private syncFormValue(): void {
+    if (typeof this.internals.setFormValue !== 'function') {
+      return;
+    }
+
+    this.internals.setFormValue(resolveSubmittedValue(this.checked, this.value));
+  }
+
   private readonly handleChange = (event: Event): void => {
     const input = event.currentTarget as HTMLInputElement;
+    if (this.effectiveDisabled) {
+      input.checked = this.checked;
+      return;
+    }
     this.checked = input.checked;
     this.host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   };
