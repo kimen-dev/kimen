@@ -22,37 +22,37 @@
   );
 }
 
-:host(:hover:not([disabled])) {
+:host(:hover:not(:disabled)) {
   --_ki-switch-track: var(--ki-switch-unchecked-hover-track);
   --_ki-switch-thumb: var(--ki-switch-unchecked-hover-thumb);
   --_ki-switch-border: var(--ki-switch-unchecked-hover-border);
 }
 
-:host([checked]:hover:not([disabled])) {
+:host([checked]:hover:not(:disabled)) {
   --_ki-switch-track: var(--ki-switch-checked-hover-track);
   --_ki-switch-thumb: var(--ki-switch-checked-hover-thumb);
   --_ki-switch-border: var(--ki-switch-checked-hover-border);
 }
 
-:host(:active:not([disabled])) {
+:host(:active:not(:disabled)) {
   --_ki-switch-track: var(--ki-switch-unchecked-active-track);
   --_ki-switch-thumb: var(--ki-switch-unchecked-active-thumb);
   --_ki-switch-border: var(--ki-switch-unchecked-active-border);
 }
 
-:host([checked]:active:not([disabled])) {
+:host([checked]:active:not(:disabled)) {
   --_ki-switch-track: var(--ki-switch-checked-active-track);
   --_ki-switch-thumb: var(--ki-switch-checked-active-thumb);
   --_ki-switch-border: var(--ki-switch-checked-active-border);
 }
 
-:host([disabled]) {
+:host(:disabled) {
   --_ki-switch-track: var(--ki-switch-unchecked-disabled-track);
   --_ki-switch-thumb: var(--ki-switch-unchecked-disabled-thumb);
   --_ki-switch-border: var(--ki-switch-unchecked-disabled-border);
 }
 
-:host([checked][disabled]) {
+:host([checked]:disabled) {
   --_ki-switch-track: var(--ki-switch-checked-disabled-track);
   --_ki-switch-thumb: var(--ki-switch-checked-disabled-thumb);
   --_ki-switch-border: var(--ki-switch-checked-disabled-border);
@@ -71,7 +71,7 @@
   user-select: none;
 }
 
-:host([disabled]) .base {
+:host(:disabled) .base {
   cursor: default;
 }
 

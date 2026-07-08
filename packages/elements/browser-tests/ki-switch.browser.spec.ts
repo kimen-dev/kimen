@@ -123,6 +123,12 @@ function trackPart(el: KiSwitchElement): HTMLElement {
   return track as HTMLElement;
 }
 
+function baseOf(el: KiSwitchElement): HTMLElement {
+  const base = el.shadowRoot?.querySelector('.base');
+  expect(base).toBeInstanceOf(HTMLElement);
+  return base as HTMLElement;
+}
+
 function eventCounts(el: KiSwitchElement): { input: () => number; change: () => number } {
   let input = 0;
   let change = 0;
@@ -333,6 +339,26 @@ describe('ki-switch in a real browser', () => {
 
     expect(el.checked).toBe(true);
     expect(formValue(form, 'newsletter')).toBeNull();
+  });
+
+  // Review round 1: a fieldset-disabled switch must ALSO look disabled. The
+  // FACE host matches :host(:disabled) under fieldset ancestry — observed
+  // through the label cursor, which the disabled rule flips from pointer to
+  // default (an enabled switch would keep the pointer affordance on an inert
+  // control before the fix).
+  it('S13 a fieldset-disabled switch adopts the disabled affordance', async () => {
+    const enabled = await mount('name="newsletter"');
+    const enabledCursor = getComputedStyle(baseOf(enabled)).cursor;
+
+    const directly = await mount('name="newsletter" disabled');
+    const directlyCursor = getComputedStyle(baseOf(directly)).cursor;
+
+    const { el } = await mountInForm('name="newsletter"', true);
+    const fieldsetCursor = getComputedStyle(baseOf(el)).cursor;
+
+    expect(enabledCursor).toBe('pointer');
+    expect(directlyCursor).toBe('default');
+    expect(fieldsetCursor, 'fieldset-disabled must match directly-disabled').toBe(directlyCursor);
   });
 
   it('S18 value="weekly" submits newsletter=weekly when on', async () => {
