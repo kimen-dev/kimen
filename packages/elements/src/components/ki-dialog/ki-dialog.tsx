@@ -11,9 +11,12 @@ import {
 } from '@stencil/core';
 import { isOutsideRect } from './ki-dialog.backdrop';
 
+/** Close reason reported by `ki-close`. */
 export type KiDialogCloseReason = 'method' | 'escape' | 'backdrop';
 
+/** Event payload for the post-close `ki-close` notification. */
 export interface KiDialogCloseDetail {
+  /** `method` for `close()`/open removal, `escape` for Escape, `backdrop` for opt-in backdrop. */
   reason: KiDialogCloseReason;
 }
 
@@ -21,12 +24,16 @@ export interface KiDialogCloseDetail {
  * A modal dialog for one interrupting decision or short focused task.
  *
  * When to use: destructive confirmations, blocking choices, and brief
- * critical input that must be resolved before returning to the page.
- * When NOT to use: non-blocking feedback, hints, long flows, menus, or
- * pickers.
+ * critical input that must be resolved before returning to the page. Always
+ * provide a `heading`, place actions in the `footer` slot, wire each footer
+ * action to `close()`, and in destructive confirmations put `autofocus` on
+ * the least destructive action.
+ * When NOT to use: non-blocking feedback (`ki-alert`, future `ki-toast`),
+ * supplementary hints (`ki-tooltip`), long forms or multi-step flows
+ * (navigate or use a future full-screen variant), menus, or pickers.
  *
  * @slot - Dialog body content.
- * @slot footer - Dialog actions; applications wire actions to `close()`.
+ * @slot footer - Dialog actions; applications wire every action to `close()`.
  * @part dialog - Internal native dialog surface.
  * @part heading - Visible h2 title, rendered only when `heading` is non-empty.
  * @part body - Scrollable body region.
@@ -42,7 +49,11 @@ export class KiDialog {
 
   /**
    * Reflected live modal state. Add it or call `show()` to open; remove it or
-   * call `close()` to close.
+   * call `close()` to close. When open, the native dialog enters the top layer
+   * and the page behind is inert.
+   * When to use: bind application state to the dialog's modal lifecycle.
+   * When NOT to use: do not set the internal native `<dialog open>` attribute;
+   * the host attribute is the only public source of truth.
    *
    * @default false
    */
@@ -51,12 +62,19 @@ export class KiDialog {
   /**
    * Visible dialog title and accessible-name source. Always provide a heading;
    * an empty value intentionally leaves the native dialog unnamed.
+   * When to use: name the interrupting decision, for example "Delete
+   * account?". When NOT to use: do not omit it for production dialogs; APG
+   * modal dialogs require an accessible name.
    */
   @Prop({ reflect: true }) heading?: string;
 
   /**
    * Opts into backdrop light-dismiss. Omit this attribute for critical
    * confirmations; `close-on-backdrop="false"` still enables it.
+   * When to use: low-risk dialogs where an outside click may safely dismiss.
+   * When NOT to use: destructive confirmations or decisions that should not be
+   * lost to a stray click; omit the attribute entirely rather than setting it
+   * to `"false"`.
    *
    * @default false
    */
@@ -64,7 +82,12 @@ export class KiDialog {
 
   /**
    * Post-close notification for every close path. Footer actions report
-   * `method` when they call `close()`.
+   * `method` when they call `close()`, Escape reports `escape`, and opt-in
+   * backdrop dismissal reports `backdrop`.
+   * When to use: update application state after the dialog is already closed
+   * and focus has returned through the native mechanism.
+   * When NOT to use: do not expect this event to veto closing; it is not
+   * cancelable in v1.
    */
   @Event({ eventName: 'ki-close', bubbles: true, composed: true, cancelable: false })
   kiClose!: EventEmitter<KiDialogCloseDetail>;
@@ -96,7 +119,11 @@ export class KiDialog {
   }
 
   /**
-   * Opens the dialog modally. No-op when already open.
+   * Opens the dialog modally. No-op when already open. Equivalent to adding
+   * the host `open` attribute.
+   * When to use: call from the invoker that should receive focus again after
+   * close. When NOT to use: do not call repeatedly to refresh content; update
+   * slotted content directly while open.
    */
   @Method()
   show(): Promise<void> {
@@ -111,6 +138,11 @@ export class KiDialog {
 
   /**
    * Closes the dialog and reports `method`. No-op when already closed.
+   * Equivalent to removing the host `open` attribute. Footer actions never
+   * close automatically; wire them to this method.
+   * When to use: resolve footer actions, programmatic dismissals, and
+   * application-controlled cancellation. When NOT to use: do not use for
+   * Escape or backdrop bookkeeping; those paths set their own close reasons.
    */
   @Method()
   close(): Promise<void> {
