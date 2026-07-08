@@ -1,0 +1,53 @@
+{
+  "ki": {
+    "alert": {
+      "radius": {
+        "$value": "{ki.radius.lg}"
+      },
+      "neutral": {
+        "bg": {
+          "$value": "{ki.surface.s2}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.med-em}"
+        }
+      },
+      "danger": {
+        "bg": {
+          "$value": "{ki.surface.danger-low-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.danger-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.danger-high-em}"
+        }
+      },
+      "dismiss": {
+        "rest": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          }
+        },
+        "hover": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          }
+        },
+        "active": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          }
+        }
+      },
+      "focus-ring": {
+        "color": {
+          "$value": "{ki.outline.primary-high-em}"
+        }
+      }
+    }
+  }
+}
