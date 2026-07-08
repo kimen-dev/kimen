@@ -26,22 +26,24 @@ function requireElement(root: ParentNode, selector: string): Element {
 
 describe('ki-progress', () => {
   it('S1 renders linear progress anatomy with a single progressbar base', async () => {
-    const { root } = await render(<ki-progress label="Uploading report.pdf" value={40} />);
+    const { root } = await render(h('ki-progress', { label: 'Uploading report.pdf', value: 40 }));
     const shadow = requireShadow(root);
     const base = requireElement(shadow, 'div.base[role="progressbar"]');
     const track = requireElement(base, 'div[part="track"]');
     const indicator = requireElement(track, 'div[part="indicator"]');
 
-    expect(base.parentElement).toBeNull();
+    expect(base.parentNode).toBe(shadow);
     expect(track.parentElement).toBe(base);
     expect(indicator.parentElement).toBe(track);
     expect(base.hasAttribute('part')).toBe(false);
     expect(base.hasAttribute('tabindex')).toBe(false);
-    expect(root.getAttributeNames()).not.toContain('tabindex');
+    expect(root.hasAttribute('tabindex')).toBe(false);
   });
 
   it('S2 renders circular progress anatomy with exactly two SVG parts', async () => {
-    const { root } = await render(<ki-progress label="Uploading report.pdf" shape="circular" />);
+    const { root } = await render(
+      h('ki-progress', { label: 'Uploading report.pdf', shape: 'circular' }),
+    );
     const shadow = requireShadow(root);
     const base = requireElement(shadow, 'div.base[role="progressbar"]');
     const svg = requireElement(base, 'svg[aria-hidden="true"]');
@@ -58,7 +60,7 @@ describe('ki-progress', () => {
   });
 
   it('S4 exposes clamped ARIA values and omits empty accessible names', async () => {
-    const { root } = await render(<ki-progress value={250} max={100} />);
+    const { root } = await render(h('ki-progress', { value: 250, max: 100 }));
     const base = requireElement(requireShadow(root), 'div.base[role="progressbar"]');
 
     expect(base.getAttribute('aria-valuemin')).toBe('0');
@@ -68,7 +70,7 @@ describe('ki-progress', () => {
   });
 
   it('S8 applies label as the internal progressbar aria-label only when present', async () => {
-    const { root } = await render(<ki-progress label="Uploading report.pdf" />);
+    const { root } = await render(h('ki-progress', { label: 'Uploading report.pdf' }));
     const base = requireElement(requireShadow(root), 'div.base[role="progressbar"]');
 
     expect(base.getAttribute('aria-label')).toBe('Uploading report.pdf');
@@ -102,7 +104,7 @@ describe('ki-progress', () => {
   });
 
   it('S1 renders a bare progress as determinate at value 0 with no events or tabindex', async () => {
-    const { root } = await render(<ki-progress />);
+    const { root } = await render(h('ki-progress'));
     const base = requireElement(requireShadow(root), 'div.base[role="progressbar"]');
 
     expect(base.getAttribute('aria-valuenow')).toBe('0');

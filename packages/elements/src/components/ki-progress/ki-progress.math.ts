@@ -1,17 +1,17 @@
 export type KiProgressShape = 'linear' | 'circular';
 
 export function normalizeMax(raw: number | undefined): number {
-  void raw;
-  return 0;
+  return raw === undefined || !Number.isFinite(raw) || raw <= 0 ? 100 : raw;
 }
 
 export function clampValue(raw: number | undefined, max: number): number {
-  void raw;
-  void max;
-  return 0;
+  if (raw === undefined || !Number.isFinite(raw)) {
+    return 0;
+  }
+
+  return Math.min(max, Math.max(0, raw));
 }
 
 export function resolveShape(raw: string | undefined): KiProgressShape {
-  void raw;
-  return 'linear';
+  return raw === 'circular' ? 'circular' : 'linear';
 }
