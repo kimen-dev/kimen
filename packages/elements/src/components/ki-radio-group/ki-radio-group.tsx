@@ -1,5 +1,6 @@
 import { AttachInternals, Component, Element, Prop, State, Watch, h } from '@stencil/core';
 import { normalizeBooleanPresence, radioGroupFormValue } from './ki-radio-group.form';
+import { arrowDirection, nextEnabledIndex } from './ki-radio-group.keyboard';
 
 type KiRadioElement = HTMLElement & {
   disabled: boolean;
@@ -119,11 +120,13 @@ export class KiRadioGroup {
 
   componentDidLoad(): void {
     this.host.addEventListener('input', this.handleInput, { capture: true });
+    this.host.addEventListener('keydown', this.handleKeyDown);
     this.syncRoster();
   }
 
   disconnectedCallback(): void {
     this.host.removeEventListener('input', this.handleInput, { capture: true });
+    this.host.removeEventListener('keydown', this.handleKeyDown);
     this.disabledObserver?.disconnect();
   }
 
@@ -155,6 +158,44 @@ export class KiRadioGroup {
     setTimeout(() => {
       this.host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
     }, 0);
+  };
+
+  private readonly handleKeyDown = (event: KeyboardEvent): void => {
+    const direction = arrowDirection(event.key, this.host.matches(':dir(rtl)'));
+    if (direction === null || this.effectiveDisabled) {
+      return;
+    }
+
+    const currentRadio = event
+      .composedPath()
+      .find((target): target is KiRadioElement => this.isKiRadio(target));
+    const currentIndex = currentRadio ? this.roster.indexOf(currentRadio) : -1;
+    if (currentIndex < 0) {
+      return;
+    }
+
+    const nextIndex = nextEnabledIndex(
+      this.roster.map((radio) => radio.disabled),
+      currentIndex,
+      direction,
+    );
+    if (nextIndex === null) {
+      return;
+    }
+
+    const nextRadio = this.roster[nextIndex];
+    if (!nextRadio) {
+      return;
+    }
+
+    const input = this.inputFor(nextRadio);
+    if (!input) {
+      return;
+    }
+
+    event.preventDefault();
+    input.focus();
+    input.click();
   };
 
   private syncRoster(): void {

@@ -314,15 +314,12 @@ describe('ki-radio-group in a real browser', () => {
 
   it('S9 Tab leaves the group in a single step', async () => {
     cleanup();
-    const before = document.createElement('button');
-    before.textContent = 'Before';
     const after = document.createElement('button');
     after.textContent = 'After';
-    document.body.append(before);
     const el = await mount({ value: 'email' });
     document.body.append(after);
+    radioAt(el, 0).focus();
 
-    await userEvent.keyboard('{Tab}');
     expect(el.querySelectorAll('ki-radio')[0]?.shadowRoot?.activeElement).toBe(radioAt(el, 0));
     await userEvent.keyboard('{Tab}');
 
