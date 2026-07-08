@@ -1,25 +1,111 @@
-import { Component, Prop, h } from '@stencil/core';
+import { Component, State, h } from '@stencil/core';
+
+type CardRegion = 'media' | 'header' | 'body' | 'footer';
+type RegionState = Record<CardRegion, boolean>;
+
+const EMPTY_REGIONS: RegionState = {
+  media: false,
+  header: false,
+  body: false,
+  footer: false,
+};
+
+function hasAssignedContent(slot: HTMLSlotElement): boolean {
+  return slot.assignedNodes({ flatten: true }).some((node) => {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      return true;
+    }
+
+    return node.nodeType === Node.TEXT_NODE && (node.textContent?.trim() ?? '') !== '';
+  });
+}
 
 /**
- * TODO(spec): one-line purpose from the approved spec (Art. II).
+ * A non-interactive card surface for grouping related content.
  *
- * When to use: TODO(spec): agent-facing guidance (Art. I).
- * When NOT to use: TODO(spec).
+ * When to use: group related media, heading, supporting text and actions into
+ * one scannable surface visually distinct from the page; fill any subset of
+ * regions. Supply the heading element yourself in the `header` slot.
+ * When NOT to use: never use as a button or link target, form control,
+ * fieldset, page landmark, section replacement or nested card.
+ *
+ * @slot media - Leading visual region for an image, video or illustration.
+ * @slot header - Title region. The author supplies the heading element at the surrounding document level.
+ * @slot - Body region for supporting text or arbitrary composed content.
+ * @slot footer - Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1.
+ * @part card - Card surface: background, border, radius, elevation and region gap.
+ * @part media - Media region wrapper.
+ * @part header - Header region wrapper.
+ * @part body - Body region wrapper around the default slot.
+ * @part footer - Footer region wrapper.
  */
+// Plain shadow DOM: slotted content keeps its own semantics while the card
+// contributes no role, tabindex, ARIA or events of its own.
 @Component({
   tag: 'ki-card',
   styleUrl: 'ki-card.css',
   shadow: true,
 })
 export class KiCard {
-  /**
-   * TODO(spec): every public prop carries JSDoc with description, default and
-   * when-to-use guidance; an undocumented API member is a build failure (Art. I).
-   * @default 'TODO'
-   */
-  @Prop() label = 'TODO';
+  @State() private hasContent: RegionState = EMPTY_REGIONS;
+
+  private readonly slots = new Map<CardRegion, HTMLSlotElement>();
+
+  componentDidLoad(): void {
+    this.syncAllRegions();
+  }
+
+  private setSlot(region: CardRegion, slot: HTMLSlotElement | undefined): void {
+    if (!slot) {
+      return;
+    }
+
+    this.slots.set(region, slot);
+  }
+
+  private syncRegion(region: CardRegion): void {
+    const slot = this.slots.get(region);
+    const present = slot ? hasAssignedContent(slot) : false;
+
+    if (this.hasContent[region] === present) {
+      return;
+    }
+
+    this.hasContent = { ...this.hasContent, [region]: present };
+  }
+
+  private syncAllRegions(): void {
+    for (const region of this.slots.keys()) {
+      this.syncRegion(region);
+    }
+  }
+
+  private region(part: CardRegion, slotName?: CardRegion) {
+    const slotAttributes = slotName ? { name: slotName } : {};
+
+    return (
+      <div part={part} data-empty={this.hasContent[part] ? undefined : ''}>
+        <slot
+          {...slotAttributes}
+          ref={(slot) => {
+            this.setSlot(part, slot);
+          }}
+          onSlotchange={() => {
+            this.syncRegion(part);
+          }}
+        />
+      </div>
+    );
+  }
 
   render() {
-    return <span class="label">{this.label}</span>;
+    return (
+      <div part="card">
+        {this.region('media', 'media')}
+        {this.region('header', 'header')}
+        {this.region('body')}
+        {this.region('footer', 'footer')}
+      </div>
+    );
   }
 }

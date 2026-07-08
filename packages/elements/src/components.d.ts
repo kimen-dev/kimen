@@ -51,16 +51,14 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A non-interactive card surface for grouping related content.
+     * When to use: group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot.
+     * When NOT to use: never use as a button or link target, form control,
+     * fieldset, page landmark, section replacement or nested card.
      */
     interface KiCard {
-        /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
-         */
-        "label": string;
     }
 }
 declare global {
@@ -78,9 +76,12 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A non-interactive card surface for grouping related content.
+     * When to use: group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot.
+     * When NOT to use: never use as a button or link target, form control,
+     * fieldset, page landmark, section replacement or nested card.
      */
     interface HTMLKiCardElement extends Components.KiCard, HTMLStencilElement {
     }
@@ -141,16 +142,14 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A non-interactive card surface for grouping related content.
+     * When to use: group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot.
+     * When NOT to use: never use as a button or link target, form control,
+     * fieldset, page landmark, section replacement or nested card.
      */
     interface KiCard {
-        /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
-         */
-        "label"?: string;
     }
 
     interface KiButtonAttributes {
@@ -162,13 +161,10 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
-    interface KiCardAttributes {
-        "label": string;
-    }
 
     interface IntrinsicElements {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
-        "ki-card": Omit<KiCard, keyof KiCardAttributes> & { [K in keyof KiCard & keyof KiCardAttributes]?: KiCard[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `attr:${K}`]?: KiCardAttributes[K] } & { [K in keyof KiCard & keyof KiCardAttributes as `prop:${K}`]?: KiCard[K] };
+        "ki-card": KiCard;
     }
 }
 export { LocalJSX as JSX };
@@ -184,9 +180,12 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A non-interactive card surface for grouping related content.
+             * When to use: group related media, heading, supporting text and actions into
+             * one scannable surface visually distinct from the page; fill any subset of
+             * regions. Supply the heading element yourself in the `header` slot.
+             * When NOT to use: never use as a button or link target, form control,
+             * fieldset, page landmark, section replacement or nested card.
              */
             "ki-card": LocalJSX.IntrinsicElements["ki-card"] & JSXBase.HTMLAttributes<HTMLKiCardElement>;
         }

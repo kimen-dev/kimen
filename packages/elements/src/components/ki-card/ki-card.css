@@ -1,11 +1,58 @@
 /* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
+  --_ki-card-bg: var(--ki-card-bg);
+  --_ki-card-fg: var(--ki-card-fg);
+  --_ki-card-border-color: var(--ki-card-border-color);
+  --_ki-card-border-width: var(--ki-card-border-width);
+  --_ki-card-radius: var(--ki-card-radius);
+  --_ki-card-elevation: var(--ki-card-elevation);
+  --_ki-card-gap: var(--ki-card-gap);
+  --_ki-card-media-padding: var(--ki-card-media-padding);
+  --_ki-card-header-padding: var(--ki-card-header-padding);
+  --_ki-card-body-padding: var(--ki-card-body-padding);
+  --_ki-card-footer-padding: var(--ki-card-footer-padding);
+
   display: block;
 }
 
-.label {
-  color: var(--ki-text-base);
-  font-family: var(--ki-typography-family-base);
-  font-size: var(--ki-typography-size-body);
+[part="card"] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--_ki-card-gap);
+  color: var(--_ki-card-fg);
+  background: var(--_ki-card-bg);
+  border-color: var(--_ki-card-border-color);
+  border-style: solid;
+  border-width: var(--_ki-card-border-width);
+  border-radius: var(--_ki-card-radius);
+  box-shadow: var(--_ki-card-elevation);
+  overflow: hidden;
+}
+
+[part="media"][data-empty],
+[part="header"][data-empty],
+[part="body"][data-empty],
+[part="footer"][data-empty] {
+  display: none;
+}
+
+[part="media"] {
+  padding-block: var(--_ki-card-media-padding);
+  padding-inline: var(--_ki-card-media-padding);
+}
+
+[part="header"] {
+  padding-block: var(--_ki-card-header-padding);
+  padding-inline: var(--_ki-card-header-padding);
+}
+
+[part="body"] {
+  padding-block: var(--_ki-card-body-padding);
+  padding-inline: var(--_ki-card-body-padding);
+}
+
+[part="footer"] {
+  padding-block: var(--_ki-card-footer-padding);
+  padding-inline: var(--_ki-card-footer-padding);
 }

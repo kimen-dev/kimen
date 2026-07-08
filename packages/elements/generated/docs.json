@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T15:10:11",
+  "timestamp": "2026-07-08T15:17:55",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -99,7 +99,7 @@
             "references": {
               "KiButtonSize": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen-w-card/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonSize"
               }
             }
@@ -151,7 +151,7 @@
             "references": {
               "KiButtonTone": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen-w-card/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonTone"
               }
             }
@@ -195,7 +195,7 @@
             "references": {
               "KiButtonType": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen-w-card/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonType"
               }
             }
@@ -265,7 +265,7 @@
             "references": {
               "KiButtonVariant": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen-w-card/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "/workspace/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonVariant"
               }
             }
@@ -346,46 +346,91 @@
       "filePath": "src/components/ki-card/ki-card.tsx",
       "encapsulation": "shadow",
       "tag": "ki-card",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
-      "usage": {},
-      "props": [
+      "docs": "A non-interactive card surface for grouping related content.\n\nWhen to use: group related media, heading, supporting text and actions into\none scannable surface visually distinct from the page; fill any subset of\nregions. Supply the heading element yourself in the `header` slot.\nWhen NOT to use: never use as a button or link target, form control,\nfieldset, page landmark, section replacement or nested card.",
+      "docsTags": [
         {
-          "name": "label",
-          "type": "string",
-          "complexType": {
-            "original": "string",
-            "resolved": "string",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "'TODO'"
-            }
-          ],
-          "default": "'TODO'",
-          "values": [
-            {
-              "type": "string"
-            }
-          ],
-          "optional": false,
-          "required": false,
-          "getter": false,
-          "setter": false
+          "name": "slot",
+          "text": "media - Leading visual region for an image, video or illustration."
+        },
+        {
+          "name": "slot",
+          "text": "header - Title region. The author supplies the heading element at the surrounding document level."
+        },
+        {
+          "name": "slot",
+          "text": "- Body region for supporting text or arbitrary composed content."
+        },
+        {
+          "name": "slot",
+          "text": "footer - Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1."
+        },
+        {
+          "name": "part",
+          "text": "card - Card surface: background, border, radius, elevation and region gap."
+        },
+        {
+          "name": "part",
+          "text": "media - Media region wrapper."
+        },
+        {
+          "name": "part",
+          "text": "header - Header region wrapper."
+        },
+        {
+          "name": "part",
+          "text": "body - Body region wrapper around the default slot."
+        },
+        {
+          "name": "part",
+          "text": "footer - Footer region wrapper."
         }
       ],
+      "usage": {},
+      "props": [],
       "methods": [],
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
-      "parts": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Body region for supporting text or arbitrary composed content."
+        },
+        {
+          "name": "footer",
+          "docs": "Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1."
+        },
+        {
+          "name": "header",
+          "docs": "Title region. The author supplies the heading element at the surrounding document level."
+        },
+        {
+          "name": "media",
+          "docs": "Leading visual region for an image, video or illustration."
+        }
+      ],
+      "parts": [
+        {
+          "name": "body",
+          "docs": "Body region wrapper around the default slot."
+        },
+        {
+          "name": "card",
+          "docs": "Card surface: background, border, radius, elevation and region gap."
+        },
+        {
+          "name": "footer",
+          "docs": "Footer region wrapper."
+        },
+        {
+          "name": "header",
+          "docs": "Header region wrapper."
+        },
+        {
+          "name": "media",
+          "docs": "Media region wrapper."
+        }
+      ],
       "states": [],
       "dependents": [],
       "dependencies": [],
