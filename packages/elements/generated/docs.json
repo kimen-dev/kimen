@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T21:01:53",
+  "timestamp": "2026-07-08T21:03:11",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -157,7 +157,7 @@
             "references": {
               "KiAlertTone": {
                 "location": "import",
-                "path": "./ki-alert.tone",
+                "path": "./ki-alert.tone.js",
                 "id": "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone",
                 "referenceLocation": "KiAlertTone"
               }

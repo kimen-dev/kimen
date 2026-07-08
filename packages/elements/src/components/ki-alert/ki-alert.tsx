@@ -1,6 +1,6 @@
 import { Component, Element, Event, type EventEmitter, Prop, h } from '@stencil/core';
-import { resolveDismissFocusTarget } from './ki-alert.focus';
-import { liveExposureForTone, type KiAlertTone } from './ki-alert.tone';
+import { resolveDismissFocusTarget } from './ki-alert.focus.js';
+import { liveExposureForTone, type KiAlertTone } from './ki-alert.tone.js';
 
 /**
  * A persistent inline status message with token-backed tone semantics.

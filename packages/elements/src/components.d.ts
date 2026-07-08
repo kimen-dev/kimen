@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { KiAlertTone } from "./components/ki-alert/ki-alert.tone";
+import { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
-export { KiAlertTone } from "./components/ki-alert/ki-alert.tone";
+export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export namespace Components {
     /**
