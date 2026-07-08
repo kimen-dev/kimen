@@ -27,9 +27,14 @@ function ensureTokens(): void {
 
 async function mount(label = 'Email'): Promise<KiRadioElement> {
   ensureTokens();
-  const el = document.createElement('ki-radio') as KiRadioElement;
+  let parent = document.querySelector('main');
+  if (!parent) {
+    parent = document.createElement('main');
+    document.body.append(parent);
+  }
+  const el = document.createElement('ki-radio') as unknown as KiRadioElement;
   el.textContent = label;
-  document.body.appendChild(el);
+  parent.appendChild(el);
   await customElements.whenDefined('ki-radio');
   const deadline = Date.now() + 2000;
   while (!el.shadowRoot?.hasChildNodes() && Date.now() < deadline) {
@@ -59,7 +64,7 @@ describe('ki-radio in a real browser', () => {
   it('has zero axe violations (Art. V floor)', async () => {
     document.body.replaceChildren();
     const el = await mount();
-    const results = await axe.run(el);
+    const results = await axe.run(document.body);
     expect(results.violations).toEqual([]);
     el.remove();
   });

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T20:39:50",
+  "timestamp": "2026-07-08T20:53:04",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -346,12 +346,54 @@
       "filePath": "src/components/ki-radio/ki-radio.tsx",
       "encapsulation": "shadow",
       "tag": "ki-radio",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
+      "docs": "One option in a token-styled radio group.\n\nWhen to use: place inside `ki-radio-group` when a person must choose\nexactly one of a small visible set.\nWhen NOT to use: never use `ki-radio` standalone, for multiple selection,\nor with authored selection state; set the parent group's `value` instead.",
+      "docsTags": [
+        {
+          "name": "slot",
+          "text": "- Option label. This is the accessible name and activation surface."
+        },
+        {
+          "name": "part",
+          "text": "control - Visual ring and selected dot."
+        },
+        {
+          "name": "part",
+          "text": "label - Wrapper around the option label."
+        }
+      ],
       "usage": {},
       "props": [
         {
-          "name": "label",
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Prevents this option from being selected or focused. Disabled options are\nskipped by group arrow navigation and omitted from form submission when\nselected before becoming disabled.\nWhen NOT to use: do not use disabled as a temporary loading state.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
           "type": "string",
           "complexType": {
             "original": "string",
@@ -359,16 +401,16 @@
             "references": {}
           },
           "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Submission value projected by the parent `ki-radio-group` when this option\nis selected. Omit for native radio parity with value `\"on\"`.\nWhen NOT to use: do not use `value` to author selection; set the group's\n`value` property or attribute.",
           "docsTags": [
             {
               "name": "default",
-              "text": "'TODO'"
+              "text": "'on'"
             }
           ],
-          "default": "'TODO'",
+          "default": "'on'",
           "values": [
             {
               "type": "string"
@@ -384,8 +426,22 @@
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
-      "parts": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Option label. This is the accessible name and activation surface."
+        }
+      ],
+      "parts": [
+        {
+          "name": "control",
+          "docs": "Visual ring and selected dot."
+        },
+        {
+          "name": "label",
+          "docs": "Wrapper around the option label."
+        }
+      ],
       "states": [],
       "dependents": [],
       "dependencies": [],
@@ -395,10 +451,48 @@
       "filePath": "src/components/ki-radio-group/ki-radio-group.tsx",
       "encapsulation": "shadow",
       "tag": "ki-radio-group",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
+      "docs": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.\n\nWhen to use: a person must choose exactly one of a small set of mutually\nexclusive options that should all be visible at once.\nWhen NOT to use: many options or tight space (use `ki-select`), independent\non/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or\nauthored selection on options; set this group's `value` instead.",
+      "docsTags": [
+        {
+          "name": "slot",
+          "text": "- `ki-radio` options. Document order is navigation order."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible group label and accessible-name source."
+        }
+      ],
       "usage": {},
       "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Makes the whole group unavailable, skips it in Tab order and removes its\nform entry.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "label",
           "type": "string",
@@ -409,15 +503,93 @@
           },
           "mutable": false,
           "attr": "label",
-          "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
+          "reflectToAttr": true,
+          "docs": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it; unlabeled groups fail accessibility gates.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form-data key for the selected option's value. Omit when the group should\nnot contribute a form entry.\nWhen NOT to use: do not put `name` on `ki-radio` options; their internal\nnative inputs are intentionally unnamed.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Requires one selected option for form submission. The group uses platform\n`valueMissing` from its internal native radio inputs.\nWhen NOT to use: do not use required when no answer is acceptable.",
           "docsTags": [
             {
               "name": "default",
-              "text": "'TODO'"
+              "text": "false"
             }
           ],
-          "default": "'TODO'",
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Projection of the current selection. The initial attribute selects the\nfirst matching option; unmatched values leave the group unselected and\noperable. Assigning the property updates selection silently.\nWhen NOT to use: never author selection on `ki-radio`; set this value.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
           "values": [
             {
               "type": "string"
@@ -433,8 +605,18 @@
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
-      "parts": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "`ki-radio` options. Document order is navigation order."
+        }
+      ],
+      "parts": [
+        {
+          "name": "label",
+          "docs": "Visible group label and accessible-name source."
+        }
+      ],
       "states": [],
       "dependents": [],
       "dependencies": [],

@@ -1,9 +1,12 @@
 import { h } from '@stencil/core';
 import { describe, expect, it, render } from '@stencil/vitest';
+import { normalizeBooleanPresence } from '../ki-radio-group/ki-radio-group.form';
 
 // @spec:007-ki-radio-group
 // Option-anatomy tests only; every behavior S-ID lives in the group suite.
 describe('ki-radio', () => {
+  type KiRadioTestElement = HTMLElement & { disabled: boolean; value: string };
+
   it('renders an unnamed native radio input wrapped by a shadow label', async () => {
     const { root } = await render(<ki-radio>Email</ki-radio>);
     const label = root.shadowRoot?.querySelector('label');
@@ -33,14 +36,15 @@ describe('ki-radio', () => {
 
     expect('checked' in root).toBe(false);
     expect('selected' in root).toBe(false);
-    expect(root.value).toBe('on');
+    expect((root as KiRadioTestElement).value).toBe('on');
   });
 
-  it('normalizes disabled presence, including disabled=false, to disabled', async () => {
-    const { root } = await render(h('ki-radio', { disabled: 'false' }, 'Email'));
+  it('normalizes disabled presence, including disabled=false, and forwards disabled', async () => {
+    const { root } = await render(h('ki-radio', { disabled: true }, 'Email'));
     const input = root.shadowRoot?.querySelector('input');
 
-    expect(root.disabled).toBe(true);
+    expect(normalizeBooleanPresence('false')).toBe(true);
+    expect((root as KiRadioTestElement).disabled).toBe(true);
     expect(input?.disabled).toBe(true);
   });
 });

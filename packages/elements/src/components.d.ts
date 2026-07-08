@@ -51,28 +51,57 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * One option in a token-styled radio group.
+     * When to use: place inside `ki-radio-group` when a person must choose
+     * exactly one of a small visible set.
+     * When NOT to use: never use `ki-radio` standalone, for multiple selection,
+     * or with authored selection state; set the parent group's `value` instead.
      */
     interface KiRadio {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Prevents this option from being selected or focused. Disabled options are skipped by group arrow navigation and omitted from form submission when selected before becoming disabled. When NOT to use: do not use disabled as a temporary loading state.
+          * @default false
          */
-        "label": string;
+        "disabled": boolean;
+        /**
+          * Submission value projected by the parent `ki-radio-group` when this option is selected. Omit for native radio parity with value `"on"`. When NOT to use: do not use `value` to author selection; set the group's `value` property or attribute.
+          * @default 'on'
+         */
+        "value": string;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled radio group that owns selection, keyboard coordination and
+     * form participation for slotted `ki-radio` options.
+     * When to use: a person must choose exactly one of a small set of mutually
+     * exclusive options that should all be visible at once.
+     * When NOT to use: many options or tight space (use `ki-select`), independent
+     * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+     * authored selection on options; set this group's `value` instead.
      */
     interface KiRadioGroup {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
          */
         "label": string;
+        /**
+          * Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
+         */
+        "name"?: string;
+        /**
+          * Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
+          * @default ''
+         */
+        "value": string;
     }
 }
 declare global {
@@ -90,9 +119,11 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * One option in a token-styled radio group.
+     * When to use: place inside `ki-radio-group` when a person must choose
+     * exactly one of a small visible set.
+     * When NOT to use: never use `ki-radio` standalone, for multiple selection,
+     * or with authored selection state; set the parent group's `value` instead.
      */
     interface HTMLKiRadioElement extends Components.KiRadio, HTMLStencilElement {
     }
@@ -101,9 +132,13 @@ declare global {
         new (): HTMLKiRadioElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled radio group that owns selection, keyboard coordination and
+     * form participation for slotted `ki-radio` options.
+     * When to use: a person must choose exactly one of a small set of mutually
+     * exclusive options that should all be visible at once.
+     * When NOT to use: many options or tight space (use `ki-select`), independent
+     * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+     * authored selection on options; set this group's `value` instead.
      */
     interface HTMLKiRadioGroupElement extends Components.KiRadioGroup, HTMLStencilElement {
     }
@@ -118,6 +153,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}` | `prop:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K | `prop:${K}`]?: never } | { [P in `prop:${K}`]: PropT } & { [P in K | `attr:${K}`]?: never };
+
     /**
      * A token-styled action button with native button semantics.
      * When to use: trigger the single main action of a view, supporting actions
@@ -165,28 +202,61 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * One option in a token-styled radio group.
+     * When to use: place inside `ki-radio-group` when a person must choose
+     * exactly one of a small visible set.
+     * When NOT to use: never use `ki-radio` standalone, for multiple selection,
+     * or with authored selection state; set the parent group's `value` instead.
      */
     interface KiRadio {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Prevents this option from being selected or focused. Disabled options are skipped by group arrow navigation and omitted from form submission when selected before becoming disabled. When NOT to use: do not use disabled as a temporary loading state.
+          * @default false
          */
-        "label"?: string;
+        "disabled"?: boolean;
+        /**
+          * Submission value projected by the parent `ki-radio-group` when this option is selected. Omit for native radio parity with value `"on"`. When NOT to use: do not use `value` to author selection; set the group's `value` property or attribute.
+          * @default 'on'
+         */
+        "value"?: string;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A token-styled radio group that owns selection, keyboard coordination and
+     * form participation for slotted `ki-radio` options.
+     * When to use: a person must choose exactly one of a small set of mutually
+     * exclusive options that should all be visible at once.
+     * When NOT to use: many options or tight space (use `ki-select`), independent
+     * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+     * authored selection on options; set this group's `value` instead.
      */
     interface KiRadioGroup {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
          */
-        "label"?: string;
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+         */
+        "label": string;
+        /**
+          * Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
+         */
+        "name"?: string;
+        /**
+          * Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
+          * @default ''
+         */
+        "value"?: string;
     }
 
     interface KiButtonAttributes {
@@ -199,16 +269,21 @@ declare namespace LocalJSX {
         "disabled": boolean;
     }
     interface KiRadioAttributes {
-        "label": string;
+        "value": string;
+        "disabled": boolean;
     }
     interface KiRadioGroupAttributes {
+        "name": string;
+        "value": string;
         "label": string;
+        "required": boolean;
+        "disabled": boolean;
     }
 
     interface IntrinsicElements {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
-        "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] };
+        "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
     }
 }
 export { LocalJSX as JSX };
@@ -224,15 +299,21 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * One option in a token-styled radio group.
+             * When to use: place inside `ki-radio-group` when a person must choose
+             * exactly one of a small visible set.
+             * When NOT to use: never use `ki-radio` standalone, for multiple selection,
+             * or with authored selection state; set the parent group's `value` instead.
              */
             "ki-radio": LocalJSX.IntrinsicElements["ki-radio"] & JSXBase.HTMLAttributes<HTMLKiRadioElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A token-styled radio group that owns selection, keyboard coordination and
+             * form participation for slotted `ki-radio` options.
+             * When to use: a person must choose exactly one of a small set of mutually
+             * exclusive options that should all be visible at once.
+             * When NOT to use: many options or tight space (use `ki-select`), independent
+             * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+             * authored selection on options; set this group's `value` instead.
              */
             "ki-radio-group": LocalJSX.IntrinsicElements["ki-radio-group"] & JSXBase.HTMLAttributes<HTMLKiRadioGroupElement>;
         }

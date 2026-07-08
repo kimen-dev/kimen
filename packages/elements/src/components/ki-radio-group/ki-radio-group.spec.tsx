@@ -12,7 +12,7 @@ describe('ki-radio-group', () => {
   it('S10 renders a visible group label and labelled radiogroup wrapper', async () => {
     const { root } = await render(
       <ki-radio-group label="Contact preference">
-        <ki-radio value="email">Email</ki-radio>
+        {h('ki-radio', { value: 'email' }, 'Email')}
       </ki-radio-group>,
     );
     const label = root.shadowRoot?.querySelector('[part="label"]');
@@ -51,7 +51,7 @@ describe('ki-radio-group', () => {
   it('S12 computes form value only from a selected enabled option', () => {
     expect(radioGroupFormValue(null)).toBeNull();
     expect(radioGroupFormValue({ value: 'email', disabled: false })).toBe('email');
-    expect(radioGroupFormValue({ value: undefined, disabled: false })).toBe('on');
+    expect(radioGroupFormValue({ disabled: false })).toBe('on');
     expect(radioGroupFormValue({ value: 'email', disabled: true })).toBeNull();
   });
 

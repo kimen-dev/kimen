@@ -44,7 +44,7 @@ async function mount(
   attributes: Record<string, string | boolean> = {},
 ): Promise<KiRadioGroupElement> {
   ensureTokens();
-  const el = document.createElement('ki-radio-group') as KiRadioGroupElement;
+  const el = document.createElement('ki-radio-group') as unknown as KiRadioGroupElement;
   el.setAttribute('label', 'Contact preference');
   for (const [name, value] of Object.entries(attributes)) {
     if (typeof value === 'boolean') {
@@ -80,11 +80,19 @@ function radios(el: KiRadioGroupElement): HTMLInputElement[] {
   });
 }
 
+function radioAt(el: KiRadioGroupElement, index: number): HTMLInputElement {
+  const input = radios(el)[index];
+  if (!input) {
+    throw new Error(`Missing radio input at index ${String(index)}`);
+  }
+  return input;
+}
+
 describe('ki-radio-group in a real browser', () => {
   it('S1 selecting an option makes it the group single choice and emits input before change', async () => {
     cleanup();
     const el = await mount();
-    const [email] = radios(el);
+    const email = radioAt(el, 0);
     const events: string[] = [];
     el.addEventListener('input', (event) => {
       events.push(`input:${String(event.composed)}:${el.value}`);
@@ -104,7 +112,8 @@ describe('ki-radio-group in a real browser', () => {
   it('S2 selecting another option releases the previous option', async () => {
     cleanup();
     const el = await mount({ value: 'email' });
-    const [email, sms] = radios(el);
+    const email = radioAt(el, 0);
+    const sms = radioAt(el, 1);
 
     await userEvent.click(sms);
 
@@ -116,7 +125,8 @@ describe('ki-radio-group in a real browser', () => {
   it('S3 a disabled option cannot be selected and reselection emits nothing', async () => {
     cleanup();
     const el = await mount({ value: 'email' });
-    const [email, , phone] = radios(el);
+    const email = radioAt(el, 0);
+    const phone = radioAt(el, 2);
     el.querySelectorAll('ki-radio')[2]?.setAttribute('disabled', '');
     let eventCount = 0;
     el.addEventListener('input', () => {
@@ -138,7 +148,7 @@ describe('ki-radio-group in a real browser', () => {
   it('S4 a value matching no option leaves the group unselected and operable', async () => {
     cleanup();
     const el = await mount({ value: 'postal' });
-    const [, sms] = radios(el);
+    const sms = radioAt(el, 1);
 
     expect(radios(el).some((input) => input.checked)).toBe(false);
     await userEvent.click(sms);
@@ -150,7 +160,7 @@ describe('ki-radio-group in a real browser', () => {
   it('S19 a disabled group ignores selection attempts and is exposed unavailable', async () => {
     cleanup();
     const el = await mount({ disabled: true, value: 'email' });
-    const [, sms] = radios(el);
+    const sms = radioAt(el, 1);
     let eventCount = 0;
     el.addEventListener('input', () => {
       eventCount += 1;

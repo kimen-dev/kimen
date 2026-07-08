@@ -1,11 +1,26 @@
 /* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
+  --_ki-radio-group-gap: var(--ki-radio-group-gap);
+  --_ki-radio-group-label-font-size: var(--ki-radio-group-label-font-size);
+  --_ki-radio-group-label-font-weight: var(--ki-radio-group-label-font-weight);
+  --_ki-radio-group-label-line-height: var(--ki-radio-group-label-line-height);
+
   display: block;
+  color: var(--ki-text-high-em);
+  font-family: var(--ki-typography-family-body);
 }
 
-.label {
-  color: var(--ki-text-base);
-  font-family: var(--ki-typography-family-base);
-  font-size: var(--ki-typography-size-body);
+[part="label"] {
+  display: block;
+  margin-block-end: var(--_ki-radio-group-gap);
+  font-size: var(--_ki-radio-group-label-font-size);
+  font-weight: var(--_ki-radio-group-label-font-weight);
+  line-height: var(--_ki-radio-group-label-line-height);
+}
+
+[role="radiogroup"] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--_ki-radio-group-gap);
 }

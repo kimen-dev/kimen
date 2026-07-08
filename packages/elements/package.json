@@ -30,6 +30,19 @@
       "name": "ki-button worst case (component + full Stencil runtime, first component on a page)",
       "path": "dist/components/ki-button.js",
       "limit": "25 KB"
+    },
+    {
+      "name": "ki-radio-group composite marginal cost (group + option, runtime excluded), Art. IV single-digit budget",
+      "path": "size-limit/ki-radio-group-composite.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-radio-group composite worst case (group + option + full Stencil runtime)",
+      "path": "size-limit/ki-radio-group-composite.js",
+      "limit": "25 KB"
     }
   ],
   "nx": {
