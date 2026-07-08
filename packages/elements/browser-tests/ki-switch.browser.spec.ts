@@ -8,9 +8,10 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { defineCustomElement } from '../dist/components/ki-switch.js';
 
 type KiSwitchElement = HTMLElement & { label: string };
+const defineKiSwitchElement: () => void = defineCustomElement;
 
 beforeAll(() => {
-  defineCustomElement();
+  defineKiSwitchElement();
 });
 
 /** Stencil renders async: wait until the shadow root has content. */

@@ -103,6 +103,15 @@ export default tseslint.config(
     },
   },
   {
+    // Browser specs intentionally import built custom-element JS from dist.
+    // tsc still checks the test source; these imports are validated by build gates.
+    files: ['packages/elements/browser-tests/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+    },
+  },
+  {
     // Public site page script: plain browser ES module, outside any tsconfig
     // project (the landing ships no TypeScript; tokens do the heavy lifting)
     files: ['site/**/*.js'],
