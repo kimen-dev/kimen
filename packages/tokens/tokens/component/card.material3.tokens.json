@@ -1,0 +1,39 @@
+{
+  "ki": {
+    "card": {
+      "bg": {
+        "$value": "{ki.surface.s1}"
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}"
+      },
+      "border-color": {
+        "$value": "{ki.outline.none}"
+      },
+      "border-width": {
+        "$value": "{ki.space.zero}"
+      },
+      "radius": {
+        "$value": "{ki.radius.xl}"
+      },
+      "elevation": {
+        "$value": "0 1px 2px 0 var(--ki-elevation-shadow-dark), 0 2px 6px 2px var(--ki-elevation-shadow-med)"
+      },
+      "gap": {
+        "$value": "{ki.space.zero}"
+      },
+      "media-padding": {
+        "$value": "{ki.space.zero}"
+      },
+      "header-padding": {
+        "$value": "{ki.space.3xl}"
+      },
+      "body-padding": {
+        "$value": "{ki.space.3xl}"
+      },
+      "footer-padding": {
+        "$value": "{ki.space.3xl}"
+      }
+    }
+  }
+}
