@@ -1,3 +1,4 @@
+import axe from 'axe-core';
 import tokensCss from '@kimen/tokens/css?raw';
 import { page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
@@ -184,5 +185,57 @@ describe('ki-switch in a real browser', () => {
     await userEvent.tab();
 
     expect(document.activeElement).toBe(button);
+  });
+
+  it('S7 exposes a switch named Email notifications in the off state', async () => {
+    await mount();
+    const control = page.getByRole('switch', { name: 'Email notifications' });
+
+    await expect.element(control).not.toBeChecked();
+  });
+
+  it('S8 exposes the on state after a user toggle', async () => {
+    const el = await mount();
+    const control = page.getByRole('switch', { name: 'Email notifications' });
+
+    await userEvent.click(internalInput(el));
+
+    await expect.element(control).toBeChecked();
+  });
+
+  it('S9 exposes disabled switches as unavailable', async () => {
+    await mount('disabled');
+    const control = page.getByRole('switch', { name: 'Email notifications' });
+
+    await expect.element(control).toBeDisabled();
+  });
+
+  it('S7 S9 keeps the rendered pointer target at least 24 by 24 CSS pixels', async () => {
+    const el = await mount();
+    const rect = el.getBoundingClientRect();
+
+    expect(rect.width).toBeGreaterThanOrEqual(24);
+    expect(rect.height).toBeGreaterThanOrEqual(24);
+  });
+
+  it('S7 S8 S9 has zero axe violations across checked and disabled states', async () => {
+    cleanup();
+    for (const checked of [false, true]) {
+      for (const disabled of [false, true]) {
+        const el = document.createElement('ki-switch') as KiSwitchElement;
+        el.textContent = `Email notifications ${String(checked)} ${String(disabled)}`;
+        if (checked) {
+          el.setAttribute('checked', '');
+        }
+        if (disabled) {
+          el.setAttribute('disabled', '');
+        }
+        document.body.append(el);
+        await waitForHydration(el);
+      }
+    }
+
+    const results = await axe.run(document.body);
+    expect(results.violations).toEqual([]);
   });
 });
