@@ -1,45 +1,36 @@
-import axe from 'axe-core';
+// @spec:016-ki-list
+// Anatomy-only assertions for the sub-component. All S-ID behavior scenarios
+// are carried by ki-list.browser.spec.ts per research D6 and the 007 composite
+// convention.
 import { beforeAll, describe, expect, it } from 'vitest';
 
-// @spec:016-ki-list
-// Real-browser tests consume the BUILT custom-elements output (what ships is
-// what is asserted), never internals (Art. III). They live outside src/ so
-// Stencil never compiles them; the build gate runs before type-aware gates.
 import { defineCustomElement } from '../dist/components/ki-list-item.js';
-
-type KiListItemElement = HTMLElement & { label: string };
 
 beforeAll(() => {
   defineCustomElement();
 });
 
-/** Stencil renders async: wait until the shadow root has content. */
-async function mount(): Promise<KiListItemElement> {
-  const el = document.createElement('ki-list-item') as KiListItemElement;
-  document.body.appendChild(el);
+async function mountItem(): Promise<HTMLElement> {
+  document.body.replaceChildren();
+  const item = document.createElement('ki-list-item');
+  item.innerHTML =
+    '<span slot="start">S</span>Primary<span slot="secondary">Secondary</span><span slot="end">E</span>';
+  document.body.append(item);
   await customElements.whenDefined('ki-list-item');
-  const deadline = Date.now() + 2000;
-  while (!el.shadowRoot?.textContent && Date.now() < deadline) {
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-  }
-  return el;
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  return item;
 }
 
-describe('ki-list-item in a real browser', () => {
-  // TODO(spec): S1 core behavior from the approved scenario.
-  it('renders its label', async () => {
-    const el = await mount();
-    expect(el.shadowRoot?.textContent).toContain('TODO');
-    el.remove();
-  });
+describe('ki-list-item anatomy in a real browser', () => {
+  it('exposes item, start, content and end parts', async () => {
+    const item = await mountItem();
+    const parts = [...(item.shadowRoot?.querySelector('[part="item"]')?.children ?? [])].map(
+      (child) => child.getAttribute('part'),
+    );
 
-  // TODO(spec): S2 keyboard path, S3 assistive-tech outcome, S4 form
-  // participation (if applicable), S5 theming: the five families (Art. II).
-
-  it('has zero axe violations (Art. V floor)', async () => {
-    const el = await mount();
-    const results = await axe.run(el);
-    expect(results.violations).toEqual([]);
-    el.remove();
+    expect(parts).toEqual(['start', 'content', 'end']);
+    expect(
+      item.shadowRoot?.querySelector('[part="content"] slot[name="secondary"]'),
+    ).toBeInstanceOf(HTMLSlotElement);
   });
 });
