@@ -31,7 +31,11 @@ describe('ki-badge', () => {
   it('S8 renders an empty badge without error and without text', async () => {
     const { root } = await render(<ki-badge></ki-badge>);
     expect(root.shadowRoot?.querySelector('[part="badge"]')).toBeTruthy();
-    expect(root.textContent.trim()).toBe('');
+    // String() reconciles Stencil's bundled TS (textContent nullable) with
+    // the root type-aware lint (string in TS 6 lib.dom) — hence the local
+    // exception for the conversion rule.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
+    expect(String(root.textContent).trim()).toBe('');
   });
 
   it('S4 exposes no interactive anatomy: no tabindex, no role, no listeners surface', async () => {
