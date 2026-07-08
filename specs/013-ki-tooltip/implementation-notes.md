@@ -9,3 +9,6 @@
   `pnpm --filter @kimen/elements exec vitest run --config vitest.browser.config.ts browser-tests/ki-tooltip.browser.spec.ts`
   exits 1 because the built scaffold does not render the default trigger slot,
   so real pointer-path fixtures fail before hover.
+- T009 browser RED: the same focused run exits 1 after adding S5/S13 because
+  the built scaffold still has no default trigger slot, so Escape and
+  blank-label browser paths cannot interact with a rendered trigger.

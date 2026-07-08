@@ -191,6 +191,38 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(tooltipRect.top).toBeGreaterThanOrEqual(triggerRect.bottom);
   });
 
+  it('S5 Escape hides the focused tooltip without moving focus or activating the trigger', async () => {
+    const { host, trigger } = await mount();
+    let activations = 0;
+    trigger.addEventListener('click', () => {
+      activations += 1;
+    });
+
+    requireTriggerSlot(host);
+    trigger.focus();
+    await nextFrame();
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+
+    await userEvent.keyboard('{Escape}');
+    await nextFrame();
+
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).not.toBeVisible();
+    expect(document.activeElement).toBe(trigger);
+    expect(activations).toBe(0);
+  });
+
+  it('S13 empty labels show no tooltip and expose no accessible description', async () => {
+    const { host, trigger } = await mount({ label: '  ' });
+
+    requireTriggerSlot(host);
+    expect(trigger.getAttribute('aria-description')).toBeNull();
+    await userEvent.hover(trigger);
+    await nextFrame();
+
+    expect(tooltipBubble(host)).toBeNull();
+    expect(trigger.getAttribute('aria-description')).toBeNull();
+  });
+
   it('S1 has zero axe violations in the pointer fixture', async () => {
     const { host, trigger } = await mount();
     await hoverTrigger(host, trigger);
