@@ -1,3 +1,4 @@
+import axe from 'axe-core';
 import { userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
@@ -52,6 +53,7 @@ async function waitFor(condition: () => boolean, message: string): Promise<void>
 
 async function mountDialog(
   attributes: Record<string, string | boolean> = {},
+  parent: ParentNode = document.body,
 ): Promise<KiDialogElement> {
   ensureTokens();
   const el = document.createElement('ki-dialog') as KiDialogElement;
@@ -68,7 +70,7 @@ async function mountDialog(
     <button slot="footer" type="button">Cancel</button>
     <button slot="footer" type="button">Delete</button>
   `;
-  document.body.append(el);
+  parent.appendChild(el);
   await customElements.whenDefined('ki-dialog');
   await waitFor(
     () => Boolean(el.shadowRoot?.querySelector('dialog')),
@@ -113,7 +115,13 @@ async function openDialog(el: KiDialogElement): Promise<void> {
 
 function nextClose(el: KiDialogElement): Promise<KiCloseEvent> {
   return new Promise((resolve) => {
-    el.addEventListener('ki-close', (event) => { resolve(event as KiCloseEvent); }, { once: true });
+    el.addEventListener(
+      'ki-close',
+      (event) => {
+        resolve(event as KiCloseEvent);
+      },
+      { once: true },
+    );
   });
 }
 
@@ -145,6 +153,20 @@ async function backdropClick(el: KiDialogElement, armInside = false): Promise<vo
 }
 
 describe('ki-dialog in a real browser', () => {
+  it('S1 S5 has zero axe violations in closed and open states under the default theme', async () => {
+    cleanup();
+    const main = document.createElement('main');
+    document.body.append(main);
+    const el = await mountDialog({}, main);
+
+    let results = await axe.run(main);
+    expect(results.violations).toEqual([]);
+
+    await openDialog(el);
+    results = await axe.run(main);
+    expect(results.violations).toEqual([]);
+  });
+
   it('S1 opening the dialog presents it above an inert page', async () => {
     cleanup();
     const main = document.createElement('main');
