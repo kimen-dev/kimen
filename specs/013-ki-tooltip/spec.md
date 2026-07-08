@@ -27,23 +27,22 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 
 The abstraction below is grounded in the Material 3 tooltip guidance plus the
 onmars token vocabulary already extracted in 001 (surfaces s0–s5,
-text-emphasis levels) — NOT yet in the MarsUI tooltip frames, which could not
-be read while drafting; unverified cells carry the pending marker mandated by
-the batch charter. Confirming the MarsUI frames is an explicit precondition of
-gate-1 approval, and three decisions are contingent on that confirmation: the
-no-arrow appearance (no `arrow` part), the absence of a size axis, and the
-text-only `label` content model (FR-001, FR-011 and the Art. IX API delta). If
-the frames contradict any of them, the affected requirements return to draft
-before approval:
+text-emphasis levels). The MarsUI file was verified page by page on
+2026-07-08: it contains no tooltip component at all — the only "Tip"-named
+artifact is a 320×472 documentation callout used on the file's overview
+sheets, not a UI tooltip. The three decisions formerly contingent on that
+verification — the no-arrow appearance (no `arrow` part), the absence of a
+size axis, and the text-only `label` content model (FR-001, FR-011 and the
+Art. IX API delta) — therefore stand uncontradicted:
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-tooltip |
 |---|---|---|---|
-| Content model | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Plain tooltip: container + single brief label text. Rich tooltip adds subhead, multi-line body and actions | `label` attribute, text-only by construction. The rich tooltip exceeds accessible tooltip semantics → future `ki-popover`, out of 013 |
-| Trigger & reveal | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Anchors to any component; transient; shown on hover, focus and long press | Default slot wraps one trigger; shows on hover AND keyboard focus, hides on pointer leave, blur and Escape. Long press deferred (open question for gate 1) |
-| Placement | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Positioned adjacent to its anchor, repositioning to avoid screen-edge obstruction | `placement` preference: `top` (default) / `bottom` / `start` / `end`; the component repositions to stay fully visible; logical values follow writing direction |
-| Appearance | Exact tooltip frame (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1); the onmars token vocabulary already extracted in 001 (surfaces s0–s5, text-emphasis levels) provides the mapping ground | Inverse container with on-inverse label text, small corner radius, no caret/arrow | All appearance resolves from `--ki-tooltip-*` component tokens over the semantic layer; no arrow part in v1 |
-| Size / emphasis scale | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Single size; no emphasis or intent axis on the plain tooltip | No `size`, `variant` or `tone` attributes (Art. VII); metrics are per-theme component tokens |
-| Interaction states | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | The tooltip itself is not interactive; no hover/press states of its own | Tooltip content is never focusable and never interactive; only the trigger carries interaction states |
+| Content model | No tooltip component in MarsUI (full-file sweep verified 2026-07-08); the only "Tip"-named artifact is a documentation callout, not a UI tooltip | Plain tooltip: container + single brief label text. Rich tooltip adds subhead, multi-line body and actions | `label` attribute, text-only by construction. The rich tooltip exceeds accessible tooltip semantics → future `ki-popover`, out of 013 |
+| Trigger & reveal | No tooltip frame, hence no trigger/reveal behavior to read (verified 2026-07-08) | Anchors to any component; transient; shown on hover, focus and long press | Default slot wraps one trigger; shows on hover AND keyboard focus, hides on pointer leave, blur and Escape. Long press deferred (open question for gate 1) |
+| Placement | No tooltip frame and no placement conventions to mirror (verified 2026-07-08) | Positioned adjacent to its anchor, repositioning to avoid screen-edge obstruction | `placement` preference: `top` (default) / `bottom` / `start` / `end`; the component repositions to stay fully visible; logical values follow writing direction |
+| Appearance | No tooltip frame in MarsUI (verified 2026-07-08); the onmars token vocabulary already extracted in 001 (surfaces s0–s5, text-emphasis levels) provides the mapping ground | Inverse container with on-inverse label text, small corner radius, no caret/arrow | All appearance resolves from `--ki-tooltip-*` component tokens over the semantic layer; no arrow part in v1 |
+| Size / emphasis scale | No tooltip frame, so no size or emphasis scale exists in MarsUI (verified 2026-07-08) | Single size; no emphasis or intent axis on the plain tooltip | No `size`, `variant` or `tone` attributes (Art. VII); metrics are per-theme component tokens |
+| Interaction states | No tooltip frame (verified 2026-07-08); nothing in MarsUI suggests an interactive tooltip | The tooltip itself is not interactive; no hover/press states of its own | Tooltip content is never focusable and never interactive; only the trigger carries interaction states |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -432,8 +431,9 @@ Feature: Tooltip
   tooltip convention; themes cannot change placement (it is behavior, not
   appearance).
 - No `size`, `variant` or `tone` axes: Material 3's plain tooltip has a
-  single size and no intent axis; if MarsUI frame verification reveals a
-  scale, adding one later is an additive MINOR change.
+  single size and no intent axis; MarsUI verification 2026-07-08 found no
+  tooltip frame, so no scale exists — adding one later would be an additive
+  MINOR change.
 - No show/hide events in v1 (Art. VII — no scenario needs them); adding
   `ki-show`/`ki-hide` later would be additive MINOR.
 - The hover-intent show delay is implementation-defined (not a public prop
@@ -447,8 +447,9 @@ Feature: Tooltip
 - Material 3's rich tooltip (subhead, body, actions) is a separate future
   component (popover); excluding it here is a scope decision, not an
   omission.
-- No arrow/caret in v1: Material 3 plain tooltips have none, and the MarsUI
-  frame is unverified; adding an `arrow` part later would be additive MINOR.
+- No arrow/caret in v1: Material 3 plain tooltips have none, and MarsUI has
+  no tooltip frame (verified 2026-07-08); adding an `arrow` part later
+  would be additive MINOR.
 - Description association crosses a shadow boundary: the trigger lives in
   light DOM (default slot) while the tooltip content renders inside the
   component, `aria-describedby` idrefs cannot cross shadow roots, and the

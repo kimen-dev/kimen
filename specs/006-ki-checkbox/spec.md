@@ -24,24 +24,24 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 
 ## Design-source analysis (Figma)
 
-The API below is derived from the Material 3 Design Kit alone: the MarsUI
-checkbox frames could not be read (Figma connector unavailable 2026-07-08),
-so the MarsUI column records pending verification, not verified facts.
-Verifying those frames is an explicit condition of gate-1 approval. API
-decisions at risk if the frames diverge: a `size` axis (would arrive as an
-additive MINOR), the error/invalid visual treatment (token-layer change
-unless MarsUI shows a dedicated anatomy), and label anatomy (additional
-slots would be additive MINOR). Any resulting API change re-enters through
-this spec before implementation:
+The API below is derived from the Material 3 Design Kit: the MarsUI file was
+verified page by page on 2026-07-08 and contains no checkbox component at
+all (its component inventory covers buttons, avatars, icons, feature icons,
+media and miscellaneous artifacts), so the MarsUI column records that
+verified absence and the onmars theme styles ki-checkbox from the 001 token
+vocabulary alone. The formerly at-risk decisions (`size` axis, error visual,
+label anatomy) are resolved by the verification: MarsUI shows none of them,
+and any future MarsUI checkbox artifact would re-enter through this spec as
+additive MINOR:
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-checkbox |
 |---|---|---|---|
-| Selection states | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Unselected / selected / indeterminate: tri-state visual, the value stays binary | `checked` boolean + `indeterminate` boolean presentation flag; the submitted value follows `checked` alone |
-| Interaction states | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | enabled, hovered, focused, pressed, disabled | CSS states (hover, focus-visible, active, disabled), never props; all token-styled (002 precedent) |
-| Error / validity | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Error configuration of the checkbox | Constraint validation via `required`; the invalid presentation is a CSS state resolved from tokens, never a prop |
-| Label & anatomy | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1); the onmars text-emphasis token vocabulary (001 extraction) covers label styling | Control paired with a label; the label names the control | Default slot is the label and the accessible-name source; activating the label toggles the control |
-| Size & shape | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1); onmars ships an xs–xl metric vocabulary (001), checkbox-specific usage unverified | Single fixed control size inside a larger touch target; fixed radius | No `size` attribute in v1; control size, radius and gap are per-theme component tokens (a size axis would be an additive MINOR later) |
-| Grouping ("select all") | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Parent/child selection illustrated with the indeterminate state | Application-level composition; no checkbox-group element in v1 (Art. VII) |
+| Selection states | No checkbox frame in MarsUI (full-file sweep verified 2026-07-08); the file's only tick artifacts are icon glyphs (Check, Tick, Verification_tick) | Unselected / selected / indeterminate: tri-state visual, the value stays binary | `checked` boolean + `indeterminate` boolean presentation flag; the submitted value follows `checked` alone |
+| Interaction states | No MarsUI checkbox frame (verified 2026-07-08); the button state matrix (default/hover/focus/disabled, 002) is the file's closest state precedent | enabled, hovered, focused, pressed, disabled | CSS states (hover, focus-visible, active, disabled), never props; all token-styled (002 precedent) |
+| Error / validity | No MarsUI checkbox frame and no checkbox-level error artifact (verified 2026-07-08); tone ramps exist only at the token layer (001) | Error configuration of the checkbox | Constraint validation via `required`; the invalid presentation is a CSS state resolved from tokens, never a prop |
+| Label & anatomy | No MarsUI checkbox frame (verified 2026-07-08); the onmars text-emphasis token vocabulary (001 extraction) covers label styling | Control paired with a label; the label names the control | Default slot is the label and the accessible-name source; activating the label toggles the control |
+| Size & shape | No MarsUI checkbox frame (verified 2026-07-08); onmars ships an xs–xl metric vocabulary (001) with no checkbox-specific usage | Single fixed control size inside a larger touch target; fixed radius | No `size` attribute in v1; control size, radius and gap are per-theme component tokens (a size axis would be an additive MINOR later) |
+| Grouping ("select all") | No MarsUI checkbox frame, hence no grouping artifact (verified 2026-07-08) | Parent/child selection illustrated with the indeterminate state | Application-level composition; no checkbox-group element in v1 (Art. VII) |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -491,10 +491,11 @@ Feature: Checkbox
 ## Assumptions
 
 - No `variant`, `tone` or `size` attributes in v1: the Material 3 checkbox
-  is a single fixed-size control with no emphasis or intent axis, and no
-  verified MarsUI material shows one; metrics are per-theme component
-  tokens. A size axis, if the MarsUI frames reveal one at gate 1, would be
-  an additive MINOR (charter allows a subset with justification).
+  is a single fixed-size control with no emphasis or intent axis, and
+  MarsUI verification 2026-07-08 found no checkbox frame at all; metrics
+  are per-theme component tokens. A size axis, should a design source ever
+  demand one, would be an additive MINOR (charter allows a subset with
+  justification).
 - Because ki-checkbox carries no enum attributes, the charter-mandated
   unknown-value fallback scenario (002 S11 pattern) maps to
   boolean-attribute robustness: any present `checked` value — including
@@ -534,6 +535,8 @@ Feature: Checkbox
   activation.
 - Disabled follows native semantics (not focusable), as decided in 002; the
   focusable-when-disabled pattern remains a possible future enhancement.
-- The MarsUI checkbox frames are unverified (Figma connector unavailable
-  2026-07-08); the pending cells in the Design-source table are confirmed
-  at gate 1 and any resulting API change re-enters through this spec.
+- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
+  file): no checkbox component exists; the Design-source table records
+  that verified absence and the onmars theme styles ki-checkbox from the
+  001 token vocabulary. Any future MarsUI checkbox artifact re-enters
+  through this spec as additive MINOR.

@@ -25,21 +25,21 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 ## Design-source analysis (Figma)
 
 The API below abstracts the patterns confirmed in the M3 inventory note for
-this component, with the MarsUI column pending verification against the
-frames; the abstraction is additionally validated against the onmars token
-vocabulary extracted in 001, so that once the frames are read neither theme
-should lack expressive power (future themes inherit the same guarantee). Per
-the batch charter's honesty rule, cells not grounded in a read source — the
-whole MarsUI column and two M3 cells below — carry an explicit pending mark
-instead of invented content:
+this component; the MarsUI column was verified against the Figma file on
+2026-07-08 (full page sweep: MarsUI contains no switch component), and the
+abstraction is additionally validated against the onmars token vocabulary
+extracted in 001, so neither theme lacks expressive power (future themes
+inherit the same guarantee). Per the batch charter's honesty rule, cells not
+grounded in a read source — two M3 cells below — carry an explicit pending
+mark instead of invented content:
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-switch |
 |---|---|---|---|
-| On/off state | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Selected / unselected: a track with a handle that travels on selection | `checked` boolean attribute; both visual states resolve from component tokens |
-| Thumb icons | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Optional icons inside the handle for the on and off states | Out of v1 scope (Art. VII); a future additive surface (slots or theme tokens), never an attribute now |
-| Size | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | (pending verification against the M3 kit frames — not in the per-component M3 inventory note; Figma connector unavailable 2026-07-08; to confirm at gate 1) | No `size` attribute in v1 (charter: `size` only where the design sources scale the control); all metrics are per-theme component tokens |
-| Interaction states | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | enabled, hovered, focused, pressed, disabled | CSS states (hover, focus-visible, active, disabled), never props; all token-styled (002 precedent) |
-| Label | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | (pending verification against the M3 kit frames — not in the per-component M3 inventory note; Figma connector unavailable 2026-07-08; to confirm at gate 1) | Default slot carries the label and is the accessible-name source (charter slot convention) |
+| On/off state | No switch frame in MarsUI (full-file sweep verified 2026-07-08); the onmars token vocabulary covers it | Selected / unselected: a track with a handle that travels on selection | `checked` boolean attribute; both visual states resolve from component tokens |
+| Thumb icons | No MarsUI switch frame, hence no thumb-icon artifact (verified 2026-07-08) | Optional icons inside the handle for the on and off states | Out of v1 scope (Art. VII); a future additive surface (slots or theme tokens), never an attribute now |
+| Size | No MarsUI switch frame, so no switch size scale exists (verified 2026-07-08) | (pending verification against the M3 kit frames — not in the per-component M3 inventory note; Figma connector unavailable 2026-07-08; to confirm at gate 1) | No `size` attribute in v1 (charter: `size` only where the design sources scale the control); all metrics are per-theme component tokens |
+| Interaction states | No MarsUI switch frame (verified 2026-07-08); the button state matrix (default/hover/focus/disabled, 002) is the file's closest state precedent | enabled, hovered, focused, pressed, disabled | CSS states (hover, focus-visible, active, disabled), never props; all token-styled (002 precedent) |
+| Label | No MarsUI switch frame (verified 2026-07-08); the onmars text-emphasis token vocabulary (001) covers label styling | (pending verification against the M3 kit frames — not in the per-component M3 inventory note; Figma connector unavailable 2026-07-08; to confirm at gate 1) | Default slot carries the label and is the accessible-name source (charter slot convention) |
 | Switch vs checkbox semantics | — (product guidance, not a frame pattern) | Switch = immediate effect; checkbox = selection for later submission | Catalog when-to-use / when-NOT-to-use metadata (Art. I), not API surface |
 | Form participation | — (behavioral, not a frame pattern) | Form-associated control | ElementInternals per the 002 pattern: `name`/`value`, reset restores defaults, disabled fieldset/form honored |
 
@@ -429,11 +429,11 @@ Feature: Switch
 ## Assumptions
 
 - No `size` attribute in v1: neither design source is confirmed to scale
-  the switch — the M3 size cell and the whole MarsUI column are pending
-  frame verification — and the charter grants `size` only where the design
-  sources actually scale the control, so Art. VII (no speculative props)
-  excludes it. If verification finds scaled switches, `size` arrives as an
-  additive MINOR.
+  the switch — MarsUI verification 2026-07-08 found no switch frame at all
+  and the M3 size cell remains pending frame verification — and the charter
+  grants `size` only where the design sources actually scale the control,
+  so Art. VII (no speculative props) excludes it. If M3 verification finds
+  scaled switches, `size` arrives as an additive MINOR.
 - No `variant`/`tone` in v1: the switch has no emphasis scale and a single
   accent role in the reference design; the charter allows fewer axes than
   the 002 subset (Art. VII — no speculative props).
@@ -458,13 +458,14 @@ Feature: Switch
   never breaks.
 - The label is required content: the default slot is the accessible-name
   source and usage without it is documented as invalid in the catalog.
-- MarsUI switch specifics are pending verification against the frames
-  (Figma connector unavailable 2026-07-08; to confirm at gate 1); the
-  onmars token vocabulary already extracted in 001 (surfaces, tone ramps,
-  metrics) is sufficient to theme the abstraction above.
-- Gate 1 approval of this spec endorses an abstraction grounded only in
-  the per-component M3 inventory note plus the 001 token vocabulary: the
-  whole MarsUI column and two M3 cells (size, labeling pattern) remain
-  unverified, and the founder assumes that risk explicitly. If the frames
+- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
+  file): no switch component exists; the onmars token vocabulary already
+  extracted in 001 (surfaces, tone ramps, metrics) is sufficient to theme
+  the abstraction above.
+- Gate 1 approval of this spec endorses an abstraction grounded in the
+  per-component M3 inventory note plus the 001 token vocabulary: the
+  MarsUI column is verified (2026-07-08 — no switch component exists in
+  the file), two M3 cells (size, labeling pattern) remain unverified, and
+  the founder assumes that remaining risk explicitly. If the M3 frames
   later contradict a scope decision taken here, the correction arrives as
   an additive change, never a breaking one.

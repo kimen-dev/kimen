@@ -30,12 +30,12 @@ guarantee):
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-list |
 |---|---|---|---|
-| Item anatomy | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | leading element (icon, avatar or image), one to three lines of text (headline + supporting text), trailing element (icon, meta text or control) | `ki-list-item` slots: `start` (leading media), default (primary text), `secondary` (supporting text), `end` (trailing media/meta) |
+| Item anatomy | No list or list-item component in MarsUI (full-file sweep verified 2026-07-08); the closest row-like artifact is `Profile_dropdown` (leading avatar + text + trailing chevron), a menu trigger rather than a list item | leading element (icon, avatar or image), one to three lines of text (headline + supporting text), trailing element (icon, meta text or control) | `ki-list-item` slots: `start` (leading media), default (primary text), `secondary` (supporting text), `end` (trailing media/meta) |
 | Text hierarchy | text emphasis levels shipped in the token layer (001 extraction) map naturally to primary vs secondary text | headline and supporting-text type roles | primary and secondary text styled via `--ki-list-item-*` font and foreground tokens resolving from the semantic text-emphasis layer |
 | Height / density | xs–xl metric ramp exists in the shipped token vocabulary (001), but no verified evidence that lists scale through it | item height follows line count (one-line vs multi-line conditions), not a size prop | no `size` attribute: item min-height per line count is a per-theme component token; height derives from the content composed |
-| Separation | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | optional divider between items | separation (divider, spacing or nothing) is a theme token decision expressed in `--ki-list-item-*` border/gap tokens, never an attribute (002 Round/Square precedent, charter rule on pure-appearance axes) |
+| Separation | No list frame; MarsUI ships standalone `Divider_horizontal` / `Divider_vertical` component sets (align × ends=pointed\|rounded) rather than any list-divider attribute (verified 2026-07-08) | optional divider between items | separation (divider, spacing or nothing) is a theme token decision expressed in `--ki-list-item-*` border/gap tokens, never an attribute (002 Round/Square precedent, charter rule on pure-appearance axes) |
 | Surface | surface ramp s0–s5 shipped in the token layer (001 extraction); which step the list sits on is a theme decision | list container on a surface color role | list background resolves from the semantic surface layer through `--ki-list-*` tokens |
-| Interactivity & selection | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | interactive list items exist (hover/focus/pressed states, selection, drag) | Out of scope for v1: the list is non-interactive; controls compose inside the `start`/`end` slots (interactive list, menu and selection patterns are future features; the complex data table is explicitly out of v1 per roadmap) |
+| Interactivity & selection | No list frame, hence no interactive-item states to read (verified 2026-07-08) | interactive list items exist (hover/focus/pressed states, selection, drag) | Out of scope for v1: the list is non-interactive; controls compose inside the `start`/`end` slots (interactive list, menu and selection patterns are future features; the complex data table is explicitly out of v1 per roadmap) |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -428,16 +428,16 @@ Feature: List
 - Separation (M3 optional divider) is a pure-appearance axis each theme
   decides through component tokens (charter rule; 002 shape precedent); no
   divider attribute exists.
-- The MarsUI column of the design-source table is grounded only in the
-  shipped token vocabulary (001 extraction) and the 002 button analysis; the
-  MarsUI list frames are pending verification (Figma connector unavailable
-  2026-07-08; to confirm at gate 1). No Figma facts were invented.
-  **Explicit gate-1 decision batched for the founder**: approve this spec
-  with the MarsUI list frames unverified — accepting that a non-additive
-  divergence discovered later (e.g. an expected divider attribute, a dense
-  variant, or a three-region text anatomy that a slot rename cannot absorb)
-  would force a MAJOR change under Art. IX or a pre-1.0 respec — or hold
-  gate-1 approval until the frames are verified.
+- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
+  file): no list or list-item component exists — the row-like
+  `Profile_dropdown` is a menu trigger, and separation ships as standalone
+  `Divider_horizontal`/`Divider_vertical` components, consistent with
+  keeping the divider out of the item API. The formerly batched gate-1
+  decision (approve with frames unverified vs hold) is resolved: there is
+  no MarsUI list artifact to diverge from, so no non-additive divergence
+  (divider attribute, dense variant, three-region anatomy) exists; any
+  future MarsUI list pattern re-enters through this spec as additive
+  MINOR.
 - Structural `list`/`listitem` roles on the hosts (FR-005) are a justified
   deviation from the charter's "semantic HTML first" default: slotted
   light-DOM children make native `<ul>`/`<li>` semantics unable to cross the

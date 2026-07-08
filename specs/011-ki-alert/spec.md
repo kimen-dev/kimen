@@ -33,12 +33,12 @@ ones — style the same contract from their own color roles:
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-alert |
 |---|---|---|---|
-| Component existence | Dedicated alert/banner frame (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | No alert in M3: the snackbar is transient with a single action (it maps to the future ki-toast); the banner was an M2 component and did not carry into M3 | A persistent inline message; each theme styles it from its own container/on-color roles through `--ki-alert-*` tokens — no 1:1 M3 component is required, and the loose mapping is documented in the catalog's when-to-use |
+| Component existence | No dedicated alert/banner frame in MarsUI (full-file sweep verified 2026-07-08); the file's only message artifact is a transient `Toast` used in a documentation prototype, which maps to the future ki-toast, not to this persistent alert | No alert in M3: the snackbar is transient with a single action (it maps to the future ki-toast); the banner was an M2 component and did not carry into M3 | A persistent inline message; each theme styles it from its own container/on-color roles through `--ki-alert-*` tokens — no 1:1 M3 component is required, and the loose mapping is documented in the catalog's when-to-use |
 | Semantic intent | Tone ramps already exist in the extracted onmars token vocabulary: success, danger, info and warning alongside neutral (001 extraction) | Error color roles plus container/on-container pairs; no per-tone message component | `tone`: five values — `neutral` (default), `success`, `danger`, `info`, `warning` — the charter's full feedback vocabulary, token-resolved |
-| Content anatomy | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Snackbar anatomy (label + optional action + optional close icon) is transient and not 1:1 | Optional `heading` attribute + default slot for the message + opt-in dismiss control |
-| Dismissal | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Snackbar dismisses on a timer or via its close affordance | Explicit user dismissal only, opt-in via `dismissible`, notified as `ki-dismiss`; no auto-timeout (that is toast behavior) |
-| Surface style (filled / outlined) | onmars surfaces s0–s5 exist in the token vocabulary; which surface the alert frame uses is (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Container vs outlined surfaces are color-role decisions | No `variant`: filled-vs-outlined is a theme decision expressed in component tokens (002 precedent), never a prop |
-| Size | onmars metrics xs–xl exist as tokens; whether the alert frame scales is (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | No equivalent to scale against | No `size` in v1; alert metrics are per-theme component tokens |
+| Content anatomy | No alert frame (verified 2026-07-08); the MarsUI `Toast` shows leading tone icon + heading + supporting text + action buttons + close — toast anatomy, recorded for the future ki-toast | Snackbar anatomy (label + optional action + optional close icon) is transient and not 1:1 | Optional `heading` attribute + default slot for the message + opt-in dismiss control |
+| Dismissal | No alert frame (verified 2026-07-08); the MarsUI `Toast` auto-closes on a visible countdown and offers a close control — timer dismissal confirmed as toast behavior, not alert behavior | Snackbar dismisses on a timer or via its close affordance | Explicit user dismissal only, opt-in via `dismissible`, notified as `ki-dismiss`; no auto-timeout (that is toast behavior) |
+| Surface style (filled / outlined) | onmars surfaces s0–s5 exist in the token vocabulary; there is no alert frame to pin a surface to (verified 2026-07-08) | Container vs outlined surfaces are color-role decisions | No `variant`: filled-vs-outlined is a theme decision expressed in component tokens (002 precedent), never a prop |
+| Size | onmars metrics xs–xl exist as tokens; MarsUI has no alert frame, so no alert scale exists (verified 2026-07-08) | No equivalent to scale against | No `size` in v1; alert metrics are per-theme component tokens |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -491,11 +491,13 @@ Feature: Alert
   gate 1.
 - No `variant` and no `size` in v1 (charter deviation justified): neither
   source establishes an emphasis or size scale for alerts — Material 3 lacks
-  the component entirely and the MarsUI frame is pending verification. Both
-  axes would be additive MINOR changes later.
-- No tone icon and no `start`/`end` slots in v1: tone iconography, if the
-  MarsUI frame shows one, is a theme decision expressible through tokens or
-  a later additive slot — pending Figma verification at gate 1.
+  the component entirely and MarsUI verification 2026-07-08 found no alert
+  frame at all. Both axes would be additive MINOR changes later.
+- No tone icon and no `start`/`end` slots in v1: MarsUI verification
+  2026-07-08 found no alert frame; the file's transient `Toast` does show a
+  leading tone icon, so if that anatomy is ever inherited by the persistent
+  alert it lands as a theme token or an additive slot — per the recorded
+  assumption this is additive MINOR post-v1.
 - No auto-dismiss timer: time-based disappearance is toast behavior and
   explicitly out of scope (charter: M3 snackbar maps to the future
   ki-toast).

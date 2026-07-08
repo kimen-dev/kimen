@@ -29,26 +29,21 @@ guarantee):
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-select |
 |---|---|---|---|
-| Component identity | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | No select component; the equivalent is the exposed dropdown menu — a menu anchored to a text field | One `ki-select` trigger plus a popup list of `ki-option` children; each theme styles trigger and popup through component tokens (material3 via its text-field + menu roles) |
-| Trigger anatomy | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Text field container in filled or outlined style, with a label and a trailing dropdown icon | Visible `label` attribute, displayed value or placeholder, component-rendered dropdown indicator. Filled vs outlined is a token-layer decision, NOT a prop (002 shape precedent) |
-| Popup surface | The extracted onmars token vocabulary ships surface levels s0–s5 for elevated surfaces (001); select-frame specifics pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1 | Menu container elevated over the surface role | Popup background, elevation, radius and padding are `--ki-select-*` component tokens resolving from each theme's surface roles |
-| Option states | The onmars vocabulary carries text-emphasis levels (001); select-frame specifics pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1 | Menu list items with enabled, hovered, focused, disabled and selected states | Option states styled via option state tokens and CSS states, never props; the selected option is exposed as selected to assistive technology |
-| Size | The onmars vocabulary carries an xs–xl metric ramp (001); whether the select scales is pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1 | Single text-field height; no size scale for menus in the kit | No `size` attribute in v1 (charter: only where the sources scale the control); heights and metrics are per-theme component tokens. A size axis would be an additive MINOR if the MarsUI frames confirm one |
-| Interaction states (trigger) | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | enabled, hovered, focused, disabled | CSS states (hover, focus-visible, disabled), token-styled, never props |
-| Semantic intent | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Text field error state exists; validation-message display is a separate text-field concern | No `tone` axis; constraint validation (`required`) participates natively, validation-message display is post-v1 (003 precedent) |
+| Component identity | No select or dropdown-list component set in MarsUI (full-file sweep verified 2026-07-08); nearest artifacts are `Profile_dropdown` (avatar + name + chevron menu trigger) and `Payment_method` (Select_method=visa\|mastercard\|apple_pay\|g_pay picker row) — neither is a form select | No select component; the equivalent is the exposed dropdown menu — a menu anchored to a text field | One `ki-select` trigger plus a popup list of `ki-option` children; each theme styles trigger and popup through component tokens (material3 via its text-field + menu roles) |
+| Trigger anatomy | No select trigger frame (verified 2026-07-08); `Profile_dropdown` is the file's only trigger-like anatomy (leading avatar, label, trailing chevron) and chevron glyphs exist on the Icons page | Text field container in filled or outlined style, with a label and a trailing dropdown icon | Visible `label` attribute, displayed value or placeholder, component-rendered dropdown indicator. Filled vs outlined is a token-layer decision, NOT a prop (002 shape precedent) |
+| Popup surface | The extracted onmars token vocabulary ships surface levels s0–s5 for elevated surfaces (001); MarsUI ships no select popup frame (verified 2026-07-08) | Menu container elevated over the surface role | Popup background, elevation, radius and padding are `--ki-select-*` component tokens resolving from each theme's surface roles |
+| Option states | The onmars vocabulary carries text-emphasis levels (001); MarsUI ships no option-list frames (verified 2026-07-08) | Menu list items with enabled, hovered, focused, disabled and selected states | Option states styled via option state tokens and CSS states, never props; the selected option is exposed as selected to assistive technology |
+| Size | The onmars vocabulary carries an xs–xl metric ramp (001); MarsUI has no select frame, so no select size scale exists (verified 2026-07-08) | Single text-field height; no size scale for menus in the kit | No `size` attribute in v1 (charter: only where the sources scale the control); heights and metrics are per-theme component tokens. A size axis would be an additive MINOR if the MarsUI frames confirm one |
+| Interaction states (trigger) | No MarsUI select frame (verified 2026-07-08); the button state matrix (default/hover/focus/disabled, 002) is the file's closest state precedent | enabled, hovered, focused, disabled | CSS states (hover, focus-visible, disabled), token-styled, never props |
+| Semantic intent | No MarsUI select frame and no select-level tone artifact (verified 2026-07-08) | Text field error state exists; validation-message display is a separate text-field concern | No `tone` axis; constraint validation (`required`) participates natively, validation-message display is post-v1 (003 precedent) |
 
-**Verification risk (gate 1)**: every MarsUI cell above is pending, so the
-"union of both reference designs" guarantee is currently one-sided — the API
-below is effectively derived from Material 3 plus the onmars token vocabulary
-(001/002). Decisions the MarsUI frames could invalidate NON-additively if
-verification contradicts them: the trigger anatomy and the parts list
-(`trigger`, `label`, `value`, `indicator`, `listbox` — a MarsUI select
-demanding a different trigger anatomy, an error/tone visual, or a mandatory
-secondary text line in options would reshape parts and markup expectations),
-and the shape of the `--ki-select-*`/`--ki-option-*` token families. Purely additive risks (a
-confirmed `size` axis) are already scoped in the table. The founder approves
-at gate 1 with this asymmetry explicit; verifying the MarsUI select frames is
-a gate-1 action item.
+**Verification note (resolved 2026-07-08)**: the MarsUI file was swept page
+by page and contains no select component, so the former non-additive risk
+(a MarsUI select contradicting the trigger anatomy, parts list or token
+families) is void — there is nothing to contradict. The API is derived from
+Material 3 plus the onmars token vocabulary (001/002) by fact, not by lack
+of verification; the onmars theme styles ki-select from tokens alone. Any
+future MarsUI select artifact would be evaluated as additive MINOR.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -559,9 +554,9 @@ Feature: Select
 ## Assumptions
 
 - No `size`, `variant` or `tone` axes in v1: the M3 exposed dropdown menu
-  offers no such scales and the MarsUI select frames are unverified
-  (charter allows a subset with justification); any confirmed axis later is
-  an additive MINOR.
+  offers no such scales, and MarsUI verification 2026-07-08 found no select
+  frames at all (charter allows a subset with justification); any confirmed
+  axis later is an additive MINOR.
 - The selection's single source of truth is `ki-select`'s `value`;
   `ki-option` carries no `selected` attribute in v1 (avoids a dual source of
   truth; native-`selected` sugar could be additive later).

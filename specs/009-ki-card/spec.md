@@ -29,11 +29,11 @@ guarantee):
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-card |
 |---|---|---|---|
-| Style axis | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | 3 card types: elevated, filled, outlined | No attribute: elevation and border resolve from `--ki-card-*` component tokens; each theme picks its card style in the token layer (002 Round/Square precedent) |
+| Style axis | No card component in MarsUI (full-file sweep verified 2026-07-08); the surface ramp in the 001 token vocabulary is the onmars ground | 3 card types: elevated, filled, outlined | No attribute: elevation and border resolve from `--ki-card-*` component tokens; each theme picks its card style in the token layer (002 Round/Square precedent) |
 | Surface | surface ramp s0–s5 shipped in the token layer (001 extraction); which step the card maps to is a theme decision | surface-container color roles per card type | card surface, border and elevation are component tokens resolving from the semantic surface layer |
-| Content anatomy | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | media/image, header (title + subhead), supporting text, actions row | slots: `media`, `header`, default (body), `footer`; actions compose inside `footer` |
-| Shape | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | corner radius from the M3 shape scale | radius is a component token per theme, never a prop |
-| Interactivity | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | actionable cards exist (whole-card click with hover/pressed states) | Out of scope for v1: the card is non-interactive; interactive elements compose inside slots (whole-card interactivity is a possible future feature) |
+| Content anatomy | No MarsUI card frame (verified 2026-07-08); the file's only card-shaped artifacts are documentation covers/thumbnails, not UI components | media/image, header (title + subhead), supporting text, actions row | slots: `media`, `header`, default (body), `footer`; actions compose inside `footer` |
+| Shape | No MarsUI card frame (verified 2026-07-08); radius conventions exist only in the 001 token vocabulary | corner radius from the M3 shape scale | radius is a component token per theme, never a prop |
+| Interactivity | No MarsUI card frame, hence no actionable-card artifact (verified 2026-07-08) | actionable cards exist (whole-card click with hover/pressed states) | Out of scope for v1: the card is non-interactive; interactive elements compose inside slots (whole-card interactivity is a possible future feature) |
 | Size | xs–xl metric ramp exists in the shipped token vocabulary (001), but no verified evidence that cards scale through it | no size ramp; paddings fixed by the spec | no `size` attribute; paddings and gaps are per-theme component tokens |
 
 ## User Scenarios & Testing *(mandatory)*
@@ -361,32 +361,29 @@ Feature: Card
   future features; until then the catalog documents them as when-NOT-to-use.
 - No `size` or `tone` attributes: neither design source demonstrably scales
   cards through a size or intent ramp that the component must expose;
-  metrics are per-theme tokens. (M3 confirmed; MarsUI pending verification —
-  if the frames reveal a card scale it lands as additive MINOR.)
+  metrics are per-theme tokens. (M3 confirmed; MarsUI verified 2026-07-08 —
+  no card frame exists, so no card scale; any future one lands as additive
+  MINOR.)
 - Media full-bleed is a theme decision, not a structural rule: padding is
   per-region (`--ki-card-{media|header|body|footer}-padding`, applied to the
   regions, never to the card surface), and both shipped themes zero the
   media region's padding to match M3's edge-to-edge media. A theme that pads
   its media region instead needs no component change. This keeps the only
-  M3-grounded layout behavior out of the structural contract while the
-  MarsUI frames are pending verification.
+  M3-grounded layout behavior out of the structural contract; MarsUI has no
+  card frame to constrain it either way (verified 2026-07-08).
 - No dedicated `actions` slot in v1: actions compose inside `footer`
   (Art. VII — simplest design that satisfies the scenarios); a dedicated
   `actions` slot would be an additive MINOR change later.
-- The MarsUI column of the design-source table is grounded only in the
-  shipped token vocabulary (001 extraction); the MarsUI card frames are
-  pending verification (Figma connector unavailable 2026-07-08). No Figma
-  facts were invented. **Explicit decision submitted for founder
-  ratification at gate 1** (so approval does not rest on an open promise):
-  if the frames are still unavailable at approval, the onmars
-  `--ki-card-*` token values are defined without a reference frame —
+- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
+  file): no card component exists — the closest artifacts (File_cover,
+  Project thumbnail sheets) are documentation scaffolding, not UI cards.
+  **Explicit decision submitted for founder ratification at gate 1**: the
+  onmars `--ki-card-*` token values are defined without a reference frame —
   grounded in the shipped 001 vocabulary (surface ramp s0–s5, radius and
-  spacing scales) — and are reconciled against the frames as a visual
-  PATCH/MINOR once the connector returns. The API surface itself (four
-  slots, no attributes) does not depend on that reconciliation: it stands
-  on the charter's binding v1 scope for 009 and the M3 anatomy; if the
-  frames later reveal additional MarsUI card patterns they land as
-  additive MINOR.
+  spacing scales) — because none exists to mirror. The API surface itself
+  (four slots, no attributes) does not depend on that decision: it stands
+  on the charter's binding v1 scope for 009 and the M3 anatomy; if a future
+  MarsUI card pattern appears it lands as additive MINOR.
 - No RTL scenario: the card has no `start`/`end` slots and its regions stack
   in the block direction, so there is no observable inline order to assert
   (the 002 S13 precedent does not apply); FR-012 still mandates logical

@@ -29,12 +29,12 @@ guarantee):
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-tabs |
 |---|---|---|---|
-| Visual emphasis | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Two tab styles: primary tabs and secondary tabs (indicator treatment and emphasis differ) | No `variant` prop: the primary/secondary distinction is pure appearance a theme can decide, so it resolves as component tokens (002 precedent: M3 Round/Square became a radius token, not an attribute) |
-| Selection semantics | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Tabs switch content views; segmented buttons make a value selection — distinct components in the kit | Catalog metadata distinguishes view switching (ki-tabs) from value selection (radio group today, a possible segmented control later) |
+| Visual emphasis | No tabs component in MarsUI (full-file sweep verified 2026-07-08); the nearest artifacts — `Nav_indicator` and the `Indicator` dot set (State=active\|active_2\|inactive) — are navigation/position markers, not tab styles | Two tab styles: primary tabs and secondary tabs (indicator treatment and emphasis differ) | No `variant` prop: the primary/secondary distinction is pure appearance a theme can decide, so it resolves as component tokens (002 precedent: M3 Round/Square became a radius token, not an attribute) |
+| Selection semantics | No tabs or segmented-control component in MarsUI (verified 2026-07-08) | Tabs switch content views; segmented buttons make a value selection — distinct components in the kit | Catalog metadata distinguishes view switching (ki-tabs) from value selection (radio group today, a possible segmented control later) |
 | Accessibility pattern | Not a Figma concern; the onmars token vocabulary carries no interaction semantics | ARIA tablist/tab/tabpanel with automatic activation | APG Tabs pattern: roving tabindex, automatic activation, arrow-key navigation. New interaction pattern in the repo → manual walkthrough flag |
-| Content anatomy | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Tab item: label with optional leading icon | `ki-tab`: default slot (label, accessible-name source) + `start`/`end` slots for icons/media; panels are free content in `ki-tab-panel` |
-| Interaction states | Frames pending as above; the onmars token layer already ships surfaces s0–s5 and text-emphasis levels the tab states can resolve from | enabled, hovered, focused, pressed, plus the active-tab indicator | CSS states (hover, focus-visible, active, disabled) styled through tokens, never props; selection is a managed state, reflected as `selected` for observation and token-driven styling |
-| Metrics | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1); the onmars metric scale xs–xl exists in the token layer if needed | Fixed tab-bar height per style; no author-facing size scale | No `size` prop in v1 (charter: `size` only where the design sources scale the control); heights, paddings and indicator metrics are per-theme component tokens |
+| Content anatomy | No tab-item anatomy in MarsUI (verified 2026-07-08) | Tab item: label with optional leading icon | `ki-tab`: default slot (label, accessible-name source) + `start`/`end` slots for icons/media; panels are free content in `ki-tab-panel` |
+| Interaction states | No tab state frames in MarsUI (verified 2026-07-08); the onmars token layer already ships surfaces s0–s5 and text-emphasis levels the tab states can resolve from | enabled, hovered, focused, pressed, plus the active-tab indicator | CSS states (hover, focus-visible, active, disabled) styled through tokens, never props; selection is a managed state, reflected as `selected` for observation and token-driven styling |
+| Metrics | No tabs frame, so no tab metrics or scale exist in MarsUI (verified 2026-07-08); the onmars metric scale xs–xl exists in the token layer if needed | Fixed tab-bar height per style; no author-facing size scale | No `size` prop in v1 (charter: `size` only where the design sources scale the control); heights, paddings and indicator metrics are per-theme component tokens |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -444,8 +444,9 @@ Feature: Tabs
 - No `variant`, `tone` or `size` props: the M3 primary/secondary tab styles
   are pure appearance resolved in the token layer (002 shape precedent), no
   semantic-intent axis exists for tabs, and neither source scales tabs
-  through an author-facing size (MarsUI frames pending verification; if they
-  surface a real scale it arrives as an additive change).
+  through an author-facing size (MarsUI verification 2026-07-08: no tabs
+  component exists at all; should a future source surface a real scale it
+  arrives as an additive change).
 - Overflow behavior (scrollable tab strips) is out of v1 scope; authors keep
   tab sets small enough to fit. Documented in the catalog guidance.
 - M3's stacked icon-above-label primary-tab layout is a theme-layer

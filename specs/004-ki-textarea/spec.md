@@ -32,13 +32,13 @@ theme lacks expressive power (and future themes inherit the same guarantee):
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-textarea |
 |---|---|---|---|
-| Component split | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | No separate textarea component: multi-line is a configuration of the text field | A dedicated `ki-textarea` element: the underlying native control and its form semantics (Enter inserts a line, height in `rows`, content as text not attribute) differ from single-line input |
-| Container style | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Filled and outlined text-field styles | Surface treatment (filled vs outlined) is a theme decision expressed in component tokens, never a prop (002 shape precedent) |
-| Label | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Label floats between placeholder position and the field's edge | Visible `label` prop rendered statically by the component and sourcing the accessible name; M3's floating-label motion is not reproduced in v1 (the component has no motion, so no reduced-motion surface) |
-| Supporting text / counter | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Supporting text and character counter below the field | Out of v1 scope, post-v1 additive (charter alignment with ki-input); constraint validation itself still participates natively |
-| Height / size | The onmars token layer ships an xs–xl metrics vocabulary; textarea-specific usage (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | The multi-line field's height comes from its configured lines, not a size ramp | `rows` attribute sets the visible line count (default 2, native parity); no `size` axis in v1; all metrics resolve from component tokens |
-| Interaction states | Tone ramps and text-emphasis levels exist in the onmars token vocabulary (001 extraction); the textarea state matrix (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | enabled, hovered, focused, error, disabled | CSS states (hover, focus-visible, disabled, readonly, invalid), token-styled, never props (state vocabulary aligned with ki-input 003); on-screen validation-message display remains post-v1 |
-| Auto-grow | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Multi-line field may grow as the user types | Out of v1 (charter): height is fixed by `rows`; auto-grow is a possible future additive feature |
+| Component split | No textarea (nor any text-field) frame in MarsUI — full-file sweep verified 2026-07-08; the onmars token vocabulary covers it | No separate textarea component: multi-line is a configuration of the text field | A dedicated `ki-textarea` element: the underlying native control and its form semantics (Enter inserts a line, height in `rows`, content as text not attribute) differ from single-line input |
+| Container style | No MarsUI textarea frame (verified 2026-07-08); the onmars surface treatment grounds in the 001 token vocabulary | Filled and outlined text-field styles | Surface treatment (filled vs outlined) is a theme decision expressed in component tokens, never a prop (002 shape precedent) |
+| Label | No MarsUI textarea frame (verified 2026-07-08), so no label treatment to mirror | Label floats between placeholder position and the field's edge | Visible `label` prop rendered statically by the component and sourcing the accessible name; M3's floating-label motion is not reproduced in v1 (the component has no motion, so no reduced-motion surface) |
+| Supporting text / counter | No MarsUI textarea frame and no supporting-text or counter artifact in the file (verified 2026-07-08) | Supporting text and character counter below the field | Out of v1 scope, post-v1 additive (charter alignment with ki-input); constraint validation itself still participates natively |
+| Height / size | The onmars token layer ships an xs–xl metrics vocabulary; MarsUI has no textarea frame, so no textarea-specific usage exists (verified 2026-07-08) | The multi-line field's height comes from its configured lines, not a size ramp | `rows` attribute sets the visible line count (default 2, native parity); no `size` axis in v1; all metrics resolve from component tokens |
+| Interaction states | Tone ramps and text-emphasis levels exist in the onmars token vocabulary (001 extraction); MarsUI has no textarea state frames (verified 2026-07-08) | enabled, hovered, focused, error, disabled | CSS states (hover, focus-visible, disabled, readonly, invalid), token-styled, never props (state vocabulary aligned with ki-input 003); on-screen validation-message display remains post-v1 |
+| Auto-grow | No MarsUI textarea frame and no auto-grow artifact (verified 2026-07-08) | Multi-line field may grow as the user types | Out of v1 (charter): height is fixed by `rows`; auto-grow is a possible future additive feature |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -485,22 +485,23 @@ Feature: Textarea
 
 - Default `rows` is 2, matching the native multiline control (Art. IV, least
   surprise); themes may still size line metrics through tokens.
-  [NEEDS CLARIFICATION: default row count rests on native parity, not on the
-  unverified MarsUI textarea frames — founder to confirm or override at
+  [NEEDS CLARIFICATION: default row count rests on native parity — MarsUI
+  verification 2026-07-08 found no textarea frame, so there is no
+  design-source default to mirror; founder to confirm or override at
   gate 1.]
 - No `size` axis in v1: Material 3's multi-line field takes its height from
   its configured lines rather than a size ramp; adding `size` later is an
   additive MINOR change (charter allows subsets with justification).
-  [NEEDS CLARIFICATION: the MarsUI textarea frames are unverified — if they
-  carry a size ramp, the founder decides at gate 1 whether `size` enters v1
-  or lands as the additive MINOR.]
+  MarsUI verification 2026-07-08: no textarea frame exists, hence no size
+  ramp to inherit; `size` stays out of v1 and any future axis lands as
+  additive MINOR.
 - No slots in v1 (deviation from ki-input's `start`/`end` affix slots,
   justified per charter): the label is a prop, and leading/trailing affixes
   on a multiline field are awkward in M3's multi-line configuration.
   Simplest design that satisfies the scenarios (Art. VII); affix slots would
-  be additive MINOR later. [NEEDS CLARIFICATION: the MarsUI textarea frames
-  are unverified — if they show affixes on the multiline field, the founder
-  decides at gate 1 whether `start`/`end` slots enter v1.]
+  be additive MINOR later. MarsUI verification 2026-07-08: no textarea
+  frame exists, so no multiline affixes are shown anywhere; slots stay out
+  of v1 and would land as additive MINOR.
 - The initial value is declared through the `value` attribute, never through
   element text content (API parity with ki-input, one uniform authoring
   contract for agents across the batch). The Input section's contrast with
@@ -542,9 +543,11 @@ Feature: Textarea
   validation-message display and supporting text remain post-v1; validity
   itself is reported through native constraint validation and the
   accessibility tree.
-- MarsUI cells marked pending in the design-source table are to be confirmed
-  at gate 1 (Figma connector unavailable 2026-07-08, per the batch honesty
-  rule); the API is defensible from the M3 inventory plus the batch charter
-  regardless of the outcome, and the three MarsUI-dependent scope decisions
-  above carry explicit [NEEDS CLARIFICATION] markers so the founder approves
-  them as open questions, not settled defaults.
+- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
+  file): no textarea or text-field frame exists — the file covers buttons,
+  avatars, icons, feature icons, media and miscellaneous artifacts only.
+  The API stands on the M3 inventory plus the batch charter; of the three
+  formerly MarsUI-dependent scope decisions, size ramp and affix slots are
+  resolved by the verification (no frame, stay out of v1), and the default
+  row count keeps its [NEEDS CLARIFICATION] marker as a founder call on
+  native parity.

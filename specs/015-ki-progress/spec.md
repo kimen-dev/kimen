@@ -33,29 +33,30 @@ unknown-duration waiting. Kimen abstracts all of that into one `ki-progress`:
 `shape` selects linear or circular, `indeterminate` selects the mode, and the
 loading-indicator use is the indeterminate mode (Art. VII — the simplest
 design that satisfies the scenarios, no speculative extra component). The
-MarsUI progress frame has not yet been read; its column is grounded only in
-what the 001 token extraction and the 002 button analysis established:
+MarsUI file was verified page by page on 2026-07-08: it contains no progress
+component — its only waiting-related artifact is the `Icon / Loader` spinner
+glyph on the Icons page — so its column records that verified absence
+alongside what the 001 token extraction and the 002 button analysis
+established:
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-progress |
 |---|---|---|---|
-| Component split / modes | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Two separate components — linear and circular progress indicators — each with determinate and indeterminate modes; a newer loading-indicator artifact covers expressive waiting | One element: `shape: linear \| circular` plus an `indeterminate` boolean; the M3 loading-indicator use maps to the indeterminate mode (Art. VII, no extra component) |
-| Anatomy | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | An active indicator advancing over a track | `track` and `indicator` parts; every metric and color resolves from `--ki-progress-*` component tokens |
-| Semantic intent | Token layer ships full tone ramps including info and warning (001 extraction); progress-frame tone usage pending verification (see above) | Single accent color role; no intent axis on the indicator | No `tone` in v1 — progress is not in the charter's feedback-component list and neither source shows intent-colored progress; colors are token-resolved and a future tone axis would be additive MINOR |
-| Size | Metric scale xs–xl exists in the onmars token vocabulary (001); progress-specific size steps pending verification (see above) | No size scale in the inventory notes; metrics fixed per component | No `size` attribute in v1 (charter: size only where the sources scale the control); track thickness and ring diameter are per-theme component tokens |
-| Interactivity | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Non-interactive output; no pointer or keyboard behavior | Non-interactive: never focusable, no events, output-only status |
-| Motion | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Indeterminate modes animate continuously | Indeterminate animation is token-scheduled and respects `prefers-reduced-motion` (Art. V): no continuous motion when reduced motion is requested; the stilled presentation is a theme decision |
+| Component split / modes | No linear or circular progress component in MarsUI (full-file sweep verified 2026-07-08); the only waiting-related artifact is the `Icon / Loader` glyph (24 px spinner icon) | Two separate components — linear and circular progress indicators — each with determinate and indeterminate modes; a newer loading-indicator artifact covers expressive waiting | One element: `shape: linear \| circular` plus an `indeterminate` boolean; the M3 loading-indicator use maps to the indeterminate mode (Art. VII, no extra component) |
+| Anatomy | No progress frame, hence no track/indicator anatomy to read (verified 2026-07-08) | An active indicator advancing over a track | `track` and `indicator` parts; every metric and color resolves from `--ki-progress-*` component tokens |
+| Semantic intent | Token layer ships full tone ramps including info and warning (001 extraction); no progress frame exists, so no frame tone usage (verified 2026-07-08) | Single accent color role; no intent axis on the indicator | No `tone` in v1 — progress is not in the charter's feedback-component list and neither source shows intent-colored progress; colors are token-resolved and a future tone axis would be additive MINOR |
+| Size | Metric scale xs–xl exists in the onmars token vocabulary (001); no progress frame and no progress size steps in MarsUI (verified 2026-07-08) | No size scale in the inventory notes; metrics fixed per component | No `size` attribute in v1 (charter: size only where the sources scale the control); track thickness and ring diameter are per-theme component tokens |
+| Interactivity | No progress frame (verified 2026-07-08); nothing in MarsUI suggests an interactive indicator | Non-interactive output; no pointer or keyboard behavior | Non-interactive: never focusable, no events, output-only status |
+| Motion | No progress frame and no motion spec in MarsUI (verified 2026-07-08); the `Icon / Loader` glyph implies spinner-style waiting but defines no animation | Indeterminate modes animate continuously | Indeterminate animation is token-scheduled and respects `prefers-reduced-motion` (Art. V): no continuous motion when reduced motion is requested; the stilled presentation is a theme decision |
 
-**Gate-1 basis note (single-source risk)**: the MarsUI progress frames remain
-unread (Figma connector unavailable 2026-07-08), so every API-shaping decision
-above rests on the Material 3 inventory notes plus the 001 token vocabulary
-alone — including for the default theme's own design source. Founder approval
-at gate 1 is therefore explicitly conditional: sign-off records acceptance of
-that single-source basis for the v1 decisions (single component, no `size`,
-no `tone`, token-only metrics). If the MarsUI frames, once read, contradict
-any of them — a size scale, tone usage, different thickness or diameter
-semantics — the spec is revised and re-approved before implementation;
-"additive MINOR later" is not invoked to paper over wrongly chosen v1
-defaults.
+**Gate-1 basis note (single-source basis, verified)**: the MarsUI file was
+verified on 2026-07-08 (full page sweep) and contains no progress component —
+only the `Icon / Loader` spinner glyph — so every API-shaping decision above
+rests on the Material 3 inventory notes plus the 001 token vocabulary, now as
+a verified fact rather than an unread-frame risk. Founder sign-off at gate 1
+records acceptance of that single-source basis for the v1 decisions (single
+component, no `size`, no `tone`, token-only metrics); no MarsUI progress
+artifact exists to contradict them, and any future one would re-enter through
+this spec before implementation.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -473,9 +474,9 @@ Feature: Progress
   pure-appearance decision a theme can make (distinct from the 002 radius
   precedent, where shape was appearance only).
 - No `size` attribute in v1: the M3 inventory notes show no size scale and
-  the MarsUI frame is pending verification; thickness and diameter are
-  per-theme component tokens (Art. VII). A size axis would be an additive
-  MINOR change if the design sources justify it.
+  MarsUI verification 2026-07-08 found no progress frame at all; thickness
+  and diameter are per-theme component tokens (Art. VII). A size axis would
+  be an additive MINOR change if the design sources justify it.
 - No `tone` attribute in v1: progress is not in the charter's
   feedback-component list and neither source shows intent-colored
   indicators; indicator color is a token-layer decision.
@@ -497,10 +498,10 @@ Feature: Progress
   indefinitely-running animations play (FR-009's deterministic oracle).
   Visual distinguishability from a determinate indicator is documented
   design guidance for theme authors, outside the gated Success Criteria.
-- The MarsUI progress frame is unverified (Figma connector unavailable
-  2026-07-08); the MarsUI column of the design-source table is grounded only
-  in the 001 token extraction and the 002 button analysis. Gate-1 approval is
-  explicitly conditional on that single-source basis (see the gate-1 basis
-  note under the design-source table): founder sign-off records its
-  acceptance, and a later contradiction from the MarsUI frames reopens the
-  spec before implementation.
+- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
+  file): no progress component exists — the only waiting-related artifact
+  is the `Icon / Loader` spinner glyph. The single-source basis (M3
+  inventory + 001 token vocabulary) is therefore a verified fact (see the
+  gate-1 basis note under the design-source table): founder sign-off
+  records its acceptance, and any future MarsUI progress artifact reopens
+  the spec before implementation.

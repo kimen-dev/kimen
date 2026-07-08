@@ -29,21 +29,22 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 The Material 3 "badge" is a narrower artifact than ki-badge: a notification
 dot or numeric counter overlaid on a navigation item. The M3 → Kimen mapping
 is therefore PARTIAL — ki-badge is the standalone status pill, and the M3
-overlay use is deliberately deferred to a future component. The MarsUI badge
-frame has not yet been read; its column is grounded only in what the 001
-token extraction and the 002 button analysis established. The requirements
-that hinge on that frame (FR-001, FR-002, the no-variant assumption) carry
-explicit [NEEDS CLARIFICATION] markers, and the verification is a batched
-founder question for gate 1 (see Assumptions) — work does not idle on it:
+overlay use is deliberately deferred to a future component. The MarsUI file
+was verified on 2026-07-08 (full page sweep): it contains no badge pill;
+its only status artifact is the tiny `Status` dot set (Miscellaneous page,
+Type=success|warning|danger|disabled × Outline=True|False — unlabeled ~4 px
+dots), which maps to the M3-style dot concern, not to this pill. The
+formerly frame-dependent requirements (FR-001, FR-002, the no-variant
+assumption) record the verified result inline:
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-badge |
 |---|---|---|---|
-| Role / anatomy | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Notification dot or numeric counter overlaid on a navigation item's icon; no standalone status pill | ki-badge is a standalone static pill labeling a nearby item; the M3 overlay dot/counter is a distinct future concern (nav badge). Mapping is partial and documented |
-| Semantic intent | Token layer ships full tone ramps including info and warning (001 extraction); badge-frame tone usage pending verification (see above) | Single color role (error container) — no tone axis on the badge itself | `tone`: neutral (default), success, danger, info, warning — the full feedback vocabulary per the charter, token-resolved. material3 defines no info/warning color roles; under material3 those two tones resolve through the inherited shared/onmars ramps via the semantic cascade (001 contract) |
-| Size | Metric scale xs–xl exists in the onmars token vocabulary (001); badge-specific size steps pending verification (see above) | Small (dot) vs large (counter) — sizes serve the overlay use, not a pill scale | `size`: sm, md (default md) — charter v1 subset of the shared xs–xl scale; metrics are per-theme component tokens |
-| Content | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | A number with max-value truncation ("999+"-style), or none (dot) | Default slot with a short text label; numeric truncation belongs to the future overlay badge, out of v1 |
-| Interactivity | (pending verification against the MarsUI frames — Figma connector unavailable 2026-07-08; to confirm at gate 1) | Non-interactive; meaning is announced through the host navigation item | Non-interactive: never focusable, no events, no dismiss affordance in v1 |
-| Shape | Fixed pill radius expected from the onmars metric conventions; pending verification (see above) | Fully rounded shape | Pill radius is a component token per size; shape is a theme decision, NOT a prop (002 precedent) |
+| Role / anatomy | No badge pill in MarsUI (verified 2026-07-08); closest artifact is the `Status` dot set (Type=success\|warning\|danger\|disabled × Outline=True\|False) — unlabeled ~4 px status dots, closer to M3's overlay dot than to a labeled pill | Notification dot or numeric counter overlaid on a navigation item's icon; no standalone status pill | ki-badge is a standalone static pill labeling a nearby item; the M3 overlay dot/counter is a distinct future concern (nav badge). Mapping is partial and documented |
+| Semantic intent | Token layer ships full tone ramps including info and warning (001 extraction); the `Status` dot set uses success\|warning\|danger\|disabled — no info tone and no labeled-badge tone usage in the file (verified 2026-07-08) | Single color role (error container) — no tone axis on the badge itself | `tone`: neutral (default), success, danger, info, warning — the full feedback vocabulary per the charter, token-resolved. material3 defines no info/warning color roles; under material3 those two tones resolve through the inherited shared/onmars ramps via the semantic cascade (001 contract) |
+| Size | Metric scale xs–xl exists in the onmars token vocabulary (001); no badge size steps in MarsUI — the `Status` dots ship in a single size (verified 2026-07-08) | Small (dot) vs large (counter) — sizes serve the overlay use, not a pill scale | `size`: sm, md (default md) — charter v1 subset of the shared xs–xl scale; metrics are per-theme component tokens |
+| Content | No labeled badge in MarsUI (verified 2026-07-08); the `Status` dot carries no text or counter | A number with max-value truncation ("999+"-style), or none (dot) | Default slot with a short text label; numeric truncation belongs to the future overlay badge, out of v1 |
+| Interactivity | The `Status` dot set is purely presentational — its only axes are tone and Outline, no interaction states (verified 2026-07-08) | Non-interactive; meaning is announced through the host navigation item | Non-interactive: never focusable, no events, no dismiss affordance in v1 |
+| Shape | No badge pill to verify; the `Status` dot renders round (screenshot-verified 2026-07-08), and pill radius grounds in the onmars metric conventions (001) | Fully rounded shape | Pill radius is a component token per size; shape is a theme decision, NOT a prop (002 precedent) |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -238,14 +239,15 @@ Feature: Badge
 - **FR-001**: The badge MUST expose a `tone` attribute with exactly five
   semantic values — `neutral` (default), `success`, `danger`, `info`,
   `warning` — describing intent, never appearance; each tone resolves its
-  colors from the token layer. [NEEDS CLARIFICATION: MarsUI badge frame
-  unverified (Figma connector unavailable 2026-07-08) — confirm at gate 1
-  that the frame's badge anatomy and tone usage fit the charter's five-tone,
-  text-only pill (no icon anatomy, no dot mode)]
+  colors from the token layer. (MarsUI verified 2026-07-08: the file has no
+  badge pill — its `Status` dot set (success|warning|danger|disabled, no
+  info) is unlabeled and maps to the future overlay/dot concern — so the
+  five-tone, text-only pill stands on the charter and the 001 tone ramps.)
 - **FR-002**: The badge MUST expose a `size` attribute with values `sm` and
   `md` (default `md`); metrics per size are per-theme component tokens,
-  never hardcoded. [NEEDS CLARIFICATION: MarsUI badge frame unverified —
-  confirm at gate 1 that the sm/md subset covers the frame's badge scale]
+  never hardcoded. (MarsUI verified 2026-07-08: no badge frame and no badge
+  size steps exist; the sm/md subset is a charter decision over the shared
+  xs–xl token scale.)
 - **FR-003**: The label MUST compose through the default slot, and the
   slotted text MUST be the sole carrier of the status meaning; tone color
   reinforces but never replaces it (WCAG 1.4.1).
@@ -345,21 +347,25 @@ Feature: Badge
   scenarios). Additional sizes would be additive MINOR changes if the design
   sources justify them.
 - No `variant` attribute: neither design source shows an emphasis scale for
-  badges (M3's badge has none; the MarsUI frame is pending verification). A
-  filled-vs-soft/outlined pill treatment, if a theme wants it, is a
-  token-layer decision, not a prop (002 shape precedent) — executable
+  badges (M3's badge has none; MarsUI verified 2026-07-08 has no badge
+  pill). A filled-vs-soft/outlined pill treatment, if a theme wants it, is
+  a token-layer decision, not a prop (002 shape precedent) — executable
   because the token family declares `--ki-badge-border-width` alongside the
-  per-tone border colors. [NEEDS CLARIFICATION: MarsUI badge frame
-  unverified — confirm at gate 1 that the frame shows no emphasis /
-  filled-vs-soft variant axis for badges]
-- The MarsUI badge frame is unverified (Figma connector unavailable
-  2026-07-08); the MarsUI column of the design-source table is grounded only
-  in the 001 token extraction and the 002 button analysis. Verification is a
-  batched founder question at gate 1 (work does not idle on it): confirm
-  (a) no variant/emphasis axis, (b) no icon or dot anatomy beyond the
-  default text slot, (c) the sm/md badge scale, (d) tone usage within the
-  five-tone vocabulary. If the frame contradicts any of these, the affected
-  FRs change before approval, not after.
+  per-tone border colors. MarsUI verification 2026-07-08: the only
+  appearance axis on the related `Status` dot set is Outline=True|False,
+  exactly the filled-vs-outlined treatment the token layer already
+  expresses; per the recorded assumption an emphasis axis would land as
+  additive MINOR post-v1.
+- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
+  file) resolved the batched founder question: (a) no variant/emphasis axis
+  exists — the `Status` dot's only appearance axis is Outline=True|False, a
+  token-layer treatment; (b) no badge pill anatomy exists at all — the
+  `Status` dot is unlabeled and belongs to the future overlay/dot concern;
+  (c) MarsUI defines no badge size steps, so sm/md stands as the charter
+  subset; (d) frame tone usage is success|warning|danger|disabled on the
+  dot — info appears only in the 001 token ramps, which the five-tone
+  vocabulary already covers. No FR changes; the verified facts are recorded
+  inline in FR-001/FR-002 and the design-source table.
 - Non-interactive and not dismissible per the charter: dismissal/removal
   belongs to a future chip-like component; the notification dot/counter
   overlay (M3's actual badge) is a separate future component.
