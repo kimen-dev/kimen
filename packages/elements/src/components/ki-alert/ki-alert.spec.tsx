@@ -137,4 +137,29 @@ describe('resolveDismissFocusTarget', () => {
 
     expect(resolveDismissFocusTarget(host)).toBeNull();
   });
+
+  it('S16/FR-013 hands focus to the following element in document order when nested', () => {
+    while (document.body.firstChild) {
+      document.body.firstChild.remove();
+    }
+    const main = document.createElement('main');
+    const before = document.createElement('button');
+    const section = document.createElement('section');
+    const host = document.createElement('ki-alert');
+    const inside = document.createElement('button');
+    const after = document.createElement('button');
+    before.textContent = 'Before';
+    inside.textContent = 'Dismiss';
+    after.textContent = 'After';
+    // before → [ section → host(alert) ] → after, all under <main>
+    section.append(host);
+    main.append(before, section, after);
+    document.body.append(main);
+    host.attachShadow({ mode: 'open' }).append(inside);
+    Object.defineProperty(host.shadowRoot, 'activeElement', { value: inside, configurable: true });
+
+    // A body-children scan would miss the nested host and return `before`;
+    // a real document-order walk returns `after`.
+    expect(resolveDismissFocusTarget(host)).toBe(after);
+  });
 });
