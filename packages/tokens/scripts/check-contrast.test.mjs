@@ -6,6 +6,7 @@ import {
   contrastRatio,
   parseColor,
   relativeLuminance,
+  resolveComponentPatterns,
   resolveContrastPairs,
 } from './check-contrast.mjs';
 
@@ -40,4 +41,21 @@ test('contrast pair table covers the declared data-model pairs', () => {
       ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
     ],
   );
+});
+
+test('component sweep includes button AA and radio non-text indicator patterns', () => {
+  const patterns = resolveComponentPatterns();
+
+  assert.deepEqual(
+    patterns.map((pattern) => [pattern.name, pattern.minRatio]),
+    [
+      ['ki-button interactive cells', 4.5],
+      ['ki-radio selected dot cells', 3],
+    ],
+  );
+  assert.equal(patterns[1].bgPattern.test('--ki-radio-selected-rest-bg'), true);
+  assert.equal(patterns[1].bgPattern.test('--ki-radio-selected-hover-bg'), true);
+  assert.equal(patterns[1].bgPattern.test('--ki-radio-selected-active-bg'), true);
+  assert.equal(patterns[1].bgPattern.test('--ki-radio-unselected-rest-bg'), false);
+  assert.equal(patterns[1].bgPattern.test('--ki-radio-selected-disabled-bg'), false);
 });
