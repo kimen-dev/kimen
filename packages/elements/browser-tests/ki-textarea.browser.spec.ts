@@ -346,8 +346,14 @@ describe('ki-textarea in a real browser', () => {
     await userEvent.click(submit);
     expect(submittedData?.get('comments')).toBe('Great service');
 
+    // Review round 1 gate-gap pin: programmatic assignment is silent.
+    const observed: string[] = [];
+    el.addEventListener('input', () => observed.push('input'));
+    el.addEventListener('change', () => observed.push('change'));
+
     el.value = 'Great service\nCall again';
     await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(observed).toEqual([]);
     await userEvent.click(submit);
 
     expect(submittedData?.get('comments')).toBe('Great service\nCall again');

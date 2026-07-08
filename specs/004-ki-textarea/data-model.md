@@ -22,19 +22,17 @@ Enter/height semantics.
 | `disabled` | boolean | `false` | yes (forwarded) | — |
 | `autocomplete` | string (autofill detail tokens, e.g. `street-address`) | — | yes (forwarded verbatim) | omitted → no declared entry purpose |
 
-## Value model (native dirty-value semantics — ADOPTED from 003 D2)
+## Value model (single reactive channel — ADOPTED from 003 D2, amended review round 1)
 
 ```text
                      declared default = value ATTRIBUTE (live)
                               │
-   first render ──────────────┘  value property = attribute ?? ''   dirty=false
         │
-        ├─ user types      → property updates per keystroke,  dirty=true,
+        ├─ user types      → property updates per keystroke,
         │                    composed input events; change on commit (S1, S20)
         │                    Enter inserts "\n" INTO the value (S2, S8)
         ├─ page assigns
-        │  el.value = x    → display replaced, NO events,     dirty=true
-        └─ form reset      → property := attribute ?? '',     dirty=false,
+        │  el.value = x    → display replaced, NO events,
                              user edits and programmatic
                              assignments discarded (S13)
 ```
@@ -148,3 +146,5 @@ composed re-dispatched `change` are the only signals (S1, S20).
 No default slot: the label is an attribute (accessible-name wiring by
 construction) and the initial value is the `value` attribute (uniform
 authoring contract for agents across the batch, spec Assumptions).
+
+> Review round 1: no dirty flag exists in the implementation — attribute and property assignments share one reactive channel and both replace the display silently; reset restores the attribute's current value. The table above reflects the shipped model.

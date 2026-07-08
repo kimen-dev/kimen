@@ -146,9 +146,12 @@ observe default rendering.
   ki-input). The catalog documents this as an agent note — preloading text as
   element content is not supported usage and never breaks rendering.
 - Form reset restores the value the field was declared with, discarding user
-  edits (native dirty-value semantics). After the user has edited, mutating
-  the declared `value` attribute does not overwrite the user's text;
-  assigning the `value` property replaces it (native parity).
+  edits. Declared deviation from native dirty-value semantics (adopted from
+  003 D2, amended in review round 1 with founder confirmation at the merge
+  gate): mutating the declared `value` attribute after a user edit ALSO
+  replaces the displayed text, silently — the attribute and the property
+  converge in the same reactive channel; reset restores the attribute's
+  current value.
 - Enter inside the textarea never submits the enclosing form — the exact
   opposite of the single-line input convention; both components document this
   in the catalog.
@@ -358,9 +361,12 @@ Feature: Textarea
   construction).
 - **FR-002**: The textarea MUST expose `name` and `value`: typing updates the
   field's `value`, and the value the field was declared with is what form
-  reset restores. Native dirty-value semantics apply to programmatic changes:
-  after the user has edited, mutating the declared `value` attribute does not
-  overwrite the user's text, while assigning the `value` property replaces it.
+  reset restores. Programmatic changes are silent (no `input`/`change`);
+  assigning either the `value` property or the `value` attribute replaces the
+  displayed text (declared deviation from native dirty-value semantics,
+  adopted from 003 D2 and amended in review round 1 — the approved-text/
+  implementation disagreement was resolved in favor of the shipped,
+  sibling-consistent behavior with founder confirmation at the merge gate).
 - **FR-003**: The textarea MUST expose a `rows` attribute (positive integer,
   default 2 — native parity) that fixes the visible line count. Unrecognized
   or invalid values fall back to the default. Height is fixed by `rows`: no
@@ -418,7 +424,9 @@ Feature: Textarea
 
 ## Constitutional Surface *(mandatory)*
 
-- **Public API delta** (Art. IX): new element `ki-textarea` (attributes:
+- **Public API delta** (Art. IX): new element `ki-textarea` (attributes: The
+  consumer-stylable `:state(user-invalid)` custom state is part of the
+  public surface (review round 1 alignment; same hook as 003).
   `label`, `name`, `value`, `placeholder`, `rows`, `required`, `readonly`,
   `disabled`, `autocomplete`; slots: none in v1 — the label is a prop and affix slots are
   deliberately excluded, see Assumptions; light-DOM text content is ignored
