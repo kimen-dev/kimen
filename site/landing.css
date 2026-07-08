@@ -11,6 +11,13 @@
   /* Page-local type ratios: the token line-height scale is absolute and pairs
      1:1 with fixed token sizes; the landing's fluid clamp() sizes need ratios. */
   --_site-leading-display: 1.08;
+
+  /* Fluid type bounds (Codex review, PR #7): the clamp() endpoints and
+     interpolation factors are named here so the type scale stays declared
+     in one token-like place instead of scattered magic numbers. */
+  --_site-hero-type-min: 2.4rem;
+  --_site-hero-type-fluid: 7.5vi;
+  --_site-heading-type-fluid: 3.5vi;
   --_site-leading-heading: 1.15;
   --_site-leading-card-title: 1.3;
   --_site-leading-body: 1.55;
@@ -206,7 +213,11 @@ main {
 
 .section h2 {
   font-family: var(--ki-typography-family-display);
-  font-size: clamp(var(--ki-typography-size-heading-3), 3.5vi, var(--ki-typography-size-heading-4));
+  font-size: clamp(
+    var(--ki-typography-size-heading-3),
+    var(--_site-heading-type-fluid),
+    var(--ki-typography-size-heading-4)
+  );
   line-height: var(--_site-leading-heading);
   font-weight: var(--ki-typography-weight-display-semibold);
   margin-block: 0 var(--ki-space-4xl);
@@ -247,7 +258,11 @@ code {
 
 .hero h1 {
   font-family: var(--ki-typography-family-display);
-  font-size: clamp(2.4rem, 7.5vi, var(--ki-typography-size-display-1));
+  font-size: clamp(
+    var(--_site-hero-type-min),
+    var(--_site-hero-type-fluid),
+    var(--ki-typography-size-display-1)
+  );
 
   /* Unitless ratio: the display line-height token is absolute and pairs with
      the full display size, which the clamp() below can shrink. */

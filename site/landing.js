@@ -53,9 +53,17 @@ function animateFlip() {
   }, 400);
 }
 
+// Monotonic token: only the LATEST requested theme may apply after an await
+// (on a slow connection the material3 load can outlive a newer selection).
+let themeRequest = 0;
+
 async function applyTheme(theme) {
+  const request = ++themeRequest;
   if (theme === 'material3') {
     await ensureMaterial3();
+    if (request !== themeRequest) {
+      return; // stale: the user picked something newer while the CSS loaded
+    }
     animateFlip();
     root.setAttribute('data-ki-theme', 'material3');
   } else {
