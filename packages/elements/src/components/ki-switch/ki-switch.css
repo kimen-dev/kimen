@@ -16,7 +16,9 @@
   --_ki-switch-thumb: var(--ki-switch-checked-rest-thumb);
   --_ki-switch-border: var(--ki-switch-checked-rest-border);
   --_ki-switch-thumb-position: calc(
-    100% - var(--ki-switch-thumb-size) - var(--ki-switch-thumb-inset)
+    100% -
+    var(--ki-switch-thumb-size) -
+    var(--ki-switch-thumb-inset)
   );
 }
 
