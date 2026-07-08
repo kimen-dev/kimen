@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement } from '../dist/components/ki-input.js';
+import material3Css from '@kimen/tokens/css/material3?raw';
 
 type KiInputElement = HTMLElement & {
   disabled: boolean;
@@ -19,6 +20,7 @@ type KiInputElement = HTMLElement & {
 };
 
 const STYLE_ID = 'ki-input-browser-token-style';
+const MATERIAL3_STYLE_ID = 'ki-input-browser-material3-token-style';
 
 beforeAll(() => {
   defineCustomElement();
@@ -32,6 +34,17 @@ function ensureTokens(): void {
   const style = document.createElement('style');
   style.id = STYLE_ID;
   style.textContent = tokensCss;
+  document.head.append(style);
+}
+
+function ensureMaterial3Tokens(): void {
+  if (document.getElementById(MATERIAL3_STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = MATERIAL3_STYLE_ID;
+  style.textContent = material3Css;
   document.head.append(style);
 }
 
@@ -108,6 +121,15 @@ function submitButton(): HTMLButtonElement {
   button.type = 'submit';
   button.textContent = 'Submit';
   return button;
+}
+
+function readTokenColor(name: string): string {
+  const probe = document.createElement('div');
+  probe.style.backgroundColor = `var(${name})`;
+  document.body.append(probe);
+  const value = getComputedStyle(probe).backgroundColor;
+  probe.remove();
+  return value;
 }
 
 async function waitForStyles(): Promise<void> {
@@ -460,5 +482,67 @@ describe('ki-input in a real browser', () => {
 
     expect(submissions).toBe(0);
     expect(el.matches(':invalid')).toBe(true);
+  });
+
+  it('S16 material3 restyles the field through component tokens alone', async () => {
+    cleanup();
+    ensureTokens();
+    const onmars = await mount({ label: 'Email' });
+    const onmarsField = requireField(onmars);
+    await waitForStyles();
+    const onmarsBg = getComputedStyle(onmarsField).backgroundColor;
+    const onmarsBlockStart = getComputedStyle(onmarsField).borderBlockStartWidth;
+    onmars.remove();
+
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    const material = await mount({ label: 'Email' });
+    const materialField = requireField(material);
+    await waitForStyles();
+    const materialStyles = getComputedStyle(materialField);
+
+    expect(materialStyles.backgroundColor).toBe(readTokenColor('--ki-input-rest-bg'));
+    expect(materialStyles.backgroundColor).not.toBe(onmarsBg);
+    expect(materialStyles.borderBlockStartWidth).toBe('0px');
+    expect(materialStyles.borderBlockEndWidth).not.toBe('0px');
+    expect(materialStyles.borderBlockStartWidth).not.toBe(onmarsBlockStart);
+  });
+
+  it('S17 forced dark under onmars resolves dark input token values', async () => {
+    cleanup();
+    ensureTokens();
+    const light = await mount({ label: 'Email' });
+    const lightField = requireField(light);
+    await waitForStyles();
+    const lightBg = getComputedStyle(lightField).backgroundColor;
+    light.remove();
+
+    document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
+    const dark = await mount({ label: 'Email' });
+    const darkField = requireField(dark);
+    await waitForStyles();
+    const darkBg = getComputedStyle(darkField).backgroundColor;
+
+    expect(darkBg).toBe(readTokenColor('--ki-input-rest-bg'));
+    expect(darkBg).not.toBe(lightBg);
+  });
+
+  it('S18 start and end adornments follow the document writing direction', async () => {
+    cleanup();
+    document.documentElement.setAttribute('dir', 'rtl');
+    const el = await mount({ label: 'Search', type: 'search' });
+    const start = document.createElement('span');
+    start.slot = 'start';
+    start.textContent = 'A';
+    const end = document.createElement('span');
+    end.slot = 'end';
+    end.textContent = 'Z';
+    el.prepend(start);
+    el.append(end);
+    await waitForStyles();
+
+    const startRect = start.getBoundingClientRect();
+    const endRect = end.getBoundingClientRect();
+    expect(startRect.left, 'start leads under RTL').toBeGreaterThan(endRect.left);
   });
 });
