@@ -1,5 +1,5 @@
 import axe from 'axe-core';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:012-ki-dialog
@@ -369,5 +369,76 @@ describe('ki-dialog in a real browser', () => {
     expect(el.open).toBe(false);
     expect(event.detail.reason).toBe('escape');
     expect(document.activeElement).toBe(opener);
+  });
+
+  it('S9 exposes the open dialog as a named modal dialog with zero axe violations', async () => {
+    cleanup();
+    const main = document.createElement('main');
+    document.body.append(main);
+    const el = await mountDialog({}, main);
+
+    await openDialog(el);
+
+    await expect.element(page.getByRole('dialog', { name: 'Delete account?' })).toBeInTheDocument();
+    expect(internalDialog(el).matches(':modal')).toBe(true);
+    const results = await axe.run(main);
+    expect(results.violations).toEqual([]);
+  });
+
+  it('S10 hides background links from assistive technology while open and restores them after close', async () => {
+    cleanup();
+    const main = document.createElement('main');
+    const settings = document.createElement('a');
+    settings.href = '#settings';
+    settings.textContent = 'Settings';
+    main.append(settings);
+    document.body.append(main);
+    const el = await mountDialog({}, main);
+
+    await expect.element(page.getByRole('link', { name: 'Settings' })).toBeInTheDocument();
+    await openDialog(el);
+    settings.focus();
+    expect(document.activeElement).not.toBe(settings);
+    await expect.element(page.getByRole('link', { name: 'Settings' })).not.toBeInTheDocument();
+
+    await el.close();
+    await waitFor(() => !el.open, 'dialog closed before background restore assertion');
+    await expect.element(page.getByRole('link', { name: 'Settings' })).toBeInTheDocument();
+  });
+
+  it('S10 focus-return edges fall back to body or preserve outside focus as specified', async () => {
+    cleanup();
+    const scrollStart = window.scrollY;
+    const opener = document.createElement('button');
+    opener.textContent = 'Delete account';
+    document.body.append(opener);
+    const removedInvokerDialog = await mountDialog();
+    opener.focus();
+    await openDialog(removedInvokerDialog);
+    opener.remove();
+    await removedInvokerDialog.close();
+    await waitFor(() => !removedInvokerDialog.open, 'removed-invoker dialog closed');
+    expect(document.activeElement).toBe(document.body);
+    expect(window.scrollY).toBe(scrollStart);
+
+    const initialOpen = await mountDialog({ open: true });
+    await waitFor(
+      () => initialOpen.open && internalDialog(initialOpen).open,
+      'initial open dialog opened',
+    );
+    await initialOpen.close();
+    await waitFor(() => !initialOpen.open, 'initial open dialog closed');
+    expect(document.activeElement).toBe(document.body);
+
+    const outside = document.createElement('button');
+    outside.textContent = 'Outside focus';
+    document.body.append(outside);
+    const outsideFocusDialog = await mountDialog();
+    await openDialog(outsideFocusDialog);
+    outside.removeAttribute('inert');
+    outside.focus();
+    await outsideFocusDialog.close();
+    await waitFor(() => !outsideFocusDialog.open, 'outside-focus dialog closed');
+    expect(document.activeElement).toBe(outside);
   });
 });

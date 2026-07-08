@@ -18,3 +18,7 @@ closed anatomy, S5, and pure helper logic.
 - T013 keyboard RED: `pnpm --filter @kimen/elements run test-browser` fails in
   S7 because focus is not observed inside the dialog after tabbing from the
   last slotted action.
+- T014 assistive-tech RED: `pnpm --filter @kimen/elements run test-browser`
+  fails in S10 because the background Settings link remains exposed to the
+  role query while open, and the removed-invoker focus fallback lands on the
+  host instead of `document.body`.
