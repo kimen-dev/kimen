@@ -14,3 +14,5 @@
   blank-label browser paths cannot interact with a rendered trigger.
 - T013 browser RED: the focused tooltip browser run exits 1 on S6 because
   after real Tab moves focus to the next button, the tooltip remains visible.
+- T014 browser RED: S7/S8 accessibility assertions were added and pass in the
+  focused run; the run remains red on the existing S6 focus-leave gap.

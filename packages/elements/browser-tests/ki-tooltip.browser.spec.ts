@@ -295,6 +295,47 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(dialog.open).toBe(false);
   });
 
+  it('S7 exposes the trigger name unchanged and the tooltip label as description', async () => {
+    const { trigger } = await mount();
+    const describedButtonOptions = {
+      name: 'Send',
+      description: 'Send immediately',
+    } as Parameters<typeof page.getByRole>[1];
+
+    expect(trigger.getAttribute('aria-description')).toBe('Send immediately');
+    await expect.element(page.getByRole('button', { name: 'Send' })).toBeVisible();
+    await expect.element(page.getByRole('button', describedButtonOptions)).toBeVisible();
+  });
+
+  it('S8 exposes the tooltip role only while the tooltip is visible', async () => {
+    const { host, trigger } = await mount();
+
+    await expect.element(requireTooltip(host)).not.toBeVisible();
+
+    trigger.focus();
+    await nextFrame();
+
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+
+    trigger.blur();
+    await nextFrame();
+
+    await expect.element(requireTooltip(host)).not.toBeVisible();
+  });
+
+  it('S8 has zero axe violations with the tooltip visible', async () => {
+    const main = document.createElement('main');
+    document.body.append(main);
+    const { trigger } = await mount({}, main);
+
+    trigger.focus();
+    await nextFrame();
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+
+    const results = await axe.run(main);
+    expect(results.violations).toEqual([]);
+  });
+
   it('S1 has zero axe violations across placements shown and hidden', async () => {
     const main = document.createElement('main');
     document.body.append(main);
