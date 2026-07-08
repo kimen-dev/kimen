@@ -1,0 +1,81 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Tokens & theming" />
+
+# Tokens & theming
+
+Every visual value in Kimen resolves from a design token — zero hardcoded
+values, enforced by lint. Tokens are layered:
+
+1. **Primitive** — raw ramps (`--ki-color-brand-500`, `--ki-space-md`,
+   `--ki-font-size-heading-3`…). Never consumed by components directly.
+2. **Semantic** — meaning, not appearance (`--ki-surface-s0…s5`,
+   `--ki-text-high-em`, `--ki-outline-low-em`). This is the layer a brand
+   reassigns to re-theme everything.
+3. **Component** — the public styling contract of each element
+   (`--ki-button-primary-neutral-rest-bg`, `--ki-button-md-height`…).
+
+## Themes
+
+**Onmars** is the default theme (it is `tokens.css`, no attribute needed).
+**Material 3** ships as the reference second theme and proves in CI, on
+every commit, that reassigning the token layers alone restyles every
+component:
+
+```html
+<link rel="stylesheet" href="@kimen/tokens/css" />
+<!-- opt-in second theme -->
+<link rel="stylesheet" href="@kimen/tokens/css/material3" />
+<html data-ki-theme="material3">
+```
+
+An unknown `data-ki-theme` value simply matches no selector: the document
+stays on the default theme. No runtime code involved anywhere.
+
+## Color scheme
+
+Both themes follow the OS by default and can be forced either way:
+
+```html
+<html data-ki-color-scheme="dark">   <!-- force dark -->
+<html data-ki-color-scheme="light">  <!-- force light -->
+<!-- no attribute: follows prefers-color-scheme -->
+```
+
+The **Scheme** toolbar above drives exactly this attribute.
+
+## Surfaces
+
+The semantic surface scale in the current scheme (each swatch reads its
+color from the live token):
+
+<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+  {['s0', 's1', 's2', 's3', 's4', 's5'].map((s) => (
+    <div
+      key={s}
+      style={{
+        inlineSize: '5.5rem',
+        blockSize: '3.5rem',
+        borderRadius: '0.5rem',
+        border: '1px solid var(--ki-outline-low-em)',
+        background: `var(--ki-surface-${s})`,
+        color: 'var(--ki-text-med-em)',
+        display: 'grid',
+        placeItems: 'center',
+        fontFamily: 'var(--ki-typography-family-mono)',
+        fontSize: '0.75rem',
+      }}
+    >
+      {`surface-${s}`}
+    </div>
+  ))}
+</div>
+
+## Customization order
+
+When you need to customize a component, reach for surfaces in this order —
+if a consumer would ever need `!important`, that is an API bug to report:
+
+1. **Tokens** — reassign at `:root` (theme-wide) or on a subtree.
+2. **`::part()`** — style exposed parts for one-off structural tweaks.
+3. **Slots** — replace content entirely.

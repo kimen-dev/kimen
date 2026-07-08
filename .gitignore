@@ -22,6 +22,9 @@ packages/elements/www/
 storybook-static/
 *storybook.log
 
+# Assembled public site (built by scripts/build-site.sh in CI)
+site-dist/
+
 # Nx
 .nx/cache
 .nx/workspace-data

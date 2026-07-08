@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Colors are the committed onmars tokens: dark-950 #0a0a0a, brand-400 #9873c9
+       (favicons cannot resolve CSS custom properties; values mirror the token
+       source and must be updated if the brand ramp changes). -->
+  <rect width="24" height="24" rx="6" fill="#0a0a0a"/>
+  <path d="M6.5 4.5v15M6.5 12h3l5.5-7h3.5l-6 7.5 6 7" fill="none" stroke="#9873c9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

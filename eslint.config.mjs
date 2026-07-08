@@ -20,6 +20,7 @@ export default tseslint.config(
       '**/generated/**',
       '**/www/**',
       '**/storybook-static/**',
+      'site-dist/**',
     ],
   },
   js.configs.recommended,
@@ -95,6 +96,23 @@ export default tseslint.config(
         URL: 'readonly',
         console: 'readonly',
         process: 'readonly',
+      },
+    },
+    rules: {
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+    },
+  },
+  {
+    // Public site page script: plain browser ES module, outside any tsconfig
+    // project (the landing ships no TypeScript; tokens do the heavy lifting)
+    files: ['site/**/*.js'],
+    extends: [tseslint.configs.disableTypeChecked],
+    languageOptions: {
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        localStorage: 'readonly',
+        IntersectionObserver: 'readonly',
       },
     },
     rules: {
