@@ -371,6 +371,9 @@
     --ki-button-ghost-active-shadow: none;
     --ki-button-ghost-disabled-shadow: none;
     --ki-button-border-width: 0.0625rem;
+    --ki-tooltip-shadow: 0 1px 2px 0 var(--ki-elevation-shadow-dark), 0 2px 6px 2px var(--ki-elevation-shadow-med);
+    --ki-tooltip-show-delay: 500ms;
+    --ki-tooltip-hide-delay: 100ms;
     --ki-color-brand-secondary-text-on-success: var(--ki-color-white-72);
     --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s1);
     --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s2);
@@ -651,6 +654,14 @@
     --ki-button-ghost-danger-hover-fg: var(--ki-text-danger-high-em);
     --ki-button-ghost-danger-active-bg: var(--ki-surface-danger-low-em);
     --ki-button-ghost-danger-active-fg: var(--ki-text-danger-high-em);
+    --ki-tooltip-radius: var(--ki-radius-xs);
+    --ki-tooltip-padding-inline: var(--ki-space-md);
+    --ki-tooltip-padding-block: var(--ki-space-xs);
+    --ki-tooltip-max-inline-size: var(--ki-space-25xl);
+    --ki-tooltip-offset: var(--ki-space-xs);
+    --ki-tooltip-font-size: var(--ki-font-size-caption-2);
+    --ki-tooltip-font-weight: var(--ki-font-weight-body-medium);
+    --ki-tooltip-line-height: var(--ki-font-line-height-caption-2);
     --ki-text-secondary-on-success: var(--ki-color-brand-secondary-text-on-success);
     --ki-button-xs-font-size: var(--ki-typography-size-caption-2);
     --ki-button-xs-line-height: var(--ki-typography-line-height-caption-2);
@@ -766,6 +777,8 @@
     --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
     --ki-button-ghost-danger-disabled-fg: var(--ki-text-muted);
     --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+    --ki-tooltip-bg: var(--ki-surface-inverse-white);
+    --ki-tooltip-fg: var(--ki-text-inverse-black);
   }
 }
 
@@ -1139,6 +1152,9 @@
   --ki-button-ghost-active-shadow: none;
   --ki-button-ghost-disabled-shadow: none;
   --ki-button-border-width: 0.0625rem;
+  --ki-tooltip-shadow: 0 1px 2px 0 var(--ki-elevation-shadow-dark), 0 2px 6px 2px var(--ki-elevation-shadow-med);
+  --ki-tooltip-show-delay: 500ms;
+  --ki-tooltip-hide-delay: 100ms;
   --ki-color-brand-secondary-text-on-success: var(--ki-color-white-72);
   --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s1);
   --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s2);
@@ -1419,6 +1435,14 @@
   --ki-button-ghost-danger-hover-fg: var(--ki-text-danger-high-em);
   --ki-button-ghost-danger-active-bg: var(--ki-surface-danger-low-em);
   --ki-button-ghost-danger-active-fg: var(--ki-text-danger-high-em);
+  --ki-tooltip-radius: var(--ki-radius-xs);
+  --ki-tooltip-padding-inline: var(--ki-space-md);
+  --ki-tooltip-padding-block: var(--ki-space-xs);
+  --ki-tooltip-max-inline-size: var(--ki-space-25xl);
+  --ki-tooltip-offset: var(--ki-space-xs);
+  --ki-tooltip-font-size: var(--ki-font-size-caption-2);
+  --ki-tooltip-font-weight: var(--ki-font-weight-body-medium);
+  --ki-tooltip-line-height: var(--ki-font-line-height-caption-2);
   --ki-text-secondary-on-success: var(--ki-color-brand-secondary-text-on-success);
   --ki-button-xs-font-size: var(--ki-typography-size-caption-2);
   --ki-button-xs-line-height: var(--ki-typography-line-height-caption-2);
@@ -1534,4 +1558,6 @@
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-fg: var(--ki-text-muted);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+  --ki-tooltip-bg: var(--ki-surface-inverse-white);
+  --ki-tooltip-fg: var(--ki-text-inverse-black);
 }

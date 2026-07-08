@@ -9,12 +9,14 @@ const LAYERS = [
   'tokens/themes/onmars.tokens.json',
   'tokens/semantic.tokens.json',
   'tokens/component/button.tokens.json',
+  'tokens/component/tooltip.tokens.json',
 ];
 const MATERIAL3_LAYERS = [
   ...LAYERS,
   'tokens/themes/material3.tokens.json',
   'tokens/semantic/material3.tokens.json',
   'tokens/component/button.material3.tokens.json',
+  'tokens/component/tooltip.material3.tokens.json',
 ];
 
 function variables({ dictionary, options, indentation = '  ' }) {
