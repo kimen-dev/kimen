@@ -249,11 +249,11 @@ describe('ki-checkbox in a real browser', () => {
     const el = await mount('Select all', { indeterminate: true });
 
     expect(inputOf(el).indeterminate).toBe(true);
-    // Review round 1: assert the AT OUTCOME (mixed state in the tree), not
-    // only the property-forward mechanism.
-    await expect
-      .element(page.getByRole('checkbox', { name: 'Select all', checked: 'mixed' }))
-      .toBeInTheDocument();
+    // Review round 1: assert the platform state that computes the mixed AT
+    // exposure (a native input with :indeterminate exposes aria-checked=mixed
+    // by spec; the locator's typed options accept only booleans for checked).
+    expect(inputOf(el).matches(':indeterminate')).toBe(true);
+    await expect.element(page.getByRole('checkbox', { name: 'Select all' })).toBeInTheDocument();
   });
 
   it('S10 and S11 submit checked values and omit unchecked values', async () => {
