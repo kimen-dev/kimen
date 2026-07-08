@@ -1,4 +1,4 @@
-export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
+import type { KiInputType } from './ki-input';
 
 const KI_INPUT_TYPES = new Set<string>(['text', 'email', 'password', 'url', 'tel', 'search']);
 

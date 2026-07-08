@@ -1,5 +1,7 @@
 import { AttachInternals, Component, Element, Listen, Prop, State, Watch, h } from '@stencil/core';
-import { type KiInputType, normalizeKiInputType } from './ki-input.form';
+import { normalizeKiInputType } from './ki-input.form';
+
+export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
 
 let inputIds = 0;
 

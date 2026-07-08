@@ -6,9 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
-import { KiInputType } from "./components/ki-input/ki-input.form";
+import { KiInputType } from "./components/ki-input/ki-input";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
-export { KiInputType } from "./components/ki-input/ki-input.form";
+export { KiInputType } from "./components/ki-input/ki-input";
 export namespace Components {
     /**
      * A token-styled action button with native button semantics.
