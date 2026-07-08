@@ -107,6 +107,15 @@ function fieldOf(el: KiInputElement): HTMLElement | null {
   return el.shadowRoot?.querySelector('[part="field"]') ?? null;
 }
 
+function requireLabel(el: KiInputElement): HTMLLabelElement {
+  const label = el.shadowRoot?.querySelector('label') ?? null;
+  expect(label).toBeInstanceOf(HTMLLabelElement);
+  if (!label) {
+    throw new Error('ki-input did not render its label element');
+  }
+  return label;
+}
+
 function requireField(el: KiInputElement): HTMLElement {
   const field = fieldOf(el);
   expect(field).toBeInstanceOf(HTMLElement);
@@ -259,7 +268,7 @@ describe('ki-input in a real browser', () => {
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     await expect.element(page.getByRole('textbox', { name: 'Email' })).toBeInTheDocument();
-    expect(el.shadowRoot.querySelector('label')?.textContent.trim()).toBe('Email');
+    expect(requireLabel(el).textContent.trim()).toBe('Email');
   });
 
   // Review round 1 (Minor-7): S19's visibility observable belongs in the
@@ -267,12 +276,11 @@ describe('ki-input in a real browser', () => {
   it('S19 renders the label visibly on screen', async () => {
     cleanup();
     const el = await mount({ label: 'Email' });
-    const label = el.shadowRoot.querySelector('label');
-    expect(label).toBeTruthy();
-    const computed = getComputedStyle(label as Element);
+    const label = requireLabel(el);
+    const computed = getComputedStyle(label);
     expect(computed.display).not.toBe('none');
     expect(computed.visibility).not.toBe('hidden');
-    expect((label as HTMLElement).getBoundingClientRect().height).toBeGreaterThan(0);
+    expect(label.getBoundingClientRect().height).toBeGreaterThan(0);
   });
 
   // Review round 1 (Minor-7): S20's silence contract verified in a real
