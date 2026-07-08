@@ -4,10 +4,12 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 
 import tokensCss from '@kimen/tokens/css?raw';
+import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '../dist/components/ki-list-item.js';
 
 const STYLE_ID = 'ki-list-browser-token-style';
+const MATERIAL3_STYLE_ID = 'ki-list-browser-material3-token-style';
 
 beforeAll(() => {
   defineKiList();
@@ -21,6 +23,16 @@ function ensureTokens(): void {
   const style = document.createElement('style');
   style.id = STYLE_ID;
   style.textContent = tokensCss;
+  document.head.append(style);
+}
+
+function ensureMaterial3Tokens(): void {
+  if (document.getElementById(MATERIAL3_STYLE_ID)) {
+    return;
+  }
+  const style = document.createElement('style');
+  style.id = MATERIAL3_STYLE_ID;
+  style.textContent = material3Css;
   document.head.append(style);
 }
 
@@ -254,5 +266,65 @@ describe('ki-list in a real browser', () => {
 
     expect(control.checked).toBe(true);
     expect(changes).toBe(1);
+  });
+
+  it('S7 restyles spacing, separation and text through material3 tokens only', async () => {
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    const list = await mountList(`
+      <ki-list>
+        <ki-list-item>
+          Email
+          <span slot="secondary">ana@onmars.dev</span>
+        </ki-list-item>
+        <ki-list-item>Storage</ki-list-item>
+      </ki-list>
+    `);
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    await settle();
+    const firstItem = list.querySelector('ki-list-item');
+    if (!firstItem) {
+      throw new Error('ki-list-item fixture missing');
+    }
+    const parts = itemParts(firstItem);
+    const listPart = list.shadowRoot?.querySelector<HTMLElement>('[part="list"]');
+    if (!listPart) {
+      throw new Error('list part missing');
+    }
+    const primary = parts.content.querySelector('.primary');
+    if (!primary) {
+      throw new Error('primary text part missing');
+    }
+
+    expect(getComputedStyle(listPart).gap).toBe('0px');
+    expect(getComputedStyle(firstItem).borderBlockEndWidth).toBe('1px');
+    expect(getComputedStyle(parts.item).paddingInlineStart).toBe('16px');
+    expect(getComputedStyle(parts.item).columnGap).toBe('16px');
+    expect(getComputedStyle(primary).fontWeight).toBe('400');
+  });
+
+  it('S9 keeps start leading and end trailing under RTL', async () => {
+    const main = cleanup();
+    document.documentElement.setAttribute('dir', 'rtl');
+    main.innerHTML = `
+      <ki-list>
+        <ki-list-item>
+          <span slot="start" data-test="icon">I</span>
+          <span data-test="text">Storage</span>
+          <span slot="end" data-test="timestamp">9:41</span>
+        </ki-list-item>
+      </ki-list>
+    `;
+    await settle();
+    const icon = main.querySelector('[data-test="icon"]');
+    const text = main.querySelector('[data-test="text"]');
+    const timestamp = main.querySelector('[data-test="timestamp"]');
+
+    expect(icon?.getBoundingClientRect().left).toBeGreaterThan(
+      text?.getBoundingClientRect().left ?? 0,
+    );
+    expect(timestamp?.getBoundingClientRect().left).toBeLessThan(
+      text?.getBoundingClientRect().left ?? 0,
+    );
   });
 });
