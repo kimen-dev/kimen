@@ -1,6 +1,6 @@
 import tokensCss from '@kimen/tokens/css?raw';
 import axe from 'axe-core';
-import { commands } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:015-ki-progress
@@ -270,5 +270,74 @@ describe('ki-progress in a real browser', () => {
     expect(progressbar(el).hasAttribute('aria-valuenow')).toBe(false);
     expect(indicator(el).getBoundingClientRect().width).toBeGreaterThan(0);
     expect(runningInfiniteAnimations(indicator(el))).toHaveLength(0);
+  });
+
+  it('S8 exposes a labeled determinate progressbar with current value and range', async () => {
+    cleanup();
+    await cleanupMedia();
+    const el = await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
+    const base = progressbar(el);
+
+    await expect
+      .element(page.getByRole('progressbar', { name: 'Uploading report.pdf' }))
+      .toBeInTheDocument();
+    expect(base.getAttribute('aria-label')).toBe('Uploading report.pdf');
+    expect(base.getAttribute('aria-valuemin')).toBe('0');
+    expect(base.getAttribute('aria-valuemax')).toBe('100');
+    expect(base.getAttribute('aria-valuenow')).toBe('40');
+  });
+
+  it('S9 exposes a labeled indeterminate progressbar without current value', async () => {
+    cleanup();
+    await cleanupMedia();
+    const el = await mount({ label: 'Loading messages', indeterminate: true });
+    const base = progressbar(el);
+
+    await expect
+      .element(page.getByRole('progressbar', { name: 'Loading messages' }))
+      .toBeInTheDocument();
+    expect(base.getAttribute('aria-label')).toBe('Loading messages');
+    expect(base.getAttribute('aria-valuemin')).toBe('0');
+    expect(base.getAttribute('aria-valuemax')).toBe('100');
+    expect(base.hasAttribute('aria-valuenow')).toBe(false);
+  });
+
+  it('S7 adds no tab stop between adjacent buttons', async () => {
+    cleanup();
+    await cleanupMedia();
+    const main = document.createElement('main');
+    document.body.append(main);
+    const before = document.createElement('button');
+    before.textContent = 'Before';
+    const after = document.createElement('button');
+    after.textContent = 'After';
+    main.append(before);
+    await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
+    main.append(after);
+
+    before.focus();
+    await userEvent.keyboard('{Tab}');
+
+    expect(document.activeElement).toBe(after);
+  });
+
+  it('S8 renders no empty aria-label when label is omitted', async () => {
+    cleanup();
+    await cleanupMedia();
+    const el = await mount({ value: '40', max: '100' });
+
+    expect(progressbar(el).hasAttribute('aria-label')).toBe(false);
+  });
+
+  it('S8 S9 have zero axe violations across the labeled shape mode matrix', async () => {
+    cleanup();
+    await cleanupMedia();
+    for (const shape of ['linear', 'circular'] as const) {
+      await mount({ label: `${shape} determinate`, shape, value: '40', max: '100' });
+      await mount({ label: `${shape} indeterminate`, shape, indeterminate: true });
+    }
+
+    const results = await axe.run(requireMain());
+    expect(results.violations).toEqual([]);
   });
 });
