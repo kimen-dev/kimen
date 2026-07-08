@@ -12,7 +12,7 @@
   font-family: var(--ki-typography-family-body);
 }
 
-:host(:hover:not([disabled])) {
+:host(:hover:not(:disabled)) {
   --_ki-input-bg: var(--ki-input-hover-bg);
   --_ki-input-fg: var(--ki-input-hover-fg);
   --_ki-input-border: var(--ki-input-hover-border);
@@ -20,7 +20,7 @@
   --_ki-input-placeholder-fg: var(--ki-input-hover-placeholder-fg);
 }
 
-:host(:focus-within:not([disabled])) {
+:host(:focus-within:not(:disabled)) {
   --_ki-input-bg: var(--ki-input-focus-bg);
   --_ki-input-fg: var(--ki-input-focus-fg);
   --_ki-input-border: var(--ki-input-focus-border);
@@ -28,7 +28,7 @@
   --_ki-input-placeholder-fg: var(--ki-input-focus-placeholder-fg);
 }
 
-:host([readonly]:not([disabled])) {
+:host([readonly]:not(:disabled)) {
   --_ki-input-bg: var(--ki-input-readonly-bg);
   --_ki-input-fg: var(--ki-input-readonly-fg);
   --_ki-input-border: var(--ki-input-readonly-border);
@@ -52,7 +52,7 @@
   --_ki-input-placeholder-fg: var(--ki-input-invalid-placeholder-fg);
 }
 
-[part="root"] {
+.root {
   display: grid;
   gap: var(--ki-input-label-gap);
 }

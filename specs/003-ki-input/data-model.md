@@ -58,7 +58,7 @@ Invariants:
 | rest | base `:host` | `-rest` |
 | hover | `:host(:hover)` | `-hover` |
 | focus | `:host(:focus-within)` + focus-ring tokens | `-focus` |
-| disabled | `:host([disabled])` / formDisabled | `-disabled` |
+| disabled | `:host(:disabled)` / formDisabled | `-disabled` |
 | readonly | `:host([readonly])` | `-readonly` |
 | invalid | `:host(:state(user-invalid))` | `-invalid` |
 

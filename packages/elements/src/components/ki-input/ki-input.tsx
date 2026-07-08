@@ -240,7 +240,7 @@ export class KiInput {
     const type = normalizeKiInputType(this.type);
 
     return (
-      <div part="root">
+      <div class="root">
         {/* Review round 1 (Critical-1): the label is a SIBLING of the field so
             slotted adornments never join the control's accessible name
             (research D1 anatomy); for/id keeps click-to-focus. */}
