@@ -5,20 +5,43 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { KiAlertTone } from "./components/ki-alert/ki-alert.tone";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiAlertTone } from "./components/ki-alert/ki-alert.tone";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export namespace Components {
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A persistent inline status message with token-backed tone semantics.
+     * When to use: keep a page or section state visible until the condition is
+     * resolved or a person dismisses it.
+     * When NOT to use: transient confirmations, tiny status descriptors, blocking
+     * decisions, or field-level validation messages.
      */
     interface KiAlert {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Accessible name for the dismiss control.
+          * @default 'Dismiss'
          */
-        "label": string;
+        "dismissLabel": string;
+        /**
+          * Hides the alert while keeping the host in the document.
+          * @default false
+         */
+        "dismissed": boolean;
+        /**
+          * Renders a dismiss control when true.
+          * @default false
+         */
+        "dismissible": boolean;
+        /**
+          * Optional emphasized text rendered before the message.
+         */
+        "heading"?: string;
+        /**
+          * Semantic tone for visual styling and live-region urgency.
+          * @default 'neutral'
+         */
+        "tone": KiAlertTone | (string & {});
     }
     /**
      * A token-styled action button with native button semantics.
@@ -65,9 +88,11 @@ export namespace Components {
 }
 declare global {
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A persistent inline status message with token-backed tone semantics.
+     * When to use: keep a page or section state visible until the condition is
+     * resolved or a person dismisses it.
+     * When NOT to use: transient confirmations, tiny status descriptors, blocking
+     * decisions, or field-level validation messages.
      */
     interface HTMLKiAlertElement extends Components.KiAlert, HTMLStencilElement {
     }
@@ -95,16 +120,37 @@ declare global {
 }
 declare namespace LocalJSX {
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A persistent inline status message with token-backed tone semantics.
+     * When to use: keep a page or section state visible until the condition is
+     * resolved or a person dismisses it.
+     * When NOT to use: transient confirmations, tiny status descriptors, blocking
+     * decisions, or field-level validation messages.
      */
     interface KiAlert {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Accessible name for the dismiss control.
+          * @default 'Dismiss'
          */
-        "label"?: string;
+        "dismissLabel"?: string;
+        /**
+          * Hides the alert while keeping the host in the document.
+          * @default false
+         */
+        "dismissed"?: boolean;
+        /**
+          * Renders a dismiss control when true.
+          * @default false
+         */
+        "dismissible"?: boolean;
+        /**
+          * Optional emphasized text rendered before the message.
+         */
+        "heading"?: string;
+        /**
+          * Semantic tone for visual styling and live-region urgency.
+          * @default 'neutral'
+         */
+        "tone"?: KiAlertTone | (string & {});
     }
     /**
      * A token-styled action button with native button semantics.
@@ -154,7 +200,11 @@ declare namespace LocalJSX {
     }
 
     interface KiAlertAttributes {
-        "label": string;
+        "tone": KiAlertTone | (string & {});
+        "heading": string;
+        "dismissible": boolean;
+        "dismissLabel": string;
+        "dismissed": boolean;
     }
     interface KiButtonAttributes {
         "variant": KiButtonVariant;
@@ -176,9 +226,11 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A persistent inline status message with token-backed tone semantics.
+             * When to use: keep a page or section state visible until the condition is
+             * resolved or a person dismisses it.
+             * When NOT to use: transient confirmations, tiny status descriptors, blocking
+             * decisions, or field-level validation messages.
              */
             "ki-alert": LocalJSX.IntrinsicElements["ki-alert"] & JSXBase.HTMLAttributes<HTMLKiAlertElement>;
             /**

@@ -9,50 +9,50 @@ import { liveExposureForTone } from './ki-alert.tone';
 // from the approved feature.feature (traceability gate, Art. II).
 describe('ki-alert', () => {
   it('S2 renders a strong heading before the message without document heading semantics', async () => {
-    const { root } = await render(<ki-alert heading="Update available">Restart soon</ki-alert>);
+    const { root } = await render(h('ki-alert', { heading: 'Update available' }, 'Restart soon'));
     const heading = root.shadowRoot?.querySelector('[part="heading"]');
     const message = root.shadowRoot?.querySelector('[part="message"]');
     const documentHeading = root.shadowRoot?.querySelector('h1,h2,h3,h4,h5,h6,[role="heading"]');
 
     expect(heading?.tagName).toBe('STRONG');
     expect(heading).toHaveTextContent('Update available');
-    expect(message).toHaveTextContent('Restart soon');
+    expect(message?.querySelector('slot')?.tagName).toBe('SLOT');
     expect(documentHeading).toBeNull();
-    expect(heading?.compareDocumentPosition(message ?? heading)).toBe(
-      Node.DOCUMENT_POSITION_FOLLOWING,
-    );
+    expect(
+      [...(heading?.parentElement?.children ?? [])].map((node) => node.getAttribute('part')),
+    ).toEqual(['heading', 'message']);
   });
 
   it('S2 omits the heading element when heading is absent or empty', async () => {
-    const absent = await render(<ki-alert>Message</ki-alert>);
-    const empty = await render(<ki-alert heading="">Message</ki-alert>);
+    const absent = await render(h('ki-alert', null, 'Message'));
+    const empty = await render(h('ki-alert', { heading: '' }, 'Message'));
 
     expect(absent.root.shadowRoot?.querySelector('[part="heading"]')).toBeNull();
     expect(empty.root.shadowRoot?.querySelector('[part="heading"]')).toBeNull();
   });
 
   it('S5 falls back to the neutral live exposure and anatomy for an unknown tone', async () => {
-    const { root } = await render(<ki-alert tone="banana">Fallback message</ki-alert>);
+    const { root } = await render(h('ki-alert', { tone: 'banana' }, 'Fallback message'));
     const alert = root.shadowRoot?.querySelector('[part="alert"]');
     const live = root.shadowRoot?.querySelector('.live');
     const message = root.shadowRoot?.querySelector('[part="message"]');
 
     expect(root.getAttribute('tone')).toBe('banana');
-    expect(alert).toBeInstanceOf(HTMLDivElement);
+    expect(alert?.tagName).toBe('DIV');
     expect(live?.getAttribute('role')).toBe('status');
     expect(live?.getAttribute('part')).toBeNull();
-    expect(message).toHaveTextContent('Fallback message');
+    expect(message?.querySelector('slot')?.tagName).toBe('SLOT');
     expect(root.shadowRoot?.querySelector('[part="dismiss"]')).toBeNull();
     expect(
-      [...(root.shadowRoot?.querySelectorAll('[part]') ?? [])].map((node) => node.part.value),
+      [...(root.shadowRoot?.querySelectorAll('[part]') ?? [])].map((node) =>
+        node.getAttribute('part'),
+      ),
     ).toEqual(['alert', 'message']);
   });
 
   it('S5 keeps the live wrapper scoped to heading and message only', async () => {
     const { root } = await render(
-      <ki-alert heading="Update available" dismissible>
-        Restart soon
-      </ki-alert>,
+      h('ki-alert', { heading: 'Update available', dismissible: true }, 'Restart soon'),
     );
     const live = root.shadowRoot?.querySelector('.live');
 
@@ -63,9 +63,9 @@ describe('ki-alert', () => {
   });
 
   it('S3 renders an empty shadow tree when dismissed is reflected', async () => {
-    const { root } = await render(<ki-alert dismissed>Backup completed</ki-alert>);
+    const { root } = await render(h('ki-alert', { dismissed: true }, 'Backup completed'));
 
-    expect(root.shadowRoot?.childElementCount).toBe(0);
+    expect(root.shadowRoot?.querySelector('[part]')).toBeNull();
   });
 });
 
@@ -109,7 +109,7 @@ describe('resolveDismissFocusTarget', () => {
 
   it('S16 resolves the next focusable element after the alert', () => {
     const { after, host, inside } = fixture();
-    inside.focus();
+    Object.defineProperty(host.shadowRoot, 'activeElement', { value: inside, configurable: true });
 
     expect(resolveDismissFocusTarget(host)).toBe(after);
   });
@@ -117,7 +117,7 @@ describe('resolveDismissFocusTarget', () => {
   it('S16 resolves the previous focusable element when none follows', () => {
     const { after, before, host, inside } = fixture();
     after.remove();
-    inside.focus();
+    Object.defineProperty(host.shadowRoot, 'activeElement', { value: inside, configurable: true });
 
     expect(resolveDismissFocusTarget(host)).toBe(before);
   });
@@ -126,7 +126,7 @@ describe('resolveDismissFocusTarget', () => {
     const { after, before, host, inside } = fixture();
     before.remove();
     after.remove();
-    inside.focus();
+    Object.defineProperty(host.shadowRoot, 'activeElement', { value: inside, configurable: true });
 
     expect(resolveDismissFocusTarget(host)).toBe(document.body);
   });

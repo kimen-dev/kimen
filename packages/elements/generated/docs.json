@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T20:39:20",
+  "timestamp": "2026-07-08T20:52:06",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -10,12 +10,33 @@
       "filePath": "src/components/ki-alert/ki-alert.tsx",
       "encapsulation": "shadow",
       "tag": "ki-alert",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
+      "docs": "A persistent inline status message with token-backed tone semantics.\n\nWhen to use: keep a page or section state visible until the condition is\nresolved or a person dismisses it.\nWhen NOT to use: transient confirmations, tiny status descriptors, blocking\ndecisions, or field-level validation messages.",
+      "docsTags": [
+        {
+          "name": "slot",
+          "text": "- Message body."
+        },
+        {
+          "name": "part",
+          "text": "alert - Alert container."
+        },
+        {
+          "name": "part",
+          "text": "heading - Optional emphasized heading."
+        },
+        {
+          "name": "part",
+          "text": "message - Message body wrapper around the default slot."
+        },
+        {
+          "name": "part",
+          "text": "dismiss - Dismiss button, rendered only when dismissible."
+        }
+      ],
       "usage": {},
       "props": [
         {
-          "name": "label",
+          "name": "dismissLabel",
           "type": "string",
           "complexType": {
             "original": "string",
@@ -23,19 +44,159 @@
             "references": {}
           },
           "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
+          "attr": "dismiss-label",
+          "reflectToAttr": true,
+          "docs": "Accessible name for the dismiss control.",
           "docsTags": [
             {
               "name": "default",
-              "text": "'TODO'"
+              "text": "'Dismiss'"
             }
           ],
-          "default": "'TODO'",
+          "default": "'Dismiss'",
           "values": [
             {
               "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "dismissed",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "dismissed",
+          "reflectToAttr": true,
+          "docs": "Hides the alert while keeping the host in the document.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "dismissible",
+          "reflectToAttr": true,
+          "docs": "Renders a dismiss control when true.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "heading",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "heading",
+          "reflectToAttr": true,
+          "docs": "Optional emphasized text rendered before the message.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}",
+          "complexType": {
+            "original": "KiAlertTone | (string & {})",
+            "resolved": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}",
+            "references": {
+              "KiAlertTone": {
+                "location": "import",
+                "path": "./ki-alert.tone",
+                "id": "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone",
+                "referenceLocation": "KiAlertTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": true,
+          "docs": "Semantic tone for visual styling and live-region urgency.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'neutral'"
+            }
+          ],
+          "default": "'neutral'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "info",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            },
+            {
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "value": "warning",
+              "type": "string"
+            },
+            {
+              "type": "string & {}"
             }
           ],
           "optional": false,
@@ -48,8 +209,30 @@
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
-      "parts": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Message body."
+        }
+      ],
+      "parts": [
+        {
+          "name": "alert",
+          "docs": "Alert container."
+        },
+        {
+          "name": "dismiss",
+          "docs": "Dismiss button, rendered only when dismissible."
+        },
+        {
+          "name": "heading",
+          "docs": "Optional emphasized heading."
+        },
+        {
+          "name": "message",
+          "docs": "Message body wrapper around the default slot."
+        }
+      ],
       "states": [],
       "dependents": [],
       "dependencies": [],
@@ -412,6 +595,11 @@
       "declaration": "export type KiButtonType = 'submit' | 'reset' | 'button';",
       "docstring": "",
       "path": "src/components/ki-button/ki-button.tsx"
+    },
+    "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone": {
+      "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
+      "docstring": "",
+      "path": "src/components/ki-alert/ki-alert.tone.ts"
     }
   }
 }

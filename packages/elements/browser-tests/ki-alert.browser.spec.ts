@@ -107,7 +107,12 @@ describe('ki-alert in a real browser', () => {
     const message = part(el, 'message');
     await nextFrame();
 
-    expect(message).toHaveTextContent('We could not save your changes');
+    expect(
+      message
+        .querySelector('slot')
+        ?.assignedNodes()
+        .map((node) => node.textContent),
+    ).toEqual(['We could not save your changes']);
     expect(getComputedStyle(alert).backgroundColor).toBe(readTokenColor('--ki-alert-danger-bg'));
     expect(getComputedStyle(alert).color).toBe(readTokenColor('--ki-alert-danger-fg'));
   });
