@@ -547,6 +547,17 @@
   --ki-button-focus-ring-width: var(--ki-space-xxs);
   --ki-button-focus-ring-offset: var(--ki-space-xxs);
   --ki-button-border-width: var(--ki-space-xxs);
+  --ki-switch-track-width: var(--ki-space-10xl);
+  --ki-switch-track-height: var(--ki-space-6xl);
+  --ki-switch-thumb-size: var(--ki-space-5xl);
+  --ki-switch-thumb-inset: var(--ki-space-xs);
+  --ki-switch-gap: var(--ki-space-sm);
+  --ki-switch-track-radius: var(--ki-radius-round);
+  --ki-switch-thumb-radius: var(--ki-radius-round);
+  --ki-switch-border-width: var(--ki-space-xxs);
+  --ki-switch-min-target: var(--ki-space-7xl);
+  --ki-switch-focus-ring-width: var(--ki-space-xxs);
+  --ki-switch-focus-ring-offset: var(--ki-space-xxs);
   --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s0);
@@ -744,6 +755,25 @@
   --ki-button-ghost-danger-active-border: var(--ki-outline-none);
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+  --ki-switch-unchecked-rest-track: var(--ki-surface-s3);
+  --ki-switch-unchecked-rest-border: var(--ki-outline-high-em);
+  --ki-switch-unchecked-hover-track: var(--ki-surface-s4);
+  --ki-switch-unchecked-hover-border: var(--ki-outline-high-em);
+  --ki-switch-unchecked-active-track: var(--ki-surface-s5);
+  --ki-switch-unchecked-active-border: var(--ki-outline-high-em);
+  --ki-switch-unchecked-disabled-track: var(--ki-surface-disabled-low-em);
+  --ki-switch-unchecked-disabled-thumb: var(--ki-surface-disabled-high-em);
+  --ki-switch-unchecked-disabled-border: var(--ki-surface-disabled-med-em);
+  --ki-switch-checked-rest-track: var(--ki-surface-primary-high-em);
+  --ki-switch-checked-rest-border: var(--ki-outline-none);
+  --ki-switch-checked-hover-track: var(--ki-surface-primary-high-em-hover);
+  --ki-switch-checked-hover-border: var(--ki-outline-none);
+  --ki-switch-checked-active-track: var(--ki-surface-primary-med-em);
+  --ki-switch-checked-active-border: var(--ki-outline-none);
+  --ki-switch-checked-disabled-track: var(--ki-surface-disabled-low-em);
+  --ki-switch-checked-disabled-thumb: var(--ki-surface-disabled-high-em);
+  --ki-switch-checked-disabled-border: var(--ki-surface-disabled-med-em);
+  --ki-switch-focus-ring-color: var(--ki-outline-primary-high-em);
   --ki-text-base: var(--ki-text-high-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. */
   --ki-text-muted: var(--ki-text-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. */
   --ki-button-primary-neutral-rest-fg: var(--ki-text-primary-on-primary);
@@ -752,6 +782,12 @@
   --ki-button-primary-success-rest-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-hover-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-active-fg: var(--ki-text-primary-on-success);
+  --ki-switch-unchecked-rest-thumb: var(--ki-text-high-em);
+  --ki-switch-unchecked-hover-thumb: var(--ki-text-high-em);
+  --ki-switch-unchecked-active-thumb: var(--ki-text-high-em);
+  --ki-switch-checked-rest-thumb: var(--ki-text-primary-on-primary);
+  --ki-switch-checked-hover-thumb: var(--ki-text-primary-on-primary);
+  --ki-switch-checked-active-thumb: var(--ki-text-primary-on-primary);
   --ki-button-primary-neutral-disabled-fg: var(--ki-text-muted);
   --ki-button-primary-success-disabled-fg: var(--ki-text-muted);
   --ki-button-primary-danger-disabled-fg: var(--ki-text-muted);
