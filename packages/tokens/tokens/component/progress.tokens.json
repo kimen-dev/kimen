@@ -1,0 +1,38 @@
+{
+  "ki": {
+    "progress": {
+      "linear": {
+        "thickness": {
+          "$value": "{ki.space.xs}"
+        },
+        "radius": {
+          "$value": "{ki.radius.round}"
+        }
+      },
+      "circular": {
+        "size": {
+          "$value": "{ki.space.12xl}"
+        },
+        "track-width": {
+          "$value": "{ki.space.xs}"
+        }
+      },
+      "track": {
+        "color": {
+          "$value": "{ki.surface.s3}"
+        }
+      },
+      "indicator": {
+        "color": {
+          "$value": "{ki.surface.primary-high-em}"
+        }
+      },
+      "indeterminate": {
+        "duration": {
+          "$type": "duration",
+          "$value": "1600ms"
+        }
+      }
+    }
+  }
+}

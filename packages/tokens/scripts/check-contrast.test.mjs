@@ -38,6 +38,16 @@ test('contrast pair table covers the declared data-model pairs', () => {
       ['--ki-text-med-em', '--ki-surface-s0'],
       ['--ki-text-high-em', '--ki-surface-s1'],
       ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
+      ['--ki-progress-indicator-color', '--ki-progress-track-color'],
     ],
   );
+});
+
+test('progress contrast pair uses the non-text 3.0 minimum', () => {
+  const progressPair = resolveContrastPairs().find(
+    (pair) =>
+      pair.text === '--ki-progress-indicator-color' && pair.surface === '--ki-progress-track-color',
+  );
+
+  assert.equal(progressPair?.minimum, 3);
 });

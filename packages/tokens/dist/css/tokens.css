@@ -291,6 +291,7 @@
   --ki-button-ghost-hover-shadow: none;
   --ki-button-ghost-active-shadow: none;
   --ki-button-ghost-disabled-shadow: none;
+  --ki-progress-indeterminate-duration: 1600ms;
   --ki-color-brand-high-em: var(--ki-color-gray-950);
   --ki-color-brand-med-em: var(--ki-color-gray-700);
   --ki-color-brand-low-em: var(--ki-color-gray-600);
@@ -547,6 +548,10 @@
   --ki-button-focus-ring-width: var(--ki-space-xxs);
   --ki-button-focus-ring-offset: var(--ki-space-xxs);
   --ki-button-border-width: var(--ki-space-xxs);
+  --ki-progress-linear-thickness: var(--ki-space-xs);
+  --ki-progress-linear-radius: var(--ki-radius-round);
+  --ki-progress-circular-size: var(--ki-space-12xl);
+  --ki-progress-circular-track-width: var(--ki-space-xs);
   --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s0);
@@ -744,6 +749,8 @@
   --ki-button-ghost-danger-active-border: var(--ki-outline-none);
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+  --ki-progress-track-color: var(--ki-surface-s3);
+  --ki-progress-indicator-color: var(--ki-surface-primary-high-em);
   --ki-text-base: var(--ki-text-high-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. */
   --ki-text-muted: var(--ki-text-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. */
   --ki-button-primary-neutral-rest-fg: var(--ki-text-primary-on-primary);

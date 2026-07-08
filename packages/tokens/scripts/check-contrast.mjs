@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const MIN_RATIO = 4.5;
+const DEFAULT_MIN_RATIO = 4.5;
 const THEMES = [
   { name: 'onmars', stylesheet: new URL('../dist/css/tokens.css', import.meta.url) },
   { name: 'material3', stylesheet: new URL('../dist/css/tokens.material3.css', import.meta.url) },
@@ -11,6 +11,11 @@ const CONTRAST_PAIRS = [
   { text: '--ki-text-med-em', surface: '--ki-surface-s0' },
   { text: '--ki-text-high-em', surface: '--ki-surface-s1' },
   { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
+  {
+    text: '--ki-progress-indicator-color',
+    surface: '--ki-progress-track-color',
+    minimum: 3,
+  },
 ];
 
 export function parseColor(value) {
@@ -169,17 +174,23 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // protects the patterns listed here).
 const COMPONENT_BG_PATTERN =
   /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u;
+const PROGRESS_PATTERN = /^--ki-progress-(?:indicator|track)-color$/u;
 
 function componentPairs(declarations) {
   const pairs = [];
+  let progressMatches = 0;
 
   for (const name of declarations.keys()) {
     if (COMPONENT_BG_PATTERN.test(name)) {
       pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
     }
+
+    if (PROGRESS_PATTERN.test(name)) {
+      progressMatches += 1;
+    }
   }
 
-  return pairs;
+  return { pairs, progressMatches };
 }
 
 function evaluateStylesheet(theme, stylesheet) {
@@ -188,11 +199,17 @@ function evaluateStylesheet(theme, stylesheet) {
   const failures = [];
 
   for (const [scheme, declarations] of Object.entries(schemes)) {
-    const swept = componentPairs(declarations);
+    const { pairs: swept, progressMatches } = componentPairs(declarations);
 
     if (swept.length === 0) {
       failures.push(
         `${theme}/${scheme}: no component-layer pairs matched — the sweep pattern drifted from the token names`,
+      );
+    }
+
+    if (progressMatches === 0) {
+      failures.push(
+        `${theme}/${scheme}: no progress contrast tokens matched — the sweep pattern drifted from the progress token names`,
       );
     }
 
@@ -205,8 +222,9 @@ function evaluateStylesheet(theme, stylesheet) {
       const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
       const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
       const ratio = contrastRatio(text, surface);
+      const minimum = pair.minimum ?? DEFAULT_MIN_RATIO;
 
-      if (ratio < MIN_RATIO) {
+      if (ratio < minimum) {
         failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio}`);
       }
     }
@@ -238,12 +256,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const failures = checkContrast();
 
   if (failures.length > 0) {
-    console.error(`Contrast check failed. Minimum ratio: ${MIN_RATIO}:1`);
+    console.error(`Contrast check failed. Default minimum ratio: ${DEFAULT_MIN_RATIO}:1`);
     for (const failure of failures) {
       console.error(`- ${failure}`);
     }
     process.exit(1);
   }
 
-  console.log(`Contrast check passed. Minimum ratio: ${MIN_RATIO}:1`);
+  console.log(`Contrast check passed. Default minimum ratio: ${DEFAULT_MIN_RATIO}:1`);
 }
