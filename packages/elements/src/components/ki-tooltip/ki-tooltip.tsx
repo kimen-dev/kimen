@@ -12,9 +12,10 @@ import {
  * When to use: add a brief clarifying hint for an icon-only, abbreviated, or
  * otherwise ambiguous control when the same information is discoverable
  * elsewhere in the interface.
- * When NOT to use: essential or unique information, rich or interactive
- * content, form validation messages, disabled controls, or touch-primary
- * flows. Use visible layout text or a future popover pattern for those cases.
+ * When NOT to use: never put essential or unique information in a tooltip;
+ * never put interactive or rich content in a tooltip; do not use tooltips for
+ * form validation messages, disabled controls, or touch-primary flows. Use
+ * visible layout text or a future `ki-popover` pattern for those cases.
  *
  * @slot - Exactly one interactive trigger. The component reflects `label` to
  * the trigger's `aria-description`.
@@ -32,8 +33,12 @@ export class KiTooltip {
    * The entire tooltip content. The string is reflected to the slotted
    * trigger's accessible description without changing its name. Empty or
    * whitespace-only labels render no tooltip and expose no description.
-   * When NOT to use: do not put essential, rich, or interactive content in a
-   * tooltip label.
+   * When to use: a short hint that clarifies the slotted trigger.
+   * When NOT to use: never use `label` for essential information, rich
+   * content, interactive content, validation messages, or information attached
+   * to disabled controls; put that content in visible UI or a future popover.
+   *
+   * @default ''
    */
   @Prop() label = '';
 
