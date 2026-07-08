@@ -249,7 +249,11 @@ describe('ki-checkbox in a real browser', () => {
     const el = await mount('Select all', { indeterminate: true });
 
     expect(inputOf(el).indeterminate).toBe(true);
-    await expect.element(page.getByRole('checkbox', { name: 'Select all' })).toBeInTheDocument();
+    // Review round 1: assert the AT OUTCOME (mixed state in the tree), not
+    // only the property-forward mechanism.
+    await expect
+      .element(page.getByRole('checkbox', { name: 'Select all', checked: 'mixed' }))
+      .toBeInTheDocument();
   });
 
   it('S10 and S11 submit checked values and omit unchecked values', async () => {
@@ -309,6 +313,17 @@ describe('ki-checkbox in a real browser', () => {
 
     expect(inputOf(el).validity.valueMissing).toBe(true);
     expect(getComputedStyle(control).borderTopColor).toBe(restBorder);
+
+    // Review round 1: observe the blocked submission directly, not only
+    // reportValidity's side effects.
+    let submitted = false;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitted = true;
+    });
+    form.requestSubmit();
+    await waitForStyles();
+    expect(submitted).toBe(false);
 
     form.reportValidity();
     await waitForStyles();

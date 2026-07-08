@@ -43,7 +43,7 @@ module.exports = async function componentGenerator(tree, options) {
   // Register in the public entry (Art. I: the contract is the single source).
   const indexPath = 'packages/elements/src/index.ts';
   const index = tree.read(indexPath, 'utf-8') ?? '';
-  const exportLine = `export * from './components/${name}/${name}.js';`;
+  const exportLine = `export { ${names(name).className} } from './components/${name}/${name}.js';\nexport type * from './components/${name}/${name}.js';`;
   if (!index.includes(exportLine)) {
     tree.write(indexPath, `${index.trimEnd()}\n${exportLine}\n`);
   }
