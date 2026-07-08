@@ -15,3 +15,6 @@ closed anatomy, S5, and pure helper logic.
 - T009 browser RED: `pnpm --filter @kimen/elements run test-browser` fails in
   S1/S2/S3/S4/S15/FR-015 because the built scaffold still renders only the
   placeholder label and no internal native `<dialog>` anatomy.
+- T013 keyboard RED: `pnpm --filter @kimen/elements run test-browser` fails in
+  S7 because focus is not observed inside the dialog after tabbing from the
+  last slotted action.

@@ -54,6 +54,11 @@ async function waitFor(condition: () => boolean, message: string): Promise<void>
 async function mountDialog(
   attributes: Record<string, string | boolean> = {},
   parent: ParentNode = document.body,
+  content = `
+    <p>This action permanently deletes your account.</p>
+    <button slot="footer" type="button">Cancel</button>
+    <button slot="footer" type="button">Delete</button>
+  `,
 ): Promise<KiDialogElement> {
   ensureTokens();
   const el = document.createElement('ki-dialog') as KiDialogElement;
@@ -65,11 +70,7 @@ async function mountDialog(
     }
   }
   el.heading = 'Delete account?';
-  el.innerHTML = `
-    <p>This action permanently deletes your account.</p>
-    <button slot="footer" type="button">Cancel</button>
-    <button slot="footer" type="button">Delete</button>
-  `;
+  el.innerHTML = content;
   parent.appendChild(el);
   await customElements.whenDefined('ki-dialog');
   await waitFor(
@@ -95,6 +96,14 @@ function bodyPart(el: KiDialogElement): HTMLElement {
     throw new Error('ki-dialog did not render body part');
   }
   return body;
+}
+
+function activeElementDeep(root: Document | ShadowRoot = document): Element | null {
+  const active = root.activeElement;
+  if (active?.shadowRoot?.activeElement) {
+    return activeElementDeep(active.shadowRoot);
+  }
+  return active;
 }
 
 function footerButton(el: KiDialogElement, label: string): HTMLButtonElement {
@@ -284,5 +293,81 @@ describe('ki-dialog in a real browser', () => {
 
     expect(dialogRect.height).toBeLessThanOrEqual(window.innerHeight);
     expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+  });
+
+  it('S6 opening from the keyboard follows focus-entry priority with visible focus', async () => {
+    cleanup();
+    const opener = document.createElement('button');
+    opener.textContent = 'Delete account';
+    document.body.append(opener);
+    const withAutofocus = await mountDialog(
+      {},
+      document.body,
+      '<button type="button" autofocus>Keep account</button><button type="button">Delete</button>',
+    );
+    opener.addEventListener('click', () => {
+      void withAutofocus.show();
+    });
+
+    opener.focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => withAutofocus.open, 'autofocus dialog opened');
+    expect(activeElementDeep()).toBe(withAutofocus.querySelector('[autofocus]'));
+    await withAutofocus.close();
+
+    const firstFocusable = await mountDialog(
+      {},
+      document.body,
+      '<p>Review this decision.</p><button type="button">First action</button>',
+    );
+    await openDialog(firstFocusable);
+    expect(activeElementDeep()).toBe(firstFocusable.querySelector('button'));
+    await firstFocusable.close();
+
+    const noFocusable = await mountDialog({}, document.body, '<p>No actions yet.</p>');
+    await openDialog(noFocusable);
+    const surface = internalDialog(noFocusable);
+    expect(activeElementDeep()).toBe(surface);
+    const styles = getComputedStyle(surface);
+    expect(styles.outlineStyle).not.toBe('none');
+    expect(styles.outlineWidth).not.toBe('0px');
+  });
+
+  it('S7 Tab from the last focusable action keeps focus inside the open dialog', async () => {
+    cleanup();
+    const behind = document.createElement('button');
+    behind.textContent = 'Background action';
+    document.body.append(behind);
+    const el = await mountDialog();
+    await openDialog(el);
+    const deleteButton = footerButton(el, 'Delete');
+
+    deleteButton.focus();
+    await userEvent.keyboard('{Tab}');
+
+    expect(activeElementDeep()).not.toBe(behind);
+    expect(el.contains(activeElementDeep())).toBe(true);
+  });
+
+  it('S8 Escape closes the dialog with reason escape and returns focus to the opener', async () => {
+    cleanup();
+    const opener = document.createElement('button');
+    opener.textContent = 'Delete account';
+    document.body.append(opener);
+    const el = await mountDialog();
+    opener.addEventListener('click', () => {
+      void el.show();
+    });
+
+    opener.focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => el.open, 'dialog opened from keyboard');
+    const closed = nextClose(el);
+    await userEvent.keyboard('{Escape}');
+    const event = await closed;
+
+    expect(el.open).toBe(false);
+    expect(event.detail.reason).toBe('escape');
+    expect(document.activeElement).toBe(opener);
   });
 });
