@@ -1,5 +1,6 @@
 import tokensCss from '@kimen/tokens/css?raw';
 import axe from 'axe-core';
+import { commands } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:015-ki-progress
@@ -17,6 +18,9 @@ type KiProgressElement = HTMLElement & {
 };
 
 const STYLE_ID = 'ki-progress-browser-token-style';
+const browserCommands = commands as unknown as {
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
+};
 
 beforeAll(() => {
   defineCustomElement();
@@ -38,6 +42,10 @@ function cleanup(): void {
   document.documentElement.removeAttribute('dir');
   document.documentElement.removeAttribute('data-ki-theme');
   document.documentElement.removeAttribute('data-ki-color-scheme');
+}
+
+async function cleanupMedia(): Promise<void> {
+  await browserCommands.emulateReducedMotion(null);
 }
 
 async function waitForRender(el: KiProgressElement): Promise<void> {
@@ -137,9 +145,17 @@ function circularDash(el: KiProgressElement): string {
   return getComputedStyle(indicator(el)).strokeDasharray;
 }
 
+function runningInfiniteAnimations(el: Element): Animation[] {
+  return el.getAnimations().filter((animation) => {
+    const timing = animation.effect?.getComputedTiming();
+    return animation.playState === 'running' && timing?.iterations === Number.POSITIVE_INFINITY;
+  });
+}
+
 describe('ki-progress in a real browser', () => {
   it('S1 fills a linear progress to 40 percent of the track', async () => {
     cleanup();
+    await cleanupMedia();
     const el = await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
 
     expect(linearFillRatio(el)).toBeCloseTo(0.4, 1);
@@ -147,6 +163,7 @@ describe('ki-progress in a real browser', () => {
 
   it('S2 presents circular progress as 40 of the normalized circumference', async () => {
     cleanup();
+    await cleanupMedia();
     const el = await mount({
       label: 'Uploading report.pdf',
       shape: 'circular',
@@ -160,6 +177,7 @@ describe('ki-progress in a real browser', () => {
 
   it('S4 clamps values above max to a full linear indicator', async () => {
     cleanup();
+    await cleanupMedia();
     const el = await mount({ label: 'Uploading report.pdf', value: '250', max: '100' });
 
     expect(linearFillRatio(el)).toBeCloseTo(1, 1);
@@ -168,6 +186,7 @@ describe('ki-progress in a real browser', () => {
 
   it('S13 updates fill and exposed value when value changes at runtime', async () => {
     cleanup();
+    await cleanupMedia();
     const el = await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
 
     el.value = 80;
@@ -179,6 +198,7 @@ describe('ki-progress in a real browser', () => {
 
   it('S14 renders documented malformed rows safely in a real browser', async () => {
     cleanup();
+    await cleanupMedia();
     const cases = [
       { value: '-10', max: '100', expected: '0', ratio: 0 },
       { value: 'abc', max: '100', expected: '0', ratio: 0 },
@@ -197,6 +217,7 @@ describe('ki-progress in a real browser', () => {
 
   it('S1 resolves track and indicator colors from progress tokens', async () => {
     cleanup();
+    await cleanupMedia();
     const el = await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
 
     expect(getComputedStyle(track(el)).backgroundColor).toBe(
@@ -209,9 +230,48 @@ describe('ki-progress in a real browser', () => {
 
   it('S1 has zero axe violations for labeled determinate progress mounted in main', async () => {
     cleanup();
+    await cleanupMedia();
     await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
 
     const results = await axe.run(requireMain());
     expect(results.violations).toEqual([]);
+  });
+
+  it('S3 shows running infinite indeterminate activity in both shapes without a completed fraction', async () => {
+    cleanup();
+    await browserCommands.emulateReducedMotion('no-preference');
+
+    for (const shape of ['linear', 'circular'] as const) {
+      const el = await mount({ label: 'Loading messages', indeterminate: true, shape });
+      expect(progressbar(el).hasAttribute('aria-valuenow')).toBe(false);
+      expect(runningInfiniteAnimations(indicator(el))).not.toHaveLength(0);
+    }
+  });
+
+  it('S15 lets indeterminate win over a declared value', async () => {
+    cleanup();
+    await browserCommands.emulateReducedMotion('no-preference');
+    const el = await mount({
+      label: 'Loading messages',
+      indeterminate: true,
+      value: '40',
+      max: '100',
+    });
+
+    expect(progressbar(el).hasAttribute('aria-valuenow')).toBe(false);
+    expect(indicator(el).getBoundingClientRect().width).not.toBeCloseTo(
+      track(el).getBoundingClientRect().width * 0.4,
+      1,
+    );
+  });
+
+  it('S6 renders indeterminate without running infinite animation under reduced motion', async () => {
+    cleanup();
+    await browserCommands.emulateReducedMotion('reduce');
+    const el = await mount({ label: 'Loading messages', indeterminate: true });
+
+    expect(progressbar(el).hasAttribute('aria-valuenow')).toBe(false);
+    expect(indicator(el).getBoundingClientRect().width).toBeGreaterThan(0);
+    expect(runningInfiniteAnimations(indicator(el))).toHaveLength(0);
   });
 });
