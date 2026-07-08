@@ -7,6 +7,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
+import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-alert.js';
 
 type KiAlertElement = HTMLElement & {
@@ -18,6 +19,7 @@ type KiAlertElement = HTMLElement & {
 };
 
 const STYLE_ID = 'ki-alert-browser-token-style';
+const MATERIAL3_STYLE_ID = 'ki-alert-browser-material3-token-style';
 const tones = ['neutral', 'success', 'danger', 'info', 'warning'] as const;
 
 beforeAll(() => {
@@ -32,6 +34,17 @@ function ensureTokens(): void {
   const style = document.createElement('style');
   style.id = STYLE_ID;
   style.textContent = tokensCss;
+  document.head.append(style);
+}
+
+function ensureMaterial3Tokens(): void {
+  if (document.getElementById(MATERIAL3_STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = MATERIAL3_STYLE_ID;
+  style.textContent = material3Css;
   document.head.append(style);
 }
 
@@ -410,5 +423,47 @@ describe('ki-alert in a real browser', () => {
 
     const results = await axe.run(main);
     expect(results.violations).toEqual([]);
+  });
+
+  it('S13 material3 restyles all five alert tones through tokens alone', async () => {
+    cleanup();
+    ensureTokens();
+    const onmars = new Map<string, string>();
+    for (const tone of tones) {
+      const el = await mount(tone, { tone });
+      onmars.set(tone, getComputedStyle(part(el, 'alert')).backgroundColor);
+    }
+
+    cleanup();
+    ensureTokens();
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    const material3 = new Map<string, string>();
+    for (const tone of tones) {
+      const el = await mount(tone, { tone });
+      material3.set(tone, getComputedStyle(part(el, 'alert')).backgroundColor);
+    }
+
+    for (const tone of tones) {
+      expect(material3.get(tone), `${tone} should restyle under material3`).not.toBe(
+        onmars.get(tone),
+      );
+    }
+  });
+
+  it('S15 keeps the message leading and dismiss control trailing under RTL', async () => {
+    cleanup();
+    document.documentElement.setAttribute('dir', 'rtl');
+    const el = await mount('Backup completed', { dismissible: true });
+    const message = part(el, 'message');
+    const dismiss = dismissButton(el);
+
+    expect(dismiss).toBeInstanceOf(HTMLButtonElement);
+    if (!dismiss) {
+      throw new Error('ki-alert did not render a dismiss button');
+    }
+    expect(message.getBoundingClientRect().left).toBeGreaterThan(
+      dismiss.getBoundingClientRect().left,
+    );
   });
 });
