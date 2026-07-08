@@ -404,4 +404,27 @@ describe('ki-progress in a real browser', () => {
     expect(indicatorRect.right).toBeCloseTo(trackRect.right, 1);
     expect(indicatorRect.left).toBeGreaterThan(trackRect.left);
   });
+
+  it('S5 renders an unrecognized shape with default linear metrics', async () => {
+    cleanup();
+    await cleanupMedia();
+    const baseline = await mount({ label: 'Default shape', value: '40', max: '100' });
+    const baselineTrackSize = getComputedStyle(track(baseline)).blockSize;
+    baseline.remove();
+
+    const el = await mount({ label: 'Unknown shape', shape: 'banana', value: '40', max: '100' });
+
+    expect(requireShadow(el).querySelector('svg')).toBeNull();
+    expect(getComputedStyle(track(el)).blockSize).toBe(baselineTrackSize);
+    expect(linearFillRatio(el)).toBeCloseTo(0.4, 1);
+  });
+
+  it('S14 renders a non-numeric value empty at the default 0', async () => {
+    cleanup();
+    await cleanupMedia();
+    const el = await mount({ label: 'Uploading report.pdf', value: 'abc', max: '100' });
+
+    expect(progressbar(el).getAttribute('aria-valuenow')).toBe('0');
+    expect(linearFillRatio(el)).toBeCloseTo(0, 1);
+  });
 });
