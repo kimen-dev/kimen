@@ -10,13 +10,11 @@ describe('ki-list mock-doc anatomy', () => {
         <ki-list-item>Email</ki-list-item>
       </ki-list>,
     );
-    const internals = (root as unknown as { internals?: ElementInternals }).internals;
     const wrapper = root.shadowRoot?.querySelector('[part="list"]');
 
-    if (internals?.role !== undefined) {
-      expect(internals.role).toBe('list');
-    }
-    expect(root.hasAttribute('role')).toBe(false);
+    // Role is reflected on the host (verified in the real AX tree by S6);
+    // here we assert the reflected attribute and the wrapper anatomy.
+    expect(root.getAttribute('role')).toBe('list');
     expect(root.hasAttribute('aria-label')).toBe(false);
     expect(wrapper?.tagName).toBe('DIV');
     expect(wrapper?.children).toHaveLength(1);

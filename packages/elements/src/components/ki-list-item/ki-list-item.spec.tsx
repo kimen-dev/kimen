@@ -21,15 +21,12 @@ describe('ki-list-item mock-doc anatomy', () => {
     const item = await renderItem(
       '<ki-list-item><span slot="start">A</span>Ana Garcia<span slot="secondary">ana@onmars.dev</span><span slot="end">9:41</span></ki-list-item>',
     );
-    const internals = (item as unknown as { internals?: ElementInternals }).internals;
     const parts = [...(item.shadowRoot?.querySelector('[part="item"]')?.children ?? [])].map(
       (child) => child.getAttribute('part'),
     );
 
-    if (internals?.role !== undefined) {
-      expect(internals.role).toBe('listitem');
-    }
-    expect(item.hasAttribute('role')).toBe(false);
+    // Role reflected on the host (real AX-tree ownership verified by S6).
+    expect(item.getAttribute('role')).toBe('listitem');
     expect(parts).toEqual(['start', 'content', 'end']);
     expect(region(item, 'content')?.querySelector('.primary slot:not([name])')?.tagName).toBe(
       'SLOT',
@@ -79,9 +76,9 @@ describe('ki-list-item mock-doc anatomy', () => {
   ])('S3 collapses absent regions: %s', async (_name, html, hasStart, hasSecondary, hasEnd) => {
     const item = await renderItem(html);
 
-    expect(item.classList.contains('has-start')).toBe(hasStart);
+    // Only .has-secondary is a host class (drives the multi-line min-height
+    // token); region collapse is driven by the `hidden` attribute per region.
     expect(item.classList.contains('has-secondary')).toBe(hasSecondary);
-    expect(item.classList.contains('has-end')).toBe(hasEnd);
     expect(region(item, 'start')?.hidden).toBe(!hasStart);
     expect(item.shadowRoot?.querySelector<HTMLElement>('.secondary')?.hidden).toBe(!hasSecondary);
     expect(region(item, 'end')?.hidden).toBe(!hasEnd);
