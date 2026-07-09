@@ -12,6 +12,19 @@ const LAYERS = [
   'tokens/component/tabs.tokens.json',
   'tokens/component/tab.tokens.json',
   'tokens/component/tab-panel.tokens.json',
+  'tokens/component/dialog.tokens.json',
+  'tokens/component/tooltip.tokens.json',
+  'tokens/component/list.tokens.json',
+  'tokens/component/progress.tokens.json',
+  'tokens/component/radio.tokens.json',
+  'tokens/component/radio-group.tokens.json',
+  'tokens/component/alert.tokens.json',
+  'tokens/component/switch.tokens.json',
+  'tokens/component/badge.tokens.json',
+  'tokens/component/textarea.tokens.json',
+  'tokens/component/checkbox.tokens.json',
+  'tokens/component/card.tokens.json',
+  'tokens/component/input.tokens.json',
 ];
 const MATERIAL3_LAYERS = [
   ...LAYERS,
@@ -19,6 +32,18 @@ const MATERIAL3_LAYERS = [
   'tokens/semantic/material3.tokens.json',
   'tokens/component/button.material3.tokens.json',
   'tokens/component/tab.material3.tokens.json',
+  'tokens/component/dialog.material3.tokens.json',
+  'tokens/component/tooltip.material3.tokens.json',
+  'tokens/component/list.material3.tokens.json',
+  'tokens/component/progress.material3.tokens.json',
+  'tokens/component/radio.material3.tokens.json',
+  'tokens/component/alert.material3.tokens.json',
+  'tokens/component/switch.material3.tokens.json',
+  'tokens/component/badge.material3.tokens.json',
+  'tokens/component/textarea.material3.tokens.json',
+  'tokens/component/checkbox.material3.tokens.json',
+  'tokens/component/card.material3.tokens.json',
+  'tokens/component/input.material3.tokens.json',
 ];
 
 function variables({ dictionary, options, indentation = '  ' }) {

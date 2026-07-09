@@ -1,0 +1,192 @@
+{
+  "ki": {
+    "checkbox": {
+      "control-size": {
+        "$value": "{ki.space.5xl}"
+      },
+      "min-target": {
+        "$value": "{ki.space.7xl}"
+      },
+      "gap": {
+        "$value": "{ki.space.sm}"
+      },
+      "radius": {
+        "$value": "{ki.radius.xs}"
+      },
+      "border-width": {
+        "$value": "{ki.space.xxs}"
+      },
+      "label": {
+        "font-size": {
+          "$value": "{ki.typography.size.body-1}"
+        },
+        "font-weight": {
+          "$value": "{ki.typography.weight.body.normal}"
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.body-1}"
+        }
+      },
+      "unchecked": {
+        "rest": {
+          "bg": {
+            "$value": "{ki.surface.s0}"
+          },
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.strong}"
+          }
+        },
+        "hover": {
+          "bg": {
+            "$value": "{ki.surface.s1}"
+          },
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.primary-high-em}"
+          }
+        },
+        "active": {
+          "bg": {
+            "$value": "{ki.surface.s2}"
+          },
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.primary-high-em}"
+          }
+        },
+        "disabled": {
+          "bg": {
+            "$value": "{ki.surface.disabled-low-em}"
+          },
+          "fg": {
+            "$value": "{ki.text.muted}"
+          },
+          "border": {
+            "$value": "{ki.outline.med-em}"
+          }
+        }
+      },
+      "checked": {
+        "rest": {
+          "bg": {
+            "$value": "{ki.surface.primary-high-em}"
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}"
+          },
+          "border": {
+            "$value": "{ki.outline.none}"
+          }
+        },
+        "hover": {
+          "bg": {
+            "$value": "{ki.surface.primary-high-em-hover}"
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}"
+          },
+          "border": {
+            "$value": "{ki.outline.none}"
+          }
+        },
+        "active": {
+          "bg": {
+            "$value": "{ki.surface.primary-high-em}"
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}"
+          },
+          "border": {
+            "$value": "{ki.outline.none}"
+          }
+        },
+        "disabled": {
+          "bg": {
+            "$value": "{ki.surface.disabled-low-em}"
+          },
+          "fg": {
+            "$value": "{ki.text.muted}"
+          },
+          "border": {
+            "$value": "{ki.outline.none}"
+          }
+        }
+      },
+      "indeterminate": {
+        "rest": {
+          "bg": {
+            "$value": "{ki.surface.primary-high-em}"
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}"
+          },
+          "border": {
+            "$value": "{ki.outline.none}"
+          }
+        },
+        "hover": {
+          "bg": {
+            "$value": "{ki.surface.primary-high-em-hover}"
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}"
+          },
+          "border": {
+            "$value": "{ki.outline.none}"
+          }
+        },
+        "active": {
+          "bg": {
+            "$value": "{ki.surface.primary-high-em}"
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}"
+          },
+          "border": {
+            "$value": "{ki.outline.none}"
+          }
+        },
+        "disabled": {
+          "bg": {
+            "$value": "{ki.surface.disabled-low-em}"
+          },
+          "fg": {
+            "$value": "{ki.text.muted}"
+          },
+          "border": {
+            "$value": "{ki.outline.none}"
+          }
+        }
+      },
+      "invalid": {
+        "bg": {
+          "$value": "{ki.surface.danger-low-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.danger-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.danger-high-em}"
+        }
+      },
+      "focus-ring": {
+        "color": {
+          "$value": "{ki.outline.primary-high-em}"
+        },
+        "width": {
+          "$value": "{ki.space.xxs}"
+        },
+        "offset": {
+          "$value": "{ki.space.xxs}"
+        }
+      }
+    }
+  }
+}

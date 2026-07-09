@@ -1,0 +1,185 @@
+{
+  "ki": {
+    "input": {
+      "height": {
+        "$value": "{ki.space.14xl}"
+      },
+      "min-target": {
+        "$value": "{ki.space.7xl}"
+      },
+      "padding-inline": {
+        "$value": "{ki.space.lg}"
+      },
+      "gap": {
+        "$value": "{ki.space.xs}"
+      },
+      "label-gap": {
+        "$value": "{ki.space.xs}"
+      },
+      "radius": {
+        "$value": "{ki.radius.md}"
+      },
+      "icon-size": {
+        "$value": "{ki.space.4xl}"
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-1}"
+      },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.normal}"
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}"
+      },
+      "label": {
+        "font-size": {
+          "$value": "{ki.typography.size.caption-2}"
+        },
+        "font-weight": {
+          "$value": "{ki.typography.weight.body.medium}"
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.caption-2}"
+        }
+      },
+      "border-width": {
+        "$value": "{ki.space.xxs}"
+      },
+      "border": {
+        "block-start": {
+          "width": {
+            "$value": "{ki.input.border-width}"
+          }
+        },
+        "block-end": {
+          "width": {
+            "$value": "{ki.input.border-width}"
+          }
+        },
+        "inline-start": {
+          "width": {
+            "$value": "{ki.input.border-width}"
+          }
+        },
+        "inline-end": {
+          "width": {
+            "$value": "{ki.input.border-width}"
+          }
+        }
+      },
+      "rest": {
+        "bg": {
+          "$value": "{ki.surface.base}"
+        },
+        "fg": {
+          "$value": "{ki.text.base}"
+        },
+        "border": {
+          "$value": "{ki.outline.med-em}"
+        },
+        "label-fg": {
+          "$value": "{ki.text.muted}"
+        },
+        "placeholder-fg": {
+          "$value": "{ki.text.muted}"
+        }
+      },
+      "hover": {
+        "bg": {
+          "$value": "{ki.surface.base}"
+        },
+        "fg": {
+          "$value": "{ki.text.base}"
+        },
+        "border": {
+          "$value": "{ki.outline.high-em}"
+        },
+        "label-fg": {
+          "$value": "{ki.text.base}"
+        },
+        "placeholder-fg": {
+          "$value": "{ki.text.muted}"
+        }
+      },
+      "focus": {
+        "bg": {
+          "$value": "{ki.surface.base}"
+        },
+        "fg": {
+          "$value": "{ki.text.base}"
+        },
+        "border": {
+          "$value": "{ki.outline.primary-high-em}"
+        },
+        "label-fg": {
+          "$value": "{ki.text.primary-med-em}"
+        },
+        "placeholder-fg": {
+          "$value": "{ki.text.muted}"
+        }
+      },
+      "disabled": {
+        "bg": {
+          "$value": "{ki.surface.disabled-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.muted}"
+        },
+        "border": {
+          "$value": "{ki.outline.low-em}"
+        },
+        "label-fg": {
+          "$value": "{ki.text.muted}"
+        },
+        "placeholder-fg": {
+          "$value": "{ki.text.muted}"
+        }
+      },
+      "readonly": {
+        "bg": {
+          "$value": "{ki.surface.raised}"
+        },
+        "fg": {
+          "$value": "{ki.text.base}"
+        },
+        "border": {
+          "$value": "{ki.outline.base-em}"
+        },
+        "label-fg": {
+          "$value": "{ki.text.muted}"
+        },
+        "placeholder-fg": {
+          "$value": "{ki.text.muted}"
+        }
+      },
+      "invalid": {
+        "bg": {
+          "$value": "{ki.surface.base}"
+        },
+        "fg": {
+          "$value": "{ki.text.base}"
+        },
+        "border": {
+          "$value": "{ki.outline.danger-high-em}"
+        },
+        "label-fg": {
+          "$value": "{ki.text.danger}"
+        },
+        "placeholder-fg": {
+          "$value": "{ki.text.muted}"
+        }
+      },
+      "focus-ring": {
+        "color": {
+          "$value": "{ki.outline.primary-high-em}"
+        },
+        "width": {
+          "$value": "{ki.space.xxs}"
+        },
+        "offset": {
+          "$value": "{ki.space.xxs}"
+        }
+      }
+    }
+  }
+}

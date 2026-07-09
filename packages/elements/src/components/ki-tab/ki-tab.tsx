@@ -3,8 +3,9 @@ import { Component, Element, Host, Prop, h } from '@stencil/core';
 /**
  * One selectable tab inside a `ki-tabs` view switcher.
  *
- * When to use: label one peer content view inside `ki-tabs`, with optional
- * `start` and `end` slot media. When NOT to use: standalone, for form value
+ * @whenToUse label one peer content view inside `ki-tabs`, with optional
+ * `start` and `end` slot media.
+ * @whenNotToUse standalone, for form value
  * selection, or for page navigation; use the parent group's `value` instead
  * of authoring `selected`.
  *

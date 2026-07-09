@@ -1,0 +1,96 @@
+/* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
+ * Logical properties only (Art. IV): direction-agnostic by construction. */
+:host {
+  --_ki-progress-linear-thickness: var(--ki-progress-linear-thickness);
+  --_ki-progress-linear-radius: var(--ki-progress-linear-radius);
+  --_ki-progress-circular-size: var(--ki-progress-circular-size);
+  --_ki-progress-circular-track-width: var(--ki-progress-circular-track-width);
+  --_ki-progress-track-color: var(--ki-progress-track-color);
+  --_ki-progress-indicator-color: var(--ki-progress-indicator-color);
+  --_ki-progress-indeterminate-duration: var(--ki-progress-indeterminate-duration);
+
+  display: block;
+}
+
+.base {
+  display: block;
+}
+
+.base-linear [part="track"] {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  block-size: var(--_ki-progress-linear-thickness);
+  border-radius: var(--_ki-progress-linear-radius);
+  background: var(--_ki-progress-track-color);
+}
+
+.base-linear [part="indicator"] {
+  display: block;
+  block-size: 100%;
+  inline-size: calc(var(--_ki-progress-fraction) * 100%);
+  border-radius: inherit;
+  background: var(--_ki-progress-indicator-color);
+}
+
+.base-circular svg {
+  display: block;
+  inline-size: var(--_ki-progress-circular-size);
+  block-size: var(--_ki-progress-circular-size);
+  transform: rotate(-90deg);
+}
+
+.base-circular [part="track"],
+.base-circular [part="indicator"] {
+  fill: none;
+  stroke-width: var(--_ki-progress-circular-track-width);
+}
+
+.base-circular [part="track"] {
+  stroke: var(--_ki-progress-track-color);
+}
+
+.base-circular [part="indicator"] {
+  stroke: var(--_ki-progress-indicator-color);
+  stroke-dasharray: calc(var(--_ki-progress-fraction) * 100) 100;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+:host([indeterminate]) .base-linear [part="indicator"] {
+  position: relative;
+  inset-inline-start: 0%;
+  inline-size: 40%;
+}
+
+:host([indeterminate]) .base-circular [part="indicator"] {
+  stroke-dasharray: 25 100;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :host([indeterminate]) .base-linear [part="indicator"] {
+    animation: ki-progress-linear-indeterminate var(--_ki-progress-indeterminate-duration) linear
+      infinite;
+  }
+
+  :host([indeterminate]) .base-circular [part="indicator"] {
+    animation: ki-progress-circular-indeterminate var(--_ki-progress-indeterminate-duration) linear
+      infinite;
+  }
+}
+
+@keyframes ki-progress-linear-indeterminate {
+  from {
+    inset-inline-start: -40%;
+  }
+
+  to {
+    inset-inline-start: 100%;
+  }
+}
+
+@keyframes ki-progress-circular-indeterminate {
+  to {
+    transform: rotate(360deg);
+  }
+}

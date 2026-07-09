@@ -3,8 +3,9 @@ import { Component, Host, Prop, h } from '@stencil/core';
 /**
  * One content view paired with a `ki-tab` inside `ki-tabs`.
  *
- * When to use: hold the content for one peer tab view, sharing `value` with
- * its `ki-tab`. When NOT to use: standalone, as lazy mounting, or for page
+ * @whenToUse hold the content for one peer tab view, sharing `value` with
+ * its `ki-tab`.
+ * @whenNotToUse standalone, as lazy mounting, or for page
  * navigation; orphan and duplicate panels are hidden by the parent group.
  *
  * @slot - Panel content.

@@ -1,0 +1,55 @@
+{
+  "ki": {
+    "dialog": {
+      "radius": {
+        "$value": "{ki.radius.8xl}"
+      },
+      "padding": {
+        "$value": "{ki.space.7xl}"
+      },
+      "gap": {
+        "$value": "{ki.space.5xl}"
+      },
+      "min-width": {
+        "$value": "{ki.space.25xl}"
+      },
+      "max-width": {
+        "$value": "{ki.space.26xl}"
+      },
+      "bg": {
+        "$value": "{ki.surface.s3}"
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}"
+      },
+      "border": {
+        "$value": "none"
+      },
+      "shadow": {
+        "$value": "0 {ki.space.xxs} {ki.space.xs} {ki.elevation.shadow-med}, 0 {ki.space.xs} {ki.space.md} {ki.elevation.shadow}"
+      },
+      "backdrop-bg": {
+        "$value": "{ki.overlay.high-em}"
+      },
+      "heading": {
+        "font-size": {
+          "$value": "{ki.typography.size.title-2}"
+        },
+        "font-weight": {
+          "$value": "{ki.typography.weight.body.normal}"
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.title-2}"
+        }
+      },
+      "motion": {
+        "duration": {
+          "$value": "200ms"
+        },
+        "easing": {
+          "$value": "cubic-bezier(0, 0, 0.2, 1)"
+        }
+      }
+    }
+  }
+}

@@ -29,8 +29,9 @@ let nextId = 0;
 /**
  * A tab group for switching between peer content views.
  *
- * When to use: switch between small sets of peer views inside the same page,
- * with one visible panel at a time. When NOT to use: selecting form values
+ * @whenToUse switch between small sets of peer views inside the same page,
+ * with one visible panel at a time.
+ * @whenNotToUse selecting form values
  * (use `ki-radio-group`), page navigation (use links), step flows, or
  * standalone `ki-tab` / `ki-tab-panel` children outside this group.
  *

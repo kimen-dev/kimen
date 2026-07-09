@@ -1,0 +1,66 @@
+{
+  "ki": {
+    "dialog": {
+      "radius": {
+        "$value": "{ki.radius.2xl}"
+      },
+      "padding": {
+        "$value": "{ki.space.7xl}"
+      },
+      "gap": {
+        "$value": "{ki.space.5xl}"
+      },
+      "min-width": {
+        "$value": "{ki.space.25xl}"
+      },
+      "max-width": {
+        "$value": "{ki.space.26xl}"
+      },
+      "bg": {
+        "$value": "{ki.surface.s1}"
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}"
+      },
+      "border": {
+        "$value": "1px solid {ki.outline.low-em}"
+      },
+      "shadow": {
+        "$value": "0 {ki.space.xs} {ki.space.3xl} {ki.elevation.shadow-med}, 0 {ki.space.5xl} {ki.space.9xl} {ki.elevation.shadow}"
+      },
+      "backdrop-bg": {
+        "$value": "{ki.overlay.high-em}"
+      },
+      "heading": {
+        "font-size": {
+          "$value": "{ki.typography.size.title-2}"
+        },
+        "font-weight": {
+          "$value": "{ki.typography.weight.body.semibold}"
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.title-2}"
+        }
+      },
+      "focus-ring": {
+        "color": {
+          "$value": "{ki.outline.primary-high-em}"
+        },
+        "width": {
+          "$value": "{ki.space.xxs}"
+        },
+        "offset": {
+          "$value": "{ki.space.xxs}"
+        }
+      },
+      "motion": {
+        "duration": {
+          "$value": "0ms"
+        },
+        "easing": {
+          "$value": "linear"
+        }
+      }
+    }
+  }
+}
