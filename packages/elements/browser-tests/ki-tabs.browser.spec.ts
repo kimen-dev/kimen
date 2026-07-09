@@ -1,4 +1,5 @@
 import axe from 'axe-core';
+import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { page, userEvent } from 'vitest/browser';
 import { commands } from 'vitest/browser';
@@ -15,9 +16,11 @@ type KiTabsElement = HTMLElement & { value: string };
 const browserCommands = commands as unknown as {
   ariaSnapshotByRole: (role: 'tablist' | 'tabpanel', name?: string) => Promise<string>;
   ariaSnapshot: (selector: string) => Promise<string>;
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
 };
 
 const STYLE_ID = 'ki-tabs-browser-token-style';
+const MATERIAL3_STYLE_ID = 'ki-tabs-browser-material3-token-style';
 
 beforeAll(() => {
   defineKiTabs();
@@ -40,6 +43,17 @@ function ensureTokens(): void {
   const style = document.createElement('style');
   style.id = STYLE_ID;
   style.textContent = tokensCss;
+  document.head.append(style);
+}
+
+function ensureMaterial3Tokens(): void {
+  if (document.getElementById(MATERIAL3_STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = MATERIAL3_STYLE_ID;
+  style.textContent = material3Css;
   document.head.append(style);
 }
 
@@ -350,5 +364,57 @@ describe('ki-tabs keyboard behavior in a real browser', () => {
     await userEvent.tab();
 
     expect(document.activeElement).toBe(after);
+  });
+});
+
+describe('ki-tabs theming behavior in a real browser', () => {
+  it('S9 material3 restyles tabs through token values alone', async () => {
+    const tabs = await mount(fixture());
+    const email = tab(tabs, 'email');
+    const onmarsColor = getComputedStyle(email).color;
+    const onmarsIndicator = getComputedStyle(email)
+      .getPropertyValue('--ki-tab-indicator-color')
+      .trim();
+
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    const material3Style = getComputedStyle(email);
+
+    expect(material3Style.color).not.toBe(onmarsColor);
+    expect(material3Style.getPropertyValue('--ki-tab-indicator-color').trim()).not.toBe(
+      onmarsIndicator,
+    );
+    expect(material3Style.getPropertyValue('--ki-tabs-gap').trim()).not.toBe('');
+    expect(material3Style.getPropertyValue('--ki-tab-panel-bg').trim()).not.toBe('');
+  });
+
+  it('S11 lays out the first tab from the right in RTL', async () => {
+    document.documentElement.dir = 'rtl';
+    const tabs = await mount(fixture());
+    const emailBox = tab(tabs, 'email').getBoundingClientRect();
+    const notificationsBox = tab(tabs, 'notifications').getBoundingClientRect();
+
+    expect(emailBox.right).toBeGreaterThan(notificationsBox.right);
+  });
+
+  it('S17 switches panels without transition or animation under reduced motion', async () => {
+    await browserCommands.emulateReducedMotion('reduce');
+    const tabs = await mount(fixture());
+
+    await userEvent.click(tab(tabs, 'notifications'));
+
+    const visiblePanel = panel(tabs, 'notifications');
+    const indicator = tab(tabs, 'notifications').shadowRoot?.querySelector('[part="indicator"]');
+    if (!(indicator instanceof HTMLElement)) {
+      throw new Error('Missing indicator part');
+    }
+
+    expect(visiblePanel.hasAttribute('hidden')).toBe(false);
+    expect(getComputedStyle(visiblePanel).transitionDuration).toBe('0s');
+    expect(getComputedStyle(visiblePanel).animationName).toBe('none');
+    expect(getComputedStyle(indicator).transitionDuration).toBe('0s');
+    expect(getComputedStyle(indicator).animationName).toBe('none');
   });
 });
