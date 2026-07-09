@@ -1,0 +1,50 @@
+# @kimen/elements — Kimen web components
+
+> Kimen web components (ki-*). Standards-first Stencil components, tokens-only styling, agent-legible by contract.
+
+Install with `pnpm add @kimen/elements`.
+
+Register individual components from the custom-elements bundle before using them:
+
+```ts
+import { defineCustomElement as defineKiButton } from '@kimen/elements/dist/components/ki-button.js';
+
+defineKiButton();
+```
+
+Load `@kimen/tokens/dist/css/tokens.css` once for the Mars default theme. Theme variants are selected with package-supported theme attributes and remain token-driven.
+
+## Components
+
+### ki-button
+
+A token-styled action button with native button semantics.
+
+When to use: trigger the single main action of a view, supporting actions
+in descending hierarchy, or confirming/destructive actions through tone.
+When NOT to use: navigation, icon-only actions, persistent toggles, or
+loading/progress semantics.
+
+Attributes:
+- `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+- `name` (string | undefined): Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
+- `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+- `value` (string | undefined): Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
+- `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+
+Slots:
+- (default): Label content. This is the accessible name source.
+- `end`: Trailing icon or media. Follows writing direction.
+- `start`: Leading icon or media. Follows writing direction.
+
+Parts:
+- `button`: Internal native button.
+- `label`: Label wrapper around the default slot.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none

@@ -10,9 +10,9 @@ export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./com
 export namespace Components {
     /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface KiButton {
@@ -54,9 +54,9 @@ export namespace Components {
 declare global {
     /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface HTMLKiButtonElement extends Components.KiButton, HTMLStencilElement {
@@ -72,9 +72,9 @@ declare global {
 declare namespace LocalJSX {
     /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface KiButton {
@@ -137,9 +137,9 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             /**
              * A token-styled action button with native button semantics.
-             * When to use: trigger the single main action of a view, supporting actions
+             * @whenToUse trigger the single main action of a view, supporting actions
              * in descending hierarchy, or confirming/destructive actions through tone.
-             * When NOT to use: navigation, icon-only actions, persistent toggles, or
+             * @whenNotToUse navigation, icon-only actions, persistent toggles, or
              * loading/progress semantics.
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;

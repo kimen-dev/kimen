@@ -1,5 +1,4 @@
 {
-  "timestamp": "2026-07-07T08:56:16",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -10,8 +9,16 @@
       "filePath": "src/components/ki-button/ki-button.tsx",
       "encapsulation": "shadow",
       "tag": "ki-button",
-      "docs": "A token-styled action button with native button semantics.\n\nWhen to use: trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.\nWhen NOT to use: navigation, icon-only actions, persistent toggles, or\nloading/progress semantics.",
+      "docs": "A token-styled action button with native button semantics.",
       "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "navigation, icon-only actions, persistent toggles, or\nloading/progress semantics."
+        },
         {
           "name": "slot",
           "text": "- Label content. This is the accessible name source."
@@ -99,7 +106,7 @@
             "references": {
               "KiButtonSize": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonSize"
               }
             }
@@ -151,7 +158,7 @@
             "references": {
               "KiButtonTone": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonTone"
               }
             }
@@ -195,7 +202,7 @@
             "references": {
               "KiButtonType": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonType"
               }
             }
@@ -265,7 +272,7 @@
             "references": {
               "KiButtonVariant": {
                 "location": "local",
-                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
+                "path": "src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonVariant"
               }
             }
