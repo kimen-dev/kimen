@@ -12,7 +12,7 @@
     "format:check": "biome format .",
     "lint": "eslint .",
     "lint:styles": "stylelint \"packages/**/*.css\" \"site/**/*.css\" --allow-empty-input",
-    "typecheck": "tsc -b --pretty false && tsc -p packages/elements --noEmit --pretty false && tsc -p packages/elements/browser-tests --pretty false",
+    "typecheck": "tsc -b --pretty false && tsc -p packages/elements --noEmit --pretty false && tsc -p packages/elements/browser-tests --pretty false && tsc -p packages/elements/scripts --pretty false",
     "deadcode": "knip",
     "packaging": "publint packages/tokens && publint packages/elements && publint packages/catalog && publint packages/kimen && attw --pack packages/elements --profile esm-only --entrypoints . && attw --pack packages/elements --profile esm-only --entrypoints ./loader --ignore-rules internal-resolution-error && attw --pack packages/catalog --profile esm-only",
     "gates": "bash scripts/gates/gates-suite.sh",

@@ -5,16 +5,85 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
+import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+import { KiInputType } from "./components/ki-input/ki-input";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
+export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
+export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiInputType } from "./components/ki-input/ki-input";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export namespace Components {
     /**
+     * A persistent inline status message with token-backed tone semantics.
+     * @whenToUse show a persistent inline message about the state of a page or
+     * section, such as a failed save, completed operation, or service notice, that
+     * remains until the condition is resolved or the person dismisses it. Express
+     * severity with `tone`, never custom styling.
+     * @whenNotToUse transient confirmations that expire on their own belong to
+     * the future `ki-toast`; tiny status descriptors attached to another element
+     * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
+     * field-level validation belongs to the form control.
+     * Assistive technology note: alerts that must be announced should be inserted
+     * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
+     * page load are exposed with their role but platform announcement is not
+     * guaranteed.
+     */
+    interface KiAlert {
+        /**
+          * Accessible name for the dismiss button. Override for localization; the default English string is the component's only built-in user-visible text.  When to use: provide a localized action name whenever the document language is not English. When NOT to use: do not put the alert message here; use the default slot.
+          * @default 'Dismiss'
+         */
+        "dismissLabel": string;
+        /**
+          * Reflected dismissed state. User dismissal sets it; applications may also set or clear it. While true, the host remains in the document but renders no alert subtree and leaves the accessibility tree. Clearing it re-shows the alert and creates a dynamic live-region appearance.  When to use: persist or restore acknowledgement state from application data. When NOT to use: do not listen for programmatic changes as dismissal events; `ki-dismiss` is only for user activation.
+          * @default false
+         */
+        "dismissed": boolean;
+        /**
+          * Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop.  When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; that is future `ki-toast` behavior.
+          * @default false
+         */
+        "dismissible": boolean;
+        /**
+          * Optional emphasized text rendered before the message inside the live region. Empty strings render no heading. The heading is a `strong` element, not a document heading, so it never changes page outline.  When to use: add a short label when it helps identify the status message. When NOT to use: do not use heading for page structure; use a real heading outside the alert when the document needs one.
+         */
+        "heading"?: string;
+        /**
+          * Semantic intent for visual styling and live-region urgency. `danger` and `warning` expose `role="alert"`; `neutral`, `success`, `info`, absent, and unrecognized values expose `role="status"`. Unknown values keep rendering and fall back to the neutral token matrix by CSS construction.  When to use: choose the tone that describes the page or section state. When NOT to use: do not use tone for layout, density, or filled-vs-outlined styling; those are token/theme decisions.
+          * @default 'neutral'
+         */
+        "tone": KiAlertTone | (string & {});
+    }
+    /**
+     * A static, non-interactive status pill.
+     * @whenToUse annotate an entity with short status text (a state, a
+     * category) whose meaning is carried by the label itself; the tone color
+     * only reinforces the text, it never replaces it.
+     * @whenNotToUse feedback that must be announced (that is
+     * ki-alert's job — the badge has no live region), an interactive
+     * chip, filter or button, empty content (the label IS the meaning), or a
+     * notification-counter overlay (a future, separate concern).
+     */
+    interface KiBadge {
+        /**
+          * Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value falls back to the `md` metrics the same way.
+          * @default 'md'
+         */
+        "size": KiBadgeSize;
+        /**
+          * Semantic intent, never appearance: each tone resolves its colors from the `--ki-badge-{tone}-*` tokens. An unrecognized value matches no style selector, so the badge keeps the neutral appearance (fallback by CSS construction — no validation code).
+          * @default 'neutral'
+         */
+        "tone": KiBadgeTone;
+    }
+    /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface KiButton {
@@ -53,15 +122,119 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface KiCard {
+    }
+    /**
+     * A form-associated checkbox for selecting independent options.
+     * @whenToUse selecting one or more independent options that a form submits
+     * later, including a "select all" parent that presents partial selection with
+     * `indeterminate`. Always provide a visible label in the default slot.
+     * @whenNotToUse a single mutually exclusive choice, an immediate on/off
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
+     */
+    interface KiCheckbox {
+        /**
+          * Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+          * @default false
+         */
+        "checked": boolean;
+        /**
+          * Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
+          * @default false
+         */
+        "indeterminate": boolean;
+        /**
+          * Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
+         */
+        "name"?: string;
+        /**
+          * Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
+         */
+        "value"?: string;
+    }
+    /**
+     * A token-styled single-line text field with native input semantics.
+     * @whenToUse collect one line of free text from a person, always with a
+     * visible `label`; choose the `type` and `autocomplete` that match the entry
+     * purpose.
+     * @whenNotToUse multiline text, predefined choices, boolean state, numeric
+     * stepper entry, or placeholder-only labeling.
+     */
+    interface KiInput {
+        /**
+          * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
+         */
+        "autocomplete"?: string;
+        /**
+          * Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
+         */
+        "label"?: string;
+        /**
+          * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
+         */
+        "name"?: string;
+        /**
+          * Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
+          * @default false
+         */
+        "readonly": boolean;
+        /**
+          * Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
+          * @default 'text'
+         */
+        "type": KiInputType;
+        /**
+          * Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
-     * When to use: communicate advancement of an ongoing task such as upload,
+     * @whenToUse communicate advancement of an ongoing task such as upload,
      * download, installation or multi-step processing. Use `value`/`max` when
      * the completed fraction is known; use `indeterminate` when work is ongoing
      * but its duration cannot be measured, including loading-indicator use cases.
      * Choose `linear` in page flows and lists, and `circular` in compact or
      * centered placements. Always set `label` to what is progressing.
-     * When NOT to use: static measurements within a known range such as disk
+     * @whenNotToUse static measurements within a known range such as disk
      * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
      * skeleton placeholders while content loads, or operations that finish in
      * under about one second.
@@ -92,13 +265,202 @@ export namespace Components {
          */
         "value": number;
     }
+    /**
+     * One option in a token-styled radio group.
+     * @whenToUse place inside `ki-radio-group` when a person must choose
+     * exactly one of a small visible set.
+     * @whenNotToUse `ki-radio` standalone, multiple selection,
+     * or authored selection state; set the parent group's `value` instead.
+     */
+    interface KiRadio {
+        /**
+          * Prevents this option from being selected or focused. Disabled options are skipped by group arrow navigation and omitted from form submission when selected before becoming disabled. When NOT to use: do not use disabled as a temporary loading state.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Submission value projected by the parent `ki-radio-group` when this option is selected. Omit for native radio parity with value `"on"`. When NOT to use: do not use `value` to author selection; set the group's `value` property or attribute.
+          * @default 'on'
+         */
+        "value": string;
+    }
+    /**
+     * A token-styled radio group that owns selection, keyboard coordination and
+     * form participation for slotted `ki-radio` options.
+     * @whenToUse a person must choose exactly one of a small set of mutually
+     * exclusive options that should all be visible at once.
+     * @whenNotToUse many options or tight space (use `ki-select`), independent
+     * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+     * authored selection on options; set this group's `value` instead.
+     */
+    interface KiRadioGroup {
+        /**
+          * Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+         */
+        "label": string;
+        /**
+          * Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
+         */
+        "name"?: string;
+        /**
+          * Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
+     * A token-styled switch for immediate on/off settings.
+     * @whenToUse binary settings whose change takes effect immediately, always
+     * with a slotted label.
+     * @whenNotToUse selections collected for later form submission; use
+     * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+     * choices, and ki-button for actions.
+     */
+    interface KiSwitch {
+        /**
+          * Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+          * @default false
+         */
+        "checked": boolean;
+        /**
+          * Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Form-data key contributed while the switch is on. When to use: include the immediate setting in native form data when on. When NOT to use: omit when no form entry should be submitted.
+          * @default undefined
+         */
+        "name"?: string;
+        /**
+          * Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When to use: submit a domain-specific value instead of the default `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
+          * @default 'on'
+         */
+        "value"?: string;
+    }
+    /**
+     * A token-styled multiline text field with native form semantics.
+     * @whenToUse free-form text longer than one line, such as comments,
+     * descriptions, messages, delivery notes, or addresses when paired with a
+     * matching `autocomplete` purpose.
+     * @whenNotToUse single-line values (`ki-input`), constrained choices,
+     * rich or formatted text editing, or search boxes.
+     * Agent note: initial text is declared through the `value` attribute; element
+     * text content is ignored. Enter inserts a line break and never submits the
+     * enclosing form, the inverse of `ki-input`.
+     */
+    interface KiTextarea {
+        /**
+          * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
+         */
+        "autocomplete"?: string;
+        /**
+          * Disables editing, focus, validation and form-data contribution. When to use: make a field temporarily unavailable. When NOT to use: do not use disabled for readonly review text that should submit.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Visible label rendered by the component and used as the accessible name. When to use: always provide a concise label for the requested long-form text. When NOT to use: do not substitute placeholder text for the label.
+         */
+        "label": string;
+        /**
+          * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
+         */
+        "name"?: string;
+        /**
+          * Hint shown while the textarea is empty. When to use: add an example or short formatting hint. When NOT to use: do not use placeholder as the accessible name or required instruction.
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the textarea focusable and selectable while rejecting edits. When to use: show submitted or policy text that should still be included in form data. When NOT to use: do not use readonly to remove a field from submission; use disabled.
+          * @default false
+         */
+        "readonly": boolean;
+        /**
+          * Requires a non-empty value before form submission. When to use: mark mandatory long-form text. When NOT to use: do not pair with `readonly` expecting it to block; readonly fields are validation exempt like native textareas.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Visible line count. Invalid, non-numeric, zero, or negative values fall back to 2; no auto-grow or user resize handle exists in v1. When to use: set the stable multiline height needed by the layout. When NOT to use: do not use rows as a responsive size axis.
+          * @default 2
+         */
+        "rows": number;
+        /**
+          * Live current text. The `value` attribute declares the reset default; element text content is ignored. Programmatic assignments replace the display and emit no events. When to use: preload or read free-form text, line breaks included. When NOT to use: do not put initial text between the element tags.
+          * @default ''
+         */
+        "value": string;
+    }
+}
+export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiAlertElement;
 }
 declare global {
+    interface HTMLKiAlertElementEventMap {
+        "ki-dismiss": null;
+    }
+    /**
+     * A persistent inline status message with token-backed tone semantics.
+     * @whenToUse show a persistent inline message about the state of a page or
+     * section, such as a failed save, completed operation, or service notice, that
+     * remains until the condition is resolved or the person dismisses it. Express
+     * severity with `tone`, never custom styling.
+     * @whenNotToUse transient confirmations that expire on their own belong to
+     * the future `ki-toast`; tiny status descriptors attached to another element
+     * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
+     * field-level validation belongs to the form control.
+     * Assistive technology note: alerts that must be announced should be inserted
+     * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
+     * page load are exposed with their role but platform announcement is not
+     * guaranteed.
+     */
+    interface HTMLKiAlertElement extends Components.KiAlert, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiAlertElementEventMap>(type: K, listener: (this: HTMLKiAlertElement, ev: KiAlertCustomEvent<HTMLKiAlertElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiAlertElementEventMap>(type: K, listener: (this: HTMLKiAlertElement, ev: KiAlertCustomEvent<HTMLKiAlertElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiAlertElement: {
+        prototype: HTMLKiAlertElement;
+        new (): HTMLKiAlertElement;
+    };
+    /**
+     * A static, non-interactive status pill.
+     * @whenToUse annotate an entity with short status text (a state, a
+     * category) whose meaning is carried by the label itself; the tone color
+     * only reinforces the text, it never replaces it.
+     * @whenNotToUse feedback that must be announced (that is
+     * ki-alert's job — the badge has no live region), an interactive
+     * chip, filter or button, empty content (the label IS the meaning), or a
+     * notification-counter overlay (a future, separate concern).
+     */
+    interface HTMLKiBadgeElement extends Components.KiBadge, HTMLStencilElement {
+    }
+    var HTMLKiBadgeElement: {
+        prototype: HTMLKiBadgeElement;
+        new (): HTMLKiBadgeElement;
+    };
     /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface HTMLKiButtonElement extends Components.KiButton, HTMLStencilElement {
@@ -108,15 +470,62 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface HTMLKiCardElement extends Components.KiCard, HTMLStencilElement {
+    }
+    var HTMLKiCardElement: {
+        prototype: HTMLKiCardElement;
+        new (): HTMLKiCardElement;
+    };
+    /**
+     * A form-associated checkbox for selecting independent options.
+     * @whenToUse selecting one or more independent options that a form submits
+     * later, including a "select all" parent that presents partial selection with
+     * `indeterminate`. Always provide a visible label in the default slot.
+     * @whenNotToUse a single mutually exclusive choice, an immediate on/off
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
+     */
+    interface HTMLKiCheckboxElement extends Components.KiCheckbox, HTMLStencilElement {
+    }
+    var HTMLKiCheckboxElement: {
+        prototype: HTMLKiCheckboxElement;
+        new (): HTMLKiCheckboxElement;
+    };
+    /**
+     * A token-styled single-line text field with native input semantics.
+     * @whenToUse collect one line of free text from a person, always with a
+     * visible `label`; choose the `type` and `autocomplete` that match the entry
+     * purpose.
+     * @whenNotToUse multiline text, predefined choices, boolean state, numeric
+     * stepper entry, or placeholder-only labeling.
+     */
+    interface HTMLKiInputElement extends Components.KiInput, HTMLStencilElement {
+    }
+    var HTMLKiInputElement: {
+        prototype: HTMLKiInputElement;
+        new (): HTMLKiInputElement;
+    };
+    /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
-     * When to use: communicate advancement of an ongoing task such as upload,
+     * @whenToUse communicate advancement of an ongoing task such as upload,
      * download, installation or multi-step processing. Use `value`/`max` when
      * the completed fraction is known; use `indeterminate` when work is ongoing
      * but its duration cannot be measured, including loading-indicator use cases.
      * Choose `linear` in page flows and lists, and `circular` in compact or
      * centered placements. Always set `label` to what is progressing.
-     * When NOT to use: static measurements within a known range such as disk
+     * @whenNotToUse static measurements within a known range such as disk
      * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
      * skeleton placeholders while content loads, or operations that finish in
      * under about one second.
@@ -127,17 +536,154 @@ declare global {
         prototype: HTMLKiProgressElement;
         new (): HTMLKiProgressElement;
     };
+    /**
+     * One option in a token-styled radio group.
+     * @whenToUse place inside `ki-radio-group` when a person must choose
+     * exactly one of a small visible set.
+     * @whenNotToUse `ki-radio` standalone, multiple selection,
+     * or authored selection state; set the parent group's `value` instead.
+     */
+    interface HTMLKiRadioElement extends Components.KiRadio, HTMLStencilElement {
+    }
+    var HTMLKiRadioElement: {
+        prototype: HTMLKiRadioElement;
+        new (): HTMLKiRadioElement;
+    };
+    /**
+     * A token-styled radio group that owns selection, keyboard coordination and
+     * form participation for slotted `ki-radio` options.
+     * @whenToUse a person must choose exactly one of a small set of mutually
+     * exclusive options that should all be visible at once.
+     * @whenNotToUse many options or tight space (use `ki-select`), independent
+     * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+     * authored selection on options; set this group's `value` instead.
+     */
+    interface HTMLKiRadioGroupElement extends Components.KiRadioGroup, HTMLStencilElement {
+    }
+    var HTMLKiRadioGroupElement: {
+        prototype: HTMLKiRadioGroupElement;
+        new (): HTMLKiRadioGroupElement;
+    };
+    /**
+     * A token-styled switch for immediate on/off settings.
+     * @whenToUse binary settings whose change takes effect immediately, always
+     * with a slotted label.
+     * @whenNotToUse selections collected for later form submission; use
+     * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+     * choices, and ki-button for actions.
+     */
+    interface HTMLKiSwitchElement extends Components.KiSwitch, HTMLStencilElement {
+    }
+    var HTMLKiSwitchElement: {
+        prototype: HTMLKiSwitchElement;
+        new (): HTMLKiSwitchElement;
+    };
+    /**
+     * A token-styled multiline text field with native form semantics.
+     * @whenToUse free-form text longer than one line, such as comments,
+     * descriptions, messages, delivery notes, or addresses when paired with a
+     * matching `autocomplete` purpose.
+     * @whenNotToUse single-line values (`ki-input`), constrained choices,
+     * rich or formatted text editing, or search boxes.
+     * Agent note: initial text is declared through the `value` attribute; element
+     * text content is ignored. Enter inserts a line break and never submits the
+     * enclosing form, the inverse of `ki-input`.
+     */
+    interface HTMLKiTextareaElement extends Components.KiTextarea, HTMLStencilElement {
+    }
+    var HTMLKiTextareaElement: {
+        prototype: HTMLKiTextareaElement;
+        new (): HTMLKiTextareaElement;
+    };
     interface HTMLElementTagNameMap {
+        "ki-alert": HTMLKiAlertElement;
+        "ki-badge": HTMLKiBadgeElement;
         "ki-button": HTMLKiButtonElement;
+        "ki-card": HTMLKiCardElement;
+        "ki-checkbox": HTMLKiCheckboxElement;
+        "ki-input": HTMLKiInputElement;
         "ki-progress": HTMLKiProgressElement;
+        "ki-radio": HTMLKiRadioElement;
+        "ki-radio-group": HTMLKiRadioGroupElement;
+        "ki-switch": HTMLKiSwitchElement;
+        "ki-textarea": HTMLKiTextareaElement;
     }
 }
 declare namespace LocalJSX {
+    type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}` | `prop:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K | `prop:${K}`]?: never } | { [P in `prop:${K}`]: PropT } & { [P in K | `attr:${K}`]?: never };
+
+    /**
+     * A persistent inline status message with token-backed tone semantics.
+     * @whenToUse show a persistent inline message about the state of a page or
+     * section, such as a failed save, completed operation, or service notice, that
+     * remains until the condition is resolved or the person dismisses it. Express
+     * severity with `tone`, never custom styling.
+     * @whenNotToUse transient confirmations that expire on their own belong to
+     * the future `ki-toast`; tiny status descriptors attached to another element
+     * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
+     * field-level validation belongs to the form control.
+     * Assistive technology note: alerts that must be announced should be inserted
+     * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
+     * page load are exposed with their role but platform announcement is not
+     * guaranteed.
+     */
+    interface KiAlert {
+        /**
+          * Accessible name for the dismiss button. Override for localization; the default English string is the component's only built-in user-visible text.  When to use: provide a localized action name whenever the document language is not English. When NOT to use: do not put the alert message here; use the default slot.
+          * @default 'Dismiss'
+         */
+        "dismissLabel"?: string;
+        /**
+          * Reflected dismissed state. User dismissal sets it; applications may also set or clear it. While true, the host remains in the document but renders no alert subtree and leaves the accessibility tree. Clearing it re-shows the alert and creates a dynamic live-region appearance.  When to use: persist or restore acknowledgement state from application data. When NOT to use: do not listen for programmatic changes as dismissal events; `ki-dismiss` is only for user activation.
+          * @default false
+         */
+        "dismissed"?: boolean;
+        /**
+          * Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop.  When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; that is future `ki-toast` behavior.
+          * @default false
+         */
+        "dismissible"?: boolean;
+        /**
+          * Optional emphasized text rendered before the message inside the live region. Empty strings render no heading. The heading is a `strong` element, not a document heading, so it never changes page outline.  When to use: add a short label when it helps identify the status message. When NOT to use: do not use heading for page structure; use a real heading outside the alert when the document needs one.
+         */
+        "heading"?: string;
+        /**
+          * Fired once after the user dismisses the alert — emitted after the alert is hidden and focus has been handed to the next control. `detail` is `null` and the event is not cancelable (the alert is already gone when it runs). When to use: record acknowledgement, or advance an application flow after a user closes the alert. When NOT to use: do not treat it as a veto point, and do not expect it for programmatic `dismissed` changes — it fires only for user activation.
+         */
+        "onKi-dismiss"?: (event: KiAlertCustomEvent<null>) => void;
+        /**
+          * Semantic intent for visual styling and live-region urgency. `danger` and `warning` expose `role="alert"`; `neutral`, `success`, `info`, absent, and unrecognized values expose `role="status"`. Unknown values keep rendering and fall back to the neutral token matrix by CSS construction.  When to use: choose the tone that describes the page or section state. When NOT to use: do not use tone for layout, density, or filled-vs-outlined styling; those are token/theme decisions.
+          * @default 'neutral'
+         */
+        "tone"?: KiAlertTone | (string & {});
+    }
+    /**
+     * A static, non-interactive status pill.
+     * @whenToUse annotate an entity with short status text (a state, a
+     * category) whose meaning is carried by the label itself; the tone color
+     * only reinforces the text, it never replaces it.
+     * @whenNotToUse feedback that must be announced (that is
+     * ki-alert's job — the badge has no live region), an interactive
+     * chip, filter or button, empty content (the label IS the meaning), or a
+     * notification-counter overlay (a future, separate concern).
+     */
+    interface KiBadge {
+        /**
+          * Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value falls back to the `md` metrics the same way.
+          * @default 'md'
+         */
+        "size"?: KiBadgeSize;
+        /**
+          * Semantic intent, never appearance: each tone resolves its colors from the `--ki-badge-{tone}-*` tokens. An unrecognized value matches no style selector, so the badge keeps the neutral appearance (fallback by CSS construction — no validation code).
+          * @default 'neutral'
+         */
+        "tone"?: KiBadgeTone;
+    }
     /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface KiButton {
@@ -180,15 +726,127 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface KiCard {
+    }
+    /**
+     * A form-associated checkbox for selecting independent options.
+     * @whenToUse selecting one or more independent options that a form submits
+     * later, including a "select all" parent that presents partial selection with
+     * `indeterminate`. Always provide a visible label in the default slot.
+     * @whenNotToUse a single mutually exclusive choice, an immediate on/off
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
+     */
+    interface KiCheckbox {
+        /**
+          * Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+          * @default false
+         */
+        "checked"?: boolean;
+        /**
+          * Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
+          * @default false
+         */
+        "indeterminate"?: boolean;
+        /**
+          * Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
+         */
+        "name"?: string;
+        /**
+          * Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
+         */
+        "value"?: string;
+    }
+    /**
+     * A token-styled single-line text field with native input semantics.
+     * @whenToUse collect one line of free text from a person, always with a
+     * visible `label`; choose the `type` and `autocomplete` that match the entry
+     * purpose.
+     * @whenNotToUse multiline text, predefined choices, boolean state, numeric
+     * stepper entry, or placeholder-only labeling.
+     */
+    interface KiInput {
+        /**
+          * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
+         */
+        "autocomplete"?: string;
+        /**
+          * Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
+         */
+        "label"?: string;
+        /**
+          * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
+         */
+        "name"?: string;
+        /**
+          * Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
+          * @default false
+         */
+        "readonly"?: boolean;
+        /**
+          * Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
+          * @default 'text'
+         */
+        "type"?: KiInputType;
+        /**
+          * Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
-     * When to use: communicate advancement of an ongoing task such as upload,
+     * @whenToUse communicate advancement of an ongoing task such as upload,
      * download, installation or multi-step processing. Use `value`/`max` when
      * the completed fraction is known; use `indeterminate` when work is ongoing
      * but its duration cannot be measured, including loading-indicator use cases.
      * Choose `linear` in page flows and lists, and `circular` in compact or
      * centered placements. Always set `label` to what is progressing.
-     * When NOT to use: static measurements within a known range such as disk
+     * @whenNotToUse static measurements within a known range such as disk
      * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
      * skeleton placeholders while content loads, or operations that finish in
      * under about one second.
@@ -219,7 +877,167 @@ declare namespace LocalJSX {
          */
         "value"?: number;
     }
+    /**
+     * One option in a token-styled radio group.
+     * @whenToUse place inside `ki-radio-group` when a person must choose
+     * exactly one of a small visible set.
+     * @whenNotToUse `ki-radio` standalone, multiple selection,
+     * or authored selection state; set the parent group's `value` instead.
+     */
+    interface KiRadio {
+        /**
+          * Prevents this option from being selected or focused. Disabled options are skipped by group arrow navigation and omitted from form submission when selected before becoming disabled. When NOT to use: do not use disabled as a temporary loading state.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Submission value projected by the parent `ki-radio-group` when this option is selected. Omit for native radio parity with value `"on"`. When NOT to use: do not use `value` to author selection; set the group's `value` property or attribute.
+          * @default 'on'
+         */
+        "value"?: string;
+    }
+    /**
+     * A token-styled radio group that owns selection, keyboard coordination and
+     * form participation for slotted `ki-radio` options.
+     * @whenToUse a person must choose exactly one of a small set of mutually
+     * exclusive options that should all be visible at once.
+     * @whenNotToUse many options or tight space (use `ki-select`), independent
+     * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+     * authored selection on options; set this group's `value` instead.
+     */
+    interface KiRadioGroup {
+        /**
+          * Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+         */
+        "label": string;
+        /**
+          * Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
+         */
+        "name"?: string;
+        /**
+          * Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
+     * A token-styled switch for immediate on/off settings.
+     * @whenToUse binary settings whose change takes effect immediately, always
+     * with a slotted label.
+     * @whenNotToUse selections collected for later form submission; use
+     * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+     * choices, and ki-button for actions.
+     */
+    interface KiSwitch {
+        /**
+          * Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+          * @default false
+         */
+        "checked"?: boolean;
+        /**
+          * Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Form-data key contributed while the switch is on. When to use: include the immediate setting in native form data when on. When NOT to use: omit when no form entry should be submitted.
+          * @default undefined
+         */
+        "name"?: string;
+        /**
+          * Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When to use: submit a domain-specific value instead of the default `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
+          * @default 'on'
+         */
+        "value"?: string;
+    }
+    /**
+     * A token-styled multiline text field with native form semantics.
+     * @whenToUse free-form text longer than one line, such as comments,
+     * descriptions, messages, delivery notes, or addresses when paired with a
+     * matching `autocomplete` purpose.
+     * @whenNotToUse single-line values (`ki-input`), constrained choices,
+     * rich or formatted text editing, or search boxes.
+     * Agent note: initial text is declared through the `value` attribute; element
+     * text content is ignored. Enter inserts a line break and never submits the
+     * enclosing form, the inverse of `ki-input`.
+     */
+    interface KiTextarea {
+        /**
+          * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
+         */
+        "autocomplete"?: string;
+        /**
+          * Disables editing, focus, validation and form-data contribution. When to use: make a field temporarily unavailable. When NOT to use: do not use disabled for readonly review text that should submit.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Visible label rendered by the component and used as the accessible name. When to use: always provide a concise label for the requested long-form text. When NOT to use: do not substitute placeholder text for the label.
+         */
+        "label": string;
+        /**
+          * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
+         */
+        "name"?: string;
+        /**
+          * Hint shown while the textarea is empty. When to use: add an example or short formatting hint. When NOT to use: do not use placeholder as the accessible name or required instruction.
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the textarea focusable and selectable while rejecting edits. When to use: show submitted or policy text that should still be included in form data. When NOT to use: do not use readonly to remove a field from submission; use disabled.
+          * @default false
+         */
+        "readonly"?: boolean;
+        /**
+          * Requires a non-empty value before form submission. When to use: mark mandatory long-form text. When NOT to use: do not pair with `readonly` expecting it to block; readonly fields are validation exempt like native textareas.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Visible line count. Invalid, non-numeric, zero, or negative values fall back to 2; no auto-grow or user resize handle exists in v1. When to use: set the stable multiline height needed by the layout. When NOT to use: do not use rows as a responsive size axis.
+          * @default 2
+         */
+        "rows"?: number;
+        /**
+          * Live current text. The `value` attribute declares the reset default; element text content is ignored. Programmatic assignments replace the display and emit no events. When to use: preload or read free-form text, line breaks included. When NOT to use: do not put initial text between the element tags.
+          * @default ''
+         */
+        "value"?: string;
+    }
 
+    interface KiAlertAttributes {
+        "tone": KiAlertTone | (string & {});
+        "heading": string;
+        "dismissible": boolean;
+        "dismissLabel": string;
+        "dismissed": boolean;
+    }
+    interface KiBadgeAttributes {
+        "tone": KiBadgeTone;
+        "size": KiBadgeSize;
+    }
     interface KiButtonAttributes {
         "variant": KiButtonVariant;
         "tone": KiButtonTone;
@@ -229,6 +1047,25 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
+    interface KiCheckboxAttributes {
+        "checked": boolean;
+        "indeterminate": boolean;
+        "disabled": boolean;
+        "required": boolean;
+        "name": string;
+        "value": string;
+    }
+    interface KiInputAttributes {
+        "type": KiInputType;
+        "label": string;
+        "placeholder": string;
+        "value": string;
+        "name": string;
+        "required": boolean;
+        "readonly": boolean;
+        "disabled": boolean;
+        "autocomplete": string;
+    }
     interface KiProgressAttributes {
         "value": number;
         "max": number;
@@ -236,10 +1073,47 @@ declare namespace LocalJSX {
         "shape": KiProgressShape;
         "label": string;
     }
+    interface KiRadioAttributes {
+        "value": string;
+        "disabled": boolean;
+    }
+    interface KiRadioGroupAttributes {
+        "name": string;
+        "value": string;
+        "label": string;
+        "required": boolean;
+        "disabled": boolean;
+    }
+    interface KiSwitchAttributes {
+        "checked": boolean;
+        "disabled": boolean;
+        "name": string;
+        "value": string;
+    }
+    interface KiTextareaAttributes {
+        "label": string;
+        "placeholder": string;
+        "value": string;
+        "name": string;
+        "rows": number;
+        "required": boolean;
+        "readonly": boolean;
+        "disabled": boolean;
+        "autocomplete": string;
+    }
 
     interface IntrinsicElements {
+        "ki-alert": Omit<KiAlert, keyof KiAlertAttributes> & { [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K] };
+        "ki-badge": Omit<KiBadge, keyof KiBadgeAttributes> & { [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K] };
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
+        "ki-card": KiCard;
+        "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
+        "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] };
+        "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
+        "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
+        "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
+        "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
     }
 }
 export { LocalJSX as JSX };
@@ -247,28 +1121,126 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             /**
+             * A persistent inline status message with token-backed tone semantics.
+             * @whenToUse show a persistent inline message about the state of a page or
+             * section, such as a failed save, completed operation, or service notice, that
+             * remains until the condition is resolved or the person dismisses it. Express
+             * severity with `tone`, never custom styling.
+             * @whenNotToUse transient confirmations that expire on their own belong to
+             * the future `ki-toast`; tiny status descriptors attached to another element
+             * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
+             * field-level validation belongs to the form control.
+             * Assistive technology note: alerts that must be announced should be inserted
+             * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
+             * page load are exposed with their role but platform announcement is not
+             * guaranteed.
+             */
+            "ki-alert": LocalJSX.IntrinsicElements["ki-alert"] & JSXBase.HTMLAttributes<HTMLKiAlertElement>;
+            /**
+             * A static, non-interactive status pill.
+             * @whenToUse annotate an entity with short status text (a state, a
+             * category) whose meaning is carried by the label itself; the tone color
+             * only reinforces the text, it never replaces it.
+             * @whenNotToUse feedback that must be announced (that is
+             * ki-alert's job — the badge has no live region), an interactive
+             * chip, filter or button, empty content (the label IS the meaning), or a
+             * notification-counter overlay (a future, separate concern).
+             */
+            "ki-badge": LocalJSX.IntrinsicElements["ki-badge"] & JSXBase.HTMLAttributes<HTMLKiBadgeElement>;
+            /**
              * A token-styled action button with native button semantics.
-             * When to use: trigger the single main action of a view, supporting actions
+             * @whenToUse trigger the single main action of a view, supporting actions
              * in descending hierarchy, or confirming/destructive actions through tone.
-             * When NOT to use: navigation, icon-only actions, persistent toggles, or
+             * @whenNotToUse navigation, icon-only actions, persistent toggles, or
              * loading/progress semantics.
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
+             * A non-interactive card surface for grouping related content.
+             * @whenToUse group related media, heading, supporting text and actions into
+             * one scannable surface visually distinct from the page; fill any subset of
+             * regions. Supply the heading element yourself in the `header` slot — plain
+             * text slotted there carries no heading semantics for assistive technology.
+             * @whenNotToUse as a button or link target, form control, fieldset, page
+             * landmark, section replacement or nested card. For an interactive card, slot
+             * the button or link INSIDE a region (whole-card interactivity is a future
+             * feature, not this component).
+             */
+            "ki-card": LocalJSX.IntrinsicElements["ki-card"] & JSXBase.HTMLAttributes<HTMLKiCardElement>;
+            /**
+             * A form-associated checkbox for selecting independent options.
+             * @whenToUse selecting one or more independent options that a form submits
+             * later, including a "select all" parent that presents partial selection with
+             * `indeterminate`. Always provide a visible label in the default slot.
+             * @whenNotToUse a single mutually exclusive choice, an immediate on/off
+             * effect, triggering an action, unlabeled/icon-only usage, or
+             * `checked="false"` to mean unchecked. Boolean attributes use presence
+             * semantics; omit `checked` to express unchecked.
+             */
+            "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
+            /**
+             * A token-styled single-line text field with native input semantics.
+             * @whenToUse collect one line of free text from a person, always with a
+             * visible `label`; choose the `type` and `autocomplete` that match the entry
+             * purpose.
+             * @whenNotToUse multiline text, predefined choices, boolean state, numeric
+             * stepper entry, or placeholder-only labeling.
+             */
+            "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;
+            /**
              * A token-styled, non-interactive progress indicator for known or unknown
              * duration work.
-             * When to use: communicate advancement of an ongoing task such as upload,
+             * @whenToUse communicate advancement of an ongoing task such as upload,
              * download, installation or multi-step processing. Use `value`/`max` when
              * the completed fraction is known; use `indeterminate` when work is ongoing
              * but its duration cannot be measured, including loading-indicator use cases.
              * Choose `linear` in page flows and lists, and `circular` in compact or
              * centered placements. Always set `label` to what is progressing.
-             * When NOT to use: static measurements within a known range such as disk
+             * @whenNotToUse static measurements within a known range such as disk
              * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
              * skeleton placeholders while content loads, or operations that finish in
              * under about one second.
              */
             "ki-progress": LocalJSX.IntrinsicElements["ki-progress"] & JSXBase.HTMLAttributes<HTMLKiProgressElement>;
+            /**
+             * One option in a token-styled radio group.
+             * @whenToUse place inside `ki-radio-group` when a person must choose
+             * exactly one of a small visible set.
+             * @whenNotToUse `ki-radio` standalone, multiple selection,
+             * or authored selection state; set the parent group's `value` instead.
+             */
+            "ki-radio": LocalJSX.IntrinsicElements["ki-radio"] & JSXBase.HTMLAttributes<HTMLKiRadioElement>;
+            /**
+             * A token-styled radio group that owns selection, keyboard coordination and
+             * form participation for slotted `ki-radio` options.
+             * @whenToUse a person must choose exactly one of a small set of mutually
+             * exclusive options that should all be visible at once.
+             * @whenNotToUse many options or tight space (use `ki-select`), independent
+             * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+             * authored selection on options; set this group's `value` instead.
+             */
+            "ki-radio-group": LocalJSX.IntrinsicElements["ki-radio-group"] & JSXBase.HTMLAttributes<HTMLKiRadioGroupElement>;
+            /**
+             * A token-styled switch for immediate on/off settings.
+             * @whenToUse binary settings whose change takes effect immediately, always
+             * with a slotted label.
+             * @whenNotToUse selections collected for later form submission; use
+             * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+             * choices, and ki-button for actions.
+             */
+            "ki-switch": LocalJSX.IntrinsicElements["ki-switch"] & JSXBase.HTMLAttributes<HTMLKiSwitchElement>;
+            /**
+             * A token-styled multiline text field with native form semantics.
+             * @whenToUse free-form text longer than one line, such as comments,
+             * descriptions, messages, delivery notes, or addresses when paired with a
+             * matching `autocomplete` purpose.
+             * @whenNotToUse single-line values (`ki-input`), constrained choices,
+             * rich or formatted text editing, or search boxes.
+             * Agent note: initial text is declared through the `value` attribute; element
+             * text content is ignored. Enter inserts a line break and never submits the
+             * enclosing form, the inverse of `ki-input`.
+             */
+            "ki-textarea": LocalJSX.IntrinsicElements["ki-textarea"] & JSXBase.HTMLAttributes<HTMLKiTextareaElement>;
         }
     }
 }

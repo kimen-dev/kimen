@@ -1,0 +1,92 @@
+{
+  "ki": {
+    "textarea": {
+      "radius": {
+        "$value": "{ki.radius.xs}"
+      },
+      "border-width": {
+        "$value": "{ki.space.xxs}"
+      },
+      "border-block-start-width": {
+        "$value": "{ki.space.zero}"
+      },
+      "border-block-end-width": {
+        "$value": "{ki.textarea.border-width}"
+      },
+      "border-inline-start-width": {
+        "$value": "{ki.space.zero}"
+      },
+      "border-inline-end-width": {
+        "$value": "{ki.space.zero}"
+      },
+      "rest": {
+        "bg": {
+          "$value": "{ki.surface.s1}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.high-em}"
+        },
+        "label-fg": {
+          "$value": "{ki.text.med-em}"
+        },
+        "placeholder-fg": {
+          "$value": "{ki.text.med-em}"
+        }
+      },
+      "hover": {
+        "bg": {
+          "$value": "{ki.surface.s2}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.high-em}"
+        },
+        "label-fg": {
+          "$value": "{ki.text.med-em}"
+        },
+        "placeholder-fg": {
+          "$value": "{ki.text.med-em}"
+        }
+      },
+      "focus": {
+        "bg": {
+          "$value": "{ki.surface.s1}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.primary-high-em}"
+        },
+        "label-fg": {
+          "$value": "{ki.text.primary-high-em}"
+        },
+        "placeholder-fg": {
+          "$value": "{ki.text.med-em}"
+        }
+      },
+      "invalid": {
+        "bg": {
+          "$value": "{ki.surface.danger-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.danger-high-em}"
+        },
+        "label-fg": {
+          "$value": "{ki.text.danger-high-em}"
+        },
+        "placeholder-fg": {
+          "$value": "{ki.text.med-em}"
+        }
+      }
+    }
+  }
+}

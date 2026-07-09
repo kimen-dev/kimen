@@ -16,13 +16,13 @@ interface ProgressBaseAttributes {
  * A token-styled, non-interactive progress indicator for known or unknown
  * duration work.
  *
- * When to use: communicate advancement of an ongoing task such as upload,
+ * @whenToUse communicate advancement of an ongoing task such as upload,
  * download, installation or multi-step processing. Use `value`/`max` when
  * the completed fraction is known; use `indeterminate` when work is ongoing
  * but its duration cannot be measured, including loading-indicator use cases.
  * Choose `linear` in page flows and lists, and `circular` in compact or
  * centered placements. Always set `label` to what is progressing.
- * When NOT to use: static measurements within a known range such as disk
+ * @whenNotToUse static measurements within a known range such as disk
  * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
  * skeleton placeholders while content loads, or operations that finish in
  * under about one second.

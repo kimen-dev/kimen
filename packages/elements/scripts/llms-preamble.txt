@@ -1,0 +1,11 @@
+Install with `pnpm add @kimen/elements`.
+
+Register individual components from the custom-elements bundle before using them:
+
+```ts
+import { defineCustomElement as defineKiButton } from '@kimen/elements/dist/components/ki-button.js';
+
+defineKiButton();
+```
+
+Load `@kimen/tokens/dist/css/tokens.css` once for the Mars default theme. Theme variants are selected with package-supported theme attributes and remain token-driven.

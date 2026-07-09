@@ -1,0 +1,64 @@
+/* Tokens-only styling (Art. VI): every value resolves from --ki-badge-*.
+   Unknown tone/size attributes match no selector, so the :host defaults
+   (neutral, md) apply — fallback by construction, zero validation code. */
+
+:host {
+  display: inline-flex;
+
+  --_ki-badge-bg: var(--ki-badge-neutral-bg);
+  --_ki-badge-fg: var(--ki-badge-neutral-fg);
+  --_ki-badge-border: var(--ki-badge-neutral-border);
+  --_ki-badge-height: var(--ki-badge-md-height);
+  --_ki-badge-padding-inline: var(--ki-badge-md-padding-inline);
+  --_ki-badge-radius: var(--ki-badge-md-radius);
+  --_ki-badge-font-size: var(--ki-badge-md-font-size);
+  --_ki-badge-line-height: var(--ki-badge-md-line-height);
+}
+
+:host([tone="success"]) {
+  --_ki-badge-bg: var(--ki-badge-success-bg);
+  --_ki-badge-fg: var(--ki-badge-success-fg);
+  --_ki-badge-border: var(--ki-badge-success-border);
+}
+
+:host([tone="danger"]) {
+  --_ki-badge-bg: var(--ki-badge-danger-bg);
+  --_ki-badge-fg: var(--ki-badge-danger-fg);
+  --_ki-badge-border: var(--ki-badge-danger-border);
+}
+
+:host([tone="info"]) {
+  --_ki-badge-bg: var(--ki-badge-info-bg);
+  --_ki-badge-fg: var(--ki-badge-info-fg);
+  --_ki-badge-border: var(--ki-badge-info-border);
+}
+
+:host([tone="warning"]) {
+  --_ki-badge-bg: var(--ki-badge-warning-bg);
+  --_ki-badge-fg: var(--ki-badge-warning-fg);
+  --_ki-badge-border: var(--ki-badge-warning-border);
+}
+
+:host([size="sm"]) {
+  --_ki-badge-height: var(--ki-badge-sm-height);
+  --_ki-badge-padding-inline: var(--ki-badge-sm-padding-inline);
+  --_ki-badge-radius: var(--ki-badge-sm-radius);
+  --_ki-badge-font-size: var(--ki-badge-sm-font-size);
+  --_ki-badge-line-height: var(--ki-badge-sm-line-height);
+}
+
+[part="badge"] {
+  display: inline-flex;
+  align-items: center;
+  block-size: var(--_ki-badge-height);
+  padding-inline: var(--_ki-badge-padding-inline);
+  border: var(--ki-badge-border-width) solid var(--_ki-badge-border);
+  border-radius: var(--_ki-badge-radius);
+  background: var(--_ki-badge-bg);
+  color: var(--_ki-badge-fg);
+  font-family: var(--ki-badge-font-family);
+  font-size: var(--_ki-badge-font-size);
+  font-weight: var(--ki-badge-font-weight);
+  line-height: var(--_ki-badge-line-height);
+  white-space: nowrap;
+}

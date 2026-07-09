@@ -1,7 +1,15 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const DEFAULT_MIN_RATIO = 4.5;
+const MIN_RATIO = 4.5;
+// WCAG 1.4.11: a non-text UI graphic needs only 3:1, not the 4.5:1 text bar.
+const NON_TEXT_MIN_RATIO = 3;
+// Components whose `-fg`/`-bg` cells paint a non-text control indicator (a
+// radio's ring and selected dot), NOT label text — the label uses semantic
+// --ki-text-* tokens, checked separately via CONTRAST_PAIRS. Holding these to
+// 4.5:1 is wrong; the original per-component checker set radio's dot cells to
+// 3:1 for exactly this reason (Codex review of 007).
+const NON_TEXT_COMPONENTS = new Set(['radio']);
 const THEMES = [
   { name: 'onmars', stylesheet: new URL('../dist/css/tokens.css', import.meta.url) },
   { name: 'material3', stylesheet: new URL('../dist/css/tokens.material3.css', import.meta.url) },
@@ -11,11 +19,6 @@ const CONTRAST_PAIRS = [
   { text: '--ki-text-med-em', surface: '--ki-surface-s0' },
   { text: '--ki-text-high-em', surface: '--ki-surface-s1' },
   { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
-  {
-    text: '--ki-progress-indicator-color',
-    surface: '--ki-progress-track-color',
-    minimum: 3,
-  },
 ];
 
 export function parseColor(value) {
@@ -168,29 +171,62 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // must clear AA in every theme x scheme. Disabled cells are exempt
 // (WCAG 1.4.3). Added after the 002-ki-button clean-context review found
 // dark-scheme failures the 4 hardcoded pairs could not see (incident-to-gate
-// rule). The pair list is DERIVED from the built CSS, but the pattern below
-// is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
-// (or this gate silently ignores that component; the zero-match guard only
-// protects the patterns listed here).
-const COMPONENT_BG_PATTERN =
-  /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u;
-const PROGRESS_PATTERN = /^--ki-progress-(?:indicator|track)-color$/u;
+// rule).
+//
+// GENERIC by construction (was per-component and silently ignored every new
+// matrix — Codex review of 003/016): any `--ki-<component>-…-bg` whose name is
+// NOT a semantic/primitive layer, paired with its `-fg` sibling when one
+// exists. New components are swept automatically, with no regex to extend.
+// Disabled cells are excluded (exempt), as are `-bg` tokens with no `-fg`
+// counterpart (non-text affordances measured elsewhere, not a text pair).
+const SEMANTIC_LAYERS = new Set([
+  'color',
+  'surface',
+  'text',
+  'outline',
+  'elevation',
+  'shadow',
+  'space',
+  'typography',
+  'radius',
+  'motion',
+  'duration',
+  'ease',
+  'opacity',
+  'size',
+  'border',
+  'z',
+]);
+// The state/variant segment is OPTIONAL so a bare `--ki-<component>-bg` (e.g.
+// ki-card's single surface pair) is swept too — a required middle segment
+// silently dropped every component that names its base pair without a state
+// (Codex review of 009).
+const COMPONENT_BG_PATTERN = /^--ki-([a-z][a-z0-9]*)(?:-[\w-]+)?-bg$/u;
+// The canary: button is the foundational component and is always present, so a
+// zero-button sweep means the naming convention drifted (the old zero-length
+// guard is defeated once any other component contributes a pair).
+const CANARY_COMPONENT = 'button';
 
-function componentPairs(declarations) {
+export function componentPairs(declarations) {
   const pairs = [];
-  let progressMatches = 0;
 
   for (const name of declarations.keys()) {
-    if (COMPONENT_BG_PATTERN.test(name)) {
-      pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
+    const match = name.match(COMPONENT_BG_PATTERN);
+    if (!match || SEMANTIC_LAYERS.has(match[1]) || /-disabled-/u.test(name)) {
+      continue;
     }
-
-    if (PROGRESS_PATTERN.test(name)) {
-      progressMatches += 1;
+    const fg = name.replace(/-bg$/u, '-fg');
+    if (declarations.has(fg)) {
+      pairs.push({
+        component: match[1],
+        text: fg,
+        surface: name,
+        minRatio: NON_TEXT_COMPONENTS.has(match[1]) ? NON_TEXT_MIN_RATIO : MIN_RATIO,
+      });
     }
   }
 
-  return { pairs, progressMatches };
+  return pairs;
 }
 
 function evaluateStylesheet(theme, stylesheet) {
@@ -199,17 +235,11 @@ function evaluateStylesheet(theme, stylesheet) {
   const failures = [];
 
   for (const [scheme, declarations] of Object.entries(schemes)) {
-    const { pairs: swept, progressMatches } = componentPairs(declarations);
+    const swept = componentPairs(declarations);
 
-    if (swept.length === 0) {
+    if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
       failures.push(
-        `${theme}/${scheme}: no component-layer pairs matched — the sweep pattern drifted from the token names`,
-      );
-    }
-
-    if (progressMatches === 0) {
-      failures.push(
-        `${theme}/${scheme}: no progress contrast tokens matched — the sweep pattern drifted from the progress token names`,
+        `${theme}/${scheme}: no ${CANARY_COMPONENT}-layer pairs matched — the component sweep pattern drifted from the token names`,
       );
     }
 
@@ -222,10 +252,10 @@ function evaluateStylesheet(theme, stylesheet) {
       const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
       const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
       const ratio = contrastRatio(text, surface);
-      const minimum = pair.minimum ?? DEFAULT_MIN_RATIO;
+      const min = pair.minRatio ?? MIN_RATIO;
 
-      if (ratio < minimum) {
-        failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio}`);
+      if (ratio < min) {
+        failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio} (min ${min})`);
       }
     }
   }
@@ -256,12 +286,16 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const failures = checkContrast();
 
   if (failures.length > 0) {
-    console.error(`Contrast check failed. Default minimum ratio: ${DEFAULT_MIN_RATIO}:1`);
+    console.error(
+      `Contrast check failed. Text ${MIN_RATIO}:1, non-text control ${NON_TEXT_MIN_RATIO}:1 (WCAG 1.4.3/1.4.11).`,
+    );
     for (const failure of failures) {
       console.error(`- ${failure}`);
     }
     process.exit(1);
   }
 
-  console.log(`Contrast check passed. Default minimum ratio: ${DEFAULT_MIN_RATIO}:1`);
+  console.log(
+    `Contrast check passed. Text ${MIN_RATIO}:1, non-text control ${NON_TEXT_MIN_RATIO}:1 (WCAG 1.4.3/1.4.11).`,
+  );
 }

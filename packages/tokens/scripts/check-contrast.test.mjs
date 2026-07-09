@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  componentPairs,
   compositeOver,
   contrastRatio,
   parseColor,
@@ -38,16 +39,54 @@ test('contrast pair table covers the declared data-model pairs', () => {
       ['--ki-text-med-em', '--ki-surface-s0'],
       ['--ki-text-high-em', '--ki-surface-s1'],
       ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
-      ['--ki-progress-indicator-color', '--ki-progress-track-color'],
     ],
   );
 });
 
-test('progress contrast pair uses the non-text 3.0 minimum', () => {
-  const progressPair = resolveContrastPairs().find(
-    (pair) =>
-      pair.text === '--ki-progress-indicator-color' && pair.surface === '--ki-progress-track-color',
+test('component sweep is generic: any component bg/fg pair, semantic layers and disabled cells excluded', () => {
+  const declarations = new Map([
+    // a non-button component with a matching fg → swept
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-fg', '#111111'],
+    // a bare component pair with no state segment (e.g. ki-card) → swept
+    ['--ki-card-bg', '#ffffff'],
+    ['--ki-card-fg', '#111111'],
+    // button canary → swept
+    ['--ki-button-neutral-rest-bg', '#eeeeee'],
+    ['--ki-button-neutral-rest-fg', '#222222'],
+    // disabled cell → excluded (WCAG 1.4.3 exempt)
+    ['--ki-input-disabled-bg', '#fafafa'],
+    ['--ki-input-disabled-fg', '#cccccc'],
+    // bg without an fg sibling → skipped (non-text affordance, not a text pair)
+    ['--ki-checkbox-checked-rest-bg', '#0066ff'],
+    // semantic layer, not a component → excluded even with an fg sibling
+    ['--ki-surface-raised-bg', '#0066ff'],
+    ['--ki-surface-raised-fg', '#ffffff'],
+  ]);
+
+  const swept = componentPairs(declarations)
+    .map((pair) => [pair.component, pair.text, pair.surface])
+    .sort();
+
+  assert.deepEqual(swept, [
+    ['button', '--ki-button-neutral-rest-fg', '--ki-button-neutral-rest-bg'],
+    ['card', '--ki-card-fg', '--ki-card-bg'],
+    ['input', '--ki-input-rest-fg', '--ki-input-rest-bg'],
+  ]);
+});
+
+test('non-text control cells (radio ring/dot) require 3:1, text cells 4.5:1', () => {
+  const declarations = new Map([
+    ['--ki-radio-selected-rest-bg', '#ffffff'],
+    ['--ki-radio-selected-rest-fg', '#767676'],
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-fg', '#111111'],
+  ]);
+
+  const byComponent = Object.fromEntries(
+    componentPairs(declarations).map((pair) => [pair.component, pair.minRatio]),
   );
 
-  assert.equal(progressPair?.minimum, 3);
+  assert.equal(byComponent.radio, 3);
+  assert.equal(byComponent.input, 4.5);
 });
