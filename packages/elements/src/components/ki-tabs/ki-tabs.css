@@ -8,7 +8,7 @@
   display: block;
 }
 
-[part='tablist'] {
+[part="tablist"] {
   display: flex;
   gap: var(--_ki-tabs-gap);
   align-items: end;

@@ -61,7 +61,7 @@
   outline-offset: var(--ki-tab-focus-ring-offset);
 }
 
-[part='tab'] {
+[part="tab"] {
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
@@ -71,7 +71,7 @@
   gap: var(--ki-tab-gap);
 }
 
-[part='indicator'] {
+[part="indicator"] {
   position: absolute;
   inset-inline: var(--ki-tab-padding-inline);
   inset-block-end: 0;
@@ -81,6 +81,6 @@
   border-radius: var(--ki-tab-indicator-radius);
 }
 
-:host([selected]) [part='indicator'] {
+:host([selected]) [part="indicator"] {
   display: block;
 }

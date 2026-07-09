@@ -18,7 +18,7 @@
   outline-offset: var(--ki-tab-panel-focus-ring-offset);
 }
 
-[part='panel'] {
+[part="panel"] {
   box-sizing: border-box;
   padding-block: var(--ki-tab-panel-padding-block);
   padding-inline: var(--ki-tab-panel-padding-inline);
