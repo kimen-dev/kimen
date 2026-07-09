@@ -334,6 +334,22 @@ describe('ki-checkbox in a real browser', () => {
     );
   });
 
+  it('S14 relaxing required after a failed submit clears the user-invalid affordance', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount('Accept the terms', { required: true, name: 'terms' }, form);
+    form.addEventListener('submit', (event) => { event.preventDefault(); });
+
+    form.reportValidity();
+    await waitForStyles();
+    expect(el.matches(':state(user-invalid)')).toBe(true);
+
+    el.required = false;
+    await waitForStyles();
+    expect(el.matches(':state(user-invalid)')).toBe(false);
+  });
+
   it('S15 disabled fieldset prevents changes and removes form data', async () => {
     cleanup();
     const form = document.createElement('form');

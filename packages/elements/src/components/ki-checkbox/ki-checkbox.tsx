@@ -138,6 +138,10 @@ export class KiCheckbox {
   protected inputConstraintChanged(): void {
     this.syncInputState();
     this.syncValidity();
+    // Relaxing a constraint (e.g. required -> false) that makes the control
+    // valid must also drop the user-invalid affordance; syncValidity only does
+    // so on the disabled path (codex review).
+    this.syncUserInvalidState(false);
   }
 
   @Watch('value')
