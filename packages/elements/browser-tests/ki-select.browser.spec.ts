@@ -6,6 +6,7 @@ import { page, userEvent } from 'vitest/browser';
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III).
 import tokensCss from '@kimen/tokens/css?raw';
+import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
 
@@ -21,6 +22,9 @@ beforeAll(() => {
 
 function cleanup(): void {
   document.body.replaceChildren();
+  document.documentElement.removeAttribute('dir');
+  document.documentElement.removeAttribute('data-ki-theme');
+  document.documentElement.removeAttribute('data-ki-color-scheme');
 }
 
 async function mountSelect(
@@ -45,6 +49,24 @@ async function mountSelect(
   return el;
 }
 
+async function mountForm(
+  attrs = '',
+  options?: string,
+): Promise<{
+  form: HTMLFormElement;
+  el: KiSelectElement;
+}> {
+  const el = await mountSelect(`name="country" ${attrs}`, options);
+  const mainElement = main();
+  const form = document.createElement('form');
+  while (mainElement.firstChild) {
+    form.append(mainElement.firstChild);
+  }
+  mainElement.append(form);
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  return { form, el };
+}
+
 function trigger(el: KiSelectElement): HTMLButtonElement {
   const button = el.shadowRoot?.querySelector<HTMLButtonElement>('[part="trigger"]');
   expect(button).toBeInstanceOf(HTMLButtonElement);
@@ -60,6 +82,15 @@ function valueText(el: KiSelectElement): string {
 
 function rows(el: KiSelectElement): HTMLElement[] {
   return [...(el.shadowRoot?.querySelectorAll<HTMLElement>('[role="option"]') ?? [])];
+}
+
+function rowAt(el: KiSelectElement, index: number): HTMLElement {
+  const row = rows(el)[index];
+  expect(row).toBeInstanceOf(HTMLElement);
+  if (!row) {
+    throw new Error(`missing row ${String(index)}`);
+  }
+  return row;
 }
 
 function main(): HTMLElement {
@@ -181,5 +212,140 @@ describe('ki-select in a real browser', () => {
     expect(trigger(el).getAttribute('aria-expanded')).toBe('true');
     expect(activeId).toBe(rows(el)[1]?.id);
     expect(el.shadowRoot?.getElementById(activeId ?? '')).toBe(rows(el)[1]);
+  });
+
+  it('S8 S9 S10 S21 S22 S23 implements the approved keyboard path', async () => {
+    const el = await mountSelect(
+      '',
+      `<ki-option value="es">Spain</ki-option><ki-option value="fr" disabled>France</ki-option><ki-option value="pt">Portugal</ki-option>`,
+    );
+    const events: string[] = [];
+    el.addEventListener('change', () => events.push('change'));
+
+    trigger(el).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    expect(trigger(el).getAttribute('aria-activedescendant')).toBe(rows(el)[0]?.id);
+    await userEvent.keyboard('{ArrowDown}');
+    expect(trigger(el).getAttribute('aria-activedescendant')).toBe(rows(el)[2]?.id);
+    await userEvent.keyboard('{Home}');
+    expect(trigger(el).getAttribute('aria-activedescendant')).toBe(rows(el)[0]?.id);
+    await userEvent.keyboard('{End}');
+    expect(trigger(el).getAttribute('aria-activedescendant')).toBe(rows(el)[2]?.id);
+    await userEvent.keyboard('{Enter}');
+    expect(el.value).toBe('pt');
+    expect(events).toEqual(['change']);
+
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard('{Home}');
+    await userEvent.keyboard('{Escape}');
+    expect(el.value).toBe('pt');
+    expect(events).toEqual(['change']);
+
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard('{Home}');
+    await userEvent.keyboard('{Tab}');
+    expect(el.value).toBe('pt');
+    expect(document.activeElement?.id).toBe('after');
+
+    const unselected = await mountSelect();
+    trigger(unselected).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    expect(trigger(unselected).getAttribute('aria-activedescendant')).toBe(rows(unselected)[0]?.id);
+    await userEvent.keyboard('f');
+    expect(unselected.value).toBe('');
+  });
+
+  it('S13 S24 submits selected values and omits unselected values', async () => {
+    const selected = await mountForm('value="fr"');
+    expect(new FormData(selected.form).get('country')).toBe('fr');
+
+    const empty = await mountForm();
+    expect(new FormData(empty.form).has('country')).toBe(false);
+  });
+
+  it('S14 blocks required empty submission and clears invalid after commit', async () => {
+    const { form, el } = await mountForm('required');
+    let submitted = false;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitted = true;
+    });
+
+    form.requestSubmit();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(submitted).toBe(false);
+    expect(trigger(el).getAttribute('aria-invalid')).toBe('true');
+    expect(el.matches(':invalid')).toBe(true);
+
+    trigger(el).click();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    rows(el)[1]?.click();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(trigger(el).hasAttribute('aria-invalid')).toBe(false);
+
+    const emptyOption = await mountForm(
+      'required',
+      `<ki-option value="">Choose</ki-option><ki-option value="fr">France</ki-option>`,
+    );
+    trigger(emptyOption.el).click();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    rows(emptyOption.el)[0]?.click();
+    expect(emptyOption.el.matches(':invalid')).toBe(true);
+  });
+
+  it('S15 resets to the declared value silently', async () => {
+    const { form, el } = await mountForm('value="fr"');
+    const changes: Event[] = [];
+    el.addEventListener('change', (event) => changes.push(event));
+
+    trigger(el).click();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    rows(el)[2]?.click();
+    expect(el.value).toBe('pt');
+
+    form.reset();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(el.value).toBe('fr');
+    expect(valueText(el)).toBe('France');
+    expect(changes).toHaveLength(1);
+  });
+
+  it('S16 honors disabled fieldsets', async () => {
+    const { form, el } = await mountForm('value="fr"');
+    const fieldset = document.createElement('fieldset');
+    fieldset.disabled = true;
+    while (form.firstChild) {
+      fieldset.append(form.firstChild);
+    }
+    form.append(fieldset);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    trigger(el).click();
+    expect(trigger(el).disabled).toBe(true);
+    expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
+    expect(new FormData(form).has('country')).toBe(false);
+  });
+
+  it('S17 S19 rethemes with material3 and keeps RTL logical ordering', async () => {
+    const el = await mountSelect();
+    const baseBg = getComputedStyle(trigger(el)).backgroundColor;
+    const style = document.createElement('style');
+    style.textContent = material3Css;
+    document.head.append(style);
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(getComputedStyle(trigger(el)).backgroundColor).not.toBe(baseBg);
+
+    trigger(el).click();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(getComputedStyle(rowAt(el, 0)).backgroundColor).toBeTruthy();
+
+    document.documentElement.setAttribute('dir', 'rtl');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const valueBox = el.shadowRoot?.querySelector('[part="value"]')?.getBoundingClientRect();
+    const indicatorBox = el.shadowRoot
+      ?.querySelector('[part="indicator"]')
+      ?.getBoundingClientRect();
+    expect(valueBox && indicatorBox ? valueBox.left > indicatorBox.left : false).toBe(true);
   });
 });
