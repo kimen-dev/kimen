@@ -379,6 +379,7 @@
   --ki-text-none: var(--ki-color-transparent-white);
   --ki-text-primary-on-danger: var(--ki-color-white-100);
   --ki-outline-high-em: var(--ki-color-black-12);
+  --ki-outline-strong: var(--ki-color-black-48);
   --ki-outline-med-em: var(--ki-color-black-8);
   --ki-outline-low-em: var(--ki-color-black-5);
   --ki-outline-base-em: var(--ki-color-black-3);
@@ -755,7 +756,7 @@
   --ki-checkbox-label-font-weight: var(--ki-typography-weight-body-normal);
   --ki-checkbox-label-line-height: var(--ki-typography-line-height-body-1);
   --ki-checkbox-unchecked-rest-bg: var(--ki-surface-s0);
-  --ki-checkbox-unchecked-rest-border: var(--ki-outline-high-em);
+  --ki-checkbox-unchecked-rest-border: var(--ki-outline-strong);
   --ki-checkbox-unchecked-hover-bg: var(--ki-surface-s1);
   --ki-checkbox-unchecked-hover-border: var(--ki-outline-primary-high-em);
   --ki-checkbox-unchecked-active-bg: var(--ki-surface-s2);

@@ -318,6 +318,7 @@
   --ki-text-danger-low-em: #dc362e;
   --ki-text-danger-base-em: #f9dedc;
   --ki-outline-high-em: #79747e;
+  --ki-outline-strong: #79747e;
   --ki-outline-med-em: #cac4d0;
   --ki-outline-low-em: #e7e0ec;
   --ki-outline-base-em: #f3edf7;
@@ -652,7 +653,7 @@
   --ki-checkbox-border-width: var(--ki-space-xxs);
   --ki-checkbox-unchecked-rest-bg: var(--ki-surface-s0);
   --ki-checkbox-unchecked-rest-fg: var(--ki-text-high-em);
-  --ki-checkbox-unchecked-rest-border: var(--ki-outline-high-em);
+  --ki-checkbox-unchecked-rest-border: var(--ki-outline-strong);
   --ki-checkbox-unchecked-hover-bg: var(--ki-surface-s1);
   --ki-checkbox-unchecked-hover-fg: var(--ki-text-high-em);
   --ki-checkbox-unchecked-hover-border: var(--ki-outline-primary-high-em);
