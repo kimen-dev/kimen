@@ -291,6 +291,8 @@
   --ki-button-ghost-hover-shadow: none;
   --ki-button-ghost-active-shadow: none;
   --ki-button-ghost-disabled-shadow: none;
+  --ki-dialog-motion-duration: 0ms;
+  --ki-dialog-motion-easing: linear;
   --ki-tooltip-shadow: 0 1px 2px 0 var(--ki-elevation-shadow-dark), 0 2px 6px 2px var(--ki-elevation-shadow-med);
   --ki-tooltip-show-delay: 500ms;
   --ki-tooltip-hide-delay: 100ms;
@@ -553,6 +555,14 @@
   --ki-button-focus-ring-width: var(--ki-space-xxs);
   --ki-button-focus-ring-offset: var(--ki-space-xxs);
   --ki-button-border-width: var(--ki-space-xxs);
+  --ki-dialog-radius: var(--ki-radius-2xl);
+  --ki-dialog-padding: var(--ki-space-7xl);
+  --ki-dialog-gap: var(--ki-space-5xl);
+  --ki-dialog-min-width: var(--ki-space-25xl);
+  --ki-dialog-max-width: var(--ki-space-26xl);
+  --ki-dialog-shadow: 0 var(--ki-space-xs) var(--ki-space-3xl) var(--ki-elevation-shadow-med), 0 var(--ki-space-5xl) var(--ki-space-9xl) var(--ki-elevation-shadow);
+  --ki-dialog-focus-ring-width: var(--ki-space-xxs);
+  --ki-dialog-focus-ring-offset: var(--ki-space-xxs);
   --ki-tooltip-radius: var(--ki-radius-sm);
   --ki-tooltip-padding-inline: var(--ki-space-md);
   --ki-tooltip-padding-block: var(--ki-space-xs);
@@ -839,6 +849,13 @@
   --ki-button-ghost-danger-active-border: var(--ki-outline-none);
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+  --ki-dialog-bg: var(--ki-surface-s1);
+  --ki-dialog-border: 1px solid var(--ki-outline-low-em);
+  --ki-dialog-backdrop-bg: var(--ki-overlay-high-em);
+  --ki-dialog-heading-font-size: var(--ki-typography-size-title-2);
+  --ki-dialog-heading-font-weight: var(--ki-typography-weight-body-semibold);
+  --ki-dialog-heading-line-height: var(--ki-typography-line-height-title-2);
+  --ki-dialog-focus-ring-color: var(--ki-outline-primary-high-em);
   --ki-tooltip-bg: var(--ki-surface-inverse-white);
   --ki-tooltip-fg: var(--ki-text-inverse-black);
   --ki-list-bg: var(--ki-surface-s0);
@@ -1020,6 +1037,7 @@
   --ki-button-primary-success-rest-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-hover-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-active-fg: var(--ki-text-primary-on-success);
+  --ki-dialog-fg: var(--ki-text-high-em);
   --ki-list-item-primary-fg: var(--ki-text-high-em);
   --ki-list-item-secondary-fg: var(--ki-text-med-em);
   --ki-alert-neutral-fg: var(--ki-text-high-em);

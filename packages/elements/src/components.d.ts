@@ -8,12 +8,14 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 import { KiInputType } from "./components/ki-input/ki-input";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
 import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
 export { KiInputType } from "./components/ki-input/ki-input";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
@@ -175,6 +177,41 @@ export namespace Components {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A modal dialog for one interrupting decision or short focused task.
+     * @whenToUse destructive confirmations, blocking choices, and brief
+     * critical input that must be resolved before returning to the page. Always
+     * provide a `heading`, place actions in the `footer` slot, wire each footer
+     * action to `close()`, and in destructive confirmations put `autofocus` on
+     * the least destructive action.
+     * @whenNotToUse non-blocking feedback (`ki-alert`, future `ki-toast`),
+     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
+     * (navigate or use a future full-screen variant), menus, or pickers.
+     */
+    interface KiDialog {
+        /**
+          * Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
+         */
+        "close": () => Promise<void>;
+        /**
+          * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
+          * @default false
+         */
+        "closeOnBackdrop": boolean;
+        /**
+          * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
+         */
+        "heading"?: string;
+        /**
+          * Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close. When open, the native dialog enters the top layer and the page behind is inert. When to use: bind application state to the dialog's modal lifecycle. When NOT to use: do not set the internal native `<dialog open>` attribute; the host attribute is the only public source of truth.
+          * @default false
+         */
+        "open": boolean;
+        /**
+          * Opens the dialog modally. No-op when already open. Equivalent to adding the host `open` attribute. When to use: call from the invoker that should receive focus again after close. When NOT to use: do not call repeatedly to refresh content; update slotted content directly while open.
+         */
+        "show": () => Promise<void>;
     }
     /**
      * A token-styled single-line text field with native input semantics.
@@ -452,6 +489,10 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiAlertElement;
 }
+export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiDialogElement;
+}
 declare global {
     interface HTMLKiAlertElementEventMap {
         "ki-dismiss": null;
@@ -546,6 +587,34 @@ declare global {
     var HTMLKiCheckboxElement: {
         prototype: HTMLKiCheckboxElement;
         new (): HTMLKiCheckboxElement;
+    };
+    interface HTMLKiDialogElementEventMap {
+        "ki-close": KiDialogCloseDetail;
+    }
+    /**
+     * A modal dialog for one interrupting decision or short focused task.
+     * @whenToUse destructive confirmations, blocking choices, and brief
+     * critical input that must be resolved before returning to the page. Always
+     * provide a `heading`, place actions in the `footer` slot, wire each footer
+     * action to `close()`, and in destructive confirmations put `autofocus` on
+     * the least destructive action.
+     * @whenNotToUse non-blocking feedback (`ki-alert`, future `ki-toast`),
+     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
+     * (navigate or use a future full-screen variant), menus, or pickers.
+     */
+    interface HTMLKiDialogElement extends Components.KiDialog, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiDialogElementEventMap>(type: K, listener: (this: HTMLKiDialogElement, ev: KiDialogCustomEvent<HTMLKiDialogElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiDialogElementEventMap>(type: K, listener: (this: HTMLKiDialogElement, ev: KiDialogCustomEvent<HTMLKiDialogElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiDialogElement: {
+        prototype: HTMLKiDialogElement;
+        new (): HTMLKiDialogElement;
     };
     /**
      * A token-styled single-line text field with native input semantics.
@@ -691,6 +760,7 @@ declare global {
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
+        "ki-dialog": HTMLKiDialogElement;
         "ki-input": HTMLKiInputElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
@@ -874,6 +944,37 @@ declare namespace LocalJSX {
           * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
          */
         "value"?: string;
+    }
+    /**
+     * A modal dialog for one interrupting decision or short focused task.
+     * @whenToUse destructive confirmations, blocking choices, and brief
+     * critical input that must be resolved before returning to the page. Always
+     * provide a `heading`, place actions in the `footer` slot, wire each footer
+     * action to `close()`, and in destructive confirmations put `autofocus` on
+     * the least destructive action.
+     * @whenNotToUse non-blocking feedback (`ki-alert`, future `ki-toast`),
+     * supplementary hints (`ki-tooltip`), long forms or multi-step flows
+     * (navigate or use a future full-screen variant), menus, or pickers.
+     */
+    interface KiDialog {
+        /**
+          * Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
+          * @default false
+         */
+        "closeOnBackdrop"?: boolean;
+        /**
+          * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
+         */
+        "heading"?: string;
+        /**
+          * Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
+         */
+        "onKi-close"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;
+        /**
+          * Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close. When open, the native dialog enters the top layer and the page behind is inert. When to use: bind application state to the dialog's modal lifecycle. When NOT to use: do not set the internal native `<dialog open>` attribute; the host attribute is the only public source of truth.
+          * @default false
+         */
+        "open"?: boolean;
     }
     /**
      * A token-styled single-line text field with native input semantics.
@@ -1191,6 +1292,11 @@ declare namespace LocalJSX {
         "name": string;
         "value": string;
     }
+    interface KiDialogAttributes {
+        "open": boolean;
+        "heading": string;
+        "closeOnBackdrop": boolean;
+    }
     interface KiInputAttributes {
         "type": KiInputType;
         "label": string;
@@ -1248,6 +1354,7 @@ declare namespace LocalJSX {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
+        "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] };
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
         "ki-list": KiList;
         "ki-list-item": KiListItem;
@@ -1321,6 +1428,18 @@ declare module "@stencil/core" {
              * semantics; omit `checked` to express unchecked.
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
+            /**
+             * A modal dialog for one interrupting decision or short focused task.
+             * @whenToUse destructive confirmations, blocking choices, and brief
+             * critical input that must be resolved before returning to the page. Always
+             * provide a `heading`, place actions in the `footer` slot, wire each footer
+             * action to `close()`, and in destructive confirmations put `autofocus` on
+             * the least destructive action.
+             * @whenNotToUse non-blocking feedback (`ki-alert`, future `ki-toast`),
+             * supplementary hints (`ki-tooltip`), long forms or multi-step flows
+             * (navigate or use a future full-screen variant), menus, or pickers.
+             */
+            "ki-dialog": LocalJSX.IntrinsicElements["ki-dialog"] & JSXBase.HTMLAttributes<HTMLKiDialogElement>;
             /**
              * A token-styled single-line text field with native input semantics.
              * @whenToUse collect one line of free text from a person, always with a

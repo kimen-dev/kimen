@@ -30,3 +30,5 @@ export { KiListItem } from './components/ki-list-item/ki-list-item.js';
 export type * from './components/ki-list-item/ki-list-item.js';
 export { KiTooltip } from './components/ki-tooltip/ki-tooltip.js';
 export type { KiTooltipPlacement } from './components/ki-tooltip/ki-tooltip.position.js';
+export { KiDialog } from './components/ki-dialog/ki-dialog.js';
+export type * from './components/ki-dialog/ki-dialog.js';

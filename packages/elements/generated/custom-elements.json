@@ -711,6 +711,163 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/ki-dialog/ki-dialog.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiDialog",
+          "customElement": true,
+          "tagName": "ki-dialog",
+          "description": "A modal dialog for one interrupting decision or short focused task.",
+          "whenToUse": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action.",
+          "whenNotToUse": "non-blocking feedback (`ki-alert`, future `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers.",
+          "attributes": [
+            {
+              "name": "close-on-backdrop",
+              "fieldName": "closeOnBackdrop",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "heading",
+              "fieldName": "heading",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "open",
+              "fieldName": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "closeOnBackdrop",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
+              "attribute": "close-on-backdrop",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible dialog title and accessible-name source. Always provide a heading;\nan empty value intentionally leaves the native dialog unnamed.\nWhen to use: name the interrupting decision, for example \"Delete\naccount?\". When NOT to use: do not omit it for production dialogs; APG\nmodal dialogs require an accessible name.",
+              "attribute": "heading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Reflected live modal state. Add it or call `show()` to open; remove it or\ncall `close()` to close. When open, the native dialog enters the top layer\nand the page behind is inert.\nWhen to use: bind application state to the dialog's modal lifecycle.\nWhen NOT to use: do not set the internal native `<dialog open>` attribute;\nthe host attribute is the only public source of truth.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "public",
+              "description": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": []
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "privacy": "public",
+              "description": "Opens the dialog modally. No-op when already open. Equivalent to adding\nthe host `open` attribute.\nWhen to use: call from the invoker that should receive focus again after\nclose. When NOT to use: do not call repeatedly to refresh content; update\nslotted content directly while open.",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": []
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-close",
+              "type": {
+                "text": "CustomEvent<KiDialogCloseDetail>"
+              },
+              "description": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Dialog body content."
+            },
+            {
+              "name": "footer",
+              "description": "Dialog actions; applications wire every action to `close()`."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "body",
+              "description": "Scrollable body region."
+            },
+            {
+              "name": "dialog",
+              "description": "Internal native dialog surface."
+            },
+            {
+              "name": "footer",
+              "description": "Action row, collapsed when empty."
+            },
+            {
+              "name": "heading",
+              "description": "Visible h2 title, rendered only when `heading` is non-empty."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiDialog",
+          "declaration": {
+            "name": "KiDialog",
+            "module": "src/components/ki-dialog/ki-dialog.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-dialog",
+          "declaration": {
+            "name": "KiDialog",
+            "module": "src/components/ki-dialog/ki-dialog.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/ki-input/ki-input.tsx",
       "declarations": [
         {

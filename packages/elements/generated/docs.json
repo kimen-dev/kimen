@@ -1075,6 +1075,235 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-dialog/ki-dialog.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-dialog",
+      "docs": "A modal dialog for one interrupting decision or short focused task.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "destructive confirmations, blocking choices, and brief\ncritical input that must be resolved before returning to the page. Always\nprovide a `heading`, place actions in the `footer` slot, wire each footer\naction to `close()`, and in destructive confirmations put `autofocus` on\nthe least destructive action."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "non-blocking feedback (`ki-alert`, future `ki-toast`),\nsupplementary hints (`ki-tooltip`), long forms or multi-step flows\n(navigate or use a future full-screen variant), menus, or pickers."
+        },
+        {
+          "name": "slot",
+          "text": "- Dialog body content."
+        },
+        {
+          "name": "slot",
+          "text": "footer - Dialog actions; applications wire every action to `close()`."
+        },
+        {
+          "name": "part",
+          "text": "dialog - Internal native dialog surface."
+        },
+        {
+          "name": "part",
+          "text": "heading - Visible h2 title, rendered only when `heading` is non-empty."
+        },
+        {
+          "name": "part",
+          "text": "body - Scrollable body region."
+        },
+        {
+          "name": "part",
+          "text": "footer - Action row, collapsed when empty."
+        }
+      ],
+      "usage": {},
+      "props": [
+        {
+          "name": "closeOnBackdrop",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "close-on-backdrop",
+          "reflectToAttr": true,
+          "docs": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "heading",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "heading",
+          "reflectToAttr": true,
+          "docs": "Visible dialog title and accessible-name source. Always provide a heading;\nan empty value intentionally leaves the native dialog unnamed.\nWhen to use: name the interrupting decision, for example \"Delete\naccount?\". When NOT to use: do not omit it for production dialogs; APG\nmodal dialogs require an accessible name.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "open",
+          "reflectToAttr": true,
+          "docs": "Reflected live modal state. Add it or call `show()` to open; remove it or\ncall `close()` to close. When open, the native dialog enters the top layer\nand the page behind is inert.\nWhen to use: bind application state to the dialog's modal lifecycle.\nWhen NOT to use: do not set the internal native `<dialog open>` attribute;\nthe host attribute is the only public source of truth.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "close",
+          "returns": {
+            "type": "Promise<void>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "() => Promise<void>",
+            "parameters": [],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<void>"
+          },
+          "signature": "close() => Promise<void>",
+          "parameters": [],
+          "docs": "Closes the dialog and reports `method`. No-op when already closed.\nEquivalent to removing the host `open` attribute. Footer actions never\nclose automatically; wire them to this method.\nWhen to use: resolve footer actions, programmatic dismissals, and\napplication-controlled cancellation. When NOT to use: do not use for\nEscape or backdrop bookkeeping; those paths set their own close reasons.",
+          "docsTags": []
+        },
+        {
+          "name": "show",
+          "returns": {
+            "type": "Promise<void>",
+            "docs": ""
+          },
+          "complexType": {
+            "signature": "() => Promise<void>",
+            "parameters": [],
+            "references": {
+              "Promise": {
+                "location": "global",
+                "id": "global::Promise"
+              }
+            },
+            "return": "Promise<void>"
+          },
+          "signature": "show() => Promise<void>",
+          "parameters": [],
+          "docs": "Opens the dialog modally. No-op when already open. Equivalent to adding\nthe host `open` attribute.\nWhen to use: call from the invoker that should receive focus again after\nclose. When NOT to use: do not call repeatedly to refresh content; update\nslotted content directly while open.",
+          "docsTags": []
+        }
+      ],
+      "events": [
+        {
+          "event": "ki-close",
+          "detail": "KiDialogCloseDetail",
+          "bubbles": true,
+          "complexType": {
+            "original": "KiDialogCloseDetail",
+            "resolved": "KiDialogCloseDetail",
+            "references": {
+              "KiDialogCloseDetail": {
+                "location": "local",
+                "path": "src/components/ki-dialog/ki-dialog.tsx",
+                "id": "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail"
+              }
+            }
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Post-close notification for every close path. Footer actions report\n`method` when they call `close()`, Escape reports `escape`, and opt-in\nbackdrop dismissal reports `backdrop`.\nWhen to use: update application state after the dialog is already closed\nand focus has returned through the native mechanism.\nWhen NOT to use: do not expect this event to veto closing; it is not\ncancelable in v1.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Dialog body content."
+        },
+        {
+          "name": "footer",
+          "docs": "Dialog actions; applications wire every action to `close()`."
+        }
+      ],
+      "parts": [
+        {
+          "name": "body",
+          "docs": "Scrollable body region."
+        },
+        {
+          "name": "dialog",
+          "docs": "Internal native dialog surface."
+        },
+        {
+          "name": "footer",
+          "docs": "Action row, collapsed when empty."
+        },
+        {
+          "name": "heading",
+          "docs": "Visible h2 title, rendered only when `heading` is non-empty."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-input/ki-input.tsx",
       "encapsulation": "shadow",
       "tag": "ki-input",
@@ -2707,6 +2936,11 @@
       "declaration": "export type KiButtonType = 'submit' | 'reset' | 'button';",
       "docstring": "",
       "path": "src/components/ki-button/ki-button.tsx"
+    },
+    "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail": {
+      "declaration": "export interface KiDialogCloseDetail {\n  /** `method` for `close()`/open removal, `escape` for Escape, `backdrop` for opt-in backdrop. */\n  reason: KiDialogCloseReason;\n}",
+      "docstring": "Event payload for the post-close `ki-close` notification.",
+      "path": "src/components/ki-dialog/ki-dialog.tsx"
     },
     "src/components/ki-input/ki-input.tsx::KiInputType": {
       "declaration": "export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';",
