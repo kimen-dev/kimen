@@ -189,7 +189,11 @@ const SEMANTIC_LAYERS = new Set([
   'border',
   'z',
 ]);
-const COMPONENT_BG_PATTERN = /^--ki-([a-z][a-z0-9]*)-[\w-]+-bg$/u;
+// The state/variant segment is OPTIONAL so a bare `--ki-<component>-bg` (e.g.
+// ki-card's single surface pair) is swept too — a required middle segment
+// silently dropped every component that names its base pair without a state
+// (Codex review of 009).
+const COMPONENT_BG_PATTERN = /^--ki-([a-z][a-z0-9]*)(?:-[\w-]+)?-bg$/u;
 // The canary: button is the foundational component and is always present, so a
 // zero-button sweep means the naming convention drifted (the old zero-length
 // guard is defeated once any other component contributes a pair).

@@ -48,6 +48,9 @@ test('component sweep is generic: any component bg/fg pair, semantic layers and 
     // a non-button component with a matching fg → swept
     ['--ki-input-rest-bg', '#ffffff'],
     ['--ki-input-rest-fg', '#111111'],
+    // a bare component pair with no state segment (e.g. ki-card) → swept
+    ['--ki-card-bg', '#ffffff'],
+    ['--ki-card-fg', '#111111'],
     // button canary → swept
     ['--ki-button-neutral-rest-bg', '#eeeeee'],
     ['--ki-button-neutral-rest-fg', '#222222'],
@@ -67,6 +70,7 @@ test('component sweep is generic: any component bg/fg pair, semantic layers and 
 
   assert.deepEqual(swept, [
     ['button', '--ki-button-neutral-rest-fg', '--ki-button-neutral-rest-bg'],
+    ['card', '--ki-card-fg', '--ki-card-bg'],
     ['input', '--ki-input-rest-fg', '--ki-input-rest-bg'],
   ]);
 });

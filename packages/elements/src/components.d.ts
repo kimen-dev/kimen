@@ -50,6 +50,19 @@ export namespace Components {
          */
         "variant": KiButtonVariant;
     }
+    /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface KiCard {
+    }
 }
 declare global {
     /**
@@ -65,8 +78,26 @@ declare global {
         prototype: HTMLKiButtonElement;
         new (): HTMLKiButtonElement;
     };
+    /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface HTMLKiCardElement extends Components.KiCard, HTMLStencilElement {
+    }
+    var HTMLKiCardElement: {
+        prototype: HTMLKiCardElement;
+        new (): HTMLKiCardElement;
+    };
     interface HTMLElementTagNameMap {
         "ki-button": HTMLKiButtonElement;
+        "ki-card": HTMLKiCardElement;
     }
 }
 declare namespace LocalJSX {
@@ -116,6 +147,19 @@ declare namespace LocalJSX {
          */
         "variant"?: KiButtonVariant;
     }
+    /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface KiCard {
+    }
 
     interface KiButtonAttributes {
         "variant": KiButtonVariant;
@@ -129,6 +173,7 @@ declare namespace LocalJSX {
 
     interface IntrinsicElements {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
+        "ki-card": KiCard;
     }
 }
 export { LocalJSX as JSX };
@@ -143,6 +188,18 @@ declare module "@stencil/core" {
              * loading/progress semantics.
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
+            /**
+             * A non-interactive card surface for grouping related content.
+             * @whenToUse group related media, heading, supporting text and actions into
+             * one scannable surface visually distinct from the page; fill any subset of
+             * regions. Supply the heading element yourself in the `header` slot — plain
+             * text slotted there carries no heading semantics for assistive technology.
+             * @whenNotToUse as a button or link target, form control, fieldset, page
+             * landmark, section replacement or nested card. For an interactive card, slot
+             * the button or link INSIDE a region (whole-card interactivity is a future
+             * feature, not this component).
+             */
+            "ki-card": LocalJSX.IntrinsicElements["ki-card"] & JSXBase.HTMLAttributes<HTMLKiCardElement>;
         }
     }
 }
