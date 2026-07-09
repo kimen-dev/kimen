@@ -1,0 +1,85 @@
+{
+  "ki": {
+    "tab": {
+      "selected": {
+        "rest": {
+          "fg": {
+            "$value": "{ki.text.primary-high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.s0}"
+          }
+        },
+        "hover": {
+          "fg": {
+            "$value": "{ki.text.primary-high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.primary-base-em-alpha}"
+          }
+        },
+        "active": {
+          "fg": {
+            "$value": "{ki.text.primary-high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.primary-low-em-alpha}"
+          }
+        },
+        "disabled": {
+          "fg": {
+            "$value": "{ki.text.muted}"
+          },
+          "bg": {
+            "$value": "{ki.surface.disabled-base-em}"
+          }
+        }
+      },
+      "unselected": {
+        "rest": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.s0}"
+          }
+        },
+        "hover": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.s1}"
+          }
+        },
+        "active": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.s2}"
+          }
+        },
+        "disabled": {
+          "fg": {
+            "$value": "{ki.text.muted}"
+          },
+          "bg": {
+            "$value": "{ki.surface.disabled-base-em}"
+          }
+        }
+      },
+      "indicator": {
+        "size": {
+          "$value": "{ki.space.xxs}"
+        },
+        "color": {
+          "$value": "{ki.outline.primary-high-em}"
+        },
+        "radius": {
+          "$value": "{ki.radius.round}"
+        }
+      }
+    }
+  }
+}
