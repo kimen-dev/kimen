@@ -10,6 +10,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import onmarsCss from '@kimen/tokens/css?raw';
 import { defineCustomElement } from '../dist/components/ki-button.js';
 
+const defineKiButtonElement: () => void = defineCustomElement;
 const browserCommands = commands as unknown as {
   emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
 };
@@ -18,7 +19,7 @@ const variants = ['primary', 'secondary', 'tertiary', 'quaternary', 'ghost'] as 
 const tones = ['neutral', 'success', 'danger'] as const;
 
 beforeAll(async () => {
-  defineCustomElement();
+  defineKiButtonElement();
   await browserCommands.emulateColorScheme('dark');
 });
 

@@ -14,3 +14,5 @@ export { KiTextarea } from './components/ki-textarea/ki-textarea.js';
 export type * from './components/ki-textarea/ki-textarea.js';
 export { KiBadge } from './components/ki-badge/ki-badge.js';
 export type * from './components/ki-badge/ki-badge.js';
+export { KiSwitch } from './components/ki-switch/ki-switch.js';
+export type * from './components/ki-switch/ki-switch.js';

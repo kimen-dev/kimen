@@ -180,6 +180,36 @@ Methods: none
 
 CSS custom properties: none
 
+### ki-switch
+
+A token-styled switch for immediate on/off settings.
+
+When to use: binary settings whose change takes effect immediately, always
+with a slotted label.
+When NOT to use: selections collected for later form submission; use
+ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+choices, and ki-button for actions.
+
+Attributes:
+- `checked` (boolean, default false): Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+- `disabled` (boolean, default false): Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
+- `name` (string | undefined): Form-data key contributed while the switch is on. When to use: include the immediate setting in native form data when on. When NOT to use: omit when no form entry should be submitted.
+- `value` (string | undefined): Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When to use: submit a domain-specific value instead of the default `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
+
+Slots:
+- (default): Label content. This is the accessible name source.
+
+Parts:
+- `label`: Label wrapper around the default slot.
+- `thumb`: Traveling handle.
+- `track`: On/off channel.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
 ### ki-textarea
 
 A token-styled multiline text field with native form semantics.

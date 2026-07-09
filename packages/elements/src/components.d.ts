@@ -181,6 +181,36 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A token-styled switch for immediate on/off settings.
+     * @whenToUse binary settings whose change takes effect immediately, always
+     * with a slotted label.
+     * @whenNotToUse selections collected for later form submission; use
+     * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+     * choices, and ki-button for actions.
+     */
+    interface KiSwitch {
+        /**
+          * Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+          * @default false
+         */
+        "checked": boolean;
+        /**
+          * Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Form-data key contributed while the switch is on. When to use: include the immediate setting in native form data when on. When NOT to use: omit when no form entry should be submitted.
+          * @default undefined
+         */
+        "name"?: string;
+        /**
+          * Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When to use: submit a domain-specific value instead of the default `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
+          * @default 'on'
+         */
+        "value"?: string;
+    }
+    /**
      * A token-styled multiline text field with native form semantics.
      * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
@@ -313,6 +343,20 @@ declare global {
         new (): HTMLKiInputElement;
     };
     /**
+     * A token-styled switch for immediate on/off settings.
+     * @whenToUse binary settings whose change takes effect immediately, always
+     * with a slotted label.
+     * @whenNotToUse selections collected for later form submission; use
+     * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+     * choices, and ki-button for actions.
+     */
+    interface HTMLKiSwitchElement extends Components.KiSwitch, HTMLStencilElement {
+    }
+    var HTMLKiSwitchElement: {
+        prototype: HTMLKiSwitchElement;
+        new (): HTMLKiSwitchElement;
+    };
+    /**
      * A token-styled multiline text field with native form semantics.
      * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
@@ -335,6 +379,7 @@ declare global {
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-input": HTMLKiInputElement;
+        "ki-switch": HTMLKiSwitchElement;
         "ki-textarea": HTMLKiTextareaElement;
     }
 }
@@ -522,6 +567,40 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A token-styled switch for immediate on/off settings.
+     * @whenToUse binary settings whose change takes effect immediately, always
+     * with a slotted label.
+     * @whenNotToUse selections collected for later form submission; use
+     * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+     * choices, and ki-button for actions.
+     */
+    interface KiSwitch {
+        /**
+          * Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
+          * @default false
+         */
+        "checked"?: boolean;
+        /**
+          * Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Form-data key contributed while the switch is on. When to use: include the immediate setting in native form data when on. When NOT to use: omit when no form entry should be submitted.
+          * @default undefined
+         */
+        "name"?: string;
+        /**
+          * Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When to use: submit a domain-specific value instead of the default `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
+          * @default 'on'
+         */
+        "value"?: string;
+    }
+    /**
      * A token-styled multiline text field with native form semantics.
      * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
@@ -612,6 +691,12 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "autocomplete": string;
     }
+    interface KiSwitchAttributes {
+        "checked": boolean;
+        "disabled": boolean;
+        "name": string;
+        "value": string;
+    }
     interface KiTextareaAttributes {
         "label": string;
         "placeholder": string;
@@ -630,6 +715,7 @@ declare namespace LocalJSX {
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
+        "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
     }
 }
@@ -688,6 +774,15 @@ declare module "@stencil/core" {
              * stepper entry, or placeholder-only labeling.
              */
             "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;
+            /**
+             * A token-styled switch for immediate on/off settings.
+             * @whenToUse binary settings whose change takes effect immediately, always
+             * with a slotted label.
+             * @whenNotToUse selections collected for later form submission; use
+             * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
+             * choices, and ki-button for actions.
+             */
+            "ki-switch": LocalJSX.IntrinsicElements["ki-switch"] & JSXBase.HTMLAttributes<HTMLKiSwitchElement>;
             /**
              * A token-styled multiline text field with native form semantics.
              * @whenToUse free-form text longer than one line, such as comments,

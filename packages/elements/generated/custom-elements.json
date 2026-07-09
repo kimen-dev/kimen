@@ -777,6 +777,141 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/ki-switch/ki-switch.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSwitch",
+          "customElement": true,
+          "tagName": "ki-switch",
+          "description": "A token-styled switch for immediate on/off settings.",
+          "whenToUse": "binary settings whose change takes effect immediately, always\nwith a slotted label.",
+          "whenNotToUse": "selections collected for later form submission; use\nki-checkbox for recorded choices, ki-radio-group for mutually exclusive\nchoices, and ki-button for actions.",
+          "attributes": [
+            {
+              "name": "checked",
+              "fieldName": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string | undefined"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "checked",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
+              "attribute": "checked",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prevents toggling, removes the switch from keyboard reach, excludes it\nfrom form data, and exposes the unavailable state to assistive technology.\nWhen to use: make a setting temporarily unavailable while preserving its\ncurrent state.\nWhen NOT to use: do not use disabled for pending or loading states.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key contributed while the switch is on.\nWhen to use: include the immediate setting in native form data when on.\nWhen NOT to use: omit when no form entry should be submitted.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data value submitted while on. Omit for native checkbox parity: the\nsubmitted value defaults to `on`.\nWhen to use: submit a domain-specific value instead of the default `on`.\nWhen NOT to use: do not set a value to represent off; off contributes\nnothing.",
+              "attribute": "value",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Label content. This is the accessible name source."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "label",
+              "description": "Label wrapper around the default slot."
+            },
+            {
+              "name": "thumb",
+              "description": "Traveling handle."
+            },
+            {
+              "name": "track",
+              "description": "On/off channel."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSwitch",
+          "declaration": {
+            "name": "KiSwitch",
+            "module": "src/components/ki-switch/ki-switch.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-switch",
+          "declaration": {
+            "name": "KiSwitch",
+            "module": "src/components/ki-switch/ki-switch.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/ki-textarea/ki-textarea.tsx",
       "declarations": [
         {
