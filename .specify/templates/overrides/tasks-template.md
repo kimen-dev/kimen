@@ -87,7 +87,7 @@ implementation and testing of each story.
 
 - [ ] T017 [US1] axe scan zero violations (floor, not proof — Art. V)
 - [ ] T018 [US1] Manual APG walkthrough documented in PR — only for NEW interaction patterns (Art. V)
-- [ ] T019 [US1] Regenerate machine surfaces: docs-json → CEM → catalog → llms.txt, committed and diffed (Art. I)
+- [ ] T019 [US1] Regenerate machine surfaces (017): build regenerates docs-json (normalized) → generated/custom-elements.json → llms.txt; committed and verified by the surfaces-sync gate (Art. I; Zod catalog is Fase 3)
 - [ ] T020 [US1] size-limit budget check: single-digit KB gzipped (Art. IV)
 - [ ] T021 [US1] Mutation score ≥70% on changed core logic (Stryker incremental, Art. III)
 

@@ -12,9 +12,9 @@ export { KiInputType } from "./components/ki-input/ki-input";
 export namespace Components {
     /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface KiButton {
@@ -53,11 +53,24 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface KiCard {
+    }
+    /**
      * A token-styled single-line text field with native input semantics.
-     * When to use: collect one line of free text from a person, always with a
+     * @whenToUse collect one line of free text from a person, always with a
      * visible `label`; choose the `type` and `autocomplete` that match the entry
      * purpose.
-     * When NOT to use: multiline text, predefined choices, boolean state, numeric
+     * @whenNotToUse multiline text, predefined choices, boolean state, numeric
      * stepper entry, or placeholder-only labeling.
      */
     interface KiInput {
@@ -107,9 +120,9 @@ export namespace Components {
 declare global {
     /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface HTMLKiButtonElement extends Components.KiButton, HTMLStencilElement {
@@ -119,11 +132,28 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface HTMLKiCardElement extends Components.KiCard, HTMLStencilElement {
+    }
+    var HTMLKiCardElement: {
+        prototype: HTMLKiCardElement;
+        new (): HTMLKiCardElement;
+    };
+    /**
      * A token-styled single-line text field with native input semantics.
-     * When to use: collect one line of free text from a person, always with a
+     * @whenToUse collect one line of free text from a person, always with a
      * visible `label`; choose the `type` and `autocomplete` that match the entry
      * purpose.
-     * When NOT to use: multiline text, predefined choices, boolean state, numeric
+     * @whenNotToUse multiline text, predefined choices, boolean state, numeric
      * stepper entry, or placeholder-only labeling.
      */
     interface HTMLKiInputElement extends Components.KiInput, HTMLStencilElement {
@@ -134,15 +164,16 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "ki-button": HTMLKiButtonElement;
+        "ki-card": HTMLKiCardElement;
         "ki-input": HTMLKiInputElement;
     }
 }
 declare namespace LocalJSX {
     /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface KiButton {
@@ -185,11 +216,24 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface KiCard {
+    }
+    /**
      * A token-styled single-line text field with native input semantics.
-     * When to use: collect one line of free text from a person, always with a
+     * @whenToUse collect one line of free text from a person, always with a
      * visible `label`; choose the `type` and `autocomplete` that match the entry
      * purpose.
-     * When NOT to use: multiline text, predefined choices, boolean state, numeric
+     * @whenNotToUse multiline text, predefined choices, boolean state, numeric
      * stepper entry, or placeholder-only labeling.
      */
     interface KiInput {
@@ -263,6 +307,7 @@ declare namespace LocalJSX {
 
     interface IntrinsicElements {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
+        "ki-card": KiCard;
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
     }
 }
@@ -272,18 +317,30 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             /**
              * A token-styled action button with native button semantics.
-             * When to use: trigger the single main action of a view, supporting actions
+             * @whenToUse trigger the single main action of a view, supporting actions
              * in descending hierarchy, or confirming/destructive actions through tone.
-             * When NOT to use: navigation, icon-only actions, persistent toggles, or
+             * @whenNotToUse navigation, icon-only actions, persistent toggles, or
              * loading/progress semantics.
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
+             * A non-interactive card surface for grouping related content.
+             * @whenToUse group related media, heading, supporting text and actions into
+             * one scannable surface visually distinct from the page; fill any subset of
+             * regions. Supply the heading element yourself in the `header` slot — plain
+             * text slotted there carries no heading semantics for assistive technology.
+             * @whenNotToUse as a button or link target, form control, fieldset, page
+             * landmark, section replacement or nested card. For an interactive card, slot
+             * the button or link INSIDE a region (whole-card interactivity is a future
+             * feature, not this component).
+             */
+            "ki-card": LocalJSX.IntrinsicElements["ki-card"] & JSXBase.HTMLAttributes<HTMLKiCardElement>;
+            /**
              * A token-styled single-line text field with native input semantics.
-             * When to use: collect one line of free text from a person, always with a
+             * @whenToUse collect one line of free text from a person, always with a
              * visible `label`; choose the `type` and `autocomplete` that match the entry
              * purpose.
-             * When NOT to use: multiline text, predefined choices, boolean state, numeric
+             * @whenNotToUse multiline text, predefined choices, boolean state, numeric
              * stepper entry, or placeholder-only labeling.
              */
             "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;

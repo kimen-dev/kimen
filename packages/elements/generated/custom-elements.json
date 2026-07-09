@@ -1,0 +1,517 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/components/ki-button/ki-button.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiButton",
+          "customElement": true,
+          "tagName": "ki-button",
+          "description": "A token-styled action button with native button semantics.",
+          "whenToUse": "trigger the single main action of a view, supporting actions\nin descending hierarchy, or confirming/destructive actions through tone.",
+          "whenNotToUse": "navigation, icon-only actions, persistent toggles, or\nloading/progress semantics.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"neutral\" | \"success\""
+              },
+              "default": "'neutral'"
+            },
+            {
+              "name": "type",
+              "fieldName": "type",
+              "type": {
+                "text": "\"button\" | \"reset\" | \"submit\""
+              },
+              "default": "'submit'"
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+              },
+              "default": "'secondary'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key contributed when this button submits its form.\nWhen NOT to use: omit when no submitter value should be sent.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Token-backed button size. Every size keeps at least the minimum pointer\ntarget; choose the size that matches the density of the surrounding UI.\nWhen NOT to use: do not use `ki-button` for icon-only compact controls.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"neutral\" | \"success\""
+              },
+              "default": "'neutral'",
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+              "attribute": "tone",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "privacy": "public",
+              "type": {
+                "text": "\"button\" | \"reset\" | \"submit\""
+              },
+              "default": "'submit'",
+              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form.",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data value paired with `name` when this button submits its form.\nWhen NOT to use: omit when the default empty submitter value is intended.",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+              },
+              "default": "'secondary'",
+              "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Label content. This is the accessible name source."
+            },
+            {
+              "name": "end",
+              "description": "Trailing icon or media. Follows writing direction."
+            },
+            {
+              "name": "start",
+              "description": "Leading icon or media. Follows writing direction."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "button",
+              "description": "Internal native button."
+            },
+            {
+              "name": "label",
+              "description": "Label wrapper around the default slot."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiButton",
+          "declaration": {
+            "name": "KiButton",
+            "module": "src/components/ki-button/ki-button.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-button",
+          "declaration": {
+            "name": "KiButton",
+            "module": "src/components/ki-button/ki-button.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/ki-card/ki-card.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiCard",
+          "customElement": true,
+          "tagName": "ki-card",
+          "description": "A non-interactive card surface for grouping related content.",
+          "whenToUse": "group related media, heading, supporting text and actions into\none scannable surface visually distinct from the page; fill any subset of\nregions. Supply the heading element yourself in the `header` slot — plain\ntext slotted there carries no heading semantics for assistive technology.",
+          "whenNotToUse": "as a button or link target, form control, fieldset, page\nlandmark, section replacement or nested card. For an interactive card, slot\nthe button or link INSIDE a region (whole-card interactivity is a future\nfeature, not this component).",
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Body region for supporting text or arbitrary composed content."
+            },
+            {
+              "name": "footer",
+              "description": "Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1."
+            },
+            {
+              "name": "header",
+              "description": "Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics."
+            },
+            {
+              "name": "media",
+              "description": "Leading visual region for an image, video or illustration."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "body",
+              "description": "Body region wrapper around the default slot."
+            },
+            {
+              "name": "card",
+              "description": "Card surface: background, border, radius, elevation and region gap."
+            },
+            {
+              "name": "footer",
+              "description": "Footer region wrapper."
+            },
+            {
+              "name": "header",
+              "description": "Header region wrapper."
+            },
+            {
+              "name": "media",
+              "description": "Media region wrapper."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiCard",
+          "declaration": {
+            "name": "KiCard",
+            "module": "src/components/ki-card/ki-card.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-card",
+          "declaration": {
+            "name": "KiCard",
+            "module": "src/components/ki-card/ki-card.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/ki-input/ki-input.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiInput",
+          "customElement": true,
+          "tagName": "ki-input",
+          "description": "A token-styled single-line text field with native input semantics.",
+          "whenToUse": "collect one line of free text from a person, always with a\nvisible `label`; choose the `type` and `autocomplete` that match the entry\npurpose.",
+          "whenNotToUse": "multiline text, predefined choices, boolean state, numeric\nstepper entry, or placeholder-only labeling.",
+          "attributes": [
+            {
+              "name": "autocomplete",
+              "fieldName": "autocomplete",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "placeholder",
+              "fieldName": "placeholder",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "readonly",
+              "fieldName": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "type",
+              "fieldName": "type",
+              "type": {
+                "text": "\"email\" | \"password\" | \"search\" | \"tel\" | \"text\" | \"url\""
+              },
+              "default": "'text'"
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Native autocomplete detail token forwarded to the internal input.\nWhen NOT to use: omit when no autofill entry purpose is known.",
+              "attribute": "autocomplete",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prevents editing, removes the field from keyboard reach and exposes the\nunavailable state through the internal native input.\nWhen NOT to use: do not use disabled for readonly reference values.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Visible label rendered next to the entry area and used as the accessible\nname. This is mandatory for valid usage.\nWhen NOT to use: never use `placeholder` as a label substitute.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key for the submitted value.\nWhen NOT to use: omit when the field must not contribute named form data.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Hint shown when the field is empty.\nWhen NOT to use: do not use placeholder as the accessible name.",
+              "attribute": "placeholder",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the value focusable and selectable while rejecting edits.\nWhen NOT to use: use `disabled` when the value must be unavailable and\nexcluded from forms.",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "privacy": "public",
+              "type": {
+                "text": "\"email\" | \"password\" | \"search\" | \"tel\" | \"text\" | \"url\""
+              },
+              "default": "'text'",
+              "description": "Entry kind with native single-line input semantics. Unknown runtime\nvalues fall back to `text`; `number` is not a v1 input kind.\nWhen NOT to use: use future numeric controls for locale-aware number entry.",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Live text value. The attribute declares the initial default; the property\nis the current value and programmatic assignments are silent.\nDeviation from native (deliberate, research D2): assigning the ATTRIBUTE\nprogrammatically also replaces the displayed value, silently — native\ninputs would keep the user's dirty value. Form reset restores the\nattribute's current value.\nWhen NOT to use: do not observe user edits by polling; listen for `input`\nand `change` (both re-dispatched composed across the shadow boundary).",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "end",
+              "description": "Trailing icon or text affix inside the field. Follows writing direction."
+            },
+            {
+              "name": "start",
+              "description": "Leading icon or text affix inside the field. Follows writing direction."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "field",
+              "description": "Enclosure wrapper for background, border, radius and focus ring."
+            },
+            {
+              "name": "input",
+              "description": "Internal native input that owns entry text, caret and selection."
+            },
+            {
+              "name": "label",
+              "description": "Visible label that provides the accessible name."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiInput",
+          "declaration": {
+            "name": "KiInput",
+            "module": "src/components/ki-input/ki-input.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-input",
+          "declaration": {
+            "name": "KiInput",
+            "module": "src/components/ki-input/ki-input.tsx"
+          }
+        }
+      ]
+    }
+  ]
+}

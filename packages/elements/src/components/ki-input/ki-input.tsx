@@ -6,10 +6,10 @@ export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'searc
 /**
  * A token-styled single-line text field with native input semantics.
  *
- * When to use: collect one line of free text from a person, always with a
+ * @whenToUse collect one line of free text from a person, always with a
  * visible `label`; choose the `type` and `autocomplete` that match the entry
  * purpose.
- * When NOT to use: multiline text, predefined choices, boolean state, numeric
+ * @whenNotToUse multiline text, predefined choices, boolean state, numeric
  * stepper entry, or placeholder-only labeling.
  *
  * @slot start - Leading icon or text affix inside the field. Follows writing direction.

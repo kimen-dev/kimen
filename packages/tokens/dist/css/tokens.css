@@ -291,6 +291,7 @@
   --ki-button-ghost-hover-shadow: none;
   --ki-button-ghost-active-shadow: none;
   --ki-button-ghost-disabled-shadow: none;
+  --ki-card-elevation: 0 1px 2px 0 var(--ki-elevation-shadow), 0 2px 6px 2px var(--ki-elevation-shadow-med);
   --ki-color-brand-high-em: var(--ki-color-gray-950);
   --ki-color-brand-med-em: var(--ki-color-gray-700);
   --ki-color-brand-low-em: var(--ki-color-gray-600);
@@ -547,6 +548,13 @@
   --ki-button-focus-ring-width: var(--ki-space-xxs);
   --ki-button-focus-ring-offset: var(--ki-space-xxs);
   --ki-button-border-width: var(--ki-space-xxs);
+  --ki-card-border-width: var(--ki-space-zero);
+  --ki-card-radius: var(--ki-radius-lg);
+  --ki-card-gap: var(--ki-space-zero);
+  --ki-card-media-padding: var(--ki-space-zero);
+  --ki-card-header-padding: var(--ki-space-3xl);
+  --ki-card-body-padding: var(--ki-space-3xl);
+  --ki-card-footer-padding: var(--ki-space-3xl);
   --ki-input-height: var(--ki-space-14xl);
   --ki-input-min-target: var(--ki-space-7xl);
   --ki-input-padding-inline: var(--ki-space-lg);
@@ -754,6 +762,7 @@
   --ki-button-ghost-danger-active-border: var(--ki-outline-none);
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+  --ki-card-border-color: var(--ki-outline-none);
   --ki-input-font-size: var(--ki-typography-size-body-1);
   --ki-input-font-weight: var(--ki-typography-weight-body-normal);
   --ki-input-line-height: var(--ki-typography-line-height-body-1);
@@ -781,6 +790,8 @@
   --ki-button-primary-success-rest-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-hover-fg: var(--ki-text-primary-on-success);
   --ki-button-primary-success-active-fg: var(--ki-text-primary-on-success);
+  --ki-card-bg: var(--ki-surface-raised);
+  --ki-card-fg: var(--ki-text-high-em);
   --ki-input-rest-bg: var(--ki-surface-base);
   --ki-input-hover-bg: var(--ki-surface-base);
   --ki-input-focus-bg: var(--ki-surface-base);

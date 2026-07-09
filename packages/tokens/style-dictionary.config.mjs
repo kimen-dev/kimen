@@ -9,6 +9,7 @@ const LAYERS = [
   'tokens/themes/onmars.tokens.json',
   'tokens/semantic.tokens.json',
   'tokens/component/button.tokens.json',
+  'tokens/component/card.tokens.json',
   'tokens/component/input.tokens.json',
 ];
 const MATERIAL3_LAYERS = [
@@ -16,6 +17,7 @@ const MATERIAL3_LAYERS = [
   'tokens/themes/material3.tokens.json',
   'tokens/semantic/material3.tokens.json',
   'tokens/component/button.material3.tokens.json',
+  'tokens/component/card.material3.tokens.json',
   'tokens/component/input.material3.tokens.json',
 ];
 
