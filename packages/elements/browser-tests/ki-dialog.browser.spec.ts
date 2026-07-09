@@ -299,6 +299,29 @@ describe('ki-dialog in a real browser', () => {
     expect(event.detail.reason).toBe('backdrop');
   });
 
+  it('S4 boolean presence: close-on-backdrop="false" opts in and survives hydration', async () => {
+    cleanup();
+    // A present-but-falsy attribute value opts IN (presence semantics).
+    const el = await mountDialog({ 'close-on-backdrop': 'false' });
+    expect(el.closeOnBackdrop).toBe(true);
+
+    await openDialog(el);
+    await backdropClick(el, true);
+    const closed = nextClose(el);
+    await backdropClick(el);
+    const event = await closed;
+    expect(el.open).toBe(false);
+    expect(event.detail.reason).toBe('backdrop');
+
+    // The same presence semantics apply to an attribute set after hydration.
+    cleanup();
+    const later = await mountDialog();
+    expect(later.closeOnBackdrop).toBe(false);
+    later.setAttribute('close-on-backdrop', 'false');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(later.closeOnBackdrop).toBe(true);
+  });
+
   it('S15 programmatic close reports exactly one close event and no-op guards report none', async () => {
     cleanup();
     const el = await mountDialog();
