@@ -163,6 +163,42 @@ describe('ki-list in a real browser', () => {
     expect(style.gap).toBe(getComputedStyle(parts.item).columnGap);
   });
 
+  it('S3 collapses the text column on a start-and-end-only item', async () => {
+    const list = await mountList(
+      `<ki-list><ki-list-item><span slot="start">A</span><span slot="end">B</span></ki-list-item></ki-list>`,
+    );
+    const item = list.querySelector('ki-list-item');
+    if (!item) {
+      throw new Error('ki-list-item fixture missing');
+    }
+    expect(itemParts(item).content.hidden).toBe(true);
+  });
+
+  it('S3 re-checks region emptiness when a slotted secondary text node changes', async () => {
+    const list = await mountList(
+      `<ki-list><ki-list-item>Primary<span slot="secondary"> </span></ki-list-item></ki-list>`,
+    );
+    const item = list.querySelector('ki-list-item');
+    if (!item) {
+      throw new Error('ki-list-item fixture missing');
+    }
+    expect(item.classList.contains('has-secondary')).toBe(false);
+
+    const textNode = item.querySelector('[slot="secondary"]')?.firstChild;
+    if (textNode) {
+      textNode.textContent = 'Updated 2 minutes ago';
+    }
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    expect(item.classList.contains('has-secondary')).toBe(true);
+  });
+
+  it('S6 preserves an author-provided role on the list host', async () => {
+    const list = await mountList(
+      '<ki-list role="presentation"><ki-list-item>A</ki-list-item></ki-list>',
+    );
+    expect(list.getAttribute('role')).toBe('presentation');
+  });
+
   it('S10 wraps long secondary text and grows without truncation or internal scrolling', async () => {
     const list = await mountList(`
       <ki-list style="inline-size: 16rem">

@@ -1,4 +1,4 @@
-import { Component, Host, h } from '@stencil/core';
+import { Component, Element, Host, h } from '@stencil/core';
 
 /**
  * A non-interactive vertical list container for read-only collections of
@@ -20,15 +20,22 @@ import { Component, Host, h } from '@stencil/core';
   shadow: true,
 })
 export class KiList {
+  @Element() private readonly host!: HTMLElement;
+
+  componentWillLoad(): void {
+    // role="list" is DEFAULT structural semantics set only when the author has
+    // not supplied a role, so an author-provided role (e.g. presentation) still
+    // wins instead of being overwritten on render (codex review). Set as a
+    // reflected attribute because ElementInternals.role did not surface in the
+    // AX tree in this build (S6).
+    if (!this.host.hasAttribute('role')) {
+      this.host.setAttribute('role', 'list');
+    }
+  }
+
   render() {
-    // role="list" reflected on the host (verified in the real accessibility
-    // tree, S6). ElementInternals.role was tried first per the plan but the
-    // browser did not expose the default role to the AX tree in this build;
-    // the reflected attribute is the portable, verifiable contract. The
-    // `list` host and its slotted `listitem` children stay co-tree, so the
-    // internal generic wrapper keeps list ownership (ARIA generic pass-through).
     return (
-      <Host role="list">
+      <Host>
         <div part="list">
           <slot />
         </div>

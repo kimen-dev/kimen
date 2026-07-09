@@ -47,8 +47,32 @@ export class KiListItem {
   @State() private hasSecondary = false;
   @State() private hasEnd = false;
 
+  private observer?: MutationObserver;
+
+  componentWillLoad(): void {
+    // Default structural role, set only when the author has not supplied one so
+    // an author role still wins (codex review).
+    if (!this.host.hasAttribute('role')) {
+      this.host.setAttribute('role', 'listitem');
+    }
+  }
+
   componentDidLoad(): void {
     this.syncSlotState();
+    // slotchange does not fire when an already-assigned text node's content
+    // changes (e.g. secondary text populated after async load), so a
+    // characterData observer re-checks the slots on those mutations (codex
+    // review).
+    if (typeof MutationObserver === 'function') {
+      this.observer = new MutationObserver(() => {
+        this.syncSlotState();
+      });
+      this.observer.observe(this.host, { characterData: true, childList: true, subtree: true });
+    }
+  }
+
+  disconnectedCallback(): void {
+    this.observer?.disconnect();
   }
 
   private syncSlotState = (): void => {
@@ -71,12 +95,15 @@ export class KiListItem {
     // :host(.has-secondary)); start/primary/end drive the per-region `hidden`
     // collapse, not host classes.
     return (
-      <Host role="listitem" class={{ 'has-secondary': this.hasSecondary }}>
+      <Host class={{ 'has-secondary': this.hasSecondary }}>
         <div part="item">
           <div part="start" hidden={!this.hasStart}>
             <slot name="start" onSlotchange={this.syncSlotState} />
           </div>
-          <div part="content">
+          {/* Collapse the flexible text column when neither text region has
+              content, so an item with only start/end regions does not reserve
+              column width or flex gaps (FR-002/FR-003, codex review). */}
+          <div part="content" hidden={!this.hasPrimary && !this.hasSecondary}>
             <span class="primary" hidden={!this.hasPrimary}>
               <slot onSlotchange={this.syncSlotState} />
             </span>
