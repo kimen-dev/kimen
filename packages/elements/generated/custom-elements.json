@@ -200,6 +200,83 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/ki-card/ki-card.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiCard",
+          "customElement": true,
+          "tagName": "ki-card",
+          "description": "A non-interactive card surface for grouping related content.",
+          "whenToUse": "group related media, heading, supporting text and actions into\none scannable surface visually distinct from the page; fill any subset of\nregions. Supply the heading element yourself in the `header` slot — plain\ntext slotted there carries no heading semantics for assistive technology.",
+          "whenNotToUse": "as a button or link target, form control, fieldset, page\nlandmark, section replacement or nested card. For an interactive card, slot\nthe button or link INSIDE a region (whole-card interactivity is a future\nfeature, not this component).",
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Body region for supporting text or arbitrary composed content."
+            },
+            {
+              "name": "footer",
+              "description": "Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1."
+            },
+            {
+              "name": "header",
+              "description": "Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics."
+            },
+            {
+              "name": "media",
+              "description": "Leading visual region for an image, video or illustration."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "body",
+              "description": "Body region wrapper around the default slot."
+            },
+            {
+              "name": "card",
+              "description": "Card surface: background, border, radius, elevation and region gap."
+            },
+            {
+              "name": "footer",
+              "description": "Footer region wrapper."
+            },
+            {
+              "name": "header",
+              "description": "Header region wrapper."
+            },
+            {
+              "name": "media",
+              "description": "Media region wrapper."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiCard",
+          "declaration": {
+            "name": "KiCard",
+            "module": "src/components/ki-card/ki-card.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-card",
+          "declaration": {
+            "name": "KiCard",
+            "module": "src/components/ki-card/ki-card.tsx"
+          }
+        }
+      ]
     }
   ]
 }

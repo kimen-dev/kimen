@@ -52,14 +52,14 @@ export namespace Components {
     }
     /**
      * A non-interactive card surface for grouping related content.
-     * When to use: group related media, heading, supporting text and actions into
+     * @whenToUse group related media, heading, supporting text and actions into
      * one scannable surface visually distinct from the page; fill any subset of
      * regions. Supply the heading element yourself in the `header` slot — plain
      * text slotted there carries no heading semantics for assistive technology.
-     * When NOT to use: never use as a button or link target, form control,
-     * fieldset, page landmark, section replacement or nested card. For an
-     * interactive card, slot the button or link INSIDE a region (whole-card
-     * interactivity is a future feature, not this component).
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
      */
     interface KiCard {
     }
@@ -80,14 +80,14 @@ declare global {
     };
     /**
      * A non-interactive card surface for grouping related content.
-     * When to use: group related media, heading, supporting text and actions into
+     * @whenToUse group related media, heading, supporting text and actions into
      * one scannable surface visually distinct from the page; fill any subset of
      * regions. Supply the heading element yourself in the `header` slot — plain
      * text slotted there carries no heading semantics for assistive technology.
-     * When NOT to use: never use as a button or link target, form control,
-     * fieldset, page landmark, section replacement or nested card. For an
-     * interactive card, slot the button or link INSIDE a region (whole-card
-     * interactivity is a future feature, not this component).
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
      */
     interface HTMLKiCardElement extends Components.KiCard, HTMLStencilElement {
     }
@@ -149,14 +149,14 @@ declare namespace LocalJSX {
     }
     /**
      * A non-interactive card surface for grouping related content.
-     * When to use: group related media, heading, supporting text and actions into
+     * @whenToUse group related media, heading, supporting text and actions into
      * one scannable surface visually distinct from the page; fill any subset of
      * regions. Supply the heading element yourself in the `header` slot — plain
      * text slotted there carries no heading semantics for assistive technology.
-     * When NOT to use: never use as a button or link target, form control,
-     * fieldset, page landmark, section replacement or nested card. For an
-     * interactive card, slot the button or link INSIDE a region (whole-card
-     * interactivity is a future feature, not this component).
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
      */
     interface KiCard {
     }
@@ -190,14 +190,14 @@ declare module "@stencil/core" {
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
              * A non-interactive card surface for grouping related content.
-             * When to use: group related media, heading, supporting text and actions into
+             * @whenToUse group related media, heading, supporting text and actions into
              * one scannable surface visually distinct from the page; fill any subset of
              * regions. Supply the heading element yourself in the `header` slot — plain
              * text slotted there carries no heading semantics for assistive technology.
-             * When NOT to use: never use as a button or link target, form control,
-             * fieldset, page landmark, section replacement or nested card. For an
-             * interactive card, slot the button or link INSIDE a region (whole-card
-             * interactivity is a future feature, not this component).
+             * @whenNotToUse as a button or link target, form control, fieldset, page
+             * landmark, section replacement or nested card. For an interactive card, slot
+             * the button or link INSIDE a region (whole-card interactivity is a future
+             * feature, not this component).
              */
             "ki-card": LocalJSX.IntrinsicElements["ki-card"] & JSXBase.HTMLAttributes<HTMLKiCardElement>;
         }
