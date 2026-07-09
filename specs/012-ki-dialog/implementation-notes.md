@@ -34,3 +34,6 @@ closed anatomy, S5, and pure helper logic.
 - T016: mock-doc and browser suites are green. The traceability spot-check is
   red at this point for S11-S14 only; those theming scenarios are introduced by
   T017 immediately after this checkpoint.
+- T017 theming RED: `pnpm --filter @kimen/elements run test-browser` fails in
+  S13 because RTL footer action geometry is not following the expected
+  right-to-left ordering.

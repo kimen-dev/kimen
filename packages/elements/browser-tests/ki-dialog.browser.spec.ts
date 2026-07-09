@@ -1,5 +1,5 @@
 import axe from 'axe-core';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:012-ki-dialog
@@ -7,6 +7,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // what is asserted), never internals (Art. III). mock-doc has no showModal,
 // top layer, inertness, Escape close requests, or ::backdrop.
 import tokensCss from '@kimen/tokens/css?raw';
+import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
 
 type CloseReason = 'method' | 'escape' | 'backdrop';
@@ -20,6 +21,10 @@ type KiDialogElement = HTMLElement & {
 };
 
 const STYLE_ID = 'ki-dialog-browser-token-style';
+const MATERIAL3_STYLE_ID = 'ki-dialog-browser-material3-token-style';
+const browserCommands = commands as unknown as {
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
+};
 
 beforeAll(() => {
   defineCustomElement();
@@ -33,6 +38,17 @@ function ensureTokens(): void {
   const style = document.createElement('style');
   style.id = STYLE_ID;
   style.textContent = tokensCss;
+  document.head.append(style);
+}
+
+function ensureMaterial3Tokens(): void {
+  if (document.getElementById(MATERIAL3_STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = MATERIAL3_STYLE_ID;
+  style.textContent = material3Css;
   document.head.append(style);
 }
 
@@ -113,6 +129,17 @@ function isInsideDialog(el: KiDialogElement, active: Element | null): boolean {
 
   const dialog = internalDialog(el);
   return active === dialog || dialog.contains(active) || el.contains(active);
+}
+
+function readToken(name: string): string {
+  const probe = document.createElement('div');
+  probe.style.backgroundColor = `var(${name})`;
+  probe.style.borderRadius = `var(${name})`;
+  document.body.append(probe);
+  const styles = getComputedStyle(probe);
+  const value = name.includes('radius') ? styles.borderRadius : styles.backgroundColor;
+  probe.remove();
+  return value;
 }
 
 function footerButton(el: KiDialogElement, label: string): HTMLButtonElement {
@@ -455,5 +482,59 @@ describe('ki-dialog in a real browser', () => {
     expect(document.activeElement).toBe(document.body);
 
     initialOpen.remove();
+  });
+
+  it('S11 material3 restyles the dialog surface and backdrop through tokens alone', async () => {
+    cleanup();
+    ensureTokens();
+    const baseline = await mountDialog();
+    await openDialog(baseline);
+    const baselineDialog = internalDialog(baseline);
+    const onmarsBg = getComputedStyle(baselineDialog).backgroundColor;
+    const onmarsRadius = getComputedStyle(baselineDialog).borderRadius;
+    await baseline.close();
+    baseline.remove();
+
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    const el = await mountDialog();
+    await openDialog(el);
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    const dialog = internalDialog(el);
+    const styles = getComputedStyle(dialog);
+    const backdrop = getComputedStyle(dialog, '::backdrop');
+
+    expect(styles.backgroundColor).toBe(readToken('--ki-dialog-bg'));
+    expect(styles.backgroundColor).not.toBe(onmarsBg);
+    expect(styles.borderRadius).toBe(readToken('--ki-dialog-radius'));
+    expect(styles.borderRadius).not.toBe(onmarsRadius);
+    expect(backdrop.backgroundColor).toBe(readToken('--ki-dialog-backdrop-bg'));
+  });
+
+  it('S13 dialog actions follow the right-to-left writing direction', async () => {
+    cleanup();
+    document.documentElement.setAttribute('dir', 'rtl');
+    const el = await mountDialog();
+    await openDialog(el);
+    const cancel = footerButton(el, 'Cancel').getBoundingClientRect();
+    const deleteAction = footerButton(el, 'Delete').getBoundingClientRect();
+
+    expect(cancel.left).toBeGreaterThan(deleteAction.left);
+  });
+
+  it('S14 reduced motion suppresses material3 open transitions', async () => {
+    cleanup();
+    ensureTokens();
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    await browserCommands.emulateReducedMotion('reduce');
+    const el = await mountDialog();
+
+    await openDialog(el);
+    const styles = getComputedStyle(internalDialog(el));
+
+    expect(styles.transitionDuration).toBe('0s');
+    expect(styles.opacity).toBe('1');
+    await browserCommands.emulateReducedMotion(null);
   });
 });
