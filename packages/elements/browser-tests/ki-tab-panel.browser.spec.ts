@@ -8,10 +8,9 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { defineCustomElement } from '../dist/components/ki-tab-panel.js';
 
 type KiTabPanelElement = HTMLElement & { label: string };
-const defineKiTabPanel = defineCustomElement;
 
 beforeAll(() => {
-  defineKiTabPanel();
+  defineCustomElement();
 });
 
 /** Stencil renders async: wait until the shadow root has content. */
