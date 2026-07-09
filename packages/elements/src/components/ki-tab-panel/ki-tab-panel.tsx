@@ -1,10 +1,14 @@
-import { Component, Prop, h } from '@stencil/core';
+import { Component, Host, Prop, h } from '@stencil/core';
 
 /**
- * TODO(spec): one-line purpose from the approved spec (Art. II).
+ * One content view paired with a `ki-tab` inside `ki-tabs`.
  *
- * When to use: TODO(spec): agent-facing guidance (Art. I).
- * When NOT to use: TODO(spec).
+ * When to use: hold the content for one peer tab view, sharing `value` with
+ * its `ki-tab`. When NOT to use: standalone, as lazy mounting, or for page
+ * navigation; orphan and duplicate panels are hidden by the parent group.
+ *
+ * @slot - Panel content.
+ * @part panel - Panel surface.
  */
 @Component({
   tag: 'ki-tab-panel',
@@ -13,13 +17,20 @@ import { Component, Prop, h } from '@stencil/core';
 })
 export class KiTabPanel {
   /**
-   * TODO(spec): every public prop carries JSDoc with description, default and
-   * when-to-use guidance; an undocumented API member is a build failure (Art. I).
-   * @default 'TODO'
+   * Pairing identifier shared with a `ki-tab`. The first panel with a value
+   * owns it; duplicate or orphan panels stay hidden.
+   *
+   * @default ''
    */
-  @Prop() label = 'TODO';
+  @Prop({ reflect: true }) value = '';
 
   render() {
-    return <span class="label">{this.label}</span>;
+    return (
+      <Host role="tabpanel">
+        <div part="panel">
+          <slot />
+        </div>
+      </Host>
+    );
   }
 }

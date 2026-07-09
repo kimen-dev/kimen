@@ -1,11 +1,26 @@
 /* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
+  --_ki-tab-panel-bg: var(--ki-tab-panel-bg);
+
+  box-sizing: border-box;
   display: block;
+  background: var(--_ki-tab-panel-bg);
+  outline: none;
 }
 
-.label {
-  color: var(--ki-text-base);
-  font-family: var(--ki-typography-family-base);
-  font-size: var(--ki-typography-size-body);
+:host([hidden]) {
+  display: none !important;
+}
+
+:host(:focus-visible) {
+  outline: var(--ki-tab-panel-focus-ring-width) solid var(--ki-tab-panel-focus-ring-color);
+  outline-offset: var(--ki-tab-panel-focus-ring-offset);
+}
+
+[part='panel'] {
+  box-sizing: border-box;
+  padding-block: var(--ki-tab-panel-padding-block);
+  padding-inline: var(--ki-tab-panel-padding-inline);
+  background: var(--_ki-tab-panel-bg);
 }

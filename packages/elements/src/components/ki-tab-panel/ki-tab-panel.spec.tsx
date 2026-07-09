@@ -7,7 +7,6 @@ import { describe, expect, it, render } from '@stencil/vitest';
 // @spec:014-ki-tabs
 // mock-doc is a fast diagnostic only; the authoritative suite is the
 // real-browser spec (Art. III). Every test title carries an approved S-ID.
-type WithInternals = HTMLElement & { internals: ElementInternals };
 
 function requireElement<T extends Element>(value: T | null, selector: string): T {
   if (value === null) {
@@ -34,11 +33,10 @@ describe('ki-tab-panel', () => {
     expect(shadow.textContent).not.toContain('TODO');
   });
 
-  it('S8 exposes tabpanel semantics through internals', async () => {
+  it('S8 exposes tabpanel semantics through the host role', async () => {
     const { root } = await render(<ki-tab-panel>Email panel</ki-tab-panel>);
-    const internals = (root as WithInternals).internals;
 
-    expect(internals.role).toBe('tabpanel');
+    expect(root.getAttribute('role')).toBe('tabpanel');
   });
 
   it('S3 reflects value with an empty-string effective default', async () => {

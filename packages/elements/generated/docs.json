@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-09T00:38:01",
+  "timestamp": "2026-07-09T00:38:46",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -496,12 +496,21 @@
       "filePath": "src/components/ki-tab-panel/ki-tab-panel.tsx",
       "encapsulation": "shadow",
       "tag": "ki-tab-panel",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
+      "docs": "One content view paired with a `ki-tab` inside `ki-tabs`.\n\nWhen to use: hold the content for one peer tab view, sharing `value` with\nits `ki-tab`. When NOT to use: standalone, as lazy mounting, or for page\nnavigation; orphan and duplicate panels are hidden by the parent group.",
+      "docsTags": [
+        {
+          "name": "slot",
+          "text": "- Panel content."
+        },
+        {
+          "name": "part",
+          "text": "panel - Panel surface."
+        }
+      ],
       "usage": {},
       "props": [
         {
-          "name": "label",
+          "name": "value",
           "type": "string",
           "complexType": {
             "original": "string",
@@ -509,16 +518,16 @@
             "references": {}
           },
           "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Pairing identifier shared with a `ki-tab`. The first panel with a value\nowns it; duplicate or orphan panels stay hidden.",
           "docsTags": [
             {
               "name": "default",
-              "text": "'TODO'"
+              "text": "''"
             }
           ],
-          "default": "'TODO'",
+          "default": "''",
           "values": [
             {
               "type": "string"
@@ -534,8 +543,18 @@
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
-      "parts": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Panel content."
+        }
+      ],
+      "parts": [
+        {
+          "name": "panel",
+          "docs": "Panel surface."
+        }
+      ],
       "states": [],
       "dependents": [],
       "dependencies": [],
