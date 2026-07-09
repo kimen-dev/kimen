@@ -118,6 +118,14 @@ function main(): HTMLElement {
   return el;
 }
 
+function firstEvent(spy: ReturnType<typeof vi.fn>): CustomEvent<{ value: string }> {
+  const call = spy.mock.calls[0];
+  if (!call) {
+    throw new Error('Missing event call');
+  }
+  return call[0] as CustomEvent<{ value: string }>;
+}
+
 describe('ki-tabs core behavior in a real browser', () => {
   it('S1 selecting a tab reveals its panel and emits one current ki-change', async () => {
     const tabs = await mount(fixture());
@@ -131,7 +139,7 @@ describe('ki-tabs core behavior in a real browser', () => {
     expect(panel(tabs, 'notifications').hasAttribute('hidden')).toBe(false);
     expect(panel(tabs, 'email').hasAttribute('hidden')).toBe(true);
     expect(onChange).toHaveBeenCalledTimes(1);
-    const event = onChange.mock.calls[0][0] as CustomEvent<{ value: string }>;
+    const event = firstEvent(onChange);
     expect(event.detail.value).toBe('notifications');
     expect(tabs.value).toBe('notifications');
   });
