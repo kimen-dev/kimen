@@ -22,3 +22,5 @@ export { KiRadioGroup } from './components/ki-radio-group/ki-radio-group.js';
 export type * from './components/ki-radio-group/ki-radio-group.js';
 export { KiRadio } from './components/ki-radio/ki-radio.js';
 export type * from './components/ki-radio/ki-radio.js';
+export { KiProgress } from './components/ki-progress/ki-progress.js';
+export type { KiProgressShape } from './components/ki-progress/ki-progress.js';

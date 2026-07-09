@@ -291,6 +291,7 @@
   --ki-button-ghost-hover-shadow: none;
   --ki-button-ghost-active-shadow: none;
   --ki-button-ghost-disabled-shadow: none;
+  --ki-progress-indeterminate-duration: 1600ms;
   --ki-card-elevation: 0 1px 2px 0 var(--ki-elevation-shadow), 0 2px 6px 2px var(--ki-elevation-shadow-med);
   --ki-color-brand-high-em: var(--ki-color-gray-950);
   --ki-color-brand-med-em: var(--ki-color-gray-700);
@@ -549,6 +550,10 @@
   --ki-button-focus-ring-width: var(--ki-space-xxs);
   --ki-button-focus-ring-offset: var(--ki-space-xxs);
   --ki-button-border-width: var(--ki-space-xxs);
+  --ki-progress-linear-thickness: var(--ki-space-xs);
+  --ki-progress-linear-radius: var(--ki-radius-round);
+  --ki-progress-circular-size: var(--ki-space-12xl);
+  --ki-progress-circular-track-width: var(--ki-space-xs);
   --ki-radio-control-size: var(--ki-space-5xl);
   --ki-radio-dot-size: var(--ki-space-md);
   --ki-radio-min-target: var(--ki-space-7xl);
@@ -814,6 +819,8 @@
   --ki-button-ghost-danger-active-border: var(--ki-outline-none);
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+  --ki-progress-track-color: var(--ki-surface-s3);
+  --ki-progress-indicator-color: var(--ki-surface-primary-high-em);
   --ki-radio-label-font-size: var(--ki-typography-size-body-1);
   --ki-radio-label-font-weight: var(--ki-typography-weight-body-normal);
   --ki-radio-label-line-height: var(--ki-typography-line-height-body-1);

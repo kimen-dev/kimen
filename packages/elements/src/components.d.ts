@@ -9,10 +9,12 @@ import { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiInputType } from "./components/ki-input/ki-input";
+import { KiProgressShape } from "./components/ki-progress/ki-progress";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiInputType } from "./components/ki-input/ki-input";
+export { KiProgressShape } from "./components/ki-progress/ki-progress";
 export namespace Components {
     /**
      * A persistent inline status message with token-backed tone semantics.
@@ -222,6 +224,46 @@ export namespace Components {
           * @default ''
          */
         "value": string;
+    }
+    /**
+     * A token-styled, non-interactive progress indicator for known or unknown
+     * duration work.
+     * @whenToUse communicate advancement of an ongoing task such as upload,
+     * download, installation or multi-step processing. Use `value`/`max` when
+     * the completed fraction is known; use `indeterminate` when work is ongoing
+     * but its duration cannot be measured, including loading-indicator use cases.
+     * Choose `linear` in page flows and lists, and `circular` in compact or
+     * centered placements. Always set `label` to what is progressing.
+     * @whenNotToUse static measurements within a known range such as disk
+     * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
+     * skeleton placeholders while content loads, or operations that finish in
+     * under about one second.
+     */
+    interface KiProgress {
+        /**
+          * Unknown-duration mode. When set, no completed fraction or current value is exposed. Its motion is declared only when reduced motion is not requested. When to use: show ongoing work whose duration or total cannot be measured. When NOT to use: do not use for known fractions; use `value` and `max`.
+          * @default false
+         */
+        "indeterminate": boolean;
+        /**
+          * Accessible name applied to the internal progressbar. Always set this to what is progressing, such as "Uploading report.pdf". Without it the element renders but exposes no accessible name. When NOT to use: do not use a generic label such as "Loading" when the task can be named more specifically.
+         */
+        "label"?: string;
+        /**
+          * Total amount. Non-finite, zero or negative values normalize to `100` for presentation and ARIA. When to use: set when a determinate task's total is not 100. When NOT to use: omit for conventional percentage-style progress.
+          * @default 100
+         */
+        "max": number;
+        /**
+          * Structural presentation. Use `linear` in page flows and lists; use `circular` in compact or centered placements. Unknown values render linear. When NOT to use: do not use shape to encode semantic status or task intent.
+          * @default 'linear'
+         */
+        "shape": KiProgressShape;
+        /**
+          * Completed amount. Presentation and ARIA clamp this value to `0..max`; malformed values fall back to `0`. Ignored while `indeterminate` is set. When to use: set with `max` for determinate task advancement. When NOT to use: do not set a fabricated value for unknown-duration work; set `indeterminate` instead.
+          * @default 0
+         */
+        "value": number;
     }
     /**
      * One option in a token-styled radio group.
@@ -475,6 +517,26 @@ declare global {
         new (): HTMLKiInputElement;
     };
     /**
+     * A token-styled, non-interactive progress indicator for known or unknown
+     * duration work.
+     * @whenToUse communicate advancement of an ongoing task such as upload,
+     * download, installation or multi-step processing. Use `value`/`max` when
+     * the completed fraction is known; use `indeterminate` when work is ongoing
+     * but its duration cannot be measured, including loading-indicator use cases.
+     * Choose `linear` in page flows and lists, and `circular` in compact or
+     * centered placements. Always set `label` to what is progressing.
+     * @whenNotToUse static measurements within a known range such as disk
+     * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
+     * skeleton placeholders while content loads, or operations that finish in
+     * under about one second.
+     */
+    interface HTMLKiProgressElement extends Components.KiProgress, HTMLStencilElement {
+    }
+    var HTMLKiProgressElement: {
+        prototype: HTMLKiProgressElement;
+        new (): HTMLKiProgressElement;
+    };
+    /**
      * One option in a token-styled radio group.
      * @whenToUse place inside `ki-radio-group` when a person must choose
      * exactly one of a small visible set.
@@ -540,6 +602,7 @@ declare global {
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-input": HTMLKiInputElement;
+        "ki-progress": HTMLKiProgressElement;
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-switch": HTMLKiSwitchElement;
@@ -775,6 +838,46 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A token-styled, non-interactive progress indicator for known or unknown
+     * duration work.
+     * @whenToUse communicate advancement of an ongoing task such as upload,
+     * download, installation or multi-step processing. Use `value`/`max` when
+     * the completed fraction is known; use `indeterminate` when work is ongoing
+     * but its duration cannot be measured, including loading-indicator use cases.
+     * Choose `linear` in page flows and lists, and `circular` in compact or
+     * centered placements. Always set `label` to what is progressing.
+     * @whenNotToUse static measurements within a known range such as disk
+     * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
+     * skeleton placeholders while content loads, or operations that finish in
+     * under about one second.
+     */
+    interface KiProgress {
+        /**
+          * Unknown-duration mode. When set, no completed fraction or current value is exposed. Its motion is declared only when reduced motion is not requested. When to use: show ongoing work whose duration or total cannot be measured. When NOT to use: do not use for known fractions; use `value` and `max`.
+          * @default false
+         */
+        "indeterminate"?: boolean;
+        /**
+          * Accessible name applied to the internal progressbar. Always set this to what is progressing, such as "Uploading report.pdf". Without it the element renders but exposes no accessible name. When NOT to use: do not use a generic label such as "Loading" when the task can be named more specifically.
+         */
+        "label"?: string;
+        /**
+          * Total amount. Non-finite, zero or negative values normalize to `100` for presentation and ARIA. When to use: set when a determinate task's total is not 100. When NOT to use: omit for conventional percentage-style progress.
+          * @default 100
+         */
+        "max"?: number;
+        /**
+          * Structural presentation. Use `linear` in page flows and lists; use `circular` in compact or centered placements. Unknown values render linear. When NOT to use: do not use shape to encode semantic status or task intent.
+          * @default 'linear'
+         */
+        "shape"?: KiProgressShape;
+        /**
+          * Completed amount. Presentation and ARIA clamp this value to `0..max`; malformed values fall back to `0`. Ignored while `indeterminate` is set. When to use: set with `max` for determinate task advancement. When NOT to use: do not set a fabricated value for unknown-duration work; set `indeterminate` instead.
+          * @default 0
+         */
+        "value"?: number;
+    }
+    /**
      * One option in a token-styled radio group.
      * @whenToUse place inside `ki-radio-group` when a person must choose
      * exactly one of a small visible set.
@@ -963,6 +1066,13 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "autocomplete": string;
     }
+    interface KiProgressAttributes {
+        "value": number;
+        "max": number;
+        "indeterminate": boolean;
+        "shape": KiProgressShape;
+        "label": string;
+    }
     interface KiRadioAttributes {
         "value": string;
         "disabled": boolean;
@@ -999,6 +1109,7 @@ declare namespace LocalJSX {
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
+        "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
@@ -1076,6 +1187,21 @@ declare module "@stencil/core" {
              * stepper entry, or placeholder-only labeling.
              */
             "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;
+            /**
+             * A token-styled, non-interactive progress indicator for known or unknown
+             * duration work.
+             * @whenToUse communicate advancement of an ongoing task such as upload,
+             * download, installation or multi-step processing. Use `value`/`max` when
+             * the completed fraction is known; use `indeterminate` when work is ongoing
+             * but its duration cannot be measured, including loading-indicator use cases.
+             * Choose `linear` in page flows and lists, and `circular` in compact or
+             * centered placements. Always set `label` to what is progressing.
+             * @whenNotToUse static measurements within a known range such as disk
+             * usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
+             * skeleton placeholders while content loads, or operations that finish in
+             * under about one second.
+             */
+            "ki-progress": LocalJSX.IntrinsicElements["ki-progress"] & JSXBase.HTMLAttributes<HTMLKiProgressElement>;
             /**
              * One option in a token-styled radio group.
              * @whenToUse place inside `ki-radio-group` when a person must choose
