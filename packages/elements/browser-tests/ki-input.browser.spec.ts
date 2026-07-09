@@ -400,6 +400,67 @@ describe('ki-input in a real browser', () => {
     expect(submissions).toBe(1);
   });
 
+  it('S8 Enter activates the default submit button as the submitter', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    const button = submitButton();
+    button.name = 'action';
+    button.value = 'save';
+    form.append(button);
+    document.body.append(form);
+    const el = await mount({ label: 'Email', name: 'email', value: 'ada@example.com' }, form);
+    let submitterValue: string | null = null;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitterValue = (event.submitter as HTMLButtonElement | null)?.value ?? null;
+    });
+
+    requireInput(el).focus();
+    await userEvent.keyboard('{Enter}');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submitterValue).toBe('save');
+  });
+
+  it('S10 a same-task required change blocks submission (validity mirrored immediately)', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    form.append(submitButton());
+    document.body.append(form);
+    const el = await mount({ label: 'Email', name: 'email' }, form);
+    let submissions = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submissions += 1;
+    });
+
+    // Constraint change and submit in the SAME task — validity must be current.
+    el.required = true;
+    form.requestSubmit();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(submissions).toBe(0);
+    expect(requireInput(el).validity.valueMissing).toBe(true);
+  });
+
+  it('S11 disabling a failed required field clears the user-invalid affordance', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    form.append(submitButton());
+    document.body.append(form);
+    const el = await mount({ label: 'Email', name: 'email', required: true }, form);
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+    });
+    form.reportValidity();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(el.matches(':state(user-invalid)')).toBe(true);
+
+    el.disabled = true;
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(el.matches(':state(user-invalid)')).toBe(false);
+  });
+
   it('S13 reset restores the attribute-declared initial value', async () => {
     cleanup();
     const form = document.createElement('form');

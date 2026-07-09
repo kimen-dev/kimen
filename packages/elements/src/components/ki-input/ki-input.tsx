@@ -128,20 +128,26 @@ export class KiInput {
   @Watch('disabled')
   protected validityAffectingPropChanged(): void {
     this.syncFormValue();
-    this.pendingValiditySync = true;
+    // Mirror the constraint onto the internal input NOW rather than waiting for
+    // the next render, so `el.required = true; form.requestSubmit()` in one task
+    // blocks the empty field exactly as a native input would (codex review).
+    this.applyInputConstraints();
+    this.syncValidity();
   }
 
   formResetCallback(): void {
     this.value = this.host.getAttribute('value') ?? '';
     this.clearUserInvalid();
     this.syncFormValue();
-    this.pendingValiditySync = true;
+    this.applyInputConstraints();
+    this.syncValidity();
   }
 
   formDisabledCallback(disabled: boolean): void {
     this.formDisabled = disabled;
     this.syncFormValue();
-    this.pendingValiditySync = true;
+    this.applyInputConstraints();
+    this.syncValidity();
   }
 
   private readonly handleInput = (event: Event): void => {
@@ -175,8 +181,23 @@ export class KiInput {
     ) {
       return;
     }
+    const form = this.internals.form;
+    if (!form) {
+      return;
+    }
     event.preventDefault();
-    this.internals.form?.requestSubmit();
+    // Native implicit submission activates the form's default (first) submit
+    // control, carrying its name/value and formaction/formnovalidate. A bare
+    // requestSubmit() drops that submitter, so mirror the default button when
+    // one exists (codex review).
+    const submitter = form.querySelector<HTMLButtonElement | HTMLInputElement>(
+      'button:not([type]), button[type="submit"], input[type="submit"]',
+    );
+    if (submitter && !submitter.disabled) {
+      form.requestSubmit(submitter);
+    } else {
+      form.requestSubmit();
+    }
   };
 
   @Listen('invalid')
@@ -204,7 +225,11 @@ export class KiInput {
       return;
     }
     if (!this.input || this.effectiveDisabled) {
+      // Disabled controls are barred from constraint validation; drop any
+      // lingering user-invalid affordance so a now-inert field is not styled
+      // invalid (codex review).
       this.internals.setValidity({});
+      this.clearUserInvalid();
       return;
     }
 
@@ -217,15 +242,17 @@ export class KiInput {
     this.internals.setValidity(this.input.validity, this.input.validationMessage, this.input);
   }
 
-  // Review round 1 (Important-5): rAF is throttled in background tabs; the
-  // render commit hook is the deterministic moment the Watch was waiting for.
-  private pendingValiditySync = false;
-
-  componentDidUpdate(): void {
-    if (this.pendingValiditySync) {
-      this.pendingValiditySync = false;
-      this.syncValidity();
+  // Imperatively mirror validity-affecting props onto the internal input so its
+  // ValidityState is fresh before the next render commit — a same-task
+  // constraint change + submit must see the new state (codex review).
+  private applyInputConstraints(): void {
+    if (!this.input) {
+      return;
     }
+    this.input.type = normalizeKiInputType(this.type);
+    this.input.required = this.required;
+    this.input.readOnly = this.readonly;
+    this.input.disabled = this.effectiveDisabled;
   }
 
   private setUserInvalid(): void {
