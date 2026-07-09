@@ -20,7 +20,7 @@
   --_ki-dialog-motion-duration: var(--ki-dialog-motion-duration);
   --_ki-dialog-motion-easing: var(--ki-dialog-motion-easing);
 
-  display: contents;
+  display: block;
 }
 
 [part="dialog"] {
@@ -69,10 +69,16 @@
 }
 
 [part="footer"] {
-  display: flex;
-  flex-flow: row wrap;
-  gap: var(--_ki-dialog-gap);
-  justify-content: flex-end;
+  display: block;
+  text-align: end;
+}
+
+slot[name="footer"] {
+  display: contents;
+}
+
+::slotted([slot="footer"]) {
+  margin-inline-start: var(--_ki-dialog-gap);
 }
 
 [part="footer"][hidden] {

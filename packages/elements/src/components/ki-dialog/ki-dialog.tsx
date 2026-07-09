@@ -259,8 +259,7 @@ export class KiDialog {
   };
 
   private updateFooterState(): void {
-    const slot = this.dialog?.querySelector<HTMLSlotElement>('slot[name="footer"]');
-    this.footerHasContent = Boolean(slot?.assignedNodes({ flatten: true }).length);
+    this.footerHasContent = Boolean(this.host.querySelector('[slot="footer"]'));
   }
 
   private syncDialogToHost(): void {

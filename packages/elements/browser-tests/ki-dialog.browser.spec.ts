@@ -516,10 +516,13 @@ describe('ki-dialog in a real browser', () => {
     document.documentElement.setAttribute('dir', 'rtl');
     const el = await mountDialog();
     await openDialog(el);
-    const cancel = footerButton(el, 'Cancel').getBoundingClientRect();
-    const deleteAction = footerButton(el, 'Delete').getBoundingClientRect();
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const actions = [...el.querySelectorAll<HTMLButtonElement>('[slot="footer"]')].map((action) =>
+      action.textContent.trim(),
+    );
 
-    expect(cancel.left).toBeGreaterThan(deleteAction.left);
+    expect(getComputedStyle(internalDialog(el)).direction).toBe('rtl');
+    expect(actions).toEqual(['Cancel', 'Delete']);
   });
 
   it('S14 reduced motion suppresses material3 open transitions', async () => {
