@@ -31,3 +31,6 @@ closed anatomy, S5, and pure helper logic.
   focusable targets; and removed-invoker/initial-open close could leave focus
   on the host, so the close notification is deferred one task and host fallback
   is moved to `document.body` with `preventScroll`.
+- T016: mock-doc and browser suites are green. The traceability spot-check is
+  red at this point for S11-S14 only; those theming scenarios are introduced by
+  T017 immediately after this checkpoint.
