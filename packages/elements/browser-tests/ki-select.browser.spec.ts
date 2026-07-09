@@ -309,6 +309,36 @@ describe('ki-select in a real browser', () => {
     expect(new FormData(empty.form).has('country')).toBe(false);
   });
 
+  it('S24 does not auto-select an empty-value option when no default is declared', async () => {
+    const { form, el } = await mountForm(
+      '',
+      `<ki-option value="">None</ki-option><ki-option value="fr">France</ki-option>`,
+    );
+
+    expect(el.value).toBe('');
+    expect(valueText(el)).toBe('Choose a country');
+    expect(new FormData(form).has('country')).toBe(false);
+  });
+
+  it('S25 mirrors a mutated selected-option value into the select value', async () => {
+    const el = await mountSelect('value="fr"');
+    expect(el.value).toBe('fr');
+
+    el.querySelector('ki-option[value="fr"]')?.setAttribute('value', 'FR');
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(el.value).toBe('FR');
+    expect(valueText(el)).toBe('France');
+  });
+
+  it('S16 a disabled required select is not reported invalid', async () => {
+    const { el } = await mountForm('required disabled');
+
+    expect(trigger(el).hasAttribute('aria-invalid')).toBe(false);
+    expect(el.matches(':state(user-invalid)')).toBe(false);
+  });
+
   it('S14 blocks required empty submission and clears invalid after commit', async () => {
     const { form, el } = await mountForm('required');
     let submitted = false;

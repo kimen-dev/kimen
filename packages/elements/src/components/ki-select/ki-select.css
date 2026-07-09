@@ -45,7 +45,21 @@
   --_ki-select-bg: var(--ki-select-hover-bg);
   --_ki-select-fg: var(--ki-select-hover-fg);
   --_ki-select-border: var(--ki-select-hover-border);
+}
+
+/* The label is a SIBLING of the trigger, so the interaction-state label token
+   must be set on the host (which both inherit from), not on the trigger where
+   it never reaches the label (codex review). */
+:host(:has([part="trigger"]:hover)) {
   --_ki-select-label-fg: var(--ki-select-hover-label-fg);
+}
+
+:host(:has([part="trigger"]:focus-visible)) {
+  --_ki-select-label-fg: var(--ki-select-focus-label-fg);
+}
+
+:host(:has([part="trigger"]:disabled)) {
+  --_ki-select-label-fg: var(--ki-select-disabled-label-fg);
 }
 
 [part="trigger"]:focus-visible {

@@ -12,12 +12,16 @@ describe('ki-option', () => {
     expect(root.shadowRoot?.querySelector('style')?.textContent).toContain('display:none');
   });
 
-  it('S1 reflects value and exposes label text as the default value', async () => {
+  it('S1 derives the label as the default value without materializing the attribute', async () => {
     const { root } = await render(<ki-option> France </ki-option>);
 
     expect(root).not.toHaveProperty('selected');
     expect(root).not.toHaveProperty('checked');
-    expect(root.getAttribute('value')).toBe('France');
+    // An implicit value is NOT written into the reflected attribute (it would go
+    // stale if the label changed); the effective value is derived on read via
+    // optionValue (asserted below and exercised by the ki-select suite).
+    expect(root.getAttribute('value')).toBeNull();
+    // An explicit value still reflects.
     (root as HTMLElement & { value: string }).value = 'fr';
     await new Promise((resolve) => requestAnimationFrame(resolve));
     expect(root.getAttribute('value')).toBe('fr');

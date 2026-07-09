@@ -38,10 +38,10 @@ export class KiOption {
    */
   @Prop({ reflect: true }) disabled = false;
 
-  componentWillLoad(): void {
-    this.value ??= optionValue(undefined, optionLabelText(this.host));
-  }
-
+  // Deliberately NO componentWillLoad materialization of `value`: writing the
+  // label fallback into the reflected `value` prop would turn an implicit value
+  // into an explicit attribute that goes stale if the label text later changes.
+  // The effective value is always derived on read (codex review).
   get optionValue(): string {
     return optionValue(this.value, optionLabelText(this.host));
   }

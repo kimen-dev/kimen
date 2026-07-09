@@ -301,10 +301,26 @@ export class KiSelect {
 
     if (selectedElement && this.roster.some((option) => option.element === selectedElement)) {
       this.selectedIndex = this.roster.findIndex((option) => option.element === selectedElement);
-    } else {
+      // The selected option survived reconciliation, but its `value` attribute
+      // may have changed (the observer watches it); mirror it so the property
+      // and submitted form value are not stale (codex review). Silent — a
+      // programmatic mutation is not a user-driven change.
+      const current = this.roster[this.selectedIndex];
+      if (current && current.value !== this.value) {
+        this.value = current.value;
+        this.syncValidity();
+      }
+    } else if (this.value !== '' || this.host.hasAttribute('value')) {
       const declaredValue =
         this.value !== '' ? this.value : (this.host.getAttribute('value') ?? '');
       this.selectByValue(declaredValue, false);
+    } else {
+      // No declared default: an option carrying value="" must NOT be
+      // auto-selected — show the placeholder and submit nothing (S2/S24,
+      // codex review).
+      this.selectedIndex = -1;
+      this.value = '';
+      this.syncValidity();
     }
 
     if (this.open) {
@@ -334,8 +350,14 @@ export class KiSelect {
 
   private commit(index: number): void {
     const option = this.roster[index];
+    // Activating a disabled (or missing) option does nothing and leaves the
+    // popup open — closing first would change interaction state and force a
+    // reopen (S4 / research D5, codex review).
+    if (!option || option.disabled) {
+      return;
+    }
     this.close();
-    if (!option || option.disabled || this.selectedIndex === index) {
+    if (this.selectedIndex === index) {
       return;
     }
     this.selectedIndex = index;
@@ -384,7 +406,21 @@ export class KiSelect {
   }
 
   private syncValidity(): void {
-    const submittedValue = this.effectiveDisabled ? null : selectFormValue(this.selectedOption);
+    // Disabled controls are barred from constraint validation, so a disabled
+    // required-but-empty select must not stay value-missing / user-invalid
+    // (codex review).
+    if (this.effectiveDisabled) {
+      if (typeof this.internals.setFormValue === 'function') {
+        this.internals.setFormValue(null);
+      }
+      if (typeof this.internals.setValidity === 'function') {
+        this.internals.setValidity({});
+      }
+      this.userInvalid = false;
+      return;
+    }
+
+    const submittedValue = selectFormValue(this.selectedOption);
     if (typeof this.internals.setFormValue === 'function') {
       this.internals.setFormValue(submittedValue);
     }
