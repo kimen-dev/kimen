@@ -194,6 +194,20 @@ describe('ki-select in a real browser', () => {
     expect(valueText(el)).toBe('France');
   });
 
+  it('S25 clears value to "" when every option is removed after a selection (FR-004 edge)', async () => {
+    // The retention that keeps a pre-roster value must NOT keep a value once
+    // options have existed and then all disappear — the selection is gone.
+    const el = await mountSelect('value="fr"');
+    expect(el.value).toBe('fr');
+    for (const option of [...el.querySelectorAll('ki-option')]) {
+      option.remove();
+    }
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(el.value).toBe('');
+    expect(valueText(el)).toBe('Choose a country');
+  });
+
   it('S20 outside pointerdown closes without changing selection or events', async () => {
     const el = await mountSelect('value="es"');
     const events: Event[] = [];

@@ -115,6 +115,11 @@ export class KiSelect {
   private mutationObserver: MutationObserver | undefined;
   private triggerElement?: HTMLButtonElement;
   private donorElement?: HTMLSelectElement;
+  // Distinguishes "options never slotted yet" (retain a pending value for the
+  // framework property-before-children path) from "options were present and
+  // then emptied" (clear the value, per FR-004: the value reads '' once the
+  // selected option disappears).
+  private sawOptions = false;
 
   private get effectiveDisabled(): boolean {
     return (
@@ -290,6 +295,10 @@ export class KiSelect {
       };
     });
 
+    if (this.roster.length > 0) {
+      this.sawOptions = true;
+    }
+
     if (selectedElement && this.roster.some((option) => option.element === selectedElement)) {
       this.selectedIndex = this.roster.findIndex((option) => option.element === selectedElement);
     } else {
@@ -306,12 +315,13 @@ export class KiSelect {
   private selectByValue(value: string, emit: boolean): void {
     const selected = resolveSelection(this.roster, value);
     this.selectedIndex = selected ? this.roster.indexOf(selected) : -1;
-    // Only clear an unmatched value once options exist to match against. An
-    // empty roster means the options have not been slotted yet (e.g. a
-    // framework assigns the `value` property before children upgrade), so the
-    // request is retained and reconcileRoster resolves it when they arrive —
-    // otherwise the intended selection would be silently discarded.
-    if (selected || this.roster.length > 0) {
+    // Clear an unmatched value once options exist OR ever existed. A roster
+    // that is empty and never had options means the children have not upgraded
+    // yet (a framework assigning the `value` property before its <ki-option>s
+    // connect); the request is retained so reconcileRoster resolves it when they
+    // arrive. But once options have appeared, an unmatched value clears to ''
+    // even if the roster was later emptied — the selection is gone (FR-004).
+    if (selected || this.roster.length > 0 || this.sawOptions) {
       this.value = selected?.value ?? '';
     }
     this.syncValidity();
@@ -399,6 +409,10 @@ export class KiSelect {
   private renderOption(option: RosterOption, index: number) {
     const highlighted = this.open && this.highlightedIndex === index;
     return (
+      // Options are activated by pointer; all keyboard interaction lives on the
+      // combobox trigger via aria-activedescendant (APG select-only), so these
+      // rows intentionally carry no key handler of their own.
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events
       <div
         id={option.id}
         part="option"
@@ -409,9 +423,6 @@ export class KiSelect {
         tabindex="-1"
         onClick={() => {
           this.commit(index);
-        }}
-        onKeyDown={() => {
-          return;
         }}
       >
         {option.label}
