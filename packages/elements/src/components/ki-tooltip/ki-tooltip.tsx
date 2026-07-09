@@ -294,10 +294,29 @@ export class KiTooltip {
       triggerRect: this.host.getBoundingClientRect(),
       tooltipRect: tooltip.getBoundingClientRect(),
       viewport: { width: window.innerWidth, height: window.innerHeight },
+      offset: this.measureOffset(),
     });
 
     this.effectivePlacement = position.effectivePlacement;
     this.crossAxisShift = position.crossAxisShift;
+  }
+
+  // Resolve `--ki-tooltip-offset` to px by laying it out on a hidden probe in
+  // the shadow root (which inherits the host custom properties). Layout returns
+  // px for any authored unit — rem, em, px — so the flip decision is correct
+  // regardless of the root font size, without hard-coding 16px/rem.
+  private measureOffset(): number {
+    const root = this.host.shadowRoot;
+    if (!root) {
+      return 0;
+    }
+    const probe = this.host.ownerDocument.createElement('div');
+    probe.style.cssText =
+      'position:absolute;visibility:hidden;pointer-events:none;inline-size:var(--_ki-tooltip-offset)';
+    root.appendChild(probe);
+    const px = probe.getBoundingClientRect().width;
+    probe.remove();
+    return Number.isFinite(px) ? px : 0;
   }
 
   render() {
