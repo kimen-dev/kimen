@@ -1,0 +1,198 @@
+/* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
+ * Logical properties only (Art. IV): direction-agnostic by construction. */
+:host {
+  --_ki-checkbox-bg: var(--ki-checkbox-unchecked-rest-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-unchecked-rest-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-unchecked-rest-border);
+
+  display: inline-block;
+}
+
+:host([checked]) {
+  --_ki-checkbox-bg: var(--ki-checkbox-checked-rest-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-checked-rest-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-checked-rest-border);
+}
+
+:host([indeterminate]) {
+  --_ki-checkbox-bg: var(--ki-checkbox-indeterminate-rest-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-indeterminate-rest-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-indeterminate-rest-border);
+}
+
+:host(:hover:not([disabled], :state(fieldset-disabled))) {
+  --_ki-checkbox-bg: var(--ki-checkbox-unchecked-hover-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-unchecked-hover-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-unchecked-hover-border);
+}
+
+:host([checked]:hover:not([disabled], :state(fieldset-disabled))) {
+  --_ki-checkbox-bg: var(--ki-checkbox-checked-hover-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-checked-hover-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-checked-hover-border);
+}
+
+:host([indeterminate]:hover:not([disabled], :state(fieldset-disabled))) {
+  --_ki-checkbox-bg: var(--ki-checkbox-indeterminate-hover-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-indeterminate-hover-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-indeterminate-hover-border);
+}
+
+:host(:active:not([disabled], :state(fieldset-disabled))) {
+  --_ki-checkbox-bg: var(--ki-checkbox-unchecked-active-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-unchecked-active-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-unchecked-active-border);
+}
+
+:host([checked]:active:not([disabled], :state(fieldset-disabled))) {
+  --_ki-checkbox-bg: var(--ki-checkbox-checked-active-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-checked-active-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-checked-active-border);
+}
+
+:host([indeterminate]:active:not([disabled], :state(fieldset-disabled))) {
+  --_ki-checkbox-bg: var(--ki-checkbox-indeterminate-active-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-indeterminate-active-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-indeterminate-active-border);
+}
+
+:host([disabled]) {
+  --_ki-checkbox-bg: var(--ki-checkbox-unchecked-disabled-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-unchecked-disabled-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-unchecked-disabled-border);
+}
+
+:host(:state(fieldset-disabled)) {
+  --_ki-checkbox-bg: var(--ki-checkbox-unchecked-disabled-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-unchecked-disabled-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-unchecked-disabled-border);
+}
+
+:host([checked][disabled]) {
+  --_ki-checkbox-bg: var(--ki-checkbox-checked-disabled-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-checked-disabled-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-checked-disabled-border);
+}
+
+:host([checked]:state(fieldset-disabled)) {
+  --_ki-checkbox-bg: var(--ki-checkbox-checked-disabled-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-checked-disabled-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-checked-disabled-border);
+}
+
+:host([indeterminate][disabled]) {
+  --_ki-checkbox-bg: var(--ki-checkbox-indeterminate-disabled-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-indeterminate-disabled-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-indeterminate-disabled-border);
+}
+
+:host([indeterminate]:state(fieldset-disabled)) {
+  --_ki-checkbox-bg: var(--ki-checkbox-indeterminate-disabled-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-indeterminate-disabled-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-indeterminate-disabled-border);
+}
+
+:host(:state(user-invalid)) {
+  --_ki-checkbox-bg: var(--ki-checkbox-invalid-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-invalid-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-invalid-border);
+}
+
+:host(.ki-user-invalid) {
+  --_ki-checkbox-bg: var(--ki-checkbox-invalid-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-invalid-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-invalid-border);
+}
+
+:host(.ki-user-invalid:hover),
+:host(.ki-user-invalid:active),
+:host(.ki-user-invalid[checked]:hover),
+:host(.ki-user-invalid[checked]:active),
+:host(.ki-user-invalid[indeterminate]:hover),
+:host(.ki-user-invalid[indeterminate]:active) {
+  --_ki-checkbox-bg: var(--ki-checkbox-invalid-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-invalid-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-invalid-border);
+}
+
+label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ki-checkbox-gap);
+  color: var(--ki-text-high-em);
+  font-size: var(--ki-checkbox-label-font-size);
+  font-weight: var(--ki-checkbox-label-font-weight);
+  line-height: var(--ki-checkbox-label-line-height);
+}
+
+input {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  inline-size: max(var(--ki-checkbox-control-size), var(--ki-checkbox-min-target));
+  block-size: max(var(--ki-checkbox-control-size), var(--ki-checkbox-min-target));
+  margin: 0;
+  opacity: 0;
+  transform: translateY(-50%);
+}
+
+[part="control"] {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--ki-checkbox-control-size);
+  block-size: var(--ki-checkbox-control-size);
+  color: var(--_ki-checkbox-fg);
+  background-color: var(--_ki-checkbox-bg);
+  border-color: var(--_ki-checkbox-border);
+  border-style: solid;
+  border-width: var(--ki-checkbox-border-width);
+  border-radius: var(--ki-checkbox-radius);
+}
+
+input:focus-visible ~ [part="control"] {
+  outline: var(--ki-checkbox-focus-ring-width) solid var(--ki-checkbox-focus-ring-color);
+  outline-offset: var(--ki-checkbox-focus-ring-offset);
+}
+
+.mark {
+  grid-area: 1 / 1;
+  inline-size: 100%;
+  block-size: 100%;
+  color: inherit;
+  fill: none;
+  opacity: 0;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--ki-checkbox-border-width);
+}
+
+:host([checked]) .mark-check,
+:host([indeterminate]) .mark-dash {
+  opacity: 1;
+}
+
+:host([indeterminate]) .mark-check {
+  opacity: 0;
+}
+
+[part="label"] {
+  min-inline-size: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mark {
+    transition-duration: 120ms;
+    transition-property: opacity, transform;
+    transition-timing-function: ease-out;
+  }
+
+  :host(:not([checked], [indeterminate])) .mark {
+    transform: scale(0.75);
+  }
+}

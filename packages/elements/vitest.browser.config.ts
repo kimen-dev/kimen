@@ -23,6 +23,11 @@ export default defineConfig({
             await page.emulateMedia({ colorScheme: scheme });
           },
         ),
+        emulateReducedMotion: defineBrowserCommand(
+          async ({ page }, reducedMotion: 'reduce' | 'no-preference' | null) => {
+            await page.emulateMedia({ reducedMotion });
+          },
+        ),
       },
       instances: [
         ...browsers.map((browser) => ({
