@@ -51,28 +51,62 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A declarative data option rendered by its owning `ki-select`.
+     * When to use: declare one choice inside a `ki-select`; its text is the
+     * human-facing label and its `value` is the submitted value.
+     * When NOT to use: never use `ki-option` standalone, never author selection
+     * on an option, and never expect it to paint its own row.
      */
     interface KiOption {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Makes this option unavailable. Disabled options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select.
+          * @default false
          */
-        "label": string;
+        "disabled": boolean;
+        /**
+          * Submission and selection value for this option. When omitted, the value falls back to the trimmed option text, matching native `<option>` parity. When NOT to use: do not use this as selection state; set `ki-select.value`.
+         */
+        "value"?: string;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A form-associated select-only combobox for choosing one option from
+     * declarative `ki-option` children.
+     * When to use: choose exactly one value from a known closed list, especially
+     * when there are roughly five or more choices or space is limited.
+     * When NOT to use: use `ki-radio-group` for a few always-visible choices,
+     * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
+     * binary decisions, and never use it for multiselect or command menus.
      */
     interface KiSelect {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
+          * @default ''
          */
         "label": string;
+        /**
+          * Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
+         */
+        "name"?: string;
+        /**
+          * Text shown while no option is selected. When NOT to use: do not use it as a replacement for `label`.
+          * @default ''
+         */
+        "placeholder": string;
+        /**
+          * Requires a non-empty submitted value. The platform validation message is donated by a hidden native select.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Live projection of the selected option value, or `""` when unselected. Assigning it selects the first matching option silently; the attribute is the reset/default declaration and is not updated by user commits.
+          * @default ''
+         */
+        "value": string;
     }
 }
 declare global {
@@ -90,9 +124,11 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A declarative data option rendered by its owning `ki-select`.
+     * When to use: declare one choice inside a `ki-select`; its text is the
+     * human-facing label and its `value` is the submitted value.
+     * When NOT to use: never use `ki-option` standalone, never author selection
+     * on an option, and never expect it to paint its own row.
      */
     interface HTMLKiOptionElement extends Components.KiOption, HTMLStencilElement {
     }
@@ -101,9 +137,13 @@ declare global {
         new (): HTMLKiOptionElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A form-associated select-only combobox for choosing one option from
+     * declarative `ki-option` children.
+     * When to use: choose exactly one value from a known closed list, especially
+     * when there are roughly five or more choices or space is limited.
+     * When NOT to use: use `ki-radio-group` for a few always-visible choices,
+     * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
+     * binary decisions, and never use it for multiselect or command menus.
      */
     interface HTMLKiSelectElement extends Components.KiSelect, HTMLStencilElement {
     }
@@ -165,28 +205,66 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A declarative data option rendered by its owning `ki-select`.
+     * When to use: declare one choice inside a `ki-select`; its text is the
+     * human-facing label and its `value` is the submitted value.
+     * When NOT to use: never use `ki-option` standalone, never author selection
+     * on an option, and never expect it to paint its own row.
      */
     interface KiOption {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Makes this option unavailable. Disabled options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select.
+          * @default false
          */
-        "label"?: string;
+        "disabled"?: boolean;
+        /**
+          * Submission and selection value for this option. When omitted, the value falls back to the trimmed option text, matching native `<option>` parity. When NOT to use: do not use this as selection state; set `ki-select.value`.
+         */
+        "value"?: string;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A form-associated select-only combobox for choosing one option from
+     * declarative `ki-option` children.
+     * When to use: choose exactly one value from a known closed list, especially
+     * when there are roughly five or more choices or space is limited.
+     * When NOT to use: use `ki-radio-group` for a few always-visible choices,
+     * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
+     * binary decisions, and never use it for multiselect or command menus.
      */
     interface KiSelect {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
+          * @default ''
          */
         "label"?: string;
+        /**
+          * Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
+         */
+        "name"?: string;
+        /**
+          * Text shown while no option is selected. When NOT to use: do not use it as a replacement for `label`.
+          * @default ''
+         */
+        "placeholder"?: string;
+        /**
+          * Requires a non-empty submitted value. The platform validation message is donated by a hidden native select.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Live projection of the selected option value, or `""` when unselected. Assigning it selects the first matching option silently; the attribute is the reset/default declaration and is not updated by user commits.
+          * @default ''
+         */
+        "value"?: string;
     }
 
     interface KiButtonAttributes {
@@ -199,10 +277,16 @@ declare namespace LocalJSX {
         "disabled": boolean;
     }
     interface KiOptionAttributes {
-        "label": string;
+        "value": string;
+        "disabled": boolean;
     }
     interface KiSelectAttributes {
         "label": string;
+        "placeholder": string;
+        "name": string;
+        "value": string;
+        "disabled": boolean;
+        "required": boolean;
     }
 
     interface IntrinsicElements {
@@ -224,15 +308,21 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A declarative data option rendered by its owning `ki-select`.
+             * When to use: declare one choice inside a `ki-select`; its text is the
+             * human-facing label and its `value` is the submitted value.
+             * When NOT to use: never use `ki-option` standalone, never author selection
+             * on an option, and never expect it to paint its own row.
              */
             "ki-option": LocalJSX.IntrinsicElements["ki-option"] & JSXBase.HTMLAttributes<HTMLKiOptionElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A form-associated select-only combobox for choosing one option from
+             * declarative `ki-option` children.
+             * When to use: choose exactly one value from a known closed list, especially
+             * when there are roughly five or more choices or space is limited.
+             * When NOT to use: use `ki-radio-group` for a few always-visible choices,
+             * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
+             * binary decisions, and never use it for multiselect or command menus.
              */
             "ki-select": LocalJSX.IntrinsicElements["ki-select"] & JSXBase.HTMLAttributes<HTMLKiSelectElement>;
         }

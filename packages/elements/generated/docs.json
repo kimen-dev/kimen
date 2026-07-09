@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-09T00:21:55",
+  "timestamp": "2026-07-09T00:34:35",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -346,35 +346,66 @@
       "filePath": "src/components/ki-option/ki-option.tsx",
       "encapsulation": "shadow",
       "tag": "ki-option",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
+      "docs": "A declarative data option rendered by its owning `ki-select`.\n\nWhen to use: declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value.\nWhen NOT to use: never use `ki-option` standalone, never author selection\non an option, and never expect it to paint its own row.",
+      "docsTags": [
+        {
+          "name": "slot",
+          "text": "- Text label mirrored by the owning select."
+        }
+      ],
       "usage": {},
       "props": [
         {
-          "name": "label",
-          "type": "string",
+          "name": "disabled",
+          "type": "boolean",
           "complexType": {
-            "original": "string",
-            "resolved": "string",
+            "original": "boolean",
+            "resolved": "boolean",
             "references": {}
           },
           "mutable": false,
-          "attr": "label",
-          "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Makes this option unavailable. Disabled options cannot be selected, are\nskipped by keyboard highlight, and are exposed unavailable by the select.",
           "docsTags": [
             {
               "name": "default",
-              "text": "'TODO'"
+              "text": "false"
             }
           ],
-          "default": "'TODO'",
+          "default": "false",
           "values": [
             {
-              "type": "string"
+              "type": "boolean"
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Submission and selection value for this option. When omitted, the value\nfalls back to the trimmed option text, matching native `<option>` parity.\nWhen NOT to use: do not use this as selection state; set `ki-select.value`.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -384,7 +415,12 @@
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Text label mirrored by the owning select."
+        }
+      ],
       "parts": [],
       "states": [],
       "dependents": [],
@@ -395,10 +431,68 @@
       "filePath": "src/components/ki-select/ki-select.tsx",
       "encapsulation": "shadow",
       "tag": "ki-select",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
+      "docs": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.\n\nWhen to use: choose exactly one value from a known closed list, especially\nwhen there are roughly five or more choices or space is limited.\nWhen NOT to use: use `ki-radio-group` for a few always-visible choices,\n`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for\nbinary decisions, and never use it for multiselect or command menus.",
+      "docsTags": [
+        {
+          "name": "slot",
+          "text": "- `ki-option` data children. They do not paint; rows are mirrored."
+        },
+        {
+          "name": "part",
+          "text": "label - Visible label and accessible-name source."
+        },
+        {
+          "name": "part",
+          "text": "trigger - Native button carrying the combobox role."
+        },
+        {
+          "name": "part",
+          "text": "value - Displayed selection or placeholder."
+        },
+        {
+          "name": "part",
+          "text": "indicator - Decorative dropdown indicator."
+        },
+        {
+          "name": "part",
+          "text": "listbox - Popup listbox surface."
+        },
+        {
+          "name": "part",
+          "text": "option - Mirrored option row rendered in this shadow root."
+        }
+      ],
       "usage": {},
       "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
         {
           "name": "label",
           "type": "string",
@@ -409,15 +503,128 @@
           },
           "mutable": false,
           "attr": "label",
-          "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
+          "reflectToAttr": true,
+          "docs": "Visible label and accessible-name source for the combobox trigger.\nWhen NOT to use: do not omit it; unlabeled selects are invalid usage.",
           "docsTags": [
             {
               "name": "default",
-              "text": "'TODO'"
+              "text": "''"
             }
           ],
-          "default": "'TODO'",
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "name",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "name",
+          "reflectToAttr": true,
+          "docs": "Form-data key used when a selected option contributes its value.\nWhen NOT to use: omit it when the select should not submit data.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "placeholder",
+          "reflectToAttr": true,
+          "docs": "Text shown while no option is selected.\nWhen NOT to use: do not use it as a replacement for `label`.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "required",
+          "reflectToAttr": true,
+          "docs": "Requires a non-empty submitted value. The platform validation message is\ndonated by a hidden native select.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Live projection of the selected option value, or `\"\"` when unselected.\nAssigning it selects the first matching option silently; the attribute is\nthe reset/default declaration and is not updated by user commits.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
           "values": [
             {
               "type": "string"
@@ -431,10 +638,46 @@
       ],
       "methods": [],
       "events": [],
-      "listeners": [],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        }
+      ],
       "styles": [],
-      "slots": [],
-      "parts": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "`ki-option` data children. They do not paint; rows are mirrored."
+        }
+      ],
+      "parts": [
+        {
+          "name": "indicator",
+          "docs": "Decorative dropdown indicator."
+        },
+        {
+          "name": "label",
+          "docs": "Visible label and accessible-name source."
+        },
+        {
+          "name": "listbox",
+          "docs": "Popup listbox surface."
+        },
+        {
+          "name": "option",
+          "docs": "Mirrored option row rendered in this shadow root."
+        },
+        {
+          "name": "trigger",
+          "docs": "Native button carrying the combobox role."
+        },
+        {
+          "name": "value",
+          "docs": "Displayed selection or placeholder."
+        }
+      ],
       "states": [],
       "dependents": [],
       "dependencies": [],

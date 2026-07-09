@@ -1,45 +1,24 @@
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:005-ki-select
-// Real-browser tests consume the BUILT custom-elements output (what ships is
-// what is asserted), never internals (Art. III). They live outside src/ so
-// Stencil never compiles them; the build gate runs before type-aware gates.
+// ki-option is a data element. Every user-facing S-ID scenario is asserted
+// through ki-select, which owns the rendered option rows.
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
-
-type KiOptionElement = HTMLElement & { label: string };
 
 beforeAll(() => {
   defineKiOption();
 });
 
-/** Stencil renders async: wait until the shadow root has content. */
-async function mount(): Promise<KiOptionElement> {
-  const el = document.createElement('ki-option') as KiOptionElement;
-  document.body.appendChild(el);
-  await customElements.whenDefined('ki-option');
-  const deadline = Date.now() + 2000;
-  while (!el.shadowRoot?.textContent && Date.now() < deadline) {
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-  }
-  return el;
-}
-
 describe('ki-option in a real browser', () => {
-  // TODO(spec): S1 core behavior from the approved scenario.
-  it('renders its label', async () => {
-    const el = await mount();
-    expect(el.shadowRoot?.textContent).toContain('TODO');
-    el.remove();
-  });
+  it('S1 paints nothing when rendered standalone as data', async () => {
+    const el = document.createElement('ki-option');
+    el.textContent = 'France';
+    document.body.append(el);
+    await customElements.whenDefined('ki-option');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
-  // TODO(spec): S2 keyboard path, S3 assistive-tech outcome, S4 form
-  // participation (if applicable), S5 theming: the five families (Art. II).
-
-  it('has zero axe violations (Art. V floor)', async () => {
-    const el = await mount();
-    const results = await axe.run(el);
-    expect(results.violations).toEqual([]);
+    expect(getComputedStyle(el).display).toBe('none');
+    expect(el.shadowRoot?.querySelector('[part]')).toBeNull();
     el.remove();
   });
 });

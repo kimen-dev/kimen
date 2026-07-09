@@ -1,11 +1,134 @@
-/* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
- * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
-  display: block;
+  --_ki-select-bg: var(--ki-select-rest-bg);
+  --_ki-select-fg: var(--ki-select-rest-fg);
+  --_ki-select-border: var(--ki-select-rest-border);
+  --_ki-select-label-fg: var(--ki-select-rest-label-fg);
+  --_ki-option-bg: var(--ki-option-rest-bg);
+  --_ki-option-fg: var(--ki-option-rest-fg);
+
+  display: inline-grid;
+  position: relative;
+  gap: var(--ki-select-label-gap);
+  font-family: var(--ki-typography-family-body);
 }
 
-.label {
-  color: var(--ki-text-base);
-  font-family: var(--ki-typography-family-base);
-  font-size: var(--ki-typography-size-body);
+[part='label'] {
+  color: var(--_ki-select-label-fg);
+  font-size: var(--ki-select-label-font-size);
+  font-weight: var(--ki-select-label-font-weight);
+  line-height: var(--ki-select-label-line-height);
+}
+
+[part='trigger'] {
+  align-items: center;
+  background: var(--_ki-select-bg);
+  border-color: var(--_ki-select-border);
+  border-style: solid;
+  border-block-start-width: var(--ki-select-border-block-start-width);
+  border-block-end-width: var(--ki-select-border-block-end-width);
+  border-inline-start-width: var(--ki-select-border-inline-start-width);
+  border-inline-end-width: var(--ki-select-border-inline-end-width);
+  border-radius: var(--ki-select-radius);
+  color: var(--_ki-select-fg);
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--ki-select-gap);
+  justify-content: space-between;
+  min-block-size: max(var(--ki-select-height), var(--ki-select-min-target));
+  min-inline-size: 100%;
+  padding-inline: var(--ki-select-padding-inline);
+  font: inherit;
+  font-size: var(--ki-select-font-size);
+}
+
+[part='trigger']:hover {
+  --_ki-select-bg: var(--ki-select-hover-bg);
+  --_ki-select-fg: var(--ki-select-hover-fg);
+  --_ki-select-border: var(--ki-select-hover-border);
+  --_ki-select-label-fg: var(--ki-select-hover-label-fg);
+}
+
+[part='trigger']:focus-visible {
+  --_ki-select-bg: var(--ki-select-focus-bg);
+  --_ki-select-fg: var(--ki-select-focus-fg);
+  --_ki-select-border: var(--ki-select-focus-border);
+
+  outline-offset: var(--ki-select-focus-ring-offset);
+  outline: var(--ki-select-focus-ring-width) solid var(--ki-select-focus-ring-color);
+}
+
+[part='trigger']:disabled {
+  --_ki-select-bg: var(--ki-select-disabled-bg);
+  --_ki-select-fg: var(--ki-select-disabled-fg);
+  --_ki-select-border: var(--ki-select-disabled-border);
+
+  cursor: not-allowed;
+}
+
+[part='value'][data-placeholder='true'] {
+  color: var(--ki-select-placeholder-fg);
+}
+
+[part='indicator'] {
+  block-size: var(--ki-select-indicator-size);
+  inline-size: var(--ki-select-indicator-size);
+  flex: none;
+  border-block-end: var(--ki-select-border-width) solid currentcolor;
+  border-inline-end: var(--ki-select-border-width) solid currentcolor;
+  transform: rotate(45deg) translateY(-25%);
+}
+
+[part='listbox'] {
+  background: var(--ki-select-listbox-bg);
+  border-radius: var(--ki-select-listbox-radius);
+  box-shadow: 0 var(--ki-select-border-width) var(--ki-select-listbox-offset)
+    var(--ki-select-listbox-elevation);
+  box-sizing: border-box;
+  inset-block-start: calc(100% + var(--ki-select-listbox-offset));
+  inset-inline-start: 0;
+  max-block-size: var(--ki-select-listbox-max-block-size);
+  min-inline-size: 100%;
+  overflow-block: auto;
+  padding: var(--ki-select-listbox-padding);
+  position: absolute;
+  z-index: 1;
+}
+
+[part='option'] {
+  background: var(--_ki-option-bg);
+  border-radius: var(--ki-option-radius);
+  color: var(--_ki-option-fg);
+  cursor: pointer;
+  font-size: var(--ki-option-font-size);
+  min-block-size: var(--ki-option-min-target);
+  padding-inline: var(--ki-option-padding-inline);
+  display: flex;
+  align-items: center;
+}
+
+[part='option']:hover {
+  --_ki-option-bg: var(--ki-option-hover-bg);
+  --_ki-option-fg: var(--ki-option-hover-fg);
+}
+
+[part='option'][data-highlighted='true'] {
+  --_ki-option-bg: var(--ki-option-highlight-bg);
+  --_ki-option-fg: var(--ki-option-highlight-fg);
+}
+
+[part='option'][aria-selected='true'] {
+  --_ki-option-bg: var(--ki-option-selected-bg);
+  --_ki-option-fg: var(--ki-option-selected-fg);
+}
+
+[part='option'][aria-disabled='true'] {
+  --_ki-option-bg: var(--ki-option-disabled-bg);
+  --_ki-option-fg: var(--ki-option-disabled-fg);
+
+  cursor: not-allowed;
+}
+
+.data-slot,
+.validity-donor {
+  display: none;
 }
