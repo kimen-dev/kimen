@@ -12,14 +12,14 @@
   font-family: var(--ki-typography-family-body);
 }
 
-[part='label'] {
+[part="label"] {
   color: var(--_ki-select-label-fg);
   font-size: var(--ki-select-label-font-size);
   font-weight: var(--ki-select-label-font-weight);
   line-height: var(--ki-select-label-line-height);
 }
 
-[part='trigger'] {
+[part="trigger"] {
   align-items: center;
   background: var(--_ki-select-bg);
   border-color: var(--_ki-select-border);
@@ -41,14 +41,14 @@
   font-size: var(--ki-select-font-size);
 }
 
-[part='trigger']:hover {
+[part="trigger"]:hover {
   --_ki-select-bg: var(--ki-select-hover-bg);
   --_ki-select-fg: var(--ki-select-hover-fg);
   --_ki-select-border: var(--ki-select-hover-border);
   --_ki-select-label-fg: var(--ki-select-hover-label-fg);
 }
 
-[part='trigger']:focus-visible {
+[part="trigger"]:focus-visible {
   --_ki-select-bg: var(--ki-select-focus-bg);
   --_ki-select-fg: var(--ki-select-focus-fg);
   --_ki-select-border: var(--ki-select-focus-border);
@@ -57,7 +57,7 @@
   outline: var(--ki-select-focus-ring-width) solid var(--ki-select-focus-ring-color);
 }
 
-[part='trigger']:disabled {
+[part="trigger"]:disabled {
   --_ki-select-bg: var(--ki-select-disabled-bg);
   --_ki-select-fg: var(--ki-select-disabled-fg);
   --_ki-select-border: var(--ki-select-disabled-border);
@@ -65,11 +65,11 @@
   cursor: not-allowed;
 }
 
-[part='value'][data-placeholder='true'] {
+[part="value"][data-placeholder="true"] {
   color: var(--ki-select-placeholder-fg);
 }
 
-[part='indicator'] {
+[part="indicator"] {
   block-size: var(--ki-select-indicator-size);
   inline-size: var(--ki-select-indicator-size);
   flex: none;
@@ -78,7 +78,7 @@
   transform: rotate(45deg) translateY(-25%);
 }
 
-[part='listbox'] {
+[part="listbox"] {
   background: var(--ki-select-listbox-bg);
   border-radius: var(--ki-select-listbox-radius);
   box-shadow: 0 var(--ki-select-border-width) var(--ki-select-listbox-offset)
@@ -94,7 +94,7 @@
   z-index: 1;
 }
 
-[part='option'] {
+[part="option"] {
   background: var(--_ki-option-bg);
   border-radius: var(--ki-option-radius);
   color: var(--_ki-option-fg);
@@ -106,22 +106,22 @@
   align-items: center;
 }
 
-[part='option']:hover {
+[part="option"]:hover {
   --_ki-option-bg: var(--ki-option-hover-bg);
   --_ki-option-fg: var(--ki-option-hover-fg);
 }
 
-[part='option'][data-highlighted='true'] {
+[part="option"][data-highlighted="true"] {
   --_ki-option-bg: var(--ki-option-highlight-bg);
   --_ki-option-fg: var(--ki-option-highlight-fg);
 }
 
-[part='option'][aria-selected='true'] {
+[part="option"][aria-selected="true"] {
   --_ki-option-bg: var(--ki-option-selected-bg);
   --_ki-option-fg: var(--ki-option-selected-fg);
 }
 
-[part='option'][aria-disabled='true'] {
+[part="option"][aria-disabled="true"] {
   --_ki-option-bg: var(--ki-option-disabled-bg);
   --_ki-option-fg: var(--ki-option-disabled-fg);
 
