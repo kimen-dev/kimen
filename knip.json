@@ -8,7 +8,12 @@
       "project": ["scripts/**/*.mjs"]
     },
     "packages/*": {
-      "entry": ["src/index.ts", "*.config.{ts,mjs}", "vitest.setup.mjs"],
+      "entry": [
+        "src/index.ts",
+        "*.config.{ts,mjs}",
+        "vitest.setup.mjs",
+        "size-limit/**/*.{ts,tsx}"
+      ],
       "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"]
     },
     "packages/kimen": {

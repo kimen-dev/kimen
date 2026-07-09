@@ -224,6 +224,59 @@ export namespace Components {
         "value": string;
     }
     /**
+     * One option in a token-styled radio group.
+     * @whenToUse place inside `ki-radio-group` when a person must choose
+     * exactly one of a small visible set.
+     * @whenNotToUse `ki-radio` standalone, multiple selection,
+     * or authored selection state; set the parent group's `value` instead.
+     */
+    interface KiRadio {
+        /**
+          * Prevents this option from being selected or focused. Disabled options are skipped by group arrow navigation and omitted from form submission when selected before becoming disabled. When NOT to use: do not use disabled as a temporary loading state.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Submission value projected by the parent `ki-radio-group` when this option is selected. Omit for native radio parity with value `"on"`. When NOT to use: do not use `value` to author selection; set the group's `value` property or attribute.
+          * @default 'on'
+         */
+        "value": string;
+    }
+    /**
+     * A token-styled radio group that owns selection, keyboard coordination and
+     * form participation for slotted `ki-radio` options.
+     * @whenToUse a person must choose exactly one of a small set of mutually
+     * exclusive options that should all be visible at once.
+     * @whenNotToUse many options or tight space (use `ki-select`), independent
+     * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+     * authored selection on options; set this group's `value` instead.
+     */
+    interface KiRadioGroup {
+        /**
+          * Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+         */
+        "label": string;
+        /**
+          * Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
+         */
+        "name"?: string;
+        /**
+          * Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
      * A token-styled switch for immediate on/off settings.
      * @whenToUse binary settings whose change takes effect immediately, always
      * with a slotted label.
@@ -422,6 +475,34 @@ declare global {
         new (): HTMLKiInputElement;
     };
     /**
+     * One option in a token-styled radio group.
+     * @whenToUse place inside `ki-radio-group` when a person must choose
+     * exactly one of a small visible set.
+     * @whenNotToUse `ki-radio` standalone, multiple selection,
+     * or authored selection state; set the parent group's `value` instead.
+     */
+    interface HTMLKiRadioElement extends Components.KiRadio, HTMLStencilElement {
+    }
+    var HTMLKiRadioElement: {
+        prototype: HTMLKiRadioElement;
+        new (): HTMLKiRadioElement;
+    };
+    /**
+     * A token-styled radio group that owns selection, keyboard coordination and
+     * form participation for slotted `ki-radio` options.
+     * @whenToUse a person must choose exactly one of a small set of mutually
+     * exclusive options that should all be visible at once.
+     * @whenNotToUse many options or tight space (use `ki-select`), independent
+     * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+     * authored selection on options; set this group's `value` instead.
+     */
+    interface HTMLKiRadioGroupElement extends Components.KiRadioGroup, HTMLStencilElement {
+    }
+    var HTMLKiRadioGroupElement: {
+        prototype: HTMLKiRadioGroupElement;
+        new (): HTMLKiRadioGroupElement;
+    };
+    /**
      * A token-styled switch for immediate on/off settings.
      * @whenToUse binary settings whose change takes effect immediately, always
      * with a slotted label.
@@ -459,6 +540,8 @@ declare global {
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-input": HTMLKiInputElement;
+        "ki-radio": HTMLKiRadioElement;
+        "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-switch": HTMLKiSwitchElement;
         "ki-textarea": HTMLKiTextareaElement;
     }
@@ -692,6 +775,63 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * One option in a token-styled radio group.
+     * @whenToUse place inside `ki-radio-group` when a person must choose
+     * exactly one of a small visible set.
+     * @whenNotToUse `ki-radio` standalone, multiple selection,
+     * or authored selection state; set the parent group's `value` instead.
+     */
+    interface KiRadio {
+        /**
+          * Prevents this option from being selected or focused. Disabled options are skipped by group arrow navigation and omitted from form submission when selected before becoming disabled. When NOT to use: do not use disabled as a temporary loading state.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Submission value projected by the parent `ki-radio-group` when this option is selected. Omit for native radio parity with value `"on"`. When NOT to use: do not use `value` to author selection; set the group's `value` property or attribute.
+          * @default 'on'
+         */
+        "value"?: string;
+    }
+    /**
+     * A token-styled radio group that owns selection, keyboard coordination and
+     * form participation for slotted `ki-radio` options.
+     * @whenToUse a person must choose exactly one of a small set of mutually
+     * exclusive options that should all be visible at once.
+     * @whenNotToUse many options or tight space (use `ki-select`), independent
+     * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+     * authored selection on options; set this group's `value` instead.
+     */
+    interface KiRadioGroup {
+        /**
+          * Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+         */
+        "label": string;
+        /**
+          * Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
+         */
+        "name"?: string;
+        /**
+          * Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
      * A token-styled switch for immediate on/off settings.
      * @whenToUse binary settings whose change takes effect immediately, always
      * with a slotted label.
@@ -823,6 +963,17 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "autocomplete": string;
     }
+    interface KiRadioAttributes {
+        "value": string;
+        "disabled": boolean;
+    }
+    interface KiRadioGroupAttributes {
+        "name": string;
+        "value": string;
+        "label": string;
+        "required": boolean;
+        "disabled": boolean;
+    }
     interface KiSwitchAttributes {
         "checked": boolean;
         "disabled": boolean;
@@ -848,6 +999,8 @@ declare namespace LocalJSX {
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
+        "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
+        "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
     }
@@ -923,6 +1076,24 @@ declare module "@stencil/core" {
              * stepper entry, or placeholder-only labeling.
              */
             "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;
+            /**
+             * One option in a token-styled radio group.
+             * @whenToUse place inside `ki-radio-group` when a person must choose
+             * exactly one of a small visible set.
+             * @whenNotToUse `ki-radio` standalone, multiple selection,
+             * or authored selection state; set the parent group's `value` instead.
+             */
+            "ki-radio": LocalJSX.IntrinsicElements["ki-radio"] & JSXBase.HTMLAttributes<HTMLKiRadioElement>;
+            /**
+             * A token-styled radio group that owns selection, keyboard coordination and
+             * form participation for slotted `ki-radio` options.
+             * @whenToUse a person must choose exactly one of a small set of mutually
+             * exclusive options that should all be visible at once.
+             * @whenNotToUse many options or tight space (use `ki-select`), independent
+             * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+             * authored selection on options; set this group's `value` instead.
+             */
+            "ki-radio-group": LocalJSX.IntrinsicElements["ki-radio-group"] & JSXBase.HTMLAttributes<HTMLKiRadioGroupElement>;
             /**
              * A token-styled switch for immediate on/off settings.
              * @whenToUse binary settings whose change takes effect immediately, always

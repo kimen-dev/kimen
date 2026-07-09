@@ -221,6 +221,61 @@ Methods: none
 
 CSS custom properties: none
 
+### ki-radio
+
+One option in a token-styled radio group.
+
+When to use: place inside `ki-radio-group` when a person must choose
+exactly one of a small visible set.
+When NOT to use: `ki-radio` standalone, multiple selection,
+or authored selection state; set the parent group's `value` instead.
+
+Attributes:
+- `disabled` (boolean, default false): Prevents this option from being selected or focused. Disabled options are skipped by group arrow navigation and omitted from form submission when selected before becoming disabled. When NOT to use: do not use disabled as a temporary loading state.
+- `value` (string, default 'on'): Submission value projected by the parent `ki-radio-group` when this option is selected. Omit for native radio parity with value `"on"`. When NOT to use: do not use `value` to author selection; set the group's `value` property or attribute.
+
+Slots:
+- (default): Option label. This is the accessible name and activation surface.
+
+Parts:
+- `control`: Visual ring and selected dot.
+- `label`: Wrapper around the option label.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
+### ki-radio-group
+
+A token-styled radio group that owns selection, keyboard coordination and form participation for slotted `ki-radio` options.
+
+When to use: a person must choose exactly one of a small set of mutually
+exclusive options that should all be visible at once.
+When NOT to use: many options or tight space (use `ki-select`), independent
+on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
+authored selection on options; set this group's `value` instead.
+
+Attributes:
+- `disabled` (boolean, default false): Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
+- `label` (string): Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
+- `name` (string | undefined): Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
+- `required` (boolean, default false): Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
+- `value` (string, default ''): Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
+
+Slots:
+- (default): `ki-radio` options. Document order is navigation order.
+
+Parts:
+- `label`: Visible group label and accessible-name source.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
 ### ki-switch
 
 A token-styled switch for immediate on/off settings.

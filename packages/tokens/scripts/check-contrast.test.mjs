@@ -74,3 +74,19 @@ test('component sweep is generic: any component bg/fg pair, semantic layers and 
     ['input', '--ki-input-rest-fg', '--ki-input-rest-bg'],
   ]);
 });
+
+test('non-text control cells (radio ring/dot) require 3:1, text cells 4.5:1', () => {
+  const declarations = new Map([
+    ['--ki-radio-selected-rest-bg', '#ffffff'],
+    ['--ki-radio-selected-rest-fg', '#767676'],
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-fg', '#111111'],
+  ]);
+
+  const byComponent = Object.fromEntries(
+    componentPairs(declarations).map((pair) => [pair.component, pair.minRatio]),
+  );
+
+  assert.equal(byComponent.radio, 3);
+  assert.equal(byComponent.input, 4.5);
+});

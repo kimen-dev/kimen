@@ -946,6 +946,248 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/ki-radio/ki-radio.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiRadio",
+          "customElement": true,
+          "tagName": "ki-radio",
+          "description": "One option in a token-styled radio group.",
+          "whenToUse": "place inside `ki-radio-group` when a person must choose\nexactly one of a small visible set.",
+          "whenNotToUse": "`ki-radio` standalone, multiple selection,\nor authored selection state; set the parent group's `value` instead.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "'on'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prevents this option from being selected or focused. Disabled options are\nskipped by group arrow navigation and omitted from form submission when\nselected before becoming disabled.\nWhen NOT to use: do not use disabled as a temporary loading state.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'on'",
+              "description": "Submission value projected by the parent `ki-radio-group` when this option\nis selected. Omit for native radio parity with value `\"on\"`.\nWhen NOT to use: do not use `value` to author selection; set the group's\n`value` property or attribute.",
+              "attribute": "value",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Option label. This is the accessible name and activation surface."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "control",
+              "description": "Visual ring and selected dot."
+            },
+            {
+              "name": "label",
+              "description": "Wrapper around the option label."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiRadio",
+          "declaration": {
+            "name": "KiRadio",
+            "module": "src/components/ki-radio/ki-radio.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-radio",
+          "declaration": {
+            "name": "KiRadio",
+            "module": "src/components/ki-radio/ki-radio.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/ki-radio-group/ki-radio-group.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiRadioGroup",
+          "customElement": true,
+          "tagName": "ki-radio-group",
+          "description": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.",
+          "whenToUse": "a person must choose exactly one of a small set of mutually\nexclusive options that should all be visible at once.",
+          "whenNotToUse": "many options or tight space (use `ki-select`), independent\non/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or\nauthored selection on options; set this group's `value` instead.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the whole group unavailable, skips it in Tab order and removes its\nform entry.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it; unlabeled groups fail accessibility gates.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key for the selected option's value. Omit when the group should\nnot contribute a form entry.\nWhen NOT to use: do not put `name` on `ki-radio` options; their internal\nnative inputs are intentionally unnamed.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires one selected option for form submission. The group uses platform\n`valueMissing` from its internal native radio inputs.\nWhen NOT to use: do not use required when no answer is acceptable.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Projection of the current selection. The initial attribute selects the\nfirst matching option; unmatched values leave the group unselected and\noperable. Assigning the property updates selection silently.\nWhen NOT to use: never author selection on `ki-radio`; set this value.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "`ki-radio` options. Document order is navigation order."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "label",
+              "description": "Visible group label and accessible-name source."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiRadioGroup",
+          "declaration": {
+            "name": "KiRadioGroup",
+            "module": "src/components/ki-radio-group/ki-radio-group.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-radio-group",
+          "declaration": {
+            "name": "KiRadioGroup",
+            "module": "src/components/ki-radio-group/ki-radio-group.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/ki-switch/ki-switch.tsx",
       "declarations": [
         {

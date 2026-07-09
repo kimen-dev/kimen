@@ -18,3 +18,7 @@ export { KiSwitch } from './components/ki-switch/ki-switch.js';
 export type * from './components/ki-switch/ki-switch.js';
 export { KiAlert } from './components/ki-alert/ki-alert.js';
 export type { KiAlertTone } from './components/ki-alert/ki-alert.tone.js';
+export { KiRadioGroup } from './components/ki-radio-group/ki-radio-group.js';
+export type * from './components/ki-radio-group/ki-radio-group.js';
+export { KiRadio } from './components/ki-radio/ki-radio.js';
+export type * from './components/ki-radio/ki-radio.js';

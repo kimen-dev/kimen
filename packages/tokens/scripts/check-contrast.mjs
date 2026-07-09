@@ -2,6 +2,14 @@ import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const MIN_RATIO = 4.5;
+// WCAG 1.4.11: a non-text UI graphic needs only 3:1, not the 4.5:1 text bar.
+const NON_TEXT_MIN_RATIO = 3;
+// Components whose `-fg`/`-bg` cells paint a non-text control indicator (a
+// radio's ring and selected dot), NOT label text — the label uses semantic
+// --ki-text-* tokens, checked separately via CONTRAST_PAIRS. Holding these to
+// 4.5:1 is wrong; the original per-component checker set radio's dot cells to
+// 3:1 for exactly this reason (Codex review of 007).
+const NON_TEXT_COMPONENTS = new Set(['radio']);
 const THEMES = [
   { name: 'onmars', stylesheet: new URL('../dist/css/tokens.css', import.meta.url) },
   { name: 'material3', stylesheet: new URL('../dist/css/tokens.material3.css', import.meta.url) },
@@ -209,7 +217,12 @@ export function componentPairs(declarations) {
     }
     const fg = name.replace(/-bg$/u, '-fg');
     if (declarations.has(fg)) {
-      pairs.push({ component: match[1], text: fg, surface: name });
+      pairs.push({
+        component: match[1],
+        text: fg,
+        surface: name,
+        minRatio: NON_TEXT_COMPONENTS.has(match[1]) ? NON_TEXT_MIN_RATIO : MIN_RATIO,
+      });
     }
   }
 
@@ -239,9 +252,10 @@ function evaluateStylesheet(theme, stylesheet) {
       const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
       const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
       const ratio = contrastRatio(text, surface);
+      const min = pair.minRatio ?? MIN_RATIO;
 
-      if (ratio < MIN_RATIO) {
-        failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio}`);
+      if (ratio < min) {
+        failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio} (min ${min})`);
       }
     }
   }
@@ -272,12 +286,16 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const failures = checkContrast();
 
   if (failures.length > 0) {
-    console.error(`Contrast check failed. Minimum ratio: ${MIN_RATIO}:1`);
+    console.error(
+      `Contrast check failed. Text ${MIN_RATIO}:1, non-text control ${NON_TEXT_MIN_RATIO}:1 (WCAG 1.4.3/1.4.11).`,
+    );
     for (const failure of failures) {
       console.error(`- ${failure}`);
     }
     process.exit(1);
   }
 
-  console.log(`Contrast check passed. Minimum ratio: ${MIN_RATIO}:1`);
+  console.log(
+    `Contrast check passed. Text ${MIN_RATIO}:1, non-text control ${NON_TEXT_MIN_RATIO}:1 (WCAG 1.4.3/1.4.11).`,
+  );
 }
