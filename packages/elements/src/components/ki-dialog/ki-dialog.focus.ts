@@ -1,12 +1,18 @@
 export function resolveEntryFocusTarget(_host: HTMLElement): HTMLElement | null {
-  const slotted = [..._host.children].filter((child): child is HTMLElement => child.nodeType === 1);
-  const autofocus = slotted.find((child) => hasAutofocus(child) && isFocusable(child));
+  const focusable = resolveFocusableTargets(_host);
+  const autofocus = focusable.find(hasAutofocus);
 
   if (autofocus) {
     return autofocus;
   }
 
-  return slotted.find(isFocusable) ?? null;
+  return focusable[0] ?? null;
+}
+
+export function resolveFocusableTargets(_host: HTMLElement): HTMLElement[] {
+  return [..._host.children]
+    .filter((child): child is HTMLElement => child.nodeType === 1)
+    .filter(isFocusable);
 }
 
 function hasAutofocus(element: HTMLElement): boolean {

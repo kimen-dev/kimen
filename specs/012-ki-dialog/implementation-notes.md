@@ -22,3 +22,12 @@ closed anatomy, S5, and pure helper logic.
   fails in S10 because the background Settings link remains exposed to the
   role query while open, and the removed-invoker focus fallback lands on the
   host instead of `document.body`.
+
+## Focus contingencies
+
+- T015: Chromium real-browser tests exposed two shadow/slotted focus gaps:
+  Tab from a slotted footer action did not wrap through the native dialog loop,
+  so `ki-dialog` listens for Tab while open and wraps only among slotted
+  focusable targets; and removed-invoker/initial-open close could leave focus
+  on the host, so the close notification is deferred one task and host fallback
+  is moved to `document.body` with `preventScroll`.

@@ -10,6 +10,7 @@ import {
   type EventEmitter,
 } from '@stencil/core';
 import { isOutsideRect } from './ki-dialog.backdrop';
+import { resolveEntryFocusTarget, resolveFocusableTargets } from './ki-dialog.focus';
 
 /** Close reason reported by `ki-close`. */
 export type KiDialogCloseReason = 'method' | 'escape' | 'backdrop';
@@ -109,6 +110,7 @@ export class KiDialog {
       this.openObserver = new MutationObserver(this.handleHostMutation);
       this.openObserver.observe(this.host, { attributeFilter: ['open'] });
     }
+    document.addEventListener('keydown', this.handleKeyDown, { capture: true });
     this.updateFooterState();
     this.syncDialogToHost();
   }
@@ -116,6 +118,7 @@ export class KiDialog {
   disconnectedCallback(): void {
     this.backdropArmed = false;
     this.openObserver?.disconnect();
+    document.removeEventListener('keydown', this.handleKeyDown, { capture: true });
   }
 
   /**
@@ -174,7 +177,10 @@ export class KiDialog {
     }
     this.host.removeAttribute('open');
 
-    this.kiClose.emit({ reason });
+    setTimeout(() => {
+      this.moveHostFallbackFocusToBody();
+      this.kiClose.emit({ reason });
+    }, 0);
   };
 
   private readonly handlePointerDown = (event: PointerEvent): void => {
@@ -211,6 +217,37 @@ export class KiDialog {
     this.updateFooterState();
   };
 
+  private readonly handleKeyDown = (event: KeyboardEvent): void => {
+    if (event.key !== 'Tab' || !this.dialog?.open) {
+      return;
+    }
+
+    const targets = resolveFocusableTargets(this.host);
+    if (targets.length === 0) {
+      event.preventDefault();
+      this.dialog.focus();
+      return;
+    }
+
+    const active = document.activeElement;
+    const first = targets[0];
+    const last = targets[targets.length - 1];
+    if (!first || !last) {
+      return;
+    }
+
+    if (event.shiftKey && active === first) {
+      event.preventDefault();
+      last.focus();
+      return;
+    }
+
+    if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
   private readonly handleHostMutation = (): void => {
     const hasOpenAttribute = this.host.hasAttribute('open');
     if (this.open !== hasOpenAttribute) {
@@ -233,11 +270,44 @@ export class KiDialog {
 
     if (this.open && !this.dialog.open) {
       this.dialog.showModal();
+      this.assistFocusEntry();
       return;
     }
 
     if (!this.open && this.dialog.open) {
       this.dialog.close();
+    }
+  }
+
+  private assistFocusEntry(): void {
+    if (!this.dialog) {
+      return;
+    }
+
+    const target = resolveEntryFocusTarget(this.host);
+    if (target) {
+      if (document.activeElement !== target) {
+        target.focus();
+      }
+      return;
+    }
+
+    if (document.activeElement !== this.dialog) {
+      this.dialog.focus();
+    }
+  }
+
+  private moveHostFallbackFocusToBody(): void {
+    if (document.activeElement === this.host) {
+      const hadTabindex = document.body.hasAttribute('tabindex');
+      const previousTabindex = document.body.getAttribute('tabindex');
+      document.body.tabIndex = -1;
+      document.body.focus({ preventScroll: true });
+      if (hadTabindex && previousTabindex !== null) {
+        document.body.setAttribute('tabindex', previousTabindex);
+      } else {
+        document.body.removeAttribute('tabindex');
+      }
     }
   }
 
@@ -247,7 +317,7 @@ export class KiDialog {
     return (
       // Native modal <dialog> receives pointer/click events retargeted from
       // ::backdrop; keyboard behavior is the platform close request.
-      // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
       <dialog
         part="dialog"
         ref={this.setDialogRef}
@@ -256,6 +326,7 @@ export class KiDialog {
         onClose={this.handleNativeClose}
         onPointerDown={this.handlePointerDown}
         onClick={this.handleClick}
+        onKeyDown={this.handleKeyDown}
       >
         {heading ? (
           <h2 part="heading" id="heading">
