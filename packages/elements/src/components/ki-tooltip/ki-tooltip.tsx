@@ -75,8 +75,9 @@ export class KiTooltip {
     this.effectivePlacement = normalizePlacement(this.placement);
     this.host.addEventListener('pointerenter', this.handlePointerEnter);
     this.host.addEventListener('pointerleave', this.handlePointerLeave);
-    this.host.addEventListener('focus', this.handleFocusIn, { capture: true });
-    this.host.addEventListener('blur', this.handleFocusOut, { capture: true });
+    // focusin/focusout bubble and compose across the shadow boundary, so they
+    // catch focus on the slotted trigger — no redundant capturing focus/blur
+    // pair (review 013 minor).
     this.host.addEventListener('focusin', this.handleFocusIn);
     this.host.addEventListener('focusout', this.handleFocusOut);
   }
@@ -84,8 +85,6 @@ export class KiTooltip {
   disconnectedCallback(): void {
     this.host.removeEventListener('pointerenter', this.handlePointerEnter);
     this.host.removeEventListener('pointerleave', this.handlePointerLeave);
-    this.host.removeEventListener('focus', this.handleFocusIn, { capture: true });
-    this.host.removeEventListener('blur', this.handleFocusOut, { capture: true });
     this.host.removeEventListener('focusin', this.handleFocusIn);
     this.host.removeEventListener('focusout', this.handleFocusOut);
     this.clearTimer();
@@ -237,6 +236,11 @@ export class KiTooltip {
     this.listeningForEscape = false;
   }
 
+  // v1 owns the trigger's `aria-description` outright: it is written on reveal
+  // and removed on teardown/blank-label. This DESTROYS any consumer-authored
+  // aria-description (documented usage constraint — do not wrap triggers that
+  // carry their own description machinery). aria-describedby is untouched and
+  // wins accname computation, so that path stays safe.
   private clearTriggerDescription(): void {
     if (!this.trigger) {
       return;

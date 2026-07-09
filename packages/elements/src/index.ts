@@ -3,4 +3,8 @@
 export { KiButton } from './components/ki-button/ki-button.js';
 export type * from './components/ki-button/ki-button.js';
 export { KiTooltip } from './components/ki-tooltip/ki-tooltip.js';
-export type * from './components/ki-tooltip/ki-tooltip.position.js';
+// Only the placement union is public API; the positioning module's rect /
+// input / direction geometry types are internal and must not enter the
+// package's public type contract (review 013 Important — export type * would
+// lock them in as MAJOR-versioned surface on first publish).
+export type { KiTooltipPlacement } from './components/ki-tooltip/ki-tooltip.position.js';
