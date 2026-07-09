@@ -221,6 +221,59 @@ Methods: none
 
 CSS custom properties: none
 
+### ki-list
+
+A non-interactive vertical list container for read-only collections of similar entries composed with `ki-list-item` children.
+
+When to use: settings, contacts, results or activity feeds where each item
+composes leading media, primary text, optional secondary text and trailing
+meta or a slotted control.
+When NOT to use: menus, selectable option lists, tabular data, navigation,
+whole-item clickable rows or lone items outside a list.
+
+Attributes: none
+
+Slots:
+- (default): `ki-list-item` children. Other children are unsupported.
+
+Parts:
+- `list`: List surface that owns background, padding, item gap and between-item divider styling.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
+### ki-list-item
+
+A non-interactive item inside `ki-list`, composed from leading media, primary text, optional secondary text and trailing media or meta.
+
+When to use: only as a child of `ki-list`, for one read-only entry in a
+similar vertical collection.
+When NOT to use: outside `ki-list`, as a menu item, selectable option,
+tabular row, navigation link or whole-item clickable control.
+
+Attributes: none
+
+Slots:
+- (default): Primary text line.
+- `end`: Trailing media, meta text or a slotted control.
+- `secondary`: Supporting text below the primary line. Its presence selects the multi-line min-height token.
+- `start`: Leading media such as an icon, avatar or image.
+
+Parts:
+- `content`: Text column containing primary and secondary lines.
+- `end`: Trailing region wrapper.
+- `item`: Item row surface and layout container.
+- `start`: Leading region wrapper.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
 ### ki-progress
 
 A token-styled, non-interactive progress indicator for known or unknown duration work.

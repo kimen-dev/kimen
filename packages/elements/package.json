@@ -149,6 +149,32 @@
       "name": "ki-progress worst case (component + full Stencil runtime, first component on a page)",
       "path": "dist/components/ki-progress.js",
       "limit": "25 KB"
+    },
+    {
+      "name": "ki-list marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": "dist/components/ki-list.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-list worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-list.js",
+      "limit": "25 KB"
+    },
+    {
+      "name": "ki-list-item marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": "dist/components/ki-list-item.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-list-item worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-list-item.js",
+      "limit": "25 KB"
     }
   ],
   "nx": {

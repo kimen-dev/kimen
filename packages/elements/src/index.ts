@@ -24,3 +24,7 @@ export { KiRadio } from './components/ki-radio/ki-radio.js';
 export type * from './components/ki-radio/ki-radio.js';
 export { KiProgress } from './components/ki-progress/ki-progress.js';
 export type { KiProgressShape } from './components/ki-progress/ki-progress.js';
+export { KiList } from './components/ki-list/ki-list.js';
+export type * from './components/ki-list/ki-list.js';
+export { KiListItem } from './components/ki-list-item/ki-list-item.js';
+export type * from './components/ki-list-item/ki-list-item.js';

@@ -946,6 +946,128 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/ki-list/ki-list.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiList",
+          "customElement": true,
+          "tagName": "ki-list",
+          "description": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.",
+          "whenToUse": "settings, contacts, results or activity feeds where each item\ncomposes leading media, primary text, optional secondary text and trailing\nmeta or a slotted control.",
+          "whenNotToUse": "menus, selectable option lists, tabular data, navigation,\nwhole-item clickable rows or lone items outside a list.",
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "`ki-list-item` children. Other children are unsupported."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "list",
+              "description": "List surface that owns background, padding, item gap and\nbetween-item divider styling."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiList",
+          "declaration": {
+            "name": "KiList",
+            "module": "src/components/ki-list/ki-list.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-list",
+          "declaration": {
+            "name": "KiList",
+            "module": "src/components/ki-list/ki-list.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/ki-list-item/ki-list-item.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiListItem",
+          "customElement": true,
+          "tagName": "ki-list-item",
+          "description": "A non-interactive item inside `ki-list`, composed from leading media,\nprimary text, optional secondary text and trailing media or meta.",
+          "whenToUse": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection.",
+          "whenNotToUse": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control.",
+          "attributes": [],
+          "members": [],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Primary text line."
+            },
+            {
+              "name": "end",
+              "description": "Trailing media, meta text or a slotted control."
+            },
+            {
+              "name": "secondary",
+              "description": "Supporting text below the primary line. Its presence\nselects the multi-line min-height token."
+            },
+            {
+              "name": "start",
+              "description": "Leading media such as an icon, avatar or image."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "content",
+              "description": "Text column containing primary and secondary lines."
+            },
+            {
+              "name": "end",
+              "description": "Trailing region wrapper."
+            },
+            {
+              "name": "item",
+              "description": "Item row surface and layout container."
+            },
+            {
+              "name": "start",
+              "description": "Leading region wrapper."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiListItem",
+          "declaration": {
+            "name": "KiListItem",
+            "module": "src/components/ki-list-item/ki-list-item.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-list-item",
+          "declaration": {
+            "name": "KiListItem",
+            "module": "src/components/ki-list-item/ki-list-item.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/ki-progress/ki-progress.tsx",
       "declarations": [
         {

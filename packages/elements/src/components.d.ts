@@ -226,6 +226,27 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A non-interactive vertical list container for read-only collections of
+     * similar entries composed with `ki-list-item` children.
+     * @whenToUse settings, contacts, results or activity feeds where each item
+     * composes leading media, primary text, optional secondary text and trailing
+     * meta or a slotted control.
+     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
+     * whole-item clickable rows or lone items outside a list.
+     */
+    interface KiList {
+    }
+    /**
+     * A non-interactive item inside `ki-list`, composed from leading media,
+     * primary text, optional secondary text and trailing media or meta.
+     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
+     * similar vertical collection.
+     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
+     * tabular row, navigation link or whole-item clickable control.
+     */
+    interface KiListItem {
+    }
+    /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
      * @whenToUse communicate advancement of an ongoing task such as upload,
@@ -517,6 +538,35 @@ declare global {
         new (): HTMLKiInputElement;
     };
     /**
+     * A non-interactive vertical list container for read-only collections of
+     * similar entries composed with `ki-list-item` children.
+     * @whenToUse settings, contacts, results or activity feeds where each item
+     * composes leading media, primary text, optional secondary text and trailing
+     * meta or a slotted control.
+     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
+     * whole-item clickable rows or lone items outside a list.
+     */
+    interface HTMLKiListElement extends Components.KiList, HTMLStencilElement {
+    }
+    var HTMLKiListElement: {
+        prototype: HTMLKiListElement;
+        new (): HTMLKiListElement;
+    };
+    /**
+     * A non-interactive item inside `ki-list`, composed from leading media,
+     * primary text, optional secondary text and trailing media or meta.
+     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
+     * similar vertical collection.
+     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
+     * tabular row, navigation link or whole-item clickable control.
+     */
+    interface HTMLKiListItemElement extends Components.KiListItem, HTMLStencilElement {
+    }
+    var HTMLKiListItemElement: {
+        prototype: HTMLKiListItemElement;
+        new (): HTMLKiListItemElement;
+    };
+    /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
      * @whenToUse communicate advancement of an ongoing task such as upload,
@@ -602,6 +652,8 @@ declare global {
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-input": HTMLKiInputElement;
+        "ki-list": HTMLKiListElement;
+        "ki-list-item": HTMLKiListItemElement;
         "ki-progress": HTMLKiProgressElement;
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
@@ -836,6 +888,27 @@ declare namespace LocalJSX {
           * @default ''
          */
         "value"?: string;
+    }
+    /**
+     * A non-interactive vertical list container for read-only collections of
+     * similar entries composed with `ki-list-item` children.
+     * @whenToUse settings, contacts, results or activity feeds where each item
+     * composes leading media, primary text, optional secondary text and trailing
+     * meta or a slotted control.
+     * @whenNotToUse menus, selectable option lists, tabular data, navigation,
+     * whole-item clickable rows or lone items outside a list.
+     */
+    interface KiList {
+    }
+    /**
+     * A non-interactive item inside `ki-list`, composed from leading media,
+     * primary text, optional secondary text and trailing media or meta.
+     * @whenToUse only as a child of `ki-list`, for one read-only entry in a
+     * similar vertical collection.
+     * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
+     * tabular row, navigation link or whole-item clickable control.
+     */
+    interface KiListItem {
     }
     /**
      * A token-styled, non-interactive progress indicator for known or unknown
@@ -1109,6 +1182,8 @@ declare namespace LocalJSX {
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
+        "ki-list": KiList;
+        "ki-list-item": KiListItem;
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
@@ -1187,6 +1262,25 @@ declare module "@stencil/core" {
              * stepper entry, or placeholder-only labeling.
              */
             "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;
+            /**
+             * A non-interactive vertical list container for read-only collections of
+             * similar entries composed with `ki-list-item` children.
+             * @whenToUse settings, contacts, results or activity feeds where each item
+             * composes leading media, primary text, optional secondary text and trailing
+             * meta or a slotted control.
+             * @whenNotToUse menus, selectable option lists, tabular data, navigation,
+             * whole-item clickable rows or lone items outside a list.
+             */
+            "ki-list": LocalJSX.IntrinsicElements["ki-list"] & JSXBase.HTMLAttributes<HTMLKiListElement>;
+            /**
+             * A non-interactive item inside `ki-list`, composed from leading media,
+             * primary text, optional secondary text and trailing media or meta.
+             * @whenToUse only as a child of `ki-list`, for one read-only entry in a
+             * similar vertical collection.
+             * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
+             * tabular row, navigation link or whole-item clickable control.
+             */
+            "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
             /**
              * A token-styled, non-interactive progress indicator for known or unknown
              * duration work.

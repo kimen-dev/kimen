@@ -1428,6 +1428,146 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-list/ki-list.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-list",
+      "docs": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "settings, contacts, results or activity feeds where each item\ncomposes leading media, primary text, optional secondary text and trailing\nmeta or a slotted control."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "menus, selectable option lists, tabular data, navigation,\nwhole-item clickable rows or lone items outside a list."
+        },
+        {
+          "name": "slot",
+          "text": "- `ki-list-item` children. Other children are unsupported."
+        },
+        {
+          "name": "part",
+          "text": "list - List surface that owns background, padding, item gap and\nbetween-item divider styling."
+        }
+      ],
+      "usage": {},
+      "props": [],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "`ki-list-item` children. Other children are unsupported."
+        }
+      ],
+      "parts": [
+        {
+          "name": "list",
+          "docs": "List surface that owns background, padding, item gap and\nbetween-item divider styling."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-list-item/ki-list-item.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-list-item",
+      "docs": "A non-interactive item inside `ki-list`, composed from leading media,\nprimary text, optional secondary text and trailing media or meta.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "only as a child of `ki-list`, for one read-only entry in a\nsimilar vertical collection."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "outside `ki-list`, as a menu item, selectable option,\ntabular row, navigation link or whole-item clickable control."
+        },
+        {
+          "name": "slot",
+          "text": "start - Leading media such as an icon, avatar or image."
+        },
+        {
+          "name": "slot",
+          "text": "- Primary text line."
+        },
+        {
+          "name": "slot",
+          "text": "secondary - Supporting text below the primary line. Its presence\nselects the multi-line min-height token."
+        },
+        {
+          "name": "slot",
+          "text": "end - Trailing media, meta text or a slotted control."
+        },
+        {
+          "name": "part",
+          "text": "item - Item row surface and layout container."
+        },
+        {
+          "name": "part",
+          "text": "start - Leading region wrapper."
+        },
+        {
+          "name": "part",
+          "text": "content - Text column containing primary and secondary lines."
+        },
+        {
+          "name": "part",
+          "text": "end - Trailing region wrapper."
+        }
+      ],
+      "usage": {},
+      "props": [],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Primary text line."
+        },
+        {
+          "name": "end",
+          "docs": "Trailing media, meta text or a slotted control."
+        },
+        {
+          "name": "secondary",
+          "docs": "Supporting text below the primary line. Its presence\nselects the multi-line min-height token."
+        },
+        {
+          "name": "start",
+          "docs": "Leading media such as an icon, avatar or image."
+        }
+      ],
+      "parts": [
+        {
+          "name": "content",
+          "docs": "Text column containing primary and secondary lines."
+        },
+        {
+          "name": "end",
+          "docs": "Trailing region wrapper."
+        },
+        {
+          "name": "item",
+          "docs": "Item row surface and layout container."
+        },
+        {
+          "name": "start",
+          "docs": "Leading region wrapper."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-progress/ki-progress.tsx",
       "encapsulation": "shadow",
       "tag": "ki-progress",
