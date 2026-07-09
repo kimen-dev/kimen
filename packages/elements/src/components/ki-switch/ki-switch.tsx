@@ -142,6 +142,21 @@ export class KiSwitch {
     this.internals.setFormValue(resolveSubmittedValue(this.checked, this.value));
   }
 
+  // The native `input` event is composed and reaches page listeners BEFORE
+  // `change`, so `checked` and the form value must be current by then — a
+  // consumer reading `new FormData(form)` from an `input` listener otherwise
+  // sees the previous state (S1, codex review). Update on input; keep the
+  // composed `change` dispatch below.
+  private readonly handleInput = (event: Event): void => {
+    const input = event.currentTarget as HTMLInputElement;
+    if (this.effectiveDisabled) {
+      input.checked = this.checked;
+      return;
+    }
+    this.checked = input.checked;
+    this.syncFormValue();
+  };
+
   private readonly handleChange = (event: Event): void => {
     const input = event.currentTarget as HTMLInputElement;
     if (this.effectiveDisabled) {
@@ -164,6 +179,7 @@ export class KiSwitch {
           disabled={this.effectiveDisabled}
           name={this.name ?? ''}
           value={this.value ?? 'on'}
+          onInput={this.handleInput}
           onChange={this.handleChange}
         />
         <span part="track">

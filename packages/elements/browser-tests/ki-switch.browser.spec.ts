@@ -310,6 +310,21 @@ describe('ki-switch in a real browser', () => {
     expect(formValue(form, 'newsletter')).toBeNull();
   });
 
+  it('S1 exposes the current checked and form value during the composed input event', async () => {
+    const { form, el } = await mountInForm('name="newsletter"');
+    let checkedDuringInput: boolean | undefined;
+    let formValueDuringInput: FormDataEntryValue | null | undefined;
+    el.addEventListener('input', () => {
+      checkedDuringInput = el.checked;
+      formValueDuringInput = formValue(form, 'newsletter');
+    });
+
+    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
+
+    expect(checkedDuringInput).toBe(true);
+    expect(formValueDuringInput).toBe('on');
+  });
+
   it('S12 resetting restores an initially on switch after it was toggled off', async () => {
     const { form, el } = await mountInForm('name="newsletter" checked');
 
