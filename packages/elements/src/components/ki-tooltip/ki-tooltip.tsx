@@ -59,6 +59,10 @@ export class KiTooltip {
   private pointerWithin = false;
   private focusWithin = false;
   private trigger: Element | undefined;
+  // The trigger's consumer-authored aria-description, captured when the trigger
+  // is assigned so it can be restored on teardown/blank-label instead of being
+  // destroyed. `null` = the author set none.
+  private authoredDescription: string | null = null;
   private tooltipEl: HTMLDivElement | undefined;
   private timer: ReturnType<typeof setTimeout> | undefined;
   private listeningForEscape = false;
@@ -124,9 +128,17 @@ export class KiTooltip {
   }
 
   private readonly handleSlotChange = (event: Event): void => {
-    this.clearTriggerDescription();
     const slot = event.currentTarget as HTMLSlotElement;
-    this.trigger = slot.assignedElements()[0];
+    const nextTrigger = slot.assignedElements()[0];
+    if (nextTrigger !== this.trigger) {
+      // Restore the outgoing trigger, then snapshot the incoming trigger's own
+      // description BEFORE we overwrite it — re-capture only on a real trigger
+      // change so a content-only slotchange never mistakes our label for the
+      // author's value.
+      this.clearTriggerDescription();
+      this.trigger = nextTrigger;
+      this.authoredDescription = nextTrigger?.getAttribute('aria-description') ?? null;
+    }
     this.syncTriggerDescription();
     this.hideNow();
   };
@@ -253,17 +265,27 @@ export class KiTooltip {
     this.listeningForEscape = false;
   }
 
-  // v1 owns the trigger's `aria-description` outright: it is written on reveal
-  // and removed on teardown/blank-label. This DESTROYS any consumer-authored
-  // aria-description (documented usage constraint — do not wrap triggers that
-  // carry their own description machinery). aria-describedby is untouched and
+  // While the tooltip has a label it owns the trigger's `aria-description`; on
+  // teardown/blank-label it RESTORES the consumer's original value (captured on
+  // assignment) rather than destroying it. aria-describedby is untouched and
   // wins accname computation, so that path stays safe.
+  //
+  // Cross-shadow limitation: when the trigger is itself a focus-delegating
+  // custom element (its real focus target lives in a shadow root, e.g.
+  // ki-button), `aria-description` set on the host is not merged into the
+  // delegated inner control's description by assistive tech. Announcing there
+  // requires the trigger to forward the description from its own shadow — the
+  // tooltip cannot reach across that boundary, and must not try to.
   private clearTriggerDescription(): void {
     if (!this.trigger) {
       return;
     }
 
-    this.trigger.removeAttribute('aria-description');
+    if (this.authoredDescription !== null) {
+      this.trigger.setAttribute('aria-description', this.authoredDescription);
+    } else {
+      this.trigger.removeAttribute('aria-description');
+    }
   }
 
   private syncTriggerDescription(): void {
@@ -272,7 +294,7 @@ export class KiTooltip {
     }
 
     if (!this.hasLabel) {
-      this.trigger.removeAttribute('aria-description');
+      this.clearTriggerDescription();
       return;
     }
 

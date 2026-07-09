@@ -287,6 +287,38 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(trigger.getAttribute('aria-description')).toBeNull();
   });
 
+  it('S9 preserves and restores a consumer-authored trigger aria-description', async () => {
+    ensureTokens();
+    const host = document.createElement('ki-tooltip') as KiTooltipElement;
+    host.label = 'Send immediately';
+    const trigger = document.createElement('button');
+    trigger.textContent = 'Send';
+    trigger.setAttribute('aria-description', 'Author note');
+    host.append(trigger);
+    document.body.appendChild(host);
+    await customElements.whenDefined('ki-tooltip');
+    const deadline = Date.now() + 500;
+    while (!host.shadowRoot?.hasChildNodes() && Date.now() < deadline) {
+      await nextFrame();
+    }
+    await nextFrame();
+
+    // While labeled, the tooltip owns the description.
+    expect(trigger.getAttribute('aria-description')).toBe('Send immediately');
+
+    // Clearing the label restores the author's original description, not null.
+    host.label = '';
+    await nextFrame();
+    expect(trigger.getAttribute('aria-description')).toBe('Author note');
+
+    // Relabeling takes ownership again; teardown restores the author's value.
+    host.label = 'Send now';
+    await nextFrame();
+    expect(trigger.getAttribute('aria-description')).toBe('Send now');
+    host.remove();
+    expect(trigger.getAttribute('aria-description')).toBe('Author note');
+  });
+
   it('S4 Tab focus shows the tooltip immediately even when show-delay is non-zero', async () => {
     const { trigger } = await mount({ showDelay: '60000ms' });
 
