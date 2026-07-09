@@ -1,6 +1,12 @@
 import { Component, Element, Event, Host, Prop, Watch, h } from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
 import {
+  firstSelectableIndex,
+  lastSelectableIndex,
+  navigationIntentForKey,
+  nextSelectableIndex,
+} from './ki-tabs.keyboard';
+import {
   buildPairing,
   resolveSelection,
   type PairingRecord,
@@ -101,6 +107,41 @@ export class KiTabs {
     }
 
     this.selectTab(target, true);
+  };
+
+  private readonly handleKeyDown = (event: KeyboardEvent): void => {
+    const target = this.tabFromEvent(event);
+    if (!target) {
+      return;
+    }
+
+    const dir = this.host.matches(':dir(rtl)') ? 'rtl' : 'ltr';
+    const intent = navigationIntentForKey(event.key, dir);
+    if (intent === null) {
+      return;
+    }
+
+    const currentIndex = this.tabRoster.indexOf(target);
+    const records = this.tabRecords();
+    const nextIndex =
+      intent === 'first'
+        ? firstSelectableIndex(records)
+        : intent === 'last'
+          ? lastSelectableIndex(records)
+          : nextSelectableIndex(records, currentIndex, intent);
+
+    if (nextIndex === null) {
+      return;
+    }
+
+    const nextTab = this.tabRoster[nextIndex];
+    if (!nextTab) {
+      return;
+    }
+
+    event.preventDefault();
+    this.selectTab(nextTab, true);
+    nextTab.focus();
   };
 
   private tabFromEvent(event: Event): HTMLElement | null {
@@ -283,7 +324,7 @@ export class KiTabs {
 
   render() {
     return (
-      <Host onClick={this.handleClick}>
+      <Host onClick={this.handleClick} onKeyDown={this.handleKeyDown}>
         <div part="tablist" role="tablist" aria-label={this.label}>
           <slot name="tab" onSlotchange={this.handleSlotChange} />
         </div>
