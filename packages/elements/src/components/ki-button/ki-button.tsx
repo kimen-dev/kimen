@@ -1,4 +1,4 @@
-import { AttachInternals, Component, Prop, State, h } from '@stencil/core';
+import { AttachInternals, Component, Element, Prop, State, h } from '@stencil/core';
 import { normalizeKiButtonType } from './ki-button.form';
 
 export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';
@@ -27,6 +27,7 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
   formAssociated: true,
 })
 export class KiButton {
+  @Element() private readonly host!: HTMLElement;
   @AttachInternals() private readonly internals!: ElementInternals;
 
   /**
@@ -93,9 +94,42 @@ export class KiButton {
   @Prop({ reflect: true }) disabled = false;
 
   @State() private formDisabled = false;
+  private button: HTMLButtonElement | undefined;
+  private descriptionObserver?: MutationObserver;
 
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
+  }
+
+  componentDidLoad(): void {
+    this.syncForwardedDescription();
+    if (typeof MutationObserver !== 'undefined') {
+      this.descriptionObserver = new MutationObserver(() => {
+        this.syncForwardedDescription();
+      });
+      this.descriptionObserver.observe(this.host, {
+        attributeFilter: ['aria-description'],
+      });
+    }
+  }
+
+  disconnectedCallback(): void {
+    this.descriptionObserver?.disconnect();
+  }
+
+  // Assistive tech announces the DELEGATED inner button, not this focus-
+  // delegating host, so an `aria-description` set on the host (e.g. by a
+  // wrapping ki-tooltip) is never announced. Mirror it onto the inner button.
+  // Done imperatively, not in JSX: aria-description is a valid ARIA 1.3 global
+  // (jsx-a11y's allow-list is stale and flags it), and Stencil's vdom never
+  // renders this attribute, so an imperative write survives re-renders intact.
+  private syncForwardedDescription(): void {
+    const description = this.host.getAttribute('aria-description');
+    if (description === null) {
+      this.button?.removeAttribute('aria-description');
+    } else {
+      this.button?.setAttribute('aria-description', description);
+    }
   }
 
   private readonly handleClick = (event: MouseEvent): void => {
@@ -150,6 +184,9 @@ export class KiButton {
   render() {
     return (
       <button
+        ref={(el) => {
+          this.button = el;
+        }}
         part="button"
         type="button"
         disabled={this.effectiveDisabled}

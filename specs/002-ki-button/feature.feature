@@ -47,6 +47,14 @@ Feature: Button
     When the accessibility tree is queried
     Then the button is exposed as unavailable
 
+  # S14
+  Scenario: An accessible description on the host reaches the focusable button
+    Given a button whose host carries an accessible description, such as one
+      supplied by a wrapping tooltip
+    When the accessibility tree is queried
+    Then the description is present on the internal button that receives focus,
+      and it tracks later changes to and removal of the host description
+
   # Family: form participation
   # S7
   Scenario: A submit button submits its form with the form data

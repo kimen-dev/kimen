@@ -172,6 +172,48 @@ describe('ki-button in a real browser', () => {
     expect(button).toHaveProperty('disabled', true);
   });
 
+  it('S14 forwards a host aria-description onto the delegated inner button', async () => {
+    cleanup();
+    ensureTokens();
+    // Focus delegates to the inner <button>, so a description on the host (e.g.
+    // written by a wrapping ki-tooltip) is only announced once mirrored down.
+    const el = document.createElement('ki-button') as KiButtonElement;
+    el.setAttribute('aria-description', 'Sends immediately');
+    el.textContent = 'Save';
+    document.body.append(el);
+    await customElements.whenDefined('ki-button');
+    const deadline = Date.now() + 500;
+    while (!el.shadowRoot?.hasChildNodes() && Date.now() < deadline) {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    const button = requireButton(el);
+
+    // The observer schedules a re-render, so let the state change settle.
+    const settle = async (): Promise<void> => {
+      await waitForStyles();
+      await waitForStyles();
+    };
+
+    // Present at mount.
+    expect(button.getAttribute('aria-description')).toBe('Sends immediately');
+
+    // Tracks a later change (a tooltip re-labelling its trigger).
+    el.setAttribute('aria-description', 'Now sending');
+    await settle();
+    expect(button.getAttribute('aria-description')).toBe('Now sending');
+
+    // Tracks removal (tooltip teardown).
+    el.removeAttribute('aria-description');
+    await settle();
+    expect(button.hasAttribute('aria-description')).toBe(false);
+
+    // No axe violations with the forwarded description present.
+    el.setAttribute('aria-description', 'Sends immediately');
+    await settle();
+    const results = await axe.run(document.body);
+    expect(results.violations).toEqual([]);
+  });
+
   it('S2 observes no activation from a real click on a disabled button', async () => {
     cleanup();
     const el = await mount('Save', { disabled: true });
