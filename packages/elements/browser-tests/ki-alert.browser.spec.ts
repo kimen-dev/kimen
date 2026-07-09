@@ -378,6 +378,51 @@ describe('ki-alert in a real browser', () => {
     expect(el.shadowRoot?.activeElement).not.toBe(button);
   });
 
+  it('S16 skips a hidden following control and hands focus to the next visible one', async () => {
+    cleanup();
+    const el = await mount('Backup completed', { dismissible: true });
+    const hidden = document.createElement('button');
+    hidden.textContent = 'Hidden';
+    hidden.hidden = true;
+    const visible = document.createElement('button');
+    visible.textContent = 'Visible';
+    document.body.append(hidden, visible);
+    const button = dismissButton(el);
+
+    button?.focus();
+    await userEvent.keyboard('{Enter}');
+    await nextFrame();
+
+    expect(document.activeElement).toBe(visible);
+  });
+
+  it('S16 hands focus to a following focus-delegating custom element', async () => {
+    cleanup();
+    if (!customElements.get('x-delegating')) {
+      customElements.define(
+        'x-delegating',
+        class extends HTMLElement {
+          connectedCallback(): void {
+            if (!this.shadowRoot) {
+              const root = this.attachShadow({ mode: 'open', delegatesFocus: true });
+              root.append(document.createElement('button'));
+            }
+          }
+        },
+      );
+    }
+    const el = await mount('Backup completed', { dismissible: true });
+    const delegating = document.createElement('x-delegating');
+    document.body.append(delegating);
+    const button = dismissButton(el);
+
+    button?.focus();
+    await userEvent.keyboard('{Enter}');
+    await nextFrame();
+
+    expect(document.activeElement).toBe(delegating);
+  });
+
   it('S6 keeps the dismiss target at least 24 by 24 CSS pixels', async () => {
     cleanup();
     const el = await mount('Backup completed', { dismissible: true });

@@ -99,6 +99,15 @@ export class KiAlert {
    */
   @Prop({ mutable: true, reflect: true }) dismissed = false;
 
+  /**
+   * Fired once after the user dismisses the alert — emitted after the alert is
+   * hidden and focus has been handed to the next control. `detail` is `null`
+   * and the event is not cancelable (the alert is already gone when it runs).
+   * When to use: record acknowledgement, or advance an application flow after a
+   * user closes the alert.
+   * When NOT to use: do not treat it as a veto point, and do not expect it for
+   * programmatic `dismissed` changes — it fires only for user activation.
+   */
   @Event({ eventName: 'ki-dismiss', bubbles: true, composed: true, cancelable: false })
   private readonly kiDismiss!: EventEmitter<null>;
 
