@@ -5,12 +5,12 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
-import { defineCustomElement } from '../dist/components/ki-option.js';
+import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 
 type KiOptionElement = HTMLElement & { label: string };
 
 beforeAll(() => {
-  defineCustomElement();
+  defineKiOption();
 });
 
 /** Stencil renders async: wait until the shadow root has content. */

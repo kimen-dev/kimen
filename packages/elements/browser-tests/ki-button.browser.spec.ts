@@ -8,7 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
-import { defineCustomElement } from '../dist/components/ki-button.js';
+import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 
 type KiButtonElement = HTMLElement & {
   disabled: boolean;
@@ -27,7 +27,7 @@ const tones = ['neutral', 'success', 'danger'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 beforeAll(() => {
-  defineCustomElement();
+  defineKiButton();
 });
 
 function ensureTokens(): void {
