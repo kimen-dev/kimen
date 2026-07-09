@@ -555,6 +555,16 @@
   --ki-card-header-padding: var(--ki-space-3xl);
   --ki-card-body-padding: var(--ki-space-3xl);
   --ki-card-footer-padding: var(--ki-space-3xl);
+  --ki-input-height: var(--ki-space-14xl);
+  --ki-input-min-target: var(--ki-space-7xl);
+  --ki-input-padding-inline: var(--ki-space-lg);
+  --ki-input-gap: var(--ki-space-xs);
+  --ki-input-label-gap: var(--ki-space-xs);
+  --ki-input-radius: var(--ki-radius-md);
+  --ki-input-icon-size: var(--ki-space-4xl);
+  --ki-input-border-width: var(--ki-space-xxs);
+  --ki-input-focus-ring-width: var(--ki-space-xxs);
+  --ki-input-focus-ring-offset: var(--ki-space-xxs);
   --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s0);
   --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s0);
@@ -753,6 +763,25 @@
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
   --ki-card-border-color: var(--ki-outline-none);
+  --ki-input-font-size: var(--ki-typography-size-body-1);
+  --ki-input-font-weight: var(--ki-typography-weight-body-normal);
+  --ki-input-line-height: var(--ki-typography-line-height-body-1);
+  --ki-input-label-font-size: var(--ki-typography-size-caption-2);
+  --ki-input-label-font-weight: var(--ki-typography-weight-body-medium);
+  --ki-input-label-line-height: var(--ki-typography-line-height-caption-2);
+  --ki-input-border-block-start-width: var(--ki-input-border-width);
+  --ki-input-border-block-end-width: var(--ki-input-border-width);
+  --ki-input-border-inline-start-width: var(--ki-input-border-width);
+  --ki-input-border-inline-end-width: var(--ki-input-border-width);
+  --ki-input-rest-border: var(--ki-outline-med-em);
+  --ki-input-hover-border: var(--ki-outline-high-em);
+  --ki-input-focus-border: var(--ki-outline-primary-high-em);
+  --ki-input-focus-label-fg: var(--ki-text-primary-med-em);
+  --ki-input-disabled-bg: var(--ki-surface-disabled-base-em);
+  --ki-input-disabled-border: var(--ki-outline-low-em);
+  --ki-input-readonly-border: var(--ki-outline-base-em);
+  --ki-input-invalid-border: var(--ki-outline-danger-high-em);
+  --ki-input-focus-ring-color: var(--ki-outline-primary-high-em);
   --ki-text-base: var(--ki-text-high-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. */
   --ki-text-muted: var(--ki-text-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. */
   --ki-button-primary-neutral-rest-fg: var(--ki-text-primary-on-primary);
@@ -763,6 +792,12 @@
   --ki-button-primary-success-active-fg: var(--ki-text-primary-on-success);
   --ki-card-bg: var(--ki-surface-raised);
   --ki-card-fg: var(--ki-text-high-em);
+  --ki-input-rest-bg: var(--ki-surface-base);
+  --ki-input-hover-bg: var(--ki-surface-base);
+  --ki-input-focus-bg: var(--ki-surface-base);
+  --ki-input-readonly-bg: var(--ki-surface-raised);
+  --ki-input-invalid-bg: var(--ki-surface-base);
+  --ki-input-invalid-label-fg: var(--ki-text-danger);
   --ki-button-primary-neutral-disabled-fg: var(--ki-text-muted);
   --ki-button-primary-success-disabled-fg: var(--ki-text-muted);
   --ki-button-primary-danger-disabled-fg: var(--ki-text-muted);
@@ -778,4 +813,20 @@
   --ki-button-ghost-neutral-disabled-fg: var(--ki-text-muted);
   --ki-button-ghost-success-disabled-fg: var(--ki-text-muted);
   --ki-button-ghost-danger-disabled-fg: var(--ki-text-muted);
+  --ki-input-rest-fg: var(--ki-text-base);
+  --ki-input-rest-label-fg: var(--ki-text-muted);
+  --ki-input-rest-placeholder-fg: var(--ki-text-muted);
+  --ki-input-hover-fg: var(--ki-text-base);
+  --ki-input-hover-label-fg: var(--ki-text-base);
+  --ki-input-hover-placeholder-fg: var(--ki-text-muted);
+  --ki-input-focus-fg: var(--ki-text-base);
+  --ki-input-focus-placeholder-fg: var(--ki-text-muted);
+  --ki-input-disabled-fg: var(--ki-text-muted);
+  --ki-input-disabled-label-fg: var(--ki-text-muted);
+  --ki-input-disabled-placeholder-fg: var(--ki-text-muted);
+  --ki-input-readonly-fg: var(--ki-text-base);
+  --ki-input-readonly-label-fg: var(--ki-text-muted);
+  --ki-input-readonly-placeholder-fg: var(--ki-text-muted);
+  --ki-input-invalid-fg: var(--ki-text-base);
+  --ki-input-invalid-placeholder-fg: var(--ki-text-muted);
 }

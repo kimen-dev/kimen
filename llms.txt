@@ -82,3 +82,39 @@ Events: none
 Methods: none
 
 CSS custom properties: none
+
+### ki-input
+
+A token-styled single-line text field with native input semantics.
+
+When to use: collect one line of free text from a person, always with a
+visible `label`; choose the `type` and `autocomplete` that match the entry
+purpose.
+When NOT to use: multiline text, predefined choices, boolean state, numeric
+stepper entry, or placeholder-only labeling.
+
+Attributes:
+- `autocomplete` (string | undefined): Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
+- `disabled` (boolean, default false): Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
+- `label` (string | undefined): Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
+- `name` (string | undefined): Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
+- `placeholder` (string | undefined): Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
+- `readonly` (boolean, default false): Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
+- `required` (boolean, default false): Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+- `type` ("email" | "password" | "search" | "tel" | "text" | "url", default 'text'): Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
+- `value` (string, default ''): Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
+
+Slots:
+- `end`: Trailing icon or text affix inside the field. Follows writing direction.
+- `start`: Leading icon or text affix inside the field. Follows writing direction.
+
+Parts:
+- `field`: Enclosure wrapper for background, border, radius and focus ring.
+- `input`: Internal native input that owns entry text, caret and selection.
+- `label`: Visible label that provides the accessible name.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
