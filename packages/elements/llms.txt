@@ -1,0 +1,191 @@
+# @kimen/elements — Kimen web components
+
+> Kimen web components (ki-*). Standards-first Stencil components, tokens-only styling, agent-legible by contract.
+
+Install with `pnpm add @kimen/elements`.
+
+Register individual components from the custom-elements bundle before using them:
+
+```ts
+import { defineCustomElement as defineKiButton } from '@kimen/elements/dist/components/ki-button.js';
+
+defineKiButton();
+```
+
+Load `@kimen/tokens/dist/css/tokens.css` once for the Mars default theme. Theme variants are selected with package-supported theme attributes and remain token-driven.
+
+## Components
+
+### ki-button
+
+A token-styled action button with native button semantics.
+
+When to use: trigger the single main action of a view, supporting actions
+in descending hierarchy, or confirming/destructive actions through tone.
+When NOT to use: navigation, icon-only actions, persistent toggles, or
+loading/progress semantics.
+
+Attributes:
+- `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+- `name` (string | undefined): Form-data key contributed when this button submits its form. When NOT to use: omit when no submitter value should be sent.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed button size. Every size keeps at least the minimum pointer target; choose the size that matches the density of the surrounding UI. When NOT to use: do not use `ki-button` for icon-only compact controls.
+- `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+- `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
+- `value` (string | undefined): Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
+- `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+
+Slots:
+- (default): Label content. This is the accessible name source.
+- `end`: Trailing icon or media. Follows writing direction.
+- `start`: Leading icon or media. Follows writing direction.
+
+Parts:
+- `button`: Internal native button.
+- `label`: Label wrapper around the default slot.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
+### ki-card
+
+A non-interactive card surface for grouping related content.
+
+When to use: group related media, heading, supporting text and actions into
+one scannable surface visually distinct from the page; fill any subset of
+regions. Supply the heading element yourself in the `header` slot — plain
+text slotted there carries no heading semantics for assistive technology.
+When NOT to use: as a button or link target, form control, fieldset, page
+landmark, section replacement or nested card. For an interactive card, slot
+the button or link INSIDE a region (whole-card interactivity is a future
+feature, not this component).
+
+Attributes: none
+
+Slots:
+- (default): Body region for supporting text or arbitrary composed content.
+- `footer`: Closing region for actions such as `ki-button`; no dedicated actions slot exists in v1.
+- `header`: Title region. The author supplies the heading element at the surrounding document level; plain text here carries no heading semantics.
+- `media`: Leading visual region for an image, video or illustration.
+
+Parts:
+- `body`: Body region wrapper around the default slot.
+- `card`: Card surface: background, border, radius, elevation and region gap.
+- `footer`: Footer region wrapper.
+- `header`: Header region wrapper.
+- `media`: Media region wrapper.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
+### ki-checkbox
+
+A form-associated checkbox for selecting independent options.
+
+When to use: selecting one or more independent options that a form submits
+later, including a "select all" parent that presents partial selection with
+`indeterminate`. Always provide a visible label in the default slot.
+When NOT to use: a single mutually exclusive choice, an immediate on/off
+effect, triggering an action, unlabeled/icon-only usage, or
+`checked="false"` to mean unchecked. Boolean attributes use presence
+semantics; omit `checked` to express unchecked.
+
+Attributes:
+- `checked` (boolean, default false): Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+- `disabled` (boolean, default false): Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
+- `indeterminate` (boolean, default false): Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
+- `name` (string | undefined): Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
+- `required` (boolean, default false): Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
+- `value` (string | undefined): Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
+
+Slots:
+- (default): Visible label content. This is the accessible name source and a native activation surface.
+
+Parts:
+- `control`: Visual checkbox box, border, focus ring and currentColor marks.
+- `label`: Label wrapper around the default slot.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
+### ki-input
+
+A token-styled single-line text field with native input semantics.
+
+When to use: collect one line of free text from a person, always with a
+visible `label`; choose the `type` and `autocomplete` that match the entry
+purpose.
+When NOT to use: multiline text, predefined choices, boolean state, numeric
+stepper entry, or placeholder-only labeling.
+
+Attributes:
+- `autocomplete` (string | undefined): Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
+- `disabled` (boolean, default false): Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
+- `label` (string | undefined): Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
+- `name` (string | undefined): Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
+- `placeholder` (string | undefined): Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
+- `readonly` (boolean, default false): Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
+- `required` (boolean, default false): Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+- `type` ("email" | "password" | "search" | "tel" | "text" | "url", default 'text'): Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
+- `value` (string, default ''): Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
+
+Slots:
+- `end`: Trailing icon or text affix inside the field. Follows writing direction.
+- `start`: Leading icon or text affix inside the field. Follows writing direction.
+
+Parts:
+- `field`: Enclosure wrapper for background, border, radius and focus ring.
+- `input`: Internal native input that owns entry text, caret and selection.
+- `label`: Visible label that provides the accessible name.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
+### ki-textarea
+
+A token-styled multiline text field with native form semantics.
+
+When to use: free-form text longer than one line, such as comments,
+descriptions, messages, delivery notes, or addresses when paired with a
+matching `autocomplete` purpose.
+When NOT to use: single-line values (`ki-input`), constrained choices,
+rich or formatted text editing, or search boxes.
+
+Agent note: initial text is declared through the `value` attribute; element
+text content is ignored. Enter inserts a line break and never submits the
+enclosing form, the inverse of `ki-input`.
+
+Attributes:
+- `autocomplete` (string | undefined): Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
+- `disabled` (boolean, default false): Disables editing, focus, validation and form-data contribution. When to use: make a field temporarily unavailable. When NOT to use: do not use disabled for readonly review text that should submit.
+- `label` (string): Visible label rendered by the component and used as the accessible name. When to use: always provide a concise label for the requested long-form text. When NOT to use: do not substitute placeholder text for the label.
+- `name` (string | undefined): Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
+- `placeholder` (string | undefined): Hint shown while the textarea is empty. When to use: add an example or short formatting hint. When NOT to use: do not use placeholder as the accessible name or required instruction.
+- `readonly` (boolean, default false): Makes the textarea focusable and selectable while rejecting edits. When to use: show submitted or policy text that should still be included in form data. When NOT to use: do not use readonly to remove a field from submission; use disabled.
+- `required` (boolean, default false): Requires a non-empty value before form submission. When to use: mark mandatory long-form text. When NOT to use: do not pair with `readonly` expecting it to block; readonly fields are validation exempt like native textareas.
+- `rows` (number, default 2): Visible line count. Invalid, non-numeric, zero, or negative values fall back to 2; no auto-grow or user resize handle exists in v1. When to use: set the stable multiline height needed by the layout. When NOT to use: do not use rows as a responsive size axis.
+- `value` (string, default ''): Live current text. The `value` attribute declares the reset default; element text content is ignored. Programmatic assignments replace the display and emit no events. When to use: preload or read free-form text, line breaks included. When NOT to use: do not put initial text between the element tags.
+
+Slots: none
+
+Parts:
+- `field`: The enclosure wrapper.
+- `label`: Rendered visible label and accessible-name source.
+- `textarea`: Internal native multiline control.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none

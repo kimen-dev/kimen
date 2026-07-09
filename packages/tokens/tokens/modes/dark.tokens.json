@@ -295,6 +295,9 @@
       "high-em": {
         "$value": "{ki.color.white.12}"
       },
+      "strong": {
+        "$value": "{ki.color.white.48}"
+      },
       "med-em": {
         "$value": "{ki.color.white.8}"
       },

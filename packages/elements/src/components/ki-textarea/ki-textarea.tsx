@@ -4,10 +4,10 @@ import { normalizeKiTextareaRows } from './ki-textarea.form';
 /**
  * A token-styled multiline text field with native form semantics.
  *
- * When to use: free-form text longer than one line, such as comments,
+ * @whenToUse free-form text longer than one line, such as comments,
  * descriptions, messages, delivery notes, or addresses when paired with a
  * matching `autocomplete` purpose.
- * When NOT to use: single-line values (`ki-input`), constrained choices,
+ * @whenNotToUse single-line values (`ki-input`), constrained choices,
  * rich or formatted text editing, or search boxes.
  *
  * Agent note: initial text is declared through the `value` attribute; element

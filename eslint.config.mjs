@@ -89,7 +89,14 @@ export default tseslint.config(
   },
   {
     // Config and script files: relax type-aware rules (not part of shipped code)
-    files: ['**/*.mjs', '**/*.config.ts', 'scripts/**', 'tools/**', '**/.storybook/**'],
+    files: [
+      '**/*.mjs',
+      '**/*.config.ts',
+      'scripts/**',
+      'tools/**',
+      'packages/*/scripts/**',
+      '**/.storybook/**',
+    ],
     extends: [tseslint.configs.disableTypeChecked],
     languageOptions: {
       globals: {

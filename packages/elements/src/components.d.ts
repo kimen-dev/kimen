@@ -6,13 +6,15 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+import { KiInputType } from "./components/ki-input/ki-input";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
+export { KiInputType } from "./components/ki-input/ki-input";
 export namespace Components {
     /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface KiButton {
@@ -51,11 +53,115 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface KiCard {
+    }
+    /**
+     * A form-associated checkbox for selecting independent options.
+     * @whenToUse selecting one or more independent options that a form submits
+     * later, including a "select all" parent that presents partial selection with
+     * `indeterminate`. Always provide a visible label in the default slot.
+     * @whenNotToUse a single mutually exclusive choice, an immediate on/off
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
+     */
+    interface KiCheckbox {
+        /**
+          * Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+          * @default false
+         */
+        "checked": boolean;
+        /**
+          * Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
+          * @default false
+         */
+        "indeterminate": boolean;
+        /**
+          * Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
+         */
+        "name"?: string;
+        /**
+          * Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
+         */
+        "value"?: string;
+    }
+    /**
+     * A token-styled single-line text field with native input semantics.
+     * @whenToUse collect one line of free text from a person, always with a
+     * visible `label`; choose the `type` and `autocomplete` that match the entry
+     * purpose.
+     * @whenNotToUse multiline text, predefined choices, boolean state, numeric
+     * stepper entry, or placeholder-only labeling.
+     */
+    interface KiInput {
+        /**
+          * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
+         */
+        "autocomplete"?: string;
+        /**
+          * Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
+         */
+        "label"?: string;
+        /**
+          * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
+         */
+        "name"?: string;
+        /**
+          * Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
+          * @default false
+         */
+        "readonly": boolean;
+        /**
+          * Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
+          * @default 'text'
+         */
+        "type": KiInputType;
+        /**
+          * Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
      * A token-styled multiline text field with native form semantics.
-     * When to use: free-form text longer than one line, such as comments,
+     * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
      * matching `autocomplete` purpose.
-     * When NOT to use: single-line values (`ki-input`), constrained choices,
+     * @whenNotToUse single-line values (`ki-input`), constrained choices,
      * rich or formatted text editing, or search boxes.
      * Agent note: initial text is declared through the `value` attribute; element
      * text content is ignored. Enter inserts a line break and never submits the
@@ -108,9 +214,9 @@ export namespace Components {
 declare global {
     /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface HTMLKiButtonElement extends Components.KiButton, HTMLStencilElement {
@@ -120,11 +226,58 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface HTMLKiCardElement extends Components.KiCard, HTMLStencilElement {
+    }
+    var HTMLKiCardElement: {
+        prototype: HTMLKiCardElement;
+        new (): HTMLKiCardElement;
+    };
+    /**
+     * A form-associated checkbox for selecting independent options.
+     * @whenToUse selecting one or more independent options that a form submits
+     * later, including a "select all" parent that presents partial selection with
+     * `indeterminate`. Always provide a visible label in the default slot.
+     * @whenNotToUse a single mutually exclusive choice, an immediate on/off
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
+     */
+    interface HTMLKiCheckboxElement extends Components.KiCheckbox, HTMLStencilElement {
+    }
+    var HTMLKiCheckboxElement: {
+        prototype: HTMLKiCheckboxElement;
+        new (): HTMLKiCheckboxElement;
+    };
+    /**
+     * A token-styled single-line text field with native input semantics.
+     * @whenToUse collect one line of free text from a person, always with a
+     * visible `label`; choose the `type` and `autocomplete` that match the entry
+     * purpose.
+     * @whenNotToUse multiline text, predefined choices, boolean state, numeric
+     * stepper entry, or placeholder-only labeling.
+     */
+    interface HTMLKiInputElement extends Components.KiInput, HTMLStencilElement {
+    }
+    var HTMLKiInputElement: {
+        prototype: HTMLKiInputElement;
+        new (): HTMLKiInputElement;
+    };
+    /**
      * A token-styled multiline text field with native form semantics.
-     * When to use: free-form text longer than one line, such as comments,
+     * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
      * matching `autocomplete` purpose.
-     * When NOT to use: single-line values (`ki-input`), constrained choices,
+     * @whenNotToUse single-line values (`ki-input`), constrained choices,
      * rich or formatted text editing, or search boxes.
      * Agent note: initial text is declared through the `value` attribute; element
      * text content is ignored. Enter inserts a line break and never submits the
@@ -138,6 +291,9 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "ki-button": HTMLKiButtonElement;
+        "ki-card": HTMLKiCardElement;
+        "ki-checkbox": HTMLKiCheckboxElement;
+        "ki-input": HTMLKiInputElement;
         "ki-textarea": HTMLKiTextareaElement;
     }
 }
@@ -146,9 +302,9 @@ declare namespace LocalJSX {
 
     /**
      * A token-styled action button with native button semantics.
-     * When to use: trigger the single main action of a view, supporting actions
+     * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
-     * When NOT to use: navigation, icon-only actions, persistent toggles, or
+     * @whenNotToUse navigation, icon-only actions, persistent toggles, or
      * loading/progress semantics.
      */
     interface KiButton {
@@ -191,11 +347,123 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
+     * A non-interactive card surface for grouping related content.
+     * @whenToUse group related media, heading, supporting text and actions into
+     * one scannable surface visually distinct from the page; fill any subset of
+     * regions. Supply the heading element yourself in the `header` slot — plain
+     * text slotted there carries no heading semantics for assistive technology.
+     * @whenNotToUse as a button or link target, form control, fieldset, page
+     * landmark, section replacement or nested card. For an interactive card, slot
+     * the button or link INSIDE a region (whole-card interactivity is a future
+     * feature, not this component).
+     */
+    interface KiCard {
+    }
+    /**
+     * A form-associated checkbox for selecting independent options.
+     * @whenToUse selecting one or more independent options that a form submits
+     * later, including a "select all" parent that presents partial selection with
+     * `indeterminate`. Always provide a visible label in the default slot.
+     * @whenNotToUse a single mutually exclusive choice, an immediate on/off
+     * effect, triggering an action, unlabeled/icon-only usage, or
+     * `checked="false"` to mean unchecked. Boolean attributes use presence
+     * semantics; omit `checked` to express unchecked.
+     */
+    interface KiCheckbox {
+        /**
+          * Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+          * @default false
+         */
+        "checked"?: boolean;
+        /**
+          * Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
+          * @default false
+         */
+        "indeterminate"?: boolean;
+        /**
+          * Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
+         */
+        "name"?: string;
+        /**
+          * Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
+         */
+        "value"?: string;
+    }
+    /**
+     * A token-styled single-line text field with native input semantics.
+     * @whenToUse collect one line of free text from a person, always with a
+     * visible `label`; choose the `type` and `autocomplete` that match the entry
+     * purpose.
+     * @whenNotToUse multiline text, predefined choices, boolean state, numeric
+     * stepper entry, or placeholder-only labeling.
+     */
+    interface KiInput {
+        /**
+          * Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
+         */
+        "autocomplete"?: string;
+        /**
+          * Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
+         */
+        "label"?: string;
+        /**
+          * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
+         */
+        "name"?: string;
+        /**
+          * Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
+          * @default false
+         */
+        "readonly"?: boolean;
+        /**
+          * Marks the field as required for native constraint validation. When NOT to use: do not use required on optional fields.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Entry kind with native single-line input semantics. Unknown runtime values fall back to `text`; `number` is not a v1 input kind. When NOT to use: use future numeric controls for locale-aware number entry.
+          * @default 'text'
+         */
+        "type"?: KiInputType;
+        /**
+          * Live text value. The attribute declares the initial default; the property is the current value and programmatic assignments are silent. Deviation from native (deliberate, research D2): assigning the ATTRIBUTE programmatically also replaces the displayed value, silently — native inputs would keep the user's dirty value. Form reset restores the attribute's current value. When NOT to use: do not observe user edits by polling; listen for `input` and `change` (both re-dispatched composed across the shadow boundary).
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
      * A token-styled multiline text field with native form semantics.
-     * When to use: free-form text longer than one line, such as comments,
+     * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
      * matching `autocomplete` purpose.
-     * When NOT to use: single-line values (`ki-input`), constrained choices,
+     * @whenNotToUse single-line values (`ki-input`), constrained choices,
      * rich or formatted text editing, or search boxes.
      * Agent note: initial text is declared through the `value` attribute; element
      * text content is ignored. Enter inserts a line break and never submits the
@@ -258,6 +526,25 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
+    interface KiCheckboxAttributes {
+        "checked": boolean;
+        "indeterminate": boolean;
+        "disabled": boolean;
+        "required": boolean;
+        "name": string;
+        "value": string;
+    }
+    interface KiInputAttributes {
+        "type": KiInputType;
+        "label": string;
+        "placeholder": string;
+        "value": string;
+        "name": string;
+        "required": boolean;
+        "readonly": boolean;
+        "disabled": boolean;
+        "autocomplete": string;
+    }
     interface KiTextareaAttributes {
         "label": string;
         "placeholder": string;
@@ -272,6 +559,9 @@ declare namespace LocalJSX {
 
     interface IntrinsicElements {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
+        "ki-card": KiCard;
+        "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
+        "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
     }
 }
@@ -281,18 +571,50 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             /**
              * A token-styled action button with native button semantics.
-             * When to use: trigger the single main action of a view, supporting actions
+             * @whenToUse trigger the single main action of a view, supporting actions
              * in descending hierarchy, or confirming/destructive actions through tone.
-             * When NOT to use: navigation, icon-only actions, persistent toggles, or
+             * @whenNotToUse navigation, icon-only actions, persistent toggles, or
              * loading/progress semantics.
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
+             * A non-interactive card surface for grouping related content.
+             * @whenToUse group related media, heading, supporting text and actions into
+             * one scannable surface visually distinct from the page; fill any subset of
+             * regions. Supply the heading element yourself in the `header` slot — plain
+             * text slotted there carries no heading semantics for assistive technology.
+             * @whenNotToUse as a button or link target, form control, fieldset, page
+             * landmark, section replacement or nested card. For an interactive card, slot
+             * the button or link INSIDE a region (whole-card interactivity is a future
+             * feature, not this component).
+             */
+            "ki-card": LocalJSX.IntrinsicElements["ki-card"] & JSXBase.HTMLAttributes<HTMLKiCardElement>;
+            /**
+             * A form-associated checkbox for selecting independent options.
+             * @whenToUse selecting one or more independent options that a form submits
+             * later, including a "select all" parent that presents partial selection with
+             * `indeterminate`. Always provide a visible label in the default slot.
+             * @whenNotToUse a single mutually exclusive choice, an immediate on/off
+             * effect, triggering an action, unlabeled/icon-only usage, or
+             * `checked="false"` to mean unchecked. Boolean attributes use presence
+             * semantics; omit `checked` to express unchecked.
+             */
+            "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
+            /**
+             * A token-styled single-line text field with native input semantics.
+             * @whenToUse collect one line of free text from a person, always with a
+             * visible `label`; choose the `type` and `autocomplete` that match the entry
+             * purpose.
+             * @whenNotToUse multiline text, predefined choices, boolean state, numeric
+             * stepper entry, or placeholder-only labeling.
+             */
+            "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;
+            /**
              * A token-styled multiline text field with native form semantics.
-             * When to use: free-form text longer than one line, such as comments,
+             * @whenToUse free-form text longer than one line, such as comments,
              * descriptions, messages, delivery notes, or addresses when paired with a
              * matching `autocomplete` purpose.
-             * When NOT to use: single-line values (`ki-input`), constrained choices,
+             * @whenNotToUse single-line values (`ki-input`), constrained choices,
              * rich or formatted text editing, or search boxes.
              * Agent note: initial text is declared through the `value` attribute; element
              * text content is ignored. Enter inserts a line break and never submits the

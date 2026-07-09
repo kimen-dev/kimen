@@ -163,45 +163,53 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // must clear AA in every theme x scheme. Disabled cells are exempt
 // (WCAG 1.4.3). Added after the 002-ki-button clean-context review found
 // dark-scheme failures the 4 hardcoded pairs could not see (incident-to-gate
-// rule). The pair list is DERIVED from the built CSS, but the pattern below
-// is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
-// (or this gate silently ignores that component; the zero-match guard only
-// protects the patterns listed here).
-const COMPONENT_SWEEPS = [
-  {
-    name: 'ki-button',
-    bgPattern: /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u,
-    pairsForBg: (name) => [{ text: name.replace(/-bg$/u, '-fg'), surface: name }],
-  },
-  {
-    name: 'ki-textarea',
-    bgPattern: /^--ki-textarea-(?:rest|hover|focus|readonly|invalid)-bg$/u,
-    pairsForBg: (name) => [
-      { text: name.replace(/-bg$/u, '-fg'), surface: name },
-      { text: name.replace(/-bg$/u, '-placeholder-fg'), surface: name },
-      { text: name.replace(/-bg$/u, '-label-fg'), surface: '--ki-surface-s0' },
-    ],
-  },
-];
+// rule).
+//
+// GENERIC by construction (was per-component and silently ignored every new
+// matrix — Codex review of 003/016): any `--ki-<component>-…-bg` whose name is
+// NOT a semantic/primitive layer, paired with its `-fg` sibling when one
+// exists. New components are swept automatically, with no regex to extend.
+// Disabled cells are excluded (exempt), as are `-bg` tokens with no `-fg`
+// counterpart (non-text affordances measured elsewhere, not a text pair).
+const SEMANTIC_LAYERS = new Set([
+  'color',
+  'surface',
+  'text',
+  'outline',
+  'elevation',
+  'shadow',
+  'space',
+  'typography',
+  'radius',
+  'motion',
+  'duration',
+  'ease',
+  'opacity',
+  'size',
+  'border',
+  'z',
+]);
+// The state/variant segment is OPTIONAL so a bare `--ki-<component>-bg` (e.g.
+// ki-card's single surface pair) is swept too — a required middle segment
+// silently dropped every component that names its base pair without a state
+// (Codex review of 009).
+const COMPONENT_BG_PATTERN = /^--ki-([a-z][a-z0-9]*)(?:-[\w-]+)?-bg$/u;
+// The canary: button is the foundational component and is always present, so a
+// zero-button sweep means the naming convention drifted (the old zero-length
+// guard is defeated once any other component contributes a pair).
+const CANARY_COMPONENT = 'button';
 
 export function componentPairs(declarations) {
   const pairs = [];
 
-  for (const sweep of COMPONENT_SWEEPS) {
-    let matches = 0;
-
-    for (const name of declarations.keys()) {
-      if (sweep.bgPattern.test(name)) {
-        matches += 1;
-        pairs.push(...sweep.pairsForBg(name));
-      }
+  for (const name of declarations.keys()) {
+    const match = name.match(COMPONENT_BG_PATTERN);
+    if (!match || SEMANTIC_LAYERS.has(match[1]) || /-disabled-/u.test(name)) {
+      continue;
     }
-
-    if (matches === 0) {
-      pairs.push({
-        text: `__missing_component_sweep__:${sweep.name}`,
-        surface: `__missing_component_sweep__:${sweep.name}`,
-      });
+    const fg = name.replace(/-bg$/u, '-fg');
+    if (declarations.has(fg)) {
+      pairs.push({ component: match[1], text: fg, surface: name });
     }
   }
 
@@ -216,19 +224,17 @@ function evaluateStylesheet(theme, stylesheet) {
   for (const [scheme, declarations] of Object.entries(schemes)) {
     const swept = componentPairs(declarations);
 
+    if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
+      failures.push(
+        `${theme}/${scheme}: no ${CANARY_COMPONENT}-layer pairs matched — the component sweep pattern drifted from the token names`,
+      );
+    }
+
     // Component cells may be translucent (ghost/quaternary): composite the
     // cell background over the page surface before measuring.
     const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
 
     for (const pair of [...CONTRAST_PAIRS, ...swept]) {
-      if (pair.text.startsWith('__missing_component_sweep__:')) {
-        const sweep = pair.text.replace('__missing_component_sweep__:', '');
-        failures.push(
-          `${theme}/${scheme}: no ${sweep} component-layer pairs matched — the sweep pattern drifted from the token names`,
-        );
-        continue;
-      }
-
       const text = parseColor(resolveCustomProperty(pair.text, declarations));
       const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
       const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;

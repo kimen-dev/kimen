@@ -10,6 +10,9 @@ const LAYERS = [
   'tokens/semantic.tokens.json',
   'tokens/component/button.tokens.json',
   'tokens/component/textarea.tokens.json',
+  'tokens/component/checkbox.tokens.json',
+  'tokens/component/card.tokens.json',
+  'tokens/component/input.tokens.json',
 ];
 const MATERIAL3_LAYERS = [
   ...LAYERS,
@@ -17,6 +20,9 @@ const MATERIAL3_LAYERS = [
   'tokens/semantic/material3.tokens.json',
   'tokens/component/button.material3.tokens.json',
   'tokens/component/textarea.material3.tokens.json',
+  'tokens/component/checkbox.material3.tokens.json',
+  'tokens/component/card.material3.tokens.json',
+  'tokens/component/input.material3.tokens.json',
 ];
 
 function variables({ dictionary, options, indentation = '  ' }) {

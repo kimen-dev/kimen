@@ -44,6 +44,11 @@ run_gate build pnpm exec nx run-many -t build
 # generated, committed, diffable). After a fresh build it must match the
 # committed copy exactly, or the sources and the contract have drifted.
 run_gate tokens-sync git diff --exit-code -- packages/tokens/dist/css
+# Agent surfaces are committed contracts (Art. I): the normalized docs-json
+# intermediate, the custom-elements manifest and both llms.txt copies must
+# match a fresh regeneration exactly (tokens-sync precedent).
+run_gate surfaces-sync git diff --exit-code -- \
+  packages/elements/generated packages/elements/llms.txt llms.txt
 run_gate contrast pnpm --filter @kimen/tokens contrast
 run_gate lint pnpm run lint
 run_gate styles pnpm run lint:styles
