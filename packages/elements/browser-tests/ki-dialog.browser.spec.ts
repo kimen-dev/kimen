@@ -9,6 +9,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
+import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 
 type CloseReason = 'method' | 'escape' | 'backdrop';
 type KiCloseEvent = CustomEvent<{ reason: CloseReason }>;
@@ -28,6 +29,7 @@ const browserCommands = commands as unknown as {
 
 beforeAll(() => {
   defineCustomElement();
+  defineKiButton();
 });
 
 function ensureTokens(): void {
@@ -112,6 +114,15 @@ function bodyPart(el: KiDialogElement): HTMLElement {
     throw new Error('ki-dialog did not render body part');
   }
   return body;
+}
+
+function requireEl(root: ParentNode, selector: string): HTMLElement {
+  const el = root.querySelector<HTMLElement>(selector);
+  expect(el).not.toBeNull();
+  if (!el) {
+    throw new Error(`missing ${selector}`);
+  }
+  return el;
 }
 
 function activeElementDeep(root: Document | ShadowRoot = document): Element | null {
@@ -367,6 +378,56 @@ describe('ki-dialog in a real browser', () => {
     const styles = getComputedStyle(surface);
     expect(styles.outlineStyle).not.toBe('none');
     expect(styles.outlineWidth).not.toBe('0px');
+  });
+
+  // Review round 1 (Critical): the CANONICAL footer is ki-button (shadow
+  // delegatesFocus, no host tabindex) wrapped in a container — the shape every
+  // story/harness uses. Entry focus must reach the autofocus action, and Tab
+  // must keep the actions keyboard-reachable (never hijacked to the surface).
+  it('S6/S7 makes ki-button footer actions focusable and keyboard-reachable', async () => {
+    cleanup();
+    const el = await mountDialog(
+      {},
+      document.body,
+      `<p>This permanently deletes your account.</p>
+       <div slot="footer">
+         <ki-button id="cancel">Cancel</ki-button>
+         <ki-button id="confirm" autofocus>Delete</ki-button>
+       </div>`,
+    );
+    // Wait for the slotted ki-buttons to hydrate (shadow + inner control)
+    // before opening — in real usage the actions exist before the dialog opens.
+    await waitFor(
+      () => Boolean(el.querySelector('#confirm')?.shadowRoot?.querySelector('button')),
+      'ki-button actions hydrated',
+    );
+    await openDialog(el);
+
+    // Entry focus lands inside the autofocus ki-button (delegatesFocus → its
+    // internal native button in the ki-button shadow), NOT on the bare dialog
+    // surface. The focused node lives in a slotted child's shadow, so we check
+    // containment against the ki-button host, not the internal <dialog>.
+    const confirm = requireEl(el, '#confirm');
+    const cancel = requireEl(el, '#cancel');
+    const inAction = (node: Element | null): boolean =>
+      node !== null &&
+      (confirm.shadowRoot?.contains(node) === true || cancel.shadowRoot?.contains(node) === true);
+
+    // Let entry focus settle (native showModal auto-focus + the deferred
+    // slotted-content focus assist resolve across a frame).
+    await waitFor(
+      () => Boolean(confirm.shadowRoot?.contains(activeElementDeep())),
+      'entry focus reaches the autofocus ki-button',
+    );
+    expect(activeElementDeep()).not.toBe(internalDialog(el));
+    expect(confirm.shadowRoot?.contains(activeElementDeep())).toBe(true);
+
+    // Tab reaches the other action; focus never gets stuck on the surface.
+    await userEvent.keyboard('{Tab}');
+    expect(activeElementDeep()).not.toBe(internalDialog(el));
+    expect(inAction(activeElementDeep())).toBe(true);
+
+    await el.close();
   });
 
   it('S7 Tab from the last focusable action keeps focus inside the open dialog', async () => {

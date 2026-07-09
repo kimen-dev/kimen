@@ -277,16 +277,30 @@ export class KiDialog {
       return;
     }
 
-    const target = resolveEntryFocusTarget(this.host);
-    if (target) {
-      if (document.activeElement !== target) {
-        target.focus();
+    // Native showModal() focuses the dialog surface when it cannot find a
+    // focusable in its flat-tree traversal — which happens for slotted actions
+    // whose control lives one shadow deeper (e.g. ki-button). That native
+    // focus settles asynchronously, so the corrective focus is deferred one
+    // frame to win over it (FR-005 / S6: entry focus reaches the action).
+    const apply = (): void => {
+      if (!this.dialog?.open) {
+        return;
       }
-      return;
-    }
+      const target = resolveEntryFocusTarget(this.host);
+      if (target) {
+        if (document.activeElement !== target && !target.contains(document.activeElement)) {
+          target.focus();
+        }
+        return;
+      }
+      if (document.activeElement !== this.dialog) {
+        this.dialog.focus();
+      }
+    };
 
-    if (document.activeElement !== this.dialog) {
-      this.dialog.focus();
+    apply();
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(apply);
     }
   }
 
