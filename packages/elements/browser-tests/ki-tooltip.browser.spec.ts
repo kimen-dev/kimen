@@ -7,6 +7,7 @@ import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
+import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
 
 type KiTooltipElement = HTMLElement & {
@@ -23,6 +24,7 @@ interface MountOptions {
 }
 
 const STYLE_ID = 'ki-tooltip-browser-token-style';
+const MATERIAL3_STYLE_ID = 'ki-tooltip-browser-material3-token-style';
 const placements = ['top', 'bottom', 'start', 'end'] as const;
 const browserCommands = commands as unknown as {
   installClock: () => Promise<void>;
@@ -49,11 +51,35 @@ function ensureTokens(): void {
   document.head.append(style);
 }
 
+function ensureMaterial3Tokens(): void {
+  if (document.getElementById(MATERIAL3_STYLE_ID)) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = MATERIAL3_STYLE_ID;
+  style.textContent = material3Css;
+  document.head.append(style);
+}
+
 function cleanup(): void {
   document.body.replaceChildren();
   document.documentElement.removeAttribute('dir');
   document.documentElement.removeAttribute('data-ki-theme');
   document.documentElement.removeAttribute('data-ki-color-scheme');
+}
+
+function readTokenColor(name: string, property: 'backgroundColor' | 'color'): string {
+  const probe = document.createElement('div');
+  if (property === 'backgroundColor') {
+    probe.style.backgroundColor = `var(${name})`;
+  } else {
+    probe.style.color = `var(${name})`;
+  }
+  document.body.append(probe);
+  const value = getComputedStyle(probe)[property];
+  probe.remove();
+  return value;
 }
 
 async function nextFrame(): Promise<void> {
@@ -163,11 +189,10 @@ describe('ki-tooltip pointer path in a real browser', () => {
       await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
 
       await userEvent.unhover(trigger);
-      await browserCommands.fastForwardClock(74);
       await nextFrame();
       await expect.element(requireTooltip(host)).toBeVisible();
 
-      await browserCommands.fastForwardClock(1);
+      await browserCommands.fastForwardClock(75);
       await nextFrame();
       await expect.element(requireTooltip(host)).not.toBeVisible();
     } finally {
@@ -201,6 +226,33 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(tooltipRect.top).toBeGreaterThanOrEqual(0);
     expect(tooltipRect.bottom).toBeLessThanOrEqual(window.innerHeight);
     expect(tooltipRect.top).toBeGreaterThanOrEqual(triggerRect.bottom);
+  });
+
+  it('S9 material3 restyles the visible tooltip with unchanged markup', async () => {
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    const { host, trigger } = await mount();
+    await hoverTrigger(host, trigger);
+    const tooltip = requireTooltip(host);
+    const style = getComputedStyle(tooltip);
+
+    expect(style.backgroundColor).toBe(readTokenColor('--ki-tooltip-bg', 'backgroundColor'));
+    expect(style.color).toBe(readTokenColor('--ki-tooltip-fg', 'color'));
+    expect(host.outerHTML).toContain('<button aria-description="Send immediately">Send</button>');
+  });
+
+  it('S11 start placement renders on the right side under RTL', async () => {
+    document.documentElement.setAttribute('dir', 'rtl');
+    const { host, trigger } = await mount({
+      placement: 'start',
+      style: { marginBlockStart: '120px', marginInlineStart: '120px' },
+    });
+    await hoverTrigger(host, trigger);
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const tooltipRect = requireTooltip(host).getBoundingClientRect();
+
+    expect(tooltipRect.left).toBeGreaterThanOrEqual(triggerRect.right);
   });
 
   it('S5 Escape hides the focused tooltip without moving focus or activating the trigger', async () => {

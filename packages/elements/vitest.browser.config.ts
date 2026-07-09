@@ -23,6 +23,11 @@ export default defineConfig({
             await page.emulateMedia({ colorScheme: scheme });
           },
         ),
+        emulateReducedMotion: defineBrowserCommand(
+          async ({ page }, reducedMotion: 'reduce' | 'no-preference' | null) => {
+            await page.emulateMedia({ reducedMotion });
+          },
+        ),
         installClock: defineBrowserCommand(async ({ page }) => {
           await page.clock.install();
         }),
@@ -37,12 +42,20 @@ export default defineConfig({
         ...browsers.map((browser) => ({
           browser,
           name: `${browser}-light`,
-          exclude: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
+          exclude: [
+            'browser-tests/**/*.dark.browser.spec.{ts,tsx}',
+            'browser-tests/**/*.motion.browser.spec.{ts,tsx}',
+          ],
         })),
         ...browsers.map((browser) => ({
           browser,
           name: `${browser}-dark`,
           include: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
+        })),
+        ...browsers.map((browser) => ({
+          browser,
+          name: `${browser}-reduced-motion`,
+          include: ['browser-tests/**/*.motion.browser.spec.{ts,tsx}'],
         })),
       ],
     },
