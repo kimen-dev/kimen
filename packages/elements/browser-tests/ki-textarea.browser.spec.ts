@@ -189,6 +189,26 @@ describe('ki-textarea in a real browser', () => {
     expect(el.shadowRoot?.activeElement).not.toBe(textarea);
   });
 
+  it('S5 a fieldset-disabled textarea uses the disabled token matrix', async () => {
+    cleanup();
+    ensureTokens();
+    const form = document.createElement('form');
+    const fieldset = document.createElement('fieldset');
+    fieldset.disabled = true;
+    form.append(fieldset);
+    document.body.append(form);
+    const el = await mount({}, fieldset);
+    await waitForStyles();
+    const field = requireElement(
+      el.shadowRoot?.querySelector('[part="field"]'),
+      'field part missing',
+    );
+
+    expect(getComputedStyle(field).borderTopColor).toBe(
+      readTokenColor('--ki-textarea-disabled-border'),
+    );
+  });
+
   it('S19 placeholder shows only while the field is empty', async () => {
     cleanup();
     const el = await mount({ placeholder: 'Add any special instructions' });

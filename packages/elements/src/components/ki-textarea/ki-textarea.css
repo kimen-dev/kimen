@@ -40,7 +40,10 @@
   --_ki-textarea-placeholder-fg: var(--ki-textarea-invalid-placeholder-fg);
 }
 
-:host([disabled]) {
+/* :disabled (not [disabled]) so a fieldset-disabled control — which sets no
+   host attribute, only ElementInternals disabled state — also gets the disabled
+   token matrix instead of rest/hover styling (codex review). */
+:host(:disabled) {
   --_ki-textarea-bg: var(--ki-textarea-disabled-bg);
   --_ki-textarea-fg: var(--ki-textarea-disabled-fg);
   --_ki-textarea-border: var(--ki-textarea-disabled-border);
