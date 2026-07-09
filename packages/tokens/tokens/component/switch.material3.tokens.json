@@ -1,0 +1,76 @@
+{
+  "ki": {
+    "switch": {
+      "unchecked": {
+        "rest": {
+          "track": {
+            "$value": "{ki.surface.s3}"
+          },
+          "thumb": {
+            "$value": "{ki.outline.high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.high-em}"
+          }
+        },
+        "hover": {
+          "track": {
+            "$value": "{ki.surface.s4}"
+          },
+          "thumb": {
+            "$value": "{ki.outline.high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.high-em}"
+          }
+        },
+        "active": {
+          "track": {
+            "$value": "{ki.surface.s5}"
+          },
+          "thumb": {
+            "$value": "{ki.outline.high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.high-em}"
+          }
+        }
+      },
+      "checked": {
+        "rest": {
+          "track": {
+            "$value": "{ki.surface.primary-med-em}"
+          },
+          "thumb": {
+            "$value": "{ki.text.primary-on-primary}"
+          },
+          "border": {
+            "$value": "{ki.outline.none}"
+          }
+        },
+        "hover": {
+          "track": {
+            "$value": "{ki.surface.primary-high-em-hover}"
+          },
+          "thumb": {
+            "$value": "{ki.text.primary-on-primary}"
+          },
+          "border": {
+            "$value": "{ki.outline.none}"
+          }
+        },
+        "active": {
+          "track": {
+            "$value": "{ki.surface.primary-high-em}"
+          },
+          "thumb": {
+            "$value": "{ki.text.primary-on-primary}"
+          },
+          "border": {
+            "$value": "{ki.outline.none}"
+          }
+        }
+      }
+    }
+  }
+}

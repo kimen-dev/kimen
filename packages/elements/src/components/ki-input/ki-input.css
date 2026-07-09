@@ -1,0 +1,117 @@
+/* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
+ * Logical properties only (Art. IV): direction-agnostic by construction. */
+:host {
+  --_ki-input-bg: var(--ki-input-rest-bg);
+  --_ki-input-fg: var(--ki-input-rest-fg);
+  --_ki-input-border: var(--ki-input-rest-border);
+  --_ki-input-label-fg: var(--ki-input-rest-label-fg);
+  --_ki-input-placeholder-fg: var(--ki-input-rest-placeholder-fg);
+
+  display: inline-block;
+  color: var(--_ki-input-fg);
+  font-family: var(--ki-typography-family-body);
+}
+
+:host(:hover:not(:disabled)) {
+  --_ki-input-bg: var(--ki-input-hover-bg);
+  --_ki-input-fg: var(--ki-input-hover-fg);
+  --_ki-input-border: var(--ki-input-hover-border);
+  --_ki-input-label-fg: var(--ki-input-hover-label-fg);
+  --_ki-input-placeholder-fg: var(--ki-input-hover-placeholder-fg);
+}
+
+:host(:focus-within:not(:disabled)) {
+  --_ki-input-bg: var(--ki-input-focus-bg);
+  --_ki-input-fg: var(--ki-input-focus-fg);
+  --_ki-input-border: var(--ki-input-focus-border);
+  --_ki-input-label-fg: var(--ki-input-focus-label-fg);
+  --_ki-input-placeholder-fg: var(--ki-input-focus-placeholder-fg);
+}
+
+:host([readonly]:not(:disabled)) {
+  --_ki-input-bg: var(--ki-input-readonly-bg);
+  --_ki-input-fg: var(--ki-input-readonly-fg);
+  --_ki-input-border: var(--ki-input-readonly-border);
+  --_ki-input-label-fg: var(--ki-input-readonly-label-fg);
+  --_ki-input-placeholder-fg: var(--ki-input-readonly-placeholder-fg);
+}
+
+:host(:disabled) {
+  --_ki-input-bg: var(--ki-input-disabled-bg);
+  --_ki-input-fg: var(--ki-input-disabled-fg);
+  --_ki-input-border: var(--ki-input-disabled-border);
+  --_ki-input-label-fg: var(--ki-input-disabled-label-fg);
+  --_ki-input-placeholder-fg: var(--ki-input-disabled-placeholder-fg);
+}
+
+:host(:state(user-invalid)) {
+  --_ki-input-bg: var(--ki-input-invalid-bg);
+  --_ki-input-fg: var(--ki-input-invalid-fg);
+  --_ki-input-border: var(--ki-input-invalid-border);
+  --_ki-input-label-fg: var(--ki-input-invalid-label-fg);
+  --_ki-input-placeholder-fg: var(--ki-input-invalid-placeholder-fg);
+}
+
+.root {
+  display: grid;
+  gap: var(--ki-input-label-gap);
+}
+
+[part="label"] {
+  color: var(--_ki-input-label-fg);
+  font-size: var(--ki-input-label-font-size);
+  font-weight: var(--ki-input-label-font-weight);
+  line-height: var(--ki-input-label-line-height);
+}
+
+[part="field"] {
+  display: flex;
+  align-items: center;
+  gap: var(--ki-input-gap);
+  box-sizing: border-box;
+  min-block-size: var(--ki-input-min-target);
+  block-size: var(--ki-input-height);
+  padding-inline: var(--ki-input-padding-inline);
+  background-color: var(--_ki-input-bg);
+  border-block-start-width: var(--ki-input-border-block-start-width);
+  border-block-end-width: var(--ki-input-border-block-end-width);
+  border-inline-start-width: var(--ki-input-border-inline-start-width);
+  border-inline-end-width: var(--ki-input-border-inline-end-width);
+  border-color: var(--_ki-input-border);
+  border-style: solid;
+  border-radius: var(--ki-input-radius);
+}
+
+:host(:focus-within) [part="field"] {
+  outline: var(--ki-input-focus-ring-width) solid var(--ki-input-focus-ring-color);
+  outline-offset: var(--ki-input-focus-ring-offset);
+}
+
+[part="input"] {
+  min-inline-size: var(--ki-space-zero);
+  flex: 1 1 auto;
+  color: var(--_ki-input-fg);
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  font-size: var(--ki-input-font-size);
+  font-weight: var(--ki-input-font-weight);
+  line-height: var(--ki-input-line-height);
+}
+
+[part="input"]::placeholder {
+  color: var(--_ki-input-placeholder-fg);
+}
+
+slot::slotted(*) {
+  flex: 0 0 auto;
+}
+
+/* Icon-shaped adornments get the icon box; text affixes size intrinsically
+   (review round 1, Important-3). */
+slot::slotted(svg),
+slot::slotted(img) {
+  inline-size: var(--ki-input-icon-size);
+  block-size: var(--ki-input-icon-size);
+}

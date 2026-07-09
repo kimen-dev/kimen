@@ -1,0 +1,86 @@
+{
+  "ki": {
+    "alert": {
+      "radius": {
+        "$value": "{ki.radius.lg}"
+      },
+      "neutral": {
+        "bg": {
+          "$value": "{ki.surface.s2}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.med-em}"
+        }
+      },
+      "danger": {
+        "bg": {
+          "$value": "{ki.surface.danger-low-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.danger-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.danger-high-em}"
+        }
+      },
+      "success": {
+        "bg": {
+          "$value": "{ki.surface.s1}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.med-em}"
+        }
+      },
+      "info": {
+        "bg": {
+          "$value": "{ki.surface.s3}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.med-em}"
+        }
+      },
+      "warning": {
+        "bg": {
+          "$value": "{ki.surface.s4}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.high-em}"
+        }
+      },
+      "dismiss": {
+        "rest": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          }
+        },
+        "hover": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          }
+        },
+        "active": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          }
+        }
+      },
+      "focus-ring": {
+        "color": {
+          "$value": "{ki.outline.primary-high-em}"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,132 @@
+/* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
+ * Logical properties only (Art. IV): direction-agnostic by construction. */
+:host {
+  --_ki-switch-track: var(--ki-switch-unchecked-rest-track);
+  --_ki-switch-thumb: var(--ki-switch-unchecked-rest-thumb);
+  --_ki-switch-border: var(--ki-switch-unchecked-rest-border);
+  --_ki-switch-thumb-position: var(--ki-switch-thumb-inset);
+
+  display: inline-block;
+  min-block-size: var(--ki-switch-min-target);
+  min-inline-size: var(--ki-switch-min-target);
+}
+
+:host([checked]) {
+  --_ki-switch-track: var(--ki-switch-checked-rest-track);
+  --_ki-switch-thumb: var(--ki-switch-checked-rest-thumb);
+  --_ki-switch-border: var(--ki-switch-checked-rest-border);
+  --_ki-switch-thumb-position: calc(
+    100% -
+    var(--ki-switch-thumb-size) -
+    var(--ki-switch-thumb-inset)
+  );
+}
+
+:host(:hover:not(:disabled)) {
+  --_ki-switch-track: var(--ki-switch-unchecked-hover-track);
+  --_ki-switch-thumb: var(--ki-switch-unchecked-hover-thumb);
+  --_ki-switch-border: var(--ki-switch-unchecked-hover-border);
+}
+
+:host([checked]:hover:not(:disabled)) {
+  --_ki-switch-track: var(--ki-switch-checked-hover-track);
+  --_ki-switch-thumb: var(--ki-switch-checked-hover-thumb);
+  --_ki-switch-border: var(--ki-switch-checked-hover-border);
+}
+
+:host(:active:not(:disabled)) {
+  --_ki-switch-track: var(--ki-switch-unchecked-active-track);
+  --_ki-switch-thumb: var(--ki-switch-unchecked-active-thumb);
+  --_ki-switch-border: var(--ki-switch-unchecked-active-border);
+}
+
+:host([checked]:active:not(:disabled)) {
+  --_ki-switch-track: var(--ki-switch-checked-active-track);
+  --_ki-switch-thumb: var(--ki-switch-checked-active-thumb);
+  --_ki-switch-border: var(--ki-switch-checked-active-border);
+}
+
+:host(:disabled) {
+  --_ki-switch-track: var(--ki-switch-unchecked-disabled-track);
+  --_ki-switch-thumb: var(--ki-switch-unchecked-disabled-thumb);
+  --_ki-switch-border: var(--ki-switch-unchecked-disabled-border);
+}
+
+:host([checked]:disabled) {
+  --_ki-switch-track: var(--ki-switch-checked-disabled-track);
+  --_ki-switch-thumb: var(--ki-switch-checked-disabled-thumb);
+  --_ki-switch-border: var(--ki-switch-checked-disabled-border);
+}
+
+.base {
+  align-items: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--ki-switch-gap);
+  min-block-size: var(--ki-switch-min-target);
+  min-inline-size: var(--ki-switch-min-target);
+  position: relative;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+:host(:disabled) .base {
+  cursor: default;
+}
+
+input {
+  block-size: var(--ki-switch-track-height);
+  cursor: inherit;
+  inline-size: var(--ki-switch-track-width);
+  inset-block-start: calc((100% - var(--ki-switch-track-height)) / 2);
+  inset-inline-start: 0;
+  margin: var(--ki-space-zero);
+  opacity: 0;
+  position: absolute;
+}
+
+[part="track"] {
+  background-color: var(--_ki-switch-track);
+  block-size: var(--ki-switch-track-height);
+  border-color: var(--_ki-switch-border);
+  border-radius: var(--ki-switch-track-radius);
+  border-style: solid;
+  border-width: var(--ki-switch-border-width);
+  box-sizing: border-box;
+  display: inline-block;
+  flex: none;
+  inline-size: var(--ki-switch-track-width);
+  outline: var(--ki-switch-focus-ring-width) solid transparent;
+  outline-color: transparent;
+  outline-offset: var(--ki-switch-focus-ring-offset);
+  pointer-events: none;
+  position: relative;
+}
+
+[part="thumb"] {
+  background-color: var(--_ki-switch-thumb);
+  block-size: var(--ki-switch-thumb-size);
+  border-radius: var(--ki-switch-thumb-radius);
+  inline-size: var(--ki-switch-thumb-size);
+  inset-block-start: calc((100% - var(--ki-switch-thumb-size)) / 2);
+  inset-inline-start: var(--_ki-switch-thumb-position);
+  pointer-events: none;
+  position: absolute;
+}
+
+input:focus + [part="track"],
+input:focus-visible + [part="track"] {
+  box-shadow: 0 0 0 var(--ki-switch-focus-ring-width) var(--ki-switch-focus-ring-color);
+  outline-color: var(--ki-switch-focus-ring-color);
+}
+
+[part="label"] {
+  min-inline-size: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [part="thumb"] {
+    transition: inset-inline-start 120ms ease;
+  }
+}

@@ -15,9 +15,9 @@ interface MaybeFormValueInternals {
  * A token-styled radio group that owns selection, keyboard coordination and
  * form participation for slotted `ki-radio` options.
  *
- * When to use: a person must choose exactly one of a small set of mutually
+ * @whenToUse a person must choose exactly one of a small set of mutually
  * exclusive options that should all be visible at once.
- * When NOT to use: many options or tight space (use `ki-select`), independent
+ * @whenNotToUse many options or tight space (use `ki-select`), independent
  * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
  * authored selection on options; set this group's `value` instead.
  *

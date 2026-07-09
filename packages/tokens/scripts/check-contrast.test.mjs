@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  componentPairs,
   compositeOver,
   contrastRatio,
   parseColor,
   relativeLuminance,
-  resolveComponentPatterns,
   resolveContrastPairs,
 } from './check-contrast.mjs';
 
@@ -43,19 +43,50 @@ test('contrast pair table covers the declared data-model pairs', () => {
   );
 });
 
-test('component sweep includes button AA and radio non-text indicator patterns', () => {
-  const patterns = resolveComponentPatterns();
+test('component sweep is generic: any component bg/fg pair, semantic layers and disabled cells excluded', () => {
+  const declarations = new Map([
+    // a non-button component with a matching fg → swept
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-fg', '#111111'],
+    // a bare component pair with no state segment (e.g. ki-card) → swept
+    ['--ki-card-bg', '#ffffff'],
+    ['--ki-card-fg', '#111111'],
+    // button canary → swept
+    ['--ki-button-neutral-rest-bg', '#eeeeee'],
+    ['--ki-button-neutral-rest-fg', '#222222'],
+    // disabled cell → excluded (WCAG 1.4.3 exempt)
+    ['--ki-input-disabled-bg', '#fafafa'],
+    ['--ki-input-disabled-fg', '#cccccc'],
+    // bg without an fg sibling → skipped (non-text affordance, not a text pair)
+    ['--ki-checkbox-checked-rest-bg', '#0066ff'],
+    // semantic layer, not a component → excluded even with an fg sibling
+    ['--ki-surface-raised-bg', '#0066ff'],
+    ['--ki-surface-raised-fg', '#ffffff'],
+  ]);
 
-  assert.deepEqual(
-    patterns.map((pattern) => [pattern.name, pattern.minRatio]),
-    [
-      ['ki-button interactive cells', 4.5],
-      ['ki-radio selected dot cells', 3],
-    ],
+  const swept = componentPairs(declarations)
+    .map((pair) => [pair.component, pair.text, pair.surface])
+    .sort();
+
+  assert.deepEqual(swept, [
+    ['button', '--ki-button-neutral-rest-fg', '--ki-button-neutral-rest-bg'],
+    ['card', '--ki-card-fg', '--ki-card-bg'],
+    ['input', '--ki-input-rest-fg', '--ki-input-rest-bg'],
+  ]);
+});
+
+test('non-text control cells (radio ring/dot) require 3:1, text cells 4.5:1', () => {
+  const declarations = new Map([
+    ['--ki-radio-selected-rest-bg', '#ffffff'],
+    ['--ki-radio-selected-rest-fg', '#767676'],
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-fg', '#111111'],
+  ]);
+
+  const byComponent = Object.fromEntries(
+    componentPairs(declarations).map((pair) => [pair.component, pair.minRatio]),
   );
-  assert.equal(patterns[1].bgPattern.test('--ki-radio-selected-rest-bg'), true);
-  assert.equal(patterns[1].bgPattern.test('--ki-radio-selected-hover-bg'), true);
-  assert.equal(patterns[1].bgPattern.test('--ki-radio-selected-active-bg'), true);
-  assert.equal(patterns[1].bgPattern.test('--ki-radio-unselected-rest-bg'), false);
-  assert.equal(patterns[1].bgPattern.test('--ki-radio-selected-disabled-bg'), false);
+
+  assert.equal(byComponent.radio, 3);
+  assert.equal(byComponent.input, 4.5);
 });

@@ -6,10 +6,10 @@ import { normalizeBooleanPresence } from '../ki-radio-group/ki-radio-group.form'
 /**
  * One option in a token-styled radio group.
  *
- * When to use: place inside `ki-radio-group` when a person must choose
+ * @whenToUse place inside `ki-radio-group` when a person must choose
  * exactly one of a small visible set.
- * When NOT to use: never use `ki-radio` standalone, for multiple selection,
- * or with authored selection state; set the parent group's `value` instead.
+ * @whenNotToUse `ki-radio` standalone, multiple selection,
+ * or authored selection state; set the parent group's `value` instead.
  *
  * @slot - Option label. This is the accessible name and activation surface.
  * @part control - Visual ring and selected dot.

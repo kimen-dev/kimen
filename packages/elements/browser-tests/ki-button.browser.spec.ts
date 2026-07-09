@@ -19,6 +19,7 @@ type KiButtonElement = HTMLElement & {
   value: string;
   variant: string;
 };
+const defineKiButtonElement: () => void = defineCustomElement;
 
 const STYLE_ID = 'ki-button-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-button-browser-material3-token-style';
@@ -27,7 +28,7 @@ const tones = ['neutral', 'success', 'danger'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 beforeAll(() => {
-  defineCustomElement();
+  defineKiButtonElement();
 });
 
 function ensureTokens(): void {
