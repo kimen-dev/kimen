@@ -163,19 +163,49 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // must clear AA in every theme x scheme. Disabled cells are exempt
 // (WCAG 1.4.3). Added after the 002-ki-button clean-context review found
 // dark-scheme failures the 4 hardcoded pairs could not see (incident-to-gate
-// rule). The pair list is DERIVED from the built CSS, but the pattern below
-// is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
-// (or this gate silently ignores that component; the zero-match guard only
-// protects the patterns listed here).
-const COMPONENT_BG_PATTERN =
-  /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u;
+// rule).
+//
+// GENERIC by construction (was per-component and silently ignored every new
+// matrix — Codex review of 003/016): any `--ki-<component>-…-bg` whose name is
+// NOT a semantic/primitive layer, paired with its `-fg` sibling when one
+// exists. New components are swept automatically, with no regex to extend.
+// Disabled cells are excluded (exempt), as are `-bg` tokens with no `-fg`
+// counterpart (non-text affordances measured elsewhere, not a text pair).
+const SEMANTIC_LAYERS = new Set([
+  'color',
+  'surface',
+  'text',
+  'outline',
+  'elevation',
+  'shadow',
+  'space',
+  'typography',
+  'radius',
+  'motion',
+  'duration',
+  'ease',
+  'opacity',
+  'size',
+  'border',
+  'z',
+]);
+const COMPONENT_BG_PATTERN = /^--ki-([a-z][a-z0-9]*)-[\w-]+-bg$/u;
+// The canary: button is the foundational component and is always present, so a
+// zero-button sweep means the naming convention drifted (the old zero-length
+// guard is defeated once any other component contributes a pair).
+const CANARY_COMPONENT = 'button';
 
-function componentPairs(declarations) {
+export function componentPairs(declarations) {
   const pairs = [];
 
   for (const name of declarations.keys()) {
-    if (COMPONENT_BG_PATTERN.test(name)) {
-      pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
+    const match = name.match(COMPONENT_BG_PATTERN);
+    if (!match || SEMANTIC_LAYERS.has(match[1]) || /-disabled-/u.test(name)) {
+      continue;
+    }
+    const fg = name.replace(/-bg$/u, '-fg');
+    if (declarations.has(fg)) {
+      pairs.push({ component: match[1], text: fg, surface: name });
     }
   }
 
@@ -190,9 +220,9 @@ function evaluateStylesheet(theme, stylesheet) {
   for (const [scheme, declarations] of Object.entries(schemes)) {
     const swept = componentPairs(declarations);
 
-    if (swept.length === 0) {
+    if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
       failures.push(
-        `${theme}/${scheme}: no component-layer pairs matched — the sweep pattern drifted from the token names`,
+        `${theme}/${scheme}: no ${CANARY_COMPONENT}-layer pairs matched — the component sweep pattern drifted from the token names`,
       );
     }
 
