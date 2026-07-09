@@ -2,3 +2,4 @@
 // packaging correctness); TS maps .js → .tsx at compile time.
 export * from './components/ki-button/ki-button.js';
 export * from './components/ki-tabs/ki-tabs.js';
+export * from './components/ki-tab/ki-tab.js';
