@@ -143,12 +143,13 @@ export function buildManifest(docs) {
               privacy: 'public',
               description: method.docs ?? '',
               return: { type: { text: method.complexType?.return ?? 'void' } },
-              parameters:
-                method.signature?.map((parameter) => ({
-                  name: parameter.name,
-                  type: { text: parameter.type },
-                  description: parameter.docs ?? '',
-                })) ?? [],
+              // docs-json puts a method's parameters in `parameters`; `signature`
+              // is the string form and has no `.map` (data-model.md member shape).
+              parameters: (method.parameters ?? []).map((parameter) => ({
+                name: parameter.name,
+                type: { text: parameter.type },
+                description: parameter.docs ?? '',
+              })),
             }),
           ),
         ],
@@ -246,6 +247,8 @@ export function buildLlmsTxt(docs, pkg, preamble) {
       '',
       renderList('Events', (component.events ?? []).map(renderEvent)),
       '',
+      renderList('Methods', (component.methods ?? []).map(renderMethod)),
+      '',
       renderList(
         'CSS custom properties',
         (component.styles ?? []).map(
@@ -323,4 +326,10 @@ function renderEvent(event) {
     ? `CustomEvent<${event.complexType.original}>`
     : 'CustomEvent';
   return `\`${event.event ?? event.name}\` (${eventType}): ${oneLine(event.docs ?? '')}`;
+}
+
+function renderMethod(method) {
+  const params = (method.parameters ?? []).map((parameter) => parameter.name).join(', ');
+  const returnType = method.complexType?.return ?? 'void';
+  return `\`${method.name}(${params})\` (${returnType}): ${oneLine(method.docs ?? '')}`;
 }

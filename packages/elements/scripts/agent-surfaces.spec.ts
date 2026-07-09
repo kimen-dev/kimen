@@ -120,6 +120,49 @@ describe('agent surfaces', () => {
     );
     expect(summary).toContain('Parts:\n- `button`: Internal native button.');
     expect(summary).toContain('Events: none');
+    expect(summary).toContain('Methods: none');
+  });
+
+  it('S1 S2 render a documented public method in the manifest and llms.txt', async () => {
+    const docs = normalizeDocs(await readFixture('path-a-docs.json'));
+    const component = docs.components[0];
+    component.methods = [
+      {
+        name: 'show',
+        docs: 'Opens the dialog modally.',
+        docsTags: [],
+        signature: 'show(force: boolean) => Promise<void>',
+        returns: { type: 'Promise<void>', docs: '' },
+        parameters: [{ name: 'force', type: 'boolean', docs: 'Force open even if busy.' }],
+        complexType: {
+          signature: 'show(force: boolean) => Promise<void>',
+          parameters: [{ name: 'force', type: 'boolean', docs: 'Force open even if busy.' }],
+          references: {},
+          return: 'Promise<void>',
+        },
+      },
+    ];
+
+    // Manifest method member reads parameters from `parameters`, never `.map`
+    // on the `signature` string (would throw). Return comes from complexType.
+    const member = buildManifest(docs).modules[0].declarations[0].members.find(
+      (entry: ManifestMember & { kind?: string }) => entry.kind === 'method',
+    );
+    expect(member).toMatchObject({
+      kind: 'method',
+      name: 'show',
+      privacy: 'public',
+      return: { type: { text: 'Promise<void>' } },
+      parameters: [
+        { name: 'force', type: { text: 'boolean' }, description: 'Force open even if busy.' },
+      ],
+    });
+
+    // llms.txt lists the method as a one-line facet in the Methods section.
+    const summary = buildLlmsTxt(docs, (await readJson(pkgUrl)) as PackageFixture, preamble);
+    expect(summary).toContain(
+      'Methods:\n- `show(force)` (Promise<void>): Opens the dialog modally.',
+    );
   });
 
   it('S3 buildLlmsTxt carries when-to-use guidance verbatim from docsTags', async () => {

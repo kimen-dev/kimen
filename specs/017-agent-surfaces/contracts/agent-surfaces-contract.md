@@ -141,6 +141,8 @@ Parts:
 
 Events: none
 
+Methods: none
+
 CSS custom properties: see the --ki-button-* component token layer (names
 documented in the component contract when present).
 ```

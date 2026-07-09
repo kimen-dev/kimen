@@ -45,4 +45,6 @@ Parts:
 
 Events: none
 
+Methods: none
+
 CSS custom properties: none
