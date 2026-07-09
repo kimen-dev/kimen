@@ -218,6 +218,22 @@
       "name": "ki-tabs group worst case (component + full Stencil runtime, first component on a page)",
       "path": "dist/components/ki-tabs.js",
       "limit": "25 KB"
+    },
+    {
+      "name": "ki-select + ki-option marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": [
+        "dist/components/ki-select.js",
+        "dist/components/ki-option.js"
+      ],
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-select + ki-option worst case (component pair + full Stencil runtime)",
+      "path": "dist/components/ki-select.js",
+      "limit": "25 KB"
     }
   ],
   "nx": {

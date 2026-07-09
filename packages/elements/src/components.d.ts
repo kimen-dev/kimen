@@ -286,6 +286,24 @@ export namespace Components {
     interface KiListItem {
     }
     /**
+     * A declarative data option rendered by its owning `ki-select`.
+     * @whenToUse declare one choice inside a `ki-select`; its text is the
+     * human-facing label and its `value` is the submitted value.
+     * @whenNotToUse `ki-option` standalone, authoring selection
+     * on an option, or expecting it to paint its own row.
+     */
+    interface KiOption {
+        /**
+          * Makes this option unavailable. Disabled options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Submission and selection value for this option. When omitted, the value falls back to the trimmed option text, matching native `<option>` parity. When NOT to use: do not use this as selection state; set `ki-select.value`.
+         */
+        "value"?: string;
+    }
+    /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
      * @whenToUse communicate advancement of an ongoing task such as upload,
@@ -374,6 +392,46 @@ export namespace Components {
         "required": boolean;
         /**
           * Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
+     * A form-associated select-only combobox for choosing one option from
+     * declarative `ki-option` children.
+     * @whenToUse choose exactly one value from a known closed list, especially
+     * when there are roughly five or more choices or space is limited.
+     * @whenNotToUse `ki-radio-group` for a few always-visible choices,
+     * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
+     * binary decisions, or multiselect and command menus.
+     */
+    interface KiSelect {
+        /**
+          * Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
+          * @default ''
+         */
+        "label": string;
+        /**
+          * Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
+         */
+        "name"?: string;
+        /**
+          * Text shown while no option is selected. When NOT to use: do not use it as a replacement for `label`.
+          * @default ''
+         */
+        "placeholder": string;
+        /**
+          * Requires a non-empty submitted value. The platform validation message is donated by a hidden native select.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Live projection of the selected option value, or `""` when unselected. Assigning it selects the first matching option silently; the attribute is the reset/default declaration and is not updated by user commits.
           * @default ''
          */
         "value": string;
@@ -723,6 +781,19 @@ declare global {
         new (): HTMLKiListItemElement;
     };
     /**
+     * A declarative data option rendered by its owning `ki-select`.
+     * @whenToUse declare one choice inside a `ki-select`; its text is the
+     * human-facing label and its `value` is the submitted value.
+     * @whenNotToUse `ki-option` standalone, authoring selection
+     * on an option, or expecting it to paint its own row.
+     */
+    interface HTMLKiOptionElement extends Components.KiOption, HTMLStencilElement {
+    }
+    var HTMLKiOptionElement: {
+        prototype: HTMLKiOptionElement;
+        new (): HTMLKiOptionElement;
+    };
+    /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
      * @whenToUse communicate advancement of an ongoing task such as upload,
@@ -769,6 +840,21 @@ declare global {
     var HTMLKiRadioGroupElement: {
         prototype: HTMLKiRadioGroupElement;
         new (): HTMLKiRadioGroupElement;
+    };
+    /**
+     * A form-associated select-only combobox for choosing one option from
+     * declarative `ki-option` children.
+     * @whenToUse choose exactly one value from a known closed list, especially
+     * when there are roughly five or more choices or space is limited.
+     * @whenNotToUse `ki-radio-group` for a few always-visible choices,
+     * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
+     * binary decisions, or multiselect and command menus.
+     */
+    interface HTMLKiSelectElement extends Components.KiSelect, HTMLStencilElement {
+    }
+    var HTMLKiSelectElement: {
+        prototype: HTMLKiSelectElement;
+        new (): HTMLKiSelectElement;
     };
     /**
      * A token-styled switch for immediate on/off settings.
@@ -879,9 +965,11 @@ declare global {
         "ki-input": HTMLKiInputElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
+        "ki-option": HTMLKiOptionElement;
         "ki-progress": HTMLKiProgressElement;
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
+        "ki-select": HTMLKiSelectElement;
         "ki-switch": HTMLKiSwitchElement;
         "ki-tab": HTMLKiTabElement;
         "ki-tab-panel": HTMLKiTabPanelElement;
@@ -1171,6 +1259,24 @@ declare namespace LocalJSX {
     interface KiListItem {
     }
     /**
+     * A declarative data option rendered by its owning `ki-select`.
+     * @whenToUse declare one choice inside a `ki-select`; its text is the
+     * human-facing label and its `value` is the submitted value.
+     * @whenNotToUse `ki-option` standalone, authoring selection
+     * on an option, or expecting it to paint its own row.
+     */
+    interface KiOption {
+        /**
+          * Makes this option unavailable. Disabled options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Submission and selection value for this option. When omitted, the value falls back to the trimmed option text, matching native `<option>` parity. When NOT to use: do not use this as selection state; set `ki-select.value`.
+         */
+        "value"?: string;
+    }
+    /**
      * A token-styled, non-interactive progress indicator for known or unknown
      * duration work.
      * @whenToUse communicate advancement of an ongoing task such as upload,
@@ -1263,6 +1369,50 @@ declare namespace LocalJSX {
         "required"?: boolean;
         /**
           * Projection of the current selection. The initial attribute selects the first matching option; unmatched values leave the group unselected and operable. Assigning the property updates selection silently. When NOT to use: never author selection on `ki-radio`; set this value.
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
+     * A form-associated select-only combobox for choosing one option from
+     * declarative `ki-option` children.
+     * @whenToUse choose exactly one value from a known closed list, especially
+     * when there are roughly five or more choices or space is limited.
+     * @whenNotToUse `ki-radio-group` for a few always-visible choices,
+     * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
+     * binary decisions, or multiselect and command menus.
+     */
+    interface KiSelect {
+        /**
+          * Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
+          * @default ''
+         */
+        "label"?: string;
+        /**
+          * Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
+         */
+        "name"?: string;
+        /**
+          * Text shown while no option is selected. When NOT to use: do not use it as a replacement for `label`.
+          * @default ''
+         */
+        "placeholder"?: string;
+        /**
+          * Requires a non-empty submitted value. The platform validation message is donated by a hidden native select.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Live projection of the selected option value, or `""` when unselected. Assigning it selects the first matching option silently; the attribute is the reset/default declaration and is not updated by user commits.
           * @default ''
          */
         "value"?: string;
@@ -1489,6 +1639,10 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "autocomplete": string;
     }
+    interface KiOptionAttributes {
+        "value": string;
+        "disabled": boolean;
+    }
     interface KiProgressAttributes {
         "value": number;
         "max": number;
@@ -1506,6 +1660,14 @@ declare namespace LocalJSX {
         "label": string;
         "required": boolean;
         "disabled": boolean;
+    }
+    interface KiSelectAttributes {
+        "label": string;
+        "placeholder": string;
+        "name": string;
+        "value": string;
+        "disabled": boolean;
+        "required": boolean;
     }
     interface KiSwitchAttributes {
         "checked": boolean;
@@ -1551,9 +1713,11 @@ declare namespace LocalJSX {
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
         "ki-list": KiList;
         "ki-list-item": KiListItem;
+        "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
+        "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] };
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
         "ki-tab-panel": Omit<KiTabPanel, keyof KiTabPanelAttributes> & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K] };
@@ -1665,6 +1829,14 @@ declare module "@stencil/core" {
              */
             "ki-list-item": LocalJSX.IntrinsicElements["ki-list-item"] & JSXBase.HTMLAttributes<HTMLKiListItemElement>;
             /**
+             * A declarative data option rendered by its owning `ki-select`.
+             * @whenToUse declare one choice inside a `ki-select`; its text is the
+             * human-facing label and its `value` is the submitted value.
+             * @whenNotToUse `ki-option` standalone, authoring selection
+             * on an option, or expecting it to paint its own row.
+             */
+            "ki-option": LocalJSX.IntrinsicElements["ki-option"] & JSXBase.HTMLAttributes<HTMLKiOptionElement>;
+            /**
              * A token-styled, non-interactive progress indicator for known or unknown
              * duration work.
              * @whenToUse communicate advancement of an ongoing task such as upload,
@@ -1697,6 +1869,16 @@ declare module "@stencil/core" {
              * authored selection on options; set this group's `value` instead.
              */
             "ki-radio-group": LocalJSX.IntrinsicElements["ki-radio-group"] & JSXBase.HTMLAttributes<HTMLKiRadioGroupElement>;
+            /**
+             * A form-associated select-only combobox for choosing one option from
+             * declarative `ki-option` children.
+             * @whenToUse choose exactly one value from a known closed list, especially
+             * when there are roughly five or more choices or space is limited.
+             * @whenNotToUse `ki-radio-group` for a few always-visible choices,
+             * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
+             * binary decisions, or multiselect and command menus.
+             */
+            "ki-select": LocalJSX.IntrinsicElements["ki-select"] & JSXBase.HTMLAttributes<HTMLKiSelectElement>;
             /**
              * A token-styled switch for immediate on/off settings.
              * @whenToUse binary settings whose change takes effect immediately, always

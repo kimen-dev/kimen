@@ -38,3 +38,7 @@ export { KiTab } from './components/ki-tab/ki-tab.js';
 export type * from './components/ki-tab/ki-tab.js';
 export { KiTabPanel } from './components/ki-tab-panel/ki-tab-panel.js';
 export type * from './components/ki-tab-panel/ki-tab-panel.js';
+export { KiSelect } from './components/ki-select/ki-select.js';
+export type * from './components/ki-select/ki-select.js';
+export { KiOption } from './components/ki-option/ki-option.js';
+export type * from './components/ki-option/ki-option.js';

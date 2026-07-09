@@ -1,0 +1,27 @@
+{
+  "ki": {
+    "option": {
+      "radius": { "$value": "{ki.radius.xs}" },
+      "rest": {
+        "bg": { "$value": "{ki.surface.s2}" },
+        "fg": { "$value": "{ki.text.high-em}" }
+      },
+      "hover": {
+        "bg": { "$value": "{ki.surface.s3}" },
+        "fg": { "$value": "{ki.text.high-em}" }
+      },
+      "highlight": {
+        "bg": { "$value": "{ki.surface.primary-base-em}" },
+        "fg": { "$value": "{ki.text.high-em}" }
+      },
+      "selected": {
+        "bg": { "$value": "{ki.surface.primary-low-em}" },
+        "fg": { "$value": "{ki.text.high-em}" }
+      },
+      "disabled": {
+        "bg": { "$value": "{ki.surface.disabled-base-em}" },
+        "fg": { "$value": "{ki.text.low-em}" }
+      }
+    }
+  }
+}

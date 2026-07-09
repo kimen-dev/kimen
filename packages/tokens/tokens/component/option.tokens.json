@@ -1,0 +1,30 @@
+{
+  "ki": {
+    "option": {
+      "min-target": { "$value": "{ki.space.7xl}" },
+      "padding-inline": { "$value": "{ki.space.md}" },
+      "radius": { "$value": "{ki.radius.xs}" },
+      "font-size": { "$value": "{ki.typography.size.body-1}" },
+      "rest": {
+        "bg": { "$value": "{ki.surface.s1}" },
+        "fg": { "$value": "{ki.text.high-em}" }
+      },
+      "hover": {
+        "bg": { "$value": "{ki.surface.s2}" },
+        "fg": { "$value": "{ki.text.high-em}" }
+      },
+      "highlight": {
+        "bg": { "$value": "{ki.surface.primary-base-em}" },
+        "fg": { "$value": "{ki.text.high-em}" }
+      },
+      "selected": {
+        "bg": { "$value": "{ki.surface.primary-low-em}" },
+        "fg": { "$value": "{ki.text.high-em}" }
+      },
+      "disabled": {
+        "bg": { "$value": "{ki.surface.disabled-base-em}" },
+        "fg": { "$value": "{ki.text.low-em}" }
+      }
+    }
+  }
+}

@@ -311,6 +311,30 @@ Methods: none
 
 CSS custom properties: none
 
+### ki-option
+
+A declarative data option rendered by its owning `ki-select`.
+
+When to use: declare one choice inside a `ki-select`; its text is the
+human-facing label and its `value` is the submitted value.
+When NOT to use: `ki-option` standalone, authoring selection
+on an option, or expecting it to paint its own row.
+
+Attributes:
+- `disabled` (boolean, default false): Makes this option unavailable. Disabled options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select.
+- `value` (string | undefined): Submission and selection value for this option. When omitted, the value falls back to the trimmed option text, matching native `<option>` parity. When NOT to use: do not use this as selection state; set `ki-select.value`.
+
+Slots:
+- (default): Text label mirrored by the owning select.
+
+Parts: none
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
 ### ki-progress
 
 A token-styled, non-interactive progress indicator for known or unknown duration work.
@@ -393,6 +417,41 @@ Slots:
 
 Parts:
 - `label`: Visible group label and accessible-name source.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
+### ki-select
+
+A form-associated select-only combobox for choosing one option from declarative `ki-option` children.
+
+When to use: choose exactly one value from a known closed list, especially
+when there are roughly five or more choices or space is limited.
+When NOT to use: `ki-radio-group` for a few always-visible choices,
+`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
+binary decisions, or multiselect and command menus.
+
+Attributes:
+- `disabled` (boolean, default false): Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
+- `label` (string, default ''): Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
+- `name` (string | undefined): Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
+- `placeholder` (string, default ''): Text shown while no option is selected. When NOT to use: do not use it as a replacement for `label`.
+- `required` (boolean, default false): Requires a non-empty submitted value. The platform validation message is donated by a hidden native select.
+- `value` (string, default ''): Live projection of the selected option value, or `""` when unselected. Assigning it selects the first matching option silently; the attribute is the reset/default declaration and is not updated by user commits.
+
+Slots:
+- (default): `ki-option` data children. They do not paint; rows are mirrored.
+
+Parts:
+- `indicator`: Decorative dropdown indicator.
+- `label`: Visible label and accessible-name source.
+- `listbox`: Popup listbox surface.
+- `option`: Mirrored option row rendered in this shadow root.
+- `trigger`: Native button carrying the combobox role.
+- `value`: Displayed selection or placeholder.
 
 Events: none
 

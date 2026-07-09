@@ -1225,6 +1225,90 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/ki-option/ki-option.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiOption",
+          "customElement": true,
+          "tagName": "ki-option",
+          "description": "A declarative data option rendered by its owning `ki-select`.",
+          "whenToUse": "declare one choice inside a `ki-select`; its text is the\nhuman-facing label and its `value` is the submitted value.",
+          "whenNotToUse": "`ki-option` standalone, authoring selection\non an option, or expecting it to paint its own row.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string | undefined"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes this option unavailable. Disabled options cannot be selected, are\nskipped by keyboard highlight, and are exposed unavailable by the select.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Submission and selection value for this option. When omitted, the value\nfalls back to the trimmed option text, matching native `<option>` parity.\nWhen NOT to use: do not use this as selection state; set `ki-select.value`.",
+              "attribute": "value",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Text label mirrored by the owning select."
+            }
+          ],
+          "cssParts": [],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiOption",
+          "declaration": {
+            "name": "KiOption",
+            "module": "src/components/ki-option/ki-option.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-option",
+          "declaration": {
+            "name": "KiOption",
+            "module": "src/components/ki-option/ki-option.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/ki-progress/ki-progress.tsx",
       "declarations": [
         {
@@ -1609,6 +1693,195 @@
           "declaration": {
             "name": "KiRadioGroup",
             "module": "src/components/ki-radio-group/ki-radio-group.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/ki-select/ki-select.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiSelect",
+          "customElement": true,
+          "tagName": "ki-select",
+          "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.",
+          "whenToUse": "choose exactly one value from a known closed list, especially\nwhen there are roughly five or more choices or space is limited.",
+          "whenNotToUse": "`ki-radio-group` for a few always-visible choices,\n`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for\nbinary decisions, or multiselect and command menus.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "placeholder",
+              "fieldName": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Visible label and accessible-name source for the combobox trigger.\nWhen NOT to use: do not omit it; unlabeled selects are invalid usage.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Form-data key used when a selected option contributes its value.\nWhen NOT to use: omit it when the select should not submit data.",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text shown while no option is selected.\nWhen NOT to use: do not use it as a replacement for `label`.",
+              "attribute": "placeholder",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requires a non-empty submitted value. The platform validation message is\ndonated by a hidden native select.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Live projection of the selected option value, or `\"\"` when unselected.\nAssigning it selects the first matching option silently; the attribute is\nthe reset/default declaration and is not updated by user commits.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "`ki-option` data children. They do not paint; rows are mirrored."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "indicator",
+              "description": "Decorative dropdown indicator."
+            },
+            {
+              "name": "label",
+              "description": "Visible label and accessible-name source."
+            },
+            {
+              "name": "listbox",
+              "description": "Popup listbox surface."
+            },
+            {
+              "name": "option",
+              "description": "Mirrored option row rendered in this shadow root."
+            },
+            {
+              "name": "trigger",
+              "description": "Native button carrying the combobox role."
+            },
+            {
+              "name": "value",
+              "description": "Displayed selection or placeholder."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiSelect",
+          "declaration": {
+            "name": "KiSelect",
+            "module": "src/components/ki-select/ki-select.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-select",
+          "declaration": {
+            "name": "KiSelect",
+            "module": "src/components/ki-select/ki-select.tsx"
           }
         }
       ]
