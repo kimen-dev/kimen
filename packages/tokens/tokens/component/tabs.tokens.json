@@ -6,7 +6,7 @@
       },
       "divider": {
         "width": {
-          "$value": "{ki.space.xxxs}"
+          "$value": "{ki.space.xxs}"
         },
         "color": {
           "$value": "{ki.outline.low-em}"
