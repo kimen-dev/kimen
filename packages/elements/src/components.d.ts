@@ -10,11 +10,13 @@ import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiInputType } from "./components/ki-input/ki-input";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
+import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiInputType } from "./components/ki-input/ki-input";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
+export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export namespace Components {
     /**
      * A persistent inline status message with token-backed tone semantics.
@@ -423,6 +425,28 @@ export namespace Components {
          */
         "value": string;
     }
+    /**
+     * A transient, text-only description bubble for one slotted trigger.
+     * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
+     * otherwise ambiguous control when the same information is discoverable
+     * elsewhere in the interface.
+     * @whenNotToUse essential or unique information in a tooltip; interactive
+     * or rich content in a tooltip; form validation messages, disabled controls,
+     * or touch-primary flows. Use visible layout text or a future `ki-popover`
+     * pattern for those cases.
+     */
+    interface KiTooltip {
+        /**
+          * The entire tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a future popover.
+          * @default ''
+         */
+        "label": string;
+        /**
+          * Preferred placement for the tooltip. The component may flip or clamp the rendered placement to keep the bubble inside the viewport; unknown runtime values fall back to `top`. When NOT to use: do not depend on placement for meaning or reading order.
+          * @default 'top'
+         */
+        "placement": KiTooltipPlacement;
+    }
 }
 export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -645,6 +669,22 @@ declare global {
         prototype: HTMLKiTextareaElement;
         new (): HTMLKiTextareaElement;
     };
+    /**
+     * A transient, text-only description bubble for one slotted trigger.
+     * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
+     * otherwise ambiguous control when the same information is discoverable
+     * elsewhere in the interface.
+     * @whenNotToUse essential or unique information in a tooltip; interactive
+     * or rich content in a tooltip; form validation messages, disabled controls,
+     * or touch-primary flows. Use visible layout text or a future `ki-popover`
+     * pattern for those cases.
+     */
+    interface HTMLKiTooltipElement extends Components.KiTooltip, HTMLStencilElement {
+    }
+    var HTMLKiTooltipElement: {
+        prototype: HTMLKiTooltipElement;
+        new (): HTMLKiTooltipElement;
+    };
     interface HTMLElementTagNameMap {
         "ki-alert": HTMLKiAlertElement;
         "ki-badge": HTMLKiBadgeElement;
@@ -659,6 +699,7 @@ declare global {
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-switch": HTMLKiSwitchElement;
         "ki-textarea": HTMLKiTextareaElement;
+        "ki-tooltip": HTMLKiTooltipElement;
     }
 }
 declare namespace LocalJSX {
@@ -1099,6 +1140,28 @@ declare namespace LocalJSX {
          */
         "value"?: string;
     }
+    /**
+     * A transient, text-only description bubble for one slotted trigger.
+     * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
+     * otherwise ambiguous control when the same information is discoverable
+     * elsewhere in the interface.
+     * @whenNotToUse essential or unique information in a tooltip; interactive
+     * or rich content in a tooltip; form validation messages, disabled controls,
+     * or touch-primary flows. Use visible layout text or a future `ki-popover`
+     * pattern for those cases.
+     */
+    interface KiTooltip {
+        /**
+          * The entire tooltip content. The string is reflected to the slotted trigger's accessible description without changing its name. Empty or whitespace-only labels render no tooltip and expose no description. When to use: a short hint that clarifies the slotted trigger. When NOT to use: never use `label` for essential information, rich content, interactive content, validation messages, or information attached to disabled controls; put that content in visible UI or a future popover.
+          * @default ''
+         */
+        "label"?: string;
+        /**
+          * Preferred placement for the tooltip. The component may flip or clamp the rendered placement to keep the bubble inside the viewport; unknown runtime values fall back to `top`. When NOT to use: do not depend on placement for meaning or reading order.
+          * @default 'top'
+         */
+        "placement"?: KiTooltipPlacement;
+    }
 
     interface KiAlertAttributes {
         "tone": KiAlertTone | (string & {});
@@ -1174,6 +1237,10 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "autocomplete": string;
     }
+    interface KiTooltipAttributes {
+        "label": string;
+        "placement": KiTooltipPlacement;
+    }
 
     interface IntrinsicElements {
         "ki-alert": Omit<KiAlert, keyof KiAlertAttributes> & { [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K] };
@@ -1189,6 +1256,7 @@ declare namespace LocalJSX {
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
+        "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -1335,6 +1403,17 @@ declare module "@stencil/core" {
              * enclosing form, the inverse of `ki-input`.
              */
             "ki-textarea": LocalJSX.IntrinsicElements["ki-textarea"] & JSXBase.HTMLAttributes<HTMLKiTextareaElement>;
+            /**
+             * A transient, text-only description bubble for one slotted trigger.
+             * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
+             * otherwise ambiguous control when the same information is discoverable
+             * elsewhere in the interface.
+             * @whenNotToUse essential or unique information in a tooltip; interactive
+             * or rich content in a tooltip; form validation messages, disabled controls,
+             * or touch-primary flows. Use visible layout text or a future `ki-popover`
+             * pattern for those cases.
+             */
+            "ki-tooltip": LocalJSX.IntrinsicElements["ki-tooltip"] & JSXBase.HTMLAttributes<HTMLKiTooltipElement>;
         }
     }
 }

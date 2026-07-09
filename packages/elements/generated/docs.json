@@ -2550,6 +2550,131 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-tooltip/ki-tooltip.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-tooltip",
+      "docs": "A transient, text-only description bubble for one slotted trigger.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "add a brief clarifying hint for an icon-only, abbreviated, or\notherwise ambiguous control when the same information is discoverable\nelsewhere in the interface."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "essential or unique information in a tooltip; interactive\nor rich content in a tooltip; form validation messages, disabled controls,\nor touch-primary flows. Use visible layout text or a future `ki-popover`\npattern for those cases."
+        },
+        {
+          "name": "slot",
+          "text": "- Exactly one interactive trigger. The component reflects `label` to\nthe trigger's `aria-description`."
+        },
+        {
+          "name": "part",
+          "text": "tooltip - The non-focusable tooltip bubble."
+        }
+      ],
+      "usage": {},
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "The entire tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a future popover.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "placement",
+          "type": "\"bottom\" | \"end\" | \"start\" | \"top\"",
+          "complexType": {
+            "original": "KiTooltipPlacement",
+            "resolved": "\"bottom\" | \"end\" | \"start\" | \"top\"",
+            "references": {
+              "KiTooltipPlacement": {
+                "location": "import",
+                "path": "./ki-tooltip.position.js",
+                "id": "src/components/ki-tooltip/ki-tooltip.position.ts::KiTooltipPlacement",
+                "referenceLocation": "KiTooltipPlacement"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "placement",
+          "reflectToAttr": true,
+          "docs": "Preferred placement for the tooltip. The component may flip or clamp the\nrendered placement to keep the bubble inside the viewport; unknown runtime\nvalues fall back to `top`.\nWhen NOT to use: do not depend on placement for meaning or reading order.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'top'"
+            }
+          ],
+          "default": "'top'",
+          "values": [
+            {
+              "value": "bottom",
+              "type": "string"
+            },
+            {
+              "value": "end",
+              "type": "string"
+            },
+            {
+              "value": "start",
+              "type": "string"
+            },
+            {
+              "value": "top",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Exactly one interactive trigger. The component reflects `label` to\nthe trigger's `aria-description`."
+        }
+      ],
+      "parts": [
+        {
+          "name": "tooltip",
+          "docs": "The non-focusable tooltip bubble."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
     }
   ],
   "typeLibrary": {
@@ -2597,6 +2722,11 @@
       "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
       "docstring": "",
       "path": "src/components/ki-alert/ki-alert.tone.ts"
+    },
+    "src/components/ki-tooltip/ki-tooltip.position.ts::KiTooltipPlacement": {
+      "declaration": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';",
+      "docstring": "",
+      "path": "src/components/ki-tooltip/ki-tooltip.position.ts"
     }
   }
 }

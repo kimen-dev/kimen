@@ -44,17 +44,34 @@ export default defineConfig({
             await page.emulateMedia({ reducedMotion });
           },
         ),
+        installClock: defineBrowserCommand(async ({ page }) => {
+          await page.clock.install();
+        }),
+        fastForwardClock: defineBrowserCommand(async ({ page }, milliseconds: number) => {
+          await page.clock.fastForward(milliseconds);
+        }),
+        resumeClock: defineBrowserCommand(async ({ page }) => {
+          await page.clock.resume();
+        }),
       },
       instances: [
         ...browsers.map((browser) => ({
           browser,
           name: `${browser}-light`,
-          exclude: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
+          exclude: [
+            'browser-tests/**/*.dark.browser.spec.{ts,tsx}',
+            'browser-tests/**/*.motion.browser.spec.{ts,tsx}',
+          ],
         })),
         ...browsers.map((browser) => ({
           browser,
           name: `${browser}-dark`,
           include: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
+        })),
+        ...browsers.map((browser) => ({
+          browser,
+          name: `${browser}-reduced-motion`,
+          include: ['browser-tests/**/*.motion.browser.spec.{ts,tsx}'],
         })),
       ],
     },

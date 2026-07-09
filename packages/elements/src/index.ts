@@ -28,3 +28,5 @@ export { KiList } from './components/ki-list/ki-list.js';
 export type * from './components/ki-list/ki-list.js';
 export { KiListItem } from './components/ki-list-item/ki-list-item.js';
 export type * from './components/ki-list-item/ki-list-item.js';
+export { KiTooltip } from './components/ki-tooltip/ki-tooltip.js';
+export type { KiTooltipPlacement } from './components/ki-tooltip/ki-tooltip.position.js';

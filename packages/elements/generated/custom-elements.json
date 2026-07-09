@@ -1816,6 +1816,97 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/ki-tooltip/ki-tooltip.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiTooltip",
+          "customElement": true,
+          "tagName": "ki-tooltip",
+          "description": "A transient, text-only description bubble for one slotted trigger.",
+          "whenToUse": "add a brief clarifying hint for an icon-only, abbreviated, or\notherwise ambiguous control when the same information is discoverable\nelsewhere in the interface.",
+          "whenNotToUse": "essential or unique information in a tooltip; interactive\nor rich content in a tooltip; form validation messages, disabled controls,\nor touch-primary flows. Use visible layout text or a future `ki-popover`\npattern for those cases.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "placement",
+              "fieldName": "placement",
+              "type": {
+                "text": "\"bottom\" | \"end\" | \"start\" | \"top\""
+              },
+              "default": "'top'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The entire tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a future popover.",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "privacy": "public",
+              "type": {
+                "text": "\"bottom\" | \"end\" | \"start\" | \"top\""
+              },
+              "default": "'top'",
+              "description": "Preferred placement for the tooltip. The component may flip or clamp the\nrendered placement to keep the bubble inside the viewport; unknown runtime\nvalues fall back to `top`.\nWhen NOT to use: do not depend on placement for meaning or reading order.",
+              "attribute": "placement",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Exactly one interactive trigger. The component reflects `label` to\nthe trigger's `aria-description`."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "tooltip",
+              "description": "The non-focusable tooltip bubble."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiTooltip",
+          "declaration": {
+            "name": "KiTooltip",
+            "module": "src/components/ki-tooltip/ki-tooltip.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-tooltip",
+          "declaration": {
+            "name": "KiTooltip",
+            "module": "src/components/ki-tooltip/ki-tooltip.tsx"
+          }
+        }
+      ]
     }
   ]
 }

@@ -175,6 +175,19 @@
       "name": "ki-list-item worst case (component + full Stencil runtime, first component on a page)",
       "path": "dist/components/ki-list-item.js",
       "limit": "25 KB"
+    },
+    {
+      "name": "ki-tooltip marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": "dist/components/ki-tooltip.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-tooltip worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-tooltip.js",
+      "limit": "25 KB"
     }
   ],
   "nx": {

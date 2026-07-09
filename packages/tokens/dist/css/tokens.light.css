@@ -291,6 +291,9 @@
   --ki-button-ghost-hover-shadow: none;
   --ki-button-ghost-active-shadow: none;
   --ki-button-ghost-disabled-shadow: none;
+  --ki-tooltip-shadow: 0 1px 2px 0 var(--ki-elevation-shadow-dark), 0 2px 6px 2px var(--ki-elevation-shadow-med);
+  --ki-tooltip-show-delay: 500ms;
+  --ki-tooltip-hide-delay: 100ms;
   --ki-progress-indeterminate-duration: 1600ms;
   --ki-card-elevation: 0 1px 2px 0 var(--ki-elevation-shadow), 0 2px 6px 2px var(--ki-elevation-shadow-med);
   --ki-color-brand-high-em: var(--ki-color-gray-950);
@@ -550,6 +553,14 @@
   --ki-button-focus-ring-width: var(--ki-space-xxs);
   --ki-button-focus-ring-offset: var(--ki-space-xxs);
   --ki-button-border-width: var(--ki-space-xxs);
+  --ki-tooltip-radius: var(--ki-radius-sm);
+  --ki-tooltip-padding-inline: var(--ki-space-md);
+  --ki-tooltip-padding-block: var(--ki-space-xs);
+  --ki-tooltip-max-inline-size: var(--ki-space-25xl);
+  --ki-tooltip-offset: var(--ki-space-xs);
+  --ki-tooltip-font-size: var(--ki-font-size-caption-2);
+  --ki-tooltip-font-weight: var(--ki-font-weight-body-medium);
+  --ki-tooltip-line-height: var(--ki-font-line-height-caption-2);
   --ki-list-padding: var(--ki-space-zero);
   --ki-list-gap: var(--ki-space-xs);
   --ki-list-item-min-height: var(--ki-space-14xl);
@@ -828,6 +839,8 @@
   --ki-button-ghost-danger-active-border: var(--ki-outline-none);
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+  --ki-tooltip-bg: var(--ki-surface-inverse-white);
+  --ki-tooltip-fg: var(--ki-text-inverse-black);
   --ki-list-bg: var(--ki-surface-s0);
   --ki-list-item-divider-color: var(--ki-outline-low-em);
   --ki-list-item-primary-font-size: var(--ki-typography-size-body-1);
