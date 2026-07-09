@@ -304,6 +304,86 @@
     "./loader": {
       "types": "./loader/index.d.ts",
       "import": "./loader/index.js"
+    },
+    "./ki-alert": {
+      "types": "./dist/components/ki-alert.d.ts",
+      "import": "./dist/components/ki-alert.js"
+    },
+    "./ki-badge": {
+      "types": "./dist/components/ki-badge.d.ts",
+      "import": "./dist/components/ki-badge.js"
+    },
+    "./ki-button": {
+      "types": "./dist/components/ki-button.d.ts",
+      "import": "./dist/components/ki-button.js"
+    },
+    "./ki-card": {
+      "types": "./dist/components/ki-card.d.ts",
+      "import": "./dist/components/ki-card.js"
+    },
+    "./ki-checkbox": {
+      "types": "./dist/components/ki-checkbox.d.ts",
+      "import": "./dist/components/ki-checkbox.js"
+    },
+    "./ki-dialog": {
+      "types": "./dist/components/ki-dialog.d.ts",
+      "import": "./dist/components/ki-dialog.js"
+    },
+    "./ki-input": {
+      "types": "./dist/components/ki-input.d.ts",
+      "import": "./dist/components/ki-input.js"
+    },
+    "./ki-list": {
+      "types": "./dist/components/ki-list.d.ts",
+      "import": "./dist/components/ki-list.js"
+    },
+    "./ki-list-item": {
+      "types": "./dist/components/ki-list-item.d.ts",
+      "import": "./dist/components/ki-list-item.js"
+    },
+    "./ki-option": {
+      "types": "./dist/components/ki-option.d.ts",
+      "import": "./dist/components/ki-option.js"
+    },
+    "./ki-progress": {
+      "types": "./dist/components/ki-progress.d.ts",
+      "import": "./dist/components/ki-progress.js"
+    },
+    "./ki-radio": {
+      "types": "./dist/components/ki-radio.d.ts",
+      "import": "./dist/components/ki-radio.js"
+    },
+    "./ki-radio-group": {
+      "types": "./dist/components/ki-radio-group.d.ts",
+      "import": "./dist/components/ki-radio-group.js"
+    },
+    "./ki-select": {
+      "types": "./dist/components/ki-select.d.ts",
+      "import": "./dist/components/ki-select.js"
+    },
+    "./ki-switch": {
+      "types": "./dist/components/ki-switch.d.ts",
+      "import": "./dist/components/ki-switch.js"
+    },
+    "./ki-tab": {
+      "types": "./dist/components/ki-tab.d.ts",
+      "import": "./dist/components/ki-tab.js"
+    },
+    "./ki-tab-panel": {
+      "types": "./dist/components/ki-tab-panel.d.ts",
+      "import": "./dist/components/ki-tab-panel.js"
+    },
+    "./ki-tabs": {
+      "types": "./dist/components/ki-tabs.d.ts",
+      "import": "./dist/components/ki-tabs.js"
+    },
+    "./ki-textarea": {
+      "types": "./dist/components/ki-textarea.d.ts",
+      "import": "./dist/components/ki-textarea.js"
+    },
+    "./ki-tooltip": {
+      "types": "./dist/components/ki-tooltip.d.ts",
+      "import": "./dist/components/ki-tooltip.js"
     }
   }
 }

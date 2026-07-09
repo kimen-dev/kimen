@@ -128,6 +128,21 @@ function requireTooltip(host: KiTooltipElement): HTMLDivElement {
   return tooltip;
 }
 
+// The bubble is always in the DOM; the `is-visible` class flips its computed
+// `visibility`. Read it synchronously so fake-clock tests never depend on the
+// polling `expect.element` matcher — page.clock freezes rAF/setTimeout, and a
+// frozen poll cannot re-check, so it flakes (times out) under load.
+function isTooltipVisible(host: KiTooltipElement): boolean {
+  return getComputedStyle(requireTooltip(host)).visibility === 'visible';
+}
+
+// Under an installed fake clock, Stencil's queued render (rAF) does not run
+// until the clock crosses an animation frame. Advancing ~one frame past a
+// state change flushes the render so the DOM reflects the new `visible` state.
+async function runRenderFrame(): Promise<void> {
+  await browserCommands.fastForwardClock(20);
+}
+
 function requireTriggerSlot(host: KiTooltipElement): void {
   const slot = host.shadowRoot?.querySelector('slot');
   if (!slot) {
@@ -180,21 +195,24 @@ describe('ki-tooltip pointer path in a real browser', () => {
 
       requireTriggerSlot(host);
       await userEvent.hover(trigger);
+
+      // Just short of the 150ms show delay: still hidden (no render since mount).
       await browserCommands.fastForwardClock(149);
-      await nextFrame();
-      await expect.element(requireTooltip(host)).not.toBeVisible();
+      expect(isTooltipVisible(host)).toBe(false);
 
+      // Cross the boundary, then run the render frame so the DOM reflects show.
       await browserCommands.fastForwardClock(1);
-      await nextFrame();
-      await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+      await runRenderFrame();
+      expect(isTooltipVisible(host)).toBe(true);
 
+      // Leaving the trigger starts the 75ms linger; the tooltip stays visible.
       await userEvent.unhover(trigger);
-      await nextFrame();
-      await expect.element(requireTooltip(host)).toBeVisible();
+      expect(isTooltipVisible(host)).toBe(true);
 
+      // The linger elapses: hidden again once the render frame runs.
       await browserCommands.fastForwardClock(75);
-      await nextFrame();
-      await expect.element(requireTooltip(host)).not.toBeVisible();
+      await runRenderFrame();
+      expect(isTooltipVisible(host)).toBe(false);
     } finally {
       await browserCommands.resumeClock();
     }

@@ -131,6 +131,34 @@ describe('ki-tooltip', () => {
     ).toBe('start');
   });
 
+  it('S14 reserves the offset gap in the flip decision', () => {
+    const viewport = { width: 320, height: 240 };
+    const tooltip = rect(0, 0, 80, 40);
+    // Trigger top edge sits 44px from the viewport top: the 40px bubble fits,
+    // but the 40px bubble PLUS an 8px offset gap (48px) does not.
+    const triggerRect = rect(120, 44, 40, 24);
+
+    expect(
+      resolveTooltipPosition({
+        placement: 'top',
+        dir: 'ltr',
+        triggerRect,
+        tooltipRect: tooltip,
+        viewport,
+      }).effectivePlacement,
+    ).toBe('top');
+    expect(
+      resolveTooltipPosition({
+        placement: 'top',
+        dir: 'ltr',
+        triggerRect,
+        tooltipRect: tooltip,
+        viewport,
+        offset: 8,
+      }).effectivePlacement,
+    ).toBe('bottom');
+  });
+
   it('S11 maps start and end logically under LTR and RTL', () => {
     const viewport = { width: 320, height: 240 };
     const tooltip = rect(0, 0, 80, 40);

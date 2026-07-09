@@ -23,6 +23,13 @@ export interface KiTooltipPositionInput {
   triggerRect: KiTooltipRect;
   tooltipRect: KiTooltipRect;
   viewport: KiTooltipViewport;
+  /**
+   * Main-axis gap (px) between trigger and bubble — the CSS
+   * `calc(100% + --ki-tooltip-offset)`. The bubble consumes `size + offset`
+   * of room, so the flip decision must reserve it or the bubble overflows the
+   * preferred edge by up to the offset near a viewport boundary.
+   */
+  offset?: number;
 }
 
 export interface KiTooltipPosition {
@@ -118,7 +125,7 @@ export function resolveTooltipPosition(input: KiTooltipPositionInput): KiTooltip
   const oppositeSide = physicalSide(opposite, input.dir);
   const preferredRoom = mainAxisRoom(preferredSide, input.triggerRect, input.viewport);
   const oppositeRoom = mainAxisRoom(oppositeSide, input.triggerRect, input.viewport);
-  const requiredRoom = mainAxisSize(preferredSide, input.tooltipRect);
+  const requiredRoom = mainAxisSize(preferredSide, input.tooltipRect) + (input.offset ?? 0);
   const effectivePlacement =
     preferredRoom < requiredRoom && oppositeRoom > preferredRoom ? opposite : preferred;
 
