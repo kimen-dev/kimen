@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  componentPairs,
   compositeOver,
   contrastRatio,
   parseColor,
@@ -38,6 +39,55 @@ test('contrast pair table covers the declared data-model pairs', () => {
       ['--ki-text-med-em', '--ki-surface-s0'],
       ['--ki-text-high-em', '--ki-surface-s1'],
       ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
+    ],
+  );
+  assert.deepEqual(
+    pairs.map((pair) => pair.minimum),
+    [4.5, 4.5, 4.5, 4.5],
+  );
+});
+
+test('component pair patterns cover button text and tab label cells', () => {
+  const declarations = new Map([
+    ['--ki-button-primary-neutral-rest-bg', '#000000'],
+    ['--ki-tab-selected-rest-bg', '#ffffff'],
+    ['--ki-tab-unselected-hover-bg', '#ffffff'],
+  ]);
+
+  assert.deepEqual(
+    componentPairs(declarations).filter((pair) => !pair.error),
+    [
+      {
+        text: '--ki-button-primary-neutral-rest-fg',
+        surface: '--ki-button-primary-neutral-rest-bg',
+        minimum: 4.5,
+      },
+      {
+        text: '--ki-tab-selected-rest-fg',
+        surface: '--ki-tab-selected-rest-bg',
+        minimum: 4.5,
+      },
+      {
+        text: '--ki-tab-unselected-hover-fg',
+        surface: '--ki-tab-unselected-hover-bg',
+        minimum: 4.5,
+      },
+      {
+        text: '--ki-tab-indicator-color',
+        surface: '--ki-tab-selected-rest-bg',
+        minimum: 3,
+      },
+    ],
+  );
+});
+
+test('component pair patterns report zero-match drift per component family', () => {
+  const pairs = componentPairs(new Map([['--ki-button-primary-neutral-rest-bg', '#000000']]));
+
+  assert.deepEqual(
+    pairs.filter((pair) => pair.error).map((pair) => pair.error),
+    [
+      'no component-layer pairs matched for ki-tab interactive label cells — the sweep pattern drifted from the token names',
     ],
   );
 });
