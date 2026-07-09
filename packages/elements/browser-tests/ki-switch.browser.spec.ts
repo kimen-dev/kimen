@@ -199,6 +199,24 @@ describe('ki-switch in a real browser', () => {
     expect(el.checked).toBe(false);
   });
 
+  it('S4 applies boolean presence semantics to checked set after hydration', async () => {
+    const el = await mount();
+    const input = internalInput(el);
+    expect(el.checked).toBe(false);
+
+    // Present-but-falsy attribute set post-hydration means on (presence).
+    el.setAttribute('checked', 'false');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(el.checked).toBe(true);
+    expect(input.checked).toBe(true);
+
+    // Reflection is not fought: a normal toggle still turns it off and stays off.
+    await userEvent.click(input);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(el.checked).toBe(false);
+    expect(el.hasAttribute('checked')).toBe(false);
+  });
+
   it('S5 Tab reaches the switch and its focus indication is visible', async () => {
     const el = await mount();
     internalInput(el).blur();
