@@ -1,0 +1,117 @@
+{
+  "ki": {
+    "tab": {
+      "min-block-size": {
+        "$value": "{ki.space.7xl}"
+      },
+      "padding-inline": {
+        "$value": "{ki.space.lg}"
+      },
+      "gap": {
+        "$value": "{ki.space.xs}"
+      },
+      "radius": {
+        "$value": "{ki.radius.sm}"
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-1}"
+      },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.medium}"
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}"
+      },
+      "selected": {
+        "rest": {
+          "fg": {
+            "$value": "{ki.text.primary-high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.s0}"
+          }
+        },
+        "hover": {
+          "fg": {
+            "$value": "{ki.text.primary-high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.s1}"
+          }
+        },
+        "active": {
+          "fg": {
+            "$value": "{ki.text.primary-high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.s2}"
+          }
+        },
+        "disabled": {
+          "fg": {
+            "$value": "{ki.text.muted}"
+          },
+          "bg": {
+            "$value": "{ki.surface.disabled-base-em}"
+          }
+        }
+      },
+      "unselected": {
+        "rest": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.s0}"
+          }
+        },
+        "hover": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.s1}"
+          }
+        },
+        "active": {
+          "fg": {
+            "$value": "{ki.text.high-em}"
+          },
+          "bg": {
+            "$value": "{ki.surface.s2}"
+          }
+        },
+        "disabled": {
+          "fg": {
+            "$value": "{ki.text.muted}"
+          },
+          "bg": {
+            "$value": "{ki.surface.disabled-base-em}"
+          }
+        }
+      },
+      "indicator": {
+        "size": {
+          "$value": "{ki.space.xxs}"
+        },
+        "color": {
+          "$value": "{ki.outline.primary-high-em}"
+        },
+        "radius": {
+          "$value": "{ki.radius.round}"
+        }
+      },
+      "focus-ring": {
+        "color": {
+          "$value": "{ki.outline.primary-high-em}"
+        },
+        "width": {
+          "$value": "{ki.space.xxs}"
+        },
+        "offset": {
+          "$value": "{ki.space.xxs}"
+        }
+      }
+    }
+  }
+}
