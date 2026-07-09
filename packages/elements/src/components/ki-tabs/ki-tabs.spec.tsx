@@ -1,11 +1,6 @@
 import { h } from '@stencil/core';
 import { describe, expect, it, render } from '@stencil/vitest';
-import {
-  buildPairing,
-  isBooleanAttributePresent,
-  resolveSelection,
-  type TabRecord,
-} from './ki-tabs.selection';
+import { buildPairing, resolveSelection, type TabRecord } from './ki-tabs.selection';
 import {
   firstSelectableIndex,
   lastSelectableIndex,
@@ -139,13 +134,5 @@ describe('ki-tabs', () => {
     expect(navigationIntentForKey('Home', 'ltr')).toBe('first');
     expect(navigationIntentForKey('End', 'rtl')).toBe('last');
     expect(navigationIntentForKey('ArrowDown', 'ltr')).toBeNull();
-  });
-
-  it('S2 normalizes boolean attribute presence without treating disabled false as false', () => {
-    expect(isBooleanAttributePresent('')).toBe(true);
-    expect(isBooleanAttributePresent('false')).toBe(true);
-    expect(isBooleanAttributePresent(true)).toBe(true);
-    expect(isBooleanAttributePresent(null)).toBe(false);
-    expect(isBooleanAttributePresent(undefined)).toBe(false);
   });
 });

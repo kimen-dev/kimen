@@ -14,10 +14,6 @@ export interface PairingRecord {
   panelIndex: number | null;
 }
 
-export function isBooleanAttributePresent(value: string | boolean | null | undefined): boolean {
-  return value !== null && value !== undefined && value !== false;
-}
-
 export function buildPairing(tabs: TabRecord[], panels: PanelRecord[]): PairingRecord[] {
   const records = new Map<string, PairingRecord>();
 
