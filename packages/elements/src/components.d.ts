@@ -156,6 +156,60 @@ export namespace Components {
          */
         "value": string;
     }
+    /**
+     * A token-styled multiline text field with native form semantics.
+     * @whenToUse free-form text longer than one line, such as comments,
+     * descriptions, messages, delivery notes, or addresses when paired with a
+     * matching `autocomplete` purpose.
+     * @whenNotToUse single-line values (`ki-input`), constrained choices,
+     * rich or formatted text editing, or search boxes.
+     * Agent note: initial text is declared through the `value` attribute; element
+     * text content is ignored. Enter inserts a line break and never submits the
+     * enclosing form, the inverse of `ki-input`.
+     */
+    interface KiTextarea {
+        /**
+          * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
+         */
+        "autocomplete"?: string;
+        /**
+          * Disables editing, focus, validation and form-data contribution. When to use: make a field temporarily unavailable. When NOT to use: do not use disabled for readonly review text that should submit.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Visible label rendered by the component and used as the accessible name. When to use: always provide a concise label for the requested long-form text. When NOT to use: do not substitute placeholder text for the label.
+         */
+        "label": string;
+        /**
+          * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
+         */
+        "name"?: string;
+        /**
+          * Hint shown while the textarea is empty. When to use: add an example or short formatting hint. When NOT to use: do not use placeholder as the accessible name or required instruction.
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the textarea focusable and selectable while rejecting edits. When to use: show submitted or policy text that should still be included in form data. When NOT to use: do not use readonly to remove a field from submission; use disabled.
+          * @default false
+         */
+        "readonly": boolean;
+        /**
+          * Requires a non-empty value before form submission. When to use: mark mandatory long-form text. When NOT to use: do not pair with `readonly` expecting it to block; readonly fields are validation exempt like native textareas.
+          * @default false
+         */
+        "required": boolean;
+        /**
+          * Visible line count. Invalid, non-numeric, zero, or negative values fall back to 2; no auto-grow or user resize handle exists in v1. When to use: set the stable multiline height needed by the layout. When NOT to use: do not use rows as a responsive size axis.
+          * @default 2
+         */
+        "rows": number;
+        /**
+          * Live current text. The `value` attribute declares the reset default; element text content is ignored. Programmatic assignments replace the display and emit no events. When to use: preload or read free-form text, line breaks included. When NOT to use: do not put initial text between the element tags.
+          * @default ''
+         */
+        "value": string;
+    }
 }
 declare global {
     /**
@@ -218,14 +272,34 @@ declare global {
         prototype: HTMLKiInputElement;
         new (): HTMLKiInputElement;
     };
+    /**
+     * A token-styled multiline text field with native form semantics.
+     * @whenToUse free-form text longer than one line, such as comments,
+     * descriptions, messages, delivery notes, or addresses when paired with a
+     * matching `autocomplete` purpose.
+     * @whenNotToUse single-line values (`ki-input`), constrained choices,
+     * rich or formatted text editing, or search boxes.
+     * Agent note: initial text is declared through the `value` attribute; element
+     * text content is ignored. Enter inserts a line break and never submits the
+     * enclosing form, the inverse of `ki-input`.
+     */
+    interface HTMLKiTextareaElement extends Components.KiTextarea, HTMLStencilElement {
+    }
+    var HTMLKiTextareaElement: {
+        prototype: HTMLKiTextareaElement;
+        new (): HTMLKiTextareaElement;
+    };
     interface HTMLElementTagNameMap {
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-input": HTMLKiInputElement;
+        "ki-textarea": HTMLKiTextareaElement;
     }
 }
 declare namespace LocalJSX {
+    type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}` | `prop:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K | `prop:${K}`]?: never } | { [P in `prop:${K}`]: PropT } & { [P in K | `attr:${K}`]?: never };
+
     /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
@@ -384,6 +458,64 @@ declare namespace LocalJSX {
          */
         "value"?: string;
     }
+    /**
+     * A token-styled multiline text field with native form semantics.
+     * @whenToUse free-form text longer than one line, such as comments,
+     * descriptions, messages, delivery notes, or addresses when paired with a
+     * matching `autocomplete` purpose.
+     * @whenNotToUse single-line values (`ki-input`), constrained choices,
+     * rich or formatted text editing, or search boxes.
+     * Agent note: initial text is declared through the `value` attribute; element
+     * text content is ignored. Enter inserts a line break and never submits the
+     * enclosing form, the inverse of `ki-input`.
+     */
+    interface KiTextarea {
+        /**
+          * Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
+         */
+        "autocomplete"?: string;
+        /**
+          * Disables editing, focus, validation and form-data contribution. When to use: make a field temporarily unavailable. When NOT to use: do not use disabled for readonly review text that should submit.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * Visible label rendered by the component and used as the accessible name. When to use: always provide a concise label for the requested long-form text. When NOT to use: do not substitute placeholder text for the label.
+         */
+        "label": string;
+        /**
+          * Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
+         */
+        "name"?: string;
+        /**
+          * Hint shown while the textarea is empty. When to use: add an example or short formatting hint. When NOT to use: do not use placeholder as the accessible name or required instruction.
+         */
+        "placeholder"?: string;
+        /**
+          * Makes the textarea focusable and selectable while rejecting edits. When to use: show submitted or policy text that should still be included in form data. When NOT to use: do not use readonly to remove a field from submission; use disabled.
+          * @default false
+         */
+        "readonly"?: boolean;
+        /**
+          * Requires a non-empty value before form submission. When to use: mark mandatory long-form text. When NOT to use: do not pair with `readonly` expecting it to block; readonly fields are validation exempt like native textareas.
+          * @default false
+         */
+        "required"?: boolean;
+        /**
+          * Visible line count. Invalid, non-numeric, zero, or negative values fall back to 2; no auto-grow or user resize handle exists in v1. When to use: set the stable multiline height needed by the layout. When NOT to use: do not use rows as a responsive size axis.
+          * @default 2
+         */
+        "rows"?: number;
+        /**
+          * Live current text. The `value` attribute declares the reset default; element text content is ignored. Programmatic assignments replace the display and emit no events. When to use: preload or read free-form text, line breaks included. When NOT to use: do not put initial text between the element tags.
+          * @default ''
+         */
+        "value"?: string;
+    }
 
     interface KiButtonAttributes {
         "variant": KiButtonVariant;
@@ -413,12 +545,24 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "autocomplete": string;
     }
+    interface KiTextareaAttributes {
+        "label": string;
+        "placeholder": string;
+        "value": string;
+        "name": string;
+        "rows": number;
+        "required": boolean;
+        "readonly": boolean;
+        "disabled": boolean;
+        "autocomplete": string;
+    }
 
     interface IntrinsicElements {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
+        "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
     }
 }
 export { LocalJSX as JSX };
@@ -465,6 +609,18 @@ declare module "@stencil/core" {
              * stepper entry, or placeholder-only labeling.
              */
             "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;
+            /**
+             * A token-styled multiline text field with native form semantics.
+             * @whenToUse free-form text longer than one line, such as comments,
+             * descriptions, messages, delivery notes, or addresses when paired with a
+             * matching `autocomplete` purpose.
+             * @whenNotToUse single-line values (`ki-input`), constrained choices,
+             * rich or formatted text editing, or search boxes.
+             * Agent note: initial text is declared through the `value` attribute; element
+             * text content is ignored. Enter inserts a line break and never submits the
+             * enclosing form, the inverse of `ki-input`.
+             */
+            "ki-textarea": LocalJSX.IntrinsicElements["ki-textarea"] & JSXBase.HTMLAttributes<HTMLKiTextareaElement>;
         }
     }
 }

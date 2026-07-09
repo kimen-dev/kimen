@@ -151,3 +151,41 @@ Events: none
 Methods: none
 
 CSS custom properties: none
+
+### ki-textarea
+
+A token-styled multiline text field with native form semantics.
+
+When to use: free-form text longer than one line, such as comments,
+descriptions, messages, delivery notes, or addresses when paired with a
+matching `autocomplete` purpose.
+When NOT to use: single-line values (`ki-input`), constrained choices,
+rich or formatted text editing, or search boxes.
+
+Agent note: initial text is declared through the `value` attribute; element
+text content is ignored. Enter inserts a line break and never submits the
+enclosing form, the inverse of `ki-input`.
+
+Attributes:
+- `autocomplete` (string | undefined): Autofill detail token forwarded to the native textarea. When to use: expose entry purpose such as `street-address` when available. When NOT to use: omit when no valid autofill purpose applies.
+- `disabled` (boolean, default false): Disables editing, focus, validation and form-data contribution. When to use: make a field temporarily unavailable. When NOT to use: do not use disabled for readonly review text that should submit.
+- `label` (string): Visible label rendered by the component and used as the accessible name. When to use: always provide a concise label for the requested long-form text. When NOT to use: do not substitute placeholder text for the label.
+- `name` (string | undefined): Form-data key used when the textarea submits with a form. When to use: provide for fields whose text must be included in FormData. When NOT to use: omit for display-only or client-only fields.
+- `placeholder` (string | undefined): Hint shown while the textarea is empty. When to use: add an example or short formatting hint. When NOT to use: do not use placeholder as the accessible name or required instruction.
+- `readonly` (boolean, default false): Makes the textarea focusable and selectable while rejecting edits. When to use: show submitted or policy text that should still be included in form data. When NOT to use: do not use readonly to remove a field from submission; use disabled.
+- `required` (boolean, default false): Requires a non-empty value before form submission. When to use: mark mandatory long-form text. When NOT to use: do not pair with `readonly` expecting it to block; readonly fields are validation exempt like native textareas.
+- `rows` (number, default 2): Visible line count. Invalid, non-numeric, zero, or negative values fall back to 2; no auto-grow or user resize handle exists in v1. When to use: set the stable multiline height needed by the layout. When NOT to use: do not use rows as a responsive size axis.
+- `value` (string, default ''): Live current text. The `value` attribute declares the reset default; element text content is ignored. Programmatic assignments replace the display and emit no events. When to use: preload or read free-form text, line breaks included. When NOT to use: do not put initial text between the element tags.
+
+Slots: none
+
+Parts:
+- `field`: The enclosure wrapper.
+- `label`: Rendered visible label and accessible-name source.
+- `textarea`: Internal native multiline control.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none

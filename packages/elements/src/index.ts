@@ -10,3 +10,5 @@ export * from './components/ki-input/ki-input.js';
 // what Art. IX forbids.
 export { KiCheckbox } from './components/ki-checkbox/ki-checkbox.js';
 export type * from './components/ki-checkbox/ki-checkbox.js';
+export { KiTextarea } from './components/ki-textarea/ki-textarea.js';
+export type * from './components/ki-textarea/ki-textarea.js';
