@@ -1,5 +1,4 @@
 import { Component, Element, Event, Host, Prop, Watch, h } from '@stencil/core';
-import type { EventEmitter } from '@stencil/core';
 import {
   firstSelectableIndex,
   lastSelectableIndex,
@@ -12,6 +11,15 @@ import {
   type PairingRecord,
   type TabRecord,
 } from './ki-tabs.selection';
+
+// Local structural type for the Stencil @Event emitter. Declaring it here
+// (rather than importing EventEmitter from '@stencil/core') keeps the
+// generated .d.ts from referencing '../../stencil-public-runtime', whose
+// extensionless import fails node16 ESM type resolution (attw
+// InternalResolutionError) — the packaging gate stays honest without a suppression.
+interface EventEmitter<T> {
+  emit(detail: T): CustomEvent<T>;
+}
 
 const TAB_TAG = 'ki-tab';
 const PANEL_TAG = 'ki-tab-panel';
