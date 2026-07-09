@@ -306,7 +306,14 @@ export class KiSelect {
   private selectByValue(value: string, emit: boolean): void {
     const selected = resolveSelection(this.roster, value);
     this.selectedIndex = selected ? this.roster.indexOf(selected) : -1;
-    this.value = selected?.value ?? '';
+    // Only clear an unmatched value once options exist to match against. An
+    // empty roster means the options have not been slotted yet (e.g. a
+    // framework assigns the `value` property before children upgrade), so the
+    // request is retained and reconcileRoster resolves it when they arrive —
+    // otherwise the intended selection would be silently discarded.
+    if (selected || this.roster.length > 0) {
+      this.value = selected?.value ?? '';
+    }
     this.syncValidity();
 
     if (emit) {

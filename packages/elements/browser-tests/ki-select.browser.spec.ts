@@ -162,6 +162,38 @@ describe('ki-select in a real browser', () => {
     expect(changes).toHaveLength(0);
   });
 
+  it('S11 resolves a value assigned as a property before options are slotted (framework path)', async () => {
+    // Frameworks (React/Vue/Angular) set the `value` PROPERTY after the host
+    // connects and often before child <ki-option>s upgrade. The requested value
+    // must survive until the roster is built, not be discarded as unmatched.
+    cleanup();
+    const style = document.createElement('style');
+    style.textContent = tokensCss;
+    const main = document.createElement('main');
+    document.body.append(style, main);
+    const el = document.createElement('ki-select') as KiSelectElement;
+    el.setAttribute('label', 'Country');
+    el.setAttribute('placeholder', 'Choose a country');
+    main.append(el);
+    await customElements.whenDefined('ki-select');
+    el.value = 'fr';
+    for (const [value, label] of [
+      ['es', 'Spain'],
+      ['fr', 'France'],
+      ['pt', 'Portugal'],
+    ] as const) {
+      const option = document.createElement('ki-option');
+      option.setAttribute('value', value);
+      option.textContent = label;
+      el.append(option);
+    }
+    await customElements.whenDefined('ki-option');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(el.value).toBe('fr');
+    expect(valueText(el)).toBe('France');
+  });
+
   it('S20 outside pointerdown closes without changing selection or events', async () => {
     const el = await mountSelect('value="es"');
     const events: Event[] = [];
