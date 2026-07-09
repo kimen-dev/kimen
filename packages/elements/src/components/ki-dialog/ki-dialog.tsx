@@ -73,7 +73,7 @@ export class KiDialog {
    *
    * @default false
    */
-  @Prop({ reflect: true, attribute: 'close-on-backdrop' }) closeOnBackdrop = false;
+  @Prop({ reflect: true, mutable: true, attribute: 'close-on-backdrop' }) closeOnBackdrop = false;
 
   /**
    * Post-close notification for every close path. Footer actions report
@@ -99,10 +99,18 @@ export class KiDialog {
     this.syncDialogToHost();
   }
 
+  componentWillLoad(): void {
+    // Boolean presence semantics: any present `close-on-backdrop` attribute
+    // (including `close-on-backdrop="false"` or malformed agent output) opts in;
+    // omit the attribute to opt out. Stencil parses "false" to `false`, so apply
+    // presence here (the observer keeps it true for post-hydration writes).
+    this.closeOnBackdrop = this.closeOnBackdrop || this.host.hasAttribute('close-on-backdrop');
+  }
+
   componentDidLoad(): void {
     if (typeof MutationObserver !== 'undefined') {
       this.openObserver = new MutationObserver(this.handleHostMutation);
-      this.openObserver.observe(this.host, { attributeFilter: ['open'] });
+      this.openObserver.observe(this.host, { attributeFilter: ['open', 'close-on-backdrop'] });
     }
     document.addEventListener('keydown', this.handleKeyDown, { capture: true });
     this.updateFooterState();
@@ -246,6 +254,14 @@ export class KiDialog {
     const hasOpenAttribute = this.host.hasAttribute('open');
     if (this.open !== hasOpenAttribute) {
       this.open = hasOpenAttribute;
+      return;
+    }
+
+    // Restore presence semantics for a present-but-falsy `close-on-backdrop`
+    // set after hydration. Only that case is corrected: absence and Stencil's
+    // own reflect writes already agree with the prop.
+    if (this.host.hasAttribute('close-on-backdrop') && !this.closeOnBackdrop) {
+      this.closeOnBackdrop = true;
       return;
     }
 
