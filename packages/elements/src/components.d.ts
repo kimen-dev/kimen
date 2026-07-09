@@ -55,6 +55,30 @@ export namespace Components {
      * When to use: TODO(spec): agent-facing guidance (Art. I).
      * When NOT to use: TODO(spec).
      */
+    interface KiTab {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label": string;
+    }
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiTabPanel {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label": string;
+    }
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
     interface KiTabs {
         /**
           * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
@@ -82,6 +106,28 @@ declare global {
      * When to use: TODO(spec): agent-facing guidance (Art. I).
      * When NOT to use: TODO(spec).
      */
+    interface HTMLKiTabElement extends Components.KiTab, HTMLStencilElement {
+    }
+    var HTMLKiTabElement: {
+        prototype: HTMLKiTabElement;
+        new (): HTMLKiTabElement;
+    };
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface HTMLKiTabPanelElement extends Components.KiTabPanel, HTMLStencilElement {
+    }
+    var HTMLKiTabPanelElement: {
+        prototype: HTMLKiTabPanelElement;
+        new (): HTMLKiTabPanelElement;
+    };
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
     interface HTMLKiTabsElement extends Components.KiTabs, HTMLStencilElement {
     }
     var HTMLKiTabsElement: {
@@ -90,6 +136,8 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "ki-button": HTMLKiButtonElement;
+        "ki-tab": HTMLKiTabElement;
+        "ki-tab-panel": HTMLKiTabPanelElement;
         "ki-tabs": HTMLKiTabsElement;
     }
 }
@@ -145,6 +193,30 @@ declare namespace LocalJSX {
      * When to use: TODO(spec): agent-facing guidance (Art. I).
      * When NOT to use: TODO(spec).
      */
+    interface KiTab {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label"?: string;
+    }
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
+    interface KiTabPanel {
+        /**
+          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
+          * @default 'TODO'
+         */
+        "label"?: string;
+    }
+    /**
+     * TODO(spec): one-line purpose from the approved spec (Art. II).
+     * When to use: TODO(spec): agent-facing guidance (Art. I).
+     * When NOT to use: TODO(spec).
+     */
     interface KiTabs {
         /**
           * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
@@ -162,12 +234,20 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
+    interface KiTabAttributes {
+        "label": string;
+    }
+    interface KiTabPanelAttributes {
+        "label": string;
+    }
     interface KiTabsAttributes {
         "label": string;
     }
 
     interface IntrinsicElements {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
+        "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
+        "ki-tab-panel": Omit<KiTabPanel, keyof KiTabPanelAttributes> & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K] };
         "ki-tabs": Omit<KiTabs, keyof KiTabsAttributes> & { [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K] };
     }
 }
@@ -183,6 +263,18 @@ declare module "@stencil/core" {
              * loading/progress semantics.
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
+            /**
+             * TODO(spec): one-line purpose from the approved spec (Art. II).
+             * When to use: TODO(spec): agent-facing guidance (Art. I).
+             * When NOT to use: TODO(spec).
+             */
+            "ki-tab": LocalJSX.IntrinsicElements["ki-tab"] & JSXBase.HTMLAttributes<HTMLKiTabElement>;
+            /**
+             * TODO(spec): one-line purpose from the approved spec (Art. II).
+             * When to use: TODO(spec): agent-facing guidance (Art. I).
+             * When NOT to use: TODO(spec).
+             */
+            "ki-tab-panel": LocalJSX.IntrinsicElements["ki-tab-panel"] & JSXBase.HTMLAttributes<HTMLKiTabPanelElement>;
             /**
              * TODO(spec): one-line purpose from the approved spec (Art. II).
              * When to use: TODO(spec): agent-facing guidance (Art. I).

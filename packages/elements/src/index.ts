@@ -3,3 +3,4 @@
 export * from './components/ki-button/ki-button.js';
 export * from './components/ki-tabs/ki-tabs.js';
 export * from './components/ki-tab/ki-tab.js';
+export * from './components/ki-tab-panel/ki-tab-panel.js';
