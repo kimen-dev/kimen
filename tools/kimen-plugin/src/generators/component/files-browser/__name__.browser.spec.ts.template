@@ -8,9 +8,10 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { defineCustomElement } from '../dist/components/<%= name %>.js';
 
 type <%= className %>Element = HTMLElement & { label: string };
+const define<%= className %>Element: () => void = defineCustomElement;
 
 beforeAll(() => {
-  defineCustomElement();
+  define<%= className %>Element();
 });
 
 /** Stencil renders async: wait until the shadow root has content. */

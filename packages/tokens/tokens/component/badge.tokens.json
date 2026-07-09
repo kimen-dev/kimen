@@ -1,0 +1,104 @@
+{
+  "ki": {
+    "badge": {
+      "sm": {
+        "height": {
+          "$value": "{ki.space.7xl}"
+        },
+        "padding-inline": {
+          "$value": "{ki.space.sm}"
+        },
+        "radius": {
+          "$value": "{ki.radius.round}"
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.caption-2}"
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.caption-2}"
+        }
+      },
+      "md": {
+        "height": {
+          "$value": "{ki.space.8xl}"
+        },
+        "padding-inline": {
+          "$value": "{ki.space.md}"
+        },
+        "radius": {
+          "$value": "{ki.radius.round}"
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.body-1}"
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.body-1}"
+        }
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}"
+      },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.medium}"
+      },
+      "border-width": {
+        "$value": "{ki.space.xxs}"
+      },
+      "neutral": {
+        "bg": {
+          "$value": "{ki.surface.s2}"
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.none}"
+        }
+      },
+      "success": {
+        "bg": {
+          "$value": "{ki.surface.success-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.success-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.none}"
+        }
+      },
+      "danger": {
+        "bg": {
+          "$value": "{ki.surface.danger-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.danger-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.none}"
+        }
+      },
+      "info": {
+        "bg": {
+          "$value": "{ki.surface.info-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.info-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.none}"
+        }
+      },
+      "warning": {
+        "bg": {
+          "$value": "{ki.surface.warning-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.warning-high-em}"
+        },
+        "border": {
+          "$value": "{ki.outline.none}"
+        }
+      }
+    }
+  }
+}

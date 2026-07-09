@@ -1,0 +1,98 @@
+{
+  "ki": {
+    "radio": {
+      "unselected": {
+        "rest": {
+          "bg": {
+            "$value": "{ki.surface.s0}"
+          },
+          "fg": {
+            "$value": "{ki.text.primary-high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.high-em}"
+          }
+        },
+        "hover": {
+          "bg": {
+            "$value": "{ki.surface.primary-base-em-alpha}"
+          },
+          "fg": {
+            "$value": "{ki.text.primary-high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.primary-med-em}"
+          }
+        },
+        "active": {
+          "bg": {
+            "$value": "{ki.surface.primary-low-em-alpha}"
+          },
+          "fg": {
+            "$value": "{ki.text.primary-high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.primary-high-em}"
+          }
+        },
+        "disabled": {
+          "bg": {
+            "$value": "{ki.surface.disabled-low-em}"
+          },
+          "fg": {
+            "$value": "{ki.text.muted}"
+          },
+          "border": {
+            "$value": "{ki.outline.med-em}"
+          }
+        }
+      },
+      "selected": {
+        "rest": {
+          "bg": {
+            "$value": "{ki.surface.s0}"
+          },
+          "fg": {
+            "$value": "{ki.surface.primary-high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.primary-high-em}"
+          }
+        },
+        "hover": {
+          "bg": {
+            "$value": "{ki.surface.primary-base-em-alpha}"
+          },
+          "fg": {
+            "$value": "{ki.surface.primary-high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.primary-high-em}"
+          }
+        },
+        "active": {
+          "bg": {
+            "$value": "{ki.surface.s0}"
+          },
+          "fg": {
+            "$value": "{ki.surface.primary-high-em}"
+          },
+          "border": {
+            "$value": "{ki.outline.primary-high-em}"
+          }
+        },
+        "disabled": {
+          "bg": {
+            "$value": "{ki.surface.disabled-low-em}"
+          },
+          "fg": {
+            "$value": "{ki.text.muted}"
+          },
+          "border": {
+            "$value": "{ki.outline.med-em}"
+          }
+        }
+      }
+    }
+  }
+}

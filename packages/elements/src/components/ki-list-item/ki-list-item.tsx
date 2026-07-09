@@ -19,9 +19,9 @@ function hasAssignedContent(slot: HTMLSlotElement | null, textSlot = false): boo
  * A non-interactive item inside `ki-list`, composed from leading media,
  * primary text, optional secondary text and trailing media or meta.
  *
- * When to use: only as a child of `ki-list`, for one read-only entry in a
+ * @whenToUse only as a child of `ki-list`, for one read-only entry in a
  * similar vertical collection.
- * When NOT to use: outside `ki-list`, as a menu item, selectable option,
+ * @whenNotToUse outside `ki-list`, as a menu item, selectable option,
  * tabular row, navigation link or whole-item clickable control.
  *
  * @slot start - Leading media such as an icon, avatar or image.

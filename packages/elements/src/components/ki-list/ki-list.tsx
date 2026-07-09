@@ -4,10 +4,10 @@ import { Component, Element, Host, h } from '@stencil/core';
  * A non-interactive vertical list container for read-only collections of
  * similar entries composed with `ki-list-item` children.
  *
- * When to use: settings, contacts, results or activity feeds where each item
+ * @whenToUse settings, contacts, results or activity feeds where each item
  * composes leading media, primary text, optional secondary text and trailing
  * meta or a slotted control.
- * When NOT to use: menus, selectable option lists, tabular data, navigation,
+ * @whenNotToUse menus, selectable option lists, tabular data, navigation,
  * whole-item clickable rows or lone items outside a list.
  *
  * @slot - `ki-list-item` children. Other children are unsupported.

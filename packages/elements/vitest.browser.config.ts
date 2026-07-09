@@ -39,6 +39,11 @@ export default defineConfig({
           }
           throw new Error(`ariaSnapshot: no frame contains ${selector}`);
         }),
+        emulateReducedMotion: defineBrowserCommand(
+          async ({ page }, reducedMotion: 'reduce' | 'no-preference' | null) => {
+            await page.emulateMedia({ reducedMotion });
+          },
+        ),
       },
       instances: [
         ...browsers.map((browser) => ({

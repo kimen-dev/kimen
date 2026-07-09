@@ -1,0 +1,56 @@
+{
+  "ki": {
+    "checkbox": {
+      "radius": { "$value": "{ki.radius.xs}" },
+      "checked": {
+        "rest": {
+          "bg": { "$value": "{ki.surface.primary-high-em}" },
+          "fg": { "$value": "{ki.text.primary-on-primary}" },
+          "border": { "$value": "{ki.outline.none}" }
+        },
+        "hover": {
+          "bg": { "$value": "{ki.surface.primary-high-em-hover}" },
+          "fg": { "$value": "{ki.text.primary-on-primary}" },
+          "border": { "$value": "{ki.outline.none}" }
+        },
+        "active": {
+          "bg": { "$value": "{ki.surface.primary-high-em}" },
+          "fg": { "$value": "{ki.text.primary-on-primary}" },
+          "border": { "$value": "{ki.outline.none}" }
+        },
+        "disabled": {
+          "bg": { "$value": "{ki.surface.disabled-low-em}" },
+          "fg": { "$value": "{ki.text.muted}" },
+          "border": { "$value": "{ki.outline.none}" }
+        }
+      },
+      "indeterminate": {
+        "rest": {
+          "bg": { "$value": "{ki.surface.primary-high-em}" },
+          "fg": { "$value": "{ki.text.primary-on-primary}" },
+          "border": { "$value": "{ki.outline.none}" }
+        },
+        "hover": {
+          "bg": { "$value": "{ki.surface.primary-high-em-hover}" },
+          "fg": { "$value": "{ki.text.primary-on-primary}" },
+          "border": { "$value": "{ki.outline.none}" }
+        },
+        "active": {
+          "bg": { "$value": "{ki.surface.primary-high-em}" },
+          "fg": { "$value": "{ki.text.primary-on-primary}" },
+          "border": { "$value": "{ki.outline.none}" }
+        },
+        "disabled": {
+          "bg": { "$value": "{ki.surface.disabled-low-em}" },
+          "fg": { "$value": "{ki.text.muted}" },
+          "border": { "$value": "{ki.outline.none}" }
+        }
+      },
+      "invalid": {
+        "bg": { "$value": "{ki.surface.danger-low-em}" },
+        "fg": { "$value": "{ki.text.danger-high-em}" },
+        "border": { "$value": "{ki.outline.danger-high-em}" }
+      }
+    }
+  }
+}
