@@ -16,14 +16,22 @@ function requireElement<T extends Element>(value: T | null, selector: string): T
   return value;
 }
 
+function shadowRootOf(root: HTMLElement): ShadowRoot {
+  if (root.shadowRoot === null) {
+    throw new Error('Missing shadow root');
+  }
+  return root.shadowRoot;
+}
+
 describe('ki-tab-panel', () => {
   it('S8 renders tabpanel anatomy around the default slot', async () => {
     const { root } = await render(<ki-tab-panel>Panel content</ki-tab-panel>);
-    const panel = requireElement(root.shadowRoot.querySelector('[part="panel"]'), '[part="panel"]');
+    const shadow = shadowRootOf(root);
+    const panel = requireElement(shadow.querySelector('[part="panel"]'), '[part="panel"]');
     const slot = requireElement(panel.querySelector('slot'), 'default slot');
 
     expect(slot.name).toBe('');
-    expect(root.shadowRoot.textContent).not.toContain('TODO');
+    expect(shadow.textContent).not.toContain('TODO');
   });
 
   it('S8 exposes tabpanel semantics through internals', async () => {
@@ -34,7 +42,7 @@ describe('ki-tab-panel', () => {
   });
 
   it('S3 reflects value with an empty-string effective default', async () => {
-    const { root } = await render(<ki-tab-panel value="email">Email panel</ki-tab-panel>);
+    const { root } = await render(h('ki-tab-panel', { value: 'email' }, 'Email panel'));
     const { root: emptyRoot } = await render(<ki-tab-panel>Email panel</ki-tab-panel>);
 
     expect(root.getAttribute('value')).toBe('email');

@@ -4,13 +4,19 @@ import { describe, expect, it, render } from '@stencil/vitest';
 // @spec:014-ki-tabs
 // mock-doc is a fast diagnostic only; the authoritative suite is the
 // real-browser spec (Art. III). Every test title carries an approved S-ID.
-type WithInternals = HTMLElement & { internals: ElementInternals };
 
 function requireElement<T extends Element>(value: T | null, selector: string): T {
   if (value === null) {
     throw new Error(`Missing ${selector}`);
   }
   return value;
+}
+
+function shadowRootOf(root: HTMLElement): ShadowRoot {
+  if (root.shadowRoot === null) {
+    throw new Error('Missing shadow root');
+  }
+  return root.shadowRoot;
 }
 
 describe('ki-tab', () => {
@@ -23,36 +29,35 @@ describe('ki-tab', () => {
       </ki-tab>,
     );
 
-    const tab = requireElement(root.shadowRoot.querySelector('[part="tab"]'), '[part="tab"]');
+    const shadow = shadowRootOf(root);
+    const tab = requireElement(shadow.querySelector('[part="tab"]'), '[part="tab"]');
     const indicator = requireElement(
-      root.shadowRoot.querySelector('[part="indicator"]'),
+      shadow.querySelector('[part="indicator"]'),
       '[part="indicator"]',
     );
     const slots = [...tab.querySelectorAll('slot')].map((slot) => slot.name);
 
     expect(slots).toEqual(['start', '', 'end']);
     expect(indicator.getAttribute('aria-hidden')).toBe('true');
-    expect(root.shadowRoot.querySelector('button,a,input,select,textarea,[tabindex]')).toBeNull();
+    expect(shadow.querySelector('button,a,input,select,textarea,[tabindex]')).toBeNull();
   });
 
-  it('S7 exposes tab semantics and selected state through internals', async () => {
-    const { root } = await render(<ki-tab selected>Email</ki-tab>);
-    const internals = (root as WithInternals).internals;
+  it('S7 exposes host tab role and selected state attributes', async () => {
+    const { root } = await render(h('ki-tab', { selected: true }, 'Email'));
 
-    expect(internals.role).toBe('tab');
-    expect(internals.ariaSelected).toBe('true');
+    expect(root.getAttribute('role')).toBe('tab');
+    expect(root.getAttribute('aria-selected')).toBe('true');
   });
 
-  it('S2 exposes disabled presence semantics through internals', async () => {
-    const { root } = await render(<ki-tab disabled="false">Billing</ki-tab>);
-    const internals = (root as WithInternals).internals;
+  it('S2 exposes disabled presence semantics through host attributes', async () => {
+    const { root } = await render(h('ki-tab', { 'attr:disabled': 'false' }, 'Billing'));
 
     expect(root.hasAttribute('disabled')).toBe(true);
-    expect(internals.ariaDisabled).toBe('true');
+    expect(root.getAttribute('aria-disabled')).toBe('true');
   });
 
   it('S3 reflects value with an empty-string effective default', async () => {
-    const { root } = await render(<ki-tab value="email">Email</ki-tab>);
+    const { root } = await render(h('ki-tab', { value: 'email' }, 'Email'));
     const { root: emptyRoot } = await render(<ki-tab>Email</ki-tab>);
 
     expect(root.getAttribute('value')).toBe('email');

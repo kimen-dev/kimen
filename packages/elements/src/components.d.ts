@@ -51,16 +51,28 @@ export namespace Components {
         "variant": KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * One selectable tab inside a `ki-tabs` view switcher.
+     * When to use: label one peer content view inside `ki-tabs`, with optional
+     * `start` and `end` slot media. When NOT to use: standalone, for form value
+     * selection, or for page navigation; use the parent group's `value` instead
+     * of authoring `selected`.
      */
     interface KiTab {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Prevents selection by every modality and exposes the unavailable state. Boolean presence semantics apply: `disabled="false"` is still disabled.
+          * @default false
          */
-        "label": string;
+        "disabled": boolean;
+        /**
+          * Output-only selected state written by `ki-tabs`. Set the group's `value` to choose an initial tab; author-set `selected` is overwritten.
+          * @default false
+         */
+        "selected": boolean;
+        /**
+          * Pairing identifier shared with a `ki-tab-panel`. The first tab with a value owns it; later duplicates render but are not selectable.
+          * @default ''
+         */
+        "value": string;
     }
     /**
      * TODO(spec): one-line purpose from the approved spec (Art. II).
@@ -102,9 +114,11 @@ declare global {
         new (): HTMLKiButtonElement;
     };
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * One selectable tab inside a `ki-tabs` view switcher.
+     * When to use: label one peer content view inside `ki-tabs`, with optional
+     * `start` and `end` slot media. When NOT to use: standalone, for form value
+     * selection, or for page navigation; use the parent group's `value` instead
+     * of authoring `selected`.
      */
     interface HTMLKiTabElement extends Components.KiTab, HTMLStencilElement {
     }
@@ -189,16 +203,28 @@ declare namespace LocalJSX {
         "variant"?: KiButtonVariant;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * One selectable tab inside a `ki-tabs` view switcher.
+     * When to use: label one peer content view inside `ki-tabs`, with optional
+     * `start` and `end` slot media. When NOT to use: standalone, for form value
+     * selection, or for page navigation; use the parent group's `value` instead
+     * of authoring `selected`.
      */
     interface KiTab {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Prevents selection by every modality and exposes the unavailable state. Boolean presence semantics apply: `disabled="false"` is still disabled.
+          * @default false
          */
-        "label"?: string;
+        "disabled"?: boolean;
+        /**
+          * Output-only selected state written by `ki-tabs`. Set the group's `value` to choose an initial tab; author-set `selected` is overwritten.
+          * @default false
+         */
+        "selected"?: boolean;
+        /**
+          * Pairing identifier shared with a `ki-tab-panel`. The first tab with a value owns it; later duplicates render but are not selectable.
+          * @default ''
+         */
+        "value"?: string;
     }
     /**
      * TODO(spec): one-line purpose from the approved spec (Art. II).
@@ -235,7 +261,9 @@ declare namespace LocalJSX {
         "disabled": boolean;
     }
     interface KiTabAttributes {
-        "label": string;
+        "value": string;
+        "disabled": boolean;
+        "selected": boolean;
     }
     interface KiTabPanelAttributes {
         "label": string;
@@ -264,9 +292,11 @@ declare module "@stencil/core" {
              */
             "ki-button": LocalJSX.IntrinsicElements["ki-button"] & JSXBase.HTMLAttributes<HTMLKiButtonElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * One selectable tab inside a `ki-tabs` view switcher.
+             * When to use: label one peer content view inside `ki-tabs`, with optional
+             * `start` and `end` slot media. When NOT to use: standalone, for form value
+             * selection, or for page navigation; use the parent group's `value` instead
+             * of authoring `selected`.
              */
             "ki-tab": LocalJSX.IntrinsicElements["ki-tab"] & JSXBase.HTMLAttributes<HTMLKiTabElement>;
             /**

@@ -23,6 +23,13 @@ function requireElement<T extends Element>(value: T | null, selector: string): T
   return value;
 }
 
+function shadowRootOf(root: HTMLElement): ShadowRoot {
+  if (root.shadowRoot === null) {
+    throw new Error('Missing shadow root');
+  }
+  return root.shadowRoot;
+}
+
 const tabs: TabRecord[] = [
   { value: 'email', disabled: false, duplicate: false },
   { value: 'billing', disabled: true, duplicate: false },
@@ -33,42 +40,40 @@ const tabs: TabRecord[] = [
 describe('ki-tabs', () => {
   it('S7 renders a shadow tablist wrapper and keeps panels outside it', async () => {
     const { root } = await render(
-      <ki-tabs label="Settings">
-        <ki-tab value="email">Email</ki-tab>
-        <ki-tab-panel value="email">Email panel</ki-tab-panel>
-      </ki-tabs>,
+      h(
+        'ki-tabs',
+        { label: 'Settings' },
+        h('ki-tab', { value: 'email' }, 'Email'),
+        h('ki-tab-panel', { value: 'email' }, 'Email panel'),
+      ),
     );
 
-    const tablist = requireElement(root.shadowRoot.querySelector('[part="tablist"]'), 'tablist');
+    const shadow = shadowRootOf(root);
+    const tablist = requireElement(shadow.querySelector('[part="tablist"]'), 'tablist');
     const tabSlot = requireElement(tablist.querySelector('slot[name="tab"]'), 'tab slot');
-    const defaultSlot = requireElement(
-      root.shadowRoot.querySelector('slot:not([name])'),
-      'default slot',
-    );
+    const defaultSlot = requireElement(shadow.querySelector('slot:not([name])'), 'default slot');
 
     expect(tablist.getAttribute('role')).toBe('tablist');
     expect(tablist.getAttribute('aria-label')).toBe('Settings');
     expect(tabSlot.parentElement).toBe(tablist);
-    expect(defaultSlot.parentElement).toBe(root.shadowRoot);
+    expect(defaultSlot.parentElement).toBe(shadow);
   });
 
   it('S7 omits the tablist aria-label when no label is provided', async () => {
     const { root } = await render(<ki-tabs></ki-tabs>);
-    const tablist = requireElement(root.shadowRoot.querySelector('[part="tablist"]'), 'tablist');
+    const tablist = requireElement(shadowRootOf(root).querySelector('[part="tablist"]'), 'tablist');
 
     expect(tablist.hasAttribute('aria-label')).toBe(false);
   });
 
   it('S8 auto-assigns tabs, preserves author ids and wires tab-panel IDREFs', async () => {
     const { root } = await render(
-      <ki-tabs value="email">
-        <ki-tab id="email-tab" value="email">
-          Email
-        </ki-tab>
-        <ki-tab-panel id="email-panel" value="email">
-          Email panel
-        </ki-tab-panel>
-      </ki-tabs>,
+      h(
+        'ki-tabs',
+        { value: 'email' },
+        h('ki-tab', { id: 'email-tab', value: 'email' }, 'Email'),
+        h('ki-tab-panel', { id: 'email-panel', value: 'email' }, 'Email panel'),
+      ),
     );
     const tab = requireElement(root.querySelector('ki-tab'), 'ki-tab');
     const panel = requireElement(root.querySelector('ki-tab-panel'), 'ki-tab-panel');
