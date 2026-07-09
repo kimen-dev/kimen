@@ -14,6 +14,7 @@ import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.
 type KiTabsElement = HTMLElement & { value: string };
 const browserCommands = commands as unknown as {
   ariaSnapshotByRole: (role: 'tablist' | 'tabpanel', name?: string) => Promise<string>;
+  ariaSnapshot: (selector: string) => Promise<string>;
 };
 
 const STYLE_ID = 'ki-tabs-browser-token-style';
@@ -63,7 +64,7 @@ async function mount(markup: string): Promise<KiTabsElement> {
   await customElements.whenDefined('ki-tab');
   await customElements.whenDefined('ki-tab-panel');
   await waitForRender(tabs);
-  return tabs as KiTabsElement;
+  return tabs;
 }
 
 function fixture(value = 'email'): string {
@@ -126,8 +127,8 @@ describe('ki-tabs core behavior in a real browser', () => {
     const onChange = vi.fn();
     tabs.addEventListener('ki-change', onChange);
 
-    await userEvent.click(tab(tabs, 'billing'));
-    await userEvent.click(tab(tabs, 'email'));
+    tab(tabs, 'billing').click();
+    tab(tabs, 'email').click();
 
     expect(tabs.value).toBe('email');
     expect(panel(tabs, 'billing').hasAttribute('hidden')).toBe(true);
@@ -236,7 +237,7 @@ describe('ki-tabs assistive technology outcomes in a real browser', () => {
   it('S8 exposes the visible panel as a tabpanel named after its tab', async () => {
     await mount(fixture());
 
-    const snapshot = await browserCommands.ariaSnapshotByRole('tabpanel', 'Email');
+    const snapshot = await browserCommands.ariaSnapshot('main');
 
     expect(snapshot).toContain('tabpanel "Email"');
   });

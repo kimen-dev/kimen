@@ -88,17 +88,27 @@ export namespace Components {
         "value": string;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A tab group for switching between peer content views.
+     * When to use: switch between small sets of peer views inside the same page,
+     * with one visible panel at a time. When NOT to use: selecting form values
+     * (use `ki-radio-group`), page navigation (use links), step flows, or
+     * standalone `ki-tab` / `ki-tab-panel` children outside this group.
      */
     interface KiTabs {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view.
          */
-        "label": string;
+        "label"?: string;
+        /**
+          * Resolved selected value. The attribute declares the initial request; the live property falls back to the first enabled owner tab, or `""` when no tab is selectable. Programmatic writes are silent.
+          * @default ''
+         */
+        "value": string;
     }
+}
+export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiTabsElement;
 }
 declare global {
     /**
@@ -139,12 +149,25 @@ declare global {
         prototype: HTMLKiTabPanelElement;
         new (): HTMLKiTabPanelElement;
     };
+    interface HTMLKiTabsElementEventMap {
+        "ki-change": { value: string };
+    }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A tab group for switching between peer content views.
+     * When to use: switch between small sets of peer views inside the same page,
+     * with one visible panel at a time. When NOT to use: selecting form values
+     * (use `ki-radio-group`), page navigation (use links), step flows, or
+     * standalone `ki-tab` / `ki-tab-panel` children outside this group.
      */
     interface HTMLKiTabsElement extends Components.KiTabs, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiTabsElementEventMap>(type: K, listener: (this: HTMLKiTabsElement, ev: KiTabsCustomEvent<HTMLKiTabsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiTabsElementEventMap>(type: K, listener: (this: HTMLKiTabsElement, ev: KiTabsCustomEvent<HTMLKiTabsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLKiTabsElement: {
         prototype: HTMLKiTabsElement;
@@ -242,16 +265,26 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
-     * TODO(spec): one-line purpose from the approved spec (Art. II).
-     * When to use: TODO(spec): agent-facing guidance (Art. I).
-     * When NOT to use: TODO(spec).
+     * A tab group for switching between peer content views.
+     * When to use: switch between small sets of peer views inside the same page,
+     * with one visible panel at a time. When NOT to use: selecting form values
+     * (use `ki-radio-group`), page navigation (use links), step flows, or
+     * standalone `ki-tab` / `ki-tab-panel` children outside this group.
      */
     interface KiTabs {
         /**
-          * TODO(spec): every public prop carries JSDoc with description, default and when-to-use guidance; an undocumented API member is a build failure (Art. I).
-          * @default 'TODO'
+          * Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view.
          */
         "label"?: string;
+        /**
+          * Fired after a user-driven selection change. `detail.value` is the resolved selected value.
+         */
+        "onKi-change"?: (event: KiTabsCustomEvent<{ value: string }>) => void;
+        /**
+          * Resolved selected value. The attribute declares the initial request; the live property falls back to the first enabled owner tab, or `""` when no tab is selectable. Programmatic writes are silent.
+          * @default ''
+         */
+        "value"?: string;
     }
 
     interface KiButtonAttributes {
@@ -272,6 +305,7 @@ declare namespace LocalJSX {
         "value": string;
     }
     interface KiTabsAttributes {
+        "value": string;
         "label": string;
     }
 
@@ -310,9 +344,11 @@ declare module "@stencil/core" {
              */
             "ki-tab-panel": LocalJSX.IntrinsicElements["ki-tab-panel"] & JSXBase.HTMLAttributes<HTMLKiTabPanelElement>;
             /**
-             * TODO(spec): one-line purpose from the approved spec (Art. II).
-             * When to use: TODO(spec): agent-facing guidance (Art. I).
-             * When NOT to use: TODO(spec).
+             * A tab group for switching between peer content views.
+             * When to use: switch between small sets of peer views inside the same page,
+             * with one visible panel at a time. When NOT to use: selecting form values
+             * (use `ki-radio-group`), page navigation (use links), step flows, or
+             * standalone `ki-tab` / `ki-tab-panel` children outside this group.
              */
             "ki-tabs": LocalJSX.IntrinsicElements["ki-tabs"] & JSXBase.HTMLAttributes<HTMLKiTabsElement>;
         }

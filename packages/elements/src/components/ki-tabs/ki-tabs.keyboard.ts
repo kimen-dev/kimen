@@ -7,24 +7,57 @@ export function nextSelectableIndex(
   currentIndex: number,
   direction: 'next' | 'previous',
 ): number | null {
-  void tabs;
-  void currentIndex;
-  void direction;
+  if (tabs.length === 0 || tabs.every((tab) => tab.disabled || tab.duplicate)) {
+    return null;
+  }
+
+  const step = direction === 'next' ? 1 : -1;
+
+  for (let offset = 1; offset <= tabs.length; offset += 1) {
+    const index = (currentIndex + offset * step + tabs.length) % tabs.length;
+    const tab = tabs[index];
+
+    if (tab && !tab.disabled && !tab.duplicate) {
+      return index;
+    }
+  }
+
   return null;
 }
 
 export function firstSelectableIndex(tabs: TabRecord[]): number | null {
-  void tabs;
-  return null;
+  const index = tabs.findIndex((tab) => !tab.disabled && !tab.duplicate);
+  return index >= 0 ? index : null;
 }
 
 export function lastSelectableIndex(tabs: TabRecord[]): number | null {
-  void tabs;
+  for (let index = tabs.length - 1; index >= 0; index -= 1) {
+    const tab = tabs[index];
+
+    if (tab && !tab.disabled && !tab.duplicate) {
+      return index;
+    }
+  }
+
   return null;
 }
 
 export function navigationIntentForKey(key: string, dir: 'ltr' | 'rtl'): NavigationIntent {
-  void key;
-  void dir;
+  if (key === 'Home') {
+    return 'first';
+  }
+
+  if (key === 'End') {
+    return 'last';
+  }
+
+  if (key === 'ArrowRight') {
+    return dir === 'rtl' ? 'previous' : 'next';
+  }
+
+  if (key === 'ArrowLeft') {
+    return dir === 'rtl' ? 'next' : 'previous';
+  }
+
   return null;
 }

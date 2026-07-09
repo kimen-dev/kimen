@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-09T00:38:46",
+  "timestamp": "2026-07-09T00:41:31",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -564,29 +564,64 @@
       "filePath": "src/components/ki-tabs/ki-tabs.tsx",
       "encapsulation": "shadow",
       "tag": "ki-tabs",
-      "docs": "TODO(spec): one-line purpose from the approved spec (Art. II).\n\nWhen to use: TODO(spec): agent-facing guidance (Art. I).\nWhen NOT to use: TODO(spec).",
-      "docsTags": [],
+      "docs": "A tab group for switching between peer content views.\n\nWhen to use: switch between small sets of peer views inside the same page,\nwith one visible panel at a time. When NOT to use: selecting form values\n(use `ki-radio-group`), page navigation (use links), step flows, or\nstandalone `ki-tab` / `ki-tab-panel` children outside this group.",
+      "docsTags": [
+        {
+          "name": "slot",
+          "text": "- `ki-tab` and `ki-tab-panel` children. Tabs are auto-assigned to an\ninternal named slot as managed output."
+        },
+        {
+          "name": "part",
+          "text": "tablist - Internal strip carrying the `tablist` role."
+        }
+      ],
       "usage": {},
       "props": [
         {
           "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Accessible name for the tablist. Always provide one when multiple tab\ngroups may appear in a view.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
           "type": "string",
           "complexType": {
             "original": "string",
             "resolved": "string",
             "references": {}
           },
-          "mutable": false,
-          "attr": "label",
+          "mutable": true,
+          "attr": "value",
           "reflectToAttr": false,
-          "docs": "TODO(spec): every public prop carries JSDoc with description, default and\nwhen-to-use guidance; an undocumented API member is a build failure (Art. I).",
+          "docs": "Resolved selected value. The attribute declares the initial request;\nthe live property falls back to the first enabled owner tab, or `\"\"`\nwhen no tab is selectable. Programmatic writes are silent.",
           "docsTags": [
             {
               "name": "default",
-              "text": "'TODO'"
+              "text": "''"
             }
           ],
-          "default": "'TODO'",
+          "default": "''",
           "values": [
             {
               "type": "string"
@@ -599,11 +634,36 @@
         }
       ],
       "methods": [],
-      "events": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "{ value: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: string }",
+            "resolved": "{ value: string; }",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Fired after a user-driven selection change.\n`detail.value` is the resolved selected value.",
+          "docsTags": []
+        }
+      ],
       "listeners": [],
       "styles": [],
-      "slots": [],
-      "parts": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "`ki-tab` and `ki-tab-panel` children. Tabs are auto-assigned to an\ninternal named slot as managed output."
+        }
+      ],
+      "parts": [
+        {
+          "name": "tablist",
+          "docs": "Internal strip carrying the `tablist` role."
+        }
+      ],
       "states": [],
       "dependents": [],
       "dependencies": [],
