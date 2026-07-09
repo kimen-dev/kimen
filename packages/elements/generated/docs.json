@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-09T00:07:29",
+  "timestamp": "2026-07-09T00:08:56",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -397,7 +397,7 @@
             "references": {
               "KiTooltipPlacement": {
                 "location": "import",
-                "path": "./ki-tooltip.position",
+                "path": "./ki-tooltip.position.js",
                 "id": "src/components/ki-tooltip/ki-tooltip.position.ts::KiTooltipPlacement",
                 "referenceLocation": "KiTooltipPlacement"
               }

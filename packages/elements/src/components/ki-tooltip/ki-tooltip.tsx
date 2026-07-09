@@ -1,10 +1,10 @@
 import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
-import { parseDelay } from './ki-tooltip.delay';
+import { parseDelay } from './ki-tooltip.delay.js';
 import {
   normalizePlacement,
   resolveTooltipPosition,
   type KiTooltipPlacement,
-} from './ki-tooltip.position';
+} from './ki-tooltip.position.js';
 
 /**
  * A transient, text-only description bubble for one slotted trigger.
