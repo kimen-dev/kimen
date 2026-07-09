@@ -96,7 +96,8 @@ export namespace Components {
      */
     interface KiTabs {
         /**
-          * Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view.
+          * Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view. When NOT to use: do not use `label` as a visible heading; render visible context in surrounding content.
+          * @default undefined
          */
         "label"?: string;
         /**
@@ -273,11 +274,12 @@ declare namespace LocalJSX {
      */
     interface KiTabs {
         /**
-          * Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view.
+          * Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view. When NOT to use: do not use `label` as a visible heading; render visible context in surrounding content.
+          * @default undefined
          */
         "label"?: string;
         /**
-          * Fired after a user-driven selection change. `detail.value` is the resolved selected value.
+          * Fired once after a user-driven selection change from pointer or keyboard navigation. `detail.value` is the resolved selected value and `value` is already current when listeners run. Programmatic `value` writes and first-render fallback are silent.
          */
         "onKi-change"?: (event: KiTabsCustomEvent<{ value: string }>) => void;
         /**

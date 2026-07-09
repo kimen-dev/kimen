@@ -50,13 +50,18 @@ export class KiTabs {
 
   /**
    * Accessible name for the tablist. Always provide one when multiple tab
-   * groups may appear in a view.
+   * groups may appear in a view. When NOT to use: do not use `label` as a
+   * visible heading; render visible context in surrounding content.
+   *
+   * @default undefined
    */
   @Prop({ reflect: true }) label?: string;
 
   /**
-   * Fired after a user-driven selection change.
-   * `detail.value` is the resolved selected value.
+   * Fired once after a user-driven selection change from pointer or keyboard
+   * navigation. `detail.value` is the resolved selected value and `value` is
+   * already current when listeners run. Programmatic `value` writes and
+   * first-render fallback are silent.
    */
   @Event({ eventName: 'ki-change', bubbles: true, composed: true })
   kiChange!: EventEmitter<{ value: string }>;
@@ -70,7 +75,9 @@ export class KiTabs {
 
   connectedCallback(): void {
     if (typeof MutationObserver === 'function') {
-      this.disabledObserver = new MutationObserver(() => { this.reconcile(this.value); });
+      this.disabledObserver = new MutationObserver(() => {
+        this.reconcile(this.value);
+      });
     }
   }
 
@@ -206,7 +213,9 @@ export class KiTabs {
     });
 
     if (selectedTab === null) {
-      this.tabRoster.forEach((tab) => { tab.setAttribute('tabindex', '-1'); });
+      this.tabRoster.forEach((tab) => {
+        tab.setAttribute('tabindex', '-1');
+      });
     }
 
     this.panelRoster.forEach((panel) => {
