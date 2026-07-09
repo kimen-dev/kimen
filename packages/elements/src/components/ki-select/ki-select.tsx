@@ -1,0 +1,25 @@
+import { Component, Prop, h } from '@stencil/core';
+
+/**
+ * TODO(spec): one-line purpose from the approved spec (Art. II).
+ *
+ * When to use: TODO(spec): agent-facing guidance (Art. I).
+ * When NOT to use: TODO(spec).
+ */
+@Component({
+  tag: 'ki-select',
+  styleUrl: 'ki-select.css',
+  shadow: true,
+})
+export class KiSelect {
+  /**
+   * TODO(spec): every public prop carries JSDoc with description, default and
+   * when-to-use guidance; an undocumented API member is a build failure (Art. I).
+   * @default 'TODO'
+   */
+  @Prop() label = 'TODO';
+
+  render() {
+    return <span class="label">{this.label}</span>;
+  }
+}
