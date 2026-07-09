@@ -1750,6 +1750,297 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/ki-tab/ki-tab.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiTab",
+          "customElement": true,
+          "tagName": "ki-tab",
+          "description": "One selectable tab inside a `ki-tabs` view switcher.",
+          "whenToUse": "label one peer content view inside `ki-tabs`, with optional\n`start` and `end` slot media.",
+          "whenNotToUse": "standalone, for form value\nselection, or for page navigation; use the parent group's `value` instead\nof authoring `selected`.",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "selected",
+              "fieldName": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Output-only selected state written by `ki-tabs`. Set the group's `value`\nto choose an initial tab; author-set `selected` is overwritten.",
+              "attribute": "selected",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Pairing identifier shared with a `ki-tab-panel`. The first tab with a\nvalue owns it; later duplicates render but are not selectable.",
+              "attribute": "value",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Tab label; this is the accessible name source."
+            },
+            {
+              "name": "end",
+              "description": "Trailing icon or media. Follows writing direction."
+            },
+            {
+              "name": "start",
+              "description": "Leading icon or media. Follows writing direction."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "indicator",
+              "description": "Decorative selected-tab marker."
+            },
+            {
+              "name": "tab",
+              "description": "Tab surface."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiTab",
+          "declaration": {
+            "name": "KiTab",
+            "module": "src/components/ki-tab/ki-tab.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-tab",
+          "declaration": {
+            "name": "KiTab",
+            "module": "src/components/ki-tab/ki-tab.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/ki-tab-panel/ki-tab-panel.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiTabPanel",
+          "customElement": true,
+          "tagName": "ki-tab-panel",
+          "description": "One content view paired with a `ki-tab` inside `ki-tabs`.",
+          "whenToUse": "hold the content for one peer tab view, sharing `value` with\nits `ki-tab`.",
+          "whenNotToUse": "standalone, as lazy mounting, or for page\nnavigation; orphan and duplicate panels are hidden by the parent group.",
+          "attributes": [
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Pairing identifier shared with a `ki-tab`. The first panel with a value\nowns it; duplicate or orphan panels stay hidden.",
+              "attribute": "value",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Panel content."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "panel",
+              "description": "Panel surface."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiTabPanel",
+          "declaration": {
+            "name": "KiTabPanel",
+            "module": "src/components/ki-tab-panel/ki-tab-panel.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-tab-panel",
+          "declaration": {
+            "name": "KiTabPanel",
+            "module": "src/components/ki-tab-panel/ki-tab-panel.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/ki-tabs/ki-tabs.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiTabs",
+          "customElement": true,
+          "tagName": "ki-tabs",
+          "description": "A tab group for switching between peer content views.",
+          "whenToUse": "switch between small sets of peer views inside the same page,\nwith one visible panel at a time.",
+          "whenNotToUse": "selecting form values\n(use `ki-radio-group`), page navigation (use links), step flows, or\nstandalone `ki-tab` / `ki-tab-panel` children outside this group.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              }
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name for the tablist. Always provide one when multiple tab\ngroups may appear in a view. When NOT to use: do not use `label` as a\nvisible heading; render visible context in surrounding content.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Resolved selected value. The attribute declares the initial request;\nthe live property falls back to the first enabled owner tab, or `\"\"`\nwhen no tab is selectable. Programmatic writes are silent.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [
+            {
+              "name": "ki-change",
+              "type": {
+                "text": "CustomEvent<{ value: string }>"
+              },
+              "description": "Fired once after a user-driven selection change from pointer or keyboard\nnavigation. `detail.value` is the resolved selected value and `value` is\nalready current when listeners run. Programmatic `value` writes and\nfirst-render fallback are silent."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "`ki-tab` and `ki-tab-panel` children. Tabs are auto-assigned to an\ninternal named slot as managed output."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "tablist",
+              "description": "Internal strip carrying the `tablist` role."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiTabs",
+          "declaration": {
+            "name": "KiTabs",
+            "module": "src/components/ki-tabs/ki-tabs.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-tabs",
+          "declaration": {
+            "name": "KiTabs",
+            "module": "src/components/ki-tabs/ki-tabs.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/ki-textarea/ki-textarea.tsx",
       "declarations": [
         {

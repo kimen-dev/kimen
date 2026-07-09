@@ -409,6 +409,65 @@ export namespace Components {
         "value"?: string;
     }
     /**
+     * One selectable tab inside a `ki-tabs` view switcher.
+     * @whenToUse label one peer content view inside `ki-tabs`, with optional
+     * `start` and `end` slot media.
+     * @whenNotToUse standalone, for form value
+     * selection, or for page navigation; use the parent group's `value` instead
+     * of authoring `selected`.
+     */
+    interface KiTab {
+        /**
+          * Prevents selection by every modality and exposes the unavailable state. Boolean presence semantics apply: `disabled="false"` is still disabled.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Output-only selected state written by `ki-tabs`. Set the group's `value` to choose an initial tab; author-set `selected` is overwritten.
+          * @default false
+         */
+        "selected": boolean;
+        /**
+          * Pairing identifier shared with a `ki-tab-panel`. The first tab with a value owns it; later duplicates render but are not selectable.
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
+     * One content view paired with a `ki-tab` inside `ki-tabs`.
+     * @whenToUse hold the content for one peer tab view, sharing `value` with
+     * its `ki-tab`.
+     * @whenNotToUse standalone, as lazy mounting, or for page
+     * navigation; orphan and duplicate panels are hidden by the parent group.
+     */
+    interface KiTabPanel {
+        /**
+          * Pairing identifier shared with a `ki-tab`. The first panel with a value owns it; duplicate or orphan panels stay hidden.
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
+     * A tab group for switching between peer content views.
+     * @whenToUse switch between small sets of peer views inside the same page,
+     * with one visible panel at a time.
+     * @whenNotToUse selecting form values
+     * (use `ki-radio-group`), page navigation (use links), step flows, or
+     * standalone `ki-tab` / `ki-tab-panel` children outside this group.
+     */
+    interface KiTabs {
+        /**
+          * Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view. When NOT to use: do not use `label` as a visible heading; render visible context in surrounding content.
+          * @default undefined
+         */
+        "label"?: string;
+        /**
+          * Resolved selected value. The attribute declares the initial request; the live property falls back to the first enabled owner tab, or `""` when no tab is selectable. Programmatic writes are silent.
+          * @default ''
+         */
+        "value": string;
+    }
+    /**
      * A token-styled multiline text field with native form semantics.
      * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
@@ -492,6 +551,10 @@ export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
 export interface KiDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLKiDialogElement;
+}
+export interface KiTabsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiTabsElement;
 }
 declare global {
     interface HTMLKiAlertElementEventMap {
@@ -722,6 +785,58 @@ declare global {
         new (): HTMLKiSwitchElement;
     };
     /**
+     * One selectable tab inside a `ki-tabs` view switcher.
+     * @whenToUse label one peer content view inside `ki-tabs`, with optional
+     * `start` and `end` slot media.
+     * @whenNotToUse standalone, for form value
+     * selection, or for page navigation; use the parent group's `value` instead
+     * of authoring `selected`.
+     */
+    interface HTMLKiTabElement extends Components.KiTab, HTMLStencilElement {
+    }
+    var HTMLKiTabElement: {
+        prototype: HTMLKiTabElement;
+        new (): HTMLKiTabElement;
+    };
+    /**
+     * One content view paired with a `ki-tab` inside `ki-tabs`.
+     * @whenToUse hold the content for one peer tab view, sharing `value` with
+     * its `ki-tab`.
+     * @whenNotToUse standalone, as lazy mounting, or for page
+     * navigation; orphan and duplicate panels are hidden by the parent group.
+     */
+    interface HTMLKiTabPanelElement extends Components.KiTabPanel, HTMLStencilElement {
+    }
+    var HTMLKiTabPanelElement: {
+        prototype: HTMLKiTabPanelElement;
+        new (): HTMLKiTabPanelElement;
+    };
+    interface HTMLKiTabsElementEventMap {
+        "ki-change": { value: string };
+    }
+    /**
+     * A tab group for switching between peer content views.
+     * @whenToUse switch between small sets of peer views inside the same page,
+     * with one visible panel at a time.
+     * @whenNotToUse selecting form values
+     * (use `ki-radio-group`), page navigation (use links), step flows, or
+     * standalone `ki-tab` / `ki-tab-panel` children outside this group.
+     */
+    interface HTMLKiTabsElement extends Components.KiTabs, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiTabsElementEventMap>(type: K, listener: (this: HTMLKiTabsElement, ev: KiTabsCustomEvent<HTMLKiTabsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiTabsElementEventMap>(type: K, listener: (this: HTMLKiTabsElement, ev: KiTabsCustomEvent<HTMLKiTabsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiTabsElement: {
+        prototype: HTMLKiTabsElement;
+        new (): HTMLKiTabsElement;
+    };
+    /**
      * A token-styled multiline text field with native form semantics.
      * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
@@ -768,6 +883,9 @@ declare global {
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-switch": HTMLKiSwitchElement;
+        "ki-tab": HTMLKiTabElement;
+        "ki-tab-panel": HTMLKiTabPanelElement;
+        "ki-tabs": HTMLKiTabsElement;
         "ki-textarea": HTMLKiTextareaElement;
         "ki-tooltip": HTMLKiTooltipElement;
     }
@@ -1184,6 +1302,69 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * One selectable tab inside a `ki-tabs` view switcher.
+     * @whenToUse label one peer content view inside `ki-tabs`, with optional
+     * `start` and `end` slot media.
+     * @whenNotToUse standalone, for form value
+     * selection, or for page navigation; use the parent group's `value` instead
+     * of authoring `selected`.
+     */
+    interface KiTab {
+        /**
+          * Prevents selection by every modality and exposes the unavailable state. Boolean presence semantics apply: `disabled="false"` is still disabled.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Output-only selected state written by `ki-tabs`. Set the group's `value` to choose an initial tab; author-set `selected` is overwritten.
+          * @default false
+         */
+        "selected"?: boolean;
+        /**
+          * Pairing identifier shared with a `ki-tab-panel`. The first tab with a value owns it; later duplicates render but are not selectable.
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
+     * One content view paired with a `ki-tab` inside `ki-tabs`.
+     * @whenToUse hold the content for one peer tab view, sharing `value` with
+     * its `ki-tab`.
+     * @whenNotToUse standalone, as lazy mounting, or for page
+     * navigation; orphan and duplicate panels are hidden by the parent group.
+     */
+    interface KiTabPanel {
+        /**
+          * Pairing identifier shared with a `ki-tab`. The first panel with a value owns it; duplicate or orphan panels stay hidden.
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
+     * A tab group for switching between peer content views.
+     * @whenToUse switch between small sets of peer views inside the same page,
+     * with one visible panel at a time.
+     * @whenNotToUse selecting form values
+     * (use `ki-radio-group`), page navigation (use links), step flows, or
+     * standalone `ki-tab` / `ki-tab-panel` children outside this group.
+     */
+    interface KiTabs {
+        /**
+          * Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view. When NOT to use: do not use `label` as a visible heading; render visible context in surrounding content.
+          * @default undefined
+         */
+        "label"?: string;
+        /**
+          * Fired once after a user-driven selection change from pointer or keyboard navigation. `detail.value` is the resolved selected value and `value` is already current when listeners run. Programmatic `value` writes and first-render fallback are silent.
+         */
+        "onKi-change"?: (event: KiTabsCustomEvent<{ value: string }>) => void;
+        /**
+          * Resolved selected value. The attribute declares the initial request; the live property falls back to the first enabled owner tab, or `""` when no tab is selectable. Programmatic writes are silent.
+          * @default ''
+         */
+        "value"?: string;
+    }
+    /**
      * A token-styled multiline text field with native form semantics.
      * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
@@ -1332,6 +1513,18 @@ declare namespace LocalJSX {
         "name": string;
         "value": string;
     }
+    interface KiTabAttributes {
+        "value": string;
+        "disabled": boolean;
+        "selected": boolean;
+    }
+    interface KiTabPanelAttributes {
+        "value": string;
+    }
+    interface KiTabsAttributes {
+        "value": string;
+        "label": string;
+    }
     interface KiTextareaAttributes {
         "label": string;
         "placeholder": string;
@@ -1362,6 +1555,9 @@ declare namespace LocalJSX {
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
+        "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
+        "ki-tab-panel": Omit<KiTabPanel, keyof KiTabPanelAttributes> & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K] };
+        "ki-tabs": Omit<KiTabs, keyof KiTabsAttributes> & { [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K] };
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
         "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
     }
@@ -1510,6 +1706,32 @@ declare module "@stencil/core" {
              * choices, and ki-button for actions.
              */
             "ki-switch": LocalJSX.IntrinsicElements["ki-switch"] & JSXBase.HTMLAttributes<HTMLKiSwitchElement>;
+            /**
+             * One selectable tab inside a `ki-tabs` view switcher.
+             * @whenToUse label one peer content view inside `ki-tabs`, with optional
+             * `start` and `end` slot media.
+             * @whenNotToUse standalone, for form value
+             * selection, or for page navigation; use the parent group's `value` instead
+             * of authoring `selected`.
+             */
+            "ki-tab": LocalJSX.IntrinsicElements["ki-tab"] & JSXBase.HTMLAttributes<HTMLKiTabElement>;
+            /**
+             * One content view paired with a `ki-tab` inside `ki-tabs`.
+             * @whenToUse hold the content for one peer tab view, sharing `value` with
+             * its `ki-tab`.
+             * @whenNotToUse standalone, as lazy mounting, or for page
+             * navigation; orphan and duplicate panels are hidden by the parent group.
+             */
+            "ki-tab-panel": LocalJSX.IntrinsicElements["ki-tab-panel"] & JSXBase.HTMLAttributes<HTMLKiTabPanelElement>;
+            /**
+             * A tab group for switching between peer content views.
+             * @whenToUse switch between small sets of peer views inside the same page,
+             * with one visible panel at a time.
+             * @whenNotToUse selecting form values
+             * (use `ki-radio-group`), page navigation (use links), step flows, or
+             * standalone `ki-tab` / `ki-tab-panel` children outside this group.
+             */
+            "ki-tabs": LocalJSX.IntrinsicElements["ki-tabs"] & JSXBase.HTMLAttributes<HTMLKiTabsElement>;
             /**
              * A token-styled multiline text field with native form semantics.
              * @whenToUse free-form text longer than one line, such as comments,

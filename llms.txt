@@ -430,6 +430,87 @@ Methods: none
 
 CSS custom properties: none
 
+### ki-tab
+
+One selectable tab inside a `ki-tabs` view switcher.
+
+When to use: label one peer content view inside `ki-tabs`, with optional
+`start` and `end` slot media.
+When NOT to use: standalone, for form value
+selection, or for page navigation; use the parent group's `value` instead
+of authoring `selected`.
+
+Attributes:
+- `disabled` (boolean, default false): Prevents selection by every modality and exposes the unavailable state. Boolean presence semantics apply: `disabled="false"` is still disabled.
+- `selected` (boolean, default false): Output-only selected state written by `ki-tabs`. Set the group's `value` to choose an initial tab; author-set `selected` is overwritten.
+- `value` (string, default ''): Pairing identifier shared with a `ki-tab-panel`. The first tab with a value owns it; later duplicates render but are not selectable.
+
+Slots:
+- (default): Tab label; this is the accessible name source.
+- `end`: Trailing icon or media. Follows writing direction.
+- `start`: Leading icon or media. Follows writing direction.
+
+Parts:
+- `indicator`: Decorative selected-tab marker.
+- `tab`: Tab surface.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
+### ki-tab-panel
+
+One content view paired with a `ki-tab` inside `ki-tabs`.
+
+When to use: hold the content for one peer tab view, sharing `value` with
+its `ki-tab`.
+When NOT to use: standalone, as lazy mounting, or for page
+navigation; orphan and duplicate panels are hidden by the parent group.
+
+Attributes:
+- `value` (string, default ''): Pairing identifier shared with a `ki-tab`. The first panel with a value owns it; duplicate or orphan panels stay hidden.
+
+Slots:
+- (default): Panel content.
+
+Parts:
+- `panel`: Panel surface.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
+### ki-tabs
+
+A tab group for switching between peer content views.
+
+When to use: switch between small sets of peer views inside the same page,
+with one visible panel at a time.
+When NOT to use: selecting form values
+(use `ki-radio-group`), page navigation (use links), step flows, or
+standalone `ki-tab` / `ki-tab-panel` children outside this group.
+
+Attributes:
+- `label` (string | undefined): Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view. When NOT to use: do not use `label` as a visible heading; render visible context in surrounding content.
+- `value` (string, default ''): Resolved selected value. The attribute declares the initial request; the live property falls back to the first enabled owner tab, or `""` when no tab is selectable. Programmatic writes are silent.
+
+Slots:
+- (default): `ki-tab` and `ki-tab-panel` children. Tabs are auto-assigned to an internal named slot as managed output.
+
+Parts:
+- `tablist`: Internal strip carrying the `tablist` role.
+
+Events:
+- `ki-change` (CustomEvent<{ value: string }>): Fired once after a user-driven selection change from pointer or keyboard navigation. `detail.value` is the resolved selected value and `value` is already current when listeners run. Programmatic `value` writes and first-render fallback are silent.
+
+Methods: none
+
+CSS custom properties: none
+
 ### ki-textarea
 
 A token-styled multiline text field with native form semantics.

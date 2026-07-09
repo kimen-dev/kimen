@@ -2475,6 +2475,362 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-tab/ki-tab.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-tab",
+      "docs": "One selectable tab inside a `ki-tabs` view switcher.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "label one peer content view inside `ki-tabs`, with optional\n`start` and `end` slot media."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "standalone, for form value\nselection, or for page navigation; use the parent group's `value` instead\nof authoring `selected`."
+        },
+        {
+          "name": "slot",
+          "text": "- Tab label; this is the accessible name source."
+        },
+        {
+          "name": "slot",
+          "text": "start - Leading icon or media. Follows writing direction."
+        },
+        {
+          "name": "slot",
+          "text": "end - Trailing icon or media. Follows writing direction."
+        },
+        {
+          "name": "part",
+          "text": "tab - Tab surface."
+        },
+        {
+          "name": "part",
+          "text": "indicator - Decorative selected-tab marker."
+        }
+      ],
+      "usage": {},
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "disabled",
+          "reflectToAttr": true,
+          "docs": "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "selected",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "selected",
+          "reflectToAttr": true,
+          "docs": "Output-only selected state written by `ki-tabs`. Set the group's `value`\nto choose an initial tab; author-set `selected` is overwritten.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Pairing identifier shared with a `ki-tab-panel`. The first tab with a\nvalue owns it; later duplicates render but are not selectable.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Tab label; this is the accessible name source."
+        },
+        {
+          "name": "end",
+          "docs": "Trailing icon or media. Follows writing direction."
+        },
+        {
+          "name": "start",
+          "docs": "Leading icon or media. Follows writing direction."
+        }
+      ],
+      "parts": [
+        {
+          "name": "indicator",
+          "docs": "Decorative selected-tab marker."
+        },
+        {
+          "name": "tab",
+          "docs": "Tab surface."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-tab-panel/ki-tab-panel.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-tab-panel",
+      "docs": "One content view paired with a `ki-tab` inside `ki-tabs`.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "hold the content for one peer tab view, sharing `value` with\nits `ki-tab`."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "standalone, as lazy mounting, or for page\nnavigation; orphan and duplicate panels are hidden by the parent group."
+        },
+        {
+          "name": "slot",
+          "text": "- Panel content."
+        },
+        {
+          "name": "part",
+          "text": "panel - Panel surface."
+        }
+      ],
+      "usage": {},
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": true,
+          "docs": "Pairing identifier shared with a `ki-tab`. The first panel with a value\nowns it; duplicate or orphan panels stay hidden.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Panel content."
+        }
+      ],
+      "parts": [
+        {
+          "name": "panel",
+          "docs": "Panel surface."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-tabs/ki-tabs.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-tabs",
+      "docs": "A tab group for switching between peer content views.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "switch between small sets of peer views inside the same page,\nwith one visible panel at a time."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "selecting form values\n(use `ki-radio-group`), page navigation (use links), step flows, or\nstandalone `ki-tab` / `ki-tab-panel` children outside this group."
+        },
+        {
+          "name": "slot",
+          "text": "- `ki-tab` and `ki-tab-panel` children. Tabs are auto-assigned to an\ninternal named slot as managed output."
+        },
+        {
+          "name": "part",
+          "text": "tablist - Internal strip carrying the `tablist` role."
+        }
+      ],
+      "usage": {},
+      "props": [
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": true,
+          "docs": "Accessible name for the tablist. Always provide one when multiple tab\ngroups may appear in a view. When NOT to use: do not use `label` as a\nvisible heading; render visible context in surrounding content.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Resolved selected value. The attribute declares the initial request;\nthe live property falls back to the first enabled owner tab, or `\"\"`\nwhen no tab is selectable. Programmatic writes are silent.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "''"
+            }
+          ],
+          "default": "''",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-change",
+          "detail": "{ value: string; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: string }",
+            "resolved": "{ value: string; }",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Fired once after a user-driven selection change from pointer or keyboard\nnavigation. `detail.value` is the resolved selected value and `value` is\nalready current when listeners run. Programmatic `value` writes and\nfirst-render fallback are silent.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "`ki-tab` and `ki-tab-panel` children. Tabs are auto-assigned to an\ninternal named slot as managed output."
+        }
+      ],
+      "parts": [
+        {
+          "name": "tablist",
+          "docs": "Internal strip carrying the `tablist` role."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-textarea/ki-textarea.tsx",
       "encapsulation": "shadow",
       "tag": "ki-textarea",

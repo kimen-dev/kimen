@@ -1,0 +1,86 @@
+/* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
+ * Logical properties only (Art. IV): direction-agnostic by construction. */
+:host {
+  --_ki-tab-fg: var(--ki-tab-unselected-rest-fg);
+  --_ki-tab-bg: var(--ki-tab-unselected-rest-bg);
+
+  box-sizing: border-box;
+  display: inline-flex;
+  position: relative;
+  min-block-size: var(--ki-tab-min-block-size);
+  color: var(--_ki-tab-fg);
+  font-family: var(--ki-typography-family-body);
+  font-size: var(--ki-tab-font-size);
+  font-weight: var(--ki-tab-font-weight);
+  line-height: var(--ki-tab-line-height);
+  background: var(--_ki-tab-bg);
+  border-radius: var(--ki-tab-radius);
+  cursor: pointer;
+  outline: none;
+}
+
+:host([selected]) {
+  --_ki-tab-fg: var(--ki-tab-selected-rest-fg);
+  --_ki-tab-bg: var(--ki-tab-selected-rest-bg);
+}
+
+:host(:hover) {
+  --_ki-tab-fg: var(--ki-tab-unselected-hover-fg);
+  --_ki-tab-bg: var(--ki-tab-unselected-hover-bg);
+}
+
+:host([selected]:hover) {
+  --_ki-tab-fg: var(--ki-tab-selected-hover-fg);
+  --_ki-tab-bg: var(--ki-tab-selected-hover-bg);
+}
+
+:host(:active) {
+  --_ki-tab-fg: var(--ki-tab-unselected-active-fg);
+  --_ki-tab-bg: var(--ki-tab-unselected-active-bg);
+}
+
+:host([selected]:active) {
+  --_ki-tab-fg: var(--ki-tab-selected-active-fg);
+  --_ki-tab-bg: var(--ki-tab-selected-active-bg);
+}
+
+:host([disabled]) {
+  --_ki-tab-fg: var(--ki-tab-unselected-disabled-fg);
+  --_ki-tab-bg: var(--ki-tab-unselected-disabled-bg);
+
+  cursor: default;
+}
+
+:host([selected][disabled]) {
+  --_ki-tab-fg: var(--ki-tab-selected-disabled-fg);
+  --_ki-tab-bg: var(--ki-tab-selected-disabled-bg);
+}
+
+:host(:focus-visible) {
+  outline: var(--ki-tab-focus-ring-width) solid var(--ki-tab-focus-ring-color);
+  outline-offset: var(--ki-tab-focus-ring-offset);
+}
+
+[part="tab"] {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--ki-tab-min-block-size);
+  padding-inline: var(--ki-tab-padding-inline);
+  gap: var(--ki-tab-gap);
+}
+
+[part="indicator"] {
+  position: absolute;
+  inset-inline: var(--ki-tab-padding-inline);
+  inset-block-end: 0;
+  display: none;
+  block-size: var(--ki-tab-indicator-size);
+  background: var(--ki-tab-indicator-color);
+  border-radius: var(--ki-tab-indicator-radius);
+}
+
+:host([selected]) [part="indicator"] {
+  display: block;
+}

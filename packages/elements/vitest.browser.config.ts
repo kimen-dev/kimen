@@ -44,6 +44,21 @@ export default defineConfig({
             await page.emulateMedia({ reducedMotion });
           },
         ),
+        ariaSnapshotByRole: defineBrowserCommand(
+          async ({ page }, role: Parameters<typeof page.getByRole>[0], name?: string) =>
+            page
+              .locator('[data-vitest="true"]')
+              .contentFrame()
+              .getByRole(role, name === undefined ? undefined : { name })
+              .ariaSnapshot({ timeout: 1000 }),
+        ),
+        ariaSnapshot: defineBrowserCommand(async ({ page }, selector: string) =>
+          page
+            .locator('[data-vitest="true"]')
+            .contentFrame()
+            .locator(selector)
+            .ariaSnapshot({ timeout: 1000 }),
+        ),
         installClock: defineBrowserCommand(async ({ page }) => {
           await page.clock.install();
         }),

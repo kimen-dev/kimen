@@ -201,6 +201,23 @@
       "name": "ki-dialog worst case (component + full Stencil runtime, first component on a page)",
       "path": "dist/components/ki-dialog.js",
       "limit": "25 KB"
+    },
+    {
+      "name": "ki-tabs composite trio marginal cost (component code, runtime excluded)",
+      "path": [
+        "dist/components/ki-tabs.js",
+        "dist/components/ki-tab.js",
+        "dist/components/ki-tab-panel.js"
+      ],
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-tabs group worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-tabs.js",
+      "limit": "25 KB"
     }
   ],
   "nx": {
