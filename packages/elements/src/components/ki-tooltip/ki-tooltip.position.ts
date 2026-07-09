@@ -1,5 +1,5 @@
 export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';
-export type KiTooltipDirection = 'ltr' | 'rtl';
+type KiTooltipDirection = 'ltr' | 'rtl';
 
 export interface KiTooltipRect {
   x: number;
