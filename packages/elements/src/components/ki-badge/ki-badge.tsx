@@ -6,13 +6,13 @@ export type KiBadgeSize = 'sm' | 'md';
 /**
  * A static, non-interactive status pill.
  *
- * When to use: annotate an entity with short status text (a state, a
+ * @whenToUse annotate an entity with short status text (a state, a
  * category) whose meaning is carried by the label itself; the tone color
  * only reinforces the text, it never replaces it.
- * When NOT to use: never for feedback that must be announced (that is
- * ki-alert's job — the badge has no live region), never as an interactive
- * chip, filter or button, never empty (the label IS the meaning), never as
- * a notification-counter overlay (a future, separate concern).
+ * @whenNotToUse feedback that must be announced (that is
+ * ki-alert's job — the badge has no live region), an interactive
+ * chip, filter or button, empty content (the label IS the meaning), or a
+ * notification-counter overlay (a future, separate concern).
  *
  * @slot - The label: short status text, the sole carrier of meaning.
  * @part badge - The pill: background, foreground, border, radius, metrics

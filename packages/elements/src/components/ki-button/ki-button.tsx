@@ -9,9 +9,9 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
 /**
  * A token-styled action button with native button semantics.
  *
- * When to use: trigger the single main action of a view, supporting actions
+ * @whenToUse trigger the single main action of a view, supporting actions
  * in descending hierarchy, or confirming/destructive actions through tone.
- * When NOT to use: navigation, icon-only actions, persistent toggles, or
+ * @whenNotToUse navigation, icon-only actions, persistent toggles, or
  * loading/progress semantics.
  *
  * @slot - Label content. This is the accessible name source.

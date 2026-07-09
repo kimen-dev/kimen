@@ -83,6 +83,7 @@
     --ki-text-danger-base-em: var(--ki-color-danger-900);
     --ki-text-none: var(--ki-color-transparent-black);
     --ki-outline-high-em: var(--ki-color-white-12);
+    --ki-outline-strong: var(--ki-color-white-48);
     --ki-outline-med-em: var(--ki-color-white-8);
     --ki-outline-low-em: var(--ki-color-white-5);
     --ki-outline-base-em: var(--ki-color-white-3);
@@ -260,6 +261,7 @@
   --ki-text-danger-base-em: var(--ki-color-danger-900);
   --ki-text-none: var(--ki-color-transparent-black);
   --ki-outline-high-em: var(--ki-color-white-12);
+  --ki-outline-strong: var(--ki-color-white-48);
   --ki-outline-med-em: var(--ki-color-white-8);
   --ki-outline-low-em: var(--ki-color-white-5);
   --ki-outline-base-em: var(--ki-color-white-3);

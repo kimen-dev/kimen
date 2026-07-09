@@ -1,0 +1,95 @@
+{
+  "timestamp": "2026-07-08T08:00:00",
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "4.43.5",
+    "typescriptVersion": "5.8.3"
+  },
+  "components": [
+    {
+      "filePath": "src/components/ki-button/ki-button.tsx",
+      "tag": "ki-button",
+      "docs": "A token-styled action button with native button semantics.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "trigger the single main action of a view"
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "navigation or persistent toggles"
+        }
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "\"primary\" | \"secondary\"",
+          "complexType": {
+            "original": "KiButtonVariant",
+            "resolved": "\"primary\" | \"secondary\"",
+            "references": {
+              "KiButtonVariant": {
+                "location": "local",
+                "path": "/Users/alice/work/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
+                "id": "src/components/ki-button/ki-button.tsx::KiButtonVariant"
+              }
+            }
+          },
+          "attr": "variant",
+          "reflectToAttr": true,
+          "docs": "Visual hierarchy for the action.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'secondary'"
+            }
+          ],
+          "default": "'secondary'"
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "kiDemo",
+          "detail": "KiDemoDetail",
+          "bubbles": true,
+          "cancelable": false,
+          "composed": true,
+          "docs": "Fires in the fixture to pin event reference normalization.",
+          "docsTags": [],
+          "complexType": {
+            "original": "KiDemoDetail",
+            "resolved": "KiDemoDetail",
+            "references": {
+              "KiDemoDetail": {
+                "location": "local",
+                "path": "/Users/alice/dev/kimen/packages/elements/src/components/ki-fixture/ki-fixture.tsx",
+                "id": "src/components/ki-fixture/ki-fixture.tsx::KiDemoDetail"
+              }
+            }
+          }
+        }
+      ],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Label content."
+        }
+      ],
+      "parts": [
+        {
+          "name": "button",
+          "docs": "Internal native button."
+        }
+      ]
+    }
+  ],
+  "typeLibrary": {
+    "src/components/ki-button/ki-button.tsx::KiButtonVariant": {
+      "declaration": "export type KiButtonVariant = 'primary' | 'secondary';",
+      "docstring": "",
+      "path": "src/components/ki-button/ki-button.tsx"
+    }
+  }
+}
