@@ -1,0 +1,17 @@
+{
+  "ki": {
+    "tabs": {
+      "gap": {
+        "$value": "{ki.space.xs}"
+      },
+      "divider": {
+        "width": {
+          "$value": "{ki.space.xxs}"
+        },
+        "color": {
+          "$value": "{ki.outline.low-em}"
+        }
+      }
+    }
+  }
+}

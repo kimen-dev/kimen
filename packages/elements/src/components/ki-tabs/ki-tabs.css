@@ -1,0 +1,16 @@
+/* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
+ * Logical properties only (Art. IV): direction-agnostic by construction. */
+:host {
+  --_ki-tabs-gap: var(--ki-tabs-gap);
+  --_ki-tabs-divider-width: var(--ki-tabs-divider-width);
+  --_ki-tabs-divider-color: var(--ki-tabs-divider-color);
+
+  display: block;
+}
+
+[part="tablist"] {
+  display: flex;
+  gap: var(--_ki-tabs-gap);
+  align-items: end;
+  border-block-end: var(--_ki-tabs-divider-width) solid var(--_ki-tabs-divider-color);
+}

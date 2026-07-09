@@ -1,0 +1,20 @@
+{
+  "ki": {
+    "radio-group": {
+      "gap": {
+        "$value": "{ki.space.sm}"
+      },
+      "label": {
+        "font-size": {
+          "$value": "{ki.typography.size.body-1}"
+        },
+        "font-weight": {
+          "$value": "{ki.typography.weight.body.medium}"
+        },
+        "line-height": {
+          "$value": "{ki.typography.line-height.body-1}"
+        }
+      }
+    }
+  }
+}

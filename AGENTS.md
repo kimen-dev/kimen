@@ -28,7 +28,9 @@ approves specs and merges.
    gate. Run everything with `bash scripts/gates/gates-suite.sh`.
 4. **Never hand-edit generated artifacts** (Art. I): manifests, catalog,
    llms.txt, wrappers and this file (once generated) are regenerated, not
-   patched.
+   patched. `@kimen/elements` build normalizes `generated/docs.json`, emits
+   `generated/custom-elements.json` plus package/root `llms.txt`, and the
+   `surfaces-sync` gate verifies they match source.
 5. **Tokens only** (Art. VI): no hardcoded visual values, CSS logical
    properties only, no hardcoded user-visible strings.
 6. **Containment** (Art. XI): unattended loops run sandboxed (`sandbox/`),

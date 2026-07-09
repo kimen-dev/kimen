@@ -1,0 +1,105 @@
+:host {
+  --_ki-textarea-bg: var(--ki-textarea-rest-bg);
+  --_ki-textarea-fg: var(--ki-textarea-rest-fg);
+  --_ki-textarea-border: var(--ki-textarea-rest-border);
+  --_ki-textarea-label-fg: var(--ki-textarea-rest-label-fg);
+  --_ki-textarea-placeholder-fg: var(--ki-textarea-rest-placeholder-fg);
+
+  display: block;
+}
+
+:host(:hover) {
+  --_ki-textarea-bg: var(--ki-textarea-hover-bg);
+  --_ki-textarea-fg: var(--ki-textarea-hover-fg);
+  --_ki-textarea-border: var(--ki-textarea-hover-border);
+  --_ki-textarea-label-fg: var(--ki-textarea-hover-label-fg);
+  --_ki-textarea-placeholder-fg: var(--ki-textarea-hover-placeholder-fg);
+}
+
+:host(:focus-within) {
+  --_ki-textarea-bg: var(--ki-textarea-focus-bg);
+  --_ki-textarea-fg: var(--ki-textarea-focus-fg);
+  --_ki-textarea-border: var(--ki-textarea-focus-border);
+  --_ki-textarea-label-fg: var(--ki-textarea-focus-label-fg);
+  --_ki-textarea-placeholder-fg: var(--ki-textarea-focus-placeholder-fg);
+}
+
+:host([readonly]) {
+  --_ki-textarea-bg: var(--ki-textarea-readonly-bg);
+  --_ki-textarea-fg: var(--ki-textarea-readonly-fg);
+  --_ki-textarea-border: var(--ki-textarea-readonly-border);
+  --_ki-textarea-label-fg: var(--ki-textarea-readonly-label-fg);
+  --_ki-textarea-placeholder-fg: var(--ki-textarea-readonly-placeholder-fg);
+}
+
+:host(:state(user-invalid)) {
+  --_ki-textarea-bg: var(--ki-textarea-invalid-bg);
+  --_ki-textarea-fg: var(--ki-textarea-invalid-fg);
+  --_ki-textarea-border: var(--ki-textarea-invalid-border);
+  --_ki-textarea-label-fg: var(--ki-textarea-invalid-label-fg);
+  --_ki-textarea-placeholder-fg: var(--ki-textarea-invalid-placeholder-fg);
+}
+
+/* :disabled (not [disabled]) so a fieldset-disabled control — which sets no
+   host attribute, only ElementInternals disabled state — also gets the disabled
+   token matrix instead of rest/hover styling (codex review). */
+:host(:disabled) {
+  --_ki-textarea-bg: var(--ki-textarea-disabled-bg);
+  --_ki-textarea-fg: var(--ki-textarea-disabled-fg);
+  --_ki-textarea-border: var(--ki-textarea-disabled-border);
+  --_ki-textarea-label-fg: var(--ki-textarea-disabled-label-fg);
+  --_ki-textarea-placeholder-fg: var(--ki-textarea-disabled-placeholder-fg);
+}
+
+.root {
+  display: grid;
+  gap: var(--ki-textarea-label-gap);
+}
+
+[part="label"] {
+  color: var(--_ki-textarea-label-fg);
+  font-family: var(--ki-typography-family-base);
+  font-size: var(--ki-textarea-label-font-size);
+  font-weight: var(--ki-textarea-label-font-weight);
+  line-height: var(--ki-textarea-label-line-height);
+}
+
+[part="field"] {
+  background: var(--_ki-textarea-bg);
+  border-block-start: var(--ki-textarea-border-block-start-width) solid var(--_ki-textarea-border);
+  border-block-end: var(--ki-textarea-border-block-end-width) solid var(--_ki-textarea-border);
+  border-inline-start: var(--ki-textarea-border-inline-start-width) solid var(--_ki-textarea-border);
+  border-inline-end: var(--ki-textarea-border-inline-end-width) solid var(--_ki-textarea-border);
+  border-radius: var(--ki-textarea-radius);
+  min-block-size: var(--ki-textarea-min-target);
+}
+
+:host(:focus-within) [part="field"] {
+  box-shadow:
+    0 0 0 var(--ki-textarea-focus-ring-offset) var(--ki-surface-s0),
+    0 0 0 calc(var(--ki-textarea-focus-ring-offset) + var(--ki-textarea-focus-ring-width))
+    var(--ki-textarea-focus-ring-color);
+}
+
+[part="textarea"] {
+  box-sizing: border-box;
+  display: block;
+  inline-size: 100%;
+  margin: 0;
+  padding-block: var(--ki-textarea-padding-block);
+  padding-inline: var(--ki-textarea-padding-inline);
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--_ki-textarea-fg);
+  font: inherit;
+  font-family: var(--ki-typography-family-base);
+  font-size: var(--ki-textarea-font-size);
+  font-weight: var(--ki-textarea-font-weight);
+  line-height: var(--ki-textarea-line-height);
+  resize: none;
+}
+
+[part="textarea"]::placeholder {
+  color: var(--_ki-textarea-placeholder-fg);
+}

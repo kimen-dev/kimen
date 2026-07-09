@@ -39,42 +39,54 @@ test('contrast pair table covers the declared data-model pairs', () => {
       ['--ki-text-med-em', '--ki-surface-s0'],
       ['--ki-text-high-em', '--ki-surface-s1'],
       ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
-      ['--ki-select-placeholder-fg', '--ki-select-rest-bg'],
-      ['--ki-select-rest-label-fg', '--ki-surface-s0'],
-      ['--ki-select-hover-label-fg', '--ki-surface-s0'],
-      ['--ki-select-focus-label-fg', '--ki-surface-s0'],
     ],
   );
 });
 
-test('component sweep covers button, select and option foreground-background matrices', () => {
+test('component sweep is generic: any component bg/fg pair, semantic layers and disabled cells excluded', () => {
   const declarations = new Map([
-    ['--ki-button-primary-neutral-rest-bg', '#000000'],
-    ['--ki-button-primary-neutral-rest-fg', '#ffffff'],
-    ['--ki-select-focus-bg', '#000000'],
-    ['--ki-select-focus-fg', '#ffffff'],
-    ['--ki-option-highlight-bg', '#000000'],
-    ['--ki-option-highlight-fg', '#ffffff'],
+    // a non-button component with a matching fg → swept
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-fg', '#111111'],
+    // a bare component pair with no state segment (e.g. ki-card) → swept
+    ['--ki-card-bg', '#ffffff'],
+    ['--ki-card-fg', '#111111'],
+    // button canary → swept
+    ['--ki-button-neutral-rest-bg', '#eeeeee'],
+    ['--ki-button-neutral-rest-fg', '#222222'],
+    // disabled cell → excluded (WCAG 1.4.3 exempt)
+    ['--ki-input-disabled-bg', '#fafafa'],
+    ['--ki-input-disabled-fg', '#cccccc'],
+    // bg without an fg sibling → skipped (non-text affordance, not a text pair)
+    ['--ki-checkbox-checked-rest-bg', '#0066ff'],
+    // semantic layer, not a component → excluded even with an fg sibling
+    ['--ki-surface-raised-bg', '#0066ff'],
+    ['--ki-surface-raised-fg', '#ffffff'],
   ]);
-  const swept = componentPairs(declarations);
 
-  assert.deepEqual(
-    swept.pairs.map((pair) => [pair.text, pair.surface]),
-    [
-      ['--ki-button-primary-neutral-rest-fg', '--ki-button-primary-neutral-rest-bg'],
-      ['--ki-select-focus-fg', '--ki-select-focus-bg'],
-      ['--ki-option-highlight-fg', '--ki-option-highlight-bg'],
-    ],
-  );
-  assert.equal(swept.counts.get('ki-button'), 1);
-  assert.equal(swept.counts.get('ki-select'), 1);
-  assert.equal(swept.counts.get('ki-option'), 1);
+  const swept = componentPairs(declarations)
+    .map((pair) => [pair.component, pair.text, pair.surface])
+    .sort();
+
+  assert.deepEqual(swept, [
+    ['button', '--ki-button-neutral-rest-fg', '--ki-button-neutral-rest-bg'],
+    ['card', '--ki-card-fg', '--ki-card-bg'],
+    ['input', '--ki-input-rest-fg', '--ki-input-rest-bg'],
+  ]);
 });
 
-test('component sweep reports zero matches per component family', () => {
-  const swept = componentPairs(new Map([['--ki-select-rest-bg', '#ffffff']]));
+test('non-text control cells (radio ring/dot) require 3:1, text cells 4.5:1', () => {
+  const declarations = new Map([
+    ['--ki-radio-selected-rest-bg', '#ffffff'],
+    ['--ki-radio-selected-rest-fg', '#767676'],
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-fg', '#111111'],
+  ]);
 
-  assert.equal(swept.counts.get('ki-button'), 0);
-  assert.equal(swept.counts.get('ki-select'), 1);
-  assert.equal(swept.counts.get('ki-option'), 0);
+  const byComponent = Object.fromEntries(
+    componentPairs(declarations).map((pair) => [pair.component, pair.minRatio]),
+  );
+
+  assert.equal(byComponent.radio, 3);
+  assert.equal(byComponent.input, 4.5);
 });

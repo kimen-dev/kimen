@@ -35,11 +35,11 @@ type RosterOption = SelectOptionRecord & {
  * A form-associated select-only combobox for choosing one option from
  * declarative `ki-option` children.
  *
- * When to use: choose exactly one value from a known closed list, especially
+ * @whenToUse choose exactly one value from a known closed list, especially
  * when there are roughly five or more choices or space is limited.
- * When NOT to use: use `ki-radio-group` for a few always-visible choices,
+ * @whenNotToUse `ki-radio-group` for a few always-visible choices,
  * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
- * binary decisions, and never use it for multiselect or command menus.
+ * binary decisions, or multiselect and command menus.
  *
  * @slot - `ki-option` data children. They do not paint; rows are mirrored.
  * @part label - Visible label and accessible-name source.

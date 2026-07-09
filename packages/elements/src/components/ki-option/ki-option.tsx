@@ -8,10 +8,10 @@ import {
 /**
  * A declarative data option rendered by its owning `ki-select`.
  *
- * When to use: declare one choice inside a `ki-select`; its text is the
+ * @whenToUse declare one choice inside a `ki-select`; its text is the
  * human-facing label and its `value` is the submitted value.
- * When NOT to use: never use `ki-option` standalone, never author selection
- * on an option, and never expect it to paint its own row.
+ * @whenNotToUse `ki-option` standalone, authoring selection
+ * on an option, or expecting it to paint its own row.
  *
  * @slot - Text label mirrored by the owning select.
  */
