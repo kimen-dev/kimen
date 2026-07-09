@@ -73,9 +73,21 @@ export class KiTooltip {
 
   connectedCallback(): void {
     this.effectivePlacement = normalizePlacement(this.placement);
+    this.host.addEventListener('pointerenter', this.handlePointerEnter);
+    this.host.addEventListener('pointerleave', this.handlePointerLeave);
+    this.host.addEventListener('focus', this.handleFocusIn, { capture: true });
+    this.host.addEventListener('blur', this.handleFocusOut, { capture: true });
+    this.host.addEventListener('focusin', this.handleFocusIn);
+    this.host.addEventListener('focusout', this.handleFocusOut);
   }
 
   disconnectedCallback(): void {
+    this.host.removeEventListener('pointerenter', this.handlePointerEnter);
+    this.host.removeEventListener('pointerleave', this.handlePointerLeave);
+    this.host.removeEventListener('focus', this.handleFocusIn, { capture: true });
+    this.host.removeEventListener('blur', this.handleFocusOut, { capture: true });
+    this.host.removeEventListener('focusin', this.handleFocusIn);
+    this.host.removeEventListener('focusout', this.handleFocusOut);
     this.clearTimer();
     this.removeEscapeListener();
     this.clearTriggerDescription();
@@ -273,12 +285,7 @@ export class KiTooltip {
     };
 
     return (
-      <Host
-        onPointerEnter={this.handlePointerEnter}
-        onPointerLeave={this.handlePointerLeave}
-        onFocusin={this.handleFocusIn}
-        onFocusout={this.handleFocusOut}
-      >
+      <Host>
         <slot onSlotchange={this.handleSlotChange} />
         {this.hasLabel ? (
           <div

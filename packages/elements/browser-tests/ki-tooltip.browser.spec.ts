@@ -250,6 +250,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
     const next = document.createElement('button');
     next.textContent = 'Next';
     document.body.append(next);
+    await userEvent.hover(next);
 
     trigger.focus();
     await nextFrame();
