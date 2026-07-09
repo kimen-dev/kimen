@@ -16,3 +16,5 @@ export { KiBadge } from './components/ki-badge/ki-badge.js';
 export type * from './components/ki-badge/ki-badge.js';
 export { KiSwitch } from './components/ki-switch/ki-switch.js';
 export type * from './components/ki-switch/ki-switch.js';
+export { KiAlert } from './components/ki-alert/ki-alert.js';
+export type { KiAlertTone } from './components/ki-alert/ki-alert.tone.js';

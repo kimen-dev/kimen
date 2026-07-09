@@ -5,13 +5,56 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiInputType } from "./components/ki-input/ki-input";
+export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiInputType } from "./components/ki-input/ki-input";
 export namespace Components {
+    /**
+     * A persistent inline status message with token-backed tone semantics.
+     * @whenToUse show a persistent inline message about the state of a page or
+     * section, such as a failed save, completed operation, or service notice, that
+     * remains until the condition is resolved or the person dismisses it. Express
+     * severity with `tone`, never custom styling.
+     * @whenNotToUse transient confirmations that expire on their own belong to
+     * the future `ki-toast`; tiny status descriptors attached to another element
+     * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
+     * field-level validation belongs to the form control.
+     * Assistive technology note: alerts that must be announced should be inserted
+     * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
+     * page load are exposed with their role but platform announcement is not
+     * guaranteed.
+     */
+    interface KiAlert {
+        /**
+          * Accessible name for the dismiss button. Override for localization; the default English string is the component's only built-in user-visible text.  When to use: provide a localized action name whenever the document language is not English. When NOT to use: do not put the alert message here; use the default slot.
+          * @default 'Dismiss'
+         */
+        "dismissLabel": string;
+        /**
+          * Reflected dismissed state. User dismissal sets it; applications may also set or clear it. While true, the host remains in the document but renders no alert subtree and leaves the accessibility tree. Clearing it re-shows the alert and creates a dynamic live-region appearance.  When to use: persist or restore acknowledgement state from application data. When NOT to use: do not listen for programmatic changes as dismissal events; `ki-dismiss` is only for user activation.
+          * @default false
+         */
+        "dismissed": boolean;
+        /**
+          * Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop.  When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; that is future `ki-toast` behavior.
+          * @default false
+         */
+        "dismissible": boolean;
+        /**
+          * Optional emphasized text rendered before the message inside the live region. Empty strings render no heading. The heading is a `strong` element, not a document heading, so it never changes page outline.  When to use: add a short label when it helps identify the status message. When NOT to use: do not use heading for page structure; use a real heading outside the alert when the document needs one.
+         */
+        "heading"?: string;
+        /**
+          * Semantic intent for visual styling and live-region urgency. `danger` and `warning` expose `role="alert"`; `neutral`, `success`, `info`, absent, and unrecognized values expose `role="status"`. Unknown values keep rendering and fall back to the neutral token matrix by CSS construction.  When to use: choose the tone that describes the page or section state. When NOT to use: do not use tone for layout, density, or filled-vs-outlined styling; those are token/theme decisions.
+          * @default 'neutral'
+         */
+        "tone": KiAlertTone | (string & {});
+    }
     /**
      * A static, non-interactive status pill.
      * @whenToUse annotate an entity with short status text (a state, a
@@ -265,7 +308,43 @@ export namespace Components {
         "value": string;
     }
 }
+export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLKiAlertElement;
+}
 declare global {
+    interface HTMLKiAlertElementEventMap {
+        "ki-dismiss": null;
+    }
+    /**
+     * A persistent inline status message with token-backed tone semantics.
+     * @whenToUse show a persistent inline message about the state of a page or
+     * section, such as a failed save, completed operation, or service notice, that
+     * remains until the condition is resolved or the person dismisses it. Express
+     * severity with `tone`, never custom styling.
+     * @whenNotToUse transient confirmations that expire on their own belong to
+     * the future `ki-toast`; tiny status descriptors attached to another element
+     * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
+     * field-level validation belongs to the form control.
+     * Assistive technology note: alerts that must be announced should be inserted
+     * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
+     * page load are exposed with their role but platform announcement is not
+     * guaranteed.
+     */
+    interface HTMLKiAlertElement extends Components.KiAlert, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLKiAlertElementEventMap>(type: K, listener: (this: HTMLKiAlertElement, ev: KiAlertCustomEvent<HTMLKiAlertElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLKiAlertElementEventMap>(type: K, listener: (this: HTMLKiAlertElement, ev: KiAlertCustomEvent<HTMLKiAlertElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLKiAlertElement: {
+        prototype: HTMLKiAlertElement;
+        new (): HTMLKiAlertElement;
+    };
     /**
      * A static, non-interactive status pill.
      * @whenToUse annotate an entity with short status text (a state, a
@@ -374,6 +453,7 @@ declare global {
         new (): HTMLKiTextareaElement;
     };
     interface HTMLElementTagNameMap {
+        "ki-alert": HTMLKiAlertElement;
         "ki-badge": HTMLKiBadgeElement;
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
@@ -386,6 +466,51 @@ declare global {
 declare namespace LocalJSX {
     type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}` | `prop:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K | `prop:${K}`]?: never } | { [P in `prop:${K}`]: PropT } & { [P in K | `attr:${K}`]?: never };
 
+    /**
+     * A persistent inline status message with token-backed tone semantics.
+     * @whenToUse show a persistent inline message about the state of a page or
+     * section, such as a failed save, completed operation, or service notice, that
+     * remains until the condition is resolved or the person dismisses it. Express
+     * severity with `tone`, never custom styling.
+     * @whenNotToUse transient confirmations that expire on their own belong to
+     * the future `ki-toast`; tiny status descriptors attached to another element
+     * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
+     * field-level validation belongs to the form control.
+     * Assistive technology note: alerts that must be announced should be inserted
+     * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
+     * page load are exposed with their role but platform announcement is not
+     * guaranteed.
+     */
+    interface KiAlert {
+        /**
+          * Accessible name for the dismiss button. Override for localization; the default English string is the component's only built-in user-visible text.  When to use: provide a localized action name whenever the document language is not English. When NOT to use: do not put the alert message here; use the default slot.
+          * @default 'Dismiss'
+         */
+        "dismissLabel"?: string;
+        /**
+          * Reflected dismissed state. User dismissal sets it; applications may also set or clear it. While true, the host remains in the document but renders no alert subtree and leaves the accessibility tree. Clearing it re-shows the alert and creates a dynamic live-region appearance.  When to use: persist or restore acknowledgement state from application data. When NOT to use: do not listen for programmatic changes as dismissal events; `ki-dismiss` is only for user activation.
+          * @default false
+         */
+        "dismissed"?: boolean;
+        /**
+          * Renders one native dismiss button when true. The button sits outside the live-region boundary, so its accessible name is not announced as part of the alert message. When false, the alert adds no tab stop.  When to use: allow a person to acknowledge and clear a persistent message. When NOT to use: do not use dismissible for auto-expiring messages; that is future `ki-toast` behavior.
+          * @default false
+         */
+        "dismissible"?: boolean;
+        /**
+          * Optional emphasized text rendered before the message inside the live region. Empty strings render no heading. The heading is a `strong` element, not a document heading, so it never changes page outline.  When to use: add a short label when it helps identify the status message. When NOT to use: do not use heading for page structure; use a real heading outside the alert when the document needs one.
+         */
+        "heading"?: string;
+        /**
+          * Fired once after the user dismisses the alert — emitted after the alert is hidden and focus has been handed to the next control. `detail` is `null` and the event is not cancelable (the alert is already gone when it runs). When to use: record acknowledgement, or advance an application flow after a user closes the alert. When NOT to use: do not treat it as a veto point, and do not expect it for programmatic `dismissed` changes — it fires only for user activation.
+         */
+        "onKi-dismiss"?: (event: KiAlertCustomEvent<null>) => void;
+        /**
+          * Semantic intent for visual styling and live-region urgency. `danger` and `warning` expose `role="alert"`; `neutral`, `success`, `info`, absent, and unrecognized values expose `role="status"`. Unknown values keep rendering and fall back to the neutral token matrix by CSS construction.  When to use: choose the tone that describes the page or section state. When NOT to use: do not use tone for layout, density, or filled-vs-outlined styling; those are token/theme decisions.
+          * @default 'neutral'
+         */
+        "tone"?: KiAlertTone | (string & {});
+    }
     /**
      * A static, non-interactive status pill.
      * @whenToUse annotate an entity with short status text (a state, a
@@ -659,6 +784,13 @@ declare namespace LocalJSX {
         "value"?: string;
     }
 
+    interface KiAlertAttributes {
+        "tone": KiAlertTone | (string & {});
+        "heading": string;
+        "dismissible": boolean;
+        "dismissLabel": string;
+        "dismissed": boolean;
+    }
     interface KiBadgeAttributes {
         "tone": KiBadgeTone;
         "size": KiBadgeSize;
@@ -710,6 +842,7 @@ declare namespace LocalJSX {
     }
 
     interface IntrinsicElements {
+        "ki-alert": Omit<KiAlert, keyof KiAlertAttributes> & { [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K] };
         "ki-badge": Omit<KiBadge, keyof KiBadgeAttributes> & { [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K] };
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
@@ -723,6 +856,22 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * A persistent inline status message with token-backed tone semantics.
+             * @whenToUse show a persistent inline message about the state of a page or
+             * section, such as a failed save, completed operation, or service notice, that
+             * remains until the condition is resolved or the person dismisses it. Express
+             * severity with `tone`, never custom styling.
+             * @whenNotToUse transient confirmations that expire on their own belong to
+             * the future `ki-toast`; tiny status descriptors attached to another element
+             * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
+             * field-level validation belongs to the form control.
+             * Assistive technology note: alerts that must be announced should be inserted
+             * dynamically, or re-shown by clearing `dismissed`; alerts present at initial
+             * page load are exposed with their role but platform announcement is not
+             * guaranteed.
+             */
+            "ki-alert": LocalJSX.IntrinsicElements["ki-alert"] & JSXBase.HTMLAttributes<HTMLKiAlertElement>;
             /**
              * A static, non-interactive status pill.
              * @whenToUse annotate an entity with short status text (a state, a

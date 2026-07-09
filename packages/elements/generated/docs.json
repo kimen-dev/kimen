@@ -6,6 +6,261 @@
   },
   "components": [
     {
+      "filePath": "src/components/ki-alert/ki-alert.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-alert",
+      "docs": "A persistent inline status message with token-backed tone semantics.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "show a persistent inline message about the state of a page or\nsection, such as a failed save, completed operation, or service notice, that\nremains until the condition is resolved or the person dismisses it. Express\nseverity with `tone`, never custom styling."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "transient confirmations that expire on their own belong to\nthe future `ki-toast`; tiny status descriptors attached to another element\nbelong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline\nfield-level validation belongs to the form control.\n\nAssistive technology note: alerts that must be announced should be inserted\ndynamically, or re-shown by clearing `dismissed`; alerts present at initial\npage load are exposed with their role but platform announcement is not\nguaranteed."
+        },
+        {
+          "name": "slot",
+          "text": "- Message body. It lives inside the live-region boundary."
+        },
+        {
+          "name": "part",
+          "text": "alert - Outer alert surface: tone background, border, radius, and padding."
+        },
+        {
+          "name": "part",
+          "text": "heading - Optional emphasized heading, rendered only when non-empty."
+        },
+        {
+          "name": "part",
+          "text": "message - Message body wrapper around the default slot."
+        },
+        {
+          "name": "part",
+          "text": "dismiss - Native dismiss button, rendered only when dismissible."
+        }
+      ],
+      "usage": {},
+      "props": [
+        {
+          "name": "dismissLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "dismiss-label",
+          "reflectToAttr": true,
+          "docs": "Accessible name for the dismiss button. Override for localization; the\ndefault English string is the component's only built-in user-visible text.\n\nWhen to use: provide a localized action name whenever the document language\nis not English.\nWhen NOT to use: do not put the alert message here; use the default slot.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Dismiss'"
+            }
+          ],
+          "default": "'Dismiss'",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "dismissed",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": true,
+          "attr": "dismissed",
+          "reflectToAttr": true,
+          "docs": "Reflected dismissed state. User dismissal sets it; applications may also\nset or clear it. While true, the host remains in the document but renders no\nalert subtree and leaves the accessibility tree. Clearing it re-shows the\nalert and creates a dynamic live-region appearance.\n\nWhen to use: persist or restore acknowledgement state from application\ndata.\nWhen NOT to use: do not listen for programmatic changes as dismissal\nevents; `ki-dismiss` is only for user activation.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "dismissible",
+          "reflectToAttr": true,
+          "docs": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "heading",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "heading",
+          "reflectToAttr": true,
+          "docs": "Optional emphasized text rendered before the message inside the live\nregion. Empty strings render no heading. The heading is a `strong`\nelement, not a document heading, so it never changes page outline.\n\nWhen to use: add a short label when it helps identify the status message.\nWhen NOT to use: do not use heading for page structure; use a real heading\noutside the alert when the document needs one.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}",
+          "complexType": {
+            "original": "KiAlertTone | (string & {})",
+            "resolved": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}",
+            "references": {
+              "KiAlertTone": {
+                "location": "import",
+                "path": "./ki-alert.tone.js",
+                "id": "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone",
+                "referenceLocation": "KiAlertTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": true,
+          "docs": "Semantic intent for visual styling and live-region urgency. `danger` and\n`warning` expose `role=\"alert\"`; `neutral`, `success`, `info`, absent, and\nunrecognized values expose `role=\"status\"`. Unknown values keep rendering\nand fall back to the neutral token matrix by CSS construction.\n\nWhen to use: choose the tone that describes the page or section state.\nWhen NOT to use: do not use tone for layout, density, or filled-vs-outlined\nstyling; those are token/theme decisions.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'neutral'"
+            }
+          ],
+          "default": "'neutral'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "info",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            },
+            {
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "value": "warning",
+              "type": "string"
+            },
+            {
+              "type": "string & {}"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "ki-dismiss",
+          "detail": "null",
+          "bubbles": true,
+          "complexType": {
+            "original": "null",
+            "resolved": "null",
+            "references": {}
+          },
+          "cancelable": false,
+          "composed": true,
+          "docs": "Fired once after the user dismisses the alert — emitted after the alert is\nhidden and focus has been handed to the next control. `detail` is `null`\nand the event is not cancelable (the alert is already gone when it runs).\nWhen to use: record acknowledgement, or advance an application flow after a\nuser closes the alert.\nWhen NOT to use: do not treat it as a veto point, and do not expect it for\nprogrammatic `dismissed` changes — it fires only for user activation.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Message body. It lives inside the live-region boundary."
+        }
+      ],
+      "parts": [
+        {
+          "name": "alert",
+          "docs": "Outer alert surface: tone background, border, radius, and padding."
+        },
+        {
+          "name": "dismiss",
+          "docs": "Native dismiss button, rendered only when dismissible."
+        },
+        {
+          "name": "heading",
+          "docs": "Optional emphasized heading, rendered only when non-empty."
+        },
+        {
+          "name": "message",
+          "docs": "Message body wrapper around the default slot."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-badge/ki-badge.tsx",
       "encapsulation": "shadow",
       "tag": "ki-badge",
@@ -1697,6 +1952,11 @@
       "declaration": "export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';",
       "docstring": "",
       "path": "src/components/ki-input/ki-input.tsx"
+    },
+    "src/components/ki-alert/ki-alert.tone.ts::KiAlertTone": {
+      "declaration": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
+      "docstring": "",
+      "path": "src/components/ki-alert/ki-alert.tone.ts"
     }
   }
 }
