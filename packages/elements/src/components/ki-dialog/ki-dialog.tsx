@@ -1,14 +1,4 @@
-import {
-  Component,
-  Element,
-  Event,
-  Method,
-  Prop,
-  State,
-  Watch,
-  h,
-  type EventEmitter,
-} from '@stencil/core';
+import { Component, Element, Event, Method, Prop, State, Watch, h } from '@stencil/core';
 import { isOutsideRect } from './ki-dialog.backdrop';
 import { resolveEntryFocusTarget, resolveFocusableTargets } from './ki-dialog.focus';
 
@@ -19,6 +9,10 @@ export type KiDialogCloseReason = 'method' | 'escape' | 'backdrop';
 export interface KiDialogCloseDetail {
   /** `method` for `close()`/open removal, `escape` for Escape, `backdrop` for opt-in backdrop. */
   reason: KiDialogCloseReason;
+}
+
+interface EventEmitter<T> {
+  emit(detail: T): CustomEvent<T>;
 }
 
 /**
@@ -91,7 +85,7 @@ export class KiDialog {
    * cancelable in v1.
    */
   @Event({ eventName: 'ki-close', bubbles: true, composed: true, cancelable: false })
-  kiClose!: EventEmitter<KiDialogCloseDetail>;
+  private readonly kiClose!: EventEmitter<KiDialogCloseDetail>;
 
   @State() private footerHasContent = false;
 
