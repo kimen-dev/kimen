@@ -28,6 +28,10 @@ export default defineConfig({
             await page.emulateMedia({ reducedMotion });
           },
         ),
+        ariaSnapshotByRole: defineBrowserCommand(
+          async ({ page }, role: Parameters<typeof page.getByRole>[0], name?: string) =>
+            page.getByRole(role, name === undefined ? undefined : { name }).ariaSnapshot(),
+        ),
       },
       instances: [
         ...browsers.map((browser) => ({

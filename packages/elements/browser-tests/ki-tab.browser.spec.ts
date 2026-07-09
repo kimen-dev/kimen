@@ -1,45 +1,52 @@
-import axe from 'axe-core';
+import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:014-ki-tabs
-// Real-browser tests consume the BUILT custom-elements output (what ships is
-// what is asserted), never internals (Art. III). They live outside src/ so
-// Stencil never compiles them; the build gate runs before type-aware gates.
+// Anatomy-only browser coverage; S-ID behavior lives in ki-tabs.browser.spec.ts
+// because the group owns selection, keyboarding and ARIA wiring.
 import { defineCustomElement } from '../dist/components/ki-tab.js';
 
-type KiTabElement = HTMLElement & { label: string };
+const STYLE_ID = 'ki-tab-browser-token-style';
 
 beforeAll(() => {
   defineCustomElement();
 });
 
-/** Stencil renders async: wait until the shadow root has content. */
-async function mount(): Promise<KiTabElement> {
-  const el = document.createElement('ki-tab') as KiTabElement;
-  document.body.appendChild(el);
-  await customElements.whenDefined('ki-tab');
-  const deadline = Date.now() + 2000;
-  while (!el.shadowRoot?.textContent && Date.now() < deadline) {
-    await new Promise((resolve) => requestAnimationFrame(resolve));
+function ensureTokens(): void {
+  if (document.getElementById(STYLE_ID)) {
+    return;
   }
+
+  const style = document.createElement('style');
+  style.id = STYLE_ID;
+  style.textContent = tokensCss;
+  document.head.append(style);
+}
+
+async function mount(): Promise<HTMLElement> {
+  ensureTokens();
+  const el = document.createElement('ki-tab');
+  el.textContent = 'Email';
+  document.body.append(el);
+  await customElements.whenDefined('ki-tab');
+  await new Promise((resolve) => requestAnimationFrame(resolve));
   return el;
 }
 
-describe('ki-tab in a real browser', () => {
-  // TODO(spec): S1 core behavior from the approved scenario.
-  it('renders its label', async () => {
+describe('ki-tab anatomy in a real browser', () => {
+  it('S7 exposes tab and indicator parts without a nested focusable control', async () => {
     const el = await mount();
-    expect(el.shadowRoot?.textContent).toContain('TODO');
-    el.remove();
+
+    expect(el.shadowRoot?.querySelector('[part="tab"]')).toBeInstanceOf(HTMLElement);
+    expect(el.shadowRoot?.querySelector('[part="indicator"]')).toBeInstanceOf(HTMLElement);
+    expect(el.shadowRoot?.querySelector('button,a,input,select,textarea,[tabindex]')).toBeNull();
   });
 
-  // TODO(spec): S2 keyboard path, S3 assistive-tech outcome, S4 form
-  // participation (if applicable), S5 theming: the five families (Art. II).
-
-  it('has zero axe violations (Art. V floor)', async () => {
+  it('S7 renders at least a 24 by 24 pointer target', async () => {
     const el = await mount();
-    const results = await axe.run(el);
-    expect(results.violations).toEqual([]);
-    el.remove();
+    const box = el.getBoundingClientRect();
+
+    expect(box.width).toBeGreaterThanOrEqual(24);
+    expect(box.height).toBeGreaterThanOrEqual(24);
   });
 });

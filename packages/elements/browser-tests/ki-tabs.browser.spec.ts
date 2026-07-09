@@ -1,5 +1,7 @@
+import axe from 'axe-core';
 import tokensCss from '@kimen/tokens/css?raw';
 import { page, userEvent } from 'vitest/browser';
+import { commands } from 'vitest/browser';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 // @spec:014-ki-tabs
@@ -10,6 +12,9 @@ import { defineCustomElement as defineKiTabPanel } from '../dist/components/ki-t
 import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.js';
 
 type KiTabsElement = HTMLElement & { value: string };
+const browserCommands = commands as unknown as {
+  ariaSnapshotByRole: (role: 'tablist' | 'tabpanel', name?: string) => Promise<string>;
+};
 
 const STYLE_ID = 'ki-tabs-browser-token-style';
 
@@ -88,6 +93,14 @@ function panel(tabs: KiTabsElement, value: string): HTMLElement {
     throw new Error(`Missing panel ${value}`);
   }
   return el as HTMLElement;
+}
+
+function main(): HTMLElement {
+  const el = document.querySelector('main');
+  if (el === null) {
+    throw new Error('Missing main fixture');
+  }
+  return el;
 }
 
 describe('ki-tabs core behavior in a real browser', () => {
@@ -202,5 +215,39 @@ describe('ki-tabs core behavior in a real browser', () => {
 
     expect(tabs.value).toBe('orphan-tab');
     expect(panel(tabs, 'orphan-panel').hasAttribute('hidden')).toBe(true);
+  });
+});
+
+describe('ki-tabs assistive technology outcomes in a real browser', () => {
+  it('S7 exposes a named tab list with named selected and disabled tabs', async () => {
+    await mount(fixture());
+
+    const snapshot = await browserCommands.ariaSnapshotByRole('tablist', 'Settings');
+
+    expect(snapshot).toContain('tablist "Settings"');
+    expect(snapshot).toContain('tab "Email"');
+    expect(snapshot).toContain('selected');
+    expect(snapshot).toContain('tab "Notifications"');
+    expect(snapshot).toContain('tab "Billing"');
+    expect(snapshot).toContain('disabled');
+    expect(snapshot).not.toContain('tabpanel');
+  });
+
+  it('S8 exposes the visible panel as a tabpanel named after its tab', async () => {
+    await mount(fixture());
+
+    const snapshot = await browserCommands.ariaSnapshotByRole('tabpanel', 'Email');
+
+    expect(snapshot).toContain('tabpanel "Email"');
+  });
+
+  it('S7 S8 has zero axe violations across selected and disabled states', async () => {
+    const tabs = await mount(fixture());
+
+    expect((await axe.run(main())).violations).toEqual([]);
+
+    await userEvent.click(tab(tabs, 'notifications'));
+
+    expect((await axe.run(main())).violations).toEqual([]);
   });
 });

@@ -1,45 +1,50 @@
-import axe from 'axe-core';
+import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:014-ki-tabs
-// Real-browser tests consume the BUILT custom-elements output (what ships is
-// what is asserted), never internals (Art. III). They live outside src/ so
-// Stencil never compiles them; the build gate runs before type-aware gates.
+// Anatomy-only browser coverage; S-ID behavior lives in ki-tabs.browser.spec.ts
+// because the group owns selection, visibility and ARIA wiring.
 import { defineCustomElement } from '../dist/components/ki-tab-panel.js';
 
-type KiTabPanelElement = HTMLElement & { label: string };
+const STYLE_ID = 'ki-tab-panel-browser-token-style';
 
 beforeAll(() => {
   defineCustomElement();
 });
 
-/** Stencil renders async: wait until the shadow root has content. */
-async function mount(): Promise<KiTabPanelElement> {
-  const el = document.createElement('ki-tab-panel') as KiTabPanelElement;
-  document.body.appendChild(el);
-  await customElements.whenDefined('ki-tab-panel');
-  const deadline = Date.now() + 2000;
-  while (!el.shadowRoot?.textContent && Date.now() < deadline) {
-    await new Promise((resolve) => requestAnimationFrame(resolve));
+function ensureTokens(): void {
+  if (document.getElementById(STYLE_ID)) {
+    return;
   }
+
+  const style = document.createElement('style');
+  style.id = STYLE_ID;
+  style.textContent = tokensCss;
+  document.head.append(style);
+}
+
+async function mount(hidden = false): Promise<HTMLElement> {
+  ensureTokens();
+  const el = document.createElement('ki-tab-panel');
+  el.textContent = 'Email panel';
+  el.toggleAttribute('hidden', hidden);
+  document.body.append(el);
+  await customElements.whenDefined('ki-tab-panel');
+  await new Promise((resolve) => requestAnimationFrame(resolve));
   return el;
 }
 
-describe('ki-tab-panel in a real browser', () => {
-  // TODO(spec): S1 core behavior from the approved scenario.
-  it('renders its label', async () => {
+describe('ki-tab-panel anatomy in a real browser', () => {
+  it('S8 exposes the panel part around slotted content', async () => {
     const el = await mount();
-    expect(el.shadowRoot?.textContent).toContain('TODO');
-    el.remove();
+
+    expect(el.shadowRoot?.querySelector('[part="panel"]')).toBeInstanceOf(HTMLElement);
   });
 
-  // TODO(spec): S2 keyboard path, S3 assistive-tech outcome, S4 form
-  // participation (if applicable), S5 theming: the five families (Art. II).
+  it('S18 renders no box while hidden', async () => {
+    const el = await mount(true);
+    const boxes = el.getClientRects();
 
-  it('has zero axe violations (Art. V floor)', async () => {
-    const el = await mount();
-    const results = await axe.run(el);
-    expect(results.violations).toEqual([]);
-    el.remove();
+    expect(boxes.length).toBe(0);
   });
 });
