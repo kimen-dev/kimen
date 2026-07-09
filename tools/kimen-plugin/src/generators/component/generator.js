@@ -41,11 +41,18 @@ module.exports = async function componentGenerator(tree, options) {
   );
 
   // Register in the public entry (Art. I: the contract is the single source).
+  // Named value export + type-only star, NEVER `export *`: the custom-elements
+  // module also exports a `defineCustomElement` side-effect helper, and a value
+  // `export *` would silently re-export it from the package root (accidental
+  // public surface). The class is the value export; `export type *` carries the
+  // component's public types without pulling in that runtime helper.
   const indexPath = 'packages/elements/src/index.ts';
   const index = tree.read(indexPath, 'utf-8') ?? '';
-  const exportLine = `export { ${names(name).className} } from './components/${name}/${name}.js';\nexport type * from './components/${name}/${name}.js';`;
-  if (!index.includes(exportLine)) {
-    tree.write(indexPath, `${index.trimEnd()}\n${exportLine}\n`);
+  const className = names(name).className;
+  const valueExport = `export { ${className} } from './components/${name}/${name}.js';`;
+  const typeExport = `export type * from './components/${name}/${name}.js';`;
+  if (!index.includes(valueExport)) {
+    tree.write(indexPath, `${index.trimEnd()}\n${valueExport}\n${typeExport}\n`);
   }
 
   return () => {

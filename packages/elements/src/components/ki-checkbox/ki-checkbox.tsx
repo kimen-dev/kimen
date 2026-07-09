@@ -7,10 +7,10 @@ import { booleanFromAttributePresence, checkboxFormValue } from './ki-checkbox.f
 /**
  * A form-associated checkbox for selecting independent options.
  *
- * When to use: selecting one or more independent options that a form submits
+ * @whenToUse selecting one or more independent options that a form submits
  * later, including a "select all" parent that presents partial selection with
  * `indeterminate`. Always provide a visible label in the default slot.
- * When NOT to use: a single mutually exclusive choice, an immediate on/off
+ * @whenNotToUse a single mutually exclusive choice, an immediate on/off
  * effect, triggering an action, unlabeled/icon-only usage, or
  * `checked="false"` to mean unchecked. Boolean attributes use presence
  * semantics; omit `checked` to express unchecked.

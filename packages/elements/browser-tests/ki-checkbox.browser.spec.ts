@@ -339,7 +339,9 @@ describe('ki-checkbox in a real browser', () => {
     const form = document.createElement('form');
     document.body.append(form);
     const el = await mount('Accept the terms', { required: true, name: 'terms' }, form);
-    form.addEventListener('submit', (event) => { event.preventDefault(); });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+    });
 
     form.reportValidity();
     await waitForStyles();

@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  componentPairs,
   compositeOver,
-  componentBgPatterns,
   contrastRatio,
   parseColor,
   relativeLuminance,
@@ -13,33 +13,6 @@ import {
 test('relative luminance matches WCAG anchors', () => {
   assert.equal(relativeLuminance(parseColor('#000000')), 0);
   assert.equal(relativeLuminance(parseColor('#ffffff')), 1);
-});
-
-test('component sweep covers button and checkbox matrices independently', () => {
-  const patterns = componentBgPatterns();
-
-  assert.ok(
-    patterns.some((pattern) => pattern.test('--ki-button-primary-neutral-rest-bg')),
-    'button matrix must be swept',
-  );
-  assert.ok(
-    patterns.some((pattern) => pattern.test('--ki-checkbox-checked-rest-bg')),
-    'checkbox checked matrix must be swept',
-  );
-  assert.ok(
-    patterns.some((pattern) => pattern.test('--ki-checkbox-indeterminate-hover-bg')),
-    'checkbox indeterminate matrix must be swept',
-  );
-  assert.equal(
-    patterns.some((pattern) => pattern.test('--ki-checkbox-unchecked-rest-bg')),
-    false,
-    'unchecked has no rendered mark ink and stays out of the text sweep',
-  );
-  assert.equal(
-    patterns.some((pattern) => pattern.test('--ki-checkbox-checked-disabled-bg')),
-    false,
-    'disabled cells stay exempt from WCAG 1.4.3 text contrast',
-  );
 });
 
 test('contrast ratio matches WCAG anchors', () => {
@@ -68,4 +41,36 @@ test('contrast pair table covers the declared data-model pairs', () => {
       ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
     ],
   );
+});
+
+test('component sweep is generic: any component bg/fg pair, semantic layers and disabled cells excluded', () => {
+  const declarations = new Map([
+    // a non-button component with a matching fg → swept
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-fg', '#111111'],
+    // a bare component pair with no state segment (e.g. ki-card) → swept
+    ['--ki-card-bg', '#ffffff'],
+    ['--ki-card-fg', '#111111'],
+    // button canary → swept
+    ['--ki-button-neutral-rest-bg', '#eeeeee'],
+    ['--ki-button-neutral-rest-fg', '#222222'],
+    // disabled cell → excluded (WCAG 1.4.3 exempt)
+    ['--ki-input-disabled-bg', '#fafafa'],
+    ['--ki-input-disabled-fg', '#cccccc'],
+    // bg without an fg sibling → skipped (non-text affordance, not a text pair)
+    ['--ki-checkbox-checked-rest-bg', '#0066ff'],
+    // semantic layer, not a component → excluded even with an fg sibling
+    ['--ki-surface-raised-bg', '#0066ff'],
+    ['--ki-surface-raised-fg', '#ffffff'],
+  ]);
+
+  const swept = componentPairs(declarations)
+    .map((pair) => [pair.component, pair.text, pair.surface])
+    .sort();
+
+  assert.deepEqual(swept, [
+    ['button', '--ki-button-neutral-rest-fg', '--ki-button-neutral-rest-bg'],
+    ['card', '--ki-card-fg', '--ki-card-bg'],
+    ['input', '--ki-input-rest-fg', '--ki-input-rest-bg'],
+  ]);
 });
