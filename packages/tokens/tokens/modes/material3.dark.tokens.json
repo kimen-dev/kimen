@@ -303,6 +303,9 @@
       "high-em": {
         "$value": "#938f99"
       },
+      "strong": {
+        "$value": "#938f99"
+      },
       "med-em": {
         "$value": "#49454f"
       },

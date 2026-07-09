@@ -43,53 +43,34 @@ test('contrast pair table covers the declared data-model pairs', () => {
   );
 });
 
-test('component contrast sweep pairs switch thumbs over tracks at 3:1', () => {
+test('component sweep is generic: any component bg/fg pair, semantic layers and disabled cells excluded', () => {
   const declarations = new Map([
-    ['--ki-button-primary-neutral-rest-bg', '#000000'],
-    ['--ki-switch-unchecked-rest-track', '#ffffff'],
-    ['--ki-switch-checked-hover-track', '#000000'],
+    // a non-button component with a matching fg → swept
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-fg', '#111111'],
+    // a bare component pair with no state segment (e.g. ki-card) → swept
+    ['--ki-card-bg', '#ffffff'],
+    ['--ki-card-fg', '#111111'],
+    // button canary → swept
+    ['--ki-button-neutral-rest-bg', '#eeeeee'],
+    ['--ki-button-neutral-rest-fg', '#222222'],
+    // disabled cell → excluded (WCAG 1.4.3 exempt)
+    ['--ki-input-disabled-bg', '#fafafa'],
+    ['--ki-input-disabled-fg', '#cccccc'],
+    // bg without an fg sibling → skipped (non-text affordance, not a text pair)
+    ['--ki-checkbox-checked-rest-bg', '#0066ff'],
+    // semantic layer, not a component → excluded even with an fg sibling
+    ['--ki-surface-raised-bg', '#0066ff'],
+    ['--ki-surface-raised-fg', '#ffffff'],
   ]);
 
-  const result = componentPairs(declarations);
+  const swept = componentPairs(declarations)
+    .map((pair) => [pair.component, pair.text, pair.surface])
+    .sort();
 
-  assert.deepEqual(result.failures, []);
-  assert.deepEqual(
-    result.pairs.filter((pair) => pair.surface.startsWith('--ki-switch')),
-    [
-      {
-        text: '--ki-switch-unchecked-rest-thumb',
-        surface: '--ki-switch-unchecked-rest-track',
-        minRatio: 3,
-      },
-      {
-        text: '--ki-switch-checked-hover-thumb',
-        surface: '--ki-switch-checked-hover-track',
-        minRatio: 3,
-      },
-    ],
-  );
-});
-
-test('component contrast sweep keeps button text pairs at 4.5:1', () => {
-  const declarations = new Map([
-    ['--ki-button-primary-neutral-rest-bg', '#000000'],
-    ['--ki-switch-unchecked-rest-track', '#ffffff'],
-  ]);
-
-  const result = componentPairs(declarations);
-
-  assert.deepEqual(result.failures, []);
-  assert.deepEqual(result.pairs[0], {
-    text: '--ki-button-primary-neutral-rest-fg',
-    surface: '--ki-button-primary-neutral-rest-bg',
-    minRatio: 4.5,
-  });
-});
-
-test('component contrast sweep reports zero matches per component pattern', () => {
-  const result = componentPairs(new Map([['--ki-button-primary-neutral-rest-bg', '#000000']]));
-
-  assert.deepEqual(result.failures, [
-    'no ki-switch thumb/track pairs matched — the sweep pattern drifted from the token names',
+  assert.deepEqual(swept, [
+    ['button', '--ki-button-neutral-rest-fg', '--ki-button-neutral-rest-bg'],
+    ['card', '--ki-card-fg', '--ki-card-bg'],
+    ['input', '--ki-input-rest-fg', '--ki-input-rest-bg'],
   ]);
 });

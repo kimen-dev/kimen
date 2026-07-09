@@ -1,20 +1,16 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const DEFAULT_MIN_RATIO = 4.5;
+const MIN_RATIO = 4.5;
 const THEMES = [
   { name: 'onmars', stylesheet: new URL('../dist/css/tokens.css', import.meta.url) },
   { name: 'material3', stylesheet: new URL('../dist/css/tokens.material3.css', import.meta.url) },
 ];
 const CONTRAST_PAIRS = [
-  { text: '--ki-text-high-em', surface: '--ki-surface-s0', minRatio: DEFAULT_MIN_RATIO },
-  { text: '--ki-text-med-em', surface: '--ki-surface-s0', minRatio: DEFAULT_MIN_RATIO },
-  { text: '--ki-text-high-em', surface: '--ki-surface-s1', minRatio: DEFAULT_MIN_RATIO },
-  {
-    text: '--ki-text-primary-on-primary',
-    surface: '--ki-surface-primary-med-em',
-    minRatio: DEFAULT_MIN_RATIO,
-  },
+  { text: '--ki-text-high-em', surface: '--ki-surface-s0' },
+  { text: '--ki-text-med-em', surface: '--ki-surface-s0' },
+  { text: '--ki-text-high-em', surface: '--ki-surface-s1' },
+  { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
 ];
 
 export function parseColor(value) {
@@ -167,47 +163,57 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // must clear AA in every theme x scheme. Disabled cells are exempt
 // (WCAG 1.4.3). Added after the 002-ki-button clean-context review found
 // dark-scheme failures the 4 hardcoded pairs could not see (incident-to-gate
-// rule). The pair list is DERIVED from the built CSS, but the pattern below
-// is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
-// (or this gate silently ignores that component; the zero-match guard only
-// protects the patterns listed here).
-const COMPONENT_PAIR_PATTERNS = [
-  {
-    name: 'ki-button text/background',
-    minRatio: DEFAULT_MIN_RATIO,
-    pattern: /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u,
-    pair: (name) => ({ text: name.replace(/-bg$/u, '-fg'), surface: name }),
-  },
-  {
-    name: 'ki-switch thumb/track',
-    minRatio: 3,
-    pattern: /^--ki-switch-(?:unchecked|checked)-(?:rest|hover|active)-track$/u,
-    pair: (name) => ({ text: name.replace(/-track$/u, '-thumb'), surface: name }),
-  },
-];
+// rule).
+//
+// GENERIC by construction (was per-component and silently ignored every new
+// matrix — Codex review of 003/016): any `--ki-<component>-…-bg` whose name is
+// NOT a semantic/primitive layer, paired with its `-fg` sibling when one
+// exists. New components are swept automatically, with no regex to extend.
+// Disabled cells are excluded (exempt), as are `-bg` tokens with no `-fg`
+// counterpart (non-text affordances measured elsewhere, not a text pair).
+const SEMANTIC_LAYERS = new Set([
+  'color',
+  'surface',
+  'text',
+  'outline',
+  'elevation',
+  'shadow',
+  'space',
+  'typography',
+  'radius',
+  'motion',
+  'duration',
+  'ease',
+  'opacity',
+  'size',
+  'border',
+  'z',
+]);
+// The state/variant segment is OPTIONAL so a bare `--ki-<component>-bg` (e.g.
+// ki-card's single surface pair) is swept too — a required middle segment
+// silently dropped every component that names its base pair without a state
+// (Codex review of 009).
+const COMPONENT_BG_PATTERN = /^--ki-([a-z][a-z0-9]*)(?:-[\w-]+)?-bg$/u;
+// The canary: button is the foundational component and is always present, so a
+// zero-button sweep means the naming convention drifted (the old zero-length
+// guard is defeated once any other component contributes a pair).
+const CANARY_COMPONENT = 'button';
 
 export function componentPairs(declarations) {
   const pairs = [];
-  const failures = [];
 
-  for (const componentPattern of COMPONENT_PAIR_PATTERNS) {
-    let matches = 0;
-
-    for (const name of declarations.keys()) {
-      if (componentPattern.pattern.test(name)) {
-        matches += 1;
-        pairs.push({ ...componentPattern.pair(name), minRatio: componentPattern.minRatio });
-      }
+  for (const name of declarations.keys()) {
+    const match = name.match(COMPONENT_BG_PATTERN);
+    if (!match || SEMANTIC_LAYERS.has(match[1]) || /-disabled-/u.test(name)) {
+      continue;
     }
-
-    if (matches === 0) {
-      failures.push(
-        `no ${componentPattern.name} pairs matched — the sweep pattern drifted from the token names`,
-      );
+    const fg = name.replace(/-bg$/u, '-fg');
+    if (declarations.has(fg)) {
+      pairs.push({ component: match[1], text: fg, surface: name });
     }
   }
 
-  return { pairs, failures };
+  return pairs;
 }
 
 function evaluateStylesheet(theme, stylesheet) {
@@ -217,22 +223,25 @@ function evaluateStylesheet(theme, stylesheet) {
 
   for (const [scheme, declarations] of Object.entries(schemes)) {
     const swept = componentPairs(declarations);
-    failures.push(...swept.failures.map((failure) => `${theme}/${scheme}: ${failure}`));
+
+    if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
+      failures.push(
+        `${theme}/${scheme}: no ${CANARY_COMPONENT}-layer pairs matched — the component sweep pattern drifted from the token names`,
+      );
+    }
 
     // Component cells may be translucent (ghost/quaternary): composite the
     // cell background over the page surface before measuring.
     const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
 
-    for (const pair of [...CONTRAST_PAIRS, ...swept.pairs]) {
+    for (const pair of [...CONTRAST_PAIRS, ...swept]) {
       const text = parseColor(resolveCustomProperty(pair.text, declarations));
       const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
       const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
       const ratio = contrastRatio(text, surface);
 
-      if (ratio < pair.minRatio) {
-        failures.push(
-          `${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio} (minimum ${pair.minRatio})`,
-        );
+      if (ratio < MIN_RATIO) {
+        failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio}`);
       }
     }
   }
@@ -263,12 +272,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const failures = checkContrast();
 
   if (failures.length > 0) {
-    console.error('Contrast check failed.');
+    console.error(`Contrast check failed. Minimum ratio: ${MIN_RATIO}:1`);
     for (const failure of failures) {
       console.error(`- ${failure}`);
     }
     process.exit(1);
   }
 
-  console.log('Contrast check passed.');
+  console.log(`Contrast check passed. Minimum ratio: ${MIN_RATIO}:1`);
 }

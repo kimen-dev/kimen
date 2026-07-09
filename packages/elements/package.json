@@ -7,11 +7,13 @@
   "type": "module",
   "files": [
     "dist",
-    "loader"
+    "loader",
+    "generated/custom-elements.json",
+    "llms.txt"
   ],
   "scripts": {
-    "build": "stencil build",
-    "test": "vitest run",
+    "build": "stencil build && node scripts/build-surfaces.mjs",
+    "test": "vitest run && vitest run --config vitest.node.config.ts",
     "test-browser": "vitest run --config vitest.browser.config.ts",
     "size": "size-limit",
     "storybook": "storybook dev -p 6006",
@@ -29,6 +31,71 @@
     {
       "name": "ki-button worst case (component + full Stencil runtime, first component on a page)",
       "path": "dist/components/ki-button.js",
+      "limit": "25 KB"
+    },
+    {
+      "name": "ki-card marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": "dist/components/ki-card.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-card worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-card.js",
+      "limit": "25 KB"
+    },
+    {
+      "name": "ki-input marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": "dist/components/ki-input.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-input worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-input.js",
+      "limit": "25 KB"
+    },
+    {
+      "name": "ki-checkbox marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": "dist/components/ki-checkbox.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-checkbox worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-checkbox.js",
+      "limit": "25 KB"
+    },
+    {
+      "name": "ki-textarea marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": "dist/components/ki-textarea.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-textarea worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-textarea.js",
+      "limit": "25 KB"
+    },
+    {
+      "name": "ki-badge marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": "dist/components/ki-badge.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-badge worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-badge.js",
       "limit": "25 KB"
     },
     {
@@ -57,7 +124,14 @@
         "inputs": [
           "default",
           "^default",
-          "!{projectRoot}/generated/**"
+          "!{projectRoot}/generated/**",
+          "!{projectRoot}/llms.txt"
+        ],
+        "outputs": [
+          "{projectRoot}/dist",
+          "{projectRoot}/generated",
+          "{projectRoot}/llms.txt",
+          "{workspaceRoot}/llms.txt"
         ]
       },
       "storybook": {
@@ -93,6 +167,7 @@
   },
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
+  "customElements": "generated/custom-elements.json",
   "collection": "dist/collection/collection-manifest.json",
   "collection:main": "dist/collection/index.js",
   "unpkg": "dist/kimen/kimen.esm.js",

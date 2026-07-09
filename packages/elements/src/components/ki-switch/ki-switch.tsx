@@ -4,9 +4,9 @@ import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
 /**
  * A token-styled switch for immediate on/off settings.
  *
- * When to use: binary settings whose change takes effect immediately, always
+ * @whenToUse binary settings whose change takes effect immediately, always
  * with a slotted label.
- * When NOT to use: selections collected for later form submission; use
+ * @whenNotToUse selections collected for later form submission; use
  * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
  * choices, and ki-button for actions.
  *
