@@ -92,6 +92,16 @@ describe('ki-dialog', () => {
     expect(resolveEntryFocusTarget(host)).toBeNull();
   });
 
+  it('S5 resolveEntryFocusTarget skips a hidden input preceding the real action', () => {
+    const host = document.createElement('ki-dialog');
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    const action = document.createElement('button');
+    host.append(hiddenInput, action);
+
+    expect(resolveEntryFocusTarget(host)).toBe(action);
+  });
+
   it('S5 isOutsideRect treats outside points as outside and boundary points as inside', () => {
     const rect = {
       bottom: 70,

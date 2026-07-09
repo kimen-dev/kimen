@@ -51,7 +51,13 @@ function isDisabledOrHidden(element: HTMLElement): boolean {
 
 function isNativeFocusable(element: HTMLElement): boolean {
   const name = element.localName;
-  if (name === 'button' || name === 'input' || name === 'select' || name === 'textarea') {
+  if (name === 'input') {
+    // A hidden input matches the native-focusable selector but cannot receive
+    // focus; treating it as a target would send entry focus to a no-op and
+    // strand the dialog (codex review).
+    return element.getAttribute('type') !== 'hidden';
+  }
+  if (name === 'button' || name === 'select' || name === 'textarea') {
     return true;
   }
   if (name === 'a' || name === 'area') {
