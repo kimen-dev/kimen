@@ -9,13 +9,13 @@ import {
 /**
  * A transient, text-only description bubble for one slotted trigger.
  *
- * When to use: add a brief clarifying hint for an icon-only, abbreviated, or
+ * @whenToUse add a brief clarifying hint for an icon-only, abbreviated, or
  * otherwise ambiguous control when the same information is discoverable
  * elsewhere in the interface.
- * When NOT to use: never put essential or unique information in a tooltip;
- * never put interactive or rich content in a tooltip; do not use tooltips for
- * form validation messages, disabled controls, or touch-primary flows. Use
- * visible layout text or a future `ki-popover` pattern for those cases.
+ * @whenNotToUse essential or unique information in a tooltip; interactive
+ * or rich content in a tooltip; form validation messages, disabled controls,
+ * or touch-primary flows. Use visible layout text or a future `ki-popover`
+ * pattern for those cases.
  *
  * @slot - Exactly one interactive trigger. The component reflects `label` to
  * the trigger's `aria-description`.

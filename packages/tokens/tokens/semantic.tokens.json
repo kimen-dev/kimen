@@ -271,7 +271,8 @@
         "$value": "{ki.color.brand.100}"
       },
       "info-high-em": {
-        "$value": "{ki.color.info.600}"
+        "$value": "{ki.color.info.800}",
+        "$description": "Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file."
       },
       "info-med-em": {
         "$value": "{ki.color.info.500}"
@@ -295,7 +296,8 @@
         "$value": "{ki.color.success.100}"
       },
       "warning-high-em": {
-        "$value": "{ki.color.warning.600}"
+        "$value": "{ki.color.warning.800}",
+        "$description": "Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file."
       },
       "warning-med-em": {
         "$value": "{ki.color.warning.500}"
@@ -341,6 +343,9 @@
       "$type": "color",
       "high-em": {
         "$value": "{ki.color.black.12}"
+      },
+      "strong": {
+        "$value": "{ki.color.black.48}"
       },
       "med-em": {
         "$value": "{ki.color.black.8}"

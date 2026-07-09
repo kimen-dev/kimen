@@ -89,7 +89,14 @@ export default tseslint.config(
   },
   {
     // Config and script files: relax type-aware rules (not part of shipped code)
-    files: ['**/*.mjs', '**/*.config.ts', 'scripts/**', 'tools/**', '**/.storybook/**'],
+    files: [
+      '**/*.mjs',
+      '**/*.config.ts',
+      'scripts/**',
+      'tools/**',
+      'packages/*/scripts/**',
+      '**/.storybook/**',
+    ],
     extends: [tseslint.configs.disableTypeChecked],
     languageOptions: {
       globals: {
@@ -100,6 +107,15 @@ export default tseslint.config(
     },
     rules: {
       '@typescript-eslint/explicit-module-boundary-types': 'off',
+    },
+  },
+  {
+    // Browser specs intentionally import built custom-element JS from dist.
+    // tsc still checks the test source; these imports are validated by build gates.
+    files: ['packages/elements/browser-tests/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
     },
   },
   {
