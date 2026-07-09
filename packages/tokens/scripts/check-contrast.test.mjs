@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  componentPairs,
   compositeOver,
   contrastRatio,
   parseColor,
   relativeLuminance,
-  resolveComponentContrastPairs,
   resolveContrastPairs,
 } from './check-contrast.mjs';
 
@@ -33,77 +33,44 @@ test('contrast pair table covers the declared data-model pairs', () => {
   const pairs = resolveContrastPairs();
 
   assert.deepEqual(
-    pairs.map((pair) => [pair.text, pair.surface, pair.min]),
+    pairs.map((pair) => [pair.text, pair.surface]),
     [
-      ['--ki-text-high-em', '--ki-surface-s0', 4.5],
-      ['--ki-text-med-em', '--ki-surface-s0', 4.5],
-      ['--ki-text-high-em', '--ki-surface-s1', 4.5],
-      ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em', 4.5],
+      ['--ki-text-high-em', '--ki-surface-s0'],
+      ['--ki-text-med-em', '--ki-surface-s0'],
+      ['--ki-text-high-em', '--ki-surface-s1'],
+      ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
     ],
   );
 });
 
-test('component contrast patterns match alert text cells with a per-pair minimum', () => {
+test('component sweep is generic: any component bg/fg pair, semantic layers and disabled cells excluded', () => {
   const declarations = new Map([
-    ['--ki-button-secondary-neutral-rest-bg', '#ffffff'],
-    ['--ki-alert-neutral-bg', '#ffffff'],
-    ['--ki-alert-success-bg', '#ffffff'],
-    ['--ki-alert-danger-bg', '#ffffff'],
-    ['--ki-alert-info-bg', '#ffffff'],
-    ['--ki-alert-warning-bg', '#ffffff'],
+    // a non-button component with a matching fg → swept
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-fg', '#111111'],
+    // a bare component pair with no state segment (e.g. ki-card) → swept
+    ['--ki-card-bg', '#ffffff'],
+    ['--ki-card-fg', '#111111'],
+    // button canary → swept
+    ['--ki-button-neutral-rest-bg', '#eeeeee'],
+    ['--ki-button-neutral-rest-fg', '#222222'],
+    // disabled cell → excluded (WCAG 1.4.3 exempt)
+    ['--ki-input-disabled-bg', '#fafafa'],
+    ['--ki-input-disabled-fg', '#cccccc'],
+    // bg without an fg sibling → skipped (non-text affordance, not a text pair)
+    ['--ki-checkbox-checked-rest-bg', '#0066ff'],
+    // semantic layer, not a component → excluded even with an fg sibling
+    ['--ki-surface-raised-bg', '#0066ff'],
+    ['--ki-surface-raised-fg', '#ffffff'],
   ]);
 
-  const { pairs, unmatchedPatterns } = resolveComponentContrastPairs(declarations);
+  const swept = componentPairs(declarations)
+    .map((pair) => [pair.component, pair.text, pair.surface])
+    .sort();
 
-  assert.equal(unmatchedPatterns.length, 0);
-  assert.deepEqual(
-    pairs
-      .filter((pair) => pair.text.startsWith('--ki-alert-') && !pair.text.includes('dismiss'))
-      .map((pair) => [pair.text, pair.surface, pair.min]),
-    [
-      ['--ki-alert-neutral-fg', '--ki-alert-neutral-bg', 4.5],
-      ['--ki-alert-success-fg', '--ki-alert-success-bg', 4.5],
-      ['--ki-alert-danger-fg', '--ki-alert-danger-bg', 4.5],
-      ['--ki-alert-info-fg', '--ki-alert-info-bg', 4.5],
-      ['--ki-alert-warning-fg', '--ki-alert-warning-bg', 4.5],
-    ],
-  );
-});
-
-test('component contrast patterns cross-pair dismiss indicators across every alert tone', () => {
-  const declarations = new Map([
-    ['--ki-button-secondary-neutral-rest-bg', '#ffffff'],
-    ['--ki-alert-neutral-bg', '#ffffff'],
-    ['--ki-alert-success-bg', '#ffffff'],
-    ['--ki-alert-danger-bg', '#ffffff'],
-    ['--ki-alert-info-bg', '#ffffff'],
-    ['--ki-alert-warning-bg', '#ffffff'],
-  ]);
-
-  const { pairs } = resolveComponentContrastPairs(declarations);
-  const dismissPairs = pairs.filter((pair) => pair.text.includes('dismiss'));
-
-  assert.equal(dismissPairs.length, 15);
-  assert.ok(
-    dismissPairs.every((pair) => pair.min === 3),
-    'dismiss glyph is a non-text indicator with a 3:1 minimum',
-  );
-  assert.deepEqual(
-    dismissPairs.slice(0, 3).map((pair) => [pair.text, pair.surface, pair.min]),
-    [
-      ['--ki-alert-dismiss-rest-fg', '--ki-alert-neutral-bg', 3],
-      ['--ki-alert-dismiss-hover-fg', '--ki-alert-neutral-bg', 3],
-      ['--ki-alert-dismiss-active-fg', '--ki-alert-neutral-bg', 3],
-    ],
-  );
-});
-
-test('component contrast patterns report zero-match drift per pattern', () => {
-  const { unmatchedPatterns } = resolveComponentContrastPairs(new Map());
-
-  assert.deepEqual(unmatchedPatterns, [
-    'ki-button interactive cells',
-    'ki-alert tone cells',
-    'ki-alert dismiss indicators',
+  assert.deepEqual(swept, [
+    ['button', '--ki-button-neutral-rest-fg', '--ki-button-neutral-rest-bg'],
+    ['card', '--ki-card-fg', '--ki-card-bg'],
+    ['input', '--ki-input-rest-fg', '--ki-input-rest-bg'],
   ]);
 });

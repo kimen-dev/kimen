@@ -5,12 +5,11 @@ import { liveExposureForTone, type KiAlertTone } from './ki-alert.tone.js';
 /**
  * A persistent inline status message with token-backed tone semantics.
  *
- * When to use: show a persistent inline message about the state of a page or
+ * @whenToUse show a persistent inline message about the state of a page or
  * section, such as a failed save, completed operation, or service notice, that
  * remains until the condition is resolved or the person dismisses it. Express
  * severity with `tone`, never custom styling.
- *
- * When NOT to use: transient confirmations that expire on their own belong to
+ * @whenNotToUse transient confirmations that expire on their own belong to
  * the future `ki-toast`; tiny status descriptors attached to another element
  * belong to `ki-badge`; blocking decisions belong to `ki-dialog`; inline
  * field-level validation belongs to the form control.
