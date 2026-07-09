@@ -155,6 +155,33 @@ describe('ki-checkbox in a real browser', () => {
     expect(events).toEqual(['input:true', 'change:true', 'input:false', 'change:false']);
   });
 
+  it('S4 applies boolean presence semantics to attributes set after hydration', async () => {
+    cleanup();
+    const el = await mount();
+    const input = inputOf(el);
+    expect(el.checked).toBe(false);
+
+    // A present-but-falsy attribute set post-hydration means checked (presence).
+    el.setAttribute('checked', 'false');
+    await waitForStyles();
+    expect(el.checked).toBe(true);
+    expect(input.checked).toBe(true);
+
+    // Reflection is not fought: a normal toggle still unchecks and stays off.
+    await userEvent.click(input);
+    await waitForStyles();
+    expect(el.checked).toBe(false);
+    expect(el.hasAttribute('checked')).toBe(false);
+
+    // Native add/remove keep working through Stencil's own observation.
+    el.setAttribute('checked', '');
+    await waitForStyles();
+    expect(el.checked).toBe(true);
+    el.removeAttribute('checked');
+    await waitForStyles();
+    expect(el.checked).toBe(false);
+  });
+
   it('S2 disabled checkbox stays inert, unfocused and emits no change', async () => {
     cleanup();
     const el = await mount('Email notifications', { disabled: true });

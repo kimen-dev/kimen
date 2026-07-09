@@ -73,6 +73,7 @@ export class KiSwitch {
 
   private input: HTMLInputElement | undefined;
   private resetChecked = false;
+  private presenceObserver?: MutationObserver;
 
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
@@ -85,7 +86,27 @@ export class KiSwitch {
   componentDidLoad(): void {
     this.syncInput();
     this.syncFormValue();
+    // Boolean presence semantics must survive hydration. Stencil natively adopts
+    // `checked=""`/removal, but parses a present-but-falsy `checked="false"` set
+    // after load to `false`; restore presence semantics for that case.
+    if (typeof MutationObserver !== 'undefined') {
+      this.presenceObserver = new MutationObserver(this.handlePresenceMutation);
+      this.presenceObserver.observe(this.host, { attributeFilter: ['checked'] });
+    }
   }
+
+  disconnectedCallback(): void {
+    this.presenceObserver?.disconnect();
+  }
+
+  // Correct ONLY the case Stencil gets wrong: a present-but-falsy attribute set
+  // after hydration. Absence and Stencil's own reflect writes already agree with
+  // the prop, so skipping them avoids fighting the reflection on every toggle.
+  private readonly handlePresenceMutation = (): void => {
+    if (this.host.hasAttribute('checked') && !this.checked) {
+      this.checked = true;
+    }
+  };
 
   @Watch('checked')
   protected checkedChanged(): void {
