@@ -59,7 +59,15 @@ describe('agent surfaces', () => {
   it('S1 buildManifest describes ki-button facets with stable custom-elements fields', async () => {
     const docs = normalizeDocs(await readJson(docsUrl));
     const manifest = buildManifest(docs);
-    const module = manifest.modules[0];
+    // Locate ki-button by path: manifest modules follow the docs' alphabetical
+    // order, so a component sorting before "button" (e.g. ki-badge) would take
+    // index 0 and break this button-specific assertion.
+    const module = manifest.modules.find(
+      (candidate: { path: string }) => candidate.path === 'src/components/ki-button/ki-button.tsx',
+    );
+    if (!module) {
+      throw new Error('ki-button module missing from manifest');
+    }
     const declaration = module.declarations[0];
 
     expect(manifest.schemaVersion).toBe('1.0.0');

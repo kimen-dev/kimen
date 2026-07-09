@@ -372,6 +372,7 @@
     --ki-button-ghost-active-shadow: none;
     --ki-button-ghost-disabled-shadow: none;
     --ki-button-border-width: 0.0625rem;
+    --ki-badge-border-width: 0.0625rem;
     --ki-card-elevation: 0 1px 2px 0 var(--ki-elevation-shadow-dark), 0 2px 6px 2px var(--ki-elevation-shadow-med);
     --ki-color-brand-secondary-text-on-success: var(--ki-color-white-72);
     --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s1);
@@ -417,7 +418,7 @@
     --ki-text-inverse-white: var(--ki-color-white-100);
     --ki-text-black: var(--ki-color-black-100);
     --ki-text-inverse-black: var(--ki-color-black-100);
-    --ki-text-info-high-em: var(--ki-color-info-600);
+    --ki-text-info-high-em: var(--ki-color-info-800); /** Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. */
     --ki-text-info-med-em: var(--ki-color-info-500);
     --ki-text-info-low-em: var(--ki-color-info-300);
     --ki-text-info-base-em: var(--ki-color-info-100);
@@ -425,7 +426,7 @@
     --ki-text-success-med-em: var(--ki-color-success-400);
     --ki-text-success-low-em: var(--ki-color-success-500);
     --ki-text-success-base-em: var(--ki-color-success-700);
-    --ki-text-warning-high-em: var(--ki-color-warning-600);
+    --ki-text-warning-high-em: var(--ki-color-warning-800); /** Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. */
     --ki-text-warning-med-em: var(--ki-color-warning-500);
     --ki-text-warning-low-em: var(--ki-color-warning-300);
     --ki-text-warning-base-em: var(--ki-color-warning-100);
@@ -653,6 +654,18 @@
     --ki-button-ghost-danger-hover-fg: var(--ki-text-danger-high-em);
     --ki-button-ghost-danger-active-bg: var(--ki-surface-danger-low-em);
     --ki-button-ghost-danger-active-fg: var(--ki-text-danger-high-em);
+    --ki-badge-sm-height: var(--ki-space-7xl);
+    --ki-badge-sm-padding-inline: var(--ki-space-sm);
+    --ki-badge-sm-radius: var(--ki-radius-round);
+    --ki-badge-md-height: var(--ki-space-8xl);
+    --ki-badge-md-padding-inline: var(--ki-space-md);
+    --ki-badge-md-radius: var(--ki-radius-round);
+    --ki-badge-neutral-bg: var(--ki-surface-s2);
+    --ki-badge-neutral-fg: var(--ki-text-high-em);
+    --ki-badge-neutral-border: var(--ki-outline-low-em);
+    --ki-badge-danger-bg: var(--ki-surface-danger-base-em);
+    --ki-badge-danger-fg: var(--ki-text-danger-high-em);
+    --ki-badge-danger-border: var(--ki-outline-danger-low-em);
     --ki-textarea-padding-inline: var(--ki-space-md);
     --ki-textarea-padding-block: var(--ki-space-sm);
     --ki-textarea-label-gap: var(--ki-space-xs);
@@ -894,6 +907,21 @@
     --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
     --ki-button-ghost-danger-disabled-fg: var(--ki-text-muted);
     --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+    --ki-badge-sm-font-size: var(--ki-typography-size-caption-2);
+    --ki-badge-sm-line-height: var(--ki-typography-line-height-caption-2);
+    --ki-badge-md-font-size: var(--ki-typography-size-body-1);
+    --ki-badge-md-line-height: var(--ki-typography-line-height-body-1);
+    --ki-badge-font-family: var(--ki-typography-family-body);
+    --ki-badge-font-weight: var(--ki-typography-weight-body-medium);
+    --ki-badge-success-bg: var(--ki-surface-success-base-em);
+    --ki-badge-success-fg: var(--ki-text-success-high-em);
+    --ki-badge-success-border: var(--ki-outline-success-low-em);
+    --ki-badge-info-bg: var(--ki-surface-info-base-em);
+    --ki-badge-info-fg: var(--ki-text-info-high-em);
+    --ki-badge-info-border: var(--ki-outline-none);
+    --ki-badge-warning-bg: var(--ki-surface-warning-base-em);
+    --ki-badge-warning-fg: var(--ki-text-warning-high-em);
+    --ki-badge-warning-border: var(--ki-outline-none);
     --ki-textarea-font-size: var(--ki-typography-size-body-1);
     --ki-textarea-font-weight: var(--ki-typography-weight-body-normal);
     --ki-textarea-line-height: var(--ki-typography-line-height-body-1);
@@ -1302,6 +1330,7 @@
   --ki-button-ghost-active-shadow: none;
   --ki-button-ghost-disabled-shadow: none;
   --ki-button-border-width: 0.0625rem;
+  --ki-badge-border-width: 0.0625rem;
   --ki-card-elevation: 0 1px 2px 0 var(--ki-elevation-shadow-dark), 0 2px 6px 2px var(--ki-elevation-shadow-med);
   --ki-color-brand-secondary-text-on-success: var(--ki-color-white-72);
   --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s1);
@@ -1347,7 +1376,7 @@
   --ki-text-inverse-white: var(--ki-color-white-100);
   --ki-text-black: var(--ki-color-black-100);
   --ki-text-inverse-black: var(--ki-color-black-100);
-  --ki-text-info-high-em: var(--ki-color-info-600);
+  --ki-text-info-high-em: var(--ki-color-info-800); /** Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. */
   --ki-text-info-med-em: var(--ki-color-info-500);
   --ki-text-info-low-em: var(--ki-color-info-300);
   --ki-text-info-base-em: var(--ki-color-info-100);
@@ -1355,7 +1384,7 @@
   --ki-text-success-med-em: var(--ki-color-success-400);
   --ki-text-success-low-em: var(--ki-color-success-500);
   --ki-text-success-base-em: var(--ki-color-success-700);
-  --ki-text-warning-high-em: var(--ki-color-warning-600);
+  --ki-text-warning-high-em: var(--ki-color-warning-800); /** Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. */
   --ki-text-warning-med-em: var(--ki-color-warning-500);
   --ki-text-warning-low-em: var(--ki-color-warning-300);
   --ki-text-warning-base-em: var(--ki-color-warning-100);
@@ -1583,6 +1612,18 @@
   --ki-button-ghost-danger-hover-fg: var(--ki-text-danger-high-em);
   --ki-button-ghost-danger-active-bg: var(--ki-surface-danger-low-em);
   --ki-button-ghost-danger-active-fg: var(--ki-text-danger-high-em);
+  --ki-badge-sm-height: var(--ki-space-7xl);
+  --ki-badge-sm-padding-inline: var(--ki-space-sm);
+  --ki-badge-sm-radius: var(--ki-radius-round);
+  --ki-badge-md-height: var(--ki-space-8xl);
+  --ki-badge-md-padding-inline: var(--ki-space-md);
+  --ki-badge-md-radius: var(--ki-radius-round);
+  --ki-badge-neutral-bg: var(--ki-surface-s2);
+  --ki-badge-neutral-fg: var(--ki-text-high-em);
+  --ki-badge-neutral-border: var(--ki-outline-low-em);
+  --ki-badge-danger-bg: var(--ki-surface-danger-base-em);
+  --ki-badge-danger-fg: var(--ki-text-danger-high-em);
+  --ki-badge-danger-border: var(--ki-outline-danger-low-em);
   --ki-textarea-padding-inline: var(--ki-space-md);
   --ki-textarea-padding-block: var(--ki-space-sm);
   --ki-textarea-label-gap: var(--ki-space-xs);
@@ -1824,6 +1865,21 @@
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse);
   --ki-button-ghost-danger-disabled-fg: var(--ki-text-muted);
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none);
+  --ki-badge-sm-font-size: var(--ki-typography-size-caption-2);
+  --ki-badge-sm-line-height: var(--ki-typography-line-height-caption-2);
+  --ki-badge-md-font-size: var(--ki-typography-size-body-1);
+  --ki-badge-md-line-height: var(--ki-typography-line-height-body-1);
+  --ki-badge-font-family: var(--ki-typography-family-body);
+  --ki-badge-font-weight: var(--ki-typography-weight-body-medium);
+  --ki-badge-success-bg: var(--ki-surface-success-base-em);
+  --ki-badge-success-fg: var(--ki-text-success-high-em);
+  --ki-badge-success-border: var(--ki-outline-success-low-em);
+  --ki-badge-info-bg: var(--ki-surface-info-base-em);
+  --ki-badge-info-fg: var(--ki-text-info-high-em);
+  --ki-badge-info-border: var(--ki-outline-none);
+  --ki-badge-warning-bg: var(--ki-surface-warning-base-em);
+  --ki-badge-warning-fg: var(--ki-text-warning-high-em);
+  --ki-badge-warning-border: var(--ki-outline-none);
   --ki-textarea-font-size: var(--ki-typography-size-body-1);
   --ki-textarea-font-weight: var(--ki-typography-weight-body-normal);
   --ki-textarea-line-height: var(--ki-typography-line-height-body-1);

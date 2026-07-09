@@ -84,6 +84,19 @@
       "name": "ki-textarea worst case (component + full Stencil runtime, first component on a page)",
       "path": "dist/components/ki-textarea.js",
       "limit": "25 KB"
+    },
+    {
+      "name": "ki-badge marginal cost (component code, runtime excluded), Art. IV single-digit budget",
+      "path": "dist/components/ki-badge.js",
+      "ignore": [
+        "@stencil/core"
+      ],
+      "limit": "9 KB"
+    },
+    {
+      "name": "ki-badge worst case (component + full Stencil runtime, first component on a page)",
+      "path": "dist/components/ki-badge.js",
+      "limit": "25 KB"
     }
   ],
   "nx": {

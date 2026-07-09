@@ -4,6 +4,97 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/components/ki-badge/ki-badge.tsx",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiBadge",
+          "customElement": true,
+          "tagName": "ki-badge",
+          "description": "A static, non-interactive status pill.",
+          "whenToUse": "annotate an entity with short status text (a state, a\ncategory) whose meaning is carried by the label itself; the tone color\nonly reinforces the text, it never replaces it.",
+          "whenNotToUse": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (a future, separate concern).",
+          "attributes": [
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"md\" | \"sm\""
+              },
+              "default": "'md'",
+              "description": "Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value\nfalls back to the `md` metrics the same way.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Semantic intent, never appearance: each tone resolves its colors from\nthe `--ki-badge-{tone}-*` tokens. An unrecognized value matches no\nstyle selector, so the badge keeps the neutral appearance (fallback by\nCSS construction — no validation code).",
+              "attribute": "tone",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The label: short status text, the sole carrier of meaning."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "badge",
+              "description": "The pill: background, foreground, border, radius, metrics\nand typography."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiBadge",
+          "declaration": {
+            "name": "KiBadge",
+            "module": "src/components/ki-badge/ki-badge.tsx"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-badge",
+          "declaration": {
+            "name": "KiBadge",
+            "module": "src/components/ki-badge/ki-badge.tsx"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/components/ki-button/ki-button.tsx",
       "declarations": [
         {

@@ -6,6 +6,145 @@
   },
   "components": [
     {
+      "filePath": "src/components/ki-badge/ki-badge.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-badge",
+      "docs": "A static, non-interactive status pill.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "annotate an entity with short status text (a state, a\ncategory) whose meaning is carried by the label itself; the tone color\nonly reinforces the text, it never replaces it."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (a future, separate concern)."
+        },
+        {
+          "name": "slot",
+          "text": "- The label: short status text, the sole carrier of meaning."
+        },
+        {
+          "name": "part",
+          "text": "badge - The pill: background, foreground, border, radius, metrics\nand typography."
+        }
+      ],
+      "usage": {},
+      "props": [
+        {
+          "name": "size",
+          "type": "\"md\" | \"sm\"",
+          "complexType": {
+            "original": "KiBadgeSize",
+            "resolved": "\"md\" | \"sm\"",
+            "references": {
+              "KiBadgeSize": {
+                "location": "local",
+                "path": "src/components/ki-badge/ki-badge.tsx",
+                "id": "src/components/ki-badge/ki-badge.tsx::KiBadgeSize"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value\nfalls back to the `md` metrics the same way.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "tone",
+          "type": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\"",
+          "complexType": {
+            "original": "KiBadgeTone",
+            "resolved": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\"",
+            "references": {
+              "KiBadgeTone": {
+                "location": "local",
+                "path": "src/components/ki-badge/ki-badge.tsx",
+                "id": "src/components/ki-badge/ki-badge.tsx::KiBadgeTone"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "tone",
+          "reflectToAttr": true,
+          "docs": "Semantic intent, never appearance: each tone resolves its colors from\nthe `--ki-badge-{tone}-*` tokens. An unrecognized value matches no\nstyle selector, so the badge keeps the neutral appearance (fallback by\nCSS construction — no validation code).",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'neutral'"
+            }
+          ],
+          "default": "'neutral'",
+          "values": [
+            {
+              "value": "danger",
+              "type": "string"
+            },
+            {
+              "value": "info",
+              "type": "string"
+            },
+            {
+              "value": "neutral",
+              "type": "string"
+            },
+            {
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "value": "warning",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The label: short status text, the sole carrier of meaning."
+        }
+      ],
+      "parts": [
+        {
+          "name": "badge",
+          "docs": "The pill: background, foreground, border, radius, metrics\nand typography."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-button/ki-button.tsx",
       "encapsulation": "shadow",
       "tag": "ki-button",
@@ -1341,6 +1480,16 @@
     }
   ],
   "typeLibrary": {
+    "src/components/ki-badge/ki-badge.tsx::KiBadgeTone": {
+      "declaration": "export type KiBadgeTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
+      "docstring": "",
+      "path": "src/components/ki-badge/ki-badge.tsx"
+    },
+    "src/components/ki-badge/ki-badge.tsx::KiBadgeSize": {
+      "declaration": "export type KiBadgeSize = 'sm' | 'md';",
+      "docstring": "",
+      "path": "src/components/ki-badge/ki-badge.tsx"
+    },
     "src/components/ki-button/ki-button.tsx::KiButtonVariant": {
       "declaration": "export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';",
       "docstring": "",

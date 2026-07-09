@@ -16,6 +16,34 @@ Load `@kimen/tokens/dist/css/tokens.css` once for the Mars default theme. Theme 
 
 ## Components
 
+### ki-badge
+
+A static, non-interactive status pill.
+
+When to use: annotate an entity with short status text (a state, a
+category) whose meaning is carried by the label itself; the tone color
+only reinforces the text, it never replaces it.
+When NOT to use: feedback that must be announced (that is
+ki-alert's job — the badge has no live region), an interactive
+chip, filter or button, empty content (the label IS the meaning), or a
+notification-counter overlay (a future, separate concern).
+
+Attributes:
+- `size` ("md" | "sm", default 'md'): Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value falls back to the `md` metrics the same way.
+- `tone` ("danger" | "info" | "neutral" | "success" | "warning", default 'neutral'): Semantic intent, never appearance: each tone resolves its colors from the `--ki-badge-{tone}-*` tokens. An unrecognized value matches no style selector, so the badge keeps the neutral appearance (fallback by CSS construction — no validation code).
+
+Slots:
+- (default): The label: short status text, the sole carrier of meaning.
+
+Parts:
+- `badge`: The pill: background, foreground, border, radius, metrics and typography.
+
+Events: none
+
+Methods: none
+
+CSS custom properties: none
+
 ### ki-button
 
 A token-styled action button with native button semantics.

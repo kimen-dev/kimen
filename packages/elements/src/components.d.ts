@@ -5,11 +5,35 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiInputType } from "./components/ki-input/ki-input";
+export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiInputType } from "./components/ki-input/ki-input";
 export namespace Components {
+    /**
+     * A static, non-interactive status pill.
+     * @whenToUse annotate an entity with short status text (a state, a
+     * category) whose meaning is carried by the label itself; the tone color
+     * only reinforces the text, it never replaces it.
+     * @whenNotToUse feedback that must be announced (that is
+     * ki-alert's job — the badge has no live region), an interactive
+     * chip, filter or button, empty content (the label IS the meaning), or a
+     * notification-counter overlay (a future, separate concern).
+     */
+    interface KiBadge {
+        /**
+          * Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value falls back to the `md` metrics the same way.
+          * @default 'md'
+         */
+        "size": KiBadgeSize;
+        /**
+          * Semantic intent, never appearance: each tone resolves its colors from the `--ki-badge-{tone}-*` tokens. An unrecognized value matches no style selector, so the badge keeps the neutral appearance (fallback by CSS construction — no validation code).
+          * @default 'neutral'
+         */
+        "tone": KiBadgeTone;
+    }
     /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
@@ -213,6 +237,22 @@ export namespace Components {
 }
 declare global {
     /**
+     * A static, non-interactive status pill.
+     * @whenToUse annotate an entity with short status text (a state, a
+     * category) whose meaning is carried by the label itself; the tone color
+     * only reinforces the text, it never replaces it.
+     * @whenNotToUse feedback that must be announced (that is
+     * ki-alert's job — the badge has no live region), an interactive
+     * chip, filter or button, empty content (the label IS the meaning), or a
+     * notification-counter overlay (a future, separate concern).
+     */
+    interface HTMLKiBadgeElement extends Components.KiBadge, HTMLStencilElement {
+    }
+    var HTMLKiBadgeElement: {
+        prototype: HTMLKiBadgeElement;
+        new (): HTMLKiBadgeElement;
+    };
+    /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
      * in descending hierarchy, or confirming/destructive actions through tone.
@@ -290,6 +330,7 @@ declare global {
         new (): HTMLKiTextareaElement;
     };
     interface HTMLElementTagNameMap {
+        "ki-badge": HTMLKiBadgeElement;
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
@@ -300,6 +341,28 @@ declare global {
 declare namespace LocalJSX {
     type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}` | `prop:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K | `prop:${K}`]?: never } | { [P in `prop:${K}`]: PropT } & { [P in K | `attr:${K}`]?: never };
 
+    /**
+     * A static, non-interactive status pill.
+     * @whenToUse annotate an entity with short status text (a state, a
+     * category) whose meaning is carried by the label itself; the tone color
+     * only reinforces the text, it never replaces it.
+     * @whenNotToUse feedback that must be announced (that is
+     * ki-alert's job — the badge has no live region), an interactive
+     * chip, filter or button, empty content (the label IS the meaning), or a
+     * notification-counter overlay (a future, separate concern).
+     */
+    interface KiBadge {
+        /**
+          * Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value falls back to the `md` metrics the same way.
+          * @default 'md'
+         */
+        "size"?: KiBadgeSize;
+        /**
+          * Semantic intent, never appearance: each tone resolves its colors from the `--ki-badge-{tone}-*` tokens. An unrecognized value matches no style selector, so the badge keeps the neutral appearance (fallback by CSS construction — no validation code).
+          * @default 'neutral'
+         */
+        "tone"?: KiBadgeTone;
+    }
     /**
      * A token-styled action button with native button semantics.
      * @whenToUse trigger the single main action of a view, supporting actions
@@ -517,6 +580,10 @@ declare namespace LocalJSX {
         "value"?: string;
     }
 
+    interface KiBadgeAttributes {
+        "tone": KiBadgeTone;
+        "size": KiBadgeSize;
+    }
     interface KiButtonAttributes {
         "variant": KiButtonVariant;
         "tone": KiButtonTone;
@@ -558,6 +625,7 @@ declare namespace LocalJSX {
     }
 
     interface IntrinsicElements {
+        "ki-badge": Omit<KiBadge, keyof KiBadgeAttributes> & { [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K] };
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
@@ -569,6 +637,17 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * A static, non-interactive status pill.
+             * @whenToUse annotate an entity with short status text (a state, a
+             * category) whose meaning is carried by the label itself; the tone color
+             * only reinforces the text, it never replaces it.
+             * @whenNotToUse feedback that must be announced (that is
+             * ki-alert's job — the badge has no live region), an interactive
+             * chip, filter or button, empty content (the label IS the meaning), or a
+             * notification-counter overlay (a future, separate concern).
+             */
+            "ki-badge": LocalJSX.IntrinsicElements["ki-badge"] & JSXBase.HTMLAttributes<HTMLKiBadgeElement>;
             /**
              * A token-styled action button with native button semantics.
              * @whenToUse trigger the single main action of a view, supporting actions
