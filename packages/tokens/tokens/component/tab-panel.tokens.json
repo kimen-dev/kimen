@@ -1,0 +1,28 @@
+{
+  "ki": {
+    "tab-panel": {
+      "padding": {
+        "block": {
+          "$value": "{ki.space.lg}"
+        },
+        "inline": {
+          "$value": "{ki.space.lg}"
+        }
+      },
+      "bg": {
+        "$value": "{ki.surface.s0}"
+      },
+      "focus-ring": {
+        "color": {
+          "$value": "{ki.outline.primary-high-em}"
+        },
+        "width": {
+          "$value": "{ki.space.xxs}"
+        },
+        "offset": {
+          "$value": "{ki.space.xxs}"
+        }
+      }
+    }
+  }
+}
