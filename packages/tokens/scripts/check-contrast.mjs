@@ -11,6 +11,10 @@ const CONTRAST_PAIRS = [
   { text: '--ki-text-med-em', surface: '--ki-surface-s0' },
   { text: '--ki-text-high-em', surface: '--ki-surface-s1' },
   { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
+  { text: '--ki-select-placeholder-fg', surface: '--ki-select-rest-bg' },
+  { text: '--ki-select-rest-label-fg', surface: '--ki-surface-s0' },
+  { text: '--ki-select-hover-label-fg', surface: '--ki-surface-s0' },
+  { text: '--ki-select-focus-label-fg', surface: '--ki-surface-s0' },
 ];
 
 export function parseColor(value) {
@@ -167,19 +171,36 @@ function resolveCustomProperty(name, declarations, seen = new Set()) {
 // is PER COMPONENT: every new component matrix (ki-card, ...) must extend it
 // (or this gate silently ignores that component; the zero-match guard only
 // protects the patterns listed here).
-const COMPONENT_BG_PATTERN =
-  /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u;
+const COMPONENT_BG_PATTERNS = [
+  {
+    name: 'ki-button',
+    pattern: /^--ki-button-[a-z]+-(?:neutral|success|danger)-(?:rest|hover|active)-bg$/u,
+  },
+  {
+    name: 'ki-select',
+    pattern: /^--ki-select-(?:rest|hover|focus)-bg$/u,
+  },
+  {
+    name: 'ki-option',
+    pattern: /^--ki-option-(?:rest|hover|highlight|selected)-bg$/u,
+  },
+];
 
-function componentPairs(declarations) {
+export function componentPairs(declarations) {
   const pairs = [];
+  const counts = new Map(COMPONENT_BG_PATTERNS.map(({ name }) => [name, 0]));
 
   for (const name of declarations.keys()) {
-    if (COMPONENT_BG_PATTERN.test(name)) {
-      pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
+    for (const { name: componentName, pattern } of COMPONENT_BG_PATTERNS) {
+      if (pattern.test(name)) {
+        counts.set(componentName, (counts.get(componentName) ?? 0) + 1);
+        pairs.push({ text: name.replace(/-bg$/u, '-fg'), surface: name });
+        break;
+      }
     }
   }
 
-  return pairs;
+  return { pairs, counts };
 }
 
 function evaluateStylesheet(theme, stylesheet) {
@@ -190,17 +211,19 @@ function evaluateStylesheet(theme, stylesheet) {
   for (const [scheme, declarations] of Object.entries(schemes)) {
     const swept = componentPairs(declarations);
 
-    if (swept.length === 0) {
-      failures.push(
-        `${theme}/${scheme}: no component-layer pairs matched — the sweep pattern drifted from the token names`,
-      );
+    for (const [componentName, count] of swept.counts) {
+      if (count === 0) {
+        failures.push(
+          `${theme}/${scheme}: no ${componentName} component-layer pairs matched — the sweep pattern drifted from the token names`,
+        );
+      }
     }
 
     // Component cells may be translucent (ghost/quaternary): composite the
     // cell background over the page surface before measuring.
     const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
 
-    for (const pair of [...CONTRAST_PAIRS, ...swept]) {
+    for (const pair of [...CONTRAST_PAIRS, ...swept.pairs]) {
       const text = parseColor(resolveCustomProperty(pair.text, declarations));
       const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
       const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;

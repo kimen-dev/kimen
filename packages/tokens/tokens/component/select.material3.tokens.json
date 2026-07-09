@@ -1,0 +1,44 @@
+{
+  "ki": {
+    "select": {
+      "height": { "$value": "{ki.space.14xl}" },
+      "radius": { "$value": "{ki.radius.xs}" },
+      "border-block-start-width": { "$value": "{ki.space.zero}" },
+      "border-inline-start-width": { "$value": "{ki.space.zero}" },
+      "border-inline-end-width": { "$value": "{ki.space.zero}" },
+      "rest": {
+        "bg": { "$value": "{ki.surface.s2}" },
+        "fg": { "$value": "{ki.text.high-em}" },
+        "border": { "$value": "{ki.outline.high-em}" },
+        "label-fg": { "$value": "{ki.text.med-em}" }
+      },
+      "hover": {
+        "bg": { "$value": "{ki.surface.s3}" },
+        "fg": { "$value": "{ki.text.high-em}" },
+        "border": { "$value": "{ki.outline.primary-high-em}" },
+        "label-fg": { "$value": "{ki.text.high-em}" }
+      },
+      "focus": {
+        "bg": { "$value": "{ki.surface.s2}" },
+        "fg": { "$value": "{ki.text.high-em}" },
+        "border": { "$value": "{ki.outline.primary-high-em}" },
+        "label-fg": { "$value": "{ki.text.primary-med-em}" }
+      },
+      "disabled": {
+        "bg": { "$value": "{ki.surface.disabled-base-em}" },
+        "fg": { "$value": "{ki.text.low-em}" },
+        "border": { "$value": "{ki.outline.low-em}" },
+        "label-fg": { "$value": "{ki.text.low-em}" }
+      },
+      "placeholder-fg": { "$value": "{ki.text.med-em}" },
+      "listbox": {
+        "bg": { "$value": "{ki.surface.s2}" },
+        "radius": { "$value": "{ki.radius.md}" },
+        "elevation": { "$value": "{ki.elevation.shadow-med}" }
+      },
+      "focus-ring": {
+        "color": { "$value": "{ki.outline.primary-high-em}" }
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  componentPairs,
   compositeOver,
   contrastRatio,
   parseColor,
@@ -38,6 +39,42 @@ test('contrast pair table covers the declared data-model pairs', () => {
       ['--ki-text-med-em', '--ki-surface-s0'],
       ['--ki-text-high-em', '--ki-surface-s1'],
       ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
+      ['--ki-select-placeholder-fg', '--ki-select-rest-bg'],
+      ['--ki-select-rest-label-fg', '--ki-surface-s0'],
+      ['--ki-select-hover-label-fg', '--ki-surface-s0'],
+      ['--ki-select-focus-label-fg', '--ki-surface-s0'],
     ],
   );
+});
+
+test('component sweep covers button, select and option foreground-background matrices', () => {
+  const declarations = new Map([
+    ['--ki-button-primary-neutral-rest-bg', '#000000'],
+    ['--ki-button-primary-neutral-rest-fg', '#ffffff'],
+    ['--ki-select-focus-bg', '#000000'],
+    ['--ki-select-focus-fg', '#ffffff'],
+    ['--ki-option-highlight-bg', '#000000'],
+    ['--ki-option-highlight-fg', '#ffffff'],
+  ]);
+  const swept = componentPairs(declarations);
+
+  assert.deepEqual(
+    swept.pairs.map((pair) => [pair.text, pair.surface]),
+    [
+      ['--ki-button-primary-neutral-rest-fg', '--ki-button-primary-neutral-rest-bg'],
+      ['--ki-select-focus-fg', '--ki-select-focus-bg'],
+      ['--ki-option-highlight-fg', '--ki-option-highlight-bg'],
+    ],
+  );
+  assert.equal(swept.counts.get('ki-button'), 1);
+  assert.equal(swept.counts.get('ki-select'), 1);
+  assert.equal(swept.counts.get('ki-option'), 1);
+});
+
+test('component sweep reports zero matches per component family', () => {
+  const swept = componentPairs(new Map([['--ki-select-rest-bg', '#ffffff']]));
+
+  assert.equal(swept.counts.get('ki-button'), 0);
+  assert.equal(swept.counts.get('ki-select'), 1);
+  assert.equal(swept.counts.get('ki-option'), 0);
 });
