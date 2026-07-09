@@ -252,3 +252,103 @@ describe('ki-tabs assistive technology outcomes in a real browser', () => {
     expect((await axe.run(main())).violations).toEqual([]);
   });
 });
+
+describe('ki-tabs keyboard behavior in a real browser', () => {
+  it('S4 ArrowRight focuses and selects the next tab with one ki-change', async () => {
+    const tabs = await mount(fixture());
+    const onChange = vi.fn();
+    tabs.addEventListener('ki-change', onChange);
+    tab(tabs, 'email').focus();
+
+    await userEvent.keyboard('{ArrowRight}');
+
+    expect(document.activeElement).toBe(tab(tabs, 'notifications'));
+    expect(tabs.value).toBe('notifications');
+    expect(panel(tabs, 'notifications').hasAttribute('hidden')).toBe(false);
+    expect(getComputedStyle(tab(tabs, 'notifications')).outlineStyle).not.toBe('none');
+    expect(onChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('S13 wraps past a disabled first tab to the next selectable tab', async () => {
+    const tabs = await mount(`
+      <ki-tabs value="security">
+        <ki-tab value="email" disabled>Email</ki-tab>
+        <ki-tab value="notifications">Notifications</ki-tab>
+        <ki-tab value="security">Security</ki-tab>
+        <ki-tab-panel value="email">Email panel</ki-tab-panel>
+        <ki-tab-panel value="notifications">Notifications panel</ki-tab-panel>
+        <ki-tab-panel value="security">Security panel</ki-tab-panel>
+      </ki-tabs>
+    `);
+    tab(tabs, 'security').focus();
+
+    await userEvent.keyboard('{ArrowRight}');
+
+    expect(document.activeElement).toBe(tab(tabs, 'notifications'));
+    expect(tabs.value).toBe('notifications');
+  });
+
+  it('S5 S14 End and Home jump to the last and first selectable tabs', async () => {
+    const tabs = await mount(`
+      <ki-tabs value="email">
+        <ki-tab value="email">Email</ki-tab>
+        <ki-tab value="notifications">Notifications</ki-tab>
+        <ki-tab value="security">Security</ki-tab>
+        <ki-tab-panel value="email">Email panel</ki-tab-panel>
+        <ki-tab-panel value="notifications">Notifications panel</ki-tab-panel>
+        <ki-tab-panel value="security">Security panel</ki-tab-panel>
+      </ki-tabs>
+    `);
+    tab(tabs, 'email').focus();
+
+    await userEvent.keyboard('{End}');
+    expect(document.activeElement).toBe(tab(tabs, 'security'));
+    expect(tabs.value).toBe('security');
+
+    await userEvent.keyboard('{Home}');
+    expect(document.activeElement).toBe(tab(tabs, 'email'));
+    expect(tabs.value).toBe('email');
+  });
+
+  it('S6 S15 Tab leaves the strip into the visible panel itself', async () => {
+    const tabs = await mount(fixture());
+    tab(tabs, 'email').focus();
+
+    await userEvent.tab();
+
+    expect(document.activeElement).toBe(panel(tabs, 'email'));
+  });
+
+  it('S16 ArrowLeft moves to the next tab in right-to-left direction', async () => {
+    document.documentElement.dir = 'rtl';
+    const tabs = await mount(fixture());
+    tab(tabs, 'email').focus();
+
+    await userEvent.keyboard('{ArrowLeft}');
+
+    expect(document.activeElement).toBe(tab(tabs, 'notifications'));
+    expect(tabs.value).toBe('notifications');
+  });
+
+  it('S18 all-disabled groups contribute no keyboard tab stop', async () => {
+    const before = document.createElement('button');
+    const after = document.createElement('button');
+    before.textContent = 'Before';
+    after.textContent = 'After';
+    document.body.append(before);
+    const tabs = await mount(`
+      <ki-tabs value="email">
+        <ki-tab value="email" disabled>Email</ki-tab>
+        <ki-tab value="notifications" disabled>Notifications</ki-tab>
+        <ki-tab-panel value="email">Email panel</ki-tab-panel>
+        <ki-tab-panel value="notifications">Notifications panel</ki-tab-panel>
+      </ki-tabs>
+    `);
+    tabs.parentElement?.after(after);
+    before.focus();
+
+    await userEvent.tab();
+
+    expect(document.activeElement).toBe(after);
+  });
+});
