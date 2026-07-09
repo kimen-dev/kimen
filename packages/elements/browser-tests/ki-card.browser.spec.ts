@@ -142,6 +142,25 @@ describe('ki-card in a real browser', () => {
     expect(Math.round(card.height)).toBe(Math.round(body.height));
   });
 
+  it('S2 re-evaluates region emptiness when a slotted text node changes content', async () => {
+    cleanup();
+    const el = await mount('<ki-card> </ki-card>');
+    const body = regionPart(el, 'body');
+    expect(body.hasAttribute('data-empty')).toBe(true);
+
+    // Mutate the already-assigned text node's data (no slotchange fires).
+    const textNode = el.childNodes[0] as Text;
+    textNode.textContent = 'Storage is almost full';
+    await nextFrame();
+    await nextFrame();
+    expect(body.hasAttribute('data-empty')).toBe(false);
+
+    textNode.textContent = '   ';
+    await nextFrame();
+    await nextFrame();
+    expect(body.hasAttribute('data-empty')).toBe(true);
+  });
+
   it('S1 S2 have zero axe violations across representative region subsets', async () => {
     cleanup();
     ensureTokens();

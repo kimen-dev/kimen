@@ -1,4 +1,4 @@
-import { Component, State, h } from '@stencil/core';
+import { Component, Element, State, h } from '@stencil/core';
 
 type CardRegion = 'media' | 'header' | 'body' | 'footer';
 type RegionState = Record<CardRegion, boolean>;
@@ -50,12 +50,29 @@ function hasAssignedContent(slot: HTMLSlotElement): boolean {
   shadow: true,
 })
 export class KiCard {
+  @Element() private readonly host!: HTMLElement;
+
   @State() private hasContent: RegionState = EMPTY_REGIONS;
 
   private readonly slots = new Map<CardRegion, HTMLSlotElement>();
+  private observer?: MutationObserver;
 
   componentDidLoad(): void {
     this.syncAllRegions();
+    // slotchange does NOT fire when an already-assigned text node's content
+    // changes (e.g. body text driven from '' to real text, or back), so a
+    // characterData observer re-checks the regions on those mutations too
+    // (codex review).
+    if (typeof MutationObserver === 'function') {
+      this.observer = new MutationObserver(() => {
+        this.syncAllRegions();
+      });
+      this.observer.observe(this.host, { characterData: true, childList: true, subtree: true });
+    }
+  }
+
+  disconnectedCallback(): void {
+    this.observer?.disconnect();
   }
 
   private setSlot(region: CardRegion, slot: HTMLSlotElement | undefined): void {
