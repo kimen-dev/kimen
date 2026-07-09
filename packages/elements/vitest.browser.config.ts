@@ -23,22 +23,55 @@ export default defineConfig({
             await page.emulateMedia({ colorScheme: scheme });
           },
         ),
+        // The real computed accessibility tree (Playwright's ariaSnapshot,
+        // returned as a YAML role/name outline). Needed for roles set via
+        // ElementInternals.role, which dom-accessibility-api (getByRole) and
+        // axe-core cannot read — the only way to verify list OWNERSHIP rather
+        // than reading back the value the component set.
+        ariaSnapshot: defineBrowserCommand(async ({ page }, selector: string) => {
+          // The test DOM lives in vitest's tester iframe, not the top page —
+          // resolve the selector inside whichever frame actually contains it.
+          for (const frame of page.frames()) {
+            const locator = frame.locator(selector);
+            if ((await locator.count()) > 0) {
+              return locator.first().ariaSnapshot();
+            }
+          }
+          throw new Error(`ariaSnapshot: no frame contains ${selector}`);
+        }),
         emulateReducedMotion: defineBrowserCommand(
           async ({ page }, reducedMotion: 'reduce' | 'no-preference' | null) => {
             await page.emulateMedia({ reducedMotion });
           },
         ),
+        installClock: defineBrowserCommand(async ({ page }) => {
+          await page.clock.install();
+        }),
+        fastForwardClock: defineBrowserCommand(async ({ page }, milliseconds: number) => {
+          await page.clock.fastForward(milliseconds);
+        }),
+        resumeClock: defineBrowserCommand(async ({ page }) => {
+          await page.clock.resume();
+        }),
       },
       instances: [
         ...browsers.map((browser) => ({
           browser,
           name: `${browser}-light`,
-          exclude: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
+          exclude: [
+            'browser-tests/**/*.dark.browser.spec.{ts,tsx}',
+            'browser-tests/**/*.motion.browser.spec.{ts,tsx}',
+          ],
         })),
         ...browsers.map((browser) => ({
           browser,
           name: `${browser}-dark`,
           include: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
+        })),
+        ...browsers.map((browser) => ({
+          browser,
+          name: `${browser}-reduced-motion`,
+          include: ['browser-tests/**/*.motion.browser.spec.{ts,tsx}'],
         })),
       ],
     },
