@@ -98,7 +98,18 @@ export class KiTooltip {
     if (!this.hasLabel) {
       this.hideNow();
     } else if (this.visible) {
-      this.positionTooltip();
+      // Measure AFTER Stencil renders the new label text, or the bubble is
+      // positioned from the previous size and can overflow near an edge until
+      // it is hidden and shown again (codex review).
+      if (typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(() => {
+          if (this.visible) {
+            this.positionTooltip();
+          }
+        });
+      } else {
+        this.positionTooltip();
+      }
     }
   }
 
@@ -120,7 +131,13 @@ export class KiTooltip {
     this.hideNow();
   };
 
-  private readonly handlePointerEnter = (): void => {
+  private readonly handlePointerEnter = (event: PointerEvent): void => {
+    // v1 is a hover/focus affordance and excludes touch: a touch contact also
+    // dispatches pointerenter, and left unfiltered it would arm the timer and
+    // reveal the tooltip on a tap or long-press (codex review).
+    if (event.pointerType === 'touch') {
+      return;
+    }
     this.pointerWithin = true;
     this.clearTimer();
 
