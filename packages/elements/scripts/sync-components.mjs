@@ -67,7 +67,7 @@ const replaceGeneratedBlock = (source, block) => {
 };
 
 const generatedComponentInterface =
-  /(^|\n)(?:export\s+)?interface\s+([A-Za-z_$][\w$]*)(?=\s+extends\s+Components\.)/gu;
+  /(^|\n)(?:export\s+)?interface\s+(\S+)(?=\s+extends\s+Components\.)/gu;
 
 export function augmentDirectDeclaration(source, component, rootContract) {
   const className = component.className;
