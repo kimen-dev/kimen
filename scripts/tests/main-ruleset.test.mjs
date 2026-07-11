@@ -2621,9 +2621,7 @@ test('S2 @spec:018-project-integrity-hardening refuses review authority shared w
   await updateFakeGitHubState(fake, {
     calls: [],
     checkRuns: state.checkRuns.map((check) =>
-      check.name === 'clean-context-review'
-        ? { ...check, app: { id: githubActionsAppId } }
-        : check,
+      check.name === 'clean-context-review' ? { ...check, app: { id: githubActionsAppId } } : check,
     ),
   });
   const env = {
