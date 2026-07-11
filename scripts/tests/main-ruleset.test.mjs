@@ -18,6 +18,7 @@ import {
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import test from 'node:test';
+import { clearTimeout, setTimeout } from 'node:timers';
 import { fileURLToPath } from 'node:url';
 import { canonicalJson, canonicalJsonSha256, sha256 } from '../lib/canonical-json.mjs';
 
