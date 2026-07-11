@@ -121,7 +121,7 @@ function aCurrentPullRequest() {
 
 function aWorkflowEnvironment(overrides = {}) {
   return {
-    GITHUB_ACTOR: 'marsgotta',
+    GITHUB_ACTOR: 'MarsGotta',
     GITHUB_API_URL: 'https://api.github.test',
     GITHUB_EVENT_NAME: 'workflow_dispatch',
     GITHUB_REF: 'refs/heads/main',
@@ -132,7 +132,7 @@ function aWorkflowEnvironment(overrides = {}) {
       'ci / gates': 15368,
       'security / semgrep': 44001,
     }),
-    KIMEN_FOUNDER_LOGIN: 'marsgotta',
+    KIMEN_FOUNDER_LOGIN: 'MarsGotta',
     KIMEN_TRUSTED_REVIEWERS_JSON: JSON.stringify(['trusted-clean-context-reviewer']),
     ...overrides,
   };
@@ -1006,7 +1006,7 @@ test('S2 @spec:018-project-integrity-hardening keeps the review workflow trusted
   assert.doesNotMatch(workflow, /^\s*uses:\s+[^@\s]+@(?![0-9a-f]{40}\b)/gm);
   assert.match(workflow, /ref:\s*\$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
   assert.match(workflow, /ref:\s*refs\/heads\/main/);
-  assert.match(workflow, /github\.actor\s*==\s*'marsgotta'/);
+  assert.match(workflow, /github\.actor\s*==\s*'MarsGotta'/);
   assert.match(pendingJob, /github\.repository\s*==\s*'kimen-dev\/kimen'/);
   assert.match(pendingJob, /github\.event\.pull_request\.base\.ref\s*==\s*'main'/);
   assert.match(workflow, /github\.ref\s*==\s*'refs\/heads\/main'/);

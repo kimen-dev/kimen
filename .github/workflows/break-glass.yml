@@ -9,8 +9,8 @@ permissions: {}
 jobs:
   validate:
     if: >-
-      github.actor == 'marsgotta' &&
-      github.event.pull_request.user.login == 'marsgotta' &&
+      github.actor == 'MarsGotta' &&
+      github.event.pull_request.user.login == 'MarsGotta' &&
       github.event.pull_request.base.ref == 'main' &&
       github.repository == 'kimen-dev/kimen' &&
       contains(github.event.pull_request.labels.*.name, 'break-glass')
@@ -39,5 +39,5 @@ jobs:
       - name: Validate founder PR-only break-glass evidence
         env:
           KIMEN_BREAK_GLASS_LABEL: break-glass
-          KIMEN_FOUNDER_LOGIN: marsgotta
+          KIMEN_FOUNDER_LOGIN: MarsGotta
         run: node .github/scripts/review-evidence.cjs validate-break-glass-event
