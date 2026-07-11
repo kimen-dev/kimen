@@ -158,6 +158,12 @@ test('S13 validates current-revision capability evidence only after the browser 
   assert.match(suite, /export KIMEN_CAPABILITY_EVIDENCE_FILE/u);
 });
 
-test('wiring fixture resolves from the repository under test', () => {
-  assert.match(repositoryRoot, /kimen\/?$/u);
+test('wiring fixture resolves from the repository under test', async () => {
+  const [fromRepositoryRoot, fromFixtureUrl] = await Promise.all([
+    readRepositoryFile('scripts/run-infra-tests.mjs'),
+    readFile(infraRunnerUrl, 'utf8'),
+  ]);
+
+  assert.equal(fileURLToPath(new URL('../', infraRunnerUrl)), repositoryRoot);
+  assert.equal(fromFixtureUrl, fromRepositoryRoot);
 });
