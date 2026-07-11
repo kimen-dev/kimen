@@ -202,8 +202,14 @@ describe('capability file and evidence mutation boundary', () => {
     );
 
     const legacy = original
-      .replace('{/* kimen:capabilities:workshop-status:start */}', '<!-- kimen:capabilities:workshop-status:start -->')
-      .replace('{/* kimen:capabilities:workshop-status:end */}', '<!-- kimen:capabilities:workshop-status:end -->');
+      .replace(
+        '{/* kimen:capabilities:workshop-status:start */}',
+        '<!-- kimen:capabilities:workshop-status:start -->',
+      )
+      .replace(
+        '{/* kimen:capabilities:workshop-status:end */}',
+        '<!-- kimen:capabilities:workshop-status:end -->',
+      );
     expect(replaceCapabilityBlock(legacy, destination, expected)).toBe(
       `# Workshop\n\n${expected}after\n`,
     );

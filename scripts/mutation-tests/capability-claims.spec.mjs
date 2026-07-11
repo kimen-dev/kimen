@@ -184,9 +184,7 @@ describe('capability claim mutation boundary', () => {
 
     expect(renderCapabilityBlocks(reordered)).toEqual(blocks);
     expect(blocks['readme-status']).toContain('<!-- kimen:capabilities:readme-status:start -->');
-    expect(blocks['workshop-status']).toContain(
-      '{/* kimen:capabilities:workshop-status:start */}',
-    );
+    expect(blocks['workshop-status']).toContain('{/* kimen:capabilities:workshop-status:start */}');
     expect(blocks['workshop-status']).not.toContain('<!--');
     expect(blocks['readme-status']).toContain('Runtime catalog planned');
     expect(blocks['site-status']).toContain('<section class="section"');
