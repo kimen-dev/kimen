@@ -12,6 +12,10 @@ MODE="${1:---render}"
 DESIRED=.github/rulesets/main.json
 RULESET_NAME=kimen-protected-main
 REVIEW_CONTEXT=clean-context-review
+FOUNDER_LOGIN=MarsGotta
+BREAK_GLASS_SCHEMA=kimen-break-glass-rollback-v1
+BREAK_GLASS_CONFIRMATION=founder-opens-current-pr-only-bypass
+BREAK_GLASS_MAX_SECONDS=600
 BACKUP_DIR="${KIMEN_RULESET_BACKUP_DIR:-reports/rulesets}"
 BACKUP_SCHEMA=kimen-ruleset-rollback-v1
 CREATE_INTENT_SCHEMA=kimen-ruleset-create-intent-v1
@@ -1014,6 +1018,184 @@ create_rollback_backup() {
   printf '%s\n' "$backup"
 }
 
+create_break_glass_backup() {
+  local ruleset_id="$1"
+  local payload="$2"
+  local expected_forward_payload="$3"
+  local pull_request="$4"
+  local head_sha="$5"
+  local founder_user_id="$6"
+  local restoration_issue_number="$7"
+  local restoration_issue_url="$8"
+  local request_payload_sha256="$9"
+  local opened_at="${10}"
+  local deadline="${11}"
+  local backup
+  local digest
+  local unsigned
+
+  unsigned=$(mktemp) || return 1
+  backup=$(mktemp "$BACKUP_DIR/break-glass-pr-${pull_request}-$(date -u +%Y%m%dT%H%M%SZ)-XXXXXX") || {
+    rm -f "$unsigned"
+    return 1
+  }
+  jq -S \
+    --arg schema "$BREAK_GLASS_SCHEMA" \
+    --arg repository "$REPOSITORY" \
+    --arg ruleset_name "$RULESET_NAME" \
+    --arg founder_login "$FOUNDER_LOGIN" \
+    --arg head_sha "$head_sha" \
+    --arg restoration_issue_url "$restoration_issue_url" \
+    --arg request_payload_sha256 "$request_payload_sha256" \
+    --argjson ruleset_id "$ruleset_id" \
+    --argjson pull_request "$pull_request" \
+    --argjson founder_user_id "$founder_user_id" \
+    --argjson restoration_issue_number "$restoration_issue_number" \
+    --argjson opened_at "$opened_at" \
+    --argjson deadline "$deadline" \
+    --slurpfile expected_forward "$expected_forward_payload" '
+      {
+        schemaVersion: $schema,
+        repository: $repository,
+        rulesetName: $ruleset_name,
+        rulesetId: $ruleset_id,
+        operation: "updated",
+        payload: .,
+        expectedForwardPayload: $expected_forward[0],
+        breakGlass: {
+          pullRequest: $pull_request,
+          headSha: $head_sha,
+          founderLogin: $founder_login,
+          founderUserId: $founder_user_id,
+          restorationIssueNumber: $restoration_issue_number,
+          restorationIssueUrl: $restoration_issue_url,
+          requestPayloadSha256: $request_payload_sha256,
+          openedAtEpochSeconds: $opened_at,
+          deadlineEpochSeconds: $deadline
+        }
+      }
+    ' "$payload" > "$unsigned" || {
+    rm -f "$backup" "$unsigned"
+    return 1
+  }
+  digest=$(kimen_sha256 "$unsigned") || {
+    rm -f "$backup" "$unsigned"
+    return 1
+  }
+  jq -S --arg digest "$digest" '. + {integritySha256: $digest}' "$unsigned" > "$backup" || {
+    rm -f "$backup" "$unsigned"
+    return 1
+  }
+  rm -f "$unsigned"
+  chmod 600 "$backup"
+  if ! write_evidence_sidecar "$backup" || ! sync_evidence_pair "$backup"; then
+    rm -f "$backup" "${backup}.sha256"
+    return 1
+  fi
+  printf '%s\n' "$backup"
+}
+
+validate_break_glass_backup() {
+  local backup="$1"
+  local actual_digest
+  local expected_digest
+  local mode
+  local unsigned
+
+  if [ -z "$backup" ] || [ -L "$backup" ] || [ ! -f "$backup" ]; then
+    echo "apply-main-ruleset: break-glass evidence must be a regular non-symlink file" >&2
+    return 1
+  fi
+  assert_no_symlink_ancestors "$backup" || return 1
+  mode=$(read_file_mode "$backup") || return 1
+  if [ "$mode" != "600" ]; then
+    echo "apply-main-ruleset: break-glass evidence must have mode 0600" >&2
+    return 1
+  fi
+  if ! jq -e -s \
+    --arg schema "$BREAK_GLASS_SCHEMA" \
+    --arg repository "$REPOSITORY" \
+    --arg ruleset_name "$RULESET_NAME" \
+    --arg founder_login "$FOUNDER_LOGIN" \
+    --arg max_seconds "$BREAK_GLASS_MAX_SECONDS" '
+      length == 1 and
+      (.[0] |
+        type == "object" and
+        (keys == [
+          "breakGlass",
+          "expectedForwardPayload",
+          "integritySha256",
+          "operation",
+          "payload",
+          "repository",
+          "rulesetId",
+          "rulesetName",
+          "schemaVersion"
+        ]) and
+        .schemaVersion == $schema and
+        .repository == $repository and
+        .rulesetName == $ruleset_name and
+        .operation == "updated" and
+        (.rulesetId | type == "number" and . == floor and . > 0) and
+        (.integritySha256 | type == "string" and test("^[0-9a-f]{64}$")) and
+        .payload as $prior |
+        .expectedForwardPayload as $forward |
+        .breakGlass as $bg |
+        ($prior | type == "object" and keys == ["bypass_actors", "conditions", "enforcement", "name", "rules", "target"]) and
+        ($forward | type == "object" and keys == ["bypass_actors", "conditions", "enforcement", "name", "rules", "target"]) and
+        $prior.name == $ruleset_name and
+        $prior.target == "branch" and
+        $prior.enforcement == "active" and
+        $prior.bypass_actors == [] and
+        (($forward | .bypass_actors = []) == $prior) and
+        ($bg | type == "object" and keys == [
+          "deadlineEpochSeconds",
+          "founderLogin",
+          "founderUserId",
+          "headSha",
+          "openedAtEpochSeconds",
+          "pullRequest",
+          "requestPayloadSha256",
+          "restorationIssueNumber",
+          "restorationIssueUrl"
+        ]) and
+        ($bg.pullRequest | type == "number" and . == floor and . > 0) and
+        ($bg.headSha | type == "string" and test("^[0-9a-f]{40}$")) and
+        $bg.founderLogin == $founder_login and
+        ($bg.founderUserId | type == "number" and . == floor and . > 0) and
+        ($bg.restorationIssueNumber | type == "number" and . == floor and . > 0) and
+        $bg.restorationIssueUrl == ("https://github.com/" + $repository + "/issues/" + ($bg.restorationIssueNumber | tostring)) and
+        ($bg.requestPayloadSha256 | type == "string" and test("^[0-9a-f]{64}$")) and
+        ($bg.openedAtEpochSeconds | type == "number" and . == floor and . > 0) and
+        ($bg.deadlineEpochSeconds | type == "number" and . == floor) and
+        ($bg.deadlineEpochSeconds > $bg.openedAtEpochSeconds) and
+        (($bg.deadlineEpochSeconds - $bg.openedAtEpochSeconds) <= ($max_seconds | tonumber)) and
+        $forward.bypass_actors == [{
+          actor_id: $bg.founderUserId,
+          actor_type: "User",
+          bypass_mode: "pull_request"
+        }])
+    ' "$backup" >/dev/null 2>&1; then
+    echo "apply-main-ruleset: break-glass evidence schema or binding is invalid" >&2
+    return 1
+  fi
+  unsigned=$(mktemp) || return 1
+  jq -S -s '.[0] | del(.integritySha256)' "$backup" > "$unsigned" || {
+    rm -f "$unsigned"
+    return 1
+  }
+  actual_digest=$(kimen_sha256 "$unsigned") || {
+    rm -f "$unsigned"
+    return 1
+  }
+  rm -f "$unsigned"
+  expected_digest=$(jq -er -s '.[0].integritySha256' "$backup") || return 1
+  if [ "$actual_digest" != "$expected_digest" ]; then
+    echo "apply-main-ruleset: break-glass evidence integrity mismatch" >&2
+    return 1
+  fi
+}
+
 create_creation_intent() {
   local payload="$1"
   local digest
@@ -1334,20 +1516,14 @@ reconcile_ambiguous_creation() {
 }
 
 render_payload() {
-  local team_id="${KIMEN_FOUNDER_TEAM_ID:-}"
   local integrations="${KIMEN_CHECK_INTEGRATIONS_JSON:-}"
-  if ! printf '%s\n' "$team_id" | grep -Eq '^[0-9]+$' || [ "$team_id" -le 1 ]; then
-    echo "apply-main-ruleset: unresolved founder team; set KIMEN_FOUNDER_TEAM_ID to the observed Team ID (>1)" >&2
-    return 1
-  fi
   if ! printf '%s\n' "$integrations" | jq -e 'type == "object"' >/dev/null 2>&1; then
     echo "apply-main-ruleset: KIMEN_CHECK_INTEGRATIONS_JSON must map every observed context to its App ID" >&2
     return 1
   fi
 
-  jq --argjson team "$team_id" --argjson integrations "$integrations" '
-    .bypass_actors[0].actor_id = $team
-    | .rules |= map(
+  jq --argjson integrations "$integrations" '
+    .rules |= map(
         if .type == "required_status_checks" then
           .parameters.required_status_checks |= map(
             .integration_id = ($integrations[.context] // error("missing integration for " + .context))
@@ -1355,7 +1531,7 @@ render_payload() {
         else . end
       )
     | if (
-        (.bypass_actors[0].actor_id | type == "number" and . == floor and . > 1 and . <= 9007199254740991) and
+        .bypass_actors == [] and
         ([.rules[] | select(.type == "required_status_checks")
           | .parameters.required_status_checks[].integration_id]
           | all(type == "number" and . == floor and . > 1 and . <= 9007199254740991))
@@ -1374,6 +1550,25 @@ trusted_review_app_id() {
     return 1
   fi
   printf '%s\n' "$app_id"
+}
+
+render_active_payload() {
+  local initial_payload="$1"
+  local review_app_id="$2"
+
+  jq --arg context "$REVIEW_CONTEXT" --argjson app_id "$review_app_id" '
+    .enforcement = "active"
+    | .rules |= map(
+        if .type == "required_status_checks" then
+          .parameters.required_status_checks += [{context: $context, integration_id: $app_id}]
+        else . end
+      )
+    | if (
+        [.rules[] | select(.type == "required_status_checks")
+          | .parameters.required_status_checks[] | select(.context == $context)]
+        | length == 1
+      ) then . else error("review requirement must exist exactly once") end
+  ' "$initial_payload"
 }
 
 observe_current_review_check() {
@@ -1449,9 +1644,328 @@ observe_current_review_check() {
   fi
 }
 
+observe_authenticated_founder() {
+  local observed
+
+  observed=$(mktemp) || return 1
+  if ! gh api --method GET user > "$observed"; then
+    rm -f "$observed"
+    echo "apply-main-ruleset: authenticated GitHub identity could not be observed" >&2
+    return 1
+  fi
+  if ! jq -e --arg login "$FOUNDER_LOGIN" '
+    .login == $login and
+    .type == "User" and
+    (.id | type == "number" and . == floor and . > 0 and . <= 9007199254740991)
+  ' "$observed" >/dev/null 2>&1; then
+    rm -f "$observed"
+    echo "apply-main-ruleset: authenticated GitHub user must be the canonical founder MarsGotta" >&2
+    return 1
+  fi
+  FOUNDER_USER_ID=$(jq -er '.id' "$observed") || {
+    rm -f "$observed"
+    return 1
+  }
+  rm -f "$observed"
+}
+
+observe_break_glass_request() {
+  local pull_request="$1"
+  local expected_head="${2:-}"
+  local expected_payload_sha256="${3:-}"
+  local event_payload
+  local issue_payload
+  local parsed_payload
+  local pr_payload
+
+  pr_payload=$(mktemp) || return 1
+  event_payload=$(mktemp) || {
+    rm -f "$pr_payload"
+    return 1
+  }
+  parsed_payload=$(mktemp) || {
+    rm -f "$pr_payload" "$event_payload"
+    return 1
+  }
+  issue_payload=$(mktemp) || {
+    rm -f "$pr_payload" "$event_payload" "$parsed_payload"
+    return 1
+  }
+  if ! gh api --method GET "repos/$REPOSITORY/pulls/$pull_request" > "$pr_payload"; then
+    rm -f "$pr_payload" "$event_payload" "$parsed_payload" "$issue_payload"
+    echo "apply-main-ruleset: break-glass PR could not be observed" >&2
+    return 1
+  fi
+  if ! jq -e --argjson pull_request "$pull_request" --arg login "$FOUNDER_LOGIN" '
+    .number == $pull_request and
+    .user.login == $login and
+    .base.ref == "main" and
+    (.head.sha | type == "string" and test("^[0-9a-f]{40}$")) and
+    (.state == "open" or .state == "closed") and
+    (.merged == true or .merged == false)
+  ' "$pr_payload" >/dev/null 2>&1; then
+    rm -f "$pr_payload" "$event_payload" "$parsed_payload" "$issue_payload"
+    echo "apply-main-ruleset: break-glass PR must be a founder-authored PR targeting main with observable state" >&2
+    return 1
+  fi
+  BREAK_GLASS_HEAD=$(jq -er '.head.sha' "$pr_payload") || return 1
+  if [ -n "$expected_head" ] && [ "$BREAK_GLASS_HEAD" != "$expected_head" ]; then
+    rm -f "$pr_payload" "$event_payload" "$parsed_payload" "$issue_payload"
+    echo "apply-main-ruleset: break-glass PR head revision changed during the session" >&2
+    return 1
+  fi
+  if ! jq -S --arg repository "$REPOSITORY" '
+    {repository: {full_name: $repository}, pull_request: .}
+  ' "$pr_payload" > "$event_payload"; then
+    rm -f "$pr_payload" "$event_payload" "$parsed_payload" "$issue_payload"
+    return 1
+  fi
+  if ! GITHUB_ACTOR="$FOUNDER_LOGIN" \
+    GITHUB_EVENT_NAME=pull_request_target \
+    GITHUB_EVENT_PATH="$event_payload" \
+    GITHUB_REPOSITORY="$REPOSITORY" \
+    KIMEN_BREAK_GLASS_LABEL=break-glass \
+    KIMEN_FOUNDER_LOGIN="$FOUNDER_LOGIN" \
+    node .github/scripts/review-evidence.cjs break-glass-payload-event > "$parsed_payload" ||
+    ! node .github/scripts/review-evidence.cjs validate-break-glass < "$parsed_payload" >/dev/null; then
+    rm -f "$pr_payload" "$event_payload" "$parsed_payload" "$issue_payload"
+    echo "apply-main-ruleset: live break-glass PR label, author, justification or restoration marker is invalid" >&2
+    return 1
+  fi
+  OBSERVED_BREAK_GLASS_REQUEST_SHA256=$(kimen_sha256 "$parsed_payload") || {
+    rm -f "$pr_payload" "$event_payload" "$parsed_payload" "$issue_payload"
+    return 1
+  }
+  if [ -n "$expected_payload_sha256" ] &&
+    [ "$OBSERVED_BREAK_GLASS_REQUEST_SHA256" != "$expected_payload_sha256" ]; then
+    rm -f "$pr_payload" "$event_payload" "$parsed_payload" "$issue_payload"
+    echo "apply-main-ruleset: validated request payload changed during the break-glass session" >&2
+    return 1
+  fi
+  BREAK_GLASS_REQUEST_PAYLOAD_SHA256="$OBSERVED_BREAK_GLASS_REQUEST_SHA256"
+  BREAK_GLASS_ISSUE_URL=$(jq -er '.request.restorationIssue' "$parsed_payload") || return 1
+  if ! BREAK_GLASS_ISSUE_NUMBER=$(jq -er --arg prefix "https://github.com/$REPOSITORY/issues/" '
+    .request.restorationIssue
+    | select(startswith($prefix))
+    | ltrimstr($prefix)
+    | select(test("^[1-9][0-9]*$"))
+    | tonumber
+  ' "$parsed_payload"); then
+    rm -f "$pr_payload" "$event_payload" "$parsed_payload" "$issue_payload"
+    echo "apply-main-ruleset: restoration issue number could not be parsed" >&2
+    return 1
+  fi
+  if ! gh api --method GET "repos/$REPOSITORY/issues/$BREAK_GLASS_ISSUE_NUMBER" > "$issue_payload" ||
+    ! jq -e --argjson issue "$BREAK_GLASS_ISSUE_NUMBER" --arg url "$BREAK_GLASS_ISSUE_URL" '
+      .number == $issue and
+      .state == "open" and
+      .html_url == $url and
+      (has("pull_request") | not)
+    ' "$issue_payload" >/dev/null 2>&1; then
+    rm -f "$pr_payload" "$event_payload" "$parsed_payload" "$issue_payload"
+    echo "apply-main-ruleset: restoration issue must exist, remain open and must not be a pull request" >&2
+    return 1
+  fi
+  BREAK_GLASS_PR_STATE=$(jq -er '.state' "$pr_payload") || return 1
+  BREAK_GLASS_PR_MERGED=$(jq -r '.merged == true' "$pr_payload") || return 1
+  rm -f "$pr_payload" "$event_payload" "$parsed_payload" "$issue_payload"
+}
+
 if [ "$MODE" = "--render" ]; then
   render_payload
   exit 0
+fi
+
+if [ "$MODE" = "--close-break-glass" ]; then
+  BREAK_GLASS_EVIDENCE="${2:-}"
+  REPOSITORY="${KIMEN_GITHUB_REPOSITORY:-kimen-dev/kimen}"
+  validate_repository "$REPOSITORY"
+  require_exclusive_writer_confirmation
+  CLOSE_SNAPSHOT_DIR=$(make_private_snapshot_directory)
+  close_break_glass_cleanup() {
+    local status=$?
+    trap - EXIT
+    if ! release_exclusive_writer_lock; then
+      status=1
+    fi
+    rm -rf "$CLOSE_SNAPSHOT_DIR"
+    exit "$status"
+  }
+  trap close_break_glass_cleanup EXIT
+  freeze_evidence_pair "$BREAK_GLASS_EVIDENCE" "$CLOSE_SNAPSHOT_DIR"
+  BREAK_GLASS_SNAPSHOT="$FROZEN_EVIDENCE_PATH"
+  validate_break_glass_backup "$BREAK_GLASS_SNAPSHOT"
+  prepare_secure_evidence_directory "$BACKUP_DIR"
+  acquire_or_adopt_recovery_lock break-glass-rollback \
+    "$BREAK_GLASS_EVIDENCE" "$BREAK_GLASS_SNAPSHOT"
+  if ! require_github_access || ! observe_authenticated_founder; then
+    if [ "$WRITER_LOCK_ADOPTED" = true ]; then
+      set_writer_lock_state recovery-ready close-break-glass break-glass-rollback \
+        "$BREAK_GLASS_EVIDENCE" "$BREAK_GLASS_SNAPSHOT" || true
+    else
+      set_writer_lock_state releasable || true
+    fi
+    exit 1
+  fi
+  EVIDENCE_FOUNDER_USER_ID=$(jq -er -s '.[0].breakGlass.founderUserId' "$BREAK_GLASS_SNAPSHOT")
+  if [ "$EVIDENCE_FOUNDER_USER_ID" != "$FOUNDER_USER_ID" ]; then
+    if [ "$WRITER_LOCK_ADOPTED" = true ]; then
+      set_writer_lock_state recovery-ready close-break-glass break-glass-rollback \
+        "$BREAK_GLASS_EVIDENCE" "$BREAK_GLASS_SNAPSHOT" || true
+    else
+      set_writer_lock_state releasable || true
+    fi
+    echo "apply-main-ruleset: authenticated founder ID does not match break-glass evidence" >&2
+    exit 1
+  fi
+  set_writer_lock_state mutating close-break-glass break-glass-rollback \
+    "$BREAK_GLASS_EVIDENCE" "$BREAK_GLASS_SNAPSHOT"
+  if ! rollback_backup "$BREAK_GLASS_SNAPSHOT"; then
+    set_writer_lock_state recovery-ready close-break-glass break-glass-rollback \
+      "$BREAK_GLASS_EVIDENCE" "$BREAK_GLASS_SNAPSHOT" || true
+    echo "apply-main-ruleset: break-glass revocation remains unresolved; exact recovery evidence retained" >&2
+    exit 1
+  fi
+  set_writer_lock_state releasable
+  release_exclusive_writer_lock
+  echo "apply-main-ruleset: PASS — temporary break-glass bypass is revoked; evidence: $BREAK_GLASS_EVIDENCE"
+  exit 0
+fi
+
+if [ "$MODE" = "--open-break-glass" ]; then
+  BREAK_GLASS_PULL_REQUEST="${2:-}"
+  BREAK_GLASS_TIMEOUT="${KIMEN_BREAK_GLASS_TIMEOUT_SECONDS:-$BREAK_GLASS_MAX_SECONDS}"
+  REPOSITORY="${KIMEN_GITHUB_REPOSITORY:-kimen-dev/kimen}"
+  validate_repository "$REPOSITORY"
+  if ! jq -en --arg value "$BREAK_GLASS_PULL_REQUEST" '
+    $value | test("^[0-9]+$") and (tonumber | . == floor and . > 0)
+  ' >/dev/null; then
+    echo "apply-main-ruleset: --open-break-glass requires one positive PR number" >&2
+    exit 2
+  fi
+  if ! printf '%s\n' "$BREAK_GLASS_TIMEOUT" | grep -Eq '^[0-9]+$' ||
+    [ "$BREAK_GLASS_TIMEOUT" -lt 1 ] || [ "$BREAK_GLASS_TIMEOUT" -gt "$BREAK_GLASS_MAX_SECONDS" ]; then
+    echo "apply-main-ruleset: break-glass timeout must be between 1 and $BREAK_GLASS_MAX_SECONDS seconds" >&2
+    exit 2
+  fi
+  if [ "${KIMEN_CONFIRM_BREAK_GLASS_SESSION:-}" != "$BREAK_GLASS_CONFIRMATION" ]; then
+    echo "apply-main-ruleset: exact break-glass confirmation missing" >&2
+    exit 1
+  fi
+  require_exclusive_writer_confirmation
+  prepare_secure_evidence_directory "$BACKUP_DIR"
+  BREAK_GLASS_INITIAL=$(mktemp)
+  BREAK_GLASS_BASELINE=$(mktemp)
+  BREAK_GLASS_FORWARD=$(mktemp)
+  BREAK_GLASS_EVIDENCE=""
+  BREAK_GLASS_SNAPSHOT=""
+  BREAK_GLASS_SNAPSHOT_DIR=""
+  BREAK_GLASS_GRANTED=false
+  BREAK_GLASS_REVOKED=false
+  BREAK_GLASS_MERGED=false
+  break_glass_session_cleanup() {
+    local status=$?
+    trap - EXIT INT TERM
+    if [ "$BREAK_GLASS_GRANTED" = true ] && [ "$BREAK_GLASS_REVOKED" != true ]; then
+      if rollback_backup "$BREAK_GLASS_SNAPSHOT"; then
+        BREAK_GLASS_REVOKED=true
+        set_writer_lock_state releasable || status=1
+      else
+        set_writer_lock_state recovery-ready open-break-glass break-glass-rollback \
+          "$BREAK_GLASS_EVIDENCE" "$BREAK_GLASS_SNAPSHOT" || true
+        echo "apply-main-ruleset: CRITICAL — break-glass bypass could not be revoked; run --close-break-glass with exact evidence: $BREAK_GLASS_EVIDENCE" >&2
+        status=1
+      fi
+    elif [ "$WRITER_LOCK_HELD" = true ] && [ "$WRITER_LOCK_STATE" = releasable ]; then
+      :
+    fi
+    if [ "$WRITER_LOCK_HELD" = true ] && [ "$WRITER_LOCK_STATE" = releasable ]; then
+      release_exclusive_writer_lock || status=1
+    fi
+    rm -f "$BREAK_GLASS_INITIAL" "$BREAK_GLASS_BASELINE" "$BREAK_GLASS_FORWARD"
+    [ -z "$BREAK_GLASS_SNAPSHOT_DIR" ] || rm -rf "$BREAK_GLASS_SNAPSHOT_DIR"
+    if [ "$status" -eq 0 ] && [ "$BREAK_GLASS_MERGED" = true ] && [ "$BREAK_GLASS_REVOKED" = true ]; then
+      echo "apply-main-ruleset: PASS — founder merge observed and temporary bypass revoked; evidence: $BREAK_GLASS_EVIDENCE"
+    fi
+    exit "$status"
+  }
+  trap break_glass_session_cleanup EXIT
+  trap 'echo "apply-main-ruleset: break-glass session interrupted; revoking temporary bypass" >&2; exit 130' INT TERM
+  acquire_exclusive_writer_lock
+  require_github_access
+  observe_authenticated_founder
+  render_payload > "$BREAK_GLASS_INITIAL"
+  REVIEW_APP_ID=$(trusted_review_app_id)
+  render_active_payload "$BREAK_GLASS_INITIAL" "$REVIEW_APP_ID" > "$BREAK_GLASS_BASELINE"
+  BREAK_GLASS_RULESET_ID=$(gh api --method GET -F includes_parents=false \
+    "repos/$REPOSITORY/rulesets" --paginate \
+    --jq ".[] | select(.source_type == \"Repository\" and .source == \"$REPOSITORY\" and .name == \"$RULESET_NAME\") | .id")
+  if ! jq -en --arg id "$BREAK_GLASS_RULESET_ID" '
+    $id | test("^[0-9]+$") and (tonumber | . == floor and . > 0)
+  ' >/dev/null; then
+    echo "apply-main-ruleset: break-glass requires exactly one active $RULESET_NAME ruleset" >&2
+    exit 1
+  fi
+  observe_ruleset_exact "$BREAK_GLASS_RULESET_ID" "$BREAK_GLASS_BASELINE"
+  observe_break_glass_request "$BREAK_GLASS_PULL_REQUEST"
+  if [ "$BREAK_GLASS_PR_STATE" != open ] || [ "$BREAK_GLASS_PR_MERGED" != false ]; then
+    echo "apply-main-ruleset: break-glass can open only for a current unmerged PR" >&2
+    exit 1
+  fi
+  BREAK_GLASS_OPENED_AT=$(date +%s)
+  BREAK_GLASS_DEADLINE=$((BREAK_GLASS_OPENED_AT + BREAK_GLASS_TIMEOUT))
+  jq --argjson founder_user_id "$FOUNDER_USER_ID" '
+    .bypass_actors = [{
+      actor_id: $founder_user_id,
+      actor_type: "User",
+      bypass_mode: "pull_request"
+    }]
+  ' "$BREAK_GLASS_BASELINE" > "$BREAK_GLASS_FORWARD"
+  BREAK_GLASS_EVIDENCE=$(create_break_glass_backup \
+    "$BREAK_GLASS_RULESET_ID" "$BREAK_GLASS_BASELINE" "$BREAK_GLASS_FORWARD" \
+    "$BREAK_GLASS_PULL_REQUEST" "$BREAK_GLASS_HEAD" "$FOUNDER_USER_ID" \
+    "$BREAK_GLASS_ISSUE_NUMBER" "$BREAK_GLASS_ISSUE_URL" \
+    "$BREAK_GLASS_REQUEST_PAYLOAD_SHA256" "$BREAK_GLASS_OPENED_AT" "$BREAK_GLASS_DEADLINE")
+  BREAK_GLASS_SNAPSHOT_DIR=$(make_private_snapshot_directory)
+  freeze_evidence_pair "$BREAK_GLASS_EVIDENCE" "$BREAK_GLASS_SNAPSHOT_DIR"
+  BREAK_GLASS_SNAPSHOT="$FROZEN_EVIDENCE_PATH"
+  validate_break_glass_backup "$BREAK_GLASS_SNAPSHOT"
+  set_writer_lock_state mutating open-break-glass break-glass-rollback \
+    "$BREAK_GLASS_EVIDENCE" "$BREAK_GLASS_SNAPSHOT"
+  BREAK_GLASS_GRANTED=true
+  if ! gh api --method PUT "repos/$REPOSITORY/rulesets/$BREAK_GLASS_RULESET_ID" \
+    --input "$BREAK_GLASS_FORWARD" >/dev/null ||
+    ! observe_ruleset_exact "$BREAK_GLASS_RULESET_ID" "$BREAK_GLASS_FORWARD"; then
+    echo "apply-main-ruleset: temporary break-glass grant was not confirmed; revoking" >&2
+    exit 1
+  fi
+  echo "apply-main-ruleset: BREAK-GLASS OPEN for PR #$BREAK_GLASS_PULL_REQUEST until epoch $BREAK_GLASS_DEADLINE; merge manually now; evidence: $BREAK_GLASS_EVIDENCE" >&2
+  while :; do
+    if ! observe_break_glass_request "$BREAK_GLASS_PULL_REQUEST" "$BREAK_GLASS_HEAD" \
+      "$BREAK_GLASS_REQUEST_PAYLOAD_SHA256"; then
+      echo "apply-main-ruleset: live PR/body/label/issue observation failed; revoking temporary bypass" >&2
+      exit 1
+    fi
+    if [ "$BREAK_GLASS_PR_STATE" = closed ] && [ "$BREAK_GLASS_PR_MERGED" = true ]; then
+      BREAK_GLASS_MERGED=true
+      exit 0
+    fi
+    if [ "$BREAK_GLASS_PR_STATE" != open ] || [ "$BREAK_GLASS_PR_MERGED" != false ]; then
+      echo "apply-main-ruleset: PR entered an unexpected state before merge; revoking temporary bypass" >&2
+      exit 1
+    fi
+    BREAK_GLASS_NOW=$(date +%s)
+    if [ "$BREAK_GLASS_NOW" -ge "$BREAK_GLASS_DEADLINE" ]; then
+      echo "apply-main-ruleset: break-glass deadline reached without merge; revoking temporary bypass" >&2
+      exit 1
+    fi
+    BREAK_GLASS_REMAINING=$((BREAK_GLASS_DEADLINE - BREAK_GLASS_NOW))
+    if [ "$BREAK_GLASS_REMAINING" -gt 2 ]; then
+      sleep 2
+    else
+      sleep "$BREAK_GLASS_REMAINING"
+    fi
+  done
 fi
 
 if [ "$MODE" = "--rollback" ]; then
@@ -1571,7 +2085,7 @@ if [ "$MODE" = "--claim-create" ]; then
 fi
 
 if [ "$MODE" != "--apply-disabled" ] && [ "$MODE" != "--activate" ]; then
-  echo "usage: apply-main-ruleset.sh --render|--apply-disabled|--activate|--rollback <backup>|--claim-create <intent> <ruleset-id>" >&2
+  echo "usage: apply-main-ruleset.sh --render|--apply-disabled|--activate|--open-break-glass <pr>|--close-break-glass <evidence>|--rollback <backup>|--claim-create <intent> <ruleset-id>" >&2
   exit 2
 fi
 
@@ -1615,19 +2129,7 @@ if [ "$MODE" = "--activate" ]; then
   INITIAL_PAYLOAD=$(mktemp)
   cp "$PAYLOAD" "$INITIAL_PAYLOAD"
   observe_current_review_check
-  jq --arg context "$REVIEW_CONTEXT" --argjson app_id "$REVIEW_APP_ID" '
-    .enforcement = "active"
-    | .rules |= map(
-        if .type == "required_status_checks" then
-          .parameters.required_status_checks += [{context: $context, integration_id: $app_id}]
-        else . end
-      )
-    | if (
-        [.rules[] | select(.type == "required_status_checks")
-          | .parameters.required_status_checks[] | select(.context == $context)]
-        | length == 1
-      ) then . else error("review requirement must exist exactly once") end
-  ' "$PAYLOAD" > "$PAYLOAD.active"
+  render_active_payload "$PAYLOAD" "$REVIEW_APP_ID" > "$PAYLOAD.active"
   mv "$PAYLOAD.active" "$PAYLOAD"
 elif ! jq -e '.enforcement == "disabled"' "$PAYLOAD" >/dev/null; then
   echo "apply-main-ruleset: --apply-disabled requires a disabled payload" >&2

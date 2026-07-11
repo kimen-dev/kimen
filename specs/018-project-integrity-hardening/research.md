@@ -97,14 +97,27 @@ it. It targets only `refs/heads/main` and requires:
 - strict, current required checks bound to their actual GitHub App IDs;
 - no deletion or non-fast-forward update;
 - zero human approvals, appropriate for one founder; and
-- founder break-glass only through a PR (`bypass_mode: pull_request`), never an
-  unconditional/exempt bypass.
+- no standing break-glass actor in the active-at-rest payload.
 
 A `break-glass` PR uses a founder-only label and required template fields for
 written justification plus a restoration issue. A deterministic workflow
-checks actor, PR mode, fields and audit linkage. GitHub's ultimate founder
-bypass remains a human constitutional control, but no desired-policy payload
-grants `always`/`exempt` authority and remote smoke verifies the audit record.
+checks actor, fields and audit linkage. Because GitHub's `pull_request` bypass
+can skip every rule in its ruleset, the desired policy grants nobody permanent
+bypass authority. An authenticated founder-only controller instead opens a
+blocking session for at most 600 seconds: it re-reads the current PR/head,
+label, exact validated request payload and open restoration issue; persists a
+digest-bound rollback record; temporarily grants the observed founder `User`
+actor `pull_request` mode; and polls without a merge API until the founder
+merges manually. Merge, timeout, signal, revision/body/base/state drift or an
+observation failure restores the exact zero-bypass payload. An unresolved
+restore retains recovery-ready evidence for explicit idempotent close.
+
+The process-local session cannot make GitHub's actor grant PR-specific. During
+the bounded window the founder could bypass another founder PR, and an
+untrappable process/host death can leave the remote grant present behind a
+non-adoptable `mutating` lock until manual inspection. Eliminating both limits
+requires a dedicated GitHub App that performs the exact merge, which would
+replace the approved founder-performed human merge and is not introduced here.
 
 The required check inventory is taken from successful recent PRs immediately
 before activation. The initial set covers deterministic gates, Semgrep,

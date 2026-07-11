@@ -1,6 +1,6 @@
 // @spec:018-project-integrity-hardening
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import {
   chmod,
   link,
@@ -25,9 +25,13 @@ const currentHeadSha = '1111111111111111111111111111111111111111';
 const staleHeadSha = '2222222222222222222222222222222222222222';
 const reviewAppId = 30_001;
 const reviewPullRequest = 42;
+const founderLogin = 'MarsGotta';
+const founderUserId = 9_072_675;
+const restorationIssue = 123;
 const rollbackSchema = 'kimen-ruleset-rollback-v1';
 const createIntentSchema = 'kimen-ruleset-create-intent-v1';
 const exclusiveWriterConfirmation = 'founder-confirms-exclusive-ruleset-writer';
+const breakGlassConfirmation = 'founder-opens-current-pr-only-bypass';
 const subjectPath = fileURLToPath(
   new URL('../../.github/scripts/review-evidence.cjs', import.meta.url),
 );
@@ -52,6 +56,10 @@ function cloneJson(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function aUserBypass(actorId) {
+  return { actor_id: actorId, actor_type: 'User', bypass_mode: 'pull_request' };
+}
+
 function missingSecurityFamilies(requiredChecks) {
   const contexts = requiredChecks.map(({ context }) => context).join('\n');
   return [
@@ -71,17 +79,17 @@ function aBreakGlassRequest(overrides = {}) {
   return {
     policy: {
       repository: 'kimen-dev/kimen',
-      founderLogin: 'marsgotta',
+      founderLogin,
       requiredLabel: 'break-glass',
       bypassMode: 'pull_request',
     },
     event: {
       eventName: 'pull_request_target',
       repository: 'kimen-dev/kimen',
-      actor: 'marsgotta',
+      actor: founderLogin,
       pullRequest: {
         number: 42,
-        author: 'marsgotta',
+        author: founderLogin,
         headSha: currentHeadSha,
         labels: ['break-glass'],
       },
@@ -135,12 +143,14 @@ const fakeGhSource = [
   "const methodIndex = args.indexOf('--method');",
   "const method = methodIndex === -1 ? 'GET' : args[methodIndex + 1];",
   "const inputIndex = args.indexOf('--input');",
+  "if (endpoint === '' && args.includes('user') && method === 'GET') { save(); process.stdout.write(JSON.stringify(state.authenticatedUser) + '\\n'); process.exit(0); }",
   "if (endpoint.endsWith('/pulls/42') && method === 'GET') { save(); process.stdout.write(JSON.stringify(state.pullRequest) + '\\n'); process.exit(0); }",
+  "if (endpoint.endsWith('/issues/123') && method === 'GET') { save(); process.stdout.write(JSON.stringify(state.restorationIssue) + '\\n'); process.exit(0); }",
   "if (/\\/commits\\/[0-9a-f]{40}\\/check-runs$/i.test(endpoint) && method === 'GET') { save(); process.stdout.write(JSON.stringify({ total_count: state.checkRuns.length, check_runs: state.checkRuns }) + '\\n'); process.exit(0); }",
   "const excludesParents = args.includes('includes_parents=false');",
   "if (endpoint.endsWith('/rulesets') && method === 'GET') { if (process.env.FAKE_GH_SWAP_BACKUP_ANCESTOR && !state.ancestorSwapped) { const ancestor = process.env.FAKE_GH_SWAP_BACKUP_ANCESTOR; const backup = process.env.FAKE_GH_SWAP_BACKUP_DIRECTORY; renameSync(ancestor, ancestor + '.original'); mkdirSync(ancestor, { mode: 0o700 }); renameSync(ancestor + '.original' + backup.slice(ancestor.length), backup); state.ancestorSwapped = true; } if (state.existingId) process.stdout.write(String(state.existingId) + '\\n'); if (!excludesParents && state.inheritedId) process.stdout.write(String(state.inheritedId) + '\\n'); save(); process.exit(0); }",
   "if (endpoint.endsWith('/rulesets') && method === 'POST') { const entries = readdirSync(process.env.KIMEN_RULESET_BACKUP_DIR); const intent = entries.find((entry) => entry.startsWith('create-intent-') && !entry.endsWith('.sha256')); state.journalBeforePost = Boolean(intent && entries.includes(intent + '.sha256') && (statSync(process.env.KIMEN_RULESET_BACKUP_DIR + '/' + intent).mode & 0o777) === 0o600); if (process.env.KIMEN_FSYNC_LOG) appendFileSync(process.env.KIMEN_FSYNC_LOG, 'REMOTE POST\\n'); const postMode = process.env.FAKE_GH_POST_MODE; if (postMode === 'error-no-mutate') { save(); process.exit(1); } if (postMode === 'concurrent-error-no-mutate') { state.payload = JSON.parse(readFileSync(args[inputIndex + 1], 'utf8')); state.existingId = 88; state.concurrentCreation = true; save(); process.exit(1); } state.payload = JSON.parse(readFileSync(args[inputIndex + 1], 'utf8')); state.existingId = 77; state.mutationCount = (state.mutationCount || 0) + 1; save(); if (process.env.FAKE_GH_BREAK_BACKUP_DIR === '1') chmodSync(process.env.KIMEN_RULESET_BACKUP_DIR, 0o500); if (postMode === 'mutate-error') process.exit(1); if (postMode === 'malformed-success') { process.stdout.write('{malformed\\n'); process.exit(0); } process.stdout.write('{\"id\":77}\\n'); process.exit(0); }",
-  "if (/\\/rulesets\\/[0-9]+$/.test(endpoint) && method === 'PUT') { const input = args[inputIndex + 1] === '-' ? readFileSync(0, 'utf8') : readFileSync(args[inputIndex + 1], 'utf8'); const requested = JSON.parse(input); const putMode = process.env.FAKE_GH_PUT_MODE; if (process.env.FAKE_GH_PUT_NOOP !== '1' && putMode !== 'error-no-mutate') { state.payload = requested; state.mutationCount = (state.mutationCount || 0) + 1; } save(); if (putMode === 'mutate-error' || putMode === 'error-no-mutate') process.exit(1); process.stdout.write(JSON.stringify(requested) + '\\n'); process.exit(0); }",
+  "if (/\\/rulesets\\/[0-9]+$/.test(endpoint) && method === 'PUT') { const input = args[inputIndex + 1] === '-' ? readFileSync(0, 'utf8') : readFileSync(args[inputIndex + 1], 'utf8'); const requested = JSON.parse(input); state.putPayloads = [...(state.putPayloads || []), requested]; const putNumber = state.putPayloads.length; const putMode = String(putNumber) === process.env.FAKE_GH_PUT_ERROR_ON_N ? 'error-no-mutate' : process.env.FAKE_GH_PUT_MODE; if (process.env.FAKE_GH_PUT_NOOP !== '1' && putMode !== 'error-no-mutate') { state.payload = requested; state.mutationCount = (state.mutationCount || 0) + 1; if (requested.bypass_actors?.length === 1) { if (process.env.FAKE_GH_MERGE_AFTER_GRANT === '1') { state.pullRequest.state = 'closed'; state.pullRequest.merged = true; state.pullRequest.merge_commit_sha = '3333333333333333333333333333333333333333'; } if (process.env.FAKE_GH_CHANGE_HEAD_AFTER_GRANT === '1') state.pullRequest.head.sha = '2222222222222222222222222222222222222222'; if (process.env.FAKE_GH_EDIT_BODY_AFTER_GRANT === '1') state.pullRequest.body = state.pullRequest.body.replace('urgent repair', 'different emergency'); } } save(); if (putMode === 'mutate-error' || putMode === 'error-no-mutate') process.exit(1); process.stdout.write(JSON.stringify(requested) + '\\n'); process.exit(0); }",
   "if (/\\/rulesets\\/[0-9]+$/.test(endpoint) && method === 'GET') { const include = args.includes('--include'); const forcedStatus = process.env.FAKE_GH_DETAIL_GET_HTTP_STATUS; const requestedId = Number(endpoint.slice(endpoint.lastIndexOf('/') + 1)); const inherited = state.inheritedId === requestedId; if (process.env.FAKE_GH_DETAIL_GET_NETWORK_ERROR === '1' || process.env.FAKE_GH_DETAIL_GET_ERROR === '1' || (process.env.FAKE_GH_DETAIL_GET_ERROR_AFTER_MUTATION === '1' && (state.mutationCount || 0) > 0)) { save(); process.exit(1); } if (forcedStatus) { if (include) process.stdout.write('HTTP/2 ' + forcedStatus + ' Forced\\n\\n'); save(); process.exit(1); } if (process.env.FAKE_GH_DETAIL_GET_ERROR_ONCE_AFTER_MUTATION === '1' && (state.mutationCount || 0) > 0 && !state.detailGetErrorUsed) { state.detailGetErrorUsed = true; save(); process.exit(1); } if ((!state.existingId && !inherited) || (inherited && excludesParents)) { if (include) process.stdout.write('HTTP/2 404 Not Found\\n\\n'); save(); process.exit(1); } if (include) process.stdout.write('HTTP/2 200 OK\\n\\n'); const selectedId = inherited ? state.inheritedId : state.existingId; const responseId = process.env.FAKE_GH_DETAIL_ID_OVERRIDE ? Number(process.env.FAKE_GH_DETAIL_ID_OVERRIDE) : selectedId; const selectedPayload = inherited ? state.inheritedPayload : state.payload; const sourceType = process.env.FAKE_GH_DETAIL_SOURCE_TYPE || (inherited ? 'Organization' : 'Repository'); const source = process.env.FAKE_GH_DETAIL_SOURCE || (inherited ? 'kimen-dev' : 'kimen-dev/kimen'); const payload = { id: responseId, source_type: sourceType, source, ...structuredClone(selectedPayload) }; const mismatch = process.env.FAKE_GH_MISMATCH; if ((mismatch === 'once-after-mutation' && (state.mutationCount || 0) > 0 && !state.mismatchUsed) || (mismatch === 'active-once' && payload.enforcement === 'active' && !state.mismatchUsed)) { state.mismatchUsed = true; payload.enforcement = payload.enforcement === 'active' ? 'disabled' : 'active'; } if (process.env.FAKE_GH_SWAP_WRITER_LOCK_AFTER_MUTATION === '1' && (state.mutationCount || 0) > 0 && !state.writerLockSwapped) { const lock = process.env.KIMEN_RULESET_BACKUP_DIR + '/.exclusive-writer.lock'; renameSync(lock, lock + '.original'); mkdirSync(lock, { mode: 0o700 }); state.writerLockSwapped = true; } save(); process.stdout.write(JSON.stringify(payload) + '\\n'); process.exit(0); }",
   "if (/\\/rulesets\\/[0-9]+$/.test(endpoint) && method === 'DELETE') { const deleteMode = process.env.FAKE_GH_DELETE_MODE; if (process.env.FAKE_GH_DELETE_NOOP !== '1' && deleteMode !== 'error-no-mutate') { state.deleted = true; state.existingId = null; state.mutationCount = (state.mutationCount || 0) + 1; } save(); if (deleteMode === 'mutate-error' || deleteMode === 'error-no-mutate') process.exit(1); process.exit(0); }",
   'save();',
@@ -159,14 +169,31 @@ async function createFakeGitHub(t) {
     statePath,
     JSON.stringify({
       calls: [],
+      putPayloads: [],
       payload: null,
       existingId: null,
       deleted: false,
       pullRequest: {
         number: reviewPullRequest,
         state: 'open',
+        merged: false,
+        user: { login: founderLogin },
         base: { ref: 'main' },
         head: { sha: currentHeadSha },
+        labels: [{ name: 'break-glass' }],
+        body: [
+          '<!-- break-glass-justification -->',
+          'A required security scanner is unavailable during an urgent repair.',
+          '<!-- break-glass-restoration-issue -->',
+          `https://github.com/kimen-dev/kimen/issues/${restorationIssue}`,
+          '<!-- break-glass-end -->',
+        ].join('\n'),
+      },
+      authenticatedUser: { id: founderUserId, login: founderLogin, type: 'User' },
+      restorationIssue: {
+        number: restorationIssue,
+        state: 'open',
+        html_url: `https://github.com/kimen-dev/kimen/issues/${restorationIssue}`,
       },
       checkRuns: [
         {
@@ -211,13 +238,94 @@ async function liveRulesetEnvironment(fake, overrides = {}) {
     ...process.env,
     PATH: `${fake.directory}:${process.env.PATH}`,
     FAKE_GH_STATE: fake.statePath,
-    KIMEN_FOUNDER_TEAM_ID: '4242',
     KIMEN_CHECK_INTEGRATIONS_JSON: JSON.stringify(integrations),
     KIMEN_CONFIRM_EXCLUSIVE_RULESET_WRITER: exclusiveWriterConfirmation,
+    KIMEN_CONFIRM_BREAK_GLASS_SESSION: breakGlassConfirmation,
+    KIMEN_BREAK_GLASS_TIMEOUT_SECONDS: '1',
     KIMEN_REVIEW_PULL_REQUEST: String(reviewPullRequest),
     KIMEN_RULESET_BACKUP_DIR: fake.backupDirectory,
     ...overrides,
   };
+}
+
+async function activateMainRuleset(fake, env) {
+  const applied = spawnSync('bash', [applyRulesetPath, '--apply-disabled'], {
+    encoding: 'utf8',
+    env,
+  });
+  assert.equal(applied.status, 0, applied.stderr || applied.stdout);
+  const activated = spawnSync('bash', [applyRulesetPath, '--activate'], {
+    encoding: 'utf8',
+    env: {
+      ...env,
+      KIMEN_CONFIRM_RULESET_ACTIVATION: 'activate-current-green-revision',
+    },
+  });
+  assert.equal(activated.status, 0, activated.stderr || activated.stdout);
+  await updateFakeGitHubState(fake, { calls: [], putPayloads: [] });
+}
+
+function openBreakGlass(env, overrides = {}) {
+  return spawnSync('bash', [applyRulesetPath, '--open-break-glass', String(reviewPullRequest)], {
+    encoding: 'utf8',
+    env: { ...env, ...overrides },
+    timeout: 10_000,
+  });
+}
+
+function closeBreakGlass(evidence, env, overrides = {}) {
+  return spawnSync('bash', [applyRulesetPath, '--close-break-glass', evidence], {
+    encoding: 'utf8',
+    env: { ...env, ...overrides },
+    timeout: 10_000,
+  });
+}
+
+function terminateBreakGlassAfterGrant(env) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(
+      'bash',
+      [applyRulesetPath, '--open-break-glass', String(reviewPullRequest)],
+      {
+        env: { ...env, KIMEN_BREAK_GLASS_TIMEOUT_SECONDS: '30' },
+        stdio: ['ignore', 'pipe', 'pipe'],
+      },
+    );
+    let stderr = '';
+    let stdout = '';
+    let terminated = false;
+    const timeout = setTimeout(() => {
+      child.kill('SIGKILL');
+      reject(new Error(`break-glass session did not open before test timeout\n${stderr}`));
+    }, 20_000);
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk;
+    });
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk;
+      if (!terminated && stderr.includes('BREAK-GLASS OPEN')) {
+        terminated = true;
+        child.kill('SIGTERM');
+      }
+    });
+    child.on('error', (error) => {
+      clearTimeout(timeout);
+      reject(error);
+    });
+    child.on('close', (code, signal) => {
+      clearTimeout(timeout);
+      resolve({ code, signal, stderr, stdout });
+    });
+  });
+}
+
+async function breakGlassEvidence(fake) {
+  const entries = await readdir(fake.backupDirectory);
+  const evidence = entries.find(
+    (entry) => entry.startsWith('break-glass-') && !entry.endsWith('.sha256'),
+  );
+  assert.ok(evidence, 'break-glass session must persist recovery evidence');
+  return join(fake.backupDirectory, evidence);
 }
 
 async function installFsyncProbe(fake) {
@@ -424,29 +532,20 @@ test('S2 @spec:018-project-integrity-hardening declares every required gate fami
   assert.ok(requiredChecks.every(({ integration_id: integrationId }) => integrationId === 1));
 });
 
-test('S2 @spec:018-project-integrity-hardening grants bypass only to the founder team through a PR', async () => {
+test('S2 @spec:018-project-integrity-hardening keeps the active-policy source free of standing bypass authority', async () => {
   const ruleset = await readRuleset();
 
-  assert.equal(ruleset.bypass_actors.length, 1);
-  assert.deepEqual(ruleset.bypass_actors[0], {
-    actor_id: ruleset.bypass_actors[0].actor_id,
-    actor_type: 'Team',
-    bypass_mode: 'pull_request',
-  });
-  assert.ok(Number.isSafeInteger(ruleset.bypass_actors[0].actor_id));
-  assert.ok(ruleset.bypass_actors[0].actor_id > 0);
-  assert.notEqual(ruleset.bypass_actors[0].actor_type, 'RepositoryRole');
-  assert.notEqual(ruleset.bypass_actors[0].actor_type, 'OrganizationAdmin');
+  assert.deepEqual(ruleset.bypass_actors, []);
 });
 
-test('S2 @spec:018-project-integrity-hardening refuses to render unresolved live actor IDs', () => {
+test('S2 @spec:018-project-integrity-hardening refuses to render unresolved live integration IDs', () => {
   const result = renderRuleset();
 
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr + result.stdout, /KIMEN_FOUNDER_TEAM_ID|unresolved founder team/i);
+  assert.match(result.stderr + result.stdout, /KIMEN_CHECK_INTEGRATIONS_JSON|integration/i);
 });
 
-test('S2 @spec:018-project-integrity-hardening renders only observed team and integration IDs', async () => {
+test('S2 @spec:018-project-integrity-hardening renders only observed integration IDs without standing bypass', async () => {
   const desired = await readRuleset();
   const requiredChecks = findRule(desired, 'required_status_checks').parameters
     .required_status_checks;
@@ -454,14 +553,13 @@ test('S2 @spec:018-project-integrity-hardening renders only observed team and in
     requiredChecks.map(({ context }, index) => [context, 20_000 + index]),
   );
   const result = renderRuleset({
-    KIMEN_FOUNDER_TEAM_ID: '4242',
     KIMEN_CHECK_INTEGRATIONS_JSON: JSON.stringify(integrations),
   });
 
   assert.equal(result.status, 0, result.stderr);
   const rendered = JSON.parse(result.stdout);
   assert.equal(rendered.enforcement, 'disabled');
-  assert.equal(rendered.bypass_actors[0].actor_id, 4242);
+  assert.deepEqual(rendered.bypass_actors, []);
   assert.deepEqual(
     findRule(rendered, 'required_status_checks').parameters.required_status_checks,
     requiredChecks.map(({ context }) => ({ context, integration_id: integrations[context] })),
@@ -476,7 +574,6 @@ test('S2 @spec:018-project-integrity-hardening rejects non-integer integration I
     requiredChecks.map(({ context }, index) => [context, index === 0 ? 20_000.5 : 20_001 + index]),
   );
   const result = renderRuleset({
-    KIMEN_FOUNDER_TEAM_ID: '4242',
     KIMEN_CHECK_INTEGRATIONS_JSON: JSON.stringify(integrations),
   });
 
@@ -722,7 +819,7 @@ test('S2 @spec:018-project-integrity-hardening refuses to overwrite a divergent 
   await applyDisabled(fake, env);
   const state = JSON.parse(await readFile(fake.statePath, 'utf8'));
   const divergent = cloneJson(state.payload);
-  divergent.bypass_actors[0].actor_id += 1;
+  divergent.bypass_actors = [aUserBypass(4243)];
   await updateFakeGitHubState(fake, { calls: [], payload: divergent });
 
   const reapplied = spawnSync('bash', [applyRulesetPath, '--apply-disabled'], {
@@ -743,7 +840,7 @@ test('S2 @spec:018-project-integrity-hardening selects only the exact repository
   await applyDisabled(fake, env);
   const local = JSON.parse(await readFile(fake.statePath, 'utf8')).payload;
   const inherited = cloneJson(local);
-  inherited.bypass_actors[0].actor_id = 6789;
+  inherited.bypass_actors = [aUserBypass(6789)];
   await updateFakeGitHubState(fake, {
     calls: [],
     existingId: 77,
@@ -1120,11 +1217,11 @@ test('S2 @spec:018-project-integrity-hardening rejects bytes that no longer matc
 test('S2 @spec:018-project-integrity-hardening uses one frozen backup when the source is swapped after validation', async (t) => {
   const fixture = await aRollbackFixture(t);
   const previous = cloneJson(fixture.backup.payload);
-  previous.bypass_actors[0].actor_id = 9876;
+  previous.bypass_actors = [aUserBypass(9876)];
   const originalBackup = rewriteRollbackBackup(fixture.backup, { payload: previous });
   await writeRollbackEvidence(fixture.backupPath, originalBackup);
   const malicious = cloneJson(previous);
-  malicious.bypass_actors[0].actor_id = 666;
+  malicious.bypass_actors = [aUserBypass(666)];
   const maliciousBytes = canonicalJson(
     rewriteRollbackBackup(fixture.backup, { payload: malicious }),
   );
@@ -1225,7 +1322,7 @@ test('S2 @spec:018-project-integrity-hardening rejects a tampered rollback opera
 test('S2 @spec:018-project-integrity-hardening detects a PUT that reports success without restoring the backup', async (t) => {
   const fixture = await aRollbackFixture(t);
   const previous = cloneJson(fixture.backup.payload);
-  previous.bypass_actors[0].actor_id = 9876;
+  previous.bypass_actors = [aUserBypass(9876)];
   const backup = rewriteRollbackBackup(fixture.backup, { payload: previous });
   await writeRollbackEvidence(fixture.backupPath, backup);
 
@@ -1254,7 +1351,7 @@ test('S2 @spec:018-project-integrity-hardening detects a DELETE that reports suc
 test('S2 @spec:018-project-integrity-hardening reconciles a rollback PUT that mutates before reporting an error', async (t) => {
   const fixture = await aRollbackFixture(t);
   const previous = cloneJson(fixture.backup.payload);
-  previous.bypass_actors[0].actor_id = 9876;
+  previous.bypass_actors = [aUserBypass(9876)];
   const backup = rewriteRollbackBackup(fixture.backup, { payload: previous });
   await writeRollbackEvidence(fixture.backupPath, backup);
 
@@ -1270,7 +1367,7 @@ test('S2 @spec:018-project-integrity-hardening reconciles a rollback PUT that mu
 test('S2 @spec:018-project-integrity-hardening reconciles a transient GET error after rollback PUT', async (t) => {
   const fixture = await aRollbackFixture(t);
   const previous = cloneJson(fixture.backup.payload);
-  previous.bypass_actors[0].actor_id = 9876;
+  previous.bypass_actors = [aUserBypass(9876)];
   const backup = rewriteRollbackBackup(fixture.backup, { payload: previous });
   await writeRollbackEvidence(fixture.backupPath, backup);
 
@@ -2510,4 +2607,156 @@ test('S2 @spec:018-project-integrity-hardening runs break-glass validation only 
   assert.match(workflow, /github\.event\.pull_request\.base\.ref\s*==\s*'main'/);
   assert.match(workflow, /validate-break-glass/);
   assert.match(workflow, /KIMEN_BREAK_GLASS_LABEL:\s*break-glass/);
+  assert.match(workflow, /KIMEN_FOUNDER_LOGIN:\s*MarsGotta/);
+});
+
+test('S2 @spec:018-project-integrity-hardening grants one bounded founder User bypass and revokes it after the human merge', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const env = await liveRulesetEnvironment(fake);
+  await activateMainRuleset(fake, env);
+
+  const opened = openBreakGlass(env, { FAKE_GH_MERGE_AFTER_GRANT: '1' });
+
+  assert.equal(opened.status, 0, opened.stderr || opened.stdout);
+  const state = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  assert.equal(state.payload.enforcement, 'active');
+  assert.deepEqual(state.payload.bypass_actors, []);
+  assert.equal(state.putPayloads.length, 2);
+  assert.deepEqual(state.putPayloads[0].bypass_actors, [
+    { actor_id: founderUserId, actor_type: 'User', bypass_mode: 'pull_request' },
+  ]);
+  assert.deepEqual(state.putPayloads[1].bypass_actors, []);
+  assert.equal(
+    state.calls.some((call) => call.some((value) => value.endsWith('/pulls/42/merge'))),
+    false,
+  );
+  const evidencePath = await breakGlassEvidence(fake);
+  const evidence = JSON.parse(await readFile(evidencePath, 'utf8'));
+  assert.equal(evidence.schemaVersion, 'kimen-break-glass-rollback-v1');
+  assert.equal(evidence.breakGlass.pullRequest, reviewPullRequest);
+  assert.equal(evidence.breakGlass.headSha, currentHeadSha);
+  assert.equal(evidence.breakGlass.founderLogin, founderLogin);
+  assert.equal(evidence.breakGlass.founderUserId, founderUserId);
+  assert.equal(evidence.breakGlass.restorationIssueNumber, restorationIssue);
+  assert.match(evidence.breakGlass.requestPayloadSha256, /^[0-9a-f]{64}$/);
+  assert.ok(
+    evidence.breakGlass.deadlineEpochSeconds - evidence.breakGlass.openedAtEpochSeconds <= 600,
+  );
+});
+
+test('S2 @spec:018-project-integrity-hardening rejects a non-founder authenticated user before granting bypass', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const env = await liveRulesetEnvironment(fake);
+  await activateMainRuleset(fake, env);
+  await updateFakeGitHubState(fake, {
+    authenticatedUser: { id: 666, login: 'Mallory', type: 'User' },
+  });
+
+  const opened = openBreakGlass(env);
+
+  assert.notEqual(opened.status, 0);
+  assert.match(opened.stderr + opened.stdout, /authenticated.*founder|MarsGotta/i);
+  await assertNoRulesetMutation(fake);
+});
+
+test('S2 @spec:018-project-integrity-hardening rejects a closed or non-issue restoration target before granting bypass', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const env = await liveRulesetEnvironment(fake);
+  await activateMainRuleset(fake, env);
+  await updateFakeGitHubState(fake, {
+    restorationIssue: {
+      number: restorationIssue,
+      state: 'closed',
+      html_url: `https://github.com/kimen-dev/kimen/issues/${restorationIssue}`,
+      pull_request: { url: 'https://api.github.test/pulls/123' },
+    },
+  });
+
+  const opened = openBreakGlass(env);
+
+  assert.notEqual(opened.status, 0);
+  assert.match(opened.stderr + opened.stdout, /restoration issue.*open|pull request/i);
+  await assertNoRulesetMutation(fake);
+});
+
+test('S2 @spec:018-project-integrity-hardening revokes the temporary bypass when the PR head changes', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const env = await liveRulesetEnvironment(fake);
+  await activateMainRuleset(fake, env);
+
+  const opened = openBreakGlass(env, { FAKE_GH_CHANGE_HEAD_AFTER_GRANT: '1' });
+
+  assert.notEqual(opened.status, 0);
+  assert.match(opened.stderr + opened.stdout, /head|revision|changed/i);
+  const state = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  assert.deepEqual(state.payload.bypass_actors, []);
+  assert.deepEqual(state.putPayloads.at(-1).bypass_actors, []);
+});
+
+test('S2 @spec:018-project-integrity-hardening revokes when the validated break-glass body changes', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const env = await liveRulesetEnvironment(fake);
+  await activateMainRuleset(fake, env);
+
+  const opened = openBreakGlass(env, { FAKE_GH_EDIT_BODY_AFTER_GRANT: '1' });
+
+  assert.notEqual(opened.status, 0);
+  assert.match(opened.stderr + opened.stdout, /validated request payload changed/i);
+  const state = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  assert.deepEqual(state.payload.bypass_actors, []);
+});
+
+test('S2 @spec:018-project-integrity-hardening revokes on timeout and close remains idempotent', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const env = await liveRulesetEnvironment(fake);
+  await activateMainRuleset(fake, env);
+
+  const opened = openBreakGlass(env);
+
+  assert.notEqual(opened.status, 0);
+  assert.match(opened.stderr + opened.stdout, /timeout|deadline/i);
+  const evidencePath = await breakGlassEvidence(fake);
+  const afterTimeout = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  assert.deepEqual(afterTimeout.payload.bypass_actors, []);
+  const putCount = afterTimeout.putPayloads.length;
+
+  const closed = closeBreakGlass(evidencePath, env);
+
+  assert.equal(closed.status, 0, closed.stderr || closed.stdout);
+  const afterClose = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  assert.equal(afterClose.putPayloads.length, putCount);
+  assert.deepEqual(afterClose.payload.bypass_actors, []);
+});
+
+test('S2 @spec:018-project-integrity-hardening revokes the temporary bypass on TERM', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const env = await liveRulesetEnvironment(fake);
+  await activateMainRuleset(fake, env);
+
+  const interrupted = await terminateBreakGlassAfterGrant(env);
+
+  assert.equal(interrupted.code, 130, interrupted.stderr || interrupted.stdout);
+  assert.match(interrupted.stderr, /interrupted.*revoking/i);
+  const state = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  assert.deepEqual(state.payload.bypass_actors, []);
+});
+
+test('S2 @spec:018-project-integrity-hardening retains exact recovery evidence when revoke fails and close completes it', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const env = await liveRulesetEnvironment(fake);
+  await activateMainRuleset(fake, env);
+
+  const opened = openBreakGlass(env, { FAKE_GH_PUT_ERROR_ON_N: '2' });
+
+  assert.notEqual(opened.status, 0);
+  assert.match(opened.stderr + opened.stdout, /recovery|revok|rollback/i);
+  const evidencePath = await breakGlassEvidence(fake);
+  const unresolved = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  assert.equal(unresolved.payload.bypass_actors.length, 1);
+
+  const closed = closeBreakGlass(evidencePath, env);
+
+  assert.equal(closed.status, 0, closed.stderr || closed.stdout);
+  const recovered = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  assert.deepEqual(recovered.payload.bypass_actors, []);
 });

@@ -133,7 +133,7 @@ const aCurrentPullRequest = (overrides = {}) => ({
 });
 
 const aWorkflowEnvironment = (overrides = {}) => ({
-  GITHUB_ACTOR: 'marsgotta',
+  GITHUB_ACTOR: 'MarsGotta',
   GITHUB_API_URL: 'https://api.github.test',
   GITHUB_EVENT_NAME: 'workflow_dispatch',
   GITHUB_REF: 'refs/heads/main',
@@ -144,7 +144,7 @@ const aWorkflowEnvironment = (overrides = {}) => ({
     'ci / gates': 15_368,
     'security / semgrep': 44_001,
   }),
-  KIMEN_FOUNDER_LOGIN: 'marsgotta',
+  KIMEN_FOUNDER_LOGIN: 'MarsGotta',
   KIMEN_TRUSTED_REVIEWERS_JSON: JSON.stringify(['trusted-clean-context-reviewer']),
   ...overrides,
 });
@@ -1455,7 +1455,7 @@ describe('trusted review workflow state', () => {
     expect(workflow).not.toMatch(/^\s*uses:\s+[^@\s]+@(?![0-9a-f]{40}\b)/gm);
     expect(workflow).toMatch(/ref:\s*\$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
     expect(workflow).toMatch(/ref:\s*refs\/heads\/main/);
-    expect(workflow).toMatch(/github\.actor\s*==\s*'marsgotta'/);
+    expect(workflow).toMatch(/github\.actor\s*==\s*'MarsGotta'/);
     expect(pendingJob).toMatch(/github\.repository\s*==\s*'kimen-dev\/kimen'/);
     expect(pendingJob).toMatch(/github\.event\.pull_request\.base\.ref\s*==\s*'main'/);
     expect(workflow).toMatch(/github\.ref\s*==\s*'refs\/heads\/main'/);

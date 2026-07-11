@@ -2,13 +2,7 @@
   "name": "kimen-protected-main",
   "target": "branch",
   "enforcement": "disabled",
-  "bypass_actors": [
-    {
-      "actor_id": 1,
-      "actor_type": "Team",
-      "bypass_mode": "pull_request"
-    }
-  ],
+  "bypass_actors": [],
   "conditions": {
     "ref_name": {
       "include": ["refs/heads/main"],

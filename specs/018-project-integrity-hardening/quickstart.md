@@ -234,6 +234,36 @@ those checks.
    invoking it; direct/force updates remain blocked. The actual merge stays
    founder-only human gate 2.
 
+The active-at-rest ruleset has `bypass_actors: []`. For a real emergency, the
+founder first creates/keeps open a same-repository restoration issue, completes
+the marked PR fields and applies the `break-glass` label. From a trusted host:
+
+```sh
+KIMEN_CONFIRM_EXCLUSIVE_RULESET_WRITER=founder-confirms-exclusive-ruleset-writer \
+KIMEN_CONFIRM_BREAK_GLASS_SESSION=founder-opens-current-pr-only-bypass \
+KIMEN_BREAK_GLASS_TIMEOUT_SECONDS=600 \
+KIMEN_CHECK_INTEGRATIONS_JSON='<live context-to-App-ID map>' \
+bash scripts/github/apply-main-ruleset.sh --open-break-glass <pr-number>
+```
+
+The command blocks while the founder performs the merge in GitHub. It never
+calls a merge endpoint. It revalidates the exact request-payload digest and
+open issue before accepting GitHub's merged state, and revokes the temporary
+`User/pull_request` actor on merge, timeout, `INT`/`TERM`, head/base/body/label/
+state change or observation failure. If revocation reports `recovery-ready`,
+retry only with the exact emitted evidence:
+
+```sh
+KIMEN_CONFIRM_EXCLUSIVE_RULESET_WRITER=founder-confirms-exclusive-ruleset-writer \
+bash scripts/github/apply-main-ruleset.sh --close-break-glass \
+  reports/rulesets/break-glass-pr-<n>-<timestamp>-<nonce>
+```
+
+Residual boundary: GitHub scopes bypass to an actor, not one PR, so the founder
+could select another founder PR during the maximum 600-second window. `kill -9`
+or host loss is not trappable and leaves a `mutating` lock plus remote grant for
+manual inspection/revocation; it is never auto-adopted or reported safe.
+
 This step requires authenticated repository-admin authority. It is never
 performed with credentials inside the unattended sandbox.
 

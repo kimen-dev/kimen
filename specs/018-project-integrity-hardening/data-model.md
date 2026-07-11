@@ -87,6 +87,28 @@ Describes the exact changed-code mutation decision.
 - Each nonempty runner group independently requires score ≥70.
 - Exactly 70 passes; any lower score fails.
 
+## BreakGlassRollbackEvidence
+
+Durable recovery authority for one bounded founder-performed emergency merge.
+
+| Field | Type | Rules |
+|---|---|---|
+| `schemaVersion` | string | `kimen-break-glass-rollback-v1` |
+| `repository/rulesetName/rulesetId` | exact identity | Binds `kimen-dev/kimen` and its repository ruleset |
+| `payload` | ruleset payload | Exact active policy with zero bypass actors |
+| `expectedForwardPayload` | ruleset payload | Differs only by one founder `User` actor in `pull_request` mode |
+| `pullRequest/headSha` | positive integer/Git SHA | Exact live founder PR and revision |
+| `founderLogin/founderUserId` | canonical login/positive integer | Both observed from the authenticated GitHub user |
+| `restorationIssueNumber/Url` | issue identity | Existing open same-repository issue, never a PR |
+| `requestPayloadSha256` | SHA-256 | Exact parsed policy/event/request bytes that validated label, justification and restoration link |
+| `openedAtEpochSeconds/deadlineEpochSeconds` | integer epochs | Positive window, hard-capped at 600 seconds |
+| `integritySha256` | SHA-256 | Canonical record without this field |
+
+The record and sidecar are private, fsynced and frozen before remote mutation.
+The session holds the exclusive writer lock while polling and never calls the
+merge API. Exact rollback is idempotent; drift retains `recovery-ready` state
+rather than broadening or silently abandoning the grant.
+
 ## ModelLease
 
 Short-lived authority for one unattended agent attempt.
