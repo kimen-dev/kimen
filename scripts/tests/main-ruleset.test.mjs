@@ -26,7 +26,7 @@ const currentHeadSha = '1111111111111111111111111111111111111111';
 const staleHeadSha = '2222222222222222222222222222222222222222';
 const githubActionsAppId = 15_368;
 const socketAppId = 156_372;
-const reviewAppId = githubActionsAppId;
+const reviewAppId = 424_242;
 const reviewPullRequest = 42;
 const founderLogin = 'MarsGotta';
 const founderUserId = 9_072_675;
@@ -2604,6 +2604,42 @@ test('S2 @spec:018-project-integrity-hardening refuses a current review Check Ru
 
   assert.notEqual(activated.status, 0);
   assert.match(activated.stderr + activated.stdout, /trusted App ID|current.*Check Run/i);
+  await assertNoRulesetMutation(fake);
+});
+
+test('S2 @spec:018-project-integrity-hardening refuses review authority shared with another required-check App', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const sharedIntegrationPolicy = {
+    ...productionIntegrationPolicy,
+    'clean-context-review': githubActionsAppId,
+  };
+  const initialEnv = await liveRulesetEnvironment(fake, {
+    KIMEN_CHECK_INTEGRATIONS_JSON: JSON.stringify(sharedIntegrationPolicy),
+  });
+  await applyDisabled(fake, initialEnv);
+  const state = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  await updateFakeGitHubState(fake, {
+    calls: [],
+    checkRuns: state.checkRuns.map((check) =>
+      check.name === 'clean-context-review'
+        ? { ...check, app: { id: githubActionsAppId } }
+        : check,
+    ),
+  });
+  const env = {
+    ...initialEnv,
+    KIMEN_CONFIRM_RULESET_ACTIVATION: 'activate-current-green-revision',
+  };
+  const activated = spawnSync('bash', [applyRulesetPath, '--activate'], {
+    encoding: 'utf8',
+    env,
+  });
+
+  assert.notEqual(activated.status, 0);
+  assert.match(
+    activated.stderr + activated.stdout,
+    /clean-context-review.*dedicated.*App|dedicated.*App.*clean-context-review/i,
+  );
   await assertNoRulesetMutation(fake);
 });
 

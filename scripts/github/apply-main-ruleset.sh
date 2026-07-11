@@ -1543,10 +1543,21 @@ trusted_review_app_id() {
   local integrations="${KIMEN_CHECK_INTEGRATIONS_JSON:-}"
   local app_id
   if ! app_id=$(printf '%s\n' "$integrations" | jq -er --arg context "$REVIEW_CONTEXT" '
-    .[$context]
-    | select(type == "number" and . == floor and . > 1 and . <= 9007199254740991)
+    . as $integrations
+    | .[$context] as $app_id
+    | select(
+        $app_id
+        | type == "number" and . == floor and . > 1 and . <= 9007199254740991
+      )
+    | select(
+        [$integrations
+          | to_entries[]
+          | select(.key != $context and .value == $app_id)]
+        | length == 0
+      )
+    | $app_id
   ' 2>/dev/null); then
-    echo "apply-main-ruleset: KIMEN_CHECK_INTEGRATIONS_JSON must bind $REVIEW_CONTEXT to its trusted observed App ID" >&2
+    echo "apply-main-ruleset: KIMEN_CHECK_INTEGRATIONS_JSON must bind $REVIEW_CONTEXT to a dedicated trusted observed App ID not shared by any other required check" >&2
     return 1
   fi
   printf '%s\n' "$app_id"
