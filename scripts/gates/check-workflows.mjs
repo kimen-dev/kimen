@@ -14,8 +14,6 @@ const ALLOWED_SCOPED_WRITES = new Set([
   'docs.yml:deploy:id-token',
   'docs.yml:deploy:pages',
   'release.yml:publish:id-token',
-  'review-evidence.yml:complete:checks',
-  'review-evidence.yml:pending:checks',
   'security.yml:osv-scan:security-events',
 ]);
 

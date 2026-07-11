@@ -573,7 +573,7 @@ function normalizeCheckRun(value) {
 
 function createCheckRunController(options = {}) {
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
-  const token = options.token ?? process.env.GITHUB_TOKEN;
+  const token = options.token ?? process.env.KIMEN_REVIEW_APP_TOKEN;
   const apiBaseUrl = (
     options.apiBaseUrl ??
     process.env.GITHUB_API_URL ??
@@ -585,7 +585,7 @@ function createCheckRunController(options = {}) {
     throw new ReviewEvidenceError('native fetch is unavailable');
   }
   if (typeof token !== 'string' || token.trim() === '') {
-    throw new ReviewEvidenceError('GITHUB_TOKEN is required for Check Run updates');
+    throw new ReviewEvidenceError('dedicated review App token is required for Check Run updates');
   }
   let parsedApiUrl;
   try {
@@ -764,6 +764,12 @@ function trustedIntegrationPolicy(source) {
   if (entries.length === 1) {
     throw new ReviewEvidenceError(
       'KIMEN_CHECK_INTEGRATIONS_JSON must include at least one deterministic required check',
+    );
+  }
+  const reviewIntegrationId = value[CHECK_NAME];
+  if (entries.some(([context, integrationId]) => context !== CHECK_NAME && integrationId === reviewIntegrationId)) {
+    throw new ReviewEvidenceError(
+      `${CHECK_NAME} must bind to a dedicated trusted GitHub App ID not shared by another required check`,
     );
   }
   return value;
@@ -1128,7 +1134,7 @@ async function runReviewEvidenceWorkflow(options = {}) {
     options.controller ??
     createCheckRunController({
       fetchImpl: options.fetchImpl,
-      token: env.GITHUB_TOKEN,
+      token: env.KIMEN_REVIEW_APP_TOKEN,
       apiBaseUrl: env.GITHUB_API_URL,
     });
 

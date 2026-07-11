@@ -12,6 +12,8 @@ const currentBaseSha = '2222222222222222222222222222222222222222';
 const staleHeadSha = '3333333333333333333333333333333333333333';
 const digestA = 'a'.repeat(64);
 const digestB = 'b'.repeat(64);
+const githubActionsAppId = 15_368;
+const reviewAppId = 4_274_482;
 const subjectPath = path.join(__dirname, 'review-evidence.cjs');
 const workflowPath = path.join(__dirname, '..', 'workflows', 'review-evidence.yml');
 const requiredPacketPaths = [
@@ -127,9 +129,10 @@ function aWorkflowEnvironment(overrides = {}) {
     GITHUB_REF: 'refs/heads/main',
     GITHUB_REPOSITORY: 'kimen-dev/kimen',
     GITHUB_TOKEN: 'test-token',
+    KIMEN_REVIEW_APP_TOKEN: 'review-app-token',
     KIMEN_CHECK_INTEGRATIONS_JSON: JSON.stringify({
-      'clean-context-review': 15368,
-      gates: 15368,
+      'clean-context-review': reviewAppId,
+      gates: githubActionsAppId,
       semgrep: 44001,
     }),
     KIMEN_FOUNDER_LOGIN: 'MarsGotta',
@@ -159,7 +162,7 @@ function aPendingReviewCheck() {
     status: 'in_progress',
     conclusion: null,
     external_id: `clean-context-review:pr:42:${currentHeadSha}`,
-    app: { id: 15368 },
+    app: { id: reviewAppId },
   };
 }
 
@@ -620,6 +623,104 @@ test('S2 @spec:018-project-integrity-hardening creates pending evidence for the 
   assert.equal(result.headSha, currentHeadSha);
 });
 
+test('S2 @spec:018-project-integrity-hardening separates read-only GitHub state access from dedicated App Check writes', async () => {
+  const calls = [];
+  const { runReviewEvidenceWorkflow } = loadSubject();
+  const event = {
+    action: 'opened',
+    repository: { full_name: 'kimen-dev/kimen' },
+    pull_request: {
+      number: 42,
+      head: { sha: currentHeadSha },
+      base: { sha: currentBaseSha },
+    },
+  };
+  const responses = [
+    aCurrentPullRequest(),
+    {
+      id: 99,
+      name: 'clean-context-review',
+      head_sha: currentHeadSha,
+      status: 'in_progress',
+      conclusion: null,
+    },
+  ];
+
+  const result = await runReviewEvidenceWorkflow({
+    env: aWorkflowEnvironment({
+      GITHUB_EVENT_NAME: 'pull_request_target',
+      GITHUB_REF: 'refs/heads/main',
+      GITHUB_TOKEN: 'read-only-token',
+      KIMEN_REVIEW_APP_TOKEN: 'dedicated-write-token',
+      KIMEN_REVIEW_MODE: 'pending',
+    }),
+    eventPayload: event,
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      return mockResponse(calls.length === 1 ? 200 : 201, responses.shift());
+    },
+  });
+
+  assert.equal(result.id, 99);
+  assert.deepEqual(
+    calls.map(({ options }) => [options.method, options.headers.Authorization]),
+    [
+      ['GET', 'Bearer read-only-token'],
+      ['POST', 'Bearer dedicated-write-token'],
+    ],
+  );
+});
+
+test('S2 @spec:018-project-integrity-hardening refuses workflow Check writes without the dedicated App token', async () => {
+  const { runReviewEvidenceWorkflow } = loadSubject();
+  const event = {
+    action: 'opened',
+    repository: { full_name: 'kimen-dev/kimen' },
+    pull_request: {
+      number: 42,
+      head: { sha: currentHeadSha },
+      base: { sha: currentBaseSha },
+    },
+  };
+
+  await assert.rejects(
+    runReviewEvidenceWorkflow({
+      env: aWorkflowEnvironment({
+        GITHUB_EVENT_NAME: 'pull_request_target',
+        GITHUB_REF: 'refs/heads/main',
+        GITHUB_TOKEN: 'read-only-token',
+        KIMEN_REVIEW_APP_TOKEN: '',
+        KIMEN_REVIEW_MODE: 'pending',
+      }),
+      eventPayload: event,
+      fetchImpl: async () => mockResponse(200, aCurrentPullRequest()),
+    }),
+    /dedicated review App token/i,
+  );
+});
+
+test('S2 @spec:018-project-integrity-hardening rejects a review App identity shared by another required check', async () => {
+  const { runReviewEvidenceWorkflow } = loadSubject();
+
+  await assert.rejects(
+    runReviewEvidenceWorkflow({
+      controller: {},
+      env: aWorkflowEnvironment({
+        KIMEN_CHECK_INTEGRATIONS_JSON: JSON.stringify({
+          'clean-context-review': githubActionsAppId,
+          gates: githubActionsAppId,
+        }),
+        KIMEN_REVIEW_MODE: 'complete',
+      }),
+      eventPayload: aDispatchEvent(),
+      fetchImpl: async () => {
+        throw new Error('mutable GitHub state must not be queried for a shared review App');
+      },
+    }),
+    /clean-context-review.*dedicated.*App|dedicated.*App.*clean-context-review/i,
+  );
+});
+
 test('S2 @spec:018-project-integrity-hardening completes from current GitHub state and trusted policy only', async () => {
   const apiCalls = [];
   const completionCalls = [];
@@ -642,7 +743,7 @@ test('S2 @spec:018-project-integrity-hardening completes from current GitHub sta
           head_sha: currentHeadSha,
           status: 'completed',
           conclusion: 'success',
-          app: { id: 15368 },
+          app: { id: githubActionsAppId },
         },
         {
           id: 12,
@@ -990,6 +1091,7 @@ test('S2 @spec:018-project-integrity-hardening permits completion only for the f
 test('S2 @spec:018-project-integrity-hardening keeps the review workflow trusted, SHA-pinned and least-privilege', () => {
   const workflow = readFileSync(workflowPath, 'utf8');
   const pendingJob = /\n {2}pending:\n([\s\S]*?)\n {2}complete:/.exec(workflow)?.[1] ?? '';
+  const completeJob = /\n {2}complete:\n([\s\S]*)/.exec(workflow)?.[1] ?? '';
 
   assert.match(
     workflow,
@@ -997,13 +1099,29 @@ test('S2 @spec:018-project-integrity-hardening keeps the review workflow trusted
   );
   assert.match(workflow, /workflow_dispatch:/);
   assert.match(workflow, /packet_manifest_base64:/);
-  assert.match(workflow, /checks:\s*write/);
+  assert.doesNotMatch(workflow, /^\s+checks:\s*write\s*$/m);
+  assert.match(workflow, /checks:\s*read/);
   assert.match(workflow, /contents:\s*read/);
   assert.match(workflow, /pull-requests:\s*read/);
   assert.doesNotMatch(workflow, /write-all|contents:\s*write|pull-requests:\s*write/);
   assert.match(workflow, /step-security\/harden-runner@[0-9a-f]{40}/);
   assert.match(workflow, /actions\/checkout@[0-9a-f]{40}/);
+  assert.match(
+    workflow,
+    /actions\/create-github-app-token@[0-9a-f]{40}[\s\S]*?permission-checks:\s*write/,
+  );
   assert.doesNotMatch(workflow, /^\s*uses:\s+[^@\s]+@(?![0-9a-f]{40}\b)/gm);
+  assert.equal((workflow.match(/environment:\s*trusted-check-writer/g) ?? []).length, 2);
+  assert.equal((workflow.match(/KIMEN_REVIEW_APP_TOKEN:/g) ?? []).length, 2);
+  assert.match(
+    pendingJob,
+    /KIMEN_REVIEW_APP_TOKEN:\s*\$\{\{ steps\.review-app-token\.outputs\.token \}\}/,
+  );
+  assert.match(
+    completeJob,
+    /KIMEN_REVIEW_APP_TOKEN:\s*\$\{\{ steps\.review-app-token\.outputs\.token \}\}/,
+  );
+  assert.doesNotMatch(workflow, /skip-token-revoke:\s*true/);
   assert.match(workflow, /ref:\s*\$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
   assert.match(workflow, /ref:\s*refs\/heads\/main/);
   assert.match(workflow, /github\.actor\s*==\s*'MarsGotta'/);

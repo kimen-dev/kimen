@@ -51,11 +51,11 @@ jobs:
     uses: example/security/.github/workflows/scan.yml@${checkoutSha}
 `;
 
-async function createWorkflowFixture(t, source) {
+async function createWorkflowFixture(t, source, fileName = 'fixture.yml') {
   const root = await mkdtemp(join(tmpdir(), 'kimen-workflow-policy-'));
   const workflowsDirectory = join(root, '.github/workflows');
   await mkdir(workflowsDirectory, { recursive: true });
-  await writeFile(join(workflowsDirectory, 'fixture.yml'), source);
+  await writeFile(join(workflowsDirectory, fileName), source);
   t.after(() => rm(root, { force: true, recursive: true }));
   return workflowsDirectory;
 }
@@ -126,6 +126,20 @@ test('@spec:018-project-integrity-hardening S6 rejects unnecessary repository wr
 
   assert.notEqual(result.status, 0);
   assert.match(diagnostic(result), /contents.*write|least[- ]privilege|permissions/i);
+});
+
+test('@spec:018-project-integrity-hardening S2 rejects checks write on the GitHub Actions review workflow', async (t) => {
+  const workflowsDirectory = await createWorkflowFixture(
+    t,
+    safeOwnedWorkflow
+      .replace('  verify:', '  complete:')
+      .replace('      contents: read', '      checks: write'),
+    'review-evidence.yml',
+  );
+  const result = runWorkflowPolicy(workflowsDirectory);
+
+  assert.notEqual(result.status, 0);
+  assert.match(diagnostic(result), /checks.*write|least[- ]privilege|unnecessary/i);
 });
 
 test('@spec:018-project-integrity-hardening S7 rejects OIDC outside an exact publisher or Pages deploy job', async (t) => {

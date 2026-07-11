@@ -28,8 +28,8 @@ jobs:
       github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    environment: trusted-check-writer
     permissions:
-      checks: write
       contents: read
       pull-requests: read
     steps:
@@ -50,9 +50,18 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           persist-credentials: false
 
+      - name: Mint dedicated review Check token
+        id: review-app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.KIMEN_REVIEW_APP_CLIENT_ID }}
+          private-key: ${{ secrets.KIMEN_REVIEW_APP_PRIVATE_KEY }}
+          permission-checks: write
+
       - name: Create current-head pending evidence
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          KIMEN_REVIEW_APP_TOKEN: ${{ steps.review-app-token.outputs.token }}
           KIMEN_REVIEW_MODE: pending
         run: node .github/scripts/review-evidence.cjs review-workflow
 
@@ -64,8 +73,9 @@ jobs:
       github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    environment: trusted-check-writer
     permissions:
-      checks: write
+      checks: read
       contents: read
       pull-requests: read
     steps:
@@ -87,11 +97,20 @@ jobs:
           ref: refs/heads/main
           persist-credentials: false
 
+      - name: Mint dedicated review Check token
+        id: review-app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.KIMEN_REVIEW_APP_CLIENT_ID }}
+          private-key: ${{ secrets.KIMEN_REVIEW_APP_PRIVATE_KEY }}
+          permission-checks: write
+
       - name: Validate current evidence and complete Check Run
         env:
           GITHUB_TOKEN: ${{ github.token }}
           KIMEN_CHECK_INTEGRATIONS_JSON: ${{ vars.KIMEN_CHECK_INTEGRATIONS_JSON }}
           KIMEN_FOUNDER_LOGIN: MarsGotta
+          KIMEN_REVIEW_APP_TOKEN: ${{ steps.review-app-token.outputs.token }}
           KIMEN_REVIEW_MODE: complete
           KIMEN_TRUSTED_REVIEWERS_JSON: ${{ vars.KIMEN_TRUSTED_REVIEWERS_JSON }}
         run: node .github/scripts/review-evidence.cjs review-workflow

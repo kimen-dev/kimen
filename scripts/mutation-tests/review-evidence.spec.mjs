@@ -40,6 +40,8 @@ const currentBaseSha = '2222222222222222222222222222222222222222';
 const staleHeadSha = '3333333333333333333333333333333333333333';
 const digestA = 'a'.repeat(64);
 const digestB = 'b'.repeat(64);
+const githubActionsAppId = 15_368;
+const reviewAppId = 4_274_482;
 const requiredPacketPaths = [
   'MANIFEST.md',
   'constitutional-surface.md',
@@ -95,7 +97,7 @@ const currentRequiredChecks = (overrides = {}) => [
   {
     context: 'gates',
     headSha: currentHeadSha,
-    integrationId: 15_368,
+    integrationId: githubActionsAppId,
     status: 'success',
     ...overrides,
   },
@@ -139,9 +141,10 @@ const aWorkflowEnvironment = (overrides = {}) => ({
   GITHUB_REF: 'refs/heads/main',
   GITHUB_REPOSITORY: 'kimen-dev/kimen',
   GITHUB_TOKEN: 'test-token',
+  KIMEN_REVIEW_APP_TOKEN: 'review-app-token',
   KIMEN_CHECK_INTEGRATIONS_JSON: JSON.stringify({
-    'clean-context-review': 15_368,
-    gates: 15_368,
+    'clean-context-review': reviewAppId,
+    gates: githubActionsAppId,
     semgrep: 44_001,
   }),
   KIMEN_FOUNDER_LOGIN: 'MarsGotta',
@@ -178,7 +181,7 @@ const aPendingReviewCheck = (overrides = {}) => ({
   status: 'in_progress',
   conclusion: null,
   external_id: `${CHECK_NAME}:pr:42:${currentHeadSha}`,
-  app: { id: 15_368 },
+  app: { id: reviewAppId },
   ...overrides,
 });
 
@@ -189,7 +192,7 @@ const anObservedCheck = (overrides = {}) => ({
   status: 'completed',
   conclusion: 'success',
   external_id: null,
-  app: { id: 15_368 },
+  app: { id: githubActionsAppId },
   ...overrides,
 });
 
@@ -571,7 +574,7 @@ describe('review Check Run REST controller', () => {
       /fetch is unavailable/,
     );
     expect(() => createCheckRunController({ fetchImpl: async () => undefined, token: '' })).toThrow(
-      /GITHUB_TOKEN/,
+      /dedicated review App token/,
     );
     expect(() =>
       createCheckRunController({
@@ -1012,7 +1015,7 @@ describe('trusted review workflow state', () => {
             {
               context: 'gates',
               headSha: currentHeadSha,
-              integrationId: 15_368,
+              integrationId: githubActionsAppId,
               status: 'success',
             },
             {
@@ -1446,13 +1449,20 @@ describe('trusted review workflow state', () => {
       /pull_request_target:\s*\n\s*types:\s*\[opened, reopened, synchronize, ready_for_review\]/,
     );
     expect(workflow).toMatch(/workflow_dispatch:/);
-    expect(workflow).toMatch(/checks:\s*write/);
+    expect(workflow).not.toMatch(/^\s+checks:\s*write\s*$/m);
+    expect(workflow).toMatch(/checks:\s*read/);
     expect(workflow).toMatch(/contents:\s*read/);
     expect(workflow).toMatch(/pull-requests:\s*read/);
     expect(workflow).not.toMatch(/write-all|contents:\s*write|pull-requests:\s*write/);
     expect(workflow).toMatch(/step-security\/harden-runner@[0-9a-f]{40}/);
     expect(workflow).toMatch(/actions\/checkout@[0-9a-f]{40}/);
+    expect(workflow).toMatch(
+      /actions\/create-github-app-token@[0-9a-f]{40}[\s\S]*?permission-checks:\s*write/,
+    );
     expect(workflow).not.toMatch(/^\s*uses:\s+[^@\s]+@(?![0-9a-f]{40}\b)/gm);
+    expect(workflow.match(/environment:\s*trusted-check-writer/g) ?? []).toHaveLength(2);
+    expect(workflow.match(/KIMEN_REVIEW_APP_TOKEN:/g) ?? []).toHaveLength(2);
+    expect(workflow).not.toMatch(/skip-token-revoke:\s*true/);
     expect(workflow).toMatch(/ref:\s*\$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
     expect(workflow).toMatch(/ref:\s*refs\/heads\/main/);
     expect(workflow).toMatch(/github\.actor\s*==\s*'MarsGotta'/);
