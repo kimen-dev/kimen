@@ -20,13 +20,13 @@
 extensions:
   kimen-gates:
     version: "0.1.0"
-    description: "Kimen constitutional pre-gates: spec lint before plan, founder approval (human gate 1) before implement"
+    description: "Kimen constitutional pre-gates: synchronized spec/feature pair plus current dual-hash founder approval before plan or implement"
 
 hooks:
   before_plan:
     - extension: kimen-gates
       command: kimen.gates.pre-plan
-      description: "HARD gate (Art. II): specs/<feature>/feature.feature exists, Gherkin lint and scenario-family coverage are green before any planning."
+      description: "HARD gate (Art. II): spec.md and feature.feature are byte-synchronized and lint green, and marker v2 covers both hashes before planning."
       prompt: "Run the Kimen pre-plan gate (bash scripts/gates/pre-plan-check.sh) and hard-stop if it exits non-zero."
       optional: false
       enabled: true
@@ -34,7 +34,7 @@ hooks:
   before_implement:
     - extension: kimen-gates
       command: kimen.gates.pre-implement
-      description: "HARD gate (Art. II/III, Workflow): founder approval marker specs/<feature>/.approved matches spec.md, spec lint green, constitution digest in sync — before any implementation."
+      description: "HARD gate (Art. II/III, Workflow): synchronized pair, marker v2 matching spec.md and feature.feature, and constitution digest in sync before implementation."
       prompt: "Run the Kimen pre-implement gate (bash scripts/gates/pre-implement-check.sh) and hard-stop if it exits non-zero."
       optional: false
       enabled: true

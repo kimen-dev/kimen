@@ -9,8 +9,7 @@ on:
   schedule:
     - cron: '0 6 * * 1' # weekly, Monday 06:00 UTC
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
   group: codeql-${{ github.workflow }}-${{ github.ref }}
@@ -24,10 +23,17 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - name: Harden runner (egress audit; switch to block after baseline)
+      - name: Harden runner
         uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            *.actions.githubusercontent.com:443
+            *.blob.core.windows.net:443
+            uploads.github.com:443
 
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:

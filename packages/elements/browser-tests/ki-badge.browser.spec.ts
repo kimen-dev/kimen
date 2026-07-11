@@ -1,13 +1,12 @@
-import axe from 'axe-core';
-import { page, userEvent } from 'vitest/browser';
-import { beforeAll, describe, expect, it } from 'vitest';
-
+import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:010-ki-badge
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import material3Css from '@kimen/tokens/css/material3?raw';
+import axe from 'axe-core';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-badge.js';
 
 type KiBadgeElement = HTMLElement & { tone: string; size: string };
@@ -134,10 +133,12 @@ describe('ki-badge', () => {
   it('S4 never takes keyboard focus', async () => {
     cleanup();
     const before = document.createElement('button');
+    before.tabIndex = 0;
     before.textContent = 'before';
     landmark().appendChild(before);
     const el = await mount('Static');
     const after = document.createElement('button');
+    after.tabIndex = 0;
     after.textContent = 'after';
     landmark().appendChild(after);
 

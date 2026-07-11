@@ -2,14 +2,14 @@
 
 > *Kimen* (Norwegian/Danish): the seed, the germ from which something grows.
 
-**A neutral, multi-protocol GenUI catalog in web components.** An agent emits
-a schema-constrained UI spec; Kimen validates it against a closed catalog and
-renders it with standard web components (`<ki-*>`). Because it is built on web
-standards, the same components work in any host, whatever the framework, and
-re-theme to any brand by reassigning one layer of design tokens.
+**An AI-first Web Components foundation for generative UI.** Kimen currently
+ships the source for standards-first `<ki-*>` components, design tokens and
+machine-readable component contracts. The neutral catalog, guarded renderer
+and protocol adapters described below are the planned GenUI layer; they are
+not implemented or published yet.
 
 ```
-agent → JSON spec → guardrail (validate against the catalog) → <ki-*> render
+planned: agent → JSON spec → guardrail → neutral catalog → <ki-*> renderer
 ```
 
 **Status**: pre-v1, under active construction. Nothing is published yet;
@@ -24,20 +24,20 @@ landing with live re-theming, and the component workshop under
 Runtime GenUI (A2UI, MCP Apps, AG-UI, json-render) injects agent-generated UI
 into applications you don't control. Web components are the one component
 technology that behaves identically in every host, and a closed, validated
-catalog is safer than letting an agent emit open HTML. Kimen puts those two
-ideas together: protocol adapters are disposable by design; the catalog and
-the components are the durable assets.
+catalog is safer than letting an agent emit open HTML. Kimen is building
+toward those two ideas together: protocol adapters will be disposable by
+design; the catalog and components will be the durable assets.
 
 ## Packages
 
-| Package | What it is |
-| --- | --- |
-| `@kimen/elements` | The `<ki-*>` Stencil web components |
-| `@kimen/catalog` | The neutral catalog schema + guardrail renderer |
-| `@kimen/tokens` | Design tokens (DTCG), primitive → semantic → component |
-| `@kimen/adapter-*` | Protocol adapters (A2UI first), each with a compatibility matrix |
-| `@kimen/react`, ... | Generated framework wrappers |
-| `kimen` | CLI / meta package (name placeholder today) |
+| Package | Status | What it is |
+| --- | --- | --- |
+| `@kimen/elements` | Implemented, unpublished | The `<ki-*>` Stencil web components |
+| `@kimen/tokens` | Implemented, unpublished | Design tokens (DTCG), primitive → semantic → component |
+| `@kimen/catalog` | Planned | Neutral catalog schema and guarded renderer |
+| `@kimen/adapter-*` | Planned | Protocol adapters (A2UI first), each with a compatibility matrix |
+| `@kimen/react`, ... | Planned | Generated framework wrappers |
+| `kimen` | Placeholder | Future CLI / meta package |
 
 ## Quality bar
 
@@ -60,3 +60,11 @@ everything else: see [`CONTRIBUTING.md`](./CONTRIBUTING.md). Security reports:
 ## License
 
 [Apache-2.0](./LICENSE) · Copyright 2026 Marcela Gotta
+
+<!-- kimen:capabilities:root-readme-status:start -->
+- **planned** — Schema-constrained guarded renderer planned
+- **hardening** — Changed-core mutation quality gate in hardening
+- **planned** — A2UI, MCP Apps, AG-UI and json-render protocol adapters planned
+- **planned** — Neutral runtime component catalog planned
+- **available** — Machine-readable Web Components foundation with token-driven theming
+<!-- kimen:capabilities:root-readme-status:end -->

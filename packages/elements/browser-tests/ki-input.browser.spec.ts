@@ -1,14 +1,13 @@
-import axe from 'axe-core';
-import { page, userEvent } from 'vitest/browser';
-import { beforeAll, describe, expect, it } from 'vitest';
-
+import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:003-ki-input
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
+import axe from 'axe-core';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-input.js';
-import material3Css from '@kimen/tokens/css/material3?raw';
 
 type KiInputElement = HTMLElement & {
   disabled: boolean;
@@ -339,7 +338,7 @@ describe('ki-input in a real browser', () => {
     const el = await mount({ autocomplete: 'email', label: 'Email' });
     const input = requireInput(el);
 
-    expect(input.autocomplete).toBe('email');
+    expect(input.getAttribute('autocomplete')).toBe('email');
   });
 
   it('S9 has zero axe violations across the type and state matrix', async () => {

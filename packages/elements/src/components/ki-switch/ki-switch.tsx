@@ -1,4 +1,4 @@
-import { AttachInternals, Component, Element, Prop, State, Watch, h } from '@stencil/core';
+import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
 import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
 
 /**
@@ -196,6 +196,7 @@ export class KiSwitch {
           ref={this.setInput}
           type="checkbox"
           role="switch"
+          tabIndex={this.effectiveDisabled ? -1 : 0}
           checked={this.checked}
           disabled={this.effectiveDisabled}
           name={this.name ?? ''}

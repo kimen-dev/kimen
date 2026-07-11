@@ -2,52 +2,44 @@
 // Layers: primitive → theme (onmars is the default theme) → semantic.
 // Dark mode is a semantic-layer mode compiled to prefers-color-scheme with a
 // [data-ki-color-scheme] attribute override. Run via ./build.mjs.
+import { readdirSync } from 'node:fs';
+
 import { formattedVariables } from 'style-dictionary/utils';
 
-const LAYERS = [
-  'tokens/primitive.tokens.json',
-  'tokens/themes/onmars.tokens.json',
-  'tokens/semantic.tokens.json',
-  'tokens/component/button.tokens.json',
-  'tokens/component/select.tokens.json',
-  'tokens/component/option.tokens.json',
-  'tokens/component/tabs.tokens.json',
-  'tokens/component/tab.tokens.json',
-  'tokens/component/tab-panel.tokens.json',
-  'tokens/component/dialog.tokens.json',
-  'tokens/component/tooltip.tokens.json',
-  'tokens/component/list.tokens.json',
-  'tokens/component/progress.tokens.json',
-  'tokens/component/radio.tokens.json',
-  'tokens/component/radio-group.tokens.json',
-  'tokens/component/alert.tokens.json',
-  'tokens/component/switch.tokens.json',
-  'tokens/component/badge.tokens.json',
-  'tokens/component/textarea.tokens.json',
-  'tokens/component/checkbox.tokens.json',
-  'tokens/component/card.tokens.json',
-  'tokens/component/input.tokens.json',
-];
+const comparePath = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
+const componentDirectory = new URL('./tokens/component/', import.meta.url);
+const componentSources = readdirSync(componentDirectory, { withFileTypes: true })
+  .filter((entry) => entry.isFile() && entry.name.endsWith('.tokens.json'))
+  .map((entry) => `tokens/component/${entry.name}`)
+  .sort(comparePath);
+const componentBaseLayers = componentSources.filter(
+  (sourcePath) => !sourcePath.endsWith('.material3.tokens.json'),
+);
+const material3ComponentOverrides = componentSources.filter((sourcePath) =>
+  sourcePath.endsWith('.material3.tokens.json'),
+);
+const componentBases = new Set(componentBaseLayers);
+
+for (const overridePath of material3ComponentOverrides) {
+  const basePath = overridePath.replace('.material3.tokens.json', '.tokens.json');
+  if (!componentBases.has(basePath)) {
+    throw new Error(`Component token override has no base source: ${overridePath}`);
+  }
+}
+
+const ONMARS_FOUNDATION = ['tokens/primitive.tokens.json', 'tokens/themes/onmars.tokens.json'];
+const ONMARS_SEMANTIC = ['tokens/semantic.tokens.json'];
+const MATERIAL3_FOUNDATION = [...ONMARS_FOUNDATION, 'tokens/themes/material3.tokens.json'];
+const MATERIAL3_SEMANTIC = ['tokens/semantic.tokens.json', 'tokens/semantic/material3.tokens.json'];
+
+// Every composition is layer-ordered, while file discovery within the
+// component layer is deterministic: all bases first, then theme overrides.
+const LAYERS = [...ONMARS_FOUNDATION, ...ONMARS_SEMANTIC, ...componentBaseLayers];
 const MATERIAL3_LAYERS = [
-  ...LAYERS,
-  'tokens/themes/material3.tokens.json',
-  'tokens/semantic/material3.tokens.json',
-  'tokens/component/button.material3.tokens.json',
-  'tokens/component/select.material3.tokens.json',
-  'tokens/component/option.material3.tokens.json',
-  'tokens/component/tab.material3.tokens.json',
-  'tokens/component/dialog.material3.tokens.json',
-  'tokens/component/tooltip.material3.tokens.json',
-  'tokens/component/list.material3.tokens.json',
-  'tokens/component/progress.material3.tokens.json',
-  'tokens/component/radio.material3.tokens.json',
-  'tokens/component/alert.material3.tokens.json',
-  'tokens/component/switch.material3.tokens.json',
-  'tokens/component/badge.material3.tokens.json',
-  'tokens/component/textarea.material3.tokens.json',
-  'tokens/component/checkbox.material3.tokens.json',
-  'tokens/component/card.material3.tokens.json',
-  'tokens/component/input.material3.tokens.json',
+  ...MATERIAL3_FOUNDATION,
+  ...MATERIAL3_SEMANTIC,
+  ...componentBaseLayers,
+  ...material3ComponentOverrides,
 ];
 
 function variables({ dictionary, options, indentation = '  ' }) {

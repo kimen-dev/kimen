@@ -1,9 +1,8 @@
-import axe from 'axe-core';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
-import { page, userEvent } from 'vitest/browser';
-import { commands } from 'vitest/browser';
+import axe from 'axe-core';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { commands, page, userEvent } from 'vitest/browser';
 
 // @spec:014-ki-tabs
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -355,6 +354,8 @@ describe('ki-tabs keyboard behavior in a real browser', () => {
   it('S18 all-disabled groups contribute no keyboard tab stop', async () => {
     const before = document.createElement('button');
     const after = document.createElement('button');
+    before.tabIndex = 0;
+    after.tabIndex = 0;
     before.textContent = 'Before';
     after.textContent = 'After';
     document.body.append(before);

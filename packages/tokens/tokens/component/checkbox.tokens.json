@@ -2,189 +2,239 @@
   "ki": {
     "checkbox": {
       "control-size": {
-        "$value": "{ki.space.5xl}"
+        "$value": "{ki.space.5xl}",
+        "$description": "dimension used by the checkbox component for control size."
       },
       "min-target": {
-        "$value": "{ki.space.7xl}"
+        "$value": "{ki.space.7xl}",
+        "$description": "dimension used by the checkbox component for min target."
       },
       "gap": {
-        "$value": "{ki.space.sm}"
+        "$value": "{ki.space.sm}",
+        "$description": "dimension used by the checkbox component for gap."
       },
       "radius": {
-        "$value": "{ki.radius.xs}"
+        "$value": "{ki.radius.xs}",
+        "$description": "dimension used by the checkbox component for radius."
       },
       "border-width": {
-        "$value": "{ki.space.xxs}"
+        "$value": "{ki.space.xxs}",
+        "$description": "dimension used by the checkbox component for border width."
       },
       "label": {
         "font-size": {
-          "$value": "{ki.typography.size.body-1}"
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the checkbox component for label font size."
         },
         "font-weight": {
-          "$value": "{ki.typography.weight.body.normal}"
+          "$value": "{ki.typography.weight.body.normal}",
+          "$description": "font weight used by the checkbox component for label font weight."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.body-1}"
+          "$value": "{ki.typography.line-height.body-1}",
+          "$description": "dimension used by the checkbox component for label line height."
         }
       },
       "unchecked": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.s0}"
+            "$value": "{ki.surface.s0}",
+            "$description": "color used by the checkbox component for unchecked rest background."
           },
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the checkbox component for unchecked rest foreground."
           },
           "border": {
-            "$value": "{ki.outline.strong}"
+            "$value": "{ki.outline.strong}",
+            "$description": "color used by the checkbox component for unchecked rest border."
           }
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.s1}"
+            "$value": "{ki.surface.s1}",
+            "$description": "color used by the checkbox component for unchecked hover background."
           },
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the checkbox component for unchecked hover foreground."
           },
           "border": {
-            "$value": "{ki.outline.primary-high-em}"
+            "$value": "{ki.outline.primary-high-em}",
+            "$description": "color used by the checkbox component for unchecked hover border."
           }
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.s2}"
+            "$value": "{ki.surface.s2}",
+            "$description": "color used by the checkbox component for unchecked active background."
           },
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the checkbox component for unchecked active foreground."
           },
           "border": {
-            "$value": "{ki.outline.primary-high-em}"
+            "$value": "{ki.outline.primary-high-em}",
+            "$description": "color used by the checkbox component for unchecked active border."
           }
         },
         "disabled": {
           "bg": {
-            "$value": "{ki.surface.disabled-low-em}"
+            "$value": "{ki.surface.disabled-low-em}",
+            "$description": "color used by the checkbox component for unchecked disabled background."
           },
           "fg": {
-            "$value": "{ki.text.muted}"
+            "$value": "{ki.text.muted}",
+            "$description": "color used by the checkbox component for unchecked disabled foreground."
           },
           "border": {
-            "$value": "{ki.outline.med-em}"
+            "$value": "{ki.outline.med-em}",
+            "$description": "color used by the checkbox component for unchecked disabled border."
           }
         }
       },
       "checked": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}"
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "color used by the checkbox component for checked rest background."
           },
           "fg": {
-            "$value": "{ki.text.primary-on-primary}"
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "color used by the checkbox component for checked rest foreground."
           },
           "border": {
-            "$value": "{ki.outline.none}"
+            "$value": "{ki.outline.none}",
+            "$description": "color used by the checkbox component for checked rest border."
           }
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em-hover}"
+            "$value": "{ki.surface.primary-high-em-hover}",
+            "$description": "color used by the checkbox component for checked hover background."
           },
           "fg": {
-            "$value": "{ki.text.primary-on-primary}"
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "color used by the checkbox component for checked hover foreground."
           },
           "border": {
-            "$value": "{ki.outline.none}"
+            "$value": "{ki.outline.none}",
+            "$description": "color used by the checkbox component for checked hover border."
           }
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}"
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "color used by the checkbox component for checked active background."
           },
           "fg": {
-            "$value": "{ki.text.primary-on-primary}"
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "color used by the checkbox component for checked active foreground."
           },
           "border": {
-            "$value": "{ki.outline.none}"
+            "$value": "{ki.outline.none}",
+            "$description": "color used by the checkbox component for checked active border."
           }
         },
         "disabled": {
           "bg": {
-            "$value": "{ki.surface.disabled-low-em}"
+            "$value": "{ki.surface.disabled-low-em}",
+            "$description": "color used by the checkbox component for checked disabled background."
           },
           "fg": {
-            "$value": "{ki.text.muted}"
+            "$value": "{ki.text.muted}",
+            "$description": "color used by the checkbox component for checked disabled foreground."
           },
           "border": {
-            "$value": "{ki.outline.none}"
+            "$value": "{ki.outline.none}",
+            "$description": "color used by the checkbox component for checked disabled border."
           }
         }
       },
       "indeterminate": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}"
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "color used by the checkbox component for indeterminate rest background."
           },
           "fg": {
-            "$value": "{ki.text.primary-on-primary}"
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "color used by the checkbox component for indeterminate rest foreground."
           },
           "border": {
-            "$value": "{ki.outline.none}"
+            "$value": "{ki.outline.none}",
+            "$description": "color used by the checkbox component for indeterminate rest border."
           }
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em-hover}"
+            "$value": "{ki.surface.primary-high-em-hover}",
+            "$description": "color used by the checkbox component for indeterminate hover background."
           },
           "fg": {
-            "$value": "{ki.text.primary-on-primary}"
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "color used by the checkbox component for indeterminate hover foreground."
           },
           "border": {
-            "$value": "{ki.outline.none}"
+            "$value": "{ki.outline.none}",
+            "$description": "color used by the checkbox component for indeterminate hover border."
           }
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}"
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "color used by the checkbox component for indeterminate active background."
           },
           "fg": {
-            "$value": "{ki.text.primary-on-primary}"
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "color used by the checkbox component for indeterminate active foreground."
           },
           "border": {
-            "$value": "{ki.outline.none}"
+            "$value": "{ki.outline.none}",
+            "$description": "color used by the checkbox component for indeterminate active border."
           }
         },
         "disabled": {
           "bg": {
-            "$value": "{ki.surface.disabled-low-em}"
+            "$value": "{ki.surface.disabled-low-em}",
+            "$description": "color used by the checkbox component for indeterminate disabled background."
           },
           "fg": {
-            "$value": "{ki.text.muted}"
+            "$value": "{ki.text.muted}",
+            "$description": "color used by the checkbox component for indeterminate disabled foreground."
           },
           "border": {
-            "$value": "{ki.outline.none}"
+            "$value": "{ki.outline.none}",
+            "$description": "color used by the checkbox component for indeterminate disabled border."
           }
         }
       },
       "invalid": {
         "bg": {
-          "$value": "{ki.surface.danger-low-em}"
+          "$value": "{ki.surface.danger-low-em}",
+          "$description": "color used by the checkbox component for invalid background."
         },
         "fg": {
-          "$value": "{ki.text.danger-high-em}"
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "color used by the checkbox component for invalid foreground."
         },
         "border": {
-          "$value": "{ki.outline.danger-high-em}"
+          "$value": "{ki.outline.danger-high-em}",
+          "$description": "color used by the checkbox component for invalid border."
         }
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the checkbox component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the checkbox component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the checkbox component for focus ring offset."
         }
       }
     }

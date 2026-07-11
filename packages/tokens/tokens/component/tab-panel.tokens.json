@@ -3,24 +3,30 @@
     "tab-panel": {
       "padding": {
         "block": {
-          "$value": "{ki.space.lg}"
+          "$value": "{ki.space.lg}",
+          "$description": "dimension used by the tab panel component for padding block."
         },
         "inline": {
-          "$value": "{ki.space.lg}"
+          "$value": "{ki.space.lg}",
+          "$description": "dimension used by the tab panel component for padding inline."
         }
       },
       "bg": {
-        "$value": "{ki.surface.s0}"
+        "$value": "{ki.surface.s0}",
+        "$description": "color used by the tab panel component for background."
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the tab panel component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the tab panel component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the tab panel component for focus ring offset."
         }
       }
     }

@@ -1,43 +1,121 @@
 {
   "ki": {
     "select": {
-      "height": { "$value": "{ki.space.14xl}" },
-      "radius": { "$value": "{ki.radius.xs}" },
-      "border-block-start-width": { "$value": "{ki.space.zero}" },
-      "border-inline-start-width": { "$value": "{ki.space.zero}" },
-      "border-inline-end-width": { "$value": "{ki.space.zero}" },
+      "height": {
+        "$value": "{ki.space.14xl}",
+        "$description": "Material 3 dimension used by the select component for height."
+      },
+      "radius": {
+        "$value": "{ki.radius.xs}",
+        "$description": "Material 3 dimension used by the select component for radius."
+      },
+      "border-block-start-width": {
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 dimension used by the select component for border block start width."
+      },
+      "border-inline-start-width": {
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 dimension used by the select component for border inline start width."
+      },
+      "border-inline-end-width": {
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 dimension used by the select component for border inline end width."
+      },
       "rest": {
-        "bg": { "$value": "{ki.surface.s2}" },
-        "fg": { "$value": "{ki.text.high-em}" },
-        "border": { "$value": "{ki.outline.high-em}" },
-        "label-fg": { "$value": "{ki.text.med-em}" }
+        "bg": {
+          "$value": "{ki.surface.s2}",
+          "$description": "Material 3 color used by the select component for rest background."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the select component for rest foreground."
+        },
+        "border": {
+          "$value": "{ki.outline.high-em}",
+          "$description": "Material 3 color used by the select component for rest border."
+        },
+        "label-fg": {
+          "$value": "{ki.text.med-em}",
+          "$description": "Material 3 color used by the select component for rest label foreground."
+        }
       },
       "hover": {
-        "bg": { "$value": "{ki.surface.s3}" },
-        "fg": { "$value": "{ki.text.high-em}" },
-        "border": { "$value": "{ki.outline.primary-high-em}" },
-        "label-fg": { "$value": "{ki.text.high-em}" }
+        "bg": {
+          "$value": "{ki.surface.s3}",
+          "$description": "Material 3 color used by the select component for hover background."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the select component for hover foreground."
+        },
+        "border": {
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "Material 3 color used by the select component for hover border."
+        },
+        "label-fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the select component for hover label foreground."
+        }
       },
       "focus": {
-        "bg": { "$value": "{ki.surface.s2}" },
-        "fg": { "$value": "{ki.text.high-em}" },
-        "border": { "$value": "{ki.outline.primary-high-em}" },
-        "label-fg": { "$value": "{ki.text.primary-med-em}" }
+        "bg": {
+          "$value": "{ki.surface.s2}",
+          "$description": "Material 3 color used by the select component for focus background."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the select component for focus foreground."
+        },
+        "border": {
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "Material 3 color used by the select component for focus border."
+        },
+        "label-fg": {
+          "$value": "{ki.text.primary-med-em}",
+          "$description": "Material 3 color used by the select component for focus label foreground."
+        }
       },
       "disabled": {
-        "bg": { "$value": "{ki.surface.disabled-base-em}" },
-        "fg": { "$value": "{ki.text.low-em}" },
-        "border": { "$value": "{ki.outline.low-em}" },
-        "label-fg": { "$value": "{ki.text.low-em}" }
+        "bg": {
+          "$value": "{ki.surface.disabled-base-em}",
+          "$description": "Material 3 color used by the select component for disabled background."
+        },
+        "fg": {
+          "$value": "{ki.text.low-em}",
+          "$description": "Material 3 color used by the select component for disabled foreground."
+        },
+        "border": {
+          "$value": "{ki.outline.low-em}",
+          "$description": "Material 3 color used by the select component for disabled border."
+        },
+        "label-fg": {
+          "$value": "{ki.text.low-em}",
+          "$description": "Material 3 color used by the select component for disabled label foreground."
+        }
       },
-      "placeholder-fg": { "$value": "{ki.text.med-em}" },
+      "placeholder-fg": {
+        "$value": "{ki.text.med-em}",
+        "$description": "Material 3 color used by the select component for placeholder foreground."
+      },
       "listbox": {
-        "bg": { "$value": "{ki.surface.s2}" },
-        "radius": { "$value": "{ki.radius.md}" },
-        "elevation": { "$value": "{ki.elevation.shadow-med}" }
+        "bg": {
+          "$value": "{ki.surface.s2}",
+          "$description": "Material 3 color used by the select component for listbox background."
+        },
+        "radius": {
+          "$value": "{ki.radius.md}",
+          "$description": "Material 3 dimension used by the select component for listbox radius."
+        },
+        "elevation": {
+          "$value": "{ki.elevation.shadow-med}",
+          "$description": "Material 3 color used by the select component for listbox elevation."
+        }
       },
       "focus-ring": {
-        "color": { "$value": "{ki.outline.primary-high-em}" }
+        "color": {
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "Material 3 color used by the select component for focus ring color."
+        }
       }
     }
   }

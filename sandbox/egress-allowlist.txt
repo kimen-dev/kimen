@@ -1,0 +1,6 @@
+version 1
+bootstrap registry.npmjs.org:443
+bootstrap cdn.playwright.dev:443
+bootstrap playwright.azureedge.net:443
+bootstrap playwright.download.prss.microsoft.com:443
+agent gateway.example.invalid:443

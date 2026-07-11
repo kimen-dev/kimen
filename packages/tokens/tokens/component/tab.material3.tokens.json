@@ -4,80 +4,99 @@
       "selected": {
         "rest": {
           "fg": {
-            "$value": "{ki.text.primary-high-em}"
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "Material 3 color used by the tab component for selected rest foreground."
           },
           "bg": {
-            "$value": "{ki.surface.s0}"
+            "$value": "{ki.surface.s0}",
+            "$description": "Material 3 color used by the tab component for selected rest background."
           }
         },
         "hover": {
           "fg": {
-            "$value": "{ki.text.primary-high-em}"
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "Material 3 color used by the tab component for selected hover foreground."
           },
           "bg": {
-            "$value": "{ki.surface.primary-base-em-alpha}"
+            "$value": "{ki.surface.primary-base-em-alpha}",
+            "$description": "Material 3 color used by the tab component for selected hover background."
           }
         },
         "active": {
           "fg": {
-            "$value": "{ki.text.primary-high-em}"
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "Material 3 color used by the tab component for selected active foreground."
           },
           "bg": {
-            "$value": "{ki.surface.primary-low-em-alpha}"
+            "$value": "{ki.surface.primary-low-em-alpha}",
+            "$description": "Material 3 color used by the tab component for selected active background."
           }
         },
         "disabled": {
           "fg": {
-            "$value": "{ki.text.muted}"
+            "$value": "{ki.text.muted}",
+            "$description": "Material 3 color used by the tab component for selected disabled foreground."
           },
           "bg": {
-            "$value": "{ki.surface.disabled-base-em}"
+            "$value": "{ki.surface.disabled-base-em}",
+            "$description": "Material 3 color used by the tab component for selected disabled background."
           }
         }
       },
       "unselected": {
         "rest": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "Material 3 color used by the tab component for unselected rest foreground."
           },
           "bg": {
-            "$value": "{ki.surface.s0}"
+            "$value": "{ki.surface.s0}",
+            "$description": "Material 3 color used by the tab component for unselected rest background."
           }
         },
         "hover": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "Material 3 color used by the tab component for unselected hover foreground."
           },
           "bg": {
-            "$value": "{ki.surface.s1}"
+            "$value": "{ki.surface.s1}",
+            "$description": "Material 3 color used by the tab component for unselected hover background."
           }
         },
         "active": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "Material 3 color used by the tab component for unselected active foreground."
           },
           "bg": {
-            "$value": "{ki.surface.s2}"
+            "$value": "{ki.surface.s2}",
+            "$description": "Material 3 color used by the tab component for unselected active background."
           }
         },
         "disabled": {
           "fg": {
-            "$value": "{ki.text.muted}"
+            "$value": "{ki.text.muted}",
+            "$description": "Material 3 color used by the tab component for unselected disabled foreground."
           },
           "bg": {
-            "$value": "{ki.surface.disabled-base-em}"
+            "$value": "{ki.surface.disabled-base-em}",
+            "$description": "Material 3 color used by the tab component for unselected disabled background."
           }
         }
       },
       "indicator": {
         "size": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "Material 3 dimension used by the tab component for indicator size."
         },
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "Material 3 color used by the tab component for indicator color."
         },
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the tab component for indicator radius."
         }
       }
     }

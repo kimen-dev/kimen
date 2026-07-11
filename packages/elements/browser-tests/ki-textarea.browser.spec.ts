@@ -1,13 +1,12 @@
-import axe from 'axe-core';
-import { page, userEvent } from 'vitest/browser';
-import { beforeAll, describe, expect, it } from 'vitest';
-
+import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:004-ki-textarea
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import material3Css from '@kimen/tokens/css/material3?raw';
+import axe from 'axe-core';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-textarea.js';
 
 type KiTextareaElement = HTMLElement & {
@@ -225,6 +224,7 @@ describe('ki-textarea in a real browser', () => {
     const el = await mount();
     const textarea = innerTextarea(el);
     const next = document.createElement('button');
+    next.tabIndex = 0;
     next.textContent = 'Next';
     document.body.append(next);
     const changes: string[] = [];
@@ -289,6 +289,7 @@ describe('ki-textarea in a real browser', () => {
     const el = await mount({ value: 'Ring twice' });
     const textarea = innerTextarea(el);
     const next = document.createElement('button');
+    next.tabIndex = 0;
     next.textContent = 'Next';
     document.body.append(next);
 

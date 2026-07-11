@@ -4,8 +4,10 @@
   "ignoreDependencies": ["husky", "nx", "@kimen/nx-plugin"],
   "workspaces": {
     ".": {
-      "entry": ["scripts/**/*.mjs"],
-      "project": ["scripts/**/*.mjs"]
+      "entry": ["scripts/**/*.mjs", "*.config.{ts,mjs}"],
+      "project": ["scripts/**/*.mjs", "*.config.{ts,mjs}"],
+      "ignoreDependencies": ["@arethetypeswrong/cli", "@stryker-mutator/vitest-runner", "publint"],
+      "stencil": false
     },
     "packages/*": {
       "entry": [
@@ -14,7 +16,8 @@
         "vitest.setup.mjs",
         "size-limit/**/*.{ts,tsx}"
       ],
-      "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"]
+      "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"],
+      "stencil": false
     },
     "packages/kimen": {
       "entry": ["index.mjs"],

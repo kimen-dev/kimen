@@ -75,7 +75,7 @@ input {
   box-sizing: border-box;
   inline-size: max(var(--_ki-radio-control-size), var(--_ki-radio-min-target));
   block-size: max(var(--_ki-radio-control-size), var(--_ki-radio-min-target));
-  margin: var(--ki-space-zero);
+  margin: 0;
   opacity: 0;
   transform: translateY(-50%);
 }

@@ -3,34 +3,41 @@
     "progress": {
       "linear": {
         "thickness": {
-          "$value": "{ki.space.xs}"
+          "$value": "{ki.space.xs}",
+          "$description": "dimension used by the progress component for linear thickness."
         },
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the progress component for linear radius."
         }
       },
       "circular": {
         "size": {
-          "$value": "{ki.space.12xl}"
+          "$value": "{ki.space.12xl}",
+          "$description": "dimension used by the progress component for circular size."
         },
         "track-width": {
-          "$value": "{ki.space.xs}"
+          "$value": "{ki.space.xs}",
+          "$description": "dimension used by the progress component for circular track width."
         }
       },
       "track": {
         "color": {
-          "$value": "{ki.surface.s3}"
+          "$value": "{ki.surface.s3}",
+          "$description": "color used by the progress component for track color."
         }
       },
       "indicator": {
         "color": {
-          "$value": "{ki.surface.primary-high-em}"
+          "$value": "{ki.surface.primary-high-em}",
+          "$description": "color used by the progress component for indicator color."
         }
       },
       "indeterminate": {
         "duration": {
           "$type": "duration",
-          "$value": "1600ms"
+          "$value": "{ki.foundation.migrated.component-progress.progress.indeterminate.duration}",
+          "$description": "duration used by the progress component for progress indeterminate duration."
         }
       }
     }

@@ -3,28 +3,34 @@
     "progress": {
       "linear": {
         "thickness": {
-          "$value": "{ki.space.xs}"
+          "$value": "{ki.space.xs}",
+          "$description": "Material 3 dimension used by the progress component for linear thickness."
         },
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the progress component for linear radius."
         }
       },
       "circular": {
         "size": {
-          "$value": "{ki.space.14xl}"
+          "$value": "{ki.space.14xl}",
+          "$description": "Material 3 dimension used by the progress component for circular size."
         },
         "track-width": {
-          "$value": "{ki.space.xs}"
+          "$value": "{ki.space.xs}",
+          "$description": "Material 3 dimension used by the progress component for circular track width."
         }
       },
       "track": {
         "color": {
-          "$value": "{ki.surface.s3}"
+          "$value": "{ki.surface.s3}",
+          "$description": "Material 3 color used by the progress component for track color."
         }
       },
       "indicator": {
         "color": {
-          "$value": "{ki.surface.primary-high-em}"
+          "$value": "{ki.surface.primary-high-em}",
+          "$description": "Material 3 color used by the progress component for indicator color."
         }
       }
     }

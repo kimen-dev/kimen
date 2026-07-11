@@ -187,9 +187,9 @@ input:focus-visible ~ [part="control"] {
 
 @media (prefers-reduced-motion: no-preference) {
   .mark {
-    transition-duration: 120ms;
+    transition-duration: var(--ki-motion-duration-fast);
     transition-property: opacity, transform;
-    transition-timing-function: ease-out;
+    transition-timing-function: var(--ki-motion-easing-out);
   }
 
   :host(:not([checked], [indeterminate])) .mark {

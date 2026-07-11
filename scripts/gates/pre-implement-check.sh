@@ -11,8 +11,8 @@
 # hook in .specify/extensions.yml (command kimen.gates.pre-implement, skill
 # /kimen-gates-pre-implement).
 #
-# Checks: pre-plan gate (feature.feature + lint) → .approved present and
-# matching spec.md → constitution digest in sync.
+# Checks: pre-plan gate (synchronized pair + current dual-hash approval) →
+# constitution digest in sync.
 #
 # Usage: pre-implement-check.sh [feature-dir]
 set -uo pipefail
@@ -25,18 +25,7 @@ DIR=$(kimen_resolve_feature_dir "${1:-}") || {
 }
 
 if ! bash scripts/gates/pre-plan-check.sh "$DIR"; then
-  echo "GATE pre-implement: FAIL — spec lint preconditions are red for $DIR"
-  exit 1
-fi
-
-MARKER="$DIR/.approved"
-if [ ! -f "$MARKER" ]; then
-  echo "GATE pre-implement: FAIL — founder approval marker missing: $MARKER. Human gate 1 (spec approval) has not happened. After the founder approves spec + Gherkin, record it with 'bash scripts/gates/record-approval.sh $DIR'."
-  exit 1
-fi
-SHA=$(kimen_sha256 "$DIR/spec.md")
-if ! grep -q "$SHA" "$MARKER"; then
-  echo "GATE pre-implement: FAIL — spec.md changed since founder approval (sha256 in $MARKER does not match). Re-approval required (Art. II), then re-run record-approval.sh."
+  echo "GATE pre-implement: FAIL — synchronized contract/approval preconditions are red for $DIR"
   exit 1
 fi
 
@@ -45,4 +34,4 @@ if ! bash scripts/gates/constitution-check.sh; then
   exit 1
 fi
 
-echo "GATE pre-implement: PASS — spec approved by founder (marker matches spec.md) and constitution in sync for $DIR"
+echo "GATE pre-implement: PASS — synchronized dual-hash approval and constitution in sync for $DIR"

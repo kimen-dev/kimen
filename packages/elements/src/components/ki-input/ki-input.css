@@ -88,7 +88,7 @@
 }
 
 [part="input"] {
-  min-inline-size: var(--ki-space-zero);
+  min-inline-size: 0;
   flex: 1 1 auto;
   color: var(--_ki-input-fg);
   background-color: transparent;

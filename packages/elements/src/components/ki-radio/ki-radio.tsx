@@ -1,4 +1,4 @@
-import { Component, Element, Prop, Watch, h } from '@stencil/core';
+import { Component, Element, h, Prop, Watch } from '@stencil/core';
 import { normalizeBooleanPresence } from '../ki-radio-group/ki-radio-group.form';
 
 /* eslint-disable jsx-a11y/label-has-associated-control -- The slotted option label is the accessible text for the native input inside the shadow label. */
@@ -61,7 +61,12 @@ export class KiRadio {
   render() {
     return (
       <label>
-        <input type="radio" disabled={this.disabled} value={this.value} />
+        <input
+          type="radio"
+          tabIndex={this.disabled ? -1 : 0}
+          disabled={this.disabled}
+          value={this.value}
+        />
         <span part="control" aria-hidden="true"></span>
         <span part="label">
           <slot />

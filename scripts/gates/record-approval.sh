@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Records HUMAN GATE 1 (founder spec approval, constitution Workflow) as a
-# verifiable marker: specs/<feature>/.approved with UTC date + spec.md sha256.
+# verifiable marker v2 bound to exact spec.md + feature.feature bytes.
 #
 # Run automatically by the kimen workflow right after its approve-spec human
 # gate, or by the founder directly when driving the /speckit-* skills without
@@ -17,13 +17,37 @@ DIR=$(kimen_resolve_feature_dir "${1:-}") || {
   exit 1
 }
 SPEC="$DIR/spec.md"
-if [ ! -f "$SPEC" ]; then
-  echo "GATE record-approval: FAIL — $SPEC not found; nothing to approve"
+FEATURE="$DIR/feature.feature"
+if ! kimen_validate_feature_dir "$DIR"; then
+  echo "GATE record-approval: FAIL — unsafe feature directory: $DIR"
   exit 1
 fi
-SHA=$(kimen_sha256 "$SPEC")
+if ! bash scripts/gates/check-spec-contracts.sh "$DIR"; then
+  echo "GATE record-approval: FAIL — contract pair is missing, desynchronized or lint-red"
+  exit 1
+fi
+SPEC_SHA=$(kimen_sha256 "$SPEC")
+FEATURE_SHA=$(kimen_sha256 "$FEATURE")
+APPROVED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+TMP=$(mktemp "$DIR/.approved.tmp.XXXXXX") || exit 1
+cleanup_approval_tmp() {
+  [ -n "${TMP:-}" ] && rm -f "$TMP"
+}
+trap cleanup_approval_tmp EXIT INT TERM
 {
-  echo "approved-at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo "spec-sha256: $SHA"
-} > "$DIR/.approved"
-echo "GATE record-approval: PASS — wrote $DIR/.approved (spec.md sha256 $SHA)"
+  echo "approval-version: 2"
+  echo "approved-at: $APPROVED_AT"
+  echo "spec-sha256: $SPEC_SHA"
+  echo "feature-sha256: $FEATURE_SHA"
+} > "$TMP"
+
+# Refuse a contract changed concurrently between validation and marker write.
+if [ "$SPEC_SHA" != "$(kimen_sha256 "$SPEC")" ] || [ "$FEATURE_SHA" != "$(kimen_sha256 "$FEATURE")" ]; then
+  rm -f "$TMP"
+  echo "GATE record-approval: FAIL — contract bytes changed during approval recording"
+  exit 1
+fi
+mv "$TMP" "$DIR/.approved"
+TMP=""
+trap - EXIT INT TERM
+echo "GATE record-approval: PASS — wrote marker v2 for exact spec.md + feature.feature bytes in $DIR"

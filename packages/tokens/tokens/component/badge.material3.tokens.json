@@ -3,36 +3,45 @@
     "badge": {
       "sm": {
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the badge component for sm radius."
         }
       },
       "md": {
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the badge component for md radius."
         }
       },
       "border-width": {
-        "$value": "0.0625rem"
+        "$value": "{ki.foundation.migrated.component-badge-material3.badge.border-width}",
+        "$description": "Material 3 dimension used by the badge component for badge border width.",
+        "$type": "dimension"
       },
       "neutral": {
         "border": {
-          "$value": "{ki.outline.low-em}"
+          "$value": "{ki.outline.low-em}",
+          "$description": "Material 3 color used by the badge component for neutral border."
         }
       },
       "success": {
         "border": {
-          "$value": "{ki.outline.success-low-em}"
+          "$value": "{ki.outline.success-low-em}",
+          "$description": "Material 3 color used by the badge component for success border."
         }
       },
       "danger": {
         "bg": {
-          "$value": "{ki.surface.danger-base-em}"
+          "$value": "{ki.surface.danger-base-em}",
+          "$description": "Material 3 color used by the badge component for danger background."
         },
         "fg": {
-          "$value": "{ki.text.danger-high-em}"
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "Material 3 color used by the badge component for danger foreground."
         },
         "border": {
-          "$value": "{ki.outline.danger-low-em}"
+          "$value": "{ki.outline.danger-low-em}",
+          "$description": "Material 3 color used by the badge component for danger border."
         }
       }
     }

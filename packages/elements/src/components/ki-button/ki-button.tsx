@@ -1,4 +1,4 @@
-import { AttachInternals, Component, Element, Prop, State, h } from '@stencil/core';
+import { AttachInternals, Component, Element, h, Prop, State } from '@stencil/core';
 import { normalizeKiButtonType } from './ki-button.form';
 
 export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';
@@ -189,6 +189,7 @@ export class KiButton {
         }}
         part="button"
         type="button"
+        tabIndex={this.effectiveDisabled ? -1 : 0}
         disabled={this.effectiveDisabled}
         onClick={this.handleClick}
       >

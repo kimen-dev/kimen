@@ -2,182 +2,233 @@
   "ki": {
     "input": {
       "height": {
-        "$value": "{ki.space.14xl}"
+        "$value": "{ki.space.14xl}",
+        "$description": "Material 3 dimension used by the input component for height."
       },
       "min-target": {
-        "$value": "{ki.space.7xl}"
+        "$value": "{ki.space.7xl}",
+        "$description": "Material 3 dimension used by the input component for min target."
       },
       "padding-inline": {
-        "$value": "{ki.space.3xl}"
+        "$value": "{ki.space.3xl}",
+        "$description": "Material 3 dimension used by the input component for padding inline."
       },
       "gap": {
-        "$value": "{ki.space.sm}"
+        "$value": "{ki.space.sm}",
+        "$description": "Material 3 dimension used by the input component for gap."
       },
       "label-gap": {
-        "$value": "{ki.space.xs}"
+        "$value": "{ki.space.xs}",
+        "$description": "Material 3 dimension used by the input component for label gap."
       },
       "radius": {
-        "$value": "{ki.radius.xs}"
+        "$value": "{ki.radius.xs}",
+        "$description": "Material 3 dimension used by the input component for radius."
       },
       "icon-size": {
-        "$value": "{ki.space.5xl}"
+        "$value": "{ki.space.5xl}",
+        "$description": "Material 3 dimension used by the input component for icon size."
       },
       "font-size": {
-        "$value": "{ki.typography.size.body-1}"
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "Material 3 dimension used by the input component for font size."
       },
       "font-weight": {
-        "$value": "{ki.typography.weight.body.normal}"
+        "$value": "{ki.typography.weight.body.normal}",
+        "$description": "Material 3 font weight used by the input component for font weight."
       },
       "line-height": {
-        "$value": "{ki.typography.line-height.body-1}"
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "Material 3 dimension used by the input component for line height."
       },
       "label": {
         "font-size": {
-          "$value": "{ki.typography.size.caption-2}"
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "Material 3 dimension used by the input component for label font size."
         },
         "font-weight": {
-          "$value": "{ki.typography.weight.body.normal}"
+          "$value": "{ki.typography.weight.body.normal}",
+          "$description": "Material 3 font weight used by the input component for label font weight."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.caption-2}"
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "Material 3 dimension used by the input component for label line height."
         }
       },
       "border-width": {
-        "$value": "{ki.space.xxs}"
+        "$value": "{ki.space.xxs}",
+        "$description": "Material 3 dimension used by the input component for border width."
       },
       "border": {
         "block-start": {
           "width": {
-            "$value": "{ki.space.zero}"
+            "$value": "{ki.space.zero}",
+            "$description": "Material 3 dimension used by the input component for border block start width."
           }
         },
         "block-end": {
           "width": {
-            "$value": "{ki.input.border-width}"
+            "$value": "{ki.input.border-width}",
+            "$description": "Material 3 dimension used by the input component for border block end width."
           }
         },
         "inline-start": {
           "width": {
-            "$value": "{ki.space.zero}"
+            "$value": "{ki.space.zero}",
+            "$description": "Material 3 dimension used by the input component for border inline start width."
           }
         },
         "inline-end": {
           "width": {
-            "$value": "{ki.space.zero}"
+            "$value": "{ki.space.zero}",
+            "$description": "Material 3 dimension used by the input component for border inline end width."
           }
         }
       },
       "rest": {
         "bg": {
-          "$value": "{ki.surface.s1}"
+          "$value": "{ki.surface.s1}",
+          "$description": "Material 3 color used by the input component for rest background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the input component for rest foreground."
         },
         "border": {
-          "$value": "{ki.outline.high-em}"
+          "$value": "{ki.outline.high-em}",
+          "$description": "Material 3 color used by the input component for rest border."
         },
         "label-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "Material 3 color used by the input component for rest label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "Material 3 color used by the input component for rest placeholder foreground."
         }
       },
       "hover": {
         "bg": {
-          "$value": "{ki.surface.s2}"
+          "$value": "{ki.surface.s2}",
+          "$description": "Material 3 color used by the input component for hover background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the input component for hover foreground."
         },
         "border": {
-          "$value": "{ki.outline.high-em}"
+          "$value": "{ki.outline.high-em}",
+          "$description": "Material 3 color used by the input component for hover border."
         },
         "label-fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the input component for hover label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "Material 3 color used by the input component for hover placeholder foreground."
         }
       },
       "focus": {
         "bg": {
-          "$value": "{ki.surface.s1}"
+          "$value": "{ki.surface.s1}",
+          "$description": "Material 3 color used by the input component for focus background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the input component for focus foreground."
         },
         "border": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "Material 3 color used by the input component for focus border."
         },
         "label-fg": {
-          "$value": "{ki.text.primary-med-em}"
+          "$value": "{ki.text.primary-med-em}",
+          "$description": "Material 3 color used by the input component for focus label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "Material 3 color used by the input component for focus placeholder foreground."
         }
       },
       "disabled": {
         "bg": {
-          "$value": "{ki.surface.disabled-base-em}"
+          "$value": "{ki.surface.disabled-base-em}",
+          "$description": "Material 3 color used by the input component for disabled background."
         },
         "fg": {
-          "$value": "{ki.text.low-em}"
+          "$value": "{ki.text.low-em}",
+          "$description": "Material 3 color used by the input component for disabled foreground."
         },
         "border": {
-          "$value": "{ki.outline.low-em}"
+          "$value": "{ki.outline.low-em}",
+          "$description": "Material 3 color used by the input component for disabled border."
         },
         "label-fg": {
-          "$value": "{ki.text.low-em}"
+          "$value": "{ki.text.low-em}",
+          "$description": "Material 3 color used by the input component for disabled label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.low-em}"
+          "$value": "{ki.text.low-em}",
+          "$description": "Material 3 color used by the input component for disabled placeholder foreground."
         }
       },
       "readonly": {
         "bg": {
-          "$value": "{ki.surface.s0}"
+          "$value": "{ki.surface.s0}",
+          "$description": "Material 3 color used by the input component for readonly background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the input component for readonly foreground."
         },
         "border": {
-          "$value": "{ki.outline.med-em}"
+          "$value": "{ki.outline.med-em}",
+          "$description": "Material 3 color used by the input component for readonly border."
         },
         "label-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "Material 3 color used by the input component for readonly label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "Material 3 color used by the input component for readonly placeholder foreground."
         }
       },
       "invalid": {
         "bg": {
-          "$value": "{ki.surface.s1}"
+          "$value": "{ki.surface.s1}",
+          "$description": "Material 3 color used by the input component for invalid background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the input component for invalid foreground."
         },
         "border": {
-          "$value": "{ki.outline.danger-high-em}"
+          "$value": "{ki.outline.danger-high-em}",
+          "$description": "Material 3 color used by the input component for invalid border."
         },
         "label-fg": {
-          "$value": "{ki.text.danger-med-em}"
+          "$value": "{ki.text.danger-med-em}",
+          "$description": "Material 3 color used by the input component for invalid label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "Material 3 color used by the input component for invalid placeholder foreground."
         }
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "Material 3 color used by the input component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "Material 3 dimension used by the input component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "Material 3 dimension used by the input component for focus ring offset."
         }
       }
     }

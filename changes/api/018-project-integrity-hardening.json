@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "ab33e8f8fdfe0fdabef84af92ce5cd01e3b7096ec7e596d961f3c7f6f5d3194d",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Declare additive direct-module types, CEM facets and three public tokens; effective light/dark CSS values for all 939 pre-018 public tokens remain unchanged across OnMars and Material3.",
+  "release": "minor",
+  "schemaVersion": 1
+}

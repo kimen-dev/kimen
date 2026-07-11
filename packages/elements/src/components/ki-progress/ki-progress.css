@@ -52,7 +52,7 @@
 
 .base-circular [part="indicator"] {
   stroke: var(--_ki-progress-indicator-color);
-  stroke-dasharray: calc(var(--_ki-progress-fraction) * 100) 100;
+  stroke-dasharray: var(--_ki-progress-dash) 100;
   transform-box: fill-box;
   transform-origin: center;
 }

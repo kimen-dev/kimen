@@ -12,8 +12,7 @@ on:
   schedule:
     - cron: '0 6 * * 1' # weekly, Monday 06:00 UTC
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
   group: security-${{ github.workflow }}-${{ github.ref }}
@@ -23,11 +22,19 @@ jobs:
   semgrep:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
     steps:
-      - name: Harden runner (egress audit; switch to block after baseline)
+      - name: Harden runner
         uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            objects.githubusercontent.com:443
+            pypi.org:443
+            files.pythonhosted.org:443
+            semgrep.dev:443
 
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
@@ -44,6 +51,8 @@ jobs:
           --exclude .specify --exclude .claude
 
   osv-scan:
+    # kimen-workflow-policy: reusable-workflow-v1
+    # reason: the full-SHA-pinned upstream OSV scanner owns its runner, so in-repo hardening cannot apply
     permissions:
       contents: read
       security-events: write
@@ -58,11 +67,18 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
-      - name: Harden runner (egress audit; switch to block after baseline)
+      - name: Harden runner
         uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
 
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
@@ -76,11 +92,19 @@ jobs:
   secrets:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
     steps:
-      - name: Harden runner (egress audit; switch to block after baseline)
+      - name: Harden runner
         uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            gitleaks.io:443
+            license.gitleaks.io:443
 
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:

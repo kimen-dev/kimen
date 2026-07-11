@@ -1,56 +1,105 @@
 #!/usr/bin/env bash
-# Runs INSIDE the sandbox container: firewall, deps, agent loop, verdict.
-# The exit code of this script IS the loop verdict (gates, nothing else).
+# @spec:018-project-integrity-hardening#S5
+# One invocation executes exactly one container phase. Host orchestration owns
+# secret destruction, revocation and the transition to fresh networkless gates.
 set -euo pipefail
 
-sudo /usr/local/bin/init-firewall.sh
+PHASE=${1:-${KIMEN_LOOP_PHASE:-}}
 
-# No ~/.gitconfig is mounted (credential-free by design): give the loop a
-# local, clearly-labeled identity so its commits are attributable to it.
-git config user.name "kimen-loop"
-git config user.email "loop@kimen.local"
+usage() {
+  echo 'usage: loop-entry.sh <bootstrap|agent|gates>' >&2
+  exit 64
+}
 
-pnpm install --frozen-lockfile || exit 1
-pnpm --filter @kimen/elements exec playwright install chromium || exit 1
+assert_secretless() {
+  local name
+  for name in KIMEN_MODEL_LEASE_FILE OPENAI_API_KEY ANTHROPIC_API_KEY \
+    ANTHROPIC_AUTH_TOKEN NODE_AUTH_TOKEN NPM_TOKEN; do
+    if [ -n "${!name:-}" ]; then
+      echo "loop-entry: $PHASE phase refuses secret environment" >&2
+      exit 97
+    fi
+  done
+}
 
-PROMPT="You are running an UNATTENDED implementation loop under the onmars-spec
-contract. Read AGENTS.md and .specify/memory/constitution.md first.
+configure_git_identity() {
+  git config user.name 'kimen-loop'
+  git config user.email 'loop@kimen.local'
+}
 
-TASK: ${KIMEN_TASK}
+run_bootstrap() {
+  assert_secretless
+  if [ "${KIMEN_FIREWALL_READY:-0}" != 1 ]; then
+    sudo /usr/local/bin/init-firewall.sh
+  fi
+  pnpm install --frozen-lockfile
+  pnpm --filter @kimen/elements exec playwright install chromium
+}
 
-Rules (binding):
-- If this task implements an approved feature under specs/, run
-  'bash scripts/gates/pre-implement-check.sh' first and abort if it fails.
-  Mechanical tasks (Art. II escape hatch) are exempt.
-- Done means EXACTLY: 'bash scripts/gates/gates-suite.sh' exits 0. Nothing
-  else closes the task, including your own assessment.
-- Maximum 3 fix iterations. If gates are still red, STOP and print the
-  failing gates: a stopped loop is correct behavior, a hung loop is not.
-- Commit with a conventional message when green. NEVER push."
+run_agent() {
+  local lease_file=${KIMEN_MODEL_LEASE_FILE:-}
+  [ -n "$lease_file" ] && [ -f "$lease_file" ] && [ -r "$lease_file" ] || {
+    echo 'loop-entry: agent phase requires one readable model lease' >&2
+    return 98
+  }
+  [ -z "${NODE_AUTH_TOKEN:-}${NPM_TOKEN:-}" ] || {
+    echo 'loop-entry: agent phase refuses registry credentials' >&2
+    return 97
+  }
+  configure_git_identity
 
-# Budget guard (onmars-spec C4): the loop can stop or escalate, never hang.
-timeout 3600 codex exec --dangerously-bypass-approvals-and-sandbox "$PROMPT"
-AGENT_RC=$?
-# The agent's exit code is observability (C8), never the verdict (C3) — but a
-# timeout/crash means the task may be unfinished even if gates happen to pass.
-if [ "$AGENT_RC" -ne 0 ]; then
-  echo "WARN: agent exited $AGENT_RC (timeout or crash); gates remain the only verdict, but treat a green run with suspicion."
-fi
+  # A conforming host has already verified this envelope. Export only the
+  # short-lived gateway token inside this disposable agent process when the
+  # mounted fixture is a real JSON envelope; never print it.
+  if command -v jq >/dev/null 2>&1 && jq -e '.tokenFormat == "jwt"' "$lease_file" >/dev/null 2>&1; then
+    provider=$(jq -r '.provider' "$lease_file")
+    endpoint=$(jq -r '.endpoint' "$lease_file")
+    token=$(jq -r '.token' "$lease_file")
+    case "$provider" in
+      openai)
+        export OPENAI_BASE_URL=$endpoint
+        export OPENAI_API_KEY=$token
+        ;;
+      anthropic)
+        export ANTHROPIC_BASE_URL=$endpoint
+        export ANTHROPIC_AUTH_TOKEN=$token
+        ;;
+      *)
+        echo 'loop-entry: unsupported lease provider' >&2
+        return 98
+        ;;
+    esac
+    unset token
+  fi
 
-# Style is formatted, never reviewed or agent-fixed (Art. X): normalize
-# formatting deterministically BEFORE judging, so the format gate only ever
-# fails on real problems (e.g. files biome cannot parse).
-pnpm run format || true
+  prompt="You are running an UNATTENDED implementation loop under the Kimen contract.
+Read AGENTS.md and .specify/memory/constitution.md first.
 
-# The agent's opinion is not the verdict (Art. III). The gates are:
-bash scripts/gates/gates-suite.sh
-VERDICT=$?
+TASK: ${KIMEN_TASK:?KIMEN_TASK is required}
 
-# Leave the attempt fetchable regardless of verdict: codex only commits when
-# green, so on red runs the work would otherwise be stranded uncommitted in
-# the disposable clone (learned 2026-07-06, loops 1-2 of 001-tokens-theming).
-if [ -n "$(git status --porcelain)" ]; then
-  git add -A
-  git commit --quiet --no-verify -m "wip(loop): snapshot (gates exit $VERDICT, agent exit $AGENT_RC)"
-fi
-exit $VERDICT
+Run the approved implementation tasks only. Maximum 3 fix iterations. Never
+push or publish. The fresh host-managed gate container is the only verdict."
+
+  set +e
+  timeout "${KIMEN_AGENT_TIMEOUT_SECONDS:-3600}" codex exec \
+    --dangerously-bypass-approvals-and-sandbox "$prompt"
+  agent_rc=$?
+  set -e
+  return "$agent_rc"
+}
+
+run_gates() {
+  assert_secretless
+  set +e
+  bash scripts/gates/gates-suite.sh
+  gate_rc=$?
+  set -e
+  return "$gate_rc"
+}
+
+case "$PHASE" in
+  bootstrap) run_bootstrap ;;
+  agent) run_agent ;;
+  gates) run_gates ;;
+  *) usage ;;
+esac

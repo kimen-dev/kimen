@@ -5,6 +5,11 @@
   "license": "Apache-2.0",
   "description": "Kimen web components (ki-*). Standards-first Stencil components, tokens-only styling, agent-legible by contract.",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimen-dev/kimen.git",
+    "directory": "packages/elements"
+  },
   "files": [
     "dist",
     "loader",
@@ -12,230 +17,13 @@
     "llms.txt"
   ],
   "scripts": {
-    "build": "stencil build && node scripts/build-surfaces.mjs",
+    "build": "stencil build && node scripts/sync-components.mjs && node scripts/build-surfaces.mjs",
     "test": "vitest run && vitest run --config vitest.node.config.ts",
     "test-browser": "vitest run --config vitest.browser.config.ts",
-    "size": "size-limit",
+    "size": "node scripts/run-size-limit.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "size-limit": [
-    {
-      "name": "ki-button marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-button.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-button worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-button.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-card marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-card.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-card worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-card.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-input marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-input.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-input worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-input.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-checkbox marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-checkbox.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-checkbox worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-checkbox.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-textarea marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-textarea.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-textarea worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-textarea.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-badge marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-badge.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-badge worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-badge.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-switch marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-switch.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-switch worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-switch.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-alert marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-alert.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-alert worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-alert.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-radio-group composite marginal cost (group + option, runtime excluded), Art. IV single-digit budget",
-      "path": "size-limit/ki-radio-group-composite.ts",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-radio-group composite worst case (group + option + full Stencil runtime)",
-      "path": "size-limit/ki-radio-group-composite.ts",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-progress marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-progress.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-progress worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-progress.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-list marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-list.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-list worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-list.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-list-item marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-list-item.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-list-item worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-list-item.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-tooltip marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-tooltip.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-tooltip worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-tooltip.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-dialog marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": "dist/components/ki-dialog.js",
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-dialog worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-dialog.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-tabs composite trio marginal cost (component code, runtime excluded)",
-      "path": [
-        "dist/components/ki-tabs.js",
-        "dist/components/ki-tab.js",
-        "dist/components/ki-tab-panel.js"
-      ],
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-tabs group worst case (component + full Stencil runtime, first component on a page)",
-      "path": "dist/components/ki-tabs.js",
-      "limit": "25 KB"
-    },
-    {
-      "name": "ki-select + ki-option marginal cost (component code, runtime excluded), Art. IV single-digit budget",
-      "path": [
-        "dist/components/ki-select.js",
-        "dist/components/ki-option.js"
-      ],
-      "ignore": [
-        "@stencil/core"
-      ],
-      "limit": "9 KB"
-    },
-    {
-      "name": "ki-select + ki-option worst case (component pair + full Stencil runtime)",
-      "path": "dist/components/ki-select.js",
-      "limit": "25 KB"
-    }
-  ],
   "nx": {
     "tags": [
       "scope:elements"
@@ -249,11 +37,13 @@
           "default",
           "^default",
           "!{projectRoot}/generated/**",
+          "!{projectRoot}/loader/**",
           "!{projectRoot}/llms.txt"
         ],
         "outputs": [
           "{projectRoot}/dist",
           "{projectRoot}/generated",
+          "{projectRoot}/loader",
           "{projectRoot}/llms.txt",
           "{workspaceRoot}/llms.txt"
         ]
@@ -305,85 +95,9 @@
       "types": "./loader/index.d.ts",
       "import": "./loader/index.js"
     },
-    "./ki-alert": {
-      "types": "./dist/components/ki-alert.d.ts",
-      "import": "./dist/components/ki-alert.js"
-    },
-    "./ki-badge": {
-      "types": "./dist/components/ki-badge.d.ts",
-      "import": "./dist/components/ki-badge.js"
-    },
-    "./ki-button": {
-      "types": "./dist/components/ki-button.d.ts",
-      "import": "./dist/components/ki-button.js"
-    },
-    "./ki-card": {
-      "types": "./dist/components/ki-card.d.ts",
-      "import": "./dist/components/ki-card.js"
-    },
-    "./ki-checkbox": {
-      "types": "./dist/components/ki-checkbox.d.ts",
-      "import": "./dist/components/ki-checkbox.js"
-    },
-    "./ki-dialog": {
-      "types": "./dist/components/ki-dialog.d.ts",
-      "import": "./dist/components/ki-dialog.js"
-    },
-    "./ki-input": {
-      "types": "./dist/components/ki-input.d.ts",
-      "import": "./dist/components/ki-input.js"
-    },
-    "./ki-list": {
-      "types": "./dist/components/ki-list.d.ts",
-      "import": "./dist/components/ki-list.js"
-    },
-    "./ki-list-item": {
-      "types": "./dist/components/ki-list-item.d.ts",
-      "import": "./dist/components/ki-list-item.js"
-    },
-    "./ki-option": {
-      "types": "./dist/components/ki-option.d.ts",
-      "import": "./dist/components/ki-option.js"
-    },
-    "./ki-progress": {
-      "types": "./dist/components/ki-progress.d.ts",
-      "import": "./dist/components/ki-progress.js"
-    },
-    "./ki-radio": {
-      "types": "./dist/components/ki-radio.d.ts",
-      "import": "./dist/components/ki-radio.js"
-    },
-    "./ki-radio-group": {
-      "types": "./dist/components/ki-radio-group.d.ts",
-      "import": "./dist/components/ki-radio-group.js"
-    },
-    "./ki-select": {
-      "types": "./dist/components/ki-select.d.ts",
-      "import": "./dist/components/ki-select.js"
-    },
-    "./ki-switch": {
-      "types": "./dist/components/ki-switch.d.ts",
-      "import": "./dist/components/ki-switch.js"
-    },
-    "./ki-tab": {
-      "types": "./dist/components/ki-tab.d.ts",
-      "import": "./dist/components/ki-tab.js"
-    },
-    "./ki-tab-panel": {
-      "types": "./dist/components/ki-tab-panel.d.ts",
-      "import": "./dist/components/ki-tab-panel.js"
-    },
-    "./ki-tabs": {
-      "types": "./dist/components/ki-tabs.d.ts",
-      "import": "./dist/components/ki-tabs.js"
-    },
-    "./ki-textarea": {
-      "types": "./dist/components/ki-textarea.d.ts",
-      "import": "./dist/components/ki-textarea.js"
-    },
-    "./ki-tooltip": {
-      "types": "./dist/components/ki-tooltip.d.ts",
-      "import": "./dist/components/ki-tooltip.js"
+    "./ki-*": {
+      "types": "./dist/components/ki-*.d.ts",
+      "import": "./dist/components/ki-*.js"
     }
   }
 }

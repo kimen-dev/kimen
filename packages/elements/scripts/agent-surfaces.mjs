@@ -99,12 +99,18 @@ export function validateDocs(docs) {
   return violations;
 }
 
-export function buildManifest(docs) {
+export function buildManifest(docs, inputs = {}) {
   return {
     schemaVersion: '1.0.0',
     readme: '',
     modules: (docs.components ?? []).map((component) => {
       const className = classNameFromTag(component.tag);
+      const modulePath = resolvePublishedModulePath(
+        component.tag,
+        component.filePath,
+        inputs.packageExports,
+      );
+      const cssProperties = cssPropertiesFor(component, inputs);
       const declaration = {
         kind: 'class',
         name: className,
@@ -121,6 +127,7 @@ export function buildManifest(docs) {
               fieldName: prop.name,
               type: { text: prop.type },
               default: prop.default,
+              description: prop.docs ?? '',
             }),
           ),
         members: [
@@ -170,12 +177,7 @@ export function buildManifest(docs) {
           name: part.name,
           description: part.docs ?? '',
         })),
-        cssProperties: (component.styles ?? [])
-          .filter((style) => (style.annotation ?? 'prop') === 'prop')
-          .map((style) => ({
-            name: style.name ?? style.annotation,
-            description: style.docs ?? '',
-          })),
+        cssProperties,
       };
 
       for (const key of FACET_KEYS) {
@@ -188,18 +190,18 @@ export function buildManifest(docs) {
 
       return {
         kind: 'javascript-module',
-        path: component.filePath,
+        path: modulePath,
         declarations: [declaration],
         exports: [
           {
             kind: 'js',
             name: className,
-            declaration: { name: className, module: component.filePath },
+            declaration: { name: className, module: modulePath },
           },
           {
             kind: 'custom-element-definition',
             name: component.tag,
-            declaration: { name: className, module: component.filePath },
+            declaration: { name: className, module: modulePath },
           },
         ],
       };
@@ -207,7 +209,7 @@ export function buildManifest(docs) {
   };
 }
 
-export function buildLlmsTxt(docs, pkg, preamble) {
+export function buildLlmsTxt(docs, pkg, preamble, inputs = {}) {
   const lines = [
     `# ${pkg.name} — Kimen web components`,
     '',
@@ -251,14 +253,101 @@ export function buildLlmsTxt(docs, pkg, preamble) {
       '',
       renderList(
         'CSS custom properties',
-        (component.styles ?? []).map(
-          (style) => `\`${style.name ?? style.annotation}\`: ${oneLine(style.docs ?? '')}`,
+        cssPropertiesFor(component, inputs).map(
+          (style) => `\`${style.name}\`: ${oneLine(style.description)}`,
         ),
       ),
     );
   }
 
   return `${lines.join('\n')}\n`;
+}
+
+function cssPropertiesFor(component, inputs) {
+  if (inputs.cssPropertiesByTag !== undefined) {
+    return (inputs.cssPropertiesByTag[component.tag] ?? []).map((style) => ({
+      name: style.name,
+      description: style.description ?? '',
+    }));
+  }
+
+  return (component.styles ?? [])
+    .filter((style) => (style.annotation ?? 'prop') === 'prop')
+    .map((style) => ({
+      name: style.name ?? style.annotation,
+      description: style.docs ?? '',
+    }));
+}
+
+function exportTargetForImport(entry) {
+  if (typeof entry === 'string') {
+    return entry;
+  }
+  if (Array.isArray(entry)) {
+    for (const candidate of entry) {
+      const target = exportTargetForImport(candidate);
+      if (target !== null) {
+        return target;
+      }
+    }
+    return null;
+  }
+  if (entry === null || typeof entry !== 'object') {
+    return null;
+  }
+
+  for (const condition of ['import', 'browser', 'default', 'node']) {
+    if (Object.hasOwn(entry, condition)) {
+      const target = exportTargetForImport(entry[condition]);
+      if (target !== null) {
+        return target;
+      }
+    }
+  }
+  return null;
+}
+
+function matchExportPattern(pattern, subpath) {
+  const starIndex = pattern.indexOf('*');
+  if (starIndex === -1) {
+    return pattern === subpath ? '' : null;
+  }
+  if (pattern.indexOf('*', starIndex + 1) !== -1) {
+    return null;
+  }
+  const prefix = pattern.slice(0, starIndex);
+  const suffix = pattern.slice(starIndex + 1);
+  if (!subpath.startsWith(prefix) || !subpath.endsWith(suffix)) {
+    return null;
+  }
+  return subpath.slice(prefix.length, subpath.length - suffix.length);
+}
+
+function resolvePublishedModulePath(tag, sourcePath, packageExports) {
+  if (packageExports === undefined) {
+    return sourcePath;
+  }
+  const subpath = `./${tag}`;
+  const entries = Object.entries(packageExports);
+  const exact = entries.find(([key]) => key === subpath);
+  const candidates = exact === undefined ? entries.filter(([key]) => key.includes('*')) : [exact];
+
+  for (const [key, entry] of candidates) {
+    const substitution = matchExportPattern(key, subpath);
+    if (substitution === null) {
+      continue;
+    }
+    const target = exportTargetForImport(entry);
+    if (target === null) {
+      continue;
+    }
+    const resolved = target.replaceAll('*', substitution).replace(/^\.\//u, '');
+    if (resolved.length > 0 && !resolved.includes('*')) {
+      return resolved;
+    }
+  }
+
+  throw new Error(`${tag}: no published JavaScript export resolves its module path`);
 }
 
 function normalizePath(value, packageRoot) {

@@ -1,4 +1,5 @@
 // @spec:017-agent-surfaces
+// @spec:018-project-integrity-hardening
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -33,6 +34,142 @@ interface PackageFixture {
 interface ManifestMember {
   name: string;
 }
+
+interface ManifestCssPropertyFixture {
+  name: string;
+  description: string;
+  layer: 'semantic' | 'component';
+}
+
+interface ManifestBuildFixture {
+  packageExports: Record<string, { types: string; import: string }>;
+  cssPropertiesByTag: Record<string, ManifestCssPropertyFixture[]>;
+}
+
+const s9CssProperties: ManifestCssPropertyFixture[] = [
+  {
+    name: '--ki-dialog-backdrop-bg',
+    description: 'Background color behind the modal dialog.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-bg',
+    description: 'Background color of the dialog surface.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-border',
+    description: 'Border drawn around the dialog surface.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-fg',
+    description: 'Foreground color inherited by dialog content.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-focus-ring-color',
+    description: 'Color of the visible dialog focus ring.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-focus-ring-offset',
+    description: 'Offset between the dialog and its focus ring.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-focus-ring-width',
+    description: 'Width of the visible dialog focus ring.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-gap',
+    description: 'Gap between the dialog heading, body and footer.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-heading-font-size',
+    description: 'Font size of the visible dialog heading.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-heading-font-weight',
+    description: 'Font weight of the visible dialog heading.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-heading-line-height',
+    description: 'Line height of the visible dialog heading.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-max-width',
+    description: 'Maximum inline size of the dialog surface.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-min-width',
+    description: 'Minimum inline size of the dialog surface.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-motion-duration',
+    description: 'Duration of dialog and backdrop entry transitions.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-motion-easing',
+    description: 'Easing curve of dialog and backdrop entry transitions.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-padding',
+    description: 'Internal padding of the dialog surface.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-radius',
+    description: 'Corner radius of the dialog surface.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-dialog-shadow',
+    description: 'Elevation shadow of the dialog surface.',
+    layer: 'component',
+  },
+  {
+    name: '--ki-typography-family-body',
+    description: 'Body font family inherited by dialog content.',
+    layer: 'semantic',
+  },
+];
+
+const s9ManifestInputs: ManifestBuildFixture = {
+  packageExports: {
+    './ki-dialog': {
+      types: './dist/components/ki-dialog.d.ts',
+      import: './dist/components/ki-dialog.js',
+    },
+  },
+  cssPropertiesByTag: {
+    'ki-dialog': s9CssProperties,
+  },
+};
+
+const buildPublishedManifest = buildManifest as unknown as (
+  docs: unknown,
+  inputs: ManifestBuildFixture,
+) => ReturnType<typeof buildManifest>;
+
+const readKiDialogDocs = async () => {
+  const docs = normalizeDocs(await readJson(docsUrl));
+  return {
+    ...docs,
+    components: docs.components.filter(
+      (component: { tag?: string }) => component.tag === 'ki-dialog',
+    ),
+  };
+};
 
 const guidance = (component: { docsTags?: { name: string; text: string }[] }, name: string) =>
   component.docsTags?.find((tag) => tag.name === name)?.text;
@@ -104,6 +241,93 @@ describe('agent surfaces', () => {
     });
   });
 
+  it('S9 buildManifest resolves every ki-dialog module reference through its published export', async () => {
+    const docs = await readKiDialogDocs();
+    const module = buildPublishedManifest(docs, s9ManifestInputs).modules[0];
+
+    expect(module).toMatchObject({
+      path: 'dist/components/ki-dialog.js',
+      exports: [
+        {
+          kind: 'js',
+          declaration: { module: 'dist/components/ki-dialog.js' },
+        },
+        {
+          kind: 'custom-element-definition',
+          declaration: { module: 'dist/components/ki-dialog.js' },
+        },
+      ],
+    });
+  });
+
+  it('S9 buildManifest resolves a direct-subpath export pattern without falling back to source', async () => {
+    const docs = await readKiDialogDocs();
+    const module = buildPublishedManifest(docs, {
+      ...s9ManifestInputs,
+      packageExports: {
+        './ki-*': {
+          types: './dist/components/ki-*.d.ts',
+          import: './dist/components/ki-*.js',
+        },
+      },
+    }).modules[0];
+
+    expect(module.path).toBe('dist/components/ki-dialog.js');
+    expect(
+      module.exports.every(
+        (entry: { declaration: { module: string } }) => entry.declaration.module === module.path,
+      ),
+    ).toBe(true);
+  });
+
+  it('S9 buildManifest copies every ki-dialog property description to its attribute', async () => {
+    const docs = await readKiDialogDocs();
+    const component = docs.components[0];
+    const declaration = buildPublishedManifest(docs, s9ManifestInputs).modules[0].declarations[0];
+
+    expect(
+      Object.fromEntries(
+        declaration.attributes.map((attribute: { name: string; description?: string }) => [
+          attribute.name,
+          attribute.description,
+        ]),
+      ),
+    ).toEqual(
+      Object.fromEntries(
+        component.props.map((property: { attr: string; docs: string }) => [
+          property.attr,
+          property.docs,
+        ]),
+      ),
+    );
+  });
+
+  it('S9 buildManifest describes every public semantic and component CSS property consumed by ki-dialog', async () => {
+    const docs = await readKiDialogDocs();
+    const declaration = buildPublishedManifest(docs, s9ManifestInputs).modules[0].declarations[0];
+
+    expect(declaration.cssProperties).toEqual(
+      s9CssProperties.map(({ name, description }) => ({ name, description })),
+    );
+  });
+
+  it('S9 buildLlmsTxt renders the same derived public CSS-property contract', async () => {
+    const docs = await readKiDialogDocs();
+    const summary = buildLlmsTxt(
+      docs,
+      (await readJson(pkgUrl)) as PackageFixture,
+      preamble,
+      s9ManifestInputs,
+    );
+
+    expect(summary).toContain(
+      'CSS custom properties:\n- `--ki-dialog-backdrop-bg`: Background color behind the modal dialog.',
+    );
+    expect(summary).toContain(
+      '- `--ki-typography-family-body`: Body font family inherited by dialog content.',
+    );
+  });
+
   it('S3 buildManifest carries when-to-use guidance verbatim from docsTags', async () => {
     const docs = normalizeDocs(await readJson(docsUrl));
     const component = docs.components[0];
@@ -129,6 +353,20 @@ describe('agent surfaces', () => {
     expect(summary).toContain('Parts:\n- `button`: Internal native button.');
     expect(summary).toContain('Events: none');
     expect(summary).toContain('Methods: none');
+  });
+
+  it('S2 shipped installation guidance uses only public package exports', async () => {
+    const shippedPreamble = await readFile(
+      new URL('./scripts/llms-preamble.txt', packageRoot),
+      'utf8',
+    );
+
+    expect(shippedPreamble).toContain('pnpm add @kimen/elements @kimen/tokens');
+    expect(shippedPreamble).toContain(
+      "import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';",
+    );
+    expect(shippedPreamble).toContain("import '@kimen/tokens/css';");
+    expect(shippedPreamble).not.toContain('/dist/');
   });
 
   it('S1 S2 render a documented public method in the manifest and llms.txt', async () => {
@@ -267,15 +505,24 @@ describe('agent surfaces', () => {
     }
   });
 
-  it('S5 gates-suite wires a surfaces-sync gate over every committed surface', async () => {
-    const gates = await readFile(
-      new URL('../../../scripts/gates/gates-suite.sh', import.meta.url),
-      'utf8',
-    );
+  it('S5 reusable core wires a surfaces-sync gate over every committed surface', async () => {
+    const [gates, sync] = await Promise.all([
+      readFile(new URL('../../../scripts/gates/gates-core.sh', import.meta.url), 'utf8'),
+      readFile(new URL('../../../scripts/gates/check-generated-sync.mjs', import.meta.url), 'utf8'),
+    ]);
 
-    expect(gates).toContain('run_gate surfaces-sync git diff --exit-code --');
-    expect(gates).toContain('packages/elements/generated');
-    expect(gates).toContain('packages/elements/llms.txt');
-    expect(gates).toContain('llms.txt');
+    expect(gates).toContain(
+      'run_core_gate surfaces-sync node scripts/gates/check-generated-sync.mjs surfaces',
+    );
+    for (const path of [
+      'llms.txt',
+      'packages/elements/generated/custom-elements.json',
+      'packages/elements/generated/docs.d.ts',
+      'packages/elements/generated/docs.json',
+      'packages/elements/generated/public-api.json',
+      'packages/elements/llms.txt',
+    ]) {
+      expect(sync).toContain(`'${path}'`);
+    }
   });
 });

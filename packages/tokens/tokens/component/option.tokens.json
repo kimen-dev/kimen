@@ -1,29 +1,71 @@
 {
   "ki": {
     "option": {
-      "min-target": { "$value": "{ki.space.7xl}" },
-      "padding-inline": { "$value": "{ki.space.md}" },
-      "radius": { "$value": "{ki.radius.xs}" },
-      "font-size": { "$value": "{ki.typography.size.body-1}" },
+      "min-target": {
+        "$value": "{ki.space.7xl}",
+        "$description": "dimension used by the option component for min target."
+      },
+      "padding-inline": {
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the option component for padding inline."
+      },
+      "radius": {
+        "$value": "{ki.radius.xs}",
+        "$description": "dimension used by the option component for radius."
+      },
+      "font-size": {
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "dimension used by the option component for font size."
+      },
       "rest": {
-        "bg": { "$value": "{ki.surface.s1}" },
-        "fg": { "$value": "{ki.text.high-em}" }
+        "bg": {
+          "$value": "{ki.surface.s1}",
+          "$description": "color used by the option component for rest background."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the option component for rest foreground."
+        }
       },
       "hover": {
-        "bg": { "$value": "{ki.surface.s2}" },
-        "fg": { "$value": "{ki.text.high-em}" }
+        "bg": {
+          "$value": "{ki.surface.s2}",
+          "$description": "color used by the option component for hover background."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the option component for hover foreground."
+        }
       },
       "highlight": {
-        "bg": { "$value": "{ki.surface.primary-base-em}" },
-        "fg": { "$value": "{ki.text.high-em}" }
+        "bg": {
+          "$value": "{ki.surface.primary-base-em}",
+          "$description": "color used by the option component for highlight background."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the option component for highlight foreground."
+        }
       },
       "selected": {
-        "bg": { "$value": "{ki.surface.primary-low-em}" },
-        "fg": { "$value": "{ki.text.high-em}" }
+        "bg": {
+          "$value": "{ki.surface.primary-low-em}",
+          "$description": "color used by the option component for selected background."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the option component for selected foreground."
+        }
       },
       "disabled": {
-        "bg": { "$value": "{ki.surface.disabled-base-em}" },
-        "fg": { "$value": "{ki.text.low-em}" }
+        "bg": {
+          "$value": "{ki.surface.disabled-base-em}",
+          "$description": "color used by the option component for disabled background."
+        },
+        "fg": {
+          "$value": "{ki.text.low-em}",
+          "$description": "color used by the option component for disabled foreground."
+        }
       }
     }
   }

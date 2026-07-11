@@ -1,7 +1,8 @@
 /**
  * Kimen component generator (constitution Art. X: deterministic scaffolding).
  * A component is born with every gate wired: tokens-only CSS, mock-doc spec,
- * real-browser + axe spec, and its export in the public entry (Art. I).
+ * real-browser + axe spec, and a component-token source. Direct package
+ * subpaths and every generated surface derive from component source.
  */
 const path = require('node:path');
 const { generateFiles, logger, names } = require('@nx/devkit');
@@ -27,6 +28,7 @@ module.exports = async function componentGenerator(tree, options) {
   const substitutions = {
     name,
     className: names(name).className,
+    tokenName: name.slice(3),
     specMarker,
     tmpl: '',
   };
@@ -39,26 +41,17 @@ module.exports = async function componentGenerator(tree, options) {
     'packages/elements/browser-tests',
     substitutions,
   );
-
-  // Register in the public entry (Art. I: the contract is the single source).
-  // Named value export + type-only star, NEVER `export *`: the custom-elements
-  // module also exports a `defineCustomElement` side-effect helper, and a value
-  // `export *` would silently re-export it from the package root (accidental
-  // public surface). The class is the value export; `export type *` carries the
-  // component's public types without pulling in that runtime helper.
-  const indexPath = 'packages/elements/src/index.ts';
-  const index = tree.read(indexPath, 'utf-8') ?? '';
-  const className = names(name).className;
-  const valueExport = `export { ${className} } from './components/${name}/${name}.js';`;
-  const typeExport = `export type * from './components/${name}/${name}.js';`;
-  if (!index.includes(valueExport)) {
-    tree.write(indexPath, `${index.trimEnd()}\n${valueExport}\n${typeExport}\n`);
-  }
+  generateFiles(
+    tree,
+    path.join(__dirname, 'files-token'),
+    'packages/tokens/tokens/component',
+    substitutions,
+  );
 
   return () => {
     logger.info(`Component ${name} scaffolded. Next steps:`);
     logger.info(
-      '  1. pnpm exec nx run @kimen/elements:build && pnpm run format  (regenerates components.d.ts + docs.json, then formats them)',
+      '  1. pnpm exec nx run @kimen/elements:build && pnpm run format  (derives direct exports, budgets and machine surfaces, then formats them)',
     );
     logger.info(
       '  2. Replace every TODO(spec) with content from the APPROVED spec (Art. II: no behavior without a spec).',

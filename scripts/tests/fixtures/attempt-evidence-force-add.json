@@ -1,0 +1,11 @@
+{
+  "attemptId": "20260709-200000-ab12",
+  "evidencePath": ".kimen/attempts/20260709-200000-ab12.json",
+  "siblingPath": ".kimen/attempts/20260709-200000-ab12.tmp",
+  "forceAddArgv": ["add", "-f", "--", ".kimen/attempts/20260709-200000-ab12.json"],
+  "ordinaryIgnoredPaths": [
+    "reports/mutation/mutation.json",
+    ".stryker-tmp/sandbox/mutant.js",
+    "scripts/tests/fixtures/output/actual.json"
+  ]
+}

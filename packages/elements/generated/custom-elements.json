@@ -4,7 +4,7 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-alert/ki-alert.tsx",
+      "path": "dist/components/ki-alert.js",
       "declarations": [
         {
           "kind": "class",
@@ -21,7 +21,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'Dismiss'"
+              "default": "'Dismiss'",
+              "description": "Accessible name for the dismiss button. Override for localization; the\ndefault English string is the component's only built-in user-visible text.\n\nWhen to use: provide a localized action name whenever the document language\nis not English.\nWhen NOT to use: do not put the alert message here; use the default slot."
             },
             {
               "name": "dismissed",
@@ -29,7 +30,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Reflected dismissed state. User dismissal sets it; applications may also\nset or clear it. While true, the host remains in the document but renders no\nalert subtree and leaves the accessibility tree. Clearing it re-shows the\nalert and creates a dynamic live-region appearance.\n\nWhen to use: persist or restore acknowledgement state from application\ndata.\nWhen NOT to use: do not listen for programmatic changes as dismissal\nevents; `ki-dismiss` is only for user activation."
             },
             {
               "name": "dismissible",
@@ -37,14 +39,16 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Renders one native dismiss button when true. The button sits outside the\nlive-region boundary, so its accessible name is not announced as part of\nthe alert message. When false, the alert adds no tab stop.\n\nWhen to use: allow a person to acknowledge and clear a persistent message.\nWhen NOT to use: do not use dismissible for auto-expiring messages; that is\nfuture `ki-toast` behavior."
             },
             {
               "name": "heading",
               "fieldName": "heading",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Optional emphasized text rendered before the message inside the live\nregion. Empty strings render no heading. The heading is a `strong`\nelement, not a document heading, so it never changes page outline.\n\nWhen to use: add a short label when it helps identify the status message.\nWhen NOT to use: do not use heading for page structure; use a real heading\noutside the alert when the document needs one."
             },
             {
               "name": "tone",
@@ -52,7 +56,8 @@
               "type": {
                 "text": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\" | string & {}"
               },
-              "default": "'neutral'"
+              "default": "'neutral'",
+              "description": "Semantic intent for visual styling and live-region urgency. `danger` and\n`warning` expose `role=\"alert\"`; `neutral`, `success`, `info`, absent, and\nunrecognized values expose `role=\"status\"`. Unknown values keep rendering\nand fall back to the neutral token matrix by CSS construction.\n\nWhen to use: choose the tone that describes the page or section state.\nWhen NOT to use: do not use tone for layout, density, or filled-vs-outlined\nstyling; those are token/theme decisions."
             }
           ],
           "members": [
@@ -149,7 +154,140 @@
               "description": "Message body wrapper around the default slot."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-alert-border-width",
+              "description": "dimension used by the alert component for border width."
+            },
+            {
+              "name": "--ki-alert-danger-bg",
+              "description": "color used by the alert component for danger background."
+            },
+            {
+              "name": "--ki-alert-danger-border",
+              "description": "color used by the alert component for danger border."
+            },
+            {
+              "name": "--ki-alert-danger-fg",
+              "description": "color used by the alert component for danger foreground."
+            },
+            {
+              "name": "--ki-alert-dismiss-active-fg",
+              "description": "color used by the alert component for dismiss active foreground."
+            },
+            {
+              "name": "--ki-alert-dismiss-hover-fg",
+              "description": "color used by the alert component for dismiss hover foreground."
+            },
+            {
+              "name": "--ki-alert-dismiss-icon-size",
+              "description": "dimension used by the alert component for dismiss icon size."
+            },
+            {
+              "name": "--ki-alert-dismiss-rest-fg",
+              "description": "color used by the alert component for dismiss rest foreground."
+            },
+            {
+              "name": "--ki-alert-dismiss-size",
+              "description": "dimension used by the alert component for dismiss size."
+            },
+            {
+              "name": "--ki-alert-focus-ring-color",
+              "description": "color used by the alert component for focus ring color."
+            },
+            {
+              "name": "--ki-alert-focus-ring-offset",
+              "description": "dimension used by the alert component for focus ring offset."
+            },
+            {
+              "name": "--ki-alert-focus-ring-width",
+              "description": "dimension used by the alert component for focus ring width."
+            },
+            {
+              "name": "--ki-alert-font-size",
+              "description": "dimension used by the alert component for font size."
+            },
+            {
+              "name": "--ki-alert-gap",
+              "description": "dimension used by the alert component for gap."
+            },
+            {
+              "name": "--ki-alert-heading-font-size",
+              "description": "dimension used by the alert component for heading font size."
+            },
+            {
+              "name": "--ki-alert-heading-font-weight",
+              "description": "font weight used by the alert component for heading font weight."
+            },
+            {
+              "name": "--ki-alert-info-bg",
+              "description": "color used by the alert component for info background."
+            },
+            {
+              "name": "--ki-alert-info-border",
+              "description": "color used by the alert component for info border."
+            },
+            {
+              "name": "--ki-alert-info-fg",
+              "description": "color used by the alert component for info foreground."
+            },
+            {
+              "name": "--ki-alert-line-height",
+              "description": "dimension used by the alert component for line height."
+            },
+            {
+              "name": "--ki-alert-neutral-bg",
+              "description": "color used by the alert component for neutral background."
+            },
+            {
+              "name": "--ki-alert-neutral-border",
+              "description": "color used by the alert component for neutral border."
+            },
+            {
+              "name": "--ki-alert-neutral-fg",
+              "description": "color used by the alert component for neutral foreground."
+            },
+            {
+              "name": "--ki-alert-padding-block",
+              "description": "dimension used by the alert component for padding block."
+            },
+            {
+              "name": "--ki-alert-padding-inline",
+              "description": "dimension used by the alert component for padding inline."
+            },
+            {
+              "name": "--ki-alert-radius",
+              "description": "dimension used by the alert component for radius."
+            },
+            {
+              "name": "--ki-alert-success-bg",
+              "description": "color used by the alert component for success background."
+            },
+            {
+              "name": "--ki-alert-success-border",
+              "description": "color used by the alert component for success border."
+            },
+            {
+              "name": "--ki-alert-success-fg",
+              "description": "color used by the alert component for success foreground."
+            },
+            {
+              "name": "--ki-alert-warning-bg",
+              "description": "color used by the alert component for warning background."
+            },
+            {
+              "name": "--ki-alert-warning-border",
+              "description": "color used by the alert component for warning border."
+            },
+            {
+              "name": "--ki-alert-warning-fg",
+              "description": "color used by the alert component for warning foreground."
+            },
+            {
+              "name": "--ki-outline-none",
+              "description": "semantic color for outline none."
+            }
+          ]
         }
       ],
       "exports": [
@@ -158,7 +296,7 @@
           "name": "KiAlert",
           "declaration": {
             "name": "KiAlert",
-            "module": "src/components/ki-alert/ki-alert.tsx"
+            "module": "dist/components/ki-alert.js"
           }
         },
         {
@@ -166,14 +304,14 @@
           "name": "ki-alert",
           "declaration": {
             "name": "KiAlert",
-            "module": "src/components/ki-alert/ki-alert.tsx"
+            "module": "dist/components/ki-alert.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-badge/ki-badge.tsx",
+      "path": "dist/components/ki-badge.js",
       "declarations": [
         {
           "kind": "class",
@@ -190,7 +328,8 @@
               "type": {
                 "text": "\"md\" | \"sm\""
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "Metric scale (`--ki-badge-{size}-*` tokens). An unrecognized value\nfalls back to the `md` metrics the same way."
             },
             {
               "name": "tone",
@@ -198,7 +337,8 @@
               "type": {
                 "text": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\""
               },
-              "default": "'neutral'"
+              "default": "'neutral'",
+              "description": "Semantic intent, never appearance: each tone resolves its colors from\nthe `--ki-badge-{tone}-*` tokens. An unrecognized value matches no\nstyle selector, so the badge keeps the neutral appearance (fallback by\nCSS construction — no validation code)."
             }
           ],
           "members": [
@@ -240,7 +380,120 @@
               "description": "The pill: background, foreground, border, radius, metrics\nand typography."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-badge-border-width",
+              "description": "dimension used by the badge component for border width."
+            },
+            {
+              "name": "--ki-badge-danger-bg",
+              "description": "color used by the badge component for danger background."
+            },
+            {
+              "name": "--ki-badge-danger-border",
+              "description": "color used by the badge component for danger border."
+            },
+            {
+              "name": "--ki-badge-danger-fg",
+              "description": "color used by the badge component for danger foreground."
+            },
+            {
+              "name": "--ki-badge-font-family",
+              "description": "font family used by the badge component for font family."
+            },
+            {
+              "name": "--ki-badge-font-weight",
+              "description": "font weight used by the badge component for font weight."
+            },
+            {
+              "name": "--ki-badge-info-bg",
+              "description": "color used by the badge component for info background."
+            },
+            {
+              "name": "--ki-badge-info-border",
+              "description": "color used by the badge component for info border."
+            },
+            {
+              "name": "--ki-badge-info-fg",
+              "description": "color used by the badge component for info foreground."
+            },
+            {
+              "name": "--ki-badge-md-font-size",
+              "description": "dimension used by the badge component for md font size."
+            },
+            {
+              "name": "--ki-badge-md-height",
+              "description": "dimension used by the badge component for md height."
+            },
+            {
+              "name": "--ki-badge-md-line-height",
+              "description": "dimension used by the badge component for md line height."
+            },
+            {
+              "name": "--ki-badge-md-padding-inline",
+              "description": "dimension used by the badge component for md padding inline."
+            },
+            {
+              "name": "--ki-badge-md-radius",
+              "description": "dimension used by the badge component for md radius."
+            },
+            {
+              "name": "--ki-badge-neutral-bg",
+              "description": "color used by the badge component for neutral background."
+            },
+            {
+              "name": "--ki-badge-neutral-border",
+              "description": "color used by the badge component for neutral border."
+            },
+            {
+              "name": "--ki-badge-neutral-fg",
+              "description": "color used by the badge component for neutral foreground."
+            },
+            {
+              "name": "--ki-badge-sm-font-size",
+              "description": "dimension used by the badge component for sm font size."
+            },
+            {
+              "name": "--ki-badge-sm-height",
+              "description": "dimension used by the badge component for sm height."
+            },
+            {
+              "name": "--ki-badge-sm-line-height",
+              "description": "dimension used by the badge component for sm line height."
+            },
+            {
+              "name": "--ki-badge-sm-padding-inline",
+              "description": "dimension used by the badge component for sm padding inline."
+            },
+            {
+              "name": "--ki-badge-sm-radius",
+              "description": "dimension used by the badge component for sm radius."
+            },
+            {
+              "name": "--ki-badge-success-bg",
+              "description": "color used by the badge component for success background."
+            },
+            {
+              "name": "--ki-badge-success-border",
+              "description": "color used by the badge component for success border."
+            },
+            {
+              "name": "--ki-badge-success-fg",
+              "description": "color used by the badge component for success foreground."
+            },
+            {
+              "name": "--ki-badge-warning-bg",
+              "description": "color used by the badge component for warning background."
+            },
+            {
+              "name": "--ki-badge-warning-border",
+              "description": "color used by the badge component for warning border."
+            },
+            {
+              "name": "--ki-badge-warning-fg",
+              "description": "color used by the badge component for warning foreground."
+            }
+          ]
         }
       ],
       "exports": [
@@ -249,7 +502,7 @@
           "name": "KiBadge",
           "declaration": {
             "name": "KiBadge",
-            "module": "src/components/ki-badge/ki-badge.tsx"
+            "module": "dist/components/ki-badge.js"
           }
         },
         {
@@ -257,14 +510,14 @@
           "name": "ki-badge",
           "declaration": {
             "name": "KiBadge",
-            "module": "src/components/ki-badge/ki-badge.tsx"
+            "module": "dist/components/ki-badge.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-button/ki-button.tsx",
+      "path": "dist/components/ki-button.js",
       "declarations": [
         {
           "kind": "class",
@@ -281,14 +534,16 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents activation, removes the button from keyboard reach, and exposes\nthe unavailable state through the internal native button.\nWhen NOT to use: do not use disabled for pending/loading semantics."
             },
             {
               "name": "name",
               "fieldName": "name",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Form-data key contributed when this button submits its form.\nWhen NOT to use: omit when no submitter value should be sent."
             },
             {
               "name": "size",
@@ -296,7 +551,8 @@
               "type": {
                 "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "Token-backed button size. Every size keeps at least the minimum pointer\ntarget; choose the size that matches the density of the surrounding UI.\nWhen NOT to use: do not use `ki-button` for icon-only compact controls."
             },
             {
               "name": "tone",
@@ -304,7 +560,8 @@
               "type": {
                 "text": "\"danger\" | \"neutral\" | \"success\""
               },
-              "default": "'neutral'"
+              "default": "'neutral'",
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`."
             },
             {
               "name": "type",
@@ -312,14 +569,16 @@
               "type": {
                 "text": "\"button\" | \"reset\" | \"submit\""
               },
-              "default": "'submit'"
+              "default": "'submit'",
+              "description": "Native form action type: `submit` submits the owning form (running\nconstraint validation and contributing `name`/`value` to the form data),\n`reset` restores field defaults, `button` never touches the form.\nCancel a submission from the form's `submit` event (`preventDefault()`);\nunlike a native button, `preventDefault()` on the `click` event does not\ncancel it. During submission `event.submitter` is a transient native\nbutton carrying this element's `name`/`value`, not the `ki-button` host.\nWhen NOT to use: use `button` when the action must never submit a form."
             },
             {
               "name": "value",
               "fieldName": "value",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Form-data value paired with `name` when this button submits its form.\nWhen NOT to use: omit when the default empty submitter value is intended."
             },
             {
               "name": "variant",
@@ -327,7 +586,8 @@
               "type": {
                 "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
               },
-              "default": "'secondary'"
+              "default": "'secondary'",
+              "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent."
             }
           ],
           "members": [
@@ -439,7 +699,872 @@
               "description": "Label wrapper around the default slot."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-button-border-width",
+              "description": "dimension used by the button component for border width."
+            },
+            {
+              "name": "--ki-button-focus-ring-color",
+              "description": "color used by the button component for focus ring color."
+            },
+            {
+              "name": "--ki-button-focus-ring-offset",
+              "description": "dimension used by the button component for focus ring offset."
+            },
+            {
+              "name": "--ki-button-focus-ring-width",
+              "description": "dimension used by the button component for focus ring width."
+            },
+            {
+              "name": "--ki-button-font-family",
+              "description": "font family used by the button component for font family."
+            },
+            {
+              "name": "--ki-button-font-weight",
+              "description": "font weight used by the button component for font weight."
+            },
+            {
+              "name": "--ki-button-ghost-active-shadow",
+              "description": "value used by the button component for ghost active shadow."
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-bg",
+              "description": "color used by the button component for ghost danger active background."
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-border",
+              "description": "color used by the button component for ghost danger active border."
+            },
+            {
+              "name": "--ki-button-ghost-danger-active-fg",
+              "description": "color used by the button component for ghost danger active foreground."
+            },
+            {
+              "name": "--ki-button-ghost-danger-hover-bg",
+              "description": "color used by the button component for ghost danger hover background."
+            },
+            {
+              "name": "--ki-button-ghost-danger-hover-border",
+              "description": "color used by the button component for ghost danger hover border."
+            },
+            {
+              "name": "--ki-button-ghost-danger-hover-fg",
+              "description": "color used by the button component for ghost danger hover foreground."
+            },
+            {
+              "name": "--ki-button-ghost-danger-rest-bg",
+              "description": "color used by the button component for ghost danger rest background."
+            },
+            {
+              "name": "--ki-button-ghost-danger-rest-border",
+              "description": "color used by the button component for ghost danger rest border."
+            },
+            {
+              "name": "--ki-button-ghost-danger-rest-fg",
+              "description": "color used by the button component for ghost danger rest foreground."
+            },
+            {
+              "name": "--ki-button-ghost-disabled-shadow",
+              "description": "value used by the button component for ghost disabled shadow."
+            },
+            {
+              "name": "--ki-button-ghost-hover-shadow",
+              "description": "value used by the button component for ghost hover shadow."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-bg",
+              "description": "color used by the button component for ghost neutral active background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-border",
+              "description": "color used by the button component for ghost neutral active border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-active-fg",
+              "description": "color used by the button component for ghost neutral active foreground."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-bg",
+              "description": "color used by the button component for ghost neutral disabled background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-border",
+              "description": "color used by the button component for ghost neutral disabled border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-disabled-fg",
+              "description": "color used by the button component for ghost neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-bg",
+              "description": "color used by the button component for ghost neutral hover background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-border",
+              "description": "color used by the button component for ghost neutral hover border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-hover-fg",
+              "description": "color used by the button component for ghost neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-bg",
+              "description": "color used by the button component for ghost neutral rest background."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-border",
+              "description": "color used by the button component for ghost neutral rest border."
+            },
+            {
+              "name": "--ki-button-ghost-neutral-rest-fg",
+              "description": "color used by the button component for ghost neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-ghost-rest-shadow",
+              "description": "value used by the button component for ghost rest shadow."
+            },
+            {
+              "name": "--ki-button-ghost-success-active-bg",
+              "description": "color used by the button component for ghost success active background."
+            },
+            {
+              "name": "--ki-button-ghost-success-active-border",
+              "description": "color used by the button component for ghost success active border."
+            },
+            {
+              "name": "--ki-button-ghost-success-active-fg",
+              "description": "color used by the button component for ghost success active foreground."
+            },
+            {
+              "name": "--ki-button-ghost-success-hover-bg",
+              "description": "color used by the button component for ghost success hover background."
+            },
+            {
+              "name": "--ki-button-ghost-success-hover-border",
+              "description": "color used by the button component for ghost success hover border."
+            },
+            {
+              "name": "--ki-button-ghost-success-hover-fg",
+              "description": "color used by the button component for ghost success hover foreground."
+            },
+            {
+              "name": "--ki-button-ghost-success-rest-bg",
+              "description": "color used by the button component for ghost success rest background."
+            },
+            {
+              "name": "--ki-button-ghost-success-rest-border",
+              "description": "color used by the button component for ghost success rest border."
+            },
+            {
+              "name": "--ki-button-ghost-success-rest-fg",
+              "description": "color used by the button component for ghost success rest foreground."
+            },
+            {
+              "name": "--ki-button-lg-font-size",
+              "description": "dimension used by the button component for lg font size."
+            },
+            {
+              "name": "--ki-button-lg-gap",
+              "description": "dimension used by the button component for lg gap."
+            },
+            {
+              "name": "--ki-button-lg-height",
+              "description": "dimension used by the button component for lg height."
+            },
+            {
+              "name": "--ki-button-lg-icon-size",
+              "description": "dimension used by the button component for lg icon size."
+            },
+            {
+              "name": "--ki-button-lg-line-height",
+              "description": "dimension used by the button component for lg line height."
+            },
+            {
+              "name": "--ki-button-lg-min-target",
+              "description": "dimension used by the button component for lg min target."
+            },
+            {
+              "name": "--ki-button-lg-padding-inline",
+              "description": "dimension used by the button component for lg padding inline."
+            },
+            {
+              "name": "--ki-button-lg-radius",
+              "description": "dimension used by the button component for lg radius."
+            },
+            {
+              "name": "--ki-button-md-font-size",
+              "description": "dimension used by the button component for md font size."
+            },
+            {
+              "name": "--ki-button-md-gap",
+              "description": "dimension used by the button component for md gap."
+            },
+            {
+              "name": "--ki-button-md-height",
+              "description": "dimension used by the button component for md height."
+            },
+            {
+              "name": "--ki-button-md-icon-size",
+              "description": "dimension used by the button component for md icon size."
+            },
+            {
+              "name": "--ki-button-md-line-height",
+              "description": "dimension used by the button component for md line height."
+            },
+            {
+              "name": "--ki-button-md-min-target",
+              "description": "dimension used by the button component for md min target."
+            },
+            {
+              "name": "--ki-button-md-padding-inline",
+              "description": "dimension used by the button component for md padding inline."
+            },
+            {
+              "name": "--ki-button-md-radius",
+              "description": "dimension used by the button component for md radius."
+            },
+            {
+              "name": "--ki-button-primary-active-shadow",
+              "description": "value used by the button component for primary active shadow."
+            },
+            {
+              "name": "--ki-button-primary-danger-active-bg",
+              "description": "color used by the button component for primary danger active background."
+            },
+            {
+              "name": "--ki-button-primary-danger-active-border",
+              "description": "color used by the button component for primary danger active border."
+            },
+            {
+              "name": "--ki-button-primary-danger-active-fg",
+              "description": "color used by the button component for primary danger active foreground."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-bg",
+              "description": "color used by the button component for primary danger hover background."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-border",
+              "description": "color used by the button component for primary danger hover border."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-fg",
+              "description": "color used by the button component for primary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-bg",
+              "description": "color used by the button component for primary danger rest background."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-border",
+              "description": "color used by the button component for primary danger rest border."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-fg",
+              "description": "color used by the button component for primary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-primary-disabled-shadow",
+              "description": "value used by the button component for primary disabled shadow."
+            },
+            {
+              "name": "--ki-button-primary-hover-shadow",
+              "description": "shadow used by the button component for button primary hover shadow."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-bg",
+              "description": "color used by the button component for primary neutral active background."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-border",
+              "description": "color used by the button component for primary neutral active border."
+            },
+            {
+              "name": "--ki-button-primary-neutral-active-fg",
+              "description": "color used by the button component for primary neutral active foreground."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-bg",
+              "description": "color used by the button component for primary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-border",
+              "description": "color used by the button component for primary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-fg",
+              "description": "color used by the button component for primary neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-bg",
+              "description": "color used by the button component for primary neutral hover background."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-border",
+              "description": "color used by the button component for primary neutral hover border."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-fg",
+              "description": "color used by the button component for primary neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-bg",
+              "description": "color used by the button component for primary neutral rest background."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-border",
+              "description": "color used by the button component for primary neutral rest border."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-fg",
+              "description": "color used by the button component for primary neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-primary-rest-shadow",
+              "description": "shadow used by the button component for button primary rest shadow."
+            },
+            {
+              "name": "--ki-button-primary-success-active-bg",
+              "description": "color used by the button component for primary success active background."
+            },
+            {
+              "name": "--ki-button-primary-success-active-border",
+              "description": "color used by the button component for primary success active border."
+            },
+            {
+              "name": "--ki-button-primary-success-active-fg",
+              "description": "color used by the button component for primary success active foreground."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-bg",
+              "description": "color used by the button component for primary success hover background."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-border",
+              "description": "color used by the button component for primary success hover border."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-fg",
+              "description": "color used by the button component for primary success hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-bg",
+              "description": "color used by the button component for primary success rest background."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-border",
+              "description": "color used by the button component for primary success rest border."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-fg",
+              "description": "color used by the button component for primary success rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-active-shadow",
+              "description": "value used by the button component for quaternary active shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-bg",
+              "description": "color used by the button component for quaternary danger active background."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-border",
+              "description": "color used by the button component for quaternary danger active border."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-active-fg",
+              "description": "color used by the button component for quaternary danger active foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-bg",
+              "description": "color used by the button component for quaternary danger hover background."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-border",
+              "description": "color used by the button component for quaternary danger hover border."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-fg",
+              "description": "color used by the button component for quaternary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-bg",
+              "description": "color used by the button component for quaternary danger rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-border",
+              "description": "color used by the button component for quaternary danger rest border."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-fg",
+              "description": "color used by the button component for quaternary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-disabled-shadow",
+              "description": "value used by the button component for quaternary disabled shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-hover-shadow",
+              "description": "value used by the button component for quaternary hover shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-bg",
+              "description": "color used by the button component for quaternary neutral active background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-border",
+              "description": "color used by the button component for quaternary neutral active border."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-active-fg",
+              "description": "color used by the button component for quaternary neutral active foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-bg",
+              "description": "color used by the button component for quaternary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-border",
+              "description": "color used by the button component for quaternary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-fg",
+              "description": "color used by the button component for quaternary neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-bg",
+              "description": "color used by the button component for quaternary neutral hover background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-border",
+              "description": "color used by the button component for quaternary neutral hover border."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-fg",
+              "description": "color used by the button component for quaternary neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-bg",
+              "description": "color used by the button component for quaternary neutral rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-border",
+              "description": "color used by the button component for quaternary neutral rest border."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-fg",
+              "description": "color used by the button component for quaternary neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-rest-shadow",
+              "description": "value used by the button component for quaternary rest shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-success-active-bg",
+              "description": "color used by the button component for quaternary success active background."
+            },
+            {
+              "name": "--ki-button-quaternary-success-active-border",
+              "description": "color used by the button component for quaternary success active border."
+            },
+            {
+              "name": "--ki-button-quaternary-success-active-fg",
+              "description": "color used by the button component for quaternary success active foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-bg",
+              "description": "color used by the button component for quaternary success hover background."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-border",
+              "description": "color used by the button component for quaternary success hover border."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-fg",
+              "description": "color used by the button component for quaternary success hover foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-bg",
+              "description": "color used by the button component for quaternary success rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-border",
+              "description": "color used by the button component for quaternary success rest border."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-fg",
+              "description": "color used by the button component for quaternary success rest foreground."
+            },
+            {
+              "name": "--ki-button-secondary-active-shadow",
+              "description": "value used by the button component for secondary active shadow."
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-bg",
+              "description": "color used by the button component for secondary danger active background."
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-border",
+              "description": "color used by the button component for secondary danger active border."
+            },
+            {
+              "name": "--ki-button-secondary-danger-active-fg",
+              "description": "color used by the button component for secondary danger active foreground."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-bg",
+              "description": "color used by the button component for secondary danger hover background."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-border",
+              "description": "color used by the button component for secondary danger hover border."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-fg",
+              "description": "color used by the button component for secondary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-bg",
+              "description": "color used by the button component for secondary danger rest background."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-border",
+              "description": "color used by the button component for secondary danger rest border."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-fg",
+              "description": "color used by the button component for secondary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-secondary-disabled-shadow",
+              "description": "value used by the button component for secondary disabled shadow."
+            },
+            {
+              "name": "--ki-button-secondary-hover-shadow",
+              "description": "value used by the button component for secondary hover shadow."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-bg",
+              "description": "color used by the button component for secondary neutral active background."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-border",
+              "description": "color used by the button component for secondary neutral active border."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-active-fg",
+              "description": "color used by the button component for secondary neutral active foreground."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-bg",
+              "description": "color used by the button component for secondary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-border",
+              "description": "color used by the button component for secondary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-fg",
+              "description": "color used by the button component for secondary neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-bg",
+              "description": "color used by the button component for secondary neutral hover background."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-border",
+              "description": "color used by the button component for secondary neutral hover border."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-fg",
+              "description": "color used by the button component for secondary neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-bg",
+              "description": "color used by the button component for secondary neutral rest background."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-border",
+              "description": "color used by the button component for secondary neutral rest border."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-fg",
+              "description": "color used by the button component for secondary neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-secondary-rest-shadow",
+              "description": "value used by the button component for secondary rest shadow."
+            },
+            {
+              "name": "--ki-button-secondary-success-active-bg",
+              "description": "color used by the button component for secondary success active background."
+            },
+            {
+              "name": "--ki-button-secondary-success-active-border",
+              "description": "color used by the button component for secondary success active border."
+            },
+            {
+              "name": "--ki-button-secondary-success-active-fg",
+              "description": "color used by the button component for secondary success active foreground."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-bg",
+              "description": "color used by the button component for secondary success hover background."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-border",
+              "description": "color used by the button component for secondary success hover border."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-fg",
+              "description": "color used by the button component for secondary success hover foreground."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-bg",
+              "description": "color used by the button component for secondary success rest background."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-border",
+              "description": "color used by the button component for secondary success rest border."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-fg",
+              "description": "color used by the button component for secondary success rest foreground."
+            },
+            {
+              "name": "--ki-button-sm-font-size",
+              "description": "dimension used by the button component for sm font size."
+            },
+            {
+              "name": "--ki-button-sm-gap",
+              "description": "dimension used by the button component for sm gap."
+            },
+            {
+              "name": "--ki-button-sm-height",
+              "description": "dimension used by the button component for sm height."
+            },
+            {
+              "name": "--ki-button-sm-icon-size",
+              "description": "dimension used by the button component for sm icon size."
+            },
+            {
+              "name": "--ki-button-sm-line-height",
+              "description": "dimension used by the button component for sm line height."
+            },
+            {
+              "name": "--ki-button-sm-min-target",
+              "description": "dimension used by the button component for sm min target."
+            },
+            {
+              "name": "--ki-button-sm-padding-inline",
+              "description": "dimension used by the button component for sm padding inline."
+            },
+            {
+              "name": "--ki-button-sm-radius",
+              "description": "dimension used by the button component for sm radius."
+            },
+            {
+              "name": "--ki-button-tertiary-active-shadow",
+              "description": "shadow used by the button component for button tertiary active shadow."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-bg",
+              "description": "color used by the button component for tertiary danger active background."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-border",
+              "description": "color used by the button component for tertiary danger active border."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-active-fg",
+              "description": "color used by the button component for tertiary danger active foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-bg",
+              "description": "color used by the button component for tertiary danger hover background."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-border",
+              "description": "color used by the button component for tertiary danger hover border."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-fg",
+              "description": "color used by the button component for tertiary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-bg",
+              "description": "color used by the button component for tertiary danger rest background."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-border",
+              "description": "color used by the button component for tertiary danger rest border."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-fg",
+              "description": "color used by the button component for tertiary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-disabled-shadow",
+              "description": "value used by the button component for tertiary disabled shadow."
+            },
+            {
+              "name": "--ki-button-tertiary-hover-shadow",
+              "description": "shadow used by the button component for button tertiary hover shadow."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-bg",
+              "description": "color used by the button component for tertiary neutral active background."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-border",
+              "description": "color used by the button component for tertiary neutral active border."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-active-fg",
+              "description": "color used by the button component for tertiary neutral active foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-bg",
+              "description": "color used by the button component for tertiary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-border",
+              "description": "color used by the button component for tertiary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-fg",
+              "description": "color used by the button component for tertiary neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-bg",
+              "description": "color used by the button component for tertiary neutral hover background."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-border",
+              "description": "color used by the button component for tertiary neutral hover border."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-fg",
+              "description": "color used by the button component for tertiary neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-bg",
+              "description": "color used by the button component for tertiary neutral rest background."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-border",
+              "description": "color used by the button component for tertiary neutral rest border."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-fg",
+              "description": "color used by the button component for tertiary neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-rest-shadow",
+              "description": "shadow used by the button component for button tertiary rest shadow."
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-bg",
+              "description": "color used by the button component for tertiary success active background."
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-border",
+              "description": "color used by the button component for tertiary success active border."
+            },
+            {
+              "name": "--ki-button-tertiary-success-active-fg",
+              "description": "color used by the button component for tertiary success active foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-bg",
+              "description": "color used by the button component for tertiary success hover background."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-border",
+              "description": "color used by the button component for tertiary success hover border."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-fg",
+              "description": "color used by the button component for tertiary success hover foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-bg",
+              "description": "color used by the button component for tertiary success rest background."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-border",
+              "description": "color used by the button component for tertiary success rest border."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-fg",
+              "description": "color used by the button component for tertiary success rest foreground."
+            },
+            {
+              "name": "--ki-button-xl-font-size",
+              "description": "dimension used by the button component for xl font size."
+            },
+            {
+              "name": "--ki-button-xl-gap",
+              "description": "dimension used by the button component for xl gap."
+            },
+            {
+              "name": "--ki-button-xl-height",
+              "description": "dimension used by the button component for xl height."
+            },
+            {
+              "name": "--ki-button-xl-icon-size",
+              "description": "dimension used by the button component for xl icon size."
+            },
+            {
+              "name": "--ki-button-xl-line-height",
+              "description": "dimension used by the button component for xl line height."
+            },
+            {
+              "name": "--ki-button-xl-min-target",
+              "description": "dimension used by the button component for xl min target."
+            },
+            {
+              "name": "--ki-button-xl-padding-inline",
+              "description": "dimension used by the button component for xl padding inline."
+            },
+            {
+              "name": "--ki-button-xl-radius",
+              "description": "dimension used by the button component for xl radius."
+            },
+            {
+              "name": "--ki-button-xs-font-size",
+              "description": "dimension used by the button component for xs font size."
+            },
+            {
+              "name": "--ki-button-xs-gap",
+              "description": "dimension used by the button component for xs gap."
+            },
+            {
+              "name": "--ki-button-xs-height",
+              "description": "dimension used by the button component for xs height."
+            },
+            {
+              "name": "--ki-button-xs-icon-size",
+              "description": "dimension used by the button component for xs icon size."
+            },
+            {
+              "name": "--ki-button-xs-line-height",
+              "description": "dimension used by the button component for xs line height."
+            },
+            {
+              "name": "--ki-button-xs-min-target",
+              "description": "dimension used by the button component for xs min target."
+            },
+            {
+              "name": "--ki-button-xs-padding-inline",
+              "description": "dimension used by the button component for xs padding inline."
+            },
+            {
+              "name": "--ki-button-xs-radius",
+              "description": "dimension used by the button component for xs radius."
+            }
+          ]
         }
       ],
       "exports": [
@@ -448,7 +1573,7 @@
           "name": "KiButton",
           "declaration": {
             "name": "KiButton",
-            "module": "src/components/ki-button/ki-button.tsx"
+            "module": "dist/components/ki-button.js"
           }
         },
         {
@@ -456,14 +1581,14 @@
           "name": "ki-button",
           "declaration": {
             "name": "KiButton",
-            "module": "src/components/ki-button/ki-button.tsx"
+            "module": "dist/components/ki-button.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-card/ki-card.tsx",
+      "path": "dist/components/ki-card.js",
       "declarations": [
         {
           "kind": "class",
@@ -516,7 +1641,52 @@
               "description": "Media region wrapper."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-card-bg",
+              "description": "color used by the card component for background."
+            },
+            {
+              "name": "--ki-card-body-padding",
+              "description": "dimension used by the card component for body padding."
+            },
+            {
+              "name": "--ki-card-border-color",
+              "description": "color used by the card component for border color."
+            },
+            {
+              "name": "--ki-card-border-width",
+              "description": "dimension used by the card component for border width."
+            },
+            {
+              "name": "--ki-card-elevation",
+              "description": "shadow used by the card component for card elevation."
+            },
+            {
+              "name": "--ki-card-fg",
+              "description": "color used by the card component for foreground."
+            },
+            {
+              "name": "--ki-card-footer-padding",
+              "description": "dimension used by the card component for footer padding."
+            },
+            {
+              "name": "--ki-card-gap",
+              "description": "dimension used by the card component for gap."
+            },
+            {
+              "name": "--ki-card-header-padding",
+              "description": "dimension used by the card component for header padding."
+            },
+            {
+              "name": "--ki-card-media-padding",
+              "description": "dimension used by the card component for media padding."
+            },
+            {
+              "name": "--ki-card-radius",
+              "description": "dimension used by the card component for radius."
+            }
+          ]
         }
       ],
       "exports": [
@@ -525,7 +1695,7 @@
           "name": "KiCard",
           "declaration": {
             "name": "KiCard",
-            "module": "src/components/ki-card/ki-card.tsx"
+            "module": "dist/components/ki-card.js"
           }
         },
         {
@@ -533,14 +1703,14 @@
           "name": "ki-card",
           "declaration": {
             "name": "KiCard",
-            "module": "src/components/ki-card/ki-card.tsx"
+            "module": "dist/components/ki-card.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-checkbox/ki-checkbox.tsx",
+      "path": "dist/components/ki-checkbox.js",
       "declarations": [
         {
           "kind": "class",
@@ -557,7 +1727,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Live binary selection state. User activation by pointer, slotted label or\nSpace toggles it with native checkbox parity and emits composed `input`\nbefore composed `change`. Boolean presence semantics apply:\n`checked=\"false\"` still renders checked; omit the attribute to express\nunchecked. Programmatic assignment is silent.\nWhen NOT to use: do not treat this reflected attribute as a native\n`defaultChecked`; reset uses the baseline captured at form association."
             },
             {
               "name": "disabled",
@@ -565,7 +1736,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents activation, removes the checkbox from keyboard reach, exposes the\nunavailable state, and excludes it from form data.\nWhen NOT to use: do not use disabled for validation errors or pending\nstate."
             },
             {
               "name": "indeterminate",
@@ -573,14 +1745,16 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Presentation-only mixed state. It renders the dash mark, is forwarded to\nthe internal native input for mixed assistive-technology exposure, and\nnever changes the submitted value. Any user toggle clears it and removes\nthe reflected attribute.\nWhen NOT to use: do not submit or persist `indeterminate` as a third\nvalue; model data remains binary through `checked`."
             },
             {
               "name": "name",
               "fieldName": "name",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Form-data key contributed when the checkbox is checked.\nWhen NOT to use: omit when the checkbox should not submit a value."
             },
             {
               "name": "required",
@@ -588,14 +1762,16 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Requires the checkbox to be checked before form submission can proceed.\nThe invalid appearance appears after a blocked submission attempt or an\ninvalidating user toggle, never on initial render.\nWhen NOT to use: do not use required to express group-level rules; compose\nthose at the form/application layer."
             },
             {
               "name": "value",
               "fieldName": "value",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Form-data value paired with `name` when checked. If omitted, the submitted\nvalue is `on`, matching native checkbox behavior.\nWhen NOT to use: do not encode the unchecked state here; unchecked\ncheckboxes contribute no form entry."
             }
           ],
           "members": [
@@ -687,7 +1863,220 @@
               "description": "Label wrapper around the default slot."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-checkbox-border-width",
+              "description": "dimension used by the checkbox component for border width."
+            },
+            {
+              "name": "--ki-checkbox-checked-active-bg",
+              "description": "color used by the checkbox component for checked active background."
+            },
+            {
+              "name": "--ki-checkbox-checked-active-border",
+              "description": "color used by the checkbox component for checked active border."
+            },
+            {
+              "name": "--ki-checkbox-checked-active-fg",
+              "description": "color used by the checkbox component for checked active foreground."
+            },
+            {
+              "name": "--ki-checkbox-checked-disabled-bg",
+              "description": "color used by the checkbox component for checked disabled background."
+            },
+            {
+              "name": "--ki-checkbox-checked-disabled-border",
+              "description": "color used by the checkbox component for checked disabled border."
+            },
+            {
+              "name": "--ki-checkbox-checked-disabled-fg",
+              "description": "color used by the checkbox component for checked disabled foreground."
+            },
+            {
+              "name": "--ki-checkbox-checked-hover-bg",
+              "description": "color used by the checkbox component for checked hover background."
+            },
+            {
+              "name": "--ki-checkbox-checked-hover-border",
+              "description": "color used by the checkbox component for checked hover border."
+            },
+            {
+              "name": "--ki-checkbox-checked-hover-fg",
+              "description": "color used by the checkbox component for checked hover foreground."
+            },
+            {
+              "name": "--ki-checkbox-checked-rest-bg",
+              "description": "color used by the checkbox component for checked rest background."
+            },
+            {
+              "name": "--ki-checkbox-checked-rest-border",
+              "description": "color used by the checkbox component for checked rest border."
+            },
+            {
+              "name": "--ki-checkbox-checked-rest-fg",
+              "description": "color used by the checkbox component for checked rest foreground."
+            },
+            {
+              "name": "--ki-checkbox-control-size",
+              "description": "dimension used by the checkbox component for control size."
+            },
+            {
+              "name": "--ki-checkbox-focus-ring-color",
+              "description": "color used by the checkbox component for focus ring color."
+            },
+            {
+              "name": "--ki-checkbox-focus-ring-offset",
+              "description": "dimension used by the checkbox component for focus ring offset."
+            },
+            {
+              "name": "--ki-checkbox-focus-ring-width",
+              "description": "dimension used by the checkbox component for focus ring width."
+            },
+            {
+              "name": "--ki-checkbox-gap",
+              "description": "dimension used by the checkbox component for gap."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-active-bg",
+              "description": "color used by the checkbox component for indeterminate active background."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-active-border",
+              "description": "color used by the checkbox component for indeterminate active border."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-active-fg",
+              "description": "color used by the checkbox component for indeterminate active foreground."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-disabled-bg",
+              "description": "color used by the checkbox component for indeterminate disabled background."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-disabled-border",
+              "description": "color used by the checkbox component for indeterminate disabled border."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-disabled-fg",
+              "description": "color used by the checkbox component for indeterminate disabled foreground."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-hover-bg",
+              "description": "color used by the checkbox component for indeterminate hover background."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-hover-border",
+              "description": "color used by the checkbox component for indeterminate hover border."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-hover-fg",
+              "description": "color used by the checkbox component for indeterminate hover foreground."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-rest-bg",
+              "description": "color used by the checkbox component for indeterminate rest background."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-rest-border",
+              "description": "color used by the checkbox component for indeterminate rest border."
+            },
+            {
+              "name": "--ki-checkbox-indeterminate-rest-fg",
+              "description": "color used by the checkbox component for indeterminate rest foreground."
+            },
+            {
+              "name": "--ki-checkbox-invalid-bg",
+              "description": "color used by the checkbox component for invalid background."
+            },
+            {
+              "name": "--ki-checkbox-invalid-border",
+              "description": "color used by the checkbox component for invalid border."
+            },
+            {
+              "name": "--ki-checkbox-invalid-fg",
+              "description": "color used by the checkbox component for invalid foreground."
+            },
+            {
+              "name": "--ki-checkbox-label-font-size",
+              "description": "dimension used by the checkbox component for label font size."
+            },
+            {
+              "name": "--ki-checkbox-label-font-weight",
+              "description": "font weight used by the checkbox component for label font weight."
+            },
+            {
+              "name": "--ki-checkbox-label-line-height",
+              "description": "dimension used by the checkbox component for label line height."
+            },
+            {
+              "name": "--ki-checkbox-min-target",
+              "description": "dimension used by the checkbox component for min target."
+            },
+            {
+              "name": "--ki-checkbox-radius",
+              "description": "dimension used by the checkbox component for radius."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-active-bg",
+              "description": "color used by the checkbox component for unchecked active background."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-active-border",
+              "description": "color used by the checkbox component for unchecked active border."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-active-fg",
+              "description": "color used by the checkbox component for unchecked active foreground."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-disabled-bg",
+              "description": "color used by the checkbox component for unchecked disabled background."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-disabled-border",
+              "description": "color used by the checkbox component for unchecked disabled border."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-disabled-fg",
+              "description": "color used by the checkbox component for unchecked disabled foreground."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-hover-bg",
+              "description": "color used by the checkbox component for unchecked hover background."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-hover-border",
+              "description": "color used by the checkbox component for unchecked hover border."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-hover-fg",
+              "description": "color used by the checkbox component for unchecked hover foreground."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-rest-bg",
+              "description": "color used by the checkbox component for unchecked rest background."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-rest-border",
+              "description": "color used by the checkbox component for unchecked rest border."
+            },
+            {
+              "name": "--ki-checkbox-unchecked-rest-fg",
+              "description": "color used by the checkbox component for unchecked rest foreground."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-text-high-em",
+              "description": "semantic color for text high em."
+            }
+          ]
         }
       ],
       "exports": [
@@ -696,7 +2085,7 @@
           "name": "KiCheckbox",
           "declaration": {
             "name": "KiCheckbox",
-            "module": "src/components/ki-checkbox/ki-checkbox.tsx"
+            "module": "dist/components/ki-checkbox.js"
           }
         },
         {
@@ -704,14 +2093,14 @@
           "name": "ki-checkbox",
           "declaration": {
             "name": "KiCheckbox",
-            "module": "src/components/ki-checkbox/ki-checkbox.tsx"
+            "module": "dist/components/ki-checkbox.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-dialog/ki-dialog.tsx",
+      "path": "dist/components/ki-dialog.js",
       "declarations": [
         {
           "kind": "class",
@@ -728,14 +2117,16 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Opts into backdrop light-dismiss. Omit this attribute for critical\nconfirmations; `close-on-backdrop=\"false\"` still enables it.\nWhen to use: low-risk dialogs where an outside click may safely dismiss.\nWhen NOT to use: destructive confirmations or decisions that should not be\nlost to a stray click; omit the attribute entirely rather than setting it\nto `\"false\"`."
             },
             {
               "name": "heading",
               "fieldName": "heading",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Visible dialog title and accessible-name source. Always provide a heading;\nan empty value intentionally leaves the native dialog unnamed.\nWhen to use: name the interrupting decision, for example \"Delete\naccount?\". When NOT to use: do not omit it for production dialogs; APG\nmodal dialogs require an accessible name."
             },
             {
               "name": "open",
@@ -743,7 +2134,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Reflected live modal state. Add it or call `show()` to open; remove it or\ncall `close()` to close. When open, the native dialog enters the top layer\nand the page behind is inert.\nWhen to use: bind application state to the dialog's modal lifecycle.\nWhen NOT to use: do not set the internal native `<dialog open>` attribute;\nthe host attribute is the only public source of truth."
             }
           ],
           "members": [
@@ -792,7 +2184,8 @@
                   "text": "Promise<void>"
                 }
               },
-              "parameters": []
+              "parameters": [],
+              "signature": "close() => Promise<void>"
             },
             {
               "kind": "method",
@@ -804,7 +2197,8 @@
                   "text": "Promise<void>"
                 }
               },
-              "parameters": []
+              "parameters": [],
+              "signature": "show() => Promise<void>"
             }
           ],
           "events": [
@@ -844,7 +2238,84 @@
               "description": "Visible h2 title, rendered only when `heading` is non-empty."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-dialog-backdrop-bg",
+              "description": "color used by the dialog component for backdrop background."
+            },
+            {
+              "name": "--ki-dialog-bg",
+              "description": "color used by the dialog component for background."
+            },
+            {
+              "name": "--ki-dialog-border",
+              "description": "border used by the dialog component for border."
+            },
+            {
+              "name": "--ki-dialog-fg",
+              "description": "color used by the dialog component for foreground."
+            },
+            {
+              "name": "--ki-dialog-focus-ring-color",
+              "description": "color used by the dialog component for focus ring color."
+            },
+            {
+              "name": "--ki-dialog-focus-ring-offset",
+              "description": "dimension used by the dialog component for focus ring offset."
+            },
+            {
+              "name": "--ki-dialog-focus-ring-width",
+              "description": "dimension used by the dialog component for focus ring width."
+            },
+            {
+              "name": "--ki-dialog-gap",
+              "description": "dimension used by the dialog component for gap."
+            },
+            {
+              "name": "--ki-dialog-heading-font-size",
+              "description": "dimension used by the dialog component for heading font size."
+            },
+            {
+              "name": "--ki-dialog-heading-font-weight",
+              "description": "font weight used by the dialog component for heading font weight."
+            },
+            {
+              "name": "--ki-dialog-heading-line-height",
+              "description": "dimension used by the dialog component for heading line height."
+            },
+            {
+              "name": "--ki-dialog-max-width",
+              "description": "dimension used by the dialog component for max width."
+            },
+            {
+              "name": "--ki-dialog-min-width",
+              "description": "dimension used by the dialog component for min width."
+            },
+            {
+              "name": "--ki-dialog-motion-duration",
+              "description": "duration used by the dialog component for dialog motion duration."
+            },
+            {
+              "name": "--ki-dialog-motion-easing",
+              "description": "easing curve used by the dialog component for dialog motion easing."
+            },
+            {
+              "name": "--ki-dialog-padding",
+              "description": "dimension used by the dialog component for padding."
+            },
+            {
+              "name": "--ki-dialog-radius",
+              "description": "dimension used by the dialog component for radius."
+            },
+            {
+              "name": "--ki-dialog-shadow",
+              "description": "shadow used by the dialog component for dialog shadow."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
         }
       ],
       "exports": [
@@ -853,7 +2324,7 @@
           "name": "KiDialog",
           "declaration": {
             "name": "KiDialog",
-            "module": "src/components/ki-dialog/ki-dialog.tsx"
+            "module": "dist/components/ki-dialog.js"
           }
         },
         {
@@ -861,14 +2332,14 @@
           "name": "ki-dialog",
           "declaration": {
             "name": "KiDialog",
-            "module": "src/components/ki-dialog/ki-dialog.tsx"
+            "module": "dist/components/ki-dialog.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-input/ki-input.tsx",
+      "path": "dist/components/ki-input.js",
       "declarations": [
         {
           "kind": "class",
@@ -884,7 +2355,8 @@
               "fieldName": "autocomplete",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Native autocomplete detail token forwarded to the internal input.\nWhen NOT to use: omit when no autofill entry purpose is known."
             },
             {
               "name": "disabled",
@@ -892,28 +2364,32 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents editing, removes the field from keyboard reach and exposes the\nunavailable state through the internal native input.\nWhen NOT to use: do not use disabled for readonly reference values."
             },
             {
               "name": "label",
               "fieldName": "label",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Visible label rendered next to the entry area and used as the accessible\nname. This is mandatory for valid usage.\nWhen NOT to use: never use `placeholder` as a label substitute."
             },
             {
               "name": "name",
               "fieldName": "name",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Form-data key for the submitted value.\nWhen NOT to use: omit when the field must not contribute named form data."
             },
             {
               "name": "placeholder",
               "fieldName": "placeholder",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Hint shown when the field is empty.\nWhen NOT to use: do not use placeholder as the accessible name."
             },
             {
               "name": "readonly",
@@ -921,7 +2397,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Makes the value focusable and selectable while rejecting edits.\nWhen NOT to use: use `disabled` when the value must be unavailable and\nexcluded from forms."
             },
             {
               "name": "required",
@@ -929,7 +2406,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Marks the field as required for native constraint validation.\nWhen NOT to use: do not use required on optional fields."
             },
             {
               "name": "type",
@@ -937,7 +2415,8 @@
               "type": {
                 "text": "\"email\" | \"password\" | \"search\" | \"tel\" | \"text\" | \"url\""
               },
-              "default": "'text'"
+              "default": "'text'",
+              "description": "Entry kind with native single-line input semantics. Unknown runtime\nvalues fall back to `text`; `number` is not a v1 input kind.\nWhen NOT to use: use future numeric controls for locale-aware number entry."
             },
             {
               "name": "value",
@@ -945,7 +2424,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Live text value. The attribute declares the initial default; the property\nis the current value and programmatic assignments are silent.\nDeviation from native (deliberate, research D2): assigning the ATTRIBUTE\nprogrammatically also replaces the displayed value, silently — native\ninputs would keep the user's dirty value. Form reset restores the\nattribute's current value.\nWhen NOT to use: do not observe user edits by polling; listen for `input`\nand `change` (both re-dispatched composed across the shadow boundary)."
             }
           ],
           "members": [
@@ -1079,7 +2559,212 @@
               "description": "Visible label that provides the accessible name."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-input-border-block-end-width",
+              "description": "dimension used by the input component for border block end width."
+            },
+            {
+              "name": "--ki-input-border-block-start-width",
+              "description": "dimension used by the input component for border block start width."
+            },
+            {
+              "name": "--ki-input-border-inline-end-width",
+              "description": "dimension used by the input component for border inline end width."
+            },
+            {
+              "name": "--ki-input-border-inline-start-width",
+              "description": "dimension used by the input component for border inline start width."
+            },
+            {
+              "name": "--ki-input-disabled-bg",
+              "description": "color used by the input component for disabled background."
+            },
+            {
+              "name": "--ki-input-disabled-border",
+              "description": "color used by the input component for disabled border."
+            },
+            {
+              "name": "--ki-input-disabled-fg",
+              "description": "color used by the input component for disabled foreground."
+            },
+            {
+              "name": "--ki-input-disabled-label-fg",
+              "description": "color used by the input component for disabled label foreground."
+            },
+            {
+              "name": "--ki-input-disabled-placeholder-fg",
+              "description": "color used by the input component for disabled placeholder foreground."
+            },
+            {
+              "name": "--ki-input-focus-bg",
+              "description": "color used by the input component for focus background."
+            },
+            {
+              "name": "--ki-input-focus-border",
+              "description": "color used by the input component for focus border."
+            },
+            {
+              "name": "--ki-input-focus-fg",
+              "description": "color used by the input component for focus foreground."
+            },
+            {
+              "name": "--ki-input-focus-label-fg",
+              "description": "color used by the input component for focus label foreground."
+            },
+            {
+              "name": "--ki-input-focus-placeholder-fg",
+              "description": "color used by the input component for focus placeholder foreground."
+            },
+            {
+              "name": "--ki-input-focus-ring-color",
+              "description": "color used by the input component for focus ring color."
+            },
+            {
+              "name": "--ki-input-focus-ring-offset",
+              "description": "dimension used by the input component for focus ring offset."
+            },
+            {
+              "name": "--ki-input-focus-ring-width",
+              "description": "dimension used by the input component for focus ring width."
+            },
+            {
+              "name": "--ki-input-font-size",
+              "description": "dimension used by the input component for font size."
+            },
+            {
+              "name": "--ki-input-font-weight",
+              "description": "font weight used by the input component for font weight."
+            },
+            {
+              "name": "--ki-input-gap",
+              "description": "dimension used by the input component for gap."
+            },
+            {
+              "name": "--ki-input-height",
+              "description": "dimension used by the input component for height."
+            },
+            {
+              "name": "--ki-input-hover-bg",
+              "description": "color used by the input component for hover background."
+            },
+            {
+              "name": "--ki-input-hover-border",
+              "description": "color used by the input component for hover border."
+            },
+            {
+              "name": "--ki-input-hover-fg",
+              "description": "color used by the input component for hover foreground."
+            },
+            {
+              "name": "--ki-input-hover-label-fg",
+              "description": "color used by the input component for hover label foreground."
+            },
+            {
+              "name": "--ki-input-hover-placeholder-fg",
+              "description": "color used by the input component for hover placeholder foreground."
+            },
+            {
+              "name": "--ki-input-icon-size",
+              "description": "dimension used by the input component for icon size."
+            },
+            {
+              "name": "--ki-input-invalid-bg",
+              "description": "color used by the input component for invalid background."
+            },
+            {
+              "name": "--ki-input-invalid-border",
+              "description": "color used by the input component for invalid border."
+            },
+            {
+              "name": "--ki-input-invalid-fg",
+              "description": "color used by the input component for invalid foreground."
+            },
+            {
+              "name": "--ki-input-invalid-label-fg",
+              "description": "color used by the input component for invalid label foreground."
+            },
+            {
+              "name": "--ki-input-invalid-placeholder-fg",
+              "description": "color used by the input component for invalid placeholder foreground."
+            },
+            {
+              "name": "--ki-input-label-font-size",
+              "description": "dimension used by the input component for label font size."
+            },
+            {
+              "name": "--ki-input-label-font-weight",
+              "description": "font weight used by the input component for label font weight."
+            },
+            {
+              "name": "--ki-input-label-gap",
+              "description": "dimension used by the input component for label gap."
+            },
+            {
+              "name": "--ki-input-label-line-height",
+              "description": "dimension used by the input component for label line height."
+            },
+            {
+              "name": "--ki-input-line-height",
+              "description": "dimension used by the input component for line height."
+            },
+            {
+              "name": "--ki-input-min-target",
+              "description": "dimension used by the input component for min target."
+            },
+            {
+              "name": "--ki-input-padding-inline",
+              "description": "dimension used by the input component for padding inline."
+            },
+            {
+              "name": "--ki-input-radius",
+              "description": "dimension used by the input component for radius."
+            },
+            {
+              "name": "--ki-input-readonly-bg",
+              "description": "color used by the input component for readonly background."
+            },
+            {
+              "name": "--ki-input-readonly-border",
+              "description": "color used by the input component for readonly border."
+            },
+            {
+              "name": "--ki-input-readonly-fg",
+              "description": "color used by the input component for readonly foreground."
+            },
+            {
+              "name": "--ki-input-readonly-label-fg",
+              "description": "color used by the input component for readonly label foreground."
+            },
+            {
+              "name": "--ki-input-readonly-placeholder-fg",
+              "description": "color used by the input component for readonly placeholder foreground."
+            },
+            {
+              "name": "--ki-input-rest-bg",
+              "description": "color used by the input component for rest background."
+            },
+            {
+              "name": "--ki-input-rest-border",
+              "description": "color used by the input component for rest border."
+            },
+            {
+              "name": "--ki-input-rest-fg",
+              "description": "color used by the input component for rest foreground."
+            },
+            {
+              "name": "--ki-input-rest-label-fg",
+              "description": "color used by the input component for rest label foreground."
+            },
+            {
+              "name": "--ki-input-rest-placeholder-fg",
+              "description": "color used by the input component for rest placeholder foreground."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
         }
       ],
       "exports": [
@@ -1088,7 +2773,7 @@
           "name": "KiInput",
           "declaration": {
             "name": "KiInput",
-            "module": "src/components/ki-input/ki-input.tsx"
+            "module": "dist/components/ki-input.js"
           }
         },
         {
@@ -1096,14 +2781,14 @@
           "name": "ki-input",
           "declaration": {
             "name": "KiInput",
-            "module": "src/components/ki-input/ki-input.tsx"
+            "module": "dist/components/ki-input.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-list/ki-list.tsx",
+      "path": "dist/components/ki-list.js",
       "declarations": [
         {
           "kind": "class",
@@ -1128,7 +2813,28 @@
               "description": "List surface that owns background, padding, item gap and\nbetween-item divider styling."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-list-bg",
+              "description": "color used by the list component for background."
+            },
+            {
+              "name": "--ki-list-gap",
+              "description": "dimension used by the list component for gap."
+            },
+            {
+              "name": "--ki-list-item-divider-color",
+              "description": "color used by the list component for item divider color."
+            },
+            {
+              "name": "--ki-list-item-divider-width",
+              "description": "dimension used by the list component for item divider width."
+            },
+            {
+              "name": "--ki-list-padding",
+              "description": "dimension used by the list component for padding."
+            }
+          ]
         }
       ],
       "exports": [
@@ -1137,7 +2843,7 @@
           "name": "KiList",
           "declaration": {
             "name": "KiList",
-            "module": "src/components/ki-list/ki-list.tsx"
+            "module": "dist/components/ki-list.js"
           }
         },
         {
@@ -1145,14 +2851,14 @@
           "name": "ki-list",
           "declaration": {
             "name": "KiList",
-            "module": "src/components/ki-list/ki-list.tsx"
+            "module": "dist/components/ki-list.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-list-item/ki-list-item.tsx",
+      "path": "dist/components/ki-list-item.js",
       "declarations": [
         {
           "kind": "class",
@@ -1201,7 +2907,64 @@
               "description": "Leading region wrapper."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-list-item-gap",
+              "description": "dimension used by the list component for item gap."
+            },
+            {
+              "name": "--ki-list-item-min-height",
+              "description": "dimension used by the list component for item min height."
+            },
+            {
+              "name": "--ki-list-item-min-height-multiline",
+              "description": "dimension used by the list component for item min height multiline."
+            },
+            {
+              "name": "--ki-list-item-padding-block",
+              "description": "dimension used by the list component for item padding block."
+            },
+            {
+              "name": "--ki-list-item-padding-inline",
+              "description": "dimension used by the list component for item padding inline."
+            },
+            {
+              "name": "--ki-list-item-primary-fg",
+              "description": "color used by the list component for item primary foreground."
+            },
+            {
+              "name": "--ki-list-item-primary-font-size",
+              "description": "dimension used by the list component for item primary font size."
+            },
+            {
+              "name": "--ki-list-item-primary-font-weight",
+              "description": "font weight used by the list component for item primary font weight."
+            },
+            {
+              "name": "--ki-list-item-primary-line-height",
+              "description": "dimension used by the list component for item primary line height."
+            },
+            {
+              "name": "--ki-list-item-radius",
+              "description": "dimension used by the list component for item radius."
+            },
+            {
+              "name": "--ki-list-item-secondary-fg",
+              "description": "color used by the list component for item secondary foreground."
+            },
+            {
+              "name": "--ki-list-item-secondary-font-size",
+              "description": "dimension used by the list component for item secondary font size."
+            },
+            {
+              "name": "--ki-list-item-secondary-font-weight",
+              "description": "font weight used by the list component for item secondary font weight."
+            },
+            {
+              "name": "--ki-list-item-secondary-line-height",
+              "description": "dimension used by the list component for item secondary line height."
+            }
+          ]
         }
       ],
       "exports": [
@@ -1210,7 +2973,7 @@
           "name": "KiListItem",
           "declaration": {
             "name": "KiListItem",
-            "module": "src/components/ki-list-item/ki-list-item.tsx"
+            "module": "dist/components/ki-list-item.js"
           }
         },
         {
@@ -1218,14 +2981,14 @@
           "name": "ki-list-item",
           "declaration": {
             "name": "KiListItem",
-            "module": "src/components/ki-list-item/ki-list-item.tsx"
+            "module": "dist/components/ki-list-item.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-option/ki-option.tsx",
+      "path": "dist/components/ki-option.js",
       "declarations": [
         {
           "kind": "class",
@@ -1242,14 +3005,16 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Makes this option unavailable. Disabled options cannot be selected, are\nskipped by keyboard highlight, and are exposed unavailable by the select."
             },
             {
               "name": "value",
               "fieldName": "value",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Submission and selection value for this option. When omitted, the value\nfalls back to the trimmed option text, matching native `<option>` parity.\nWhen NOT to use: do not use this as selection state; set `ki-select.value`."
             }
           ],
           "members": [
@@ -1294,7 +3059,7 @@
           "name": "KiOption",
           "declaration": {
             "name": "KiOption",
-            "module": "src/components/ki-option/ki-option.tsx"
+            "module": "dist/components/ki-option.js"
           }
         },
         {
@@ -1302,14 +3067,14 @@
           "name": "ki-option",
           "declaration": {
             "name": "KiOption",
-            "module": "src/components/ki-option/ki-option.tsx"
+            "module": "dist/components/ki-option.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-progress/ki-progress.tsx",
+      "path": "dist/components/ki-progress.js",
       "declarations": [
         {
           "kind": "class",
@@ -1326,14 +3091,16 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Unknown-duration mode. When set, no completed fraction or current value is\nexposed. Its motion is declared only when reduced motion is not requested.\nWhen to use: show ongoing work whose duration or total cannot be measured.\nWhen NOT to use: do not use for known fractions; use `value` and `max`."
             },
             {
               "name": "label",
               "fieldName": "label",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Accessible name applied to the internal progressbar. Always set this to\nwhat is progressing, such as \"Uploading report.pdf\". Without it the\nelement renders but exposes no accessible name.\nWhen NOT to use: do not use a generic label such as \"Loading\" when the\ntask can be named more specifically."
             },
             {
               "name": "max",
@@ -1341,7 +3108,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "100"
+              "default": "100",
+              "description": "Total amount. Non-finite, zero or negative values normalize to `100` for\npresentation and ARIA.\nWhen to use: set when a determinate task's total is not 100.\nWhen NOT to use: omit for conventional percentage-style progress."
             },
             {
               "name": "shape",
@@ -1349,7 +3117,8 @@
               "type": {
                 "text": "\"circular\" | \"linear\""
               },
-              "default": "'linear'"
+              "default": "'linear'",
+              "description": "Structural presentation. Use `linear` in page flows and lists; use\n`circular` in compact or centered placements. Unknown values render linear.\nWhen NOT to use: do not use shape to encode semantic status or task intent."
             },
             {
               "name": "value",
@@ -1357,7 +3126,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "0"
+              "default": "0",
+              "description": "Completed amount. Presentation and ARIA clamp this value to `0..max`;\nmalformed values fall back to `0`. Ignored while `indeterminate` is set.\nWhen to use: set with `max` for determinate task advancement.\nWhen NOT to use: do not set a fabricated value for unknown-duration work;\nset `indeterminate` instead."
             }
           ],
           "members": [
@@ -1433,7 +3203,36 @@
               "description": "The full channel or ring: track ink and radius/stroke geometry."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-progress-circular-size",
+              "description": "dimension used by the progress component for circular size."
+            },
+            {
+              "name": "--ki-progress-circular-track-width",
+              "description": "dimension used by the progress component for circular track width."
+            },
+            {
+              "name": "--ki-progress-indeterminate-duration",
+              "description": "duration used by the progress component for progress indeterminate duration."
+            },
+            {
+              "name": "--ki-progress-indicator-color",
+              "description": "color used by the progress component for indicator color."
+            },
+            {
+              "name": "--ki-progress-linear-radius",
+              "description": "dimension used by the progress component for linear radius."
+            },
+            {
+              "name": "--ki-progress-linear-thickness",
+              "description": "dimension used by the progress component for linear thickness."
+            },
+            {
+              "name": "--ki-progress-track-color",
+              "description": "color used by the progress component for track color."
+            }
+          ]
         }
       ],
       "exports": [
@@ -1442,7 +3241,7 @@
           "name": "KiProgress",
           "declaration": {
             "name": "KiProgress",
-            "module": "src/components/ki-progress/ki-progress.tsx"
+            "module": "dist/components/ki-progress.js"
           }
         },
         {
@@ -1450,14 +3249,14 @@
           "name": "ki-progress",
           "declaration": {
             "name": "KiProgress",
-            "module": "src/components/ki-progress/ki-progress.tsx"
+            "module": "dist/components/ki-progress.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-radio/ki-radio.tsx",
+      "path": "dist/components/ki-radio.js",
       "declarations": [
         {
           "kind": "class",
@@ -1474,7 +3273,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents this option from being selected or focused. Disabled options are\nskipped by group arrow navigation and omitted from form submission when\nselected before becoming disabled.\nWhen NOT to use: do not use disabled as a temporary loading state."
             },
             {
               "name": "value",
@@ -1482,7 +3282,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'on'"
+              "default": "'on'",
+              "description": "Submission value projected by the parent `ki-radio-group` when this option\nis selected. Omit for native radio parity with value `\"on\"`.\nWhen NOT to use: do not use `value` to author selection; set the group's\n`value` property or attribute."
             }
           ],
           "members": [
@@ -1528,7 +3329,172 @@
               "description": "Wrapper around the option label."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
+            },
+            {
+              "name": "--ki-radio-border-width",
+              "description": "dimension used by the radio component for border width."
+            },
+            {
+              "name": "--ki-radio-control-radius",
+              "description": "dimension used by the radio component for control radius."
+            },
+            {
+              "name": "--ki-radio-control-size",
+              "description": "dimension used by the radio component for control size."
+            },
+            {
+              "name": "--ki-radio-dot-size",
+              "description": "dimension used by the radio component for dot size."
+            },
+            {
+              "name": "--ki-radio-focus-ring-color",
+              "description": "color used by the radio component for focus ring color."
+            },
+            {
+              "name": "--ki-radio-focus-ring-offset",
+              "description": "dimension used by the radio component for focus ring offset."
+            },
+            {
+              "name": "--ki-radio-focus-ring-width",
+              "description": "dimension used by the radio component for focus ring width."
+            },
+            {
+              "name": "--ki-radio-gap",
+              "description": "dimension used by the radio component for gap."
+            },
+            {
+              "name": "--ki-radio-label-font-size",
+              "description": "dimension used by the radio component for label font size."
+            },
+            {
+              "name": "--ki-radio-label-font-weight",
+              "description": "font weight used by the radio component for label font weight."
+            },
+            {
+              "name": "--ki-radio-label-line-height",
+              "description": "dimension used by the radio component for label line height."
+            },
+            {
+              "name": "--ki-radio-min-target",
+              "description": "dimension used by the radio component for min target."
+            },
+            {
+              "name": "--ki-radio-selected-active-bg",
+              "description": "color used by the radio component for selected active background."
+            },
+            {
+              "name": "--ki-radio-selected-active-border",
+              "description": "color used by the radio component for selected active border."
+            },
+            {
+              "name": "--ki-radio-selected-active-fg",
+              "description": "color used by the radio component for selected active foreground."
+            },
+            {
+              "name": "--ki-radio-selected-disabled-bg",
+              "description": "color used by the radio component for selected disabled background."
+            },
+            {
+              "name": "--ki-radio-selected-disabled-border",
+              "description": "color used by the radio component for selected disabled border."
+            },
+            {
+              "name": "--ki-radio-selected-disabled-fg",
+              "description": "color used by the radio component for selected disabled foreground."
+            },
+            {
+              "name": "--ki-radio-selected-hover-bg",
+              "description": "color used by the radio component for selected hover background."
+            },
+            {
+              "name": "--ki-radio-selected-hover-border",
+              "description": "color used by the radio component for selected hover border."
+            },
+            {
+              "name": "--ki-radio-selected-hover-fg",
+              "description": "color used by the radio component for selected hover foreground."
+            },
+            {
+              "name": "--ki-radio-selected-rest-bg",
+              "description": "color used by the radio component for selected rest background."
+            },
+            {
+              "name": "--ki-radio-selected-rest-border",
+              "description": "color used by the radio component for selected rest border."
+            },
+            {
+              "name": "--ki-radio-selected-rest-fg",
+              "description": "color used by the radio component for selected rest foreground."
+            },
+            {
+              "name": "--ki-radio-unselected-active-bg",
+              "description": "color used by the radio component for unselected active background."
+            },
+            {
+              "name": "--ki-radio-unselected-active-border",
+              "description": "color used by the radio component for unselected active border."
+            },
+            {
+              "name": "--ki-radio-unselected-active-fg",
+              "description": "color used by the radio component for unselected active foreground."
+            },
+            {
+              "name": "--ki-radio-unselected-disabled-bg",
+              "description": "color used by the radio component for unselected disabled background."
+            },
+            {
+              "name": "--ki-radio-unselected-disabled-border",
+              "description": "color used by the radio component for unselected disabled border."
+            },
+            {
+              "name": "--ki-radio-unselected-disabled-fg",
+              "description": "color used by the radio component for unselected disabled foreground."
+            },
+            {
+              "name": "--ki-radio-unselected-hover-bg",
+              "description": "color used by the radio component for unselected hover background."
+            },
+            {
+              "name": "--ki-radio-unselected-hover-border",
+              "description": "color used by the radio component for unselected hover border."
+            },
+            {
+              "name": "--ki-radio-unselected-hover-fg",
+              "description": "color used by the radio component for unselected hover foreground."
+            },
+            {
+              "name": "--ki-radio-unselected-rest-bg",
+              "description": "color used by the radio component for unselected rest background."
+            },
+            {
+              "name": "--ki-radio-unselected-rest-border",
+              "description": "color used by the radio component for unselected rest border."
+            },
+            {
+              "name": "--ki-radio-unselected-rest-fg",
+              "description": "color used by the radio component for unselected rest foreground."
+            },
+            {
+              "name": "--ki-text-high-em",
+              "description": "semantic color for text high em."
+            },
+            {
+              "name": "--ki-text-muted",
+              "description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
         }
       ],
       "exports": [
@@ -1537,7 +3503,7 @@
           "name": "KiRadio",
           "declaration": {
             "name": "KiRadio",
-            "module": "src/components/ki-radio/ki-radio.tsx"
+            "module": "dist/components/ki-radio.js"
           }
         },
         {
@@ -1545,14 +3511,14 @@
           "name": "ki-radio",
           "declaration": {
             "name": "KiRadio",
-            "module": "src/components/ki-radio/ki-radio.tsx"
+            "module": "dist/components/ki-radio.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-radio-group/ki-radio-group.tsx",
+      "path": "dist/components/ki-radio-group.js",
       "declarations": [
         {
           "kind": "class",
@@ -1569,21 +3535,24 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Makes the whole group unavailable, skips it in Tab order and removes its\nform entry.\nWhen NOT to use: do not use disabled for pending/loading semantics."
             },
             {
               "name": "label",
               "fieldName": "label",
               "type": {
                 "text": "string"
-              }
+              },
+              "description": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it; unlabeled groups fail accessibility gates."
             },
             {
               "name": "name",
               "fieldName": "name",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Form-data key for the selected option's value. Omit when the group should\nnot contribute a form entry.\nWhen NOT to use: do not put `name` on `ki-radio` options; their internal\nnative inputs are intentionally unnamed."
             },
             {
               "name": "required",
@@ -1591,7 +3560,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Requires one selected option for form submission. The group uses platform\n`valueMissing` from its internal native radio inputs.\nWhen NOT to use: do not use required when no answer is acceptable."
             },
             {
               "name": "value",
@@ -1599,7 +3569,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Projection of the current selection. The initial attribute selects the\nfirst matching option; unmatched values leave the group unselected and\noperable. Assigning the property updates selection silently.\nWhen NOT to use: never author selection on `ki-radio`; set this value."
             }
           ],
           "members": [
@@ -1675,7 +3646,32 @@
               "description": "Visible group label and accessible-name source."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-radio-group-gap",
+              "description": "dimension used by the radio group component for gap."
+            },
+            {
+              "name": "--ki-radio-group-label-font-size",
+              "description": "dimension used by the radio group component for label font size."
+            },
+            {
+              "name": "--ki-radio-group-label-font-weight",
+              "description": "font weight used by the radio group component for label font weight."
+            },
+            {
+              "name": "--ki-radio-group-label-line-height",
+              "description": "dimension used by the radio group component for label line height."
+            },
+            {
+              "name": "--ki-text-high-em",
+              "description": "semantic color for text high em."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
         }
       ],
       "exports": [
@@ -1684,7 +3680,7 @@
           "name": "KiRadioGroup",
           "declaration": {
             "name": "KiRadioGroup",
-            "module": "src/components/ki-radio-group/ki-radio-group.tsx"
+            "module": "dist/components/ki-radio-group.js"
           }
         },
         {
@@ -1692,14 +3688,14 @@
           "name": "ki-radio-group",
           "declaration": {
             "name": "KiRadioGroup",
-            "module": "src/components/ki-radio-group/ki-radio-group.tsx"
+            "module": "dist/components/ki-radio-group.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-select/ki-select.tsx",
+      "path": "dist/components/ki-select.js",
       "declarations": [
         {
           "kind": "class",
@@ -1716,7 +3712,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply."
             },
             {
               "name": "label",
@@ -1724,14 +3721,16 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Visible label and accessible-name source for the combobox trigger.\nWhen NOT to use: do not omit it; unlabeled selects are invalid usage."
             },
             {
               "name": "name",
               "fieldName": "name",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Form-data key used when a selected option contributes its value.\nWhen NOT to use: omit it when the select should not submit data."
             },
             {
               "name": "placeholder",
@@ -1739,7 +3738,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Text shown while no option is selected.\nWhen NOT to use: do not use it as a replacement for `label`."
             },
             {
               "name": "required",
@@ -1747,7 +3747,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Requires a non-empty submitted value. The platform validation message is\ndonated by a hidden native select."
             },
             {
               "name": "value",
@@ -1755,7 +3756,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Live projection of the selected option value, or `\"\"` when unselected.\nAssigning it selects the first matching option silently; the attribute is\nthe reset/default declaration and is not updated by user commits."
             }
           ],
           "members": [
@@ -1864,7 +3866,236 @@
               "description": "Displayed selection or placeholder."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-option-disabled-bg",
+              "description": "color used by the option component for disabled background."
+            },
+            {
+              "name": "--ki-option-disabled-fg",
+              "description": "color used by the option component for disabled foreground."
+            },
+            {
+              "name": "--ki-option-font-size",
+              "description": "dimension used by the option component for font size."
+            },
+            {
+              "name": "--ki-option-highlight-bg",
+              "description": "color used by the option component for highlight background."
+            },
+            {
+              "name": "--ki-option-highlight-fg",
+              "description": "color used by the option component for highlight foreground."
+            },
+            {
+              "name": "--ki-option-hover-bg",
+              "description": "color used by the option component for hover background."
+            },
+            {
+              "name": "--ki-option-hover-fg",
+              "description": "color used by the option component for hover foreground."
+            },
+            {
+              "name": "--ki-option-min-target",
+              "description": "dimension used by the option component for min target."
+            },
+            {
+              "name": "--ki-option-padding-inline",
+              "description": "dimension used by the option component for padding inline."
+            },
+            {
+              "name": "--ki-option-radius",
+              "description": "dimension used by the option component for radius."
+            },
+            {
+              "name": "--ki-option-rest-bg",
+              "description": "color used by the option component for rest background."
+            },
+            {
+              "name": "--ki-option-rest-fg",
+              "description": "color used by the option component for rest foreground."
+            },
+            {
+              "name": "--ki-option-selected-bg",
+              "description": "color used by the option component for selected background."
+            },
+            {
+              "name": "--ki-option-selected-fg",
+              "description": "color used by the option component for selected foreground."
+            },
+            {
+              "name": "--ki-select-border-block-end-width",
+              "description": "dimension used by the select component for border block end width."
+            },
+            {
+              "name": "--ki-select-border-block-start-width",
+              "description": "dimension used by the select component for border block start width."
+            },
+            {
+              "name": "--ki-select-border-inline-end-width",
+              "description": "dimension used by the select component for border inline end width."
+            },
+            {
+              "name": "--ki-select-border-inline-start-width",
+              "description": "dimension used by the select component for border inline start width."
+            },
+            {
+              "name": "--ki-select-border-width",
+              "description": "dimension used by the select component for border width."
+            },
+            {
+              "name": "--ki-select-disabled-bg",
+              "description": "color used by the select component for disabled background."
+            },
+            {
+              "name": "--ki-select-disabled-border",
+              "description": "color used by the select component for disabled border."
+            },
+            {
+              "name": "--ki-select-disabled-fg",
+              "description": "color used by the select component for disabled foreground."
+            },
+            {
+              "name": "--ki-select-disabled-label-fg",
+              "description": "color used by the select component for disabled label foreground."
+            },
+            {
+              "name": "--ki-select-focus-bg",
+              "description": "color used by the select component for focus background."
+            },
+            {
+              "name": "--ki-select-focus-border",
+              "description": "color used by the select component for focus border."
+            },
+            {
+              "name": "--ki-select-focus-fg",
+              "description": "color used by the select component for focus foreground."
+            },
+            {
+              "name": "--ki-select-focus-label-fg",
+              "description": "color used by the select component for focus label foreground."
+            },
+            {
+              "name": "--ki-select-focus-ring-color",
+              "description": "color used by the select component for focus ring color."
+            },
+            {
+              "name": "--ki-select-focus-ring-offset",
+              "description": "dimension used by the select component for focus ring offset."
+            },
+            {
+              "name": "--ki-select-focus-ring-width",
+              "description": "dimension used by the select component for focus ring width."
+            },
+            {
+              "name": "--ki-select-font-size",
+              "description": "dimension used by the select component for font size."
+            },
+            {
+              "name": "--ki-select-gap",
+              "description": "dimension used by the select component for gap."
+            },
+            {
+              "name": "--ki-select-height",
+              "description": "dimension used by the select component for height."
+            },
+            {
+              "name": "--ki-select-hover-bg",
+              "description": "color used by the select component for hover background."
+            },
+            {
+              "name": "--ki-select-hover-border",
+              "description": "color used by the select component for hover border."
+            },
+            {
+              "name": "--ki-select-hover-fg",
+              "description": "color used by the select component for hover foreground."
+            },
+            {
+              "name": "--ki-select-hover-label-fg",
+              "description": "color used by the select component for hover label foreground."
+            },
+            {
+              "name": "--ki-select-indicator-size",
+              "description": "dimension used by the select component for indicator size."
+            },
+            {
+              "name": "--ki-select-label-font-size",
+              "description": "dimension used by the select component for label font size."
+            },
+            {
+              "name": "--ki-select-label-font-weight",
+              "description": "font weight used by the select component for label font weight."
+            },
+            {
+              "name": "--ki-select-label-gap",
+              "description": "dimension used by the select component for label gap."
+            },
+            {
+              "name": "--ki-select-label-line-height",
+              "description": "dimension used by the select component for label line height."
+            },
+            {
+              "name": "--ki-select-listbox-bg",
+              "description": "color used by the select component for listbox background."
+            },
+            {
+              "name": "--ki-select-listbox-elevation",
+              "description": "color used by the select component for listbox elevation."
+            },
+            {
+              "name": "--ki-select-listbox-max-block-size",
+              "description": "dimension used by the select component for listbox max block size."
+            },
+            {
+              "name": "--ki-select-listbox-offset",
+              "description": "dimension used by the select component for listbox offset."
+            },
+            {
+              "name": "--ki-select-listbox-padding",
+              "description": "dimension used by the select component for listbox padding."
+            },
+            {
+              "name": "--ki-select-listbox-radius",
+              "description": "dimension used by the select component for listbox radius."
+            },
+            {
+              "name": "--ki-select-min-target",
+              "description": "dimension used by the select component for min target."
+            },
+            {
+              "name": "--ki-select-padding-inline",
+              "description": "dimension used by the select component for padding inline."
+            },
+            {
+              "name": "--ki-select-placeholder-fg",
+              "description": "color used by the select component for placeholder foreground."
+            },
+            {
+              "name": "--ki-select-radius",
+              "description": "dimension used by the select component for radius."
+            },
+            {
+              "name": "--ki-select-rest-bg",
+              "description": "color used by the select component for rest background."
+            },
+            {
+              "name": "--ki-select-rest-border",
+              "description": "color used by the select component for rest border."
+            },
+            {
+              "name": "--ki-select-rest-fg",
+              "description": "color used by the select component for rest foreground."
+            },
+            {
+              "name": "--ki-select-rest-label-fg",
+              "description": "color used by the select component for rest label foreground."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
         }
       ],
       "exports": [
@@ -1873,7 +4104,7 @@
           "name": "KiSelect",
           "declaration": {
             "name": "KiSelect",
-            "module": "src/components/ki-select/ki-select.tsx"
+            "module": "dist/components/ki-select.js"
           }
         },
         {
@@ -1881,14 +4112,14 @@
           "name": "ki-select",
           "declaration": {
             "name": "KiSelect",
-            "module": "src/components/ki-select/ki-select.tsx"
+            "module": "dist/components/ki-select.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-switch/ki-switch.tsx",
+      "path": "dist/components/ki-switch.js",
       "declarations": [
         {
           "kind": "class",
@@ -1905,7 +4136,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern."
             },
             {
               "name": "disabled",
@@ -1913,21 +4145,24 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents toggling, removes the switch from keyboard reach, excludes it\nfrom form data, and exposes the unavailable state to assistive technology.\nWhen to use: make a setting temporarily unavailable while preserving its\ncurrent state.\nWhen NOT to use: do not use disabled for pending or loading states."
             },
             {
               "name": "name",
               "fieldName": "name",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Form-data key contributed while the switch is on.\nWhen to use: include the immediate setting in native form data when on.\nWhen NOT to use: omit when no form entry should be submitted."
             },
             {
               "name": "value",
               "fieldName": "value",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Form-data value submitted while on. Omit for native checkbox parity: the\nsubmitted value defaults to `on`.\nWhen to use: submit a domain-specific value instead of the default `on`.\nWhen NOT to use: do not set a value to represent off; off contributes\nnothing."
             }
           ],
           "members": [
@@ -1999,7 +4234,160 @@
               "description": "On/off channel."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
+            },
+            {
+              "name": "--ki-switch-border-width",
+              "description": "dimension used by the switch component for border width."
+            },
+            {
+              "name": "--ki-switch-checked-active-border",
+              "description": "color used by the switch component for checked active border."
+            },
+            {
+              "name": "--ki-switch-checked-active-thumb",
+              "description": "color used by the switch component for checked active thumb."
+            },
+            {
+              "name": "--ki-switch-checked-active-track",
+              "description": "color used by the switch component for checked active track."
+            },
+            {
+              "name": "--ki-switch-checked-disabled-border",
+              "description": "color used by the switch component for checked disabled border."
+            },
+            {
+              "name": "--ki-switch-checked-disabled-thumb",
+              "description": "color used by the switch component for checked disabled thumb."
+            },
+            {
+              "name": "--ki-switch-checked-disabled-track",
+              "description": "color used by the switch component for checked disabled track."
+            },
+            {
+              "name": "--ki-switch-checked-hover-border",
+              "description": "color used by the switch component for checked hover border."
+            },
+            {
+              "name": "--ki-switch-checked-hover-thumb",
+              "description": "color used by the switch component for checked hover thumb."
+            },
+            {
+              "name": "--ki-switch-checked-hover-track",
+              "description": "color used by the switch component for checked hover track."
+            },
+            {
+              "name": "--ki-switch-checked-rest-border",
+              "description": "color used by the switch component for checked rest border."
+            },
+            {
+              "name": "--ki-switch-checked-rest-thumb",
+              "description": "color used by the switch component for checked rest thumb."
+            },
+            {
+              "name": "--ki-switch-checked-rest-track",
+              "description": "color used by the switch component for checked rest track."
+            },
+            {
+              "name": "--ki-switch-focus-ring-color",
+              "description": "color used by the switch component for focus ring color."
+            },
+            {
+              "name": "--ki-switch-focus-ring-offset",
+              "description": "dimension used by the switch component for focus ring offset."
+            },
+            {
+              "name": "--ki-switch-focus-ring-width",
+              "description": "dimension used by the switch component for focus ring width."
+            },
+            {
+              "name": "--ki-switch-gap",
+              "description": "dimension used by the switch component for gap."
+            },
+            {
+              "name": "--ki-switch-min-target",
+              "description": "dimension used by the switch component for min target."
+            },
+            {
+              "name": "--ki-switch-thumb-inset",
+              "description": "dimension used by the switch component for thumb inset."
+            },
+            {
+              "name": "--ki-switch-thumb-radius",
+              "description": "dimension used by the switch component for thumb radius."
+            },
+            {
+              "name": "--ki-switch-thumb-size",
+              "description": "dimension used by the switch component for thumb size."
+            },
+            {
+              "name": "--ki-switch-track-height",
+              "description": "dimension used by the switch component for track height."
+            },
+            {
+              "name": "--ki-switch-track-radius",
+              "description": "dimension used by the switch component for track radius."
+            },
+            {
+              "name": "--ki-switch-track-width",
+              "description": "dimension used by the switch component for track width."
+            },
+            {
+              "name": "--ki-switch-unchecked-active-border",
+              "description": "color used by the switch component for unchecked active border."
+            },
+            {
+              "name": "--ki-switch-unchecked-active-thumb",
+              "description": "color used by the switch component for unchecked active thumb."
+            },
+            {
+              "name": "--ki-switch-unchecked-active-track",
+              "description": "color used by the switch component for unchecked active track."
+            },
+            {
+              "name": "--ki-switch-unchecked-disabled-border",
+              "description": "color used by the switch component for unchecked disabled border."
+            },
+            {
+              "name": "--ki-switch-unchecked-disabled-thumb",
+              "description": "color used by the switch component for unchecked disabled thumb."
+            },
+            {
+              "name": "--ki-switch-unchecked-disabled-track",
+              "description": "color used by the switch component for unchecked disabled track."
+            },
+            {
+              "name": "--ki-switch-unchecked-hover-border",
+              "description": "color used by the switch component for unchecked hover border."
+            },
+            {
+              "name": "--ki-switch-unchecked-hover-thumb",
+              "description": "color used by the switch component for unchecked hover thumb."
+            },
+            {
+              "name": "--ki-switch-unchecked-hover-track",
+              "description": "color used by the switch component for unchecked hover track."
+            },
+            {
+              "name": "--ki-switch-unchecked-rest-border",
+              "description": "color used by the switch component for unchecked rest border."
+            },
+            {
+              "name": "--ki-switch-unchecked-rest-thumb",
+              "description": "color used by the switch component for unchecked rest thumb."
+            },
+            {
+              "name": "--ki-switch-unchecked-rest-track",
+              "description": "color used by the switch component for unchecked rest track."
+            }
+          ]
         }
       ],
       "exports": [
@@ -2008,7 +4396,7 @@
           "name": "KiSwitch",
           "declaration": {
             "name": "KiSwitch",
-            "module": "src/components/ki-switch/ki-switch.tsx"
+            "module": "dist/components/ki-switch.js"
           }
         },
         {
@@ -2016,14 +4404,14 @@
           "name": "ki-switch",
           "declaration": {
             "name": "KiSwitch",
-            "module": "src/components/ki-switch/ki-switch.tsx"
+            "module": "dist/components/ki-switch.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-tab/ki-tab.tsx",
+      "path": "dist/components/ki-tab.js",
       "declarations": [
         {
           "kind": "class",
@@ -2040,7 +4428,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents selection by every modality and exposes the unavailable state.\nBoolean presence semantics apply: `disabled=\"false\"` is still disabled."
             },
             {
               "name": "selected",
@@ -2048,7 +4437,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Output-only selected state written by `ki-tabs`. Set the group's `value`\nto choose an initial tab; author-set `selected` is overwritten."
             },
             {
               "name": "value",
@@ -2056,7 +4446,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Pairing identifier shared with a `ki-tab-panel`. The first tab with a\nvalue owns it; later duplicates render but are not selectable."
             }
           ],
           "members": [
@@ -2122,7 +4513,128 @@
               "description": "Tab surface."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-tab-focus-ring-color",
+              "description": "color used by the tab component for focus ring color."
+            },
+            {
+              "name": "--ki-tab-focus-ring-offset",
+              "description": "dimension used by the tab component for focus ring offset."
+            },
+            {
+              "name": "--ki-tab-focus-ring-width",
+              "description": "dimension used by the tab component for focus ring width."
+            },
+            {
+              "name": "--ki-tab-font-size",
+              "description": "dimension used by the tab component for font size."
+            },
+            {
+              "name": "--ki-tab-font-weight",
+              "description": "font weight used by the tab component for font weight."
+            },
+            {
+              "name": "--ki-tab-gap",
+              "description": "dimension used by the tab component for gap."
+            },
+            {
+              "name": "--ki-tab-indicator-color",
+              "description": "color used by the tab component for indicator color."
+            },
+            {
+              "name": "--ki-tab-indicator-radius",
+              "description": "dimension used by the tab component for indicator radius."
+            },
+            {
+              "name": "--ki-tab-indicator-size",
+              "description": "dimension used by the tab component for indicator size."
+            },
+            {
+              "name": "--ki-tab-line-height",
+              "description": "dimension used by the tab component for line height."
+            },
+            {
+              "name": "--ki-tab-min-block-size",
+              "description": "dimension used by the tab component for min block size."
+            },
+            {
+              "name": "--ki-tab-padding-inline",
+              "description": "dimension used by the tab component for padding inline."
+            },
+            {
+              "name": "--ki-tab-radius",
+              "description": "dimension used by the tab component for radius."
+            },
+            {
+              "name": "--ki-tab-selected-active-bg",
+              "description": "color used by the tab component for selected active background."
+            },
+            {
+              "name": "--ki-tab-selected-active-fg",
+              "description": "color used by the tab component for selected active foreground."
+            },
+            {
+              "name": "--ki-tab-selected-disabled-bg",
+              "description": "color used by the tab component for selected disabled background."
+            },
+            {
+              "name": "--ki-tab-selected-disabled-fg",
+              "description": "color used by the tab component for selected disabled foreground."
+            },
+            {
+              "name": "--ki-tab-selected-hover-bg",
+              "description": "color used by the tab component for selected hover background."
+            },
+            {
+              "name": "--ki-tab-selected-hover-fg",
+              "description": "color used by the tab component for selected hover foreground."
+            },
+            {
+              "name": "--ki-tab-selected-rest-bg",
+              "description": "color used by the tab component for selected rest background."
+            },
+            {
+              "name": "--ki-tab-selected-rest-fg",
+              "description": "color used by the tab component for selected rest foreground."
+            },
+            {
+              "name": "--ki-tab-unselected-active-bg",
+              "description": "color used by the tab component for unselected active background."
+            },
+            {
+              "name": "--ki-tab-unselected-active-fg",
+              "description": "color used by the tab component for unselected active foreground."
+            },
+            {
+              "name": "--ki-tab-unselected-disabled-bg",
+              "description": "color used by the tab component for unselected disabled background."
+            },
+            {
+              "name": "--ki-tab-unselected-disabled-fg",
+              "description": "color used by the tab component for unselected disabled foreground."
+            },
+            {
+              "name": "--ki-tab-unselected-hover-bg",
+              "description": "color used by the tab component for unselected hover background."
+            },
+            {
+              "name": "--ki-tab-unselected-hover-fg",
+              "description": "color used by the tab component for unselected hover foreground."
+            },
+            {
+              "name": "--ki-tab-unselected-rest-bg",
+              "description": "color used by the tab component for unselected rest background."
+            },
+            {
+              "name": "--ki-tab-unselected-rest-fg",
+              "description": "color used by the tab component for unselected rest foreground."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
         }
       ],
       "exports": [
@@ -2131,7 +4643,7 @@
           "name": "KiTab",
           "declaration": {
             "name": "KiTab",
-            "module": "src/components/ki-tab/ki-tab.tsx"
+            "module": "dist/components/ki-tab.js"
           }
         },
         {
@@ -2139,14 +4651,14 @@
           "name": "ki-tab",
           "declaration": {
             "name": "KiTab",
-            "module": "src/components/ki-tab/ki-tab.tsx"
+            "module": "dist/components/ki-tab.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-tab-panel/ki-tab-panel.tsx",
+      "path": "dist/components/ki-tab-panel.js",
       "declarations": [
         {
           "kind": "class",
@@ -2163,7 +4675,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Pairing identifier shared with a `ki-tab`. The first panel with a value\nowns it; duplicate or orphan panels stay hidden."
             }
           ],
           "members": [
@@ -2193,7 +4706,32 @@
               "description": "Panel surface."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-tab-panel-bg",
+              "description": "color used by the tab panel component for background."
+            },
+            {
+              "name": "--ki-tab-panel-focus-ring-color",
+              "description": "color used by the tab panel component for focus ring color."
+            },
+            {
+              "name": "--ki-tab-panel-focus-ring-offset",
+              "description": "dimension used by the tab panel component for focus ring offset."
+            },
+            {
+              "name": "--ki-tab-panel-focus-ring-width",
+              "description": "dimension used by the tab panel component for focus ring width."
+            },
+            {
+              "name": "--ki-tab-panel-padding-block",
+              "description": "dimension used by the tab panel component for padding block."
+            },
+            {
+              "name": "--ki-tab-panel-padding-inline",
+              "description": "dimension used by the tab panel component for padding inline."
+            }
+          ]
         }
       ],
       "exports": [
@@ -2202,7 +4740,7 @@
           "name": "KiTabPanel",
           "declaration": {
             "name": "KiTabPanel",
-            "module": "src/components/ki-tab-panel/ki-tab-panel.tsx"
+            "module": "dist/components/ki-tab-panel.js"
           }
         },
         {
@@ -2210,14 +4748,14 @@
           "name": "ki-tab-panel",
           "declaration": {
             "name": "KiTabPanel",
-            "module": "src/components/ki-tab-panel/ki-tab-panel.tsx"
+            "module": "dist/components/ki-tab-panel.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-tabs/ki-tabs.tsx",
+      "path": "dist/components/ki-tabs.js",
       "declarations": [
         {
           "kind": "class",
@@ -2233,7 +4771,8 @@
               "fieldName": "label",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Accessible name for the tablist. Always provide one when multiple tab\ngroups may appear in a view. When NOT to use: do not use `label` as a\nvisible heading; render visible context in surrounding content."
             },
             {
               "name": "value",
@@ -2241,7 +4780,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Resolved selected value. The attribute declares the initial request;\nthe live property falls back to the first enabled owner tab, or `\"\"`\nwhen no tab is selectable. Programmatic writes are silent."
             }
           ],
           "members": [
@@ -2290,7 +4830,20 @@
               "description": "Internal strip carrying the `tablist` role."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-tabs-divider-color",
+              "description": "color used by the tabs component for divider color."
+            },
+            {
+              "name": "--ki-tabs-divider-width",
+              "description": "dimension used by the tabs component for divider width."
+            },
+            {
+              "name": "--ki-tabs-gap",
+              "description": "dimension used by the tabs component for gap."
+            }
+          ]
         }
       ],
       "exports": [
@@ -2299,7 +4852,7 @@
           "name": "KiTabs",
           "declaration": {
             "name": "KiTabs",
-            "module": "src/components/ki-tabs/ki-tabs.tsx"
+            "module": "dist/components/ki-tabs.js"
           }
         },
         {
@@ -2307,14 +4860,14 @@
           "name": "ki-tabs",
           "declaration": {
             "name": "KiTabs",
-            "module": "src/components/ki-tabs/ki-tabs.tsx"
+            "module": "dist/components/ki-tabs.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-textarea/ki-textarea.tsx",
+      "path": "dist/components/ki-textarea.js",
       "declarations": [
         {
           "kind": "class",
@@ -2330,7 +4883,8 @@
               "fieldName": "autocomplete",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Autofill detail token forwarded to the native textarea.\nWhen to use: expose entry purpose such as `street-address` when available.\nWhen NOT to use: omit when no valid autofill purpose applies."
             },
             {
               "name": "disabled",
@@ -2338,28 +4892,32 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Disables editing, focus, validation and form-data contribution.\nWhen to use: make a field temporarily unavailable. When NOT to use: do not\nuse disabled for readonly review text that should submit."
             },
             {
               "name": "label",
               "fieldName": "label",
               "type": {
                 "text": "string"
-              }
+              },
+              "description": "Visible label rendered by the component and used as the accessible name.\nWhen to use: always provide a concise label for the requested long-form\ntext. When NOT to use: do not substitute placeholder text for the label."
             },
             {
               "name": "name",
               "fieldName": "name",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Form-data key used when the textarea submits with a form.\nWhen to use: provide for fields whose text must be included in FormData.\nWhen NOT to use: omit for display-only or client-only fields."
             },
             {
               "name": "placeholder",
               "fieldName": "placeholder",
               "type": {
                 "text": "string | undefined"
-              }
+              },
+              "description": "Hint shown while the textarea is empty.\nWhen to use: add an example or short formatting hint. When NOT to use: do\nnot use placeholder as the accessible name or required instruction."
             },
             {
               "name": "readonly",
@@ -2367,7 +4925,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Makes the textarea focusable and selectable while rejecting edits.\nWhen to use: show submitted or policy text that should still be included\nin form data. When NOT to use: do not use readonly to remove a field from\nsubmission; use disabled."
             },
             {
               "name": "required",
@@ -2375,7 +4934,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Requires a non-empty value before form submission.\nWhen to use: mark mandatory long-form text. When NOT to use: do not pair\nwith `readonly` expecting it to block; readonly fields are validation\nexempt like native textareas."
             },
             {
               "name": "rows",
@@ -2383,7 +4943,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "2"
+              "default": "2",
+              "description": "Visible line count. Invalid, non-numeric, zero, or negative values fall\nback to 2; no auto-grow or user resize handle exists in v1.\nWhen to use: set the stable multiline height needed by the layout. When\nNOT to use: do not use rows as a responsive size axis."
             },
             {
               "name": "value",
@@ -2391,7 +4952,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Live current text. The `value` attribute declares the reset default;\nelement text content is ignored. Programmatic assignments replace the\ndisplay and emit no events.\nWhen to use: preload or read free-form text, line breaks included. When\nNOT to use: do not put initial text between the element tags."
             }
           ],
           "members": [
@@ -2516,7 +5078,208 @@
               "description": "Internal native multiline control."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-surface-s0",
+              "description": "semantic color for surface s0."
+            },
+            {
+              "name": "--ki-textarea-border-block-end-width",
+              "description": "dimension used by the textarea component for border block end width."
+            },
+            {
+              "name": "--ki-textarea-border-block-start-width",
+              "description": "dimension used by the textarea component for border block start width."
+            },
+            {
+              "name": "--ki-textarea-border-inline-end-width",
+              "description": "dimension used by the textarea component for border inline end width."
+            },
+            {
+              "name": "--ki-textarea-border-inline-start-width",
+              "description": "dimension used by the textarea component for border inline start width."
+            },
+            {
+              "name": "--ki-textarea-disabled-bg",
+              "description": "color used by the textarea component for disabled background."
+            },
+            {
+              "name": "--ki-textarea-disabled-border",
+              "description": "color used by the textarea component for disabled border."
+            },
+            {
+              "name": "--ki-textarea-disabled-fg",
+              "description": "color used by the textarea component for disabled foreground."
+            },
+            {
+              "name": "--ki-textarea-disabled-label-fg",
+              "description": "color used by the textarea component for disabled label foreground."
+            },
+            {
+              "name": "--ki-textarea-disabled-placeholder-fg",
+              "description": "color used by the textarea component for disabled placeholder foreground."
+            },
+            {
+              "name": "--ki-textarea-focus-bg",
+              "description": "color used by the textarea component for focus background."
+            },
+            {
+              "name": "--ki-textarea-focus-border",
+              "description": "color used by the textarea component for focus border."
+            },
+            {
+              "name": "--ki-textarea-focus-fg",
+              "description": "color used by the textarea component for focus foreground."
+            },
+            {
+              "name": "--ki-textarea-focus-label-fg",
+              "description": "color used by the textarea component for focus label foreground."
+            },
+            {
+              "name": "--ki-textarea-focus-placeholder-fg",
+              "description": "color used by the textarea component for focus placeholder foreground."
+            },
+            {
+              "name": "--ki-textarea-focus-ring-color",
+              "description": "color used by the textarea component for focus ring color."
+            },
+            {
+              "name": "--ki-textarea-focus-ring-offset",
+              "description": "dimension used by the textarea component for focus ring offset."
+            },
+            {
+              "name": "--ki-textarea-focus-ring-width",
+              "description": "dimension used by the textarea component for focus ring width."
+            },
+            {
+              "name": "--ki-textarea-font-size",
+              "description": "dimension used by the textarea component for font size."
+            },
+            {
+              "name": "--ki-textarea-font-weight",
+              "description": "font weight used by the textarea component for font weight."
+            },
+            {
+              "name": "--ki-textarea-hover-bg",
+              "description": "color used by the textarea component for hover background."
+            },
+            {
+              "name": "--ki-textarea-hover-border",
+              "description": "color used by the textarea component for hover border."
+            },
+            {
+              "name": "--ki-textarea-hover-fg",
+              "description": "color used by the textarea component for hover foreground."
+            },
+            {
+              "name": "--ki-textarea-hover-label-fg",
+              "description": "color used by the textarea component for hover label foreground."
+            },
+            {
+              "name": "--ki-textarea-hover-placeholder-fg",
+              "description": "color used by the textarea component for hover placeholder foreground."
+            },
+            {
+              "name": "--ki-textarea-invalid-bg",
+              "description": "color used by the textarea component for invalid background."
+            },
+            {
+              "name": "--ki-textarea-invalid-border",
+              "description": "color used by the textarea component for invalid border."
+            },
+            {
+              "name": "--ki-textarea-invalid-fg",
+              "description": "color used by the textarea component for invalid foreground."
+            },
+            {
+              "name": "--ki-textarea-invalid-label-fg",
+              "description": "color used by the textarea component for invalid label foreground."
+            },
+            {
+              "name": "--ki-textarea-invalid-placeholder-fg",
+              "description": "color used by the textarea component for invalid placeholder foreground."
+            },
+            {
+              "name": "--ki-textarea-label-font-size",
+              "description": "dimension used by the textarea component for label font size."
+            },
+            {
+              "name": "--ki-textarea-label-font-weight",
+              "description": "font weight used by the textarea component for label font weight."
+            },
+            {
+              "name": "--ki-textarea-label-gap",
+              "description": "dimension used by the textarea component for label gap."
+            },
+            {
+              "name": "--ki-textarea-label-line-height",
+              "description": "dimension used by the textarea component for label line height."
+            },
+            {
+              "name": "--ki-textarea-line-height",
+              "description": "dimension used by the textarea component for line height."
+            },
+            {
+              "name": "--ki-textarea-min-target",
+              "description": "dimension used by the textarea component for min target."
+            },
+            {
+              "name": "--ki-textarea-padding-block",
+              "description": "dimension used by the textarea component for padding block."
+            },
+            {
+              "name": "--ki-textarea-padding-inline",
+              "description": "dimension used by the textarea component for padding inline."
+            },
+            {
+              "name": "--ki-textarea-radius",
+              "description": "dimension used by the textarea component for radius."
+            },
+            {
+              "name": "--ki-textarea-readonly-bg",
+              "description": "color used by the textarea component for readonly background."
+            },
+            {
+              "name": "--ki-textarea-readonly-border",
+              "description": "color used by the textarea component for readonly border."
+            },
+            {
+              "name": "--ki-textarea-readonly-fg",
+              "description": "color used by the textarea component for readonly foreground."
+            },
+            {
+              "name": "--ki-textarea-readonly-label-fg",
+              "description": "color used by the textarea component for readonly label foreground."
+            },
+            {
+              "name": "--ki-textarea-readonly-placeholder-fg",
+              "description": "color used by the textarea component for readonly placeholder foreground."
+            },
+            {
+              "name": "--ki-textarea-rest-bg",
+              "description": "color used by the textarea component for rest background."
+            },
+            {
+              "name": "--ki-textarea-rest-border",
+              "description": "color used by the textarea component for rest border."
+            },
+            {
+              "name": "--ki-textarea-rest-fg",
+              "description": "color used by the textarea component for rest foreground."
+            },
+            {
+              "name": "--ki-textarea-rest-label-fg",
+              "description": "color used by the textarea component for rest label foreground."
+            },
+            {
+              "name": "--ki-textarea-rest-placeholder-fg",
+              "description": "color used by the textarea component for rest placeholder foreground."
+            },
+            {
+              "name": "--ki-typography-family-base",
+              "description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.typography.family.body."
+            }
+          ]
         }
       ],
       "exports": [
@@ -2525,7 +5288,7 @@
           "name": "KiTextarea",
           "declaration": {
             "name": "KiTextarea",
-            "module": "src/components/ki-textarea/ki-textarea.tsx"
+            "module": "dist/components/ki-textarea.js"
           }
         },
         {
@@ -2533,14 +5296,14 @@
           "name": "ki-textarea",
           "declaration": {
             "name": "KiTextarea",
-            "module": "src/components/ki-textarea/ki-textarea.tsx"
+            "module": "dist/components/ki-textarea.js"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/components/ki-tooltip/ki-tooltip.tsx",
+      "path": "dist/components/ki-tooltip.js",
       "declarations": [
         {
           "kind": "class",
@@ -2557,7 +5320,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The entire tooltip content. The string is reflected to the slotted\ntrigger's accessible description without changing its name. Empty or\nwhitespace-only labels render no tooltip and expose no description.\nWhen to use: a short hint that clarifies the slotted trigger.\nWhen NOT to use: never use `label` for essential information, rich\ncontent, interactive content, validation messages, or information attached\nto disabled controls; put that content in visible UI or a future popover."
             },
             {
               "name": "placement",
@@ -2565,7 +5329,8 @@
               "type": {
                 "text": "\"bottom\" | \"end\" | \"start\" | \"top\""
               },
-              "default": "'top'"
+              "default": "'top'",
+              "description": "Preferred placement for the tooltip. The component may flip or clamp the\nrendered placement to keep the bubble inside the viewport; unknown runtime\nvalues fall back to `top`.\nWhen NOT to use: do not depend on placement for meaning or reading order."
             }
           ],
           "members": [
@@ -2607,7 +5372,52 @@
               "description": "The non-focusable tooltip bubble."
             }
           ],
-          "cssProperties": []
+          "cssProperties": [
+            {
+              "name": "--ki-tooltip-bg",
+              "description": "color used by the tooltip component for background."
+            },
+            {
+              "name": "--ki-tooltip-fg",
+              "description": "color used by the tooltip component for foreground."
+            },
+            {
+              "name": "--ki-tooltip-font-size",
+              "description": "dimension used by the tooltip component for font size."
+            },
+            {
+              "name": "--ki-tooltip-font-weight",
+              "description": "font weight used by the tooltip component for font weight."
+            },
+            {
+              "name": "--ki-tooltip-line-height",
+              "description": "dimension used by the tooltip component for line height."
+            },
+            {
+              "name": "--ki-tooltip-max-inline-size",
+              "description": "dimension used by the tooltip component for max inline size."
+            },
+            {
+              "name": "--ki-tooltip-offset",
+              "description": "dimension used by the tooltip component for offset."
+            },
+            {
+              "name": "--ki-tooltip-padding-block",
+              "description": "dimension used by the tooltip component for padding block."
+            },
+            {
+              "name": "--ki-tooltip-padding-inline",
+              "description": "dimension used by the tooltip component for padding inline."
+            },
+            {
+              "name": "--ki-tooltip-radius",
+              "description": "dimension used by the tooltip component for radius."
+            },
+            {
+              "name": "--ki-tooltip-shadow",
+              "description": "shadow used by the tooltip component for tooltip shadow."
+            }
+          ]
         }
       ],
       "exports": [
@@ -2616,7 +5426,7 @@
           "name": "KiTooltip",
           "declaration": {
             "name": "KiTooltip",
-            "module": "src/components/ki-tooltip/ki-tooltip.tsx"
+            "module": "dist/components/ki-tooltip.js"
           }
         },
         {
@@ -2624,7 +5434,7 @@
           "name": "ki-tooltip",
           "declaration": {
             "name": "KiTooltip",
-            "module": "src/components/ki-tooltip/ki-tooltip.tsx"
+            "module": "dist/components/ki-tooltip.js"
           }
         }
       ]

@@ -3,20 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kimen — the neutral catalog for generative UI</title>
+    <title>Kimen — Web Components for generative UI</title>
     <meta
       name="description"
-      content="Standards-first web components with a schema-constrained catalog for generative UI. Tokens-only theming, deterministic quality gates, agent-legible by contract. Apache-2.0."
+      content="An AI-first Web Components foundation for generative UI. Tokens-only theming, deterministic quality gates and machine-readable contracts. Catalog and adapters planned. Apache-2.0."
     />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <!-- SEO metadata only: a canonical link is never fetched or executed by
          the browser, so subresource integrity does not apply.
          nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
     <link rel="canonical" href="https://kimen-dev.github.io/kimen/" />
-    <meta property="og:title" content="Kimen — the neutral catalog for generative UI" />
+    <meta property="og:title" content="Kimen — Web Components for generative UI" />
     <meta
       property="og:description"
-      content="Web components any host can trust: schema-constrained catalog, one-attribute theming, deterministic gates."
+      content="Standards-first web components with token theming and machine-readable contracts; guarded GenUI catalog planned."
     />
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)" />
@@ -76,12 +76,12 @@
     <main id="main">
       <!-- ============================== HERO ============================== -->
       <section class="hero" aria-labelledby="hero-title">
-        <p class="eyebrow">Web components · Schema-constrained catalog · Apache-2.0</p>
-        <h1 id="hero-title">The neutral catalog for generative&nbsp;UI.</h1>
+        <p class="eyebrow">Web Components · Agent-legible contracts · Apache-2.0</p>
+        <h1 id="hero-title">The Web Components foundation for generative&nbsp;UI.</h1>
         <p class="lede">
-          Agents emit a declarative spec; hosts render it with standards-first web components — in
-          any framework, under any brand. Theming is one attribute. Quality is a gate, not a
-          promise.
+          Kimen's implemented components work in any framework and under any brand. A neutral,
+          guarded catalog will connect agent specs to those components in a later phase. Theming
+          is one attribute. Quality is a gate, not a promise.
         </p>
         <div class="hero-actions">
           <a class="cta cta-primary" href="https://github.com/kimen-dev/kimen">View on GitHub</a>
@@ -118,11 +118,11 @@
         <h2 id="why-title">Why it exists</h2>
         <div class="card-grid">
           <article class="card">
-            <h3>A catalog hosts can trust</h3>
+            <h3>A guarded catalog, by design</h3>
             <p>
-              Only catalog components render. Only declared actions dispatch. Unknown props are
-              rejected, and no code-execution path exists from spec data. The guardrail is tested
-              as a security boundary — because in runtime GenUI, it is one.
+              The planned renderer will accept only catalog components and declared actions,
+              reject unknown props and expose no code-execution path from spec data. That
+              guardrail will be tested as a security boundary before it is presented as shipped.
             </p>
           </article>
           <article class="card">
@@ -136,9 +136,9 @@
           <article class="card">
             <h3>Done means gates exit 0</h3>
             <p>
-              Real-browser tests, zero axe violations, mutation-score gates, scenario-to-test
-              traceability and per-component size budgets. No self-assessment — an agent built it,
-              a script proved it, a human merged it.
+              Real-browser tests, zero axe violations, packaging checks, scenario-to-test
+              traceability and per-component size budgets. Mutation gating is part of the current
+              integrity-hardening work. No self-assessment — a script proves each completed gate.
             </p>
           </article>
         </div>
@@ -197,7 +197,7 @@
           <li><code>custom-elements.json</code> — machine-readable manifest of every prop, event, slot and part</li>
           <li><code>llms.txt</code> — the library, summarized for language models</li>
           <li>when-to-use / when-NOT-to-use metadata on every component</li>
-          <li>a Zod-validated catalog schema for runtime GenUI (A2UI, MCP Apps, AG-UI, json-render)</li>
+          <li>planned: a Zod-validated catalog schema for runtime GenUI (A2UI, MCP Apps, AG-UI, json-render)</li>
         </ul>
       </section>
 
@@ -205,7 +205,7 @@
       <section class="section" aria-labelledby="roadmap-title">
         <h2 id="roadmap-title">Where we are</h2>
         <ol class="roadmap">
-          <li data-state="done"><span class="phase">Factory</span> deterministic gates, hardened CI, sandboxed agent loops</li>
+          <li data-state="current"><span class="phase">Factory hardening</span> closing enforcement, mutation, release and sandbox gaps</li>
           <li data-state="done"><span class="phase">Tokens &amp; theming</span> three layers, two themes, re-theming proven in CI</li>
           <li data-state="current"><span class="phase">Core components</span> the essential ki-* set for GenUI — in progress</li>
           <li data-state="next"><span class="phase">Catalog + guardrail</span> the schema of what agents may emit, rendered safely</li>
@@ -216,6 +216,18 @@
           <a class="text-link" href="https://github.com/kimen-dev/kimen/blob/main/docs/roadmap.md">Read the full roadmap</a>
         </p>
       </section>
+      <!-- kimen:capabilities:site-status:start -->
+      <section class="section" aria-labelledby="capability-status-title">
+        <h2 id="capability-status-title">Capability status</h2>
+        <ul data-kimen-capabilities="site-status">
+          <li data-capability="guarded-renderer" data-state="planned">Schema-constrained guarded renderer planned</li>
+          <li data-capability="mutation-quality-gate" data-state="hardening">Changed-core mutation quality gate in hardening</li>
+          <li data-capability="protocol-adapters" data-state="planned">A2UI, MCP Apps, AG-UI and json-render protocol adapters planned</li>
+          <li data-capability="runtime-catalog" data-state="planned">Neutral runtime component catalog planned</li>
+          <li data-capability="web-components-foundation" data-state="available">Machine-readable Web Components foundation with token-driven theming</li>
+        </ul>
+      </section>
+      <!-- kimen:capabilities:site-status:end -->
     </main>
 
     <footer class="site-footer">

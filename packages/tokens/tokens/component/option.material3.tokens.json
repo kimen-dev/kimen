@@ -1,26 +1,59 @@
 {
   "ki": {
     "option": {
-      "radius": { "$value": "{ki.radius.xs}" },
+      "radius": {
+        "$value": "{ki.radius.xs}",
+        "$description": "Material 3 dimension used by the option component for radius."
+      },
       "rest": {
-        "bg": { "$value": "{ki.surface.s2}" },
-        "fg": { "$value": "{ki.text.high-em}" }
+        "bg": {
+          "$value": "{ki.surface.s2}",
+          "$description": "Material 3 color used by the option component for rest background."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the option component for rest foreground."
+        }
       },
       "hover": {
-        "bg": { "$value": "{ki.surface.s3}" },
-        "fg": { "$value": "{ki.text.high-em}" }
+        "bg": {
+          "$value": "{ki.surface.s3}",
+          "$description": "Material 3 color used by the option component for hover background."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the option component for hover foreground."
+        }
       },
       "highlight": {
-        "bg": { "$value": "{ki.surface.primary-base-em}" },
-        "fg": { "$value": "{ki.text.high-em}" }
+        "bg": {
+          "$value": "{ki.surface.primary-base-em}",
+          "$description": "Material 3 color used by the option component for highlight background."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the option component for highlight foreground."
+        }
       },
       "selected": {
-        "bg": { "$value": "{ki.surface.primary-low-em}" },
-        "fg": { "$value": "{ki.text.high-em}" }
+        "bg": {
+          "$value": "{ki.surface.primary-low-em}",
+          "$description": "Material 3 color used by the option component for selected background."
+        },
+        "fg": {
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the option component for selected foreground."
+        }
       },
       "disabled": {
-        "bg": { "$value": "{ki.surface.disabled-base-em}" },
-        "fg": { "$value": "{ki.text.low-em}" }
+        "bg": {
+          "$value": "{ki.surface.disabled-base-em}",
+          "$description": "Material 3 color used by the option component for disabled background."
+        },
+        "fg": {
+          "$value": "{ki.text.low-em}",
+          "$description": "Material 3 color used by the option component for disabled foreground."
+        }
       }
     }
   }

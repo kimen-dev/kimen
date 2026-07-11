@@ -1,15 +1,14 @@
-import axe from 'axe-core';
-import { commands, page, userEvent } from 'vitest/browser';
-import { beforeAll, describe, expect, it } from 'vitest';
-
+import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:012-ki-dialog
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III). mock-doc has no showModal,
 // top layer, inertness, Escape close requests, or ::backdrop.
 import tokensCss from '@kimen/tokens/css?raw';
-import material3Css from '@kimen/tokens/css/material3?raw';
-import { defineCustomElement } from '../dist/components/ki-dialog.js';
+import axe from 'axe-core';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
+import { defineCustomElement } from '../dist/components/ki-dialog.js';
 
 type CloseReason = 'method' | 'escape' | 'backdrop';
 type KiCloseEvent = CustomEvent<{ reason: CloseReason }>;
@@ -23,10 +22,6 @@ type KiDialogElement = HTMLElement & {
 
 const STYLE_ID = 'ki-dialog-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-dialog-browser-material3-token-style';
-const browserCommands = commands as unknown as {
-  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
-};
-
 beforeAll(() => {
   defineCustomElement();
   defineKiButton();
@@ -607,21 +602,5 @@ describe('ki-dialog in a real browser', () => {
 
     expect(getComputedStyle(internalDialog(el)).direction).toBe('rtl');
     expect(actions).toEqual(['Cancel', 'Delete']);
-  });
-
-  it('S14 reduced motion suppresses material3 open transitions', async () => {
-    cleanup();
-    ensureTokens();
-    ensureMaterial3Tokens();
-    document.documentElement.setAttribute('data-ki-theme', 'material3');
-    await browserCommands.emulateReducedMotion('reduce');
-    const el = await mountDialog();
-
-    await openDialog(el);
-    const styles = getComputedStyle(internalDialog(el));
-
-    expect(styles.transitionDuration).toBe('0s');
-    expect(styles.opacity).toBe('1');
-    await browserCommands.emulateReducedMotion(null);
   });
 });

@@ -4,5 +4,14 @@
     "allowJs": true,
     "noEmit": true
   },
-  "include": ["./**/*.ts", "../vitest.node.config.ts"]
+  "files": [
+    "../stencil.config.ts",
+    "../vitest.config.ts",
+    "../vitest.node.config.ts",
+    "../vitest.browser.config.ts",
+    "../../../vitest.mutation.config.ts",
+    "../../../vitest.mutation.elements.config.ts",
+    "../../../vitest.mutation.node.config.ts"
+  ],
+  "include": ["./**/*.ts"]
 }

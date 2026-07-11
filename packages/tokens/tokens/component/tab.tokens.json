@@ -2,114 +2,143 @@
   "ki": {
     "tab": {
       "min-block-size": {
-        "$value": "{ki.space.7xl}"
+        "$value": "{ki.space.7xl}",
+        "$description": "dimension used by the tab component for min block size."
       },
       "padding-inline": {
-        "$value": "{ki.space.lg}"
+        "$value": "{ki.space.lg}",
+        "$description": "dimension used by the tab component for padding inline."
       },
       "gap": {
-        "$value": "{ki.space.xs}"
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the tab component for gap."
       },
       "radius": {
-        "$value": "{ki.radius.sm}"
+        "$value": "{ki.radius.sm}",
+        "$description": "dimension used by the tab component for radius."
       },
       "font-size": {
-        "$value": "{ki.typography.size.body-1}"
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "dimension used by the tab component for font size."
       },
       "font-weight": {
-        "$value": "{ki.typography.weight.body.medium}"
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "font weight used by the tab component for font weight."
       },
       "line-height": {
-        "$value": "{ki.typography.line-height.body-1}"
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "dimension used by the tab component for line height."
       },
       "selected": {
         "rest": {
           "fg": {
-            "$value": "{ki.text.primary-high-em}"
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "color used by the tab component for selected rest foreground."
           },
           "bg": {
-            "$value": "{ki.surface.s0}"
+            "$value": "{ki.surface.s0}",
+            "$description": "color used by the tab component for selected rest background."
           }
         },
         "hover": {
           "fg": {
-            "$value": "{ki.text.primary-high-em}"
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "color used by the tab component for selected hover foreground."
           },
           "bg": {
-            "$value": "{ki.surface.s1}"
+            "$value": "{ki.surface.s1}",
+            "$description": "color used by the tab component for selected hover background."
           }
         },
         "active": {
           "fg": {
-            "$value": "{ki.text.primary-high-em}"
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "color used by the tab component for selected active foreground."
           },
           "bg": {
-            "$value": "{ki.surface.s2}"
+            "$value": "{ki.surface.s2}",
+            "$description": "color used by the tab component for selected active background."
           }
         },
         "disabled": {
           "fg": {
-            "$value": "{ki.text.muted}"
+            "$value": "{ki.text.muted}",
+            "$description": "color used by the tab component for selected disabled foreground."
           },
           "bg": {
-            "$value": "{ki.surface.disabled-base-em}"
+            "$value": "{ki.surface.disabled-base-em}",
+            "$description": "color used by the tab component for selected disabled background."
           }
         }
       },
       "unselected": {
         "rest": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the tab component for unselected rest foreground."
           },
           "bg": {
-            "$value": "{ki.surface.s0}"
+            "$value": "{ki.surface.s0}",
+            "$description": "color used by the tab component for unselected rest background."
           }
         },
         "hover": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the tab component for unselected hover foreground."
           },
           "bg": {
-            "$value": "{ki.surface.s1}"
+            "$value": "{ki.surface.s1}",
+            "$description": "color used by the tab component for unselected hover background."
           }
         },
         "active": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the tab component for unselected active foreground."
           },
           "bg": {
-            "$value": "{ki.surface.s2}"
+            "$value": "{ki.surface.s2}",
+            "$description": "color used by the tab component for unselected active background."
           }
         },
         "disabled": {
           "fg": {
-            "$value": "{ki.text.muted}"
+            "$value": "{ki.text.muted}",
+            "$description": "color used by the tab component for unselected disabled foreground."
           },
           "bg": {
-            "$value": "{ki.surface.disabled-base-em}"
+            "$value": "{ki.surface.disabled-base-em}",
+            "$description": "color used by the tab component for unselected disabled background."
           }
         }
       },
       "indicator": {
         "size": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the tab component for indicator size."
         },
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the tab component for indicator color."
         },
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the tab component for indicator radius."
         }
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the tab component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the tab component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the tab component for focus ring offset."
         }
       }
     }

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control -- The shadow label wraps
  * the native input and slotted label text; static JSX analysis cannot see the
  * flattened-tree accessible name. */
-import { AttachInternals, Component, Element, Listen, Prop, State, Watch, h } from '@stencil/core';
+import { AttachInternals, Component, Element, h, Listen, Prop, State, Watch } from '@stencil/core';
 import { booleanFromAttributePresence, checkboxFormValue } from './ki-checkbox.form';
 
 /**
@@ -312,6 +312,7 @@ export class KiCheckbox {
           id="ki-checkbox-control"
           ref={this.setInput}
           type="checkbox"
+          tabIndex={this.effectiveDisabled ? -1 : 0}
           checked={this.checked}
           disabled={this.effectiveDisabled}
           required={this.required}

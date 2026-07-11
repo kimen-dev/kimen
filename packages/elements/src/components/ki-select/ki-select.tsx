@@ -3,12 +3,21 @@ import {
   Component,
   Element,
   Host,
+  h,
   Listen,
   Prop,
   State,
   Watch,
-  h,
 } from '@stencil/core';
+import {
+  normalizeBooleanPresence,
+  optionLabelText,
+  optionValue,
+  resolveSelection,
+  type SelectOptionRecord,
+  selectFormValue,
+  selectValueMissing,
+} from './ki-select.form';
 import {
   firstEnabled,
   keyIntent,
@@ -16,15 +25,6 @@ import {
   moveHighlight,
   openHighlight,
 } from './ki-select.keyboard';
-import {
-  normalizeBooleanPresence,
-  optionLabelText,
-  optionValue,
-  resolveSelection,
-  selectFormValue,
-  selectValueMissing,
-  type SelectOptionRecord,
-} from './ki-select.form';
 
 type RosterOption = SelectOptionRecord & {
   element: HTMLElement;
@@ -482,6 +482,7 @@ export class KiSelect {
           id={this.triggerId}
           part="trigger"
           type="button"
+          tabIndex={this.effectiveDisabled ? -1 : 0}
           role="combobox"
           aria-expanded={this.open ? 'true' : 'false'}
           aria-controls={this.listboxId}

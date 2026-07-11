@@ -4,7 +4,7 @@ workflow:
   name: "Kimen Constitutional SDD Cycle"
   version: "0.1.0"
   author: "Kimen"
-  description: "specify → clarify → gherkin extraction → deterministic spec lint (shape + scenario families) → founder gate (recorded as .approved marker) → plan → checklist → analyze → constitution check → tasks → implement/converge loop terminated by deterministic gates (onmars-spec)"
+  description: "specify → clarify → canonical Gherkin extraction → synchronized contract validation → founder gate (marker v2 with both hashes) → plan → checklist → analyze → constitution check → tasks → implement/converge loop terminated by deterministic gates (onmars-spec)"
 
 # NOTE: run locally (human gates cannot be approved headless). CI runs the
 # same shell gates directly via .github/workflows/ci.yml.
@@ -40,11 +40,11 @@ steps:
     type: shell
     run: "bash scripts/gates/extract-feature.sh"
 
-  # Deterministic gate: Gherkin shape (stable S-IDs, one When per scenario)
-  # plus five-scenario-family coverage for UI components (Art. II)
+  # Deterministic read-only gate: spec block == feature bytes, Gherkin shape
+  # and five-scenario-family coverage for UI components (Art. II).
   - id: lint-spec
     type: shell
-    run: "bash scripts/gates/lint-feature.sh && bash scripts/gates/check-scenario-families.sh"
+    run: "bash scripts/gates/check-spec-contracts.sh"
 
   # HUMAN GATE 1 (constitution Workflow): spec + Gherkin approval by the founder
   - id: approve-spec
@@ -53,9 +53,9 @@ steps:
     options: [approve, reject]
     on_reject: abort
 
-  # Persist human gate 1 as a verifiable marker: specs/<feature>/.approved
-  # (UTC date + spec.md sha256). The kimen-gates before_implement hook
-  # (scripts/gates/pre-implement-check.sh) refuses to implement without it.
+  # Persist human gate 1 as marker v2: UTC date + exact spec.md and
+  # feature.feature SHA-256. Both before_plan and before_implement refuse stale
+  # or desynchronized pairs.
   # NOTE: in direct-skill mode (no workflow runner), founder approval == the
   # founder running `bash scripts/gates/record-approval.sh` after approving.
   - id: record-approval

@@ -1,4 +1,4 @@
-import { Component, Prop, h } from '@stencil/core';
+import { Component, h, Prop } from '@stencil/core';
 import { clampValue, normalizeMax, resolveShape } from './ki-progress.math';
 
 export type KiProgressShape = 'linear' | 'circular';
@@ -148,7 +148,13 @@ export class KiProgress {
     }
 
     return (
-      <div {...attrs} style={{ '--_ki-progress-fraction': String(this.fraction) }}>
+      <div
+        {...attrs}
+        style={{
+          '--_ki-progress-fraction': String(this.fraction),
+          '--_ki-progress-dash': String(this.fraction * 100),
+        }}
+      >
         {children}
       </div>
     );

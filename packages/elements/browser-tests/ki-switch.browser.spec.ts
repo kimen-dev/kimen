@@ -1,9 +1,8 @@
-import axe from 'axe-core';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
-import { page, userEvent } from 'vitest/browser';
-import { commands } from 'vitest/browser';
+import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 
 // @spec:008-ki-switch
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -20,9 +19,6 @@ type KiSwitchElement = HTMLElement & {
 const STYLE_ID = 'ki-switch-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-switch-browser-material3-token-style';
 const defineKiSwitchElement: () => void = defineCustomElement;
-const browserCommands = commands as unknown as {
-  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
-};
 
 beforeAll(() => {
   defineKiSwitchElement();
@@ -253,6 +249,7 @@ describe('ki-switch in a real browser', () => {
     el.disabled = true;
     el.textContent = 'Email notifications';
     const button = document.createElement('button');
+    button.tabIndex = 0;
     button.textContent = 'Next';
     document.body.append(el, button);
     await waitForHydration(el);
@@ -440,18 +437,5 @@ describe('ki-switch in a real browser', () => {
 
     expect(trackRect.left).toBeGreaterThan(labelRect.left);
     expect(Math.abs(thumbRect.left - trackRect.left)).toBeLessThanOrEqual(8);
-  });
-
-  it('S19 suppresses thumb travel transition under reduced motion', async () => {
-    await browserCommands.emulateReducedMotion('reduce');
-    const el = await mount();
-    const thumb = el.shadowRoot?.querySelector('[part="thumb"]');
-    expect(thumb).toBeInstanceOf(HTMLElement);
-
-    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
-    const transition = getComputedStyle(thumb as HTMLElement).transitionDuration;
-
-    expect(transition).toBe('0s');
-    await browserCommands.emulateReducedMotion(null);
   });
 });

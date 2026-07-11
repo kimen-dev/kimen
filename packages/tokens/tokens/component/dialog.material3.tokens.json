@@ -2,52 +2,70 @@
   "ki": {
     "dialog": {
       "radius": {
-        "$value": "{ki.radius.8xl}"
+        "$value": "{ki.radius.8xl}",
+        "$description": "Material 3 dimension used by the dialog component for radius."
       },
       "padding": {
-        "$value": "{ki.space.7xl}"
+        "$value": "{ki.space.7xl}",
+        "$description": "Material 3 dimension used by the dialog component for padding."
       },
       "gap": {
-        "$value": "{ki.space.5xl}"
+        "$value": "{ki.space.5xl}",
+        "$description": "Material 3 dimension used by the dialog component for gap."
       },
       "min-width": {
-        "$value": "{ki.space.25xl}"
+        "$value": "{ki.space.25xl}",
+        "$description": "Material 3 dimension used by the dialog component for min width."
       },
       "max-width": {
-        "$value": "{ki.space.26xl}"
+        "$value": "{ki.space.26xl}",
+        "$description": "Material 3 dimension used by the dialog component for max width."
       },
       "bg": {
-        "$value": "{ki.surface.s3}"
+        "$value": "{ki.surface.s3}",
+        "$description": "Material 3 color used by the dialog component for background."
       },
       "fg": {
-        "$value": "{ki.text.high-em}"
+        "$value": "{ki.text.high-em}",
+        "$description": "Material 3 color used by the dialog component for foreground."
       },
       "border": {
-        "$value": "none"
+        "$value": "none",
+        "$description": "Material 3 border used by the dialog component for border."
       },
       "shadow": {
-        "$value": "0 {ki.space.xxs} {ki.space.xs} {ki.elevation.shadow-med}, 0 {ki.space.xs} {ki.space.md} {ki.elevation.shadow}"
+        "$value": "{ki.foundation.migrated.component-dialog-material3.dialog.shadow}",
+        "$description": "Material 3 shadow used by the dialog component for dialog shadow.",
+        "$type": "shadow"
       },
       "backdrop-bg": {
-        "$value": "{ki.overlay.high-em}"
+        "$value": "{ki.overlay.high-em}",
+        "$description": "Material 3 color used by the dialog component for backdrop background."
       },
       "heading": {
         "font-size": {
-          "$value": "{ki.typography.size.title-2}"
+          "$value": "{ki.typography.size.title-2}",
+          "$description": "Material 3 dimension used by the dialog component for heading font size."
         },
         "font-weight": {
-          "$value": "{ki.typography.weight.body.normal}"
+          "$value": "{ki.typography.weight.body.normal}",
+          "$description": "Material 3 font weight used by the dialog component for heading font weight."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.title-2}"
+          "$value": "{ki.typography.line-height.title-2}",
+          "$description": "Material 3 dimension used by the dialog component for heading line height."
         }
       },
       "motion": {
         "duration": {
-          "$value": "200ms"
+          "$value": "{ki.foundation.migrated.component-dialog-material3.dialog.motion.duration}",
+          "$description": "Material 3 duration used by the dialog component for dialog motion duration.",
+          "$type": "duration"
         },
         "easing": {
-          "$value": "cubic-bezier(0, 0, 0.2, 1)"
+          "$value": "{ki.foundation.migrated.component-dialog-material3.dialog.motion.easing}",
+          "$description": "Material 3 easing curve used by the dialog component for dialog motion easing.",
+          "$type": "cubicBezier"
         }
       }
     }

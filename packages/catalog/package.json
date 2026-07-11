@@ -24,5 +24,39 @@
     "tags": [
       "scope:catalog"
     ]
+  },
+  "kimenCapabilities": {
+    "generatedFrom": "docs/capabilities.json",
+    "marker": {
+      "start": "kimen:capabilities:catalog-package-status:start",
+      "end": "kimen:capabilities:catalog-package-status:end"
+    },
+    "claims": [
+      {
+        "id": "guarded-renderer",
+        "state": "planned",
+        "text": "Schema-constrained guarded renderer planned"
+      },
+      {
+        "id": "mutation-quality-gate",
+        "state": "hardening",
+        "text": "Changed-core mutation quality gate in hardening"
+      },
+      {
+        "id": "protocol-adapters",
+        "state": "planned",
+        "text": "A2UI, MCP Apps, AG-UI and json-render protocol adapters planned"
+      },
+      {
+        "id": "runtime-catalog",
+        "state": "planned",
+        "text": "Neutral runtime component catalog planned"
+      },
+      {
+        "id": "web-components-foundation",
+        "state": "available",
+        "text": "Machine-readable Web Components foundation with token-driven theming"
+      }
+    ]
   }
 }

@@ -3,29 +3,29 @@
 High-level build order, without dates: phases overlap and the exit criteria
 are quality gates, not deadlines.
 
-## 1. Factory (done)
+## 1. Factory (integrity hardening)
 
-Monorepo (pnpm + Nx), the deterministic gate suite (format, lint, typecheck,
-boundaries, dead code, packaging, budgets, real-browser tests with axe,
-security scanning), Nx generators so every component is scaffolded the same
-way, hardened CI, a release pipeline with npm trusted publishing (dry-run
-verified), and the sandboxed unattended-loop environment, exercised end to
-end. The `@kimen` npm organization is registered.
+The pnpm + Nx monorepo, deterministic gate suite, component generator,
+release workflow and unattended-loop sandbox exist. Current work is closing
+their enforcement gaps: protected-main rules, mutation gating, sandbox
+credential containment, complete generator wiring and least-privilege
+release separation. The `@kimen` npm organization is registered.
 
-## 2. Tokens and theming (current)
+## 2. Tokens and theming (implemented, hardening)
 
 `@kimen/tokens`: DTCG tokens compiled to CSS custom properties in three
-layers (primitive → semantic → component). Mars ships as the default theme,
+layers (primitive → semantic → component). onmars is the default theme,
 and a second reference theme proves in CI that any brand can re-theme by
-reassigning the semantic layer alone. Dark mode via tokens; RTL rendered in CI.
+reassigning the semantic layer alone. Token reference and layer-integrity
+gates are still being added before publication.
 
-## 3. Core components
+## 3. Core components (implemented, pre-release)
 
 The essential `<ki-*>` set for GenUI (forms, content, feedback: button,
 input, select, checkbox, radio, switch, card, badge, alert, dialog, tooltip,
-tabs, progress, list). Each one: five Gherkin scenario families, real-browser
-suite, zero axe violations, size budget, generated docs/manifest/catalog
-entries.
+tabs, progress, list). The source includes Gherkin contracts, real-browser
+tests, axe checks, size budgets, generated docs, a Custom Elements Manifest
+and `llms.txt`. The runtime catalog does not exist yet.
 
 ## 4. Neutral catalog + guardrail renderer
 
@@ -47,3 +47,11 @@ llms.txt versioned alongside the public API; docs site generated from the
 single source of truth.
 
 Follow progress through issues and pull requests.
+
+<!-- kimen:capabilities:roadmap-status:start -->
+- **planned** — Schema-constrained guarded renderer planned
+- **hardening** — Changed-core mutation quality gate in hardening
+- **planned** — A2UI, MCP Apps, AG-UI and json-render protocol adapters planned
+- **planned** — Neutral runtime component catalog planned
+- **available** — Machine-readable Web Components foundation with token-driven theming
+<!-- kimen:capabilities:roadmap-status:end -->

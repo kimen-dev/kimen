@@ -81,7 +81,7 @@ input {
   inline-size: var(--ki-switch-track-width);
   inset-block-start: calc((100% - var(--ki-switch-track-height)) / 2);
   inset-inline-start: 0;
-  margin: var(--ki-space-zero);
+  margin: 0;
   opacity: 0;
   position: absolute;
 }
@@ -127,6 +127,6 @@ input:focus-visible + [part="track"] {
 
 @media (prefers-reduced-motion: no-preference) {
   [part="thumb"] {
-    transition: inset-inline-start 120ms ease;
+    transition: inset-inline-start var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
   }
 }

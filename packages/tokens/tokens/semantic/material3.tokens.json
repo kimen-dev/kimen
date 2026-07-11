@@ -3,240 +3,314 @@
     "surface": {
       "$type": "color",
       "s0": {
-        "$value": "#fef7ff"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.s0}",
+        "$description": "Material 3 semantic color for surface s0."
       },
       "s1": {
-        "$value": "#f7f2fa"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.primary-base-em}",
+        "$description": "Material 3 semantic color for surface s1."
       },
       "s2": {
-        "$value": "#f3edf7"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.base-em}",
+        "$description": "Material 3 semantic color for surface s2."
       },
       "s3": {
-        "$value": "#ece6f0"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.s3}",
+        "$description": "Material 3 semantic color for surface s3."
       },
       "s4": {
-        "$value": "#e6e0e9"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.s4}",
+        "$description": "Material 3 semantic color for surface s4."
       },
       "s5": {
-        "$value": "#ded8e1"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.s5}",
+        "$description": "Material 3 semantic color for surface s5."
       },
       "special": {
         "blur-base-light": {
-          "$value": "#fef7ffcc"
+          "$value": "{ki.foundation.migrated.semantic-material3.surface.special.blur-base-light}",
+          "$description": "Material 3 semantic color for surface special blur base light."
         },
         "blur-base-dark": {
-          "$value": "#fef7ffe0"
+          "$value": "{ki.foundation.migrated.semantic-material3.surface.special.blur-base-dark}",
+          "$description": "Material 3 semantic color for surface special blur base dark."
         },
         "secondary-alpha-base": {
-          "$value": "#f3edf7cc"
+          "$value": "{ki.foundation.migrated.semantic-material3.surface.special.secondary-alpha-base}",
+          "$description": "Material 3 semantic color for surface special secondary alpha base."
         }
       },
       "primary-high-em": {
-        "$value": "#4f378b"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.700}",
+        "$description": "Material 3 semantic color for surface primary high em."
       },
       "primary-med-em": {
-        "$value": "#6750a4"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.500}",
+        "$description": "Material 3 semantic color for surface primary med em."
       },
       "primary-low-em": {
-        "$value": "#eaddff"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.100}",
+        "$description": "Material 3 semantic color for surface primary low em."
       },
       "primary-base-em": {
-        "$value": "#f7f2fa"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.primary-base-em}",
+        "$description": "Material 3 semantic color for surface primary base em."
       },
       "primary-low-em-alpha": {
-        "$value": "{ki.color.brand.500-alpha-2}"
+        "$value": "{ki.color.brand.500-alpha-2}",
+        "$description": "Material 3 semantic color for surface primary low em alpha."
       },
       "primary-base-em-alpha": {
-        "$value": "{ki.color.brand.500-alpha-1}"
+        "$value": "{ki.color.brand.500-alpha-1}",
+        "$description": "Material 3 semantic color for surface primary base em alpha."
       },
       "danger-high-em": {
-        "$value": "#ba1a1a"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-high-em}",
+        "$description": "Material 3 semantic color for surface danger high em."
       },
       "danger-med-em": {
-        "$value": "#b3261e"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-high-em}",
+        "$description": "Material 3 semantic color for surface danger med em."
       },
       "danger-low-em": {
-        "$value": "#f9dedc"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-base-em}",
+        "$description": "Material 3 semantic color for surface danger low em."
       },
       "danger-base-em": {
-        "$value": "#fffbff"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-base-em}",
+        "$description": "Material 3 semantic color for surface danger base em."
       },
       "danger-low-em-alpha": {
-        "$value": "#b3261e1a"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-base-em-alpha}",
+        "$description": "Material 3 semantic color for surface danger low em alpha."
       },
       "danger-base-em-alpha": {
-        "$value": "#b3261e14"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-base-em-alpha}",
+        "$description": "Material 3 semantic color for surface danger base em alpha."
       },
       "disabled-high-em": {
-        "$value": "#79747e"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.low-em}",
+        "$description": "Material 3 semantic color for surface disabled high em."
       },
       "disabled-med-em": {
-        "$value": "#cac4d0"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.base-em}",
+        "$description": "Material 3 semantic color for surface disabled med em."
       },
       "disabled-low-em": {
-        "$value": "#e7e0ec"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.low-em}",
+        "$description": "Material 3 semantic color for surface disabled low em."
       },
       "disabled-base-em": {
-        "$value": "#f3edf7"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.base-em}",
+        "$description": "Material 3 semantic color for surface disabled base em."
       },
       "hover-overlay": {
-        "$value": "#1d1b2014"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.hover-overlay}",
+        "$description": "Material 3 semantic color for surface hover overlay."
       },
       "hover-overlay-inverse": {
-        "$value": "#ffffff14"
+        "$value": "{ki.color.white.8}",
+        "$description": "Material 3 semantic color for surface hover overlay inverse."
       },
       "primary-high-em-hover": {
-        "$value": "{ki.color.brand.800}"
+        "$value": "{ki.color.brand.800}",
+        "$description": "Material 3 semantic color for surface primary high em hover."
       },
       "danger-high-em-hover": {
-        "$value": "#8c1d18"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-high-em-hover}",
+        "$description": "Material 3 semantic color for surface danger high em hover."
       }
     },
     "text": {
       "$type": "color",
       "high-em": {
-        "$value": "#1d1b20"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.high-em}",
+        "$description": "Material 3 semantic color for text high em."
       },
       "med-em": {
-        "$value": "#49454f"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.med-em}",
+        "$description": "Material 3 semantic color for text med em."
       },
       "low-em": {
-        "$value": "#79747e"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.low-em}",
+        "$description": "Material 3 semantic color for text low em."
       },
       "base-em": {
-        "$value": "#938f99"
+        "$value": "{ki.foundation.migrated.semantic-material3.text.base-em}",
+        "$description": "Material 3 semantic color for text base em."
       },
       "primary-on-primary": {
-        "$value": "#ffffff"
+        "$value": "{ki.color.white.100}",
+        "$description": "Material 3 semantic color for text primary on primary."
       },
       "primary-on-primary-light": {
-        "$value": "#381e72"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.800}",
+        "$description": "Material 3 semantic color for text primary on primary light."
       },
       "secondary-on-primary": {
-        "$value": "{ki.color.white.72}"
+        "$value": "{ki.color.white.72}",
+        "$description": "Material 3 semantic color for text secondary on primary."
       },
       "secondary-on-primary-light": {
-        "$value": "#6750a4"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.500}",
+        "$description": "Material 3 semantic color for text secondary on primary light."
       },
       "text-on-neutral": {
-        "$value": "#ffffff"
+        "$value": "{ki.color.white.100}",
+        "$description": "Material 3 semantic color for text text on neutral."
       },
       "primary-high-em": {
-        "$value": "#4f378b"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.700}",
+        "$description": "Material 3 semantic color for text primary high em."
       },
       "primary-med-em": {
-        "$value": "#6750a4"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.500}",
+        "$description": "Material 3 semantic color for text primary med em."
       },
       "primary-low-em": {
-        "$value": "#7f67be"
+        "$value": "{ki.foundation.migrated.semantic-material3.text.primary-low-em}",
+        "$description": "Material 3 semantic color for text primary low em."
       },
       "primary-base-em": {
-        "$value": "#eaddff"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.100}",
+        "$description": "Material 3 semantic color for text primary base em."
       },
       "danger-high-em": {
-        "$value": "#ba1a1a"
+        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-high-em}",
+        "$description": "Material 3 semantic color for text danger high em."
       },
       "danger-med-em": {
-        "$value": "#b3261e"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-high-em}",
+        "$description": "Material 3 semantic color for text danger med em."
       },
       "danger-low-em": {
-        "$value": "#dc362e"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-med-em}",
+        "$description": "Material 3 semantic color for text danger low em."
       },
       "danger-base-em": {
-        "$value": "#f9dedc"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-base-em}",
+        "$description": "Material 3 semantic color for text danger base em."
       }
     },
     "outline": {
       "$type": "color",
       "high-em": {
-        "$value": "#79747e"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.low-em}",
+        "$description": "Material 3 semantic color for outline high em."
       },
       "strong": {
-        "$value": "#79747e"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.low-em}",
+        "$description": "Material 3 semantic color for outline strong."
       },
       "med-em": {
-        "$value": "#cac4d0"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.base-em}",
+        "$description": "Material 3 semantic color for outline med em."
       },
       "low-em": {
-        "$value": "#e7e0ec"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.low-em}",
+        "$description": "Material 3 semantic color for outline low em."
       },
       "base-em": {
-        "$value": "#f3edf7"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.base-em}",
+        "$description": "Material 3 semantic color for outline base em."
       },
       "primary-high-em": {
-        "$value": "#6750a4"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.500}",
+        "$description": "Material 3 semantic color for outline primary high em."
       },
       "primary-med-em": {
-        "$value": "#b69df8"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.300}",
+        "$description": "Material 3 semantic color for outline primary med em."
       },
       "primary-low-em": {
-        "$value": "#d0bcff"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.200}",
+        "$description": "Material 3 semantic color for outline primary low em."
       },
       "primary-base-em": {
-        "$value": "#eaddff"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.100}",
+        "$description": "Material 3 semantic color for outline primary base em."
       },
       "primary-low-em-alpha": {
-        "$value": "#6750a43d"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.500-alpha-4}",
+        "$description": "Material 3 semantic color for outline primary low em alpha."
       },
       "primary-base-em-alpha": {
-        "$value": "#6750a41a"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.500-alpha-2}",
+        "$description": "Material 3 semantic color for outline primary base em alpha."
       },
       "danger-high-em": {
-        "$value": "#b3261e"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-high-em}",
+        "$description": "Material 3 semantic color for outline danger high em."
       },
       "danger-med-em": {
-        "$value": "#dc362e"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-med-em}",
+        "$description": "Material 3 semantic color for outline danger med em."
       },
       "danger-low-em": {
-        "$value": "#f2b8b5"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-low-em}",
+        "$description": "Material 3 semantic color for outline danger low em."
       },
       "danger-base-em": {
-        "$value": "#f9dedc"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-base-em}",
+        "$description": "Material 3 semantic color for outline danger base em."
       },
       "danger-low-em-alpha": {
-        "$value": "#b3261e3d"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-low-em-alpha}",
+        "$description": "Material 3 semantic color for outline danger low em alpha."
       },
       "danger-base-em-alpha": {
-        "$value": "#b3261e1a"
+        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-base-em-alpha}",
+        "$description": "Material 3 semantic color for outline danger base em alpha."
       },
       "primary-button-top": {
-        "$value": "#00000014"
+        "$value": "{ki.color.black.8}",
+        "$description": "Material 3 semantic color for outline primary button top."
       },
       "primary-button-bottom": {
-        "$value": "#0000001f"
+        "$value": "{ki.color.black.12}",
+        "$description": "Material 3 semantic color for outline primary button bottom."
       },
       "secondary-button-top": {
-        "$value": "#0000000d"
+        "$value": "{ki.color.black.5}",
+        "$description": "Material 3 semantic color for outline secondary button top."
       },
       "secondary-button-bottom": {
-        "$value": "#00000014"
+        "$value": "{ki.color.black.8}",
+        "$description": "Material 3 semantic color for outline secondary button bottom."
       }
     },
     "overlay": {
       "$type": "color",
       "high-em": {
-        "$value": "#00000052"
+        "$value": "{ki.color.black.32}",
+        "$description": "Material 3 semantic color for overlay high em."
       },
       "high-em-inverse": {
-        "$value": "#ffffff1f"
+        "$value": "{ki.color.white.12}",
+        "$description": "Material 3 semantic color for overlay high em inverse."
       },
       "med-em": {
-        "$value": "#00000029"
+        "$value": "{ki.foundation.migrated.semantic-material3.overlay.med-em}",
+        "$description": "Material 3 semantic color for overlay med em."
       },
       "med-em-inverse": {
-        "$value": "#ffffff14"
+        "$value": "{ki.color.white.8}",
+        "$description": "Material 3 semantic color for overlay med em inverse."
       }
     },
     "elevation": {
       "$type": "color",
       "shadow": {
-        "$value": "#0000000d"
+        "$value": "{ki.color.black.5}",
+        "$description": "Material 3 semantic color for elevation shadow."
       },
       "shadow-med": {
-        "$value": "#00000014"
+        "$value": "{ki.color.black.8}",
+        "$description": "Material 3 semantic color for elevation shadow med."
       },
       "shadow-dark": {
-        "$value": "#0000003d"
+        "$value": "{ki.color.black.24}",
+        "$description": "Material 3 semantic color for elevation shadow dark."
       }
     }
   }

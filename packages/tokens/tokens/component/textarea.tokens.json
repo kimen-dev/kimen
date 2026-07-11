@@ -2,164 +2,213 @@
   "ki": {
     "textarea": {
       "padding-inline": {
-        "$value": "{ki.space.md}"
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the textarea component for padding inline."
       },
       "padding-block": {
-        "$value": "{ki.space.sm}"
+        "$value": "{ki.space.sm}",
+        "$description": "dimension used by the textarea component for padding block."
       },
       "label-gap": {
-        "$value": "{ki.space.xs}"
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the textarea component for label gap."
       },
       "radius": {
-        "$value": "{ki.radius.md}"
+        "$value": "{ki.radius.md}",
+        "$description": "dimension used by the textarea component for radius."
       },
       "min-target": {
-        "$value": "{ki.space.7xl}"
+        "$value": "{ki.space.7xl}",
+        "$description": "dimension used by the textarea component for min target."
       },
       "font-size": {
-        "$value": "{ki.typography.size.body-1}"
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "dimension used by the textarea component for font size."
       },
       "font-weight": {
-        "$value": "{ki.typography.weight.body.normal}"
+        "$value": "{ki.typography.weight.body.normal}",
+        "$description": "font weight used by the textarea component for font weight."
       },
       "line-height": {
-        "$value": "{ki.typography.line-height.body-1}"
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "dimension used by the textarea component for line height."
       },
       "label-font-size": {
-        "$value": "{ki.typography.size.caption-2}"
+        "$value": "{ki.typography.size.caption-2}",
+        "$description": "dimension used by the textarea component for label font size."
       },
       "label-font-weight": {
-        "$value": "{ki.typography.weight.body.medium}"
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "font weight used by the textarea component for label font weight."
       },
       "label-line-height": {
-        "$value": "{ki.typography.line-height.caption-2}"
+        "$value": "{ki.typography.line-height.caption-2}",
+        "$description": "dimension used by the textarea component for label line height."
       },
       "border-width": {
-        "$value": "{ki.space.xxs}"
+        "$value": "{ki.space.xxs}",
+        "$description": "dimension used by the textarea component for border width."
       },
       "border-block-start-width": {
-        "$value": "{ki.textarea.border-width}"
+        "$value": "{ki.textarea.border-width}",
+        "$description": "dimension used by the textarea component for border block start width."
       },
       "border-block-end-width": {
-        "$value": "{ki.textarea.border-width}"
+        "$value": "{ki.textarea.border-width}",
+        "$description": "dimension used by the textarea component for border block end width."
       },
       "border-inline-start-width": {
-        "$value": "{ki.textarea.border-width}"
+        "$value": "{ki.textarea.border-width}",
+        "$description": "dimension used by the textarea component for border inline start width."
       },
       "border-inline-end-width": {
-        "$value": "{ki.textarea.border-width}"
+        "$value": "{ki.textarea.border-width}",
+        "$description": "dimension used by the textarea component for border inline end width."
       },
       "rest": {
         "bg": {
-          "$value": "{ki.surface.s1}"
+          "$value": "{ki.surface.s1}",
+          "$description": "color used by the textarea component for rest background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the textarea component for rest foreground."
         },
         "border": {
-          "$value": "{ki.outline.med-em}"
+          "$value": "{ki.outline.med-em}",
+          "$description": "color used by the textarea component for rest border."
         },
         "label-fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the textarea component for rest label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for rest placeholder foreground."
         }
       },
       "hover": {
         "bg": {
-          "$value": "{ki.surface.s2}"
+          "$value": "{ki.surface.s2}",
+          "$description": "color used by the textarea component for hover background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the textarea component for hover foreground."
         },
         "border": {
-          "$value": "{ki.outline.high-em}"
+          "$value": "{ki.outline.high-em}",
+          "$description": "color used by the textarea component for hover border."
         },
         "label-fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the textarea component for hover label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for hover placeholder foreground."
         }
       },
       "focus": {
         "bg": {
-          "$value": "{ki.surface.s1}"
+          "$value": "{ki.surface.s1}",
+          "$description": "color used by the textarea component for focus background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the textarea component for focus foreground."
         },
         "border": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the textarea component for focus border."
         },
         "label-fg": {
-          "$value": "{ki.text.primary-high-em}"
+          "$value": "{ki.text.primary-high-em}",
+          "$description": "color used by the textarea component for focus label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for focus placeholder foreground."
         }
       },
       "disabled": {
         "bg": {
-          "$value": "{ki.surface.disabled-low-em}"
+          "$value": "{ki.surface.disabled-low-em}",
+          "$description": "color used by the textarea component for disabled background."
         },
         "fg": {
-          "$value": "{ki.text.muted}"
+          "$value": "{ki.text.muted}",
+          "$description": "color used by the textarea component for disabled foreground."
         },
         "border": {
-          "$value": "{ki.outline.med-em}"
+          "$value": "{ki.outline.med-em}",
+          "$description": "color used by the textarea component for disabled border."
         },
         "label-fg": {
-          "$value": "{ki.text.muted}"
+          "$value": "{ki.text.muted}",
+          "$description": "color used by the textarea component for disabled label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.muted}"
+          "$value": "{ki.text.muted}",
+          "$description": "color used by the textarea component for disabled placeholder foreground."
         }
       },
       "readonly": {
         "bg": {
-          "$value": "{ki.surface.s0}"
+          "$value": "{ki.surface.s0}",
+          "$description": "color used by the textarea component for readonly background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the textarea component for readonly foreground."
         },
         "border": {
-          "$value": "{ki.outline.med-em}"
+          "$value": "{ki.outline.med-em}",
+          "$description": "color used by the textarea component for readonly border."
         },
         "label-fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the textarea component for readonly label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for readonly placeholder foreground."
         }
       },
       "invalid": {
         "bg": {
-          "$value": "{ki.surface.danger-base-em}"
+          "$value": "{ki.surface.danger-base-em}",
+          "$description": "color used by the textarea component for invalid background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the textarea component for invalid foreground."
         },
         "border": {
-          "$value": "{ki.outline.danger-high-em}"
+          "$value": "{ki.outline.danger-high-em}",
+          "$description": "color used by the textarea component for invalid border."
         },
         "label-fg": {
-          "$value": "{ki.text.danger-high-em}"
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "color used by the textarea component for invalid label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for invalid placeholder foreground."
         }
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the textarea component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the textarea component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the textarea component for focus ring offset."
         }
       }
     }

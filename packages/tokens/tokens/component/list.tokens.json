@@ -2,62 +2,81 @@
   "ki": {
     "list": {
       "bg": {
-        "$value": "{ki.surface.s0}"
+        "$value": "{ki.surface.s0}",
+        "$description": "color used by the list component for background."
       },
       "padding": {
-        "$value": "{ki.space.zero}"
+        "$value": "{ki.space.zero}",
+        "$description": "dimension used by the list component for padding."
       },
       "gap": {
-        "$value": "{ki.space.xs}"
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the list component for gap."
       },
       "item": {
         "min-height": {
-          "$value": "{ki.space.14xl}"
+          "$value": "{ki.space.14xl}",
+          "$description": "dimension used by the list component for item min height."
         },
         "min-height-multiline": {
-          "$value": "{ki.space.18xl}"
+          "$value": "{ki.space.18xl}",
+          "$description": "dimension used by the list component for item min height multiline."
         },
         "padding-inline": {
-          "$value": "{ki.space.md}"
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the list component for item padding inline."
         },
         "padding-block": {
-          "$value": "{ki.space.sm}"
+          "$value": "{ki.space.sm}",
+          "$description": "dimension used by the list component for item padding block."
         },
         "gap": {
-          "$value": "{ki.space.md}"
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the list component for item gap."
         },
         "radius": {
-          "$value": "{ki.radius.0}"
+          "$value": "{ki.radius.0}",
+          "$description": "dimension used by the list component for item radius."
         },
         "divider-width": {
-          "$value": "{ki.space.zero}"
+          "$value": "{ki.space.zero}",
+          "$description": "dimension used by the list component for item divider width."
         },
         "divider-color": {
-          "$value": "{ki.outline.low-em}"
+          "$value": "{ki.outline.low-em}",
+          "$description": "color used by the list component for item divider color."
         },
         "primary-font-size": {
-          "$value": "{ki.typography.size.body-1}"
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the list component for item primary font size."
         },
         "primary-line-height": {
-          "$value": "{ki.typography.line-height.body-1}"
+          "$value": "{ki.typography.line-height.body-1}",
+          "$description": "dimension used by the list component for item primary line height."
         },
         "primary-font-weight": {
-          "$value": "{ki.typography.weight.body.medium}"
+          "$value": "{ki.typography.weight.body.medium}",
+          "$description": "font weight used by the list component for item primary font weight."
         },
         "primary-fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the list component for item primary foreground."
         },
         "secondary-font-size": {
-          "$value": "{ki.typography.size.caption-1}"
+          "$value": "{ki.typography.size.caption-1}",
+          "$description": "dimension used by the list component for item secondary font size."
         },
         "secondary-line-height": {
-          "$value": "{ki.typography.line-height.caption-1}"
+          "$value": "{ki.typography.line-height.caption-1}",
+          "$description": "dimension used by the list component for item secondary line height."
         },
         "secondary-font-weight": {
-          "$value": "{ki.typography.weight.body.normal}"
+          "$value": "{ki.typography.weight.body.normal}",
+          "$description": "font weight used by the list component for item secondary font weight."
         },
         "secondary-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the list component for item secondary foreground."
         }
       }
     }

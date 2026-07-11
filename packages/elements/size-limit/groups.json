@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "groups": [
+    {
+      "id": "ki-radio-group",
+      "members": ["ki-radio-group", "ki-radio"]
+    },
+    {
+      "id": "ki-select",
+      "members": ["ki-select", "ki-option"]
+    },
+    {
+      "id": "ki-tabs",
+      "members": ["ki-tabs", "ki-tab", "ki-tab-panel"]
+    }
+  ]
+}

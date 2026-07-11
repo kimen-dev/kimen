@@ -2,63 +2,85 @@
   "ki": {
     "dialog": {
       "radius": {
-        "$value": "{ki.radius.2xl}"
+        "$value": "{ki.radius.2xl}",
+        "$description": "dimension used by the dialog component for radius."
       },
       "padding": {
-        "$value": "{ki.space.7xl}"
+        "$value": "{ki.space.7xl}",
+        "$description": "dimension used by the dialog component for padding."
       },
       "gap": {
-        "$value": "{ki.space.5xl}"
+        "$value": "{ki.space.5xl}",
+        "$description": "dimension used by the dialog component for gap."
       },
       "min-width": {
-        "$value": "{ki.space.25xl}"
+        "$value": "{ki.space.25xl}",
+        "$description": "dimension used by the dialog component for min width."
       },
       "max-width": {
-        "$value": "{ki.space.26xl}"
+        "$value": "{ki.space.26xl}",
+        "$description": "dimension used by the dialog component for max width."
       },
       "bg": {
-        "$value": "{ki.surface.s1}"
+        "$value": "{ki.surface.s1}",
+        "$description": "color used by the dialog component for background."
       },
       "fg": {
-        "$value": "{ki.text.high-em}"
+        "$value": "{ki.text.high-em}",
+        "$description": "color used by the dialog component for foreground."
       },
       "border": {
-        "$value": "1px solid {ki.outline.low-em}"
+        "$value": "{ki.foundation.migrated.component-dialog.dialog.border}",
+        "$description": "border used by the dialog component for border.",
+        "$type": "border"
       },
       "shadow": {
-        "$value": "0 {ki.space.xs} {ki.space.3xl} {ki.elevation.shadow-med}, 0 {ki.space.5xl} {ki.space.9xl} {ki.elevation.shadow}"
+        "$value": "{ki.foundation.migrated.component-dialog.dialog.shadow}",
+        "$description": "shadow used by the dialog component for dialog shadow.",
+        "$type": "shadow"
       },
       "backdrop-bg": {
-        "$value": "{ki.overlay.high-em}"
+        "$value": "{ki.overlay.high-em}",
+        "$description": "color used by the dialog component for backdrop background."
       },
       "heading": {
         "font-size": {
-          "$value": "{ki.typography.size.title-2}"
+          "$value": "{ki.typography.size.title-2}",
+          "$description": "dimension used by the dialog component for heading font size."
         },
         "font-weight": {
-          "$value": "{ki.typography.weight.body.semibold}"
+          "$value": "{ki.typography.weight.body.semibold}",
+          "$description": "font weight used by the dialog component for heading font weight."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.title-2}"
+          "$value": "{ki.typography.line-height.title-2}",
+          "$description": "dimension used by the dialog component for heading line height."
         }
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the dialog component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the dialog component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the dialog component for focus ring offset."
         }
       },
       "motion": {
         "duration": {
-          "$value": "0ms"
+          "$value": "{ki.foundation.migrated.component-dialog.dialog.motion.duration}",
+          "$description": "duration used by the dialog component for dialog motion duration.",
+          "$type": "duration"
         },
         "easing": {
-          "$value": "linear"
+          "$value": "{ki.foundation.migrated.component-dialog.dialog.motion.easing}",
+          "$description": "easing curve used by the dialog component for dialog motion easing.",
+          "$type": "cubicBezier"
         }
       }
     }

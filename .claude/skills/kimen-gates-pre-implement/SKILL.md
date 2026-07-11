@@ -17,10 +17,9 @@ constitution Workflow) outside the workflow runner: invoking
 `/speckit-implement` directly must not bypass founder approval. It is a
 deterministic gate: the script decides, not you (Art. X).
 
-The gate verifies, in order: feature.feature exists and spec lint is green
-(pre-plan gate), the founder approval marker `specs/<feature>/.approved`
-exists AND its recorded sha256 matches the current spec.md, and the
-constitution digest is in sync.
+The gate verifies, in order: the pre-plan gate confirms byte-synchronized,
+lint-green `spec.md` + `feature.feature` and marker v2 matches both SHA-256
+hashes; then the constitution digest must be in sync.
 
 ## Steps
 
