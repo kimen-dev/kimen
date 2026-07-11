@@ -158,6 +158,23 @@ test('S13 validates current-revision capability evidence only after the browser 
   assert.match(suite, /export KIMEN_CAPABILITY_EVIDENCE_FILE/u);
 });
 
+test('S13 regenerates capability evidence after recording the final capability gate', async () => {
+  const suite = await readRepositoryFile('scripts/gates/gates-suite.sh');
+  const capabilityGate = suite.indexOf(
+    'run_gate capabilities node scripts/gates/check-capabilities.mjs',
+  );
+  const finalRegeneration = suite.indexOf(
+    'node scripts/gates/check-capabilities.mjs --write-evidence "$KIMEN_CAPABILITY_EVIDENCE_FILE"',
+    capabilityGate + 1,
+  );
+
+  assert.ok(capabilityGate >= 0, 'the capability gate must remain mandatory');
+  assert.ok(
+    finalRegeneration > capabilityGate,
+    'capability evidence must be regenerated after run_gate records suite capabilities green',
+  );
+});
+
 test('wiring fixture resolves from the repository under test', async () => {
   const [fromRepositoryRoot, fromFixtureUrl] = await Promise.all([
     readRepositoryFile('scripts/run-infra-tests.mjs'),

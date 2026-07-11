@@ -44,6 +44,11 @@ export KIMEN_CAPABILITY_EVIDENCE_FILE
 run_gate capabilities node scripts/gates/check-capabilities.mjs \
   --write-evidence "$KIMEN_CAPABILITY_EVIDENCE_FILE" \
   --gate-evidence "$KIMEN_GATE_EVIDENCE_FILE"
+# run_gate appends the capability verdict after the command succeeds. Rebuild
+# the revision record from that final TSV so review packets consume the exact
+# complete gate set rather than the pre-verdict snapshot.
+node scripts/gates/check-capabilities.mjs --write-evidence "$KIMEN_CAPABILITY_EVIDENCE_FILE" \
+  --gate-evidence "$KIMEN_GATE_EVIDENCE_FILE" >/dev/null || exit 1
 
 if [ "${KIMEN_MUTATION_DELEGATED_TO:-}" = 'mutation' ]; then
   echo "GATES JOB GREEN — mutation delegated; Definition of Done requires ci / mutation and ci / containment"
