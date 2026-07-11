@@ -1,6 +1,7 @@
 import { defineVitestConfig } from '@stencil/vitest/config';
 
 export default defineVitestConfig({
+  cacheDir: 'reports/cache/vite/mutation-elements',
   stencilConfig: './packages/elements/stencil.config.ts',
   test: {
     name: 'elements-mutation',

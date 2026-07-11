@@ -1,3 +1,5 @@
+import { join } from 'node:path';
+
 import { defineBrowserCommand, playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
@@ -16,6 +18,8 @@ if (!supportedBrowsers.some((browser) => browser === configuredBrowser)) {
 }
 
 const browser = configuredBrowser as SupportedBrowser;
+const cacheRoot = process.env['KIMEN_CACHE_ROOT'];
+const cacheDir = cacheRoot ? join(cacheRoot, `vite/elements-browser-${browser}`) : undefined;
 // Playwright's default headless Chromium selects a separate headless-shell
 // binary. Selecting the installed `chromium` channel makes the executable that
 // gates-browser verifies via the public executablePath() API the one launched.
@@ -24,7 +28,9 @@ const provider = playwright(
 );
 
 export default defineConfig({
+  ...(cacheDir ? { cacheDir } : {}),
   test: {
+    name: `elements-browser-${browser}`,
     include: ['browser-tests/**/*.browser.spec.{ts,tsx}'],
     browser: {
       enabled: true,

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { isAbsolute } from 'node:path';
 import test from 'node:test';
 
 // @spec:018-project-integrity-hardening
@@ -95,6 +96,15 @@ test('@spec:018 S3 mutation Vitest config keeps node and Stencil suites separate
 test('@spec:018 S3 each Stryker runner has one exact Vitest project', async () => {
   const nodeConfig = await loadConfig('vitest.mutation.node.config.ts');
   const elementsConfig = await loadConfig('vitest.mutation.elements.config.ts');
+
+  assert.deepEqual(
+    [nodeConfig.cacheDir, elementsConfig.cacheDir],
+    ['reports/cache/vite/mutation-node', 'reports/cache/vite/mutation-elements'],
+  );
+  for (const cacheDir of [nodeConfig.cacheDir, elementsConfig.cacheDir]) {
+    assert.equal(isAbsolute(cacheDir), false, 'Stryker cache must resolve inside each sandbox');
+    assert.doesNotMatch(cacheDir, /node_modules/);
+  }
 
   assert.equal(nodeConfig.test?.name, 'node-mutation');
   assert.deepEqual(nodeConfig.test?.include, ['scripts/mutation-tests/**/*.spec.mjs']);

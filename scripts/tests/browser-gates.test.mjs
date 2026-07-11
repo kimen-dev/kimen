@@ -5,11 +5,13 @@ import { chmod, mkdir, mkdtemp, readFile, realpath, rm, writeFile } from 'node:f
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 const browserGate = join(repositoryRoot, 'scripts/gates/gates-browser.sh');
 const browserConfig = join(repositoryRoot, 'packages/elements/vitest.browser.config.ts');
+const elementsConfig = join(repositoryRoot, 'packages/elements/vitest.config.ts');
+const nodeConfig = join(repositoryRoot, 'packages/elements/vitest.node.config.ts');
 const suiteGate = join(repositoryRoot, 'scripts/gates/gates-suite.sh');
 const temporaryRoot = await realpath(tmpdir());
 
@@ -91,6 +93,26 @@ function runBrowserGate(fixture, engine) {
 
 const diagnostic = (result) => `${result.stdout}\n${result.stderr}`;
 
+function inspectVitestConfig(configPath, environment = {}) {
+  const configUrl = pathToFileURL(configPath).href;
+  const result = spawnSync(
+    process.execPath,
+    [
+      '--input-type=module',
+      '--eval',
+      `const config = await (await import(${JSON.stringify(configUrl)})).default;
+process.stdout.write(JSON.stringify({ cacheDir: config.cacheDir, name: config.test?.name }));`,
+    ],
+    {
+      cwd: repositoryRoot,
+      encoding: 'utf8',
+      env: { ...process.env, ...environment },
+    },
+  );
+  assert.equal(result.status, 0, diagnostic(result));
+  return JSON.parse(result.stdout);
+}
+
 test('S6 browser config accepts exactly one validated engine per invocation', async () => {
   const source = await readFile(browserConfig, 'utf8');
 
@@ -98,6 +120,38 @@ test('S6 browser config accepts exactly one validated engine per invocation', as
   assert.match(source, /chromium.*firefox.*webkit/s);
   assert.match(source, /launchOptions:\s*\{\s*channel:\s*'chromium'/);
   assert.doesNotMatch(source, /KIMEN_BROWSER_MATRIX/);
+});
+
+test('S6 Vitest configs isolate writable caches by suite and browser engine', () => {
+  const cacheRoot = join(temporaryRoot, 'kimen-vitest-cache-contract');
+  const commonEnvironment = { KIMEN_CACHE_ROOT: cacheRoot };
+  const unit = inspectVitestConfig(elementsConfig, commonEnvironment);
+  const node = inspectVitestConfig(nodeConfig, commonEnvironment);
+  const chromium = inspectVitestConfig(browserConfig, {
+    ...commonEnvironment,
+    KIMEN_BROWSER_ENGINE: 'chromium',
+  });
+  const firefox = inspectVitestConfig(browserConfig, {
+    ...commonEnvironment,
+    KIMEN_BROWSER_ENGINE: 'firefox',
+  });
+
+  assert.deepEqual(unit, {
+    cacheDir: join(cacheRoot, 'vite/elements-unit'),
+    name: 'elements-unit',
+  });
+  assert.deepEqual(node, {
+    cacheDir: join(cacheRoot, 'vite/elements-node'),
+    name: 'elements-node',
+  });
+  assert.deepEqual(chromium, {
+    cacheDir: join(cacheRoot, 'vite/elements-browser-chromium'),
+    name: 'elements-browser-chromium',
+  });
+  assert.deepEqual(firefox, {
+    cacheDir: join(cacheRoot, 'vite/elements-browser-firefox'),
+    name: 'elements-browser-firefox',
+  });
 });
 
 test('S6 browser gate rejects an engine outside the supported matrix', async (t) => {
