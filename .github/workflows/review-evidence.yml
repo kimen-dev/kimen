@@ -44,8 +44,8 @@ jobs:
 
       # pull_request_target has a write-capable token. Execute only the trusted
       # base revision; the controller treats every PR event field as data.
-      - name: Check out trusted base revision
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # nosemgrep: yaml.github-actions.security.pull-request-target-code-checkout.pull-request-target-code-checkout
+      - name: Check out trusted base revision # nosemgrep: yaml.github-actions.security.pull-request-target-code-checkout.pull-request-target-code-checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           persist-credentials: false
