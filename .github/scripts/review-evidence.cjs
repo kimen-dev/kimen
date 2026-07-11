@@ -44,10 +44,6 @@ function isRecord(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
-function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 function addUnknownKeyErrors(value, allowedKeys, path, errors) {
   if (!isRecord(value)) {
     errors.push(`${path} must be an object`);
@@ -76,6 +72,41 @@ function validateRepository(value, path, errors, requireProduction = true) {
   } else if (requireProduction && value !== PRODUCTION_REPOSITORY) {
     errors.push(`${path} must equal ${PRODUCTION_REPOSITORY}`);
   }
+}
+
+function isRepositoryIssueUrl(value, repository) {
+  if (
+    typeof value !== 'string' ||
+    typeof repository !== 'string' ||
+    !REPOSITORY_PATTERN.test(repository)
+  ) {
+    return false;
+  }
+
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    return false;
+  }
+
+  if (
+    url.protocol !== 'https:' ||
+    url.hostname !== 'github.com' ||
+    url.port !== '' ||
+    url.username !== '' ||
+    url.password !== '' ||
+    url.search !== '' ||
+    url.hash !== ''
+  ) {
+    return false;
+  }
+
+  const issuePathPrefix = `/${repository}/issues/`;
+  if (!url.pathname.startsWith(issuePathPrefix)) {
+    return false;
+  }
+  return /^[1-9][0-9]*$/.test(url.pathname.slice(issuePathPrefix.length));
 }
 
 function validateSha(value, path, errors) {
@@ -1198,15 +1229,7 @@ function validateBreakGlass(payload) {
   if (typeof request.justification !== 'string' || request.justification.trim() === '') {
     reasons.push('break-glass justification is required');
   }
-  const restorationPattern =
-    typeof policy.repository === 'string'
-      ? new RegExp(`^https://github\\.com/${escapeRegExp(policy.repository)}/issues/[1-9][0-9]*$`)
-      : null;
-  if (
-    typeof request.restorationIssue !== 'string' ||
-    restorationPattern === null ||
-    !restorationPattern.test(request.restorationIssue)
-  ) {
+  if (!isRepositoryIssueUrl(request.restorationIssue, policy.repository)) {
     reasons.push('restoration issue must be an issue URL in the policy repository');
   }
 
@@ -1214,18 +1237,23 @@ function validateBreakGlass(payload) {
 }
 
 function extractMarkerValue(body, marker) {
-  if (typeof body !== 'string') {
+  if (typeof body !== 'string' || typeof marker !== 'string' || !/^[a-z0-9-]+$/i.test(marker)) {
     return '';
   }
-  const escapedMarker = escapeRegExp(marker);
-  const markerPattern = new RegExp(`<!--\\s*${escapedMarker}\\s*-->`, 'i');
-  const match = markerPattern.exec(body);
-  if (!match) {
-    return '';
+
+  const normalizedMarker = marker.toLowerCase();
+  const markerPattern = /<!--\s*([a-z0-9-]+)\s*-->/gi;
+  let selectedEnd = null;
+  let match;
+  while ((match = markerPattern.exec(body)) !== null) {
+    if (selectedEnd !== null) {
+      return body.slice(selectedEnd, match.index).trim();
+    }
+    if (match[1].toLowerCase() === normalizedMarker) {
+      selectedEnd = markerPattern.lastIndex;
+    }
   }
-  const afterMarker = body.slice(match.index + match[0].length);
-  const nextMarker = /<!--\s*[a-z0-9-]+\s*-->/i.exec(afterMarker);
-  return afterMarker.slice(0, nextMarker?.index ?? afterMarker.length).trim();
+  return selectedEnd === null ? '' : body.slice(selectedEnd).trim();
 }
 
 function breakGlassPayloadFromEvent(eventPayload, env = process.env) {

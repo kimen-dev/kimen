@@ -92,6 +92,7 @@ export default tseslint.config(
     files: [
       '**/*.mjs',
       '**/*.config.ts',
+      '.github/scripts/**/*.cjs',
       'scripts/**',
       'tools/**',
       'packages/*/scripts/**',
@@ -100,6 +101,7 @@ export default tseslint.config(
     extends: [tseslint.configs.disableTypeChecked],
     languageOptions: {
       globals: {
+        Buffer: 'readonly',
         URL: 'readonly',
         console: 'readonly',
         process: 'readonly',
@@ -136,8 +138,8 @@ export default tseslint.config(
     },
   },
   {
-    // Nx generator implementations are CommonJS (Nx loads them via require)
-    files: ['tools/**/*.js'],
+    // Nx generators and trusted GitHub controllers are loaded through CommonJS.
+    files: ['tools/**/*.js', '.github/scripts/**/*.cjs'],
     languageOptions: {
       sourceType: 'commonjs',
       globals: {
