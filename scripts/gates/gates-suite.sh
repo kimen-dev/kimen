@@ -34,6 +34,9 @@ run_gate constitution bash scripts/gates/constitution-check.sh
 # Scenario-to-test traceability is a CI gate (Art. II). SKIPs loudly (exit 0)
 # while specs/ has no feature files yet; arms itself with the first feature.
 run_gate traceability bash scripts/gates/check-traceability.sh
+# The trusted Check Run controller is security-critical bootstrap code and
+# must carry its own dependency-free regression suite on main.
+run_gate review-evidence node --test .github/scripts/review-evidence.test.cjs
 run_gate nx-graph nx_graph
 run_gate format pnpm run format:check
 # Build runs BEFORE lint/typecheck: browser tests import the built dist
