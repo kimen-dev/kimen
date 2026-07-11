@@ -160,6 +160,9 @@ jobs:
       - name: Install exact browser engine
         run: pnpm --filter @kimen/elements exec playwright install --with-deps "${{ matrix.engine }}"
 
+      - name: Run complete browser gate
+        run: bash scripts/gates/gates-browser.sh "${{ matrix.engine }}"
+
       - name: Download candidate by immutable artifact ID
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:

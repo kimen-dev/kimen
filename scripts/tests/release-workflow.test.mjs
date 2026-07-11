@@ -70,6 +70,18 @@ test('@spec:018-project-integrity-hardening S6 prerelease keeps every engine out
   );
 });
 
+test('@spec:018-project-integrity-hardening S6 prerelease runs the full browser gate for every matrix engine', () => {
+  const browserJob = readJob(releaseWorkflow, 'browser');
+  const installEngine =
+    'pnpm --filter @kimen/elements exec playwright install --with-deps "${{ matrix.engine }}"';
+  const fullBrowserGate = 'bash scripts/gates/gates-browser.sh "${{ matrix.engine }}"';
+  const candidateConsumer = 'node scripts/consumer-contract.mjs';
+
+  assert.equal(occurrenceCount(browserJob, fullBrowserGate), 1);
+  assert.ok(browserJob.indexOf(fullBrowserGate) > browserJob.indexOf(installEngine));
+  assert.ok(browserJob.indexOf(fullBrowserGate) < browserJob.indexOf(candidateConsumer));
+});
+
 test('@spec:018-project-integrity-hardening S6 browsers and independent verification consume validate-core output', () => {
   assert.deepEqual(readYamlList(readJob(releaseWorkflow, 'browser'), 'needs'), ['validate-core']);
   assert.deepEqual(readYamlList(readJob(releaseWorkflow, 'verify-candidate'), 'needs'), [
