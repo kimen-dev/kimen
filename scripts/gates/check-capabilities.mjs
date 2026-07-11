@@ -113,15 +113,33 @@ export async function discoverMandatoryEvidenceIds(root = repositoryRoot) {
   return ids;
 }
 
-function markerPair(destinationId) {
+function markerPair(destinationId, destinationPath = '') {
+  const marker = (position) => `kimen:capabilities:${destinationId}:${position}`;
+  if (destinationPath.endsWith('.mdx')) {
+    return {
+      start: `{/* ${marker('start')} */}`,
+      end: `{/* ${marker('end')} */}`,
+    };
+  }
   return {
-    start: `<!-- kimen:capabilities:${destinationId}:start -->`,
-    end: `<!-- kimen:capabilities:${destinationId}:end -->`,
+    start: `<!-- ${marker('start')} -->`,
+    end: `<!-- ${marker('end')} -->`,
   };
 }
 
-export function extractTextBlock(source, destinationId) {
-  const { start, end } = markerPair(destinationId);
+export function extractTextBlock(source, destinationId, destinationPath = '') {
+  let { start, end } = markerPair(destinationId, destinationPath);
+  if (destinationPath.endsWith('.mdx')) {
+    const legacy = markerPair(destinationId);
+    const hasCurrentStart = source.includes(start);
+    const hasLegacyStart = source.includes(legacy.start);
+    if (hasCurrentStart && hasLegacyStart) {
+      fail(`${destinationId} has duplicate generated block start markers`);
+    }
+    if (!hasCurrentStart && hasLegacyStart) {
+      ({ start, end } = legacy);
+    }
+  }
   const startMarkerIndex = source.indexOf(start);
   if (startMarkerIndex === -1) {
     return null;
@@ -189,7 +207,7 @@ export async function readCapabilityBlocks(manifest, root = repositoryRoot) {
       }
       continue;
     }
-    const block = extractTextBlock(source, destination.id);
+    const block = extractTextBlock(source, destination.id, destination.path);
     if (block !== null) {
       blocks[destination.id] = block.text;
     }
@@ -205,7 +223,7 @@ async function writeAtomic(path, contents) {
 }
 
 export function replaceCapabilityBlock(source, destination, block) {
-  const existing = extractTextBlock(source, destination.id);
+  const existing = extractTextBlock(source, destination.id, destination.path);
   if (existing !== null) {
     let before = source.slice(0, existing.startIndex);
     let after = source.slice(existing.endIndex);

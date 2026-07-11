@@ -16,6 +16,7 @@ const otherDigest = 'd'.repeat(64);
 const mandatoryEvidenceIds = ['build', 'pack-consumer', 'test-browser'];
 const destinations = [
   { id: 'readme-status', path: 'README.md' },
+  { id: 'workshop-status', path: 'packages/elements/docs/introduction.mdx' },
   { id: 'site-status', path: 'site/index.html' },
   { id: 'package-status', path: 'packages/example/package.json' },
 ];
@@ -183,6 +184,10 @@ describe('capability claim mutation boundary', () => {
 
     expect(renderCapabilityBlocks(reordered)).toEqual(blocks);
     expect(blocks['readme-status']).toContain('<!-- kimen:capabilities:readme-status:start -->');
+    expect(blocks['workshop-status']).toContain(
+      '{/* kimen:capabilities:workshop-status:start */}',
+    );
+    expect(blocks['workshop-status']).not.toContain('<!--');
     expect(blocks['readme-status']).toContain('Runtime catalog planned');
     expect(blocks['site-status']).toContain('<section class="section"');
     expect(JSON.parse(blocks['package-status']).claims).toHaveLength(3);

@@ -175,6 +175,40 @@ describe('capability file and evidence mutation boundary', () => {
     );
   });
 
+  it('S13 extracts and replaces MDX-safe generated markers', () => {
+    const destination = {
+      id: 'workshop-status',
+      path: 'packages/elements/docs/introduction.mdx',
+    };
+    const original = [
+      '# Workshop',
+      '',
+      '{/* kimen:capabilities:workshop-status:start */}',
+      '- stale',
+      '{/* kimen:capabilities:workshop-status:end */}',
+      'after',
+      '',
+    ].join('\n');
+    const expected = [
+      '{/* kimen:capabilities:workshop-status:start */}',
+      '- current',
+      '{/* kimen:capabilities:workshop-status:end */}',
+      '',
+    ].join('\n');
+
+    expect(extractTextBlock(original, destination.id, destination.path)?.text).toContain('- stale');
+    expect(replaceCapabilityBlock(original, destination, expected)).toBe(
+      `# Workshop\n\n${expected}after\n`,
+    );
+
+    const legacy = original
+      .replace('{/* kimen:capabilities:workshop-status:start */}', '<!-- kimen:capabilities:workshop-status:start -->')
+      .replace('{/* kimen:capabilities:workshop-status:end */}', '<!-- kimen:capabilities:workshop-status:end -->');
+    expect(replaceCapabilityBlock(legacy, destination, expected)).toBe(
+      `# Workshop\n\n${expected}after\n`,
+    );
+  });
+
   it('S13 fails closed for missing or duplicate end markers and preserves insertion grammar', () => {
     const markdown = { id: 'readme-status', path: 'README.md' };
     const html = { id: 'site-status', path: 'site/index.html' };

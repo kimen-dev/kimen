@@ -254,6 +254,15 @@ test('S13 renders byte-deterministic blocks independent of manifest ordering', a
   assert.deepEqual(renderCapabilityBlocks(reordered), renderCapabilityBlocks(manifest));
 });
 
+test('S13 renders generated workshop markers as valid MDX comments', async () => {
+  const { renderCapabilityBlocks } = await loadSubject();
+  const block = renderCapabilityBlocks(aManifest())['elements-workshop-status'];
+
+  assert.match(block, /^\{\/\* kimen:capabilities:elements-workshop-status:start \*\/\}$/m);
+  assert.match(block, /^\{\/\* kimen:capabilities:elements-workshop-status:end \*\/\}$/m);
+  assert.doesNotMatch(block, /<!--/);
+});
+
 test('S13 rejects manual drift in a generated public-status block', async () => {
   const { renderCapabilityBlocks, validateCapabilityBlocks } = await loadSubject();
   const manifest = aManifest();

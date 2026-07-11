@@ -261,6 +261,14 @@ function renderBlock(destination, capabilities) {
       2,
     )}\n`;
   }
+  if (destination.path.endsWith('.mdx')) {
+    return [
+      `{/* ${start} */}`,
+      ...claims.map((claim) => `- **${claim.state}** — ${claim.text}`),
+      `{/* ${end} */}`,
+      '',
+    ].join('\n');
+  }
   if (destination.path.endsWith('.html')) {
     return [
       `      <!-- ${start} -->`,
