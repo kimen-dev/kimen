@@ -338,7 +338,11 @@ const hasTokenNamespace = (document, tokenSlug) => {
     if (!isPlainRecord(cursor) || !Object.hasOwn(cursor, segment)) {
       return false;
     }
-    cursor = cursor[segment];
+    const descriptor = Object.getOwnPropertyDescriptor(cursor, segment);
+    if (!descriptor || !Object.hasOwn(descriptor, 'value')) {
+      return false;
+    }
+    cursor = descriptor.value;
   }
   return isPlainRecord(cursor);
 };

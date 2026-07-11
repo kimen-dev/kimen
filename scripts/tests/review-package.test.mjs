@@ -92,6 +92,13 @@ function evidenceSurfaceForPath(path) {
 }
 
 function requiredEvidenceStates(surfaceId) {
+  if (surfaceId === 'component:ki-progress') {
+    return [
+      'circular-labeled-value-73-of-100',
+      'circular-labeled-value-73-of-100-dark',
+      'circular-labeled-value-73-of-100-rtl',
+    ];
+  }
   if (
     surfaceId.startsWith('component:') ||
     surfaceId === 'component-generator' ||
@@ -1829,6 +1836,33 @@ test('S2 review packet rejects an evidence manifest that omits a contractually r
   assert.match(
     result.stderr,
     /missing.*required.*state.*(?:dark|rtl)|state.*(?:dark|rtl).*missing/iu,
+  );
+  await assertPacketWasRemoved(result.packetPath);
+});
+
+test('S2 review packet rejects generic ki-progress images that do not bind the changed circular state', async (t) => {
+  const fixture = await createReviewFixture({
+    candidateContents: '.fixture { color: red; }\n',
+    candidatePath: 'packages/elements/src/components/ki-progress/ki-progress.css',
+  });
+  t.after(() => fixture.cleanup());
+  const evidence = await createRenderedEvidence(fixture, {
+    uiPaths: ['packages/elements/src/components/ki-progress/ki-progress.css'],
+  });
+  const manifest = await readEvidenceManifest(evidence.evidenceDirectory);
+  for (const [index, state] of manifest.surfaces[0].states.entries()) {
+    state.name = ['default', 'dark', 'rtl'][index];
+  }
+  await writeEvidenceManifest(evidence.evidenceDirectory, manifest);
+
+  const result = await runReviewPackage(fixture, localGreenFence, {
+    evidenceDirectory: evidence.evidenceDirectory,
+  });
+
+  assert.notEqual(result.code, 0);
+  assert.match(
+    result.stderr,
+    /ki-progress.*(?:circular|value-73)|(?:circular|value-73).*ki-progress/iu,
   );
   await assertPacketWasRemoved(result.packetPath);
 });

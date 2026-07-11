@@ -228,11 +228,20 @@ function normalizeManifest(manifest, policy) {
 }
 
 function escapeHtml(value) {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;');
+  return value.replace(/[&<>"]/gu, (character) => {
+    switch (character) {
+      case '&':
+        return '&amp;';
+      case '<':
+        return '&lt;';
+      case '>':
+        return '&gt;';
+      case '"':
+        return '&quot;';
+      default:
+        throw new Error('Unexpected HTML escape character');
+    }
+  });
 }
 
 function claimText(capability) {

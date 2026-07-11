@@ -430,6 +430,13 @@ async function requiredUiSurfaces(requiredRecordsPath) {
 }
 
 function requiredRenderedStates(surfaceId) {
+  if (surfaceId === 'component:ki-progress') {
+    return [
+      'circular-labeled-value-73-of-100',
+      'circular-labeled-value-73-of-100-dark',
+      'circular-labeled-value-73-of-100-rtl',
+    ];
+  }
   if (
     surfaceId.startsWith('component:') ||
     surfaceId === 'component-generator' ||

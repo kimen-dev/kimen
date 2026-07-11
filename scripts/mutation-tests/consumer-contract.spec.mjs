@@ -42,6 +42,15 @@ async function put(root, path, contents) {
   return target;
 }
 
+function thrownMessage(callback) {
+  try {
+    callback();
+  } catch (error) {
+    return error instanceof Error ? error.message : String(error);
+  }
+  throw new Error('Expected callback to throw');
+}
+
 function fakePlaywrightBoundary() {
   const state = {
     browserClosed: false,
@@ -999,11 +1008,13 @@ describe('packed consumer mutation boundary', () => {
     'node',
     'tsx',
   ])('S8 fails closed for unsupported executable fence %s', (language) => {
-    expect(() =>
-      extractExecutableSnippets(
-        `\`\`\`js\naccepted();\n\`\`\`\n\`\`\`${language}\nskipped();\n\`\`\`\n`,
+    expect(
+      thrownMessage(() =>
+        extractExecutableSnippets(
+          `\`\`\`js\naccepted();\n\`\`\`\n\`\`\`${language}\nskipped();\n\`\`\`\n`,
+        ),
       ),
-    ).toThrow(new RegExp(`unsupported executable fence.*${language}`, 'iu'));
+    ).toBe(`consumer-contract: unsupported executable fence language or descriptor: ${language}`);
   });
 
   it.each([

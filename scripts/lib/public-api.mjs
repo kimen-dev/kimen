@@ -83,9 +83,10 @@ function matchExportPattern(exports, publicSubpath) {
     if (matched === '') continue;
     const target = exportTarget(entry, `export ${key}`);
     if (target.indexOf('*') === -1 || target.indexOf('*') !== target.lastIndexOf('*')) continue;
+    const wildcardIndex = target.indexOf('*');
     matches.push({
       key,
-      target: target.replace('*', matched),
+      target: `${target.slice(0, wildcardIndex)}${matched}${target.slice(wildcardIndex + 1)}`,
       specificity: prefix.length + suffix.length,
     });
   }

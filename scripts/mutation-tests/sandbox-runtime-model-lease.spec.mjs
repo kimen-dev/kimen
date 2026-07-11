@@ -141,11 +141,20 @@ const makeFixture = async ({
   return { claims, compactToken, envelope, paths };
 };
 
+const expectRejectedReason = async (promise, reason) => {
+  let rejection;
+  try {
+    await promise;
+  } catch (error) {
+    rejection = error;
+  }
+  expect(rejection).toBeInstanceOf(Error);
+  expect(rejection.message).toBe(reason);
+};
+
 const rejectedReason = async (fixtureOptions, reason, maximumTtl = 3_660) => {
   const fixture = await makeFixture(fixtureOptions);
-  await expect(verifyLease(fixture.paths, maximumTtl)).rejects.toThrow(
-    new RegExp(`^${reason}$`, 'u'),
-  );
+  await expectRejectedReason(verifyLease(fixture.paths, maximumTtl), reason);
 };
 
 const configureHelper = async (
@@ -490,7 +499,7 @@ describe('sandbox model-lease mutation boundary', () => {
     [['revoke', '--lease-id', 'contains spaces'], 'invalid-lease-id'],
     [['acquire', '--output', 'unused'], 'missing-configuration'],
   ])('S4 rejects malformed model-lease arguments %#', async (arguments_, reason) => {
-    await expect(runModelLease([...arguments_])).rejects.toThrow(new RegExp(`^${reason}$`, 'u'));
+    await expectRejectedReason(runModelLease([...arguments_]), reason);
   });
 
   it('S4 main verifies a lease with an explicit TTL without mutating caller arguments', async () => {

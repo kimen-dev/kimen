@@ -381,7 +381,8 @@ export function exportedTarget(packageMetadata, subpath) {
     if (target.indexOf('*') === -1 || target.indexOf('*') !== target.lastIndexOf('*')) {
       return null;
     }
-    return target.replace('*', wildcardValue);
+    const wildcardIndex = target.indexOf('*');
+    return `${target.slice(0, wildcardIndex)}${wildcardValue}${target.slice(wildcardIndex + 1)}`;
   };
   if (typeof entry === 'string') {
     return substituteWildcard(entry);

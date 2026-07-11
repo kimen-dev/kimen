@@ -74,6 +74,11 @@
       "stylelint --fix --allow-empty-input"
     ]
   },
+  "pnpm": {
+    "overrides": {
+      "qs": "6.15.3"
+    }
+  },
   "workspaces": [
     "packages/*",
     "tools/*"

@@ -66,24 +66,25 @@ const replaceGeneratedBlock = (source, block) => {
   return `${base}\n${block}`;
 };
 
-const escapeRegularExpression = (value) => value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+const generatedComponentInterface =
+  /(^|\n)(?:export\s+)?interface\s+([A-Za-z_$][\w$]*)(?=\s+extends\s+Components\.)/gu;
 
 export function augmentDirectDeclaration(source, component, rootContract) {
   const className = component.className;
   if (typeof className !== 'string' || className.trim() === '') {
     throw new Error(`Missing component class name for ${component.tag}`);
   }
-  const interfacePattern = new RegExp(
-    `(^|\\n)(?:export\\s+)?interface\\s+${escapeRegularExpression(className)}(?=\\s+extends\\s+Components\\.)`,
-    'gu',
+  const matches = [...source.matchAll(generatedComponentInterface)].filter(
+    (match) => match[2] === className,
   );
-  const matches = [...source.matchAll(interfacePattern)];
   if (matches.length !== 1) {
     throw new Error(
       `${component.tag} declaration must contain exactly one generated ${className} interface`,
     );
   }
-  const exportedInterface = source.replace(interfacePattern, `$1export interface ${className}`);
+  const exportedInterface = source.replace(generatedComponentInterface, (match, prefix, name) =>
+    name === className ? `${prefix}export interface ${className}` : match,
+  );
   return replaceGeneratedBlock(exportedInterface, renderDirectTypeExports(component, rootContract));
 }
 
