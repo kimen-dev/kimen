@@ -60,7 +60,7 @@ jobs:
     if: >-
       github.event_name == 'workflow_dispatch' &&
       github.repository == 'kimen-dev/kimen' &&
-      github.actor == 'marsgotta' &&
+      github.actor == 'MarsGotta' &&
       github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -91,7 +91,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           KIMEN_CHECK_INTEGRATIONS_JSON: ${{ vars.KIMEN_CHECK_INTEGRATIONS_JSON }}
-          KIMEN_FOUNDER_LOGIN: marsgotta
+          KIMEN_FOUNDER_LOGIN: MarsGotta
           KIMEN_REVIEW_MODE: complete
           KIMEN_TRUSTED_REVIEWERS_JSON: ${{ vars.KIMEN_TRUSTED_REVIEWERS_JSON }}
         run: node .github/scripts/review-evidence.cjs review-workflow

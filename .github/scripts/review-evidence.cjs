@@ -7,7 +7,7 @@ const { TextDecoder } = require('node:util');
 
 const CHECK_NAME = 'clean-context-review';
 const PRODUCTION_REPOSITORY = 'kimen-dev/kimen';
-const PRODUCTION_FOUNDER = 'marsgotta';
+const PRODUCTION_FOUNDER = 'MarsGotta';
 const API_VERSION = '2022-11-28';
 const SHA_PATTERN = /^[0-9a-f]{40}$/i;
 const SHA256_PATTERN = /^[0-9a-f]{64}$/i;
