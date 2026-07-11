@@ -767,7 +767,11 @@ function trustedIntegrationPolicy(source) {
     );
   }
   const reviewIntegrationId = value[CHECK_NAME];
-  if (entries.some(([context, integrationId]) => context !== CHECK_NAME && integrationId === reviewIntegrationId)) {
+  if (
+    entries.some(
+      ([context, integrationId]) => context !== CHECK_NAME && integrationId === reviewIntegrationId,
+    )
+  ) {
     throw new ReviewEvidenceError(
       `${CHECK_NAME} must bind to a dedicated trusted GitHub App ID not shared by another required check`,
     );
