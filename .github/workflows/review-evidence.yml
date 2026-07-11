@@ -1,0 +1,93 @@
+name: review-evidence
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        description: Pull request number whose current revision was reviewed
+        required: true
+        type: string
+      attestation:
+        description: Clean-context review-evidence-v1 attestation JSON
+        required: true
+        type: string
+      packet_manifest_base64:
+        description: Canonical packet-manifest.json bytes encoded as base64
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  pending:
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+
+      # pull_request_target has a write-capable token. Execute only the trusted
+      # base revision; the controller treats every PR event field as data.
+      - name: Check out trusted base revision
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - name: Create current-head pending evidence
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          KIMEN_REVIEW_MODE: pending
+        run: node .github/scripts/review-evidence.cjs review-workflow
+
+  complete:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.actor == 'marsgotta' &&
+      github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+
+      # Completion always runs repository-controlled code from main. Dispatch
+      # inputs, including canonical packet-manifest bytes, are read as JSON
+      # data from GITHUB_EVENT_PATH and never interpolated into shell syntax.
+      - name: Check out trusted main revision
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          ref: refs/heads/main
+          persist-credentials: false
+
+      - name: Validate current evidence and complete Check Run
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          KIMEN_CHECK_INTEGRATIONS_JSON: ${{ vars.KIMEN_CHECK_INTEGRATIONS_JSON }}
+          KIMEN_FOUNDER_LOGIN: marsgotta
+          KIMEN_REVIEW_MODE: complete
+          KIMEN_TRUSTED_REVIEWERS_JSON: ${{ vars.KIMEN_TRUSTED_REVIEWERS_JSON }}
+        run: node .github/scripts/review-evidence.cjs review-workflow
