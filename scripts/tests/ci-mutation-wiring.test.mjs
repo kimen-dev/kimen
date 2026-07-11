@@ -216,7 +216,7 @@ test('S3 protected main requires every mandatory CI gate context', async () => {
   const statusRule = ruleset.rules.find(({ type }) => type === 'required_status_checks');
   const contexts = statusRule.parameters.required_status_checks.map(({ context }) => context);
 
-  assert.ok(contexts.includes('ci / gates'));
-  assert.ok(contexts.includes('ci / mutation'));
-  assert.ok(contexts.includes('ci / containment'));
+  assert.ok(contexts.includes('gates'));
+  assert.ok(contexts.includes('mutation'));
+  assert.ok(contexts.includes('containment'));
 });

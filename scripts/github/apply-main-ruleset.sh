@@ -1571,9 +1571,35 @@ render_active_payload() {
   ' "$initial_payload"
 }
 
-observe_current_review_check() {
+observe_current_activation_checks() {
+  local active_payload="${1:-}"
+  local expected_head="${2:-}"
   local pull_request="${KIMEN_REVIEW_PULL_REQUEST:-}"
   local expected_external_id
+  local required_checks
+  if [ -z "$active_payload" ] || [ ! -f "$active_payload" ] || [ -L "$active_payload" ]; then
+    echo "apply-main-ruleset: activation requires the frozen active payload" >&2
+    return 1
+  fi
+  if ! required_checks=$(jq -ce --arg review_context "$REVIEW_CONTEXT" '
+    [
+      .rules[]
+      | select(.type == "required_status_checks")
+      | .parameters.required_status_checks[]
+    ] as $checks
+    | if (
+        ($checks | length) > 0 and
+        ([$checks[].context] | unique | length) == ($checks | length) and
+        ([$checks[] | select(.context == $review_context)] | length) == 1 and
+        ($checks | all(
+          (.context | type == "string" and length > 0 and length <= 200) and
+          (.integration_id | type == "number" and . == floor and . > 1 and . <= 9007199254740991)
+        ))
+      ) then $checks else error("invalid frozen required-check policy") end
+  ' "$active_payload" 2>/dev/null); then
+    echo "apply-main-ruleset: active payload has no valid exact required-check policy" >&2
+    return 1
+  fi
   if ! jq -en --arg value "$pull_request" '
     $value
     | test("^[0-9]+$") and
@@ -1583,21 +1609,21 @@ observe_current_review_check() {
     return 1
   fi
 
-  if ! REVIEW_APP_ID=$(trusted_review_app_id); then
-    return 1
-  fi
-
+  [ -z "${REVIEW_PR_PAYLOAD:-}" ] || rm -f -- "$REVIEW_PR_PAYLOAD"
+  [ -z "${REVIEW_CHECKS_PAYLOAD:-}" ] || rm -f -- "$REVIEW_CHECKS_PAYLOAD"
   REVIEW_PR_PAYLOAD=$(mktemp)
   REVIEW_CHECKS_PAYLOAD=$(mktemp)
   gh api --method GET \
     -H 'Accept: application/vnd.github+json' \
     -H 'X-GitHub-Api-Version: 2022-11-28' \
     "repos/$REPOSITORY/pulls/$pull_request" > "$REVIEW_PR_PAYLOAD"
-  if ! CURRENT_REVIEW_SHA=$(jq -er --argjson pull_request "$pull_request" '
+  if ! CURRENT_REVIEW_SHA=$(jq -er --argjson pull_request "$pull_request" \
+    --arg repository "$REPOSITORY" '
     select(
       .number == $pull_request and
       .state == "open" and
       .base.ref == "main" and
+      .base.repo.full_name == $repository and
       (.head.sha | type == "string" and test("^[0-9a-fA-F]{40}$"))
     )
     | .head.sha
@@ -1605,41 +1631,56 @@ observe_current_review_check() {
     echo "apply-main-ruleset: review PR must be open, target main and expose a current 40-hex head SHA" >&2
     return 1
   fi
+  if [ -n "$expected_head" ] && [ "$CURRENT_REVIEW_SHA" != "$expected_head" ]; then
+    echo "apply-main-ruleset: review PR head changed from $expected_head to $CURRENT_REVIEW_SHA during activation" >&2
+    return 1
+  fi
   expected_external_id="$REVIEW_CONTEXT:pr:$pull_request:$CURRENT_REVIEW_SHA"
 
   gh api --method GET \
     -H 'Accept: application/vnd.github+json' \
     -H 'X-GitHub-Api-Version: 2022-11-28' \
-    -f "check_name=$REVIEW_CONTEXT" \
     -f filter=latest \
     -f per_page=100 \
     "repos/$REPOSITORY/commits/$CURRENT_REVIEW_SHA/check-runs" > "$REVIEW_CHECKS_PAYLOAD"
   if ! jq -e \
-    --arg context "$REVIEW_CONTEXT" \
+    --argjson required_checks "$required_checks" \
+    --arg review_context "$REVIEW_CONTEXT" \
     --arg external_id "$expected_external_id" \
-    --arg head "$CURRENT_REVIEW_SHA" \
-    --argjson app_id "$REVIEW_APP_ID" '
-      if (.check_runs | type) != "array" then false
+    --arg head "$CURRENT_REVIEW_SHA" '
+      if (.total_count | type) != "number" then false
+      elif (
+        .total_count != (.total_count | floor) or
+        .total_count < 0 or
+        .total_count > 100 or
+        (.check_runs | type) != "array" or
+        .total_count != (.check_runs | length)
+      ) then false
       else
-        [
-          .check_runs[]
-          | select(
-              (.id | type == "number" and . == floor and . > 0 and . <= 9007199254740991) and
-              .name == $context and
-              .head_sha == $head and
-              (.app.id == $app_id)
-            )
-        ] as $matching
-        | if ($matching | length) == 0 then false
-          else
-            ($matching | max_by(.id)) as $latest
-            | $latest.external_id == $external_id and
-              $latest.status == "completed" and
-              $latest.conclusion == "success"
-          end
+        .check_runs as $runs
+        | (all($required_checks[];
+            . as $required
+            | [
+                $runs[]
+                | select(
+                    (.id | type == "number" and . == floor and . > 0 and . <= 9007199254740991) and
+                    .name == $required.context and
+                    .head_sha == $head and
+                    (.app.id == $required.integration_id)
+                  )
+              ] as $matching_required
+            | ($matching_required | length) > 0 and
+              (($matching_required | max_by(.id)) as $latest_required
+                | $latest_required.status == "completed" and
+                  $latest_required.conclusion == "success" and
+                  (if $required.context == $review_context
+                    then $latest_required.external_id == $external_id
+                    else true
+                  end))
+          ))
       end
     ' "$REVIEW_CHECKS_PAYLOAD" >/dev/null 2>&1; then
-    echo "apply-main-ruleset: the latest exact current-revision $REVIEW_CONTEXT Check Run (external identity $expected_external_id) from trusted App ID $REVIEW_APP_ID is not green for PR #$pull_request head $CURRENT_REVIEW_SHA" >&2
+    echo "apply-main-ruleset: every latest exact current-revision required Check Run (including $REVIEW_CONTEXT external identity $expected_external_id) must be completed/success from its trusted App ID for PR #$pull_request head $CURRENT_REVIEW_SHA" >&2
     return 1
   fi
 }
@@ -2108,6 +2149,7 @@ POST_RESPONSE=""
 REVIEW_PR_PAYLOAD=""
 REVIEW_CHECKS_PAYLOAD=""
 CURRENT_REVIEW_SHA=""
+ACTIVATION_REVIEW_SHA=""
 REVIEW_APP_ID=""
 cleanup() {
   if ! release_exclusive_writer_lock; then
@@ -2128,7 +2170,7 @@ if [ "$MODE" = "--activate" ]; then
   }
   INITIAL_PAYLOAD=$(mktemp)
   cp "$PAYLOAD" "$INITIAL_PAYLOAD"
-  observe_current_review_check
+  REVIEW_APP_ID=$(trusted_review_app_id)
   render_active_payload "$PAYLOAD" "$REVIEW_APP_ID" > "$PAYLOAD.active"
   mv "$PAYLOAD.active" "$PAYLOAD"
 elif ! jq -e '.enforcement == "disabled"' "$PAYLOAD" >/dev/null; then
@@ -2177,6 +2219,9 @@ if [ -n "$EXISTING_ID" ]; then
     exit 1
   fi
   if json_files_equal "$PAYLOAD" "$CURRENT_NORMALIZED"; then
+    if [ "$MODE" = "--activate" ]; then
+      observe_current_activation_checks "$PAYLOAD"
+    fi
     set_writer_lock_state releasable
     release_exclusive_writer_lock
     echo "apply-main-ruleset: PASS — ruleset $EXISTING_ID already matches the exact active review policy; no-op"
@@ -2197,6 +2242,10 @@ if [ -n "$EXISTING_ID" ]; then
   if ! observe_ruleset_exact "$EXISTING_ID" "$CURRENT_NORMALIZED"; then
     echo "apply-main-ruleset: live ruleset changed after rollback evidence was frozen; refusing PUT" >&2
     exit 1
+  fi
+  if [ "$MODE" = "--activate" ]; then
+    observe_current_activation_checks "$PAYLOAD"
+    ACTIVATION_REVIEW_SHA="$CURRENT_REVIEW_SHA"
   fi
   set_writer_lock_state mutating "main-put:$MODE" rollback-backup "$BACKUP" "$BACKUP_SNAPSHOT"
   assert_secure_evidence_chain_unchanged
@@ -2289,8 +2338,9 @@ if ! observe_ruleset_exact "$RULESET_ID" "$PAYLOAD"; then
   fi
   exit 1
 fi
-if [ "$MODE" = "--activate" ] && ! observe_current_review_check; then
-  echo "apply-main-ruleset: current review observation changed during activation; rolling back" >&2
+if [ "$MODE" = "--activate" ] &&
+  ! observe_current_activation_checks "$PAYLOAD" "$ACTIVATION_REVIEW_SHA"; then
+  echo "apply-main-ruleset: current required-check observation changed during activation; rolling back" >&2
   if rollback_backup "$BACKUP_SNAPSHOT"; then
     set_writer_lock_state releasable || true
   else

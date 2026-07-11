@@ -29,15 +29,15 @@
       "parameters": {
         "do_not_enforce_on_create": false,
         "required_status_checks": [
-          { "context": "ci / gates", "integration_id": 1 },
-          { "context": "ci / mutation", "integration_id": 1 },
-          { "context": "ci / containment", "integration_id": 1 },
-          { "context": "codeql / analyze", "integration_id": 1 },
-          { "context": "security / semgrep", "integration_id": 1 },
-          { "context": "security / osv-scan", "integration_id": 1 },
-          { "context": "security / dependency-review", "integration_id": 1 },
-          { "context": "security / secrets", "integration_id": 1 },
-          { "context": "Socket / scan", "integration_id": 1 }
+          { "context": "gates", "integration_id": 1 },
+          { "context": "mutation", "integration_id": 1 },
+          { "context": "containment", "integration_id": 1 },
+          { "context": "analyze", "integration_id": 1 },
+          { "context": "semgrep", "integration_id": 1 },
+          { "context": "osv-scan / osv-scan", "integration_id": 1 },
+          { "context": "dependency-review", "integration_id": 1 },
+          { "context": "secrets", "integration_id": 1 },
+          { "context": "Socket Security: Pull Request Alerts", "integration_id": 1 }
         ],
         "strict_required_status_checks_policy": true
       }

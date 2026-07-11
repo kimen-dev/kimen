@@ -75,7 +75,7 @@ CI runs these commands in the mandatory Linux `containment` job. Setting
 `KIMEN_REQUIRE_DOCKER_CONTAINMENT=1` converts an unavailable daemon/image from
 a local skip into a hard failure; the merge gate therefore cannot silently
 omit Docker containment. The disabled-at-rest desired main ruleset names
-`ci / containment` as its own required context; activation remains a separate
+`containment` as its own required context; activation remains a separate
 founder-controlled operation.
 
 Expected:
@@ -213,7 +213,7 @@ wrapper proves it can allocate isolated writable npm/pnpm/Nx/consumer/mutation
 caches plus an exact `PLAYWRIGHT_BROWSERS_PATH` even when HOME/global caches are
 read-only; a missing prepared browser fails explicitly rather than using a
 global install. Protected-main completion additionally requires the independent
-`ci / mutation` and mandatory Linux `ci / containment` contexts plus the
+`mutation` and mandatory Linux `containment` contexts plus the
 prerelease Firefox/WebKit evidence; a local green result cannot impersonate
 those checks.
 
@@ -226,6 +226,13 @@ those checks.
    emitted by `review-package.sh`. The trusted workflow rejects missing,
    non-canonical, stale or digest-mismatched manifests before reading Check
    Runs.
+   Observe Check Runs from the current PR head and bind these exact context
+   names to their live App IDs: `gates`, `mutation`, `containment`, `analyze`,
+   `semgrep`, `osv-scan / osv-scan`, `dependency-review`, `secrets`,
+   `Socket Security: Pull Request Alerts`, and `clean-context-review`. GitHub
+   rulesets match the Check Run/job name, not the displayed
+   `<workflow> / <job>` label. Do not activate while any exact name or App ID
+   is absent from the current head.
 2. Apply the desired ruleset initially disabled, inspect its returned JSON,
    then activate it.
 3. Confirm a stale SHA, failing required check and unresolved conversation each

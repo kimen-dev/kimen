@@ -76,14 +76,14 @@ function aPacketHandoff(manifest = aPacketManifest(), sourceOverride) {
 function currentRequiredChecks(overrides = {}) {
   return [
     {
-      context: 'ci / gates',
+      context: 'gates',
       headSha: currentHeadSha,
       integrationId: 15368,
       status: 'success',
       ...overrides,
     },
     {
-      context: 'security / semgrep',
+      context: 'semgrep',
       headSha: currentHeadSha,
       integrationId: 15368,
       status: 'success',
@@ -129,8 +129,8 @@ function aWorkflowEnvironment(overrides = {}) {
     GITHUB_TOKEN: 'test-token',
     KIMEN_CHECK_INTEGRATIONS_JSON: JSON.stringify({
       'clean-context-review': 15368,
-      'ci / gates': 15368,
-      'security / semgrep': 44001,
+      gates: 15368,
+      semgrep: 44001,
     }),
     KIMEN_FOUNDER_LOGIN: 'MarsGotta',
     KIMEN_TRUSTED_REVIEWERS_JSON: JSON.stringify(['trusted-clean-context-reviewer']),
@@ -225,7 +225,7 @@ test('S2 @spec:018-project-integrity-hardening rejects a failing required check 
   assert.equal(result.exitCode, 1);
   assert.equal(result.decision.status, 'failure');
   assert.equal(result.decision.headSha, currentHeadSha);
-  assert.match(result.decision.reasons.join('\n'), /ci \/ gates.*failure/i);
+  assert.match(result.decision.reasons.join('\n'), /gates.*failure/i);
 });
 
 test('S2 @spec:018-project-integrity-hardening rejects pass attestations with open critical findings', () => {
@@ -312,7 +312,7 @@ test('S2 @spec:018-project-integrity-hardening keeps a current queued check pend
 
   assert.equal(result.exitCode, 2);
   assert.equal(result.decision.status, 'pending');
-  assert.match(result.decision.reasons.join('\n'), /ci \/ gates.*pending/i);
+  assert.match(result.decision.reasons.join('\n'), /gates.*pending/i);
 });
 
 test('S2 @spec:018-project-integrity-hardening keeps a stale required check pending', () => {
@@ -324,7 +324,7 @@ test('S2 @spec:018-project-integrity-hardening keeps a stale required check pend
 
   assert.equal(result.exitCode, 2);
   assert.equal(result.decision.status, 'pending');
-  assert.match(result.decision.reasons.join('\n'), /ci \/ gates.*head SHA.*current/i);
+  assert.match(result.decision.reasons.join('\n'), /gates.*head SHA.*current/i);
 });
 
 function mockResponse(status, body) {
@@ -630,7 +630,7 @@ test('S2 @spec:018-project-integrity-hardening completes from current GitHub sta
       check_runs: [
         {
           id: 10,
-          name: 'ci / gates',
+          name: 'gates',
           head_sha: currentHeadSha,
           status: 'completed',
           conclusion: 'success',
@@ -638,7 +638,7 @@ test('S2 @spec:018-project-integrity-hardening completes from current GitHub sta
         },
         {
           id: 11,
-          name: 'ci / gates',
+          name: 'gates',
           head_sha: currentHeadSha,
           status: 'completed',
           conclusion: 'success',
@@ -646,7 +646,7 @@ test('S2 @spec:018-project-integrity-hardening completes from current GitHub sta
         },
         {
           id: 12,
-          name: 'security / semgrep',
+          name: 'semgrep',
           head_sha: currentHeadSha,
           status: 'completed',
           conclusion: 'success',
@@ -688,13 +688,13 @@ test('S2 @spec:018-project-integrity-hardening completes from current GitHub sta
   });
   assert.deepEqual(completionCalls[0].evaluation.requiredChecks, [
     {
-      context: 'ci / gates',
+      context: 'gates',
       headSha: currentHeadSha,
       integrationId: 15368,
       status: 'success',
     },
     {
-      context: 'security / semgrep',
+      context: 'semgrep',
       headSha: currentHeadSha,
       integrationId: 44001,
       status: 'success',
@@ -715,7 +715,7 @@ test('S2 @spec:018-project-integrity-hardening refuses an attested packet digest
       check_runs: [
         {
           id: 11,
-          name: 'ci / gates',
+          name: 'gates',
           head_sha: currentHeadSha,
           status: 'completed',
           conclusion: 'success',
@@ -723,7 +723,7 @@ test('S2 @spec:018-project-integrity-hardening refuses an attested packet digest
         },
         {
           id: 12,
-          name: 'security / semgrep',
+          name: 'semgrep',
           head_sha: currentHeadSha,
           status: 'completed',
           conclusion: 'success',
@@ -863,7 +863,7 @@ test('S2 @spec:018-project-integrity-hardening rejects same-name checks from the
       check_runs: [
         {
           id: 10,
-          name: 'ci / gates',
+          name: 'gates',
           head_sha: currentHeadSha,
           status: 'completed',
           conclusion: 'success',
@@ -871,7 +871,7 @@ test('S2 @spec:018-project-integrity-hardening rejects same-name checks from the
         },
         {
           id: 12,
-          name: 'security / semgrep',
+          name: 'semgrep',
           head_sha: currentHeadSha,
           status: 'completed',
           conclusion: 'success',
@@ -895,7 +895,7 @@ test('S2 @spec:018-project-integrity-hardening rejects same-name checks from the
       eventPayload: aDispatchEvent(),
       fetchImpl: async () => mockResponse(200, responses.shift()),
     }),
-    /ci \/ gates.*pending/i,
+    /gates.*pending/i,
   );
 });
 
@@ -907,7 +907,7 @@ test('S2 @spec:018-project-integrity-hardening never completes a review Check Ru
       check_runs: [
         {
           id: 11,
-          name: 'ci / gates',
+          name: 'gates',
           head_sha: currentHeadSha,
           status: 'completed',
           conclusion: 'success',
@@ -915,7 +915,7 @@ test('S2 @spec:018-project-integrity-hardening never completes a review Check Ru
         },
         {
           id: 12,
-          name: 'security / semgrep',
+          name: 'semgrep',
           head_sha: currentHeadSha,
           status: 'completed',
           conclusion: 'success',

@@ -93,14 +93,14 @@ const aPacketHandoff = (manifest = aPacketManifest(), sourceOverride) => {
 
 const currentRequiredChecks = (overrides = {}) => [
   {
-    context: 'ci / gates',
+    context: 'gates',
     headSha: currentHeadSha,
     integrationId: 15_368,
     status: 'success',
     ...overrides,
   },
   {
-    context: 'security / semgrep',
+    context: 'semgrep',
     headSha: currentHeadSha,
     integrationId: 44_001,
     status: 'success',
@@ -141,8 +141,8 @@ const aWorkflowEnvironment = (overrides = {}) => ({
   GITHUB_TOKEN: 'test-token',
   KIMEN_CHECK_INTEGRATIONS_JSON: JSON.stringify({
     'clean-context-review': 15_368,
-    'ci / gates': 15_368,
-    'security / semgrep': 44_001,
+    gates: 15_368,
+    semgrep: 44_001,
   }),
   KIMEN_FOUNDER_LOGIN: 'MarsGotta',
   KIMEN_TRUSTED_REVIEWERS_JSON: JSON.stringify(['trusted-clean-context-reviewer']),
@@ -184,7 +184,7 @@ const aPendingReviewCheck = (overrides = {}) => ({
 
 const anObservedCheck = (overrides = {}) => ({
   id: 11,
-  name: 'ci / gates',
+  name: 'gates',
   head_sha: currentHeadSha,
   status: 'completed',
   conclusion: 'success',
@@ -195,7 +195,7 @@ const anObservedCheck = (overrides = {}) => ({
 
 const successfulObservedChecks = () => [
   anObservedCheck(),
-  anObservedCheck({ id: 12, name: 'security / semgrep', app: { id: 44_001 } }),
+  anObservedCheck({ id: 12, name: 'semgrep', app: { id: 44_001 } }),
   aPendingReviewCheck(),
 ];
 
@@ -292,8 +292,8 @@ describe('review evidence evaluator', () => {
     expect(staleBase.reasons).toEqual([
       'attestation baseSha does not match the current revision baseSha',
     ]);
-    expect(queued.reasons).toEqual(['ci / gates is pending on the current revision']);
-    expect(staleCheck.reasons).toEqual(['ci / gates head SHA does not cover the current revision']);
+    expect(queued.reasons).toEqual(['gates is pending on the current revision']);
+    expect(staleCheck.reasons).toEqual(['gates head SHA does not cover the current revision']);
     expect(emptyChecks.reasons).toEqual(['missing required checks for current revision']);
     for (const result of [missing, staleAttestation, staleBase, queued, staleCheck, emptyChecks]) {
       expect(result.status).toBe('pending');
@@ -305,7 +305,7 @@ describe('review evidence evaluator', () => {
     const cases = [
       [
         anEvaluation({ requiredChecks: currentRequiredChecks({ status: 'failure' }) }),
-        'ci / gates has failure status on the current revision',
+        'gates has failure status on the current revision',
       ],
       [
         anEvaluation({ attestation: aPassingAttestation({ verdict: 'fail' }) }),
@@ -466,7 +466,7 @@ describe('review evidence evaluator', () => {
       reasons: [
         'attestation verdict is fail, not pass',
         'attestation head SHA does not cover the current revision',
-        'ci / gates is pending on the current revision',
+        'gates is pending on the current revision',
       ],
     });
     expect(evaluateReviewEvidence(null)).toEqual({
@@ -1010,13 +1010,13 @@ describe('trusted review workflow state', () => {
           attestation: aPacketHandoff().attestation,
           requiredChecks: [
             {
-              context: 'ci / gates',
+              context: 'gates',
               headSha: currentHeadSha,
               integrationId: 15_368,
               status: 'success',
             },
             {
-              context: 'security / semgrep',
+              context: 'semgrep',
               headSha: currentHeadSha,
               integrationId: 44_001,
               status: 'success',
@@ -1195,7 +1195,7 @@ describe('trusted review workflow state', () => {
           total_count: 3,
           check_runs: [
             candidate,
-            anObservedCheck({ id: 12, name: 'security / semgrep', app: { id: 44_001 } }),
+            anObservedCheck({ id: 12, name: 'semgrep', app: { id: 44_001 } }),
             aPendingReviewCheck(),
           ],
         },
@@ -1211,7 +1211,7 @@ describe('trusted review workflow state', () => {
           eventPayload: aDispatchEvent(),
           fetchImpl: async () => mockResponse(200, responses.shift()),
         }),
-      ).rejects.toThrow(/ci \/ gates.*pending/);
+      ).rejects.toThrow(/gates.*pending/);
     }
   });
 
@@ -1246,7 +1246,7 @@ describe('trusted review workflow state', () => {
       const checks = [
         anObservedCheck(),
         latest,
-        anObservedCheck({ id: 12, name: 'security / semgrep', app: { id: 44_001 } }),
+        anObservedCheck({ id: 12, name: 'semgrep', app: { id: 44_001 } }),
         aPendingReviewCheck(),
       ];
       const responses = [aCurrentPullRequest(), { total_count: 4, check_runs: checks }];
@@ -1264,9 +1264,9 @@ describe('trusted review workflow state', () => {
 
     await expect(
       runWithLatest(anObservedCheck({ id: 20, status: 'queued', conclusion: null })),
-    ).rejects.toThrow(/ci \/ gates.*pending/);
+    ).rejects.toThrow(/gates.*pending/);
     await expect(runWithLatest(anObservedCheck({ id: 20, conclusion: 'failure' }))).rejects.toThrow(
-      /ci \/ gates.*failure/,
+      /gates.*failure/,
     );
   });
 
@@ -1360,12 +1360,12 @@ describe('trusted review workflow state', () => {
       ['KIMEN_CHECK_INTEGRATIONS_JSON', '{}', /must not be empty/],
       [
         'KIMEN_CHECK_INTEGRATIONS_JSON',
-        JSON.stringify({ [CHECK_NAME]: 1, 'ci / gates': 15_368 }),
+        JSON.stringify({ [CHECK_NAME]: 1, gates: 15_368 }),
         /observed GitHub App ID/,
       ],
       [
         'KIMEN_CHECK_INTEGRATIONS_JSON',
-        JSON.stringify({ 'ci / gates': 15_368 }),
+        JSON.stringify({ gates: 15_368 }),
         /must bind clean-context-review/,
       ],
       [

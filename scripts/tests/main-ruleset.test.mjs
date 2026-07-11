@@ -24,11 +24,36 @@ import { canonicalJson, canonicalJsonSha256, sha256 } from '../lib/canonical-jso
 
 const currentHeadSha = '1111111111111111111111111111111111111111';
 const staleHeadSha = '2222222222222222222222222222222222222222';
-const reviewAppId = 30_001;
+const githubActionsAppId = 15_368;
+const socketAppId = 156_372;
+const reviewAppId = githubActionsAppId;
 const reviewPullRequest = 42;
 const founderLogin = 'MarsGotta';
 const founderUserId = 9_072_675;
 const restorationIssue = 123;
+const productionCheckContexts = [
+  'gates',
+  'mutation',
+  'containment',
+  'analyze',
+  'semgrep',
+  'osv-scan / osv-scan',
+  'dependency-review',
+  'secrets',
+  'Socket Security: Pull Request Alerts',
+];
+const productionIntegrationPolicy = {
+  gates: githubActionsAppId,
+  mutation: githubActionsAppId,
+  containment: githubActionsAppId,
+  analyze: githubActionsAppId,
+  semgrep: githubActionsAppId,
+  'osv-scan / osv-scan': githubActionsAppId,
+  'dependency-review': githubActionsAppId,
+  secrets: githubActionsAppId,
+  'Socket Security: Pull Request Alerts': socketAppId,
+  'clean-context-review': reviewAppId,
+};
 const rollbackSchema = 'kimen-ruleset-rollback-v1';
 const createIntentSchema = 'kimen-ruleset-create-intent-v1';
 const exclusiveWriterConfirmation = 'founder-confirms-exclusive-ruleset-writer';
@@ -61,11 +86,23 @@ function aUserBypass(actorId) {
   return { actor_id: actorId, actor_type: 'User', bypass_mode: 'pull_request' };
 }
 
+function currentGreenRequiredCheckRuns() {
+  return productionCheckContexts.map((name, index) => ({
+    id: 8_000 + index,
+    name,
+    head_sha: currentHeadSha,
+    status: 'completed',
+    conclusion: 'success',
+    app: { id: productionIntegrationPolicy[name] },
+    external_id: `fixture:${name}:${currentHeadSha}`,
+  }));
+}
+
 function missingSecurityFamilies(requiredChecks) {
   const contexts = requiredChecks.map(({ context }) => context).join('\n');
   return [
-    ['deterministic gates', /ci.*gates/i],
-    ['CodeQL', /codeql/i],
+    ['deterministic gates', /gates/i],
+    ['CodeQL', /analyze/i],
     ['Semgrep', /semgrep/i],
     ['OSV', /osv/i],
     ['dependency review', /dependency.*review/i],
@@ -145,13 +182,13 @@ const fakeGhSource = [
   "const method = methodIndex === -1 ? 'GET' : args[methodIndex + 1];",
   "const inputIndex = args.indexOf('--input');",
   "if (endpoint === '' && args.includes('user') && method === 'GET') { save(); process.stdout.write(JSON.stringify(state.authenticatedUser) + '\\n'); process.exit(0); }",
-  "if (endpoint.endsWith('/pulls/42') && method === 'GET') { save(); process.stdout.write(JSON.stringify(state.pullRequest) + '\\n'); process.exit(0); }",
+  "if (endpoint.endsWith('/pulls/42') && method === 'GET') { state.pullRequestReads = (state.pullRequestReads || 0) + 1; if (process.env.FAKE_GH_MOVE_HEAD_ON_SECOND_PR_GET === '1' && state.pullRequestReads === 2) { const movedHead = '2222222222222222222222222222222222222222'; state.pullRequest.head.sha = movedHead; state.checkRuns = state.checkRuns.map((check) => ({ ...check, head_sha: movedHead, external_id: check.name === 'clean-context-review' ? 'clean-context-review:pr:42:' + movedHead : check.external_id })); } save(); process.stdout.write(JSON.stringify(state.pullRequest) + '\\n'); process.exit(0); }",
   "if (endpoint.endsWith('/issues/123') && method === 'GET') { save(); process.stdout.write(JSON.stringify(state.restorationIssue) + '\\n'); process.exit(0); }",
   "if (/\\/commits\\/[0-9a-f]{40}\\/check-runs$/i.test(endpoint) && method === 'GET') { save(); process.stdout.write(JSON.stringify({ total_count: state.checkRuns.length, check_runs: state.checkRuns }) + '\\n'); process.exit(0); }",
   "const excludesParents = args.includes('includes_parents=false');",
   "if (endpoint.endsWith('/rulesets') && method === 'GET') { if (process.env.FAKE_GH_SWAP_BACKUP_ANCESTOR && !state.ancestorSwapped) { const ancestor = process.env.FAKE_GH_SWAP_BACKUP_ANCESTOR; const backup = process.env.FAKE_GH_SWAP_BACKUP_DIRECTORY; renameSync(ancestor, ancestor + '.original'); mkdirSync(ancestor, { mode: 0o700 }); renameSync(ancestor + '.original' + backup.slice(ancestor.length), backup); state.ancestorSwapped = true; } if (state.existingId) process.stdout.write(String(state.existingId) + '\\n'); if (!excludesParents && state.inheritedId) process.stdout.write(String(state.inheritedId) + '\\n'); save(); process.exit(0); }",
   "if (endpoint.endsWith('/rulesets') && method === 'POST') { const entries = readdirSync(process.env.KIMEN_RULESET_BACKUP_DIR); const intent = entries.find((entry) => entry.startsWith('create-intent-') && !entry.endsWith('.sha256')); state.journalBeforePost = Boolean(intent && entries.includes(intent + '.sha256') && (statSync(process.env.KIMEN_RULESET_BACKUP_DIR + '/' + intent).mode & 0o777) === 0o600); if (process.env.KIMEN_FSYNC_LOG) appendFileSync(process.env.KIMEN_FSYNC_LOG, 'REMOTE POST\\n'); const postMode = process.env.FAKE_GH_POST_MODE; if (postMode === 'error-no-mutate') { save(); process.exit(1); } if (postMode === 'concurrent-error-no-mutate') { state.payload = JSON.parse(readFileSync(args[inputIndex + 1], 'utf8')); state.existingId = 88; state.concurrentCreation = true; save(); process.exit(1); } state.payload = JSON.parse(readFileSync(args[inputIndex + 1], 'utf8')); state.existingId = 77; state.mutationCount = (state.mutationCount || 0) + 1; save(); if (process.env.FAKE_GH_BREAK_BACKUP_DIR === '1') chmodSync(process.env.KIMEN_RULESET_BACKUP_DIR, 0o500); if (postMode === 'mutate-error') process.exit(1); if (postMode === 'malformed-success') { process.stdout.write('{malformed\\n'); process.exit(0); } process.stdout.write('{\"id\":77}\\n'); process.exit(0); }",
-  "if (/\\/rulesets\\/[0-9]+$/.test(endpoint) && method === 'PUT') { const input = args[inputIndex + 1] === '-' ? readFileSync(0, 'utf8') : readFileSync(args[inputIndex + 1], 'utf8'); const requested = JSON.parse(input); state.putPayloads = [...(state.putPayloads || []), requested]; const putNumber = state.putPayloads.length; const putMode = String(putNumber) === process.env.FAKE_GH_PUT_ERROR_ON_N ? 'error-no-mutate' : process.env.FAKE_GH_PUT_MODE; if (process.env.FAKE_GH_PUT_NOOP !== '1' && putMode !== 'error-no-mutate') { state.payload = requested; state.mutationCount = (state.mutationCount || 0) + 1; if (requested.bypass_actors?.length === 1) { if (process.env.FAKE_GH_MERGE_AFTER_GRANT === '1') { state.pullRequest.state = 'closed'; state.pullRequest.merged = true; state.pullRequest.merge_commit_sha = '3333333333333333333333333333333333333333'; } if (process.env.FAKE_GH_CHANGE_HEAD_AFTER_GRANT === '1') state.pullRequest.head.sha = '2222222222222222222222222222222222222222'; if (process.env.FAKE_GH_EDIT_BODY_AFTER_GRANT === '1') state.pullRequest.body = state.pullRequest.body.replace('urgent repair', 'different emergency'); } } save(); if (putMode === 'mutate-error' || putMode === 'error-no-mutate') process.exit(1); process.stdout.write(JSON.stringify(requested) + '\\n'); process.exit(0); }",
+  "if (/\\/rulesets\\/[0-9]+$/.test(endpoint) && method === 'PUT') { const input = args[inputIndex + 1] === '-' ? readFileSync(0, 'utf8') : readFileSync(args[inputIndex + 1], 'utf8'); const requested = JSON.parse(input); state.putPayloads = [...(state.putPayloads || []), requested]; const putNumber = state.putPayloads.length; const putMode = String(putNumber) === process.env.FAKE_GH_PUT_ERROR_ON_N ? 'error-no-mutate' : process.env.FAKE_GH_PUT_MODE; if (process.env.FAKE_GH_PUT_NOOP !== '1' && putMode !== 'error-no-mutate') { state.payload = requested; state.mutationCount = (state.mutationCount || 0) + 1; if (requested.enforcement === 'active' && process.env.FAKE_GH_FAIL_REQUIRED_AFTER_ACTIVATION && !state.requiredCheckDrifted) { const context = process.env.FAKE_GH_FAIL_REQUIRED_AFTER_ACTIVATION; const prior = state.checkRuns.filter((check) => check.name === context).sort((left, right) => right.id - left.id)[0]; if (prior) state.checkRuns.push({ ...prior, id: Math.max(...state.checkRuns.map((check) => check.id)) + 1, status: 'completed', conclusion: 'failure', external_id: 'post-put-drift' }); state.requiredCheckDrifted = true; } if (requested.bypass_actors?.length === 1) { if (process.env.FAKE_GH_MERGE_AFTER_GRANT === '1') { state.pullRequest.state = 'closed'; state.pullRequest.merged = true; state.pullRequest.merge_commit_sha = '3333333333333333333333333333333333333333'; } if (process.env.FAKE_GH_CHANGE_HEAD_AFTER_GRANT === '1') state.pullRequest.head.sha = '2222222222222222222222222222222222222222'; if (process.env.FAKE_GH_EDIT_BODY_AFTER_GRANT === '1') state.pullRequest.body = state.pullRequest.body.replace('urgent repair', 'different emergency'); } } save(); if (putMode === 'mutate-error' || putMode === 'error-no-mutate') process.exit(1); process.stdout.write(JSON.stringify(requested) + '\\n'); process.exit(0); }",
   "if (/\\/rulesets\\/[0-9]+$/.test(endpoint) && method === 'GET') { const include = args.includes('--include'); const forcedStatus = process.env.FAKE_GH_DETAIL_GET_HTTP_STATUS; const requestedId = Number(endpoint.slice(endpoint.lastIndexOf('/') + 1)); const inherited = state.inheritedId === requestedId; if (process.env.FAKE_GH_DETAIL_GET_NETWORK_ERROR === '1' || process.env.FAKE_GH_DETAIL_GET_ERROR === '1' || (process.env.FAKE_GH_DETAIL_GET_ERROR_AFTER_MUTATION === '1' && (state.mutationCount || 0) > 0)) { save(); process.exit(1); } if (forcedStatus) { if (include) process.stdout.write('HTTP/2 ' + forcedStatus + ' Forced\\n\\n'); save(); process.exit(1); } if (process.env.FAKE_GH_DETAIL_GET_ERROR_ONCE_AFTER_MUTATION === '1' && (state.mutationCount || 0) > 0 && !state.detailGetErrorUsed) { state.detailGetErrorUsed = true; save(); process.exit(1); } if ((!state.existingId && !inherited) || (inherited && excludesParents)) { if (include) process.stdout.write('HTTP/2 404 Not Found\\n\\n'); save(); process.exit(1); } if (include) process.stdout.write('HTTP/2 200 OK\\n\\n'); const selectedId = inherited ? state.inheritedId : state.existingId; const responseId = process.env.FAKE_GH_DETAIL_ID_OVERRIDE ? Number(process.env.FAKE_GH_DETAIL_ID_OVERRIDE) : selectedId; const selectedPayload = inherited ? state.inheritedPayload : state.payload; const sourceType = process.env.FAKE_GH_DETAIL_SOURCE_TYPE || (inherited ? 'Organization' : 'Repository'); const source = process.env.FAKE_GH_DETAIL_SOURCE || (inherited ? 'kimen-dev' : 'kimen-dev/kimen'); const payload = { id: responseId, source_type: sourceType, source, ...structuredClone(selectedPayload) }; const mismatch = process.env.FAKE_GH_MISMATCH; if ((mismatch === 'once-after-mutation' && (state.mutationCount || 0) > 0 && !state.mismatchUsed) || (mismatch === 'active-once' && payload.enforcement === 'active' && !state.mismatchUsed)) { state.mismatchUsed = true; payload.enforcement = payload.enforcement === 'active' ? 'disabled' : 'active'; } if (process.env.FAKE_GH_SWAP_WRITER_LOCK_AFTER_MUTATION === '1' && (state.mutationCount || 0) > 0 && !state.writerLockSwapped) { const lock = process.env.KIMEN_RULESET_BACKUP_DIR + '/.exclusive-writer.lock'; renameSync(lock, lock + '.original'); mkdirSync(lock, { mode: 0o700 }); state.writerLockSwapped = true; } save(); process.stdout.write(JSON.stringify(payload) + '\\n'); process.exit(0); }",
   "if (/\\/rulesets\\/[0-9]+$/.test(endpoint) && method === 'DELETE') { const deleteMode = process.env.FAKE_GH_DELETE_MODE; if (process.env.FAKE_GH_DELETE_NOOP !== '1' && deleteMode !== 'error-no-mutate') { state.deleted = true; state.existingId = null; state.mutationCount = (state.mutationCount || 0) + 1; } save(); if (deleteMode === 'mutate-error' || deleteMode === 'error-no-mutate') process.exit(1); process.exit(0); }",
   'save();',
@@ -179,7 +216,7 @@ async function createFakeGitHub(t) {
         state: 'open',
         merged: false,
         user: { login: founderLogin },
-        base: { ref: 'main' },
+        base: { ref: 'main', repo: { full_name: 'kimen-dev/kimen' } },
         head: { sha: currentHeadSha },
         labels: [{ name: 'break-glass' }],
         body: [
@@ -197,6 +234,7 @@ async function createFakeGitHub(t) {
         html_url: `https://github.com/kimen-dev/kimen/issues/${restorationIssue}`,
       },
       checkRuns: [
+        ...currentGreenRequiredCheckRuns(),
         {
           id: 9_001,
           name: 'clean-context-review',
@@ -228,13 +266,7 @@ async function assertNoRulesetMutation(fake) {
 }
 
 async function liveRulesetEnvironment(fake, overrides = {}) {
-  const desired = await readRuleset();
-  const requiredChecks = findRule(desired, 'required_status_checks').parameters
-    .required_status_checks;
-  const integrations = Object.fromEntries(
-    requiredChecks.map(({ context }, index) => [context, 20_000 + index]),
-  );
-  integrations['clean-context-review'] = reviewAppId;
+  const integrations = { ...productionIntegrationPolicy };
   return {
     ...process.env,
     PATH: `${fake.directory}:${process.env.PATH}`,
@@ -526,11 +558,22 @@ test('S2 @spec:018-project-integrity-hardening declares every required gate fami
 
   assert.deepEqual(missingSecurityFamilies(requiredChecks), []);
   assert.ok(
-    requiredChecks.some(({ context }) => context === 'ci / containment'),
+    requiredChecks.some(({ context }) => context === 'containment'),
     'mandatory Linux containment must be a required main check',
   );
   assert.ok(requiredChecks.length >= 7);
   assert.ok(requiredChecks.every(({ integration_id: integrationId }) => integrationId === 1));
+});
+
+test('S2 @spec:018-project-integrity-hardening binds required gates to exact GitHub Check Run names', async () => {
+  const ruleset = await readRuleset();
+  const requiredChecks = findRule(ruleset, 'required_status_checks').parameters
+    .required_status_checks;
+
+  assert.deepEqual(
+    requiredChecks.map(({ context }) => context),
+    productionCheckContexts,
+  );
 });
 
 test('S2 @spec:018-project-integrity-hardening keeps the active-policy source free of standing bypass authority', async () => {
@@ -2030,6 +2073,105 @@ test('S2 @spec:018-project-integrity-hardening transitions disabled initial poli
   assert.deepEqual(rolledBackState.payload, initialState.payload);
 });
 
+test('S2 @spec:018-project-integrity-hardening refuses activation when one exact required Check Run is absent', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const initialEnv = await liveRulesetEnvironment(fake);
+  await applyDisabled(fake, initialEnv);
+  const state = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  await updateFakeGitHubState(fake, {
+    calls: [],
+    checkRuns: state.checkRuns.filter(({ name }) => name !== 'containment'),
+  });
+
+  const activated = spawnSync('bash', [applyRulesetPath, '--activate'], {
+    encoding: 'utf8',
+    env: {
+      ...initialEnv,
+      KIMEN_CONFIRM_RULESET_ACTIVATION: 'activate-current-green-revision',
+    },
+  });
+
+  assert.notEqual(activated.status, 0);
+  assert.match(activated.stderr + activated.stdout, /required.*Check Run|containment/i);
+  await assertNoRulesetMutation(fake);
+});
+
+test('S2 @spec:018-project-integrity-hardening refuses activation when a required Check Run comes from the wrong App', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const initialEnv = await liveRulesetEnvironment(fake);
+  await applyDisabled(fake, initialEnv);
+  const state = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  await updateFakeGitHubState(fake, {
+    calls: [],
+    checkRuns: state.checkRuns.map((check) =>
+      check.name === 'semgrep' ? { ...check, app: { id: githubActionsAppId + 1 } } : check,
+    ),
+  });
+
+  const activated = spawnSync('bash', [applyRulesetPath, '--activate'], {
+    encoding: 'utf8',
+    env: {
+      ...initialEnv,
+      KIMEN_CONFIRM_RULESET_ACTIVATION: 'activate-current-green-revision',
+    },
+  });
+
+  assert.notEqual(activated.status, 0);
+  assert.match(activated.stderr + activated.stdout, /required.*trusted App ID/i);
+  await assertNoRulesetMutation(fake);
+});
+
+test('S2 @spec:018-project-integrity-hardening rolls back when a required Check Run stops passing after activation PUT', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const initialEnv = await liveRulesetEnvironment(fake);
+  await applyDisabled(fake, initialEnv);
+  const initialState = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  await updateFakeGitHubState(fake, { calls: [], putPayloads: [], requiredCheckDrifted: false });
+
+  const activated = spawnSync('bash', [applyRulesetPath, '--activate'], {
+    encoding: 'utf8',
+    env: {
+      ...initialEnv,
+      FAKE_GH_FAIL_REQUIRED_AFTER_ACTIVATION: 'gates',
+      KIMEN_CONFIRM_RULESET_ACTIVATION: 'activate-current-green-revision',
+    },
+  });
+
+  assert.notEqual(activated.status, 0);
+  assert.match(activated.stderr + activated.stdout, /required.*Check Run|rolling back/i);
+  const finalState = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  assert.deepEqual(finalState.payload, initialState.payload);
+  assert.equal(
+    finalState.calls.filter((call) =>
+      call.includes(`repos/kimen-dev/kimen/commits/${currentHeadSha}/check-runs`),
+    ).length,
+    2,
+    'activation must observe every exact required Check Run before and after PUT',
+  );
+});
+
+test('S2 @spec:018-project-integrity-hardening rolls back when the PR head changes after activation evidence', async (t) => {
+  const fake = await createFakeGitHub(t);
+  const initialEnv = await liveRulesetEnvironment(fake);
+  await applyDisabled(fake, initialEnv);
+  const initialState = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  await updateFakeGitHubState(fake, { calls: [], pullRequestReads: 0, putPayloads: [] });
+
+  const activated = spawnSync('bash', [applyRulesetPath, '--activate'], {
+    encoding: 'utf8',
+    env: {
+      ...initialEnv,
+      FAKE_GH_MOVE_HEAD_ON_SECOND_PR_GET: '1',
+      KIMEN_CONFIRM_RULESET_ACTIVATION: 'activate-current-green-revision',
+    },
+  });
+
+  assert.notEqual(activated.status, 0);
+  assert.match(activated.stderr + activated.stdout, /head.*changed|required.*observation/i);
+  const finalState = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  assert.deepEqual(finalState.payload, initialState.payload);
+});
+
 test('S2 @spec:018-project-integrity-hardening treats the exact active review policy as an idempotent no-op', async (t) => {
   const fake = await createFakeGitHub(t);
   const initialEnv = await liveRulesetEnvironment(fake);
@@ -2065,17 +2207,26 @@ test('S2 @spec:018-project-integrity-hardening treats the exact active review po
 
 test('S2 @spec:018-project-integrity-hardening refuses final activation when no real review Check Run exists', async (t) => {
   const fake = await createFakeGitHub(t);
-  await updateFakeGitHubState(fake, { checkRuns: [] });
-  const env = await liveRulesetEnvironment(fake, {
-    KIMEN_CONFIRM_RULESET_ACTIVATION: 'activate-current-green-revision',
+  const initialEnv = await liveRulesetEnvironment(fake);
+  await applyDisabled(fake, initialEnv);
+  await updateFakeGitHubState(fake, {
+    calls: [],
+    checkRuns: currentGreenRequiredCheckRuns(),
   });
+  const env = {
+    ...initialEnv,
+    KIMEN_CONFIRM_RULESET_ACTIVATION: 'activate-current-green-revision',
+  };
   const activated = spawnSync('bash', [applyRulesetPath, '--activate'], {
     encoding: 'utf8',
     env,
   });
 
   assert.notEqual(activated.status, 0);
-  assert.match(activated.stderr + activated.stdout, /current.*clean-context-review.*Check Run/i);
+  assert.match(
+    activated.stderr + activated.stdout,
+    /required Check Run.*clean-context-review|clean-context-review.*completed\/success/i,
+  );
   await assertNoRulesetMutation(fake);
 });
 
@@ -2086,6 +2237,7 @@ test('S2 @spec:018-project-integrity-hardening refuses an incomplete current rev
   await updateFakeGitHubState(fake, {
     calls: [],
     checkRuns: [
+      ...currentGreenRequiredCheckRuns(),
       {
         id: 9_004,
         name: 'clean-context-review',
@@ -2118,6 +2270,7 @@ test('S2 @spec:018-project-integrity-hardening refuses an unsuccessful current r
   await updateFakeGitHubState(fake, {
     calls: [],
     checkRuns: [
+      ...currentGreenRequiredCheckRuns(),
       {
         id: 9_005,
         name: 'clean-context-review',
@@ -2150,6 +2303,7 @@ test('S2 @spec:018-project-integrity-hardening rejects a same-App review Check R
   await updateFakeGitHubState(fake, {
     calls: [],
     checkRuns: [
+      ...currentGreenRequiredCheckRuns(),
       {
         id: 9_006,
         name: 'clean-context-review',
@@ -2183,6 +2337,7 @@ test('S2 @spec:018-project-integrity-hardening rejects a same-App review Check R
   await updateFakeGitHubState(fake, {
     calls: [],
     checkRuns: [
+      ...currentGreenRequiredCheckRuns(),
       {
         id: 9_006,
         name: 'clean-context-review',
@@ -2217,6 +2372,7 @@ test('S2 @spec:018-project-integrity-hardening lets a newer same-App run with th
     calls: [],
     mutationCount: 0,
     checkRuns: [
+      ...currentGreenRequiredCheckRuns(),
       {
         id: 9_007,
         name: 'clean-context-review',
@@ -2261,6 +2417,7 @@ test('S2 @spec:018-project-integrity-hardening lets a newer same-App run missing
     calls: [],
     mutationCount: 0,
     checkRuns: [
+      ...currentGreenRequiredCheckRuns(),
       {
         id: 9_009,
         name: 'clean-context-review',
@@ -2303,6 +2460,7 @@ test('S2 @spec:018-project-integrity-hardening lets the newest exact review Chec
   await updateFakeGitHubState(fake, {
     calls: [],
     checkRuns: [
+      ...currentGreenRequiredCheckRuns(),
       {
         id: 9_007,
         name: 'clean-context-review',
@@ -2346,6 +2504,7 @@ test('S2 @spec:018-project-integrity-hardening lets the newest failed review Che
   await updateFakeGitHubState(fake, {
     calls: [],
     checkRuns: [
+      ...currentGreenRequiredCheckRuns(),
       {
         id: 9_009,
         name: 'clean-context-review',
@@ -2383,8 +2542,12 @@ test('S2 @spec:018-project-integrity-hardening lets the newest failed review Che
 
 test('S2 @spec:018-project-integrity-hardening refuses a review Check Run for an older PR head', async (t) => {
   const fake = await createFakeGitHub(t);
+  const initialEnv = await liveRulesetEnvironment(fake);
+  await applyDisabled(fake, initialEnv);
   await updateFakeGitHubState(fake, {
+    calls: [],
     checkRuns: [
+      ...currentGreenRequiredCheckRuns(),
       {
         id: 9_002,
         name: 'clean-context-review',
@@ -2395,23 +2558,31 @@ test('S2 @spec:018-project-integrity-hardening refuses a review Check Run for an
       },
     ],
   });
-  const env = await liveRulesetEnvironment(fake, {
+  const env = {
+    ...initialEnv,
     KIMEN_CONFIRM_RULESET_ACTIVATION: 'activate-current-green-revision',
-  });
+  };
   const activated = spawnSync('bash', [applyRulesetPath, '--activate'], {
     encoding: 'utf8',
     env,
   });
 
   assert.notEqual(activated.status, 0);
-  assert.match(activated.stderr + activated.stdout, /current.*clean-context-review.*Check Run/i);
+  assert.match(
+    activated.stderr + activated.stdout,
+    /required Check Run.*clean-context-review|clean-context-review.*completed\/success/i,
+  );
   await assertNoRulesetMutation(fake);
 });
 
 test('S2 @spec:018-project-integrity-hardening refuses a current review Check Run from an untrusted App', async (t) => {
   const fake = await createFakeGitHub(t);
+  const initialEnv = await liveRulesetEnvironment(fake);
+  await applyDisabled(fake, initialEnv);
   await updateFakeGitHubState(fake, {
+    calls: [],
     checkRuns: [
+      ...currentGreenRequiredCheckRuns(),
       {
         id: 9_003,
         name: 'clean-context-review',
@@ -2422,9 +2593,10 @@ test('S2 @spec:018-project-integrity-hardening refuses a current review Check Ru
       },
     ],
   });
-  const env = await liveRulesetEnvironment(fake, {
+  const env = {
+    ...initialEnv,
     KIMEN_CONFIRM_RULESET_ACTIVATION: 'activate-current-green-revision',
-  });
+  };
   const activated = spawnSync('bash', [applyRulesetPath, '--activate'], {
     encoding: 'utf8',
     env,
