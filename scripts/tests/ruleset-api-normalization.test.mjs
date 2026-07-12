@@ -33,6 +33,7 @@ const baseRuleset = {
   ],
   target: 'branch',
 };
+const cloneRuleset = () => JSON.parse(JSON.stringify(baseRuleset));
 
 async function normalizeFixture(t, value) {
   const directory = await mkdtemp(join(tmpdir(), 'kimen-ruleset-normalize-'));
@@ -49,7 +50,7 @@ async function normalizeFixture(t, value) {
 }
 
 test('S2 ruleset comparison removes only exact empty GitHub pull-request defaults', async (t) => {
-  const observed = structuredClone(baseRuleset);
+  const observed = cloneRuleset();
   observed.rules[0].parameters.dismissal_restriction = {
     allowed_actors: [],
     enabled: false,
@@ -60,7 +61,7 @@ test('S2 ruleset comparison removes only exact empty GitHub pull-request default
 });
 
 test('S2 ruleset comparison preserves non-empty GitHub pull-request authority', async (t) => {
-  const observed = structuredClone(baseRuleset);
+  const observed = cloneRuleset();
   observed.rules[0].parameters.dismissal_restriction = {
     allowed_actors: [{ actor_id: 7, actor_type: 'User' }],
     enabled: true,

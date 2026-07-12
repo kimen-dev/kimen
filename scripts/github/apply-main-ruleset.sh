@@ -2243,7 +2243,7 @@ if [ -n "$EXISTING_ID" ]; then
     echo "apply-main-ruleset: detail GET identity or repository origin does not match ruleset $EXISTING_ID; refusing rollback evidence" >&2
     exit 1
   fi
-  jq '{name,target,enforcement,bypass_actors,conditions,rules}' "$CURRENT" > "$CURRENT_NORMALIZED"
+  normalize_ruleset "$CURRENT" > "$CURRENT_NORMALIZED"
   if [ "$MODE" = "--apply-disabled" ]; then
     if json_files_equal "$PAYLOAD" "$CURRENT_NORMALIZED"; then
       set_writer_lock_state releasable

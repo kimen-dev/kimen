@@ -823,7 +823,15 @@ test('S2 @spec:018-project-integrity-hardening treats an exact disabled initial 
   const fake = await createFakeGitHub(t);
   const env = await liveRulesetEnvironment(fake);
   await applyDisabled(fake, env);
-  await updateFakeGitHubState(fake, { calls: [] });
+  const state = JSON.parse(await readFile(fake.statePath, 'utf8'));
+  const payloadWithGitHubDefaults = cloneJson(state.payload);
+  const pullRequestRule = findRule(payloadWithGitHubDefaults, 'pull_request');
+  pullRequestRule.parameters.dismissal_restriction = {
+    allowed_actors: [],
+    enabled: false,
+  };
+  pullRequestRule.parameters.required_reviewers = [];
+  await updateFakeGitHubState(fake, { calls: [], payload: payloadWithGitHubDefaults });
 
   const reapplied = spawnSync('bash', [applyRulesetPath, '--apply-disabled'], {
     encoding: 'utf8',
