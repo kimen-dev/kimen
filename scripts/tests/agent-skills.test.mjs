@@ -367,6 +367,11 @@ test('S9 reversed canonical and compatibility roles fail closed', async (t) => {
   assert.match(result.stderr, /AGENT_SKILLS_GUIDANCE_DRIFT/);
 });
 
+test('S9 ownership paths are matched literally without dynamic regular expressions', async () => {
+  const source = await readFile(cliPath, 'utf8');
+  assert.doesNotMatch(source, /new RegExp\((?:targetPath|otherPath)/u);
+});
+
 test('S1 S2 S7 the real repository exposes 27 tracked skills through the Git symlink', async () => {
   const result = runCli(repositoryRoot);
   assert.equal(result.status, 0, result.stderr);

@@ -183,10 +183,22 @@ function positions(contents, pattern) {
   return indexes;
 }
 
+function literalPositions(contents, literal) {
+  const haystack = contents.toLowerCase();
+  const needle = literal.toLowerCase();
+  const indexes = [];
+  let index = haystack.indexOf(needle);
+  while (index !== -1) {
+    indexes.push(index);
+    index = haystack.indexOf(needle, index + needle.length);
+  }
+  return indexes;
+}
+
 function roleBoundToPath(contents, rolePattern, targetPath, otherPath) {
   const roles = positions(contents, rolePattern);
-  const targets = positions(contents, new RegExp(targetPath.replaceAll('.', '\\.'), 'gi'));
-  const others = positions(contents, new RegExp(otherPath.replaceAll('.', '\\.'), 'gi'));
+  const targets = literalPositions(contents, targetPath);
+  const others = literalPositions(contents, otherPath);
   return roles.some((roleIndex) => {
     const targetDistance = Math.min(
       ...targets.map((index) => Math.abs(index - roleIndex)),
