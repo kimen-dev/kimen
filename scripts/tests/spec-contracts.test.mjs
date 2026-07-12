@@ -47,6 +47,7 @@ async function createContractFixture(t) {
   const fixture = await createFixtureRepo({ featureId: '999-contract-fixture' });
   t.after(() => fixture.cleanup());
   await fixture.copyFromRepo('scripts/gates');
+  await fixture.write('scripts/gates/check-agent-skills.mjs', 'process.exit(0);\n');
 
   const featurePath = join(fixture.root, fixture.featureDir, 'feature.feature');
   const featureBytes = await readFile(featurePath, 'utf8');

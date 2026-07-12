@@ -63,6 +63,7 @@ run_core_gate() {
 if [ -z "$ONLY" ]; then
   run_core_gate constitution bash scripts/gates/constitution-check.sh
 fi
+run_core_gate agent-skills node scripts/gates/check-agent-skills.mjs
 run_core_gate spec-contracts bash scripts/gates/check-spec-contracts.sh "${FEATURE_ARG[@]}"
 run_core_gate approvals bash scripts/gates/check-approvals.sh "${FEATURE_ARG[@]}"
 run_core_gate traceability bash scripts/gates/check-traceability.sh "${FEATURE_ARG[@]}"

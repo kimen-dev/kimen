@@ -38,7 +38,7 @@ files). Markdown-only static-analysis methodology. Notable, and accepted:
 
 - Replaced upstream `{baseDir}` plugin-path placeholders in all markdown links
   with plain relative `references/…` links, so the links resolve when the
-  skill lives directly in `.claude/skills/` instead of a plugin install.
+  skill lives directly in canonical `.agents/skills/` instead of a plugin install.
 - No content changes otherwise.
 
 ## Omitted from upstream (intentionally)

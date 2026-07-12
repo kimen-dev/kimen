@@ -41,8 +41,9 @@ approves specs and merges.
 
 - `/.specify/`: Spec Kit (constitution digest, templates + Kimen overrides,
   scripts, workflows)
-- `/.claude/skills/`: Spec Kit skills + constitutional skills
-  (`gherkin-use-cases`, `frontend-best-practices`, `frontend-qa`)
+- `/.agents/skills/`: canonical Spec Kit and constitutional skills
+  (`gherkin-use-cases`, `frontend-best-practices`, `frontend-qa`);
+  `/.claude/skills` is the compatibility-only symlink for Claude
 - `/specs/`: feature specs (created by `/speckit-specify`)
 - `/tools/kimen-plugin/`: Nx generators (`component`, `feature-spec`,
   `adapter`): `pnpm exec nx g @kimen/nx-plugin:component ki-x --spec NNN-ki-x`

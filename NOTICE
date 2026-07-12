@@ -20,23 +20,23 @@ the "Superpowers" project:
 Vendored and adapted files (each carries a header identifying its upstream
 source and the Kimen adaptations):
 
-  - .claude/skills/systematic-debugging/SKILL.md
+  - .agents/skills/systematic-debugging/SKILL.md
       from skills/systematic-debugging/SKILL.md
-  - .claude/skills/systematic-debugging/references/root-cause-tracing.md
+  - .agents/skills/systematic-debugging/references/root-cause-tracing.md
       from skills/systematic-debugging/root-cause-tracing.md
-  - .claude/skills/systematic-debugging/references/defense-in-depth.md
+  - .agents/skills/systematic-debugging/references/defense-in-depth.md
       from skills/systematic-debugging/defense-in-depth.md
-  - .claude/skills/systematic-debugging/references/condition-based-waiting.md
+  - .agents/skills/systematic-debugging/references/condition-based-waiting.md
       from skills/systematic-debugging/condition-based-waiting.md
-  - .claude/skills/requesting-code-review/SKILL.md
+  - .agents/skills/requesting-code-review/SKILL.md
       from skills/requesting-code-review/SKILL.md
-  - .claude/skills/requesting-code-review/code-reviewer.md
+  - .agents/skills/requesting-code-review/code-reviewer.md
       from skills/requesting-code-review/code-reviewer.md
-  - .claude/skills/frontend-qa/SKILL.md
+  - .agents/skills/frontend-qa/SKILL.md
       section 9 (rationalization/red-flags tables) adapted from
       skills/test-driven-development/SKILL.md; the rest of the file is
       original Kimen material
-  - .claude/skills/requesting-code-review/scripts/review-package.sh
+  - .agents/skills/requesting-code-review/scripts/review-package.sh
       Kimen-original script implementing the review-packet pattern described
       by the upstream skill (upstream ships no script)
 
@@ -68,7 +68,7 @@ MIT License (applies to the upstream material identified above):
 Third-party notices: vendored Agent Skills
 ------------------------------------------
 
-Skills vendored under .claude/skills/ from third-party sources carry their own
+Skills vendored canonically under .agents/skills/ from third-party sources carry their own
 license and provenance record in a LICENSE-NOTICE.md file inside each skill
 directory (source URL, pinned commit, upstream author, local modifications).
 

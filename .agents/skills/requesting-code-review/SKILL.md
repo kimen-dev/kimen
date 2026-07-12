@@ -55,7 +55,7 @@ the founder's gate.
 Assemble it with the audited, network-free script in this skill:
 
 ```bash
-.claude/skills/requesting-code-review/scripts/review-package.sh \
+.agents/skills/requesting-code-review/scripts/review-package.sh \
   specs/<feature-dir> [<base-ref>] [<head-ref>]
 ```
 

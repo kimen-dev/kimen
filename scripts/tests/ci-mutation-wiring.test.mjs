@@ -43,6 +43,7 @@ async function createCoreFixture(t) {
       'check-traceability.sh',
     ].map((name) => writeFile(join(gateDirectory, name), '#!/usr/bin/env bash\nexit 0\n')),
   );
+  await writeFile(join(gateDirectory, 'check-agent-skills.mjs'), 'process.exit(0);\n');
   await writeFile(join(gateDirectory, 'check-generated-sync.mjs'), 'process.exit(0);\n');
   const fakePnpm = join(binDirectory, 'pnpm');
   await writeFile(

@@ -12,9 +12,11 @@ repo. This file only adds Claude-specific notes.
   `/speckit-plan`, `/speckit-tasks`, `/speckit-implement`, etc. Templates
   resolve through `.specify/templates/overrides/` (Kimen versions with
   mandatory Gherkin section and RED→GREEN→gates task structure).
-- Constitutional skills live in `.claude/skills/`: use `gherkin-use-cases`
-  when writing `.feature` files, `frontend-best-practices` when writing or
-  reviewing component code, `frontend-qa` when writing tests or CI gates.
+- Repository skills live canonically in `.agents/skills/`; `.claude/skills`
+  is Claude's compatibility-only view of that same catalog. Use
+  `gherkin-use-cases` when writing `.feature` files,
+  `frontend-best-practices` when writing or reviewing component code, and
+  `frontend-qa` when writing tests or CI gates.
 - Two human gates only: spec/Gherkin approval and merge. Do not idle waiting
   on them; batch questions for the founder.
 - Never run with permission bypass outside a credential-free sandbox

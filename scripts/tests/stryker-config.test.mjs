@@ -16,6 +16,7 @@ const assertCommonMutationPolicy = (config, configFile) => {
   assert.deepEqual(config.reporters, ['clear-text', 'json']);
   assert.deepEqual(config.plugins, ['@stryker-mutator/vitest-runner']);
   assert.deepEqual(config.ignorePatterns, [
+    '/.claude',
     '/.nx',
     '/.stryker-tmp',
     '/packages/*/dist',

@@ -60,7 +60,7 @@ async function createReviewFixture({
       'subject.txt': 'before\n',
     },
   });
-  await fixture.copyFromRepo('.claude/skills/requesting-code-review/scripts/review-package.sh');
+  await fixture.copyFromRepo('.agents/skills/requesting-code-review/scripts/review-package.sh');
   await fixture.copyFromRepo('scripts/lib/publish-review-packet.mjs');
   await fixture.copyFromRepo('scripts/lib/review-package-io.mjs');
   await fixture.copyFromRepo('scripts/lib/review-rendered-evidence.mjs');
@@ -447,7 +447,7 @@ async function runReviewPackage(
   const result = await fixture.run(
     'bash',
     [
-      '.claude/skills/requesting-code-review/scripts/review-package.sh',
+      '.agents/skills/requesting-code-review/scripts/review-package.sh',
       fixture.featureDir,
       baseRef,
       headRef,

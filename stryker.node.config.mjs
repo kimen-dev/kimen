@@ -9,6 +9,7 @@
 const config = {
   plugins: ['@stryker-mutator/vitest-runner'],
   ignorePatterns: [
+    '/.claude',
     '/.nx',
     '/.stryker-tmp',
     '/packages/*/dist',

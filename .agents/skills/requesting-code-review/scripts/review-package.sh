@@ -8,7 +8,7 @@
 # tree and local git history.
 #
 # Usage:
-#   .claude/skills/requesting-code-review/scripts/review-package.sh \
+#   .agents/skills/requesting-code-review/scripts/review-package.sh \
 #     <spec-dir> [<base-ref>] [<head-ref>]
 #
 #   <spec-dir>   feature spec directory (e.g. specs/012-ki-button)
