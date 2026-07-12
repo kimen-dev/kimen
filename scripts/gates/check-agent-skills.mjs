@@ -24,6 +24,16 @@ function git(root, args) {
   return result.stdout;
 }
 
+function gitBuffer(root, args) {
+  const result = spawnSync('git', args, {
+    cwd: root,
+    encoding: null,
+    maxBuffer: 16 * 1024 * 1024,
+  });
+  if (result.status !== 0) return undefined;
+  return result.stdout;
+}
+
 async function pathType(path) {
   try {
     const stat = await lstat(path);
@@ -88,28 +98,58 @@ async function collectCanonicalEntries(canonicalAbsolute) {
 
 const sha256 = (contents) => createHash('sha256').update(contents).digest('hex');
 
-async function collectArtifactHashes(root, relativeDirectory = '') {
-  const absoluteDirectory = resolve(root, relativeDirectory);
-  if ((await pathType(absoluteDirectory)) !== 'directory') return [];
-  const entries = await readdir(absoluteDirectory, { withFileTypes: true });
-  const artifacts = [];
-  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
-    const relativePath = relativeDirectory ? `${relativeDirectory}/${entry.name}` : entry.name;
-    if (entry.isDirectory()) {
-      artifacts.push(...(await collectArtifactHashes(root, relativePath)));
-    } else if (entry.isFile()) {
-      artifacts.push({
-        hash: sha256(await readFile(resolve(root, relativePath))),
-        path: relativePath,
-      });
-    } else {
-      artifacts.push({ hash: `non-file:${entry.name}`, path: relativePath });
-    }
-  }
-  return artifacts;
+function historicalDescriptorCanBeRead(source, expectedRootPath) {
+  return (
+    source?.rootPath === expectedRootPath &&
+    typeof source.commitSha === 'string' &&
+    /^[a-f0-9]{40}$/.test(source.commitSha)
+  );
 }
 
-async function collectMigration(root, canonicalAbsolute) {
+function collectHistoricalSource(root, source, expectedRootPath) {
+  if (!historicalDescriptorCanBeRead(source, expectedRootPath)) {
+    return { ...source, available: false };
+  }
+  const listing = gitBuffer(root, [
+    'ls-tree',
+    '-rz',
+    '--full-tree',
+    source.commitSha,
+    '--',
+    source.rootPath,
+  ]);
+  if (!listing) return { ...source, available: false };
+
+  const prefix = `${source.rootPath}/`;
+  const artifacts = [];
+  for (const record of listing.toString('utf8').split('\0').filter(Boolean)) {
+    const match = /^(\d+) blob ([a-f0-9]{40})\t(.+)$/u.exec(record);
+    if (!match || !/^100(?:644|755)$/u.test(match[1]) || !match[3].startsWith(prefix)) {
+      artifacts.push({ hash: `invalid:${record}`, path: record });
+      continue;
+    }
+    const contents = gitBuffer(root, ['cat-file', 'blob', match[2]]);
+    const path = match[3].slice(prefix.length);
+    artifacts.push({ hash: contents ? sha256(contents) : 'unavailable', path });
+  }
+
+  const sorted = artifacts.sort((left, right) =>
+    left.path < right.path ? -1 : left.path > right.path ? 1 : 0,
+  );
+  const actualHashes = Object.fromEntries(sorted.map(({ hash, path }) => [path, hash]));
+  const actualSkillCount = new Set(sorted.map(({ path }) => path.split('/', 1)[0])).size;
+  return {
+    ...source,
+    actualArtifactCount: sorted.length,
+    actualHashes,
+    actualPathSetSha256: sha256(sorted.map(({ path }) => `${path}\n`).join('')),
+    actualSkillCount,
+    actualTreeSha256: sha256(sorted.map(({ hash, path }) => `${path}\0${hash}\n`).join('')),
+    available: true,
+  };
+}
+
+async function collectMigration(root) {
   const contractPath = agentSkillTopology.migrationContractPath;
   let contract;
   try {
@@ -120,17 +160,20 @@ async function collectMigration(root, canonicalAbsolute) {
     }
     throw error;
   }
-  const artifacts = await collectArtifactHashes(canonicalAbsolute);
-  const sorted = artifacts.sort((left, right) =>
-    left.path < right.path ? -1 : left.path > right.path ? 1 : 0,
-  );
   return {
     ...contract,
-    actualArtifactCount: sorted.length,
-    actualPathSetSha256: sha256(sorted.map(({ path }) => `${path}\n`).join('')),
-    actualTreeSha256: sha256(sorted.map(({ hash, path }) => `${path}\0${hash}\n`).join('')),
     exists: true,
+    migratedSource: collectHistoricalSource(
+      root,
+      contract.migratedSource,
+      agentSkillTopology.canonicalPath,
+    ),
     path: contractPath,
+    validatedSource: collectHistoricalSource(
+      root,
+      contract.validatedSource,
+      agentSkillTopology.compatibilityPath,
+    ),
   };
 }
 
@@ -313,7 +356,7 @@ export async function collectAgentSkillFacts(root) {
       readGuidance(root, 'NOTICE', false),
       readGuidance(root, '.specify/extensions.yml', false),
     ]),
-    migration: await collectMigration(root, canonicalAbsolute),
+    migration: await collectMigration(root),
     repositoryRoot: root,
     tooling: await collectToolingWriterDrift(root),
   };
@@ -336,7 +379,8 @@ const diagnosticDetails = Object.freeze({
   AGENT_SKILLS_GIT_MODE: 'compatibility path must be stored as a Git symlink',
   AGENT_SKILLS_GUIDANCE_DRIFT: 'guidance must bind each ownership role to its path',
   AGENT_SKILLS_MIGRATION_CONTRACT: 'migration inventory contract must be valid',
-  AGENT_SKILLS_MIGRATION_HASH: 'canonical artifact tree must match the approved inventory',
+  AGENT_SKILLS_MIGRATION_HASH: 'pinned historical trees must match the approved inventory',
+  AGENT_SKILLS_MIGRATION_SOURCE: 'pinned historical commits must be available',
   AGENT_SKILLS_TOOLING_VENDOR_WRITE: 'repository tooling must not write to a vendor path',
 });
 
@@ -372,7 +416,7 @@ export async function runAgentSkillCheck({
       `target=${agentSkillTopology.expectedLinkTarget}`,
       `skills=${report.skillCount}`,
       `artifacts=${report.artifactCount}`,
-      'inventory=verified',
+      'inventory=historical-verified',
     ].join(' ') + '\n',
   );
   return 0;

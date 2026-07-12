@@ -1,16 +1,33 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "canonicalPath": ".agents/skills",
   "entryEncoding": "utf8(path) + NUL + lowercase-sha256(bytes) + LF, sorted by path",
   "pathEncoding": "utf8(path) + LF, sorted by path",
-  "expectedSkillCount": 27,
-  "expectedArtifactCount": 70,
   "expectedConflictCount": 8,
   "expectedRewriteCount": 1,
-  "pathSetSha256": "e3f0e427908ea47d061ee3fe99f01de0028bdb5ff3f3497e4201225fb1191955",
-  "candidateTreeSha256": "c0ea6a2df87e991eed6f2aaeb7d64d0b359405a0f54c3b6d751c32f58f597ede",
-  "validatedTreeSha256": "baf2e467d9d8b2d9d9ceb6fb3ba9049ad3f8dff85de0458487bac8f7e05f888a",
-  "finalTreeSha256": "50e542dc1b40c4a992ac682d6e71e56df6027731f2f5360c954883345d9a3a63",
+  "candidateCapture": {
+    "skillCount": 27,
+    "artifactCount": 70,
+    "pathSetSha256": "e3f0e427908ea47d061ee3fe99f01de0028bdb5ff3f3497e4201225fb1191955",
+    "treeSha256": "c0ea6a2df87e991eed6f2aaeb7d64d0b359405a0f54c3b6d751c32f58f597ede",
+    "provenance": "founder-approved local pre-migration capture"
+  },
+  "validatedSource": {
+    "commitSha": "d4bd216090e3eb6515a59bee8db29760328108e6",
+    "rootPath": ".claude/skills",
+    "skillCount": 27,
+    "artifactCount": 70,
+    "pathSetSha256": "e3f0e427908ea47d061ee3fe99f01de0028bdb5ff3f3497e4201225fb1191955",
+    "treeSha256": "baf2e467d9d8b2d9d9ceb6fb3ba9049ad3f8dff85de0458487bac8f7e05f888a"
+  },
+  "migratedSource": {
+    "commitSha": "b78ccb8dc38f5f424372cbae006b3748234d7a96",
+    "rootPath": ".agents/skills",
+    "skillCount": 27,
+    "artifactCount": 70,
+    "pathSetSha256": "e3f0e427908ea47d061ee3fe99f01de0028bdb5ff3f3497e4201225fb1191955",
+    "treeSha256": "50e542dc1b40c4a992ac682d6e71e56df6027731f2f5360c954883345d9a3a63"
+  },
   "rewrittenAfterMigration": [
     {
       "path": "agentic-actions-auditor/LICENSE-NOTICE.md",

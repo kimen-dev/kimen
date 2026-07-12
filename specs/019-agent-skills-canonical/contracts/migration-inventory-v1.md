@@ -38,12 +38,20 @@ expected only where T029 subsequently rewrote an obsolete canonical path.
 
 The machine-readable companion
 `contracts/migration-inventory-v1.json` (SHA-256
-`df327fb80407d1d77a4ae8efac662b7c67c9e321ef0069bb65c7d6523db34169`)
-binds the common 70-path source set, the complete candidate, validated and
-final tree digests, the eight approved conflict hashes and the one declared
-post-migration rewrite. The `agent-skills` gate recomputes the final path-set
-and tree digests from the real canonical catalog and fails closed on contract,
-count, path or byte drift.
+`6ebbe37d433a5f5009d1ff21fa8fd55634e595d265965e2c00a4988a78a27aae`)
+binds the common 70-path source set, the eight approved conflict hashes and the
+one declared post-migration rewrite. The `agent-skills` gate reads the actual
+Git trees at validated source `d4bd216090e3eb6515a59bee8db29760328108e6`
+and migrated source `b78ccb8dc38f5f424372cbae006b3748234d7a96`,
+recomputes their path-set/tree digests and verifies each declared validated and
+final conflict/rewrite hash. Missing history, count, path or byte drift fails
+closed.
+
+The candidate tree digest is explicitly a founder-approved local
+pre-migration capture because those bytes were never committed; the gate does
+not misrepresent that capture as Git-reconstructable. Historical verification
+is deliberately independent of the live canonical tree, so later one-edit
+skill additions or updates remain compatible with SC-005.
 
 Implementation evidence must enumerate both pre-migration trees, prove the
 same 27 skill names, report exactly these eight conflicts, and show zero

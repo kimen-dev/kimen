@@ -15,19 +15,32 @@ function finding(code, path) {
 }
 
 const isSha256 = (value) => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
+const isCommitSha = (value) => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value);
+
+function historicalSourceIsValid(source, expectedRootPath) {
+  return (
+    source?.rootPath === expectedRootPath &&
+    isCommitSha(source.commitSha) &&
+    Number.isInteger(source.skillCount) &&
+    Number.isInteger(source.artifactCount) &&
+    isSha256(source.pathSetSha256) &&
+    isSha256(source.treeSha256)
+  );
+}
 
 function migrationContractIsValid(migration) {
   if (
-    migration.schemaVersion !== 1 ||
+    migration.schemaVersion !== 2 ||
     migration.canonicalPath !== CANONICAL_PATH ||
-    !Number.isInteger(migration.expectedSkillCount) ||
-    !Number.isInteger(migration.expectedArtifactCount) ||
     !Number.isInteger(migration.expectedConflictCount) ||
     !Number.isInteger(migration.expectedRewriteCount) ||
-    !isSha256(migration.pathSetSha256) ||
-    !isSha256(migration.candidateTreeSha256) ||
-    !isSha256(migration.validatedTreeSha256) ||
-    !isSha256(migration.finalTreeSha256) ||
+    !historicalSourceIsValid(migration.validatedSource, COMPATIBILITY_PATH) ||
+    !historicalSourceIsValid(migration.migratedSource, CANONICAL_PATH) ||
+    !Number.isInteger(migration.candidateCapture?.skillCount) ||
+    !Number.isInteger(migration.candidateCapture?.artifactCount) ||
+    !isSha256(migration.candidateCapture?.pathSetSha256) ||
+    !isSha256(migration.candidateCapture?.treeSha256) ||
+    migration.candidateCapture?.provenance !== 'founder-approved local pre-migration capture' ||
     !Array.isArray(migration.approvedConflicts) ||
     !Array.isArray(migration.rewrittenAfterMigration)
   ) {
@@ -35,7 +48,13 @@ function migrationContractIsValid(migration) {
   }
   if (
     migration.approvedConflicts.length !== migration.expectedConflictCount ||
-    migration.rewrittenAfterMigration.length !== migration.expectedRewriteCount
+    migration.rewrittenAfterMigration.length !== migration.expectedRewriteCount ||
+    migration.candidateCapture.skillCount !== migration.validatedSource.skillCount ||
+    migration.candidateCapture.artifactCount !== migration.validatedSource.artifactCount ||
+    migration.candidateCapture.pathSetSha256 !== migration.validatedSource.pathSetSha256 ||
+    migration.validatedSource.skillCount !== migration.migratedSource.skillCount ||
+    migration.validatedSource.artifactCount !== migration.migratedSource.artifactCount ||
+    migration.validatedSource.pathSetSha256 !== migration.migratedSource.pathSetSha256
   ) {
     return false;
   }
@@ -57,6 +76,31 @@ function migrationContractIsValid(migration) {
     migration.rewrittenAfterMigration.every(
       ({ finalHash, sourceHash }) =>
         isSha256(sourceHash) && isSha256(finalHash) && sourceHash !== finalHash,
+    )
+  );
+}
+
+function historicalSourceMatches(source) {
+  return (
+    source.available === true &&
+    source.skillCount === source.actualSkillCount &&
+    source.artifactCount === source.actualArtifactCount &&
+    source.pathSetSha256 === source.actualPathSetSha256 &&
+    source.treeSha256 === source.actualTreeSha256
+  );
+}
+
+function migrationRecordsMatchSources(migration) {
+  const validatedHashes = migration.validatedSource.actualHashes ?? {};
+  const migratedHashes = migration.migratedSource.actualHashes ?? {};
+  return (
+    migration.approvedConflicts.every(
+      ({ finalHash, path, validatedHash }) =>
+        validatedHashes[path] === validatedHash && migratedHashes[path] === finalHash,
+    ) &&
+    migration.rewrittenAfterMigration.every(
+      ({ finalHash, path, sourceHash }) =>
+        validatedHashes[path] === sourceHash && migratedHashes[path] === finalHash,
     )
   );
 }
@@ -147,15 +191,17 @@ export function validateAgentSkillFacts(facts) {
   const migration = facts.migration ?? {};
   if (!migration.exists || !migrationContractIsValid(migration)) {
     findings.push(finding('AGENT_SKILLS_MIGRATION_CONTRACT', MIGRATION_CONTRACT_PATH));
-  } else {
-    if (
-      migration.expectedArtifactCount !== migration.actualArtifactCount ||
-      migration.expectedSkillCount !== skills.length ||
-      migration.pathSetSha256 !== migration.actualPathSetSha256 ||
-      migration.finalTreeSha256 !== migration.actualTreeSha256
-    ) {
-      findings.push(finding('AGENT_SKILLS_MIGRATION_HASH', MIGRATION_CONTRACT_PATH));
-    }
+  } else if (
+    migration.validatedSource.available !== true ||
+    migration.migratedSource.available !== true
+  ) {
+    findings.push(finding('AGENT_SKILLS_MIGRATION_SOURCE', MIGRATION_CONTRACT_PATH));
+  } else if (
+    !historicalSourceMatches(migration.validatedSource) ||
+    !historicalSourceMatches(migration.migratedSource) ||
+    !migrationRecordsMatchSources(migration)
+  ) {
+    findings.push(finding('AGENT_SKILLS_MIGRATION_HASH', MIGRATION_CONTRACT_PATH));
   }
 
   findings.sort(compareByPathThenCode);
@@ -164,54 +210,6 @@ export function validateAgentSkillFacts(facts) {
     findings,
     skillCount: skills.length,
   };
-}
-
-export function reconcileMigrationEntries({
-  approvedConflictPaths = [],
-  candidateEntries = [],
-  requiredPaths = [],
-  validatedEntries = [],
-}) {
-  const approved = new Set(approvedConflictPaths);
-  const candidate = new Map(candidateEntries.map((entry) => [entry.path, entry]));
-  const validated = new Map(validatedEntries.map((entry) => [entry.path, entry]));
-  const allPaths = new Set([...requiredPaths, ...candidate.keys(), ...validated.keys()]);
-  const required = new Set(requiredPaths);
-  const conflicts = [];
-  const entries = [];
-  const findings = [];
-
-  for (const path of [...allPaths].sort()) {
-    const candidateEntry = candidate.get(path);
-    const validatedEntry = validated.get(path);
-
-    if (!candidateEntry && !validatedEntry) {
-      if (required.has(path)) {
-        findings.push(finding('AGENT_SKILLS_MIGRATION_OMISSION', path));
-      }
-      continue;
-    }
-
-    if (candidateEntry && validatedEntry && candidateEntry.hash !== validatedEntry.hash) {
-      conflicts.push(path);
-      if (!approved.has(path)) {
-        findings.push(finding('AGENT_SKILLS_MIGRATION_CONFLICT', path));
-      }
-      entries.push({ ...validatedEntry, resolution: 'main-validated' });
-      continue;
-    }
-
-    if (candidateEntry && validatedEntry) {
-      entries.push({ ...validatedEntry, resolution: 'identical' });
-    } else if (validatedEntry) {
-      entries.push({ ...validatedEntry, resolution: 'main-validated' });
-    } else {
-      entries.push({ ...candidateEntry, resolution: 'unique-preserved' });
-    }
-  }
-
-  findings.sort(compareByPathThenCode);
-  return { conflicts, entries, findings };
 }
 
 export const agentSkillTopology = Object.freeze({

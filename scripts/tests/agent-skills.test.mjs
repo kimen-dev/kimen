@@ -10,9 +10,6 @@ import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 const cliPath = join(repositoryRoot, 'scripts/gates/check-agent-skills.mjs');
-const sutUrl = new URL('../lib/agent-skill-catalog.mjs', import.meta.url);
-
-const loadSut = () => import(sutUrl.href);
 
 const sha256 = (contents) => createHash('sha256').update(contents).digest('hex');
 const inventoryDigests = (entries) => {
@@ -24,43 +21,6 @@ const inventoryDigests = (entries) => {
     pathSetSha256: sha256(sorted.map(({ path }) => `${path}\n`).join('')),
   };
 };
-
-async function synchronizeFixtureInventory(root) {
-  const contractPath = join(
-    root,
-    'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
-  );
-  const inventory = JSON.parse(await readFile(contractPath, 'utf8'));
-  const paths = runGit(root, ['ls-files', '.agents/skills'])
-    .stdout.trim()
-    .split('\n')
-    .filter(Boolean);
-  const entries = await Promise.all(
-    paths.map(async (path) => ({
-      hash: sha256(await readFile(join(root, path))),
-      path: path.replace(/^\.agents\/skills\//, ''),
-    })),
-  );
-  const digests = inventoryDigests(entries);
-  await write(
-    root,
-    'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
-    `${JSON.stringify(
-      {
-        ...inventory,
-        candidateTreeSha256: digests.finalTreeSha256,
-        expectedArtifactCount: entries.length,
-        expectedSkillCount: entries.filter(({ path }) => path.endsWith('/SKILL.md')).length,
-        finalTreeSha256: digests.finalTreeSha256,
-        pathSetSha256: digests.pathSetSha256,
-        validatedTreeSha256: digests.finalTreeSha256,
-      },
-      null,
-      2,
-    )}\n`,
-  );
-  runGit(root, ['add', '-A']);
-}
 
 function run(root, command, args, options = {}) {
   return spawnSync(command, args, {
@@ -104,15 +64,30 @@ async function createFixture(
   const root = await mkdtemp(join(tmpdir(), 'kimen-agent-skills-'));
   t.after(() => rm(root, { recursive: true, force: true }));
 
+  runGit(root, ['init', '--quiet']);
+  runGit(root, ['config', 'user.email', 'fixture@example.invalid']);
+  runGit(root, ['config', 'user.name', 'Kimen Fixture']);
+
+  await write(root, '.claude/skills/alpha/SKILL.md', '# Alpha\n');
+  await write(root, '.claude/skills/beta/SKILL.md', '# Beta\n');
+  runGit(root, ['add', '-A']);
+  runGit(root, ['commit', '--quiet', '-m', 'validated source']);
+  const validatedCommitSha = runGit(root, ['rev-parse', 'HEAD']).stdout.trim();
+
   await write(root, '.agents/skills/alpha/SKILL.md', '# Alpha\n');
   await write(root, '.agents/skills/beta/SKILL.md', '# Beta\n');
-  if (missingEntrypoint) {
-    await unlink(join(root, '.agents/skills/beta/SKILL.md'));
+  await rm(join(root, '.claude/skills'), { recursive: true, force: true });
+  await symlink('../.agents/skills', join(root, '.claude/skills'));
+  runGit(root, ['add', '-A']);
+  runGit(root, ['commit', '--quiet', '-m', 'migrated source']);
+  const migratedCommitSha = runGit(root, ['rev-parse', 'HEAD']).stdout.trim();
+
+  if (compatibility !== 'valid') {
+    await rm(join(root, '.claude/skills'), { recursive: true, force: true });
   }
-  await mkdir(join(root, '.claude'), { recursive: true });
 
   if (compatibility === 'valid') {
-    await symlink('../.agents/skills', join(root, '.claude/skills'));
+    // The migrated historical symlink remains the live compatibility view.
   } else if (compatibility === 'directory') {
     await write(root, '.claude/skills/alpha/SKILL.md', '# Alpha\n');
     await write(root, '.claude/skills/beta/SKILL.md', '# Beta\n');
@@ -131,6 +106,9 @@ async function createFixture(
   } else if (compatibility !== 'missing') {
     throw new Error(`Unknown compatibility fixture: ${compatibility}`);
   }
+  if (missingEntrypoint) {
+    await unlink(join(root, '.agents/skills/beta/SKILL.md'));
+  }
 
   await write(root, 'AGENTS.md', guidance);
   await write(root, 'CLAUDE.md', guidance);
@@ -147,24 +125,41 @@ async function createFixture(
       (() => {
         const entries = [
           { hash: sha256('# Alpha\n'), path: 'alpha/SKILL.md' },
-          ...(missingEntrypoint ? [] : [{ hash: sha256('# Beta\n'), path: 'beta/SKILL.md' }]),
+          { hash: sha256('# Beta\n'), path: 'beta/SKILL.md' },
         ];
         const digests = inventoryDigests(entries);
         return {
           approvedConflicts: [],
+          candidateCapture: {
+            artifactCount: 2,
+            pathSetSha256: digests.pathSetSha256,
+            provenance: 'founder-approved local pre-migration capture',
+            skillCount: 2,
+            treeSha256: digests.finalTreeSha256,
+          },
           canonicalPath: '.agents/skills',
-          candidateTreeSha256: digests.finalTreeSha256,
           entryEncoding: 'utf8(path) + NUL + lowercase-sha256(bytes) + LF, sorted by path',
-          expectedArtifactCount: missingEntrypoint ? 1 : 2,
           expectedConflictCount: 0,
           expectedRewriteCount: 0,
-          expectedSkillCount: 2,
-          finalTreeSha256: digests.finalTreeSha256,
+          migratedSource: {
+            artifactCount: 2,
+            commitSha: migratedCommitSha,
+            pathSetSha256: digests.pathSetSha256,
+            rootPath: '.agents/skills',
+            skillCount: 2,
+            treeSha256: digests.finalTreeSha256,
+          },
           pathEncoding: 'utf8(path) + LF, sorted by path',
-          pathSetSha256: digests.pathSetSha256,
           rewrittenAfterMigration: [],
-          schemaVersion: 1,
-          validatedTreeSha256: digests.finalTreeSha256,
+          schemaVersion: 2,
+          validatedSource: {
+            artifactCount: 2,
+            commitSha: validatedCommitSha,
+            pathSetSha256: digests.pathSetSha256,
+            rootPath: '.claude/skills',
+            skillCount: 2,
+            treeSha256: digests.finalTreeSha256,
+          },
         };
       })(),
       null,
@@ -173,9 +168,6 @@ async function createFixture(
   );
   await mkdir(join(root, '.home'), { recursive: true });
 
-  runGit(root, ['init', '--quiet']);
-  runGit(root, ['config', 'user.email', 'fixture@example.invalid']);
-  runGit(root, ['config', 'user.name', 'Kimen Fixture']);
   runGit(root, ['add', '-A']);
   if (commit) {
     runGit(root, ['commit', '--quiet', '-m', 'fixture']);
@@ -236,7 +228,6 @@ test('S3 one canonical edit and compatibility write share one content owner', as
   );
   await write(root, '.claude/skills/gamma/SKILL.md', '# Gamma\n');
   runGit(root, ['add', '-A']);
-  await synchronizeFixtureInventory(root);
   assert.equal(await readFile(join(root, '.agents/skills/gamma/SKILL.md'), 'utf8'), '# Gamma\n');
   const result = runCli(root);
   assert.equal(result.status, 0, result.stderr);
@@ -250,63 +241,7 @@ test('S4 a byte-identical independent Claude directory fails the single-source i
   assert.match(result.stderr, /AGENT_SKILLS_COMPAT_NOT_LINK/);
 });
 
-test('S5 migration retains validated bytes, unique artifacts and approved conflicts', async () => {
-  const { reconcileMigrationEntries } = await loadSut();
-  const report = reconcileMigrationEntries({
-    approvedConflictPaths: ['review/SKILL.md'],
-    candidateEntries: [
-      { hash: 'old-review', path: 'review/SKILL.md' },
-      { hash: 'same', path: 'shared/SKILL.md' },
-      { hash: 'candidate-only', path: 'unique/reference.md' },
-    ],
-    requiredPaths: [
-      'review/SKILL.md',
-      'shared/SKILL.md',
-      'unique/reference.md',
-      'validated/LICENSE-NOTICE.md',
-    ],
-    validatedEntries: [
-      { hash: 'validated-review', path: 'review/SKILL.md' },
-      { hash: 'same', path: 'shared/SKILL.md' },
-      { hash: 'validated-license', path: 'validated/LICENSE-NOTICE.md' },
-    ],
-  });
-
-  assert.deepEqual(report.findings, []);
-  assert.deepEqual(report.conflicts, ['review/SKILL.md']);
-  assert.deepEqual(
-    report.entries.map(({ hash, path, resolution }) => ({ hash, path, resolution })),
-    [
-      { hash: 'validated-review', path: 'review/SKILL.md', resolution: 'main-validated' },
-      { hash: 'same', path: 'shared/SKILL.md', resolution: 'identical' },
-      { hash: 'candidate-only', path: 'unique/reference.md', resolution: 'unique-preserved' },
-      {
-        hash: 'validated-license',
-        path: 'validated/LICENSE-NOTICE.md',
-        resolution: 'main-validated',
-      },
-    ],
-  );
-});
-
-test('S5 migration fails closed for omissions and unapproved conflicts', async () => {
-  const { reconcileMigrationEntries } = await loadSut();
-  const report = reconcileMigrationEntries({
-    approvedConflictPaths: [],
-    candidateEntries: [{ hash: 'old', path: 'review/SKILL.md' }],
-    requiredPaths: ['missing/SKILL.md', 'review/SKILL.md'],
-    validatedEntries: [{ hash: 'validated', path: 'review/SKILL.md' }],
-  });
-  assert.deepEqual(
-    report.findings.map(({ code, path }) => ({ code, path })),
-    [
-      { code: 'AGENT_SKILLS_MIGRATION_OMISSION', path: 'missing/SKILL.md' },
-      { code: 'AGENT_SKILLS_MIGRATION_CONFLICT', path: 'review/SKILL.md' },
-    ],
-  );
-});
-
-test('S5 the real migration inventory is gate-bound to every final artifact', async () => {
+test('S5 the real migration inventory is bound to immutable Git trees', async () => {
   const inventory = JSON.parse(
     await readFile(
       join(
@@ -316,25 +251,44 @@ test('S5 the real migration inventory is gate-bound to every final artifact', as
       'utf8',
     ),
   );
-  assert.equal(inventory.expectedSkillCount, 27);
-  assert.equal(inventory.expectedArtifactCount, 70);
+  assert.equal(inventory.schemaVersion, 2);
+  assert.equal(inventory.validatedSource.commitSha, 'd4bd216090e3eb6515a59bee8db29760328108e6');
+  assert.equal(inventory.migratedSource.commitSha, 'b78ccb8dc38f5f424372cbae006b3748234d7a96');
+  assert.equal(inventory.validatedSource.artifactCount, 70);
+  assert.equal(inventory.migratedSource.artifactCount, 70);
   assert.equal(inventory.approvedConflicts.length, 8);
-  assert.match(inventory.pathSetSha256, /^[a-f0-9]{64}$/);
-  assert.match(inventory.candidateTreeSha256, /^[a-f0-9]{64}$/);
-  assert.match(inventory.validatedTreeSha256, /^[a-f0-9]{64}$/);
-  assert.match(inventory.finalTreeSha256, /^[a-f0-9]{64}$/);
+  assert.match(inventory.candidateCapture.treeSha256, /^[a-f0-9]{64}$/);
   const result = runCli(repositoryRoot);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /inventory=verified/);
+  assert.match(result.stdout, /inventory=historical-verified/);
 });
 
-test('S5 migration inventory rejects a changed canonical artifact hash', async (t) => {
+test('S5 historical evidence does not freeze a later canonical edit', async (t) => {
   const root = await createFixture(t);
-  await write(root, '.agents/skills/alpha/SKILL.md', '# Tampered Alpha\n');
+  await write(root, '.agents/skills/alpha/SKILL.md', '# Later Alpha\n');
+  runGit(root, ['add', '-A']);
+  const result = runCli(root);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /inventory=historical-verified/);
+});
+
+test('S5 historical evidence rejects an unavailable pinned source commit', async (t) => {
+  const root = await createFixture(t);
+  const contractPath = join(
+    root,
+    'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
+  );
+  const inventory = JSON.parse(await readFile(contractPath, 'utf8'));
+  inventory.validatedSource.commitSha = '0'.repeat(40);
+  await write(
+    root,
+    'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
+    `${JSON.stringify(inventory, null, 2)}\n`,
+  );
   runGit(root, ['add', '-A']);
   const result = runCli(root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /AGENT_SKILLS_MIGRATION_HASH/);
+  assert.match(result.stderr, /AGENT_SKILLS_MIGRATION_SOURCE/);
 });
 
 for (const [condition, code] of [
@@ -371,7 +325,6 @@ test('S8 a vendor-path tool write persists only in the canonical catalog', async
   const root = await createFixture(t);
   await write(root, '.claude/skills/tool-added/SKILL.md', '# Tool added\n');
   runGit(root, ['add', '-A']);
-  await synchronizeFixtureInventory(root);
   assert.equal(
     await readFile(join(root, '.agents/skills/tool-added/SKILL.md'), 'utf8'),
     '# Tool added\n',
@@ -442,4 +395,10 @@ test('S6 mutation sandboxes exclude the compatibility symlink and retain canonic
     assert.match(config, /ignorePatterns:[\s\S]*['"]\/\.claude['"]/);
     assert.doesNotMatch(config, /ignorePatterns:[\s\S]*['"]\/\.agents['"]/);
   }
+});
+
+test('S5 CI gates checkout retains the pinned historical commits', async () => {
+  const workflow = await readFile(join(repositoryRoot, '.github/workflows/ci.yml'), 'utf8');
+  const gatesJob = workflow.slice(workflow.indexOf('  gates:'), workflow.indexOf('  mutation:'));
+  assert.match(gatesJob, /actions\/checkout@[a-f0-9]{40}[\s\S]*fetch-depth: 0/);
 });

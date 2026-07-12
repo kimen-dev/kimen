@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdir, mkdtemp, rm, symlink, unlink, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, symlink, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -10,11 +10,7 @@ import {
   parseAgentSkillArguments,
   runAgentSkillCheck,
 } from '../gates/check-agent-skills.mjs';
-import {
-  agentSkillTopology,
-  reconcileMigrationEntries,
-  validateAgentSkillFacts,
-} from '../lib/agent-skill-catalog.mjs';
+import { agentSkillTopology, validateAgentSkillFacts } from '../lib/agent-skill-catalog.mjs';
 
 // @spec:019-agent-skills-canonical
 
@@ -53,22 +49,48 @@ const validFacts = () => ({
     },
   ],
   migration: {
-    actualArtifactCount: 2,
-    actualPathSetSha256: 'a'.repeat(64),
-    actualTreeSha256: 'b'.repeat(64),
     approvedConflicts: [],
-    candidateTreeSha256: 'c'.repeat(64),
+    candidateCapture: {
+      artifactCount: 2,
+      pathSetSha256: 'a'.repeat(64),
+      provenance: 'founder-approved local pre-migration capture',
+      skillCount: 2,
+      treeSha256: 'c'.repeat(64),
+    },
     canonicalPath: '.agents/skills',
     exists: true,
-    expectedArtifactCount: 2,
     expectedConflictCount: 0,
     expectedRewriteCount: 0,
-    expectedSkillCount: 2,
-    finalTreeSha256: 'b'.repeat(64),
-    pathSetSha256: 'a'.repeat(64),
+    migratedSource: {
+      actualArtifactCount: 2,
+      actualHashes: {},
+      actualPathSetSha256: 'a'.repeat(64),
+      actualSkillCount: 2,
+      actualTreeSha256: 'b'.repeat(64),
+      artifactCount: 2,
+      available: true,
+      commitSha: '2'.repeat(40),
+      pathSetSha256: 'a'.repeat(64),
+      rootPath: '.agents/skills',
+      skillCount: 2,
+      treeSha256: 'b'.repeat(64),
+    },
     rewrittenAfterMigration: [],
-    schemaVersion: 1,
-    validatedTreeSha256: 'd'.repeat(64),
+    schemaVersion: 2,
+    validatedSource: {
+      actualArtifactCount: 2,
+      actualHashes: {},
+      actualPathSetSha256: 'a'.repeat(64),
+      actualSkillCount: 2,
+      actualTreeSha256: 'd'.repeat(64),
+      artifactCount: 2,
+      available: true,
+      commitSha: '1'.repeat(40),
+      pathSetSha256: 'a'.repeat(64),
+      rootPath: '.claude/skills',
+      skillCount: 2,
+      treeSha256: 'd'.repeat(64),
+    },
   },
   repositoryRoot: '/repo',
   tooling: { writerDriftPaths: [] },
@@ -93,10 +115,27 @@ async function createCliFixture({
   toolingWriter = false,
 } = {}) {
   const root = await mkdtemp(join(tmpdir(), 'kimen-agent-skills-mutation-'));
+  fixtureGit(root, ['init', '--quiet']);
+  fixtureGit(root, ['config', 'user.email', 'fixture@example.invalid']);
+  fixtureGit(root, ['config', 'user.name', 'Kimen Fixture']);
+
+  await writeFixture(root, '.claude/skills/alpha/SKILL.md', '# Alpha\n');
+  fixtureGit(root, ['add', '-A']);
+  fixtureGit(root, ['commit', '--quiet', '-m', 'validated source']);
+  const validatedCommitSha = fixtureGit(root, ['rev-parse', 'HEAD']).trim();
+
   await writeFixture(root, '.agents/skills/alpha/SKILL.md', '# Alpha\n');
-  await mkdir(join(root, '.claude'), { recursive: true });
+  await rm(join(root, '.claude/skills'), { recursive: true, force: true });
+  await symlink('../.agents/skills', join(root, '.claude/skills'));
+  fixtureGit(root, ['add', '-A']);
+  fixtureGit(root, ['commit', '--quiet', '-m', 'migrated source']);
+  const migratedCommitSha = fixtureGit(root, ['rev-parse', 'HEAD']).trim();
+
+  if (compatibility !== 'valid') {
+    await rm(join(root, '.claude/skills'), { recursive: true, force: true });
+  }
   if (compatibility === 'valid') {
-    await symlink('../.agents/skills', join(root, '.claude/skills'));
+    // Preserve the historical migration symlink.
   } else if (compatibility === 'directory') {
     await writeFixture(root, '.claude/skills/alpha/SKILL.md', '# Alpha\n');
   } else if (compatibility === 'broken') {
@@ -137,20 +176,36 @@ async function createCliFixture({
     'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
     `${JSON.stringify({
       approvedConflicts: [],
-      candidateTreeSha256: finalTreeSha256,
+      candidateCapture: {
+        artifactCount: 1,
+        pathSetSha256,
+        provenance: 'founder-approved local pre-migration capture',
+        skillCount: 1,
+        treeSha256: finalTreeSha256,
+      },
       canonicalPath: '.agents/skills',
-      expectedArtifactCount: 1,
       expectedConflictCount: 0,
       expectedRewriteCount: 0,
-      expectedSkillCount: 1,
-      finalTreeSha256,
-      pathSetSha256,
+      migratedSource: {
+        artifactCount: 1,
+        commitSha: migratedCommitSha,
+        pathSetSha256,
+        rootPath: '.agents/skills',
+        skillCount: 1,
+        treeSha256: finalTreeSha256,
+      },
       rewrittenAfterMigration: [],
-      schemaVersion: 1,
-      validatedTreeSha256: finalTreeSha256,
+      schemaVersion: 2,
+      validatedSource: {
+        artifactCount: 1,
+        commitSha: validatedCommitSha,
+        pathSetSha256,
+        rootPath: '.claude/skills',
+        skillCount: 1,
+        treeSha256: finalTreeSha256,
+      },
     })}\n`,
   );
-  fixtureGit(root, ['init', '--quiet']);
   fixtureGit(root, ['add', '-A']);
   return root;
 }
@@ -206,29 +261,6 @@ describe('canonical agent skill facts', () => {
   });
 });
 
-describe('agent skill migration inventory', () => {
-  it('@spec:019 S5 preserves validated conflicts and candidate-only artifacts', () => {
-    expect(
-      reconcileMigrationEntries({
-        approvedConflictPaths: ['a/SKILL.md'],
-        candidateEntries: [
-          { hash: 'old', path: 'a/SKILL.md' },
-          { hash: 'candidate', path: 'b/reference.md' },
-        ],
-        requiredPaths: ['a/SKILL.md', 'b/reference.md'],
-        validatedEntries: [{ hash: 'validated', path: 'a/SKILL.md' }],
-      }),
-    ).toMatchObject({
-      conflicts: ['a/SKILL.md'],
-      entries: [
-        { hash: 'validated', path: 'a/SKILL.md', resolution: 'main-validated' },
-        { hash: 'candidate', path: 'b/reference.md', resolution: 'unique-preserved' },
-      ],
-      findings: [],
-    });
-  });
-});
-
 describe('complete agent skill invariant matrix', () => {
   it('@spec:019 S1 freezes the public topology constants', () => {
     expect(agentSkillTopology).toEqual({
@@ -270,9 +302,6 @@ describe('complete agent skill invariant matrix', () => {
   it('@spec:019 S1 sorts skills and rejects every non-file entrypoint', () => {
     const facts = validFacts();
     facts.canonical.artifactCount = 9;
-    facts.migration.actualArtifactCount = 9;
-    facts.migration.expectedArtifactCount = 9;
-    facts.migration.expectedSkillCount = 3;
     facts.canonical.skills = [
       { entrypointType: 'missing', name: 'zeta' },
       { entrypointType: 'directory', name: 'alpha' },
@@ -387,17 +416,167 @@ describe('complete agent skill invariant matrix', () => {
 
   it('@spec:019 S5 rejects invalid or drifted migration inventory facts', () => {
     const invalid = validFacts();
-    invalid.migration.schemaVersion = 2;
+    invalid.migration.schemaVersion = 1;
     expect(validateAgentSkillFacts(invalid).findings).toContainEqual({
       code: 'AGENT_SKILLS_MIGRATION_CONTRACT',
       path: agentSkillTopology.migrationContractPath,
     });
 
     const drifted = validFacts();
-    drifted.migration.actualTreeSha256 = 'e'.repeat(64);
+    drifted.migration.migratedSource.actualTreeSha256 = 'e'.repeat(64);
     expect(validateAgentSkillFacts(drifted).findings).toContainEqual({
       code: 'AGENT_SKILLS_MIGRATION_HASH',
       path: agentSkillTopology.migrationContractPath,
+    });
+
+    const unavailable = validFacts();
+    unavailable.migration.validatedSource.available = false;
+    expect(validateAgentSkillFacts(unavailable).findings).toContainEqual({
+      code: 'AGENT_SKILLS_MIGRATION_SOURCE',
+      path: agentSkillTopology.migrationContractPath,
+    });
+  });
+
+  it.each([
+    ['validated root', (facts) => (facts.migration.validatedSource.rootPath = '.agents/skills')],
+    ['validated commit', (facts) => (facts.migration.validatedSource.commitSha = 'short')],
+    ['validated skill count', (facts) => (facts.migration.validatedSource.skillCount = 1.5)],
+    ['validated artifact count', (facts) => (facts.migration.validatedSource.artifactCount = 1.5)],
+    ['validated path digest', (facts) => (facts.migration.validatedSource.pathSetSha256 = 'bad')],
+    ['validated tree digest', (facts) => (facts.migration.validatedSource.treeSha256 = 'bad')],
+    ['migrated root', (facts) => (facts.migration.migratedSource.rootPath = '.claude/skills')],
+    ['candidate provenance', (facts) => (facts.migration.candidateCapture.provenance = 'guess')],
+    ['candidate skill count', (facts) => (facts.migration.candidateCapture.skillCount = 1)],
+    ['candidate artifact count', (facts) => (facts.migration.candidateCapture.artifactCount = 1)],
+    [
+      'candidate path digest',
+      (facts) => (facts.migration.candidateCapture.pathSetSha256 = 'f'.repeat(64)),
+    ],
+    ['conflict count', (facts) => (facts.migration.expectedConflictCount = 1)],
+    ['rewrite count', (facts) => (facts.migration.expectedRewriteCount = 1)],
+  ])('@spec:019 S5 rejects malformed historical contract field %s', (_name, mutate) => {
+    const facts = validFacts();
+    mutate(facts);
+    expect(validateAgentSkillFacts(facts).findings).toContainEqual({
+      code: 'AGENT_SKILLS_MIGRATION_CONTRACT',
+      path: agentSkillTopology.migrationContractPath,
+    });
+  });
+
+  it.each([
+    [
+      'validated availability',
+      (facts) => (facts.migration.validatedSource.available = false),
+      'SOURCE',
+    ],
+    [
+      'migrated availability',
+      (facts) => (facts.migration.migratedSource.available = false),
+      'SOURCE',
+    ],
+    [
+      'validated skill count',
+      (facts) => (facts.migration.validatedSource.actualSkillCount = 1),
+      'HASH',
+    ],
+    [
+      'validated artifact count',
+      (facts) => (facts.migration.validatedSource.actualArtifactCount = 1),
+      'HASH',
+    ],
+    [
+      'validated path digest',
+      (facts) => (facts.migration.validatedSource.actualPathSetSha256 = 'f'.repeat(64)),
+      'HASH',
+    ],
+    [
+      'validated tree digest',
+      (facts) => (facts.migration.validatedSource.actualTreeSha256 = 'f'.repeat(64)),
+      'HASH',
+    ],
+    [
+      'migrated skill count',
+      (facts) => (facts.migration.migratedSource.actualSkillCount = 1),
+      'HASH',
+    ],
+    [
+      'migrated artifact count',
+      (facts) => (facts.migration.migratedSource.actualArtifactCount = 1),
+      'HASH',
+    ],
+    [
+      'migrated path digest',
+      (facts) => (facts.migration.migratedSource.actualPathSetSha256 = 'f'.repeat(64)),
+      'HASH',
+    ],
+    [
+      'migrated tree digest',
+      (facts) => (facts.migration.migratedSource.actualTreeSha256 = 'f'.repeat(64)),
+      'HASH',
+    ],
+  ])('@spec:019 S5 detects historical source drift in %s', (_name, mutate, suffix) => {
+    const facts = validFacts();
+    mutate(facts);
+    expect(validateAgentSkillFacts(facts).findings).toContainEqual({
+      code: `AGENT_SKILLS_MIGRATION_${suffix}`,
+      path: agentSkillTopology.migrationContractPath,
+    });
+  });
+
+  it('@spec:019 S5 verifies declared conflict and rewrite hashes against both Git trees', () => {
+    const facts = validFacts();
+    facts.migration.expectedConflictCount = 1;
+    facts.migration.approvedConflicts = [
+      {
+        candidateHash: 'e'.repeat(64),
+        finalHash: 'f'.repeat(64),
+        path: 'alpha/SKILL.md',
+        validatedHash: 'd'.repeat(64),
+      },
+    ];
+    facts.migration.validatedSource.actualHashes = { 'alpha/SKILL.md': 'd'.repeat(64) };
+    facts.migration.migratedSource.actualHashes = { 'alpha/SKILL.md': 'f'.repeat(64) };
+    expect(validateAgentSkillFacts(facts).findings).toEqual([]);
+
+    facts.migration.migratedSource.actualHashes['alpha/SKILL.md'] = '0'.repeat(64);
+    expect(validateAgentSkillFacts(facts).findings).toContainEqual({
+      code: 'AGENT_SKILLS_MIGRATION_HASH',
+      path: agentSkillTopology.migrationContractPath,
+    });
+
+    const rewrite = validFacts();
+    rewrite.migration.expectedRewriteCount = 1;
+    rewrite.migration.rewrittenAfterMigration = [
+      {
+        finalHash: 'f'.repeat(64),
+        path: 'alpha/LICENSE-NOTICE.md',
+        sourceHash: 'd'.repeat(64),
+      },
+    ];
+    rewrite.migration.validatedSource.actualHashes = {
+      'alpha/LICENSE-NOTICE.md': 'd'.repeat(64),
+    };
+    rewrite.migration.migratedSource.actualHashes = {
+      'alpha/LICENSE-NOTICE.md': 'f'.repeat(64),
+    };
+    expect(validateAgentSkillFacts(rewrite).findings).toEqual([]);
+
+    rewrite.migration.validatedSource.actualHashes['alpha/LICENSE-NOTICE.md'] = '0'.repeat(64);
+    expect(validateAgentSkillFacts(rewrite).findings).toContainEqual({
+      code: 'AGENT_SKILLS_MIGRATION_HASH',
+      path: agentSkillTopology.migrationContractPath,
+    });
+  });
+
+  it('@spec:019 S3 S5 later canonical changes do not alter historical evidence', () => {
+    const facts = validFacts();
+    facts.canonical.artifactCount = 3;
+    facts.canonical.entries.push({ name: 'gamma', type: 'directory' });
+    facts.canonical.skills.push({ entrypointType: 'file', name: 'gamma' });
+    expect(validateAgentSkillFacts(facts)).toEqual({
+      artifactCount: 3,
+      findings: [],
+      skillCount: 3,
     });
   });
 
@@ -416,64 +595,6 @@ describe('complete agent skill invariant matrix', () => {
     ).toBe(
       'AGENT_SKILLS_COMPAT_TARGET .claude/skills?X invariant="compatibility link must resolve to the canonical catalog" expected=".claude/skills -> ../.agents/skills; .agents/skills is the sole real catalog"',
     );
-  });
-
-  it('@spec:019 S5 accounts for every migration resolution and finding in path order', () => {
-    expect(
-      reconcileMigrationEntries({
-        approvedConflictPaths: ['d-approved/SKILL.md'],
-        candidateEntries: [
-          { hash: 'candidate', path: 'e-candidate/SKILL.md' },
-          { hash: 'same', path: 'c-identical/SKILL.md' },
-          { hash: 'old', path: 'd-approved/SKILL.md' },
-          { hash: 'old', path: 'f-unapproved/SKILL.md' },
-        ],
-        requiredPaths: [
-          'f-unapproved/SKILL.md',
-          'a-missing/SKILL.md',
-          'b-validated/SKILL.md',
-          'c-identical/SKILL.md',
-          'd-approved/SKILL.md',
-          'e-candidate/SKILL.md',
-        ],
-        validatedEntries: [
-          { hash: 'validated', path: 'f-unapproved/SKILL.md' },
-          { hash: 'validated', path: 'd-approved/SKILL.md' },
-          { hash: 'same', path: 'c-identical/SKILL.md' },
-          { hash: 'validated', path: 'b-validated/SKILL.md' },
-        ],
-      }),
-    ).toEqual({
-      conflicts: ['d-approved/SKILL.md', 'f-unapproved/SKILL.md'],
-      entries: [
-        {
-          hash: 'validated',
-          path: 'b-validated/SKILL.md',
-          resolution: 'main-validated',
-        },
-        { hash: 'same', path: 'c-identical/SKILL.md', resolution: 'identical' },
-        {
-          hash: 'validated',
-          path: 'd-approved/SKILL.md',
-          resolution: 'main-validated',
-        },
-        {
-          hash: 'candidate',
-          path: 'e-candidate/SKILL.md',
-          resolution: 'unique-preserved',
-        },
-        {
-          hash: 'validated',
-          path: 'f-unapproved/SKILL.md',
-          resolution: 'main-validated',
-        },
-      ],
-      findings: [
-        { code: 'AGENT_SKILLS_MIGRATION_OMISSION', path: 'a-missing/SKILL.md' },
-        { code: 'AGENT_SKILLS_MIGRATION_CONFLICT', path: 'f-unapproved/SKILL.md' },
-      ],
-    });
-    expect(reconcileMigrationEntries({})).toEqual({ conflicts: [], entries: [], findings: [] });
   });
 });
 
@@ -498,8 +619,28 @@ describe('agent skill filesystem and Git collector', () => {
         exitCode: 0,
         stderr: '',
         stdout:
-          'canonical=.agents/skills compatibility=.claude/skills target=../.agents/skills skills=1 artifacts=1 inventory=verified\n',
+          'canonical=.agents/skills compatibility=.claude/skills target=../.agents/skills skills=1 artifacts=1 inventory=historical-verified\n',
       });
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it('@spec:019 S5 collector fails closed for missing or drifted pinned Git evidence', async () => {
+    const root = await createCliFixture();
+    try {
+      const contractPath = join(
+        root,
+        'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
+      );
+      const inventory = JSON.parse(await readFile(contractPath, 'utf8'));
+      inventory.validatedSource.commitSha = '0'.repeat(40);
+      await writeFile(contractPath, `${JSON.stringify(inventory)}\n`, 'utf8');
+      expect((await executeCli(root)).stderr).toContain('AGENT_SKILLS_MIGRATION_SOURCE');
+
+      inventory.validatedSource.commitSha = inventory.migratedSource.commitSha;
+      await writeFile(contractPath, `${JSON.stringify(inventory)}\n`, 'utf8');
+      expect((await executeCli(root)).stderr).toContain('AGENT_SKILLS_MIGRATION_HASH');
     } finally {
       await rm(root, { recursive: true, force: true });
     }

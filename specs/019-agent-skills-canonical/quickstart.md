@@ -84,7 +84,7 @@ Expected: exit 0. This is the only completion signal.
   scope detected 336 of 403 valid mutants for `83.37%`, threshold `70%`.
 - Negative fixtures: missing entrypoint; independent directory; missing,
   broken, absolute, escaping, cyclic and wrong targets; stale guidance; and
-  migration omission/conflict all fail with stable codes.
+  missing or byte-drifted pinned migration history all fail with stable codes.
 - Reference audit: remaining `.claude/skills` strings are compatibility
   declarations/tests, spec 019 contracts, approved historical spec 018 text,
   or `.specify/integrations/claude.manifest.json` compatibility metadata.
@@ -102,6 +102,30 @@ Expected: exit 0. This is the only completion signal.
 - Remediation GREEN: 24/24 focused Node tests and 39/39 mutation-boundary
   tests pass. The machine-readable migration contract binds the common
   70-path source set and complete source/final tree digests; the real gate
-  reports `inventory=verified`.
+  originally reported `inventory=verified`.
 - Remediation mutation: 543 of 737 valid mutants detected for `73.68%`, above
   the unchanged `70%` threshold.
+
+## Clean-context review round 2 and founder resolution
+
+- Frozen head: `00fee8f71fd8ac7ad952f97050ceda646d4d5058`.
+- Packet SHA-256:
+  `ffe6802e9ba2a0cc5e5255d1ebe25db76f668d27a1adae9f3be80bddf035c001`.
+- Verdict: S8 writer auditing, S9 role binding, FR-014 diagnostics and
+  non-directory entry rejection resolved. The final review escalated S5
+  because the live-tree snapshot both overstated pre-migration verification
+  and required manual synchronization after a legitimate skill edit.
+- Founder resolution: approved immutable historical verification against
+  validated commit `d4bd216090e3eb6515a59bee8db29760328108e6` and migrated
+  commit `b78ccb8dc38f5f424372cbae006b3748234d7a96`, with full Git history
+  in the CI gates checkout and no third review round.
+- Resolution RED: after the v2 contract fixtures were introduced, nine
+  focused tests failed because the gate did not read pinned Git sources,
+  still froze live bytes and CI did not fetch history.
+- Resolution GREEN: 24/24 focused Node tests and 39/39 mutation-boundary tests
+  pass; a later canonical edit/addition requires no inventory rewrite and the
+  real gate reports `inventory=historical-verified`.
+- Resolution mutation: the first historical-model run exposed a real test gap
+  at `68.40%`; after adding only targeted contract/source/conflict/rewrite
+  tests, 640 of 845 valid mutants were detected for `75.74%` against the
+  unchanged `70%` threshold.
