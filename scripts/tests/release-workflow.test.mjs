@@ -103,6 +103,7 @@ test('@spec:018-project-integrity-hardening S6 prerelease permits the runner apt
     const job = readJob(releaseWorkflow, jobName);
     assert.match(job, /^ {12}azure\.archive\.ubuntu\.com:80$/m);
     assert.match(job, /^ {12}dl\.google\.com:443$/m);
+    assert.match(job, /^ {12}storage\.googleapis\.com:443$/m);
   }
 });
 

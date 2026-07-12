@@ -207,6 +207,11 @@ test('S3 CI separates ordinary gates from mutation with isolated pre-install cac
     /^ {12}dl\.google\.com:443$/m,
     'Playwright dependency installation must permit the preconfigured Google apt source',
   );
+  assert.match(
+    gates,
+    /^ {12}storage\.googleapis\.com:443$/m,
+    'Playwright Chromium downloads must permit the observed CDN redirect host',
+  );
   assert.ok(gates.indexOf(cacheSetup) > -1);
   assert.ok(gates.indexOf(cacheSetup) < gates.indexOf('uses: pnpm/action-setup@'));
   assert.match(gates, /KIMEN_MUTATION_DELEGATED_TO: ['"]?mutation['"]?/);
