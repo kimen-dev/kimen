@@ -59,7 +59,26 @@ require_exclusive_writer_confirmation() {
 }
 
 normalize_ruleset() {
-  jq -S '{name,target,enforcement,bypass_actors,conditions,rules}' "$1"
+  jq -S '
+    def normalize_pull_request_defaults:
+      if .type == "pull_request" and
+        .parameters.dismissal_restriction? == {allowed_actors: [], enabled: false}
+      then .parameters |= del(.dismissal_restriction)
+      else .
+      end |
+      if .type == "pull_request" and .parameters.required_reviewers? == []
+      then .parameters |= del(.required_reviewers)
+      else .
+      end;
+    {
+      name,
+      target,
+      enforcement,
+      bypass_actors,
+      conditions,
+      rules: (.rules | map(normalize_pull_request_defaults))
+    }
+  ' "$1"
 }
 
 json_files_equal() {
