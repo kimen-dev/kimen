@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "canonicalPath": ".agents/skills",
+  "entryEncoding": "utf8(path) + NUL + lowercase-sha256(bytes) + LF, sorted by path",
+  "pathEncoding": "utf8(path) + LF, sorted by path",
+  "expectedSkillCount": 27,
+  "expectedArtifactCount": 70,
+  "expectedConflictCount": 8,
+  "expectedRewriteCount": 1,
+  "pathSetSha256": "e3f0e427908ea47d061ee3fe99f01de0028bdb5ff3f3497e4201225fb1191955",
+  "candidateTreeSha256": "c0ea6a2df87e991eed6f2aaeb7d64d0b359405a0f54c3b6d751c32f58f597ede",
+  "validatedTreeSha256": "baf2e467d9d8b2d9d9ceb6fb3ba9049ad3f8dff85de0458487bac8f7e05f888a",
+  "finalTreeSha256": "50e542dc1b40c4a992ac682d6e71e56df6027731f2f5360c954883345d9a3a63",
+  "rewrittenAfterMigration": [
+    {
+      "path": "agentic-actions-auditor/LICENSE-NOTICE.md",
+      "sourceHash": "bdbaeae5dc5f27343a4f5dbab19e5b9337c14b8ca1d9df4e3aab7b4503a945f9",
+      "finalHash": "69f0494c7fd960b73e049d00a1c106332097f283480228f1467377b700a3b7d0"
+    }
+  ],
+  "approvedConflicts": [
+    {
+      "path": "agentic-actions-auditor/SKILL.md",
+      "candidateHash": "1c4f5bdfa50b9633adcfb5ab78d5c8b9dd31173f92d653da85c82dca99d0f74e",
+      "validatedHash": "d7bb81eb9c3739eb49b991193375ae0b4a8115cc5eae6074671118b5bc04de1a",
+      "finalHash": "d7bb81eb9c3739eb49b991193375ae0b4a8115cc5eae6074671118b5bc04de1a"
+    },
+    {
+      "path": "create-mcp-app/SKILL.md",
+      "candidateHash": "09a7ee170f24898a6562212a528588e7a73e731cc5cb07cf9a883d03dd532b1a",
+      "validatedHash": "0fbf7d9189c0031774111a92a1957bfb0f75a16065beac2bb3452d33576a6807",
+      "finalHash": "0fbf7d9189c0031774111a92a1957bfb0f75a16065beac2bb3452d33576a6807"
+    },
+    {
+      "path": "kimen-gates-pre-implement/SKILL.md",
+      "candidateHash": "b77c035c4e47b936d65be4af0ba94ce89ba9d2ac7a6052a0dc4214f19db6f4a3",
+      "validatedHash": "5bd0af5a863539cac1411d029879822572f1904112e7e11fff5d3861efa68b98",
+      "finalHash": "5bd0af5a863539cac1411d029879822572f1904112e7e11fff5d3861efa68b98"
+    },
+    {
+      "path": "kimen-gates-pre-plan/SKILL.md",
+      "candidateHash": "5019932ebbee39d99fa39dca16404750ffcfcee8a8eecf87ec9d1afe30faed24",
+      "validatedHash": "57277266376c456b75d705251dcf36ee0a0764f6675bfc77b8e226d163c0f8a0",
+      "finalHash": "57277266376c456b75d705251dcf36ee0a0764f6675bfc77b8e226d163c0f8a0"
+    },
+    {
+      "path": "requesting-code-review/SKILL.md",
+      "candidateHash": "2cd6a54af30811d26fc27f9c1da70e5908dd5fae6935977db4911ed7816a5d0d",
+      "validatedHash": "871e6a7bce800cbd1570673dfc271cbf4ac31f9a774e0753a45aa9c20b1ed25c",
+      "finalHash": "a92c35679948c130f9dc1ca75bfabd6f1ea1b2a546a3c6afab22ac2a563b0de8"
+    },
+    {
+      "path": "requesting-code-review/scripts/review-package.sh",
+      "candidateHash": "1f60f39b1b0cb463a3c3118da6eb025d17d48046cf01ca96cc53cfa05b453819",
+      "validatedHash": "719f1004023d56c34e007f88debfce6602be9bd494b7490b7744fd2421ee47cb",
+      "finalHash": "1f1e2bf918a1dd41e3bc15cd82ab95d87cb97db4f9ae8c57c3c5a4a7702bea98"
+    },
+    {
+      "path": "speckit-constitution/SKILL.md",
+      "candidateHash": "b23911c848ec179f292140295cb52c7cfcde77fb3c107d0fe79dacfbf6275a22",
+      "validatedHash": "ee3972318415a05559c6bf281dcbd2e8deda944e595d64ab5474abeacf558697",
+      "finalHash": "ee3972318415a05559c6bf281dcbd2e8deda944e595d64ab5474abeacf558697"
+    },
+    {
+      "path": "systematic-debugging/SKILL.md",
+      "candidateHash": "13fca57aa65a6f4dac76e0a4e11a2e1e5fd30e2141da06c083907ec900e20070",
+      "validatedHash": "d5356e13d140f442d361860e5184bdfc8c27296a2c6e7da0d093ac28ca4a89f4",
+      "finalHash": "d5356e13d140f442d361860e5184bdfc8c27296a2c6e7da0d093ac28ca4a89f4"
+    }
+  ]
+}

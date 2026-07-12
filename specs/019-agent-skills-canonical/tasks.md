@@ -131,7 +131,7 @@ guidance fixtures fail or pass only according to the topology contract.
 - [x] T036 Exercise the clean-clone quickstart in a disposable clone and record exact topology, count and negative-fixture evidence in `specs/019-agent-skills-canonical/quickstart.md`
 - [x] T037 Run `bash scripts/gates/gates-suite.sh` to exit 0 with the new `agent-skills` gate in the authoritative evidence
 - [x] T038 Run `/speckit-converge` and append any real remaining work to `specs/019-agent-skills-canonical/tasks.md`
-- [ ] T039 Build a clean-context review packet from the exact reviewed SHA using `.agents/skills/requesting-code-review/scripts/review-package.sh`
+- [x] T039 Build a clean-context review packet from the exact reviewed SHA using `.agents/skills/requesting-code-review/scripts/review-package.sh`
 - [ ] T040 Address at most two actionable review rounds, re-run full gates, and present final evidence plus the founder-only merge action without merging or publishing npm
 
 ---

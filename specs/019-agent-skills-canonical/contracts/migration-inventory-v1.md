@@ -36,6 +36,15 @@ expected only where T029 subsequently rewrote an obsolete canonical path.
 
 ## Verification
 
+The machine-readable companion
+`contracts/migration-inventory-v1.json` (SHA-256
+`df327fb80407d1d77a4ae8efac662b7c67c9e321ef0069bb65c7d6523db34169`)
+binds the common 70-path source set, the complete candidate, validated and
+final tree digests, the eight approved conflict hashes and the one declared
+post-migration rewrite. The `agent-skills` gate recomputes the final path-set
+and tree digests from the real canonical catalog and fails closed on contract,
+count, path or byte drift.
+
 Implementation evidence must enumerate both pre-migration trees, prove the
 same 27 skill names, report exactly these eight conflicts, and show zero
 unaccounted paths after migration. Any additional conflict or omission requires

@@ -88,3 +88,20 @@ Expected: exit 0. This is the only completion signal.
 - Reference audit: remaining `.claude/skills` strings are compatibility
   declarations/tests, spec 019 contracts, approved historical spec 018 text,
   or `.specify/integrations/claude.manifest.json` compatibility metadata.
+
+## Clean-context review round 1
+
+- Frozen head: `90caec39f270ac755f0a808ea4ab52346a3d6601`.
+- Packet SHA-256:
+  `fb7f0c64c378fb501bb678451c9b09a954a883e7a18f8d60cebef31d2593ac70`.
+- Verdict: no Critical, Important, API, SemVer or accessibility finding; five
+  gate gaps required remediation before the founder merge gate.
+- Remediation RED: the expanded focused suite registered 24 tests and failed
+  12 for the missing inventory binding, non-directory entry rejection,
+  writer-path audit, role binding and FR-014 diagnostics.
+- Remediation GREEN: 24/24 focused Node tests and 39/39 mutation-boundary
+  tests pass. The machine-readable migration contract binds the common
+  70-path source set and complete source/final tree digests; the real gate
+  reports `inventory=verified`.
+- Remediation mutation: 543 of 737 valid mutants detected for `73.68%`, above
+  the unchanged `70%` threshold.

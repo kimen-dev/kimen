@@ -1,6 +1,7 @@
 // @spec:019-agent-skills-canonical
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { mkdir, mkdtemp, readFile, rm, symlink, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -12,6 +13,54 @@ const cliPath = join(repositoryRoot, 'scripts/gates/check-agent-skills.mjs');
 const sutUrl = new URL('../lib/agent-skill-catalog.mjs', import.meta.url);
 
 const loadSut = () => import(sutUrl.href);
+
+const sha256 = (contents) => createHash('sha256').update(contents).digest('hex');
+const inventoryDigests = (entries) => {
+  const sorted = [...entries].sort((left, right) =>
+    left.path < right.path ? -1 : left.path > right.path ? 1 : 0,
+  );
+  return {
+    finalTreeSha256: sha256(sorted.map(({ hash, path }) => `${path}\0${hash}\n`).join('')),
+    pathSetSha256: sha256(sorted.map(({ path }) => `${path}\n`).join('')),
+  };
+};
+
+async function synchronizeFixtureInventory(root) {
+  const contractPath = join(
+    root,
+    'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
+  );
+  const inventory = JSON.parse(await readFile(contractPath, 'utf8'));
+  const paths = runGit(root, ['ls-files', '.agents/skills'])
+    .stdout.trim()
+    .split('\n')
+    .filter(Boolean);
+  const entries = await Promise.all(
+    paths.map(async (path) => ({
+      hash: sha256(await readFile(join(root, path))),
+      path: path.replace(/^\.agents\/skills\//, ''),
+    })),
+  );
+  const digests = inventoryDigests(entries);
+  await write(
+    root,
+    'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
+    `${JSON.stringify(
+      {
+        ...inventory,
+        candidateTreeSha256: digests.finalTreeSha256,
+        expectedArtifactCount: entries.length,
+        expectedSkillCount: entries.filter(({ path }) => path.endsWith('/SKILL.md')).length,
+        finalTreeSha256: digests.finalTreeSha256,
+        pathSetSha256: digests.pathSetSha256,
+        validatedTreeSha256: digests.finalTreeSha256,
+      },
+      null,
+      2,
+    )}\n`,
+  );
+  runGit(root, ['add', '-A']);
+}
 
 function run(root, command, args, options = {}) {
   return spawnSync(command, args, {
@@ -91,6 +140,37 @@ async function createFixture(
     '.specify/extensions.yml',
     '# Skill sources are canonical under .agents/skills.\n',
   );
+  await write(
+    root,
+    'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
+    `${JSON.stringify(
+      (() => {
+        const entries = [
+          { hash: sha256('# Alpha\n'), path: 'alpha/SKILL.md' },
+          ...(missingEntrypoint ? [] : [{ hash: sha256('# Beta\n'), path: 'beta/SKILL.md' }]),
+        ];
+        const digests = inventoryDigests(entries);
+        return {
+          approvedConflicts: [],
+          canonicalPath: '.agents/skills',
+          candidateTreeSha256: digests.finalTreeSha256,
+          entryEncoding: 'utf8(path) + NUL + lowercase-sha256(bytes) + LF, sorted by path',
+          expectedArtifactCount: missingEntrypoint ? 1 : 2,
+          expectedConflictCount: 0,
+          expectedRewriteCount: 0,
+          expectedSkillCount: 2,
+          finalTreeSha256: digests.finalTreeSha256,
+          pathEncoding: 'utf8(path) + LF, sorted by path',
+          pathSetSha256: digests.pathSetSha256,
+          rewrittenAfterMigration: [],
+          schemaVersion: 1,
+          validatedTreeSha256: digests.finalTreeSha256,
+        };
+      })(),
+      null,
+      2,
+    )}\n`,
+  );
   await mkdir(join(root, '.home'), { recursive: true });
 
   runGit(root, ['init', '--quiet']);
@@ -118,6 +198,26 @@ test('S1 canonical discovery rejects a skill without SKILL.md', async (t) => {
   assert.match(result.stderr, /AGENT_SKILLS_ENTRY_MISSING/);
 });
 
+test('S1 canonical discovery rejects an immediate file masquerading as a skill', async (t) => {
+  const root = await createFixture(t);
+  await write(root, '.agents/skills/not-a-skill', 'not a directory\n');
+  runGit(root, ['add', '-A']);
+  const result = runCli(root);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /AGENT_SKILLS_ENTRY_TYPE/);
+  assert.match(result.stderr, /\.agents\/skills\/not-a-skill/);
+});
+
+test('S1 canonical discovery rejects an immediate symlink masquerading as a skill', async (t) => {
+  const root = await createFixture(t);
+  await symlink('alpha', join(root, '.agents/skills/linked-skill'));
+  runGit(root, ['add', '-A']);
+  const result = runCli(root);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /AGENT_SKILLS_ENTRY_TYPE/);
+  assert.match(result.stderr, /\.agents\/skills\/linked-skill/);
+});
+
 test('S2 Claude resolves the exact canonical catalog through its conventional path', async (t) => {
   const root = await createFixture(t);
   const result = runCli(root);
@@ -136,6 +236,7 @@ test('S3 one canonical edit and compatibility write share one content owner', as
   );
   await write(root, '.claude/skills/gamma/SKILL.md', '# Gamma\n');
   runGit(root, ['add', '-A']);
+  await synchronizeFixtureInventory(root);
   assert.equal(await readFile(join(root, '.agents/skills/gamma/SKILL.md'), 'utf8'), '# Gamma\n');
   const result = runCli(root);
   assert.equal(result.status, 0, result.stderr);
@@ -205,6 +306,37 @@ test('S5 migration fails closed for omissions and unapproved conflicts', async (
   );
 });
 
+test('S5 the real migration inventory is gate-bound to every final artifact', async () => {
+  const inventory = JSON.parse(
+    await readFile(
+      join(
+        repositoryRoot,
+        'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
+      ),
+      'utf8',
+    ),
+  );
+  assert.equal(inventory.expectedSkillCount, 27);
+  assert.equal(inventory.expectedArtifactCount, 70);
+  assert.equal(inventory.approvedConflicts.length, 8);
+  assert.match(inventory.pathSetSha256, /^[a-f0-9]{64}$/);
+  assert.match(inventory.candidateTreeSha256, /^[a-f0-9]{64}$/);
+  assert.match(inventory.validatedTreeSha256, /^[a-f0-9]{64}$/);
+  assert.match(inventory.finalTreeSha256, /^[a-f0-9]{64}$/);
+  const result = runCli(repositoryRoot);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /inventory=verified/);
+});
+
+test('S5 migration inventory rejects a changed canonical artifact hash', async (t) => {
+  const root = await createFixture(t);
+  await write(root, '.agents/skills/alpha/SKILL.md', '# Tampered Alpha\n');
+  runGit(root, ['add', '-A']);
+  const result = runCli(root);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /AGENT_SKILLS_MIGRATION_HASH/);
+});
+
 for (const [condition, code] of [
   ['missing', 'AGENT_SKILLS_COMPAT_MISSING'],
   ['broken', 'AGENT_SKILLS_COMPAT_BROKEN'],
@@ -218,6 +350,8 @@ for (const [condition, code] of [
     const result = runCli(root);
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, new RegExp(code));
+    assert.match(result.stderr, /invariant=/);
+    assert.match(result.stderr, /expected=.*\.claude\/skills.*\.\.\/\.agents\/skills/);
   });
 }
 
@@ -237,6 +371,7 @@ test('S8 a vendor-path tool write persists only in the canonical catalog', async
   const root = await createFixture(t);
   await write(root, '.claude/skills/tool-added/SKILL.md', '# Tool added\n');
   runGit(root, ['add', '-A']);
+  await synchronizeFixtureInventory(root);
   assert.equal(
     await readFile(join(root, '.agents/skills/tool-added/SKILL.md'), 'utf8'),
     '# Tool added\n',
@@ -246,9 +381,33 @@ test('S8 a vendor-path tool write persists only in the canonical catalog', async
   assert.match(result.stdout, /skills=3/);
 });
 
+test('S8 repository-owned tooling cannot configure a vendor-owned skill write', async (t) => {
+  const root = await createFixture(t);
+  await write(
+    root,
+    'scripts/update-skills.mjs',
+    "import { writeFile } from 'node:fs/promises';\nawait writeFile('.claude/skills/new/SKILL.md', '# New\\n');\n",
+  );
+  runGit(root, ['add', '-A']);
+  const result = runCli(root);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /AGENT_SKILLS_TOOLING_VENDOR_WRITE/);
+  assert.match(result.stderr, /scripts\/update-skills\.mjs/);
+});
+
 test('S9 stale operating guidance reports canonical ownership drift', async (t) => {
   const root = await createFixture(t, {
     guidance: 'Constitutional skills live only in `.claude/skills`.\n',
+  });
+  const result = runCli(root);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /AGENT_SKILLS_GUIDANCE_DRIFT/);
+});
+
+test('S9 reversed canonical and compatibility roles fail closed', async (t) => {
+  const root = await createFixture(t, {
+    guidance:
+      'Repository skills are canonical at `.claude/skills`. `.agents/skills` is compatibility-only.\n',
   });
   const result = runCli(root);
   assert.notEqual(result.status, 0);

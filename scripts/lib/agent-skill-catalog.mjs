@@ -3,6 +3,8 @@
 const CANONICAL_PATH = '.agents/skills';
 const COMPATIBILITY_PATH = '.claude/skills';
 const EXPECTED_LINK_TARGET = '../.agents/skills';
+const MIGRATION_CONTRACT_PATH =
+  'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json';
 
 function compareByPathThenCode(left, right) {
   return left.path.localeCompare(right.path) || left.code.localeCompare(right.code);
@@ -10,6 +12,53 @@ function compareByPathThenCode(left, right) {
 
 function finding(code, path) {
   return { code, path };
+}
+
+const isSha256 = (value) => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
+
+function migrationContractIsValid(migration) {
+  if (
+    migration.schemaVersion !== 1 ||
+    migration.canonicalPath !== CANONICAL_PATH ||
+    !Number.isInteger(migration.expectedSkillCount) ||
+    !Number.isInteger(migration.expectedArtifactCount) ||
+    !Number.isInteger(migration.expectedConflictCount) ||
+    !Number.isInteger(migration.expectedRewriteCount) ||
+    !isSha256(migration.pathSetSha256) ||
+    !isSha256(migration.candidateTreeSha256) ||
+    !isSha256(migration.validatedTreeSha256) ||
+    !isSha256(migration.finalTreeSha256) ||
+    !Array.isArray(migration.approvedConflicts) ||
+    !Array.isArray(migration.rewrittenAfterMigration)
+  ) {
+    return false;
+  }
+  if (
+    migration.approvedConflicts.length !== migration.expectedConflictCount ||
+    migration.rewrittenAfterMigration.length !== migration.expectedRewriteCount
+  ) {
+    return false;
+  }
+
+  const paths = new Set();
+  const records = [...migration.approvedConflicts, ...migration.rewrittenAfterMigration];
+  for (const record of records) {
+    if (typeof record?.path !== 'string' || paths.has(record.path)) return false;
+    paths.add(record.path);
+  }
+  return (
+    migration.approvedConflicts.every(
+      ({ candidateHash, finalHash, validatedHash }) =>
+        isSha256(candidateHash) &&
+        isSha256(validatedHash) &&
+        isSha256(finalHash) &&
+        candidateHash !== validatedHash,
+    ) &&
+    migration.rewrittenAfterMigration.every(
+      ({ finalHash, sourceHash }) =>
+        isSha256(sourceHash) && isSha256(finalHash) && sourceHash !== finalHash,
+    )
+  );
 }
 
 export function validateAgentSkillFacts(facts) {
@@ -31,6 +80,14 @@ export function validateAgentSkillFacts(facts) {
       findings.push(
         finding('AGENT_SKILLS_ENTRY_MISSING', `${CANONICAL_PATH}/${skill.name}/SKILL.md`),
       );
+    }
+  }
+
+  for (const entry of [...(canonical.entries ?? [])].sort((left, right) =>
+    left.name.localeCompare(right.name),
+  )) {
+    if (entry.type !== 'directory') {
+      findings.push(finding('AGENT_SKILLS_ENTRY_TYPE', `${CANONICAL_PATH}/${entry.name}`));
     }
   }
 
@@ -80,6 +137,24 @@ export function validateAgentSkillFacts(facts) {
       guidance.compatibilityRequired !== false && !guidance.compatibilityDeclared;
     if (!guidance.canonicalDeclared || compatibilityMissing) {
       findings.push(finding('AGENT_SKILLS_GUIDANCE_DRIFT', guidance.path));
+    }
+  }
+
+  for (const path of [...(facts.tooling?.writerDriftPaths ?? [])].sort()) {
+    findings.push(finding('AGENT_SKILLS_TOOLING_VENDOR_WRITE', path));
+  }
+
+  const migration = facts.migration ?? {};
+  if (!migration.exists || !migrationContractIsValid(migration)) {
+    findings.push(finding('AGENT_SKILLS_MIGRATION_CONTRACT', MIGRATION_CONTRACT_PATH));
+  } else {
+    if (
+      migration.expectedArtifactCount !== migration.actualArtifactCount ||
+      migration.expectedSkillCount !== skills.length ||
+      migration.pathSetSha256 !== migration.actualPathSetSha256 ||
+      migration.finalTreeSha256 !== migration.actualTreeSha256
+    ) {
+      findings.push(finding('AGENT_SKILLS_MIGRATION_HASH', MIGRATION_CONTRACT_PATH));
     }
   }
 
@@ -143,4 +218,5 @@ export const agentSkillTopology = Object.freeze({
   canonicalPath: CANONICAL_PATH,
   compatibilityPath: COMPATIBILITY_PATH,
   expectedLinkTarget: EXPECTED_LINK_TARGET,
+  migrationContractPath: MIGRATION_CONTRACT_PATH,
 });
