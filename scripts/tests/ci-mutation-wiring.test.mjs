@@ -196,13 +196,14 @@ test('S3 CI separates ordinary gates from mutation with isolated pre-install cac
   assert.ok(gatesStart > -1);
   assert.ok(mutationStart > gatesStart);
   assert.ok(containmentStart > mutationStart);
+  assert.match(gates, /timeout-minutes: 45/);
   assert.ok(gates.indexOf(cacheSetup) > -1);
   assert.ok(gates.indexOf(cacheSetup) < gates.indexOf('uses: pnpm/action-setup@'));
   assert.match(gates, /KIMEN_MUTATION_DELEGATED_TO: ['"]?mutation['"]?/);
   assert.match(gates, /run: bash scripts\/gates\/gates-suite\.sh/);
   assert.ok(mutation.indexOf(cacheSetup) > -1);
   assert.ok(mutation.indexOf(cacheSetup) < mutation.indexOf('uses: pnpm/action-setup@'));
-  assert.match(mutation, /timeout-minutes: 20/);
+  assert.match(mutation, /timeout-minutes: 45/);
   assert.match(mutation, /fetch-depth: 0/);
   assert.match(
     mutation,
