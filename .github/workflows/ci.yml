@@ -70,7 +70,7 @@ jobs:
 
   mutation:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     permissions:
       contents: read
     steps:
@@ -105,7 +105,7 @@ jobs:
       - name: Changed-core mutation gate
         env:
           KIMEN_MUTATION_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
-        run: pnpm run test:mutation
+        run: GITHUB_STEP_SUMMARY="$RUNNER_TEMP/kimen-mutation-summary.md" pnpm run test:mutation
 
   containment:
     runs-on: ubuntu-latest

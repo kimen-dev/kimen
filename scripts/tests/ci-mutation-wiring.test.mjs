@@ -218,13 +218,16 @@ test('S3 CI separates ordinary gates from mutation with isolated pre-install cac
   assert.match(gates, /run: bash scripts\/gates\/gates-suite\.sh/);
   assert.ok(mutation.indexOf(cacheSetup) > -1);
   assert.ok(mutation.indexOf(cacheSetup) < mutation.indexOf('uses: pnpm/action-setup@'));
-  assert.match(mutation, /timeout-minutes: 45/);
+  assert.match(mutation, /timeout-minutes: 90/);
   assert.match(mutation, /fetch-depth: 0/);
   assert.match(
     mutation,
     /KIMEN_MUTATION_BASE:.*github\.event\.pull_request\.base\.sha.*github\.event\.before/,
   );
-  assert.match(mutation, /run: pnpm run test:mutation/);
+  assert.match(
+    mutation,
+    /GITHUB_STEP_SUMMARY="\$RUNNER_TEMP\/kimen-mutation-summary\.md" pnpm run test:mutation/,
+  );
   assert.doesNotMatch(mutation, /playwright/i);
   assert.match(
     containment,
