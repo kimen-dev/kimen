@@ -3,308 +3,395 @@
     "button": {
       "xs": {
         "height": {
-          "$value": "{ki.space.7xl}"
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the button component for xs height."
         },
         "padding-inline": {
-          "$value": "{ki.space.sm}"
+          "$value": "{ki.space.sm}",
+          "$description": "dimension used by the button component for xs padding inline."
         },
         "gap": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the button component for xs gap."
         },
         "radius": {
-          "$value": "{ki.radius.sm}"
+          "$value": "{ki.radius.sm}",
+          "$description": "dimension used by the button component for xs radius."
         },
         "font-size": {
-          "$value": "{ki.typography.size.caption-2}"
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the button component for xs font size."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.caption-2}"
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the button component for xs line height."
         },
         "icon-size": {
-          "$value": "{ki.space.3xl}"
+          "$value": "{ki.space.3xl}",
+          "$description": "dimension used by the button component for xs icon size."
         },
         "min-target": {
-          "$value": "{ki.space.7xl}"
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the button component for xs min target."
         }
       },
       "sm": {
         "height": {
-          "$value": "{ki.space.10xl}"
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the button component for sm height."
         },
         "padding-inline": {
-          "$value": "{ki.space.md}"
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the button component for sm padding inline."
         },
         "gap": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the button component for sm gap."
         },
         "radius": {
-          "$value": "{ki.radius.md}"
+          "$value": "{ki.radius.md}",
+          "$description": "dimension used by the button component for sm radius."
         },
         "font-size": {
-          "$value": "{ki.typography.size.body-1}"
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the button component for sm font size."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.body-1}"
+          "$value": "{ki.typography.line-height.body-1}",
+          "$description": "dimension used by the button component for sm line height."
         },
         "icon-size": {
-          "$value": "{ki.space.3xl}"
+          "$value": "{ki.space.3xl}",
+          "$description": "dimension used by the button component for sm icon size."
         },
         "min-target": {
-          "$value": "{ki.space.7xl}"
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the button component for sm min target."
         }
       },
       "md": {
         "height": {
-          "$value": "{ki.space.12xl}"
+          "$value": "{ki.space.12xl}",
+          "$description": "dimension used by the button component for md height."
         },
         "padding-inline": {
-          "$value": "{ki.space.lg}"
+          "$value": "{ki.space.lg}",
+          "$description": "dimension used by the button component for md padding inline."
         },
         "gap": {
-          "$value": "{ki.space.xs}"
+          "$value": "{ki.space.xs}",
+          "$description": "dimension used by the button component for md gap."
         },
         "radius": {
-          "$value": "{ki.radius.lg}"
+          "$value": "{ki.radius.lg}",
+          "$description": "dimension used by the button component for md radius."
         },
         "font-size": {
-          "$value": "{ki.typography.size.body-1}"
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the button component for md font size."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.body-1}"
+          "$value": "{ki.typography.line-height.body-1}",
+          "$description": "dimension used by the button component for md line height."
         },
         "icon-size": {
-          "$value": "{ki.space.4xl}"
+          "$value": "{ki.space.4xl}",
+          "$description": "dimension used by the button component for md icon size."
         },
         "min-target": {
-          "$value": "{ki.space.7xl}"
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the button component for md min target."
         }
       },
       "lg": {
         "height": {
-          "$value": "{ki.space.14xl}"
+          "$value": "{ki.space.14xl}",
+          "$description": "dimension used by the button component for lg height."
         },
         "padding-inline": {
-          "$value": "{ki.space.xl}"
+          "$value": "{ki.space.xl}",
+          "$description": "dimension used by the button component for lg padding inline."
         },
         "gap": {
-          "$value": "{ki.space.sm}"
+          "$value": "{ki.space.sm}",
+          "$description": "dimension used by the button component for lg gap."
         },
         "radius": {
-          "$value": "{ki.radius.xl}"
+          "$value": "{ki.radius.xl}",
+          "$description": "dimension used by the button component for lg radius."
         },
         "font-size": {
-          "$value": "{ki.typography.size.body-2}"
+          "$value": "{ki.typography.size.body-2}",
+          "$description": "dimension used by the button component for lg font size."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.body-2}"
+          "$value": "{ki.typography.line-height.body-2}",
+          "$description": "dimension used by the button component for lg line height."
         },
         "icon-size": {
-          "$value": "{ki.space.5xl}"
+          "$value": "{ki.space.5xl}",
+          "$description": "dimension used by the button component for lg icon size."
         },
         "min-target": {
-          "$value": "{ki.space.7xl}"
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the button component for lg min target."
         }
       },
       "xl": {
         "height": {
-          "$value": "{ki.space.16xl}"
+          "$value": "{ki.space.16xl}",
+          "$description": "dimension used by the button component for xl height."
         },
         "padding-inline": {
-          "$value": "{ki.space.3xl}"
+          "$value": "{ki.space.3xl}",
+          "$description": "dimension used by the button component for xl padding inline."
         },
         "gap": {
-          "$value": "{ki.space.sm}"
+          "$value": "{ki.space.sm}",
+          "$description": "dimension used by the button component for xl gap."
         },
         "radius": {
-          "$value": "{ki.radius.2xl}"
+          "$value": "{ki.radius.2xl}",
+          "$description": "dimension used by the button component for xl radius."
         },
         "font-size": {
-          "$value": "{ki.typography.size.title-2}"
+          "$value": "{ki.typography.size.title-2}",
+          "$description": "dimension used by the button component for xl font size."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.title-2}"
+          "$value": "{ki.typography.line-height.title-2}",
+          "$description": "dimension used by the button component for xl line height."
         },
         "icon-size": {
-          "$value": "{ki.space.7xl}"
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the button component for xl icon size."
         },
         "min-target": {
-          "$value": "{ki.space.7xl}"
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the button component for xl min target."
         }
       },
       "font-family": {
-        "$value": "{ki.typography.family.body}"
+        "$value": "{ki.typography.family.body}",
+        "$description": "font family used by the button component for font family."
       },
       "font-weight": {
-        "$value": "{ki.typography.weight.body.medium}"
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "font weight used by the button component for font weight."
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the button component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the button component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the button component for focus ring offset."
         }
       },
       "primary": {
         "neutral": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.primary-high-em}"
+              "$value": "{ki.surface.primary-high-em}",
+              "$description": "color used by the button component for primary neutral rest background."
             },
             "fg": {
-              "$value": "{ki.text.primary-on-primary}"
+              "$value": "{ki.text.primary-on-primary}",
+              "$description": "color used by the button component for primary neutral rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary neutral rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.primary-high-em-hover}"
+              "$value": "{ki.surface.primary-high-em-hover}",
+              "$description": "color used by the button component for primary neutral hover background."
             },
             "fg": {
-              "$value": "{ki.text.primary-on-primary}"
+              "$value": "{ki.text.primary-on-primary}",
+              "$description": "color used by the button component for primary neutral hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary neutral hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.primary-high-em}"
+              "$value": "{ki.surface.primary-high-em}",
+              "$description": "color used by the button component for primary neutral active background."
             },
             "fg": {
-              "$value": "{ki.text.primary-on-primary}"
+              "$value": "{ki.text.primary-on-primary}",
+              "$description": "color used by the button component for primary neutral active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary neutral active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.surface.disabled-low-em}"
+              "$value": "{ki.surface.disabled-low-em}",
+              "$description": "color used by the button component for primary neutral disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for primary neutral disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary neutral disabled border."
             }
           }
         },
         "success": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.success-high-em}"
+              "$value": "{ki.surface.success-high-em}",
+              "$description": "color used by the button component for primary success rest background."
             },
             "fg": {
-              "$value": "{ki.text.primary-on-success}"
+              "$value": "{ki.text.primary-on-success}",
+              "$description": "color used by the button component for primary success rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary success rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.success-high-em-hover}"
+              "$value": "{ki.surface.success-high-em-hover}",
+              "$description": "color used by the button component for primary success hover background."
             },
             "fg": {
-              "$value": "{ki.text.primary-on-success}"
+              "$value": "{ki.text.primary-on-success}",
+              "$description": "color used by the button component for primary success hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary success hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.success-high-em}"
+              "$value": "{ki.surface.success-high-em}",
+              "$description": "color used by the button component for primary success active background."
             },
             "fg": {
-              "$value": "{ki.text.primary-on-success}"
+              "$value": "{ki.text.primary-on-success}",
+              "$description": "color used by the button component for primary success active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary success active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.surface.disabled-low-em}"
+              "$value": "{ki.surface.disabled-low-em}",
+              "$description": "color used by the button component for primary success disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for primary success disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary success disabled border."
             }
           }
         },
         "danger": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.danger-high-em}"
+              "$value": "{ki.surface.danger-high-em}",
+              "$description": "color used by the button component for primary danger rest background."
             },
             "fg": {
-              "$value": "{ki.text.primary-on-danger}"
+              "$value": "{ki.text.primary-on-danger}",
+              "$description": "color used by the button component for primary danger rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary danger rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.danger-high-em-hover}"
+              "$value": "{ki.surface.danger-high-em-hover}",
+              "$description": "color used by the button component for primary danger hover background."
             },
             "fg": {
-              "$value": "{ki.text.primary-on-danger}"
+              "$value": "{ki.text.primary-on-danger}",
+              "$description": "color used by the button component for primary danger hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary danger hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.danger-high-em}"
+              "$value": "{ki.surface.danger-high-em}",
+              "$description": "color used by the button component for primary danger active background."
             },
             "fg": {
-              "$value": "{ki.text.primary-on-danger}"
+              "$value": "{ki.text.primary-on-danger}",
+              "$description": "color used by the button component for primary danger active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary danger active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.surface.disabled-low-em}"
+              "$value": "{ki.surface.disabled-low-em}",
+              "$description": "color used by the button component for primary danger disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for primary danger disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for primary danger disabled border."
             }
           }
         },
         "rest": {
           "shadow": {
-            "$value": "0 1px 1px -0.5px var(--ki-elevation-shadow)"
+            "$value": "{ki.foundation.migrated.component-button.button.primary.hover.shadow}",
+            "$description": "shadow used by the button component for button primary rest shadow.",
+            "$type": "shadow"
           }
         },
         "hover": {
           "shadow": {
-            "$value": "0 1px 1px -0.5px var(--ki-elevation-shadow)"
+            "$value": "{ki.foundation.migrated.component-button.button.primary.hover.shadow}",
+            "$description": "shadow used by the button component for button primary hover shadow.",
+            "$type": "shadow"
           }
         },
         "active": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for primary active shadow."
           }
         },
         "disabled": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for primary disabled shadow."
           }
         }
       },
@@ -312,159 +399,199 @@
         "neutral": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.primary-base-em}"
+              "$value": "{ki.surface.primary-base-em}",
+              "$description": "color used by the button component for secondary neutral rest background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for secondary neutral rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary neutral rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.primary-low-em}"
+              "$value": "{ki.surface.primary-low-em}",
+              "$description": "color used by the button component for secondary neutral hover background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for secondary neutral hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary neutral hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.primary-low-em}"
+              "$value": "{ki.surface.primary-low-em}",
+              "$description": "color used by the button component for secondary neutral active background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for secondary neutral active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary neutral active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.surface.disabled-low-em}"
+              "$value": "{ki.surface.disabled-low-em}",
+              "$description": "color used by the button component for secondary neutral disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for secondary neutral disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary neutral disabled border."
             }
           }
         },
         "success": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.success-base-em}"
+              "$value": "{ki.surface.success-base-em}",
+              "$description": "color used by the button component for secondary success rest background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for secondary success rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary success rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.success-low-em}"
+              "$value": "{ki.surface.success-low-em}",
+              "$description": "color used by the button component for secondary success hover background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for secondary success hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary success hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.success-low-em}"
+              "$value": "{ki.surface.success-low-em}",
+              "$description": "color used by the button component for secondary success active background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for secondary success active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary success active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.surface.disabled-low-em}"
+              "$value": "{ki.surface.disabled-low-em}",
+              "$description": "color used by the button component for secondary success disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for secondary success disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary success disabled border."
             }
           }
         },
         "danger": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.danger-base-em}"
+              "$value": "{ki.surface.danger-base-em}",
+              "$description": "color used by the button component for secondary danger rest background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for secondary danger rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary danger rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.danger-low-em}"
+              "$value": "{ki.surface.danger-low-em}",
+              "$description": "color used by the button component for secondary danger hover background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for secondary danger hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary danger hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.danger-low-em}"
+              "$value": "{ki.surface.danger-low-em}",
+              "$description": "color used by the button component for secondary danger active background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for secondary danger active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary danger active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.surface.disabled-low-em}"
+              "$value": "{ki.surface.disabled-low-em}",
+              "$description": "color used by the button component for secondary danger disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for secondary danger disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for secondary danger disabled border."
             }
           }
         },
         "rest": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for secondary rest shadow."
           }
         },
         "hover": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for secondary hover shadow."
           }
         },
         "active": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for secondary active shadow."
           }
         },
         "disabled": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for secondary disabled shadow."
           }
         }
       },
@@ -472,159 +599,202 @@
         "neutral": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.s0}"
+              "$value": "{ki.surface.s0}",
+              "$description": "color used by the button component for tertiary neutral rest background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for tertiary neutral rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary neutral rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.s1}"
+              "$value": "{ki.surface.s1}",
+              "$description": "color used by the button component for tertiary neutral hover background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for tertiary neutral hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary neutral hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.s2}"
+              "$value": "{ki.surface.s2}",
+              "$description": "color used by the button component for tertiary neutral active background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for tertiary neutral active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary neutral active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.surface.disabled-low-em}"
+              "$value": "{ki.surface.disabled-low-em}",
+              "$description": "color used by the button component for tertiary neutral disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for tertiary neutral disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary neutral disabled border."
             }
           }
         },
         "success": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.s0}"
+              "$value": "{ki.surface.s0}",
+              "$description": "color used by the button component for tertiary success rest background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for tertiary success rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary success rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.s1}"
+              "$value": "{ki.surface.s1}",
+              "$description": "color used by the button component for tertiary success hover background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for tertiary success hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary success hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.s2}"
+              "$value": "{ki.surface.s2}",
+              "$description": "color used by the button component for tertiary success active background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for tertiary success active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary success active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.surface.disabled-low-em}"
+              "$value": "{ki.surface.disabled-low-em}",
+              "$description": "color used by the button component for tertiary success disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for tertiary success disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary success disabled border."
             }
           }
         },
         "danger": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.s0}"
+              "$value": "{ki.surface.s0}",
+              "$description": "color used by the button component for tertiary danger rest background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for tertiary danger rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary danger rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.s1}"
+              "$value": "{ki.surface.s1}",
+              "$description": "color used by the button component for tertiary danger hover background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for tertiary danger hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary danger hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.s2}"
+              "$value": "{ki.surface.s2}",
+              "$description": "color used by the button component for tertiary danger active background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for tertiary danger active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary danger active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.surface.disabled-low-em}"
+              "$value": "{ki.surface.disabled-low-em}",
+              "$description": "color used by the button component for tertiary danger disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for tertiary danger disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for tertiary danger disabled border."
             }
           }
         },
         "rest": {
           "shadow": {
-            "$value": "0 1px 2px 0 var(--ki-elevation-shadow-dark), 0 2px 6px 2px var(--ki-elevation-shadow-med)"
+            "$value": "{ki.foundation.migrated.component-button.button.tertiary.active.shadow}",
+            "$description": "shadow used by the button component for button tertiary rest shadow.",
+            "$type": "shadow"
           }
         },
         "hover": {
           "shadow": {
-            "$value": "0 1px 3px 0 var(--ki-elevation-shadow-dark), 0 4px 8px 3px var(--ki-elevation-shadow-med)"
+            "$value": "{ki.foundation.migrated.component-button.button.tertiary.hover.shadow}",
+            "$description": "shadow used by the button component for button tertiary hover shadow.",
+            "$type": "shadow"
           }
         },
         "active": {
           "shadow": {
-            "$value": "0 1px 2px 0 var(--ki-elevation-shadow-dark), 0 2px 6px 2px var(--ki-elevation-shadow-med)"
+            "$value": "{ki.foundation.migrated.component-button.button.tertiary.active.shadow}",
+            "$description": "shadow used by the button component for button tertiary active shadow.",
+            "$type": "shadow"
           }
         },
         "disabled": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for tertiary disabled shadow."
           }
         }
       },
@@ -632,159 +802,199 @@
         "neutral": {
           "rest": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for quaternary neutral rest background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for quaternary neutral rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.primary-med-em}"
+              "$value": "{ki.outline.primary-med-em}",
+              "$description": "color used by the button component for quaternary neutral rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.primary-base-em-alpha}"
+              "$value": "{ki.surface.primary-base-em-alpha}",
+              "$description": "color used by the button component for quaternary neutral hover background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for quaternary neutral hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.primary-high-em}"
+              "$value": "{ki.outline.primary-high-em}",
+              "$description": "color used by the button component for quaternary neutral hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.primary-low-em}"
+              "$value": "{ki.surface.primary-low-em}",
+              "$description": "color used by the button component for quaternary neutral active background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for quaternary neutral active foreground."
             },
             "border": {
-              "$value": "{ki.outline.primary-high-em}"
+              "$value": "{ki.outline.primary-high-em}",
+              "$description": "color used by the button component for quaternary neutral active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for quaternary neutral disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for quaternary neutral disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.low-em}"
+              "$value": "{ki.outline.low-em}",
+              "$description": "color used by the button component for quaternary neutral disabled border."
             }
           }
         },
         "success": {
           "rest": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for quaternary success rest background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for quaternary success rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.success-med-em}"
+              "$value": "{ki.outline.success-med-em}",
+              "$description": "color used by the button component for quaternary success rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.success-base-em-alpha}"
+              "$value": "{ki.surface.success-base-em-alpha}",
+              "$description": "color used by the button component for quaternary success hover background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for quaternary success hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.success-high-em}"
+              "$value": "{ki.outline.success-high-em}",
+              "$description": "color used by the button component for quaternary success hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.success-low-em}"
+              "$value": "{ki.surface.success-low-em}",
+              "$description": "color used by the button component for quaternary success active background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for quaternary success active foreground."
             },
             "border": {
-              "$value": "{ki.outline.success-high-em}"
+              "$value": "{ki.outline.success-high-em}",
+              "$description": "color used by the button component for quaternary success active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for quaternary success disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for quaternary success disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.low-em}"
+              "$value": "{ki.outline.low-em}",
+              "$description": "color used by the button component for quaternary success disabled border."
             }
           }
         },
         "danger": {
           "rest": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for quaternary danger rest background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for quaternary danger rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.danger-med-em}"
+              "$value": "{ki.outline.danger-med-em}",
+              "$description": "color used by the button component for quaternary danger rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.danger-base-em-alpha}"
+              "$value": "{ki.surface.danger-base-em-alpha}",
+              "$description": "color used by the button component for quaternary danger hover background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for quaternary danger hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.danger-high-em}"
+              "$value": "{ki.outline.danger-high-em}",
+              "$description": "color used by the button component for quaternary danger hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.danger-low-em}"
+              "$value": "{ki.surface.danger-low-em}",
+              "$description": "color used by the button component for quaternary danger active background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for quaternary danger active foreground."
             },
             "border": {
-              "$value": "{ki.outline.danger-high-em}"
+              "$value": "{ki.outline.danger-high-em}",
+              "$description": "color used by the button component for quaternary danger active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for quaternary danger disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for quaternary danger disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.low-em}"
+              "$value": "{ki.outline.low-em}",
+              "$description": "color used by the button component for quaternary danger disabled border."
             }
           }
         },
         "rest": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for quaternary rest shadow."
           }
         },
         "hover": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for quaternary hover shadow."
           }
         },
         "active": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for quaternary active shadow."
           }
         },
         "disabled": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for quaternary disabled shadow."
           }
         }
       },
@@ -792,164 +1002,205 @@
         "neutral": {
           "rest": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for ghost neutral rest background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for ghost neutral rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost neutral rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.primary-base-em-alpha}"
+              "$value": "{ki.surface.primary-base-em-alpha}",
+              "$description": "color used by the button component for ghost neutral hover background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for ghost neutral hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost neutral hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.primary-low-em}"
+              "$value": "{ki.surface.primary-low-em}",
+              "$description": "color used by the button component for ghost neutral active background."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}"
+              "$value": "{ki.text.primary-high-em}",
+              "$description": "color used by the button component for ghost neutral active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost neutral active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for ghost neutral disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for ghost neutral disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost neutral disabled border."
             }
           }
         },
         "success": {
           "rest": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for ghost success rest background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for ghost success rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost success rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.success-base-em-alpha}"
+              "$value": "{ki.surface.success-base-em-alpha}",
+              "$description": "color used by the button component for ghost success hover background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for ghost success hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost success hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.success-low-em}"
+              "$value": "{ki.surface.success-low-em}",
+              "$description": "color used by the button component for ghost success active background."
             },
             "fg": {
-              "$value": "{ki.text.success-high-em}"
+              "$value": "{ki.text.success-high-em}",
+              "$description": "color used by the button component for ghost success active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost success active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for ghost success disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for ghost success disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost success disabled border."
             }
           }
         },
         "danger": {
           "rest": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for ghost danger rest background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for ghost danger rest foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost danger rest border."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.danger-base-em-alpha}"
+              "$value": "{ki.surface.danger-base-em-alpha}",
+              "$description": "color used by the button component for ghost danger hover background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for ghost danger hover foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost danger hover border."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.danger-low-em}"
+              "$value": "{ki.surface.danger-low-em}",
+              "$description": "color used by the button component for ghost danger active background."
             },
             "fg": {
-              "$value": "{ki.text.danger-high-em}"
+              "$value": "{ki.text.danger-high-em}",
+              "$description": "color used by the button component for ghost danger active foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost danger active border."
             }
           },
           "disabled": {
             "bg": {
-              "$value": "{ki.transparent-inverse}"
+              "$value": "{ki.transparent-inverse}",
+              "$description": "color used by the button component for ghost danger disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}"
+              "$value": "{ki.text.muted}",
+              "$description": "color used by the button component for ghost danger disabled foreground."
             },
             "border": {
-              "$value": "{ki.outline.none}"
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the button component for ghost danger disabled border."
             }
           }
         },
         "rest": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for ghost rest shadow."
           }
         },
         "hover": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for ghost hover shadow."
           }
         },
         "active": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for ghost active shadow."
           }
         },
         "disabled": {
           "shadow": {
-            "$value": "none"
+            "$value": "none",
+            "$description": "value used by the button component for ghost disabled shadow."
           }
         }
       },
       "border-width": {
-        "$value": "{ki.space.xxs}"
+        "$value": "{ki.space.xxs}",
+        "$description": "dimension used by the button component for border width."
       }
     }
   }

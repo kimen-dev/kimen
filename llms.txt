@@ -2,17 +2,18 @@
 
 > Kimen web components (ki-*). Standards-first Stencil components, tokens-only styling, agent-legible by contract.
 
-Install with `pnpm add @kimen/elements`.
+Install with `pnpm add @kimen/elements @kimen/tokens`.
 
 Register individual components from the custom-elements bundle before using them:
 
 ```ts
-import { defineCustomElement as defineKiButton } from '@kimen/elements/dist/components/ki-button.js';
+import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
+import '@kimen/tokens/css';
 
 defineKiButton();
 ```
 
-Load `@kimen/tokens/dist/css/tokens.css` once for the Mars default theme. Theme variants are selected with package-supported theme attributes and remain token-driven.
+Load `@kimen/tokens/css` once for the onmars default theme. Theme variants are selected with package-supported theme attributes and remain token-driven.
 
 ## Components
 
@@ -55,7 +56,40 @@ Events:
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-alert-border-width`: dimension used by the alert component for border width.
+- `--ki-alert-danger-bg`: color used by the alert component for danger background.
+- `--ki-alert-danger-border`: color used by the alert component for danger border.
+- `--ki-alert-danger-fg`: color used by the alert component for danger foreground.
+- `--ki-alert-dismiss-active-fg`: color used by the alert component for dismiss active foreground.
+- `--ki-alert-dismiss-hover-fg`: color used by the alert component for dismiss hover foreground.
+- `--ki-alert-dismiss-icon-size`: dimension used by the alert component for dismiss icon size.
+- `--ki-alert-dismiss-rest-fg`: color used by the alert component for dismiss rest foreground.
+- `--ki-alert-dismiss-size`: dimension used by the alert component for dismiss size.
+- `--ki-alert-focus-ring-color`: color used by the alert component for focus ring color.
+- `--ki-alert-focus-ring-offset`: dimension used by the alert component for focus ring offset.
+- `--ki-alert-focus-ring-width`: dimension used by the alert component for focus ring width.
+- `--ki-alert-font-size`: dimension used by the alert component for font size.
+- `--ki-alert-gap`: dimension used by the alert component for gap.
+- `--ki-alert-heading-font-size`: dimension used by the alert component for heading font size.
+- `--ki-alert-heading-font-weight`: font weight used by the alert component for heading font weight.
+- `--ki-alert-info-bg`: color used by the alert component for info background.
+- `--ki-alert-info-border`: color used by the alert component for info border.
+- `--ki-alert-info-fg`: color used by the alert component for info foreground.
+- `--ki-alert-line-height`: dimension used by the alert component for line height.
+- `--ki-alert-neutral-bg`: color used by the alert component for neutral background.
+- `--ki-alert-neutral-border`: color used by the alert component for neutral border.
+- `--ki-alert-neutral-fg`: color used by the alert component for neutral foreground.
+- `--ki-alert-padding-block`: dimension used by the alert component for padding block.
+- `--ki-alert-padding-inline`: dimension used by the alert component for padding inline.
+- `--ki-alert-radius`: dimension used by the alert component for radius.
+- `--ki-alert-success-bg`: color used by the alert component for success background.
+- `--ki-alert-success-border`: color used by the alert component for success border.
+- `--ki-alert-success-fg`: color used by the alert component for success foreground.
+- `--ki-alert-warning-bg`: color used by the alert component for warning background.
+- `--ki-alert-warning-border`: color used by the alert component for warning border.
+- `--ki-alert-warning-fg`: color used by the alert component for warning foreground.
+- `--ki-outline-none`: semantic color for outline none.
 
 ### ki-badge
 
@@ -83,7 +117,35 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-badge-border-width`: dimension used by the badge component for border width.
+- `--ki-badge-danger-bg`: color used by the badge component for danger background.
+- `--ki-badge-danger-border`: color used by the badge component for danger border.
+- `--ki-badge-danger-fg`: color used by the badge component for danger foreground.
+- `--ki-badge-font-family`: font family used by the badge component for font family.
+- `--ki-badge-font-weight`: font weight used by the badge component for font weight.
+- `--ki-badge-info-bg`: color used by the badge component for info background.
+- `--ki-badge-info-border`: color used by the badge component for info border.
+- `--ki-badge-info-fg`: color used by the badge component for info foreground.
+- `--ki-badge-md-font-size`: dimension used by the badge component for md font size.
+- `--ki-badge-md-height`: dimension used by the badge component for md height.
+- `--ki-badge-md-line-height`: dimension used by the badge component for md line height.
+- `--ki-badge-md-padding-inline`: dimension used by the badge component for md padding inline.
+- `--ki-badge-md-radius`: dimension used by the badge component for md radius.
+- `--ki-badge-neutral-bg`: color used by the badge component for neutral background.
+- `--ki-badge-neutral-border`: color used by the badge component for neutral border.
+- `--ki-badge-neutral-fg`: color used by the badge component for neutral foreground.
+- `--ki-badge-sm-font-size`: dimension used by the badge component for sm font size.
+- `--ki-badge-sm-height`: dimension used by the badge component for sm height.
+- `--ki-badge-sm-line-height`: dimension used by the badge component for sm line height.
+- `--ki-badge-sm-padding-inline`: dimension used by the badge component for sm padding inline.
+- `--ki-badge-sm-radius`: dimension used by the badge component for sm radius.
+- `--ki-badge-success-bg`: color used by the badge component for success background.
+- `--ki-badge-success-border`: color used by the badge component for success border.
+- `--ki-badge-success-fg`: color used by the badge component for success foreground.
+- `--ki-badge-warning-bg`: color used by the badge component for warning background.
+- `--ki-badge-warning-border`: color used by the badge component for warning border.
+- `--ki-badge-warning-fg`: color used by the badge component for warning foreground.
 
 ### ki-button
 
@@ -116,7 +178,223 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-button-border-width`: dimension used by the button component for border width.
+- `--ki-button-focus-ring-color`: color used by the button component for focus ring color.
+- `--ki-button-focus-ring-offset`: dimension used by the button component for focus ring offset.
+- `--ki-button-focus-ring-width`: dimension used by the button component for focus ring width.
+- `--ki-button-font-family`: font family used by the button component for font family.
+- `--ki-button-font-weight`: font weight used by the button component for font weight.
+- `--ki-button-ghost-active-shadow`: value used by the button component for ghost active shadow.
+- `--ki-button-ghost-danger-active-bg`: color used by the button component for ghost danger active background.
+- `--ki-button-ghost-danger-active-border`: color used by the button component for ghost danger active border.
+- `--ki-button-ghost-danger-active-fg`: color used by the button component for ghost danger active foreground.
+- `--ki-button-ghost-danger-hover-bg`: color used by the button component for ghost danger hover background.
+- `--ki-button-ghost-danger-hover-border`: color used by the button component for ghost danger hover border.
+- `--ki-button-ghost-danger-hover-fg`: color used by the button component for ghost danger hover foreground.
+- `--ki-button-ghost-danger-rest-bg`: color used by the button component for ghost danger rest background.
+- `--ki-button-ghost-danger-rest-border`: color used by the button component for ghost danger rest border.
+- `--ki-button-ghost-danger-rest-fg`: color used by the button component for ghost danger rest foreground.
+- `--ki-button-ghost-disabled-shadow`: value used by the button component for ghost disabled shadow.
+- `--ki-button-ghost-hover-shadow`: value used by the button component for ghost hover shadow.
+- `--ki-button-ghost-neutral-active-bg`: color used by the button component for ghost neutral active background.
+- `--ki-button-ghost-neutral-active-border`: color used by the button component for ghost neutral active border.
+- `--ki-button-ghost-neutral-active-fg`: color used by the button component for ghost neutral active foreground.
+- `--ki-button-ghost-neutral-disabled-bg`: color used by the button component for ghost neutral disabled background.
+- `--ki-button-ghost-neutral-disabled-border`: color used by the button component for ghost neutral disabled border.
+- `--ki-button-ghost-neutral-disabled-fg`: color used by the button component for ghost neutral disabled foreground.
+- `--ki-button-ghost-neutral-hover-bg`: color used by the button component for ghost neutral hover background.
+- `--ki-button-ghost-neutral-hover-border`: color used by the button component for ghost neutral hover border.
+- `--ki-button-ghost-neutral-hover-fg`: color used by the button component for ghost neutral hover foreground.
+- `--ki-button-ghost-neutral-rest-bg`: color used by the button component for ghost neutral rest background.
+- `--ki-button-ghost-neutral-rest-border`: color used by the button component for ghost neutral rest border.
+- `--ki-button-ghost-neutral-rest-fg`: color used by the button component for ghost neutral rest foreground.
+- `--ki-button-ghost-rest-shadow`: value used by the button component for ghost rest shadow.
+- `--ki-button-ghost-success-active-bg`: color used by the button component for ghost success active background.
+- `--ki-button-ghost-success-active-border`: color used by the button component for ghost success active border.
+- `--ki-button-ghost-success-active-fg`: color used by the button component for ghost success active foreground.
+- `--ki-button-ghost-success-hover-bg`: color used by the button component for ghost success hover background.
+- `--ki-button-ghost-success-hover-border`: color used by the button component for ghost success hover border.
+- `--ki-button-ghost-success-hover-fg`: color used by the button component for ghost success hover foreground.
+- `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
+- `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
+- `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
+- `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
+- `--ki-button-lg-gap`: dimension used by the button component for lg gap.
+- `--ki-button-lg-height`: dimension used by the button component for lg height.
+- `--ki-button-lg-icon-size`: dimension used by the button component for lg icon size.
+- `--ki-button-lg-line-height`: dimension used by the button component for lg line height.
+- `--ki-button-lg-min-target`: dimension used by the button component for lg min target.
+- `--ki-button-lg-padding-inline`: dimension used by the button component for lg padding inline.
+- `--ki-button-lg-radius`: dimension used by the button component for lg radius.
+- `--ki-button-md-font-size`: dimension used by the button component for md font size.
+- `--ki-button-md-gap`: dimension used by the button component for md gap.
+- `--ki-button-md-height`: dimension used by the button component for md height.
+- `--ki-button-md-icon-size`: dimension used by the button component for md icon size.
+- `--ki-button-md-line-height`: dimension used by the button component for md line height.
+- `--ki-button-md-min-target`: dimension used by the button component for md min target.
+- `--ki-button-md-padding-inline`: dimension used by the button component for md padding inline.
+- `--ki-button-md-radius`: dimension used by the button component for md radius.
+- `--ki-button-primary-active-shadow`: value used by the button component for primary active shadow.
+- `--ki-button-primary-danger-active-bg`: color used by the button component for primary danger active background.
+- `--ki-button-primary-danger-active-border`: color used by the button component for primary danger active border.
+- `--ki-button-primary-danger-active-fg`: color used by the button component for primary danger active foreground.
+- `--ki-button-primary-danger-hover-bg`: color used by the button component for primary danger hover background.
+- `--ki-button-primary-danger-hover-border`: color used by the button component for primary danger hover border.
+- `--ki-button-primary-danger-hover-fg`: color used by the button component for primary danger hover foreground.
+- `--ki-button-primary-danger-rest-bg`: color used by the button component for primary danger rest background.
+- `--ki-button-primary-danger-rest-border`: color used by the button component for primary danger rest border.
+- `--ki-button-primary-danger-rest-fg`: color used by the button component for primary danger rest foreground.
+- `--ki-button-primary-disabled-shadow`: value used by the button component for primary disabled shadow.
+- `--ki-button-primary-hover-shadow`: shadow used by the button component for button primary hover shadow.
+- `--ki-button-primary-neutral-active-bg`: color used by the button component for primary neutral active background.
+- `--ki-button-primary-neutral-active-border`: color used by the button component for primary neutral active border.
+- `--ki-button-primary-neutral-active-fg`: color used by the button component for primary neutral active foreground.
+- `--ki-button-primary-neutral-disabled-bg`: color used by the button component for primary neutral disabled background.
+- `--ki-button-primary-neutral-disabled-border`: color used by the button component for primary neutral disabled border.
+- `--ki-button-primary-neutral-disabled-fg`: color used by the button component for primary neutral disabled foreground.
+- `--ki-button-primary-neutral-hover-bg`: color used by the button component for primary neutral hover background.
+- `--ki-button-primary-neutral-hover-border`: color used by the button component for primary neutral hover border.
+- `--ki-button-primary-neutral-hover-fg`: color used by the button component for primary neutral hover foreground.
+- `--ki-button-primary-neutral-rest-bg`: color used by the button component for primary neutral rest background.
+- `--ki-button-primary-neutral-rest-border`: color used by the button component for primary neutral rest border.
+- `--ki-button-primary-neutral-rest-fg`: color used by the button component for primary neutral rest foreground.
+- `--ki-button-primary-rest-shadow`: shadow used by the button component for button primary rest shadow.
+- `--ki-button-primary-success-active-bg`: color used by the button component for primary success active background.
+- `--ki-button-primary-success-active-border`: color used by the button component for primary success active border.
+- `--ki-button-primary-success-active-fg`: color used by the button component for primary success active foreground.
+- `--ki-button-primary-success-hover-bg`: color used by the button component for primary success hover background.
+- `--ki-button-primary-success-hover-border`: color used by the button component for primary success hover border.
+- `--ki-button-primary-success-hover-fg`: color used by the button component for primary success hover foreground.
+- `--ki-button-primary-success-rest-bg`: color used by the button component for primary success rest background.
+- `--ki-button-primary-success-rest-border`: color used by the button component for primary success rest border.
+- `--ki-button-primary-success-rest-fg`: color used by the button component for primary success rest foreground.
+- `--ki-button-quaternary-active-shadow`: value used by the button component for quaternary active shadow.
+- `--ki-button-quaternary-danger-active-bg`: color used by the button component for quaternary danger active background.
+- `--ki-button-quaternary-danger-active-border`: color used by the button component for quaternary danger active border.
+- `--ki-button-quaternary-danger-active-fg`: color used by the button component for quaternary danger active foreground.
+- `--ki-button-quaternary-danger-hover-bg`: color used by the button component for quaternary danger hover background.
+- `--ki-button-quaternary-danger-hover-border`: color used by the button component for quaternary danger hover border.
+- `--ki-button-quaternary-danger-hover-fg`: color used by the button component for quaternary danger hover foreground.
+- `--ki-button-quaternary-danger-rest-bg`: color used by the button component for quaternary danger rest background.
+- `--ki-button-quaternary-danger-rest-border`: color used by the button component for quaternary danger rest border.
+- `--ki-button-quaternary-danger-rest-fg`: color used by the button component for quaternary danger rest foreground.
+- `--ki-button-quaternary-disabled-shadow`: value used by the button component for quaternary disabled shadow.
+- `--ki-button-quaternary-hover-shadow`: value used by the button component for quaternary hover shadow.
+- `--ki-button-quaternary-neutral-active-bg`: color used by the button component for quaternary neutral active background.
+- `--ki-button-quaternary-neutral-active-border`: color used by the button component for quaternary neutral active border.
+- `--ki-button-quaternary-neutral-active-fg`: color used by the button component for quaternary neutral active foreground.
+- `--ki-button-quaternary-neutral-disabled-bg`: color used by the button component for quaternary neutral disabled background.
+- `--ki-button-quaternary-neutral-disabled-border`: color used by the button component for quaternary neutral disabled border.
+- `--ki-button-quaternary-neutral-disabled-fg`: color used by the button component for quaternary neutral disabled foreground.
+- `--ki-button-quaternary-neutral-hover-bg`: color used by the button component for quaternary neutral hover background.
+- `--ki-button-quaternary-neutral-hover-border`: color used by the button component for quaternary neutral hover border.
+- `--ki-button-quaternary-neutral-hover-fg`: color used by the button component for quaternary neutral hover foreground.
+- `--ki-button-quaternary-neutral-rest-bg`: color used by the button component for quaternary neutral rest background.
+- `--ki-button-quaternary-neutral-rest-border`: color used by the button component for quaternary neutral rest border.
+- `--ki-button-quaternary-neutral-rest-fg`: color used by the button component for quaternary neutral rest foreground.
+- `--ki-button-quaternary-rest-shadow`: value used by the button component for quaternary rest shadow.
+- `--ki-button-quaternary-success-active-bg`: color used by the button component for quaternary success active background.
+- `--ki-button-quaternary-success-active-border`: color used by the button component for quaternary success active border.
+- `--ki-button-quaternary-success-active-fg`: color used by the button component for quaternary success active foreground.
+- `--ki-button-quaternary-success-hover-bg`: color used by the button component for quaternary success hover background.
+- `--ki-button-quaternary-success-hover-border`: color used by the button component for quaternary success hover border.
+- `--ki-button-quaternary-success-hover-fg`: color used by the button component for quaternary success hover foreground.
+- `--ki-button-quaternary-success-rest-bg`: color used by the button component for quaternary success rest background.
+- `--ki-button-quaternary-success-rest-border`: color used by the button component for quaternary success rest border.
+- `--ki-button-quaternary-success-rest-fg`: color used by the button component for quaternary success rest foreground.
+- `--ki-button-secondary-active-shadow`: value used by the button component for secondary active shadow.
+- `--ki-button-secondary-danger-active-bg`: color used by the button component for secondary danger active background.
+- `--ki-button-secondary-danger-active-border`: color used by the button component for secondary danger active border.
+- `--ki-button-secondary-danger-active-fg`: color used by the button component for secondary danger active foreground.
+- `--ki-button-secondary-danger-hover-bg`: color used by the button component for secondary danger hover background.
+- `--ki-button-secondary-danger-hover-border`: color used by the button component for secondary danger hover border.
+- `--ki-button-secondary-danger-hover-fg`: color used by the button component for secondary danger hover foreground.
+- `--ki-button-secondary-danger-rest-bg`: color used by the button component for secondary danger rest background.
+- `--ki-button-secondary-danger-rest-border`: color used by the button component for secondary danger rest border.
+- `--ki-button-secondary-danger-rest-fg`: color used by the button component for secondary danger rest foreground.
+- `--ki-button-secondary-disabled-shadow`: value used by the button component for secondary disabled shadow.
+- `--ki-button-secondary-hover-shadow`: value used by the button component for secondary hover shadow.
+- `--ki-button-secondary-neutral-active-bg`: color used by the button component for secondary neutral active background.
+- `--ki-button-secondary-neutral-active-border`: color used by the button component for secondary neutral active border.
+- `--ki-button-secondary-neutral-active-fg`: color used by the button component for secondary neutral active foreground.
+- `--ki-button-secondary-neutral-disabled-bg`: color used by the button component for secondary neutral disabled background.
+- `--ki-button-secondary-neutral-disabled-border`: color used by the button component for secondary neutral disabled border.
+- `--ki-button-secondary-neutral-disabled-fg`: color used by the button component for secondary neutral disabled foreground.
+- `--ki-button-secondary-neutral-hover-bg`: color used by the button component for secondary neutral hover background.
+- `--ki-button-secondary-neutral-hover-border`: color used by the button component for secondary neutral hover border.
+- `--ki-button-secondary-neutral-hover-fg`: color used by the button component for secondary neutral hover foreground.
+- `--ki-button-secondary-neutral-rest-bg`: color used by the button component for secondary neutral rest background.
+- `--ki-button-secondary-neutral-rest-border`: color used by the button component for secondary neutral rest border.
+- `--ki-button-secondary-neutral-rest-fg`: color used by the button component for secondary neutral rest foreground.
+- `--ki-button-secondary-rest-shadow`: value used by the button component for secondary rest shadow.
+- `--ki-button-secondary-success-active-bg`: color used by the button component for secondary success active background.
+- `--ki-button-secondary-success-active-border`: color used by the button component for secondary success active border.
+- `--ki-button-secondary-success-active-fg`: color used by the button component for secondary success active foreground.
+- `--ki-button-secondary-success-hover-bg`: color used by the button component for secondary success hover background.
+- `--ki-button-secondary-success-hover-border`: color used by the button component for secondary success hover border.
+- `--ki-button-secondary-success-hover-fg`: color used by the button component for secondary success hover foreground.
+- `--ki-button-secondary-success-rest-bg`: color used by the button component for secondary success rest background.
+- `--ki-button-secondary-success-rest-border`: color used by the button component for secondary success rest border.
+- `--ki-button-secondary-success-rest-fg`: color used by the button component for secondary success rest foreground.
+- `--ki-button-sm-font-size`: dimension used by the button component for sm font size.
+- `--ki-button-sm-gap`: dimension used by the button component for sm gap.
+- `--ki-button-sm-height`: dimension used by the button component for sm height.
+- `--ki-button-sm-icon-size`: dimension used by the button component for sm icon size.
+- `--ki-button-sm-line-height`: dimension used by the button component for sm line height.
+- `--ki-button-sm-min-target`: dimension used by the button component for sm min target.
+- `--ki-button-sm-padding-inline`: dimension used by the button component for sm padding inline.
+- `--ki-button-sm-radius`: dimension used by the button component for sm radius.
+- `--ki-button-tertiary-active-shadow`: shadow used by the button component for button tertiary active shadow.
+- `--ki-button-tertiary-danger-active-bg`: color used by the button component for tertiary danger active background.
+- `--ki-button-tertiary-danger-active-border`: color used by the button component for tertiary danger active border.
+- `--ki-button-tertiary-danger-active-fg`: color used by the button component for tertiary danger active foreground.
+- `--ki-button-tertiary-danger-hover-bg`: color used by the button component for tertiary danger hover background.
+- `--ki-button-tertiary-danger-hover-border`: color used by the button component for tertiary danger hover border.
+- `--ki-button-tertiary-danger-hover-fg`: color used by the button component for tertiary danger hover foreground.
+- `--ki-button-tertiary-danger-rest-bg`: color used by the button component for tertiary danger rest background.
+- `--ki-button-tertiary-danger-rest-border`: color used by the button component for tertiary danger rest border.
+- `--ki-button-tertiary-danger-rest-fg`: color used by the button component for tertiary danger rest foreground.
+- `--ki-button-tertiary-disabled-shadow`: value used by the button component for tertiary disabled shadow.
+- `--ki-button-tertiary-hover-shadow`: shadow used by the button component for button tertiary hover shadow.
+- `--ki-button-tertiary-neutral-active-bg`: color used by the button component for tertiary neutral active background.
+- `--ki-button-tertiary-neutral-active-border`: color used by the button component for tertiary neutral active border.
+- `--ki-button-tertiary-neutral-active-fg`: color used by the button component for tertiary neutral active foreground.
+- `--ki-button-tertiary-neutral-disabled-bg`: color used by the button component for tertiary neutral disabled background.
+- `--ki-button-tertiary-neutral-disabled-border`: color used by the button component for tertiary neutral disabled border.
+- `--ki-button-tertiary-neutral-disabled-fg`: color used by the button component for tertiary neutral disabled foreground.
+- `--ki-button-tertiary-neutral-hover-bg`: color used by the button component for tertiary neutral hover background.
+- `--ki-button-tertiary-neutral-hover-border`: color used by the button component for tertiary neutral hover border.
+- `--ki-button-tertiary-neutral-hover-fg`: color used by the button component for tertiary neutral hover foreground.
+- `--ki-button-tertiary-neutral-rest-bg`: color used by the button component for tertiary neutral rest background.
+- `--ki-button-tertiary-neutral-rest-border`: color used by the button component for tertiary neutral rest border.
+- `--ki-button-tertiary-neutral-rest-fg`: color used by the button component for tertiary neutral rest foreground.
+- `--ki-button-tertiary-rest-shadow`: shadow used by the button component for button tertiary rest shadow.
+- `--ki-button-tertiary-success-active-bg`: color used by the button component for tertiary success active background.
+- `--ki-button-tertiary-success-active-border`: color used by the button component for tertiary success active border.
+- `--ki-button-tertiary-success-active-fg`: color used by the button component for tertiary success active foreground.
+- `--ki-button-tertiary-success-hover-bg`: color used by the button component for tertiary success hover background.
+- `--ki-button-tertiary-success-hover-border`: color used by the button component for tertiary success hover border.
+- `--ki-button-tertiary-success-hover-fg`: color used by the button component for tertiary success hover foreground.
+- `--ki-button-tertiary-success-rest-bg`: color used by the button component for tertiary success rest background.
+- `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border.
+- `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
+- `--ki-button-xl-font-size`: dimension used by the button component for xl font size.
+- `--ki-button-xl-gap`: dimension used by the button component for xl gap.
+- `--ki-button-xl-height`: dimension used by the button component for xl height.
+- `--ki-button-xl-icon-size`: dimension used by the button component for xl icon size.
+- `--ki-button-xl-line-height`: dimension used by the button component for xl line height.
+- `--ki-button-xl-min-target`: dimension used by the button component for xl min target.
+- `--ki-button-xl-padding-inline`: dimension used by the button component for xl padding inline.
+- `--ki-button-xl-radius`: dimension used by the button component for xl radius.
+- `--ki-button-xs-font-size`: dimension used by the button component for xs font size.
+- `--ki-button-xs-gap`: dimension used by the button component for xs gap.
+- `--ki-button-xs-height`: dimension used by the button component for xs height.
+- `--ki-button-xs-icon-size`: dimension used by the button component for xs icon size.
+- `--ki-button-xs-line-height`: dimension used by the button component for xs line height.
+- `--ki-button-xs-min-target`: dimension used by the button component for xs min target.
+- `--ki-button-xs-padding-inline`: dimension used by the button component for xs padding inline.
+- `--ki-button-xs-radius`: dimension used by the button component for xs radius.
 
 ### ki-card
 
@@ -150,7 +428,18 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-card-bg`: color used by the card component for background.
+- `--ki-card-body-padding`: dimension used by the card component for body padding.
+- `--ki-card-border-color`: color used by the card component for border color.
+- `--ki-card-border-width`: dimension used by the card component for border width.
+- `--ki-card-elevation`: shadow used by the card component for card elevation.
+- `--ki-card-fg`: color used by the card component for foreground.
+- `--ki-card-footer-padding`: dimension used by the card component for footer padding.
+- `--ki-card-gap`: dimension used by the card component for gap.
+- `--ki-card-header-padding`: dimension used by the card component for header padding.
+- `--ki-card-media-padding`: dimension used by the card component for media padding.
+- `--ki-card-radius`: dimension used by the card component for radius.
 
 ### ki-checkbox
 
@@ -183,7 +472,60 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-checkbox-border-width`: dimension used by the checkbox component for border width.
+- `--ki-checkbox-checked-active-bg`: color used by the checkbox component for checked active background.
+- `--ki-checkbox-checked-active-border`: color used by the checkbox component for checked active border.
+- `--ki-checkbox-checked-active-fg`: color used by the checkbox component for checked active foreground.
+- `--ki-checkbox-checked-disabled-bg`: color used by the checkbox component for checked disabled background.
+- `--ki-checkbox-checked-disabled-border`: color used by the checkbox component for checked disabled border.
+- `--ki-checkbox-checked-disabled-fg`: color used by the checkbox component for checked disabled foreground.
+- `--ki-checkbox-checked-hover-bg`: color used by the checkbox component for checked hover background.
+- `--ki-checkbox-checked-hover-border`: color used by the checkbox component for checked hover border.
+- `--ki-checkbox-checked-hover-fg`: color used by the checkbox component for checked hover foreground.
+- `--ki-checkbox-checked-rest-bg`: color used by the checkbox component for checked rest background.
+- `--ki-checkbox-checked-rest-border`: color used by the checkbox component for checked rest border.
+- `--ki-checkbox-checked-rest-fg`: color used by the checkbox component for checked rest foreground.
+- `--ki-checkbox-control-size`: dimension used by the checkbox component for control size.
+- `--ki-checkbox-focus-ring-color`: color used by the checkbox component for focus ring color.
+- `--ki-checkbox-focus-ring-offset`: dimension used by the checkbox component for focus ring offset.
+- `--ki-checkbox-focus-ring-width`: dimension used by the checkbox component for focus ring width.
+- `--ki-checkbox-gap`: dimension used by the checkbox component for gap.
+- `--ki-checkbox-indeterminate-active-bg`: color used by the checkbox component for indeterminate active background.
+- `--ki-checkbox-indeterminate-active-border`: color used by the checkbox component for indeterminate active border.
+- `--ki-checkbox-indeterminate-active-fg`: color used by the checkbox component for indeterminate active foreground.
+- `--ki-checkbox-indeterminate-disabled-bg`: color used by the checkbox component for indeterminate disabled background.
+- `--ki-checkbox-indeterminate-disabled-border`: color used by the checkbox component for indeterminate disabled border.
+- `--ki-checkbox-indeterminate-disabled-fg`: color used by the checkbox component for indeterminate disabled foreground.
+- `--ki-checkbox-indeterminate-hover-bg`: color used by the checkbox component for indeterminate hover background.
+- `--ki-checkbox-indeterminate-hover-border`: color used by the checkbox component for indeterminate hover border.
+- `--ki-checkbox-indeterminate-hover-fg`: color used by the checkbox component for indeterminate hover foreground.
+- `--ki-checkbox-indeterminate-rest-bg`: color used by the checkbox component for indeterminate rest background.
+- `--ki-checkbox-indeterminate-rest-border`: color used by the checkbox component for indeterminate rest border.
+- `--ki-checkbox-indeterminate-rest-fg`: color used by the checkbox component for indeterminate rest foreground.
+- `--ki-checkbox-invalid-bg`: color used by the checkbox component for invalid background.
+- `--ki-checkbox-invalid-border`: color used by the checkbox component for invalid border.
+- `--ki-checkbox-invalid-fg`: color used by the checkbox component for invalid foreground.
+- `--ki-checkbox-label-font-size`: dimension used by the checkbox component for label font size.
+- `--ki-checkbox-label-font-weight`: font weight used by the checkbox component for label font weight.
+- `--ki-checkbox-label-line-height`: dimension used by the checkbox component for label line height.
+- `--ki-checkbox-min-target`: dimension used by the checkbox component for min target.
+- `--ki-checkbox-radius`: dimension used by the checkbox component for radius.
+- `--ki-checkbox-unchecked-active-bg`: color used by the checkbox component for unchecked active background.
+- `--ki-checkbox-unchecked-active-border`: color used by the checkbox component for unchecked active border.
+- `--ki-checkbox-unchecked-active-fg`: color used by the checkbox component for unchecked active foreground.
+- `--ki-checkbox-unchecked-disabled-bg`: color used by the checkbox component for unchecked disabled background.
+- `--ki-checkbox-unchecked-disabled-border`: color used by the checkbox component for unchecked disabled border.
+- `--ki-checkbox-unchecked-disabled-fg`: color used by the checkbox component for unchecked disabled foreground.
+- `--ki-checkbox-unchecked-hover-bg`: color used by the checkbox component for unchecked hover background.
+- `--ki-checkbox-unchecked-hover-border`: color used by the checkbox component for unchecked hover border.
+- `--ki-checkbox-unchecked-hover-fg`: color used by the checkbox component for unchecked hover foreground.
+- `--ki-checkbox-unchecked-rest-bg`: color used by the checkbox component for unchecked rest background.
+- `--ki-checkbox-unchecked-rest-border`: color used by the checkbox component for unchecked rest border.
+- `--ki-checkbox-unchecked-rest-fg`: color used by the checkbox component for unchecked rest foreground.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-text-high-em`: semantic color for text high em.
 
 ### ki-dialog
 
@@ -220,7 +562,26 @@ Methods:
 - `close()` (Promise<void>): Closes the dialog and reports `method`. No-op when already closed. Equivalent to removing the host `open` attribute. Footer actions never close automatically; wire them to this method. When to use: resolve footer actions, programmatic dismissals, and application-controlled cancellation. When NOT to use: do not use for Escape or backdrop bookkeeping; those paths set their own close reasons.
 - `show()` (Promise<void>): Opens the dialog modally. No-op when already open. Equivalent to adding the host `open` attribute. When to use: call from the invoker that should receive focus again after close. When NOT to use: do not call repeatedly to refresh content; update slotted content directly while open.
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-dialog-backdrop-bg`: color used by the dialog component for backdrop background.
+- `--ki-dialog-bg`: color used by the dialog component for background.
+- `--ki-dialog-border`: border used by the dialog component for border.
+- `--ki-dialog-fg`: color used by the dialog component for foreground.
+- `--ki-dialog-focus-ring-color`: color used by the dialog component for focus ring color.
+- `--ki-dialog-focus-ring-offset`: dimension used by the dialog component for focus ring offset.
+- `--ki-dialog-focus-ring-width`: dimension used by the dialog component for focus ring width.
+- `--ki-dialog-gap`: dimension used by the dialog component for gap.
+- `--ki-dialog-heading-font-size`: dimension used by the dialog component for heading font size.
+- `--ki-dialog-heading-font-weight`: font weight used by the dialog component for heading font weight.
+- `--ki-dialog-heading-line-height`: dimension used by the dialog component for heading line height.
+- `--ki-dialog-max-width`: dimension used by the dialog component for max width.
+- `--ki-dialog-min-width`: dimension used by the dialog component for min width.
+- `--ki-dialog-motion-duration`: duration used by the dialog component for dialog motion duration.
+- `--ki-dialog-motion-easing`: easing curve used by the dialog component for dialog motion easing.
+- `--ki-dialog-padding`: dimension used by the dialog component for padding.
+- `--ki-dialog-radius`: dimension used by the dialog component for radius.
+- `--ki-dialog-shadow`: shadow used by the dialog component for dialog shadow.
+- `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-input
 
@@ -256,7 +617,58 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-input-border-block-end-width`: dimension used by the input component for border block end width.
+- `--ki-input-border-block-start-width`: dimension used by the input component for border block start width.
+- `--ki-input-border-inline-end-width`: dimension used by the input component for border inline end width.
+- `--ki-input-border-inline-start-width`: dimension used by the input component for border inline start width.
+- `--ki-input-disabled-bg`: color used by the input component for disabled background.
+- `--ki-input-disabled-border`: color used by the input component for disabled border.
+- `--ki-input-disabled-fg`: color used by the input component for disabled foreground.
+- `--ki-input-disabled-label-fg`: color used by the input component for disabled label foreground.
+- `--ki-input-disabled-placeholder-fg`: color used by the input component for disabled placeholder foreground.
+- `--ki-input-focus-bg`: color used by the input component for focus background.
+- `--ki-input-focus-border`: color used by the input component for focus border.
+- `--ki-input-focus-fg`: color used by the input component for focus foreground.
+- `--ki-input-focus-label-fg`: color used by the input component for focus label foreground.
+- `--ki-input-focus-placeholder-fg`: color used by the input component for focus placeholder foreground.
+- `--ki-input-focus-ring-color`: color used by the input component for focus ring color.
+- `--ki-input-focus-ring-offset`: dimension used by the input component for focus ring offset.
+- `--ki-input-focus-ring-width`: dimension used by the input component for focus ring width.
+- `--ki-input-font-size`: dimension used by the input component for font size.
+- `--ki-input-font-weight`: font weight used by the input component for font weight.
+- `--ki-input-gap`: dimension used by the input component for gap.
+- `--ki-input-height`: dimension used by the input component for height.
+- `--ki-input-hover-bg`: color used by the input component for hover background.
+- `--ki-input-hover-border`: color used by the input component for hover border.
+- `--ki-input-hover-fg`: color used by the input component for hover foreground.
+- `--ki-input-hover-label-fg`: color used by the input component for hover label foreground.
+- `--ki-input-hover-placeholder-fg`: color used by the input component for hover placeholder foreground.
+- `--ki-input-icon-size`: dimension used by the input component for icon size.
+- `--ki-input-invalid-bg`: color used by the input component for invalid background.
+- `--ki-input-invalid-border`: color used by the input component for invalid border.
+- `--ki-input-invalid-fg`: color used by the input component for invalid foreground.
+- `--ki-input-invalid-label-fg`: color used by the input component for invalid label foreground.
+- `--ki-input-invalid-placeholder-fg`: color used by the input component for invalid placeholder foreground.
+- `--ki-input-label-font-size`: dimension used by the input component for label font size.
+- `--ki-input-label-font-weight`: font weight used by the input component for label font weight.
+- `--ki-input-label-gap`: dimension used by the input component for label gap.
+- `--ki-input-label-line-height`: dimension used by the input component for label line height.
+- `--ki-input-line-height`: dimension used by the input component for line height.
+- `--ki-input-min-target`: dimension used by the input component for min target.
+- `--ki-input-padding-inline`: dimension used by the input component for padding inline.
+- `--ki-input-radius`: dimension used by the input component for radius.
+- `--ki-input-readonly-bg`: color used by the input component for readonly background.
+- `--ki-input-readonly-border`: color used by the input component for readonly border.
+- `--ki-input-readonly-fg`: color used by the input component for readonly foreground.
+- `--ki-input-readonly-label-fg`: color used by the input component for readonly label foreground.
+- `--ki-input-readonly-placeholder-fg`: color used by the input component for readonly placeholder foreground.
+- `--ki-input-rest-bg`: color used by the input component for rest background.
+- `--ki-input-rest-border`: color used by the input component for rest border.
+- `--ki-input-rest-fg`: color used by the input component for rest foreground.
+- `--ki-input-rest-label-fg`: color used by the input component for rest label foreground.
+- `--ki-input-rest-placeholder-fg`: color used by the input component for rest placeholder foreground.
+- `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-list
 
@@ -280,7 +692,12 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-list-bg`: color used by the list component for background.
+- `--ki-list-gap`: dimension used by the list component for gap.
+- `--ki-list-item-divider-color`: color used by the list component for item divider color.
+- `--ki-list-item-divider-width`: dimension used by the list component for item divider width.
+- `--ki-list-padding`: dimension used by the list component for padding.
 
 ### ki-list-item
 
@@ -309,7 +726,21 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-list-item-gap`: dimension used by the list component for item gap.
+- `--ki-list-item-min-height`: dimension used by the list component for item min height.
+- `--ki-list-item-min-height-multiline`: dimension used by the list component for item min height multiline.
+- `--ki-list-item-padding-block`: dimension used by the list component for item padding block.
+- `--ki-list-item-padding-inline`: dimension used by the list component for item padding inline.
+- `--ki-list-item-primary-fg`: color used by the list component for item primary foreground.
+- `--ki-list-item-primary-font-size`: dimension used by the list component for item primary font size.
+- `--ki-list-item-primary-font-weight`: font weight used by the list component for item primary font weight.
+- `--ki-list-item-primary-line-height`: dimension used by the list component for item primary line height.
+- `--ki-list-item-radius`: dimension used by the list component for item radius.
+- `--ki-list-item-secondary-fg`: color used by the list component for item secondary foreground.
+- `--ki-list-item-secondary-font-size`: dimension used by the list component for item secondary font size.
+- `--ki-list-item-secondary-font-weight`: font weight used by the list component for item secondary font weight.
+- `--ki-list-item-secondary-line-height`: dimension used by the list component for item secondary line height.
 
 ### ki-option
 
@@ -367,7 +798,14 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-progress-circular-size`: dimension used by the progress component for circular size.
+- `--ki-progress-circular-track-width`: dimension used by the progress component for circular track width.
+- `--ki-progress-indeterminate-duration`: duration used by the progress component for progress indeterminate duration.
+- `--ki-progress-indicator-color`: color used by the progress component for indicator color.
+- `--ki-progress-linear-radius`: dimension used by the progress component for linear radius.
+- `--ki-progress-linear-thickness`: dimension used by the progress component for linear thickness.
+- `--ki-progress-track-color`: color used by the progress component for track color.
 
 ### ki-radio
 
@@ -393,7 +831,48 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
+- `--ki-radio-border-width`: dimension used by the radio component for border width.
+- `--ki-radio-control-radius`: dimension used by the radio component for control radius.
+- `--ki-radio-control-size`: dimension used by the radio component for control size.
+- `--ki-radio-dot-size`: dimension used by the radio component for dot size.
+- `--ki-radio-focus-ring-color`: color used by the radio component for focus ring color.
+- `--ki-radio-focus-ring-offset`: dimension used by the radio component for focus ring offset.
+- `--ki-radio-focus-ring-width`: dimension used by the radio component for focus ring width.
+- `--ki-radio-gap`: dimension used by the radio component for gap.
+- `--ki-radio-label-font-size`: dimension used by the radio component for label font size.
+- `--ki-radio-label-font-weight`: font weight used by the radio component for label font weight.
+- `--ki-radio-label-line-height`: dimension used by the radio component for label line height.
+- `--ki-radio-min-target`: dimension used by the radio component for min target.
+- `--ki-radio-selected-active-bg`: color used by the radio component for selected active background.
+- `--ki-radio-selected-active-border`: color used by the radio component for selected active border.
+- `--ki-radio-selected-active-fg`: color used by the radio component for selected active foreground.
+- `--ki-radio-selected-disabled-bg`: color used by the radio component for selected disabled background.
+- `--ki-radio-selected-disabled-border`: color used by the radio component for selected disabled border.
+- `--ki-radio-selected-disabled-fg`: color used by the radio component for selected disabled foreground.
+- `--ki-radio-selected-hover-bg`: color used by the radio component for selected hover background.
+- `--ki-radio-selected-hover-border`: color used by the radio component for selected hover border.
+- `--ki-radio-selected-hover-fg`: color used by the radio component for selected hover foreground.
+- `--ki-radio-selected-rest-bg`: color used by the radio component for selected rest background.
+- `--ki-radio-selected-rest-border`: color used by the radio component for selected rest border.
+- `--ki-radio-selected-rest-fg`: color used by the radio component for selected rest foreground.
+- `--ki-radio-unselected-active-bg`: color used by the radio component for unselected active background.
+- `--ki-radio-unselected-active-border`: color used by the radio component for unselected active border.
+- `--ki-radio-unselected-active-fg`: color used by the radio component for unselected active foreground.
+- `--ki-radio-unselected-disabled-bg`: color used by the radio component for unselected disabled background.
+- `--ki-radio-unselected-disabled-border`: color used by the radio component for unselected disabled border.
+- `--ki-radio-unselected-disabled-fg`: color used by the radio component for unselected disabled foreground.
+- `--ki-radio-unselected-hover-bg`: color used by the radio component for unselected hover background.
+- `--ki-radio-unselected-hover-border`: color used by the radio component for unselected hover border.
+- `--ki-radio-unselected-hover-fg`: color used by the radio component for unselected hover foreground.
+- `--ki-radio-unselected-rest-bg`: color used by the radio component for unselected rest background.
+- `--ki-radio-unselected-rest-border`: color used by the radio component for unselected rest border.
+- `--ki-radio-unselected-rest-fg`: color used by the radio component for unselected rest foreground.
+- `--ki-text-high-em`: semantic color for text high em.
+- `--ki-text-muted`: Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em.
+- `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-radio-group
 
@@ -422,7 +901,13 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-radio-group-gap`: dimension used by the radio group component for gap.
+- `--ki-radio-group-label-font-size`: dimension used by the radio group component for label font size.
+- `--ki-radio-group-label-font-weight`: font weight used by the radio group component for label font weight.
+- `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height.
+- `--ki-text-high-em`: semantic color for text high em.
+- `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-select
 
@@ -457,7 +942,64 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-option-disabled-bg`: color used by the option component for disabled background.
+- `--ki-option-disabled-fg`: color used by the option component for disabled foreground.
+- `--ki-option-font-size`: dimension used by the option component for font size.
+- `--ki-option-highlight-bg`: color used by the option component for highlight background.
+- `--ki-option-highlight-fg`: color used by the option component for highlight foreground.
+- `--ki-option-hover-bg`: color used by the option component for hover background.
+- `--ki-option-hover-fg`: color used by the option component for hover foreground.
+- `--ki-option-min-target`: dimension used by the option component for min target.
+- `--ki-option-padding-inline`: dimension used by the option component for padding inline.
+- `--ki-option-radius`: dimension used by the option component for radius.
+- `--ki-option-rest-bg`: color used by the option component for rest background.
+- `--ki-option-rest-fg`: color used by the option component for rest foreground.
+- `--ki-option-selected-bg`: color used by the option component for selected background.
+- `--ki-option-selected-fg`: color used by the option component for selected foreground.
+- `--ki-select-border-block-end-width`: dimension used by the select component for border block end width.
+- `--ki-select-border-block-start-width`: dimension used by the select component for border block start width.
+- `--ki-select-border-inline-end-width`: dimension used by the select component for border inline end width.
+- `--ki-select-border-inline-start-width`: dimension used by the select component for border inline start width.
+- `--ki-select-border-width`: dimension used by the select component for border width.
+- `--ki-select-disabled-bg`: color used by the select component for disabled background.
+- `--ki-select-disabled-border`: color used by the select component for disabled border.
+- `--ki-select-disabled-fg`: color used by the select component for disabled foreground.
+- `--ki-select-disabled-label-fg`: color used by the select component for disabled label foreground.
+- `--ki-select-focus-bg`: color used by the select component for focus background.
+- `--ki-select-focus-border`: color used by the select component for focus border.
+- `--ki-select-focus-fg`: color used by the select component for focus foreground.
+- `--ki-select-focus-label-fg`: color used by the select component for focus label foreground.
+- `--ki-select-focus-ring-color`: color used by the select component for focus ring color.
+- `--ki-select-focus-ring-offset`: dimension used by the select component for focus ring offset.
+- `--ki-select-focus-ring-width`: dimension used by the select component for focus ring width.
+- `--ki-select-font-size`: dimension used by the select component for font size.
+- `--ki-select-gap`: dimension used by the select component for gap.
+- `--ki-select-height`: dimension used by the select component for height.
+- `--ki-select-hover-bg`: color used by the select component for hover background.
+- `--ki-select-hover-border`: color used by the select component for hover border.
+- `--ki-select-hover-fg`: color used by the select component for hover foreground.
+- `--ki-select-hover-label-fg`: color used by the select component for hover label foreground.
+- `--ki-select-indicator-size`: dimension used by the select component for indicator size.
+- `--ki-select-label-font-size`: dimension used by the select component for label font size.
+- `--ki-select-label-font-weight`: font weight used by the select component for label font weight.
+- `--ki-select-label-gap`: dimension used by the select component for label gap.
+- `--ki-select-label-line-height`: dimension used by the select component for label line height.
+- `--ki-select-listbox-bg`: color used by the select component for listbox background.
+- `--ki-select-listbox-elevation`: color used by the select component for listbox elevation.
+- `--ki-select-listbox-max-block-size`: dimension used by the select component for listbox max block size.
+- `--ki-select-listbox-offset`: dimension used by the select component for listbox offset.
+- `--ki-select-listbox-padding`: dimension used by the select component for listbox padding.
+- `--ki-select-listbox-radius`: dimension used by the select component for listbox radius.
+- `--ki-select-min-target`: dimension used by the select component for min target.
+- `--ki-select-padding-inline`: dimension used by the select component for padding inline.
+- `--ki-select-placeholder-fg`: color used by the select component for placeholder foreground.
+- `--ki-select-radius`: dimension used by the select component for radius.
+- `--ki-select-rest-bg`: color used by the select component for rest background.
+- `--ki-select-rest-border`: color used by the select component for rest border.
+- `--ki-select-rest-fg`: color used by the select component for rest foreground.
+- `--ki-select-rest-label-fg`: color used by the select component for rest label foreground.
+- `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-switch
 
@@ -487,7 +1029,45 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
+- `--ki-switch-border-width`: dimension used by the switch component for border width.
+- `--ki-switch-checked-active-border`: color used by the switch component for checked active border.
+- `--ki-switch-checked-active-thumb`: color used by the switch component for checked active thumb.
+- `--ki-switch-checked-active-track`: color used by the switch component for checked active track.
+- `--ki-switch-checked-disabled-border`: color used by the switch component for checked disabled border.
+- `--ki-switch-checked-disabled-thumb`: color used by the switch component for checked disabled thumb.
+- `--ki-switch-checked-disabled-track`: color used by the switch component for checked disabled track.
+- `--ki-switch-checked-hover-border`: color used by the switch component for checked hover border.
+- `--ki-switch-checked-hover-thumb`: color used by the switch component for checked hover thumb.
+- `--ki-switch-checked-hover-track`: color used by the switch component for checked hover track.
+- `--ki-switch-checked-rest-border`: color used by the switch component for checked rest border.
+- `--ki-switch-checked-rest-thumb`: color used by the switch component for checked rest thumb.
+- `--ki-switch-checked-rest-track`: color used by the switch component for checked rest track.
+- `--ki-switch-focus-ring-color`: color used by the switch component for focus ring color.
+- `--ki-switch-focus-ring-offset`: dimension used by the switch component for focus ring offset.
+- `--ki-switch-focus-ring-width`: dimension used by the switch component for focus ring width.
+- `--ki-switch-gap`: dimension used by the switch component for gap.
+- `--ki-switch-min-target`: dimension used by the switch component for min target.
+- `--ki-switch-thumb-inset`: dimension used by the switch component for thumb inset.
+- `--ki-switch-thumb-radius`: dimension used by the switch component for thumb radius.
+- `--ki-switch-thumb-size`: dimension used by the switch component for thumb size.
+- `--ki-switch-track-height`: dimension used by the switch component for track height.
+- `--ki-switch-track-radius`: dimension used by the switch component for track radius.
+- `--ki-switch-track-width`: dimension used by the switch component for track width.
+- `--ki-switch-unchecked-active-border`: color used by the switch component for unchecked active border.
+- `--ki-switch-unchecked-active-thumb`: color used by the switch component for unchecked active thumb.
+- `--ki-switch-unchecked-active-track`: color used by the switch component for unchecked active track.
+- `--ki-switch-unchecked-disabled-border`: color used by the switch component for unchecked disabled border.
+- `--ki-switch-unchecked-disabled-thumb`: color used by the switch component for unchecked disabled thumb.
+- `--ki-switch-unchecked-disabled-track`: color used by the switch component for unchecked disabled track.
+- `--ki-switch-unchecked-hover-border`: color used by the switch component for unchecked hover border.
+- `--ki-switch-unchecked-hover-thumb`: color used by the switch component for unchecked hover thumb.
+- `--ki-switch-unchecked-hover-track`: color used by the switch component for unchecked hover track.
+- `--ki-switch-unchecked-rest-border`: color used by the switch component for unchecked rest border.
+- `--ki-switch-unchecked-rest-thumb`: color used by the switch component for unchecked rest thumb.
+- `--ki-switch-unchecked-rest-track`: color used by the switch component for unchecked rest track.
 
 ### ki-tab
 
@@ -517,7 +1097,37 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-tab-focus-ring-color`: color used by the tab component for focus ring color.
+- `--ki-tab-focus-ring-offset`: dimension used by the tab component for focus ring offset.
+- `--ki-tab-focus-ring-width`: dimension used by the tab component for focus ring width.
+- `--ki-tab-font-size`: dimension used by the tab component for font size.
+- `--ki-tab-font-weight`: font weight used by the tab component for font weight.
+- `--ki-tab-gap`: dimension used by the tab component for gap.
+- `--ki-tab-indicator-color`: color used by the tab component for indicator color.
+- `--ki-tab-indicator-radius`: dimension used by the tab component for indicator radius.
+- `--ki-tab-indicator-size`: dimension used by the tab component for indicator size.
+- `--ki-tab-line-height`: dimension used by the tab component for line height.
+- `--ki-tab-min-block-size`: dimension used by the tab component for min block size.
+- `--ki-tab-padding-inline`: dimension used by the tab component for padding inline.
+- `--ki-tab-radius`: dimension used by the tab component for radius.
+- `--ki-tab-selected-active-bg`: color used by the tab component for selected active background.
+- `--ki-tab-selected-active-fg`: color used by the tab component for selected active foreground.
+- `--ki-tab-selected-disabled-bg`: color used by the tab component for selected disabled background.
+- `--ki-tab-selected-disabled-fg`: color used by the tab component for selected disabled foreground.
+- `--ki-tab-selected-hover-bg`: color used by the tab component for selected hover background.
+- `--ki-tab-selected-hover-fg`: color used by the tab component for selected hover foreground.
+- `--ki-tab-selected-rest-bg`: color used by the tab component for selected rest background.
+- `--ki-tab-selected-rest-fg`: color used by the tab component for selected rest foreground.
+- `--ki-tab-unselected-active-bg`: color used by the tab component for unselected active background.
+- `--ki-tab-unselected-active-fg`: color used by the tab component for unselected active foreground.
+- `--ki-tab-unselected-disabled-bg`: color used by the tab component for unselected disabled background.
+- `--ki-tab-unselected-disabled-fg`: color used by the tab component for unselected disabled foreground.
+- `--ki-tab-unselected-hover-bg`: color used by the tab component for unselected hover background.
+- `--ki-tab-unselected-hover-fg`: color used by the tab component for unselected hover foreground.
+- `--ki-tab-unselected-rest-bg`: color used by the tab component for unselected rest background.
+- `--ki-tab-unselected-rest-fg`: color used by the tab component for unselected rest foreground.
+- `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-tab-panel
 
@@ -541,7 +1151,13 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-tab-panel-bg`: color used by the tab panel component for background.
+- `--ki-tab-panel-focus-ring-color`: color used by the tab panel component for focus ring color.
+- `--ki-tab-panel-focus-ring-offset`: dimension used by the tab panel component for focus ring offset.
+- `--ki-tab-panel-focus-ring-width`: dimension used by the tab panel component for focus ring width.
+- `--ki-tab-panel-padding-block`: dimension used by the tab panel component for padding block.
+- `--ki-tab-panel-padding-inline`: dimension used by the tab panel component for padding inline.
 
 ### ki-tabs
 
@@ -568,7 +1184,10 @@ Events:
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-tabs-divider-color`: color used by the tabs component for divider color.
+- `--ki-tabs-divider-width`: dimension used by the tabs component for divider width.
+- `--ki-tabs-gap`: dimension used by the tabs component for gap.
 
 ### ki-textarea
 
@@ -606,7 +1225,57 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-surface-s0`: semantic color for surface s0.
+- `--ki-textarea-border-block-end-width`: dimension used by the textarea component for border block end width.
+- `--ki-textarea-border-block-start-width`: dimension used by the textarea component for border block start width.
+- `--ki-textarea-border-inline-end-width`: dimension used by the textarea component for border inline end width.
+- `--ki-textarea-border-inline-start-width`: dimension used by the textarea component for border inline start width.
+- `--ki-textarea-disabled-bg`: color used by the textarea component for disabled background.
+- `--ki-textarea-disabled-border`: color used by the textarea component for disabled border.
+- `--ki-textarea-disabled-fg`: color used by the textarea component for disabled foreground.
+- `--ki-textarea-disabled-label-fg`: color used by the textarea component for disabled label foreground.
+- `--ki-textarea-disabled-placeholder-fg`: color used by the textarea component for disabled placeholder foreground.
+- `--ki-textarea-focus-bg`: color used by the textarea component for focus background.
+- `--ki-textarea-focus-border`: color used by the textarea component for focus border.
+- `--ki-textarea-focus-fg`: color used by the textarea component for focus foreground.
+- `--ki-textarea-focus-label-fg`: color used by the textarea component for focus label foreground.
+- `--ki-textarea-focus-placeholder-fg`: color used by the textarea component for focus placeholder foreground.
+- `--ki-textarea-focus-ring-color`: color used by the textarea component for focus ring color.
+- `--ki-textarea-focus-ring-offset`: dimension used by the textarea component for focus ring offset.
+- `--ki-textarea-focus-ring-width`: dimension used by the textarea component for focus ring width.
+- `--ki-textarea-font-size`: dimension used by the textarea component for font size.
+- `--ki-textarea-font-weight`: font weight used by the textarea component for font weight.
+- `--ki-textarea-hover-bg`: color used by the textarea component for hover background.
+- `--ki-textarea-hover-border`: color used by the textarea component for hover border.
+- `--ki-textarea-hover-fg`: color used by the textarea component for hover foreground.
+- `--ki-textarea-hover-label-fg`: color used by the textarea component for hover label foreground.
+- `--ki-textarea-hover-placeholder-fg`: color used by the textarea component for hover placeholder foreground.
+- `--ki-textarea-invalid-bg`: color used by the textarea component for invalid background.
+- `--ki-textarea-invalid-border`: color used by the textarea component for invalid border.
+- `--ki-textarea-invalid-fg`: color used by the textarea component for invalid foreground.
+- `--ki-textarea-invalid-label-fg`: color used by the textarea component for invalid label foreground.
+- `--ki-textarea-invalid-placeholder-fg`: color used by the textarea component for invalid placeholder foreground.
+- `--ki-textarea-label-font-size`: dimension used by the textarea component for label font size.
+- `--ki-textarea-label-font-weight`: font weight used by the textarea component for label font weight.
+- `--ki-textarea-label-gap`: dimension used by the textarea component for label gap.
+- `--ki-textarea-label-line-height`: dimension used by the textarea component for label line height.
+- `--ki-textarea-line-height`: dimension used by the textarea component for line height.
+- `--ki-textarea-min-target`: dimension used by the textarea component for min target.
+- `--ki-textarea-padding-block`: dimension used by the textarea component for padding block.
+- `--ki-textarea-padding-inline`: dimension used by the textarea component for padding inline.
+- `--ki-textarea-radius`: dimension used by the textarea component for radius.
+- `--ki-textarea-readonly-bg`: color used by the textarea component for readonly background.
+- `--ki-textarea-readonly-border`: color used by the textarea component for readonly border.
+- `--ki-textarea-readonly-fg`: color used by the textarea component for readonly foreground.
+- `--ki-textarea-readonly-label-fg`: color used by the textarea component for readonly label foreground.
+- `--ki-textarea-readonly-placeholder-fg`: color used by the textarea component for readonly placeholder foreground.
+- `--ki-textarea-rest-bg`: color used by the textarea component for rest background.
+- `--ki-textarea-rest-border`: color used by the textarea component for rest border.
+- `--ki-textarea-rest-fg`: color used by the textarea component for rest foreground.
+- `--ki-textarea-rest-label-fg`: color used by the textarea component for rest label foreground.
+- `--ki-textarea-rest-placeholder-fg`: color used by the textarea component for rest placeholder foreground.
+- `--ki-typography-family-base`: Deprecated alias kept for pre-Fase-1 consumers; use ki.typography.family.body.
 
 ### ki-tooltip
 
@@ -634,4 +1303,15 @@ Events: none
 
 Methods: none
 
-CSS custom properties: none
+CSS custom properties:
+- `--ki-tooltip-bg`: color used by the tooltip component for background.
+- `--ki-tooltip-fg`: color used by the tooltip component for foreground.
+- `--ki-tooltip-font-size`: dimension used by the tooltip component for font size.
+- `--ki-tooltip-font-weight`: font weight used by the tooltip component for font weight.
+- `--ki-tooltip-line-height`: dimension used by the tooltip component for line height.
+- `--ki-tooltip-max-inline-size`: dimension used by the tooltip component for max inline size.
+- `--ki-tooltip-offset`: dimension used by the tooltip component for offset.
+- `--ki-tooltip-padding-block`: dimension used by the tooltip component for padding block.
+- `--ki-tooltip-padding-inline`: dimension used by the tooltip component for padding inline.
+- `--ki-tooltip-radius`: dimension used by the tooltip component for radius.
+- `--ki-tooltip-shadow`: shadow used by the tooltip component for tooltip shadow.

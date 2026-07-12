@@ -7,8 +7,8 @@ const { ariaSnapshot } = commands as unknown as {
   ariaSnapshot: (selector: string) => Promise<string>;
 };
 
-import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
+import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '../dist/components/ki-list-item.js';
 
@@ -267,7 +267,7 @@ describe('ki-list in a real browser', () => {
       <ki-list>
         <ki-list-item>
           Email
-          <input slot="end" role="switch" aria-label="Email alerts" type="checkbox" />
+          <input slot="end" role="switch" aria-label="Email alerts" type="checkbox" tabindex="0" />
         </ki-list-item>
       </ki-list>
     `);
@@ -286,7 +286,7 @@ describe('ki-list in a real browser', () => {
       <ki-list>
         <ki-list-item>
           Email
-          <input slot="end" role="switch" aria-label="Email alerts" type="checkbox" />
+          <input slot="end" role="switch" aria-label="Email alerts" type="checkbox" tabindex="0" />
         </ki-list-item>
       </ki-list>
     `);

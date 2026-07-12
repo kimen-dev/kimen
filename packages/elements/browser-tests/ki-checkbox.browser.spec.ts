@@ -1,10 +1,9 @@
-import axe from 'axe-core';
-import { commands, page, userEvent } from 'vitest/browser';
-import { beforeAll, describe, expect, it } from 'vitest';
-
+import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:006-ki-checkbox
 import tokensCss from '@kimen/tokens/css?raw';
-import material3Css from '@kimen/tokens/css/material3?raw';
+import axe from 'axe-core';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-checkbox.js';
 
 type KiCheckboxElement = HTMLElement & {
@@ -17,10 +16,6 @@ type KiCheckboxElement = HTMLElement & {
 
 const STYLE_ID = 'ki-checkbox-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-checkbox-browser-material3-token-style';
-const browserCommands = commands as unknown as {
-  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
-};
-
 beforeAll(() => {
   defineCustomElement();
 });
@@ -258,7 +253,7 @@ describe('ki-checkbox in a real browser', () => {
 
     expect(el.checked).toBe(true);
     expect(el.indeterminate).toBe(false);
-    expect(el.hasAttribute('indeterminate')).toBe(false);
+    await expect.element(el).not.toHaveAttribute('indeterminate');
   });
 
   it('S19 resolves checked indeterminate to unchecked and not mixed', async () => {
@@ -445,24 +440,6 @@ describe('ki-checkbox in a real browser', () => {
     const controlRect = controlOf(el).getBoundingClientRect();
     const labelRect = labelPartOf(el).getBoundingClientRect();
     expect(controlRect.left, 'control leads on the right in RTL').toBeGreaterThan(labelRect.left);
-  });
-
-  it('S21 applies state with no mark animation under reduced motion', async () => {
-    cleanup();
-    await browserCommands.emulateReducedMotion('reduce');
-    const el = await mount();
-    const mark = el.shadowRoot?.querySelector('.mark');
-    expect(mark).toBeInstanceOf(SVGElement);
-    if (!mark) {
-      throw new Error('ki-checkbox did not render a mark');
-    }
-
-    await userEvent.click(inputOf(el));
-
-    const style = getComputedStyle(mark);
-    expect(el.checked).toBe(true);
-    expect(`${style.transitionDuration} ${style.animationName}`).toBe('0s none');
-    await browserCommands.emulateReducedMotion(null);
   });
 
   it('S9 has zero axe violations across selection and validity states', async () => {

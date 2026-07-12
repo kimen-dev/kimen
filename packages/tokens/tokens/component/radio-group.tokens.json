@@ -2,17 +2,21 @@
   "ki": {
     "radio-group": {
       "gap": {
-        "$value": "{ki.space.sm}"
+        "$value": "{ki.space.sm}",
+        "$description": "dimension used by the radio group component for gap."
       },
       "label": {
         "font-size": {
-          "$value": "{ki.typography.size.body-1}"
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the radio group component for label font size."
         },
         "font-weight": {
-          "$value": "{ki.typography.weight.body.medium}"
+          "$value": "{ki.typography.weight.body.medium}",
+          "$description": "font weight used by the radio group component for label font weight."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.body-1}"
+          "$value": "{ki.typography.line-height.body-1}",
+          "$description": "dimension used by the radio group component for label line height."
         }
       }
     }

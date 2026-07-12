@@ -1,13 +1,12 @@
-import axe from 'axe-core';
-import { commands, page, userEvent } from 'vitest/browser';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
-
+import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:013-ki-tooltip
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import material3Css from '@kimen/tokens/css/material3?raw';
+import axe from 'axe-core';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
 
 type KiTooltipElement = HTMLElement & {
@@ -181,7 +180,6 @@ describe('ki-tooltip pointer path in a real browser', () => {
     await hoverTrigger(host, trigger);
     const tooltip = requireTooltip(host);
 
-    await userEvent.unhover(trigger);
     await userEvent.hover(tooltip);
     await nextFrame();
 
@@ -339,6 +337,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
 
   it('S4 Tab focus shows the tooltip immediately even when show-delay is non-zero', async () => {
     const { trigger } = await mount({ showDelay: '60000ms' });
+    trigger.tabIndex = 0;
 
     await userEvent.keyboard('{Tab}');
     await nextFrame();
@@ -350,6 +349,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
   it('S6 moving focus to the next interactive element hides the tooltip', async () => {
     const { host, trigger } = await mount();
     const next = document.createElement('button');
+    next.tabIndex = 0;
     next.textContent = 'Next';
     document.body.append(next);
     await userEvent.hover(next);

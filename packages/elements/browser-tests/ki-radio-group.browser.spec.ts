@@ -1,13 +1,12 @@
-import axe from 'axe-core';
-import { page, userEvent } from 'vitest/browser';
-import { beforeAll, describe, expect, it } from 'vitest';
-
+import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:007-ki-radio-group
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import material3Css from '@kimen/tokens/css/material3?raw';
+import axe from 'axe-core';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineRadio } from '../dist/components/ki-radio.js';
 import { defineCustomElement as defineRadioGroup } from '../dist/components/ki-radio-group.js';
 
@@ -249,8 +248,13 @@ describe('ki-radio-group in a real browser', () => {
 
   it('S5 Tab reaches the group as a single stop on the selected option with visible focus', async () => {
     cleanup();
+    const before = document.createElement('button');
+    before.tabIndex = 0;
+    before.textContent = 'Before';
+    document.body.append(before);
     const el = await mount({ value: 'sms' });
     const sms = radioAt(el, 1);
+    before.focus();
 
     await userEvent.keyboard('{Tab}');
 
@@ -267,10 +271,15 @@ describe('ki-radio-group in a real browser', () => {
 
   it('S25 Tab enters an unselected group on the first enabled option without selecting', async () => {
     cleanup();
+    const before = document.createElement('button');
+    before.tabIndex = 0;
+    before.textContent = 'Before';
+    document.body.append(before);
     const el = await mount();
     el.querySelectorAll('ki-radio')[0]?.setAttribute('disabled', '');
     await new Promise((resolve) => requestAnimationFrame(resolve));
     const sms = radioAt(el, 1);
+    before.focus();
 
     await userEvent.keyboard('{Tab}');
 
@@ -329,6 +338,7 @@ describe('ki-radio-group in a real browser', () => {
   it('S9 Tab leaves the group in a single step', async () => {
     cleanup();
     const after = document.createElement('button');
+    after.tabIndex = 0;
     after.textContent = 'After';
     const el = await mount({ value: 'email' });
     document.body.append(after);
@@ -343,6 +353,7 @@ describe('ki-radio-group in a real browser', () => {
   it('S20 Tab skips a disabled group entirely', async () => {
     cleanup();
     const after = document.createElement('button');
+    after.tabIndex = 0;
     after.textContent = 'After';
     document.body.append(after);
     await mount({ disabled: true, value: 'email' });
@@ -414,9 +425,9 @@ describe('ki-radio-group in a real browser', () => {
 
     await userEvent.click(radioAt(el, 0));
 
-    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.hasAttribute('aria-invalid')).toBe(
-      false,
-    );
+    await expect
+      .element(page.getByRole('radiogroup', { name: 'Contact preference' }))
+      .not.toHaveAttribute('aria-invalid');
   });
 
   it('S14 form reset restores the initial selection silently', async () => {

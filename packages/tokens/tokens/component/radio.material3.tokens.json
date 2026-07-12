@@ -4,92 +4,116 @@
       "unselected": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.s0}"
+            "$value": "{ki.surface.s0}",
+            "$description": "Material 3 color used by the radio component for unselected rest background."
           },
           "fg": {
-            "$value": "{ki.text.primary-high-em}"
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "Material 3 color used by the radio component for unselected rest foreground."
           },
           "border": {
-            "$value": "{ki.outline.high-em}"
+            "$value": "{ki.outline.high-em}",
+            "$description": "Material 3 color used by the radio component for unselected rest border."
           }
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.primary-base-em-alpha}"
+            "$value": "{ki.surface.primary-base-em-alpha}",
+            "$description": "Material 3 color used by the radio component for unselected hover background."
           },
           "fg": {
-            "$value": "{ki.text.primary-high-em}"
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "Material 3 color used by the radio component for unselected hover foreground."
           },
           "border": {
-            "$value": "{ki.outline.primary-med-em}"
+            "$value": "{ki.outline.primary-med-em}",
+            "$description": "Material 3 color used by the radio component for unselected hover border."
           }
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.primary-low-em-alpha}"
+            "$value": "{ki.surface.primary-low-em-alpha}",
+            "$description": "Material 3 color used by the radio component for unselected active background."
           },
           "fg": {
-            "$value": "{ki.text.primary-high-em}"
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "Material 3 color used by the radio component for unselected active foreground."
           },
           "border": {
-            "$value": "{ki.outline.primary-high-em}"
+            "$value": "{ki.outline.primary-high-em}",
+            "$description": "Material 3 color used by the radio component for unselected active border."
           }
         },
         "disabled": {
           "bg": {
-            "$value": "{ki.surface.disabled-low-em}"
+            "$value": "{ki.surface.disabled-low-em}",
+            "$description": "Material 3 color used by the radio component for unselected disabled background."
           },
           "fg": {
-            "$value": "{ki.text.muted}"
+            "$value": "{ki.text.muted}",
+            "$description": "Material 3 color used by the radio component for unselected disabled foreground."
           },
           "border": {
-            "$value": "{ki.outline.med-em}"
+            "$value": "{ki.outline.med-em}",
+            "$description": "Material 3 color used by the radio component for unselected disabled border."
           }
         }
       },
       "selected": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.s0}"
+            "$value": "{ki.surface.s0}",
+            "$description": "Material 3 color used by the radio component for selected rest background."
           },
           "fg": {
-            "$value": "{ki.surface.primary-high-em}"
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "Material 3 color used by the radio component for selected rest foreground."
           },
           "border": {
-            "$value": "{ki.outline.primary-high-em}"
+            "$value": "{ki.outline.primary-high-em}",
+            "$description": "Material 3 color used by the radio component for selected rest border."
           }
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.primary-base-em-alpha}"
+            "$value": "{ki.surface.primary-base-em-alpha}",
+            "$description": "Material 3 color used by the radio component for selected hover background."
           },
           "fg": {
-            "$value": "{ki.surface.primary-high-em}"
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "Material 3 color used by the radio component for selected hover foreground."
           },
           "border": {
-            "$value": "{ki.outline.primary-high-em}"
+            "$value": "{ki.outline.primary-high-em}",
+            "$description": "Material 3 color used by the radio component for selected hover border."
           }
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.s0}"
+            "$value": "{ki.surface.s0}",
+            "$description": "Material 3 color used by the radio component for selected active background."
           },
           "fg": {
-            "$value": "{ki.surface.primary-high-em}"
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "Material 3 color used by the radio component for selected active foreground."
           },
           "border": {
-            "$value": "{ki.outline.primary-high-em}"
+            "$value": "{ki.outline.primary-high-em}",
+            "$description": "Material 3 color used by the radio component for selected active border."
           }
         },
         "disabled": {
           "bg": {
-            "$value": "{ki.surface.disabled-low-em}"
+            "$value": "{ki.surface.disabled-low-em}",
+            "$description": "Material 3 color used by the radio component for selected disabled background."
           },
           "fg": {
-            "$value": "{ki.text.muted}"
+            "$value": "{ki.text.muted}",
+            "$description": "Material 3 color used by the radio component for selected disabled foreground."
           },
           "border": {
-            "$value": "{ki.outline.med-em}"
+            "$value": "{ki.outline.med-em}",
+            "$description": "Material 3 color used by the radio component for selected disabled border."
           }
         }
       }

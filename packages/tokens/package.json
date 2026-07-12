@@ -5,6 +5,11 @@
   "license": "Apache-2.0",
   "description": "Kimen design tokens (DTCG) compiled to CSS custom properties. Primitive → theme → semantic layers; onmars is the default theme (light + dark).",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimen-dev/kimen.git",
+    "directory": "packages/tokens"
+  },
   "files": [
     "dist"
   ],

@@ -1,6 +1,3 @@
-# Gherkin contract (Art. II): declarative business language, stable S-IDs,
-# one When per scenario, observable outcomes only. Non-applicable UI families
-# are N/A-justified in spec.md's Scenario Family Coverage table.
 Feature: Agent surfaces
   Everything an agent needs to wire a Kimen component correctly is generated
   from the component contract and shipped with the library: a standard

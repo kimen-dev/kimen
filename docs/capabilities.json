@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "destinations": [
+    {
+      "id": "catalog-package-status",
+      "path": "packages/catalog/package.json"
+    },
+    {
+      "id": "catalog-readme-status",
+      "path": "packages/catalog/README.md"
+    },
+    {
+      "id": "elements-workshop-status",
+      "path": "packages/elements/docs/introduction.mdx"
+    },
+    {
+      "id": "kimen-package-status",
+      "path": "packages/kimen/package.json"
+    },
+    {
+      "id": "kimen-readme-status",
+      "path": "packages/kimen/README.md"
+    },
+    {
+      "id": "roadmap-status",
+      "path": "docs/roadmap.md"
+    },
+    {
+      "id": "root-readme-status",
+      "path": "README.md"
+    },
+    {
+      "id": "site-status",
+      "path": "site/index.html"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "guarded-renderer",
+      "state": "planned",
+      "evidence": [],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "",
+      "plannedText": "Schema-constrained guarded renderer planned"
+    },
+    {
+      "id": "mutation-quality-gate",
+      "state": "hardening",
+      "evidence": ["mutation"],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "",
+      "plannedText": "Changed-core mutation quality gate in hardening"
+    },
+    {
+      "id": "protocol-adapters",
+      "state": "planned",
+      "evidence": [],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "",
+      "plannedText": "A2UI, MCP Apps, AG-UI and json-render protocol adapters planned"
+    },
+    {
+      "id": "runtime-catalog",
+      "state": "planned",
+      "evidence": [],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "",
+      "plannedText": "Neutral runtime component catalog planned"
+    },
+    {
+      "id": "web-components-foundation",
+      "state": "available",
+      "evidence": ["build", "pack-consumer", "test-browser"],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "Machine-readable Web Components foundation with token-driven theming",
+      "plannedText": ""
+    }
+  ]
+}

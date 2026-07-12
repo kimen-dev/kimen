@@ -1,21 +1,41 @@
+import { join } from 'node:path';
+
 import { defineBrowserCommand, playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
 // Real-browser suite (constitution Art. III: component suites never run in
 // jsdom/mock-doc alone; Art. IV: engine baseline is verified, not declared).
-// PR gates run Chromium; the pre-release gate runs the full engine matrix:
-//   KIMEN_BROWSER_MATRIX=1 pnpm run test-browser
-const browsers = process.env['KIMEN_BROWSER_MATRIX']
-  ? (['chromium', 'firefox', 'webkit'] as const)
-  : (['chromium'] as const);
+// Every invocation runs exactly one validated engine. The local suite supplies
+// Chromium; prerelease supplies one explicit matrix value per independent job.
+const supportedBrowsers = ['chromium', 'firefox', 'webkit'] as const;
+type SupportedBrowser = (typeof supportedBrowsers)[number];
+const configuredBrowser = process.env['KIMEN_BROWSER_ENGINE'] ?? 'chromium';
+
+if (!supportedBrowsers.some((browser) => browser === configuredBrowser)) {
+  throw new Error(
+    `KIMEN_BROWSER_ENGINE must be one of ${supportedBrowsers.join(', ')}; received ${configuredBrowser}`,
+  );
+}
+
+const browser = configuredBrowser as SupportedBrowser;
+const cacheRoot = process.env['KIMEN_CACHE_ROOT'];
+const cacheDir = cacheRoot ? join(cacheRoot, `vite/elements-browser-${browser}`) : undefined;
+// Playwright's default headless Chromium selects a separate headless-shell
+// binary. Selecting the installed `chromium` channel makes the executable that
+// gates-browser verifies via the public executablePath() API the one launched.
+const provider = playwright(
+  browser === 'chromium' ? { launchOptions: { channel: 'chromium' } } : undefined,
+);
 
 export default defineConfig({
+  ...(cacheDir ? { cacheDir } : {}),
   test: {
+    name: `elements-browser-${browser}`,
     include: ['browser-tests/**/*.browser.spec.{ts,tsx}'],
     browser: {
       enabled: true,
       headless: true,
-      provider: playwright(),
+      provider,
       screenshotFailures: false,
       commands: {
         emulateColorScheme: defineBrowserCommand(
@@ -52,13 +72,6 @@ export default defineConfig({
               .getByRole(role, name === undefined ? undefined : { name })
               .ariaSnapshot({ timeout: 1000 }),
         ),
-        ariaSnapshot: defineBrowserCommand(async ({ page }, selector: string) =>
-          page
-            .locator('[data-vitest="true"]')
-            .contentFrame()
-            .locator(selector)
-            .ariaSnapshot({ timeout: 1000 }),
-        ),
         installClock: defineBrowserCommand(async ({ page }) => {
           await page.clock.install();
         }),
@@ -70,24 +83,24 @@ export default defineConfig({
         }),
       },
       instances: [
-        ...browsers.map((browser) => ({
+        {
           browser,
           name: `${browser}-light`,
           exclude: [
             'browser-tests/**/*.dark.browser.spec.{ts,tsx}',
             'browser-tests/**/*.motion.browser.spec.{ts,tsx}',
           ],
-        })),
-        ...browsers.map((browser) => ({
+        },
+        {
           browser,
           name: `${browser}-dark`,
           include: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
-        })),
-        ...browsers.map((browser) => ({
+        },
+        {
           browser,
           name: `${browser}-reduced-motion`,
           include: ['browser-tests/**/*.motion.browser.spec.{ts,tsx}'],
-        })),
+        },
       ],
     },
   },

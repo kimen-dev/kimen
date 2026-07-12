@@ -2,62 +2,82 @@
   "ki": {
     "list": {
       "bg": {
-        "$value": "{ki.surface.s0}"
+        "$value": "{ki.surface.s0}",
+        "$description": "Material 3 color used by the list component for background."
       },
       "padding": {
-        "$value": "{ki.space.zero}"
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 dimension used by the list component for padding."
       },
       "gap": {
-        "$value": "{ki.space.zero}"
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 dimension used by the list component for gap."
       },
       "item": {
         "min-height": {
-          "$value": "{ki.space.14xl}"
+          "$value": "{ki.space.14xl}",
+          "$description": "Material 3 dimension used by the list component for item min height."
         },
         "min-height-multiline": {
-          "$value": "{ki.space.18xl}"
+          "$value": "{ki.space.18xl}",
+          "$description": "Material 3 dimension used by the list component for item min height multiline."
         },
         "padding-inline": {
-          "$value": "{ki.space.3xl}"
+          "$value": "{ki.space.3xl}",
+          "$description": "Material 3 dimension used by the list component for item padding inline."
         },
         "padding-block": {
-          "$value": "{ki.space.md}"
+          "$value": "{ki.space.md}",
+          "$description": "Material 3 dimension used by the list component for item padding block."
         },
         "gap": {
-          "$value": "{ki.space.3xl}"
+          "$value": "{ki.space.3xl}",
+          "$description": "Material 3 dimension used by the list component for item gap."
         },
         "radius": {
-          "$value": "{ki.radius.0}"
+          "$value": "{ki.radius.0}",
+          "$description": "Material 3 dimension used by the list component for item radius."
         },
         "divider-width": {
-          "$value": "0.0625rem"
+          "$value": "{ki.foundation.migrated.component-badge-material3.badge.border-width}",
+          "$description": "Material 3 dimension used by the list component for list item divider width.",
+          "$type": "dimension"
         },
         "divider-color": {
-          "$value": "{ki.outline.med-em}"
+          "$value": "{ki.outline.med-em}",
+          "$description": "Material 3 color used by the list component for item divider color."
         },
         "primary-font-size": {
-          "$value": "{ki.typography.size.body-1}"
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "Material 3 dimension used by the list component for item primary font size."
         },
         "primary-line-height": {
-          "$value": "{ki.typography.line-height.body-1}"
+          "$value": "{ki.typography.line-height.body-1}",
+          "$description": "Material 3 dimension used by the list component for item primary line height."
         },
         "primary-font-weight": {
-          "$value": "{ki.typography.weight.body.normal}"
+          "$value": "{ki.typography.weight.body.normal}",
+          "$description": "Material 3 font weight used by the list component for item primary font weight."
         },
         "primary-fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the list component for item primary foreground."
         },
         "secondary-font-size": {
-          "$value": "{ki.typography.size.caption-1}"
+          "$value": "{ki.typography.size.caption-1}",
+          "$description": "Material 3 dimension used by the list component for item secondary font size."
         },
         "secondary-line-height": {
-          "$value": "{ki.typography.line-height.caption-1}"
+          "$value": "{ki.typography.line-height.caption-1}",
+          "$description": "Material 3 dimension used by the list component for item secondary line height."
         },
         "secondary-font-weight": {
-          "$value": "{ki.typography.weight.body.normal}"
+          "$value": "{ki.typography.weight.body.normal}",
+          "$description": "Material 3 font weight used by the list component for item secondary font weight."
         },
         "secondary-fg": {
-          "$value": "{ki.text.med-em}"
+          "$value": "{ki.text.med-em}",
+          "$description": "Material 3 color used by the list component for item secondary foreground."
         }
       }
     }

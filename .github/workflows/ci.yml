@@ -11,8 +11,7 @@ on:
     branches: [main]
   pull_request:
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -21,16 +20,35 @@ concurrency:
 jobs:
   gates:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
+    permissions:
+      contents: read
     steps:
-      - name: Harden runner (egress audit; switch to block after baseline)
+      - name: Harden runner
         uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            cdn.playwright.dev:443
+            playwright.azureedge.net:443
+            playwright.download.prss.microsoft.com:443
+            packages.microsoft.com:443
+            dl.google.com:443
+            azure.archive.ubuntu.com:80
+            storage.googleapis.com:443
+            archive.ubuntu.com:443
+            security.ubuntu.com:443
 
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           persist-credentials: false
+
+      - name: Allocate isolated writable caches
+        run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
 
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
 
@@ -46,4 +64,91 @@ jobs:
         run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
 
       - name: Deterministic gates suite
+        env:
+          KIMEN_MUTATION_DELEGATED_TO: mutation
         run: bash scripts/gates/gates-suite.sh
+
+  mutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Allocate isolated writable caches
+        run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Changed-core mutation gate
+        env:
+          KIMEN_MUTATION_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: GITHUB_STEP_SUMMARY="$RUNNER_TEMP/kimen-mutation-summary.md" pnpm run test:mutation
+
+  containment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            objects.githubusercontent.com:443
+            auth.docker.io:443
+            registry-1.docker.io:443
+            production.cloudflare.docker.com:443
+            production.cloudfront.docker.com:443
+            snapshot.debian.org:443
+            registry.npmjs.org:443
+            cdn.playwright.dev:443
+            playwright.azureedge.net:443
+            playwright.download.prss.microsoft.com:443
+
+      - name: Check out source
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      - name: Deterministic S4-S5 lease, proxy and recovery fixtures
+        run: |
+          node --test \
+            scripts/tests/model-lease.test.mjs \
+            scripts/tests/sandbox-static-contract.test.mjs \
+            sandbox/tests/proxy.test.mjs
+          bash sandbox/tests/loop-entry.test.sh
+          bash sandbox/tests/loop-host.test.sh
+
+      - name: Build pinned unattended image
+        run: docker build --tag kimen-sandbox sandbox
+
+      - name: Mandatory Linux Docker containment smoke
+        env:
+          KIMEN_CONTAINMENT_IMAGE: kimen-sandbox
+          KIMEN_REQUIRE_DOCKER_CONTAINMENT: '1'
+        run: bash sandbox/tests/containment.test.sh

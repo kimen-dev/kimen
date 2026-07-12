@@ -5,7 +5,7 @@
 }
 
 .label {
-  color: var(--ki-text-base);
+  color: var(--ki-<%= tokenName %>-text-color);
   font-family: var(--ki-typography-family-base);
   font-size: var(--ki-typography-size-body);
 }

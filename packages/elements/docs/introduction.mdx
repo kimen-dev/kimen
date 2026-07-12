@@ -4,10 +4,10 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Kimen component workshop
 
-**Kimen** is a neutral, multi-protocol GenUI catalog in web components: an
-agent emits a schema-constrained UI spec, a guardrail validates it against a
-closed catalog, and standards-first `<ki-*>` elements render it — in any
-host, whatever the framework, under any brand.
+**Kimen Elements** is the implemented Web Components foundation for Kimen's
+planned, multi-protocol GenUI system. Today it provides standards-first
+`<ki-*>` elements, generated machine contracts and token-driven theming in
+any host. The neutral catalog, guardrail and protocol adapters come later.
 
 This Storybook is the **component workshop**: every published component with
 its props as live controls, its docs generated from the component contract
@@ -35,12 +35,21 @@ The **Scheme** toolbar switches light / dark / auto — it drives the same
 - Source, roadmap and constitution: [github.com/kimen-dev/kimen](https://github.com/kimen-dev/kimen)
 - Status: **pre-v1** — components land one by one through an approved-spec
   pipeline with deterministic quality gates (real-browser tests, axe zero
-  violations, mutation-score gates, bundle budgets).
+  violations, packaging checks and bundle budgets). Mutation gating is being
+  added during project-integrity hardening.
 
 ## For agents
 
-Kimen treats machine legibility as a deliverable: components ship
-when-to-use / when-NOT-to-use metadata, a generated manifest, and (as the
-catalog phase lands) a Zod-validated schema of what agents may emit. An API
-a capable agent cannot wire correctly from its description alone is a
-defect — file it as one.
+Kimen treats machine legibility as a deliverable: components already produce
+when-to-use / when-NOT-to-use metadata, a generated manifest and `llms.txt`.
+A Zod-validated schema of what agents may emit is planned for the catalog
+phase. An API a capable agent cannot wire correctly from its description
+alone is a defect — file it as one.
+
+{/* kimen:capabilities:elements-workshop-status:start */}
+- **planned** — Schema-constrained guarded renderer planned
+- **hardening** — Changed-core mutation quality gate in hardening
+- **planned** — A2UI, MCP Apps, AG-UI and json-render protocol adapters planned
+- **planned** — Neutral runtime component catalog planned
+- **available** — Machine-readable Web Components foundation with token-driven theming
+{/* kimen:capabilities:elements-workshop-status:end */}

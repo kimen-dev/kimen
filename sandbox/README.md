@@ -1,39 +1,71 @@
-# Kimen loop sandbox
+# Kimen unattended sandbox
 
-Disposable, credential-free container where unattended agent loops run
-(constitution digest, Art. XI). Vendor-agnostic: Claude Code and Codex CLI
-are baked into the image; use whichever model fits the task. No npm or
-GitHub credentials inside; egress restricted to an allowlist (npm registry,
-GitHub, Playwright CDN, Anthropic + OpenAI APIs) by `init-firewall.sh`.
-Permission-bypass agent execution is allowed only here, because there is
-nothing to exfiltrate.
+The unattended loop is split across disposable containers and controlled by
+the host. Bootstrap has registry/build-only egress and no model authority. One
+agent container receives a verified short-lived gateway lease. The host then
+destroys that container and lease file, revokes the lease, and starts the
+authoritative gates in a fresh container with `--network none`.
 
-## Usage: two commands, total
+No npm/GitHub token, static provider key, ChatGPT login state, OAuth refresh
+token or persistent authentication volume is accepted. Permission-bypass agent
+execution is confined to the leased disposable agent container.
 
-```bash
-# ONCE: sign Codex in with your ChatGPT subscription (persists in a volume)
-bash sandbox/login.sh
+## External model-lease prerequisite
 
-# PER LOOP: branch + task. Everything else is automatic (disposable clone,
-# firewall, install, Codex under the loop contract, gates verdict).
-bash sandbox/loop.sh <feature-branch> "the task"
+Kimen cannot mint short-lived model authority. Before a real unattended run,
+the founder must configure an external gateway helper that implements
+[`model-lease-v1`](../specs/018-project-integrity-hardening/contracts/model-lease-v1.md)
+and export these host-only paths:
+
+```sh
+export KIMEN_MODEL_LEASE_HELPER=/root-owned/bin/kimen-model-broker
+export KIMEN_MODEL_LEASE_KEYRING=/root-owned/etc/kimen/model-keyring.json
+export KIMEN_MODEL_LEASE_REVOCATIONS=/root-owned/etc/kimen/revocations.json
 ```
 
-When it finishes it prints the verdict and the exact commands to review the
-diff, keep the result (`git fetch`) or discard the clone. Whoever writes,
-the reviewer should be a strong model from a DIFFERENT vendor (constitution
-Workflow), and the gates are the only definition of done.
+The keyring contains only pinned Ed25519 public JWKs with explicit `current` or
+`next` status. The helper's minting/provider credential stays outside this
+repository and every container. `sandbox/model-lease.sh acquire` requests at
+most 3,660 seconds, verifies the compact JWT plus envelope, writes one mode-0600
+lease, and prints only its opaque ID. Revocation is mandatory before gates.
 
-For interactive debugging there is also `sandbox/run.sh <clone-path>`, which
-drops you in a shell inside the same containment (pass ANTHROPIC_API_KEY or
-OPENAI_API_KEY if you want an agent available by API instead of the
-subscription volume).
+`sandbox/egress-allowlist.txt` is versioned and root-owned in the image. Its
+`gateway.example.invalid` entry is intentionally non-routable: unattended model
+execution remains disabled until an approved change replaces it with the real
+gateway host and the same host is present in the verifier allowlist. The proxy
+accepts only exact port-443 CONNECT targets whose bounded TLS ClientHello SNI
+matches that target; the agent UID has no direct DNS or network route.
 
-## Notes
+## Run
 
-- The allowlist resolves domains to IPs at start; if a CDN rotates mid-loop,
-  re-run `sudo /usr/local/bin/init-firewall.sh`.
-- Requires `--cap-add=NET_ADMIN` (set by `run.sh`). The primary defense is
-  the absence of credentials; the firewall reduces the exfiltration surface.
-- `ANTHROPIC_API_KEY` is the only secret present: use a dedicated, rotatable,
-  low-privilege key.
+```sh
+bash sandbox/loop.sh <feature-branch> "the approved task"
+```
+
+`sandbox/run.sh` is only a compatibility alias for the same split-phase loop;
+it no longer opens an interactive credential-bearing container. Every attempt
+leaves a local `loop/<attempt-id>` evidence ref with a product snapshot parent
+and exact non-secret evidence commit. A green overall result requires both
+successful revocation and green fresh-container gates; agent exit remains
+observable but is not the verdict.
+
+## Verification
+
+The deterministic lease, proxy and recovery fixtures require no credential or
+network:
+
+```sh
+node --test scripts/tests/model-lease.test.mjs
+node --test sandbox/tests/proxy.test.mjs
+bash sandbox/tests/loop-entry.test.sh
+bash sandbox/tests/loop-host.test.sh
+```
+
+The UID firewall boundary requires Linux plus Docker and is mandatory in CI:
+
+```sh
+KIMEN_REQUIRE_DOCKER_CONTAINMENT=1 bash sandbox/tests/containment.test.sh
+```
+
+Local machines without a Docker daemon report an explicit skip; that skip is
+not release evidence.

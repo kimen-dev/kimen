@@ -2,37 +2,49 @@
   "ki": {
     "card": {
       "bg": {
-        "$value": "{ki.surface.raised}"
+        "$value": "{ki.surface.raised}",
+        "$description": "color used by the card component for background."
       },
       "fg": {
-        "$value": "{ki.text.high-em}"
+        "$value": "{ki.text.high-em}",
+        "$description": "color used by the card component for foreground."
       },
       "border-color": {
-        "$value": "{ki.outline.none}"
+        "$value": "{ki.outline.none}",
+        "$description": "color used by the card component for border color."
       },
       "border-width": {
-        "$value": "{ki.space.zero}"
+        "$value": "{ki.space.zero}",
+        "$description": "dimension used by the card component for border width."
       },
       "radius": {
-        "$value": "{ki.radius.lg}"
+        "$value": "{ki.radius.lg}",
+        "$description": "dimension used by the card component for radius."
       },
       "elevation": {
-        "$value": "0 1px 2px 0 var(--ki-elevation-shadow), 0 2px 6px 2px var(--ki-elevation-shadow-med)"
+        "$value": "{ki.foundation.migrated.component-card.card.elevation}",
+        "$description": "shadow used by the card component for card elevation.",
+        "$type": "shadow"
       },
       "gap": {
-        "$value": "{ki.space.zero}"
+        "$value": "{ki.space.zero}",
+        "$description": "dimension used by the card component for gap."
       },
       "media-padding": {
-        "$value": "{ki.space.zero}"
+        "$value": "{ki.space.zero}",
+        "$description": "dimension used by the card component for media padding."
       },
       "header-padding": {
-        "$value": "{ki.space.3xl}"
+        "$value": "{ki.space.3xl}",
+        "$description": "dimension used by the card component for header padding."
       },
       "body-padding": {
-        "$value": "{ki.space.3xl}"
+        "$value": "{ki.space.3xl}",
+        "$description": "dimension used by the card component for body padding."
       },
       "footer-padding": {
-        "$value": "{ki.space.3xl}"
+        "$value": "{ki.space.3xl}",
+        "$description": "dimension used by the card component for footer padding."
       }
     }
   }

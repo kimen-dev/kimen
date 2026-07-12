@@ -2,83 +2,103 @@
   "ki": {
     "alert": {
       "radius": {
-        "$value": "{ki.radius.lg}"
+        "$value": "{ki.radius.lg}",
+        "$description": "Material 3 dimension used by the alert component for radius."
       },
       "neutral": {
         "bg": {
-          "$value": "{ki.surface.s2}"
+          "$value": "{ki.surface.s2}",
+          "$description": "Material 3 color used by the alert component for neutral background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the alert component for neutral foreground."
         },
         "border": {
-          "$value": "{ki.outline.med-em}"
+          "$value": "{ki.outline.med-em}",
+          "$description": "Material 3 color used by the alert component for neutral border."
         }
       },
       "danger": {
         "bg": {
-          "$value": "{ki.surface.danger-low-em}"
+          "$value": "{ki.surface.danger-low-em}",
+          "$description": "Material 3 color used by the alert component for danger background."
         },
         "fg": {
-          "$value": "{ki.text.danger-high-em}"
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "Material 3 color used by the alert component for danger foreground."
         },
         "border": {
-          "$value": "{ki.outline.danger-high-em}"
+          "$value": "{ki.outline.danger-high-em}",
+          "$description": "Material 3 color used by the alert component for danger border."
         }
       },
       "success": {
         "bg": {
-          "$value": "{ki.surface.s1}"
+          "$value": "{ki.surface.s1}",
+          "$description": "Material 3 color used by the alert component for success background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the alert component for success foreground."
         },
         "border": {
-          "$value": "{ki.outline.med-em}"
+          "$value": "{ki.outline.med-em}",
+          "$description": "Material 3 color used by the alert component for success border."
         }
       },
       "info": {
         "bg": {
-          "$value": "{ki.surface.s3}"
+          "$value": "{ki.surface.s3}",
+          "$description": "Material 3 color used by the alert component for info background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the alert component for info foreground."
         },
         "border": {
-          "$value": "{ki.outline.med-em}"
+          "$value": "{ki.outline.med-em}",
+          "$description": "Material 3 color used by the alert component for info border."
         }
       },
       "warning": {
         "bg": {
-          "$value": "{ki.surface.s4}"
+          "$value": "{ki.surface.s4}",
+          "$description": "Material 3 color used by the alert component for warning background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "Material 3 color used by the alert component for warning foreground."
         },
         "border": {
-          "$value": "{ki.outline.high-em}"
+          "$value": "{ki.outline.high-em}",
+          "$description": "Material 3 color used by the alert component for warning border."
         }
       },
       "dismiss": {
         "rest": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "Material 3 color used by the alert component for dismiss rest foreground."
           }
         },
         "hover": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "Material 3 color used by the alert component for dismiss hover foreground."
           }
         },
         "active": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "Material 3 color used by the alert component for dismiss active foreground."
           }
         }
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "Material 3 color used by the alert component for focus ring color."
         }
       }
     }

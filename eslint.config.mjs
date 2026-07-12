@@ -3,9 +3,9 @@
 // TODO(Fase 2): add @stencil-community/eslint-plugin when packages/elements has
 // real components (requires type-aware tsx parsing per package).
 import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import jsxA11y from 'eslint-plugin-jsx-a11y';
 import nxPlugin from '@nx/eslint-plugin';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
@@ -21,6 +21,7 @@ export default tseslint.config(
       '**/www/**',
       '**/storybook-static/**',
       'site-dist/**',
+      'reports/**',
     ],
   },
   js.configs.recommended,

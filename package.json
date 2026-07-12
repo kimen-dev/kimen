@@ -14,7 +14,22 @@
     "lint:styles": "stylelint \"packages/**/*.css\" \"site/**/*.css\" --allow-empty-input",
     "typecheck": "tsc -b --pretty false && tsc -p packages/elements --noEmit --pretty false && tsc -p packages/elements/browser-tests --pretty false && tsc -p packages/elements/scripts --pretty false",
     "deadcode": "knip",
-    "packaging": "publint packages/tokens && publint packages/elements && publint packages/catalog && publint packages/kimen && attw --pack packages/elements --profile esm-only --entrypoints . && attw --pack packages/elements --profile esm-only --entrypoints ./loader --ignore-rules internal-resolution-error && attw --pack packages/catalog --profile esm-only && attw --pack packages/elements --profile esm-only --entrypoints ./ki-alert ./ki-badge ./ki-button ./ki-card ./ki-checkbox ./ki-dialog ./ki-input ./ki-list ./ki-list-item ./ki-option ./ki-progress ./ki-radio ./ki-radio-group ./ki-select ./ki-switch ./ki-tab ./ki-tab-panel ./ki-tabs ./ki-textarea ./ki-tooltip --ignore-rules internal-resolution-error",
+    "packaging": "bash scripts/gates/cache-env.sh -- node scripts/gates/check-packaging.mjs",
+    "test:infra": "node scripts/run-infra-tests.mjs",
+    "test:consumer-contract:unit": "bash scripts/gates/cache-env.sh -- node --test scripts/tests/consumer-contract.test.mjs",
+    "test:consumer-contract:isolated": "node --test scripts/tests/consumer-contract.test.mjs && node scripts/tests/consumer-contract-real-smoke.mjs",
+    "test:consumer-contract": "bash scripts/gates/cache-env.sh -- pnpm run test:consumer-contract:isolated",
+    "test:generator-smoke": "node scripts/generator-smoke.mjs",
+    "test:generator-contract": "pnpm exec nx run @kimen/nx-plugin:test --skipNxCache",
+    "check:tokens": "node scripts/gates/check-tokens.mjs",
+    "check:component-inventory": "node scripts/gates/check-component-inventory.mjs",
+    "check:packed-manifest": "node scripts/gates/check-packed-manifest.mjs",
+    "check:api": "node --test scripts/tests/css-token-surface.test.mjs scripts/tests/public-api.test.mjs scripts/tests/public-api-gate.test.mjs scripts/tests/public-api-snapshot.test.mjs && node scripts/gates/check-public-api.mjs --baseline changes/api/baselines/0.0.0.json --candidate packages/elements/generated/public-api.json --declaration changes/api/018-project-integrity-hardening.json",
+    "generate:capabilities": "node scripts/gates/check-capabilities.mjs --generate",
+    "check:capabilities": "node scripts/gates/check-capabilities.mjs --static-only",
+    "test:mutation": "bash scripts/gates/run-mutation.sh",
+    "test:sandbox": "bash sandbox/tests/run-local.sh",
+    "check:workflows": "node scripts/gates/check-workflows.mjs",
     "gates": "bash scripts/gates/gates-suite.sh",
     "storybook": "nx storybook @kimen/elements",
     "prepare": "husky"
@@ -22,11 +37,16 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.4",
     "@biomejs/biome": "2.5.2",
-    "@kimen/nx-plugin": "workspace:*",
     "@commitlint/cli": "21.2.0",
     "@commitlint/config-conventional": "21.2.0",
     "@eslint/js": "10.0.1",
+    "@kimen/nx-plugin": "workspace:*",
     "@nx/eslint-plugin": "23.0.1",
+    "@stencil/core": "4.43.5",
+    "@stencil/vitest": "1.13.3",
+    "@stryker-mutator/api": "9.6.1",
+    "@stryker-mutator/core": "9.6.1",
+    "@stryker-mutator/vitest-runner": "9.6.1",
     "eslint": "10.6.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "husky": "9.1.7",
@@ -40,7 +60,8 @@
     "stylelint-declaration-strict-value": "1.11.1",
     "stylelint-use-logical": "2.1.3",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.62.1"
+    "typescript-eslint": "8.62.1",
+    "vitest": "4.1.9"
   },
   "lint-staged": {
     "*.{ts,tsx,js,mjs,json,md,yml,yaml}": [
@@ -52,5 +73,14 @@
     "*.css": [
       "stylelint --fix --allow-empty-input"
     ]
-  }
+  },
+  "pnpm": {
+    "overrides": {
+      "qs": "6.15.3"
+    }
+  },
+  "workspaces": [
+    "packages/*",
+    "tools/*"
+  ]
 }

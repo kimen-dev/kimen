@@ -67,6 +67,7 @@ Assemble it with the audited, network-free script in this skill:
 | `scenario-ids.txt` | Extracted S-IDs, the reviewer's compliance checklist |
 | `constitutional-surface.md` | The spec's Constitutional Surface section — which articles this feature touches |
 | `gates-output.txt` | Proof the deterministic layer already passed |
+| `packet-manifest.json` | Canonical base/head plus size/SHA-256 inventory; its own digest is the attested `packetSha256` |
 | `evidence/` | Rendered evidence for UI-affecting changes (screenshots, VR diffs) |
 | `MANIFEST.md` | Inventory + reviewer scope reminder |
 
@@ -77,18 +78,22 @@ the suite; pass `EVIDENCE_DIR=<path>` to include rendered evidence.
 ## How to Dispatch
 
 1. Run `review-package.sh` (above).
-2. Dispatch a **fresh agent** — clean context, zero shared history with the
+2. Preserve the emitted `packet SHA-256` and the exact
+   `packet-manifest.json`; completion dispatch sends the manifest bytes as
+   standard base64 and the attestation uses the emitted digest as
+   `packetSha256`. The workflow recomputes it against the live PR range.
+3. Dispatch a **fresh agent** — clean context, zero shared history with the
    writer, different model vendor when available — using the template in
    `code-reviewer.md` in this skill directory. Fill in `{PACKET_DIR}` and
    `{DESCRIPTION}`.
-3. **Act on feedback:**
+4. **Act on feedback:**
    - Fix Critical issues immediately (failing-test-first if behavior is
      wrong — see `systematic-debugging`)
    - Fix Important issues before requesting round 2
    - Note Minor issues for later
    - Push back if the reviewer is wrong — with technical reasoning, in the
      round-2 packet notes; never silently ignore a finding
-4. **Max 2 review rounds** (Workflow). Still unresolved after round 2 →
+5. **Max 2 review rounds** (Workflow). Still unresolved after round 2 →
    escalate to the founder with both review reports, batched; do not idle.
 
 ## Review Scope — Only What Gates Cannot Catch

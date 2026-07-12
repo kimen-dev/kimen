@@ -437,7 +437,7 @@ button {
   line-height: var(--_ki-button-line-height);
   min-block-size: var(--_ki-button-height);
   min-inline-size: var(--_ki-button-min-target);
-  padding-block: var(--ki-space-zero);
+  padding-block: 0;
   padding-inline: var(--_ki-button-padding-inline);
   text-align: center;
   touch-action: manipulation;

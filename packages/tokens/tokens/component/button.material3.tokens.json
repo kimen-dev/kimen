@@ -3,31 +3,38 @@
     "button": {
       "xs": {
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the button component for xs radius."
         }
       },
       "sm": {
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the button component for sm radius."
         }
       },
       "md": {
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the button component for md radius."
         }
       },
       "lg": {
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the button component for lg radius."
         }
       },
       "xl": {
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the button component for xl radius."
         }
       },
       "border-width": {
-        "$value": "0.0625rem"
+        "$value": "{ki.foundation.migrated.component-badge-material3.badge.border-width}",
+        "$description": "Material 3 dimension used by the button component for button border width.",
+        "$type": "dimension"
       }
     }
   }

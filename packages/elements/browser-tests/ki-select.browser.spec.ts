@@ -1,12 +1,11 @@
-import axe from 'axe-core';
-import { beforeAll, describe, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
-
+import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:005-ki-select
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III).
 import tokensCss from '@kimen/tokens/css?raw';
-import material3Css from '@kimen/tokens/css/material3?raw';
+import axe from 'axe-core';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
 
@@ -39,7 +38,7 @@ async function mountSelect(
   const style = document.createElement('style');
   style.textContent = tokensCss;
   const main = document.createElement('main');
-  main.innerHTML = `<ki-select label="Country" placeholder="Choose a country" ${attrs}>${options}</ki-select><button id="after">After</button>`;
+  main.innerHTML = `<ki-select label="Country" placeholder="Choose a country" ${attrs}>${options}</ki-select><button id="after" tabindex="0">After</button>`;
   document.body.append(style, main);
   await customElements.whenDefined('ki-select');
   await customElements.whenDefined('ki-option');
@@ -267,16 +266,18 @@ describe('ki-select in a real browser', () => {
     );
     const events: string[] = [];
     el.addEventListener('change', () => events.push('change'));
+    const firstId = rows(el)[0]?.id ?? '';
+    const lastId = rows(el)[2]?.id ?? '';
 
     trigger(el).focus();
     await userEvent.keyboard('{ArrowDown}');
-    expect(trigger(el).getAttribute('aria-activedescendant')).toBe(rows(el)[0]?.id);
+    await expect.element(trigger(el)).toHaveAttribute('aria-activedescendant', firstId);
     await userEvent.keyboard('{ArrowDown}');
-    expect(trigger(el).getAttribute('aria-activedescendant')).toBe(rows(el)[2]?.id);
+    await expect.element(trigger(el)).toHaveAttribute('aria-activedescendant', lastId);
     await userEvent.keyboard('{Home}');
-    expect(trigger(el).getAttribute('aria-activedescendant')).toBe(rows(el)[0]?.id);
+    await expect.element(trigger(el)).toHaveAttribute('aria-activedescendant', firstId);
     await userEvent.keyboard('{End}');
-    expect(trigger(el).getAttribute('aria-activedescendant')).toBe(rows(el)[2]?.id);
+    await expect.element(trigger(el)).toHaveAttribute('aria-activedescendant', lastId);
     await userEvent.keyboard('{Enter}');
     expect(el.value).toBe('pt');
     expect(events).toEqual(['change']);
@@ -296,7 +297,9 @@ describe('ki-select in a real browser', () => {
     const unselected = await mountSelect();
     trigger(unselected).focus();
     await userEvent.keyboard('{ArrowDown}');
-    expect(trigger(unselected).getAttribute('aria-activedescendant')).toBe(rows(unselected)[0]?.id);
+    await expect
+      .element(trigger(unselected))
+      .toHaveAttribute('aria-activedescendant', rows(unselected)[0]?.id ?? '');
     await userEvent.keyboard('f');
     expect(unselected.value).toBe('');
   });

@@ -1,13 +1,12 @@
-import axe from 'axe-core';
-import { page, userEvent } from 'vitest/browser';
-import { beforeAll, describe, expect, it } from 'vitest';
-
+import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:011-ki-alert
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import material3Css from '@kimen/tokens/css/material3?raw';
+import axe from 'axe-core';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-alert.js';
 
 type KiAlertElement = HTMLElement & {
@@ -354,6 +353,7 @@ describe('ki-alert in a real browser', () => {
     cleanup();
     await mount('Read only');
     const save = document.createElement('button');
+    save.tabIndex = 0;
     save.textContent = 'Save';
     document.body.append(save);
 
@@ -366,6 +366,7 @@ describe('ki-alert in a real browser', () => {
     cleanup();
     const el = await mount('Backup completed', { dismissible: true });
     const save = document.createElement('button');
+    save.tabIndex = 0;
     save.textContent = 'Save';
     document.body.append(save);
     const button = dismissButton(el);

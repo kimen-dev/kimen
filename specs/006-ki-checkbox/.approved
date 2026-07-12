@@ -1,2 +1,5 @@
+approval-version: 2
 approved-at: 2026-07-08T15:08:36Z
 spec-sha256: bad061d1d04ec33d67b982b117ff77a966042dae811f1b9c427192ef8fcf14ab
+feature-sha256: dbb3068c9caab675113943df77ef2303ab1f644573f80de18a83ba84d6ae8fa1
+migrated-from-version: 1

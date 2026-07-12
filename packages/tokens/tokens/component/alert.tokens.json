@@ -2,119 +2,151 @@
   "ki": {
     "alert": {
       "padding-inline": {
-        "$value": "{ki.space.lg}"
+        "$value": "{ki.space.lg}",
+        "$description": "dimension used by the alert component for padding inline."
       },
       "padding-block": {
-        "$value": "{ki.space.md}"
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the alert component for padding block."
       },
       "gap": {
-        "$value": "{ki.space.sm}"
+        "$value": "{ki.space.sm}",
+        "$description": "dimension used by the alert component for gap."
       },
       "radius": {
-        "$value": "{ki.radius.lg}"
+        "$value": "{ki.radius.lg}",
+        "$description": "dimension used by the alert component for radius."
       },
       "border-width": {
-        "$value": "{ki.space.xxs}"
+        "$value": "{ki.space.xxs}",
+        "$description": "dimension used by the alert component for border width."
       },
       "font-size": {
-        "$value": "{ki.typography.size.body-1}"
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "dimension used by the alert component for font size."
       },
       "line-height": {
-        "$value": "{ki.typography.line-height.body-1}"
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "dimension used by the alert component for line height."
       },
       "heading-font-size": {
-        "$value": "{ki.typography.size.body-2}"
+        "$value": "{ki.typography.size.body-2}",
+        "$description": "dimension used by the alert component for heading font size."
       },
       "heading-font-weight": {
-        "$value": "{ki.typography.weight.body.semibold}"
+        "$value": "{ki.typography.weight.body.semibold}",
+        "$description": "font weight used by the alert component for heading font weight."
       },
       "dismiss-size": {
-        "$value": "{ki.space.7xl}"
+        "$value": "{ki.space.7xl}",
+        "$description": "dimension used by the alert component for dismiss size."
       },
       "dismiss-icon-size": {
-        "$value": "{ki.space.4xl}"
+        "$value": "{ki.space.4xl}",
+        "$description": "dimension used by the alert component for dismiss icon size."
       },
       "neutral": {
         "bg": {
-          "$value": "{ki.surface.s1}"
+          "$value": "{ki.surface.s1}",
+          "$description": "color used by the alert component for neutral background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the alert component for neutral foreground."
         },
         "border": {
-          "$value": "{ki.outline.none}"
+          "$value": "{ki.outline.none}",
+          "$description": "color used by the alert component for neutral border."
         }
       },
       "success": {
         "bg": {
-          "$value": "{ki.surface.success-base-em}"
+          "$value": "{ki.surface.success-base-em}",
+          "$description": "color used by the alert component for success background."
         },
         "fg": {
-          "$value": "{ki.text.success-high-em}"
+          "$value": "{ki.text.success-high-em}",
+          "$description": "color used by the alert component for success foreground."
         },
         "border": {
-          "$value": "{ki.outline.success-med-em}"
+          "$value": "{ki.outline.success-med-em}",
+          "$description": "color used by the alert component for success border."
         }
       },
       "danger": {
         "bg": {
-          "$value": "{ki.surface.danger-base-em}"
+          "$value": "{ki.surface.danger-base-em}",
+          "$description": "color used by the alert component for danger background."
         },
         "fg": {
-          "$value": "{ki.text.danger-high-em}"
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "color used by the alert component for danger foreground."
         },
         "border": {
-          "$value": "{ki.outline.danger-med-em}"
+          "$value": "{ki.outline.danger-med-em}",
+          "$description": "color used by the alert component for danger border."
         }
       },
       "info": {
         "bg": {
-          "$value": "{ki.surface.info-base-em}"
+          "$value": "{ki.surface.info-base-em}",
+          "$description": "color used by the alert component for info background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the alert component for info foreground."
         },
         "border": {
-          "$value": "{ki.outline.info-med-em}"
+          "$value": "{ki.outline.info-med-em}",
+          "$description": "color used by the alert component for info border."
         }
       },
       "warning": {
         "bg": {
-          "$value": "{ki.surface.warning-base-em}"
+          "$value": "{ki.surface.warning-base-em}",
+          "$description": "color used by the alert component for warning background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the alert component for warning foreground."
         },
         "border": {
-          "$value": "{ki.outline.warning-med-em}"
+          "$value": "{ki.outline.warning-med-em}",
+          "$description": "color used by the alert component for warning border."
         }
       },
       "dismiss": {
         "rest": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the alert component for dismiss rest foreground."
           }
         },
         "hover": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the alert component for dismiss hover foreground."
           }
         },
         "active": {
           "fg": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the alert component for dismiss active foreground."
           }
         }
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the alert component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the alert component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the alert component for focus ring offset."
         }
       }
     }

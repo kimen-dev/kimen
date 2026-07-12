@@ -1,5 +1,5 @@
 import { h } from '@stencil/core';
-import { describe, expect, it, render } from '@stencil/vitest';
+import { describe, expect, it, render, vi } from '@stencil/vitest';
 import { resolveDismissFocusTarget } from './ki-alert.focus';
 import { liveExposureForTone } from './ki-alert.tone';
 
@@ -8,6 +8,17 @@ import { liveExposureForTone } from './ki-alert.tone';
 // real-browser spec (Art. III). Every test maps to a scenario ID (S<n>)
 // from the approved feature.feature (traceability gate, Art. II).
 describe('ki-alert', () => {
+  it('S1 S11 exposes the documented neutral tone and dismiss-label defaults', async () => {
+    const { root } = await render(h('ki-alert', { dismissible: true }, 'Service notice'));
+    const live = root.shadowRoot?.querySelector('.live');
+    const dismiss = root.shadowRoot?.querySelector('[part="dismiss"]');
+
+    expect(root.getAttribute('tone')).toBe('neutral');
+    expect(live?.getAttribute('role')).toBe('status');
+    expect(root.getAttribute('dismiss-label')).toBe('Dismiss');
+    expect(dismiss?.getAttribute('aria-label')).toBe('Dismiss');
+  });
+
   it('S2 renders a strong heading before the message without document heading semantics', async () => {
     const { root } = await render(h('ki-alert', { heading: 'Update available' }, 'Restart soon'));
     const heading = root.shadowRoot?.querySelector('[part="heading"]');
@@ -29,6 +40,15 @@ describe('ki-alert', () => {
 
     expect(absent.root.shadowRoot?.querySelector('[part="heading"]')).toBeNull();
     expect(empty.root.shadowRoot?.querySelector('[part="heading"]')).toBeNull();
+  });
+
+  it('S2 trims surrounding heading whitespace before display', async () => {
+    const { root } = await render(
+      h('ki-alert', { heading: '  Update available  ' }, 'Restart soon'),
+    );
+    const heading = root.shadowRoot?.querySelector('[part="heading"]');
+
+    expect(heading?.textContent).toBe('Update available');
   });
 
   it('S5 falls back to the neutral live exposure and anatomy for an unknown tone', async () => {
@@ -66,6 +86,32 @@ describe('ki-alert', () => {
     const { root } = await render(h('ki-alert', { dismissed: true }, 'Backup completed'));
 
     expect(root.shadowRoot?.querySelector('[part]')).toBeNull();
+  });
+
+  it('S3 S16 user dismissal hides the alert, hands off focus, and emits once', async () => {
+    const { root, spyOnEvent, waitForChanges } = await render(
+      h('ki-alert', { dismissible: true }, 'Backup completed'),
+    );
+    const dismiss = root.shadowRoot?.querySelector<HTMLButtonElement>('[part="dismiss"]');
+    const after = document.createElement('button');
+    after.textContent = 'Save';
+    document.body.append(after);
+    const events = spyOnEvent('ki-dismiss');
+    const focusAfter = vi.spyOn(after, 'focus');
+
+    expect(dismiss).toBeInstanceOf(HTMLButtonElement);
+    Object.defineProperty(root.shadowRoot, 'activeElement', {
+      configurable: true,
+      value: dismiss,
+    });
+    dismiss?.click();
+    await waitForChanges();
+
+    expect((root as HTMLElement & { dismissed: boolean }).dismissed).toBe(true);
+    expect(root.shadowRoot?.querySelector('[part="alert"]')).toBeNull();
+    expect(focusAfter).toHaveBeenCalledOnce();
+    expect(events.length).toBe(1);
+    expect(events.firstEvent?.detail).toBeNull();
   });
 });
 

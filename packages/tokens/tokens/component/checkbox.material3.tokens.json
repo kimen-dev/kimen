@@ -1,55 +1,139 @@
 {
   "ki": {
     "checkbox": {
-      "radius": { "$value": "{ki.radius.xs}" },
+      "radius": {
+        "$value": "{ki.radius.xs}",
+        "$description": "Material 3 dimension used by the checkbox component for radius."
+      },
       "checked": {
         "rest": {
-          "bg": { "$value": "{ki.surface.primary-high-em}" },
-          "fg": { "$value": "{ki.text.primary-on-primary}" },
-          "border": { "$value": "{ki.outline.none}" }
+          "bg": {
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "Material 3 color used by the checkbox component for checked rest background."
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "Material 3 color used by the checkbox component for checked rest foreground."
+          },
+          "border": {
+            "$value": "{ki.outline.none}",
+            "$description": "Material 3 color used by the checkbox component for checked rest border."
+          }
         },
         "hover": {
-          "bg": { "$value": "{ki.surface.primary-high-em-hover}" },
-          "fg": { "$value": "{ki.text.primary-on-primary}" },
-          "border": { "$value": "{ki.outline.none}" }
+          "bg": {
+            "$value": "{ki.surface.primary-high-em-hover}",
+            "$description": "Material 3 color used by the checkbox component for checked hover background."
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "Material 3 color used by the checkbox component for checked hover foreground."
+          },
+          "border": {
+            "$value": "{ki.outline.none}",
+            "$description": "Material 3 color used by the checkbox component for checked hover border."
+          }
         },
         "active": {
-          "bg": { "$value": "{ki.surface.primary-high-em}" },
-          "fg": { "$value": "{ki.text.primary-on-primary}" },
-          "border": { "$value": "{ki.outline.none}" }
+          "bg": {
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "Material 3 color used by the checkbox component for checked active background."
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "Material 3 color used by the checkbox component for checked active foreground."
+          },
+          "border": {
+            "$value": "{ki.outline.none}",
+            "$description": "Material 3 color used by the checkbox component for checked active border."
+          }
         },
         "disabled": {
-          "bg": { "$value": "{ki.surface.disabled-low-em}" },
-          "fg": { "$value": "{ki.text.muted}" },
-          "border": { "$value": "{ki.outline.none}" }
+          "bg": {
+            "$value": "{ki.surface.disabled-low-em}",
+            "$description": "Material 3 color used by the checkbox component for checked disabled background."
+          },
+          "fg": {
+            "$value": "{ki.text.muted}",
+            "$description": "Material 3 color used by the checkbox component for checked disabled foreground."
+          },
+          "border": {
+            "$value": "{ki.outline.none}",
+            "$description": "Material 3 color used by the checkbox component for checked disabled border."
+          }
         }
       },
       "indeterminate": {
         "rest": {
-          "bg": { "$value": "{ki.surface.primary-high-em}" },
-          "fg": { "$value": "{ki.text.primary-on-primary}" },
-          "border": { "$value": "{ki.outline.none}" }
+          "bg": {
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate rest background."
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate rest foreground."
+          },
+          "border": {
+            "$value": "{ki.outline.none}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate rest border."
+          }
         },
         "hover": {
-          "bg": { "$value": "{ki.surface.primary-high-em-hover}" },
-          "fg": { "$value": "{ki.text.primary-on-primary}" },
-          "border": { "$value": "{ki.outline.none}" }
+          "bg": {
+            "$value": "{ki.surface.primary-high-em-hover}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate hover background."
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate hover foreground."
+          },
+          "border": {
+            "$value": "{ki.outline.none}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate hover border."
+          }
         },
         "active": {
-          "bg": { "$value": "{ki.surface.primary-high-em}" },
-          "fg": { "$value": "{ki.text.primary-on-primary}" },
-          "border": { "$value": "{ki.outline.none}" }
+          "bg": {
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate active background."
+          },
+          "fg": {
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate active foreground."
+          },
+          "border": {
+            "$value": "{ki.outline.none}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate active border."
+          }
         },
         "disabled": {
-          "bg": { "$value": "{ki.surface.disabled-low-em}" },
-          "fg": { "$value": "{ki.text.muted}" },
-          "border": { "$value": "{ki.outline.none}" }
+          "bg": {
+            "$value": "{ki.surface.disabled-low-em}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate disabled background."
+          },
+          "fg": {
+            "$value": "{ki.text.muted}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate disabled foreground."
+          },
+          "border": {
+            "$value": "{ki.outline.none}",
+            "$description": "Material 3 color used by the checkbox component for indeterminate disabled border."
+          }
         }
       },
       "invalid": {
-        "bg": { "$value": "{ki.surface.danger-low-em}" },
-        "fg": { "$value": "{ki.text.danger-high-em}" },
-        "border": { "$value": "{ki.outline.danger-high-em}" }
+        "bg": {
+          "$value": "{ki.surface.danger-low-em}",
+          "$description": "Material 3 color used by the checkbox component for invalid background."
+        },
+        "fg": {
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "Material 3 color used by the checkbox component for invalid foreground."
+        },
+        "border": {
+          "$value": "{ki.outline.danger-high-em}",
+          "$description": "Material 3 color used by the checkbox component for invalid border."
+        }
       }
     }
   }

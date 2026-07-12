@@ -74,8 +74,8 @@
   box-sizing: border-box;
   min-inline-size: var(--_ki-alert-dismiss-size);
   min-block-size: var(--_ki-alert-dismiss-size);
-  padding-block: var(--ki-space-zero);
-  padding-inline: var(--ki-space-zero);
+  padding-block: 0;
+  padding-inline: 0;
   border: var(--_ki-alert-border-width) solid var(--ki-outline-none);
   border-radius: var(--_ki-alert-radius);
   background: var(--ki-outline-none);

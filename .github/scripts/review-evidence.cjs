@@ -1364,8 +1364,16 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
     writeJson(result);
     return exitCodeForDecision(result);
   }
+  if (command === 'break-glass-payload-event') {
+    if (typeof env.GITHUB_EVENT_PATH !== 'string' || env.GITHUB_EVENT_PATH.trim() === '') {
+      throw new ReviewEvidenceError('GITHUB_EVENT_PATH is required');
+    }
+    const eventPayload = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8'));
+    writeJson(breakGlassPayloadFromEvent(eventPayload, env));
+    return 0;
+  }
   throw new ReviewEvidenceError(
-    'usage: review-evidence.cjs evaluate|pending|complete|review-workflow|validate-break-glass|validate-break-glass-event',
+    'usage: review-evidence.cjs evaluate|pending|complete|review-workflow|validate-break-glass|validate-break-glass-event|break-glass-payload-event',
   );
 }
 

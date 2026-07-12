@@ -2,133 +2,169 @@
   "ki": {
     "switch": {
       "track-width": {
-        "$value": "{ki.space.10xl}"
+        "$value": "{ki.space.10xl}",
+        "$description": "dimension used by the switch component for track width."
       },
       "track-height": {
-        "$value": "{ki.space.6xl}"
+        "$value": "{ki.space.6xl}",
+        "$description": "dimension used by the switch component for track height."
       },
       "thumb-size": {
-        "$value": "{ki.space.5xl}"
+        "$value": "{ki.space.5xl}",
+        "$description": "dimension used by the switch component for thumb size."
       },
       "thumb-inset": {
-        "$value": "{ki.space.xs}"
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the switch component for thumb inset."
       },
       "gap": {
-        "$value": "{ki.space.sm}"
+        "$value": "{ki.space.sm}",
+        "$description": "dimension used by the switch component for gap."
       },
       "track-radius": {
-        "$value": "{ki.radius.round}"
+        "$value": "{ki.radius.round}",
+        "$description": "dimension used by the switch component for track radius."
       },
       "thumb-radius": {
-        "$value": "{ki.radius.round}"
+        "$value": "{ki.radius.round}",
+        "$description": "dimension used by the switch component for thumb radius."
       },
       "border-width": {
-        "$value": "{ki.space.xxs}"
+        "$value": "{ki.space.xxs}",
+        "$description": "dimension used by the switch component for border width."
       },
       "min-target": {
-        "$value": "{ki.space.7xl}"
+        "$value": "{ki.space.7xl}",
+        "$description": "dimension used by the switch component for min target."
       },
       "unchecked": {
         "rest": {
           "track": {
-            "$value": "{ki.surface.s3}"
+            "$value": "{ki.surface.s3}",
+            "$description": "color used by the switch component for unchecked rest track."
           },
           "thumb": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the switch component for unchecked rest thumb."
           },
           "border": {
-            "$value": "{ki.outline.high-em}"
+            "$value": "{ki.outline.high-em}",
+            "$description": "color used by the switch component for unchecked rest border."
           }
         },
         "hover": {
           "track": {
-            "$value": "{ki.surface.s4}"
+            "$value": "{ki.surface.s4}",
+            "$description": "color used by the switch component for unchecked hover track."
           },
           "thumb": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the switch component for unchecked hover thumb."
           },
           "border": {
-            "$value": "{ki.outline.high-em}"
+            "$value": "{ki.outline.high-em}",
+            "$description": "color used by the switch component for unchecked hover border."
           }
         },
         "active": {
           "track": {
-            "$value": "{ki.surface.s5}"
+            "$value": "{ki.surface.s5}",
+            "$description": "color used by the switch component for unchecked active track."
           },
           "thumb": {
-            "$value": "{ki.text.high-em}"
+            "$value": "{ki.text.high-em}",
+            "$description": "color used by the switch component for unchecked active thumb."
           },
           "border": {
-            "$value": "{ki.outline.high-em}"
+            "$value": "{ki.outline.high-em}",
+            "$description": "color used by the switch component for unchecked active border."
           }
         },
         "disabled": {
           "track": {
-            "$value": "{ki.surface.disabled-low-em}"
+            "$value": "{ki.surface.disabled-low-em}",
+            "$description": "color used by the switch component for unchecked disabled track."
           },
           "thumb": {
-            "$value": "{ki.surface.disabled-high-em}"
+            "$value": "{ki.surface.disabled-high-em}",
+            "$description": "color used by the switch component for unchecked disabled thumb."
           },
           "border": {
-            "$value": "{ki.surface.disabled-med-em}"
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the switch component for unchecked disabled border."
           }
         }
       },
       "checked": {
         "rest": {
           "track": {
-            "$value": "{ki.surface.primary-high-em}"
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "color used by the switch component for checked rest track."
           },
           "thumb": {
-            "$value": "{ki.text.primary-on-primary}"
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "color used by the switch component for checked rest thumb."
           },
           "border": {
-            "$value": "{ki.outline.none}"
+            "$value": "{ki.outline.none}",
+            "$description": "color used by the switch component for checked rest border."
           }
         },
         "hover": {
           "track": {
-            "$value": "{ki.surface.primary-high-em-hover}"
+            "$value": "{ki.surface.primary-high-em-hover}",
+            "$description": "color used by the switch component for checked hover track."
           },
           "thumb": {
-            "$value": "{ki.text.primary-on-primary}"
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "color used by the switch component for checked hover thumb."
           },
           "border": {
-            "$value": "{ki.outline.none}"
+            "$value": "{ki.outline.none}",
+            "$description": "color used by the switch component for checked hover border."
           }
         },
         "active": {
           "track": {
-            "$value": "{ki.surface.primary-med-em}"
+            "$value": "{ki.surface.primary-med-em}",
+            "$description": "color used by the switch component for checked active track."
           },
           "thumb": {
-            "$value": "{ki.text.primary-on-primary}"
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "color used by the switch component for checked active thumb."
           },
           "border": {
-            "$value": "{ki.outline.none}"
+            "$value": "{ki.outline.none}",
+            "$description": "color used by the switch component for checked active border."
           }
         },
         "disabled": {
           "track": {
-            "$value": "{ki.surface.disabled-low-em}"
+            "$value": "{ki.surface.disabled-low-em}",
+            "$description": "color used by the switch component for checked disabled track."
           },
           "thumb": {
-            "$value": "{ki.surface.disabled-high-em}"
+            "$value": "{ki.surface.disabled-high-em}",
+            "$description": "color used by the switch component for checked disabled thumb."
           },
           "border": {
-            "$value": "{ki.surface.disabled-med-em}"
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the switch component for checked disabled border."
           }
         }
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}"
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the switch component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the switch component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the switch component for focus ring offset."
         }
       }
     }

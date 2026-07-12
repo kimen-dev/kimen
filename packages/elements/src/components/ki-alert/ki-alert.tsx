@@ -1,6 +1,6 @@
-import { Component, Element, Event, type EventEmitter, Prop, h } from '@stencil/core';
+import { Component, Element, Event, type EventEmitter, h, Prop } from '@stencil/core';
 import { resolveDismissFocusTarget } from './ki-alert.focus.js';
-import { liveExposureForTone, type KiAlertTone } from './ki-alert.tone.js';
+import { type KiAlertTone, liveExposureForTone } from './ki-alert.tone.js';
 
 /**
  * A persistent inline status message with token-backed tone semantics.
@@ -136,6 +136,7 @@ export class KiAlert {
         {this.dismissible ? (
           <button
             type="button"
+            tabIndex={0}
             part="dismiss"
             aria-label={this.dismissLabel}
             onClick={this.handleDismiss}

@@ -2,45 +2,59 @@
   "ki": {
     "tooltip": {
       "radius": {
-        "$value": "{ki.radius.sm}"
+        "$value": "{ki.radius.sm}",
+        "$description": "dimension used by the tooltip component for radius."
       },
       "padding-inline": {
-        "$value": "{ki.space.md}"
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the tooltip component for padding inline."
       },
       "padding-block": {
-        "$value": "{ki.space.xs}"
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the tooltip component for padding block."
       },
       "max-inline-size": {
-        "$value": "{ki.space.25xl}"
+        "$value": "{ki.space.25xl}",
+        "$description": "dimension used by the tooltip component for max inline size."
       },
       "offset": {
-        "$value": "{ki.space.xs}"
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the tooltip component for offset."
       },
       "bg": {
-        "$value": "{ki.surface.inverse-white}"
+        "$value": "{ki.surface.inverse-white}",
+        "$description": "color used by the tooltip component for background."
       },
       "fg": {
-        "$value": "{ki.text.inverse-black}"
+        "$value": "{ki.text.inverse-black}",
+        "$description": "color used by the tooltip component for foreground."
       },
       "font-size": {
-        "$value": "{ki.font.size.caption-2}"
+        "$value": "{ki.font.size.caption-2}",
+        "$description": "dimension used by the tooltip component for font size."
       },
       "font-weight": {
-        "$value": "{ki.font.weight.body.medium}"
+        "$value": "{ki.font.weight.body.medium}",
+        "$description": "font weight used by the tooltip component for font weight."
       },
       "line-height": {
-        "$value": "{ki.font.line-height.caption-2}"
+        "$value": "{ki.font.line-height.caption-2}",
+        "$description": "dimension used by the tooltip component for line height."
       },
       "shadow": {
-        "$value": "0 1px 2px 0 var(--ki-elevation-shadow-dark), 0 2px 6px 2px var(--ki-elevation-shadow-med)"
+        "$value": "{ki.foundation.migrated.component-button.button.tertiary.active.shadow}",
+        "$description": "shadow used by the tooltip component for tooltip shadow.",
+        "$type": "shadow"
       },
       "show-delay": {
         "$type": "duration",
-        "$value": "500ms"
+        "$value": "{ki.foundation.migrated.component-tooltip.tooltip.show-delay}",
+        "$description": "duration used by the tooltip component for tooltip show delay."
       },
       "hide-delay": {
         "$type": "duration",
-        "$value": "100ms"
+        "$value": "{ki.foundation.migrated.component-tooltip.tooltip.hide-delay}",
+        "$description": "duration used by the tooltip component for tooltip hide delay."
       }
     }
   }

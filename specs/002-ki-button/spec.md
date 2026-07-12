@@ -195,6 +195,14 @@ Feature: Button
     When the accessibility tree is queried
     Then the button is exposed as unavailable
 
+  # S14
+  Scenario: An accessible description on the host reaches the focusable button
+    Given a button whose host carries an accessible description, such as one
+      supplied by a wrapping tooltip
+    When the accessibility tree is queried
+    Then the description is present on the internal button that receives focus,
+      and it tracks later changes to and removal of the host description
+
   # Family: form participation
   # S7
   Scenario: A submit button submits its form with the form data
@@ -240,7 +248,7 @@ Feature: Button
 |---|---|---|
 | Core behavior | S1, S2, S11 | |
 | Keyboard path | S3, S4 | |
-| Assistive-tech outcome | S5, S6 | |
+| Assistive-tech outcome | S5, S6, S14 | |
 | Form participation | S7, S8, S12 | |
 | Theming | S9, S10, S13 | |
 
@@ -288,6 +296,9 @@ Feature: Button
 - **FR-014**: The factory smoke component (`ki-hello`) MUST be removed in
   this feature, as scheduled by the roadmap ("deleted when the first real
   component lands").
+- **FR-015**: An `aria-description` supplied on the host MUST reach the
+  internal native button that receives focus, MUST track later value changes,
+  and MUST be removed internally when the host description is removed.
 
 ## Constitutional Surface *(mandatory)*
 
@@ -343,6 +354,8 @@ Feature: Button
   (gzipped) and within the declared budget gate.
 - **SC-005**: keyboard-only operation covers 100% of the behavior available
   to pointer users.
+- **SC-006**: a host accessible description is exposed on the focus target and
+  stays synchronized across setting, updating and removing the description.
 
 ## Assumptions
 

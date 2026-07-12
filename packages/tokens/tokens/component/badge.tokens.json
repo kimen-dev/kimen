@@ -3,100 +3,128 @@
     "badge": {
       "sm": {
         "height": {
-          "$value": "{ki.space.7xl}"
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the badge component for sm height."
         },
         "padding-inline": {
-          "$value": "{ki.space.sm}"
+          "$value": "{ki.space.sm}",
+          "$description": "dimension used by the badge component for sm padding inline."
         },
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the badge component for sm radius."
         },
         "font-size": {
-          "$value": "{ki.typography.size.caption-2}"
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the badge component for sm font size."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.caption-2}"
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the badge component for sm line height."
         }
       },
       "md": {
         "height": {
-          "$value": "{ki.space.8xl}"
+          "$value": "{ki.space.8xl}",
+          "$description": "dimension used by the badge component for md height."
         },
         "padding-inline": {
-          "$value": "{ki.space.md}"
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the badge component for md padding inline."
         },
         "radius": {
-          "$value": "{ki.radius.round}"
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the badge component for md radius."
         },
         "font-size": {
-          "$value": "{ki.typography.size.body-1}"
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the badge component for md font size."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.body-1}"
+          "$value": "{ki.typography.line-height.body-1}",
+          "$description": "dimension used by the badge component for md line height."
         }
       },
       "font-family": {
-        "$value": "{ki.typography.family.body}"
+        "$value": "{ki.typography.family.body}",
+        "$description": "font family used by the badge component for font family."
       },
       "font-weight": {
-        "$value": "{ki.typography.weight.body.medium}"
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "font weight used by the badge component for font weight."
       },
       "border-width": {
-        "$value": "{ki.space.xxs}"
+        "$value": "{ki.space.xxs}",
+        "$description": "dimension used by the badge component for border width."
       },
       "neutral": {
         "bg": {
-          "$value": "{ki.surface.s2}"
+          "$value": "{ki.surface.s2}",
+          "$description": "color used by the badge component for neutral background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}"
+          "$value": "{ki.text.high-em}",
+          "$description": "color used by the badge component for neutral foreground."
         },
         "border": {
-          "$value": "{ki.outline.none}"
+          "$value": "{ki.outline.none}",
+          "$description": "color used by the badge component for neutral border."
         }
       },
       "success": {
         "bg": {
-          "$value": "{ki.surface.success-base-em}"
+          "$value": "{ki.surface.success-base-em}",
+          "$description": "color used by the badge component for success background."
         },
         "fg": {
-          "$value": "{ki.text.success-high-em}"
+          "$value": "{ki.text.success-high-em}",
+          "$description": "color used by the badge component for success foreground."
         },
         "border": {
-          "$value": "{ki.outline.none}"
+          "$value": "{ki.outline.none}",
+          "$description": "color used by the badge component for success border."
         }
       },
       "danger": {
         "bg": {
-          "$value": "{ki.surface.danger-base-em}"
+          "$value": "{ki.surface.danger-base-em}",
+          "$description": "color used by the badge component for danger background."
         },
         "fg": {
-          "$value": "{ki.text.danger-high-em}"
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "color used by the badge component for danger foreground."
         },
         "border": {
-          "$value": "{ki.outline.none}"
+          "$value": "{ki.outline.none}",
+          "$description": "color used by the badge component for danger border."
         }
       },
       "info": {
         "bg": {
-          "$value": "{ki.surface.info-base-em}"
+          "$value": "{ki.surface.info-base-em}",
+          "$description": "color used by the badge component for info background."
         },
         "fg": {
-          "$value": "{ki.text.info-high-em}"
+          "$value": "{ki.text.info-high-em}",
+          "$description": "color used by the badge component for info foreground."
         },
         "border": {
-          "$value": "{ki.outline.none}"
+          "$value": "{ki.outline.none}",
+          "$description": "color used by the badge component for info border."
         }
       },
       "warning": {
         "bg": {
-          "$value": "{ki.surface.warning-base-em}"
+          "$value": "{ki.surface.warning-base-em}",
+          "$description": "color used by the badge component for warning background."
         },
         "fg": {
-          "$value": "{ki.text.warning-high-em}"
+          "$value": "{ki.text.warning-high-em}",
+          "$description": "color used by the badge component for warning foreground."
         },
         "border": {
-          "$value": "{ki.outline.none}"
+          "$value": "{ki.outline.none}",
+          "$description": "color used by the badge component for warning border."
         }
       }
     }

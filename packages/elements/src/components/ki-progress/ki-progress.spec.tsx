@@ -33,6 +33,12 @@ describe('ki-progress', () => {
     const indicator = requireElement(track, 'div[part="indicator"]');
 
     expect(base.parentNode).toBe(shadow);
+    expect(root.getAttribute('shape')).toBe('linear');
+    expect(base.getAttribute('class')).toBe('base base-linear');
+    expect(base.getAttribute('aria-label')).toBe('Uploading report.pdf');
+    expect(base.getAttribute('aria-valuenow')).toBe('40');
+    expect((base as HTMLElement).style.getPropertyValue('--_ki-progress-fraction')).toBe('0.4');
+    expect((base as HTMLElement).style.getPropertyValue('--_ki-progress-dash')).toBe('40');
     expect(track.parentElement).toBe(base);
     expect(indicator.parentElement).toBe(track);
     expect(base.hasAttribute('part')).toBe(false);
@@ -50,6 +56,7 @@ describe('ki-progress', () => {
     const circles = [...svg.querySelectorAll('circle')];
 
     expect(svg.hasAttribute('part')).toBe(false);
+    expect(base.getAttribute('class')).toBe('base base-circular');
     expect(circles).toHaveLength(2);
     expect(circles.map((circle) => circle.getAttribute('part'))).toEqual(['track', 'indicator']);
     expect(circles.every((circle) => circle.getAttribute('pathLength') === '100')).toBe(true);
@@ -67,6 +74,8 @@ describe('ki-progress', () => {
     expect(base.getAttribute('aria-valuemax')).toBe('100');
     expect(base.getAttribute('aria-valuenow')).toBe('100');
     expect(base.hasAttribute('aria-label')).toBe(false);
+    expect((base as HTMLElement).style.getPropertyValue('--_ki-progress-fraction')).toBe('1');
+    expect((base as HTMLElement).style.getPropertyValue('--_ki-progress-dash')).toBe('100');
   });
 
   it('S8 applies label as the internal progressbar aria-label only when present', async () => {
@@ -80,10 +89,33 @@ describe('ki-progress', () => {
     const { root } = await render(h('ki-progress', { shape: 'banana' }));
     const shadow = requireShadow(root);
 
+    const base = requireElement(shadow, 'div.base[role="progressbar"]');
+
+    expect(base.getAttribute('class')).toBe('base base-linear');
     expect(shadow.querySelector('div[part="track"] > div[part="indicator"]')).toBeInstanceOf(
       Element,
     );
     expect(shadow.querySelector('svg')).toBeNull();
+  });
+
+  it('S3 S9 S15 indeterminate progress exposes activity without a completed fraction', async () => {
+    const { root } = await render(
+      h('ki-progress', {
+        indeterminate: true,
+        label: 'Loading messages',
+        value: 40,
+        max: 100,
+      }),
+    );
+    const base = requireElement(requireShadow(root), 'div.base[role="progressbar"]');
+
+    expect(base.getAttribute('class')).toBe('base base-linear');
+    expect(base.getAttribute('aria-label')).toBe('Loading messages');
+    expect(base.getAttribute('aria-valuemin')).toBe('0');
+    expect(base.getAttribute('aria-valuemax')).toBe('100');
+    expect(base.hasAttribute('aria-valuenow')).toBe(false);
+    expect(base.hasAttribute('style')).toBe(false);
+    expect(base.querySelector('div[part="track"] > div[part="indicator"]')).toBeInstanceOf(Element);
   });
 
   it('S14 normalizes max and clamps value through pure helpers', () => {

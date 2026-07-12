@@ -2,14 +2,17 @@
   "ki": {
     "tabs": {
       "gap": {
-        "$value": "{ki.space.xs}"
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the tabs component for gap."
       },
       "divider": {
         "width": {
-          "$value": "{ki.space.xxs}"
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the tabs component for divider width."
         },
         "color": {
-          "$value": "{ki.outline.low-em}"
+          "$value": "{ki.outline.low-em}",
+          "$description": "color used by the tabs component for divider color."
         }
       }
     }

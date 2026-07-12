@@ -36,9 +36,16 @@ coverage/
 reports/
 playwright-report/
 test-results/
+# Generated actuals belong to infrastructure fixtures, never to traceability.
+scripts/tests/fixtures/output/
 
 # Spec Kit run state (local, per-run)
 .specify/workflows/runs/
+
+# Ordinary unattended-attempt state stays local. The host finalizer may retain
+# only one validated `.kimen/attempts/<attempt-id>.json` via an exact `git add
+# -f -- <path>`; there is deliberately no broad negation here.
+.kimen/attempts/
 
 # Internal operational docs (founder machines only, never committed)
 internal/

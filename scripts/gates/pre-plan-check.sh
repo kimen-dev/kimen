@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # Gate: preflight for /speckit-plan (kimen-gates extension hook, Art. II).
 #
-# Direct skill invocations must meet the same bar as the kimen workflow's
-# lint-spec step: the Gherkin behavior contract exists and lints green
-# (stable S-IDs, one When each, five scenario families covered or
-# N/A-justified) BEFORE any planning happens. Registered as a mandatory
+# Direct skill invocations require one synchronized, lint-green contract pair
+# and a current founder marker v2 covering both exact files BEFORE planning.
+# Registered as a mandatory
 # before_plan hook in .specify/extensions.yml (command kimen.gates.pre-plan,
 # skill /kimen-gates-pre-plan).
 #
@@ -17,17 +16,12 @@ DIR=$(kimen_resolve_feature_dir "${1:-}") || {
   echo "GATE pre-plan: FAIL — no feature directory (arg, SPECIFY_FEATURE_DIRECTORY, .specify/feature.json or specs/*/). Run /speckit-specify first."
   exit 1
 }
-FEATURE="$DIR/feature.feature"
-if [ ! -f "$FEATURE" ]; then
-  echo "GATE pre-plan: FAIL — $FEATURE missing (Art. II: specs before code). Finish the spec's Gherkin section, then run 'bash scripts/gates/extract-feature.sh'."
+if ! bash scripts/gates/check-spec-contracts.sh "$DIR"; then
+  echo "GATE pre-plan: FAIL — spec.md/feature.feature contract is missing, desynchronized or lint-red for $DIR"
   exit 1
 fi
-if ! bash scripts/gates/lint-feature.sh "$FEATURE"; then
-  echo "GATE pre-plan: FAIL — Gherkin lint is red for $FEATURE"
+if ! bash scripts/gates/check-approvals.sh "$DIR"; then
+  echo "GATE pre-plan: FAIL — founder approval marker v2 is missing or stale for $DIR"
   exit 1
 fi
-if ! bash scripts/gates/check-scenario-families.sh "$DIR"; then
-  echo "GATE pre-plan: FAIL — scenario-family coverage is red for $DIR"
-  exit 1
-fi
-echo "GATE pre-plan: PASS — feature.feature present and spec lint green for $DIR"
+echo "GATE pre-plan: PASS — synchronized contract pair and current dual-hash founder approval for $DIR"

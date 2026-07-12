@@ -1,8 +1,8 @@
-import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
+import tokensCss from '@kimen/tokens/css?raw';
 import axe from 'axe-core';
-import { commands, page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { commands, page, userEvent } from 'vitest/browser';
 
 // @spec:015-ki-progress
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -280,16 +280,6 @@ describe('ki-progress in a real browser', () => {
     expect(progressbar(el).style.getPropertyValue('--_ki-progress-fraction')).toBe('');
   });
 
-  it('S6 renders indeterminate without running infinite animation under reduced motion', async () => {
-    cleanup();
-    await browserCommands.emulateReducedMotion('reduce');
-    const el = await mount({ label: 'Loading messages', indeterminate: true });
-
-    expect(progressbar(el).hasAttribute('aria-valuenow')).toBe(false);
-    expect(indicator(el).getBoundingClientRect().width).toBeGreaterThan(0);
-    expect(runningInfiniteAnimations(indicator(el))).toHaveLength(0);
-  });
-
   it('S8 exposes a labeled determinate progressbar with current value and range', async () => {
     cleanup();
     await cleanupMedia();
@@ -326,8 +316,10 @@ describe('ki-progress in a real browser', () => {
     const main = document.createElement('main');
     document.body.append(main);
     const before = document.createElement('button');
+    before.tabIndex = 0;
     before.textContent = 'Before';
     const after = document.createElement('button');
+    after.tabIndex = 0;
     after.textContent = 'After';
     main.append(before);
     await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });

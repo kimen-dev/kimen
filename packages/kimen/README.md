@@ -2,17 +2,25 @@
 
 > *Kimen* (Norwegian/Danish): the seed, the germ from which something grows.
 
-**This is a legitimate name placeholder.** Kimen is the neutral,
-multi-protocol GenUI catalog in web components (`<ki-*>`): agents emit
-schema-constrained UI specs, Kimen validates them against a closed catalog and
-renders them with standard web components that re-theme via design tokens in
-a single step.
+**This is a legitimate name placeholder.** The implemented Kimen foundation
+is a set of standards-first web components (`<ki-*>`), design tokens and
+machine-readable contracts. The neutral catalog, guarded renderer and
+multi-protocol adapters are planned; this package will eventually expose the
+CLI / meta entry point for that system.
 
-The project is pre-v1. The real packages ship under the
-[`@kimen` scope](https://www.npmjs.com/org/kimen) (`@kimen/elements`,
-`@kimen/catalog`, `@kimen/tokens`, `@kimen/adapter-*`), and this unscoped
-package will become the Kimen CLI / meta entry point.
+The project is pre-v1 and nothing is published yet. Implemented package
+sources live under the [`@kimen` scope](https://www.npmjs.com/org/kimen) as
+`@kimen/elements` and `@kimen/tokens`; `@kimen/catalog` and
+`@kimen/adapter-*` are roadmap packages.
 
 Follow the build: https://github.com/kimen-dev/kimen
 
 Apache-2.0 · Copyright 2026 Marcela Gotta
+
+<!-- kimen:capabilities:kimen-readme-status:start -->
+- **planned** — Schema-constrained guarded renderer planned
+- **hardening** — Changed-core mutation quality gate in hardening
+- **planned** — A2UI, MCP Apps, AG-UI and json-render protocol adapters planned
+- **planned** — Neutral runtime component catalog planned
+- **available** — Machine-readable Web Components foundation with token-driven theming
+<!-- kimen:capabilities:kimen-readme-status:end -->
