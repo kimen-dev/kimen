@@ -128,7 +128,7 @@ guidance fixtures fail or pass only according to the topology contract.
 - [x] T033 Run `bash scripts/gates/check-spec-contracts.sh specs/019-agent-skills-canonical` and `bash scripts/gates/check-traceability.sh specs/019-agent-skills-canonical`
 - [x] T034 [P] Run formatting, lint, typecheck, workflow policy and `git diff --check` over all changed agent surfaces
 - [x] T035 Run node mutation for `scripts/lib/agent-skill-catalog.mjs` and achieve at least 70% without weakening mutants or scope
-- [ ] T036 Exercise the clean-clone quickstart in a disposable clone and record exact topology, count and negative-fixture evidence in `specs/019-agent-skills-canonical/quickstart.md`
+- [x] T036 Exercise the clean-clone quickstart in a disposable clone and record exact topology, count and negative-fixture evidence in `specs/019-agent-skills-canonical/quickstart.md`
 - [x] T037 Run `bash scripts/gates/gates-suite.sh` to exit 0 with the new `agent-skills` gate in the authoritative evidence
 - [x] T038 Run `/speckit-converge` and append any real remaining work to `specs/019-agent-skills-canonical/tasks.md`
 - [ ] T039 Build a clean-context review packet from the exact reviewed SHA using `.agents/skills/requesting-code-review/scripts/review-package.sh`

@@ -71,6 +71,10 @@ Expected: exit 0. This is the only completion signal.
   not exist.
 - Focused GREEN after implementation: 18/18 Node scenario/integration tests;
   the affected review-packet suite also remained green.
+- Clean-clone GREEN: a dependency-free clone of candidate `b78ccb8dc38f`
+  reported an empty worktree, exact target `../.agents/skills`, Git mode
+  `120000`, 27 skills and 70 artifacts; all 18 focused tests passed, including
+  the independent-directory and six unsafe-link negative fixtures.
 - Real topology: `canonical=.agents/skills compatibility=.claude/skills
   target=../.agents/skills skills=27 artifacts=70`; Git stores the compatibility
   entry as mode `120000`.
