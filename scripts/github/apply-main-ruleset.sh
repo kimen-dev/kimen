@@ -136,11 +136,17 @@ assert_no_symlink_ancestors() {
 
 read_path_facts() {
   local path="$1"
+  local facts
 
-  if stat -f '%d|%i|%u|%Lp|%l|%z|%m' "$path" 2>/dev/null; then
+  if facts=$(stat -c '%d|%i|%u|%a|%h|%s|%Y' "$path" 2>/dev/null); then
+    printf '%s\n' "$facts"
     return 0
   fi
-  stat -c '%d|%i|%u|%a|%h|%s|%Y' "$path" 2>/dev/null
+  if facts=$(stat -f '%d|%i|%u|%Lp|%l|%z|%m' "$path" 2>/dev/null); then
+    printf '%s\n' "$facts"
+    return 0
+  fi
+  return 1
 }
 
 build_secure_evidence_chain_snapshot() {
