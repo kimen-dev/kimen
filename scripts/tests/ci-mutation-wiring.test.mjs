@@ -197,6 +197,16 @@ test('S3 CI separates ordinary gates from mutation with isolated pre-install cac
   assert.ok(mutationStart > gatesStart);
   assert.ok(containmentStart > mutationStart);
   assert.match(gates, /timeout-minutes: 45/);
+  assert.match(
+    gates,
+    /^ {12}azure\.archive\.ubuntu\.com:80$/m,
+    'Playwright dependency installation must permit the GitHub runner Ubuntu mirror',
+  );
+  assert.match(
+    gates,
+    /^ {12}dl\.google\.com:443$/m,
+    'Playwright dependency installation must permit the preconfigured Google apt source',
+  );
   assert.ok(gates.indexOf(cacheSetup) > -1);
   assert.ok(gates.indexOf(cacheSetup) < gates.indexOf('uses: pnpm/action-setup@'));
   assert.match(gates, /KIMEN_MUTATION_DELEGATED_TO: ['"]?mutation['"]?/);

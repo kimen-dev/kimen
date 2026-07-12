@@ -98,6 +98,14 @@ test('@spec:018-project-integrity-hardening S6 prerelease runs the full browser 
   assert.ok(browserJob.indexOf(fullBrowserGate) < browserJob.indexOf(candidateConsumer));
 });
 
+test('@spec:018-project-integrity-hardening S6 prerelease permits the runner apt sources required by Playwright', () => {
+  for (const jobName of ['validate-core', 'browser']) {
+    const job = readJob(releaseWorkflow, jobName);
+    assert.match(job, /^ {12}azure\.archive\.ubuntu\.com:80$/m);
+    assert.match(job, /^ {12}dl\.google\.com:443$/m);
+  }
+});
+
 test('@spec:018-project-integrity-hardening S6 browsers and independent verification consume validate-core output', () => {
   assert.deepEqual(readYamlList(readJob(releaseWorkflow, 'browser'), 'needs'), ['validate-core']);
   assert.deepEqual(readYamlList(readJob(releaseWorkflow, 'verify-candidate'), 'needs'), [
