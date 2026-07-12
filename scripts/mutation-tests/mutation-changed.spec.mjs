@@ -350,12 +350,12 @@ describe('mutation group execution', () => {
       force: true,
       executeStryker: async (options) => {
         calls.push(options);
-        await expect(access(options.jsonReporter.fileName)).rejects.toThrow();
         await mkdir(options.tempDirName, { recursive: true });
         await writeFile(join(options.tempDirName, 'worker'), 'temporary\n');
         await writeFile(
           options.jsonReporter.fileName,
           JSON.stringify(mutationReport({ files: options.mutate })),
+          { flag: 'wx' },
         );
       },
     });

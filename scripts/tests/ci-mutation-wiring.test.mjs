@@ -190,6 +190,7 @@ test('S3 CI separates ordinary gates from mutation with isolated pre-install cac
   const containmentStart = workflow.indexOf('  containment:\n');
   const gates = workflow.slice(gatesStart, mutationStart);
   const mutation = workflow.slice(mutationStart, containmentStart);
+  const containment = workflow.slice(containmentStart);
   const cacheSetup = 'run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"';
 
   assert.ok(gatesStart > -1);
@@ -209,6 +210,10 @@ test('S3 CI separates ordinary gates from mutation with isolated pre-install cac
   );
   assert.match(mutation, /run: pnpm run test:mutation/);
   assert.doesNotMatch(mutation, /playwright/i);
+  assert.ok(
+    containment.includes('production.cloudfront.docker.com:443'),
+    'the pinned Docker base redirect host must remain in the containment egress allowlist',
+  );
 });
 
 test('S3 protected main requires every mandatory CI gate context', async () => {

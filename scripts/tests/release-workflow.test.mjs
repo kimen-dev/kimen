@@ -52,6 +52,22 @@ function occurrenceCount(source, needle) {
   return source.split(needle).length - 1;
 }
 
+function readNestedYamlScalar(source, parentKey, childKey) {
+  const lines = source.split('\n');
+  const parentIndex = lines.findIndex((line) => line.trim() === `${parentKey}:`);
+  assert.notEqual(parentIndex, -1, `expected ${parentKey} in YAML block`);
+  const parentIndent = lines[parentIndex].length - lines[parentIndex].trimStart().length;
+
+  for (const line of lines.slice(parentIndex + 1)) {
+    if (line.trim() === '') continue;
+    const indentation = line.length - line.trimStart().length;
+    if (indentation <= parentIndent) break;
+    const prefix = `${childKey}:`;
+    if (line.trim().startsWith(prefix)) return line.trim().slice(prefix.length).trim();
+  }
+  return null;
+}
+
 test('@spec:018-project-integrity-hardening S6 prerelease uses exactly Chromium, Firefox and WebKit', () => {
   const browserJob = readJob(releaseWorkflow, 'browser');
   const engineKey = /^\s+(engine|browser):\s*/m.exec(browserJob)?.[1];
@@ -63,10 +79,10 @@ test('@spec:018-project-integrity-hardening S6 prerelease uses exactly Chromium,
 test('@spec:018-project-integrity-hardening S6 prerelease keeps every engine outcome after one fails', () => {
   const browserJob = readJob(releaseWorkflow, 'browser');
 
-  assert.match(
-    browserJob,
-    /^\s+strategy:\s*\n(?:\s+.*\n)*?\s+fail-fast:\s*false\s*$/m,
-    'the browser matrix must set strategy.fail-fast to false',
+  assert.equal(
+    readNestedYamlScalar(browserJob, 'strategy', 'fail-fast'),
+    'false',
+    'the browser matrix must keep running after failure',
   );
 });
 

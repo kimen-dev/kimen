@@ -14,10 +14,19 @@ const packageLock = await readFile(
 
 // @spec:018-project-integrity-hardening#S5
 test('sandbox image pins its base, dated Debian snapshot and direct OS packages', () => {
+  const dockerfileLines = dockerfile.split('\n').map((line) => line.trim());
   assert.match(dockerfile, /^FROM node:\d+\.\d+\.\d+-bookworm@sha256:[0-9a-f]{64}$/m);
   assert.match(dockerfile, /ARG DEBIAN_SNAPSHOT=\d{8}T\d{6}Z/);
-  assert.match(dockerfile, /snapshot\.debian\.org\/archive\/debian\//);
-  assert.match(dockerfile, /snapshot\.debian\.org\/archive\/debian-security\//);
+  assert.ok(
+    dockerfileLines.includes(
+      '"deb [check-valid-until=no] https://snapshot.debian.org/archive/debian/${DEBIAN_SNAPSHOT}/ bookworm main" \\',
+    ),
+  );
+  assert.ok(
+    dockerfileLines.includes(
+      '"deb [check-valid-until=no] https://snapshot.debian.org/archive/debian-security/${DEBIAN_SNAPSHOT}/ bookworm-security main" \\',
+    ),
+  );
   for (const name of ['iptables', 'ipset', 'dnsutils', 'jq', 'sudo', 'git']) {
     assert.match(dockerfile, new RegExp(`\\b${name}=[^\\s\\\\]+`));
   }

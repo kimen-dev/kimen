@@ -10,7 +10,6 @@ import {
   fchmodSync,
   fstatSync,
   fsyncSync,
-  lstatSync,
   openSync,
   readSync,
   writeSync,
@@ -21,6 +20,7 @@ import { pathToFileURL } from 'node:url';
 const chunkBytes = 64 * 1024;
 const noFollow = constants.O_NOFOLLOW ?? 0;
 const closeOnExec = constants.O_CLOEXEC ?? 0;
+const nonBlock = constants.O_NONBLOCK ?? 0;
 
 function fail(message, exitCode = 1) {
   const error = new Error(message);
@@ -118,24 +118,24 @@ async function captureCommand({
 }
 
 function copyFileBounded({ label, limit, output, source }) {
-  const pathInformation = lstatSync(source);
-  if (pathInformation.isSymbolicLink() || !pathInformation.isFile()) {
-    fail(`${label} source must be a regular file, not a symbolic link`);
+  let sourceDescriptor;
+  try {
+    sourceDescriptor = openSync(source, constants.O_RDONLY | noFollow | closeOnExec | nonBlock);
+  } catch (error) {
+    if (['ELOOP', 'EMLINK'].includes(error.code)) {
+      fail(`${label} source must be a regular file, not a symbolic link`);
+    }
+    throw error;
   }
-  if (pathInformation.size > limit) fail(`${label} exceeds its streaming byte limit`);
-  const sourceDescriptor = openSync(source, constants.O_RDONLY | noFollow | closeOnExec);
   let outputDescriptor;
   let bytesWritten = 0;
   try {
-    outputDescriptor = openExclusiveOutput(output);
     const openedSource = fstatSync(sourceDescriptor);
-    if (
-      !openedSource.isFile() ||
-      openedSource.dev !== pathInformation.dev ||
-      openedSource.ino !== pathInformation.ino
-    ) {
-      fail(`${label} source changed before streaming copy`);
+    if (!openedSource.isFile()) {
+      fail(`${label} source must be a regular file, not a symbolic link`);
     }
+    if (openedSource.size > limit) fail(`${label} exceeds its streaming byte limit`);
+    outputDescriptor = openExclusiveOutput(output);
     const buffer = Buffer.allocUnsafe(chunkBytes);
     while (true) {
       const bytesRead = readSync(sourceDescriptor, buffer, 0, buffer.length, null);

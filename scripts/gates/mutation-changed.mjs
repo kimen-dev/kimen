@@ -2,7 +2,7 @@
 
 import { execFile } from 'node:child_process';
 import { constants as fsConstants } from 'node:fs';
-import { access, lstat, mkdir, readFile, realpath, rm } from 'node:fs/promises';
+import { access, lstat, mkdir, open, realpath, rm } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
@@ -30,6 +30,8 @@ const CONFIG_PATHS = Object.freeze({
 });
 const RUNNERS = Object.freeze(['node', 'elements']);
 const GIT_BASE_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9._/@{}^~:+-]*$/;
+const noFollow = fsConstants.O_NOFOLLOW ?? 0;
+const nonBlock = fsConstants.O_NONBLOCK ?? 0;
 
 const isPlainRecord = (value) =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -408,25 +410,35 @@ const defaultExecuteStryker = async (options) => {
 };
 
 const readMutationJson = async (reportPath, runner) => {
-  let stats;
+  let handle;
   try {
-    stats = await lstat(reportPath);
+    handle = await open(reportPath, fsConstants.O_RDONLY | noFollow | nonBlock);
   } catch (error) {
     if (error.code === 'ENOENT') {
       throw new Error(`Mutation report for ${runner} is missing: ${reportPath}`, { cause: error });
     }
+    if (['ELOOP', 'EMLINK'].includes(error.code)) {
+      throw new Error(`Mutation report for ${runner} must be a regular non-symlink file`, {
+        cause: error,
+      });
+    }
     throw error;
   }
-  if (!stats.isFile() || stats.isSymbolicLink()) {
-    throw new Error(`Mutation report for ${runner} must be a regular non-symlink file`);
-  }
-  const contents = await readFile(reportPath, 'utf8');
   try {
-    return JSON.parse(contents);
-  } catch (error) {
-    throw new Error(`Mutation report for ${runner} is invalid JSON: ${error.message}`, {
-      cause: error,
-    });
+    const stats = await handle.stat();
+    if (!stats.isFile()) {
+      throw new Error(`Mutation report for ${runner} must be a regular non-symlink file`);
+    }
+    const contents = await handle.readFile('utf8');
+    try {
+      return JSON.parse(contents);
+    } catch (error) {
+      throw new Error(`Mutation report for ${runner} is invalid JSON: ${error.message}`, {
+        cause: error,
+      });
+    }
+  } finally {
+    await handle.close();
   }
 };
 

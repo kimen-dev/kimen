@@ -696,7 +696,9 @@ test('S2 review packet finalizes only the held file descriptor after a created f
   const externalFile = join(fixture.root, 'reports/founder-owned-external.txt');
   await mkdir(dirname(externalFile), { recursive: true });
   await writeFile(externalFile, 'preserve external bytes\n', { mode: 0o644 });
-  const externalModeBefore = (await stat(externalFile)).mode & 0o777;
+  const externalBeforeHandle = await open(externalFile, 'r');
+  const externalInformationBefore = await externalBeforeHandle.stat();
+  const externalModeBefore = externalInformationBefore.mode & 0o777;
   const injection = await installPublicationInjector(fixture, {
     entryPath: 'MANIFEST.md',
     mode: 'file-finalize-symlink',
@@ -704,15 +706,20 @@ test('S2 review packet finalizes only the held file descriptor after a created f
     packetDirectory,
   });
 
-  const result = await runReviewPackage(fixture, localGreenFence, {
-    packetDirectory,
-    processEnvironment: injection.processEnvironment,
-  });
+  try {
+    const result = await runReviewPackage(fixture, localGreenFence, {
+      packetDirectory,
+      processEnvironment: injection.processEnvironment,
+    });
 
-  assert.notEqual(result.code, 0);
-  assert.match(result.stderr, /(?:symbolic link|inventory|publication|identity)/iu);
-  assert.equal(await readFile(externalFile, 'utf8'), 'preserve external bytes\n');
-  assert.equal((await stat(externalFile)).mode & 0o777, externalModeBefore);
+    assert.notEqual(result.code, 0);
+    assert.match(result.stderr, /(?:symbolic link|inventory|publication|identity)/iu);
+    assert.equal(await externalBeforeHandle.readFile('utf8'), 'preserve external bytes\n');
+    assert.equal((await externalBeforeHandle.stat()).mode & 0o777, externalModeBefore);
+  } finally {
+    await externalBeforeHandle.close();
+  }
+  assert.equal((await stat(externalFile)).ino, externalInformationBefore.ino);
   assert.ok((await stat(packetDirectory)).isDirectory());
 });
 

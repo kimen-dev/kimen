@@ -342,12 +342,12 @@ test('@spec:018 S3 runner isolates one cache scope, deletes stale JSON and repor
     force: true,
     executeStryker: async (options) => {
       calls.push(options);
-      await assert.rejects(access(options.jsonReporter.fileName));
       await mkdir(options.tempDirName, { recursive: true });
       await writeFile(join(options.tempDirName, 'worker-was-here'), 'temporary\n');
       await writeFile(
         options.jsonReporter.fileName,
         JSON.stringify(mutationReport({ files: options.mutate })),
+        { flag: 'wx' },
       );
     },
   });

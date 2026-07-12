@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import { generateKeyPairSync, sign } from 'node:crypto';
-import { chmod, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { chmod, mkdtemp, open, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { setTimeout } from 'node:timers';
@@ -532,8 +532,13 @@ describe('sandbox model-lease mutation boundary', () => {
 
     expect(stdout).toHaveBeenCalledWith(`${leaseId}\n`);
     expect(String(stdout.mock.calls[0][0])).not.toContain(fixture.compactToken);
-    expect((await stat(outputPath)).mode & 0o777).toBe(0o600);
-    expect(JSON.parse(await readFile(outputPath, 'utf8'))).toEqual(fixture.envelope);
+    const outputHandle = await open(outputPath, 'r');
+    try {
+      expect((await outputHandle.stat()).mode & 0o777).toBe(0o600);
+      expect(JSON.parse(await outputHandle.readFile('utf8'))).toEqual(fixture.envelope);
+    } finally {
+      await outputHandle.close();
+    }
     expect(await readFile(helper.helperLog, 'utf8')).toBe(
       `acquire --ttl 3660 --not-after-ms ${helper.leaseNotAfterMs} --audience kimen-sandbox --project kimen\n`,
     );

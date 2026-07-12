@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { createHmac, generateKeyPairSync, sign } from 'node:crypto';
-import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { mkdtemp, open, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
@@ -568,8 +568,13 @@ test('S4 acquire exposes only a verified mode-0600 lease and its opaque ID', asy
     { status: fixture.result.status, stdout: fixture.result.stdout, stderr: fixture.result.stderr },
     { status: 0, stdout: `${defaultLeaseId}\n`, stderr: '' },
   );
-  assert.equal((await stat(fixture.outputPath)).mode & 0o777, 0o600);
-  assert.equal(JSON.parse(await readFile(fixture.outputPath, 'utf8')).token, fixture.token);
+  const outputHandle = await open(fixture.outputPath, 'r');
+  try {
+    assert.equal((await outputHandle.stat()).mode & 0o777, 0o600);
+    assert.equal(JSON.parse(await outputHandle.readFile('utf8')).token, fixture.token);
+  } finally {
+    await outputHandle.close();
+  }
   assert.equal(fixture.result.stdout.includes(fixture.token), false);
   assert.equal(fixture.result.stderr.includes(fixture.token), false);
   assert.equal(await readFile(fixture.helperLog, 'utf8'), `acquire:3660:${fixture.notAfterMs}\n`);

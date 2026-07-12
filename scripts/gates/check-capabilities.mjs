@@ -2,7 +2,17 @@
 // @spec:018-project-integrity-hardening#S13
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { lstat, mkdir, readFile, readlink, realpath, rename, writeFile } from 'node:fs/promises';
+import { constants as fsConstants } from 'node:fs';
+import {
+  lstat,
+  mkdir,
+  open,
+  readFile,
+  readlink,
+  realpath,
+  rename,
+  writeFile,
+} from 'node:fs/promises';
 import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -14,6 +24,8 @@ import {
 } from '../lib/capability-claims.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
+const noFollow = fsConstants.O_NOFOLLOW ?? 0;
+const nonBlock = fsConstants.O_NONBLOCK ?? 0;
 const defaultManifest = join(repositoryRoot, 'docs/capabilities.json');
 const requiredDestinationPaths = Object.freeze([
   'README.md',
@@ -272,18 +284,30 @@ export async function generateCapabilityBlocks(manifest, root = repositoryRoot) 
 
 async function hashUntrackedFile(hash, path, root) {
   const absolute = join(root, path);
-  const information = await lstat(absolute);
   hash.update('untracked\0');
   hash.update(path);
   hash.update('\0');
-  if (information.isSymbolicLink()) {
+
+  let handle;
+  try {
+    handle = await open(absolute, fsConstants.O_RDONLY | noFollow | nonBlock);
+  } catch (error) {
+    if (!['ELOOP', 'EMLINK'].includes(error.code)) throw error;
     hash.update('symlink\0');
     hash.update(await readlink(absolute));
-  } else if (information.isFile()) {
+    hash.update('\0');
+    return;
+  }
+
+  try {
+    const information = await handle.stat();
+    if (!information.isFile()) {
+      fail(`unsupported untracked worktree entry ${path}`);
+    }
     hash.update('file\0');
-    hash.update(await readFile(absolute));
-  } else {
-    fail(`unsupported untracked worktree entry ${path}`);
+    hash.update(await handle.readFile());
+  } finally {
+    await handle.close();
   }
   hash.update('\0');
 }
