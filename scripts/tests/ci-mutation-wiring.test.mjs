@@ -211,8 +211,9 @@ test('S3 CI separates ordinary gates from mutation with isolated pre-install cac
   );
   assert.match(mutation, /run: pnpm run test:mutation/);
   assert.doesNotMatch(mutation, /playwright/i);
+  const containmentLines = containment.split('\n').map((line) => line.trim());
   assert.ok(
-    containment.includes('production.cloudfront.docker.com:443'),
+    containmentLines.indexOf('production.cloudfront.docker.com:443') >= 0,
     'the pinned Docker base redirect host must remain in the containment egress allowlist',
   );
 });
