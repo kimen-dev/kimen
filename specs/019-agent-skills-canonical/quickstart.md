@@ -116,9 +116,9 @@ Expected: exit 0. This is the only completion signal.
   because the live-tree snapshot both overstated pre-migration verification
   and required manual synchronization after a legitimate skill edit.
 - Founder resolution: approved immutable historical verification against
-  validated commit `d4bd216090e3eb6515a59bee8db29760328108e6` and migrated
-  commit `b78ccb8dc38f5f424372cbae006b3748234d7a96`, with full Git history
-  in the CI gates checkout and no third review round.
+  validated commit `d4bd216090e3eb6515a59bee8db29760328108e6` and the migrated
+  Git state, with full Git history in the CI gates checkout and no third review
+  round at that stage.
 - Resolution RED: after the v2 contract fixtures were introduced, nine
   focused tests failed because the gate did not read pinned Git sources,
   still froze live bytes and CI did not fetch history.
@@ -129,3 +129,16 @@ Expected: exit 0. This is the only completion signal.
   at `68.40%`; after adding only targeted contract/source/conflict/rewrite
   tests, 640 of 845 valid mutants were detected for `75.74%` against the
   unchanged `70%` threshold.
+
+## Pull-request review remediation
+
+- The PR reviewer proved that pinning the migrated branch commit did not
+  survive the repository's squash-only merge policy. Contract schema v3 pins
+  subtree object `dab40a007b09d898b61120e8f9fb9fc7191cbb7d` and requires that
+  exact object to remain reachable from `HEAD` at `.agents/skills`.
+- A second review finding proved that enumerating existing ignored files could
+  not detect a latent ignore rule. The root `.gitignore` now ends with the
+  canonical unignore guard and the gate rejects a later root rule or any nested
+  `.gitignore` capable of overriding it.
+- Regression evidence includes a disposable squash-only clone and hypothetical
+  future canonical paths; both fail before the fix and pass with the v3 gate.

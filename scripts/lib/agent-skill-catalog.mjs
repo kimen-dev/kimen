@@ -15,12 +15,11 @@ function finding(code, path) {
 }
 
 const isSha256 = (value) => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
-const isCommitSha = (value) => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value);
+const isGitOid = (value) => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value);
 
-function historicalSourceIsValid(source, expectedRootPath) {
+function historicalDigestFieldsAreValid(source, expectedRootPath) {
   return (
     source?.rootPath === expectedRootPath &&
-    isCommitSha(source.commitSha) &&
     Number.isInteger(source.skillCount) &&
     Number.isInteger(source.artifactCount) &&
     isSha256(source.pathSetSha256) &&
@@ -28,14 +27,22 @@ function historicalSourceIsValid(source, expectedRootPath) {
   );
 }
 
+function commitSourceIsValid(source, expectedRootPath) {
+  return historicalDigestFieldsAreValid(source, expectedRootPath) && isGitOid(source.commitSha);
+}
+
+function reachableTreeSourceIsValid(source, expectedRootPath) {
+  return historicalDigestFieldsAreValid(source, expectedRootPath) && isGitOid(source.treeOid);
+}
+
 function migrationContractIsValid(migration) {
   if (
-    migration.schemaVersion !== 2 ||
+    migration.schemaVersion !== 3 ||
     migration.canonicalPath !== CANONICAL_PATH ||
     !Number.isInteger(migration.expectedConflictCount) ||
     !Number.isInteger(migration.expectedRewriteCount) ||
-    !historicalSourceIsValid(migration.validatedSource, COMPATIBILITY_PATH) ||
-    !historicalSourceIsValid(migration.migratedSource, CANONICAL_PATH) ||
+    !commitSourceIsValid(migration.validatedSource, COMPATIBILITY_PATH) ||
+    !reachableTreeSourceIsValid(migration.migratedSource, CANONICAL_PATH) ||
     !Number.isInteger(migration.candidateCapture?.skillCount) ||
     !Number.isInteger(migration.candidateCapture?.artifactCount) ||
     !isSha256(migration.candidateCapture?.pathSetSha256) ||
@@ -135,7 +142,11 @@ export function validateAgentSkillFacts(facts) {
     }
   }
 
-  for (const path of [...(canonical.ignoredPaths ?? [])].sort()) {
+  const hiddenOrUnsafePaths = new Set([
+    ...(canonical.ignoredPaths ?? []),
+    ...(canonical.ignorePolicyPaths ?? []),
+  ]);
+  for (const path of [...hiddenOrUnsafePaths].sort()) {
     findings.push(finding('AGENT_SKILLS_IGNORED', path));
   }
   for (const path of [...(canonical.untrackedPaths ?? [])].sort()) {

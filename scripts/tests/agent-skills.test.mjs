@@ -12,6 +12,12 @@ const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 const cliPath = join(repositoryRoot, 'scripts/gates/check-agent-skills.mjs');
 
 const sha256 = (contents) => createHash('sha256').update(contents).digest('hex');
+const canonicalUnignoreGuard = [
+  '!.agents/',
+  '!.agents/skills/',
+  `!.agents/skills/${'*'.repeat(2)}`,
+  '',
+].join('\n');
 const inventoryDigests = (entries) => {
   const sorted = [...entries].sort((left, right) =>
     left.path < right.path ? -1 : left.path > right.path ? 1 : 0,
@@ -80,7 +86,7 @@ async function createFixture(
   await symlink('../.agents/skills', join(root, '.claude/skills'));
   runGit(root, ['add', '-A']);
   runGit(root, ['commit', '--quiet', '-m', 'migrated source']);
-  const migratedCommitSha = runGit(root, ['rev-parse', 'HEAD']).stdout.trim();
+  const migratedTreeOid = runGit(root, ['rev-parse', 'HEAD:.agents/skills']).stdout.trim();
 
   if (compatibility !== 'valid') {
     await rm(join(root, '.claude/skills'), { recursive: true, force: true });
@@ -113,6 +119,7 @@ async function createFixture(
   await write(root, 'AGENTS.md', guidance);
   await write(root, 'CLAUDE.md', guidance);
   await write(root, 'NOTICE', 'Vendored skills live under `.agents/skills`.\n');
+  await write(root, '.gitignore', canonicalUnignoreGuard);
   await write(
     root,
     '.specify/extensions.yml',
@@ -143,15 +150,15 @@ async function createFixture(
           expectedRewriteCount: 0,
           migratedSource: {
             artifactCount: 2,
-            commitSha: migratedCommitSha,
             pathSetSha256: digests.pathSetSha256,
             rootPath: '.agents/skills',
             skillCount: 2,
+            treeOid: migratedTreeOid,
             treeSha256: digests.finalTreeSha256,
           },
           pathEncoding: 'utf8(path) + LF, sorted by path',
           rewrittenAfterMigration: [],
-          schemaVersion: 2,
+          schemaVersion: 3,
           validatedSource: {
             artifactCount: 2,
             commitSha: validatedCommitSha,
@@ -251,9 +258,9 @@ test('S5 the real migration inventory is bound to immutable Git trees', async ()
       'utf8',
     ),
   );
-  assert.equal(inventory.schemaVersion, 2);
+  assert.equal(inventory.schemaVersion, 3);
   assert.equal(inventory.validatedSource.commitSha, 'd4bd216090e3eb6515a59bee8db29760328108e6');
-  assert.equal(inventory.migratedSource.commitSha, 'b78ccb8dc38f5f424372cbae006b3748234d7a96');
+  assert.equal(inventory.migratedSource.treeOid, 'dab40a007b09d898b61120e8f9fb9fc7191cbb7d');
   assert.equal(inventory.validatedSource.artifactCount, 70);
   assert.equal(inventory.migratedSource.artifactCount, 70);
   assert.equal(inventory.approvedConflicts.length, 8);
@@ -289,6 +296,40 @@ test('S5 historical evidence rejects an unavailable pinned source commit', async
   const result = runCli(root);
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /AGENT_SKILLS_MIGRATION_SOURCE/);
+});
+
+test('S5 squash-only history retains the migrated source evidence', async (t) => {
+  const source = await createFixture(t, { commit: true });
+  const sourceTree = runGit(source, ['rev-parse', 'HEAD^{tree}']).stdout.trim();
+  const baseCommit = runGit(source, ['rev-list', '--max-parents=0', 'HEAD']).stdout.trim();
+  const squashedCommit = runGit(source, [
+    'commit-tree',
+    sourceTree,
+    '-p',
+    baseCommit,
+    '-m',
+    'synthetic squash',
+  ]).stdout.trim();
+  runGit(source, ['branch', 'squashed', squashedCommit]);
+
+  const clone = await mkdtemp(join(tmpdir(), 'kimen-agent-skills-squash-clone-'));
+  t.after(() => rm(clone, { recursive: true, force: true }));
+  await rm(clone, { recursive: true, force: true });
+  const cloned = run(dirname(clone), 'git', [
+    'clone',
+    '--quiet',
+    '--no-local',
+    '--single-branch',
+    '--branch',
+    'squashed',
+    source,
+    clone,
+  ]);
+  assert.equal(cloned.status, 0, cloned.stderr);
+
+  const result = runCli(clone);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /inventory=historical-verified/);
 });
 
 for (const [condition, code] of [
@@ -348,6 +389,36 @@ test('S8 repository-owned tooling cannot configure a vendor-owned skill write', 
   assert.match(result.stderr, /scripts\/update-skills\.mjs/);
 });
 
+test('S1 S8 a later ignore rule cannot hide a future canonical artifact', async (t) => {
+  const root = await createFixture(t);
+  await write(
+    root,
+    '.gitignore',
+    ['*.log', canonicalUnignoreGuard.trimEnd(), '.agents/skills/new-*.md', ''].join('\n'),
+  );
+  const ignored = run(root, 'git', [
+    'check-ignore',
+    '--no-index',
+    '.agents/skills/new-sentinel.md',
+  ]);
+  assert.equal(ignored.status, 0, 'fixture must reproduce the latent ignore rule');
+
+  const result = runCli(root);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /AGENT_SKILLS_IGNORED \.gitignore/);
+});
+
+test('S1 S8 a nested ignore file cannot override canonical visibility', async (t) => {
+  const root = await createFixture(t);
+  await write(root, '.gitignore', canonicalUnignoreGuard);
+  await write(root, '.agents/skills/alpha/.gitignore', '*.md\n');
+  runGit(root, ['add', '-A']);
+
+  const result = runCli(root);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /AGENT_SKILLS_IGNORED \.agents\/skills\/alpha\/\.gitignore/);
+});
+
 test('S9 stale operating guidance reports canonical ownership drift', async (t) => {
   const root = await createFixture(t, {
     guidance: 'Constitutional skills live only in `.claude/skills`.\n',
@@ -402,7 +473,7 @@ test('S6 mutation sandboxes exclude the compatibility symlink and retain canonic
   }
 });
 
-test('S5 CI gates checkout retains the pinned historical commits', async () => {
+test('S5 CI gates checkout retains the pinned historical Git sources', async () => {
   const workflow = await readFile(join(repositoryRoot, '.github/workflows/ci.yml'), 'utf8');
   const gatesJob = workflow.slice(workflow.indexOf('  gates:'), workflow.indexOf('  mutation:'));
   assert.match(gatesJob, /actions\/checkout@[a-f0-9]{40}[\s\S]*fetch-depth: 0/);

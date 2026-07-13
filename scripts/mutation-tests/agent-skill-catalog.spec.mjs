@@ -22,6 +22,7 @@ const validFacts = () => ({
       { name: 'beta', type: 'directory' },
     ],
     exists: true,
+    ignorePolicyPaths: [],
     ignoredPaths: [],
     path: '.agents/skills',
     realPath: '/repo/.agents/skills',
@@ -69,14 +70,14 @@ const validFacts = () => ({
       actualTreeSha256: 'b'.repeat(64),
       artifactCount: 2,
       available: true,
-      commitSha: '2'.repeat(40),
       pathSetSha256: 'a'.repeat(64),
       rootPath: '.agents/skills',
       skillCount: 2,
+      treeOid: '2'.repeat(40),
       treeSha256: 'b'.repeat(64),
     },
     rewrittenAfterMigration: [],
-    schemaVersion: 2,
+    schemaVersion: 3,
     validatedSource: {
       actualArtifactCount: 2,
       actualHashes: {},
@@ -97,6 +98,12 @@ const validFacts = () => ({
 });
 
 const sha256 = (contents) => createHash('sha256').update(contents).digest('hex');
+const canonicalUnignoreGuard = [
+  '!.agents/',
+  '!.agents/skills/',
+  `!.agents/skills/${'*'.repeat(2)}`,
+  '',
+].join('\n');
 
 async function writeFixture(root, relativePath, contents) {
   const path = join(root, relativePath);
@@ -129,7 +136,7 @@ async function createCliFixture({
   await symlink('../.agents/skills', join(root, '.claude/skills'));
   fixtureGit(root, ['add', '-A']);
   fixtureGit(root, ['commit', '--quiet', '-m', 'migrated source']);
-  const migratedCommitSha = fixtureGit(root, ['rev-parse', 'HEAD']).trim();
+  const migratedTreeOid = fixtureGit(root, ['rev-parse', 'HEAD:.agents/skills']).trim();
 
   if (compatibility !== 'valid') {
     await rm(join(root, '.claude/skills'), { recursive: true, force: true });
@@ -159,6 +166,7 @@ async function createCliFixture({
   await writeFixture(root, 'AGENTS.md', guidance);
   await writeFixture(root, 'CLAUDE.md', guidance);
   await writeFixture(root, 'NOTICE', 'Vendored under .agents/skills.\n');
+  await writeFixture(root, '.gitignore', canonicalUnignoreGuard);
   await writeFixture(root, '.specify/extensions.yml', '# canonical .agents/skills\n');
   if (toolingWriter) {
     await writeFixture(
@@ -188,14 +196,14 @@ async function createCliFixture({
       expectedRewriteCount: 0,
       migratedSource: {
         artifactCount: 1,
-        commitSha: migratedCommitSha,
         pathSetSha256,
         rootPath: '.agents/skills',
         skillCount: 1,
+        treeOid: migratedTreeOid,
         treeSha256: finalTreeSha256,
       },
       rewrittenAfterMigration: [],
-      schemaVersion: 2,
+      schemaVersion: 3,
       validatedSource: {
         artifactCount: 1,
         commitSha: validatedCommitSha,
@@ -319,6 +327,7 @@ describe('complete agent skill invariant matrix', () => {
 
   it('@spec:019 S1 S8 reports ignored and untracked paths deterministically', () => {
     const facts = validFacts();
+    facts.canonical.ignorePolicyPaths = ['.gitignore'];
     facts.canonical.ignoredPaths = [
       '.agents/skills/zeta/SKILL.md',
       '.agents/skills/alpha/SKILL.md',
@@ -332,6 +341,7 @@ describe('complete agent skill invariant matrix', () => {
       { code: 'AGENT_SKILLS_UNTRACKED', path: '.agents/skills/beta/SKILL.md' },
       { code: 'AGENT_SKILLS_IGNORED', path: '.agents/skills/zeta/SKILL.md' },
       { code: 'AGENT_SKILLS_UNTRACKED', path: '.agents/skills/zeta/SKILL.md' },
+      { code: 'AGENT_SKILLS_IGNORED', path: '.gitignore' },
     ]);
   });
 
@@ -445,6 +455,7 @@ describe('complete agent skill invariant matrix', () => {
     ['validated path digest', (facts) => (facts.migration.validatedSource.pathSetSha256 = 'bad')],
     ['validated tree digest', (facts) => (facts.migration.validatedSource.treeSha256 = 'bad')],
     ['migrated root', (facts) => (facts.migration.migratedSource.rootPath = '.claude/skills')],
+    ['migrated tree', (facts) => (facts.migration.migratedSource.treeOid = 'short')],
     ['candidate provenance', (facts) => (facts.migration.candidateCapture.provenance = 'guess')],
     ['candidate skill count', (facts) => (facts.migration.candidateCapture.skillCount = 1)],
     ['candidate artifact count', (facts) => (facts.migration.candidateCapture.artifactCount = 1)],
@@ -638,7 +649,7 @@ describe('agent skill filesystem and Git collector', () => {
       await writeFile(contractPath, `${JSON.stringify(inventory)}\n`, 'utf8');
       expect((await executeCli(root)).stderr).toContain('AGENT_SKILLS_MIGRATION_SOURCE');
 
-      inventory.validatedSource.commitSha = inventory.migratedSource.commitSha;
+      inventory.validatedSource.commitSha = fixtureGit(root, ['rev-parse', 'HEAD']).trim();
       await writeFile(contractPath, `${JSON.stringify(inventory)}\n`, 'utf8');
       expect((await executeCli(root)).stderr).toContain('AGENT_SKILLS_MIGRATION_HASH');
     } finally {

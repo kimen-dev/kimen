@@ -97,39 +97,23 @@ async function collectCanonicalEntries(canonicalAbsolute) {
 }
 
 const sha256 = (contents) => createHash('sha256').update(contents).digest('hex');
+const gitOidIsValid = (value) => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value);
+const requiredIgnoreSuffix = ['!.agents/', '!.agents/skills/', '!.agents/skills/**', ''].join('\n');
 
-function historicalDescriptorCanBeRead(source, expectedRootPath) {
-  return (
-    source?.rootPath === expectedRootPath &&
-    typeof source.commitSha === 'string' &&
-    /^[a-f0-9]{40}$/.test(source.commitSha)
-  );
+function commitSourceCanBeRead(source, expectedRootPath) {
+  return source?.rootPath === expectedRootPath && gitOidIsValid(source.commitSha);
 }
 
-function collectHistoricalSource(root, source, expectedRootPath) {
-  if (!historicalDescriptorCanBeRead(source, expectedRootPath)) {
-    return { ...source, available: false };
-  }
-  const listing = gitBuffer(root, [
-    'ls-tree',
-    '-rz',
-    '--full-tree',
-    source.commitSha,
-    '--',
-    source.rootPath,
-  ]);
-  if (!listing) return { ...source, available: false };
-
-  const prefix = `${source.rootPath}/`;
+function collectHistoricalListing(root, source, listing, normalizePath) {
   const artifacts = [];
   for (const record of listing.toString('utf8').split('\0').filter(Boolean)) {
     const match = /^(\d+) blob ([a-f0-9]{40})\t(.+)$/u.exec(record);
-    if (!match || !/^100(?:644|755)$/u.test(match[1]) || !match[3].startsWith(prefix)) {
+    const path = match ? normalizePath(match[3]) : undefined;
+    if (!match || !/^100(?:644|755)$/u.test(match[1]) || path === undefined) {
       artifacts.push({ hash: `invalid:${record}`, path: record });
       continue;
     }
     const contents = gitBuffer(root, ['cat-file', 'blob', match[2]]);
-    const path = match[3].slice(prefix.length);
     artifacts.push({ hash: contents ? sha256(contents) : 'unavailable', path });
   }
 
@@ -149,6 +133,49 @@ function collectHistoricalSource(root, source, expectedRootPath) {
   };
 }
 
+function collectCommitSource(root, source, expectedRootPath) {
+  if (!commitSourceCanBeRead(source, expectedRootPath)) {
+    return { ...source, available: false };
+  }
+  const listing = gitBuffer(root, [
+    'ls-tree',
+    '-rz',
+    '--full-tree',
+    source.commitSha,
+    '--',
+    source.rootPath,
+  ]);
+  if (!listing) return { ...source, available: false };
+
+  const prefix = `${source.rootPath}/`;
+  return collectHistoricalListing(root, source, listing, (path) =>
+    path.startsWith(prefix) ? path.slice(prefix.length) : undefined,
+  );
+}
+
+function collectReachableTreeSource(root, source, expectedRootPath) {
+  if (source?.rootPath !== expectedRootPath || !gitOidIsValid(source.treeOid)) {
+    return { ...source, available: false };
+  }
+  const reachableObjects = gitBuffer(root, [
+    'rev-list',
+    '--objects',
+    'HEAD',
+    '--',
+    source.rootPath,
+  ]);
+  const expectedRecord = `${source.treeOid} ${source.rootPath}`;
+  const reachable = reachableObjects
+    ?.toString('utf8')
+    .split('\n')
+    .some((record) => record === expectedRecord);
+  if (!reachable) return { ...source, available: false };
+
+  const listing = gitBuffer(root, ['ls-tree', '-rz', '--full-tree', '-r', source.treeOid]);
+  if (!listing) return { ...source, available: false };
+  return collectHistoricalListing(root, source, listing, (path) => path);
+}
+
 async function collectMigration(root) {
   const contractPath = agentSkillTopology.migrationContractPath;
   let contract;
@@ -163,13 +190,13 @@ async function collectMigration(root) {
   return {
     ...contract,
     exists: true,
-    migratedSource: collectHistoricalSource(
+    migratedSource: collectReachableTreeSource(
       root,
       contract.migratedSource,
       agentSkillTopology.canonicalPath,
     ),
     path: contractPath,
-    validatedSource: collectHistoricalSource(
+    validatedSource: collectCommitSource(
       root,
       contract.validatedSource,
       agentSkillTopology.compatibilityPath,
@@ -319,6 +346,36 @@ async function collectToolingWriterDrift(root) {
   return { writerDriftPaths: writerDriftPaths.sort() };
 }
 
+async function collectIgnorePolicy(root) {
+  let rootIgnore = '';
+  try {
+    rootIgnore = await readFile(resolve(root, '.gitignore'), 'utf8');
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+
+  const candidatePaths = new Set([
+    ...listGitPaths(root, ['ls-files', '--', '.agents']),
+    ...listGitPaths(root, ['ls-files', '--others', '--exclude-standard', '--', '.agents']),
+    ...listGitPaths(root, [
+      'ls-files',
+      '--others',
+      '--ignored',
+      '--exclude-standard',
+      '--',
+      '.agents',
+    ]),
+  ]);
+  const policyPaths = [...candidatePaths]
+    .filter(
+      (path) =>
+        path === '.agents/.gitignore' || /^\.agents\/skills(?:\/.*)?\/\.gitignore$/u.test(path),
+    )
+    .sort();
+  if (!rootIgnore.endsWith(requiredIgnoreSuffix)) policyPaths.push('.gitignore');
+  return policyPaths.sort();
+}
+
 export async function collectAgentSkillFacts(root) {
   const canonicalPath = agentSkillTopology.canonicalPath;
   const canonicalAbsolute = resolve(root, canonicalPath);
@@ -354,6 +411,7 @@ export async function collectAgentSkillFacts(root) {
       artifactCount: trackedPaths.length,
       entries: await collectCanonicalEntries(canonicalAbsolute),
       exists: canonicalType !== 'missing',
+      ignorePolicyPaths: await collectIgnorePolicy(root),
       ignoredPaths,
       path: canonicalPath,
       realPath: canonicalRealPath,
@@ -379,7 +437,7 @@ const diagnosticDetails = Object.freeze({
   AGENT_SKILLS_CANONICAL_TYPE: 'canonical catalog must be a real directory',
   AGENT_SKILLS_ENTRY_MISSING: 'every skill directory must contain a regular SKILL.md',
   AGENT_SKILLS_ENTRY_TYPE: 'every immediate canonical entry must be a real skill directory',
-  AGENT_SKILLS_IGNORED: 'canonical artifacts must not be ignored',
+  AGENT_SKILLS_IGNORED: 'canonical artifacts and future additions must remain visible to Git',
   AGENT_SKILLS_UNTRACKED: 'canonical artifacts must be tracked',
   AGENT_SKILLS_COMPAT_MISSING: 'compatibility path must exist',
   AGENT_SKILLS_COMPAT_NOT_LINK: 'compatibility path must be a symbolic link',
@@ -392,7 +450,7 @@ const diagnosticDetails = Object.freeze({
   AGENT_SKILLS_GUIDANCE_DRIFT: 'guidance must bind each ownership role to its path',
   AGENT_SKILLS_MIGRATION_CONTRACT: 'migration inventory contract must be valid',
   AGENT_SKILLS_MIGRATION_HASH: 'pinned historical trees must match the approved inventory',
-  AGENT_SKILLS_MIGRATION_SOURCE: 'pinned historical commits must be available',
+  AGENT_SKILLS_MIGRATION_SOURCE: 'pinned historical Git sources must be reachable',
   AGENT_SKILLS_TOOLING_VENDOR_WRITE: 'repository tooling must not write to a vendor path',
 });
 

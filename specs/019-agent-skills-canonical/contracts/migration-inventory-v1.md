@@ -4,6 +4,7 @@
 
 - Pre-migration canonical candidate: local `.agents/skills`
 - Validated committed source: `main:.claude/skills`
+- Migrated source evidence: reachable Git tree object for `.agents/skills`
 - Skill directory union: 27
 - Skill names unique to either catalog: 0
 - Validated source artifacts: 70 files, preserved once under `.agents/skills`
@@ -38,14 +39,17 @@ expected only where T029 subsequently rewrote an obsolete canonical path.
 
 The machine-readable companion
 `contracts/migration-inventory-v1.json` (SHA-256
-`6ebbe37d433a5f5009d1ff21fa8fd55634e595d265965e2c00a4988a78a27aae`)
+`2b837f0ee55868a98f7b4e01a21aab30bb05b3a67fe4da8570285a0afb906bcb`)
 binds the common 70-path source set, the eight approved conflict hashes and the
 one declared post-migration rewrite. The `agent-skills` gate reads the actual
-Git trees at validated source `d4bd216090e3eb6515a59bee8db29760328108e6`
-and migrated source `b78ccb8dc38f5f424372cbae006b3748234d7a96`,
-recomputes their path-set/tree digests and verifies each declared validated and
-final conflict/rewrite hash. Missing history, count, path or byte drift fails
-closed.
+Git tree at validated source commit
+`d4bd216090e3eb6515a59bee8db29760328108e6` and migrated subtree object
+`dab40a007b09d898b61120e8f9fb9fc7191cbb7d`, proves that the latter remains
+reachable from `HEAD` at `.agents/skills`, recomputes both path-set/tree digests
+and verifies each declared validated and final conflict/rewrite hash. Missing
+history, reachability, count, path or byte drift fails closed. Pinning the
+migrated subtree rather than its branch commit preserves this evidence after
+the repository's required squash merge.
 
 The candidate tree digest is explicitly a founder-approved local
 pre-migration capture because those bytes were never committed; the gate does
