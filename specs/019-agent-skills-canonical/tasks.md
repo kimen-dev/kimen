@@ -139,7 +139,7 @@ guidance fixtures fail or pass only according to the topology contract.
 - [x] T041 Add RED/GREEN coverage that cryptographically binds every approved conflict `candidateHash` to the candidate-capture tree digest (GG1)
 - [x] T042 Replace intermediate-tree reachability with a validated-source-plus-declared-transformations model and prove later canonical edit + squash + clean clone together (GG2)
 - [x] T043 Replace write-API heuristics with the structural vendor-path policy across `scripts/`, `tools/`, `packages/`, `.github/`, `.specify/` and skill scripts, retaining only the explicit compatibility allowlist (GG3)
-- [ ] T044 Re-run full gates, freeze/push the remediated head and execute the founder-authorized third clean-context review limited to GG1–GG3; do not merge or publish npm
+- [x] T044 Re-run full gates, freeze/push the remediated head and execute the founder-authorized third clean-context review limited to GG1–GG3; do not merge or publish npm
 
 ---
 

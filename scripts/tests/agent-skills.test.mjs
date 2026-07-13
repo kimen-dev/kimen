@@ -64,6 +64,7 @@ async function createFixture(
     compatibility = 'valid',
     commit = false,
     guidance = validRoleGuidance,
+    migratedAlpha = '# Alpha\n',
     missingEntrypoint = false,
   } = {},
 ) {
@@ -80,7 +81,7 @@ async function createFixture(
   runGit(root, ['commit', '--quiet', '-m', 'validated source']);
   const validatedCommitSha = runGit(root, ['rev-parse', 'HEAD']).stdout.trim();
 
-  await write(root, '.agents/skills/alpha/SKILL.md', '# Alpha\n');
+  await write(root, '.agents/skills/alpha/SKILL.md', migratedAlpha);
   await write(root, '.agents/skills/beta/SKILL.md', '# Beta\n');
   await rm(join(root, '.claude/skills'), { recursive: true, force: true });
   await symlink('../.agents/skills', join(root, '.claude/skills'));
@@ -129,31 +130,48 @@ async function createFixture(
     'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
     `${JSON.stringify(
       (() => {
-        const entries = [
-          { hash: sha256('# Alpha\n'), path: 'alpha/SKILL.md' },
+        const validatedAlphaHash = sha256('# Alpha\n');
+        const migratedAlphaHash = sha256(migratedAlpha);
+        const validatedEntries = [
+          { hash: validatedAlphaHash, path: 'alpha/SKILL.md' },
           { hash: sha256('# Beta\n'), path: 'beta/SKILL.md' },
         ];
-        const digests = inventoryDigests(entries);
+        const migratedEntries = validatedEntries.map((entry) =>
+          entry.path === 'alpha/SKILL.md' ? { ...entry, hash: migratedAlphaHash } : entry,
+        );
+        const validatedDigests = inventoryDigests(validatedEntries);
+        const migratedDigests = inventoryDigests(migratedEntries);
+        const approvedConflicts =
+          validatedAlphaHash === migratedAlphaHash
+            ? []
+            : [
+                {
+                  candidateHash: migratedAlphaHash,
+                  finalHash: migratedAlphaHash,
+                  path: 'alpha/SKILL.md',
+                  validatedHash: validatedAlphaHash,
+                },
+              ];
         return {
-          approvedConflicts: [],
+          approvedConflicts,
           candidateCapture: {
             artifactCount: 2,
-            pathSetSha256: digests.pathSetSha256,
+            pathSetSha256: migratedDigests.pathSetSha256,
             provenance: 'founder-approved local pre-migration capture',
             skillCount: 2,
-            treeSha256: digests.finalTreeSha256,
+            treeSha256: migratedDigests.finalTreeSha256,
           },
           canonicalPath: '.agents/skills',
           entryEncoding: 'utf8(path) + NUL + lowercase-sha256(bytes) + LF, sorted by path',
-          expectedConflictCount: 0,
+          expectedConflictCount: approvedConflicts.length,
           expectedRewriteCount: 0,
           migratedSource: {
             artifactCount: 2,
             derivation: 'validated-source-plus-declared-final-hashes',
-            pathSetSha256: digests.pathSetSha256,
+            pathSetSha256: migratedDigests.pathSetSha256,
             rootPath: '.agents/skills',
             skillCount: 2,
-            treeSha256: digests.finalTreeSha256,
+            treeSha256: migratedDigests.finalTreeSha256,
           },
           pathEncoding: 'utf8(path) + LF, sorted by path',
           rewrittenAfterMigration: [],
@@ -161,10 +179,10 @@ async function createFixture(
           validatedSource: {
             artifactCount: 2,
             commitSha: validatedCommitSha,
-            pathSetSha256: digests.pathSetSha256,
+            pathSetSha256: validatedDigests.pathSetSha256,
             rootPath: '.claude/skills',
             skillCount: 2,
-            treeSha256: digests.finalTreeSha256,
+            treeSha256: validatedDigests.finalTreeSha256,
           },
         };
       })(),
@@ -332,7 +350,10 @@ test('S5 squash-only history retains the migrated source evidence', async (t) =>
 });
 
 test('S5 a later canonical edit remains verifiable after squash and a clean clone', async (t) => {
-  const source = await createFixture(t, { commit: true });
+  const source = await createFixture(t, {
+    commit: true,
+    migratedAlpha: '# Migrated Alpha\n',
+  });
   const migratedTreeOid = runGit(source, ['rev-parse', 'HEAD~1:.agents/skills']).stdout.trim();
   await write(source, '.agents/skills/alpha/SKILL.md', '# Later Alpha\n');
   runGit(source, ['add', '-A']);
@@ -365,8 +386,8 @@ test('S5 a later canonical edit remains verifiable after squash and a clean clon
   ]);
   assert.equal(cloned.status, 0, cloned.stderr);
   assert.doesNotMatch(
-    runGit(clone, ['rev-list', '--objects', 'HEAD', '--', '.agents/skills']).stdout,
-    new RegExp(`^${migratedTreeOid} \\.agents/skills$`, 'm'),
+    runGit(clone, ['rev-list', '--objects', 'HEAD']).stdout,
+    new RegExp(`^${migratedTreeOid}(?: |$)`, 'm'),
     'fixture must remove the intermediate migrated tree from reachable squash history',
   );
 
@@ -452,6 +473,16 @@ for (const [name, path, contents] of [
     'fs.open',
     'tools/open-skills.mjs',
     "import { open } from 'node:fs/promises';\nawait open('.claude/skills/new/SKILL.md', 'w');\n",
+  ],
+  [
+    'write below .specify',
+    '.specify/scripts/write-skills.mjs',
+    "import { writeFile } from 'node:fs/promises';\nawait writeFile('.claude/skills/new/SKILL.md', '# New\\n');\n",
+  ],
+  [
+    'skill-owned script',
+    '.agents/skills/alpha/scripts/write-skills.mjs',
+    "import { writeFile } from 'node:fs/promises';\nawait writeFile('.claude/skills/new/SKILL.md', '# New\\n');\n",
   ],
 ]) {
   test(`S8 rejects vendor-path tooling via ${name}`, async (t) => {

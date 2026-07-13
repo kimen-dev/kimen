@@ -163,3 +163,16 @@ Expected: exit 0. This is the only completion signal.
   digest fails; a later edit + squash + clean clone passes without an
   intermediate reachable tree; `createWriteStream`, `fs.cp`, shell `tee` and
   `fs.open` fixtures fail while the declared Claude manifest remains allowed.
+- Exceptional third-review packet for head
+  `6575bef6295eed4ff6d43fde3a906b81dc232919`: manifest SHA-256
+  `da456501d60a6035f7738b3dcd953b744ba880bf1249e3c0326115eccebf36f0`.
+  Verdict: GG1 closed, zero Critical and two Important test gaps. The reviewer
+  proved that GG2's path-filtered reachability assertion could hide the same
+  content-addressed tree under `.claude/skills`, and that GG3 did not yet lock
+  the `.specify` and skill-owned script selection branches.
+- Third-review remediation: the combined squash fixture now applies a declared
+  non-identity migration, proves its distinct intermediate tree is absent from
+  the unfiltered reachable-object graph and still passes in a clean clone.
+  Additional negative fixtures reject non-allowlisted references below both
+  `.specify/` and `.agents/skills/<skill>/scripts/`. The focused suite passes
+  36/36 scenarios and 62/62 mutation-boundary tests.
