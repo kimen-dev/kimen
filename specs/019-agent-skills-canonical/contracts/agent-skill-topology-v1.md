@@ -38,6 +38,7 @@ copy or generated mirror is equivalent.
 | `AGENT_SKILLS_CANONICAL_MISSING` | `.agents/skills` does not exist. |
 | `AGENT_SKILLS_CANONICAL_TYPE` | Canonical path is not a real directory. |
 | `AGENT_SKILLS_ENTRY_MISSING` | A skill has no regular `SKILL.md`. |
+| `AGENT_SKILLS_ENTRY_TYPE` | An immediate canonical entry is not a real skill directory. |
 | `AGENT_SKILLS_IGNORED` | A canonical artifact is ignored by Git. |
 | `AGENT_SKILLS_UNTRACKED` | Required canonical content is not versioned. |
 | `AGENT_SKILLS_COMPAT_MISSING` | `.claude/skills` is absent. |
@@ -49,8 +50,10 @@ copy or generated mirror is equivalent.
 | `AGENT_SKILLS_COMPAT_TARGET` | Stored/resolved target is not the exact canonical target. |
 | `AGENT_SKILLS_GIT_MODE` | Git does not store compatibility as mode `120000`. |
 | `AGENT_SKILLS_GUIDANCE_DRIFT` | Repository guidance assigns the wrong ownership role. |
-| `AGENT_SKILLS_MIGRATION_OMISSION` | A required pre-migration artifact is absent from the union. |
-| `AGENT_SKILLS_MIGRATION_CONFLICT` | A byte conflict lacks explicit founder-approved resolution. |
+| `AGENT_SKILLS_MIGRATION_CONTRACT` | The migration inventory has an invalid shape or inconsistent declared counts. |
+| `AGENT_SKILLS_MIGRATION_HASH` | Historical tree evidence or a declared migration record does not match, or a byte difference is undeclared. |
+| `AGENT_SKILLS_MIGRATION_SOURCE` | A pinned historical Git source is unavailable or unreachable. |
+| `AGENT_SKILLS_TOOLING_VENDOR_WRITE` | Repository tooling writes through the compatibility-only vendor path. |
 
 The CLI prints findings sorted by path then code and exits non-zero when at
 least one finding exists. It prints the canonical and compatibility paths plus

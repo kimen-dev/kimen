@@ -6,11 +6,37 @@ const EXPECTED_LINK_TARGET = '../.agents/skills';
 const MIGRATION_CONTRACT_PATH =
   'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json';
 
+export const agentSkillFindingCodes = Object.freeze([
+  'AGENT_SKILLS_CANONICAL_MISSING',
+  'AGENT_SKILLS_CANONICAL_TYPE',
+  'AGENT_SKILLS_ENTRY_MISSING',
+  'AGENT_SKILLS_ENTRY_TYPE',
+  'AGENT_SKILLS_IGNORED',
+  'AGENT_SKILLS_UNTRACKED',
+  'AGENT_SKILLS_COMPAT_MISSING',
+  'AGENT_SKILLS_COMPAT_NOT_LINK',
+  'AGENT_SKILLS_COMPAT_ABSOLUTE',
+  'AGENT_SKILLS_COMPAT_BROKEN',
+  'AGENT_SKILLS_COMPAT_CYCLE',
+  'AGENT_SKILLS_COMPAT_ESCAPE',
+  'AGENT_SKILLS_COMPAT_TARGET',
+  'AGENT_SKILLS_GIT_MODE',
+  'AGENT_SKILLS_GUIDANCE_DRIFT',
+  'AGENT_SKILLS_MIGRATION_CONTRACT',
+  'AGENT_SKILLS_MIGRATION_HASH',
+  'AGENT_SKILLS_MIGRATION_SOURCE',
+  'AGENT_SKILLS_TOOLING_VENDOR_WRITE',
+]);
+const agentSkillFindingCodeSet = new Set(agentSkillFindingCodes);
+
 function compareByPathThenCode(left, right) {
   return left.path.localeCompare(right.path) || left.code.localeCompare(right.code);
 }
 
 function finding(code, path) {
+  if (!agentSkillFindingCodeSet.has(code)) {
+    throw new Error(`undeclared agent skill finding code: ${code}`);
+  }
   return { code, path };
 }
 
@@ -100,6 +126,12 @@ function historicalSourceMatches(source) {
 function migrationRecordsMatchSources(migration) {
   const validatedHashes = migration.validatedSource.actualHashes ?? {};
   const migratedHashes = migration.migratedSource.actualHashes ?? {};
+  const records = [...migration.approvedConflicts, ...migration.rewrittenAfterMigration];
+  const recordedPaths = new Set(records.map(({ path }) => path));
+  const historicalPaths = new Set([
+    ...Object.keys(validatedHashes),
+    ...Object.keys(migratedHashes),
+  ]);
   return (
     migration.approvedConflicts.every(
       ({ finalHash, path, validatedHash }) =>
@@ -108,6 +140,9 @@ function migrationRecordsMatchSources(migration) {
     migration.rewrittenAfterMigration.every(
       ({ finalHash, path, sourceHash }) =>
         validatedHashes[path] === sourceHash && migratedHashes[path] === finalHash,
+    ) &&
+    [...historicalPaths].every(
+      (path) => validatedHashes[path] === migratedHashes[path] || recordedPaths.has(path),
     )
   );
 }

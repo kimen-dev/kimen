@@ -6,7 +6,11 @@ import { lstat, readdir, readFile, readlink, realpath } from 'node:fs/promises';
 import { isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { agentSkillTopology, validateAgentSkillFacts } from '../lib/agent-skill-catalog.mjs';
+import {
+  agentSkillFindingCodes,
+  agentSkillTopology,
+  validateAgentSkillFacts,
+} from '../lib/agent-skill-catalog.mjs';
 
 export function parseAgentSkillArguments(argv, currentDirectory = process.cwd()) {
   if (argv.length === 0) return { root: currentDirectory };
@@ -453,6 +457,10 @@ const diagnosticDetails = Object.freeze({
   AGENT_SKILLS_MIGRATION_SOURCE: 'pinned historical Git sources must be reachable',
   AGENT_SKILLS_TOOLING_VENDOR_WRITE: 'repository tooling must not write to a vendor path',
 });
+
+if (Object.keys(diagnosticDetails).length !== agentSkillFindingCodes.length) {
+  throw new Error('agent skill diagnostic details must cover every declared finding code');
+}
 
 function safeDiagnosticPath(path) {
   return String(path).replaceAll(/[^A-Za-z0-9._/-]/g, '?');

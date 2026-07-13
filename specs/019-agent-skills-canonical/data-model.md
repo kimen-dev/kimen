@@ -72,9 +72,12 @@ Stable failure emitted by pure validation and rendered by the gate CLI.
 |---|---|
 | code | Stable code from the topology contract |
 | path | Repository-relative offending path |
-| expected | Required invariant |
-| observed | Sanitized observed fact |
-| remediation | Action that restores the canonical topology |
+
+The CLI renders each finding with the code and a sanitized path, then derives
+the invariant and exact expected canonical/compatibility topology from its
+closed diagnostic catalog. Findings intentionally contain no raw observed
+filesystem values or free-form remediation text, keeping output bounded and
+preventing host-path or credential disclosure.
 
 Findings sort deterministically by path then code. Any finding makes the gate
 red; zero findings makes it green.

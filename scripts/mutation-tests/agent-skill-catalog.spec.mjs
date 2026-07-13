@@ -579,6 +579,23 @@ describe('complete agent skill invariant matrix', () => {
     });
   });
 
+  it('@spec:019 S5 rejects every undeclared byte difference between historical trees', () => {
+    const facts = validFacts();
+    facts.migration.validatedSource.actualHashes = {
+      'alpha/SKILL.md': 'd'.repeat(64),
+      'beta/SKILL.md': 'e'.repeat(64),
+    };
+    facts.migration.migratedSource.actualHashes = {
+      'alpha/SKILL.md': 'f'.repeat(64),
+      'beta/SKILL.md': 'e'.repeat(64),
+    };
+
+    expect(validateAgentSkillFacts(facts).findings).toContainEqual({
+      code: 'AGENT_SKILLS_MIGRATION_HASH',
+      path: agentSkillTopology.migrationContractPath,
+    });
+  });
+
   it('@spec:019 S3 S5 later canonical changes do not alter historical evidence', () => {
     const facts = validFacts();
     facts.canonical.artifactCount = 3;
@@ -606,6 +623,25 @@ describe('complete agent skill invariant matrix', () => {
     ).toBe(
       'AGENT_SKILLS_COMPAT_TARGET .claude/skills?X invariant="compatibility link must resolve to the canonical catalog" expected=".claude/skills -> ../.agents/skills; .agents/skills is the sole real catalog"',
     );
+  });
+
+  it('@spec:019 S6 keeps the documented finding-code contract synchronized with the gate', async () => {
+    const { agentSkillFindingCodes } = await import('../lib/agent-skill-catalog.mjs');
+    const topologyContract = await readFile(
+      'specs/019-agent-skills-canonical/contracts/agent-skill-topology-v1.md',
+      'utf8',
+    );
+    const documentedCodes = [...topologyContract.matchAll(/^\| `(AGENT_SKILLS_[A-Z_]+)` \|/gmu)]
+      .map((match) => match[1])
+      .sort();
+
+    expect(agentSkillFindingCodes).toEqual(expect.any(Array));
+    expect(documentedCodes).toEqual([...agentSkillFindingCodes].sort());
+    for (const code of agentSkillFindingCodes) {
+      expect(formatAgentSkillFinding({ code, path: '.agents/skills' })).not.toContain(
+        'agent skill topology invariant must hold',
+      );
+    }
   });
 });
 
