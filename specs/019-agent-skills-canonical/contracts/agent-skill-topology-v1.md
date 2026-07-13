@@ -31,6 +31,17 @@ copy or generated mirror is equivalent.
 8. Repository-owned guidance names `.agents/skills` canonical and
    `.claude/skills` compatibility-only.
 
+## Repository tooling reference policy
+
+The gate scans every tracked regular file below `scripts/`, `tools/`,
+`packages/`, `.github/` and `.specify/`, plus every skill-owned `scripts/`
+subtree. Tests below `scripts/tests/` and `scripts/mutation-tests/` are evidence,
+not production tooling, and are excluded. Any literal `.claude/skills`
+reference in the scanned surface fails regardless of write API or shell
+command. The only exact allowlisted compatibility references are the gate, its
+topology library and `.specify/integrations/claude.manifest.json`; adding an
+allowlist entry is a reviewed contract change.
+
 ## Stable finding codes
 
 | Code | Meaning |
@@ -51,8 +62,8 @@ copy or generated mirror is equivalent.
 | `AGENT_SKILLS_GIT_MODE` | Git does not store compatibility as mode `120000`. |
 | `AGENT_SKILLS_GUIDANCE_DRIFT` | Repository guidance assigns the wrong ownership role. |
 | `AGENT_SKILLS_MIGRATION_CONTRACT` | The migration inventory has an invalid shape or inconsistent declared counts. |
-| `AGENT_SKILLS_MIGRATION_HASH` | Historical tree evidence or a declared migration record does not match, or a byte difference is undeclared. |
-| `AGENT_SKILLS_MIGRATION_SOURCE` | A pinned historical Git source is unavailable or unreachable. |
+| `AGENT_SKILLS_MIGRATION_HASH` | The validated tree, candidate derivation, migrated derivation or a declared migration record does not match. |
+| `AGENT_SKILLS_MIGRATION_SOURCE` | The pinned validated Git source is unavailable or unreachable. |
 | `AGENT_SKILLS_TOOLING_VENDOR_WRITE` | Repository tooling writes through the compatibility-only vendor path. |
 
 The CLI prints findings sorted by path then code and exits non-zero when at

@@ -157,29 +157,6 @@ function collectCommitSource(root, source, expectedRootPath) {
   );
 }
 
-function collectReachableTreeSource(root, source, expectedRootPath) {
-  if (source?.rootPath !== expectedRootPath || !gitOidIsValid(source.treeOid)) {
-    return { ...source, available: false };
-  }
-  const reachableObjects = gitBuffer(root, [
-    'rev-list',
-    '--objects',
-    'HEAD',
-    '--',
-    source.rootPath,
-  ]);
-  const expectedRecord = `${source.treeOid} ${source.rootPath}`;
-  const reachable = reachableObjects
-    ?.toString('utf8')
-    .split('\n')
-    .some((record) => record === expectedRecord);
-  if (!reachable) return { ...source, available: false };
-
-  const listing = gitBuffer(root, ['ls-tree', '-rz', '--full-tree', '-r', source.treeOid]);
-  if (!listing) return { ...source, available: false };
-  return collectHistoricalListing(root, source, listing, (path) => path);
-}
-
 async function collectMigration(root) {
   const contractPath = agentSkillTopology.migrationContractPath;
   let contract;
@@ -194,11 +171,7 @@ async function collectMigration(root) {
   return {
     ...contract,
     exists: true,
-    migratedSource: collectReachableTreeSource(
-      root,
-      contract.migratedSource,
-      agentSkillTopology.canonicalPath,
-    ),
+    migratedSource: contract.migratedSource,
     path: contractPath,
     validatedSource: collectCommitSource(
       root,
@@ -326,24 +299,31 @@ async function collectToolingWriterDrift(root) {
     'tools',
     '.specify',
     '.agents/skills',
+    'packages',
+    '.github',
+  ]);
+  const allowedVendorReferences = new Set([
+    'scripts/gates/check-agent-skills.mjs',
+    'scripts/lib/agent-skill-catalog.mjs',
+    '.specify/integrations/claude.manifest.json',
   ]);
   const candidates = tracked.filter(
     (path) =>
-      path !== 'scripts/gates/check-agent-skills.mjs' &&
+      !allowedVendorReferences.has(path) &&
       ((!path.startsWith('scripts/tests/') &&
         !path.startsWith('scripts/mutation-tests/') &&
         (path.startsWith('scripts/') ||
           path.startsWith('tools/') ||
-          path.startsWith('.specify/'))) ||
+          path.startsWith('.specify/') ||
+          path.startsWith('packages/') ||
+          path.startsWith('.github/'))) ||
         /^\.agents\/skills\/[^/]+\/scripts\//.test(path)),
   );
-  const writerPattern =
-    /\b(?:appendFile|copyFile|mkdir|rename|writeFile)(?:Sync)?\b|(?:^|\s)(?:cp|install|mkdir|mv)(?:\s|$)/m;
   const writerDriftPaths = [];
   for (const path of candidates) {
     if ((await pathType(resolve(root, path))) !== 'file') continue;
     const contents = await readFile(resolve(root, path), 'utf8');
-    if (contents.includes('.claude/skills') && writerPattern.test(contents)) {
+    if (contents.includes('.claude/skills')) {
       writerDriftPaths.push(path);
     }
   }
@@ -453,8 +433,9 @@ const diagnosticDetails = Object.freeze({
   AGENT_SKILLS_GIT_MODE: 'compatibility path must be stored as a Git symlink',
   AGENT_SKILLS_GUIDANCE_DRIFT: 'guidance must bind each ownership role to its path',
   AGENT_SKILLS_MIGRATION_CONTRACT: 'migration inventory contract must be valid',
-  AGENT_SKILLS_MIGRATION_HASH: 'pinned historical trees must match the approved inventory',
-  AGENT_SKILLS_MIGRATION_SOURCE: 'pinned historical Git sources must be reachable',
+  AGENT_SKILLS_MIGRATION_HASH:
+    'pinned source and declared transformations must match the approved inventory',
+  AGENT_SKILLS_MIGRATION_SOURCE: 'pinned validated Git source must be reachable',
   AGENT_SKILLS_TOOLING_VENDOR_WRITE: 'repository tooling must not write to a vendor path',
 });
 

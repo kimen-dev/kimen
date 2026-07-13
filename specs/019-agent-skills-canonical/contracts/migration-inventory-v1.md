@@ -4,7 +4,8 @@
 
 - Pre-migration canonical candidate: local `.agents/skills`
 - Validated committed source: `main:.claude/skills`
-- Migrated source evidence: reachable Git tree object for `.agents/skills`
+- Migrated source evidence: deterministic derivation from the validated Git
+  source plus every declared conflict/rewrite final hash
 - Skill directory union: 27
 - Skill names unique to either catalog: 0
 - Validated source artifacts: 70 files, preserved once under `.agents/skills`
@@ -39,23 +40,27 @@ expected only where T029 subsequently rewrote an obsolete canonical path.
 
 The machine-readable companion
 `contracts/migration-inventory-v1.json` (SHA-256
-`2b837f0ee55868a98f7b4e01a21aab30bb05b3a67fe4da8570285a0afb906bcb`)
+`0e45c598de1a6bb20a4f18013c5734f26f406bda74b2c6612480971f660e12b0`)
 binds the common 70-path source set, the eight approved conflict hashes and the
 one declared post-migration rewrite. The `agent-skills` gate reads the actual
 Git tree at validated source commit
-`d4bd216090e3eb6515a59bee8db29760328108e6` and migrated subtree object
-`dab40a007b09d898b61120e8f9fb9fc7191cbb7d`, proves that the latter remains
-reachable from `HEAD` at `.agents/skills`, recomputes both path-set/tree digests
-and verifies each declared validated and final conflict/rewrite hash. Missing
-history, reachability, count, path or byte drift fails closed. Pinning the
-migrated subtree rather than its branch commit preserves this evidence after
-the repository's required squash merge.
+`d4bd216090e3eb6515a59bee8db29760328108e6`, recomputes its path-set/tree
+digests and verifies every declared validated source hash. Schema v4 then
+derives the founder-approved candidate by replacing precisely the eight
+declared paths with their `candidateHash`, and derives the migrated result by
+applying precisely every conflict `finalHash` and rewrite `finalHash`. Both
+derived summaries must equal their declared count, path-set and tree digests.
+Missing history, count, path, record or byte drift fails closed. Because no
+intermediate migrated Git object is required, the evidence remains verifiable
+after squash and after later legitimate canonical edits.
 
 The candidate tree digest is explicitly a founder-approved local
-pre-migration capture because those bytes were never committed; the gate does
-not misrepresent that capture as Git-reconstructable. Historical verification
-is deliberately independent of the live canonical tree, so later one-edit
-skill additions or updates remain compatible with SC-005.
+pre-migration capture because those byte payloads were never committed. Its
+digest is nevertheless cryptographically linked to every declared
+`candidateHash`; changing either a conflict hash or the capture digest fails.
+Historical verification is deliberately independent of the live canonical
+tree, so later one-edit skill additions or updates remain compatible with
+SC-005.
 
 Implementation evidence must enumerate both pre-migration trees, prove the
 same 27 skill names, report exactly these eight conflicts, and show zero

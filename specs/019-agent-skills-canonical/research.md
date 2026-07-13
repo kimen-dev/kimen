@@ -105,3 +105,26 @@ copied directory satisfies single-source behavior would weaken the contract.
 - Windows copy fallback: rejected because it creates a second source of truth.
 - Platform-specific junction management: deferred until a supported Windows
   workflow is approved and tested.
+
+## Decision 7 — Squash-stable migration evidence and structural tooling audit
+
+**Decision**: Reconstruct the candidate and migrated evidence summaries from
+the immutable validated Git source plus the closed conflict/rewrite records.
+Audit tooling structurally: a vendor-path literal is forbidden across the
+owned tooling roots except for the exact contract allowlist.
+
+**Rationale**: A squash can make an intermediate migrated tree unreachable,
+especially after a later canonical edit. Deterministic derivation preserves
+the same path/byte proof without retaining an implementation-history object.
+Likewise, classifying a small list of filesystem APIs cannot cover equivalent
+writers such as streams, `fs.cp`, `open` or shell `tee`; ownership of the path,
+not the chosen write primitive, is the stable invariant.
+
+**Alternatives considered**:
+
+- Require the intermediate tree to remain reachable: rejected because it is
+  incompatible with the approved squash-only history plus later edits.
+- Trust unbound candidate conflict hashes: rejected because changing a
+  `candidateHash` would not invalidate the declared candidate capture.
+- Enumerate additional write APIs: rejected because the list remains
+  intrinsically incomplete and varies by language and shell.

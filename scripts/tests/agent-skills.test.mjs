@@ -86,7 +86,6 @@ async function createFixture(
   await symlink('../.agents/skills', join(root, '.claude/skills'));
   runGit(root, ['add', '-A']);
   runGit(root, ['commit', '--quiet', '-m', 'migrated source']);
-  const migratedTreeOid = runGit(root, ['rev-parse', 'HEAD:.agents/skills']).stdout.trim();
 
   if (compatibility !== 'valid') {
     await rm(join(root, '.claude/skills'), { recursive: true, force: true });
@@ -150,15 +149,15 @@ async function createFixture(
           expectedRewriteCount: 0,
           migratedSource: {
             artifactCount: 2,
+            derivation: 'validated-source-plus-declared-final-hashes',
             pathSetSha256: digests.pathSetSha256,
             rootPath: '.agents/skills',
             skillCount: 2,
-            treeOid: migratedTreeOid,
             treeSha256: digests.finalTreeSha256,
           },
           pathEncoding: 'utf8(path) + LF, sorted by path',
           rewrittenAfterMigration: [],
-          schemaVersion: 3,
+          schemaVersion: 4,
           validatedSource: {
             artifactCount: 2,
             commitSha: validatedCommitSha,
@@ -248,7 +247,7 @@ test('S4 a byte-identical independent Claude directory fails the single-source i
   assert.match(result.stderr, /AGENT_SKILLS_COMPAT_NOT_LINK/);
 });
 
-test('S5 the real migration inventory is bound to immutable Git trees', async () => {
+test('S5 the real migration inventory is bound to immutable Git plus closed transformations', async () => {
   const inventory = JSON.parse(
     await readFile(
       join(
@@ -258,9 +257,9 @@ test('S5 the real migration inventory is bound to immutable Git trees', async ()
       'utf8',
     ),
   );
-  assert.equal(inventory.schemaVersion, 3);
+  assert.equal(inventory.schemaVersion, 4);
   assert.equal(inventory.validatedSource.commitSha, 'd4bd216090e3eb6515a59bee8db29760328108e6');
-  assert.equal(inventory.migratedSource.treeOid, 'dab40a007b09d898b61120e8f9fb9fc7191cbb7d');
+  assert.equal(inventory.migratedSource.derivation, 'validated-source-plus-declared-final-hashes');
   assert.equal(inventory.validatedSource.artifactCount, 70);
   assert.equal(inventory.migratedSource.artifactCount, 70);
   assert.equal(inventory.approvedConflicts.length, 8);
@@ -332,6 +331,50 @@ test('S5 squash-only history retains the migrated source evidence', async (t) =>
   assert.match(result.stdout, /inventory=historical-verified/);
 });
 
+test('S5 a later canonical edit remains verifiable after squash and a clean clone', async (t) => {
+  const source = await createFixture(t, { commit: true });
+  const migratedTreeOid = runGit(source, ['rev-parse', 'HEAD~1:.agents/skills']).stdout.trim();
+  await write(source, '.agents/skills/alpha/SKILL.md', '# Later Alpha\n');
+  runGit(source, ['add', '-A']);
+  runGit(source, ['commit', '--quiet', '-m', 'later canonical edit']);
+
+  const sourceTree = runGit(source, ['rev-parse', 'HEAD^{tree}']).stdout.trim();
+  const baseCommit = runGit(source, ['rev-list', '--max-parents=0', 'HEAD']).stdout.trim();
+  const squashedCommit = runGit(source, [
+    'commit-tree',
+    sourceTree,
+    '-p',
+    baseCommit,
+    '-m',
+    'synthetic squash after canonical edit',
+  ]).stdout.trim();
+  runGit(source, ['branch', 'squashed-after-edit', squashedCommit]);
+
+  const clone = await mkdtemp(join(tmpdir(), 'kimen-agent-skills-squash-edit-clone-'));
+  t.after(() => rm(clone, { recursive: true, force: true }));
+  await rm(clone, { recursive: true, force: true });
+  const cloned = run(dirname(clone), 'git', [
+    'clone',
+    '--quiet',
+    '--no-local',
+    '--single-branch',
+    '--branch',
+    'squashed-after-edit',
+    source,
+    clone,
+  ]);
+  assert.equal(cloned.status, 0, cloned.stderr);
+  assert.doesNotMatch(
+    runGit(clone, ['rev-list', '--objects', 'HEAD', '--', '.agents/skills']).stdout,
+    new RegExp(`^${migratedTreeOid} \\.agents/skills$`, 'm'),
+    'fixture must remove the intermediate migrated tree from reachable squash history',
+  );
+
+  const result = runCli(clone);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /inventory=historical-verified/);
+});
+
 for (const [condition, code] of [
   ['missing', 'AGENT_SKILLS_COMPAT_MISSING'],
   ['broken', 'AGENT_SKILLS_COMPAT_BROKEN'],
@@ -387,6 +430,53 @@ test('S8 repository-owned tooling cannot configure a vendor-owned skill write', 
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /AGENT_SKILLS_TOOLING_VENDOR_WRITE/);
   assert.match(result.stderr, /scripts\/update-skills\.mjs/);
+});
+
+for (const [name, path, contents] of [
+  [
+    'createWriteStream',
+    'scripts/stream-skills.mjs',
+    "import { createWriteStream } from 'node:fs';\ncreateWriteStream('.claude/skills/new/SKILL.md');\n",
+  ],
+  [
+    'fs.cp below packages',
+    'packages/tooling/write-skills.mjs',
+    "import { cp } from 'node:fs/promises';\nawait cp('source', '.claude/skills/new', { recursive: true });\n",
+  ],
+  [
+    'shell tee below GitHub',
+    '.github/actions/write-skills/action.yml',
+    'runs:\n  using: composite\n  steps:\n    - shell: bash\n      run: printf skill | tee .claude/skills/new/SKILL.md\n',
+  ],
+  [
+    'fs.open',
+    'tools/open-skills.mjs',
+    "import { open } from 'node:fs/promises';\nawait open('.claude/skills/new/SKILL.md', 'w');\n",
+  ],
+]) {
+  test(`S8 rejects vendor-path tooling via ${name}`, async (t) => {
+    const root = await createFixture(t);
+    await write(root, path, contents);
+    runGit(root, ['add', '-A']);
+
+    const result = runCli(root);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /AGENT_SKILLS_TOOLING_VENDOR_WRITE/);
+    assert.match(result.stderr, new RegExp(path.replaceAll('.', '\\.').replaceAll('/', '\\/')));
+  });
+}
+
+test('S8 permits the declared Claude compatibility manifest', async (t) => {
+  const root = await createFixture(t);
+  await write(
+    root,
+    '.specify/integrations/claude.manifest.json',
+    `${JSON.stringify({ files: { '.claude/skills/example/SKILL.md': '0'.repeat(64) } })}\n`,
+  );
+  runGit(root, ['add', '-A']);
+
+  const result = runCli(root);
+  assert.equal(result.status, 0, result.stderr);
 });
 
 test('S1 S8 a later ignore rule cannot hide a future canonical artifact', async (t) => {

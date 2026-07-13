@@ -142,3 +142,24 @@ Expected: exit 0. This is the only completion signal.
   `.gitignore` capable of overriding it.
 - Regression evidence includes a disposable squash-only clone and hypothetical
   future canonical paths; both fail before the fix and pass with the v3 gate.
+
+## Review round 2 gate gaps and exceptional round 3 authorization
+
+- Frozen reviewed head: `08d06e9623c3b2992c988b8eec8145d1b75961e5`.
+- Verdict: zero Critical and three Important Gate Gaps. GG1 found that conflict
+  `candidateHash` values were not bound to the candidate-capture digest; GG2
+  combined a later canonical edit with squash/clean clone and made the
+  intermediate tree unreachable; GG3 demonstrated writer-policy evasions via
+  unclassified APIs and previously unscanned roots.
+- Founder authorization: on 2026-07-13 the founder approved GG1–GG3 and an
+  exceptional third clean-context review limited to those remediations. This
+  explicitly overrides the normal two-round cap for this review only; merge
+  and npm publication remain unauthorized.
+- Remediation: schema v4 derives candidate and migrated tree summaries from the
+  immutable validated source plus closed conflict/rewrite records. The tooling
+  gate now enforces a structural path-reference policy over all tracked files
+  in the owned tooling roots, with only three exact compatibility exceptions.
+- RED/GREEN evidence: changing either a candidate conflict hash or capture
+  digest fails; a later edit + squash + clean clone passes without an
+  intermediate reachable tree; `createWriteStream`, `fs.cp`, shell `tee` and
+  `fs.open` fixtures fail while the declared Claude manifest remains allowed.

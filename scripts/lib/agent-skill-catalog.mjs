@@ -1,10 +1,12 @@
 // @spec:019-agent-skills-canonical
+import { createHash } from 'node:crypto';
 
 const CANONICAL_PATH = '.agents/skills';
 const COMPATIBILITY_PATH = '.claude/skills';
 const EXPECTED_LINK_TARGET = '../.agents/skills';
 const MIGRATION_CONTRACT_PATH =
   'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json';
+const MIGRATION_DERIVATION = 'validated-source-plus-declared-final-hashes';
 
 export const agentSkillFindingCodes = Object.freeze([
   'AGENT_SKILLS_CANONICAL_MISSING',
@@ -42,6 +44,28 @@ function finding(code, path) {
 
 const isSha256 = (value) => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
 const isGitOid = (value) => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value);
+const sha256 = (contents) => createHash('sha256').update(contents).digest('hex');
+
+function summarizeHashes(hashes) {
+  const entries = Object.entries(hashes).sort(([left], [right]) =>
+    left < right ? -1 : left > right ? 1 : 0,
+  );
+  return {
+    artifactCount: entries.length,
+    pathSetSha256: sha256(entries.map(([path]) => `${path}\n`).join('')),
+    skillCount: new Set(entries.map(([path]) => path.split('/', 1)[0])).size,
+    treeSha256: sha256(entries.map(([path, hash]) => `${path}\0${hash}\n`).join('')),
+  };
+}
+
+function digestSummaryMatches(source, summary) {
+  return (
+    source.skillCount === summary.skillCount &&
+    source.artifactCount === summary.artifactCount &&
+    source.pathSetSha256 === summary.pathSetSha256 &&
+    source.treeSha256 === summary.treeSha256
+  );
+}
 
 function historicalDigestFieldsAreValid(source, expectedRootPath) {
   return (
@@ -57,18 +81,15 @@ function commitSourceIsValid(source, expectedRootPath) {
   return historicalDigestFieldsAreValid(source, expectedRootPath) && isGitOid(source.commitSha);
 }
 
-function reachableTreeSourceIsValid(source, expectedRootPath) {
-  return historicalDigestFieldsAreValid(source, expectedRootPath) && isGitOid(source.treeOid);
-}
-
 function migrationContractIsValid(migration) {
   if (
-    migration.schemaVersion !== 3 ||
+    migration.schemaVersion !== 4 ||
     migration.canonicalPath !== CANONICAL_PATH ||
     !Number.isInteger(migration.expectedConflictCount) ||
     !Number.isInteger(migration.expectedRewriteCount) ||
     !commitSourceIsValid(migration.validatedSource, COMPATIBILITY_PATH) ||
-    !reachableTreeSourceIsValid(migration.migratedSource, CANONICAL_PATH) ||
+    !historicalDigestFieldsAreValid(migration.migratedSource, CANONICAL_PATH) ||
+    migration.migratedSource?.derivation !== MIGRATION_DERIVATION ||
     !Number.isInteger(migration.candidateCapture?.skillCount) ||
     !Number.isInteger(migration.candidateCapture?.artifactCount) ||
     !isSha256(migration.candidateCapture?.pathSetSha256) ||
@@ -114,36 +135,38 @@ function migrationContractIsValid(migration) {
 }
 
 function historicalSourceMatches(source) {
+  const actualSummary = summarizeHashes(source.actualHashes ?? {});
   return (
     source.available === true &&
     source.skillCount === source.actualSkillCount &&
     source.artifactCount === source.actualArtifactCount &&
     source.pathSetSha256 === source.actualPathSetSha256 &&
-    source.treeSha256 === source.actualTreeSha256
+    source.treeSha256 === source.actualTreeSha256 &&
+    source.actualSkillCount === actualSummary.skillCount &&
+    source.actualArtifactCount === actualSummary.artifactCount &&
+    source.actualPathSetSha256 === actualSummary.pathSetSha256 &&
+    source.actualTreeSha256 === actualSummary.treeSha256
   );
 }
 
 function migrationRecordsMatchSources(migration) {
   const validatedHashes = migration.validatedSource.actualHashes ?? {};
-  const migratedHashes = migration.migratedSource.actualHashes ?? {};
-  const records = [...migration.approvedConflicts, ...migration.rewrittenAfterMigration];
-  const recordedPaths = new Set(records.map(({ path }) => path));
-  const historicalPaths = new Set([
-    ...Object.keys(validatedHashes),
-    ...Object.keys(migratedHashes),
-  ]);
+  const candidateHashes = { ...validatedHashes };
+  const migratedHashes = { ...validatedHashes };
+
+  for (const { candidateHash, finalHash, path, validatedHash } of migration.approvedConflicts) {
+    if (validatedHashes[path] !== validatedHash) return false;
+    candidateHashes[path] = candidateHash;
+    migratedHashes[path] = finalHash;
+  }
+  for (const { finalHash, path, sourceHash } of migration.rewrittenAfterMigration) {
+    if (validatedHashes[path] !== sourceHash) return false;
+    migratedHashes[path] = finalHash;
+  }
+
   return (
-    migration.approvedConflicts.every(
-      ({ finalHash, path, validatedHash }) =>
-        validatedHashes[path] === validatedHash && migratedHashes[path] === finalHash,
-    ) &&
-    migration.rewrittenAfterMigration.every(
-      ({ finalHash, path, sourceHash }) =>
-        validatedHashes[path] === sourceHash && migratedHashes[path] === finalHash,
-    ) &&
-    [...historicalPaths].every(
-      (path) => validatedHashes[path] === migratedHashes[path] || recordedPaths.has(path),
-    )
+    digestSummaryMatches(migration.candidateCapture, summarizeHashes(candidateHashes)) &&
+    digestSummaryMatches(migration.migratedSource, summarizeHashes(migratedHashes))
   );
 }
 
@@ -237,14 +260,10 @@ export function validateAgentSkillFacts(facts) {
   const migration = facts.migration ?? {};
   if (!migration.exists || !migrationContractIsValid(migration)) {
     findings.push(finding('AGENT_SKILLS_MIGRATION_CONTRACT', MIGRATION_CONTRACT_PATH));
-  } else if (
-    migration.validatedSource.available !== true ||
-    migration.migratedSource.available !== true
-  ) {
+  } else if (migration.validatedSource.available !== true) {
     findings.push(finding('AGENT_SKILLS_MIGRATION_SOURCE', MIGRATION_CONTRACT_PATH));
   } else if (
     !historicalSourceMatches(migration.validatedSource) ||
-    !historicalSourceMatches(migration.migratedSource) ||
     !migrationRecordsMatchSources(migration)
   ) {
     findings.push(finding('AGENT_SKILLS_MIGRATION_HASH', MIGRATION_CONTRACT_PATH));
@@ -262,5 +281,6 @@ export const agentSkillTopology = Object.freeze({
   canonicalPath: CANONICAL_PATH,
   compatibilityPath: COMPATIBILITY_PATH,
   expectedLinkTarget: EXPECTED_LINK_TARGET,
+  migrationDerivation: MIGRATION_DERIVATION,
   migrationContractPath: MIGRATION_CONTRACT_PATH,
 });

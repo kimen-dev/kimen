@@ -13,8 +13,11 @@ Move the validated 27-skill catalog from the Claude-specific directory to the
 versioned vendor-neutral `.agents/skills` source, replace `.claude/skills` with
 the exact relative symlink `../.agents/skills`, and add dependency-free
 validation that rejects copies, broken/unsafe targets, untracked canonical
-content and stale guidance. Seed all eight current conflicts from the validated
-`main` versions before `.agents/skills` becomes the sole editable source.
+content, stale guidance and vendor-path references in repository tooling. Seed
+all eight current conflicts from the validated `main` versions before
+`.agents/skills` becomes the sole editable source, and bind the candidate and
+migrated summaries to closed transformations that remain verifiable after a
+squash.
 
 ## Technical Context
 

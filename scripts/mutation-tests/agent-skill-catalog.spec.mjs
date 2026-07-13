@@ -14,6 +14,22 @@ import { agentSkillTopology, validateAgentSkillFacts } from '../lib/agent-skill-
 
 // @spec:019-agent-skills-canonical
 
+const sha256 = (contents) => createHash('sha256').update(contents).digest('hex');
+const summaryFromHashes = (hashes) => {
+  const entries = Object.entries(hashes).sort(([left], [right]) => left.localeCompare(right));
+  return {
+    artifactCount: entries.length,
+    pathSetSha256: sha256(entries.map(([path]) => `${path}\n`).join('')),
+    skillCount: new Set(entries.map(([path]) => path.split('/', 1)[0])).size,
+    treeSha256: sha256(entries.map(([path, hash]) => `${path}\0${hash}\n`).join('')),
+  };
+};
+const validHistoricalHashes = Object.freeze({
+  'alpha/SKILL.md': 'd'.repeat(64),
+  'beta/SKILL.md': 'e'.repeat(64),
+});
+const validHistoricalSummary = summaryFromHashes(validHistoricalHashes);
+
 const validFacts = () => ({
   canonical: {
     artifactCount: 2,
@@ -52,52 +68,54 @@ const validFacts = () => ({
   migration: {
     approvedConflicts: [],
     candidateCapture: {
-      artifactCount: 2,
-      pathSetSha256: 'a'.repeat(64),
+      ...validHistoricalSummary,
       provenance: 'founder-approved local pre-migration capture',
-      skillCount: 2,
-      treeSha256: 'c'.repeat(64),
     },
     canonicalPath: '.agents/skills',
     exists: true,
     expectedConflictCount: 0,
     expectedRewriteCount: 0,
     migratedSource: {
-      actualArtifactCount: 2,
-      actualHashes: {},
-      actualPathSetSha256: 'a'.repeat(64),
-      actualSkillCount: 2,
-      actualTreeSha256: 'b'.repeat(64),
-      artifactCount: 2,
-      available: true,
-      pathSetSha256: 'a'.repeat(64),
+      ...validHistoricalSummary,
+      derivation: 'validated-source-plus-declared-final-hashes',
       rootPath: '.agents/skills',
-      skillCount: 2,
-      treeOid: '2'.repeat(40),
-      treeSha256: 'b'.repeat(64),
     },
     rewrittenAfterMigration: [],
-    schemaVersion: 3,
+    schemaVersion: 4,
     validatedSource: {
-      actualArtifactCount: 2,
-      actualHashes: {},
-      actualPathSetSha256: 'a'.repeat(64),
-      actualSkillCount: 2,
-      actualTreeSha256: 'd'.repeat(64),
-      artifactCount: 2,
+      ...validHistoricalSummary,
+      actualArtifactCount: validHistoricalSummary.artifactCount,
+      actualHashes: { ...validHistoricalHashes },
+      actualPathSetSha256: validHistoricalSummary.pathSetSha256,
+      actualSkillCount: validHistoricalSummary.skillCount,
+      actualTreeSha256: validHistoricalSummary.treeSha256,
       available: true,
       commitSha: '1'.repeat(40),
-      pathSetSha256: 'a'.repeat(64),
       rootPath: '.claude/skills',
-      skillCount: 2,
-      treeSha256: 'd'.repeat(64),
     },
   },
   repositoryRoot: '/repo',
   tooling: { writerDriftPaths: [] },
 });
 
-const sha256 = (contents) => createHash('sha256').update(contents).digest('hex');
+const clone = (value) => JSON.parse(JSON.stringify(value));
+function setValidatedEvidence(facts, hashes) {
+  const summary = summaryFromHashes(hashes);
+  Object.assign(facts.migration.validatedSource, summary, {
+    actualArtifactCount: summary.artifactCount,
+    actualHashes: { ...hashes },
+    actualPathSetSha256: summary.pathSetSha256,
+    actualSkillCount: summary.skillCount,
+    actualTreeSha256: summary.treeSha256,
+  });
+  Object.assign(facts.migration.candidateCapture, summary);
+  Object.assign(facts.migration.migratedSource, summary);
+}
+
+function setDerivedEvidence(facts, candidateHashes, migratedHashes) {
+  Object.assign(facts.migration.candidateCapture, summaryFromHashes(candidateHashes));
+  Object.assign(facts.migration.migratedSource, summaryFromHashes(migratedHashes));
+}
 const canonicalUnignoreGuard = [
   '!.agents/',
   '!.agents/skills/',
@@ -136,7 +154,6 @@ async function createCliFixture({
   await symlink('../.agents/skills', join(root, '.claude/skills'));
   fixtureGit(root, ['add', '-A']);
   fixtureGit(root, ['commit', '--quiet', '-m', 'migrated source']);
-  const migratedTreeOid = fixtureGit(root, ['rev-parse', 'HEAD:.agents/skills']).trim();
 
   if (compatibility !== 'valid') {
     await rm(join(root, '.claude/skills'), { recursive: true, force: true });
@@ -196,14 +213,14 @@ async function createCliFixture({
       expectedRewriteCount: 0,
       migratedSource: {
         artifactCount: 1,
+        derivation: 'validated-source-plus-declared-final-hashes',
         pathSetSha256,
         rootPath: '.agents/skills',
         skillCount: 1,
-        treeOid: migratedTreeOid,
         treeSha256: finalTreeSha256,
       },
       rewrittenAfterMigration: [],
-      schemaVersion: 3,
+      schemaVersion: 4,
       validatedSource: {
         artifactCount: 1,
         commitSha: validatedCommitSha,
@@ -275,6 +292,7 @@ describe('complete agent skill invariant matrix', () => {
       canonicalPath: '.agents/skills',
       compatibilityPath: '.claude/skills',
       expectedLinkTarget: '../.agents/skills',
+      migrationDerivation: 'validated-source-plus-declared-final-hashes',
       migrationContractPath:
         'specs/019-agent-skills-canonical/contracts/migration-inventory-v1.json',
     });
@@ -433,7 +451,7 @@ describe('complete agent skill invariant matrix', () => {
     });
 
     const drifted = validFacts();
-    drifted.migration.migratedSource.actualTreeSha256 = 'e'.repeat(64);
+    drifted.migration.migratedSource.treeSha256 = 'f'.repeat(64);
     expect(validateAgentSkillFacts(drifted).findings).toContainEqual({
       code: 'AGENT_SKILLS_MIGRATION_HASH',
       path: agentSkillTopology.migrationContractPath,
@@ -455,7 +473,7 @@ describe('complete agent skill invariant matrix', () => {
     ['validated path digest', (facts) => (facts.migration.validatedSource.pathSetSha256 = 'bad')],
     ['validated tree digest', (facts) => (facts.migration.validatedSource.treeSha256 = 'bad')],
     ['migrated root', (facts) => (facts.migration.migratedSource.rootPath = '.claude/skills')],
-    ['migrated tree', (facts) => (facts.migration.migratedSource.treeOid = 'short')],
+    ['migrated derivation', (facts) => (facts.migration.migratedSource.derivation = 'guess')],
     ['candidate provenance', (facts) => (facts.migration.candidateCapture.provenance = 'guess')],
     ['candidate skill count', (facts) => (facts.migration.candidateCapture.skillCount = 1)],
     ['candidate artifact count', (facts) => (facts.migration.candidateCapture.artifactCount = 1)],
@@ -481,11 +499,6 @@ describe('complete agent skill invariant matrix', () => {
       'SOURCE',
     ],
     [
-      'migrated availability',
-      (facts) => (facts.migration.migratedSource.available = false),
-      'SOURCE',
-    ],
-    [
       'validated skill count',
       (facts) => (facts.migration.validatedSource.actualSkillCount = 1),
       'HASH',
@@ -505,26 +518,6 @@ describe('complete agent skill invariant matrix', () => {
       (facts) => (facts.migration.validatedSource.actualTreeSha256 = 'f'.repeat(64)),
       'HASH',
     ],
-    [
-      'migrated skill count',
-      (facts) => (facts.migration.migratedSource.actualSkillCount = 1),
-      'HASH',
-    ],
-    [
-      'migrated artifact count',
-      (facts) => (facts.migration.migratedSource.actualArtifactCount = 1),
-      'HASH',
-    ],
-    [
-      'migrated path digest',
-      (facts) => (facts.migration.migratedSource.actualPathSetSha256 = 'f'.repeat(64)),
-      'HASH',
-    ],
-    [
-      'migrated tree digest',
-      (facts) => (facts.migration.migratedSource.actualTreeSha256 = 'f'.repeat(64)),
-      'HASH',
-    ],
   ])('@spec:019 S5 detects historical source drift in %s', (_name, mutate, suffix) => {
     const facts = validFacts();
     mutate(facts);
@@ -536,6 +529,7 @@ describe('complete agent skill invariant matrix', () => {
 
   it('@spec:019 S5 verifies declared conflict and rewrite hashes against both Git trees', () => {
     const facts = validFacts();
+    const validatedHashes = { ...validHistoricalHashes };
     facts.migration.expectedConflictCount = 1;
     facts.migration.approvedConflicts = [
       {
@@ -545,17 +539,25 @@ describe('complete agent skill invariant matrix', () => {
         validatedHash: 'd'.repeat(64),
       },
     ];
-    facts.migration.validatedSource.actualHashes = { 'alpha/SKILL.md': 'd'.repeat(64) };
-    facts.migration.migratedSource.actualHashes = { 'alpha/SKILL.md': 'f'.repeat(64) };
+    setValidatedEvidence(facts, validatedHashes);
+    setDerivedEvidence(
+      facts,
+      { ...validatedHashes, 'alpha/SKILL.md': 'e'.repeat(64) },
+      { ...validatedHashes, 'alpha/SKILL.md': 'f'.repeat(64) },
+    );
     expect(validateAgentSkillFacts(facts).findings).toEqual([]);
 
-    facts.migration.migratedSource.actualHashes['alpha/SKILL.md'] = '0'.repeat(64);
+    facts.migration.migratedSource.treeSha256 = '0'.repeat(64);
     expect(validateAgentSkillFacts(facts).findings).toContainEqual({
       code: 'AGENT_SKILLS_MIGRATION_HASH',
       path: agentSkillTopology.migrationContractPath,
     });
 
     const rewrite = validFacts();
+    const rewriteHashes = {
+      ...validHistoricalHashes,
+      'alpha/LICENSE-NOTICE.md': 'd'.repeat(64),
+    };
     rewrite.migration.expectedRewriteCount = 1;
     rewrite.migration.rewrittenAfterMigration = [
       {
@@ -564,31 +566,70 @@ describe('complete agent skill invariant matrix', () => {
         sourceHash: 'd'.repeat(64),
       },
     ];
-    rewrite.migration.validatedSource.actualHashes = {
-      'alpha/LICENSE-NOTICE.md': 'd'.repeat(64),
-    };
-    rewrite.migration.migratedSource.actualHashes = {
+    setValidatedEvidence(rewrite, rewriteHashes);
+    setDerivedEvidence(rewrite, rewriteHashes, {
+      ...rewriteHashes,
       'alpha/LICENSE-NOTICE.md': 'f'.repeat(64),
-    };
+    });
     expect(validateAgentSkillFacts(rewrite).findings).toEqual([]);
 
-    rewrite.migration.validatedSource.actualHashes['alpha/LICENSE-NOTICE.md'] = '0'.repeat(64);
+    rewrite.migration.rewrittenAfterMigration[0].sourceHash = '0'.repeat(64);
     expect(validateAgentSkillFacts(rewrite).findings).toContainEqual({
       code: 'AGENT_SKILLS_MIGRATION_HASH',
       path: agentSkillTopology.migrationContractPath,
     });
   });
 
-  it('@spec:019 S5 rejects every undeclared byte difference between historical trees', () => {
+  it('@spec:019 S5 cryptographically binds the candidate capture to every conflict hash', () => {
     const facts = validFacts();
-    facts.migration.validatedSource.actualHashes = {
+    const validatedHashes = {
       'alpha/SKILL.md': 'd'.repeat(64),
       'beta/SKILL.md': 'e'.repeat(64),
     };
-    facts.migration.migratedSource.actualHashes = {
+    const candidateHashes = {
+      ...validatedHashes,
+      'alpha/SKILL.md': 'c'.repeat(64),
+    };
+    facts.migration.expectedConflictCount = 1;
+    facts.migration.approvedConflicts = [
+      {
+        candidateHash: candidateHashes['alpha/SKILL.md'],
+        finalHash: validatedHashes['alpha/SKILL.md'],
+        path: 'alpha/SKILL.md',
+        validatedHash: validatedHashes['alpha/SKILL.md'],
+      },
+    ];
+    setValidatedEvidence(facts, validatedHashes);
+    setDerivedEvidence(facts, candidateHashes, validatedHashes);
+    expect(validateAgentSkillFacts(facts).findings).toEqual([]);
+
+    const driftedConflict = clone(facts);
+    driftedConflict.migration.approvedConflicts[0].candidateHash = '0'.repeat(64);
+    expect(validateAgentSkillFacts(driftedConflict).findings).toContainEqual({
+      code: 'AGENT_SKILLS_MIGRATION_HASH',
+      path: agentSkillTopology.migrationContractPath,
+    });
+
+    const driftedCapture = clone(facts);
+    driftedCapture.migration.candidateCapture.treeSha256 = '0'.repeat(64);
+    expect(validateAgentSkillFacts(driftedCapture).findings).toContainEqual({
+      code: 'AGENT_SKILLS_MIGRATION_HASH',
+      path: agentSkillTopology.migrationContractPath,
+    });
+  });
+
+  it('@spec:019 S5 rejects a migrated digest that claims an undeclared byte difference', () => {
+    const facts = validFacts();
+    const validatedHashes = {
+      'alpha/SKILL.md': 'd'.repeat(64),
+      'beta/SKILL.md': 'e'.repeat(64),
+    };
+    const undeclaredMigratedHashes = {
       'alpha/SKILL.md': 'f'.repeat(64),
       'beta/SKILL.md': 'e'.repeat(64),
     };
+    setValidatedEvidence(facts, validatedHashes);
+    Object.assign(facts.migration.migratedSource, summaryFromHashes(undeclaredMigratedHashes));
 
     expect(validateAgentSkillFacts(facts).findings).toContainEqual({
       code: 'AGENT_SKILLS_MIGRATION_HASH',

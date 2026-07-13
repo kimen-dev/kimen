@@ -134,6 +134,13 @@ guidance fixtures fail or pass only according to the topology contract.
 - [x] T039 Build a clean-context review packet from the exact reviewed SHA using `.agents/skills/requesting-code-review/scripts/review-package.sh`
 - [x] T040 Address at most two actionable review rounds, re-run full gates, and present final evidence plus the founder-only merge action without merging or publishing npm
 
+### Founder-authorized exceptional review remediation (2026-07-13)
+
+- [x] T041 Add RED/GREEN coverage that cryptographically binds every approved conflict `candidateHash` to the candidate-capture tree digest (GG1)
+- [x] T042 Replace intermediate-tree reachability with a validated-source-plus-declared-transformations model and prove later canonical edit + squash + clean clone together (GG2)
+- [x] T043 Replace write-API heuristics with the structural vendor-path policy across `scripts/`, `tools/`, `packages/`, `.github/`, `.specify/` and skill scripts, retaining only the explicit compatibility allowlist (GG3)
+- [ ] T044 Re-run full gates, freeze/push the remediated head and execute the founder-authorized third clean-context review limited to GG1–GG3; do not merge or publish npm
+
 ---
 
 ## Dependencies & Execution Order
@@ -146,6 +153,7 @@ Setup T001–T004
         → US2 Claude compatibility T022–T024
           → US4 deterministic drift prevention T025–T032
             → verification/review T033–T040
+              → founder-authorized GG1–GG3 remediation T041–T044
 ```
 
 - T005–T014 are a hard constitutional barrier: all S1–S9 tests must exist and

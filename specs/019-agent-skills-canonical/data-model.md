@@ -61,6 +61,10 @@ Auditable mapping from the two pre-migration catalogs to the canonical result.
 | skillNames | Exactly the union of pre-migration skill names |
 | sourcePaths | Every pre-migration artifact accounted for |
 | conflicts | Eight initial byte-conflict records |
+| validatedSource | Immutable Git commit plus complete path/tree digest |
+| candidateCapture | Validated source with every conflict `candidateHash` applied |
+| migratedSource | Validated source with every conflict/rewrite `finalHash` applied |
+| derivation | Exactly `validated-source-plus-declared-final-hashes` |
 | resolution | `main-validated`, `identical`, `unique-preserved`, or explicit founder exception |
 | omissions | Empty unless separately founder-approved |
 

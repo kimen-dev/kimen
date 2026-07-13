@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "canonicalPath": ".agents/skills",
   "entryEncoding": "utf8(path) + NUL + lowercase-sha256(bytes) + LF, sorted by path",
   "pathEncoding": "utf8(path) + LF, sorted by path",
@@ -21,7 +21,7 @@
     "treeSha256": "baf2e467d9d8b2d9d9ceb6fb3ba9049ad3f8dff85de0458487bac8f7e05f888a"
   },
   "migratedSource": {
-    "treeOid": "dab40a007b09d898b61120e8f9fb9fc7191cbb7d",
+    "derivation": "validated-source-plus-declared-final-hashes",
     "rootPath": ".agents/skills",
     "skillCount": 27,
     "artifactCount": 70,
