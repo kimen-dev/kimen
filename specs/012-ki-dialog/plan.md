@@ -6,9 +6,9 @@
 
 **Branch**: `feat/ki-dialog` | **Date**: 2026-07-08 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/012-ki-dialog/spec.md` (gate-1
-review in progress on `feat/fase2-specs`; implementation is blocked by the
-pre-implement gate until the sha-stamped `.approved` marker exists).
+**Input**: Feature specification from `/specs/012-ki-dialog/spec.md`; founder
+intent is confirmed in the working conversation or PR, without a repository
+approval marker.
 
 ## Summary
 
@@ -107,9 +107,8 @@ browser-test command, no removals — purely additive.
   obligation is a complete JSDoc contract so those surfaces regenerate from
   it without rework. **PASS**
 - **Art. II — Specs before code (NON-NEGOTIABLE)**: implements exactly
-  `specs/012-ki-dialog/feature.feature` S1–S15 (gate-1 review in progress;
-  the pre-implement gate blocks execution until the `.approved` marker is
-  recorded); four families covered, form participation N/A-justified in the
+  `specs/012-ki-dialog/feature.feature` S1–S15; four families covered, form
+  participation N/A-justified in the
   spec's coverage table (not a form control; forms compose inside the
   slots); nothing in this plan exceeds the approved scenarios — no
   full-screen mode, no built-in close button, no variant/tone/size axes, no

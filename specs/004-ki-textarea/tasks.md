@@ -6,9 +6,8 @@
 
 **Input**: Design documents from `/specs/004-ki-textarea/`
 
-**Prerequisites**: plan.md, spec.md with S1–S25 (gate-1 approval pending —
-the pre-implement gate blocks execution until the `.approved` marker
-exists; the default-`rows` [NEEDS CLARIFICATION] resolves at gate 1),
+**Prerequisites**: plan.md, spec.md with S1–S25 (the default-`rows` question is
+confirmed directly with the founder),
 research.md (D1–D12; 003 decisions adopted by citation), data-model.md,
 contracts/textarea-contract.md
 

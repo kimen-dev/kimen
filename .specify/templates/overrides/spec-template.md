@@ -1,7 +1,8 @@
 # Feature Specification: [FEATURE NAME]
 
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
-     Constitutional basis: .specify/memory/constitution.md Art. II (Specs Before Code).
+     Constitutional basis: .specify/memory/constitution.md Art. II
+     (Proportionate Behavior Contracts).
      Kept in sync with constitutional amendments (no-drift rule). -->
 
 **Feature Branch**: `[###-feature-name]`
@@ -95,14 +96,14 @@ Feature: [Feature name]
 ## Constitutional Surface *(mandatory)*
 
 <!-- Declare the constitutional obligations this feature touches, so plan and
-     review check them explicitly instead of discovering them late. -->
+     implementation and quality checks cover them explicitly. -->
 
 - **Public API delta** (Art. IX): [new/changed props, events, parts, slots, tokens; SemVer impact]
 - **Bundle budget** (Art. IV): [expected KB impact; new runtime dependency? justify or "none"]
 - **Accessibility** (Art. V): [APG pattern followed; new interaction pattern? → manual walkthrough required]
 - **Tokens** (Art. VI): [new tokens introduced, layer they belong to; "none"]
 - **Catalog/agent legibility** (Art. I): [when-to-use / when-NOT-to-use description for the catalog]
-- **Guardrail/security boundary** (Art. VIII): [touches spec rendering, actions or adapter surface? → standalone scenario approval required]
+- **Guardrail/security boundary** (Art. VIII): [touches spec rendering, actions or adapter surface? → standalone scenario required]
 
 ## Success Criteria *(mandatory)*
 

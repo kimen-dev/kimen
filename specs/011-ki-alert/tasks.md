@@ -6,9 +6,8 @@
 
 **Input**: Design documents from `/specs/011-ki-alert/`
 
-**Prerequisites**: plan.md, spec.md with S1–S19 (gate-1 approval pending —
-the pre-implement gate blocks execution until the `.approved` marker
-exists), research.md (D1–D10), data-model.md, contracts/alert-contract.md
+**Prerequisites**: plan.md, spec.md with S1–S19, research.md (D1–D10),
+data-model.md, contracts/alert-contract.md
 
 **Tests**: MANDATORY, never optional (Art. II/III). RED tests are written
 first and verified failing for the right reason. Every test file carries the

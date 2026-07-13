@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Reusable deterministic non-browser gate. A feature argument keeps the narrow
-# contract/approval/traceability diagnostic used by Spec Kit fixtures.
+# Reusable fast non-browser quality gate. A feature argument keeps the narrow
+# contract/traceability diagnostic used by Spec Kit fixtures.
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
@@ -58,19 +58,15 @@ run_core_gate() {
   fi
 }
 
-# Approval is meaningful only for a synchronized contract; traceability is
-# meaningful only for an approved behavior set. Keep this order fail-closed.
+# Traceability is meaningful only for a synchronized behavior contract.
 if [ -z "$ONLY" ]; then
   run_core_gate constitution bash scripts/gates/constitution-check.sh
 fi
 run_core_gate spec-contracts bash scripts/gates/check-spec-contracts.sh "${FEATURE_ARG[@]}"
-run_core_gate approvals bash scripts/gates/check-approvals.sh "${FEATURE_ARG[@]}"
 run_core_gate traceability bash scripts/gates/check-traceability.sh "${FEATURE_ARG[@]}"
 
 if [ -n "$ONLY" ]; then
-  record_core_evidence mutation not-applicable
-  echo "── CORE mutation: N/A (feature-scoped diagnostic; repository-wide changed files required)"
-  echo "CORE GATES GREEN — mutation N/A for feature-scoped diagnostics"
+  echo "CORE CONTRACT GATES GREEN"
   exit 0
 fi
 
@@ -78,24 +74,6 @@ command -v pnpm >/dev/null || {
   echo "gates-core: pnpm not found — run 'corepack enable pnpm'" >&2
   exit 1
 }
-MUTATION_STATE='local'
-case "${KIMEN_MUTATION_DELEGATED_TO:-}" in
-  '') ;;
-  mutation)
-    if [ "${CI:-}" != 'true' ] || [ "${GITHUB_ACTIONS:-}" != 'true' ]; then
-      record_core_evidence mutation red
-      echo "── CORE mutation: FAIL (delegation requires CI=true and GITHUB_ACTIONS=true)" >&2
-      exit 1
-    fi
-    MUTATION_STATE='delegated'
-    ;;
-  *)
-    record_core_evidence mutation red
-    echo "── CORE mutation: FAIL (KIMEN_MUTATION_DELEGATED_TO must equal mutation)" >&2
-    exit 1
-    ;;
-esac
-
 # Nx boundaries need a materialized ProjectGraph or their lint rule silently
 # skips. Fail if graph generation does not leave a non-empty artifact.
 nx_graph() {
@@ -103,7 +81,15 @@ nx_graph() {
   [ -s .nx/graph.json ]
 }
 
+agent_skills() {
+  [ -d .agents/skills ] &&
+    [ -L .claude/skills ] &&
+    [ "$(readlink .claude/skills)" = '../.agents/skills' ] &&
+    [ -f .agents/skills/frontend-qa/SKILL.md ]
+}
+
 run_core_gate workflows pnpm run check:workflows
+run_core_gate agent-skills agent_skills
 run_core_gate nx-graph nx_graph
 run_core_gate format pnpm run format:check
 # Build precedes type-aware analysis because component tests and generated
@@ -114,29 +100,11 @@ run_core_gate surfaces-sync node scripts/gates/check-generated-sync.mjs surfaces
 run_core_gate public-api pnpm run check:api
 run_core_gate token-contract pnpm run check:tokens
 run_core_gate component-inventory pnpm run check:component-inventory
-run_core_gate capabilities-static pnpm run check:capabilities
 run_core_gate lint pnpm run lint
 run_core_gate styles pnpm run lint:styles
 run_core_gate typecheck pnpm run typecheck
 run_core_gate deadcode pnpm run deadcode
-run_core_gate packaging pnpm run packaging
-run_core_gate packed-manifest pnpm run check:packed-manifest
 run_core_gate contrast pnpm --filter @kimen/tokens contrast
-run_core_gate generator-contract pnpm run test:generator-contract
-run_core_gate infra-contracts pnpm run test:infra
-run_core_gate sandbox-contract pnpm run test:sandbox
 run_core_gate budgets pnpm exec nx run-many -t size
 run_core_gate test pnpm exec nx run-many -t test
-run_core_gate pack-consumer pnpm run test:consumer-contract
-
-case "$MUTATION_STATE" in
-  delegated)
-    record_core_evidence mutation delegated
-    echo "── CORE mutation: DELEGATED to ci / mutation (GitHub Actions only)"
-    echo "CORE GATES GREEN — mutation delegated; Definition of Done also requires ci / mutation"
-    ;;
-  *)
-    run_core_gate mutation pnpm run test:mutation
-    echo "CORE GATES GREEN"
-    ;;
-esac
+echo "CORE QUALITY GREEN"

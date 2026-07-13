@@ -6,9 +6,9 @@
 
 **Branch**: `feat/ki-alert` | **Date**: 2026-07-08 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/011-ki-alert/spec.md` (gate-1
-review in progress on `feat/fase2-specs`; implementation is blocked by the
-pre-implement gate until the sha-stamped `.approved` marker exists).
+**Input**: Feature specification from `/specs/011-ki-alert/spec.md`; founder
+intent is confirmed in the working conversation or PR, without a repository
+approval marker.
 
 ## Summary
 
@@ -98,9 +98,8 @@ removals — purely additive.
   contract is complete so those surfaces regenerate from it without
   rework. **PASS**
 - **Art. II — Specs before code (NON-NEGOTIABLE)**: implements exactly
-  `specs/011-ki-alert/feature.feature` S1–S19 (gate-1 review in progress;
-  the pre-implement gate blocks execution until the `.approved` marker is
-  recorded); four families covered, form participation N/A-justified in
+  `specs/011-ki-alert/feature.feature` S1–S19; four families covered, form
+  participation N/A-justified in
   the spec's coverage table (feedback message, not a form control);
   nothing in this plan exceeds the approved scenarios — no tone icons, no
   `start`/`end` slots, no auto-dismiss timer, no size/variant axes, no

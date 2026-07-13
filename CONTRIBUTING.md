@@ -1,7 +1,7 @@
 # Contributing to Kimen
 
-Thanks for your interest. Kimen is a one-person, AI-First operation with
-strict automated gates; external contributions are welcome and pass exactly
+Thanks for your interest. Kimen is a one-person, AI-First operation with a
+small high-signal quality core; external contributions are welcome and pass
 the same bar as agent-written code.
 
 ## The short version
@@ -10,13 +10,14 @@ the same bar as agent-written code.
    (`.specify/memory/constitution.md`). They govern every contribution. PRs
    that conflict with them are declined with a pointer to the relevant
    article.
-2. **Specs before code** (Art. II): new behavior needs an approved Gherkin
-   `.feature` first. Open an issue or draft spec before writing code; typos,
-   dependency bumps, mechanical refactors and docs are exempt.
-3. **Gates define done** (Art. III/X): your PR must exit 0 on the full
-   deterministic suite (format, lint, typecheck, boundaries, tests in a real
-   browser, mutation score on core logic, axe, budgets). Style is formatted,
-   not reviewed; no PR comment will ever be about formatting.
+2. **Behavior contracts where they pay** (Art. II): public component
+   behavior/API, new interaction patterns and security boundaries need concise
+   Gherkin first. Bug fixes need a failing regression test; refactors, tooling,
+   dependencies and docs do not need a spec.
+3. **One fast quality result defines ordinary PR readiness** (Art. III/X):
+   format, lint, strict types, boundaries, build, tests in Chromium, axe and
+   relevant API/token/budget integrity. Mutation runs daily; packaging and the
+   three-browser matrix run before release.
 4. **DCO sign-off, no CLA**: every commit is signed off
    (`git commit -s`), certifying the
    [Developer Certificate of Origin](https://developercertificate.org/).
@@ -30,5 +31,5 @@ the same bar as agent-written code.
   when-to-use/when-NOT-to-use); an undocumented member fails the build.
 - Generated artifacts (manifests, catalog, llms.txt, wrappers) are regenerated,
   never hand-edited.
-- Review is asynchronous and batched; the founder is the only human gate.
-  Expect honest, article-referenced feedback.
+- The founder is the only merge gate. Independent review is optional and
+  advisory for changes whose risk justifies it.

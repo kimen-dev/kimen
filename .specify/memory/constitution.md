@@ -1,6 +1,6 @@
 <!--
 Sync Impact Report
-- Version change: template (unfilled) → 1.4.2 (mirrors the constitution master v1.4.2)
+- Version change: 1.4.2 → 2.0.0 (mirrors constitution master v2.0.0)
 - Nature: DERIVED ARTIFACT. This file is the operational digest that Spec Kit
   commands load, and the operative governance text of this repository. The
   normative source is the constitution master, maintained by the founder
@@ -9,21 +9,20 @@ Sync Impact Report
   Art. I applied to governance). A version-stamp mismatch against the master
   means this digest is stale and MUST be regenerated before running any
   /speckit.* command.
-- Modified principles: all placeholders filled (11 principles, Articles I-XI)
+- Modified principles: Art. II risk-proportionate contracts; Art. III fast PR
+  quality plus daily mutation; Art. X deterministic 20/80 automation; workflow
+  and incident response simplified.
 - Added sections: Technology Standards & Declared Bets; Development Workflow,
   Human Gates & Emergency Procedure
 - Removed sections: none
 - Templates requiring updates:
   ✅ resolved: plan-template.md via .specify/templates/overrides/plan-template.md
-    (Constitution Check enumerates the 11 articles, the deterministic-gates
-    definition of done — gates exit 0, never self-assessed — and echoes the
-    Constitutional Surface from spec.md)
+    (risk-focused Constitution Check and fast quality definition of done)
   ✅ resolved: spec-template.md via .specify/templates/overrides/spec-template.md
     (mandatory Gherkin section with stable S-IDs and the five scenario
     families table for UI components, Art. II)
   ✅ resolved: tasks-template.md via .specify/templates/overrides/tasks-template.md
-    (RED→GREEN→gates task structure: failing-test-first, a11y walkthrough,
-    catalog/manifest regeneration, budget check)
+    (RED→GREEN→quality structure without per-PR mutation tasks)
 - Follow-up TODOs: none
 -->
 
@@ -34,10 +33,11 @@ web components, a neutral schema-constrained catalog, and disposable protocol
 adapters (A2UI, MCP Apps, AG-UI, json-render). It is built and run as a
 one-person, AI-First operation: agents do most implementation; a single
 founder is the only human reviewer. Automated gates substitute for a team and
-are therefore strict and non-negotiable; the founder's attention is the
-scarcest resource and is spent only where leverage is highest.
+form a small, risk-focused quality core. Controls stay only while their signal
+justifies their runtime and maintenance; the founder's attention is spent only
+where leverage is highest.
 
-**Normative source**: the constitution master (v1.4.2), maintained by the
+**Normative source**: the constitution master (v2.0.0), maintained by the
 founder outside this repository. This digest is the operative in-repo text:
 Spec Kit commands load it, gates check it, and contributions are reviewed
 against it. Full rationales and the amendment log live in the master, which
@@ -54,27 +54,27 @@ deliverable: every component ships machine-readable when-to-use/when-NOT-to-use
 metadata; an API a capable agent cannot wire correctly from its description
 alone is a defect. Generated artifacts are committed and diffable.
 
-### II. Specs Before Code (NON-NEGOTIABLE)
-New behavior requires an approved Gherkin `.feature` BEFORE implementation:
-declarative, business-language scenarios with stable IDs (S1..Sn), one `When`
-per scenario, observable outcomes only. UI components cover five scenario
-families minimum: core behavior, keyboard path, assistive-tech outcome, form
-participation (when applicable), theming. Scenario-to-test traceability is a
-CI gate. Escape hatch: typos, dependency bumps, mechanical refactors and docs
-need no scenario, but if behavior changes, a scenario exists first.
+### II. Proportionate Behavior Contracts (NON-NEGOTIABLE)
+New public component behavior, a public API change, a new interaction pattern,
+or a guardrail/security-boundary change requires a concise Gherkin `.feature`
+before implementation. UI components retain the five scenario families and
+existing contracts retain traceability. Bug fixes need a failing regression
+test, not a new spec; refactors, dependency/tooling work, docs and low-risk
+maintenance need no Spec Kit artifacts. The founder approves intent in the
+working conversation or PR; repository hash markers never substitute for that
+judgment. Plans, checklists and task documents are optional complexity tools.
 
 ### III. Test-First and Deterministic Gates (NON-NEGOTIABLE)
 Bug fixes start with a failing test. Pure logic is built TDD (red → green →
-refactor). "Done" is defined exclusively by gates exiting 0: static analysis
-(Art. X), TS-strict typecheck, full suite in a REAL browser (never jsdom-only;
-engine matrix per Art. IV), traceability, mutation score ≥70% on changed core
-code (Stryker incremental), axe zero violations, bundle budgets. Agent or
-human self-assessment never closes work. Coverage is a diagnostic, never a
-gate; mutation score IS the gate. Tests are deterministic and assert behavior
-through public APIs. LLM output is tested by contract: schema validation
-deterministically in CI, golden specs with structural comparison, live evals
-scheduled and never merge-blocking; an eval below threshold auto-opens a
-prioritized issue for the founder.
+refactor). An ordinary PR is ready when one fast quality workflow exits 0:
+format, lint, strict typecheck, build, focused unit/component tests, Chromium
+browser tests, accessibility and relevant API/token/budget checks. Release
+verification adds packaging and the three-browser matrix. Coverage is
+diagnostic. Mutation runs once daily over core logic changed in the preceding
+24 hours, never in the ordinary PR or local completion path; a score below 70%
+blocks release and creates focused test work. Tests remain deterministic and
+assert behavior through public APIs. LLM live evals stay scheduled and
+non-blocking.
 
 ### IV. Web Standards and Lightness
 Standard web components (Stencil) with generated framework wrappers. Semantic
@@ -133,16 +133,17 @@ removal, with migration docs and codemods where feasible. Support policy:
 only the latest MAJOR receives fixes and security patches. Packaging
 correctness is validated mechanically before publish.
 
-### X. Deterministic Static Analysis (NON-NEGOTIABLE)
-Everything a script can decide is decided by a script, never by an agent or
-reviewer. The deterministic layer runs before tests and review and blocks
-merge: format, lint (type-aware, Stencil rules, static a11y), typecheck,
-module boundaries, dead code, packaging, security suite (SAST, dependency CVE
-and malicious-package scanning, secret scanning). Style is formatted, not
-reviewed. Releases use trusted publishing (OIDC, signed provenance); CI is
-hardened (SHA-pinned actions, least privilege, egress control). Every gate is
-deterministic and reproducible; a flaky gate is a bug fixed before it is
-trusted.
+### X. Deterministic 20/80 Automation (NON-NEGOTIABLE)
+Automation is selected by risk, signal and maintenance cost. The PR-blocking
+core stays small: format, lint/static accessibility, strict typecheck, module
+boundaries, build, tests and public API/token integrity. One consolidated
+quality result is required on `main`. Containment runs only for sandbox
+changes, dependency review only for dependency changes, mutation daily, and
+broad SAST/secret/CVE scans on the protected branch and weekly. Security stays
+layered without duplicating tools for appearances. Required gates are
+deterministic, reproducible and fast enough to run once; flaky, redundant or
+chronically low-signal gates are simplified or removed. Releases use trusted
+publishing with signed provenance and hardened, least-privilege CI.
 
 ### XI. Operational Security of Agents (NON-NEGOTIABLE)
 Article X governs what agents produce; this article governs how agents are
@@ -171,22 +172,23 @@ Apache-2.0. External contributions pass the same gates, with DCO sign-off.
 
 ## Development Workflow, Human Gates & Emergency Procedure
 
-Per feature: `/speckit.specify` → `/speckit.clarify` → Gherkin `.feature`
-(founder approval — human gate 1) → `/speckit.plan` → `/speckit.checklist` →
-`/speckit.tasks` → `/speckit.analyze` → `/speckit.implement` under the
-onmars-spec loop contract (sandboxed per Art. XI; anchors re-read each
-iteration; termination only by gates) → `/speckit.converge` → clean-context
-agent review (diff + spec + feature + rendered screenshots for UI changes;
-different model vendor preferred; max 2 rounds) → merge (founder — human
-gate 2). Single writer per feature; parallel work only across independent
-worktrees. Spec and Gherkin phases are never looped.
+Default path: clarify → add a concise contract only when Art. II requires it →
+implement with appropriate tests → run the fast quality workflow → founder
+merge. Spec Kit planning/checklist/task stages are optional and used only when
+they materially reduce uncertainty. Clean-context review is one optional,
+non-blocking pass for large diffs, public API/security boundaries or unfamiliar
+interaction patterns. It reads the PR diff, relevant contract and test results
+directly: no packet hashes, attestations, Check Run App or review rounds.
+Confirmed Critical defects are fixed; suggestions go to the backlog. UI changes
+include rendered evidence when visual behavior matters. Single writer per
+feature; parallel work only across independent worktrees.
 
-Emergency: a blocking gate may be waived only by the founder, per PR, with
-written justification and an issue restoring the gate; the same gate waived
-twice consecutively triggers a fix or an amendment. Broken releases roll
-forward (deprecate, patch, post-mortem within a week). Every incident
-produces at least one new deterministic gate or test that would have caught
-it. Vulnerability reports follow coordinated disclosure per SECURITY.md.
+The founder may override a failing non-security check for an urgent fix with a
+brief PR note; repeated overrides mean the check is fixed or removed. Broken
+releases roll forward. Every escaped defect gets a focused regression test; a
+new repository-wide gate is added only for a repeated or high-impact defect
+class whose ongoing cost is lower than the failures it prevents. Vulnerability
+reports follow coordinated disclosure per SECURITY.md.
 
 ## Governance
 
@@ -199,8 +201,7 @@ same change (plus any artifacts the amendment makes stale), with written
 rationale and migration notes.
 Versioning: MAJOR = principle removed/redefined, MINOR = principle added,
 PATCH = clarification. Two version lines must never be confused: this
-constitution's version and the library's public API SemVer. Every PR review
-verifies compliance; deviations are justified in the PR description or
-rejected. Complexity must always justify itself.
+constitution's version and the library's public API SemVer. The founder's merge
+decision verifies compliance. Complexity must always justify itself.
 
-**Version**: 1.4.2 | **Ratified**: 2026-06-12 | **Last Amended**: 2026-07-04
+**Version**: 2.0.0 | **Ratified**: 2026-06-12 | **Last Amended**: 2026-07-13

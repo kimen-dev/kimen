@@ -6,9 +6,9 @@
 
 **Branch**: `feat/ki-progress` | **Date**: 2026-07-08 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/015-ki-progress/spec.md`
-(gate-1 review in progress on `feat/fase2-specs`; implementation is blocked
-by the pre-implement gate until the sha-stamped `.approved` marker exists).
+**Input**: Feature specification from `/specs/015-ki-progress/spec.md`;
+founder intent is confirmed in the working conversation or PR, without a
+repository approval marker.
 
 ## Summary
 

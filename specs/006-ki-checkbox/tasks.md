@@ -6,9 +6,8 @@
 
 **Input**: Design documents from `/specs/006-ki-checkbox/`
 
-**Prerequisites**: plan.md, spec.md with S1–S21 (gate-1 approval pending —
-the pre-implement gate blocks execution until the `.approved` marker
-exists), research.md (D1–D10), data-model.md, contracts/checkbox-contract.md
+**Prerequisites**: plan.md, spec.md with S1–S21, research.md (D1–D10),
+data-model.md, contracts/checkbox-contract.md
 
 **Tests**: MANDATORY, never optional (Art. II/III). RED tests are written
 first and verified failing for the right reason. Every test file carries the

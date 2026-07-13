@@ -7,8 +7,8 @@
 
 **Branch**: `feat/ki-button` | **Date**: 2026-07-06 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/002-ki-button/spec.md` (approved,
-`.approved` marker recorded 2026-07-06)
+**Input**: Feature specification from `/specs/002-ki-button/spec.md`; founder
+intent was confirmed in the working conversation.
 
 ## Summary
 
@@ -68,10 +68,10 @@ component tokens (see research.md D4), removal of ki-hello.
   `src/components.d.ts` regenerate on build and are committed; ki-hello's
   generated entries disappear in the same regeneration. AGENTS.md is still
   hand-maintained (pre-Fase-2 pipeline) and needs no change. **PASS**
-- **Art. II — Specs before code (NON-NEGOTIABLE)**: implements exactly
-  `specs/002-ki-button/feature.feature` S1–S11 (approved, sha-stamped
-  `.approved`); the five families are covered (see spec table); nothing in
-  this plan exceeds the approved scenarios — toggle, icon-only, loading and
+- **Art. II — Proportionate behavior contracts (NON-NEGOTIABLE)**: implements exactly
+  `specs/002-ki-button/feature.feature` S1–S11; the five families are covered
+  (see spec table); nothing in this plan exceeds the scenarios — toggle,
+  icon-only, loading and
   shape attribute stay out. **PASS**
 - **Art. III — Test-first, deterministic gates (NON-NEGOTIABLE)**: RED
   first — mock-doc spec + browser suite written against S1–S11 and verified
@@ -164,7 +164,7 @@ line); guardrail → none.
 
 ```text
 specs/002-ki-button/
-├── spec.md              # approved (.approved sha-stamped)
+├── spec.md              # behavior specification
 ├── feature.feature      # extracted Gherkin contract, S1–S11
 ├── plan.md              # this file
 ├── research.md          # Phase 0: decisions D1–D7

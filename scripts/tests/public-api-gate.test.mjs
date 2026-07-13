@@ -290,7 +290,7 @@ test('[S10] the 0.0.0 root metadata overlay cannot authorize a removal', async (
   assert.match(result.reasons.join('\n'), /at least one prior minor/u);
 });
 
-test('[S10] T079 wires fixtures and the sealed repository candidate into core gates', async () => {
+test('[S10] public API stays in fast quality while packed consumers stay release-scoped', async () => {
   const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
   const coreGates = await readFile(coreGatesPath, 'utf8');
 
@@ -310,7 +310,7 @@ test('[S10] T079 wires fixtures and the sealed repository candidate into core ga
     packageJson.scripts['check:packed-manifest'],
     'node scripts/gates/check-packed-manifest.mjs',
   );
-  assert.match(coreGates, /run_core_gate packed-manifest pnpm run check:packed-manifest/u);
-  assert.match(coreGates, /run_core_gate pack-consumer pnpm run test:consumer-contract/u);
+  assert.doesNotMatch(coreGates, /run_core_gate packed-manifest/u);
+  assert.doesNotMatch(coreGates, /run_core_gate pack-consumer/u);
   assert.match(coreGates, /run_core_gate public-api pnpm run check:api/u);
 });

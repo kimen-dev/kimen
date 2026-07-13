@@ -6,9 +6,9 @@
 
 **Branch**: `feat/ki-input` | **Date**: 2026-07-08 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/003-ki-input/spec.md` (gate-1
-review in progress on `feat/fase2-specs`; implementation is blocked by the
-pre-implement gate until the sha-stamped `.approved` marker exists).
+**Input**: Feature specification from `/specs/003-ki-input/spec.md`; founder
+intent is confirmed in the working conversation or PR, without a repository
+approval marker.
 
 ## Summary
 
@@ -82,9 +82,8 @@ additive.
   contract is complete so those surfaces regenerate from it without rework.
   **PASS**
 - **Art. II — Specs before code (NON-NEGOTIABLE)**: implements exactly
-  `specs/003-ki-input/feature.feature` S1–S28 (gate-1 review in progress;
-  the pre-implement gate blocks execution until the `.approved` marker is
-  recorded); all five families are covered (see spec table); nothing in
+  `specs/003-ki-input/feature.feature` S1–S28; all five families are covered
+  (see spec table); nothing in
   this plan exceeds the approved scenarios — helper text, on-screen
   validation messages, `type="number"`, size/variant axes and floating-label
   motion stay out. **PASS**

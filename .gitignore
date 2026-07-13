@@ -63,6 +63,3 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
-
-# Review packets are working artifacts assembled per round, never committed
-specs/*/review-packet/

@@ -6,9 +6,8 @@
 
 **Input**: Design documents from `/specs/007-ki-radio-group/`
 
-**Prerequisites**: plan.md, spec.md with S1–S25 (gate-1 approval pending —
-the pre-implement gate blocks execution until the `.approved` marker
-exists), research.md (D1–D10), data-model.md,
+**Prerequisites**: plan.md, spec.md with S1–S25, research.md (D1–D10),
+data-model.md,
 contracts/radio-group-contract.md
 
 **Tests**: MANDATORY, never optional (Art. II/III). RED tests are written

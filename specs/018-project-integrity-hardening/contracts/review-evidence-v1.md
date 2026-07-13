@@ -1,5 +1,8 @@
 # Clean-context review evidence v1
 
+> Retired by Constitution 2.0.0. Clean-context review is now optional,
+> advisory and direct-diff only.
+
 The protected context is `clean-context-review`, implemented as a GitHub Check
 Run on the exact PR head SHA.
 

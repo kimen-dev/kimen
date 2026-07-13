@@ -1,27 +1,14 @@
 ## Summary
 
-Describe the change and the approved specification it implements.
+Describe the outcome, why it is needed, and the risk of the change. Link the
+behavior contract only when Article II requires one.
 
 ## Verification
 
-- [ ] Deterministic gates are green for the current revision.
+- [ ] The consolidated `quality` check is green for the current revision.
 - [ ] Public API and generated surfaces were reviewed when applicable.
 
-## Break-glass (founder only)
+## Risk notes
 
-Leave this section empty for ordinary pull requests. A break-glass request must
-carry the `break-glass` label, be authored and triggered by the founder, and
-use PR-only bypass mode. Both fields below are mandatory and retained as audit
-evidence.
-
-<!--
-Write the concrete emergency between the justification and restoration markers.
-Write only the kimen-dev/kimen restoration issue URL between the restoration and
-end markers. Do not remove or rename any marker.
--->
-
-<!-- break-glass-justification -->
-
-<!-- break-glass-restoration-issue -->
-
-<!-- break-glass-end -->
+Mention public API, accessibility, security/guardrail, generated-surface or
+release impact. Write `none` when there is no special risk.

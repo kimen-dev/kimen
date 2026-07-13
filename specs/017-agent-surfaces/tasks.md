@@ -5,8 +5,7 @@
 
 **Input**: Design documents from `/specs/017-agent-surfaces/`
 
-**Prerequisites**: plan.md, spec.md (S1–S6; gate-1 approval + `.approved`
-marker REQUIRED before any task below runs — pre-implement gate), research.md
+**Prerequisites**: plan.md, spec.md (S1–S6), research.md
 (D1–D9), data-model.md, contracts/agent-surfaces-contract.md
 
 **Tests**: MANDATORY, never optional (Art. II/III). RED tests are written

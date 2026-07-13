@@ -11,7 +11,8 @@ description: "Task list template for feature implementation (Kimen override)"
 
 **Input**: Design documents from `/specs/[###-feature-name]/`
 
-**Prerequisites**: plan.md (required), spec.md with Gherkin scenarios (required), research.md, contracts/
+**Prerequisites**: a behavior contract when Article II requires one. plan.md,
+research.md and contracts/ are optional complexity tools.
 
 **Tests**: MANDATORY, never optional (constitution Art. II/III). Tests are written
 FIRST and verified failing for the right reason before any implementation. Every
@@ -89,7 +90,7 @@ implementation and testing of each story.
 - [ ] T018 [US1] Manual APG walkthrough documented in PR — only for NEW interaction patterns (Art. V)
 - [ ] T019 [US1] Regenerate machine surfaces (017): build regenerates docs-json (normalized) → generated/custom-elements.json → llms.txt; committed and verified by the surfaces-sync gate (Art. I; Zod catalog is Fase 3)
 - [ ] T020 [US1] size-limit budget check: single-digit KB gzipped (Art. IV)
-- [ ] T021 [US1] Mutation score ≥70% on changed core logic (Stryker incremental, Art. III)
+- [ ] T021 [US1] Confirm changed core logic is covered by the daily mutation scope (Art. III)
 
 **Checkpoint**: User Story 1 fully functional; all gates exit 0
 
@@ -113,7 +114,7 @@ implementation and testing of each story.
   independent worktrees, single writer per feature — Workflow)
 - Within each story: RED tests (verified failing) → implementation → gates.
   Tests before implementation is NON-NEGOTIABLE (Art. III)
-- "Done" for any task group = deterministic gates exit 0, never self-assessment
+- "Done" for any task group = consolidated fast quality exits 0
 
 ## Notes
 

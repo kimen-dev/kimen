@@ -6,12 +6,11 @@
 
 **Branch**: `feat/ki-textarea` | **Date**: 2026-07-08 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/004-ki-textarea/spec.md`
-(gate-1 review in progress on `feat/fase2-specs`; implementation is blocked
-by the pre-implement gate until the sha-stamped `.approved` marker exists.
-One open marker rides to gate 1: the default `rows` count — the plan
+**Input**: Feature specification from `/specs/004-ki-textarea/spec.md`;
+founder intent is confirmed in the working conversation or PR. One open
+question is the default `rows` count — the plan
 proceeds with the spec's native-parity default of 2; a different founder
-answer changes one constant, nothing structural).
+answer changes one constant, nothing structural.
 
 ## Summary
 
@@ -90,9 +89,8 @@ component tokens per theme (research D9), no removals — purely additive.
   obligation is that the JSDoc contract is complete so those surfaces
   regenerate from it without rework. **PASS**
 - **Art. II — Specs before code (NON-NEGOTIABLE)**: implements exactly
-  `specs/004-ki-textarea/feature.feature` S1–S25 (gate-1 review in
-  progress; the pre-implement gate blocks execution until the `.approved`
-  marker is recorded); all five families are covered (see spec table);
+  `specs/004-ki-textarea/feature.feature` S1–S25; all five families are covered
+  (see spec table);
   nothing in this plan exceeds the approved scenarios — auto-grow, resize
   handle, `maxlength`/counter, helper text, on-screen validation messages,
   affix slots and size/variant axes stay out. **PASS**

@@ -1,5 +1,8 @@
 # Implementation Plan: Project integrity hardening
 
+> Historical plan. Constitution 2.0.0 supersedes its approval-marker,
+> review-evidence and per-PR mutation wiring.
+
 <!-- KIMEN OVERRIDE of plan-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Articles I-XI. -->
 

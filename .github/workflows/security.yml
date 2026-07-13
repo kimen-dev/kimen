@@ -1,5 +1,5 @@
-# Kimen security gates (constitution Art. X): SAST (Semgrep), dependency CVEs
-# (osv-scanner + dependency review), secret scanning (gitleaks + trufflehog).
+# Scheduled and protected-branch security depth: SAST, dependency CVEs and
+# secret scanning. PR dependency diffs use the path-scoped companion workflow.
 # Actions pinned to commit SHAs; trailing comment records the resolved tag.
 # Malicious-package detection on new dependencies: Socket (GitHub App, no
 # workflow — installed by the founder on the org).
@@ -8,7 +8,6 @@ name: security
 on:
   push:
     branches: [main]
-  pull_request:
   schedule:
     - cron: '0 6 * * 1' # weekly, Monday 06:00 UTC
 
@@ -48,7 +47,7 @@ jobs:
       - name: Semgrep scan (findings block)
         run: >-
           semgrep scan --config p/default --error --metrics=off
-          --exclude .specify --exclude .claude
+          --exclude .specify --exclude .agents --exclude .claude
 
   osv-scan:
     # kimen-workflow-policy: reusable-workflow-v1
@@ -62,34 +61,6 @@ jobs:
       scan-args: |-
         --recursive
         ./
-
-  dependency-review:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      pull-requests: read
-    steps:
-      - name: Harden runner
-        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
-        with:
-          egress-policy: block
-          allowed-endpoints: >-
-            github.com:443
-            api.github.com:443
-            objects.githubusercontent.com:443
-            api.deps.dev:443
-            api.securityscorecards.dev:443
-
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
-        with:
-          persist-credentials: false
-
-      - name: Dependency review (CVEs + licenses on the PR diff)
-        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
-        with:
-          fail-on-severity: low
 
   secrets:
     runs-on: ubuntu-latest
