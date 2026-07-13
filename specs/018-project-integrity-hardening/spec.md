@@ -1,5 +1,9 @@
 # Feature Specification: Project integrity hardening
 
+> Historical contract. Constitution 2.0.0 retired repository approval hashes,
+> blocking clean-context evidence and per-PR mutation; the code and current
+> governance files are authoritative for the replacement 20/80 model.
+
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Arts. I–IV and IX–XI. -->
 
@@ -7,11 +11,9 @@
 
 **Created**: 2026-07-09
 
-**Status**: Approval state is determined exclusively by the current
-spec/feature hashes in `.approved`. The founder approved exact S1–S13 on
-2026-07-09, with standalone approval of S2, S4, S5 and S7, and explicitly
-approved preserving `002-ki-button` S14; any later spec-byte change requires a
-new matching approval record.
+**Status**: Historical record of the founder's 2026-07-09 approval of S1–S13,
+including S2, S4, S5 and S7 and preservation of `002-ki-button` S14. The
+former hash marker is intentionally no longer present.
 
 **Input**: User description: "Execute the accepted project-review findings:
 make approved contracts tamper-evident, protect main, add mutation and token

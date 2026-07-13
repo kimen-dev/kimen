@@ -6,9 +6,9 @@
 
 **Branch**: `feat/ki-checkbox` | **Date**: 2026-07-08 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/006-ki-checkbox/spec.md`
-(gate-1 review in progress on `feat/fase2-specs`; implementation is blocked
-by the pre-implement gate until the sha-stamped `.approved` marker exists).
+**Input**: Feature specification from `/specs/006-ki-checkbox/spec.md`;
+founder intent is confirmed in the working conversation or PR, without a
+repository approval marker.
 
 ## Summary
 
@@ -87,9 +87,8 @@ additive.
   plan's obligation is that the JSDoc contract is complete so those
   surfaces regenerate from it without rework. **PASS**
 - **Art. II — Specs before code (NON-NEGOTIABLE)**: implements exactly
-  `specs/006-ki-checkbox/feature.feature` S1–S21 (gate-1 review in
-  progress; the pre-implement gate blocks execution until the `.approved`
-  marker is recorded); all five families are covered (see spec table);
+  `specs/006-ki-checkbox/feature.feature` S1–S21; all five families are covered
+  (see spec table);
   nothing in this plan exceeds the approved scenarios — no size axis, no
   checkbox-group, no validation-message display, no `ki-*` events. **PASS**
 - **Art. III — Test-first, deterministic gates (NON-NEGOTIABLE)**: RED

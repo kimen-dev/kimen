@@ -1,18 +1,11 @@
 #!/usr/bin/env bash
 # Gate: preflight for /speckit-implement (kimen-gates extension hook).
 #
-# Enforces HUMAN GATE 1 outside the workflow runner (constitution Workflow):
-# implementation may not start until the founder approved the spec. The
-# approval marker is specs/<feature>/.approved containing the sha256 of the
-# approved spec.md — written by the kimen workflow's record-approval step, or
-# by the founder running 'bash scripts/gates/record-approval.sh' when driving
-# the /speckit-* skills directly. A sha mismatch means spec.md changed after
-# approval: re-approval required. Registered as a mandatory before_implement
-# hook in .specify/extensions.yml (command kimen.gates.pre-implement, skill
-# /kimen-gates-pre-implement).
+# Validates the selected contract and constitution before the optional Spec Kit
+# implementation path. Founder intent is confirmed in conversation or PR, not
+# encoded as an approval artifact.
 #
-# Checks: pre-plan gate (synchronized pair + current dual-hash approval) →
-# constitution digest in sync.
+# Checks: synchronized contract pair → constitution digest in sync.
 #
 # Usage: pre-implement-check.sh [feature-dir]
 set -uo pipefail
@@ -25,7 +18,7 @@ DIR=$(kimen_resolve_feature_dir "${1:-}") || {
 }
 
 if ! bash scripts/gates/pre-plan-check.sh "$DIR"; then
-  echo "GATE pre-implement: FAIL — synchronized contract/approval preconditions are red for $DIR"
+  echo "GATE pre-implement: FAIL — synchronized contract preconditions are red for $DIR"
   exit 1
 fi
 
@@ -34,4 +27,4 @@ if ! bash scripts/gates/constitution-check.sh; then
   exit 1
 fi
 
-echo "GATE pre-implement: PASS — synchronized dual-hash approval and constitution in sync for $DIR"
+echo "GATE pre-implement: PASS — synchronized contract and constitution in sync for $DIR"

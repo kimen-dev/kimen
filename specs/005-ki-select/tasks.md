@@ -6,9 +6,8 @@
 
 **Input**: Design documents from `/specs/005-ki-select/`
 
-**Prerequisites**: plan.md, spec.md with S1–S25 (gate-1 approval pending —
-the pre-implement gate blocks execution until the `.approved` marker
-exists; two spec-flagged open questions ride gate 1: typeahead inclusion
+**Prerequisites**: plan.md, spec.md with S1–S25 (two spec-flagged open questions
+are confirmed directly with the founder: typeahead inclusion
 and commit-vs-discard on Tab — if the founder flips either, FR-007/S21
 and the affected tests change BEFORE implementation), research.md
 (D1–D10), data-model.md, contracts/select-contract.md

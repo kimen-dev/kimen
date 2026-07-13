@@ -6,9 +6,8 @@
 
 **Input**: Design documents from `/specs/014-ki-tabs/`
 
-**Prerequisites**: plan.md, spec.md with S1–S18 (gate-1 approval pending —
-the pre-implement gate blocks execution until the `.approved` marker
-exists), research.md (D1–D10), data-model.md,
+**Prerequisites**: plan.md, spec.md with S1–S18, research.md (D1–D10),
+data-model.md,
 contracts/tabs-contract.md
 
 **Tests**: MANDATORY, never optional (Art. II/III). RED tests are written

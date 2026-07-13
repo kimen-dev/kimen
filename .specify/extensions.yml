@@ -1,17 +1,15 @@
-# Kimen gates extension: mandatory pre-hooks for direct /speckit-* skill
-# invocations (constitution Art. II/III + Workflow;
-# design: internal harness note, capa 2).
+# Kimen gates extension: lightweight pre-hooks for the optional Spec Kit path.
 #
 # CONTRACT: the installed speckit-* skills' "Pre-Execution Checks" parse this
-# file directly (.claude/skills/speckit-plan/SKILL.md and
-# .claude/skills/speckit-implement/SKILL.md are the reference parsers). They:
+# file directly (.agents/skills/speckit-plan/SKILL.md and
+# .agents/skills/speckit-implement/SKILL.md are the reference parsers). They:
 #   - read the entries under hooks.before_plan / hooks.before_implement,
 #   - treat a missing `enabled` field as enabled (we set it explicitly),
 #   - execute `optional: false` entries as MANDATORY pre-hooks and wait for
 #     the result before proceeding,
 #   - map the command id to a slash command by replacing dots with hyphens:
 #     kimen.gates.pre-plan → /kimen-gates-pre-plan
-#     (skill dir .claude/skills/kimen-gates-pre-plan/).
+#     (canonical skill dir .agents/skills/kimen-gates-pre-plan/).
 #
 # NEVER add a `condition` field here: the hooks guide marks it "future" and
 # the installed skills skip any hook that defines one — a mandatory gate
@@ -19,14 +17,14 @@
 
 extensions:
   kimen-gates:
-    version: "0.1.0"
-    description: "Kimen constitutional pre-gates: synchronized spec/feature pair plus current dual-hash founder approval before plan or implement"
+    version: "2.0.0"
+    description: "Kimen constitutional pre-gates: validate a selected behavior contract and constitution sync without approval markers"
 
 hooks:
   before_plan:
     - extension: kimen-gates
       command: kimen.gates.pre-plan
-      description: "HARD gate (Art. II): spec.md and feature.feature are byte-synchronized and lint green, and marker v2 covers both hashes before planning."
+      description: "Contract gate (Art. II): when Spec Kit is used, spec.md and feature.feature are synchronized and lint green."
       prompt: "Run the Kimen pre-plan gate (bash scripts/gates/pre-plan-check.sh) and hard-stop if it exits non-zero."
       optional: false
       enabled: true
@@ -34,7 +32,7 @@ hooks:
   before_implement:
     - extension: kimen-gates
       command: kimen.gates.pre-implement
-      description: "HARD gate (Art. II/III, Workflow): synchronized pair, marker v2 matching spec.md and feature.feature, and constitution digest in sync before implementation."
+      description: "Contract gate (Art. II/III): synchronized pair and constitution digest in sync before implementation."
       prompt: "Run the Kimen pre-implement gate (bash scripts/gates/pre-implement-check.sh) and hard-stop if it exits non-zero."
       optional: false
       enabled: true

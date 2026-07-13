@@ -3,7 +3,7 @@
  * specs/<NNN>-<slug>/feature.feature with the five scenario families,
  * stable S-IDs and one When per scenario, shaped to pass
  * scripts/gates/lint-feature.sh from birth (content stays TODO until the
- * founder-approved spec fills it).
+ * the behavior contract fills it).
  */
 const path = require('node:path');
 const { generateFiles, logger } = require('@nx/devkit');
@@ -45,7 +45,7 @@ module.exports = async function featureSpecGenerator(tree, options) {
         `${dir}/feature.feature`,
     );
     logger.info(
-      '  3. Founder approval is recorded with scripts/gates/record-approval.sh (human gate 1).',
+      '  3. Confirm the contract intent with the founder in the working conversation or PR.',
     );
   };
 };

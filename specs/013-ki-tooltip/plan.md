@@ -6,9 +6,9 @@
 
 **Branch**: `feat/ki-tooltip` | **Date**: 2026-07-08 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/013-ki-tooltip/spec.md` (gate-1
-review in progress on `feat/fase2-specs`; implementation is blocked by the
-pre-implement gate until the sha-stamped `.approved` marker exists).
+**Input**: Feature specification from `/specs/013-ki-tooltip/spec.md`; founder
+intent is confirmed in the working conversation or PR, without a repository
+approval marker.
 
 ## Summary
 
@@ -103,9 +103,8 @@ removals — purely additive.
   obligation is that the JSDoc contract is complete so those surfaces
   regenerate from it without rework. **PASS**
 - **Art. II — Specs before code (NON-NEGOTIABLE)**: implements exactly
-  `specs/013-ki-tooltip/feature.feature` S1–S17 (gate-1 review in
-  progress; the pre-implement gate blocks execution until the `.approved`
-  marker is recorded); four families covered, form participation
+  `specs/013-ki-tooltip/feature.feature` S1–S17; four families covered, form
+  participation
   N/A-justified in the spec's coverage table (transient descriptive
   overlay, not a form control); nothing in this plan exceeds the approved
   scenarios — no arrow part, no show/hide events, no rich content slot, no

@@ -6,10 +6,8 @@
 
 **Branch**: `feat/agent-surfaces` | **Date**: 2026-07-08 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/017-agent-surfaces/spec.md`
-(status: Draft, in the Fase-2 gate-1 batch on `feat/fase2-specs`; the
-pre-implement gate blocks `/speckit-implement` until the founder records the
-`.approved` marker — this plan exists so gate 1 can review spec + plan together).
+**Input**: Feature specification from `/specs/017-agent-surfaces/spec.md`;
+founder intent is confirmed in the working conversation or PR.
 
 ## Summary
 
@@ -87,9 +85,8 @@ specs (003–016) inherit the T019 obligation this feature makes satisfiable
 - **Art. II — Specs before code (NON-NEGOTIABLE)**: implements exactly
   `specs/017-agent-surfaces/feature.feature` S1–S6. The four UI scenario
   families are N/A-justified in the spec's coverage table (no interactive,
-  rendered, form or themed surface exists). Spec is awaiting gate-1
-  approval; no implementation task may start before the `.approved` marker
-  (pre-implement gate enforces this). Nothing in this plan exceeds the
+  rendered, form or themed surface exists). Founder intent is confirmed in the
+  working conversation or PR. Nothing in this plan exceeds the
   approved scenarios — no docs site, no AGENTS.md generation, no catalog.
   **PASS (implementation gated on approval)**
 - **Art. III — Test-first, deterministic gates (NON-NEGOTIABLE)**: RED

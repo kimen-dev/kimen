@@ -6,9 +6,8 @@
 
 **Input**: Design documents from `/specs/015-ki-progress/`
 
-**Prerequisites**: plan.md, spec.md with S1–S15 (gate-1 approval pending —
-the pre-implement gate blocks execution until the `.approved` marker
-exists), research.md (D1–D8), data-model.md,
+**Prerequisites**: plan.md, spec.md with S1–S15, research.md (D1–D8),
+data-model.md,
 contracts/progress-contract.md.
 
 **Tests**: MANDATORY, never optional (Art. II/III). RED tests are written

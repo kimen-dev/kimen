@@ -95,9 +95,7 @@ test('@spec:018 S3 non-core presentation files carry an explicit exclusion reaso
 test('@spec:018 S3 local agent tooling is classified explicitly without mutating user files', async () => {
   const { classifyChangedFiles } = await loadMutationPolicy();
 
-  const classified = classifyChangedFiles([
-    '.agents/skills/requesting-code-review/scripts/review-package.sh',
-  ]);
+  const classified = classifyChangedFiles(['.agents/skills/example/SKILL.md']);
 
   assert.equal(classified[0].classification, 'excluded');
   assert.match(classified[0].reason, /agent tooling/i);

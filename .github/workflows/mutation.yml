@@ -1,0 +1,60 @@
+# Test-quality feedback runs once per day, never once per PR revision.
+name: mutation
+
+on:
+  schedule:
+    - cron: '17 3 * * *'
+
+permissions: {}
+
+concurrency:
+  group: mutation-daily
+  cancel-in-progress: true
+
+jobs:
+  mutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Allocate isolated writable caches
+        run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Select the preceding 24-hour window
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="$(git rev-list -1 --before='24 hours ago' HEAD)"
+          if [ -z "$base" ]; then
+            base="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+          fi
+          printf 'KIMEN_MUTATION_BASE=%s\n' "$base" >>"$GITHUB_ENV"
+
+      - name: Daily changed-core mutation
+        run: GITHUB_STEP_SUMMARY="$RUNNER_TEMP/kimen-mutation-summary.md" pnpm run test:mutation

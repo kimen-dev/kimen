@@ -4,6 +4,9 @@ description: "Dependency-ordered implementation tasks for project integrity hard
 
 # Tasks: Project integrity hardening
 
+> Historical completion record. Tasks that created approval hashes or custom
+> review evidence were deliberately retired by Constitution 2.0.0.
+
 **Input**: Approved design documents from
 `/specs/018-project-integrity-hardening/`
 

@@ -1,0 +1,62 @@
+name: containment
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sandbox/**'
+      - 'scripts/tests/model-lease.test.mjs'
+      - 'scripts/tests/sandbox-static-contract.test.mjs'
+      - '.github/workflows/containment.yml'
+  pull_request:
+    paths:
+      - 'sandbox/**'
+      - 'scripts/tests/model-lease.test.mjs'
+      - 'scripts/tests/sandbox-static-contract.test.mjs'
+      - '.github/workflows/containment.yml'
+
+permissions: {}
+
+concurrency:
+  group: containment-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  containment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            objects.githubusercontent.com:443
+            auth.docker.io:443
+            registry-1.docker.io:443
+            registry.npmjs.org:443
+            production.cloudflare.docker.com:443
+            production.cloudfront.docker.com:443
+            snapshot.debian.org:443
+
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      - name: Containment contracts
+        run: |
+          node --test scripts/tests/model-lease.test.mjs scripts/tests/sandbox-static-contract.test.mjs sandbox/tests/proxy.test.mjs
+          bash sandbox/tests/loop-entry.test.sh
+          bash sandbox/tests/loop-host.test.sh
+
+      - name: Build sandbox image
+        run: docker build --tag kimen-sandbox sandbox
+
+      - name: Linux Docker containment smoke
+        env:
+          KIMEN_CONTAINMENT_IMAGE: kimen-sandbox
+          KIMEN_REQUIRE_DOCKER_CONTAINMENT: '1'
+        run: bash sandbox/tests/containment.test.sh

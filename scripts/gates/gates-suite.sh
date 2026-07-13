@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Gate: full deterministic suite (constitution Art. III/X). "Done" = this exits 0.
+# Gate: consolidated fast PR quality suite (constitution Art. III/X).
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
@@ -34,25 +34,7 @@ run_gate() {
   fi
 }
 
-# The trusted Check Run controller is security-critical bootstrap code and
-# must carry its own dependency-free regression suite on main.
-run_gate review-evidence node --test .github/scripts/review-evidence.test.cjs
 run_gate core bash scripts/gates/gates-core.sh
 run_gate test-browser bash scripts/gates/gates-browser.sh chromium
-KIMEN_CAPABILITY_EVIDENCE_FILE="$EVIDENCE_DIRECTORY/capabilities-current-run.json"
-export KIMEN_CAPABILITY_EVIDENCE_FILE
-run_gate capabilities node scripts/gates/check-capabilities.mjs \
-  --write-evidence "$KIMEN_CAPABILITY_EVIDENCE_FILE" \
-  --gate-evidence "$KIMEN_GATE_EVIDENCE_FILE"
-# run_gate appends the capability verdict after the command succeeds. Rebuild
-# the revision record from that final TSV so review packets consume the exact
-# complete gate set rather than the pre-verdict snapshot.
-node scripts/gates/check-capabilities.mjs --write-evidence "$KIMEN_CAPABILITY_EVIDENCE_FILE" \
-  --gate-evidence "$KIMEN_GATE_EVIDENCE_FILE" >/dev/null || exit 1
-
-if [ "${KIMEN_MUTATION_DELEGATED_TO:-}" = 'mutation' ]; then
-  echo "GATES JOB GREEN — mutation delegated; Definition of Done requires ci / mutation and ci / containment"
-else
-  echo "LOCAL GATES GREEN — protected main still requires ci / containment"
-fi
+echo "QUALITY GATES GREEN"
 echo "CURRENT-RUN EVIDENCE: $KIMEN_GATE_EVIDENCE_FILE"

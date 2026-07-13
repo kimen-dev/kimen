@@ -7,9 +7,8 @@
 
 **Branch**: `feat/ki-card` | **Date**: 2026-07-08 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/009-ki-card/spec.md` (pending
-gate-1 approval; this plan is prepared alongside the Fase 2 spec batch and
-implementation starts only after the `.approved` marker exists)
+**Input**: Feature specification from `/specs/009-ki-card/spec.md`; founder
+intent is confirmed in the working conversation or PR.
 
 ## Summary
 

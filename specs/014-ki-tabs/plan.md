@@ -6,9 +6,9 @@
 
 **Branch**: `feat/ki-tabs` | **Date**: 2026-07-08 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/014-ki-tabs/spec.md`
-(gate-1 review in progress on `feat/fase2-specs`; implementation is blocked
-by the pre-implement gate until the sha-stamped `.approved` marker exists).
+**Input**: Feature specification from `/specs/014-ki-tabs/spec.md`; founder
+intent is confirmed in the working conversation or PR, without a repository
+approval marker.
 
 ## Summary
 
@@ -111,9 +111,8 @@ not landed first), no removals — purely additive.
   documented as component output, never authoring surface (research
   D1/D2). **PASS**
 - **Art. II — Specs before code (NON-NEGOTIABLE)**: implements exactly
-  `specs/014-ki-tabs/feature.feature` S1–S18 (gate-1 review in progress;
-  the pre-implement gate blocks execution until the `.approved` marker is
-  recorded); all five families covered or N/A-justified (form
+  `specs/014-ki-tabs/feature.feature` S1–S18; all five families covered or
+  N/A-justified (form
   participation N/A per the spec table); nothing in this plan exceeds the
   approved scenarios — no vertical orientation, no manual-activation
   opt-in, no ArrowUp/Down or Enter/Space handling, no overflow/scroll

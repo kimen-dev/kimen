@@ -1,5 +1,7 @@
 # Approval marker v2 contract
 
+> Retired by Constitution 2.0.0. Kept only as historical design evidence.
+
 Path: `specs/<NNN-feature>/.approved`
 
 ```text

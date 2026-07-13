@@ -7,9 +7,8 @@
 
 **Branch**: `feat/ki-badge` | **Date**: 2026-07-08 | **Spec**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/010-ki-badge/spec.md` (pending
-gate-1 approval; this plan is prepared alongside the Fase 2 spec batch and
-implementation starts only after the `.approved` marker exists)
+**Input**: Feature specification from `/specs/010-ki-badge/spec.md`; founder
+intent is confirmed in the working conversation or PR.
 
 ## Summary
 
