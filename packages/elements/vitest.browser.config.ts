@@ -75,6 +75,9 @@ export default defineConfig({
         installClock: defineBrowserCommand(async ({ page }) => {
           await page.clock.install();
         }),
+        pauseClock: defineBrowserCommand(async ({ page }) => {
+          await page.clock.pauseAt(Date.now());
+        }),
         fastForwardClock: defineBrowserCommand(async ({ page }, milliseconds: number) => {
           await page.clock.fastForward(milliseconds);
         }),

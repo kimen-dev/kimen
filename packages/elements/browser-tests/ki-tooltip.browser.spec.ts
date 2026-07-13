@@ -27,6 +27,7 @@ const MATERIAL3_STYLE_ID = 'ki-tooltip-browser-material3-token-style';
 const placements = ['top', 'bottom', 'start', 'end'] as const;
 const browserCommands = commands as unknown as {
   installClock: () => Promise<void>;
+  pauseClock: () => Promise<void>;
   fastForwardClock: (milliseconds: number) => Promise<void>;
   resumeClock: () => Promise<void>;
 };
@@ -190,6 +191,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
     await browserCommands.installClock();
     try {
       const { host, trigger } = await mount({ showDelay: '150ms', hideDelay: '75ms' });
+      await browserCommands.pauseClock();
 
       requireTriggerSlot(host);
       await userEvent.hover(trigger);
