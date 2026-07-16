@@ -1783,108 +1783,108 @@
     --ki-font-letter-spacing-sm: var(--ki-foundation-migrated-themes-material3-font-letter-spacing-sm);
     --ki-font-letter-spacing-md: var(--ki-foundation-migrated-themes-material3-font-letter-spacing-md);
     --ki-font-letter-spacing-lg: var(--ki-foundation-migrated-themes-material3-font-letter-spacing-lg);
-    --ki-surface-s0: var(--ki-foundation-migrated-modes-material3-dark-surface-s0);
-    --ki-surface-s1: var(--ki-foundation-migrated-themes-material3-color-brand-high-em);
-    --ki-surface-s2: var(--ki-foundation-migrated-modes-material3-dark-outline-base-em);
-    --ki-surface-s3: var(--ki-foundation-migrated-modes-material3-dark-surface-s3);
-    --ki-surface-s4: var(--ki-foundation-migrated-modes-material3-dark-outline-low-em);
-    --ki-surface-s5: var(--ki-foundation-migrated-modes-material3-dark-surface-s5);
-    --ki-surface-special-blur-base-light: var(--ki-foundation-migrated-modes-material3-dark-surface-special-blur-base-light);
-    --ki-surface-special-blur-base-dark: var(--ki-foundation-migrated-modes-material3-dark-surface-special-blur-base-dark);
-    --ki-surface-special-secondary-alpha-base: var(--ki-foundation-migrated-modes-material3-dark-surface-special-secondary-alpha-base);
+    --ki-surface-s0: var(--ki-foundation-migrated-modes-material3-dark-surface-s0); /** Material 3 semantic color for surface s0. */
+    --ki-surface-s1: var(--ki-foundation-migrated-themes-material3-color-brand-high-em); /** Material 3 semantic color for surface s1. */
+    --ki-surface-s2: var(--ki-foundation-migrated-modes-material3-dark-outline-base-em); /** Material 3 semantic color for surface s2. */
+    --ki-surface-s3: var(--ki-foundation-migrated-modes-material3-dark-surface-s3); /** Material 3 semantic color for surface s3. */
+    --ki-surface-s4: var(--ki-foundation-migrated-modes-material3-dark-outline-low-em); /** Material 3 semantic color for surface s4. */
+    --ki-surface-s5: var(--ki-foundation-migrated-modes-material3-dark-surface-s5); /** Material 3 semantic color for surface s5. */
+    --ki-surface-special-blur-base-light: var(--ki-foundation-migrated-modes-material3-dark-surface-special-blur-base-light); /** Material 3 semantic color for surface special blur base light. */
+    --ki-surface-special-blur-base-dark: var(--ki-foundation-migrated-modes-material3-dark-surface-special-blur-base-dark); /** Material 3 semantic color for surface special blur base dark. */
+    --ki-surface-special-secondary-alpha-base: var(--ki-foundation-migrated-modes-material3-dark-surface-special-secondary-alpha-base); /** Material 3 semantic color for surface special secondary alpha base. */
     --ki-surface-white: var(--ki-color-white-100); /** semantic color for surface white. */
-    --ki-surface-inverse-white: var(--ki-color-white-100);
+    --ki-surface-inverse-white: var(--ki-color-white-100); /** semantic color for surface inverse white. */
     --ki-surface-black: var(--ki-color-black-100); /** semantic color for surface black. */
-    --ki-surface-inverse-black: var(--ki-color-black-100);
-    --ki-surface-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-100);
-    --ki-surface-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-200);
-    --ki-surface-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-700);
-    --ki-surface-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-800);
-    --ki-surface-primary-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-low-em-alpha);
-    --ki-surface-primary-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-primary-base-em-alpha);
+    --ki-surface-inverse-black: var(--ki-color-black-100); /** semantic color for surface inverse black. */
+    --ki-surface-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-100); /** Material 3 semantic color for surface primary high em. */
+    --ki-surface-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-200); /** Material 3 semantic color for surface primary med em. */
+    --ki-surface-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-700); /** Material 3 semantic color for surface primary low em. */
+    --ki-surface-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-800); /** Material 3 semantic color for surface primary base em. */
+    --ki-surface-primary-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-low-em-alpha); /** Material 3 semantic color for surface primary low em alpha. */
+    --ki-surface-primary-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-primary-base-em-alpha); /** Material 3 semantic color for surface primary base em alpha. */
     --ki-surface-info-high-em: var(--ki-color-info-600); /** semantic color for surface info high em. */
     --ki-surface-info-med-em: var(--ki-color-info-500); /** semantic color for surface info med em. */
     --ki-surface-info-low-em: var(--ki-color-info-100); /** semantic color for surface info low em. */
     --ki-surface-info-base-em: var(--ki-color-info-50); /** semantic color for surface info base em. */
     --ki-surface-info-low-em-alpha: var(--ki-color-info-500-alpha-2); /** semantic color for surface info low em alpha. */
     --ki-surface-info-base-em-alpha: var(--ki-color-info-500-alpha-1); /** semantic color for surface info base em alpha. */
-    --ki-surface-success-high-em: var(--ki-color-success-300);
-    --ki-surface-success-med-em: var(--ki-color-success-300);
-    --ki-surface-success-low-em: var(--ki-color-success-800);
-    --ki-surface-success-base-em: var(--ki-color-success-950);
-    --ki-surface-success-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-success-low-em-alpha);
-    --ki-surface-success-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-success-base-em-alpha);
+    --ki-surface-success-high-em: var(--ki-color-success-300); /** semantic color for surface success high em. */
+    --ki-surface-success-med-em: var(--ki-color-success-300); /** semantic color for surface success med em. */
+    --ki-surface-success-low-em: var(--ki-color-success-800); /** semantic color for surface success low em. */
+    --ki-surface-success-base-em: var(--ki-color-success-950); /** semantic color for surface success base em. */
+    --ki-surface-success-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-success-low-em-alpha); /** semantic color for surface success low em alpha. */
+    --ki-surface-success-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-success-base-em-alpha); /** semantic color for surface success base em alpha. */
     --ki-surface-warning-high-em: var(--ki-color-warning-600); /** semantic color for surface warning high em. */
     --ki-surface-warning-med-em: var(--ki-color-warning-500); /** semantic color for surface warning med em. */
     --ki-surface-warning-low-em: var(--ki-color-warning-100); /** semantic color for surface warning low em. */
     --ki-surface-warning-base-em: var(--ki-color-warning-50); /** semantic color for surface warning base em. */
     --ki-surface-warning-low-em-alpha: var(--ki-color-warning-500-alpha-2); /** semantic color for surface warning low em alpha. */
     --ki-surface-warning-base-em-alpha: var(--ki-color-warning-500-alpha-1); /** semantic color for surface warning base em alpha. */
-    --ki-surface-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-    --ki-surface-danger-med-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-    --ki-surface-danger-low-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover);
-    --ki-surface-danger-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em);
-    --ki-surface-danger-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em-alpha);
-    --ki-surface-danger-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-danger-base-em-alpha);
-    --ki-surface-disabled-high-em: var(--ki-color-white-32);
-    --ki-surface-disabled-med-em: var(--ki-foundation-migrated-modes-material3-dark-surface-disabled-med-em);
-    --ki-surface-disabled-low-em: var(--ki-color-white-12);
-    --ki-surface-disabled-base-em: var(--ki-color-white-8);
-    --ki-surface-hover-overlay: var(--ki-color-white-8);
-    --ki-surface-hover-overlay-inverse: var(--ki-color-black-8);
-    --ki-surface-success-high-em-hover: var(--ki-color-success-200);
-    --ki-surface-danger-high-em-hover: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-    --ki-text-high-em: var(--ki-foundation-migrated-semantic-material3-surface-s4);
-    --ki-text-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-base-em);
-    --ki-text-low-em: var(--ki-foundation-migrated-semantic-material3-text-base-em);
-    --ki-text-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-low-em);
-    --ki-text-primary-on-primary: var(--ki-foundation-migrated-themes-material3-color-brand-800);
-    --ki-text-primary-on-primary-light: var(--ki-foundation-migrated-themes-material3-color-brand-200);
-    --ki-text-secondary-on-primary: var(--ki-foundation-migrated-modes-material3-dark-color-brand-secondary-text-on-primary);
-    --ki-text-secondary-on-primary-light: var(--ki-foundation-migrated-themes-material3-color-brand-100);
-    --ki-text-primary-on-success: var(--ki-color-success-950);
-    --ki-text-text-on-neutral: var(--ki-color-black-100);
+    --ki-surface-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for surface danger high em. */
+    --ki-surface-danger-med-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for surface danger med em. */
+    --ki-surface-danger-low-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover); /** Material 3 semantic color for surface danger low em. */
+    --ki-surface-danger-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em); /** Material 3 semantic color for surface danger base em. */
+    --ki-surface-danger-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em-alpha); /** Material 3 semantic color for surface danger low em alpha. */
+    --ki-surface-danger-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-danger-base-em-alpha); /** Material 3 semantic color for surface danger base em alpha. */
+    --ki-surface-disabled-high-em: var(--ki-color-white-32); /** Material 3 semantic color for surface disabled high em. */
+    --ki-surface-disabled-med-em: var(--ki-foundation-migrated-modes-material3-dark-surface-disabled-med-em); /** Material 3 semantic color for surface disabled med em. */
+    --ki-surface-disabled-low-em: var(--ki-color-white-12); /** Material 3 semantic color for surface disabled low em. */
+    --ki-surface-disabled-base-em: var(--ki-color-white-8); /** Material 3 semantic color for surface disabled base em. */
+    --ki-surface-hover-overlay: var(--ki-color-white-8); /** Material 3 semantic color for surface hover overlay. */
+    --ki-surface-hover-overlay-inverse: var(--ki-color-black-8); /** Material 3 semantic color for surface hover overlay inverse. */
+    --ki-surface-success-high-em-hover: var(--ki-color-success-200); /** semantic color for surface success high em hover. */
+    --ki-surface-danger-high-em-hover: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for surface danger high em hover. */
+    --ki-text-high-em: var(--ki-foundation-migrated-semantic-material3-surface-s4); /** Material 3 semantic color for text high em. */
+    --ki-text-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-base-em); /** Material 3 semantic color for text med em. */
+    --ki-text-low-em: var(--ki-foundation-migrated-semantic-material3-text-base-em); /** Material 3 semantic color for text low em. */
+    --ki-text-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-low-em); /** Material 3 semantic color for text base em. */
+    --ki-text-primary-on-primary: var(--ki-foundation-migrated-themes-material3-color-brand-800); /** Material 3 semantic color for text primary on primary. */
+    --ki-text-primary-on-primary-light: var(--ki-foundation-migrated-themes-material3-color-brand-200); /** Material 3 semantic color for text primary on primary light. */
+    --ki-text-secondary-on-primary: var(--ki-foundation-migrated-modes-material3-dark-color-brand-secondary-text-on-primary); /** Material 3 semantic color for text secondary on primary. */
+    --ki-text-secondary-on-primary-light: var(--ki-foundation-migrated-themes-material3-color-brand-100); /** Material 3 semantic color for text secondary on primary light. */
+    --ki-text-primary-on-success: var(--ki-color-success-950); /** semantic color for text primary on success. */
+    --ki-text-text-on-neutral: var(--ki-color-black-100); /** Material 3 semantic color for text text on neutral. */
     --ki-text-white: var(--ki-color-white-100); /** semantic color for text white. */
-    --ki-text-inverse-white: var(--ki-color-white-100);
+    --ki-text-inverse-white: var(--ki-color-white-100); /** semantic color for text inverse white. */
     --ki-text-black: var(--ki-color-black-100); /** semantic color for text black. */
-    --ki-text-inverse-black: var(--ki-color-black-100);
-    --ki-text-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-100);
-    --ki-text-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-200);
-    --ki-text-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-300);
-    --ki-text-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-700);
+    --ki-text-inverse-black: var(--ki-color-black-100); /** semantic color for text inverse black. */
+    --ki-text-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-100); /** Material 3 semantic color for text primary high em. */
+    --ki-text-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-200); /** Material 3 semantic color for text primary med em. */
+    --ki-text-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-300); /** Material 3 semantic color for text primary low em. */
+    --ki-text-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-700); /** Material 3 semantic color for text primary base em. */
     --ki-text-info-high-em: var(--ki-color-info-800); /** Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. */
     --ki-text-info-med-em: var(--ki-color-info-500); /** semantic color for text info med em. */
     --ki-text-info-low-em: var(--ki-color-info-300); /** semantic color for text info low em. */
     --ki-text-info-base-em: var(--ki-color-info-100); /** semantic color for text info base em. */
-    --ki-text-success-high-em: var(--ki-color-success-300);
-    --ki-text-success-med-em: var(--ki-color-success-400);
-    --ki-text-success-low-em: var(--ki-color-success-500);
-    --ki-text-success-base-em: var(--ki-color-success-700);
+    --ki-text-success-high-em: var(--ki-color-success-300); /** semantic color for text success high em. */
+    --ki-text-success-med-em: var(--ki-color-success-400); /** semantic color for text success med em. */
+    --ki-text-success-low-em: var(--ki-color-success-500); /** semantic color for text success low em. */
+    --ki-text-success-base-em: var(--ki-color-success-700); /** semantic color for text success base em. */
     --ki-text-warning-high-em: var(--ki-color-warning-800); /** Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. */
     --ki-text-warning-med-em: var(--ki-color-warning-500); /** semantic color for text warning med em. */
     --ki-text-warning-low-em: var(--ki-color-warning-300); /** semantic color for text warning low em. */
     --ki-text-warning-base-em: var(--ki-color-warning-100); /** semantic color for text warning base em. */
-    --ki-text-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-    --ki-text-danger-med-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-    --ki-text-danger-low-em: var(--ki-foundation-migrated-modes-material3-dark-text-danger-low-em);
-    --ki-text-danger-base-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover);
-    --ki-text-none: var(--ki-color-transparent-black);
-    --ki-text-primary-on-danger: var(--ki-foundation-migrated-modes-material3-dark-text-primary-on-danger);
-    --ki-outline-high-em: var(--ki-foundation-migrated-semantic-material3-text-base-em);
-    --ki-outline-strong: var(--ki-foundation-migrated-semantic-material3-text-base-em);
-    --ki-outline-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-med-em);
-    --ki-outline-low-em: var(--ki-foundation-migrated-modes-material3-dark-outline-low-em);
-    --ki-outline-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-base-em);
+    --ki-text-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for text danger high em. */
+    --ki-text-danger-med-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for text danger med em. */
+    --ki-text-danger-low-em: var(--ki-foundation-migrated-modes-material3-dark-text-danger-low-em); /** Material 3 semantic color for text danger low em. */
+    --ki-text-danger-base-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover); /** Material 3 semantic color for text danger base em. */
+    --ki-text-none: var(--ki-color-transparent-black); /** semantic color for text none. */
+    --ki-text-primary-on-danger: var(--ki-foundation-migrated-modes-material3-dark-text-primary-on-danger); /** semantic color for text primary on danger. */
+    --ki-outline-high-em: var(--ki-foundation-migrated-semantic-material3-text-base-em); /** Material 3 semantic color for outline high em. */
+    --ki-outline-strong: var(--ki-foundation-migrated-semantic-material3-text-base-em); /** Material 3 semantic color for outline strong. */
+    --ki-outline-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-med-em); /** Material 3 semantic color for outline med em. */
+    --ki-outline-low-em: var(--ki-foundation-migrated-modes-material3-dark-outline-low-em); /** Material 3 semantic color for outline low em. */
+    --ki-outline-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-base-em); /** Material 3 semantic color for outline base em. */
     --ki-outline-white: var(--ki-color-white-100); /** semantic color for outline white. */
-    --ki-outline-inverse-white: var(--ki-color-white-100);
+    --ki-outline-inverse-white: var(--ki-color-white-100); /** semantic color for outline inverse white. */
     --ki-outline-black: var(--ki-color-black-100); /** semantic color for outline black. */
-    --ki-outline-inverse-black: var(--ki-color-black-100);
-    --ki-outline-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-200);
-    --ki-outline-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-500);
-    --ki-outline-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-700);
-    --ki-outline-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-800);
-    --ki-outline-primary-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-low-em-alpha);
-    --ki-outline-primary-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-base-em-alpha);
+    --ki-outline-inverse-black: var(--ki-color-black-100); /** semantic color for outline inverse black. */
+    --ki-outline-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-200); /** Material 3 semantic color for outline primary high em. */
+    --ki-outline-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-500); /** Material 3 semantic color for outline primary med em. */
+    --ki-outline-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-700); /** Material 3 semantic color for outline primary low em. */
+    --ki-outline-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-800); /** Material 3 semantic color for outline primary base em. */
+    --ki-outline-primary-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-low-em-alpha); /** Material 3 semantic color for outline primary low em alpha. */
+    --ki-outline-primary-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-base-em-alpha); /** Material 3 semantic color for outline primary base em alpha. */
     --ki-outline-info-high-em: var(--ki-color-info-500); /** semantic color for outline info high em. */
     --ki-outline-info-med-em: var(--ki-color-info-300); /** semantic color for outline info med em. */
     --ki-outline-info-low-em: var(--ki-color-info-200); /** semantic color for outline info low em. */
@@ -1903,17 +1903,17 @@
     --ki-outline-warning-base-em: var(--ki-color-warning-100); /** semantic color for outline warning base em. */
     --ki-outline-warning-low-em-alpha: var(--ki-color-warning-500-alpha-4); /** semantic color for outline warning low em alpha. */
     --ki-outline-warning-base-em-alpha: var(--ki-color-warning-500-alpha-2); /** semantic color for outline warning base em alpha. */
-    --ki-outline-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-    --ki-outline-danger-med-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover);
-    --ki-outline-danger-low-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em);
-    --ki-outline-danger-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-base-em);
-    --ki-outline-danger-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em-alpha);
-    --ki-outline-danger-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-base-em-alpha);
-    --ki-outline-none: var(--ki-color-transparent-black);
-    --ki-outline-primary-button-top: var(--ki-color-black-12);
-    --ki-outline-primary-button-bottom: var(--ki-color-black-24);
-    --ki-outline-secondary-button-top: var(--ki-color-white-8);
-    --ki-outline-secondary-button-bottom: var(--ki-color-white-12);
+    --ki-outline-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for outline danger high em. */
+    --ki-outline-danger-med-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover); /** Material 3 semantic color for outline danger med em. */
+    --ki-outline-danger-low-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em); /** Material 3 semantic color for outline danger low em. */
+    --ki-outline-danger-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-base-em); /** Material 3 semantic color for outline danger base em. */
+    --ki-outline-danger-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em-alpha); /** Material 3 semantic color for outline danger low em alpha. */
+    --ki-outline-danger-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-base-em-alpha); /** Material 3 semantic color for outline danger base em alpha. */
+    --ki-outline-none: var(--ki-color-transparent-black); /** semantic color for outline none. */
+    --ki-outline-primary-button-top: var(--ki-color-black-12); /** Material 3 semantic color for outline primary button top. */
+    --ki-outline-primary-button-bottom: var(--ki-color-black-24); /** Material 3 semantic color for outline primary button bottom. */
+    --ki-outline-secondary-button-top: var(--ki-color-white-8); /** Material 3 semantic color for outline secondary button top. */
+    --ki-outline-secondary-button-bottom: var(--ki-color-white-12); /** Material 3 semantic color for outline secondary button bottom. */
     --ki-inverse-white-alpha-3: var(--ki-color-black-3); /** semantic color for inverse white alpha 3. */
     --ki-inverse-white-alpha-6: var(--ki-color-black-5); /** semantic color for inverse white alpha 6. */
     --ki-inverse-white-alpha-9: var(--ki-color-black-8); /** semantic color for inverse white alpha 9. */
@@ -1944,14 +1944,14 @@
     --ki-inverse-black-alpha-80: var(--ki-color-white-80); /** semantic color for inverse black alpha 80. */
     --ki-inverse-black-alpha-88: var(--ki-color-white-88); /** semantic color for inverse black alpha 88. */
     --ki-inverse-black-alpha-solid: var(--ki-color-white-100); /** semantic color for inverse black alpha solid. */
-    --ki-overlay-high-em: var(--ki-color-black-32);
-    --ki-overlay-high-em-inverse: var(--ki-color-white-12);
-    --ki-overlay-med-em: var(--ki-foundation-migrated-semantic-material3-overlay-med-em);
-    --ki-overlay-med-em-inverse: var(--ki-color-white-8);
-    --ki-elevation-shadow: var(--ki-foundation-migrated-semantic-material3-overlay-med-em);
-    --ki-elevation-shadow-med: var(--ki-color-black-24);
-    --ki-elevation-shadow-dark: var(--ki-color-black-32);
-    --ki-transparent-inverse: var(--ki-color-transparent-black);
+    --ki-overlay-high-em: var(--ki-color-black-32); /** Material 3 semantic color for overlay high em. */
+    --ki-overlay-high-em-inverse: var(--ki-color-white-12); /** Material 3 semantic color for overlay high em inverse. */
+    --ki-overlay-med-em: var(--ki-foundation-migrated-semantic-material3-overlay-med-em); /** Material 3 semantic color for overlay med em. */
+    --ki-overlay-med-em-inverse: var(--ki-color-white-8); /** Material 3 semantic color for overlay med em inverse. */
+    --ki-elevation-shadow: var(--ki-foundation-migrated-semantic-material3-overlay-med-em); /** Material 3 semantic color for elevation shadow. */
+    --ki-elevation-shadow-med: var(--ki-color-black-24); /** Material 3 semantic color for elevation shadow med. */
+    --ki-elevation-shadow-dark: var(--ki-color-black-32); /** Material 3 semantic color for elevation shadow dark. */
+    --ki-transparent-inverse: var(--ki-color-transparent-black); /** semantic color for transparent inverse. */
     --ki-spacing-inline: var(--ki-space-md); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md. */
     --ki-spacing-block: var(--ki-space-xl); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. */
     --ki-corner-control: var(--ki-radius-md); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. */
@@ -2129,23 +2129,23 @@
     --ki-tooltip-offset: var(--ki-space-xs); /** Material 3 dimension used by the tooltip component for offset. */
     --ki-tooltip-show-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-show-delay); /** Material 3 duration used by the tooltip component for tooltip show delay. */
     --ki-tooltip-hide-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-hide-delay); /** Material 3 duration used by the tooltip component for tooltip hide delay. */
-    --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s1);
-    --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s2);
-    --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s3);
-    --ki-surface-special-light-s0-dark-s4: var(--ki-surface-s4);
-    --ki-surface-special-light-s0-dark-s5: var(--ki-surface-s5);
-    --ki-surface-special-dark-s0-light-s1: var(--ki-surface-s0);
-    --ki-surface-special-dark-s0-light-s2: var(--ki-surface-s0);
-    --ki-surface-special-dark-s0-light-s3: var(--ki-surface-s0);
-    --ki-surface-special-dark-s0-light-s4: var(--ki-surface-s0);
-    --ki-surface-special-dark-s0-light-s5: var(--ki-surface-s0);
-    --ki-surface-special-light-s1-dark-s2: var(--ki-surface-s2);
-    --ki-surface-special-light-s2-dark-s3: var(--ki-surface-s3);
-    --ki-surface-special-light-s3-dark-s4: var(--ki-surface-s4);
-    --ki-surface-special-light-s4-dark-s5: var(--ki-surface-s5);
+    --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s1); /** semantic color for surface special light s0 dark s1. */
+    --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s2); /** semantic color for surface special light s0 dark s2. */
+    --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s3); /** semantic color for surface special light s0 dark s3. */
+    --ki-surface-special-light-s0-dark-s4: var(--ki-surface-s4); /** semantic color for surface special light s0 dark s4. */
+    --ki-surface-special-light-s0-dark-s5: var(--ki-surface-s5); /** semantic color for surface special light s0 dark s5. */
+    --ki-surface-special-dark-s0-light-s1: var(--ki-surface-s0); /** semantic color for surface special dark s0 light s1. */
+    --ki-surface-special-dark-s0-light-s2: var(--ki-surface-s0); /** semantic color for surface special dark s0 light s2. */
+    --ki-surface-special-dark-s0-light-s3: var(--ki-surface-s0); /** semantic color for surface special dark s0 light s3. */
+    --ki-surface-special-dark-s0-light-s4: var(--ki-surface-s0); /** semantic color for surface special dark s0 light s4. */
+    --ki-surface-special-dark-s0-light-s5: var(--ki-surface-s0); /** semantic color for surface special dark s0 light s5. */
+    --ki-surface-special-light-s1-dark-s2: var(--ki-surface-s2); /** semantic color for surface special light s1 dark s2. */
+    --ki-surface-special-light-s2-dark-s3: var(--ki-surface-s3); /** semantic color for surface special light s2 dark s3. */
+    --ki-surface-special-light-s3-dark-s4: var(--ki-surface-s4); /** semantic color for surface special light s3 dark s4. */
+    --ki-surface-special-light-s4-dark-s5: var(--ki-surface-s5); /** semantic color for surface special light s4 dark s5. */
     --ki-surface-base: var(--ki-surface-s0); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.surface.s0. */
     --ki-surface-raised: var(--ki-surface-s1); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.surface.s1. */
-    --ki-surface-primary-high-em-hover: var(--ki-color-brand-200);
+    --ki-surface-primary-high-em-hover: var(--ki-color-brand-200); /** Material 3 semantic color for surface primary high em hover. */
     --ki-text-secondary-on-success: var(--ki-color-brand-secondary-text-on-success); /** semantic color for text secondary on success. */
     --ki-text-base: var(--ki-text-high-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. */
     --ki-text-muted: var(--ki-text-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. */
@@ -3137,108 +3137,108 @@
   --ki-font-letter-spacing-sm: var(--ki-foundation-migrated-themes-material3-font-letter-spacing-sm);
   --ki-font-letter-spacing-md: var(--ki-foundation-migrated-themes-material3-font-letter-spacing-md);
   --ki-font-letter-spacing-lg: var(--ki-foundation-migrated-themes-material3-font-letter-spacing-lg);
-  --ki-surface-s0: var(--ki-foundation-migrated-modes-material3-dark-surface-s0);
-  --ki-surface-s1: var(--ki-foundation-migrated-themes-material3-color-brand-high-em);
-  --ki-surface-s2: var(--ki-foundation-migrated-modes-material3-dark-outline-base-em);
-  --ki-surface-s3: var(--ki-foundation-migrated-modes-material3-dark-surface-s3);
-  --ki-surface-s4: var(--ki-foundation-migrated-modes-material3-dark-outline-low-em);
-  --ki-surface-s5: var(--ki-foundation-migrated-modes-material3-dark-surface-s5);
-  --ki-surface-special-blur-base-light: var(--ki-foundation-migrated-modes-material3-dark-surface-special-blur-base-light);
-  --ki-surface-special-blur-base-dark: var(--ki-foundation-migrated-modes-material3-dark-surface-special-blur-base-dark);
-  --ki-surface-special-secondary-alpha-base: var(--ki-foundation-migrated-modes-material3-dark-surface-special-secondary-alpha-base);
+  --ki-surface-s0: var(--ki-foundation-migrated-modes-material3-dark-surface-s0); /** Material 3 semantic color for surface s0. */
+  --ki-surface-s1: var(--ki-foundation-migrated-themes-material3-color-brand-high-em); /** Material 3 semantic color for surface s1. */
+  --ki-surface-s2: var(--ki-foundation-migrated-modes-material3-dark-outline-base-em); /** Material 3 semantic color for surface s2. */
+  --ki-surface-s3: var(--ki-foundation-migrated-modes-material3-dark-surface-s3); /** Material 3 semantic color for surface s3. */
+  --ki-surface-s4: var(--ki-foundation-migrated-modes-material3-dark-outline-low-em); /** Material 3 semantic color for surface s4. */
+  --ki-surface-s5: var(--ki-foundation-migrated-modes-material3-dark-surface-s5); /** Material 3 semantic color for surface s5. */
+  --ki-surface-special-blur-base-light: var(--ki-foundation-migrated-modes-material3-dark-surface-special-blur-base-light); /** Material 3 semantic color for surface special blur base light. */
+  --ki-surface-special-blur-base-dark: var(--ki-foundation-migrated-modes-material3-dark-surface-special-blur-base-dark); /** Material 3 semantic color for surface special blur base dark. */
+  --ki-surface-special-secondary-alpha-base: var(--ki-foundation-migrated-modes-material3-dark-surface-special-secondary-alpha-base); /** Material 3 semantic color for surface special secondary alpha base. */
   --ki-surface-white: var(--ki-color-white-100); /** semantic color for surface white. */
-  --ki-surface-inverse-white: var(--ki-color-white-100);
+  --ki-surface-inverse-white: var(--ki-color-white-100); /** semantic color for surface inverse white. */
   --ki-surface-black: var(--ki-color-black-100); /** semantic color for surface black. */
-  --ki-surface-inverse-black: var(--ki-color-black-100);
-  --ki-surface-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-100);
-  --ki-surface-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-200);
-  --ki-surface-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-700);
-  --ki-surface-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-800);
-  --ki-surface-primary-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-low-em-alpha);
-  --ki-surface-primary-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-primary-base-em-alpha);
+  --ki-surface-inverse-black: var(--ki-color-black-100); /** semantic color for surface inverse black. */
+  --ki-surface-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-100); /** Material 3 semantic color for surface primary high em. */
+  --ki-surface-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-200); /** Material 3 semantic color for surface primary med em. */
+  --ki-surface-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-700); /** Material 3 semantic color for surface primary low em. */
+  --ki-surface-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-800); /** Material 3 semantic color for surface primary base em. */
+  --ki-surface-primary-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-low-em-alpha); /** Material 3 semantic color for surface primary low em alpha. */
+  --ki-surface-primary-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-primary-base-em-alpha); /** Material 3 semantic color for surface primary base em alpha. */
   --ki-surface-info-high-em: var(--ki-color-info-600); /** semantic color for surface info high em. */
   --ki-surface-info-med-em: var(--ki-color-info-500); /** semantic color for surface info med em. */
   --ki-surface-info-low-em: var(--ki-color-info-100); /** semantic color for surface info low em. */
   --ki-surface-info-base-em: var(--ki-color-info-50); /** semantic color for surface info base em. */
   --ki-surface-info-low-em-alpha: var(--ki-color-info-500-alpha-2); /** semantic color for surface info low em alpha. */
   --ki-surface-info-base-em-alpha: var(--ki-color-info-500-alpha-1); /** semantic color for surface info base em alpha. */
-  --ki-surface-success-high-em: var(--ki-color-success-300);
-  --ki-surface-success-med-em: var(--ki-color-success-300);
-  --ki-surface-success-low-em: var(--ki-color-success-800);
-  --ki-surface-success-base-em: var(--ki-color-success-950);
-  --ki-surface-success-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-success-low-em-alpha);
-  --ki-surface-success-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-success-base-em-alpha);
+  --ki-surface-success-high-em: var(--ki-color-success-300); /** semantic color for surface success high em. */
+  --ki-surface-success-med-em: var(--ki-color-success-300); /** semantic color for surface success med em. */
+  --ki-surface-success-low-em: var(--ki-color-success-800); /** semantic color for surface success low em. */
+  --ki-surface-success-base-em: var(--ki-color-success-950); /** semantic color for surface success base em. */
+  --ki-surface-success-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-success-low-em-alpha); /** semantic color for surface success low em alpha. */
+  --ki-surface-success-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-success-base-em-alpha); /** semantic color for surface success base em alpha. */
   --ki-surface-warning-high-em: var(--ki-color-warning-600); /** semantic color for surface warning high em. */
   --ki-surface-warning-med-em: var(--ki-color-warning-500); /** semantic color for surface warning med em. */
   --ki-surface-warning-low-em: var(--ki-color-warning-100); /** semantic color for surface warning low em. */
   --ki-surface-warning-base-em: var(--ki-color-warning-50); /** semantic color for surface warning base em. */
   --ki-surface-warning-low-em-alpha: var(--ki-color-warning-500-alpha-2); /** semantic color for surface warning low em alpha. */
   --ki-surface-warning-base-em-alpha: var(--ki-color-warning-500-alpha-1); /** semantic color for surface warning base em alpha. */
-  --ki-surface-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-  --ki-surface-danger-med-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-  --ki-surface-danger-low-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover);
-  --ki-surface-danger-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em);
-  --ki-surface-danger-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em-alpha);
-  --ki-surface-danger-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-danger-base-em-alpha);
-  --ki-surface-disabled-high-em: var(--ki-color-white-32);
-  --ki-surface-disabled-med-em: var(--ki-foundation-migrated-modes-material3-dark-surface-disabled-med-em);
-  --ki-surface-disabled-low-em: var(--ki-color-white-12);
-  --ki-surface-disabled-base-em: var(--ki-color-white-8);
-  --ki-surface-hover-overlay: var(--ki-color-white-8);
-  --ki-surface-hover-overlay-inverse: var(--ki-color-black-8);
-  --ki-surface-success-high-em-hover: var(--ki-color-success-200);
-  --ki-surface-danger-high-em-hover: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-  --ki-text-high-em: var(--ki-foundation-migrated-semantic-material3-surface-s4);
-  --ki-text-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-base-em);
-  --ki-text-low-em: var(--ki-foundation-migrated-semantic-material3-text-base-em);
-  --ki-text-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-low-em);
-  --ki-text-primary-on-primary: var(--ki-foundation-migrated-themes-material3-color-brand-800);
-  --ki-text-primary-on-primary-light: var(--ki-foundation-migrated-themes-material3-color-brand-200);
-  --ki-text-secondary-on-primary: var(--ki-foundation-migrated-modes-material3-dark-color-brand-secondary-text-on-primary);
-  --ki-text-secondary-on-primary-light: var(--ki-foundation-migrated-themes-material3-color-brand-100);
-  --ki-text-primary-on-success: var(--ki-color-success-950);
-  --ki-text-text-on-neutral: var(--ki-color-black-100);
+  --ki-surface-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for surface danger high em. */
+  --ki-surface-danger-med-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for surface danger med em. */
+  --ki-surface-danger-low-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover); /** Material 3 semantic color for surface danger low em. */
+  --ki-surface-danger-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em); /** Material 3 semantic color for surface danger base em. */
+  --ki-surface-danger-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em-alpha); /** Material 3 semantic color for surface danger low em alpha. */
+  --ki-surface-danger-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-surface-danger-base-em-alpha); /** Material 3 semantic color for surface danger base em alpha. */
+  --ki-surface-disabled-high-em: var(--ki-color-white-32); /** Material 3 semantic color for surface disabled high em. */
+  --ki-surface-disabled-med-em: var(--ki-foundation-migrated-modes-material3-dark-surface-disabled-med-em); /** Material 3 semantic color for surface disabled med em. */
+  --ki-surface-disabled-low-em: var(--ki-color-white-12); /** Material 3 semantic color for surface disabled low em. */
+  --ki-surface-disabled-base-em: var(--ki-color-white-8); /** Material 3 semantic color for surface disabled base em. */
+  --ki-surface-hover-overlay: var(--ki-color-white-8); /** Material 3 semantic color for surface hover overlay. */
+  --ki-surface-hover-overlay-inverse: var(--ki-color-black-8); /** Material 3 semantic color for surface hover overlay inverse. */
+  --ki-surface-success-high-em-hover: var(--ki-color-success-200); /** semantic color for surface success high em hover. */
+  --ki-surface-danger-high-em-hover: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for surface danger high em hover. */
+  --ki-text-high-em: var(--ki-foundation-migrated-semantic-material3-surface-s4); /** Material 3 semantic color for text high em. */
+  --ki-text-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-base-em); /** Material 3 semantic color for text med em. */
+  --ki-text-low-em: var(--ki-foundation-migrated-semantic-material3-text-base-em); /** Material 3 semantic color for text low em. */
+  --ki-text-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-low-em); /** Material 3 semantic color for text base em. */
+  --ki-text-primary-on-primary: var(--ki-foundation-migrated-themes-material3-color-brand-800); /** Material 3 semantic color for text primary on primary. */
+  --ki-text-primary-on-primary-light: var(--ki-foundation-migrated-themes-material3-color-brand-200); /** Material 3 semantic color for text primary on primary light. */
+  --ki-text-secondary-on-primary: var(--ki-foundation-migrated-modes-material3-dark-color-brand-secondary-text-on-primary); /** Material 3 semantic color for text secondary on primary. */
+  --ki-text-secondary-on-primary-light: var(--ki-foundation-migrated-themes-material3-color-brand-100); /** Material 3 semantic color for text secondary on primary light. */
+  --ki-text-primary-on-success: var(--ki-color-success-950); /** semantic color for text primary on success. */
+  --ki-text-text-on-neutral: var(--ki-color-black-100); /** Material 3 semantic color for text text on neutral. */
   --ki-text-white: var(--ki-color-white-100); /** semantic color for text white. */
-  --ki-text-inverse-white: var(--ki-color-white-100);
+  --ki-text-inverse-white: var(--ki-color-white-100); /** semantic color for text inverse white. */
   --ki-text-black: var(--ki-color-black-100); /** semantic color for text black. */
-  --ki-text-inverse-black: var(--ki-color-black-100);
-  --ki-text-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-100);
-  --ki-text-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-200);
-  --ki-text-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-300);
-  --ki-text-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-700);
+  --ki-text-inverse-black: var(--ki-color-black-100); /** semantic color for text inverse black. */
+  --ki-text-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-100); /** Material 3 semantic color for text primary high em. */
+  --ki-text-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-200); /** Material 3 semantic color for text primary med em. */
+  --ki-text-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-300); /** Material 3 semantic color for text primary low em. */
+  --ki-text-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-700); /** Material 3 semantic color for text primary base em. */
   --ki-text-info-high-em: var(--ki-color-info-800); /** Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. */
   --ki-text-info-med-em: var(--ki-color-info-500); /** semantic color for text info med em. */
   --ki-text-info-low-em: var(--ki-color-info-300); /** semantic color for text info low em. */
   --ki-text-info-base-em: var(--ki-color-info-100); /** semantic color for text info base em. */
-  --ki-text-success-high-em: var(--ki-color-success-300);
-  --ki-text-success-med-em: var(--ki-color-success-400);
-  --ki-text-success-low-em: var(--ki-color-success-500);
-  --ki-text-success-base-em: var(--ki-color-success-700);
+  --ki-text-success-high-em: var(--ki-color-success-300); /** semantic color for text success high em. */
+  --ki-text-success-med-em: var(--ki-color-success-400); /** semantic color for text success med em. */
+  --ki-text-success-low-em: var(--ki-color-success-500); /** semantic color for text success low em. */
+  --ki-text-success-base-em: var(--ki-color-success-700); /** semantic color for text success base em. */
   --ki-text-warning-high-em: var(--ki-color-warning-800); /** Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. */
   --ki-text-warning-med-em: var(--ki-color-warning-500); /** semantic color for text warning med em. */
   --ki-text-warning-low-em: var(--ki-color-warning-300); /** semantic color for text warning low em. */
   --ki-text-warning-base-em: var(--ki-color-warning-100); /** semantic color for text warning base em. */
-  --ki-text-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-  --ki-text-danger-med-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-  --ki-text-danger-low-em: var(--ki-foundation-migrated-modes-material3-dark-text-danger-low-em);
-  --ki-text-danger-base-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover);
-  --ki-text-none: var(--ki-color-transparent-black);
-  --ki-text-primary-on-danger: var(--ki-foundation-migrated-modes-material3-dark-text-primary-on-danger);
-  --ki-outline-high-em: var(--ki-foundation-migrated-semantic-material3-text-base-em);
-  --ki-outline-strong: var(--ki-foundation-migrated-semantic-material3-text-base-em);
-  --ki-outline-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-med-em);
-  --ki-outline-low-em: var(--ki-foundation-migrated-modes-material3-dark-outline-low-em);
-  --ki-outline-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-base-em);
+  --ki-text-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for text danger high em. */
+  --ki-text-danger-med-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for text danger med em. */
+  --ki-text-danger-low-em: var(--ki-foundation-migrated-modes-material3-dark-text-danger-low-em); /** Material 3 semantic color for text danger low em. */
+  --ki-text-danger-base-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover); /** Material 3 semantic color for text danger base em. */
+  --ki-text-none: var(--ki-color-transparent-black); /** semantic color for text none. */
+  --ki-text-primary-on-danger: var(--ki-foundation-migrated-modes-material3-dark-text-primary-on-danger); /** semantic color for text primary on danger. */
+  --ki-outline-high-em: var(--ki-foundation-migrated-semantic-material3-text-base-em); /** Material 3 semantic color for outline high em. */
+  --ki-outline-strong: var(--ki-foundation-migrated-semantic-material3-text-base-em); /** Material 3 semantic color for outline strong. */
+  --ki-outline-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-med-em); /** Material 3 semantic color for outline med em. */
+  --ki-outline-low-em: var(--ki-foundation-migrated-modes-material3-dark-outline-low-em); /** Material 3 semantic color for outline low em. */
+  --ki-outline-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-base-em); /** Material 3 semantic color for outline base em. */
   --ki-outline-white: var(--ki-color-white-100); /** semantic color for outline white. */
-  --ki-outline-inverse-white: var(--ki-color-white-100);
+  --ki-outline-inverse-white: var(--ki-color-white-100); /** semantic color for outline inverse white. */
   --ki-outline-black: var(--ki-color-black-100); /** semantic color for outline black. */
-  --ki-outline-inverse-black: var(--ki-color-black-100);
-  --ki-outline-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-200);
-  --ki-outline-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-500);
-  --ki-outline-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-700);
-  --ki-outline-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-800);
-  --ki-outline-primary-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-low-em-alpha);
-  --ki-outline-primary-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-base-em-alpha);
+  --ki-outline-inverse-black: var(--ki-color-black-100); /** semantic color for outline inverse black. */
+  --ki-outline-primary-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-200); /** Material 3 semantic color for outline primary high em. */
+  --ki-outline-primary-med-em: var(--ki-foundation-migrated-themes-material3-color-brand-500); /** Material 3 semantic color for outline primary med em. */
+  --ki-outline-primary-low-em: var(--ki-foundation-migrated-themes-material3-color-brand-700); /** Material 3 semantic color for outline primary low em. */
+  --ki-outline-primary-base-em: var(--ki-foundation-migrated-themes-material3-color-brand-800); /** Material 3 semantic color for outline primary base em. */
+  --ki-outline-primary-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-low-em-alpha); /** Material 3 semantic color for outline primary low em alpha. */
+  --ki-outline-primary-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-primary-base-em-alpha); /** Material 3 semantic color for outline primary base em alpha. */
   --ki-outline-info-high-em: var(--ki-color-info-500); /** semantic color for outline info high em. */
   --ki-outline-info-med-em: var(--ki-color-info-300); /** semantic color for outline info med em. */
   --ki-outline-info-low-em: var(--ki-color-info-200); /** semantic color for outline info low em. */
@@ -3257,17 +3257,17 @@
   --ki-outline-warning-base-em: var(--ki-color-warning-100); /** semantic color for outline warning base em. */
   --ki-outline-warning-low-em-alpha: var(--ki-color-warning-500-alpha-4); /** semantic color for outline warning low em alpha. */
   --ki-outline-warning-base-em-alpha: var(--ki-color-warning-500-alpha-2); /** semantic color for outline warning base em alpha. */
-  --ki-outline-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em);
-  --ki-outline-danger-med-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover);
-  --ki-outline-danger-low-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em);
-  --ki-outline-danger-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-base-em);
-  --ki-outline-danger-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em-alpha);
-  --ki-outline-danger-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-base-em-alpha);
-  --ki-outline-none: var(--ki-color-transparent-black);
-  --ki-outline-primary-button-top: var(--ki-color-black-12);
-  --ki-outline-primary-button-bottom: var(--ki-color-black-24);
-  --ki-outline-secondary-button-top: var(--ki-color-white-8);
-  --ki-outline-secondary-button-bottom: var(--ki-color-white-12);
+  --ki-outline-danger-high-em: var(--ki-foundation-migrated-semantic-material3-outline-danger-low-em); /** Material 3 semantic color for outline danger high em. */
+  --ki-outline-danger-med-em: var(--ki-foundation-migrated-semantic-material3-surface-danger-high-em-hover); /** Material 3 semantic color for outline danger med em. */
+  --ki-outline-danger-low-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em); /** Material 3 semantic color for outline danger low em. */
+  --ki-outline-danger-base-em: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-base-em); /** Material 3 semantic color for outline danger base em. */
+  --ki-outline-danger-low-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-low-em-alpha); /** Material 3 semantic color for outline danger low em alpha. */
+  --ki-outline-danger-base-em-alpha: var(--ki-foundation-migrated-modes-material3-dark-outline-danger-base-em-alpha); /** Material 3 semantic color for outline danger base em alpha. */
+  --ki-outline-none: var(--ki-color-transparent-black); /** semantic color for outline none. */
+  --ki-outline-primary-button-top: var(--ki-color-black-12); /** Material 3 semantic color for outline primary button top. */
+  --ki-outline-primary-button-bottom: var(--ki-color-black-24); /** Material 3 semantic color for outline primary button bottom. */
+  --ki-outline-secondary-button-top: var(--ki-color-white-8); /** Material 3 semantic color for outline secondary button top. */
+  --ki-outline-secondary-button-bottom: var(--ki-color-white-12); /** Material 3 semantic color for outline secondary button bottom. */
   --ki-inverse-white-alpha-3: var(--ki-color-black-3); /** semantic color for inverse white alpha 3. */
   --ki-inverse-white-alpha-6: var(--ki-color-black-5); /** semantic color for inverse white alpha 6. */
   --ki-inverse-white-alpha-9: var(--ki-color-black-8); /** semantic color for inverse white alpha 9. */
@@ -3298,14 +3298,14 @@
   --ki-inverse-black-alpha-80: var(--ki-color-white-80); /** semantic color for inverse black alpha 80. */
   --ki-inverse-black-alpha-88: var(--ki-color-white-88); /** semantic color for inverse black alpha 88. */
   --ki-inverse-black-alpha-solid: var(--ki-color-white-100); /** semantic color for inverse black alpha solid. */
-  --ki-overlay-high-em: var(--ki-color-black-32);
-  --ki-overlay-high-em-inverse: var(--ki-color-white-12);
-  --ki-overlay-med-em: var(--ki-foundation-migrated-semantic-material3-overlay-med-em);
-  --ki-overlay-med-em-inverse: var(--ki-color-white-8);
-  --ki-elevation-shadow: var(--ki-foundation-migrated-semantic-material3-overlay-med-em);
-  --ki-elevation-shadow-med: var(--ki-color-black-24);
-  --ki-elevation-shadow-dark: var(--ki-color-black-32);
-  --ki-transparent-inverse: var(--ki-color-transparent-black);
+  --ki-overlay-high-em: var(--ki-color-black-32); /** Material 3 semantic color for overlay high em. */
+  --ki-overlay-high-em-inverse: var(--ki-color-white-12); /** Material 3 semantic color for overlay high em inverse. */
+  --ki-overlay-med-em: var(--ki-foundation-migrated-semantic-material3-overlay-med-em); /** Material 3 semantic color for overlay med em. */
+  --ki-overlay-med-em-inverse: var(--ki-color-white-8); /** Material 3 semantic color for overlay med em inverse. */
+  --ki-elevation-shadow: var(--ki-foundation-migrated-semantic-material3-overlay-med-em); /** Material 3 semantic color for elevation shadow. */
+  --ki-elevation-shadow-med: var(--ki-color-black-24); /** Material 3 semantic color for elevation shadow med. */
+  --ki-elevation-shadow-dark: var(--ki-color-black-32); /** Material 3 semantic color for elevation shadow dark. */
+  --ki-transparent-inverse: var(--ki-color-transparent-black); /** semantic color for transparent inverse. */
   --ki-spacing-inline: var(--ki-space-md); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md. */
   --ki-spacing-block: var(--ki-space-xl); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. */
   --ki-corner-control: var(--ki-radius-md); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. */
@@ -3483,23 +3483,23 @@
   --ki-tooltip-offset: var(--ki-space-xs); /** Material 3 dimension used by the tooltip component for offset. */
   --ki-tooltip-show-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-show-delay); /** Material 3 duration used by the tooltip component for tooltip show delay. */
   --ki-tooltip-hide-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-hide-delay); /** Material 3 duration used by the tooltip component for tooltip hide delay. */
-  --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s1);
-  --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s2);
-  --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s3);
-  --ki-surface-special-light-s0-dark-s4: var(--ki-surface-s4);
-  --ki-surface-special-light-s0-dark-s5: var(--ki-surface-s5);
-  --ki-surface-special-dark-s0-light-s1: var(--ki-surface-s0);
-  --ki-surface-special-dark-s0-light-s2: var(--ki-surface-s0);
-  --ki-surface-special-dark-s0-light-s3: var(--ki-surface-s0);
-  --ki-surface-special-dark-s0-light-s4: var(--ki-surface-s0);
-  --ki-surface-special-dark-s0-light-s5: var(--ki-surface-s0);
-  --ki-surface-special-light-s1-dark-s2: var(--ki-surface-s2);
-  --ki-surface-special-light-s2-dark-s3: var(--ki-surface-s3);
-  --ki-surface-special-light-s3-dark-s4: var(--ki-surface-s4);
-  --ki-surface-special-light-s4-dark-s5: var(--ki-surface-s5);
+  --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s1); /** semantic color for surface special light s0 dark s1. */
+  --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s2); /** semantic color for surface special light s0 dark s2. */
+  --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s3); /** semantic color for surface special light s0 dark s3. */
+  --ki-surface-special-light-s0-dark-s4: var(--ki-surface-s4); /** semantic color for surface special light s0 dark s4. */
+  --ki-surface-special-light-s0-dark-s5: var(--ki-surface-s5); /** semantic color for surface special light s0 dark s5. */
+  --ki-surface-special-dark-s0-light-s1: var(--ki-surface-s0); /** semantic color for surface special dark s0 light s1. */
+  --ki-surface-special-dark-s0-light-s2: var(--ki-surface-s0); /** semantic color for surface special dark s0 light s2. */
+  --ki-surface-special-dark-s0-light-s3: var(--ki-surface-s0); /** semantic color for surface special dark s0 light s3. */
+  --ki-surface-special-dark-s0-light-s4: var(--ki-surface-s0); /** semantic color for surface special dark s0 light s4. */
+  --ki-surface-special-dark-s0-light-s5: var(--ki-surface-s0); /** semantic color for surface special dark s0 light s5. */
+  --ki-surface-special-light-s1-dark-s2: var(--ki-surface-s2); /** semantic color for surface special light s1 dark s2. */
+  --ki-surface-special-light-s2-dark-s3: var(--ki-surface-s3); /** semantic color for surface special light s2 dark s3. */
+  --ki-surface-special-light-s3-dark-s4: var(--ki-surface-s4); /** semantic color for surface special light s3 dark s4. */
+  --ki-surface-special-light-s4-dark-s5: var(--ki-surface-s5); /** semantic color for surface special light s4 dark s5. */
   --ki-surface-base: var(--ki-surface-s0); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.surface.s0. */
   --ki-surface-raised: var(--ki-surface-s1); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.surface.s1. */
-  --ki-surface-primary-high-em-hover: var(--ki-color-brand-200);
+  --ki-surface-primary-high-em-hover: var(--ki-color-brand-200); /** Material 3 semantic color for surface primary high em hover. */
   --ki-text-secondary-on-success: var(--ki-color-brand-secondary-text-on-success); /** semantic color for text secondary on success. */
   --ki-text-base: var(--ki-text-high-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. */
   --ki-text-muted: var(--ki-text-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. */
