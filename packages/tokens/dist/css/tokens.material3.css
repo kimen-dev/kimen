@@ -200,6 +200,33 @@
   --ki-radius-big-component-sm: 20px;
   --ki-radius-big-component-md: 24px;
   --ki-radius-big-component-lg: 28px;
+  --ki-blur-8: 8px; /** MarsUI Blur/8: backdrop-filter blur radius. */
+  --ki-blur-16: 16px; /** MarsUI Blur/16: backdrop-filter blur radius. */
+  --ki-blur-24: 24px; /** MarsUI Blur/24: backdrop-filter blur radius used by component effects. */
+  --ki-blur-48: 48px; /** MarsUI Blur/48: backdrop-filter blur radius. */
+  --ki-blur-96: 96px; /** MarsUI Blur/96: backdrop-filter blur radius. */
+  --ki-shadow-distance-1: 1px; /** MarsUI Elevation/e1 layer geometry: 1px offset/blur. */
+  --ki-shadow-distance-2: 3px; /** MarsUI Elevation/e2 layer geometry: 3px offset/blur (also the Component_effect inner-highlight offset/blur). */
+  --ki-shadow-distance-3: 20px; /** MarsUI Elevation/e3 layer geometry: 20px offset/blur. */
+  --ki-shadow-distance-4: 32px; /** MarsUI Elevation/e4 layer geometry: 32px offset/blur. */
+  --ki-shadow-distance-5: 56px; /** MarsUI Elevation/e5 layer geometry: 56px offset/blur. */
+  --ki-shadow-distance-6: 72px; /** MarsUI Elevation/e6 layer geometry: 72px offset/blur. */
+  --ki-shadow-spread-1: -0.5px; /** MarsUI Elevation/e1 layer spread: -0.5px. */
+  --ki-shadow-spread-2: -1.5px; /** MarsUI Elevation/e2 layer spread: -1.5px. */
+  --ki-shadow-spread-3: -12px; /** MarsUI Elevation/e3 layer spread: -12px. */
+  --ki-shadow-spread-4: -16px; /** MarsUI Elevation/e4 layer spread: -16px. */
+  --ki-shadow-spread-5: -28px; /** MarsUI Elevation/e5 layer spread: -28px. */
+  --ki-shadow-spread-6: -36px; /** MarsUI Elevation/e6 layer spread: -36px. */
+  --ki-shadow-effect-y: 2px; /** MarsUI Component_effect/secondary drop and inner-highlight offset: 2px. */
+  --ki-shadow-effect-blur: 1.5px; /** MarsUI Component_effect/secondary_default drop blur: 1.5px. */
+  --ki-shadow-ring: 3px; /** MarsUI Focus/*: 3px focus-ring spread. */
+  --ki-size-border-hairline: 1px; /** MarsUI hairline stroke: 1px divider/border width. */
+  --ki-size-surface-xxs: 18rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Floating hint surfaces such as tooltips. */
+  --ki-size-surface-xs: 20rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Small floating surfaces such as listboxes. */
+  --ki-size-surface-sm: 24rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
+  --ki-size-surface-md: 32rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
+  --ki-size-surface-lg: 40rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
+  --ki-size-surface-xl: 48rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
   --ki-foundation-migrated-modes-material3-dark-color-brand-secondary-text-on-primary: rgba(56, 30, 114, 0.8);
   --ki-foundation-migrated-modes-material3-dark-outline-base-em: #211f26;
   --ki-foundation-migrated-modes-material3-dark-outline-danger-base-em: #2d0704;
@@ -368,6 +395,10 @@
   --ki-color-brand-secondary-text-on-primary-light: var(--ki-foundation-migrated-themes-material3-color-brand-500);
   --ki-color-brand-primary-text-on-success: var(--ki-color-white-100);
   --ki-color-brand-secondary-text-on-success: var(--ki-color-white-72);
+  --ki-shadow-inner-primary-default: inset 0px var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) 0px var(--ki-color-white-12); /** MarsUI Component_effect/primary_default inner highlight: inset White/12 0/3/3. */
+  --ki-shadow-inner-primary-hover: inset 0px var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) 0px var(--ki-color-white-18); /** MarsUI Component_effect/primary_hover inner highlight: inset White/18 0/3/3. */
+  --ki-shadow-inner-secondary-default: inset 0px var(--ki-shadow-effect-y) var(--ki-shadow-distance-2) 0px var(--ki-color-white-3); /** MarsUI Component_effect/secondary_default inner highlight: inset White/3 0/2/3. */
+  --ki-shadow-inner-secondary-hover: inset 0px var(--ki-shadow-effect-y) var(--ki-shadow-distance-2) 0px var(--ki-color-white-8); /** MarsUI Component_effect/secondary_hover inner highlight: inset White/8 0/2/3. */
   --ki-foundation-migrated-component-button-button-primary-hover-shadow: 0px 1px 1px -0.5px var(--ki-color-black-5);
   --ki-foundation-migrated-component-button-button-tertiary-active-shadow: 0px 1px 2px 0px var(--ki-color-black-24), 0px 2px 6px 2px var(--ki-color-black-8);
   --ki-foundation-migrated-component-button-button-tertiary-hover-shadow: 0px 1px 3px 0px var(--ki-color-black-24), 0px 4px 8px 3px var(--ki-color-black-8);
@@ -592,6 +623,7 @@
   --ki-elevation-shadow: var(--ki-color-black-5); /** Material 3 semantic color for elevation shadow. */
   --ki-elevation-shadow-med: var(--ki-color-black-8); /** Material 3 semantic color for elevation shadow med. */
   --ki-elevation-shadow-dark: var(--ki-color-black-24); /** Material 3 semantic color for elevation shadow dark. */
+  --ki-effect-component-backdrop-blur: var(--ki-blur-24); /** MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate). */
   --ki-transparent-inverse: var(--ki-color-transparent-white); /** semantic color for transparent inverse. */
   --ki-spacing-inline: var(--ki-space-md); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md. */
   --ki-spacing-block: var(--ki-space-xl); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. */
@@ -665,8 +697,8 @@
   --ki-dialog-radius: var(--ki-radius-8xl); /** Material 3 dimension used by the dialog component for radius. */
   --ki-dialog-padding: var(--ki-space-7xl); /** Material 3 dimension used by the dialog component for padding. */
   --ki-dialog-gap: var(--ki-space-5xl); /** Material 3 dimension used by the dialog component for gap. */
-  --ki-dialog-min-width: var(--ki-space-25xl); /** Material 3 dimension used by the dialog component for min width. */
-  --ki-dialog-max-width: var(--ki-space-26xl); /** Material 3 dimension used by the dialog component for max width. */
+  --ki-dialog-min-width: var(--ki-size-surface-sm); /** Material 3 dimension used by the dialog component for min width (surface size scale; to be refined in Fase M3). */
+  --ki-dialog-max-width: var(--ki-size-surface-md); /** Material 3 dimension used by the dialog component for max width (surface size scale; to be refined in Fase M3). */
   --ki-dialog-focus-ring-width: var(--ki-space-xxs); /** dimension used by the dialog component for focus ring width. */
   --ki-dialog-focus-ring-offset: var(--ki-space-xxs); /** dimension used by the dialog component for focus ring offset. */
   --ki-dialog-motion-duration: var(--ki-foundation-migrated-component-dialog-material3-dialog-motion-duration); /** Material 3 duration used by the dialog component for dialog motion duration. */
@@ -723,7 +755,7 @@
   --ki-select-label-gap: var(--ki-space-xs); /** dimension used by the select component for label gap. */
   --ki-select-listbox-radius: var(--ki-radius-md); /** Material 3 dimension used by the select component for listbox radius. */
   --ki-select-listbox-padding: var(--ki-space-xs); /** dimension used by the select component for listbox padding. */
-  --ki-select-listbox-max-block-size: var(--ki-space-25xl); /** dimension used by the select component for listbox max block size. */
+  --ki-select-listbox-max-block-size: var(--ki-size-surface-xs); /** dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale). */
   --ki-select-listbox-offset: var(--ki-space-xs); /** dimension used by the select component for listbox offset. */
   --ki-select-focus-ring-width: var(--ki-space-xxs); /** dimension used by the select component for focus ring width. */
   --ki-select-focus-ring-offset: var(--ki-space-xxs); /** dimension used by the select component for focus ring offset. */
@@ -766,7 +798,7 @@
   --ki-tooltip-radius: var(--ki-radius-xs); /** Material 3 dimension used by the tooltip component for radius. */
   --ki-tooltip-padding-inline: var(--ki-space-md); /** Material 3 dimension used by the tooltip component for padding inline. */
   --ki-tooltip-padding-block: var(--ki-space-xs); /** Material 3 dimension used by the tooltip component for padding block. */
-  --ki-tooltip-max-inline-size: var(--ki-space-25xl); /** Material 3 dimension used by the tooltip component for max inline size. */
+  --ki-tooltip-max-inline-size: var(--ki-size-surface-xxs); /** Material 3 dimension used by the tooltip component for max inline size (surface size scale; to be refined in Fase M3). */
   --ki-tooltip-offset: var(--ki-space-xs); /** Material 3 dimension used by the tooltip component for offset. */
   --ki-tooltip-show-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-show-delay); /** Material 3 duration used by the tooltip component for tooltip show delay. */
   --ki-tooltip-hide-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-hide-delay); /** Material 3 duration used by the tooltip component for tooltip hide delay. */
@@ -794,6 +826,18 @@
   --ki-text-base: var(--ki-text-high-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. */
   --ki-text-muted: var(--ki-text-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. */
   --ki-text-danger: var(--ki-text-danger-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.danger-med-em. */
+  --ki-elevation-e1: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow); /** MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow. */
+  --ki-elevation-e2: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow); /** MarsUI Elevation/e2 (cumulative: e1 layers plus 0/3/3/-1.5). */
+  --ki-elevation-e3: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow); /** MarsUI Elevation/e3 (cumulative: e2 layers plus 0/20/20/-12). */
+  --ki-elevation-e4: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow); /** MarsUI Elevation/e4 (cumulative: e3 layers plus 0/32/32/-16). */
+  --ki-elevation-e5: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow); /** MarsUI Elevation/e5 (cumulative: e4 layers plus 0/56/56/-28). */
+  --ki-elevation-e6: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-6) var(--ki-shadow-distance-6) var(--ki-shadow-spread-6) var(--ki-elevation-shadow); /** MarsUI Elevation/e6 (cumulative: e5 layers plus 0/72/72/-36). */
+  --ki-effect-component-primary-default-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), var(--ki-shadow-inner-primary-default); /** MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow. */
+  --ki-effect-component-primary-hover-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), var(--ki-shadow-inner-primary-hover); /** MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). */
+  --ki-effect-component-secondary-default-shadow: 0 var(--ki-shadow-effect-y) var(--ki-shadow-effect-blur) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), var(--ki-shadow-inner-secondary-default); /** MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). */
+  --ki-effect-component-secondary-hover-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), var(--ki-shadow-inner-secondary-hover); /** MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). */
+  --ki-focus-primary: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-primary-base-em-alpha); /** MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha (scheme-aware via the outline token). */
+  --ki-focus-gray: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-med-em); /** MarsUI Focus/gray: 3px spread focus ring of Outline/med_em (scheme-aware via the outline token). */
   --ki-typography-family-display: var(--ki-font-family-display); /** semantic font family for typography family display. */
   --ki-typography-family-body: var(--ki-font-family-body); /** semantic font family for typography family body. */
   --ki-typography-family-serif: var(--ki-font-family-serif); /** semantic font family for typography family serif. */
@@ -1556,6 +1600,33 @@
     --ki-radius-big-component-sm: 20px;
     --ki-radius-big-component-md: 24px;
     --ki-radius-big-component-lg: 28px;
+    --ki-blur-8: 8px; /** MarsUI Blur/8: backdrop-filter blur radius. */
+    --ki-blur-16: 16px; /** MarsUI Blur/16: backdrop-filter blur radius. */
+    --ki-blur-24: 24px; /** MarsUI Blur/24: backdrop-filter blur radius used by component effects. */
+    --ki-blur-48: 48px; /** MarsUI Blur/48: backdrop-filter blur radius. */
+    --ki-blur-96: 96px; /** MarsUI Blur/96: backdrop-filter blur radius. */
+    --ki-shadow-distance-1: 1px; /** MarsUI Elevation/e1 layer geometry: 1px offset/blur. */
+    --ki-shadow-distance-2: 3px; /** MarsUI Elevation/e2 layer geometry: 3px offset/blur (also the Component_effect inner-highlight offset/blur). */
+    --ki-shadow-distance-3: 20px; /** MarsUI Elevation/e3 layer geometry: 20px offset/blur. */
+    --ki-shadow-distance-4: 32px; /** MarsUI Elevation/e4 layer geometry: 32px offset/blur. */
+    --ki-shadow-distance-5: 56px; /** MarsUI Elevation/e5 layer geometry: 56px offset/blur. */
+    --ki-shadow-distance-6: 72px; /** MarsUI Elevation/e6 layer geometry: 72px offset/blur. */
+    --ki-shadow-spread-1: -0.5px; /** MarsUI Elevation/e1 layer spread: -0.5px. */
+    --ki-shadow-spread-2: -1.5px; /** MarsUI Elevation/e2 layer spread: -1.5px. */
+    --ki-shadow-spread-3: -12px; /** MarsUI Elevation/e3 layer spread: -12px. */
+    --ki-shadow-spread-4: -16px; /** MarsUI Elevation/e4 layer spread: -16px. */
+    --ki-shadow-spread-5: -28px; /** MarsUI Elevation/e5 layer spread: -28px. */
+    --ki-shadow-spread-6: -36px; /** MarsUI Elevation/e6 layer spread: -36px. */
+    --ki-shadow-effect-y: 2px; /** MarsUI Component_effect/secondary drop and inner-highlight offset: 2px. */
+    --ki-shadow-effect-blur: 1.5px; /** MarsUI Component_effect/secondary_default drop blur: 1.5px. */
+    --ki-shadow-ring: 3px; /** MarsUI Focus/*: 3px focus-ring spread. */
+    --ki-size-border-hairline: 1px; /** MarsUI hairline stroke: 1px divider/border width. */
+    --ki-size-surface-xxs: 18rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Floating hint surfaces such as tooltips. */
+    --ki-size-surface-xs: 20rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Small floating surfaces such as listboxes. */
+    --ki-size-surface-sm: 24rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
+    --ki-size-surface-md: 32rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
+    --ki-size-surface-lg: 40rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
+    --ki-size-surface-xl: 48rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
     --ki-foundation-migrated-modes-material3-dark-color-brand-secondary-text-on-primary: rgba(56, 30, 114, 0.8);
     --ki-foundation-migrated-modes-material3-dark-outline-base-em: #211f26;
     --ki-foundation-migrated-modes-material3-dark-outline-danger-base-em: #2d0704;
@@ -1724,6 +1795,10 @@
     --ki-color-brand-secondary-text-on-primary-light: var(--ki-foundation-migrated-themes-material3-color-brand-100);
     --ki-color-brand-primary-text-on-success: var(--ki-color-white-100);
     --ki-color-brand-secondary-text-on-success: var(--ki-color-white-72);
+    --ki-shadow-inner-primary-default: inset 0px var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) 0px var(--ki-color-white-12); /** MarsUI Component_effect/primary_default inner highlight: inset White/12 0/3/3. */
+    --ki-shadow-inner-primary-hover: inset 0px var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) 0px var(--ki-color-white-18); /** MarsUI Component_effect/primary_hover inner highlight: inset White/18 0/3/3. */
+    --ki-shadow-inner-secondary-default: inset 0px var(--ki-shadow-effect-y) var(--ki-shadow-distance-2) 0px var(--ki-color-white-3); /** MarsUI Component_effect/secondary_default inner highlight: inset White/3 0/2/3. */
+    --ki-shadow-inner-secondary-hover: inset 0px var(--ki-shadow-effect-y) var(--ki-shadow-distance-2) 0px var(--ki-color-white-8); /** MarsUI Component_effect/secondary_hover inner highlight: inset White/8 0/2/3. */
     --ki-foundation-migrated-component-button-button-primary-hover-shadow: 0px 1px 1px -0.5px var(--ki-foundation-migrated-semantic-material3-overlay-med-em);
     --ki-foundation-migrated-component-button-button-tertiary-active-shadow: 0px 1px 2px 0px var(--ki-color-black-32), 0px 2px 6px 2px var(--ki-color-black-24);
     --ki-foundation-migrated-component-button-button-tertiary-hover-shadow: 0px 1px 3px 0px var(--ki-color-black-32), 0px 4px 8px 3px var(--ki-color-black-24);
@@ -1951,6 +2026,7 @@
     --ki-elevation-shadow: var(--ki-foundation-migrated-semantic-material3-overlay-med-em); /** Material 3 semantic color for elevation shadow. */
     --ki-elevation-shadow-med: var(--ki-color-black-24); /** Material 3 semantic color for elevation shadow med. */
     --ki-elevation-shadow-dark: var(--ki-color-black-32); /** Material 3 semantic color for elevation shadow dark. */
+    --ki-effect-component-backdrop-blur: var(--ki-blur-24); /** MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate). */
     --ki-transparent-inverse: var(--ki-color-transparent-black); /** semantic color for transparent inverse. */
     --ki-spacing-inline: var(--ki-space-md); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md. */
     --ki-spacing-block: var(--ki-space-xl); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. */
@@ -2024,8 +2100,8 @@
     --ki-dialog-radius: var(--ki-radius-8xl); /** Material 3 dimension used by the dialog component for radius. */
     --ki-dialog-padding: var(--ki-space-7xl); /** Material 3 dimension used by the dialog component for padding. */
     --ki-dialog-gap: var(--ki-space-5xl); /** Material 3 dimension used by the dialog component for gap. */
-    --ki-dialog-min-width: var(--ki-space-25xl); /** Material 3 dimension used by the dialog component for min width. */
-    --ki-dialog-max-width: var(--ki-space-26xl); /** Material 3 dimension used by the dialog component for max width. */
+    --ki-dialog-min-width: var(--ki-size-surface-sm); /** Material 3 dimension used by the dialog component for min width (surface size scale; to be refined in Fase M3). */
+    --ki-dialog-max-width: var(--ki-size-surface-md); /** Material 3 dimension used by the dialog component for max width (surface size scale; to be refined in Fase M3). */
     --ki-dialog-focus-ring-width: var(--ki-space-xxs); /** dimension used by the dialog component for focus ring width. */
     --ki-dialog-focus-ring-offset: var(--ki-space-xxs); /** dimension used by the dialog component for focus ring offset. */
     --ki-dialog-motion-duration: var(--ki-foundation-migrated-component-dialog-material3-dialog-motion-duration); /** Material 3 duration used by the dialog component for dialog motion duration. */
@@ -2082,7 +2158,7 @@
     --ki-select-label-gap: var(--ki-space-xs); /** dimension used by the select component for label gap. */
     --ki-select-listbox-radius: var(--ki-radius-md); /** Material 3 dimension used by the select component for listbox radius. */
     --ki-select-listbox-padding: var(--ki-space-xs); /** dimension used by the select component for listbox padding. */
-    --ki-select-listbox-max-block-size: var(--ki-space-25xl); /** dimension used by the select component for listbox max block size. */
+    --ki-select-listbox-max-block-size: var(--ki-size-surface-xs); /** dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale). */
     --ki-select-listbox-offset: var(--ki-space-xs); /** dimension used by the select component for listbox offset. */
     --ki-select-focus-ring-width: var(--ki-space-xxs); /** dimension used by the select component for focus ring width. */
     --ki-select-focus-ring-offset: var(--ki-space-xxs); /** dimension used by the select component for focus ring offset. */
@@ -2125,7 +2201,7 @@
     --ki-tooltip-radius: var(--ki-radius-xs); /** Material 3 dimension used by the tooltip component for radius. */
     --ki-tooltip-padding-inline: var(--ki-space-md); /** Material 3 dimension used by the tooltip component for padding inline. */
     --ki-tooltip-padding-block: var(--ki-space-xs); /** Material 3 dimension used by the tooltip component for padding block. */
-    --ki-tooltip-max-inline-size: var(--ki-space-25xl); /** Material 3 dimension used by the tooltip component for max inline size. */
+    --ki-tooltip-max-inline-size: var(--ki-size-surface-xxs); /** Material 3 dimension used by the tooltip component for max inline size (surface size scale; to be refined in Fase M3). */
     --ki-tooltip-offset: var(--ki-space-xs); /** Material 3 dimension used by the tooltip component for offset. */
     --ki-tooltip-show-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-show-delay); /** Material 3 duration used by the tooltip component for tooltip show delay. */
     --ki-tooltip-hide-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-hide-delay); /** Material 3 duration used by the tooltip component for tooltip hide delay. */
@@ -2150,6 +2226,18 @@
     --ki-text-base: var(--ki-text-high-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. */
     --ki-text-muted: var(--ki-text-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. */
     --ki-text-danger: var(--ki-text-danger-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.danger-med-em. */
+    --ki-elevation-e1: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow); /** MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow. */
+    --ki-elevation-e2: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow); /** MarsUI Elevation/e2 (cumulative: e1 layers plus 0/3/3/-1.5). */
+    --ki-elevation-e3: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow); /** MarsUI Elevation/e3 (cumulative: e2 layers plus 0/20/20/-12). */
+    --ki-elevation-e4: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow); /** MarsUI Elevation/e4 (cumulative: e3 layers plus 0/32/32/-16). */
+    --ki-elevation-e5: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow); /** MarsUI Elevation/e5 (cumulative: e4 layers plus 0/56/56/-28). */
+    --ki-elevation-e6: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-6) var(--ki-shadow-distance-6) var(--ki-shadow-spread-6) var(--ki-elevation-shadow); /** MarsUI Elevation/e6 (cumulative: e5 layers plus 0/72/72/-36). */
+    --ki-effect-component-primary-default-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), var(--ki-shadow-inner-primary-default); /** MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow. */
+    --ki-effect-component-primary-hover-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), var(--ki-shadow-inner-primary-hover); /** MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). */
+    --ki-effect-component-secondary-default-shadow: 0 var(--ki-shadow-effect-y) var(--ki-shadow-effect-blur) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), var(--ki-shadow-inner-secondary-default); /** MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). */
+    --ki-effect-component-secondary-hover-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), var(--ki-shadow-inner-secondary-hover); /** MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). */
+    --ki-focus-primary: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-primary-base-em-alpha); /** MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha (scheme-aware via the outline token). */
+    --ki-focus-gray: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-med-em); /** MarsUI Focus/gray: 3px spread focus ring of Outline/med_em (scheme-aware via the outline token). */
     --ki-typography-family-display: var(--ki-font-family-display); /** semantic font family for typography family display. */
     --ki-typography-family-body: var(--ki-font-family-body); /** semantic font family for typography family body. */
     --ki-typography-family-serif: var(--ki-font-family-serif); /** semantic font family for typography family serif. */
@@ -2910,6 +2998,33 @@
   --ki-radius-big-component-sm: 20px;
   --ki-radius-big-component-md: 24px;
   --ki-radius-big-component-lg: 28px;
+  --ki-blur-8: 8px; /** MarsUI Blur/8: backdrop-filter blur radius. */
+  --ki-blur-16: 16px; /** MarsUI Blur/16: backdrop-filter blur radius. */
+  --ki-blur-24: 24px; /** MarsUI Blur/24: backdrop-filter blur radius used by component effects. */
+  --ki-blur-48: 48px; /** MarsUI Blur/48: backdrop-filter blur radius. */
+  --ki-blur-96: 96px; /** MarsUI Blur/96: backdrop-filter blur radius. */
+  --ki-shadow-distance-1: 1px; /** MarsUI Elevation/e1 layer geometry: 1px offset/blur. */
+  --ki-shadow-distance-2: 3px; /** MarsUI Elevation/e2 layer geometry: 3px offset/blur (also the Component_effect inner-highlight offset/blur). */
+  --ki-shadow-distance-3: 20px; /** MarsUI Elevation/e3 layer geometry: 20px offset/blur. */
+  --ki-shadow-distance-4: 32px; /** MarsUI Elevation/e4 layer geometry: 32px offset/blur. */
+  --ki-shadow-distance-5: 56px; /** MarsUI Elevation/e5 layer geometry: 56px offset/blur. */
+  --ki-shadow-distance-6: 72px; /** MarsUI Elevation/e6 layer geometry: 72px offset/blur. */
+  --ki-shadow-spread-1: -0.5px; /** MarsUI Elevation/e1 layer spread: -0.5px. */
+  --ki-shadow-spread-2: -1.5px; /** MarsUI Elevation/e2 layer spread: -1.5px. */
+  --ki-shadow-spread-3: -12px; /** MarsUI Elevation/e3 layer spread: -12px. */
+  --ki-shadow-spread-4: -16px; /** MarsUI Elevation/e4 layer spread: -16px. */
+  --ki-shadow-spread-5: -28px; /** MarsUI Elevation/e5 layer spread: -28px. */
+  --ki-shadow-spread-6: -36px; /** MarsUI Elevation/e6 layer spread: -36px. */
+  --ki-shadow-effect-y: 2px; /** MarsUI Component_effect/secondary drop and inner-highlight offset: 2px. */
+  --ki-shadow-effect-blur: 1.5px; /** MarsUI Component_effect/secondary_default drop blur: 1.5px. */
+  --ki-shadow-ring: 3px; /** MarsUI Focus/*: 3px focus-ring spread. */
+  --ki-size-border-hairline: 1px; /** MarsUI hairline stroke: 1px divider/border width. */
+  --ki-size-surface-xxs: 18rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Floating hint surfaces such as tooltips. */
+  --ki-size-surface-xs: 20rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Small floating surfaces such as listboxes. */
+  --ki-size-surface-sm: 24rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
+  --ki-size-surface-md: 32rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
+  --ki-size-surface-lg: 40rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
+  --ki-size-surface-xl: 48rem; /** Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). */
   --ki-foundation-migrated-modes-material3-dark-color-brand-secondary-text-on-primary: rgba(56, 30, 114, 0.8);
   --ki-foundation-migrated-modes-material3-dark-outline-base-em: #211f26;
   --ki-foundation-migrated-modes-material3-dark-outline-danger-base-em: #2d0704;
@@ -3078,6 +3193,10 @@
   --ki-color-brand-secondary-text-on-primary-light: var(--ki-foundation-migrated-themes-material3-color-brand-100);
   --ki-color-brand-primary-text-on-success: var(--ki-color-white-100);
   --ki-color-brand-secondary-text-on-success: var(--ki-color-white-72);
+  --ki-shadow-inner-primary-default: inset 0px var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) 0px var(--ki-color-white-12); /** MarsUI Component_effect/primary_default inner highlight: inset White/12 0/3/3. */
+  --ki-shadow-inner-primary-hover: inset 0px var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) 0px var(--ki-color-white-18); /** MarsUI Component_effect/primary_hover inner highlight: inset White/18 0/3/3. */
+  --ki-shadow-inner-secondary-default: inset 0px var(--ki-shadow-effect-y) var(--ki-shadow-distance-2) 0px var(--ki-color-white-3); /** MarsUI Component_effect/secondary_default inner highlight: inset White/3 0/2/3. */
+  --ki-shadow-inner-secondary-hover: inset 0px var(--ki-shadow-effect-y) var(--ki-shadow-distance-2) 0px var(--ki-color-white-8); /** MarsUI Component_effect/secondary_hover inner highlight: inset White/8 0/2/3. */
   --ki-foundation-migrated-component-button-button-primary-hover-shadow: 0px 1px 1px -0.5px var(--ki-foundation-migrated-semantic-material3-overlay-med-em);
   --ki-foundation-migrated-component-button-button-tertiary-active-shadow: 0px 1px 2px 0px var(--ki-color-black-32), 0px 2px 6px 2px var(--ki-color-black-24);
   --ki-foundation-migrated-component-button-button-tertiary-hover-shadow: 0px 1px 3px 0px var(--ki-color-black-32), 0px 4px 8px 3px var(--ki-color-black-24);
@@ -3305,6 +3424,7 @@
   --ki-elevation-shadow: var(--ki-foundation-migrated-semantic-material3-overlay-med-em); /** Material 3 semantic color for elevation shadow. */
   --ki-elevation-shadow-med: var(--ki-color-black-24); /** Material 3 semantic color for elevation shadow med. */
   --ki-elevation-shadow-dark: var(--ki-color-black-32); /** Material 3 semantic color for elevation shadow dark. */
+  --ki-effect-component-backdrop-blur: var(--ki-blur-24); /** MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate). */
   --ki-transparent-inverse: var(--ki-color-transparent-black); /** semantic color for transparent inverse. */
   --ki-spacing-inline: var(--ki-space-md); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md. */
   --ki-spacing-block: var(--ki-space-xl); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. */
@@ -3378,8 +3498,8 @@
   --ki-dialog-radius: var(--ki-radius-8xl); /** Material 3 dimension used by the dialog component for radius. */
   --ki-dialog-padding: var(--ki-space-7xl); /** Material 3 dimension used by the dialog component for padding. */
   --ki-dialog-gap: var(--ki-space-5xl); /** Material 3 dimension used by the dialog component for gap. */
-  --ki-dialog-min-width: var(--ki-space-25xl); /** Material 3 dimension used by the dialog component for min width. */
-  --ki-dialog-max-width: var(--ki-space-26xl); /** Material 3 dimension used by the dialog component for max width. */
+  --ki-dialog-min-width: var(--ki-size-surface-sm); /** Material 3 dimension used by the dialog component for min width (surface size scale; to be refined in Fase M3). */
+  --ki-dialog-max-width: var(--ki-size-surface-md); /** Material 3 dimension used by the dialog component for max width (surface size scale; to be refined in Fase M3). */
   --ki-dialog-focus-ring-width: var(--ki-space-xxs); /** dimension used by the dialog component for focus ring width. */
   --ki-dialog-focus-ring-offset: var(--ki-space-xxs); /** dimension used by the dialog component for focus ring offset. */
   --ki-dialog-motion-duration: var(--ki-foundation-migrated-component-dialog-material3-dialog-motion-duration); /** Material 3 duration used by the dialog component for dialog motion duration. */
@@ -3436,7 +3556,7 @@
   --ki-select-label-gap: var(--ki-space-xs); /** dimension used by the select component for label gap. */
   --ki-select-listbox-radius: var(--ki-radius-md); /** Material 3 dimension used by the select component for listbox radius. */
   --ki-select-listbox-padding: var(--ki-space-xs); /** dimension used by the select component for listbox padding. */
-  --ki-select-listbox-max-block-size: var(--ki-space-25xl); /** dimension used by the select component for listbox max block size. */
+  --ki-select-listbox-max-block-size: var(--ki-size-surface-xs); /** dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale). */
   --ki-select-listbox-offset: var(--ki-space-xs); /** dimension used by the select component for listbox offset. */
   --ki-select-focus-ring-width: var(--ki-space-xxs); /** dimension used by the select component for focus ring width. */
   --ki-select-focus-ring-offset: var(--ki-space-xxs); /** dimension used by the select component for focus ring offset. */
@@ -3479,7 +3599,7 @@
   --ki-tooltip-radius: var(--ki-radius-xs); /** Material 3 dimension used by the tooltip component for radius. */
   --ki-tooltip-padding-inline: var(--ki-space-md); /** Material 3 dimension used by the tooltip component for padding inline. */
   --ki-tooltip-padding-block: var(--ki-space-xs); /** Material 3 dimension used by the tooltip component for padding block. */
-  --ki-tooltip-max-inline-size: var(--ki-space-25xl); /** Material 3 dimension used by the tooltip component for max inline size. */
+  --ki-tooltip-max-inline-size: var(--ki-size-surface-xxs); /** Material 3 dimension used by the tooltip component for max inline size (surface size scale; to be refined in Fase M3). */
   --ki-tooltip-offset: var(--ki-space-xs); /** Material 3 dimension used by the tooltip component for offset. */
   --ki-tooltip-show-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-show-delay); /** Material 3 duration used by the tooltip component for tooltip show delay. */
   --ki-tooltip-hide-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-hide-delay); /** Material 3 duration used by the tooltip component for tooltip hide delay. */
@@ -3504,6 +3624,18 @@
   --ki-text-base: var(--ki-text-high-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. */
   --ki-text-muted: var(--ki-text-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. */
   --ki-text-danger: var(--ki-text-danger-med-em); /** Deprecated alias kept for pre-Fase-1 consumers; use ki.text.danger-med-em. */
+  --ki-elevation-e1: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow); /** MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow. */
+  --ki-elevation-e2: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow); /** MarsUI Elevation/e2 (cumulative: e1 layers plus 0/3/3/-1.5). */
+  --ki-elevation-e3: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow); /** MarsUI Elevation/e3 (cumulative: e2 layers plus 0/20/20/-12). */
+  --ki-elevation-e4: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow); /** MarsUI Elevation/e4 (cumulative: e3 layers plus 0/32/32/-16). */
+  --ki-elevation-e5: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow); /** MarsUI Elevation/e5 (cumulative: e4 layers plus 0/56/56/-28). */
+  --ki-elevation-e6: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-6) var(--ki-shadow-distance-6) var(--ki-shadow-spread-6) var(--ki-elevation-shadow); /** MarsUI Elevation/e6 (cumulative: e5 layers plus 0/72/72/-36). */
+  --ki-effect-component-primary-default-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), var(--ki-shadow-inner-primary-default); /** MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow. */
+  --ki-effect-component-primary-hover-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), var(--ki-shadow-inner-primary-hover); /** MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). */
+  --ki-effect-component-secondary-default-shadow: 0 var(--ki-shadow-effect-y) var(--ki-shadow-effect-blur) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), var(--ki-shadow-inner-secondary-default); /** MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). */
+  --ki-effect-component-secondary-hover-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), var(--ki-shadow-inner-secondary-hover); /** MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). */
+  --ki-focus-primary: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-primary-base-em-alpha); /** MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha (scheme-aware via the outline token). */
+  --ki-focus-gray: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-med-em); /** MarsUI Focus/gray: 3px spread focus ring of Outline/med_em (scheme-aware via the outline token). */
   --ki-typography-family-display: var(--ki-font-family-display); /** semantic font family for typography family display. */
   --ki-typography-family-body: var(--ki-font-family-body); /** semantic font family for typography family body. */
   --ki-typography-family-serif: var(--ki-font-family-serif); /** semantic font family for typography family serif. */

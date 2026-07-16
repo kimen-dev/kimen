@@ -3450,7 +3450,7 @@
               "--ki-dialog-max-width": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the dialog component for max width.",
+                "description": "dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -3458,7 +3458,7 @@
               "--ki-dialog-min-width": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the dialog component for min width.",
+                "description": "dimension used by the dialog component for min width (surface size scale; the former ki.space.25xl reference misused the spacing scale).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -5673,7 +5673,7 @@
               "--ki-select-listbox-max-block-size": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the select component for listbox max block size.",
+                "description": "dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -7483,7 +7483,7 @@
               "--ki-tooltip-max-inline-size": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the tooltip component for max inline size.",
+                "description": "dimension used by the tooltip component for max inline size (surface size scale; the former ki.space.25xl reference misused the spacing scale).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -9055,16 +9055,29 @@
                 "--ki-dialog-heading-font-size": "1.125rem",
                 "--ki-dialog-heading-font-weight": "700",
                 "--ki-dialog-heading-line-height": "1.5rem",
-                "--ki-dialog-max-width": "10rem",
-                "--ki-dialog-min-width": "9rem",
+                "--ki-dialog-max-width": "32rem",
+                "--ki-dialog-min-width": "24rem",
                 "--ki-dialog-motion-duration": "0ms",
                 "--ki-dialog-motion-easing": "cubic-bezier(0,0,1,1)",
                 "--ki-dialog-padding": "1.5rem",
                 "--ki-dialog-radius": "14px",
                 "--ki-dialog-shadow": "0 0.25rem 1rem 0 rgba(0,0,0,0.12),0 1.25rem 1.75rem 0 rgba(0,0,0,0.08)",
+                "--ki-effect-component-backdrop-blur": "24px",
+                "--ki-effect-component-primary-default-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
+                "--ki-effect-component-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),inset 0 3px 3px 0 rgba(255,255,255,0.18)",
+                "--ki-effect-component-secondary-default-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.08),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
+                "--ki-effect-component-secondary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),inset 0 2px 3px 0 rgba(255,255,255,0.08)",
+                "--ki-elevation-e1": "0 1px 1px -0.5px rgba(0,0,0,0.08)",
+                "--ki-elevation-e2": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08)",
+                "--ki-elevation-e3": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08)",
+                "--ki-elevation-e4": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),0 32px 32px -16px rgba(0,0,0,0.08)",
+                "--ki-elevation-e5": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),0 32px 32px -16px rgba(0,0,0,0.08),0 56px 56px -28px rgba(0,0,0,0.08)",
+                "--ki-elevation-e6": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),0 32px 32px -16px rgba(0,0,0,0.08),0 56px 56px -28px rgba(0,0,0,0.08),0 72px 72px -36px rgba(0,0,0,0.08)",
                 "--ki-elevation-shadow": "rgba(0,0,0,0.08)",
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.48)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.12)",
+                "--ki-focus-gray": "0 0 0 3px rgba(255,255,255,0.08)",
+                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0.125rem",
                 "--ki-input-border-inline-end-width": "0.125rem",
@@ -9148,8 +9161,8 @@
                 "--ki-inverse-white-alpha-solid": "#ffffff",
                 "--ki-list-bg": "#0a0a0a",
                 "--ki-list-gap": "0.25rem",
-                "--ki-list-item-divider-color": "rgba(255,255,255,0.05)",
-                "--ki-list-item-divider-width": "0",
+                "--ki-list-item-divider-color": "rgba(255,255,255,0.03)",
+                "--ki-list-item-divider-width": "1px",
                 "--ki-list-item-gap": "0.5rem",
                 "--ki-list-item-min-height": "3rem",
                 "--ki-list-item-min-height-multiline": "4rem",
@@ -9307,7 +9320,7 @@
                 "--ki-select-label-line-height": "1rem",
                 "--ki-select-listbox-bg": "#151515",
                 "--ki-select-listbox-elevation": "rgba(0,0,0,0.12)",
-                "--ki-select-listbox-max-block-size": "9rem",
+                "--ki-select-listbox-max-block-size": "20rem",
                 "--ki-select-listbox-offset": "0.25rem",
                 "--ki-select-listbox-padding": "0.25rem",
                 "--ki-select-listbox-radius": "8px",
@@ -9558,12 +9571,12 @@
                 "--ki-tooltip-font-weight": "600",
                 "--ki-tooltip-hide-delay": "100ms",
                 "--ki-tooltip-line-height": "1rem",
-                "--ki-tooltip-max-inline-size": "9rem",
+                "--ki-tooltip-max-inline-size": "18rem",
                 "--ki-tooltip-offset": "0.25rem",
                 "--ki-tooltip-padding-block": "0.25rem",
                 "--ki-tooltip-padding-inline": "0.5rem",
                 "--ki-tooltip-radius": "6px",
-                "--ki-tooltip-shadow": "0 1px 2px 0 rgba(0,0,0,0.48),0 2px 6px 2px rgba(0,0,0,0.12)",
+                "--ki-tooltip-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08)",
                 "--ki-tooltip-show-delay": "500ms",
                 "--ki-transparent-inverse": "rgba(0,0,0,0)",
                 "--ki-typography-family-base": "Inter,system-ui,sans-serif",
@@ -9999,16 +10012,29 @@
                 "--ki-dialog-heading-font-size": "1.125rem",
                 "--ki-dialog-heading-font-weight": "700",
                 "--ki-dialog-heading-line-height": "1.5rem",
-                "--ki-dialog-max-width": "10rem",
-                "--ki-dialog-min-width": "9rem",
+                "--ki-dialog-max-width": "32rem",
+                "--ki-dialog-min-width": "24rem",
                 "--ki-dialog-motion-duration": "0ms",
                 "--ki-dialog-motion-easing": "cubic-bezier(0,0,1,1)",
                 "--ki-dialog-padding": "1.5rem",
                 "--ki-dialog-radius": "14px",
                 "--ki-dialog-shadow": "0 0.25rem 1rem 0 rgba(0,0,0,0.05),0 1.25rem 1.75rem 0 rgba(0,0,0,0.03)",
+                "--ki-effect-component-backdrop-blur": "24px",
+                "--ki-effect-component-primary-default-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
+                "--ki-effect-component-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),inset 0 3px 3px 0 rgba(255,255,255,0.18)",
+                "--ki-effect-component-secondary-default-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.03),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
+                "--ki-effect-component-secondary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),inset 0 2px 3px 0 rgba(255,255,255,0.08)",
+                "--ki-elevation-e1": "0 1px 1px -0.5px rgba(0,0,0,0.03)",
+                "--ki-elevation-e2": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03)",
+                "--ki-elevation-e3": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03)",
+                "--ki-elevation-e4": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),0 32px 32px -16px rgba(0,0,0,0.03)",
+                "--ki-elevation-e5": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),0 32px 32px -16px rgba(0,0,0,0.03),0 56px 56px -28px rgba(0,0,0,0.03)",
+                "--ki-elevation-e6": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),0 32px 32px -16px rgba(0,0,0,0.03),0 56px 56px -28px rgba(0,0,0,0.03),0 72px 72px -36px rgba(0,0,0,0.03)",
                 "--ki-elevation-shadow": "rgba(0,0,0,0.03)",
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.32)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.05)",
+                "--ki-focus-gray": "0 0 0 3px rgba(0,0,0,0.08)",
+                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0.125rem",
                 "--ki-input-border-inline-end-width": "0.125rem",
@@ -10092,8 +10118,8 @@
                 "--ki-inverse-white-alpha-solid": "#000000",
                 "--ki-list-bg": "#ffffff",
                 "--ki-list-gap": "0.25rem",
-                "--ki-list-item-divider-color": "rgba(0,0,0,0.05)",
-                "--ki-list-item-divider-width": "0",
+                "--ki-list-item-divider-color": "rgba(0,0,0,0.03)",
+                "--ki-list-item-divider-width": "1px",
                 "--ki-list-item-gap": "0.5rem",
                 "--ki-list-item-min-height": "3rem",
                 "--ki-list-item-min-height-multiline": "4rem",
@@ -10251,7 +10277,7 @@
                 "--ki-select-label-line-height": "1rem",
                 "--ki-select-listbox-bg": "#f9f9fa",
                 "--ki-select-listbox-elevation": "rgba(0,0,0,0.05)",
-                "--ki-select-listbox-max-block-size": "9rem",
+                "--ki-select-listbox-max-block-size": "20rem",
                 "--ki-select-listbox-offset": "0.25rem",
                 "--ki-select-listbox-padding": "0.25rem",
                 "--ki-select-listbox-radius": "8px",
@@ -10502,12 +10528,12 @@
                 "--ki-tooltip-font-weight": "600",
                 "--ki-tooltip-hide-delay": "100ms",
                 "--ki-tooltip-line-height": "1rem",
-                "--ki-tooltip-max-inline-size": "9rem",
+                "--ki-tooltip-max-inline-size": "18rem",
                 "--ki-tooltip-offset": "0.25rem",
                 "--ki-tooltip-padding-block": "0.25rem",
                 "--ki-tooltip-padding-inline": "0.5rem",
                 "--ki-tooltip-radius": "6px",
-                "--ki-tooltip-shadow": "0 1px 2px 0 rgba(0,0,0,0.32),0 2px 6px 2px rgba(0,0,0,0.05)",
+                "--ki-tooltip-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03)",
                 "--ki-tooltip-show-delay": "500ms",
                 "--ki-transparent-inverse": "rgba(255,255,255,0)",
                 "--ki-typography-family-base": "Inter,system-ui,sans-serif",
@@ -10948,16 +10974,29 @@
                 "--ki-dialog-heading-font-size": "1.375rem",
                 "--ki-dialog-heading-font-weight": "400",
                 "--ki-dialog-heading-line-height": "1.75rem",
-                "--ki-dialog-max-width": "10rem",
-                "--ki-dialog-min-width": "9rem",
+                "--ki-dialog-max-width": "32rem",
+                "--ki-dialog-min-width": "24rem",
                 "--ki-dialog-motion-duration": "200ms",
                 "--ki-dialog-motion-easing": "cubic-bezier(0,0,0.2,1)",
                 "--ki-dialog-padding": "1.5rem",
                 "--ki-dialog-radius": "28px",
                 "--ki-dialog-shadow": "0 0.125rem 0.25rem 0 rgba(0,0,0,0.24),0 0.25rem 0.5rem 0 rgba(0,0,0,0.16)",
+                "--ki-effect-component-backdrop-blur": "24px",
+                "--ki-effect-component-primary-default-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.16),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
+                "--ki-effect-component-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.16),0 3px 3px -1.5px rgba(0,0,0,0.16),0 20px 20px -12px rgba(0,0,0,0.16),inset 0 3px 3px 0 rgba(255,255,255,0.18)",
+                "--ki-effect-component-secondary-default-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.16),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
+                "--ki-effect-component-secondary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.16),0 3px 3px -1.5px rgba(0,0,0,0.16),0 20px 20px -12px rgba(0,0,0,0.16),inset 0 2px 3px 0 rgba(255,255,255,0.08)",
+                "--ki-elevation-e1": "0 1px 1px -0.5px rgba(0,0,0,0.16)",
+                "--ki-elevation-e2": "0 1px 1px -0.5px rgba(0,0,0,0.16),0 3px 3px -1.5px rgba(0,0,0,0.16)",
+                "--ki-elevation-e3": "0 1px 1px -0.5px rgba(0,0,0,0.16),0 3px 3px -1.5px rgba(0,0,0,0.16),0 20px 20px -12px rgba(0,0,0,0.16)",
+                "--ki-elevation-e4": "0 1px 1px -0.5px rgba(0,0,0,0.16),0 3px 3px -1.5px rgba(0,0,0,0.16),0 20px 20px -12px rgba(0,0,0,0.16),0 32px 32px -16px rgba(0,0,0,0.16)",
+                "--ki-elevation-e5": "0 1px 1px -0.5px rgba(0,0,0,0.16),0 3px 3px -1.5px rgba(0,0,0,0.16),0 20px 20px -12px rgba(0,0,0,0.16),0 32px 32px -16px rgba(0,0,0,0.16),0 56px 56px -28px rgba(0,0,0,0.16)",
+                "--ki-elevation-e6": "0 1px 1px -0.5px rgba(0,0,0,0.16),0 3px 3px -1.5px rgba(0,0,0,0.16),0 20px 20px -12px rgba(0,0,0,0.16),0 32px 32px -16px rgba(0,0,0,0.16),0 56px 56px -28px rgba(0,0,0,0.16),0 72px 72px -36px rgba(0,0,0,0.16)",
                 "--ki-elevation-shadow": "rgba(0,0,0,0.16)",
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.32)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.24)",
+                "--ki-focus-gray": "0 0 0 3px #49454f",
+                "--ki-focus-primary": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0",
                 "--ki-input-border-inline-end-width": "0",
@@ -11200,7 +11239,7 @@
                 "--ki-select-label-line-height": "1rem",
                 "--ki-select-listbox-bg": "#211f26",
                 "--ki-select-listbox-elevation": "rgba(0,0,0,0.24)",
-                "--ki-select-listbox-max-block-size": "9rem",
+                "--ki-select-listbox-max-block-size": "20rem",
                 "--ki-select-listbox-offset": "0.25rem",
                 "--ki-select-listbox-padding": "0.25rem",
                 "--ki-select-listbox-radius": "8px",
@@ -11451,7 +11490,7 @@
                 "--ki-tooltip-font-weight": "500",
                 "--ki-tooltip-hide-delay": "100ms",
                 "--ki-tooltip-line-height": "1rem",
-                "--ki-tooltip-max-inline-size": "9rem",
+                "--ki-tooltip-max-inline-size": "18rem",
                 "--ki-tooltip-offset": "0.25rem",
                 "--ki-tooltip-padding-block": "0.25rem",
                 "--ki-tooltip-padding-inline": "0.5rem",
@@ -11892,16 +11931,29 @@
                 "--ki-dialog-heading-font-size": "1.375rem",
                 "--ki-dialog-heading-font-weight": "400",
                 "--ki-dialog-heading-line-height": "1.75rem",
-                "--ki-dialog-max-width": "10rem",
-                "--ki-dialog-min-width": "9rem",
+                "--ki-dialog-max-width": "32rem",
+                "--ki-dialog-min-width": "24rem",
                 "--ki-dialog-motion-duration": "200ms",
                 "--ki-dialog-motion-easing": "cubic-bezier(0,0,0.2,1)",
                 "--ki-dialog-padding": "1.5rem",
                 "--ki-dialog-radius": "28px",
                 "--ki-dialog-shadow": "0 0.125rem 0.25rem 0 rgba(0,0,0,0.08),0 0.25rem 0.5rem 0 rgba(0,0,0,0.05)",
+                "--ki-effect-component-backdrop-blur": "24px",
+                "--ki-effect-component-primary-default-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.05),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
+                "--ki-effect-component-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.05),0 3px 3px -1.5px rgba(0,0,0,0.05),0 20px 20px -12px rgba(0,0,0,0.05),inset 0 3px 3px 0 rgba(255,255,255,0.18)",
+                "--ki-effect-component-secondary-default-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.05),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
+                "--ki-effect-component-secondary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.05),0 3px 3px -1.5px rgba(0,0,0,0.05),0 20px 20px -12px rgba(0,0,0,0.05),inset 0 2px 3px 0 rgba(255,255,255,0.08)",
+                "--ki-elevation-e1": "0 1px 1px -0.5px rgba(0,0,0,0.05)",
+                "--ki-elevation-e2": "0 1px 1px -0.5px rgba(0,0,0,0.05),0 3px 3px -1.5px rgba(0,0,0,0.05)",
+                "--ki-elevation-e3": "0 1px 1px -0.5px rgba(0,0,0,0.05),0 3px 3px -1.5px rgba(0,0,0,0.05),0 20px 20px -12px rgba(0,0,0,0.05)",
+                "--ki-elevation-e4": "0 1px 1px -0.5px rgba(0,0,0,0.05),0 3px 3px -1.5px rgba(0,0,0,0.05),0 20px 20px -12px rgba(0,0,0,0.05),0 32px 32px -16px rgba(0,0,0,0.05)",
+                "--ki-elevation-e5": "0 1px 1px -0.5px rgba(0,0,0,0.05),0 3px 3px -1.5px rgba(0,0,0,0.05),0 20px 20px -12px rgba(0,0,0,0.05),0 32px 32px -16px rgba(0,0,0,0.05),0 56px 56px -28px rgba(0,0,0,0.05)",
+                "--ki-elevation-e6": "0 1px 1px -0.5px rgba(0,0,0,0.05),0 3px 3px -1.5px rgba(0,0,0,0.05),0 20px 20px -12px rgba(0,0,0,0.05),0 32px 32px -16px rgba(0,0,0,0.05),0 56px 56px -28px rgba(0,0,0,0.05),0 72px 72px -36px rgba(0,0,0,0.05)",
                 "--ki-elevation-shadow": "rgba(0,0,0,0.05)",
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.24)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.08)",
+                "--ki-focus-gray": "0 0 0 3px #cac4d0",
+                "--ki-focus-primary": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0",
                 "--ki-input-border-inline-end-width": "0",
@@ -12144,7 +12196,7 @@
                 "--ki-select-label-line-height": "1rem",
                 "--ki-select-listbox-bg": "#f3edf7",
                 "--ki-select-listbox-elevation": "rgba(0,0,0,0.08)",
-                "--ki-select-listbox-max-block-size": "9rem",
+                "--ki-select-listbox-max-block-size": "20rem",
                 "--ki-select-listbox-offset": "0.25rem",
                 "--ki-select-listbox-padding": "0.25rem",
                 "--ki-select-listbox-radius": "8px",
@@ -12395,7 +12447,7 @@
                 "--ki-tooltip-font-weight": "500",
                 "--ki-tooltip-hide-delay": "100ms",
                 "--ki-tooltip-line-height": "1rem",
-                "--ki-tooltip-max-inline-size": "9rem",
+                "--ki-tooltip-max-inline-size": "18rem",
                 "--ki-tooltip-offset": "0.25rem",
                 "--ki-tooltip-padding-block": "0.25rem",
                 "--ki-tooltip-padding-inline": "0.5rem",
@@ -15701,17 +15753,17 @@
             "type": null
           },
           "--ki-dialog-max-width": {
-            "default": "10rem",
+            "default": "32rem",
             "deprecatedSince": null,
-            "description": "dimension used by the dialog component for max width.",
+            "description": "dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-dialog-min-width": {
-            "default": "9rem",
+            "default": "24rem",
             "deprecatedSince": null,
-            "description": "dimension used by the dialog component for min width.",
+            "description": "dimension used by the dialog component for min width (surface size scale; the former ki.space.25xl reference misused the spacing scale).",
             "replacement": null,
             "required": false,
             "type": null
@@ -15788,6 +15840,361 @@
             "required": false,
             "type": "shadow"
           },
+          "--ki-effect-component-backdrop-blur": {
+            "default": "24px",
+            "deprecatedSince": null,
+            "description": "MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate).",
+            "replacement": null,
+            "required": false,
+            "type": "dimension"
+          },
+          "--ki-effect-component-primary-default-shadow": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#ffffff1f",
+                "inset": true,
+                "offsetX": {
+                  "unit": "px",
+                  "value": 0
+                },
+                "offsetY": "3px",
+                "spread": {
+                  "unit": "px",
+                  "value": 0
+                }
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow.",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-effect-component-primary-hover-shadow": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "3px",
+                "spread": "-1.5px"
+              },
+              {
+                "blur": "20px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "20px",
+                "spread": "-12px"
+              },
+              {
+                "blur": "3px",
+                "color": "#ffffff2e",
+                "inset": true,
+                "offsetX": {
+                  "unit": "px",
+                  "value": 0
+                },
+                "offsetY": "3px",
+                "spread": {
+                  "unit": "px",
+                  "value": 0
+                }
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-effect-component-secondary-default-shadow": {
+            "default": [
+              {
+                "blur": "1.5px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "2px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#ffffff08",
+                "inset": true,
+                "offsetX": {
+                  "unit": "px",
+                  "value": 0
+                },
+                "offsetY": "2px",
+                "spread": {
+                  "unit": "px",
+                  "value": 0
+                }
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-effect-component-secondary-hover-shadow": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "3px",
+                "spread": "-1.5px"
+              },
+              {
+                "blur": "20px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "20px",
+                "spread": "-12px"
+              },
+              {
+                "blur": "3px",
+                "color": "#ffffff14",
+                "inset": true,
+                "offsetX": {
+                  "unit": "px",
+                  "value": 0
+                },
+                "offsetY": "2px",
+                "spread": {
+                  "unit": "px",
+                  "value": 0
+                }
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-elevation-e1": {
+            "default": {
+              "blur": "1px",
+              "color": "#00000008",
+              "offsetX": 0,
+              "offsetY": "1px",
+              "spread": "-0.5px"
+            },
+            "deprecatedSince": null,
+            "description": "MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow.",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-elevation-e2": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "3px",
+                "spread": "-1.5px"
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "MarsUI Elevation/e2 (cumulative: e1 layers plus 0/3/3/-1.5).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-elevation-e3": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "3px",
+                "spread": "-1.5px"
+              },
+              {
+                "blur": "20px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "20px",
+                "spread": "-12px"
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "MarsUI Elevation/e3 (cumulative: e2 layers plus 0/20/20/-12).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-elevation-e4": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "3px",
+                "spread": "-1.5px"
+              },
+              {
+                "blur": "20px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "20px",
+                "spread": "-12px"
+              },
+              {
+                "blur": "32px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "32px",
+                "spread": "-16px"
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "MarsUI Elevation/e4 (cumulative: e3 layers plus 0/32/32/-16).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-elevation-e5": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "3px",
+                "spread": "-1.5px"
+              },
+              {
+                "blur": "20px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "20px",
+                "spread": "-12px"
+              },
+              {
+                "blur": "32px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "32px",
+                "spread": "-16px"
+              },
+              {
+                "blur": "56px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "56px",
+                "spread": "-28px"
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "MarsUI Elevation/e5 (cumulative: e4 layers plus 0/56/56/-28).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-elevation-e6": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "3px",
+                "spread": "-1.5px"
+              },
+              {
+                "blur": "20px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "20px",
+                "spread": "-12px"
+              },
+              {
+                "blur": "32px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "32px",
+                "spread": "-16px"
+              },
+              {
+                "blur": "56px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "56px",
+                "spread": "-28px"
+              },
+              {
+                "blur": "72px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "72px",
+                "spread": "-36px"
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "MarsUI Elevation/e6 (cumulative: e5 layers plus 0/72/72/-36).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
           "--ki-elevation-shadow": {
             "default": "#00000008",
             "deprecatedSince": null,
@@ -15811,6 +16218,34 @@
             "replacement": null,
             "required": false,
             "type": "color"
+          },
+          "--ki-focus-gray": {
+            "default": {
+              "blur": 0,
+              "color": "#00000014",
+              "offsetX": 0,
+              "offsetY": 0,
+              "spread": "3px"
+            },
+            "deprecatedSince": null,
+            "description": "MarsUI Focus/gray: 3px spread focus ring of Outline/med_em (scheme-aware via the outline token).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-focus-primary": {
+            "default": {
+              "blur": 0,
+              "color": "#845abe33",
+              "offsetX": 0,
+              "offsetY": 0,
+              "spread": "3px"
+            },
+            "deprecatedSince": null,
+            "description": "MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha (scheme-aware via the outline token).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
           },
           "--ki-input-border-block-end-width": {
             "default": "0.125rem",
@@ -16477,7 +16912,7 @@
             "type": null
           },
           "--ki-list-item-divider-color": {
-            "default": "#0000000d",
+            "default": "#00000008",
             "deprecatedSince": null,
             "description": "color used by the list component for item divider color.",
             "replacement": null,
@@ -16485,7 +16920,7 @@
             "type": null
           },
           "--ki-list-item-divider-width": {
-            "default": "0rem",
+            "default": "1px",
             "deprecatedSince": null,
             "description": "dimension used by the list component for item divider width.",
             "replacement": null,
@@ -17759,9 +18194,9 @@
             "type": null
           },
           "--ki-select-listbox-max-block-size": {
-            "default": "9rem",
+            "default": "20rem",
             "deprecatedSince": null,
-            "description": "dimension used by the select component for listbox max block size.",
+            "description": "dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale).",
             "replacement": null,
             "required": false,
             "type": null
@@ -19767,9 +20202,9 @@
             "type": null
           },
           "--ki-tooltip-max-inline-size": {
-            "default": "9rem",
+            "default": "18rem",
             "deprecatedSince": null,
-            "description": "dimension used by the tooltip component for max inline size.",
+            "description": "dimension used by the tooltip component for max inline size (surface size scale; the former ki.space.25xl reference misused the spacing scale).",
             "replacement": null,
             "required": false,
             "type": null
@@ -19809,42 +20244,18 @@
           "--ki-tooltip-shadow": {
             "default": [
               {
-                "blur": {
-                  "unit": "px",
-                  "value": 2
-                },
-                "color": "#00000052",
-                "offsetX": {
-                  "unit": "px",
-                  "value": 0
-                },
-                "offsetY": {
-                  "unit": "px",
-                  "value": 1
-                },
-                "spread": {
-                  "unit": "px",
-                  "value": 0
-                }
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
               },
               {
-                "blur": {
-                  "unit": "px",
-                  "value": 6
-                },
-                "color": "#0000000d",
-                "offsetX": {
-                  "unit": "px",
-                  "value": 0
-                },
-                "offsetY": {
-                  "unit": "px",
-                  "value": 2
-                },
-                "spread": {
-                  "unit": "px",
-                  "value": 2
-                }
+                "blur": "3px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "3px",
+                "spread": "-1.5px"
               }
             ],
             "deprecatedSince": null,
@@ -20310,5 +20721,5 @@
       }
     }
   },
-  "surfaceSha256": "ab33e8f8fdfe0fdabef84af92ce5cd01e3b7096ec7e596d961f3c7f6f5d3194d"
+  "surfaceSha256": "2ce278e6a4f0c3b45aa3066d65700ac47e8446fc41b1100d768cd8c799a0eec2"
 }

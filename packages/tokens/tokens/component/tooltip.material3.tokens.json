@@ -14,8 +14,8 @@
         "$description": "Material 3 dimension used by the tooltip component for padding block."
       },
       "max-inline-size": {
-        "$value": "{ki.space.25xl}",
-        "$description": "Material 3 dimension used by the tooltip component for max inline size."
+        "$value": "{ki.size.surface.xxs}",
+        "$description": "Material 3 dimension used by the tooltip component for max inline size (surface size scale; to be refined in Fase M3)."
       },
       "offset": {
         "$value": "{ki.space.xs}",

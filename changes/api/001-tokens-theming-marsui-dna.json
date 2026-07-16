@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "2ce278e6a4f0c3b45aa3066d65700ac47e8446fc41b1100d768cd8c799a0eec2",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Fase T (MarsUI design DNA): additive elevation e1-e6, glass component effects, focus rings, backdrop blur, surface size scale and shadow primitives; deliberate effective-value changes to 22 shipped tokens (dialog min/max width from the misused space scale to the new surface sizes, tooltip/listbox max sizes, tooltip shadow decoupled from the button token onto elevation e2, onmars list dividers gain a visible hairline). Nothing is published yet (0.0.0, private); every change is founder-reviewed in the fase T PR.",
+  "release": "major",
+  "schemaVersion": 1
+}

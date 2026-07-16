@@ -14,8 +14,8 @@
         "$description": "dimension used by the tooltip component for padding block."
       },
       "max-inline-size": {
-        "$value": "{ki.space.25xl}",
-        "$description": "dimension used by the tooltip component for max inline size."
+        "$value": "{ki.size.surface.xxs}",
+        "$description": "dimension used by the tooltip component for max inline size (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
       },
       "offset": {
         "$value": "{ki.space.xs}",
@@ -42,7 +42,7 @@
         "$description": "dimension used by the tooltip component for line height."
       },
       "shadow": {
-        "$value": "{ki.foundation.migrated.component-button.button.tertiary.active.shadow}",
+        "$value": "{ki.elevation.e2}",
         "$description": "shadow used by the tooltip component for tooltip shadow.",
         "$type": "shadow"
       },

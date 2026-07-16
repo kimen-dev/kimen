@@ -777,6 +777,315 @@
       "shadow-dark": {
         "$value": "{ki.color.black.32}",
         "$description": "semantic color for elevation shadow dark."
+      },
+      "e1": {
+        "$type": "shadow",
+        "$value": {
+          "color": "{ki.elevation.shadow}",
+          "offsetX": 0,
+          "offsetY": "{ki.shadow.distance.1}",
+          "blur": "{ki.shadow.distance.1}",
+          "spread": "{ki.shadow.spread.1}"
+        },
+        "$description": "MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow."
+      },
+      "e2": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.1}",
+            "blur": "{ki.shadow.distance.1}",
+            "spread": "{ki.shadow.spread.1}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": "{ki.shadow.spread.2}"
+          }
+        ],
+        "$description": "MarsUI Elevation/e2 (cumulative: e1 layers plus 0/3/3/-1.5)."
+      },
+      "e3": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.1}",
+            "blur": "{ki.shadow.distance.1}",
+            "spread": "{ki.shadow.spread.1}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": "{ki.shadow.spread.2}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.3}",
+            "blur": "{ki.shadow.distance.3}",
+            "spread": "{ki.shadow.spread.3}"
+          }
+        ],
+        "$description": "MarsUI Elevation/e3 (cumulative: e2 layers plus 0/20/20/-12)."
+      },
+      "e4": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.1}",
+            "blur": "{ki.shadow.distance.1}",
+            "spread": "{ki.shadow.spread.1}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": "{ki.shadow.spread.2}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.3}",
+            "blur": "{ki.shadow.distance.3}",
+            "spread": "{ki.shadow.spread.3}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.4}",
+            "blur": "{ki.shadow.distance.4}",
+            "spread": "{ki.shadow.spread.4}"
+          }
+        ],
+        "$description": "MarsUI Elevation/e4 (cumulative: e3 layers plus 0/32/32/-16)."
+      },
+      "e5": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.1}",
+            "blur": "{ki.shadow.distance.1}",
+            "spread": "{ki.shadow.spread.1}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": "{ki.shadow.spread.2}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.3}",
+            "blur": "{ki.shadow.distance.3}",
+            "spread": "{ki.shadow.spread.3}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.4}",
+            "blur": "{ki.shadow.distance.4}",
+            "spread": "{ki.shadow.spread.4}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.5}",
+            "blur": "{ki.shadow.distance.5}",
+            "spread": "{ki.shadow.spread.5}"
+          }
+        ],
+        "$description": "MarsUI Elevation/e5 (cumulative: e4 layers plus 0/56/56/-28)."
+      },
+      "e6": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.1}",
+            "blur": "{ki.shadow.distance.1}",
+            "spread": "{ki.shadow.spread.1}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": "{ki.shadow.spread.2}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.3}",
+            "blur": "{ki.shadow.distance.3}",
+            "spread": "{ki.shadow.spread.3}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.4}",
+            "blur": "{ki.shadow.distance.4}",
+            "spread": "{ki.shadow.spread.4}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.5}",
+            "blur": "{ki.shadow.distance.5}",
+            "spread": "{ki.shadow.spread.5}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.6}",
+            "blur": "{ki.shadow.distance.6}",
+            "spread": "{ki.shadow.spread.6}"
+          }
+        ],
+        "$description": "MarsUI Elevation/e6 (cumulative: e5 layers plus 0/72/72/-36)."
+      }
+    },
+    "effect": {
+      "component": {
+        "backdrop-blur": {
+          "$type": "dimension",
+          "$value": "{ki.blur.24}",
+          "$description": "MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate)."
+        },
+        "primary": {
+          "default": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": [
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.1}",
+                  "blur": "{ki.shadow.distance.1}",
+                  "spread": "{ki.shadow.spread.1}"
+                },
+                "{ki.shadow.inner.primary-default}"
+              ],
+              "$description": "MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow."
+            }
+          },
+          "hover": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": [
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.1}",
+                  "blur": "{ki.shadow.distance.1}",
+                  "spread": "{ki.shadow.spread.1}"
+                },
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.2}",
+                  "blur": "{ki.shadow.distance.2}",
+                  "spread": "{ki.shadow.spread.2}"
+                },
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.3}",
+                  "blur": "{ki.shadow.distance.3}",
+                  "spread": "{ki.shadow.spread.3}"
+                },
+                "{ki.shadow.inner.primary-hover}"
+              ],
+              "$description": "MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            }
+          }
+        },
+        "secondary": {
+          "default": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": [
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.effect-y}",
+                  "blur": "{ki.shadow.effect-blur}",
+                  "spread": "{ki.shadow.spread.1}"
+                },
+                "{ki.shadow.inner.secondary-default}"
+              ],
+              "$description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            }
+          },
+          "hover": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": [
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.1}",
+                  "blur": "{ki.shadow.distance.1}",
+                  "spread": "{ki.shadow.spread.1}"
+                },
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.2}",
+                  "blur": "{ki.shadow.distance.2}",
+                  "spread": "{ki.shadow.spread.2}"
+                },
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.3}",
+                  "blur": "{ki.shadow.distance.3}",
+                  "spread": "{ki.shadow.spread.3}"
+                },
+                "{ki.shadow.inner.secondary-hover}"
+              ],
+              "$description": "MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            }
+          }
+        }
+      }
+    },
+    "focus": {
+      "$type": "shadow",
+      "primary": {
+        "$value": {
+          "color": "{ki.outline.primary-base-em-alpha}",
+          "offsetX": 0,
+          "offsetY": 0,
+          "blur": 0,
+          "spread": "{ki.shadow.ring}"
+        },
+        "$description": "MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha (scheme-aware via the outline token)."
+      },
+      "gray": {
+        "$value": {
+          "color": "{ki.outline.med-em}",
+          "offsetX": 0,
+          "offsetY": 0,
+          "blur": 0,
+          "spread": "{ki.shadow.ring}"
+        },
+        "$description": "MarsUI Focus/gray: 3px spread focus ring of Outline/med_em (scheme-aware via the outline token)."
       }
     },
     "transparent-inverse": {

@@ -622,6 +622,202 @@
         }
       }
     },
+    "blur": {
+      "$type": "dimension",
+      "8": {
+        "$value": "8px",
+        "$description": "MarsUI Blur/8: backdrop-filter blur radius."
+      },
+      "16": {
+        "$value": "16px",
+        "$description": "MarsUI Blur/16: backdrop-filter blur radius."
+      },
+      "24": {
+        "$value": "24px",
+        "$description": "MarsUI Blur/24: backdrop-filter blur radius used by component effects."
+      },
+      "48": {
+        "$value": "48px",
+        "$description": "MarsUI Blur/48: backdrop-filter blur radius."
+      },
+      "96": {
+        "$value": "96px",
+        "$description": "MarsUI Blur/96: backdrop-filter blur radius."
+      }
+    },
+    "shadow": {
+      "$type": "dimension",
+      "distance": {
+        "1": {
+          "$value": "1px",
+          "$description": "MarsUI Elevation/e1 layer geometry: 1px offset/blur."
+        },
+        "2": {
+          "$value": "3px",
+          "$description": "MarsUI Elevation/e2 layer geometry: 3px offset/blur (also the Component_effect inner-highlight offset/blur)."
+        },
+        "3": {
+          "$value": "20px",
+          "$description": "MarsUI Elevation/e3 layer geometry: 20px offset/blur."
+        },
+        "4": {
+          "$value": "32px",
+          "$description": "MarsUI Elevation/e4 layer geometry: 32px offset/blur."
+        },
+        "5": {
+          "$value": "56px",
+          "$description": "MarsUI Elevation/e5 layer geometry: 56px offset/blur."
+        },
+        "6": {
+          "$value": "72px",
+          "$description": "MarsUI Elevation/e6 layer geometry: 72px offset/blur."
+        }
+      },
+      "spread": {
+        "1": {
+          "$value": "-0.5px",
+          "$description": "MarsUI Elevation/e1 layer spread: -0.5px."
+        },
+        "2": {
+          "$value": "-1.5px",
+          "$description": "MarsUI Elevation/e2 layer spread: -1.5px."
+        },
+        "3": {
+          "$value": "-12px",
+          "$description": "MarsUI Elevation/e3 layer spread: -12px."
+        },
+        "4": {
+          "$value": "-16px",
+          "$description": "MarsUI Elevation/e4 layer spread: -16px."
+        },
+        "5": {
+          "$value": "-28px",
+          "$description": "MarsUI Elevation/e5 layer spread: -28px."
+        },
+        "6": {
+          "$value": "-36px",
+          "$description": "MarsUI Elevation/e6 layer spread: -36px."
+        }
+      },
+      "effect-y": {
+        "$value": "2px",
+        "$description": "MarsUI Component_effect/secondary drop and inner-highlight offset: 2px."
+      },
+      "effect-blur": {
+        "$value": "1.5px",
+        "$description": "MarsUI Component_effect/secondary_default drop blur: 1.5px."
+      },
+      "ring": {
+        "$value": "3px",
+        "$description": "MarsUI Focus/*: 3px focus-ring spread."
+      },
+      "inner": {
+        "$type": "shadow",
+        "primary-default": {
+          "$value": {
+            "color": "{ki.color.white.12}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            },
+            "inset": true
+          },
+          "$description": "MarsUI Component_effect/primary_default inner highlight: inset White/12 0/3/3."
+        },
+        "primary-hover": {
+          "$value": {
+            "color": "{ki.color.white.18}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            },
+            "inset": true
+          },
+          "$description": "MarsUI Component_effect/primary_hover inner highlight: inset White/18 0/3/3."
+        },
+        "secondary-default": {
+          "$value": {
+            "color": "{ki.color.white.3}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": "{ki.shadow.effect-y}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            },
+            "inset": true
+          },
+          "$description": "MarsUI Component_effect/secondary_default inner highlight: inset White/3 0/2/3."
+        },
+        "secondary-hover": {
+          "$value": {
+            "color": "{ki.color.white.8}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": "{ki.shadow.effect-y}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            },
+            "inset": true
+          },
+          "$description": "MarsUI Component_effect/secondary_hover inner highlight: inset White/8 0/2/3."
+        }
+      }
+    },
+    "size": {
+      "$type": "dimension",
+      "border": {
+        "hairline": {
+          "$value": "1px",
+          "$description": "MarsUI hairline stroke: 1px divider/border width."
+        }
+      },
+      "surface": {
+        "xxs": {
+          "$value": "18rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Floating hint surfaces such as tooltips."
+        },
+        "xs": {
+          "$value": "20rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Small floating surfaces such as listboxes."
+        },
+        "sm": {
+          "$value": "24rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space)."
+        },
+        "md": {
+          "$value": "32rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space)."
+        },
+        "lg": {
+          "$value": "40rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space)."
+        },
+        "xl": {
+          "$value": "48rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space)."
+        }
+      }
+    },
     "foundation": {
       "migrated": {
         "modes-material3-dark": {

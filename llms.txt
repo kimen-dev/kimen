@@ -574,8 +574,8 @@ CSS custom properties:
 - `--ki-dialog-heading-font-size`: dimension used by the dialog component for heading font size.
 - `--ki-dialog-heading-font-weight`: font weight used by the dialog component for heading font weight.
 - `--ki-dialog-heading-line-height`: dimension used by the dialog component for heading line height.
-- `--ki-dialog-max-width`: dimension used by the dialog component for max width.
-- `--ki-dialog-min-width`: dimension used by the dialog component for min width.
+- `--ki-dialog-max-width`: dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale).
+- `--ki-dialog-min-width`: dimension used by the dialog component for min width (surface size scale; the former ki.space.25xl reference misused the spacing scale).
 - `--ki-dialog-motion-duration`: duration used by the dialog component for dialog motion duration.
 - `--ki-dialog-motion-easing`: easing curve used by the dialog component for dialog motion easing.
 - `--ki-dialog-padding`: dimension used by the dialog component for padding.
@@ -987,7 +987,7 @@ CSS custom properties:
 - `--ki-select-label-line-height`: dimension used by the select component for label line height.
 - `--ki-select-listbox-bg`: color used by the select component for listbox background.
 - `--ki-select-listbox-elevation`: color used by the select component for listbox elevation.
-- `--ki-select-listbox-max-block-size`: dimension used by the select component for listbox max block size.
+- `--ki-select-listbox-max-block-size`: dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale).
 - `--ki-select-listbox-offset`: dimension used by the select component for listbox offset.
 - `--ki-select-listbox-padding`: dimension used by the select component for listbox padding.
 - `--ki-select-listbox-radius`: dimension used by the select component for listbox radius.
@@ -1309,7 +1309,7 @@ CSS custom properties:
 - `--ki-tooltip-font-size`: dimension used by the tooltip component for font size.
 - `--ki-tooltip-font-weight`: font weight used by the tooltip component for font weight.
 - `--ki-tooltip-line-height`: dimension used by the tooltip component for line height.
-- `--ki-tooltip-max-inline-size`: dimension used by the tooltip component for max inline size.
+- `--ki-tooltip-max-inline-size`: dimension used by the tooltip component for max inline size (surface size scale; the former ki.space.25xl reference misused the spacing scale).
 - `--ki-tooltip-offset`: dimension used by the tooltip component for offset.
 - `--ki-tooltip-padding-block`: dimension used by the tooltip component for padding block.
 - `--ki-tooltip-padding-inline`: dimension used by the tooltip component for padding inline.

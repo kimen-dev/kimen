@@ -159,8 +159,8 @@
           "$description": "dimension used by the select component for listbox padding."
         },
         "max-block-size": {
-          "$value": "{ki.space.25xl}",
-          "$description": "dimension used by the select component for listbox max block size."
+          "$value": "{ki.size.surface.xs}",
+          "$description": "dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
         },
         "offset": {
           "$value": "{ki.space.xs}",
