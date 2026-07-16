@@ -20,6 +20,7 @@
     "build": "stencil build && node scripts/sync-components.mjs && node scripts/build-surfaces.mjs",
     "test": "vitest run && vitest run --config vitest.node.config.ts",
     "test-browser": "vitest run --config vitest.browser.config.ts",
+    "test:coverage": "vitest run --coverage && vitest run --coverage --config vitest.browser.config.ts",
     "size": "node scripts/run-size-limit.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
