@@ -106,5 +106,10 @@ run_core_gate typecheck pnpm run typecheck
 run_core_gate deadcode pnpm run deadcode
 run_core_gate contrast pnpm --filter @kimen/tokens contrast
 run_core_gate budgets pnpm exec nx run-many -t size
+# Infrastructure tests assert the wiring promises above (workflow structure,
+# gate composition, release invariants); capabilities keeps public status
+# claims in sync with docs/capabilities.json. Both are fast node checks.
+run_core_gate infra-tests pnpm run test:infra
+run_core_gate capabilities pnpm run check:capabilities
 run_core_gate test pnpm exec nx run-many -t test
 echo "CORE QUALITY GREEN"

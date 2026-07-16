@@ -76,6 +76,13 @@ jobs:
       - name: Validate deterministic core
         run: bash scripts/gates/gates-core.sh
 
+      # Release verification adds packaging (constitution Art. III): publint
+      # over every workspace package plus attw --profile esm-only, so type and
+      # export resolution is proven before a candidate is built. Deliberately
+      # absent from gates-core.sh (see scripts/tests/integrity-wiring.test.mjs).
+      - name: Validate packaging contract
+        run: pnpm run packaging
+
       - name: Build exact immutable candidate
         id: candidate
         shell: bash
