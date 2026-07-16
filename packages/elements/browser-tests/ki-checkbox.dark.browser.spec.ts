@@ -35,16 +35,9 @@ function readTokenColor(name: string): string {
   return value;
 }
 
-// The pointer may rest over the freshly mounted control, so token assertions
-// read the matching interaction state — mirroring checkboxState in
-// ki-checkbox.browser.spec.ts.
-function checkboxState(el: KiCheckboxElement): 'hover' | 'rest' {
-  return el.matches(':hover') ? 'hover' : 'rest';
-}
-
-async function mount(): Promise<KiCheckboxElement> {
+async function mount(scheme: 'light' | 'dark'): Promise<KiCheckboxElement> {
   document.body.replaceChildren();
-  document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
+  document.documentElement.setAttribute('data-ki-color-scheme', scheme);
   injectStylesheet(tokensCss, 'ki-checkbox-dark-tokens');
   const el = document.createElement('ki-checkbox') as KiCheckboxElement;
   el.toggleAttribute('checked', true);
@@ -55,16 +48,33 @@ async function mount(): Promise<KiCheckboxElement> {
   return el;
 }
 
+function controlBackground(el: KiCheckboxElement): string {
+  const control = el.shadowRoot?.querySelector('[part="control"]');
+  expect(control).toBeInstanceOf(HTMLElement);
+  return control instanceof HTMLElement ? getComputedStyle(control).backgroundColor : '';
+}
+
 describe('ki-checkbox under the dark scheme', () => {
   it('S17 resolves the checked control from dark onmars token values', async () => {
-    const el = await mount();
-    const control = el.shadowRoot?.querySelector('[part="control"]');
-    expect(control).toBeInstanceOf(HTMLElement);
+    // Capture the forced-light value first so the dark assertion below is
+    // falsable: a probe alone resolves whatever scheme is active and would
+    // stay green even if the dark block never applied (ki-card.dark pattern).
+    let el = await mount('light');
+    const lightBackground = controlBackground(el);
 
-    const background =
-      control instanceof HTMLElement ? getComputedStyle(control).backgroundColor : '';
+    el = await mount('dark');
+    const background = controlBackground(el);
 
-    expect(background).toBe(readTokenColor(`--ki-checkbox-checked-${checkboxState(el)}-bg`));
+    // The pointer may rest over the freshly mounted control, so the observed
+    // value is one of the two dark interaction states; both mounts share the
+    // same geometry, so the interaction state matches across schemes.
+    expect([
+      readTokenColor('--ki-checkbox-checked-rest-bg'),
+      readTokenColor('--ki-checkbox-checked-hover-bg'),
+    ]).toContain(background);
+    expect(background, 'forced dark must change the resolved control surface').not.toBe(
+      lightBackground,
+    );
     expect(background).not.toBe('rgba(0, 0, 0, 0)');
   });
 });

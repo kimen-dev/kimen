@@ -24,7 +24,9 @@ export const distSourceCoveragePlugin = {
   name: 'kimen:dist-source-coverage',
   async load(id: string): Promise<{ code: string; map: DistSourceMap } | null> {
     const cleanId = id.split('?')[0] ?? id;
-    if (!cleanId.endsWith('.js') || !cleanId.includes('/dist/')) {
+    // Only this package's own dist output: a foreign /dist/ module (another
+    // workspace package, node_modules) would re-anchor onto the wrong src.
+    if (!cleanId.endsWith('.js') || !cleanId.startsWith(join(packageRoot, 'dist/'))) {
       return null;
     }
     let map: DistSourceMap;
@@ -51,7 +53,7 @@ export const distSourceCoveragePlugin = {
  *
  * Baseline (2026-07-16, `pnpm --filter @kimen/elements run test:coverage`),
  * recorded so future threshold work (Fase Q) starts from a known floor:
- * - elements-unit: 69.91% lines / 63.14% branches / 71.96% functions
+ * - elements-unit: 69.95% lines / 63.27% branches / 72.23% functions
  * - elements-browser-chromium: 90.53% lines / 77.97% branches / 97.41% functions
  */
 export function coverageOptions(

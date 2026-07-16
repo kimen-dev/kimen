@@ -508,14 +508,21 @@ describe('ki-radio-group in a real browser', () => {
     el.querySelectorAll('ki-radio')[0]?.setAttribute('disabled', '');
 
     // The MutationObserver reconcile runs in a microtask; the focus restore is
-    // deferred one further frame (after the browser blurs to <body>). Poll the
-    // observable outcome instead of guessing a settle delay.
+    // deferred one further frame (after the browser blurs to <body>). Gate on
+    // a condition that only becomes true AFTER the reconcile — the disabled
+    // option leaving the tab order — so the anchor captured next is the new
+    // one, never the stale pre-reconcile tab stop.
+    await expect
+      .poll(() => hosts[0]?.shadowRoot?.querySelector('input')?.tabIndex, {
+        message: 'the disabled option must leave the tab order',
+      })
+      .toBe(-1);
     // Focus retargets to the ki-radio host at the group's shadow boundary; the
     // new tab stop is the input inside that host.
-    const findAnchorHost = (): HTMLElement | undefined =>
-      hosts.find((radio) => radio.shadowRoot?.querySelector('input')?.tabIndex === 0);
-    await expect.poll(findAnchorHost, { message: 'a new tab stop must exist' }).toBeTruthy();
-    const anchorHost = findAnchorHost();
+    const anchorHost = hosts.find(
+      (radio) => radio.shadowRoot?.querySelector('input')?.tabIndex === 0,
+    );
+    expect(anchorHost, 'a new tab stop must exist').toBeTruthy();
     await expect
       .poll(() => document.activeElement, {
         message: 'focus must follow to the new tab stop, not fall to body',

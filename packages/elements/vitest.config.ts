@@ -26,8 +26,11 @@ export default defineVitestConfig({
     environment: 'stencil',
     setupFiles: ['./vitest.setup.mjs'],
     // The unit suite executes components through the built lazy loader
-    // (vitest.setup.mjs), so the executed component code lives in the
-    // dist/kimen entry chunks; kimen.esm.js itself is Stencil runtime only.
-    coverage: coverageOptions('elements-unit', ['dist/kimen/p-*.entry.js']),
+    // (vitest.setup.mjs). Component code lives in dist/kimen p-* chunks —
+    // both the *.entry.js chunks AND shared non-entry chunks (e.g. the
+    // ki-select/ki-radio-group form controllers), so the pattern must match
+    // all of them. Pure runtime chunks remap onto @stencil/* sources, which
+    // excludeAfterRemap already drops from the report.
+    coverage: coverageOptions('elements-unit', ['dist/kimen/p-*.js']),
   },
 });

@@ -186,6 +186,11 @@ export const darkConfig = {
       // platform only. Genuinely broken references still fail the build
       // (log.errors.brokenReferences defaults to 'throw'), and token
       // collisions are reported at config level, which this does not touch.
+      // Trade-off of the platform-wide switch: output-NAME collision warnings
+      // (two token paths transforming to the same --ki-*) and per-platform
+      // transform warnings are also silenced for tokens.dark.css alone; the
+      // other five sheets keep reporting both classes, so a systemic mistake
+      // still surfaces on the light/material3 builds of the same sources.
       log: { warnings: 'disabled' },
       files: [
         {

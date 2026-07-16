@@ -33,9 +33,9 @@ function readTokenColor(name: string): string {
   return value;
 }
 
-async function mount(): Promise<HTMLElement> {
+async function mount(scheme: 'light' | 'dark'): Promise<HTMLElement> {
   document.body.replaceChildren();
-  document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
+  document.documentElement.setAttribute('data-ki-color-scheme', scheme);
   injectStylesheet(tokensCss, 'ki-textarea-dark-tokens');
   const el = document.createElement('ki-textarea');
   el.setAttribute('label', 'Delivery notes');
@@ -45,21 +45,33 @@ async function mount(): Promise<HTMLElement> {
   return el;
 }
 
+function fieldBackground(el: HTMLElement): string {
+  const field = el.shadowRoot?.querySelector('[part="field"]');
+  expect(field).toBeInstanceOf(HTMLElement);
+  return field instanceof HTMLElement ? getComputedStyle(field).backgroundColor : '';
+}
+
 describe('ki-textarea under the dark scheme', () => {
   it('S18 resolves the field appearance from dark onmars token values', async () => {
-    const el = await mount();
-    const field = el.shadowRoot?.querySelector('[part="field"]');
-    expect(field).toBeInstanceOf(HTMLElement);
+    // Capture the forced-light value first so the dark assertion below is
+    // falsable: a probe alone resolves whatever scheme is active and would
+    // stay green even if the dark block never applied (ki-card.dark pattern).
+    let el = await mount('light');
+    const lightBackground = fieldBackground(el);
 
-    const background = field instanceof HTMLElement ? getComputedStyle(field).backgroundColor : '';
+    el = await mount('dark');
+    const background = fieldBackground(el);
 
     // The pointer may rest over the freshly mounted field, so the observed
-    // value is one of the two dark states — mirroring the S18 assertion in
-    // ki-textarea.browser.spec.ts.
+    // value is one of the two dark interaction states; both mounts share the
+    // same geometry, so the interaction state matches across schemes.
     expect([
       readTokenColor('--ki-textarea-rest-bg'),
       readTokenColor('--ki-textarea-hover-bg'),
     ]).toContain(background);
+    expect(background, 'forced dark must change the resolved field surface').not.toBe(
+      lightBackground,
+    );
     expect(background).not.toBe('rgba(0, 0, 0, 0)');
   });
 });
