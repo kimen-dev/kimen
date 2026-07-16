@@ -506,20 +506,21 @@ describe('ki-radio-group in a real browser', () => {
     expect(document.activeElement).toBe(hosts[0]);
 
     el.querySelectorAll('ki-radio')[0]?.setAttribute('disabled', '');
-    // The MutationObserver reconcile runs in a microtask; the focus restore is
-    // deferred one further frame (after the browser blurs to <body>).
-    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-    await new Promise((resolve) => setTimeout(resolve, 30));
 
+    // The MutationObserver reconcile runs in a microtask; the focus restore is
+    // deferred one further frame (after the browser blurs to <body>). Poll the
+    // observable outcome instead of guessing a settle delay.
     // Focus retargets to the ki-radio host at the group's shadow boundary; the
     // new tab stop is the input inside that host.
-    const anchorHost = hosts.find(
-      (radio) => radio.shadowRoot?.querySelector('input')?.tabIndex === 0,
-    );
-    expect(anchorHost, 'a new tab stop must exist').toBeTruthy();
-    expect(document.activeElement, 'focus must follow to the new tab stop, not fall to body').toBe(
-      anchorHost,
-    );
+    const findAnchorHost = (): HTMLElement | undefined =>
+      hosts.find((radio) => radio.shadowRoot?.querySelector('input')?.tabIndex === 0);
+    await expect.poll(findAnchorHost, { message: 'a new tab stop must exist' }).toBeTruthy();
+    const anchorHost = findAnchorHost();
+    await expect
+      .poll(() => document.activeElement, {
+        message: 'focus must follow to the new tab stop, not fall to body',
+      })
+      .toBe(anchorHost);
     expect(document.activeElement).not.toBe(document.body);
   });
 
