@@ -145,6 +145,9 @@
     --ki-overlay-high-em-inverse: var(--ki-color-black-40); /** semantic color for overlay high em inverse. */
     --ki-overlay-med-em: var(--ki-color-white-3); /** semantic color for overlay med em. */
     --ki-overlay-med-em-inverse: var(--ki-color-black-24); /** semantic color for overlay med em inverse. */
+    --ki-state-layer-focus: var(--ki-color-black-8); /** Focus interaction state layer. M3 md.sys.state.focus.state-layer-opacity: 12% of the on-color. onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark). */
+    --ki-state-layer-pressed: var(--ki-color-black-8); /** Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark). */
+    --ki-state-layer-dragged: var(--ki-color-black-12); /** Dragged interaction state layer. M3 md.sys.state.dragged.state-layer-opacity: 16% of the on-color. onmars: MarsUI overlay two steps above hover_overlay (White/12 light, Black/12 dark). */
     --ki-elevation-shadow: var(--ki-color-black-8); /** semantic color for elevation shadow. */
     --ki-elevation-shadow-med: var(--ki-color-black-12); /** semantic color for elevation shadow med. */
     --ki-elevation-shadow-dark: var(--ki-color-black-48); /** semantic color for elevation shadow dark. */
@@ -172,6 +175,7 @@
     --ki-surface-primary-high-em-hover: var(--ki-color-brand-600); /** semantic color for surface primary high em hover. */
     --ki-text-primary-on-primary-light: var(--ki-color-brand-300); /** semantic color for text primary on primary light. */
     --ki-text-secondary-on-primary-light: var(--ki-color-brand-400); /** semantic color for text secondary on primary light. */
+    --ki-text-inverse-primary: var(--ki-color-brand-600); /** Primary accent legible on the inverse surface. M3 md.sys.color.inverse-primary (primary tone 80 light / 40 dark). onmars: the opposite-scheme primary text tone (brand 300 light, brand 600 dark). */
     --ki-text-primary-high-em: var(--ki-color-brand-300); /** semantic color for text primary high em. */
     --ki-text-primary-med-em: var(--ki-color-brand-400); /** semantic color for text primary med em. */
     --ki-text-primary-low-em: var(--ki-color-brand-700); /** semantic color for text primary low em. */
@@ -329,6 +333,9 @@
   --ki-overlay-high-em-inverse: var(--ki-color-black-40); /** semantic color for overlay high em inverse. */
   --ki-overlay-med-em: var(--ki-color-white-3); /** semantic color for overlay med em. */
   --ki-overlay-med-em-inverse: var(--ki-color-black-24); /** semantic color for overlay med em inverse. */
+  --ki-state-layer-focus: var(--ki-color-black-8); /** Focus interaction state layer. M3 md.sys.state.focus.state-layer-opacity: 12% of the on-color. onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark). */
+  --ki-state-layer-pressed: var(--ki-color-black-8); /** Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark). */
+  --ki-state-layer-dragged: var(--ki-color-black-12); /** Dragged interaction state layer. M3 md.sys.state.dragged.state-layer-opacity: 16% of the on-color. onmars: MarsUI overlay two steps above hover_overlay (White/12 light, Black/12 dark). */
   --ki-elevation-shadow: var(--ki-color-black-8); /** semantic color for elevation shadow. */
   --ki-elevation-shadow-med: var(--ki-color-black-12); /** semantic color for elevation shadow med. */
   --ki-elevation-shadow-dark: var(--ki-color-black-48); /** semantic color for elevation shadow dark. */
@@ -356,6 +363,7 @@
   --ki-surface-primary-high-em-hover: var(--ki-color-brand-600); /** semantic color for surface primary high em hover. */
   --ki-text-primary-on-primary-light: var(--ki-color-brand-300); /** semantic color for text primary on primary light. */
   --ki-text-secondary-on-primary-light: var(--ki-color-brand-400); /** semantic color for text secondary on primary light. */
+  --ki-text-inverse-primary: var(--ki-color-brand-600); /** Primary accent legible on the inverse surface. M3 md.sys.color.inverse-primary (primary tone 80 light / 40 dark). onmars: the opposite-scheme primary text tone (brand 300 light, brand 600 dark). */
   --ki-text-primary-high-em: var(--ki-color-brand-300); /** semantic color for text primary high em. */
   --ki-text-primary-med-em: var(--ki-color-brand-400); /** semantic color for text primary med em. */
   --ki-text-primary-low-em: var(--ki-color-brand-700); /** semantic color for text primary low em. */

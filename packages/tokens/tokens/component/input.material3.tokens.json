@@ -22,8 +22,8 @@
         "$description": "Material 3 dimension used by the input component for label gap."
       },
       "radius": {
-        "$value": "{ki.radius.xs}",
-        "$description": "Material 3 dimension used by the input component for radius."
+        "$value": "{ki.radius.component.xs}",
+        "$description": "M3 text-field container shape: md.sys.shape.corner.extra-small (4dp) via the material3 radius scale."
       },
       "icon-size": {
         "$value": "{ki.space.5xl}",

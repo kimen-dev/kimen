@@ -46,11 +46,11 @@
       },
       "primary-med-em": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.500}",
-        "$description": "Material 3 semantic color for surface primary med em."
+        "$description": "M3 md.sys.color.primary (primary tone 40)."
       },
       "primary-low-em": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.100}",
-        "$description": "Material 3 semantic color for surface primary low em."
+        "$description": "M3 md.sys.color.primary-container (primary tone 90)."
       },
       "primary-base-em": {
         "$value": "{ki.foundation.migrated.semantic-material3.surface.primary-base-em}",
@@ -64,21 +64,37 @@
         "$value": "{ki.color.brand.500-alpha-1}",
         "$description": "Material 3 semantic color for surface primary base em alpha."
       },
+      "secondary-med-em": {
+        "$value": "{ki.foundation.material3.palette.secondary.40}",
+        "$description": "M3 md.sys.color.secondary (secondary tone 40)."
+      },
+      "secondary-low-em": {
+        "$value": "{ki.foundation.material3.palette.secondary.90}",
+        "$description": "M3 md.sys.color.secondary-container (secondary tone 90)."
+      },
+      "tertiary-med-em": {
+        "$value": "{ki.foundation.material3.palette.tertiary.40}",
+        "$description": "M3 md.sys.color.tertiary (tertiary tone 40)."
+      },
+      "tertiary-low-em": {
+        "$value": "{ki.foundation.material3.palette.tertiary.90}",
+        "$description": "M3 md.sys.color.tertiary-container (tertiary tone 90)."
+      },
       "danger-high-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-high-em}",
-        "$description": "Material 3 semantic color for surface danger high em."
+        "$value": "{ki.foundation.material3.palette.error.40}",
+        "$description": "M3 md.sys.color.error (error tone 40)."
       },
       "danger-med-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-high-em}",
-        "$description": "Material 3 semantic color for surface danger med em."
+        "$value": "{ki.foundation.material3.palette.error.50}",
+        "$description": "M3 error tone 50: mid-emphasis danger surface."
       },
       "danger-low-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-base-em}",
-        "$description": "Material 3 semantic color for surface danger low em."
+        "$value": "{ki.foundation.material3.palette.error.90}",
+        "$description": "M3 md.sys.color.error-container (error tone 90)."
       },
       "danger-base-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-base-em}",
-        "$description": "Material 3 semantic color for surface danger base em."
+        "$value": "{ki.foundation.material3.palette.error.95}",
+        "$description": "M3 error tone 95: faintest danger tint."
       },
       "danger-low-em-alpha": {
         "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-base-em-alpha}",
@@ -117,8 +133,8 @@
         "$description": "Material 3 semantic color for surface primary high em hover."
       },
       "danger-high-em-hover": {
-        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-high-em-hover}",
-        "$description": "Material 3 semantic color for surface danger high em hover."
+        "$value": "{ki.foundation.material3.palette.error.30}",
+        "$description": "Hover of the M3 error surface: error tone 30."
       }
     },
     "text": {
@@ -136,16 +152,16 @@
         "$description": "Material 3 semantic color for text low em."
       },
       "base-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.text.base-em}",
-        "$description": "Material 3 semantic color for text base em."
+        "$value": "{ki.foundation.material3.palette.neutral-variant.60}",
+        "$description": "M3 neutral-variant tone 60 (dark-scheme outline tone) as faintest text."
       },
       "primary-on-primary": {
         "$value": "{ki.color.white.100}",
-        "$description": "Material 3 semantic color for text primary on primary."
+        "$description": "M3 md.sys.color.on-primary (primary tone 100)."
       },
       "primary-on-primary-light": {
-        "$value": "{ki.foundation.migrated.themes-material3.color.brand.800}",
-        "$description": "Material 3 semantic color for text primary on primary light."
+        "$value": "{ki.color.brand.700}",
+        "$description": "M3 md.sys.color.on-primary-container (primary tone 30, current baseline — the 2023 color update moved on-*-container from tone 10 to 30)."
       },
       "secondary-on-primary": {
         "$value": "{ki.color.white.72}",
@@ -154,6 +170,26 @@
       "secondary-on-primary-light": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.500}",
         "$description": "Material 3 semantic color for text secondary on primary light."
+      },
+      "primary-on-secondary": {
+        "$value": "{ki.foundation.material3.palette.secondary.100}",
+        "$description": "M3 md.sys.color.on-secondary (secondary tone 100)."
+      },
+      "primary-on-secondary-light": {
+        "$value": "{ki.foundation.material3.palette.secondary.30}",
+        "$description": "M3 md.sys.color.on-secondary-container (secondary tone 30, current baseline)."
+      },
+      "primary-on-tertiary": {
+        "$value": "{ki.foundation.material3.palette.tertiary.100}",
+        "$description": "M3 md.sys.color.on-tertiary (tertiary tone 100)."
+      },
+      "primary-on-tertiary-light": {
+        "$value": "{ki.foundation.material3.palette.tertiary.30}",
+        "$description": "M3 md.sys.color.on-tertiary-container (tertiary tone 30, current baseline)."
+      },
+      "inverse-primary": {
+        "$value": "{ki.color.brand.200}",
+        "$description": "M3 md.sys.color.inverse-primary (primary tone 80)."
       },
       "text-on-neutral": {
         "$value": "{ki.color.white.100}",
@@ -176,20 +212,20 @@
         "$description": "Material 3 semantic color for text primary base em."
       },
       "danger-high-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-high-em}",
-        "$description": "Material 3 semantic color for text danger high em."
+        "$value": "{ki.foundation.material3.palette.error.30}",
+        "$description": "High-emphasis danger text: M3 error tone 30 (AA over the error-container tints)."
       },
       "danger-med-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-high-em}",
-        "$description": "Material 3 semantic color for text danger med em."
+        "$value": "{ki.foundation.material3.palette.error.40}",
+        "$description": "M3 md.sys.color.error (error tone 40) as danger text."
       },
       "danger-low-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-med-em}",
-        "$description": "Material 3 semantic color for text danger low em."
+        "$value": "{ki.foundation.material3.palette.error.70}",
+        "$description": "M3 error tone 70: low-emphasis danger text (ramp-position parity with onmars danger.300)."
       },
       "danger-base-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-base-em}",
-        "$description": "Material 3 semantic color for text danger base em."
+        "$value": "{ki.foundation.material3.palette.error.90}",
+        "$description": "M3 error tone 90: faintest danger text."
       }
     },
     "outline": {
@@ -207,8 +243,8 @@
         "$description": "Material 3 semantic color for outline med em."
       },
       "low-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.low-em}",
-        "$description": "Material 3 semantic color for outline low em."
+        "$value": "{ki.foundation.material3.palette.neutral-variant.90}",
+        "$description": "M3 neutral-variant tone 90 hairline."
       },
       "base-em": {
         "$value": "{ki.foundation.migrated.semantic-material3.outline.base-em}",
@@ -239,20 +275,20 @@
         "$description": "Material 3 semantic color for outline primary base em alpha."
       },
       "danger-high-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-high-em}",
-        "$description": "Material 3 semantic color for outline danger high em."
+        "$value": "{ki.foundation.material3.palette.error.40}",
+        "$description": "M3 md.sys.color.error (error tone 40) as outline."
       },
       "danger-med-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-med-em}",
-        "$description": "Material 3 semantic color for outline danger med em."
+        "$value": "{ki.foundation.material3.palette.error.50}",
+        "$description": "M3 error tone 50 outline."
       },
       "danger-low-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-low-em}",
-        "$description": "Material 3 semantic color for outline danger low em."
+        "$value": "{ki.foundation.material3.palette.error.80}",
+        "$description": "M3 error tone 80 outline (on-error-container dark tone)."
       },
       "danger-base-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-base-em}",
-        "$description": "Material 3 semantic color for outline danger base em."
+        "$value": "{ki.foundation.material3.palette.error.90}",
+        "$description": "M3 md.sys.color.error-container (error tone 90) as hairline."
       },
       "danger-low-em-alpha": {
         "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-low-em-alpha}",
@@ -283,7 +319,7 @@
       "$type": "color",
       "high-em": {
         "$value": "{ki.color.black.32}",
-        "$description": "Material 3 semantic color for overlay high em."
+        "$description": "M3 md.sys.color.scrim (black) at the M3 scrim opacity (32%)."
       },
       "high-em-inverse": {
         "$value": "{ki.color.white.12}",
@@ -311,6 +347,184 @@
       "shadow-dark": {
         "$value": "{ki.color.black.24}",
         "$description": "Material 3 semantic color for elevation shadow dark."
+      },
+      "e1": {
+        "$type": "shadow",
+        "$value": "{ki.foundation.material3.elevation.level-1}",
+        "$description": "M3 md.sys.elevation.level1 (key + ambient pair). Identical in dark: M3 dark expresses elevation via surface tint (approximated by the mapped surface containers), not stronger shadows."
+      },
+      "e2": {
+        "$type": "shadow",
+        "$value": "{ki.foundation.material3.elevation.level-2}",
+        "$description": "M3 md.sys.elevation.level2. Identical in dark (surface tint carries dark elevation)."
+      },
+      "e3": {
+        "$type": "shadow",
+        "$value": "{ki.foundation.material3.elevation.level-3}",
+        "$description": "M3 md.sys.elevation.level3. Identical in dark (surface tint carries dark elevation)."
+      },
+      "e4": {
+        "$type": "shadow",
+        "$value": "{ki.foundation.material3.elevation.level-4}",
+        "$description": "M3 md.sys.elevation.level4. Identical in dark (surface tint carries dark elevation)."
+      },
+      "e5": {
+        "$type": "shadow",
+        "$value": "{ki.foundation.material3.elevation.level-5}",
+        "$description": "M3 md.sys.elevation.level5. Identical in dark (surface tint carries dark elevation)."
+      },
+      "e6": {
+        "$type": "shadow",
+        "$value": "{ki.foundation.material3.elevation.level-5}",
+        "$description": "M3 md.sys.elevation.level5 (the M3 scale ends at level 5; ki e6 reuses it)."
+      }
+    },
+    "effect": {
+      "component": {
+        "backdrop-blur": {
+          "$type": "dimension",
+          "$value": "{ki.blur.none}",
+          "$description": "M3 surfaces are opaque, never glass: the component backdrop blur is disabled (blur 0). Replaces the MarsUI Blur/24 glass backdrop."
+        },
+        "primary": {
+          "default": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{ki.foundation.material3.elevation.level-1}",
+              "$description": "M3 md.sys.elevation.level1 as the primary component resting effect: flat elevation replaces the MarsUI glass drop + inner White/12 highlight (M3 has no glass inner strokes)."
+            }
+          },
+          "hover": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{ki.foundation.material3.elevation.level-2}",
+              "$description": "M3 md.sys.elevation.level2 as the primary component hover effect (+1 level on hover, M3 elevated interaction pattern). Replaces the MarsUI glass hover stack."
+            }
+          }
+        },
+        "secondary": {
+          "default": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{ki.foundation.material3.elevation.level-1}",
+              "$description": "M3 md.sys.elevation.level1 as the secondary component resting effect: flat elevation replaces the MarsUI glass drop + inner White/3 highlight."
+            }
+          },
+          "hover": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": "{ki.foundation.material3.elevation.level-2}",
+              "$description": "M3 md.sys.elevation.level2 as the secondary component hover effect (+1 level on hover). Replaces the MarsUI glass hover stack."
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "duration": {
+        "$type": "duration",
+        "fast": {
+          "$value": "{ki.foundation.material3.motion.duration.short-2}",
+          "$description": "M3 md.sys.motion.duration.short2 (100ms) as the fast interaction duration."
+        },
+        "short-1": {
+          "$value": "{ki.foundation.material3.motion.duration.short-1}",
+          "$description": "M3 md.sys.motion.duration.short1 (50ms)."
+        },
+        "short-2": {
+          "$value": "{ki.foundation.material3.motion.duration.short-2}",
+          "$description": "M3 md.sys.motion.duration.short2 (100ms)."
+        },
+        "short-3": {
+          "$value": "{ki.foundation.material3.motion.duration.short-3}",
+          "$description": "M3 md.sys.motion.duration.short3 (150ms)."
+        },
+        "short-4": {
+          "$value": "{ki.foundation.material3.motion.duration.short-4}",
+          "$description": "M3 md.sys.motion.duration.short4 (200ms)."
+        },
+        "medium-1": {
+          "$value": "{ki.foundation.material3.motion.duration.medium-1}",
+          "$description": "M3 md.sys.motion.duration.medium1 (250ms)."
+        },
+        "medium-2": {
+          "$value": "{ki.foundation.material3.motion.duration.medium-2}",
+          "$description": "M3 md.sys.motion.duration.medium2 (300ms)."
+        },
+        "medium-3": {
+          "$value": "{ki.foundation.material3.motion.duration.medium-3}",
+          "$description": "M3 md.sys.motion.duration.medium3 (350ms)."
+        },
+        "medium-4": {
+          "$value": "{ki.foundation.material3.motion.duration.medium-4}",
+          "$description": "M3 md.sys.motion.duration.medium4 (400ms)."
+        },
+        "long-1": {
+          "$value": "{ki.foundation.material3.motion.duration.long-1}",
+          "$description": "M3 md.sys.motion.duration.long1 (450ms)."
+        },
+        "long-2": {
+          "$value": "{ki.foundation.material3.motion.duration.long-2}",
+          "$description": "M3 md.sys.motion.duration.long2 (500ms)."
+        },
+        "long-3": {
+          "$value": "{ki.foundation.material3.motion.duration.long-3}",
+          "$description": "M3 md.sys.motion.duration.long3 (550ms)."
+        },
+        "long-4": {
+          "$value": "{ki.foundation.material3.motion.duration.long-4}",
+          "$description": "M3 md.sys.motion.duration.long4 (600ms)."
+        }
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "standard": {
+          "$value": "{ki.foundation.material3.motion.easing.standard}",
+          "$description": "M3 md.sys.motion.easing.standard."
+        },
+        "out": {
+          "$value": "{ki.foundation.material3.motion.easing.standard-decelerate}",
+          "$description": "M3 md.sys.motion.easing.standard-decelerate as the decelerate curve."
+        },
+        "emphasized": {
+          "$value": "{ki.foundation.material3.motion.easing.emphasized}",
+          "$description": "M3 md.sys.motion.easing.emphasized."
+        },
+        "emphasized-decelerate": {
+          "$value": "{ki.foundation.material3.motion.easing.emphasized-decelerate}",
+          "$description": "M3 md.sys.motion.easing.emphasized-decelerate."
+        },
+        "emphasized-accelerate": {
+          "$value": "{ki.foundation.material3.motion.easing.emphasized-accelerate}",
+          "$description": "M3 md.sys.motion.easing.emphasized-accelerate."
+        },
+        "standard-decelerate": {
+          "$value": "{ki.foundation.material3.motion.easing.standard-decelerate}",
+          "$description": "M3 md.sys.motion.easing.standard-decelerate."
+        },
+        "standard-accelerate": {
+          "$value": "{ki.foundation.material3.motion.easing.standard-accelerate}",
+          "$description": "M3 md.sys.motion.easing.standard-accelerate."
+        }
+      }
+    },
+    "state-layer": {
+      "$type": "color",
+      "hover": {
+        "$value": "{ki.foundation.material3.state-layer.light.hover}",
+        "$description": "M3 hover state layer: 8% of md.sys.color.on-surface."
+      },
+      "focus": {
+        "$value": "{ki.foundation.material3.state-layer.light.focus}",
+        "$description": "M3 focus state layer: 12% of md.sys.color.on-surface."
+      },
+      "pressed": {
+        "$value": "{ki.foundation.material3.state-layer.light.focus}",
+        "$description": "M3 pressed state layer: 12% of md.sys.color.on-surface (shares the focus value)."
+      },
+      "dragged": {
+        "$value": "{ki.foundation.material3.state-layer.light.dragged}",
+        "$description": "M3 dragged state layer: 16% of md.sys.color.on-surface."
       }
     }
   }

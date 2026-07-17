@@ -2,8 +2,8 @@
   "ki": {
     "tooltip": {
       "radius": {
-        "$value": "{ki.radius.xs}",
-        "$description": "Material 3 dimension used by the tooltip component for radius."
+        "$value": "{ki.radius.component.xs}",
+        "$description": "M3 plain tooltip container shape: md.sys.shape.corner.extra-small (4dp) via the material3 radius scale."
       },
       "padding-inline": {
         "$value": "{ki.space.md}",
@@ -42,8 +42,14 @@
         "$description": "Material 3 dimension used by the tooltip component for line height."
       },
       "shadow": {
-        "$value": "{ki.foundation.migrated.component-card-material3.card.elevation}",
-        "$description": "Material 3 shadow used by the tooltip component for tooltip shadow.",
+        "$value": {
+          "color": "{ki.color.transparent.black}",
+          "offsetX": 0,
+          "offsetY": 0,
+          "blur": 0,
+          "spread": 0
+        },
+        "$description": "M3 plain tooltip is flat: md.comp.plain-tooltip container elevation level0, so the shadow is transparent (replaces the inherited card elevation).",
         "$type": "shadow"
       },
       "show-delay": {

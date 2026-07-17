@@ -2,8 +2,8 @@
   "ki": {
     "dialog": {
       "radius": {
-        "$value": "{ki.radius.8xl}",
-        "$description": "Material 3 dimension used by the dialog component for radius."
+        "$value": "{ki.radius.big-component.lg}",
+        "$description": "M3 dialog container shape: md.sys.shape.corner.extra-large (28dp) via the material3 radius scale."
       },
       "padding": {
         "$value": "{ki.space.7xl}",
@@ -34,8 +34,8 @@
         "$description": "Material 3 border used by the dialog component for border."
       },
       "shadow": {
-        "$value": "{ki.foundation.migrated.component-dialog-material3.dialog.shadow}",
-        "$description": "Material 3 shadow used by the dialog component for dialog shadow.",
+        "$value": "{ki.elevation.e3}",
+        "$description": "M3 dialog container elevation: md.sys.elevation.level3 via ki.elevation.e3 (replaces the migrated approximation).",
         "$type": "shadow"
       },
       "backdrop-bg": {
@@ -58,13 +58,13 @@
       },
       "motion": {
         "duration": {
-          "$value": "{ki.foundation.migrated.component-dialog-material3.dialog.motion.duration}",
-          "$description": "Material 3 duration used by the dialog component for dialog motion duration.",
+          "$value": "{ki.motion.duration.medium-2}",
+          "$description": "M3 dialog enter transition: md.sys.motion.duration.medium2 (300ms).",
           "$type": "duration"
         },
         "easing": {
-          "$value": "{ki.foundation.migrated.component-dialog-material3.dialog.motion.easing}",
-          "$description": "Material 3 easing curve used by the dialog component for dialog motion easing.",
+          "$value": "{ki.motion.easing.emphasized-decelerate}",
+          "$description": "M3 dialog enter transition: md.sys.motion.easing.emphasized-decelerate.",
           "$type": "cubicBezier"
         }
       }

@@ -226,6 +226,9 @@
       "inverse-black": {
         "$value": "{ki.color.black.100}"
       },
+      "inverse-primary": {
+        "$value": "{ki.color.brand.600}"
+      },
       "primary-high-em": {
         "$value": "{ki.color.brand.300}"
       },
@@ -528,6 +531,18 @@
       },
       "med-em-inverse": {
         "$value": "{ki.color.black.24}"
+      }
+    },
+    "state-layer": {
+      "$type": "color",
+      "focus": {
+        "$value": "{ki.color.black.8}"
+      },
+      "pressed": {
+        "$value": "{ki.color.black.8}"
+      },
+      "dragged": {
+        "$value": "{ki.color.black.12}"
       }
     },
     "elevation": {

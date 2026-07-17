@@ -1,0 +1,16 @@
+{
+  "ki": {
+    "tab-panel": {
+      "padding": {
+        "block": {
+          "$value": "{ki.space.7xl}",
+          "$description": "M3 pane content padding: 24dp between the tab bar and pane body."
+        },
+        "inline": {
+          "$value": "{ki.space.7xl}",
+          "$description": "M3 pane content padding: 24dp inline pane margin."
+        }
+      }
+    }
+  }
+}

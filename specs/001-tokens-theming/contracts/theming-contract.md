@@ -39,6 +39,8 @@ every theme and scheme — the invariant S6 enforces):
 | `--ki-outline-*` | `--ki-outline-med-em`, `--ki-outline-primary-button-top` | semantic |
 | `--ki-inverse-white-*` / `--ki-inverse-black-*` | `--ki-inverse-white-alpha-12` | semantic |
 | `--ki-overlay-*`, `--ki-elevation-*` | `--ki-overlay-high-em`, `--ki-elevation-shadow` | semantic |
+| `--ki-state-layer-*` | `--ki-state-layer-hover`, `--ki-state-layer-pressed` | semantic |
+| `--ki-motion-*` | `--ki-motion-duration-medium-2`, `--ki-motion-easing-emphasized` | semantic |
 | `--ki-typography-*` | `--ki-typography-size-body-1` (aliases of `--ki-font-*`) | semantic |
 
 Deprecated compat aliases (kept until a formal deprecation cycle):
