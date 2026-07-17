@@ -4,7 +4,7 @@
 // scenarios S5-S8, S13 and S14 carry the adversarial cases.
 import { describe, expect, it } from 'vitest';
 import type { UiSpec } from '../src/index.js';
-import { VALIDATION_MAX_BYTES, validateUiSpec } from '../src/index.js';
+import { VALIDATION_MAX_BYTES, VALIDATION_MAX_DEPTH, validateUiSpec } from '../src/index.js';
 
 const confirmationCard: UiSpec = {
   version: 1,
@@ -118,5 +118,77 @@ describe('validateUiSpec', () => {
     const bounded = validateUiSpec(confirmationCard, { maxBytes: 64 });
     expect(bounded.ok).toBe(false);
     expect(bounded.issues[0]?.code).toBe('size-budget');
+  });
+
+  // Purity-wall hardening (FR-004/FR-013/FR-014, Codex review of PR #57):
+  // validation must never invoke foreign code, never blow the stack, and
+  // never let object identity games defeat the budgets.
+  it('never invokes getters or toJSON on untrusted object input', () => {
+    let reads = 0;
+    const withGetter = {
+      version: 1,
+      root: {
+        component: 'ki-button',
+        get props(): Record<string, string> {
+          reads += 1;
+          return {};
+        },
+      },
+    };
+    const report = validateUiSpec(withGetter);
+    expect(reads).toBe(0);
+    expect(report.ok).toBe(false);
+    expect(report.issues[0]?.code).toBe('malformed-spec');
+    expect(report.issues[0]?.message).toContain('accessor');
+
+    let serializations = 0;
+    const withToJson = {
+      version: 1,
+      toJSON: (): unknown => {
+        serializations += 1;
+        return { root: { component: 'ki-button' }, version: 1 };
+      },
+      root: { component: 'ki-button' },
+    };
+    const jsonReport = validateUiSpec(withToJson);
+    expect(serializations).toBe(0);
+    // A function value is not data — rejected, never invoked.
+    expect(jsonReport.ok).toBe(false);
+    expect(jsonReport.issues[0]?.code).toBe('malformed-spec');
+  });
+
+  it('reports the depth budget on deep nesting instead of overflowing the stack', () => {
+    const depth = 2000;
+    const deep = `{"version":1,"root":${'['.repeat(depth)}${']'.repeat(depth)}}`;
+    expect(new TextEncoder().encode(deep).length).toBeLessThan(VALIDATION_MAX_BYTES);
+    const report = validateUiSpec(deep);
+    expect(report.ok).toBe(false);
+    expect(report.issues[0]?.code).toBe('depth-budget');
+    expect(report.issues[0]?.message).toContain(String(VALIDATION_MAX_DEPTH));
+  });
+
+  it('rejects shared object references and cycles as malformed instead of hanging or throwing', () => {
+    const sharedProps = { variant: 'primary' };
+    const shared = {
+      version: 1,
+      root: {
+        component: 'ki-card',
+        slots: {
+          '': [
+            { component: 'ki-button', props: sharedProps },
+            { component: 'ki-button', props: sharedProps },
+          ],
+        },
+      },
+    };
+    const sharedReport = validateUiSpec(shared);
+    expect(sharedReport.ok).toBe(false);
+    expect(sharedReport.issues[0]?.code).toBe('malformed-spec');
+
+    const cyclic: Record<string, unknown> = { version: 1 };
+    cyclic['root'] = { component: 'ki-card', slots: { '': [cyclic] } };
+    const cyclicReport = validateUiSpec(cyclic);
+    expect(cyclicReport.ok).toBe(false);
+    expect(cyclicReport.issues[0]?.code).toBe('malformed-spec');
   });
 });

@@ -49,8 +49,15 @@ A UI spec is data, never code. Validation rejects — naming the offender —
 unknown components, unknown props, wrong-typed values, undeclared slots,
 bindings to actions the spec's `actions` list never declares,
 prototype-pollution keys (`__proto__`, `constructor`, `prototype`) anywhere
-in the document, and payloads beyond the declared size budget
-(`VALIDATION_MAX_BYTES`, overridable per call with `maxBytes`).
+in the document, payloads beyond the declared size budget
+(`VALIDATION_MAX_BYTES`, overridable per call with `maxBytes`) and nesting
+beyond the depth budget (`VALIDATION_MAX_DEPTH`). Object input crosses an
+iterative purity wall before any other check: validation never invokes
+getters or `toJSON` on the input (accessor properties, functions and other
+non-JSON values are rejected as not-data), shared object references and
+cycles are rejected (a spec is a JSON tree), and every later check runs on
+the plain-data snapshot, so mutating the original mid-validation changes
+nothing.
 
 ### What validation does NOT protect against
 

@@ -31,7 +31,30 @@
   "nx": {
     "tags": [
       "scope:catalog"
-    ]
+    ],
+    "targets": {
+      "build": {
+        "dependsOn": [
+          "^build",
+          {
+            "projects": [
+              "@kimen/elements"
+            ],
+            "target": "build"
+          }
+        ],
+        "inputs": [
+          "{projectRoot}/**/*",
+          "!{projectRoot}/src/generated/**",
+          "{workspaceRoot}/packages/elements/generated/custom-elements.json",
+          "{workspaceRoot}/packages/elements/package.json"
+        ],
+        "outputs": [
+          "{projectRoot}/dist",
+          "{projectRoot}/src/generated"
+        ]
+      }
+    }
   },
   "kimenCapabilities": {
     "generatedFrom": "docs/capabilities.json",

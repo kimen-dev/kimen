@@ -65,6 +65,7 @@ export interface UiSpec {
 
 export interface ValidationIssue {
   readonly code:
+    | 'depth-budget'
     | 'forbidden-key'
     | 'invalid-prop-type'
     | 'malformed-spec'
@@ -95,12 +96,209 @@ export const VALIDATION_MAX_BYTES = 262_144;
 const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
 /**
- * JSON.stringify's lib typing hides the `undefined` it returns for
- * non-serializable roots; the declared return type restores it (a const
- * annotation would be narrowed away by control flow at the use site).
+ * The declared validation depth budget (FR-014 hardening): a byte budget
+ * bounds total node count but not call-stack depth — a few kilobytes of
+ * `[[[[…` would otherwise turn every recursive layer (walk, schema parse)
+ * into a stack overflow instead of a report. 256 levels is far beyond any
+ * real UI composition.
  */
-function serializeSafely(value: unknown): string | undefined {
-  return JSON.stringify(value);
+export const VALIDATION_MAX_DEPTH = 256;
+
+interface Snapshot {
+  readonly data: unknown;
+  readonly issues: readonly ValidationIssue[];
+}
+
+/**
+ * The purity wall of the boundary (FR-004/FR-013/FR-014): an ITERATIVE walk
+ * over the input that builds a plain-data clone without ever invoking
+ * foreign code — no `JSON.stringify` on the untrusted value (it would call
+ * `toJSON` and getters), accessor properties rejected instead of read, and
+ * everything after this validates the clone, so mutation of the original
+ * between checks can hide nothing (no time-of-check/time-of-use gap).
+ *
+ * Enforced while walking, each abort producing a named report, never a
+ * throw: forbidden keys (`__proto__`/`constructor`/`prototype`), non-data
+ * values (functions, symbols, bigints, non-finite numbers, class
+ * instances), accessor properties, the byte budget (accumulated as visited,
+ * so an over-budget object aborts early), the depth budget, and repeated
+ * object references — a UI spec is a JSON tree, and shared references or
+ * cycles would let a small payload expand into an unbounded serialized form.
+ */
+function snapshotPlainData(input: unknown, maxBytes: number): Snapshot {
+  const issues: ValidationIssue[] = [];
+  const seen = new WeakSet();
+  let approxBytes = 0;
+  const rootHolder: { data?: unknown } = {};
+  const stack: {
+    value: unknown;
+    path: string;
+    depth: number;
+    assign: (clone: unknown) => void;
+  }[] = [
+    {
+      assign: (clone) => {
+        rootHolder.data = clone;
+      },
+      depth: 0,
+      path: 'spec',
+      value: input,
+    },
+  ];
+
+  while (stack.length > 0 && issues.length === 0) {
+    const item = stack.pop();
+    if (item === undefined) {
+      break;
+    }
+    const { value, path, depth, assign } = item;
+    if (approxBytes > maxBytes) {
+      issues.push({
+        code: 'size-budget',
+        message: `spec payload exceeds the ${String(maxBytes)}-byte validation budget`,
+        path,
+      });
+      break;
+    }
+    if (depth > VALIDATION_MAX_DEPTH) {
+      issues.push({
+        code: 'depth-budget',
+        message: `spec nesting exceeds the ${String(VALIDATION_MAX_DEPTH)}-level validation depth budget`,
+        path,
+      });
+      break;
+    }
+    if (value === null) {
+      assign(null);
+      approxBytes += 4;
+      continue;
+    }
+    if (typeof value === 'string') {
+      assign(value);
+      approxBytes += value.length + 2;
+      continue;
+    }
+    if (typeof value === 'boolean') {
+      assign(value);
+      approxBytes += 5;
+      continue;
+    }
+    if (typeof value === 'number') {
+      if (!Number.isFinite(value)) {
+        issues.push({
+          code: 'malformed-spec',
+          message: 'non-finite numbers are not data',
+          path,
+        });
+        break;
+      }
+      assign(value);
+      approxBytes += 16;
+      continue;
+    }
+    if (typeof value !== 'object') {
+      issues.push({
+        code: 'malformed-spec',
+        message: `a ${typeof value} value is not data`,
+        path,
+      });
+      break;
+    }
+    if (seen.has(value)) {
+      issues.push({
+        code: 'malformed-spec',
+        message: 'shared object references and cycles are not a data tree',
+        path,
+      });
+      break;
+    }
+    seen.add(value);
+    approxBytes += 2;
+    if (Array.isArray(value)) {
+      const clone: unknown[] = [];
+      assign(clone);
+      for (let index = value.length - 1; index >= 0; index -= 1) {
+        const descriptor = Reflect.getOwnPropertyDescriptor(value, index);
+        if (descriptor !== undefined && !('value' in descriptor)) {
+          issues.push({
+            code: 'malformed-spec',
+            message: `accessor properties are not data (index ${String(index)})`,
+            path: `${path}[${String(index)}]`,
+          });
+          break;
+        }
+        const child: unknown = descriptor === undefined ? undefined : descriptor.value;
+        const childIndex = index;
+        stack.push({
+          assign: (childClone) => {
+            clone[childIndex] = childClone;
+          },
+          depth: depth + 1,
+          path: `${path}[${String(index)}]`,
+          value: child ?? null,
+        });
+      }
+    } else {
+      if (
+        Object.getPrototypeOf(value) !== Object.prototype &&
+        Object.getPrototypeOf(value) !== null
+      ) {
+        issues.push({
+          code: 'malformed-spec',
+          message: 'only plain objects and arrays are data',
+          path,
+        });
+        break;
+      }
+      const clone: Record<string, unknown> = {};
+      assign(clone);
+      for (const key of Reflect.ownKeys(value)) {
+        if (typeof key !== 'string') {
+          issues.push({
+            code: 'malformed-spec',
+            message: 'symbol keys are not data',
+            path,
+          });
+          break;
+        }
+        if (FORBIDDEN_KEYS.has(key)) {
+          issues.push({
+            code: 'forbidden-key',
+            message: `forbidden key "${key}" is not allowed in a UI spec`,
+            path: `${path}.${key}`,
+          });
+          break;
+        }
+        const descriptor = Reflect.getOwnPropertyDescriptor(value, key);
+        if (descriptor === undefined || !('value' in descriptor)) {
+          issues.push({
+            code: 'malformed-spec',
+            message: `accessor property "${key}" is not data`,
+            path: `${path}.${key}`,
+          });
+          break;
+        }
+        approxBytes += key.length + 4;
+        stack.push({
+          assign: (childClone) => {
+            clone[key] = childClone;
+          },
+          depth: depth + 1,
+          path: `${path}.${key}`,
+          value: descriptor.value,
+        });
+      }
+    }
+  }
+  if (issues.length === 0 && approxBytes > maxBytes) {
+    issues.push({
+      code: 'size-budget',
+      message: `spec payload exceeds the ${String(maxBytes)}-byte validation budget`,
+      path: 'spec',
+    });
+  }
+
+  return { data: rootHolder.data, issues };
 }
 
 const uiSpecNodeSchema: z.ZodType<UiSpecNode> = z.lazy(() =>
@@ -117,40 +315,6 @@ const uiSpecSchema = z.strictObject({
   actions: z.array(z.string().min(1)).optional(),
   root: uiSpecNodeSchema,
 });
-
-/**
- * Rejects any own `__proto__`/`constructor`/`prototype` key anywhere in the
- * document (FR-013), naming the forbidden key. Purely observational: the
- * walk never mutates the spec and never touches objects outside it.
- */
-function collectForbiddenKeys(value: unknown, path: string, issues: ValidationIssue[]): void {
-  if (Array.isArray(value)) {
-    value.forEach((item, index) => {
-      collectForbiddenKeys(item, `${path}[${String(index)}]`, issues);
-    });
-    return;
-  }
-  if (typeof value !== 'object' || value === null) {
-    return;
-  }
-  for (const key of Reflect.ownKeys(value)) {
-    if (typeof key !== 'string') {
-      continue;
-    }
-    if (FORBIDDEN_KEYS.has(key)) {
-      issues.push({
-        code: 'forbidden-key',
-        message: `forbidden key "${key}" is not allowed in a UI spec`,
-        path: `${path}.${key}`,
-      });
-      continue;
-    }
-    const descriptor = Reflect.getOwnPropertyDescriptor(value, key);
-    if (descriptor !== undefined && 'value' in descriptor) {
-      collectForbiddenKeys(descriptor.value, `${path}.${key}`, issues);
-    }
-  }
-}
 
 function checkProp(
   component: string,
@@ -242,45 +406,33 @@ function checkNode(
 
 /**
  * Validates an agent-emitted UI spec against the generated catalog (FR-004).
- * Pure data processing over `input`: nothing is executed, nothing outside
- * the spec is ever mutated, and every rejection names its offender. The
- * size budget (FR-014) runs first, before any deep traversal.
+ * Pure data processing over `input`: no spec content is ever executed —
+ * string input is measured against the byte budget (FR-014) before parsing,
+ * object input crosses the iterative snapshot wall (budgets enforced while
+ * walking, foreign code never invoked, see `snapshotPlainData`) — nothing
+ * outside the spec is ever mutated, every check runs on the plain-data
+ * clone, and every rejection names its offender.
  */
 export function validateUiSpec(
   input: unknown,
   options: { readonly maxBytes?: number } = {},
 ): ValidationReport {
   const maxBytes = options.maxBytes ?? VALIDATION_MAX_BYTES;
-  let serialized: string;
-  try {
-    serialized = typeof input === 'string' ? input : (serializeSafely(input) ?? '');
-  } catch {
-    return {
-      issues: [
-        {
-          code: 'malformed-spec',
-          message: 'the spec is not serializable data (cycles or exotic values)',
-          path: '',
-        },
-      ],
-      ok: false,
-    };
-  }
-  const byteLength = new TextEncoder().encode(serialized).length;
-  if (byteLength > maxBytes) {
-    return {
-      issues: [
-        {
-          code: 'size-budget',
-          message: `spec payload of ${String(byteLength)} bytes exceeds the ${String(maxBytes)}-byte validation budget`,
-          path: '',
-        },
-      ],
-      ok: false,
-    };
-  }
   let document: unknown = input;
   if (typeof input === 'string') {
+    const byteLength = new TextEncoder().encode(input).length;
+    if (byteLength > maxBytes) {
+      return {
+        issues: [
+          {
+            code: 'size-budget',
+            message: `spec payload of ${String(byteLength)} bytes exceeds the ${String(maxBytes)}-byte validation budget`,
+            path: '',
+          },
+        ],
+        ok: false,
+      };
+    }
     try {
       document = JSON.parse(input);
     } catch {
@@ -291,13 +443,12 @@ export function validateUiSpec(
     }
   }
 
-  const forbidden: ValidationIssue[] = [];
-  collectForbiddenKeys(document, 'spec', forbidden);
-  if (forbidden.length > 0) {
-    return { issues: forbidden, ok: false };
+  const snapshot = snapshotPlainData(document, maxBytes);
+  if (snapshot.issues.length > 0) {
+    return { issues: snapshot.issues, ok: false };
   }
 
-  const parsed = uiSpecSchema.safeParse(document);
+  const parsed = uiSpecSchema.safeParse(snapshot.data);
   if (!parsed.success) {
     return {
       issues: parsed.error.issues.map((issue) => ({
