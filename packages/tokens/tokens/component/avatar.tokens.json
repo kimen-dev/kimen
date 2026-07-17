@@ -1,0 +1,118 @@
+{
+  "ki": {
+    "avatar": {
+      "xxs": {
+        "size": {
+          "$value": "{ki.space.5xl}",
+          "$description": "dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.caption-1}",
+          "$description": "dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px)."
+        },
+        "icon-size": {
+          "$value": "{ki.space.2xl}",
+          "$description": "dimension used by the avatar component for the xxs generic-figure glyph (MarsUI Icon/User 14px, Space/2xl)."
+        }
+      },
+      "xs": {
+        "size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the avatar component for the xs box (24px circle, Figma Space/7xl)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.caption-1}",
+          "$description": "dimension used by the avatar component for xs initials (MarsUI UI/Caption 1: 10px, same step as xxs — verified on Type=text Size=xs 10108:6226)."
+        },
+        "icon-size": {
+          "$value": "{ki.space.2xl}",
+          "$description": "dimension used by the avatar component for the xs generic-figure glyph (MarsUI Icon/User 14px, same step as xxs — NOT the icon-button 16px ramp; verified on 10108:6230)."
+        }
+      },
+      "sm": {
+        "size": {
+          "$value": "{ki.space.10xl}",
+          "$description": "dimension used by the avatar component for the sm box (32px circle, Figma Space/10xl)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the avatar component for sm initials (MarsUI UI/Caption 2: 12px)."
+        },
+        "icon-size": {
+          "$value": "{ki.space.4xl}",
+          "$description": "dimension used by the avatar component for the sm generic-figure glyph (MarsUI Icon/User 18px, Space/4xl)."
+        }
+      },
+      "md": {
+        "size": {
+          "$value": "{ki.space.12xl}",
+          "$description": "dimension used by the avatar component for the md box (40px circle, Figma Space/12xl, node 10011:947)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the avatar component for md initials (MarsUI UI/Para: body_1 13px)."
+        },
+        "icon-size": {
+          "$value": "{ki.space.5xl}",
+          "$description": "dimension used by the avatar component for the md generic-figure glyph (MarsUI Icon/User 20px, Space/5xl)."
+        }
+      },
+      "lg": {
+        "size": {
+          "$value": "{ki.space.14xl}",
+          "$description": "dimension used by the avatar component for the lg box (48px circle, Figma Space/14xl)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.body-2}",
+          "$description": "dimension used by the avatar component for lg initials (MarsUI UI/Body 2: 15px)."
+        },
+        "icon-size": {
+          "$value": "{ki.space.7xl}",
+          "$description": "dimension used by the avatar component for the lg generic-figure glyph (MarsUI Icon/User 24px, Space/7xl)."
+        }
+      },
+      "xl": {
+        "size": {
+          "$value": "{ki.space.16xl}",
+          "$description": "dimension used by the avatar component for the xl box (56px circle, Figma Space/16xl)."
+        },
+        "font-size": {
+          "$value": "{ki.typography.size.title-2}",
+          "$description": "dimension used by the avatar component for xl initials (MarsUI UI/Title 2: 18px)."
+        },
+        "icon-size": {
+          "$value": "{ki.space.9xl}",
+          "$description": "dimension used by the avatar component for the xl generic-figure glyph (MarsUI Icon/User 28px, Space/9xl)."
+        }
+      },
+      "radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "dimension used by the avatar component for the shape: Radius/radius_round bound to every avatar variant — the circle is a radius token, never an attribute (002 shape precedent, FR-005)."
+      },
+      "bg": {
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification)."
+      },
+      "fg": {
+        "$value": "{ki.text.primary-on-primary}",
+        "$description": "color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant."
+      },
+      "border-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "dimension used by the avatar component for the surface border (MarsUI 1px hairline on Type=text; applied to the token surface behind initials and figure, dropped under a loaded portrait — design-extraction decision 4)."
+      },
+      "border-color": {
+        "$value": "{ki.outline.base-em}",
+        "$description": "color used by the avatar component for the surface border: Outline/base_em (Black/3 light, White/3 dark), the exact variable on Type=text variants."
+      },
+      "font-family": {
+        "$value": "{ki.typography.family.body}",
+        "$description": "font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter)."
+      },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "font weight used by the avatar component for initials (MarsUI Typeface/weight/body/medium: 600)."
+      }
+    }
+  }
+}

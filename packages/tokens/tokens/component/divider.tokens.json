@@ -1,0 +1,22 @@
+{
+  "ki": {
+    "divider": {
+      "thickness": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md)."
+      },
+      "color": {
+        "$value": "{ki.outline.base-em}",
+        "$description": "color used by the divider component for the rule: Outline/base_em (Black/3 light, White/3 dark), the exact variable bound to every Figma divider variant and the same semantic role ki-list uses for item dividers."
+      },
+      "radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps)."
+      },
+      "spacing": {
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007)."
+      }
+    }
+  }
+}

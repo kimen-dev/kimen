@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "avatar": {
+      "border-color": {
+        "$value": "{ki.outline.none}",
+        "$description": "Material 3 color used by the avatar component for the surface border: M3 ships no standalone avatar and its monogram usages (list item, chip) are flat container surfaces without a hairline, so the MarsUI glass hairline is disabled; every other avatar token re-resolves through the material3 semantic cascade (spec 019 Constitutional Surface)."
+      }
+    }
+  }
+}

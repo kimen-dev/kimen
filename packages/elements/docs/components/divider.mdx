@@ -1,0 +1,67 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-divider" />
+
+# ki-divider
+
+A static, decorative rule that visually separates adjacent content.
+
+**When to use** — visually separate adjacent content when spacing alone is
+not enough: grouped settings sections, toolbar action groups, distinct
+regions inside a card. Horizontal between stacked content, vertical between
+side-by-side content.
+
+**When NOT to use** — between list items (separation is a `ki-list`
+theme-token decision), semantic thematic breaks in running prose (native
+`<hr>` carries those semantics — the divider is deliberately decorative and
+contributes no role, name or announcement), as a border or outline
+substitute (surface/border tokens), or purely decorative flourishes (prefer
+white space).
+
+## Examples
+
+`orientation` is the component's only attribute — a structural axis, never
+appearance. An unrecognized value keeps the default horizontal rendering by
+CSS construction:
+
+```html
+<section>Profile</section>
+<ki-divider></ki-divider>
+<section>Notifications</section>
+```
+
+A vertical rule stretches to the cross size its layout context provides
+(in a context that resolves no height it renders zero-length — give the
+row a height or let flex/grid stretch it):
+
+```html
+<div style="display: flex">
+  <button>Edit</button>
+  <ki-divider orientation="vertical"></ki-divider>
+  <button>Share</button>
+</div>
+```
+
+## Customization
+
+| Token                     | Controls                                          |
+| ------------------------- | ------------------------------------------------- |
+| `--ki-divider-thickness`  | Rule thickness (onmars: 1px hairline)             |
+| `--ki-divider-color`      | Rule color (resolves from the outline layer)      |
+| `--ki-divider-radius`     | End caps (onmars: pill; material3: square)        |
+| `--ki-divider-spacing`    | Reserved gutter, rule centered (material3: zero)  |
+
+The end-cap treatment and the gutter are per-theme token decisions, never
+attributes. An inset is a per-instance layout decision: use logical margins
+(`margin-inline`) on the instance. Single shadow part: `::part(divider)`
+(the rule itself: thickness, color and end-cap radius).
+
+## Accessibility
+
+- The divider is decorative: no role, no name, no announcement, no tab
+  stop. The surrounding content (headings, lists, toolbars) carries the
+  structure; the rule only reinforces it visually.
+- Semantic thematic breaks belong to native `<hr>`.
+- Rule contrast is a theme-layer concern: the divider is a non-essential
+  graphical object, so the 3:1 non-text contrast requirement does not bind
+  it, but both shipped themes keep the hairline perceivable.

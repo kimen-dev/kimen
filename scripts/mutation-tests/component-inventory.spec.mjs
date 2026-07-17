@@ -333,7 +333,10 @@ describe('component inventory mutation boundary', () => {
     expect(characterization.typeStars).toHaveLength(0);
     expect(characterization.namedTypes).toHaveLength(12);
     expect(validateLegacyRootContract(rootSource)).toEqual(FROZEN_LEGACY_ROOT);
-    expect(components).toHaveLength(20);
+    // The root stays frozen at 20 while the direct-subpath inventory grows:
+    // Fase N wave 1 adds ki-divider, ki-status, ki-icon-button and the
+    // ki-avatar + ki-avatar-group companion pair (specs 019-022).
+    expect(components).toHaveLength(25);
     expect(
       resolveComponentSubpaths(packageJson.exports, components).map((entry) => entry.publicSubpath),
     ).toEqual(components.map((entry) => entry.publicSubpath));

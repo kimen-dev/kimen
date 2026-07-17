@@ -12,6 +12,7 @@ import {
 } from '../lib/component-inventory.mjs';
 
 const REQUIRED_COMPOSITES = Object.freeze([
+  { id: 'ki-avatar-group', members: ['ki-avatar-group', 'ki-avatar'] },
   { id: 'ki-radio-group', members: ['ki-radio-group', 'ki-radio'] },
   { id: 'ki-select', members: ['ki-select', 'ki-option'] },
   { id: 'ki-tabs', members: ['ki-tabs', 'ki-tab', 'ki-tab-panel'] },
@@ -40,7 +41,7 @@ export async function checkComponentInventory({
 
   if (JSON.stringify(groups) !== JSON.stringify(REQUIRED_COMPOSITES)) {
     throw new Error(
-      'Composite budget exceptions must be exactly ki-radio-group, ki-select, and ki-tabs',
+      'Composite budget exceptions must be exactly ki-avatar-group, ki-radio-group, ki-select, and ki-tabs',
     );
   }
   if (directSubpaths.length !== inventory.length) {

@@ -1,0 +1,21 @@
+{
+  "ki": {
+    "avatar-group": {
+      "counter-border-color": {
+        "$value": "{ki.outline.none}",
+        "$description": "Material 3 color used by the avatar group component for the counter border: M3 surfaces carry no MarsUI bevel hairline, so the counter border is disabled (same decision as the avatar surface border)."
+      },
+      "counter-shadow": {
+        "$value": {
+          "color": "{ki.color.transparent.black}",
+          "offsetX": 0,
+          "offsetY": 0,
+          "blur": 0,
+          "spread": 0
+        },
+        "$type": "shadow",
+        "$description": "Material 3 shadow used by the avatar group component for the counter: M3 has no avatar-group artifact and its nearest flat-surface conventions carry no glass effects, so the theme resolves the counter effect to a transparent level0 shadow (status.material3 precedent)."
+      }
+    }
+  }
+}
