@@ -44,6 +44,44 @@ const buttonToneRow = (tone: string): string =>
 const badgeSizeRow = (size: string): string =>
   badgeTones.map((tone) => `<ki-badge tone="${tone}" size="${size}">${tone}</ki-badge>`).join('');
 
+const avatarSizes = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
+
+// Deterministic 16x16 four-quadrant PNG, vendored inline as a data: URI so
+// the portrait step of the avatar fallback chain NEVER touches the network
+// (Art. X). Generated once (scripts in the PR description); flat quadrants
+// keep the scaled interpolation trivial and stable.
+const avatarPortrait =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAJklEQVR42mNIKFmBFblFtGBFDKMaaKKhZ84RrMjEKQUrGtVAEw0AykRZEK3RLr0AAAAASUVORK5CYII=';
+
+const avatarSizeRow = (attributes: string): string =>
+  avatarSizes.map((size) => `<ki-avatar size="${size}"${attributes}></ki-avatar>`).join('');
+
+const avatarGroupMembers = [
+  `<ki-avatar label="Ada Lovelace" src="${avatarPortrait}"></ki-avatar>`,
+  '<ki-avatar label="Grace Hopper" initials="GH"></ki-avatar>',
+  '<ki-avatar label="Alan Turing" initials="AT"></ki-avatar>',
+  '<ki-avatar label="Unknown member"></ki-avatar>',
+  '<ki-avatar label="Edsger Dijkstra" initials="ED"></ki-avatar>',
+  '<ki-avatar label="Barbara Liskov" initials="BL"></ki-avatar>',
+].join('');
+
+// A plus glyph as an inline SVG path: vector-only (no font metrics involved)
+// and filled from currentColor, so every variant x tone x state resolves the
+// icon color through the component's own foreground token.
+const iconButtonGlyph =
+  '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M9 3h2v6h6v2h-6v6H9v-6H3V9h6z"></path></svg>';
+
+const iconButtonToneRow = (tone: string): string =>
+  buttonVariants
+    .map(
+      (variant) =>
+        `<ki-icon-button variant="${variant}" tone="${tone}" label="Add">${iconButtonGlyph}</ki-icon-button>`,
+    )
+    .join('');
+
+const statusToneRow = (attributes: string): string =>
+  badgeTones.map((tone) => `<ki-status tone="${tone}"${attributes}></ki-status>`).join('');
+
 const selectOptions = [
   '<ki-option value="es">Spain</ki-option>',
   '<ki-option value="fr">France</ki-option>',
@@ -71,6 +109,33 @@ const galleries = {
       '<ki-alert tone="success" heading="Success heading">Success message body.</ki-alert>',
       '<ki-alert tone="warning" heading="Warning heading">Warning message body.</ki-alert>',
       '<ki-alert tone="danger">Danger message without a heading.</ki-alert>',
+    ].join(''),
+  },
+  'ki-avatar': {
+    html: [
+      // The three content modes across the full size ramp: portrait (inline
+      // deterministic data: URI), verbatim initials, built-in generic figure.
+      row(avatarSizeRow(` label="Ada Lovelace" src="${avatarPortrait}"`)),
+      row(avatarSizeRow(' label="Ada Lovelace" initials="AL"')),
+      row(avatarSizeRow(' label="Unknown member"')),
+    ].join(''),
+  },
+  'ki-avatar-group': {
+    html: [
+      // Uncapped: every member renders overlapped, no counter.
+      row(`<ki-avatar-group>${avatarGroupMembers}</ki-avatar-group>`),
+      // Capped: three members plus the exact "+3" overflow counter.
+      row(`<ki-avatar-group max="3">${avatarGroupMembers}</ki-avatar-group>`),
+      // Size override (S6): the group's sm metrics win over a member-declared
+      // xl, so the stack stays uniform; four members plus "+2".
+      row(
+        `<ki-avatar-group size="sm" max="4"><ki-avatar label="Ada Lovelace" size="xl" src="${avatarPortrait}"></ki-avatar>` +
+          '<ki-avatar label="Grace Hopper" initials="GH"></ki-avatar>' +
+          '<ki-avatar label="Alan Turing" initials="AT"></ki-avatar>' +
+          '<ki-avatar label="Unknown member"></ki-avatar>' +
+          '<ki-avatar label="Edsger Dijkstra" initials="ED"></ki-avatar>' +
+          '<ki-avatar label="Barbara Liskov" initials="BL"></ki-avatar></ki-avatar-group>',
+      ),
     ].join(''),
   },
   'ki-badge': {
@@ -133,6 +198,58 @@ const galleries = {
       await settleFrames(2);
     },
     width: 400,
+  },
+  'ki-divider': {
+    html: [
+      // Stacked sections separated by horizontal rules (onmars resolves
+      // --ki-divider-radius to the round cap).
+      '<div style="display:flex;flex-direction:column;">' +
+        '<div>Profile</div>' +
+        '<ki-divider></ki-divider>' +
+        '<div>Notifications</div>' +
+        '<ki-divider></ki-divider>' +
+        '<div>Billing</div>' +
+        '</div>',
+      // Toolbar: vertical rules stretch to the explicit row cross size.
+      '<div style="display:flex;align-items:stretch;gap:12px;block-size:24px;">' +
+        '<span>Edit</span>' +
+        '<ki-divider orientation="vertical"></ki-divider>' +
+        '<span>Share</span>' +
+        '<ki-divider orientation="vertical"></ki-divider>' +
+        '<span>Delete</span>' +
+        '</div>',
+    ].join(''),
+  },
+  'ki-icon-button': {
+    focusFirst: true,
+    html: [
+      row(iconButtonToneRow('neutral')),
+      row(iconButtonToneRow('success')),
+      row(iconButtonToneRow('danger')),
+      row(
+        buttonSizes
+          .map(
+            (size) =>
+              `<ki-icon-button size="${size}" label="Add">${iconButtonGlyph}</ki-icon-button>`,
+          )
+          .join(''),
+      ),
+      row(
+        buttonVariants
+          .map(
+            (variant) =>
+              `<ki-icon-button variant="${variant}" disabled label="Add">${iconButtonGlyph}</ki-icon-button>`,
+          )
+          .join(''),
+      ),
+      // Glass variants over a hard-striped backdrop: the deterministic CSS
+      // stripes are the only way the backdrop-filter blur is visible in a
+      // capture (over a flat surface a blur is a no-op).
+      '<div style="display:flex;align-items:center;gap:12px;padding:12px;background:repeating-linear-gradient(45deg,#334155 0 8px,#94a3b8 8px 16px);">' +
+        `<ki-icon-button variant="primary" label="Add">${iconButtonGlyph}</ki-icon-button>` +
+        `<ki-icon-button variant="secondary" label="Add">${iconButtonGlyph}</ki-icon-button>` +
+        '</div>',
+    ].join(''),
   },
   'ki-input': {
     html: [
@@ -231,6 +348,23 @@ const galleries = {
         `<ki-select label="Required" required placeholder="Choose one">${selectOptions}</ki-select>`,
       ),
       row(`<ki-select label="Disabled" disabled value="es">${selectOptions}</ki-select>`),
+    ].join(''),
+  },
+  'ki-status': {
+    html: [
+      // Full tone x ring x label matrix. A label never paints (visible
+      // status text belongs to ki-badge), so each labeled row must stay
+      // pixel-identical to its unlabeled sibling — the capture guards that
+      // invariant alongside the tone fills and the ring layer.
+      row(statusToneRow('')),
+      row(statusToneRow(' label="Service state"')),
+      // The ring separates the dot from media beneath it and resolves to
+      // the surface color, so only a deterministic contrasting strip (the
+      // media stand-in) makes the ring layer visible in the capture.
+      '<div style="display:flex;flex-direction:column;gap:12px;padding:12px;background:linear-gradient(135deg,#334155,#94a3b8);">' +
+        row(statusToneRow(' ring')) +
+        row(statusToneRow(' ring label="Service state"')) +
+        '</div>',
     ].join(''),
   },
   'ki-switch': {
