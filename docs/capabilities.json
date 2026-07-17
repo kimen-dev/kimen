@@ -55,7 +55,7 @@
     {
       "id": "mutation-quality-gate",
       "state": "hardening",
-      "evidence": ["mutation"],
+      "evidence": ["infra-tests"],
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",
@@ -106,7 +106,7 @@
     {
       "id": "web-components-foundation",
       "state": "available",
-      "evidence": ["build", "pack-consumer", "test-browser"],
+      "evidence": ["build", "surfaces-sync", "token-contract", "test-browser"],
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",

@@ -107,6 +107,17 @@ test('@spec:018-project-integrity-hardening S6 prerelease permits the runner apt
   }
 });
 
+test('@spec:018-project-integrity-hardening S8 release validation proves the packaging contract before the candidate is built', () => {
+  const validateCore = readJob(releaseWorkflow, 'validate-core');
+  const coreGate = 'bash scripts/gates/gates-core.sh';
+  const packagingGate = 'pnpm run packaging';
+  const candidateBuild = 'node scripts/release/candidate-cli.mjs build';
+
+  assert.equal(occurrenceCount(validateCore, packagingGate), 1);
+  assert.ok(validateCore.indexOf(packagingGate) > validateCore.indexOf(coreGate));
+  assert.ok(validateCore.indexOf(packagingGate) < validateCore.indexOf(candidateBuild));
+});
+
 test('@spec:018-project-integrity-hardening S6 browsers and independent verification consume validate-core output', () => {
   assert.deepEqual(readYamlList(readJob(releaseWorkflow, 'browser'), 'needs'), ['validate-core']);
   assert.deepEqual(readYamlList(readJob(releaseWorkflow, 'verify-candidate'), 'needs'), [

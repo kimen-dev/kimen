@@ -29,18 +29,26 @@ for (const overridePath of material3ComponentOverrides) {
 
 const ONMARS_FOUNDATION = ['tokens/primitive.tokens.json', 'tokens/themes/onmars.tokens.json'];
 const ONMARS_SEMANTIC = ['tokens/semantic.tokens.json'];
-const MATERIAL3_FOUNDATION = [...ONMARS_FOUNDATION, 'tokens/themes/material3.tokens.json'];
-const MATERIAL3_SEMANTIC = ['tokens/semantic.tokens.json', 'tokens/semantic/material3.tokens.json'];
+// The material3 layer only overrides tokens the base layers already define
+// (theme over onmars theme, semantic over semantic, component over component).
+const MATERIAL3_OVERRIDES = [
+  'tokens/themes/material3.tokens.json',
+  'tokens/semantic/material3.tokens.json',
+  ...material3ComponentOverrides,
+];
 
 // Every composition is layer-ordered, while file discovery within the
 // component layer is deterministic: all bases first, then theme overrides.
 const LAYERS = [...ONMARS_FOUNDATION, ...ONMARS_SEMANTIC, ...componentBaseLayers];
-const MATERIAL3_LAYERS = [
-  ...MATERIAL3_FOUNDATION,
-  ...MATERIAL3_SEMANTIC,
-  ...componentBaseLayers,
-  ...material3ComponentOverrides,
-];
+
+// Layer overrides are declared through Style Dictionary's include/source
+// split: overriding an `include` token from `source` is silent by design,
+// while two `source` files colliding still emits a "Token collisions
+// detected" warning. Each layer stays collision-checked as `source` in
+// exactly one build (base layers in lightConfig, material3 overrides in
+// material3LightConfig, each dark-mode file as the sole source of its own
+// config), so intentional overrides are quiet and a genuine duplicate —
+// e.g. two component files defining the same token — still warns.
 
 function variables({ dictionary, options, indentation = '  ' }) {
   return formattedVariables({
@@ -91,7 +99,8 @@ export const lightConfig = {
 };
 
 export const material3LightConfig = {
-  source: MATERIAL3_LAYERS,
+  include: LAYERS,
+  source: MATERIAL3_OVERRIDES,
   hooks: {
     formats: {
       'kimen/css-material3-light': ({ dictionary, options }) =>
@@ -167,6 +176,22 @@ export const darkConfig = {
       transformGroup: 'css',
       prefix: '',
       buildPath: 'dist/css/',
+      // Combining the modes/dark filter with outputReferences makes Style
+      // Dictionary warn about "filtered out token references": the dark file
+      // emits var(--ki-*) references to tokens it does not define. That is
+      // the intent — those custom properties are defined on :root by
+      // tokens.light.css and both files ship concatenated in tokens.css, but
+      // Style Dictionary cannot see across output files and offers no
+      // per-warning switch, so file-level warnings are disabled for this
+      // platform only. Genuinely broken references still fail the build
+      // (log.errors.brokenReferences defaults to 'throw'), and token
+      // collisions are reported at config level, which this does not touch.
+      // Trade-off of the platform-wide switch: output-NAME collision warnings
+      // (two token paths transforming to the same --ki-*) and per-platform
+      // transform warnings are also silenced for tokens.dark.css alone; the
+      // other five sheets keep reporting both classes, so a systemic mistake
+      // still surfaces on the light/material3 builds of the same sources.
+      log: { warnings: 'disabled' },
       files: [
         {
           destination: 'tokens.dark.css',
@@ -180,7 +205,8 @@ export const darkConfig = {
 };
 
 export const material3DarkConfig = {
-  source: [...MATERIAL3_LAYERS, 'tokens/modes/material3.dark.tokens.json'],
+  include: [...LAYERS, ...MATERIAL3_OVERRIDES],
+  source: ['tokens/modes/material3.dark.tokens.json'],
   hooks: {
     formats: {
       'kimen/css-material3-dark': material3DarkFormat,

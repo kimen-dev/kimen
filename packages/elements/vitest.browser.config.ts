@@ -3,6 +3,10 @@ import { join } from 'node:path';
 import { defineBrowserCommand, playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
+// The explicit .ts extension keeps this config importable by plain Node type
+// stripping (scripts/tests/browser-gates.test.mjs loads it without a bundler).
+import { coverageOptions, distSourceCoveragePlugin } from './vitest.coverage.config.ts';
+
 // Real-browser suite (constitution Art. III: component suites never run in
 // jsdom/mock-doc alone; Art. IV: engine baseline is verified, not declared).
 // Every invocation runs exactly one validated engine. The local suite supplies
@@ -29,9 +33,17 @@ const provider = playwright(
 
 export default defineConfig({
   ...(cacheDir ? { cacheDir } : {}),
+  plugins: [distSourceCoveragePlugin],
   test: {
     name: `elements-browser-${browser}`,
     include: ['browser-tests/**/*.browser.spec.{ts,tsx}'],
+    // V8 coverage collection needs CDP, so it is only available on the
+    // chromium engine (the ordinary local/PR engine, Art. III); the
+    // firefox/webkit prerelease matrix runs never pass --coverage. Browser
+    // specs import the built dist/components custom elements, so those are
+    // the executed scripts that remap onto src (index.js is a barrel the
+    // specs never import, hence the ki-* pattern).
+    coverage: coverageOptions(`elements-browser-${browser}`, ['dist/components/ki-*.js']),
     browser: {
       enabled: true,
       headless: true,

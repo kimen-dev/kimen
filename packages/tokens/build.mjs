@@ -1,6 +1,14 @@
 // Builds @kimen/tokens: light (:root) + dark (prefers-color-scheme/attribute)
 // into a single dist/css/tokens.css. Intermediate per-mode files are kept in
 // dist/css/ for split loading and debugging.
+//
+// A warning-free build is the expected outcome. Layer overrides (primitive →
+// theme → semantic → component, material3 over onmars, dark over light) are
+// declared intentional via each config's include/source split, and the dark
+// file's cross-file var() references via a scoped platform log — see
+// style-dictionary.config.mjs. Any warning this build prints is therefore a
+// real problem (duplicate token in the same layer, unexpected filtered
+// reference), not noise to ignore.
 import StyleDictionary from 'style-dictionary';
 import { readFile, writeFile } from 'node:fs/promises';
 import {

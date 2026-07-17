@@ -578,12 +578,18 @@ describe('ki-dialog in a real browser', () => {
     document.documentElement.setAttribute('data-ki-theme', 'material3');
     const el = await mountDialog();
     await openDialog(el);
-    await new Promise((resolve) => setTimeout(resolve, 250));
     const dialog = internalDialog(el);
+    // The theme swap resolves through the cascade, not a timer: wait on the
+    // observable outcome (the surface shows material3 token values).
+    const material3Bg = readToken('--ki-dialog-bg');
+    await waitFor(
+      () => getComputedStyle(dialog).backgroundColor === material3Bg,
+      'dialog surface resolved material3 token values',
+    );
     const styles = getComputedStyle(dialog);
     const backdrop = getComputedStyle(dialog, '::backdrop');
 
-    expect(styles.backgroundColor).toBe(readToken('--ki-dialog-bg'));
+    expect(styles.backgroundColor).toBe(material3Bg);
     expect(styles.backgroundColor).not.toBe(onmarsBg);
     expect(styles.borderRadius).toBe(readToken('--ki-dialog-radius'));
     expect(styles.borderRadius).not.toBe(onmarsRadius);
