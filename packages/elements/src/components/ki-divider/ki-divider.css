@@ -1,0 +1,37 @@
+/* Tokens only (Art. VI): every visual value resolves from --ki-divider-*.
+ * Logical properties only (Art. IV): direction-agnostic by construction.
+ *
+ * An unrecognized orientation value matches no [orientation="vertical"]
+ * selector, so the horizontal :host defaults apply — fallback by CSS
+ * construction, zero validation code (FR-002, badge precedent).
+ *
+ * The gutter (FR-007): the host reserves the theme's --ki-divider-spacing
+ * cross size with the rule centered in it via symmetric padding. When a
+ * theme sets the gutter to zero (or below the rule thickness) the padding
+ * resolves to 0 and the host collapses to the rule itself. */
+
+:host {
+  display: block;
+  padding-block: calc(max(var(--ki-divider-spacing) - var(--ki-divider-thickness), 0px) / 2);
+}
+
+[part="divider"] {
+  block-size: var(--ki-divider-thickness);
+  border-radius: var(--ki-divider-radius);
+  background: var(--ki-divider-color);
+}
+
+/* A vertical divider derives its length from the layout context (FR-003):
+ * in a stretching context (flex/grid cross axis or an explicit height) the
+ * rule fills it; where no height resolves it renders zero-length — a
+ * consumer layout concern the component does not repair (spec edge case). */
+:host([orientation="vertical"]) {
+  inline-size: fit-content;
+  padding-block: 0;
+  padding-inline: calc(max(var(--ki-divider-spacing) - var(--ki-divider-thickness), 0px) / 2);
+}
+
+:host([orientation="vertical"]) [part="divider"] {
+  inline-size: var(--ki-divider-thickness);
+  block-size: 100%;
+}

@@ -37,7 +37,9 @@ test('packaging invokes publint once per publishable package and derives one ATT
   const componentAttw = calls.find(
     ({ args }) => args[1] === 'attw' && args.includes('./ki-tooltip'),
   );
-  assert.equal(componentAttw.args.filter((argument) => argument.startsWith('./ki-')).length, 20);
+  // 25 direct component subpaths after Fase N wave 1 adds ki-divider,
+  // ki-status, ki-icon-button and the ki-avatar + ki-avatar-group pair.
+  assert.equal(componentAttw.args.filter((argument) => argument.startsWith('./ki-')).length, 25);
 });
 
 test('standalone packaging re-enters through the isolated cache environment', async () => {

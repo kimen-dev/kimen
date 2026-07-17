@@ -1,0 +1,86 @@
+import axe from 'axe-core';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { commands } from 'vitest/browser';
+
+// @spec:020-ki-divider
+import tokensCss from '@kimen/tokens/css?raw';
+import { defineCustomElement } from '../dist/components/ki-divider.js';
+
+const STYLE_ID = 'ki-divider-dark-tokens';
+
+const browserCommands = commands as unknown as {
+  emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
+};
+
+beforeAll(async () => {
+  defineCustomElement();
+  await browserCommands.emulateColorScheme('dark');
+});
+
+function injectStylesheet(): void {
+  if (document.getElementById(STYLE_ID)) {
+    return;
+  }
+  const style = document.createElement('style');
+  style.id = STYLE_ID;
+  style.textContent = tokensCss;
+  document.head.appendChild(style);
+}
+
+function landmark(): HTMLElement {
+  let main = document.querySelector('main');
+  if (!main) {
+    main = document.createElement('main');
+    document.body.appendChild(main);
+  }
+  return main;
+}
+
+async function mount(): Promise<HTMLElement> {
+  const el = document.createElement('ki-divider');
+  landmark().appendChild(el);
+  await customElements.whenDefined('ki-divider');
+  const deadline = Date.now() + 2000;
+  while (!el.shadowRoot?.querySelector('[part="divider"]') && Date.now() < deadline) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  return el;
+}
+
+function readTokenColor(name: string): string {
+  const probe = document.createElement('div');
+  probe.style.color = `var(${name})`;
+  document.body.appendChild(probe);
+  const value = getComputedStyle(probe).color;
+  probe.remove();
+  return value;
+}
+
+function requireRule(el: HTMLElement): HTMLElement {
+  const rule = el.shadowRoot?.querySelector<HTMLElement>('[part="divider"]') ?? null;
+  expect(rule).toBeTruthy();
+  if (!rule) {
+    throw new Error('ki-divider did not render its rule');
+  }
+  return rule;
+}
+
+describe('ki-divider under the dark scheme', () => {
+  it('S7 resolves the rule color from the dark token values', async () => {
+    injectStylesheet();
+    document.documentElement.setAttribute('data-ki-color-scheme', 'light');
+    let el = await mount();
+    const lightColor = getComputedStyle(requireRule(el)).backgroundColor;
+    el.remove();
+
+    document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
+    el = await mount();
+    const darkColor = getComputedStyle(requireRule(el)).backgroundColor;
+
+    expect(darkColor).toBe(readTokenColor('--ki-divider-color'));
+    expect(darkColor, 'forced dark must change the rule color').not.toBe(lightColor);
+
+    const results = await axe.run(document.body);
+    expect(results.violations).toEqual([]);
+  });
+});

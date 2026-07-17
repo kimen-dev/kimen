@@ -1,0 +1,47 @@
+{
+  "ki": {
+    "status": {
+      "size": {
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the status component for the dot: the MarsUI 4px dot, Space/xs bound to every Status variant (specs/021-ki-status/design-extraction.md). One size per theme, never an attribute (FR-006)."
+      },
+      "radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "dimension used by the status component for the dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent)."
+      },
+      "shadow": {
+        "$value": "{ki.effect.component.primary.default.shadow}",
+        "$description": "shadow used by the status component for the dot effects: the exact MarsUI pair on every Status variant — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers. The effect's backdrop blur is deliberately NOT applied: a 4px dot has no glass surface to blur (brief §5 perf note, glass restraint).",
+        "$type": "shadow"
+      },
+      "ring-width": {
+        "$value": "{ki.space.xxs}",
+        "$description": "dimension used by the status component for the separating ring: the 2px stroke on every Outline=True Status variant (FR-002)."
+      },
+      "ring-color": {
+        "$value": "{ki.outline.inverse-black}",
+        "$description": "color used by the status component for the separating ring: Outline/inverse_black, the exact variable bound to Outline=True variants — white over light surfaces, black over dark ones, so the ring reads as a cutout from the underlying media (FR-002)."
+      },
+      "neutral-color": {
+        "$value": "{ki.surface.disabled-high-em}",
+        "$description": "color used by the status component for the neutral tone fill: Surface/disabled_high_em, the exact variable bound to the Type=disabled Status variant (Gray/500 light, White/32 dark) — MarsUI's disabled gray maps to the charter neutral tone (spec Assumptions)."
+      },
+      "success-color": {
+        "$value": "{ki.surface.success-med-em}",
+        "$description": "color used by the status component for the success tone fill: Surface/success_med_em, the exact variable bound to the Type=success Status variant (Success/500)."
+      },
+      "danger-color": {
+        "$value": "{ki.surface.danger-med-em}",
+        "$description": "color used by the status component for the danger tone fill: Surface/danger_med_em, the exact variable bound to the Type=danger Status variant (Danger/500)."
+      },
+      "info-color": {
+        "$value": "{ki.surface.info-med-em}",
+        "$description": "color used by the status component for the info tone fill: no Figma Status variant ships an info Type, so the fill extrapolates the verified med-em 500 pattern to the Info ramp (001 contract, 010/015 precedent) — declared for founder ratification."
+      },
+      "warning-color": {
+        "$value": "{ki.surface.warning-med-em}",
+        "$description": "color used by the status component for the warning tone fill: Surface/warning_med_em, the exact variable bound to the Type=warning Status variant (Warning/500)."
+      }
+    }
+  }
+}

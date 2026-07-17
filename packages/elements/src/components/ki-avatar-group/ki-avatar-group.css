@@ -1,0 +1,135 @@
+/* Tokens only (Art. VI): every visual value resolves from a --ki-avatar-*
+ * or --ki-avatar-group-* token. Logical properties only (Art. IV): the stack
+ * and its trailing counter follow the writing direction (FR-013, S13).
+ *
+ * The group re-declares the members' private --_avatar-* metrics from this
+ * outer tree via ::slotted: the cascade lets outer-tree declarations win
+ * over the member's own :host size rules, so the stack stays uniform at the
+ * group's size whatever the members declare (FR-010, S6). The base is the md
+ * step; an unrecognized group size matches no selector and keeps it
+ * (FR-007). */
+
+:host {
+  --_group-overlap: var(--ki-avatar-group-md-overlap);
+  --_group-counter-size: var(--ki-avatar-md-size);
+  --_group-counter-padding-inline: var(--ki-avatar-group-md-counter-padding-inline);
+  --_group-counter-font-size: var(--ki-avatar-group-md-counter-font-size);
+
+  display: inline-flex;
+}
+
+::slotted(ki-avatar) {
+  --_avatar-size: var(--ki-avatar-md-size);
+  --_avatar-font-size: var(--ki-avatar-md-font-size);
+  --_avatar-icon-size: var(--ki-avatar-md-icon-size);
+
+  position: relative;
+  box-shadow: 0 0 0 var(--ki-avatar-group-ring-width) var(--ki-avatar-group-ring-color);
+  border-radius: var(--ki-avatar-radius);
+}
+
+:host([size="xxs"]) {
+  --_group-overlap: var(--ki-avatar-group-xxs-overlap);
+  --_group-counter-size: var(--ki-avatar-xxs-size);
+  --_group-counter-padding-inline: var(--ki-avatar-group-xxs-counter-padding-inline);
+  --_group-counter-font-size: var(--ki-avatar-group-xxs-counter-font-size);
+}
+
+:host([size="xxs"]) ::slotted(ki-avatar) {
+  --_avatar-size: var(--ki-avatar-xxs-size);
+  --_avatar-font-size: var(--ki-avatar-xxs-font-size);
+  --_avatar-icon-size: var(--ki-avatar-xxs-icon-size);
+}
+
+:host([size="xs"]) {
+  --_group-overlap: var(--ki-avatar-group-xs-overlap);
+  --_group-counter-size: var(--ki-avatar-xs-size);
+  --_group-counter-padding-inline: var(--ki-avatar-group-xs-counter-padding-inline);
+  --_group-counter-font-size: var(--ki-avatar-group-xs-counter-font-size);
+}
+
+:host([size="xs"]) ::slotted(ki-avatar) {
+  --_avatar-size: var(--ki-avatar-xs-size);
+  --_avatar-font-size: var(--ki-avatar-xs-font-size);
+  --_avatar-icon-size: var(--ki-avatar-xs-icon-size);
+}
+
+:host([size="sm"]) {
+  --_group-overlap: var(--ki-avatar-group-sm-overlap);
+  --_group-counter-size: var(--ki-avatar-sm-size);
+  --_group-counter-padding-inline: var(--ki-avatar-group-sm-counter-padding-inline);
+  --_group-counter-font-size: var(--ki-avatar-group-sm-counter-font-size);
+}
+
+:host([size="sm"]) ::slotted(ki-avatar) {
+  --_avatar-size: var(--ki-avatar-sm-size);
+  --_avatar-font-size: var(--ki-avatar-sm-font-size);
+  --_avatar-icon-size: var(--ki-avatar-sm-icon-size);
+}
+
+:host([size="lg"]) {
+  --_group-overlap: var(--ki-avatar-group-lg-overlap);
+  --_group-counter-size: var(--ki-avatar-lg-size);
+  --_group-counter-padding-inline: var(--ki-avatar-group-lg-counter-padding-inline);
+  --_group-counter-font-size: var(--ki-avatar-group-lg-counter-font-size);
+}
+
+:host([size="lg"]) ::slotted(ki-avatar) {
+  --_avatar-size: var(--ki-avatar-lg-size);
+  --_avatar-font-size: var(--ki-avatar-lg-font-size);
+  --_avatar-icon-size: var(--ki-avatar-lg-icon-size);
+}
+
+:host([size="xl"]) {
+  --_group-overlap: var(--ki-avatar-group-xl-overlap);
+  --_group-counter-size: var(--ki-avatar-xl-size);
+  --_group-counter-padding-inline: var(--ki-avatar-group-xl-counter-padding-inline);
+  --_group-counter-font-size: var(--ki-avatar-group-xl-counter-font-size);
+}
+
+:host([size="xl"]) ::slotted(ki-avatar) {
+  --_avatar-size: var(--ki-avatar-xl-size);
+  --_avatar-font-size: var(--ki-avatar-xl-font-size);
+  --_avatar-icon-size: var(--ki-avatar-xl-icon-size);
+}
+
+[part="group"] {
+  display: flex;
+  align-items: center;
+}
+
+/* Overlap between consecutive members: the leading edge of every member but
+ * the first tucks under its predecessor (reversed z-order set inline by the
+ * group; the exact MarsUI -8/-12 steps live in the per-size overlap token). */
+::slotted(ki-avatar:not(:first-of-type)) {
+  margin-inline-start: calc(-1 * var(--_group-overlap));
+}
+
+/* Beyond the cap: not rendered, not exposed (FR-009). */
+::slotted([data-ki-avatar-group-overflow]) {
+  display: none;
+}
+
+/* The static "+N" counter: the MarsUI secondary-button-styled pill at the
+ * bottom stacking layer (it stays static while members are positioned), the
+ * member height at the group size, tucked under the last member. */
+[part="counter"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  block-size: var(--_group-counter-size);
+  margin-inline-start: calc(-1 * var(--_group-overlap));
+  padding-inline: var(--_group-counter-padding-inline);
+  border: var(--ki-avatar-group-counter-border-width) solid
+    var(--ki-avatar-group-counter-border-color);
+  border-radius: var(--ki-avatar-group-counter-radius);
+  background: var(--ki-avatar-group-counter-bg);
+  box-shadow: var(--ki-avatar-group-counter-shadow);
+  color: var(--ki-avatar-group-counter-fg);
+  font-family: var(--ki-avatar-font-family);
+  font-size: var(--_group-counter-font-size);
+  font-weight: var(--ki-avatar-font-weight);
+  line-height: 1;
+  white-space: nowrap;
+}

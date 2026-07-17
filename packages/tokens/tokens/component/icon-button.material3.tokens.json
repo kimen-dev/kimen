@@ -1,0 +1,193 @@
+{
+  "ki": {
+    "icon-button": {
+      "xs": {
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the icon button component for xs radius (M3 shape Round, same decision as button)."
+        }
+      },
+      "sm": {
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the icon button component for sm radius (M3 shape Round, same decision as button)."
+        }
+      },
+      "md": {
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the icon button component for md radius (M3 shape Round, same decision as button)."
+        }
+      },
+      "lg": {
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the icon button component for lg radius (M3 shape Round, same decision as button)."
+        }
+      },
+      "xl": {
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "Material 3 dimension used by the icon button component for xl radius (M3 shape Round, same decision as button)."
+        }
+      },
+      "border-width": {
+        "$value": "{ki.foundation.migrated.component-badge-material3.badge.border-width}",
+        "$type": "dimension",
+        "$description": "Material 3 dimension used by the icon button component for border width."
+      },
+      "primary": {
+        "neutral": {
+          "rest": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "hover": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "active": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          }
+        },
+        "success": {
+          "rest": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "hover": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "active": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          }
+        },
+        "danger": {
+          "rest": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "hover": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "active": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          }
+        },
+        "rest": {
+          "border-bottom": {
+            "$value": "{ki.outline.none}",
+            "$type": "color",
+            "$description": "Material 3 primary icon buttons carry no border: the MarsUI bevel bottom edge is disabled."
+          }
+        },
+        "hover": {
+          "overlay": {
+            "$value": "{ki.state-layer.hover}",
+            "$type": "color",
+            "$description": "M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim."
+          }
+        }
+      },
+      "secondary": {
+        "neutral": {
+          "rest": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "hover": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "active": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          }
+        },
+        "success": {
+          "rest": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "hover": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "active": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          }
+        },
+        "danger": {
+          "rest": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "hover": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          },
+          "active": {
+            "border": {
+              "$value": "{ki.outline.none}",
+              "$description": "Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled."
+            }
+          }
+        },
+        "rest": {
+          "border-bottom": {
+            "$value": "{ki.outline.none}",
+            "$type": "color",
+            "$description": "Material 3 secondary icon buttons carry no border: the MarsUI bevel bottom edge is disabled."
+          }
+        },
+        "hover": {
+          "overlay": {
+            "$value": "{ki.state-layer.hover}",
+            "$type": "color",
+            "$description": "M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim."
+          }
+        }
+      }
+    }
+  }
+}
