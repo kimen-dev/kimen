@@ -39,6 +39,7 @@ interface VisualSuiteOptions {
 const browserCommands = commands as unknown as {
   emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
   emulateReducedMotion: (value: 'no-preference' | 'reduce' | null) => Promise<void>;
+  resetPointer: () => Promise<void>;
   visualGateStatus: (screenshotName: string) => Promise<{
     armed: boolean;
     baselineExists: boolean;
@@ -243,6 +244,7 @@ export function runVisualSuite(options: VisualSuiteOptions): void {
           console.warn(notice);
           testContext.skip(notice);
         }
+        await browserCommands.resetPointer();
         const wrapper = await mountGallery(component, theme);
         if (visualGalleries[component].focusFirst === true) {
           // Deterministic focus: keyboard Tab lands wherever the iframe's

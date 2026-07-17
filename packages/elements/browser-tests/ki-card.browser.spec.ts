@@ -196,7 +196,19 @@ describe('ki-card in a real browser', () => {
     const button = el.querySelector('ki-button');
     expect(button).toBeInstanceOf(HTMLElement);
 
+    // Anchor the Tab start point: page-level focus state persists across
+    // spec FILES in the same browser instance, so an unanchored Tab lands
+    // wherever the previous file left focus — this exact test went red on
+    // main when wave 1 reshuffled the file order (same failure class the
+    // visual gate caught twice). A focused in-document sentinel makes the
+    // next tab stop deterministic; it is removed before the assertions.
+    const sentinel = document.createElement('button');
+    sentinel.textContent = 'sentinel';
+    document.body.prepend(sentinel);
+    sentinel.focus();
+
     await userEvent.keyboard('{Tab}');
+    sentinel.remove();
 
     expect(document.activeElement).not.toBe(el);
     expect(document.activeElement).toBe(button);
