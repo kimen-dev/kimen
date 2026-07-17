@@ -5,7 +5,17 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const INFRASTRUCTURE_TEST = /^[a-z0-9][a-z0-9-]*\.test\.mjs$/u;
-const DEDICATED_TEST_FILES = new Set(['consumer-contract.test.mjs']);
+// Files a dedicated gate already runs in the same core pass stay out of the
+// infra-tests discovery, so no test executes twice per PR (Art. X):
+// consumer-contract has its own wrapper scripts; the public-api set runs
+// inside the public-api gate (`pnpm run check:api`).
+const DEDICATED_TEST_FILES = new Set([
+  'consumer-contract.test.mjs',
+  'css-token-surface.test.mjs',
+  'public-api.test.mjs',
+  'public-api-gate.test.mjs',
+  'public-api-snapshot.test.mjs',
+]);
 
 export function selectInfrastructureTestFiles(entries) {
   return entries

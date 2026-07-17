@@ -188,8 +188,9 @@ describe('ki-list in a real browser', () => {
     if (textNode) {
       textNode.textContent = 'Updated 2 minutes ago';
     }
-    await new Promise((resolve) => setTimeout(resolve, 60));
-    expect(item.classList.contains('has-secondary')).toBe(true);
+    // The re-check runs from a characterData MutationObserver: poll the
+    // observable class flip instead of guessing a settle delay.
+    await expect.poll(() => item.classList.contains('has-secondary')).toBe(true);
   });
 
   it('S6 preserves an author-provided role on the list host', async () => {

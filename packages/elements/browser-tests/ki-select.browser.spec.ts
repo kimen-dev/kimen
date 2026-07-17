@@ -328,11 +328,11 @@ describe('ki-select in a real browser', () => {
     expect(el.value).toBe('fr');
 
     el.querySelector('ki-option[value="fr"]')?.setAttribute('value', 'FR');
-    await new Promise((resolve) => setTimeout(resolve, 60));
-    await new Promise((resolve) => requestAnimationFrame(resolve));
 
-    expect(el.value).toBe('FR');
-    expect(valueText(el)).toBe('France');
+    // The mirror runs from a MutationObserver plus a queued re-render: poll
+    // the observable outcome instead of guessing a settle delay.
+    await expect.poll(() => el.value).toBe('FR');
+    await expect.poll(() => valueText(el)).toBe('France');
   });
 
   it('S16 a disabled required select is not reported invalid', async () => {

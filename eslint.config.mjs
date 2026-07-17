@@ -16,6 +16,9 @@ export default tseslint.config(
       '**/*.md',
       '.specify/**',
       '.claude/**',
+      // Local agent-session tooling; gitignored, but `eslint .` still walks it
+      // and its timestamp droppings can carry code-like extensions (.ts).
+      '.remember/**',
       '**/loader/**',
       '**/generated/**',
       '**/www/**',
