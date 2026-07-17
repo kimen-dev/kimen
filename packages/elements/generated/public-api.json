@@ -764,10 +764,18 @@
               }
             },
             "cssProperties": {
+              "--ki-button-backdrop-blur": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "backdrop blur used by the button component glass variants (primary/secondary). material3 resolves to blur none via the semantic override.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
               "--ki-button-border-width": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the button component for border width.",
+                "description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -784,6 +792,14 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "dimension used by the button component for focus ring offset.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-button-focus-ring-shadow": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1159,7 +1175,7 @@
               "--ki-button-md-gap": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the button component for md gap.",
+                "description": "dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1212,10 +1228,18 @@
                 "required": false,
                 "type": null
               },
+              "--ki-button-padding-block": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the button component for padding block (MarsUI: 4px in every size).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
               "--ki-button-primary-active-shadow": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "value used by the button component for primary active shadow.",
+                "description": "shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1231,7 +1255,7 @@
               "--ki-button-primary-danger-active-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary danger active border.",
+                "description": "color used by the button component for primary danger active border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1247,7 +1271,7 @@
               "--ki-button-primary-danger-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary danger hover background.",
+                "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1255,7 +1279,7 @@
               "--ki-button-primary-danger-hover-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary danger hover border.",
+                "description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1271,7 +1295,7 @@
               "--ki-button-primary-danger-rest-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary danger rest background.",
+                "description": "color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1279,7 +1303,7 @@
               "--ki-button-primary-danger-rest-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary danger rest border.",
+                "description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1300,10 +1324,18 @@
                 "required": false,
                 "type": null
               },
+              "--ki-button-primary-hover-overlay": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
               "--ki-button-primary-hover-shadow": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "shadow used by the button component for button primary hover shadow.",
+                "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1311,7 +1343,7 @@
               "--ki-button-primary-neutral-active-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary neutral active background.",
+                "description": "color used by the button component for primary neutral active background (MarsUI defines no pressed state; mirrors rest).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1319,7 +1351,7 @@
               "--ki-button-primary-neutral-active-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary neutral active border.",
+                "description": "color used by the button component for primary neutral active border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1335,7 +1367,7 @@
               "--ki-button-primary-neutral-disabled-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary neutral disabled background.",
+                "description": "color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1351,7 +1383,7 @@
               "--ki-button-primary-neutral-disabled-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary neutral disabled foreground.",
+                "description": "color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1359,7 +1391,7 @@
               "--ki-button-primary-neutral-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary neutral hover background.",
+                "description": "color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1367,7 +1399,7 @@
               "--ki-button-primary-neutral-hover-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary neutral hover border.",
+                "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1383,7 +1415,7 @@
               "--ki-button-primary-neutral-rest-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary neutral rest background.",
+                "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1391,7 +1423,7 @@
               "--ki-button-primary-neutral-rest-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary neutral rest border.",
+                "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1404,10 +1436,18 @@
                 "required": false,
                 "type": null
               },
+              "--ki-button-primary-rest-border-bottom": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
               "--ki-button-primary-rest-shadow": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "shadow used by the button component for button primary rest shadow.",
+                "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1423,7 +1463,7 @@
               "--ki-button-primary-success-active-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary success active border.",
+                "description": "color used by the button component for primary success active border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1439,7 +1479,7 @@
               "--ki-button-primary-success-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary success hover background.",
+                "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1447,7 +1487,7 @@
               "--ki-button-primary-success-hover-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary success hover border.",
+                "description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1463,7 +1503,7 @@
               "--ki-button-primary-success-rest-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary success rest background.",
+                "description": "color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1471,7 +1511,7 @@
               "--ki-button-primary-success-rest-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for primary success rest border.",
+                "description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1759,7 +1799,7 @@
               "--ki-button-secondary-active-shadow": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "value used by the button component for secondary active shadow.",
+                "description": "shadow used by the button component for secondary active shadow (MarsUI defines no pressed state; mirrors rest).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1775,7 +1815,7 @@
               "--ki-button-secondary-danger-active-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary danger active border.",
+                "description": "color used by the button component for secondary danger active border (MarsUI bevel top/inline edge, variant trait).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1799,7 +1839,7 @@
               "--ki-button-secondary-danger-hover-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary danger hover border.",
+                "description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1823,7 +1863,7 @@
               "--ki-button-secondary-danger-rest-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary danger rest border.",
+                "description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1844,10 +1884,18 @@
                 "required": false,
                 "type": null
               },
+              "--ki-button-secondary-hover-overlay": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
               "--ki-button-secondary-hover-shadow": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "value used by the button component for secondary hover shadow.",
+                "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1855,7 +1903,7 @@
               "--ki-button-secondary-neutral-active-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral active background.",
+                "description": "color used by the button component for secondary neutral active background (MarsUI defines no pressed state; mirrors rest).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1863,7 +1911,7 @@
               "--ki-button-secondary-neutral-active-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral active border.",
+                "description": "color used by the button component for secondary neutral active border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1871,7 +1919,7 @@
               "--ki-button-secondary-neutral-active-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral active foreground.",
+                "description": "color used by the button component for secondary neutral active foreground (MarsUI text/high_em).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1903,7 +1951,7 @@
               "--ki-button-secondary-neutral-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral hover background.",
+                "description": "color used by the button component for secondary neutral hover background (MarsUI: rest fill; hover darkening comes from the hover overlay).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1911,7 +1959,7 @@
               "--ki-button-secondary-neutral-hover-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral hover border.",
+                "description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1919,7 +1967,7 @@
               "--ki-button-secondary-neutral-hover-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral hover foreground.",
+                "description": "color used by the button component for secondary neutral hover foreground (MarsUI text/high_em).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1927,7 +1975,7 @@
               "--ki-button-secondary-neutral-rest-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral rest background.",
+                "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1935,7 +1983,7 @@
               "--ki-button-secondary-neutral-rest-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral rest border.",
+                "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1943,7 +1991,15 @@
               "--ki-button-secondary-neutral-rest-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral rest foreground.",
+                "description": "color used by the button component for secondary neutral rest foreground (MarsUI text/high_em).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-button-secondary-rest-border-bottom": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1951,7 +2007,7 @@
               "--ki-button-secondary-rest-shadow": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "value used by the button component for secondary rest shadow.",
+                "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1967,7 +2023,7 @@
               "--ki-button-secondary-success-active-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary success active border.",
+                "description": "color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1991,7 +2047,7 @@
               "--ki-button-secondary-success-hover-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary success hover border.",
+                "description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2015,7 +2071,7 @@
               "--ki-button-secondary-success-rest-border": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for secondary success rest border.",
+                "description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2039,7 +2095,7 @@
               "--ki-button-sm-gap": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the button component for sm gap.",
+                "description": "dimension used by the button component for sm gap (interpolated between xs and md effective gaps).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2375,7 +2431,7 @@
               "--ki-button-xl-gap": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the button component for xl gap.",
+                "description": "dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2415,7 +2471,7 @@
               "--ki-button-xl-padding-inline": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the button component for xl padding inline.",
+                "description": "dimension used by the button component for xl padding inline (MarsUI 14px).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2431,7 +2487,7 @@
               "--ki-button-xs-font-size": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the button component for xs font size.",
+                "description": "dimension used by the button component for xs font size (MarsUI caption_1 10px).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2439,7 +2495,7 @@
               "--ki-button-xs-gap": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the button component for xs gap.",
+                "description": "dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2455,7 +2511,7 @@
               "--ki-button-xs-icon-size": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the button component for xs icon size.",
+                "description": "dimension used by the button component for xs icon size (MarsUI 14px).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2463,7 +2519,7 @@
               "--ki-button-xs-line-height": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "dimension used by the button component for xs line height.",
+                "description": "dimension used by the button component for xs line height (MarsUI caption_1 16px).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2488,6 +2544,14 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "dimension used by the button component for xs radius.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-transparent-inverse": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic color for transparent inverse.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -8736,9 +8800,11 @@
                 "--ki-badge-warning-bg": "#321f01",
                 "--ki-badge-warning-border": "rgba(0,0,0,0)",
                 "--ki-badge-warning-fg": "#fbcb84",
-                "--ki-button-border-width": "0.125rem",
+                "--ki-button-backdrop-blur": "12px",
+                "--ki-button-border-width": "1px",
                 "--ki-button-focus-ring-color": "#b59cd8",
                 "--ki-button-focus-ring-offset": "0.125rem",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Inter,system-ui,sans-serif",
                 "--ki-button-font-weight": "600",
@@ -8791,52 +8857,55 @@
                 "--ki-button-lg-padding-inline": "0.75rem",
                 "--ki-button-lg-radius": "12px",
                 "--ki-button-md-font-size": "0.8125rem",
-                "--ki-button-md-gap": "0.25rem",
+                "--ki-button-md-gap": "0.375rem",
                 "--ki-button-md-height": "2.5rem",
                 "--ki-button-md-icon-size": "1.125rem",
                 "--ki-button-md-line-height": "1.5rem",
                 "--ki-button-md-min-target": "1.5rem",
                 "--ki-button-md-padding-inline": "0.625rem",
                 "--ki-button-md-radius": "10px",
-                "--ki-button-primary-active-shadow": "none",
+                "--ki-button-padding-block": "0.25rem",
+                "--ki-button-primary-active-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-button-primary-danger-active-bg": "#cd2118",
-                "--ki-button-primary-danger-active-border": "rgba(0,0,0,0)",
+                "--ki-button-primary-danger-active-border": "rgba(0,0,0,0.12)",
                 "--ki-button-primary-danger-active-fg": "#ffffff",
                 "--ki-button-primary-danger-disabled-bg": "rgba(255,255,255,0.12)",
                 "--ki-button-primary-danger-disabled-border": "rgba(0,0,0,0)",
                 "--ki-button-primary-danger-disabled-fg": "rgba(255,255,255,0.72)",
-                "--ki-button-primary-danger-hover-bg": "#a01a13",
-                "--ki-button-primary-danger-hover-border": "rgba(0,0,0,0)",
+                "--ki-button-primary-danger-hover-bg": "#cd2118",
+                "--ki-button-primary-danger-hover-border": "rgba(0,0,0,0.12)",
                 "--ki-button-primary-danger-hover-fg": "#ffffff",
                 "--ki-button-primary-danger-rest-bg": "#cd2118",
-                "--ki-button-primary-danger-rest-border": "rgba(0,0,0,0)",
+                "--ki-button-primary-danger-rest-border": "rgba(0,0,0,0.12)",
                 "--ki-button-primary-danger-rest-fg": "#ffffff",
                 "--ki-button-primary-disabled-shadow": "none",
-                "--ki-button-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08)",
+                "--ki-button-primary-hover-overlay": "rgba(0,0,0,0.05)",
+                "--ki-button-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),inset 0 3px 3px 0 rgba(255,255,255,0.18)",
                 "--ki-button-primary-neutral-active-bg": "#845abe",
-                "--ki-button-primary-neutral-active-border": "rgba(0,0,0,0)",
+                "--ki-button-primary-neutral-active-border": "rgba(0,0,0,0.12)",
                 "--ki-button-primary-neutral-active-fg": "#ffffff",
                 "--ki-button-primary-neutral-disabled-bg": "rgba(255,255,255,0.12)",
                 "--ki-button-primary-neutral-disabled-border": "rgba(0,0,0,0)",
                 "--ki-button-primary-neutral-disabled-fg": "rgba(255,255,255,0.72)",
-                "--ki-button-primary-neutral-hover-bg": "#5f3993",
-                "--ki-button-primary-neutral-hover-border": "rgba(0,0,0,0)",
+                "--ki-button-primary-neutral-hover-bg": "#845abe",
+                "--ki-button-primary-neutral-hover-border": "rgba(0,0,0,0.12)",
                 "--ki-button-primary-neutral-hover-fg": "#ffffff",
                 "--ki-button-primary-neutral-rest-bg": "#845abe",
-                "--ki-button-primary-neutral-rest-border": "rgba(0,0,0,0)",
+                "--ki-button-primary-neutral-rest-border": "rgba(0,0,0,0.12)",
                 "--ki-button-primary-neutral-rest-fg": "#ffffff",
-                "--ki-button-primary-rest-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08)",
+                "--ki-button-primary-rest-border-bottom": "rgba(0,0,0,0.24)",
+                "--ki-button-primary-rest-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-button-primary-success-active-bg": "#2c6a2b",
-                "--ki-button-primary-success-active-border": "rgba(0,0,0,0)",
+                "--ki-button-primary-success-active-border": "rgba(0,0,0,0.12)",
                 "--ki-button-primary-success-active-fg": "#ffffff",
                 "--ki-button-primary-success-disabled-bg": "rgba(255,255,255,0.12)",
                 "--ki-button-primary-success-disabled-border": "rgba(0,0,0,0)",
                 "--ki-button-primary-success-disabled-fg": "rgba(255,255,255,0.72)",
-                "--ki-button-primary-success-hover-bg": "#265526",
-                "--ki-button-primary-success-hover-border": "rgba(0,0,0,0)",
+                "--ki-button-primary-success-hover-bg": "#2c6a2b",
+                "--ki-button-primary-success-hover-border": "rgba(0,0,0,0.12)",
                 "--ki-button-primary-success-hover-fg": "#ffffff",
                 "--ki-button-primary-success-rest-bg": "#2c6a2b",
-                "--ki-button-primary-success-rest-border": "rgba(0,0,0,0)",
+                "--ki-button-primary-success-rest-border": "rgba(0,0,0,0.12)",
                 "--ki-button-primary-success-rest-fg": "#ffffff",
                 "--ki-button-quaternary-active-shadow": "none",
                 "--ki-button-quaternary-danger-active-bg": "#72130e",
@@ -8878,48 +8947,50 @@
                 "--ki-button-quaternary-success-rest-bg": "rgba(0,0,0,0)",
                 "--ki-button-quaternary-success-rest-border": "#409b3f",
                 "--ki-button-quaternary-success-rest-fg": "#9cda9b",
-                "--ki-button-secondary-active-shadow": "none",
+                "--ki-button-secondary-active-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.08),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
                 "--ki-button-secondary-danger-active-bg": "#72130e",
-                "--ki-button-secondary-danger-active-border": "rgba(0,0,0,0)",
+                "--ki-button-secondary-danger-active-border": "rgba(255,255,255,0.03)",
                 "--ki-button-secondary-danger-active-fg": "#f19997",
                 "--ki-button-secondary-danger-disabled-bg": "rgba(255,255,255,0.12)",
                 "--ki-button-secondary-danger-disabled-border": "rgba(0,0,0,0)",
                 "--ki-button-secondary-danger-disabled-fg": "rgba(255,255,255,0.72)",
                 "--ki-button-secondary-danger-hover-bg": "#72130e",
-                "--ki-button-secondary-danger-hover-border": "rgba(0,0,0,0)",
+                "--ki-button-secondary-danger-hover-border": "rgba(255,255,255,0.03)",
                 "--ki-button-secondary-danger-hover-fg": "#f19997",
                 "--ki-button-secondary-danger-rest-bg": "#440b08",
-                "--ki-button-secondary-danger-rest-border": "rgba(0,0,0,0)",
+                "--ki-button-secondary-danger-rest-border": "rgba(255,255,255,0.03)",
                 "--ki-button-secondary-danger-rest-fg": "#f19997",
                 "--ki-button-secondary-disabled-shadow": "none",
-                "--ki-button-secondary-hover-shadow": "none",
-                "--ki-button-secondary-neutral-active-bg": "#1f1331",
-                "--ki-button-secondary-neutral-active-border": "rgba(0,0,0,0)",
-                "--ki-button-secondary-neutral-active-fg": "#b59cd8",
+                "--ki-button-secondary-hover-overlay": "rgba(255,255,255,0.03)",
+                "--ki-button-secondary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),inset 0 2px 3px 0 rgba(255,255,255,0.08)",
+                "--ki-button-secondary-neutral-active-bg": "rgba(36,36,36,0.88)",
+                "--ki-button-secondary-neutral-active-border": "rgba(255,255,255,0.03)",
+                "--ki-button-secondary-neutral-active-fg": "#ffffff",
                 "--ki-button-secondary-neutral-disabled-bg": "rgba(255,255,255,0.12)",
                 "--ki-button-secondary-neutral-disabled-border": "rgba(0,0,0,0)",
                 "--ki-button-secondary-neutral-disabled-fg": "rgba(255,255,255,0.72)",
-                "--ki-button-secondary-neutral-hover-bg": "#1f1331",
-                "--ki-button-secondary-neutral-hover-border": "rgba(0,0,0,0)",
-                "--ki-button-secondary-neutral-hover-fg": "#b59cd8",
-                "--ki-button-secondary-neutral-rest-bg": "#170e25",
-                "--ki-button-secondary-neutral-rest-border": "rgba(0,0,0,0)",
-                "--ki-button-secondary-neutral-rest-fg": "#b59cd8",
-                "--ki-button-secondary-rest-shadow": "none",
+                "--ki-button-secondary-neutral-hover-bg": "rgba(36,36,36,0.88)",
+                "--ki-button-secondary-neutral-hover-border": "rgba(255,255,255,0.03)",
+                "--ki-button-secondary-neutral-hover-fg": "#ffffff",
+                "--ki-button-secondary-neutral-rest-bg": "rgba(36,36,36,0.88)",
+                "--ki-button-secondary-neutral-rest-border": "rgba(255,255,255,0.03)",
+                "--ki-button-secondary-neutral-rest-fg": "#ffffff",
+                "--ki-button-secondary-rest-border-bottom": "rgba(255,255,255,0.05)",
+                "--ki-button-secondary-rest-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.08),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
                 "--ki-button-secondary-success-active-bg": "#214622",
-                "--ki-button-secondary-success-active-border": "rgba(0,0,0,0)",
+                "--ki-button-secondary-success-active-border": "rgba(255,255,255,0.03)",
                 "--ki-button-secondary-success-active-fg": "#9cda9b",
                 "--ki-button-secondary-success-disabled-bg": "rgba(255,255,255,0.12)",
                 "--ki-button-secondary-success-disabled-border": "rgba(0,0,0,0)",
                 "--ki-button-secondary-success-disabled-fg": "rgba(255,255,255,0.72)",
                 "--ki-button-secondary-success-hover-bg": "#214622",
-                "--ki-button-secondary-success-hover-border": "rgba(0,0,0,0)",
+                "--ki-button-secondary-success-hover-border": "rgba(255,255,255,0.03)",
                 "--ki-button-secondary-success-hover-fg": "#9cda9b",
                 "--ki-button-secondary-success-rest-bg": "#0d260e",
-                "--ki-button-secondary-success-rest-border": "rgba(0,0,0,0)",
+                "--ki-button-secondary-success-rest-border": "rgba(255,255,255,0.03)",
                 "--ki-button-secondary-success-rest-fg": "#9cda9b",
                 "--ki-button-sm-font-size": "0.8125rem",
-                "--ki-button-sm-gap": "0.125rem",
+                "--ki-button-sm-gap": "0.25rem",
                 "--ki-button-sm-height": "2rem",
                 "--ki-button-sm-icon-size": "1rem",
                 "--ki-button-sm-line-height": "1.5rem",
@@ -8967,17 +9038,17 @@
                 "--ki-button-tertiary-success-rest-border": "rgba(0,0,0,0)",
                 "--ki-button-tertiary-success-rest-fg": "#9cda9b",
                 "--ki-button-xl-font-size": "1.125rem",
-                "--ki-button-xl-gap": "0.375rem",
+                "--ki-button-xl-gap": "0.5rem",
                 "--ki-button-xl-height": "3.5rem",
                 "--ki-button-xl-icon-size": "1.5rem",
                 "--ki-button-xl-line-height": "1.5rem",
                 "--ki-button-xl-min-target": "1.5rem",
-                "--ki-button-xl-padding-inline": "1rem",
+                "--ki-button-xl-padding-inline": "0.875rem",
                 "--ki-button-xl-radius": "14px",
-                "--ki-button-xs-font-size": "0.75rem",
-                "--ki-button-xs-gap": "0.125rem",
+                "--ki-button-xs-font-size": "0.625rem",
+                "--ki-button-xs-gap": "0.25rem",
                 "--ki-button-xs-height": "1.5rem",
-                "--ki-button-xs-icon-size": "1rem",
+                "--ki-button-xs-icon-size": "0.875rem",
                 "--ki-button-xs-line-height": "1rem",
                 "--ki-button-xs-min-target": "1.5rem",
                 "--ki-button-xs-padding-inline": "0.375rem",
@@ -9062,7 +9133,7 @@
                 "--ki-dialog-padding": "1.5rem",
                 "--ki-dialog-radius": "14px",
                 "--ki-dialog-shadow": "0 0.25rem 1rem 0 rgba(0,0,0,0.12),0 1.25rem 1.75rem 0 rgba(0,0,0,0.08)",
-                "--ki-effect-component-backdrop-blur": "24px",
+                "--ki-effect-component-backdrop-blur": "12px",
                 "--ki-effect-component-primary-default-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-effect-component-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),0 3px 3px -1.5px rgba(0,0,0,0.08),0 20px 20px -12px rgba(0,0,0,0.08),inset 0 3px 3px 0 rgba(255,255,255,0.18)",
                 "--ki-effect-component-secondary-default-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.08),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
@@ -9077,7 +9148,7 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.48)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.12)",
                 "--ki-focus-gray": "0 0 0 3px rgba(255,255,255,0.08)",
-                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.56)",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0.125rem",
                 "--ki-input-border-inline-end-width": "0.125rem",
@@ -9724,9 +9795,11 @@
                 "--ki-badge-warning-bg": "#fffeea",
                 "--ki-badge-warning-border": "rgba(255,255,255,0)",
                 "--ki-badge-warning-fg": "#945b05",
-                "--ki-button-border-width": "0.125rem",
+                "--ki-button-backdrop-blur": "12px",
+                "--ki-button-border-width": "1px",
                 "--ki-button-focus-ring-color": "#845abe",
                 "--ki-button-focus-ring-offset": "0.125rem",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Inter,system-ui,sans-serif",
                 "--ki-button-font-weight": "600",
@@ -9779,52 +9852,55 @@
                 "--ki-button-lg-padding-inline": "0.75rem",
                 "--ki-button-lg-radius": "12px",
                 "--ki-button-md-font-size": "0.8125rem",
-                "--ki-button-md-gap": "0.25rem",
+                "--ki-button-md-gap": "0.375rem",
                 "--ki-button-md-height": "2.5rem",
                 "--ki-button-md-icon-size": "1.125rem",
                 "--ki-button-md-line-height": "1.5rem",
                 "--ki-button-md-min-target": "1.5rem",
                 "--ki-button-md-padding-inline": "0.625rem",
                 "--ki-button-md-radius": "10px",
-                "--ki-button-primary-active-shadow": "none",
+                "--ki-button-padding-block": "0.25rem",
+                "--ki-button-primary-active-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-button-primary-danger-active-bg": "#cd2118",
-                "--ki-button-primary-danger-active-border": "rgba(255,255,255,0)",
+                "--ki-button-primary-danger-active-border": "rgba(0,0,0,0.08)",
                 "--ki-button-primary-danger-active-fg": "#ffffff",
                 "--ki-button-primary-danger-disabled-bg": "#ececf0",
                 "--ki-button-primary-danger-disabled-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-danger-disabled-fg": "#5b616d",
-                "--ki-button-primary-danger-hover-bg": "#a01a13",
-                "--ki-button-primary-danger-hover-border": "rgba(255,255,255,0)",
+                "--ki-button-primary-danger-hover-bg": "#cd2118",
+                "--ki-button-primary-danger-hover-border": "rgba(0,0,0,0.08)",
                 "--ki-button-primary-danger-hover-fg": "#ffffff",
                 "--ki-button-primary-danger-rest-bg": "#cd2118",
-                "--ki-button-primary-danger-rest-border": "rgba(255,255,255,0)",
+                "--ki-button-primary-danger-rest-border": "rgba(0,0,0,0.08)",
                 "--ki-button-primary-danger-rest-fg": "#ffffff",
                 "--ki-button-primary-disabled-shadow": "none",
-                "--ki-button-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03)",
-                "--ki-button-primary-neutral-active-bg": "#5f3993",
-                "--ki-button-primary-neutral-active-border": "rgba(255,255,255,0)",
+                "--ki-button-primary-hover-overlay": "rgba(255,255,255,0.05)",
+                "--ki-button-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),inset 0 3px 3px 0 rgba(255,255,255,0.18)",
+                "--ki-button-primary-neutral-active-bg": "#845abe",
+                "--ki-button-primary-neutral-active-border": "rgba(0,0,0,0.08)",
                 "--ki-button-primary-neutral-active-fg": "#ffffff",
                 "--ki-button-primary-neutral-disabled-bg": "#ececf0",
                 "--ki-button-primary-neutral-disabled-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-neutral-disabled-fg": "#5b616d",
                 "--ki-button-primary-neutral-hover-bg": "#845abe",
-                "--ki-button-primary-neutral-hover-border": "rgba(255,255,255,0)",
+                "--ki-button-primary-neutral-hover-border": "rgba(0,0,0,0.08)",
                 "--ki-button-primary-neutral-hover-fg": "#ffffff",
-                "--ki-button-primary-neutral-rest-bg": "#5f3993",
-                "--ki-button-primary-neutral-rest-border": "rgba(255,255,255,0)",
+                "--ki-button-primary-neutral-rest-bg": "#845abe",
+                "--ki-button-primary-neutral-rest-border": "rgba(0,0,0,0.08)",
                 "--ki-button-primary-neutral-rest-fg": "#ffffff",
-                "--ki-button-primary-rest-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03)",
+                "--ki-button-primary-rest-border-bottom": "rgba(0,0,0,0.18)",
+                "--ki-button-primary-rest-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-button-primary-success-active-bg": "#2c6a2b",
-                "--ki-button-primary-success-active-border": "rgba(255,255,255,0)",
+                "--ki-button-primary-success-active-border": "rgba(0,0,0,0.08)",
                 "--ki-button-primary-success-active-fg": "#ffffff",
                 "--ki-button-primary-success-disabled-bg": "#ececf0",
                 "--ki-button-primary-success-disabled-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-success-disabled-fg": "#5b616d",
-                "--ki-button-primary-success-hover-bg": "#265526",
-                "--ki-button-primary-success-hover-border": "rgba(255,255,255,0)",
+                "--ki-button-primary-success-hover-bg": "#2c6a2b",
+                "--ki-button-primary-success-hover-border": "rgba(0,0,0,0.08)",
                 "--ki-button-primary-success-hover-fg": "#ffffff",
                 "--ki-button-primary-success-rest-bg": "#2c6a2b",
-                "--ki-button-primary-success-rest-border": "rgba(255,255,255,0)",
+                "--ki-button-primary-success-rest-border": "rgba(0,0,0,0.08)",
                 "--ki-button-primary-success-rest-fg": "#ffffff",
                 "--ki-button-quaternary-active-shadow": "none",
                 "--ki-button-quaternary-danger-active-bg": "#ffebed",
@@ -9866,48 +9942,50 @@
                 "--ki-button-quaternary-success-rest-bg": "rgba(255,255,255,0)",
                 "--ki-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-button-quaternary-success-rest-fg": "#2c6a2b",
-                "--ki-button-secondary-active-shadow": "none",
+                "--ki-button-secondary-active-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.03),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
                 "--ki-button-secondary-danger-active-bg": "#ffebed",
-                "--ki-button-secondary-danger-active-border": "rgba(255,255,255,0)",
+                "--ki-button-secondary-danger-active-border": "rgba(0,0,0,0.05)",
                 "--ki-button-secondary-danger-active-fg": "#cd2118",
                 "--ki-button-secondary-danger-disabled-bg": "#ececf0",
                 "--ki-button-secondary-danger-disabled-border": "rgba(255,255,255,0)",
                 "--ki-button-secondary-danger-disabled-fg": "#5b616d",
                 "--ki-button-secondary-danger-hover-bg": "#ffebed",
-                "--ki-button-secondary-danger-hover-border": "rgba(255,255,255,0)",
+                "--ki-button-secondary-danger-hover-border": "rgba(0,0,0,0.05)",
                 "--ki-button-secondary-danger-hover-fg": "#cd2118",
                 "--ki-button-secondary-danger-rest-bg": "#fff3f2",
-                "--ki-button-secondary-danger-rest-border": "rgba(255,255,255,0)",
+                "--ki-button-secondary-danger-rest-border": "rgba(0,0,0,0.05)",
                 "--ki-button-secondary-danger-rest-fg": "#cd2118",
                 "--ki-button-secondary-disabled-shadow": "none",
-                "--ki-button-secondary-hover-shadow": "none",
-                "--ki-button-secondary-neutral-active-bg": "#ece4f5",
-                "--ki-button-secondary-neutral-active-border": "rgba(255,255,255,0)",
-                "--ki-button-secondary-neutral-active-fg": "#5f3993",
+                "--ki-button-secondary-hover-overlay": "rgba(0,0,0,0.03)",
+                "--ki-button-secondary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),inset 0 2px 3px 0 rgba(255,255,255,0.08)",
+                "--ki-button-secondary-neutral-active-bg": "rgba(242,242,244,0.8)",
+                "--ki-button-secondary-neutral-active-border": "rgba(0,0,0,0.05)",
+                "--ki-button-secondary-neutral-active-fg": "#0a0c11",
                 "--ki-button-secondary-neutral-disabled-bg": "#ececf0",
                 "--ki-button-secondary-neutral-disabled-border": "rgba(255,255,255,0)",
                 "--ki-button-secondary-neutral-disabled-fg": "#5b616d",
-                "--ki-button-secondary-neutral-hover-bg": "#ece4f5",
-                "--ki-button-secondary-neutral-hover-border": "rgba(255,255,255,0)",
-                "--ki-button-secondary-neutral-hover-fg": "#5f3993",
-                "--ki-button-secondary-neutral-rest-bg": "#f7f4fb",
-                "--ki-button-secondary-neutral-rest-border": "rgba(255,255,255,0)",
-                "--ki-button-secondary-neutral-rest-fg": "#5f3993",
-                "--ki-button-secondary-rest-shadow": "none",
+                "--ki-button-secondary-neutral-hover-bg": "rgba(242,242,244,0.8)",
+                "--ki-button-secondary-neutral-hover-border": "rgba(0,0,0,0.05)",
+                "--ki-button-secondary-neutral-hover-fg": "#0a0c11",
+                "--ki-button-secondary-neutral-rest-bg": "rgba(242,242,244,0.8)",
+                "--ki-button-secondary-neutral-rest-border": "rgba(0,0,0,0.05)",
+                "--ki-button-secondary-neutral-rest-fg": "#0a0c11",
+                "--ki-button-secondary-rest-border-bottom": "rgba(0,0,0,0.12)",
+                "--ki-button-secondary-rest-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.03),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
                 "--ki-button-secondary-success-active-bg": "#e3f6e2",
-                "--ki-button-secondary-success-active-border": "rgba(255,255,255,0)",
+                "--ki-button-secondary-success-active-border": "rgba(0,0,0,0.05)",
                 "--ki-button-secondary-success-active-fg": "#2c6a2b",
                 "--ki-button-secondary-success-disabled-bg": "#ececf0",
                 "--ki-button-secondary-success-disabled-border": "rgba(255,255,255,0)",
                 "--ki-button-secondary-success-disabled-fg": "#5b616d",
                 "--ki-button-secondary-success-hover-bg": "#e3f6e2",
-                "--ki-button-secondary-success-hover-border": "rgba(255,255,255,0)",
+                "--ki-button-secondary-success-hover-border": "rgba(0,0,0,0.05)",
                 "--ki-button-secondary-success-hover-fg": "#2c6a2b",
                 "--ki-button-secondary-success-rest-bg": "#f4faf3",
-                "--ki-button-secondary-success-rest-border": "rgba(255,255,255,0)",
+                "--ki-button-secondary-success-rest-border": "rgba(0,0,0,0.05)",
                 "--ki-button-secondary-success-rest-fg": "#2c6a2b",
                 "--ki-button-sm-font-size": "0.8125rem",
-                "--ki-button-sm-gap": "0.125rem",
+                "--ki-button-sm-gap": "0.25rem",
                 "--ki-button-sm-height": "2rem",
                 "--ki-button-sm-icon-size": "1rem",
                 "--ki-button-sm-line-height": "1.5rem",
@@ -9955,17 +10033,17 @@
                 "--ki-button-tertiary-success-rest-border": "rgba(255,255,255,0)",
                 "--ki-button-tertiary-success-rest-fg": "#2c6a2b",
                 "--ki-button-xl-font-size": "1.125rem",
-                "--ki-button-xl-gap": "0.375rem",
+                "--ki-button-xl-gap": "0.5rem",
                 "--ki-button-xl-height": "3.5rem",
                 "--ki-button-xl-icon-size": "1.5rem",
                 "--ki-button-xl-line-height": "1.5rem",
                 "--ki-button-xl-min-target": "1.5rem",
-                "--ki-button-xl-padding-inline": "1rem",
+                "--ki-button-xl-padding-inline": "0.875rem",
                 "--ki-button-xl-radius": "14px",
-                "--ki-button-xs-font-size": "0.75rem",
-                "--ki-button-xs-gap": "0.125rem",
+                "--ki-button-xs-font-size": "0.625rem",
+                "--ki-button-xs-gap": "0.25rem",
                 "--ki-button-xs-height": "1.5rem",
-                "--ki-button-xs-icon-size": "1rem",
+                "--ki-button-xs-icon-size": "0.875rem",
                 "--ki-button-xs-line-height": "1rem",
                 "--ki-button-xs-min-target": "1.5rem",
                 "--ki-button-xs-padding-inline": "0.375rem",
@@ -10050,7 +10128,7 @@
                 "--ki-dialog-padding": "1.5rem",
                 "--ki-dialog-radius": "14px",
                 "--ki-dialog-shadow": "0 0.25rem 1rem 0 rgba(0,0,0,0.05),0 1.25rem 1.75rem 0 rgba(0,0,0,0.03)",
-                "--ki-effect-component-backdrop-blur": "24px",
+                "--ki-effect-component-backdrop-blur": "12px",
                 "--ki-effect-component-primary-default-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-effect-component-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),0 3px 3px -1.5px rgba(0,0,0,0.03),0 20px 20px -12px rgba(0,0,0,0.03),inset 0 3px 3px 0 rgba(255,255,255,0.18)",
                 "--ki-effect-component-secondary-default-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.03),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
@@ -10065,7 +10143,7 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.32)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.05)",
                 "--ki-focus-gray": "0 0 0 3px rgba(0,0,0,0.08)",
-                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.2)",
+                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0.125rem",
                 "--ki-input-border-inline-end-width": "0.125rem",
@@ -10717,9 +10795,11 @@
                 "--ki-badge-warning-bg": "#fffeea",
                 "--ki-badge-warning-border": "rgba(0,0,0,0)",
                 "--ki-badge-warning-fg": "#945b05",
+                "--ki-button-backdrop-blur": "0",
                 "--ki-button-border-width": "0.0625rem",
                 "--ki-button-focus-ring-color": "#d0bcff",
                 "--ki-button-focus-ring-offset": "0.125rem",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Roboto,system-ui,sans-serif",
                 "--ki-button-font-weight": "500",
@@ -10772,14 +10852,15 @@
                 "--ki-button-lg-padding-inline": "0.75rem",
                 "--ki-button-lg-radius": "9999px",
                 "--ki-button-md-font-size": "0.875rem",
-                "--ki-button-md-gap": "0.25rem",
+                "--ki-button-md-gap": "0.375rem",
                 "--ki-button-md-height": "2.5rem",
                 "--ki-button-md-icon-size": "1.125rem",
                 "--ki-button-md-line-height": "1.25rem",
                 "--ki-button-md-min-target": "1.5rem",
                 "--ki-button-md-padding-inline": "0.625rem",
                 "--ki-button-md-radius": "9999px",
-                "--ki-button-primary-active-shadow": "none",
+                "--ki-button-padding-block": "0.25rem",
+                "--ki-button-primary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-primary-danger-active-bg": "#f2b8b5",
                 "--ki-button-primary-danger-active-border": "rgba(0,0,0,0)",
                 "--ki-button-primary-danger-active-fg": "#601410",
@@ -10793,8 +10874,9 @@
                 "--ki-button-primary-danger-rest-border": "rgba(0,0,0,0)",
                 "--ki-button-primary-danger-rest-fg": "#601410",
                 "--ki-button-primary-disabled-shadow": "none",
-                "--ki-button-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.16)",
-                "--ki-button-primary-neutral-active-bg": "#eaddff",
+                "--ki-button-primary-hover-overlay": "rgba(230,224,233,0.08)",
+                "--ki-button-primary-hover-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 2px 6px 2px rgba(0,0,0,0.15)",
+                "--ki-button-primary-neutral-active-bg": "#d0bcff",
                 "--ki-button-primary-neutral-active-border": "rgba(0,0,0,0)",
                 "--ki-button-primary-neutral-active-fg": "#381e72",
                 "--ki-button-primary-neutral-disabled-bg": "rgba(255,255,255,0.12)",
@@ -10803,17 +10885,18 @@
                 "--ki-button-primary-neutral-hover-bg": "#d0bcff",
                 "--ki-button-primary-neutral-hover-border": "rgba(0,0,0,0)",
                 "--ki-button-primary-neutral-hover-fg": "#381e72",
-                "--ki-button-primary-neutral-rest-bg": "#eaddff",
+                "--ki-button-primary-neutral-rest-bg": "#d0bcff",
                 "--ki-button-primary-neutral-rest-border": "rgba(0,0,0,0)",
                 "--ki-button-primary-neutral-rest-fg": "#381e72",
-                "--ki-button-primary-rest-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.16)",
+                "--ki-button-primary-rest-border-bottom": "rgba(0,0,0,0)",
+                "--ki-button-primary-rest-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-primary-success-active-bg": "#9cda9b",
                 "--ki-button-primary-success-active-border": "rgba(0,0,0,0)",
                 "--ki-button-primary-success-active-fg": "#0d260e",
                 "--ki-button-primary-success-disabled-bg": "rgba(255,255,255,0.12)",
                 "--ki-button-primary-success-disabled-border": "rgba(0,0,0,0)",
                 "--ki-button-primary-success-disabled-fg": "#cac4d0",
-                "--ki-button-primary-success-hover-bg": "#c8ebc7",
+                "--ki-button-primary-success-hover-bg": "#9cda9b",
                 "--ki-button-primary-success-hover-border": "rgba(0,0,0,0)",
                 "--ki-button-primary-success-hover-fg": "#0d260e",
                 "--ki-button-primary-success-rest-bg": "#9cda9b",
@@ -10859,7 +10942,7 @@
                 "--ki-button-quaternary-success-rest-bg": "rgba(0,0,0,0)",
                 "--ki-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-button-quaternary-success-rest-fg": "#9cda9b",
-                "--ki-button-secondary-active-shadow": "none",
+                "--ki-button-secondary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-secondary-danger-active-bg": "#8c1d18",
                 "--ki-button-secondary-danger-active-border": "rgba(0,0,0,0)",
                 "--ki-button-secondary-danger-active-fg": "#f2b8b5",
@@ -10873,20 +10956,22 @@
                 "--ki-button-secondary-danger-rest-border": "rgba(0,0,0,0)",
                 "--ki-button-secondary-danger-rest-fg": "#f2b8b5",
                 "--ki-button-secondary-disabled-shadow": "none",
-                "--ki-button-secondary-hover-shadow": "none",
-                "--ki-button-secondary-neutral-active-bg": "#4f378b",
+                "--ki-button-secondary-hover-overlay": "rgba(230,224,233,0.08)",
+                "--ki-button-secondary-hover-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 2px 6px 2px rgba(0,0,0,0.15)",
+                "--ki-button-secondary-neutral-active-bg": "rgba(33,31,38,0.8)",
                 "--ki-button-secondary-neutral-active-border": "rgba(0,0,0,0)",
-                "--ki-button-secondary-neutral-active-fg": "#eaddff",
+                "--ki-button-secondary-neutral-active-fg": "#e6e0e9",
                 "--ki-button-secondary-neutral-disabled-bg": "rgba(255,255,255,0.12)",
                 "--ki-button-secondary-neutral-disabled-border": "rgba(0,0,0,0)",
                 "--ki-button-secondary-neutral-disabled-fg": "#cac4d0",
-                "--ki-button-secondary-neutral-hover-bg": "#4f378b",
+                "--ki-button-secondary-neutral-hover-bg": "rgba(33,31,38,0.8)",
                 "--ki-button-secondary-neutral-hover-border": "rgba(0,0,0,0)",
-                "--ki-button-secondary-neutral-hover-fg": "#eaddff",
-                "--ki-button-secondary-neutral-rest-bg": "#381e72",
+                "--ki-button-secondary-neutral-hover-fg": "#e6e0e9",
+                "--ki-button-secondary-neutral-rest-bg": "rgba(33,31,38,0.8)",
                 "--ki-button-secondary-neutral-rest-border": "rgba(0,0,0,0)",
-                "--ki-button-secondary-neutral-rest-fg": "#eaddff",
-                "--ki-button-secondary-rest-shadow": "none",
+                "--ki-button-secondary-neutral-rest-fg": "#e6e0e9",
+                "--ki-button-secondary-rest-border-bottom": "rgba(0,0,0,0)",
+                "--ki-button-secondary-rest-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-secondary-success-active-bg": "#265526",
                 "--ki-button-secondary-success-active-border": "rgba(0,0,0,0)",
                 "--ki-button-secondary-success-active-fg": "#9cda9b",
@@ -10900,7 +10985,7 @@
                 "--ki-button-secondary-success-rest-border": "rgba(0,0,0,0)",
                 "--ki-button-secondary-success-rest-fg": "#9cda9b",
                 "--ki-button-sm-font-size": "0.875rem",
-                "--ki-button-sm-gap": "0.125rem",
+                "--ki-button-sm-gap": "0.25rem",
                 "--ki-button-sm-height": "2rem",
                 "--ki-button-sm-icon-size": "1rem",
                 "--ki-button-sm-line-height": "1.25rem",
@@ -10948,17 +11033,17 @@
                 "--ki-button-tertiary-success-rest-border": "rgba(0,0,0,0)",
                 "--ki-button-tertiary-success-rest-fg": "#9cda9b",
                 "--ki-button-xl-font-size": "1.375rem",
-                "--ki-button-xl-gap": "0.375rem",
+                "--ki-button-xl-gap": "0.5rem",
                 "--ki-button-xl-height": "3.5rem",
                 "--ki-button-xl-icon-size": "1.5rem",
                 "--ki-button-xl-line-height": "1.75rem",
                 "--ki-button-xl-min-target": "1.5rem",
-                "--ki-button-xl-padding-inline": "1rem",
+                "--ki-button-xl-padding-inline": "0.875rem",
                 "--ki-button-xl-radius": "9999px",
-                "--ki-button-xs-font-size": "0.75rem",
-                "--ki-button-xs-gap": "0.125rem",
+                "--ki-button-xs-font-size": "0.6875rem",
+                "--ki-button-xs-gap": "0.25rem",
                 "--ki-button-xs-height": "1.5rem",
-                "--ki-button-xs-icon-size": "1rem",
+                "--ki-button-xs-icon-size": "0.875rem",
                 "--ki-button-xs-line-height": "1rem",
                 "--ki-button-xs-min-target": "1.5rem",
                 "--ki-button-xs-padding-inline": "0.375rem",
@@ -11058,7 +11143,7 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.32)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.24)",
                 "--ki-focus-gray": "0 0 0 3px #49454f",
-                "--ki-focus-primary": "0 0 0 3px rgba(208,188,255,0.16)",
+                "--ki-focus-primary": "0 0 0 3px rgba(208,188,255,0.32)",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0",
                 "--ki-input-border-inline-end-width": "0",
@@ -11705,9 +11790,11 @@
                 "--ki-badge-warning-bg": "#fffeea",
                 "--ki-badge-warning-border": "rgba(255,255,255,0)",
                 "--ki-badge-warning-fg": "#945b05",
+                "--ki-button-backdrop-blur": "0",
                 "--ki-button-border-width": "0.0625rem",
                 "--ki-button-focus-ring-color": "#6750a4",
                 "--ki-button-focus-ring-offset": "0.125rem",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Roboto,system-ui,sans-serif",
                 "--ki-button-font-weight": "500",
@@ -11760,48 +11847,51 @@
                 "--ki-button-lg-padding-inline": "0.75rem",
                 "--ki-button-lg-radius": "9999px",
                 "--ki-button-md-font-size": "0.875rem",
-                "--ki-button-md-gap": "0.25rem",
+                "--ki-button-md-gap": "0.375rem",
                 "--ki-button-md-height": "2.5rem",
                 "--ki-button-md-icon-size": "1.125rem",
                 "--ki-button-md-line-height": "1.25rem",
                 "--ki-button-md-min-target": "1.5rem",
                 "--ki-button-md-padding-inline": "0.625rem",
                 "--ki-button-md-radius": "9999px",
-                "--ki-button-primary-active-shadow": "none",
+                "--ki-button-padding-block": "0.25rem",
+                "--ki-button-primary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-primary-danger-active-bg": "#b3261e",
                 "--ki-button-primary-danger-active-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-danger-active-fg": "#ffffff",
                 "--ki-button-primary-danger-disabled-bg": "#e7e0ec",
                 "--ki-button-primary-danger-disabled-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-danger-disabled-fg": "#49454f",
-                "--ki-button-primary-danger-hover-bg": "#8c1d18",
+                "--ki-button-primary-danger-hover-bg": "#b3261e",
                 "--ki-button-primary-danger-hover-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-danger-hover-fg": "#ffffff",
                 "--ki-button-primary-danger-rest-bg": "#b3261e",
                 "--ki-button-primary-danger-rest-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-danger-rest-fg": "#ffffff",
                 "--ki-button-primary-disabled-shadow": "none",
-                "--ki-button-primary-hover-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.05)",
-                "--ki-button-primary-neutral-active-bg": "#4f378b",
+                "--ki-button-primary-hover-overlay": "rgba(29,27,32,0.08)",
+                "--ki-button-primary-hover-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 2px 6px 2px rgba(0,0,0,0.15)",
+                "--ki-button-primary-neutral-active-bg": "#6750a4",
                 "--ki-button-primary-neutral-active-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-neutral-active-fg": "#ffffff",
                 "--ki-button-primary-neutral-disabled-bg": "#e7e0ec",
                 "--ki-button-primary-neutral-disabled-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-neutral-disabled-fg": "#49454f",
-                "--ki-button-primary-neutral-hover-bg": "#381e72",
+                "--ki-button-primary-neutral-hover-bg": "#6750a4",
                 "--ki-button-primary-neutral-hover-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-neutral-hover-fg": "#ffffff",
-                "--ki-button-primary-neutral-rest-bg": "#4f378b",
+                "--ki-button-primary-neutral-rest-bg": "#6750a4",
                 "--ki-button-primary-neutral-rest-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-neutral-rest-fg": "#ffffff",
-                "--ki-button-primary-rest-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.05)",
+                "--ki-button-primary-rest-border-bottom": "rgba(255,255,255,0)",
+                "--ki-button-primary-rest-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-primary-success-active-bg": "#2c6a2b",
                 "--ki-button-primary-success-active-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-success-active-fg": "#ffffff",
                 "--ki-button-primary-success-disabled-bg": "#e7e0ec",
                 "--ki-button-primary-success-disabled-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-success-disabled-fg": "#49454f",
-                "--ki-button-primary-success-hover-bg": "#265526",
+                "--ki-button-primary-success-hover-bg": "#2c6a2b",
                 "--ki-button-primary-success-hover-border": "rgba(255,255,255,0)",
                 "--ki-button-primary-success-hover-fg": "#ffffff",
                 "--ki-button-primary-success-rest-bg": "#2c6a2b",
@@ -11847,7 +11937,7 @@
                 "--ki-button-quaternary-success-rest-bg": "rgba(255,255,255,0)",
                 "--ki-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-button-quaternary-success-rest-fg": "#2c6a2b",
-                "--ki-button-secondary-active-shadow": "none",
+                "--ki-button-secondary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-secondary-danger-active-bg": "#f9dedc",
                 "--ki-button-secondary-danger-active-border": "rgba(255,255,255,0)",
                 "--ki-button-secondary-danger-active-fg": "#8c1d18",
@@ -11861,20 +11951,22 @@
                 "--ki-button-secondary-danger-rest-border": "rgba(255,255,255,0)",
                 "--ki-button-secondary-danger-rest-fg": "#8c1d18",
                 "--ki-button-secondary-disabled-shadow": "none",
-                "--ki-button-secondary-hover-shadow": "none",
-                "--ki-button-secondary-neutral-active-bg": "#eaddff",
+                "--ki-button-secondary-hover-overlay": "rgba(29,27,32,0.08)",
+                "--ki-button-secondary-hover-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 2px 6px 2px rgba(0,0,0,0.15)",
+                "--ki-button-secondary-neutral-active-bg": "rgba(243,237,247,0.8)",
                 "--ki-button-secondary-neutral-active-border": "rgba(255,255,255,0)",
-                "--ki-button-secondary-neutral-active-fg": "#4f378b",
+                "--ki-button-secondary-neutral-active-fg": "#1d1b20",
                 "--ki-button-secondary-neutral-disabled-bg": "#e7e0ec",
                 "--ki-button-secondary-neutral-disabled-border": "rgba(255,255,255,0)",
                 "--ki-button-secondary-neutral-disabled-fg": "#49454f",
-                "--ki-button-secondary-neutral-hover-bg": "#eaddff",
+                "--ki-button-secondary-neutral-hover-bg": "rgba(243,237,247,0.8)",
                 "--ki-button-secondary-neutral-hover-border": "rgba(255,255,255,0)",
-                "--ki-button-secondary-neutral-hover-fg": "#4f378b",
-                "--ki-button-secondary-neutral-rest-bg": "#f7f2fa",
+                "--ki-button-secondary-neutral-hover-fg": "#1d1b20",
+                "--ki-button-secondary-neutral-rest-bg": "rgba(243,237,247,0.8)",
                 "--ki-button-secondary-neutral-rest-border": "rgba(255,255,255,0)",
-                "--ki-button-secondary-neutral-rest-fg": "#4f378b",
-                "--ki-button-secondary-rest-shadow": "none",
+                "--ki-button-secondary-neutral-rest-fg": "#1d1b20",
+                "--ki-button-secondary-rest-border-bottom": "rgba(255,255,255,0)",
+                "--ki-button-secondary-rest-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-secondary-success-active-bg": "#e3f6e2",
                 "--ki-button-secondary-success-active-border": "rgba(255,255,255,0)",
                 "--ki-button-secondary-success-active-fg": "#2c6a2b",
@@ -11888,7 +11980,7 @@
                 "--ki-button-secondary-success-rest-border": "rgba(255,255,255,0)",
                 "--ki-button-secondary-success-rest-fg": "#2c6a2b",
                 "--ki-button-sm-font-size": "0.875rem",
-                "--ki-button-sm-gap": "0.125rem",
+                "--ki-button-sm-gap": "0.25rem",
                 "--ki-button-sm-height": "2rem",
                 "--ki-button-sm-icon-size": "1rem",
                 "--ki-button-sm-line-height": "1.25rem",
@@ -11936,17 +12028,17 @@
                 "--ki-button-tertiary-success-rest-border": "rgba(255,255,255,0)",
                 "--ki-button-tertiary-success-rest-fg": "#2c6a2b",
                 "--ki-button-xl-font-size": "1.375rem",
-                "--ki-button-xl-gap": "0.375rem",
+                "--ki-button-xl-gap": "0.5rem",
                 "--ki-button-xl-height": "3.5rem",
                 "--ki-button-xl-icon-size": "1.5rem",
                 "--ki-button-xl-line-height": "1.75rem",
                 "--ki-button-xl-min-target": "1.5rem",
-                "--ki-button-xl-padding-inline": "1rem",
+                "--ki-button-xl-padding-inline": "0.875rem",
                 "--ki-button-xl-radius": "9999px",
-                "--ki-button-xs-font-size": "0.75rem",
-                "--ki-button-xs-gap": "0.125rem",
+                "--ki-button-xs-font-size": "0.6875rem",
+                "--ki-button-xs-gap": "0.25rem",
                 "--ki-button-xs-height": "1.5rem",
-                "--ki-button-xs-icon-size": "1rem",
+                "--ki-button-xs-icon-size": "0.875rem",
                 "--ki-button-xs-line-height": "1rem",
                 "--ki-button-xs-min-target": "1.5rem",
                 "--ki-button-xs-padding-inline": "0.375rem",
@@ -12046,7 +12138,7 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.24)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.08)",
                 "--ki-focus-gray": "0 0 0 3px #cac4d0",
-                "--ki-focus-primary": "0 0 0 3px rgba(103,80,164,0.1)",
+                "--ki-focus-primary": "0 0 0 3px rgba(103,80,164,0.24)",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0",
                 "--ki-input-border-inline-end-width": "0",
@@ -13121,10 +13213,18 @@
             "required": false,
             "type": null
           },
-          "--ki-button-border-width": {
-            "default": "0.125rem",
+          "--ki-button-backdrop-blur": {
+            "default": "12px",
             "deprecatedSince": null,
-            "description": "dimension used by the button component for border width.",
+            "description": "backdrop blur used by the button component glass variants (primary/secondary). material3 resolves to blur none via the semantic override.",
+            "replacement": null,
+            "required": false,
+            "type": "dimension"
+          },
+          "--ki-button-border-width": {
+            "default": "1px",
+            "deprecatedSince": null,
+            "description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13144,6 +13244,20 @@
             "replacement": null,
             "required": false,
             "type": null
+          },
+          "--ki-button-focus-ring-shadow": {
+            "default": {
+              "blur": 0,
+              "color": "#845abe66",
+              "offsetX": 0,
+              "offsetY": 0,
+              "spread": "3px"
+            },
+            "deprecatedSince": null,
+            "description": "shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
           },
           "--ki-button-focus-ring-width": {
             "default": "0.125rem",
@@ -13566,9 +13680,9 @@
             "type": null
           },
           "--ki-button-md-gap": {
-            "default": "0.25rem",
+            "default": "0.375rem",
             "deprecatedSince": null,
-            "description": "dimension used by the button component for md gap.",
+            "description": "dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13621,13 +13735,43 @@
             "required": false,
             "type": null
           },
-          "--ki-button-primary-active-shadow": {
-            "default": "none",
+          "--ki-button-padding-block": {
+            "default": "0.25rem",
             "deprecatedSince": null,
-            "description": "value used by the button component for primary active shadow.",
+            "description": "dimension used by the button component for padding block (MarsUI: 4px in every size).",
             "replacement": null,
             "required": false,
             "type": null
+          },
+          "--ki-button-primary-active-shadow": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#ffffff1f",
+                "inset": true,
+                "offsetX": {
+                  "unit": "px",
+                  "value": 0
+                },
+                "offsetY": "3px",
+                "spread": {
+                  "unit": "px",
+                  "value": 0
+                }
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
           },
           "--ki-button-primary-danger-active-bg": {
             "default": "#cd2118",
@@ -13638,9 +13782,9 @@
             "type": null
           },
           "--ki-button-primary-danger-active-border": {
-            "default": "#ffffff00",
+            "default": "#00000014",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary danger active border.",
+            "description": "color used by the button component for primary danger active border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13678,17 +13822,17 @@
             "type": null
           },
           "--ki-button-primary-danger-hover-bg": {
-            "default": "#a01a13",
+            "default": "#cd2118",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary danger hover background.",
+            "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-primary-danger-hover-border": {
-            "default": "#ffffff00",
+            "default": "#00000014",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary danger hover border.",
+            "description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13704,15 +13848,15 @@
           "--ki-button-primary-danger-rest-bg": {
             "default": "#cd2118",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary danger rest background.",
+            "description": "color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-primary-danger-rest-border": {
-            "default": "#ffffff00",
+            "default": "#00000014",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary danger rest border.",
+            "description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13733,44 +13877,70 @@
             "required": false,
             "type": null
           },
-          "--ki-button-primary-hover-shadow": {
-            "default": {
-              "blur": {
-                "unit": "px",
-                "value": 1
-              },
-              "color": "#00000008",
-              "offsetX": {
-                "unit": "px",
-                "value": 0
-              },
-              "offsetY": {
-                "unit": "px",
-                "value": 1
-              },
-              "spread": {
-                "unit": "px",
-                "value": -0.5
-              }
-            },
+          "--ki-button-primary-hover-overlay": {
+            "default": "#ffffff0d",
             "deprecatedSince": null,
-            "description": "shadow used by the button component for button primary hover shadow.",
+            "description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5).",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-button-primary-hover-shadow": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "3px",
+                "spread": "-1.5px"
+              },
+              {
+                "blur": "20px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "20px",
+                "spread": "-12px"
+              },
+              {
+                "blur": "3px",
+                "color": "#ffffff2e",
+                "inset": true,
+                "offsetX": {
+                  "unit": "px",
+                  "value": 0
+                },
+                "offsetY": "3px",
+                "spread": {
+                  "unit": "px",
+                  "value": 0
+                }
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover).",
             "replacement": null,
             "required": false,
             "type": "shadow"
           },
           "--ki-button-primary-neutral-active-bg": {
-            "default": "#5f3993",
+            "default": "#845abe",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary neutral active background.",
+            "description": "color used by the button component for primary neutral active background (MarsUI defines no pressed state; mirrors rest).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-primary-neutral-active-border": {
-            "default": "#ffffff00",
+            "default": "#00000014",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary neutral active border.",
+            "description": "color used by the button component for primary neutral active border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13786,7 +13956,7 @@
           "--ki-button-primary-neutral-disabled-bg": {
             "default": "#ececf0",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary neutral disabled background.",
+            "description": "color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13802,7 +13972,7 @@
           "--ki-button-primary-neutral-disabled-fg": {
             "default": "#5b616d",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary neutral disabled foreground.",
+            "description": "color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13810,15 +13980,15 @@
           "--ki-button-primary-neutral-hover-bg": {
             "default": "#845abe",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary neutral hover background.",
+            "description": "color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-primary-neutral-hover-border": {
-            "default": "#ffffff00",
+            "default": "#00000014",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary neutral hover border.",
+            "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13832,17 +14002,17 @@
             "type": null
           },
           "--ki-button-primary-neutral-rest-bg": {
-            "default": "#5f3993",
+            "default": "#845abe",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary neutral rest background.",
+            "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-primary-neutral-rest-border": {
-            "default": "#ffffff00",
+            "default": "#00000014",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary neutral rest border.",
+            "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13855,28 +14025,40 @@
             "required": false,
             "type": null
           },
-          "--ki-button-primary-rest-shadow": {
-            "default": {
-              "blur": {
-                "unit": "px",
-                "value": 1
-              },
-              "color": "#00000008",
-              "offsetX": {
-                "unit": "px",
-                "value": 0
-              },
-              "offsetY": {
-                "unit": "px",
-                "value": 1
-              },
-              "spread": {
-                "unit": "px",
-                "value": -0.5
-              }
-            },
+          "--ki-button-primary-rest-border-bottom": {
+            "default": "#0000002e",
             "deprecatedSince": null,
-            "description": "shadow used by the button component for button primary rest shadow.",
+            "description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom).",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-button-primary-rest-shadow": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#ffffff1f",
+                "inset": true,
+                "offsetX": {
+                  "unit": "px",
+                  "value": 0
+                },
+                "offsetY": "3px",
+                "spread": {
+                  "unit": "px",
+                  "value": 0
+                }
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default).",
             "replacement": null,
             "required": false,
             "type": "shadow"
@@ -13890,9 +14072,9 @@
             "type": null
           },
           "--ki-button-primary-success-active-border": {
-            "default": "#ffffff00",
+            "default": "#00000014",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary success active border.",
+            "description": "color used by the button component for primary success active border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13930,17 +14112,17 @@
             "type": null
           },
           "--ki-button-primary-success-hover-bg": {
-            "default": "#265526",
+            "default": "#2c6a2b",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary success hover background.",
+            "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-primary-success-hover-border": {
-            "default": "#ffffff00",
+            "default": "#00000014",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary success hover border.",
+            "description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
@@ -13956,15 +14138,15 @@
           "--ki-button-primary-success-rest-bg": {
             "default": "#2c6a2b",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary success rest background.",
+            "description": "color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-primary-success-rest-border": {
-            "default": "#ffffff00",
+            "default": "#00000014",
             "deprecatedSince": null,
-            "description": "color used by the button component for primary success rest border.",
+            "description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
@@ -14298,12 +14480,34 @@
             "type": null
           },
           "--ki-button-secondary-active-shadow": {
-            "default": "none",
+            "default": [
+              {
+                "blur": "1.5px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "2px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#ffffff08",
+                "inset": true,
+                "offsetX": {
+                  "unit": "px",
+                  "value": 0
+                },
+                "offsetY": "2px",
+                "spread": {
+                  "unit": "px",
+                  "value": 0
+                }
+              }
+            ],
             "deprecatedSince": null,
-            "description": "value used by the button component for secondary active shadow.",
+            "description": "shadow used by the button component for secondary active shadow (MarsUI defines no pressed state; mirrors rest).",
             "replacement": null,
             "required": false,
-            "type": null
+            "type": "shadow"
           },
           "--ki-button-secondary-danger-active-bg": {
             "default": "#ffebed",
@@ -14314,9 +14518,9 @@
             "type": null
           },
           "--ki-button-secondary-danger-active-border": {
-            "default": "#ffffff00",
+            "default": "#0000000d",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary danger active border.",
+            "description": "color used by the button component for secondary danger active border (MarsUI bevel top/inline edge, variant trait).",
             "replacement": null,
             "required": false,
             "type": null
@@ -14362,9 +14566,9 @@
             "type": null
           },
           "--ki-button-secondary-danger-hover-border": {
-            "default": "#ffffff00",
+            "default": "#0000000d",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary danger hover border.",
+            "description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait).",
             "replacement": null,
             "required": false,
             "type": null
@@ -14386,9 +14590,9 @@
             "type": null
           },
           "--ki-button-secondary-danger-rest-border": {
-            "default": "#ffffff00",
+            "default": "#0000000d",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary danger rest border.",
+            "description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait).",
             "replacement": null,
             "required": false,
             "type": null
@@ -14409,34 +14613,78 @@
             "required": false,
             "type": null
           },
-          "--ki-button-secondary-hover-shadow": {
-            "default": "none",
+          "--ki-button-secondary-hover-overlay": {
+            "default": "#00000008",
             "deprecatedSince": null,
-            "description": "value used by the button component for secondary hover shadow.",
+            "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3).",
             "replacement": null,
             "required": false,
-            "type": null
+            "type": "color"
+          },
+          "--ki-button-secondary-hover-shadow": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "3px",
+                "spread": "-1.5px"
+              },
+              {
+                "blur": "20px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "20px",
+                "spread": "-12px"
+              },
+              {
+                "blur": "3px",
+                "color": "#ffffff14",
+                "inset": true,
+                "offsetX": {
+                  "unit": "px",
+                  "value": 0
+                },
+                "offsetY": "2px",
+                "spread": {
+                  "unit": "px",
+                  "value": 0
+                }
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
           },
           "--ki-button-secondary-neutral-active-bg": {
-            "default": "#ece4f5",
+            "default": "#f2f2f4cc",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary neutral active background.",
+            "description": "color used by the button component for secondary neutral active background (MarsUI defines no pressed state; mirrors rest).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-secondary-neutral-active-border": {
-            "default": "#ffffff00",
+            "default": "#0000000d",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary neutral active border.",
+            "description": "color used by the button component for secondary neutral active border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-secondary-neutral-active-fg": {
-            "default": "#5f3993",
+            "default": "#0a0c11",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary neutral active foreground.",
+            "description": "color used by the button component for secondary neutral active foreground (MarsUI text/high_em).",
             "replacement": null,
             "required": false,
             "type": null
@@ -14466,60 +14714,90 @@
             "type": null
           },
           "--ki-button-secondary-neutral-hover-bg": {
-            "default": "#ece4f5",
+            "default": "#f2f2f4cc",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary neutral hover background.",
+            "description": "color used by the button component for secondary neutral hover background (MarsUI: rest fill; hover darkening comes from the hover overlay).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-secondary-neutral-hover-border": {
-            "default": "#ffffff00",
+            "default": "#0000000d",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary neutral hover border.",
+            "description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-secondary-neutral-hover-fg": {
-            "default": "#5f3993",
+            "default": "#0a0c11",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary neutral hover foreground.",
+            "description": "color used by the button component for secondary neutral hover foreground (MarsUI text/high_em).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-secondary-neutral-rest-bg": {
-            "default": "#f7f4fb",
+            "default": "#f2f2f4cc",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary neutral rest background.",
+            "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-secondary-neutral-rest-border": {
-            "default": "#ffffff00",
+            "default": "#0000000d",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary neutral rest border.",
+            "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-secondary-neutral-rest-fg": {
-            "default": "#5f3993",
+            "default": "#0a0c11",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary neutral rest foreground.",
+            "description": "color used by the button component for secondary neutral rest foreground (MarsUI text/high_em).",
             "replacement": null,
             "required": false,
             "type": null
           },
-          "--ki-button-secondary-rest-shadow": {
-            "default": "none",
+          "--ki-button-secondary-rest-border-bottom": {
+            "default": "#0000001f",
             "deprecatedSince": null,
-            "description": "value used by the button component for secondary rest shadow.",
+            "description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom).",
             "replacement": null,
             "required": false,
-            "type": null
+            "type": "color"
+          },
+          "--ki-button-secondary-rest-shadow": {
+            "default": [
+              {
+                "blur": "1.5px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "2px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#ffffff08",
+                "inset": true,
+                "offsetX": {
+                  "unit": "px",
+                  "value": 0
+                },
+                "offsetY": "2px",
+                "spread": {
+                  "unit": "px",
+                  "value": 0
+                }
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
           },
           "--ki-button-secondary-success-active-bg": {
             "default": "#e3f6e2",
@@ -14530,9 +14808,9 @@
             "type": null
           },
           "--ki-button-secondary-success-active-border": {
-            "default": "#ffffff00",
+            "default": "#0000000d",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary success active border.",
+            "description": "color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait).",
             "replacement": null,
             "required": false,
             "type": null
@@ -14578,9 +14856,9 @@
             "type": null
           },
           "--ki-button-secondary-success-hover-border": {
-            "default": "#ffffff00",
+            "default": "#0000000d",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary success hover border.",
+            "description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait).",
             "replacement": null,
             "required": false,
             "type": null
@@ -14602,9 +14880,9 @@
             "type": null
           },
           "--ki-button-secondary-success-rest-border": {
-            "default": "#ffffff00",
+            "default": "#0000000d",
             "deprecatedSince": null,
-            "description": "color used by the button component for secondary success rest border.",
+            "description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait).",
             "replacement": null,
             "required": false,
             "type": null
@@ -14626,9 +14904,9 @@
             "type": null
           },
           "--ki-button-sm-gap": {
-            "default": "0.125rem",
+            "default": "0.25rem",
             "deprecatedSince": null,
-            "description": "dimension used by the button component for sm gap.",
+            "description": "dimension used by the button component for sm gap (interpolated between xs and md effective gaps).",
             "replacement": null,
             "required": false,
             "type": null
@@ -15127,9 +15405,9 @@
             "type": null
           },
           "--ki-button-xl-gap": {
-            "default": "0.375rem",
+            "default": "0.5rem",
             "deprecatedSince": null,
-            "description": "dimension used by the button component for xl gap.",
+            "description": "dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px).",
             "replacement": null,
             "required": false,
             "type": null
@@ -15167,9 +15445,9 @@
             "type": null
           },
           "--ki-button-xl-padding-inline": {
-            "default": "1rem",
+            "default": "0.875rem",
             "deprecatedSince": null,
-            "description": "dimension used by the button component for xl padding inline.",
+            "description": "dimension used by the button component for xl padding inline (MarsUI 14px).",
             "replacement": null,
             "required": false,
             "type": null
@@ -15183,17 +15461,17 @@
             "type": null
           },
           "--ki-button-xs-font-size": {
-            "default": "0.75rem",
+            "default": "0.625rem",
             "deprecatedSince": null,
-            "description": "dimension used by the button component for xs font size.",
+            "description": "dimension used by the button component for xs font size (MarsUI caption_1 10px).",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-button-xs-gap": {
-            "default": "0.125rem",
+            "default": "0.25rem",
             "deprecatedSince": null,
-            "description": "dimension used by the button component for xs gap.",
+            "description": "dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px).",
             "replacement": null,
             "required": false,
             "type": null
@@ -15207,9 +15485,9 @@
             "type": null
           },
           "--ki-button-xs-icon-size": {
-            "default": "1rem",
+            "default": "0.875rem",
             "deprecatedSince": null,
-            "description": "dimension used by the button component for xs icon size.",
+            "description": "dimension used by the button component for xs icon size (MarsUI 14px).",
             "replacement": null,
             "required": false,
             "type": null
@@ -15217,7 +15495,7 @@
           "--ki-button-xs-line-height": {
             "default": "1rem",
             "deprecatedSince": null,
-            "description": "dimension used by the button component for xs line height.",
+            "description": "dimension used by the button component for xs line height (MarsUI caption_1 16px).",
             "replacement": null,
             "required": false,
             "type": null
@@ -15965,7 +16243,7 @@
             "type": "shadow"
           },
           "--ki-effect-component-backdrop-blur": {
-            "default": "24px",
+            "default": "12px",
             "deprecatedSince": null,
             "description": "MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate).",
             "replacement": null,
@@ -16360,13 +16638,13 @@
           "--ki-focus-primary": {
             "default": {
               "blur": 0,
-              "color": "#845abe33",
+              "color": "#845abe66",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
             },
             "deprecatedSince": null,
-            "description": "MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha (scheme-aware via the outline token).",
+            "description": "MarsUI Focus/primary: 3px spread focus ring of the MarsUI style Outline/primary_base_em_alpha = brand 500 at 40% (Kimen name: outline.primary-low-em-alpha / brand.500-alpha-4; the Kimen outline.primary-base-em-alpha resolves to 20% and does not match the Figma Focus style — specs/002-ki-button/design-extraction.md §2.5).",
             "replacement": null,
             "required": false,
             "type": "shadow"
@@ -21118,5 +21396,5 @@
       }
     }
   },
-  "surfaceSha256": "a3a3818d66c9b26fc5b2767160cafb12a2cc429ccd298d2ff227400606f5f2fe"
+  "surfaceSha256": "a00617895dc5ad06cc7c395a20754dae7d03f5b9619a70567ea8bef704b34565"
 }

@@ -629,24 +629,24 @@
         "$description": "Blur/0: backdrop blur disabled. Themes without glass surfaces (material3) alias the component backdrop blur here."
       },
       "8": {
-        "$value": "8px",
-        "$description": "MarsUI Blur/8: backdrop-filter blur radius."
+        "$value": "4px",
+        "$description": "MarsUI Blur/8 (Figma radius 8 → CSS blur 4px, official export convention radius/2)."
       },
       "16": {
-        "$value": "16px",
-        "$description": "MarsUI Blur/16: backdrop-filter blur radius."
+        "$value": "8px",
+        "$description": "MarsUI Blur/16 (Figma radius 16 → CSS blur 8px, official export convention radius/2)."
       },
       "24": {
-        "$value": "24px",
-        "$description": "MarsUI Blur/24: backdrop-filter blur radius used by component effects."
+        "$value": "12px",
+        "$description": "MarsUI Blur/24 (Figma radius 24 → CSS blur 12px, official export convention radius/2)."
       },
       "48": {
-        "$value": "48px",
-        "$description": "MarsUI Blur/48: backdrop-filter blur radius."
+        "$value": "24px",
+        "$description": "MarsUI Blur/48 (Figma radius 48 → CSS blur 24px, official export convention radius/2)."
       },
       "96": {
-        "$value": "96px",
-        "$description": "MarsUI Blur/96: backdrop-filter blur radius."
+        "$value": "48px",
+        "$description": "MarsUI Blur/96 (Figma radius 96 → CSS blur 48px, official export convention radius/2)."
       }
     },
     "shadow": {

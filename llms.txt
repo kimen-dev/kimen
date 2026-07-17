@@ -179,9 +179,11 @@ Events: none
 Methods: none
 
 CSS custom properties:
-- `--ki-button-border-width`: dimension used by the button component for border width.
+- `--ki-button-backdrop-blur`: backdrop blur used by the button component glass variants (primary/secondary). material3 resolves to blur none via the semantic override.
+- `--ki-button-border-width`: dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px).
 - `--ki-button-focus-ring-color`: color used by the button component for focus ring color.
 - `--ki-button-focus-ring-offset`: dimension used by the button component for focus ring offset.
+- `--ki-button-focus-ring-shadow`: shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring).
 - `--ki-button-focus-ring-width`: dimension used by the button component for focus ring width.
 - `--ki-button-font-family`: font family used by the button component for font family.
 - `--ki-button-font-weight`: font weight used by the button component for font weight.
@@ -228,46 +230,49 @@ CSS custom properties:
 - `--ki-button-lg-padding-inline`: dimension used by the button component for lg padding inline.
 - `--ki-button-lg-radius`: dimension used by the button component for lg radius.
 - `--ki-button-md-font-size`: dimension used by the button component for md font size.
-- `--ki-button-md-gap`: dimension used by the button component for md gap.
+- `--ki-button-md-gap`: dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px).
 - `--ki-button-md-height`: dimension used by the button component for md height.
 - `--ki-button-md-icon-size`: dimension used by the button component for md icon size.
 - `--ki-button-md-line-height`: dimension used by the button component for md line height.
 - `--ki-button-md-min-target`: dimension used by the button component for md min target.
 - `--ki-button-md-padding-inline`: dimension used by the button component for md padding inline.
 - `--ki-button-md-radius`: dimension used by the button component for md radius.
-- `--ki-button-primary-active-shadow`: value used by the button component for primary active shadow.
+- `--ki-button-padding-block`: dimension used by the button component for padding block (MarsUI: 4px in every size).
+- `--ki-button-primary-active-shadow`: shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest).
 - `--ki-button-primary-danger-active-bg`: color used by the button component for primary danger active background.
-- `--ki-button-primary-danger-active-border`: color used by the button component for primary danger active border.
+- `--ki-button-primary-danger-active-border`: color used by the button component for primary danger active border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-danger-active-fg`: color used by the button component for primary danger active foreground.
-- `--ki-button-primary-danger-hover-bg`: color used by the button component for primary danger hover background.
-- `--ki-button-primary-danger-hover-border`: color used by the button component for primary danger hover border.
+- `--ki-button-primary-danger-hover-bg`: color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
+- `--ki-button-primary-danger-hover-border`: color used by the button component for primary danger hover border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-danger-hover-fg`: color used by the button component for primary danger hover foreground.
-- `--ki-button-primary-danger-rest-bg`: color used by the button component for primary danger rest background.
-- `--ki-button-primary-danger-rest-border`: color used by the button component for primary danger rest border.
+- `--ki-button-primary-danger-rest-bg`: color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).
+- `--ki-button-primary-danger-rest-border`: color used by the button component for primary danger rest border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-danger-rest-fg`: color used by the button component for primary danger rest foreground.
 - `--ki-button-primary-disabled-shadow`: value used by the button component for primary disabled shadow.
-- `--ki-button-primary-hover-shadow`: shadow used by the button component for button primary hover shadow.
-- `--ki-button-primary-neutral-active-bg`: color used by the button component for primary neutral active background.
-- `--ki-button-primary-neutral-active-border`: color used by the button component for primary neutral active border.
+- `--ki-button-primary-hover-overlay`: color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5).
+- `--ki-button-primary-hover-shadow`: shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover).
+- `--ki-button-primary-neutral-active-bg`: color used by the button component for primary neutral active background (MarsUI defines no pressed state; mirrors rest).
+- `--ki-button-primary-neutral-active-border`: color used by the button component for primary neutral active border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-neutral-active-fg`: color used by the button component for primary neutral active foreground.
-- `--ki-button-primary-neutral-disabled-bg`: color used by the button component for primary neutral disabled background.
+- `--ki-button-primary-neutral-disabled-bg`: color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification).
 - `--ki-button-primary-neutral-disabled-border`: color used by the button component for primary neutral disabled border.
-- `--ki-button-primary-neutral-disabled-fg`: color used by the button component for primary neutral disabled foreground.
-- `--ki-button-primary-neutral-hover-bg`: color used by the button component for primary neutral hover background.
-- `--ki-button-primary-neutral-hover-border`: color used by the button component for primary neutral hover border.
+- `--ki-button-primary-neutral-disabled-fg`: color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification).
+- `--ki-button-primary-neutral-hover-bg`: color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
+- `--ki-button-primary-neutral-hover-border`: color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-neutral-hover-fg`: color used by the button component for primary neutral hover foreground.
-- `--ki-button-primary-neutral-rest-bg`: color used by the button component for primary neutral rest background.
-- `--ki-button-primary-neutral-rest-border`: color used by the button component for primary neutral rest border.
+- `--ki-button-primary-neutral-rest-bg`: color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500).
+- `--ki-button-primary-neutral-rest-border`: color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-neutral-rest-fg`: color used by the button component for primary neutral rest foreground.
-- `--ki-button-primary-rest-shadow`: shadow used by the button component for button primary rest shadow.
+- `--ki-button-primary-rest-border-bottom`: color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom).
+- `--ki-button-primary-rest-shadow`: shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default).
 - `--ki-button-primary-success-active-bg`: color used by the button component for primary success active background.
-- `--ki-button-primary-success-active-border`: color used by the button component for primary success active border.
+- `--ki-button-primary-success-active-border`: color used by the button component for primary success active border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-success-active-fg`: color used by the button component for primary success active foreground.
-- `--ki-button-primary-success-hover-bg`: color used by the button component for primary success hover background.
-- `--ki-button-primary-success-hover-border`: color used by the button component for primary success hover border.
+- `--ki-button-primary-success-hover-bg`: color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
+- `--ki-button-primary-success-hover-border`: color used by the button component for primary success hover border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-success-hover-fg`: color used by the button component for primary success hover foreground.
-- `--ki-button-primary-success-rest-bg`: color used by the button component for primary success rest background.
-- `--ki-button-primary-success-rest-border`: color used by the button component for primary success rest border.
+- `--ki-button-primary-success-rest-bg`: color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification).
+- `--ki-button-primary-success-rest-border`: color used by the button component for primary success rest border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-success-rest-fg`: color used by the button component for primary success rest foreground.
 - `--ki-button-quaternary-active-shadow`: value used by the button component for quaternary active shadow.
 - `--ki-button-quaternary-danger-active-bg`: color used by the button component for quaternary danger active background.
@@ -303,42 +308,44 @@ CSS custom properties:
 - `--ki-button-quaternary-success-rest-bg`: color used by the button component for quaternary success rest background.
 - `--ki-button-quaternary-success-rest-border`: color used by the button component for quaternary success rest border.
 - `--ki-button-quaternary-success-rest-fg`: color used by the button component for quaternary success rest foreground.
-- `--ki-button-secondary-active-shadow`: value used by the button component for secondary active shadow.
+- `--ki-button-secondary-active-shadow`: shadow used by the button component for secondary active shadow (MarsUI defines no pressed state; mirrors rest).
 - `--ki-button-secondary-danger-active-bg`: color used by the button component for secondary danger active background.
-- `--ki-button-secondary-danger-active-border`: color used by the button component for secondary danger active border.
+- `--ki-button-secondary-danger-active-border`: color used by the button component for secondary danger active border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-danger-active-fg`: color used by the button component for secondary danger active foreground.
 - `--ki-button-secondary-danger-hover-bg`: color used by the button component for secondary danger hover background.
-- `--ki-button-secondary-danger-hover-border`: color used by the button component for secondary danger hover border.
+- `--ki-button-secondary-danger-hover-border`: color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-danger-hover-fg`: color used by the button component for secondary danger hover foreground.
 - `--ki-button-secondary-danger-rest-bg`: color used by the button component for secondary danger rest background.
-- `--ki-button-secondary-danger-rest-border`: color used by the button component for secondary danger rest border.
+- `--ki-button-secondary-danger-rest-border`: color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-danger-rest-fg`: color used by the button component for secondary danger rest foreground.
 - `--ki-button-secondary-disabled-shadow`: value used by the button component for secondary disabled shadow.
-- `--ki-button-secondary-hover-shadow`: value used by the button component for secondary hover shadow.
-- `--ki-button-secondary-neutral-active-bg`: color used by the button component for secondary neutral active background.
-- `--ki-button-secondary-neutral-active-border`: color used by the button component for secondary neutral active border.
-- `--ki-button-secondary-neutral-active-fg`: color used by the button component for secondary neutral active foreground.
+- `--ki-button-secondary-hover-overlay`: color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3).
+- `--ki-button-secondary-hover-shadow`: shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover).
+- `--ki-button-secondary-neutral-active-bg`: color used by the button component for secondary neutral active background (MarsUI defines no pressed state; mirrors rest).
+- `--ki-button-secondary-neutral-active-border`: color used by the button component for secondary neutral active border (MarsUI bevel top/inline edge).
+- `--ki-button-secondary-neutral-active-fg`: color used by the button component for secondary neutral active foreground (MarsUI text/high_em).
 - `--ki-button-secondary-neutral-disabled-bg`: color used by the button component for secondary neutral disabled background.
 - `--ki-button-secondary-neutral-disabled-border`: color used by the button component for secondary neutral disabled border.
 - `--ki-button-secondary-neutral-disabled-fg`: color used by the button component for secondary neutral disabled foreground.
-- `--ki-button-secondary-neutral-hover-bg`: color used by the button component for secondary neutral hover background.
-- `--ki-button-secondary-neutral-hover-border`: color used by the button component for secondary neutral hover border.
-- `--ki-button-secondary-neutral-hover-fg`: color used by the button component for secondary neutral hover foreground.
-- `--ki-button-secondary-neutral-rest-bg`: color used by the button component for secondary neutral rest background.
-- `--ki-button-secondary-neutral-rest-border`: color used by the button component for secondary neutral rest border.
-- `--ki-button-secondary-neutral-rest-fg`: color used by the button component for secondary neutral rest foreground.
-- `--ki-button-secondary-rest-shadow`: value used by the button component for secondary rest shadow.
+- `--ki-button-secondary-neutral-hover-bg`: color used by the button component for secondary neutral hover background (MarsUI: rest fill; hover darkening comes from the hover overlay).
+- `--ki-button-secondary-neutral-hover-border`: color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge).
+- `--ki-button-secondary-neutral-hover-fg`: color used by the button component for secondary neutral hover foreground (MarsUI text/high_em).
+- `--ki-button-secondary-neutral-rest-bg`: color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint).
+- `--ki-button-secondary-neutral-rest-border`: color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge).
+- `--ki-button-secondary-neutral-rest-fg`: color used by the button component for secondary neutral rest foreground (MarsUI text/high_em).
+- `--ki-button-secondary-rest-border-bottom`: color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom).
+- `--ki-button-secondary-rest-shadow`: shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default).
 - `--ki-button-secondary-success-active-bg`: color used by the button component for secondary success active background.
-- `--ki-button-secondary-success-active-border`: color used by the button component for secondary success active border.
+- `--ki-button-secondary-success-active-border`: color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-success-active-fg`: color used by the button component for secondary success active foreground.
 - `--ki-button-secondary-success-hover-bg`: color used by the button component for secondary success hover background.
-- `--ki-button-secondary-success-hover-border`: color used by the button component for secondary success hover border.
+- `--ki-button-secondary-success-hover-border`: color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-success-hover-fg`: color used by the button component for secondary success hover foreground.
 - `--ki-button-secondary-success-rest-bg`: color used by the button component for secondary success rest background.
-- `--ki-button-secondary-success-rest-border`: color used by the button component for secondary success rest border.
+- `--ki-button-secondary-success-rest-border`: color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-success-rest-fg`: color used by the button component for secondary success rest foreground.
 - `--ki-button-sm-font-size`: dimension used by the button component for sm font size.
-- `--ki-button-sm-gap`: dimension used by the button component for sm gap.
+- `--ki-button-sm-gap`: dimension used by the button component for sm gap (interpolated between xs and md effective gaps).
 - `--ki-button-sm-height`: dimension used by the button component for sm height.
 - `--ki-button-sm-icon-size`: dimension used by the button component for sm icon size.
 - `--ki-button-sm-line-height`: dimension used by the button component for sm line height.
@@ -380,21 +387,22 @@ CSS custom properties:
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border.
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size.
-- `--ki-button-xl-gap`: dimension used by the button component for xl gap.
+- `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px).
 - `--ki-button-xl-height`: dimension used by the button component for xl height.
 - `--ki-button-xl-icon-size`: dimension used by the button component for xl icon size.
 - `--ki-button-xl-line-height`: dimension used by the button component for xl line height.
 - `--ki-button-xl-min-target`: dimension used by the button component for xl min target.
-- `--ki-button-xl-padding-inline`: dimension used by the button component for xl padding inline.
+- `--ki-button-xl-padding-inline`: dimension used by the button component for xl padding inline (MarsUI 14px).
 - `--ki-button-xl-radius`: dimension used by the button component for xl radius.
-- `--ki-button-xs-font-size`: dimension used by the button component for xs font size.
-- `--ki-button-xs-gap`: dimension used by the button component for xs gap.
+- `--ki-button-xs-font-size`: dimension used by the button component for xs font size (MarsUI caption_1 10px).
+- `--ki-button-xs-gap`: dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px).
 - `--ki-button-xs-height`: dimension used by the button component for xs height.
-- `--ki-button-xs-icon-size`: dimension used by the button component for xs icon size.
-- `--ki-button-xs-line-height`: dimension used by the button component for xs line height.
+- `--ki-button-xs-icon-size`: dimension used by the button component for xs icon size (MarsUI 14px).
+- `--ki-button-xs-line-height`: dimension used by the button component for xs line height (MarsUI caption_1 16px).
 - `--ki-button-xs-min-target`: dimension used by the button component for xs min target.
 - `--ki-button-xs-padding-inline`: dimension used by the button component for xs padding inline.
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius.
+- `--ki-transparent-inverse`: semantic color for transparent inverse.
 
 ### ki-card
 

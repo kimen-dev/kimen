@@ -1128,13 +1128,13 @@
       "$type": "shadow",
       "primary": {
         "$value": {
-          "color": "{ki.outline.primary-base-em-alpha}",
+          "color": "{ki.outline.primary-low-em-alpha}",
           "offsetX": 0,
           "offsetY": 0,
           "blur": 0,
           "spread": "{ki.shadow.ring}"
         },
-        "$description": "MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha (scheme-aware via the outline token)."
+        "$description": "MarsUI Focus/primary: 3px spread focus ring of the MarsUI style Outline/primary_base_em_alpha = brand 500 at 40% (Kimen name: outline.primary-low-em-alpha / brand.500-alpha-4; the Kimen outline.primary-base-em-alpha resolves to 20% and does not match the Figma Focus style — specs/002-ki-button/design-extraction.md §2.5)."
       },
       "gray": {
         "$value": {
