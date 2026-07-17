@@ -20,6 +20,7 @@
   "scripts": {
     "build": "node ./build.mjs",
     "contrast": "node ./scripts/check-contrast.mjs",
+    "reference": "node ./scripts/generate-reference.mjs",
     "size": "size-limit",
     "test": "node --test scripts/*.test.mjs"
   },

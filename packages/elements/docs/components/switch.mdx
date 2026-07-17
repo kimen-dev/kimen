@@ -1,0 +1,75 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-switch" />
+
+# ki-switch
+
+A token-styled switch for immediate on/off settings.
+
+**When to use** — binary settings whose change takes effect immediately,
+always with a slotted label.
+
+**When NOT to use** — selections collected for later form submission; use
+`ki-checkbox` for recorded choices, `ki-radio-group` for mutually exclusive
+choices, and `ki-button` for actions.
+
+## Examples
+
+The default slot is the label and accessible name source. Boolean presence
+semantics apply to `checked`: any present attribute — even
+`checked="false"` — means on; omit it to express off:
+
+```html
+<ki-switch>Desktop notifications</ki-switch>
+<ki-switch checked>Autosave</ki-switch>
+<ki-switch disabled>Beta features (unavailable on this plan)</ki-switch>
+```
+
+While on, a named switch contributes `name`/`value` to form data (`on` when
+`value` is omitted, native checkbox parity); while off it contributes
+nothing:
+
+```html
+<ki-switch name="tracking" value="enabled" checked>Usage analytics</ki-switch>
+```
+
+## Recipe: applying the setting immediately
+
+The switch dispatches composed `input` and `change` events on user toggles —
+apply the effect right away; a switch never waits for a submit:
+
+```html
+<ki-switch id="autosave" checked>Autosave</ki-switch>
+
+<script type="module">
+  const autosave = document.getElementById('autosave');
+  autosave.addEventListener('change', () => {
+    // Persist the setting immediately — that is the switch contract.
+    console.log('autosave is now', autosave.checked ? 'on' : 'off');
+  });
+</script>
+```
+
+## Customization
+
+| Token                           | Controls                        |
+| ------------------------------- | ------------------------------- |
+| `--ki-switch-track-width`       | Track inline size               |
+| `--ki-switch-track-height`      | Track block size                |
+| `--ki-switch-thumb-size`        | Handle dimensions               |
+| `--ki-switch-checked-rest-track`| On-state resting track color    |
+| `--ki-switch-gap`               | Gap between track and label     |
+
+States follow
+`--ki-switch-{unchecked|checked}-{rest|hover|active|disabled}-{track|thumb|border}`.
+Shadow parts: `::part(track)` (on/off channel), `::part(thumb)` (traveling
+handle) and `::part(label)` (label wrapper).
+
+## Accessibility
+
+- Always slot a visible label — it is the accessible name source.
+- `disabled` preserves the current state while removing the switch from
+  keyboard reach and from form data; do not use it for pending or loading
+  states.
+- If the change is recorded only when a form is submitted, that is a
+  `ki-checkbox`, not a switch — the switch role promises immediate effect.

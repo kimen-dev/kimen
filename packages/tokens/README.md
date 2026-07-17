@@ -69,5 +69,5 @@ A complete theme reassigns theme-layer tokens and semantic-layer tokens while
 sharing primitives. The public contract is the `--ki-*` custom-property name
 set; every theme must expose the same names in light and dark schemes.
 
-The approved public contract for this feature is documented in
-`../../specs/001-tokens-theming/contracts/theming-contract.md`.
+The approved public contract for this feature is documented in the
+[theming contract](https://github.com/kimen-dev/kimen/blob/main/specs/001-tokens-theming/contracts/theming-contract.md).

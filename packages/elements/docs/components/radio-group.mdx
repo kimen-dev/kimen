@@ -1,0 +1,91 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-radio-group" />
+
+# ki-radio-group
+
+A token-styled radio group that owns selection, keyboard coordination and
+form participation for slotted `ki-radio` options.
+
+**When to use** — a person must choose exactly one of a small set of
+mutually exclusive options that should all be visible at once.
+
+**When NOT to use** — many options or tight space (use `ki-select`),
+independent on/off settings (use `ki-checkbox` or `ki-switch`), multiple
+selection, or authored selection on options; set this group's `value`
+instead.
+
+## Examples
+
+The group owns everything: `label` (mandatory), `name` for form data,
+`value` for selection. Each `ki-radio` only carries its own `value` and
+label text — never `name`, never selection state:
+
+```html
+<ki-radio-group label="Delivery speed" name="delivery" value="standard">
+  <ki-radio value="standard">Standard (3–5 days)</ki-radio>
+  <ki-radio value="express">Express (1–2 days)</ki-radio>
+  <ki-radio value="overnight" disabled>Overnight (unavailable)</ki-radio>
+</ki-radio-group>
+```
+
+Without an initial `value` the group renders unselected and operable, and
+`required` uses the platform `valueMissing` validation:
+
+```html
+<form>
+  <ki-radio-group label="Billing cycle" name="cycle" required>
+    <ki-radio value="monthly">Monthly</ki-radio>
+    <ki-radio value="yearly">Yearly</ki-radio>
+  </ki-radio-group>
+  <ki-button type="submit" variant="primary">Continue</ki-button>
+</form>
+```
+
+## Recipe: reacting to a selection change
+
+The group dispatches a composed `change` event on user selection; its
+`value` property is the current projection. Assigning the property updates
+selection silently:
+
+```html
+<ki-radio-group id="speed" label="Delivery speed" name="delivery" value="standard">
+  <ki-radio value="standard">Standard</ki-radio>
+  <ki-radio value="express">Express</ki-radio>
+</ki-radio-group>
+
+<script type="module">
+  const group = document.getElementById('speed');
+  group.addEventListener('change', () => {
+    console.log('selected:', group.value);
+  });
+  // Programmatic selection — silent, no events:
+  group.value = 'express';
+</script>
+```
+
+## Customization
+
+| Token                              | Controls                          |
+| ---------------------------------- | --------------------------------- |
+| `--ki-radio-group-gap`             | Vertical gap between options      |
+| `--ki-radio-control-size`          | Ring dimensions                   |
+| `--ki-radio-dot-size`              | Selected dot dimensions           |
+| `--ki-radio-selected-rest-border`  | Selected ring resting border      |
+| `--ki-radio-gap`                   | Gap between ring and option label |
+
+Option states follow
+`--ki-radio-{unselected|selected}-{rest|hover|active|disabled}-*`. Shadow
+parts: on the group, `::part(label)`; on each `ki-radio`, `::part(control)`
+(ring and dot) and `::part(label)`.
+
+## Accessibility
+
+- The group `label` is the radiogroup accessible name — omitting it fails
+  the accessibility gates.
+- Document order is the arrow-key navigation order; disabled options are
+  skipped.
+- Never put `name` on `ki-radio` — the internal native inputs are
+  intentionally unnamed; the group contributes the single form entry.
+- Group `disabled` skips the whole group in Tab order and removes its form
+  entry; do not use it for pending/loading semantics.

@@ -19,6 +19,48 @@ star/watch the repo to follow along.
 landing with live re-theming, and the component workshop under
 [/storybook/](https://kimen-dev.github.io/kimen/storybook/).
 
+## Quickstart
+
+> Not published to npm yet: these are the exact commands the first release
+> will ship with, already validated in CI against packed tarballs on every
+> release dry run (`scripts/consumer-contract.mjs`).
+
+```sh
+pnpm add @kimen/elements @kimen/tokens
+# or: npm install @kimen/elements @kimen/tokens
+```
+
+Register each component from its direct subpath and load the token stylesheet
+once:
+
+```ts
+import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
+import '@kimen/tokens/css';
+
+defineKiButton();
+```
+
+```html
+<ki-button variant="primary">Save</ki-button>
+```
+
+`@kimen/tokens/css` ships the default onmars theme and follows
+`prefers-color-scheme`. To opt into the Material 3 reference theme, also load
+its stylesheet and select it on the document root; `data-ki-color-scheme`
+(`light` / `dark`) overrides the OS scheme for any theme:
+
+```ts
+import '@kimen/tokens/css/material3';
+```
+
+```html
+<html data-ki-theme="material3" data-ki-color-scheme="dark">
+```
+
+Imports from the package root (`import { KiButton } from '@kimen/elements'`)
+are a deprecated compatibility facade: see
+[`docs/migrations/root-imports.md`](./docs/migrations/root-imports.md).
+
 ## Why
 
 Runtime GenUI (A2UI, MCP Apps, AG-UI, json-render) injects agent-generated UI

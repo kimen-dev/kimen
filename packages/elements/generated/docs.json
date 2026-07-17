@@ -434,7 +434,9 @@
           "text": "label - Label wrapper around the default slot."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "A standalone primary action:\n\n```html\n<ki-button variant=\"primary\">Save</ki-button>\n```\n\n`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type=\"button\"`:\n\n```html\n<form>\n  <ki-button type=\"button\">Cancel</ki-button>\n  <ki-button variant=\"primary\">Save changes</ki-button>\n</form>\n```\n\nProgrammatic creation after registration; string attributes and properties are interchangeable:\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-button';\n\ndefineCustomElement();\n\nconst saveButton = document.createElement('ki-button');\nsaveButton.setAttribute('type', 'button');\nsaveButton.textContent = 'Save';\ndocument.body.append(saveButton);\n```\n"
+      },
       "props": [
         {
           "name": "disabled",
@@ -1113,7 +1115,9 @@
           "text": "footer - Action row, collapsed when empty."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "A modal confirmation; `heading` names the dialog for assistive technology and actions go in the `footer` slot:\n\n```html\n<ki-dialog heading=\"Delete draft?\" id=\"confirm-dialog\">\n  <p>This permanently removes the draft.</p>\n  <ki-button slot=\"footer\" type=\"button\">Cancel</ki-button>\n  <ki-button slot=\"footer\" tone=\"danger\" variant=\"primary\">Delete</ki-button>\n</ki-dialog>\n```\n\nOpen it with the `show()` method (and close with `close()`); the `ki-close` event reports why it closed in `detail.reason` (`method`, `escape`, or `backdrop`):\n\n```html\n<ki-button type=\"button\" onclick=\"document.getElementById('confirm-dialog').show()\">\n  Delete draft\n</ki-button>\n```\n"
+      },
       "props": [
         {
           "name": "closeOnBackdrop",
@@ -1338,7 +1342,9 @@
           "text": "label - Visible label that provides the accessible name."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):\n\n```html\n<form>\n  <ki-input label=\"Work email\" name=\"email\" type=\"email\" required></ki-input>\n  <ki-button variant=\"primary\">Subscribe</ki-button>\n</form>\n```\n\nRead-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:\n\n```html\n<ki-input label=\"Plan\" value=\"Pro\" readonly></ki-input>\n<ki-input label=\"Legacy ID\" value=\"A-1042\" disabled></ki-input>\n```\n"
+      },
       "props": [
         {
           "name": "autocomplete",
@@ -2427,7 +2433,9 @@
           "text": "option - Mirrored option row rendered in this shadow root."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "Options are declared as `ki-option` children; the option text is the visible label and `value` is the submitted value:\n\n```html\n<ki-select label=\"Country\" name=\"country\" placeholder=\"Choose a country\">\n  <ki-option value=\"es\">Spain</ki-option>\n  <ki-option value=\"fr\">France</ki-option>\n  <ki-option value=\"pt\">Portugal</ki-option>\n</ki-select>\n```\n\nAn option without `value` submits its trimmed label text, and `required` blocks submission while empty:\n\n```html\n<form>\n  <ki-select label=\"Team size\" name=\"size\" required>\n    <ki-option>1-10</ki-option>\n    <ki-option>11-50</ki-option>\n    <ki-option disabled>51+</ki-option>\n  </ki-select>\n  <ki-button variant=\"primary\">Continue</ki-button>\n</form>\n```\n"
+      },
       "props": [
         {
           "name": "disabled",
@@ -3088,7 +3096,9 @@
           "text": "tablist - Internal strip carrying the `tablist` role."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "Tabs pair with panels through a shared `value`; the group's `value` selects the active pair and `label` names the tablist:\n\n```html\n<ki-tabs label=\"Settings\" value=\"email\">\n  <ki-tab value=\"email\">Email</ki-tab>\n  <ki-tab value=\"security\">Security</ki-tab>\n  <ki-tab-panel value=\"email\">Email delivery preferences</ki-tab-panel>\n  <ki-tab-panel value=\"security\">Security and sign-in preferences</ki-tab-panel>\n</ki-tabs>\n```\n\nA disabled tab stays visible but cannot be selected by any modality; user selection dispatches a composed `ki-change` event carrying the new value in `detail.value` (programmatic `value` writes stay silent):\n\n```html\n<ki-tabs label=\"Billing\" value=\"plans\">\n  <ki-tab value=\"plans\">Plans</ki-tab>\n  <ki-tab value=\"invoices\" disabled>Invoices</ki-tab>\n  <ki-tab-panel value=\"plans\">Plan management</ki-tab-panel>\n  <ki-tab-panel value=\"invoices\">Invoice history</ki-tab-panel>\n</ki-tabs>\n```\n"
+      },
       "props": [
         {
           "name": "label",
