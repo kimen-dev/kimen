@@ -11,8 +11,8 @@ One deterministic "state gallery" PNG per component x theme, captured with
 `expect(...).toMatchScreenshot()` inside the ordinary Chromium gate
 (`scripts/gates/gates-browser.sh chromium`, part of `gates-suite.sh`):
 
-- Matrix: 20 components x (onmars light + onmars dark) + material3 light
-  = 60 captures. Hover and animated states are out of v1.
+- Matrix: 25 components x (onmars light + onmars dark) + material3 light
+  = 75 captures. Hover and animated states are out of v1.
 - Shared harness: `visual/harness.ts` (tokens injection, vendored font
   fixtures + `document.fonts.ready`, reduced-motion emulation, gallery
   mounting). Galleries live in `visual/galleries.ts`. Two fonts are
