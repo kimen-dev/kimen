@@ -909,6 +909,14 @@
   --ki-icon-button-border-width: var(--ki-size-border-hairline); /** dimension used by the icon button component for border width (MarsUI bevel/outline stroke: 1px, INNER — the square box already contains it). */
   --ki-icon-button-focus-ring-width: var(--ki-space-xxs); /** dimension used by the icon button component for focus ring width. */
   --ki-icon-button-focus-ring-offset: var(--ki-space-xxs); /** dimension used by the icon button component for focus ring offset. */
+  --ki-indicator-gap: var(--ki-space-sm); /** dimension used by the indicator component for the space between dots: Space/sm, the exact variable bound as the 6px gap of the composed Nav_indicator row (node 14195:5866, specs/024-ki-indicator/design-extraction.md). */
+  --ki-indicator-dot-inline-size: var(--ki-space-md); /** dimension used by the indicator component for the resting dot inline size: Space/md, the exact variable bound as the 8px width of the State=inactive symbol; the painted circle is 8x8 centered in the 16px row line. */
+  --ki-indicator-dot-block-size: var(--ki-space-md); /** dimension used by the indicator component for the resting dot block size: the 8px circle diameter measured in the State=inactive vector (the 16px frame height is row alignment, carried by the current dot). */
+  --ki-indicator-dot-radius: var(--ki-radius-round); /** dimension used by the indicator component for the resting dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent). */
+  --ki-indicator-dot-current-inline-size: var(--ki-space-10xl); /** dimension used by the indicator component for the current dot inline size: Space/10xl, the exact variable bound as the 32px width of the State=active pill — the MarsUI elongation lives here, never in an attribute (FR-007). */
+  --ki-indicator-dot-current-block-size: var(--ki-space-3xl); /** dimension used by the indicator component for the current dot block size: Space/3xl, the exact variable bound as the 16px height of the State=active pill (the full row line; declared family extension, design-extraction §Decisiones). */
+  --ki-indicator-dot-current-radius: var(--ki-radius-round); /** dimension used by the indicator component for the current dot shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent). */
+  --ki-indicator-dot-current-hole-block-size: var(--ki-space-sm); /** dimension used by the indicator component for the block size of the transparent hole cut from the current pill: the 6px cutout height measured in the State=active vector; the ring width derives by construction as (current block size − hole block size) / 2 and a theme resolves it to zero for a solid dot (declared family extension, design-extraction §Decisiones). */
   --ki-input-height: var(--ki-space-14xl); /** dimension used by the input component for height. */
   --ki-input-min-target: var(--ki-space-7xl); /** dimension used by the input component for min target. */
   --ki-input-padding-inline: var(--ki-space-lg); /** dimension used by the input component for padding inline. */
@@ -936,6 +944,11 @@
   --ki-progress-circular-size: var(--ki-space-12xl); /** dimension used by the progress component for circular size. */
   --ki-progress-circular-track-width: var(--ki-space-xs); /** dimension used by the progress component for circular track width. */
   --ki-progress-indeterminate-duration: var(--ki-foundation-migrated-component-progress-progress-indeterminate-duration); /** duration used by the progress component for progress indeterminate duration. */
+  --ki-qr-size: var(--ki-space-24xl); /** dimension used by the qr component for the code's square box: the 128px QR_code frame (node 16158:27561) binds no size variable and the space scale has no 8rem step, so onmars resolves the nearest step (120px); consumers rescale through this token — the code always stays 1:1 (specs/026-ki-qr/design-extraction.md §4, declared for founder ratification). */
+  --ki-qr-module-radius: var(--ki-radius-0); /** dimension used by the qr component for the corner radius of every data module, in the code's internal coordinate space of 8px per module: Type=square (the set default) renders pure squares (radius 0); the documented round value is 4px (4px = half a module, the MarsUI Type=round dot carried as a token value, never an attribute — FR-007, 002 shape precedent). */
+  --ki-qr-finder-radius: var(--ki-radius-0); /** dimension used by the qr component for the corner radius of the three finder rings, applied to the ring's midline in the code's internal coordinate space of 8px per module: Type=square renders square concentric finders (radius 0); the documented round value is 14px (14px midline = 18px outer edge, the 2.25-module radius measured on Type=round); the inner-edge and center radii derive by construction (stroke geometry and a 3/7 scale — design-extraction §5). */
+  --ki-qr-quiet-zone: var(--ki-space-md); /** dimension used by the qr component for the light quiet zone around the modules: the 8px band measured on both 128px variants (about two modules of the sample matrices), painted as tile padding and preserved at any token-driven size (FR-008). */
+  --ki-qr-radius: var(--ki-radius-0); /** dimension used by the qr component for the tile corners: the QR_code frames are square with no own radius (the rounded showcase card beneath is framing, not anatomy — design-extraction §1). */
   --ki-radio-group-gap: var(--ki-space-sm); /** dimension used by the radio group component for gap. */
   --ki-radio-control-size: var(--ki-space-5xl); /** dimension used by the radio component for control size. */
   --ki-radio-dot-size: var(--ki-space-md); /** dimension used by the radio component for dot size. */
@@ -945,6 +958,13 @@
   --ki-radio-border-width: var(--ki-space-xxs); /** dimension used by the radio component for border width. */
   --ki-radio-focus-ring-width: var(--ki-space-xxs); /** dimension used by the radio component for focus ring width. */
   --ki-radio-focus-ring-offset: var(--ki-space-xxs); /** dimension used by the radio component for focus ring offset. */
+  --ki-scroller-thumb-thickness: var(--ki-space-xs); /** dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17). */
+  --ki-scroller-thumb-radius: var(--ki-radius-round); /** dimension used by the scroller component for the thumb shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent). */
+  --ki-scroller-thumb-min-length: var(--ki-space-3xl); /** dimension used by the scroller component for the minimum thumb length along the scroll axis: the 16px min-height on the Figma scroll pill; the actual length stays the native visible-fraction proportion (FR-003). */
+  --ki-scroller-gutter: var(--ki-space-xxs); /** dimension used by the scroller component for the clearance on each side of the thumb: the 2px padding-inline of the 8px Scroller rail (rail thickness = thumb-thickness + 2×gutter). */
+  --ki-scroller-track-inset: var(--ki-space-xs); /** dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5). */
+  --ki-scroller-focus-ring-width: var(--ki-space-xxs); /** dimension used by the scroller component for the viewport focus ring width (ki-dialog precedent). */
+  --ki-scroller-focus-ring-offset: var(--ki-space-xxs); /** dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent). */
   --ki-select-height: var(--ki-space-12xl); /** dimension used by the select component for height. */
   --ki-select-min-target: var(--ki-space-7xl); /** dimension used by the select component for min target. */
   --ki-select-padding-inline: var(--ki-space-lg); /** dimension used by the select component for padding inline. */
@@ -1002,6 +1022,15 @@
   --ki-tooltip-offset: var(--ki-space-xs); /** dimension used by the tooltip component for offset. */
   --ki-tooltip-show-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-show-delay); /** duration used by the tooltip component for tooltip show delay. */
   --ki-tooltip-hide-delay: var(--ki-foundation-migrated-component-tooltip-tooltip-hide-delay); /** duration used by the tooltip component for tooltip hide delay. */
+  --ki-video-frame-radius: var(--ki-radius-big-component-xs); /** dimension used by the video component for the frame corners: Radius/big_component/radius_xs, the exact variable bound to the Size=md Video frame (node 12089:6570, specs/025-ki-video/design-extraction.md) — the sm frame's radius_md is the scale demo, not a second API value. */
+  --ki-video-scrim-radius: var(--ki-radius-component-6xl); /** dimension used by the video component for the overlay scrim shape: Radius/component/radius_6xl, the exact variable bound to the Size=md Play halo (28px pill-cornered square). */
+  --ki-video-scrim-padding: var(--ki-space-3xl); /** dimension used by the video component for the scrim clearance around the play container: Space/3xl, the exact variable bound as the Size=md Play halo padding (16px on every side). */
+  --ki-video-play-size: var(--ki-space-16xl); /** dimension used by the video component for the play container box: the 56px Icon_button instance of the Size=md Video (the ki-icon-button xl box; the sm variant's 40px box is the scale demo). */
+  --ki-video-play-icon-size: var(--ki-space-9xl); /** dimension used by the video component for the play glyph: the 28px Icon/Placeholder_xl slot measured inside the Size=md play container (the ki-icon-button xl icon size). */
+  --ki-video-play-radius: var(--ki-radius-component-xl); /** dimension used by the video component for the play container shape: Radius/component/radius_xl, the exact variable bound to the Size=md Icon_button instance (14px, the ki-icon-button xl radius). */
+  --ki-video-play-border-width: var(--ki-size-border-hairline); /** dimension used by the video component for the play container bevel width (MarsUI hairline stroke, ki-icon-button precedent). */
+  --ki-video-focus-ring-width: var(--ki-space-xxs); /** dimension used by the video component for the play control focus ring width (ki-dialog precedent). */
+  --ki-video-focus-ring-offset: var(--ki-space-xxs); /** dimension used by the video component for the play control focus ring offset (ki-dialog precedent). */
   --ki-surface-special-light-s0-dark-s1: var(--ki-surface-s0); /** semantic color for surface special light s0 dark s1. */
   --ki-surface-special-light-s0-dark-s2: var(--ki-surface-s0); /** semantic color for surface special light s0 dark s2. */
   --ki-surface-special-light-s0-dark-s3: var(--ki-surface-s0); /** semantic color for surface special light s0 dark s3. */
@@ -1438,6 +1467,9 @@
   --ki-icon-button-ghost-danger-active-fg: var(--ki-text-danger-high-em); /** color used by the icon button component for ghost danger active foreground — the icon inherits it via currentColor. */
   --ki-icon-button-ghost-danger-active-border: var(--ki-outline-none); /** color used by the icon button component for ghost danger active border. */
   --ki-icon-button-backdrop-blur: var(--ki-effect-component-backdrop-blur); /** dimension used by the icon button component for the glass variants (primary/secondary) backdrop blur, identical to the button glass. material3 resolves to blur none via the semantic override. */
+  --ki-indicator-dot-color: var(--ki-inverse-white-alpha-18); /** color used by the indicator component for the resting dot fill: Inverse_white/alpha_18, the exact variable bound to every Indicator variant fill (Black/18 light, White/18 dark) — the scheme flip rides the semantic layer. */
+  --ki-indicator-dot-current-color: var(--ki-inverse-white-alpha-18); /** color used by the indicator component for the current dot treatment: Inverse_white/alpha_18, the exact fill of the State=active ring vector (Black/18 light, White/18 dark) — painted as the pill ring in onmars, as the solid dot in themes that zero the hole. */
+  --ki-indicator-motion-duration: var(--ki-motion-duration-fast); /** duration used by the indicator component for the highlight transfer between dots: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-008; disabled under reduced motion by construction). */
   --ki-input-border-block-start-width: var(--ki-input-border-width); /** dimension used by the input component for border block start width. */
   --ki-input-border-block-end-width: var(--ki-input-border-width); /** dimension used by the input component for border block end width. */
   --ki-input-border-inline-start-width: var(--ki-input-border-width); /** dimension used by the input component for border inline start width. */
@@ -1454,6 +1486,8 @@
   --ki-option-hover-bg: var(--ki-surface-s2); /** color used by the option component for hover background. */
   --ki-option-disabled-bg: var(--ki-surface-disabled-base-em); /** color used by the option component for disabled background. */
   --ki-progress-track-color: var(--ki-surface-s3); /** color used by the progress component for track color. */
+  --ki-qr-color: var(--ki-surface-black); /** color used by the qr component for the dark modules and finder rings: the Figma fill binds Text/high_em (#0a0c11), which flips light under the dark scheme and would invert the code, so the theme obligation (FR-010: dark modules on a light tile in both schemes) resolves the scheme-stable black ink instead (design-extraction §2, declared for founder ratification). */
+  --ki-qr-background: var(--ki-surface-white); /** color used by the qr component for the light tile behind the modules: the Figma symbol is transparent over the showcase card's Surface/s0 white, but a scannable code owns its tile — the scheme-stable white keeps dark-on-light module contrast in both schemes (FR-010, a documented theme obligation). */
   --ki-radio-unselected-rest-bg: var(--ki-surface-s0); /** color used by the radio component for unselected rest background. */
   --ki-radio-unselected-rest-border: var(--ki-outline-high-em); /** color used by the radio component for unselected rest border. */
   --ki-radio-unselected-hover-bg: var(--ki-surface-s1); /** color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3. */
@@ -1465,6 +1499,9 @@
   --ki-radio-selected-active-bg: var(--ki-surface-s0); /** color used by the radio component for selected active background. */
   --ki-radio-selected-disabled-bg: var(--ki-surface-disabled-low-em); /** color used by the radio component for selected disabled background. */
   --ki-radio-selected-disabled-border: var(--ki-outline-med-em); /** color used by the radio component for selected disabled border. */
+  --ki-scroller-thumb-color: var(--ki-inverse-white-alpha-6); /** color used by the scroller component for the indicator thumb: Inverse_white/alpha_6, the exact variable bound to the scroll pill on both Scroller variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md). */
+  --ki-scroller-track-color: var(--ki-transparent-inverse); /** color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute. */
+  --ki-scroller-surface: var(--ki-transparent-inverse); /** color used by the scroller component for the viewport surface: transparent in onmars — the scroller shows the consumer's own surface; a theme may resolve a proper surface here (FR-007). */
   --ki-select-border-block-start-width: var(--ki-select-border-width); /** dimension used by the select component for border block start width. */
   --ki-select-border-block-end-width: var(--ki-select-border-width); /** dimension used by the select component for border block end width. */
   --ki-select-border-inline-start-width: var(--ki-select-border-width); /** dimension used by the select component for border inline start width. */
@@ -1530,6 +1567,12 @@
   --ki-tooltip-font-size: var(--ki-font-size-caption-2); /** dimension used by the tooltip component for font size. */
   --ki-tooltip-font-weight: var(--ki-font-weight-body-medium); /** font weight used by the tooltip component for font weight. */
   --ki-tooltip-line-height: var(--ki-font-line-height-caption-2); /** dimension used by the tooltip component for line height. */
+  --ki-video-scrim-color: var(--ki-inverse-white-alpha-6); /** color used by the video component for the overlay scrim behind the play control: Inverse_white/alpha_6, the exact variable bound to the Play halo on both Video variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer. */
+  --ki-video-backdrop-blur: var(--ki-effect-component-backdrop-blur); /** dimension used by the video component for the glass backdrop of the scrim and the play container (MarsUI Blur/24, identical to the button glass). material3 resolves to blur none via the semantic override. */
+  --ki-video-play-bg: var(--ki-surface-inverse-white); /** color used by the video component for the play container surface: Surface/inverse_white, the exact variable bound to the Icon_button fill (black over light, white over dark) — the control carries its own surface so glyph contrast never depends on the poster imagery (FR-008). */
+  --ki-video-play-fg: var(--ki-text-inverse-black); /** color used by the video component for the play glyph: Text/inverse_black, the counterpart of the inverse container surface (white over light, black over dark) — the glyph inherits it via currentColor; the -bg/-fg pair is swept by the contrast gate (FR-008). */
+  --ki-video-play-border-color: var(--ki-outline-primary-button-top); /** color used by the video component for the play container bevel: Outline/primary_button_top, the exact variable bound to the Icon_button stroke — the verified ki-button glass bevel. */
+  --ki-video-motion-duration: var(--ki-motion-duration-fast); /** duration used by the video component for the facade dismissal fade: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-013; disabled under reduced motion by construction, 024 precedent). */
   --ki-surface-secondary-med-em: var(--ki-surface-primary-med-em); /** Secondary accent surface. M3 md.sys.color.secondary (secondary tone 40 light / 80 dark). onmars is a single-accent theme: the secondary accent resolves to the primary accent surface. */
   --ki-surface-secondary-low-em: var(--ki-surface-primary-low-em); /** Secondary container surface. M3 md.sys.color.secondary-container (secondary tone 90 light / 30 dark). onmars single-accent: resolves to the primary container equivalent. */
   --ki-surface-tertiary-med-em: var(--ki-surface-primary-med-em); /** Tertiary accent surface. M3 md.sys.color.tertiary (tertiary tone 40 light / 80 dark). onmars is a single-accent theme: the tertiary accent resolves to the primary accent surface. */
@@ -1737,6 +1780,7 @@
   --ki-radio-selected-active-fg: var(--ki-surface-primary-high-em); /** color used by the radio component for selected active foreground. */
   --ki-radio-selected-active-border: var(--ki-outline-primary-high-em); /** color used by the radio component for selected active border. */
   --ki-radio-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the radio component for focus ring color. */
+  --ki-scroller-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the scroller component for the viewport focus ring: the keyboard-focusable scroll region (FR-005) adopts the ki-dialog focus-ring pair verbatim. */
   --ki-select-font-size: var(--ki-typography-size-body-1); /** dimension used by the select component for font size. */
   --ki-select-label-font-size: var(--ki-typography-size-caption-1); /** dimension used by the select component for label font size. */
   --ki-select-label-font-weight: var(--ki-typography-weight-body-medium); /** font weight used by the select component for label font weight. */
@@ -1799,6 +1843,8 @@
   --ki-textarea-invalid-placeholder-fg: var(--ki-text-med-em); /** color used by the textarea component for invalid placeholder foreground. */
   --ki-textarea-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the textarea component for focus ring color. */
   --ki-tooltip-shadow: var(--ki-elevation-e2); /** shadow used by the tooltip component for tooltip shadow. */
+  --ki-video-play-shadow: var(--ki-effect-component-primary-default-shadow); /** shadow used by the video component for the play container effects: the exact MarsUI glass pair on the Icon_button instance — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers (ki-status/ki-icon-button precedent). */
+  --ki-video-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the video component for the play control focus ring: the keyboard-reachable facade control (FR-004, S6) adopts the ki-dialog/ki-icon-button focus-ring pair verbatim. */
   --ki-alert-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-button-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring). */
   --ki-button-primary-neutral-disabled-fg: var(--ki-text-muted); /** color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification). */

@@ -1,0 +1,91 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-qr" />
+
+# ki-qr
+
+A machine-scannable QR code that hands a declared value — a link, a pairing
+payload — from the screen to a nearby camera, encoded locally and restyled
+entirely through tokens.
+
+**When to use** — hand a URL or machine-readable payload from the screen to
+a nearby camera device: login pairing, tickets and passes, "continue on
+mobile" links, Wi-Fi sharing. Declare `value` (encoded verbatim, always
+locally) and a purpose-stating `label`, and always offer the same payload
+through an accessible alternative next to the code — a visible link or
+copyable text — because a QR code is only useful to someone who can point a
+second device's camera at the screen.
+
+**When NOT to use** — data the person must read on this same screen (render
+text or a link), one-dimensional barcodes (out of scope), anything
+interactive (a QR code is not a button — pair it with a real control),
+secret values (anyone who can photograph the screen can decode them), or as
+the sole carrier of the payload (the accessible alternative is mandatory
+guidance).
+
+## Examples
+
+One attribute carries the content; the matrix is derived, never authored:
+
+```html
+<ki-qr value="https://onmars.dev" label="Open onmars.dev on your phone"></ki-qr>
+<a href="https://onmars.dev">onmars.dev</a>
+```
+
+The value is data, never behavior: it is encoded byte-for-byte as one UTF-8
+segment at error-correction level M and never interpreted, resolved,
+navigated to or fetched. Non-ASCII text round-trips exactly:
+
+```html
+<ki-qr value="Reunión mañana — Zúrich" label="Add the meeting to your phone"></ki-qr>
+```
+
+Malformed declarations never render a broken code: with no `value` (or a
+value beyond the ~2,331-byte capacity of the densest symbol) nothing renders
+and nothing errors — both are authoring mistakes, not error states. Unknown
+attributes copied from other design systems are ignored:
+
+```html
+<ki-qr label="Nothing to encode"></ki-qr>
+<!-- renders nothing -->
+<ki-qr value="https://onmars.dev" shape="round" label="Open"></ki-qr>
+<!-- default appearance, still decodes -->
+```
+
+## Customization
+
+| Token                    | Controls                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------- |
+| `--ki-qr-size`           | The code's square box (onmars: 120px; the code always stays 1:1)                |
+| `--ki-qr-color`          | Module and finder ink (scheme-stable black in both shipped themes)              |
+| `--ki-qr-background`     | The light tile behind the modules (scheme-stable white in both shipped themes)  |
+| `--ki-qr-module-radius`  | Data-module corner radius: 0 square (default), 4px full round dots              |
+| `--ki-qr-finder-radius`  | Finder-ring midline radius: 0 square (default), 14px the MarsUI round rings     |
+| `--ki-qr-quiet-zone`     | The light margin around the modules (onmars: 8px; material3: 16px)              |
+| `--ki-qr-radius`         | Tile corners (onmars: 0; material3: 12px)                                       |
+
+The MarsUI `Type` square|round axis is carried entirely by the two shape
+tokens (there is no `shape` attribute): inside the code's coordinate space
+one module measures 8px, so `--ki-qr-module-radius: 4px` is half a module —
+a full round dot — and `--ki-qr-finder-radius: 14px` reproduces the measured
+round finder rings; the inner-edge and center radii derive by construction.
+Themes MUST keep dark modules on a light tile in both color schemes at ≥3:1
+non-text contrast: an inverted code scans unreliably on common devices, so
+restyling never costs scannability. Part: `::part(code)` (the tile).
+
+## Accessibility
+
+- Exposed as exactly one non-interactive image (role `img`) named by
+  `label`, falling back to the encoded value — never an unnamed graphic,
+  never a fake button. Name the purpose ("Open onmars.dev on your phone"):
+  that is what tells assistive-technology users to look for the accessible
+  alternative.
+- The same payload MUST be reachable through an accessible alternative
+  (visible link, copyable text) placed next to the component — a QR code is
+  only useful to someone who can point a second camera at the screen. The
+  code never travels alone.
+- Never focusable, zero tab stops, no events, no pointer affordance.
+- With no value the component exposes nothing to assistive technology.
+- The matrix never mirrors in right-to-left documents; surrounding spacing
+  uses logical properties.
+- No motion, so `prefers-reduced-motion` is not applicable.

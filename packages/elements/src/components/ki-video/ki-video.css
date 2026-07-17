@@ -1,0 +1,110 @@
+/* Tokens only (Art. VI): every visual value resolves from --ki-video-*.
+ * Logical properties only (Art. IV): the play control centers through
+ * inset + auto margins, so RTL needs zero direction code.
+ *
+ * The frame fills the container's inline size and the slotted media keeps
+ * its own intrinsic aspect ratio (FR-006): the component never declares an
+ * aspect-ratio of its own — 16:9 is the design-source demonstration, not a
+ * constraint.
+ *
+ * Unrecognized attributes or values match nothing here and nothing in the
+ * component code, so the default appearance holds by construction — zero
+ * validation code (FR-009, badge/divider precedent). */
+
+:host {
+  display: block;
+}
+
+[part="frame"] {
+  position: relative;
+  inline-size: 100%;
+  overflow: hidden;
+  border-radius: var(--ki-video-frame-radius);
+}
+
+::slotted(video) {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+/* The play control (FR-001): the button's own box is the overlay scrim —
+ * the Figma Play halo — and the .control span inside it is the glass
+ * container. Centered by construction: inset 0 + auto margins on a
+ * fit-content box, direction-agnostic (RTL edge case). */
+[part="play"] {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  inline-size: fit-content;
+  block-size: fit-content;
+  display: flex;
+  padding: var(--ki-video-scrim-padding);
+  border: 0;
+  border-radius: var(--ki-video-scrim-radius);
+  background: var(--ki-video-scrim-color);
+  backdrop-filter: blur(var(--ki-video-backdrop-blur));
+  color: var(--ki-video-play-fg);
+  cursor: pointer;
+
+  /* The only motion in the component: the facade dismissal fade (FR-013),
+   * theme-token duration. Visibility interpolates discretely — it stays
+   * visible until the fade completes — so the button leaves the Tab order
+   * and the accessibility tree exactly when the yielded surface becomes
+   * the native player's. No motion is required to be functional. */
+  transition:
+    opacity var(--ki-video-motion-duration),
+    visibility var(--ki-video-motion-duration);
+}
+
+/* The glass container carries its own token surface so the glyph/container
+ * pair meets the 3:1 non-text minimum regardless of the poster imagery
+ * behind it (FR-008): the exact ki-button glass mechanics — inverse
+ * surface, hairline bevel, e1 drop + inner-white highlight, backdrop blur
+ * (each disabled by the material3 token values, never by markup). */
+.control {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--ki-video-play-size);
+  block-size: var(--ki-video-play-size);
+  border: var(--ki-video-play-border-width) solid var(--ki-video-play-border-color);
+  border-radius: var(--ki-video-play-radius);
+  background: var(--ki-video-play-bg);
+  box-shadow: var(--ki-video-play-shadow);
+  backdrop-filter: blur(var(--ki-video-backdrop-blur));
+}
+
+.glyph {
+  inline-size: var(--ki-video-play-icon-size);
+  block-size: var(--ki-video-play-icon-size);
+}
+
+[part="play"]:focus {
+  outline: none;
+}
+
+/* The facade's single Tab stop shows the theme's focus ring (FR-004, S6 —
+ * the ki-dialog focusable-surface precedent). */
+[part="play"]:focus-visible {
+  outline: var(--ki-video-focus-ring-width) solid var(--ki-video-focus-ring-color);
+  outline-offset: var(--ki-video-focus-ring-offset);
+}
+
+/* Dismissed facade (FR-002): input passes to the native player immediately;
+ * the fade completes and visibility then removes the button from the
+ * accessibility tree and the Tab order. The state never reverts. */
+.playing [part="play"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* FR-013 (Art. V): reduced motion dismisses the facade instantly — the
+ * computed transition durations resolve to zero (S12, SC-007). */
+@media (prefers-reduced-motion: reduce) {
+  [part="play"] {
+    transition: none;
+  }
+}

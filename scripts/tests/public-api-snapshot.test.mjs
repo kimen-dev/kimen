@@ -467,7 +467,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/004-fase-n-wave1.json',
+      '../../changes/api/005-fase-n-wave2.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -485,17 +485,25 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // ki-avatar + ki-avatar-group companion pair (spec 019-ki-avatar): 25
   // --ki-avatar-* and 26 --ki-avatar-group-* component token leaves (the
   // six-step size/font/glyph ramps plus group overlap/ring/counter).
-  // 25 components in total.
+  // Fase N wave 2 adds four additive simple elements: ki-scroller (spec
+  // 023-ki-scroller): 11 --ki-scroller-* component token leaves (thumb,
+  // track, gutter, surface and the focus-ring triple) — ki-indicator (spec
+  // 024-ki-indicator): 11 --ki-indicator-* component token leaves (resting
+  // dot, the current-dot quintet, gap, motion) — ki-video (spec
+  // 025-ki-video): 17 --ki-video-* component token leaves (frame, the play
+  // glass control, scrim, backdrop blur, focus ring, motion) — and ki-qr
+  // (spec 026-ki-qr): 7 --ki-qr-* component token leaves (size, ink, tile,
+  // quiet zone and the shape axis). 29 components in total.
   assert.equal(result.release, 'major');
   assert.equal(result.decision, 'passed');
   assert.deepEqual(result.removals, []);
   assert.deepEqual(result.newRootSymbols, []);
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].components).length, 25);
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].components).length, 29);
   assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].rootSymbols).length, 32);
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1262);
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1308);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1262,
+    1308,
   );
 });

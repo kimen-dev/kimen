@@ -24,7 +24,7 @@
     "check:tokens": "node scripts/gates/check-tokens.mjs",
     "check:component-inventory": "node scripts/gates/check-component-inventory.mjs",
     "check:packed-manifest": "node scripts/gates/check-packed-manifest.mjs",
-    "check:api": "node --test scripts/tests/css-token-surface.test.mjs scripts/tests/public-api.test.mjs scripts/tests/public-api-gate.test.mjs scripts/tests/public-api-snapshot.test.mjs && node scripts/gates/check-public-api.mjs --baseline changes/api/baselines/0.0.0.json --candidate packages/elements/generated/public-api.json --declaration changes/api/004-fase-n-wave1.json",
+    "check:api": "node --test scripts/tests/css-token-surface.test.mjs scripts/tests/public-api.test.mjs scripts/tests/public-api-gate.test.mjs scripts/tests/public-api-snapshot.test.mjs && node scripts/gates/check-public-api.mjs --baseline changes/api/baselines/0.0.0.json --candidate packages/elements/generated/public-api.json --declaration changes/api/005-fase-n-wave2.json",
     "generate:capabilities": "node scripts/gates/check-capabilities.mjs --generate",
     "check:capabilities": "node scripts/gates/check-capabilities.mjs --static-only",
     "test:mutation": "bash scripts/gates/run-mutation.sh",

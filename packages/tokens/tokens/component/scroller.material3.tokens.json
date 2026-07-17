@@ -1,0 +1,26 @@
+{
+  "ki": {
+    "scroller": {
+      "thumb-color": {
+        "$value": "{ki.outline.med-em}",
+        "$description": "Material 3 color used by the scroller component for the indicator thumb: M3 publishes no scrollbar guidance (defers to platform scrollbars), so the theme-author decision maps the thumb to md.sys.color.outline-variant (ki.outline.med-em, divider/tabs precedent)."
+      },
+      "thumb-thickness": {
+        "$value": "{ki.space.md}",
+        "$description": "Material 3 dimension used by the scroller component for the thumb cross size: 8dp flush thumb, the platform-scrollbar look M3 defers to (theme-author decision, no md.comp.scrollbar tokens exist)."
+      },
+      "thumb-radius": {
+        "$value": "{ki.radius.0}",
+        "$description": "Material 3 dimension used by the scroller component for the thumb shape: square-ended like the platform scrollbars M3 defers to (divider end-cap precedent)."
+      },
+      "gutter": {
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 dimension used by the scroller component for the thumb clearance: zero — the 8dp thumb fills the rail flush, platform style (rail = thumb-thickness + 2×gutter)."
+      },
+      "track-inset": {
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 dimension used by the scroller component for the rail end insets: zero — platform scrollbars run edge to edge (theme-author decision)."
+      }
+    }
+  }
+}

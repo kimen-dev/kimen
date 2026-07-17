@@ -15,6 +15,7 @@ import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 import { KiInputType } from "./components/ki-input/ki-input";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
+import { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 import { KiStatusTone } from "./components/ki-status/ki-status";
 import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
@@ -27,6 +28,7 @@ export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
 export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 export { KiInputType } from "./components/ki-input/ki-input";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
+export { KiScrollerOrientation } from "./components/ki-scroller/ki-scroller";
 export { KiStatusTone } from "./components/ki-status/ki-status";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export namespace Components {
@@ -342,6 +344,41 @@ export namespace Components {
         "variant": KiIconButtonVariant;
     }
     /**
+     * A non-interactive page-position indicator: one dot per position of a
+     * bounded sequence, exactly one highlighted as current.
+     * @whenToUse show the current position within a bounded, sequential set of
+     * peer views whose navigation lives elsewhere: carousel slides, unlabeled
+     * onboarding steps, gallery pages. Wire `count` and `current` (1-based) to
+     * the sequence the consumer renders and give it a `label` (required
+     * authoring: assistive technology reads one graphic named
+     * "<label>, <current> / <count>"). Below two positions an indicator carries
+     * no information.
+     * @whenNotToUse section navigation (ki-tabs), task completion or loading
+     * (ki-progress), labeled step flows (a stepper is a separate roadmap item),
+     * interactive pagination (a future feature — the indicator takes no focus
+     * and no input; navigation belongs to the composing carousel's own
+     * controls), or conveying quantity without a current position. Position
+     * changes are never announced by the indicator itself (no live region): the
+     * composing carousel owns announcements.
+     */
+    interface KiIndicator {
+        /**
+          * Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent).
+          * @default undefined
+         */
+        "count"?: number;
+        /**
+          * The current position, 1-based to match the exposed position text ("2 / 5"). Exactly one dot presents the current appearance whenever `count` >= 1: values above `count` clamp to the last position, values below 1 and non-numeric values fall back to the first (FR-003). Updates re-render in place — the highlight and the exposed text follow immediately, re-applying the normalization (FR-004).
+          * @default undefined
+         */
+        "current"?: number;
+        /**
+          * Accessible name of the sequence ("Slide position"). The exposed name combines it with the wordless numeric position — "<label>, <current> / <count>" — on a single non-interactive graphic; without a label the name degrades to the bare position text (documented as required authoring, FR-005). The label is never rendered visually and position changes are never announced (no live region, FR-006).
+          * @default undefined
+         */
+        "label"?: string;
+    }
+    /**
      * A token-styled single-line text field with native input semantics.
      * @whenToUse collect one line of free text from a person, always with a
      * visible `label`; choose the `type` and `autocomplete` that match the entry
@@ -472,6 +509,37 @@ export namespace Components {
         "value": number;
     }
     /**
+     * A machine-scannable QR code that hands a declared value — a link, a
+     * pairing payload — from the screen to a nearby camera, encoded locally
+     * and restyled entirely through tokens.
+     * @whenToUse hand a URL or machine-readable payload from the screen to a
+     * nearby camera device: login pairing, tickets and passes, "continue on
+     * mobile" links, Wi-Fi sharing. Declare `value` (encoded verbatim, always
+     * locally) and a purpose-stating `label` ("Open onmars.dev on your phone"),
+     * and always offer the same payload through an accessible alternative next
+     * to the code — a visible link or copyable text — because a QR code is only
+     * useful to someone who can point a second device's camera at the screen.
+     * @whenNotToUse data the person must read on this same screen (render text
+     * or a link), one-dimensional barcodes (out of scope), anything interactive
+     * (a QR code is not a button — pair it with a real control instead), secret
+     * values (anyone who can photograph the screen can decode them), or as the
+     * sole carrier of the payload (the accessible alternative is mandatory
+     * guidance). An always-empty ki-qr and a value beyond the ~2,331-byte
+     * capacity are authoring mistakes: both render nothing, silently.
+     */
+    interface KiQr {
+        /**
+          * Accessible name stating the code's purpose ("Open onmars.dev on your phone"). The component exposes exactly one non-interactive image named by it, falling back to the encoded value when absent (FR-005) — never an unnamed graphic. The label is never rendered visually, and naming the purpose is what tells assistive-technology users to look for the accessible alternative carrying the same payload (documented catalog guidance, FR-013).
+          * @default undefined
+         */
+        "label"?: string;
+        /**
+          * The exact text the code encodes — the single source of the content, encoded locally as one UTF-8 byte segment at error-correction level M, so an independent decoder recovers it byte-for-byte, including non-ASCII text (FR-001), and no network request is ever made — the value is data, never behavior: the component never interprets, resolves, navigates to or fetches it (FR-002). Changes re-encode in place. When absent, empty or beyond the capacity of the densest symbol (~2,331 bytes at level M), nothing renders and nothing errors (FR-003).
+          * @default undefined
+         */
+        "value"?: string;
+    }
+    /**
      * One option in a token-styled radio group.
      * @whenToUse place inside `ki-radio-group` when a person must choose
      * exactly one of a small visible set.
@@ -523,6 +591,34 @@ export namespace Components {
           * @default ''
          */
         "value": string;
+    }
+    /**
+     * A bounded scroll container that clips its content along one declared axis
+     * and replaces platform scrollbar chrome with a token-resolved indicator.
+     * @whenToUse a bounded region inside a view whose content can outgrow it:
+     * chat or message panes, code and log blocks, tag rows, sidebar navigation,
+     * tall menus inside cards. Give it bounds (its size comes entirely from your
+     * layout) and a `label` (required: the accessible name of the scroll
+     * region). Scrolling stays native — wheel, touch, keyboard and indicator
+     * drag operate the viewport directly.
+     * @whenNotToUse page-level scrolling (the browser's job), carousels or
+     * paginated media (future indicator/carousel patterns), virtualized long
+     * collections, multi-column tabular data, or nesting scrollers (v1
+     * guarantees a single scroll axis per region). Cross-axis overflow is an
+     * authoring mistake: the scroller scrolls its declared axis only and clips
+     * the other — wrap or size content on the cross axis.
+     */
+    interface KiScroller {
+        /**
+          * Accessible name of the scroll region ("Release notes", "Chat messages"). Assistive technology receives a `region` with this name whose slotted content keeps its own semantics (FR-006). Documented as required: a scroller without a label renders but exposes no accessible name and fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
+          * @default undefined
+         */
+        "label"?: string;
+        /**
+          * Declared scroll axis, mapping the design source's `Type` axis: `vertical` (default) scrolls the block axis, `horizontal` the inline axis. One axis per instance; the cross axis clips. A structural axis, never appearance — thickness, shape and colors of the indicator are per-theme `--ki-scroller-*` tokens. An unrecognized value matches no style selector and no `horizontal` code path, so the scroller keeps the default vertical behavior (fallback by CSS construction plus a single strict comparison — no validation code, FR-002/FR-009).
+          * @default 'vertical'
+         */
+        "orientation": KiScrollerOrientation;
     }
     /**
      * A form-associated select-only combobox for choosing one option from
@@ -760,6 +856,32 @@ export namespace Components {
          */
         "placement": KiTooltipPlacement;
     }
+    /**
+     * A themed video surface: a calm poster facade with exactly one accessible
+     * play control over a slotted native `<video>` element. From the first
+     * activation on, playback, scrubbing, volume, captions and fullscreen belong
+     * to the native player — Kimen ships no custom chrome.
+     * @whenToUse playable content the person deliberately chooses to watch —
+     * product tours, talks, tutorials, announcements — presented as a poster
+     * with one play control. Slot exactly one native `<video>` carrying its own
+     * `poster`, sources and `<track>` captions, omit `controls` (the component
+     * enables the native chrome the moment the facade yields, FR-002), and give
+     * the control a `label` (required: the accessible name of the play button).
+     * @whenNotToUse decorative background or ambient loops (plain CSS and
+     * `<video>` are the tool), audio-only content (a future audio component),
+     * embeds from streaming platforms that ship their own player chrome (use
+     * their embed), or static imagery (use an image, not a video). `autoplay`
+     * on the slotted media is unsupported: the facade's contract is that
+     * playback begins only by explicit user activation — never on scroll,
+     * hover or visibility (FR-003).
+     */
+    interface KiVideo {
+        /**
+          * Accessible name of the play control ("Play the product tour"). The control is a real button exposing role button with exactly this name; the frame contributes no role, name or state of its own (FR-004, FR-005). Documented as required: no default human-language string is baked in, and an unlabeled control renders but fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
+          * @default undefined
+         */
+        "label"?: string;
+    }
 }
 export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -972,6 +1094,30 @@ declare global {
         new (): HTMLKiIconButtonElement;
     };
     /**
+     * A non-interactive page-position indicator: one dot per position of a
+     * bounded sequence, exactly one highlighted as current.
+     * @whenToUse show the current position within a bounded, sequential set of
+     * peer views whose navigation lives elsewhere: carousel slides, unlabeled
+     * onboarding steps, gallery pages. Wire `count` and `current` (1-based) to
+     * the sequence the consumer renders and give it a `label` (required
+     * authoring: assistive technology reads one graphic named
+     * "<label>, <current> / <count>"). Below two positions an indicator carries
+     * no information.
+     * @whenNotToUse section navigation (ki-tabs), task completion or loading
+     * (ki-progress), labeled step flows (a stepper is a separate roadmap item),
+     * interactive pagination (a future feature — the indicator takes no focus
+     * and no input; navigation belongs to the composing carousel's own
+     * controls), or conveying quantity without a current position. Position
+     * changes are never announced by the indicator itself (no live region): the
+     * composing carousel owns announcements.
+     */
+    interface HTMLKiIndicatorElement extends Components.KiIndicator, HTMLStencilElement {
+    }
+    var HTMLKiIndicatorElement: {
+        prototype: HTMLKiIndicatorElement;
+        new (): HTMLKiIndicatorElement;
+    };
+    /**
      * A token-styled single-line text field with native input semantics.
      * @whenToUse collect one line of free text from a person, always with a
      * visible `label`; choose the `type` and `autocomplete` that match the entry
@@ -1048,6 +1194,31 @@ declare global {
         new (): HTMLKiProgressElement;
     };
     /**
+     * A machine-scannable QR code that hands a declared value — a link, a
+     * pairing payload — from the screen to a nearby camera, encoded locally
+     * and restyled entirely through tokens.
+     * @whenToUse hand a URL or machine-readable payload from the screen to a
+     * nearby camera device: login pairing, tickets and passes, "continue on
+     * mobile" links, Wi-Fi sharing. Declare `value` (encoded verbatim, always
+     * locally) and a purpose-stating `label` ("Open onmars.dev on your phone"),
+     * and always offer the same payload through an accessible alternative next
+     * to the code — a visible link or copyable text — because a QR code is only
+     * useful to someone who can point a second device's camera at the screen.
+     * @whenNotToUse data the person must read on this same screen (render text
+     * or a link), one-dimensional barcodes (out of scope), anything interactive
+     * (a QR code is not a button — pair it with a real control instead), secret
+     * values (anyone who can photograph the screen can decode them), or as the
+     * sole carrier of the payload (the accessible alternative is mandatory
+     * guidance). An always-empty ki-qr and a value beyond the ~2,331-byte
+     * capacity are authoring mistakes: both render nothing, silently.
+     */
+    interface HTMLKiQrElement extends Components.KiQr, HTMLStencilElement {
+    }
+    var HTMLKiQrElement: {
+        prototype: HTMLKiQrElement;
+        new (): HTMLKiQrElement;
+    };
+    /**
      * One option in a token-styled radio group.
      * @whenToUse place inside `ki-radio-group` when a person must choose
      * exactly one of a small visible set.
@@ -1074,6 +1245,28 @@ declare global {
     var HTMLKiRadioGroupElement: {
         prototype: HTMLKiRadioGroupElement;
         new (): HTMLKiRadioGroupElement;
+    };
+    /**
+     * A bounded scroll container that clips its content along one declared axis
+     * and replaces platform scrollbar chrome with a token-resolved indicator.
+     * @whenToUse a bounded region inside a view whose content can outgrow it:
+     * chat or message panes, code and log blocks, tag rows, sidebar navigation,
+     * tall menus inside cards. Give it bounds (its size comes entirely from your
+     * layout) and a `label` (required: the accessible name of the scroll
+     * region). Scrolling stays native — wheel, touch, keyboard and indicator
+     * drag operate the viewport directly.
+     * @whenNotToUse page-level scrolling (the browser's job), carousels or
+     * paginated media (future indicator/carousel patterns), virtualized long
+     * collections, multi-column tabular data, or nesting scrollers (v1
+     * guarantees a single scroll axis per region). Cross-axis overflow is an
+     * authoring mistake: the scroller scrolls its declared axis only and clips
+     * the other — wrap or size content on the cross axis.
+     */
+    interface HTMLKiScrollerElement extends Components.KiScroller, HTMLStencilElement {
+    }
+    var HTMLKiScrollerElement: {
+        prototype: HTMLKiScrollerElement;
+        new (): HTMLKiScrollerElement;
     };
     /**
      * A form-associated select-only combobox for choosing one option from
@@ -1209,6 +1402,31 @@ declare global {
         prototype: HTMLKiTooltipElement;
         new (): HTMLKiTooltipElement;
     };
+    /**
+     * A themed video surface: a calm poster facade with exactly one accessible
+     * play control over a slotted native `<video>` element. From the first
+     * activation on, playback, scrubbing, volume, captions and fullscreen belong
+     * to the native player — Kimen ships no custom chrome.
+     * @whenToUse playable content the person deliberately chooses to watch —
+     * product tours, talks, tutorials, announcements — presented as a poster
+     * with one play control. Slot exactly one native `<video>` carrying its own
+     * `poster`, sources and `<track>` captions, omit `controls` (the component
+     * enables the native chrome the moment the facade yields, FR-002), and give
+     * the control a `label` (required: the accessible name of the play button).
+     * @whenNotToUse decorative background or ambient loops (plain CSS and
+     * `<video>` are the tool), audio-only content (a future audio component),
+     * embeds from streaming platforms that ship their own player chrome (use
+     * their embed), or static imagery (use an image, not a video). `autoplay`
+     * on the slotted media is unsupported: the facade's contract is that
+     * playback begins only by explicit user activation — never on scroll,
+     * hover or visibility (FR-003).
+     */
+    interface HTMLKiVideoElement extends Components.KiVideo, HTMLStencilElement {
+    }
+    var HTMLKiVideoElement: {
+        prototype: HTMLKiVideoElement;
+        new (): HTMLKiVideoElement;
+    };
     interface HTMLElementTagNameMap {
         "ki-alert": HTMLKiAlertElement;
         "ki-avatar": HTMLKiAvatarElement;
@@ -1220,13 +1438,16 @@ declare global {
         "ki-dialog": HTMLKiDialogElement;
         "ki-divider": HTMLKiDividerElement;
         "ki-icon-button": HTMLKiIconButtonElement;
+        "ki-indicator": HTMLKiIndicatorElement;
         "ki-input": HTMLKiInputElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
         "ki-option": HTMLKiOptionElement;
         "ki-progress": HTMLKiProgressElement;
+        "ki-qr": HTMLKiQrElement;
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
+        "ki-scroller": HTMLKiScrollerElement;
         "ki-select": HTMLKiSelectElement;
         "ki-status": HTMLKiStatusElement;
         "ki-switch": HTMLKiSwitchElement;
@@ -1235,6 +1456,7 @@ declare global {
         "ki-tabs": HTMLKiTabsElement;
         "ki-textarea": HTMLKiTextareaElement;
         "ki-tooltip": HTMLKiTooltipElement;
+        "ki-video": HTMLKiVideoElement;
     }
 }
 declare namespace LocalJSX {
@@ -1560,6 +1782,41 @@ declare namespace LocalJSX {
         "variant"?: KiIconButtonVariant;
     }
     /**
+     * A non-interactive page-position indicator: one dot per position of a
+     * bounded sequence, exactly one highlighted as current.
+     * @whenToUse show the current position within a bounded, sequential set of
+     * peer views whose navigation lives elsewhere: carousel slides, unlabeled
+     * onboarding steps, gallery pages. Wire `count` and `current` (1-based) to
+     * the sequence the consumer renders and give it a `label` (required
+     * authoring: assistive technology reads one graphic named
+     * "<label>, <current> / <count>"). Below two positions an indicator carries
+     * no information.
+     * @whenNotToUse section navigation (ki-tabs), task completion or loading
+     * (ki-progress), labeled step flows (a stepper is a separate roadmap item),
+     * interactive pagination (a future feature — the indicator takes no focus
+     * and no input; navigation belongs to the composing carousel's own
+     * controls), or conveying quantity without a current position. Position
+     * changes are never announced by the indicator itself (no live region): the
+     * composing carousel owns announcements.
+     */
+    interface KiIndicator {
+        /**
+          * Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent).
+          * @default undefined
+         */
+        "count"?: number;
+        /**
+          * The current position, 1-based to match the exposed position text ("2 / 5"). Exactly one dot presents the current appearance whenever `count` >= 1: values above `count` clamp to the last position, values below 1 and non-numeric values fall back to the first (FR-003). Updates re-render in place — the highlight and the exposed text follow immediately, re-applying the normalization (FR-004).
+          * @default undefined
+         */
+        "current"?: number;
+        /**
+          * Accessible name of the sequence ("Slide position"). The exposed name combines it with the wordless numeric position — "<label>, <current> / <count>" — on a single non-interactive graphic; without a label the name degrades to the bare position text (documented as required authoring, FR-005). The label is never rendered visually and position changes are never announced (no live region, FR-006).
+          * @default undefined
+         */
+        "label"?: string;
+    }
+    /**
      * A token-styled single-line text field with native input semantics.
      * @whenToUse collect one line of free text from a person, always with a
      * visible `label`; choose the `type` and `autocomplete` that match the entry
@@ -1694,6 +1951,37 @@ declare namespace LocalJSX {
         "value"?: number;
     }
     /**
+     * A machine-scannable QR code that hands a declared value — a link, a
+     * pairing payload — from the screen to a nearby camera, encoded locally
+     * and restyled entirely through tokens.
+     * @whenToUse hand a URL or machine-readable payload from the screen to a
+     * nearby camera device: login pairing, tickets and passes, "continue on
+     * mobile" links, Wi-Fi sharing. Declare `value` (encoded verbatim, always
+     * locally) and a purpose-stating `label` ("Open onmars.dev on your phone"),
+     * and always offer the same payload through an accessible alternative next
+     * to the code — a visible link or copyable text — because a QR code is only
+     * useful to someone who can point a second device's camera at the screen.
+     * @whenNotToUse data the person must read on this same screen (render text
+     * or a link), one-dimensional barcodes (out of scope), anything interactive
+     * (a QR code is not a button — pair it with a real control instead), secret
+     * values (anyone who can photograph the screen can decode them), or as the
+     * sole carrier of the payload (the accessible alternative is mandatory
+     * guidance). An always-empty ki-qr and a value beyond the ~2,331-byte
+     * capacity are authoring mistakes: both render nothing, silently.
+     */
+    interface KiQr {
+        /**
+          * Accessible name stating the code's purpose ("Open onmars.dev on your phone"). The component exposes exactly one non-interactive image named by it, falling back to the encoded value when absent (FR-005) — never an unnamed graphic. The label is never rendered visually, and naming the purpose is what tells assistive-technology users to look for the accessible alternative carrying the same payload (documented catalog guidance, FR-013).
+          * @default undefined
+         */
+        "label"?: string;
+        /**
+          * The exact text the code encodes — the single source of the content, encoded locally as one UTF-8 byte segment at error-correction level M, so an independent decoder recovers it byte-for-byte, including non-ASCII text (FR-001), and no network request is ever made — the value is data, never behavior: the component never interprets, resolves, navigates to or fetches it (FR-002). Changes re-encode in place. When absent, empty or beyond the capacity of the densest symbol (~2,331 bytes at level M), nothing renders and nothing errors (FR-003).
+          * @default undefined
+         */
+        "value"?: string;
+    }
+    /**
      * One option in a token-styled radio group.
      * @whenToUse place inside `ki-radio-group` when a person must choose
      * exactly one of a small visible set.
@@ -1749,6 +2037,34 @@ declare namespace LocalJSX {
           * @default ''
          */
         "value"?: string;
+    }
+    /**
+     * A bounded scroll container that clips its content along one declared axis
+     * and replaces platform scrollbar chrome with a token-resolved indicator.
+     * @whenToUse a bounded region inside a view whose content can outgrow it:
+     * chat or message panes, code and log blocks, tag rows, sidebar navigation,
+     * tall menus inside cards. Give it bounds (its size comes entirely from your
+     * layout) and a `label` (required: the accessible name of the scroll
+     * region). Scrolling stays native — wheel, touch, keyboard and indicator
+     * drag operate the viewport directly.
+     * @whenNotToUse page-level scrolling (the browser's job), carousels or
+     * paginated media (future indicator/carousel patterns), virtualized long
+     * collections, multi-column tabular data, or nesting scrollers (v1
+     * guarantees a single scroll axis per region). Cross-axis overflow is an
+     * authoring mistake: the scroller scrolls its declared axis only and clips
+     * the other — wrap or size content on the cross axis.
+     */
+    interface KiScroller {
+        /**
+          * Accessible name of the scroll region ("Release notes", "Chat messages"). Assistive technology receives a `region` with this name whose slotted content keeps its own semantics (FR-006). Documented as required: a scroller without a label renders but exposes no accessible name and fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
+          * @default undefined
+         */
+        "label"?: string;
+        /**
+          * Declared scroll axis, mapping the design source's `Type` axis: `vertical` (default) scrolls the block axis, `horizontal` the inline axis. One axis per instance; the cross axis clips. A structural axis, never appearance — thickness, shape and colors of the indicator are per-theme `--ki-scroller-*` tokens. An unrecognized value matches no style selector and no `horizontal` code path, so the scroller keeps the default vertical behavior (fallback by CSS construction plus a single strict comparison — no validation code, FR-002/FR-009).
+          * @default 'vertical'
+         */
+        "orientation"?: KiScrollerOrientation;
     }
     /**
      * A form-associated select-only combobox for choosing one option from
@@ -2002,6 +2318,32 @@ declare namespace LocalJSX {
          */
         "placement"?: KiTooltipPlacement;
     }
+    /**
+     * A themed video surface: a calm poster facade with exactly one accessible
+     * play control over a slotted native `<video>` element. From the first
+     * activation on, playback, scrubbing, volume, captions and fullscreen belong
+     * to the native player — Kimen ships no custom chrome.
+     * @whenToUse playable content the person deliberately chooses to watch —
+     * product tours, talks, tutorials, announcements — presented as a poster
+     * with one play control. Slot exactly one native `<video>` carrying its own
+     * `poster`, sources and `<track>` captions, omit `controls` (the component
+     * enables the native chrome the moment the facade yields, FR-002), and give
+     * the control a `label` (required: the accessible name of the play button).
+     * @whenNotToUse decorative background or ambient loops (plain CSS and
+     * `<video>` are the tool), audio-only content (a future audio component),
+     * embeds from streaming platforms that ship their own player chrome (use
+     * their embed), or static imagery (use an image, not a video). `autoplay`
+     * on the slotted media is unsupported: the facade's contract is that
+     * playback begins only by explicit user activation — never on scroll,
+     * hover or visibility (FR-003).
+     */
+    interface KiVideo {
+        /**
+          * Accessible name of the play control ("Play the product tour"). The control is a real button exposing role button with exactly this name; the frame contributes no role, name or state of its own (FR-004, FR-005). Documented as required: no default human-language string is baked in, and an unlabeled control renders but fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
+          * @default undefined
+         */
+        "label"?: string;
+    }
 
     interface KiAlertAttributes {
         "tone": KiAlertTone | (string & {});
@@ -2056,6 +2398,11 @@ declare namespace LocalJSX {
         "label": string;
         "disabled": boolean;
     }
+    interface KiIndicatorAttributes {
+        "count": number;
+        "current": number;
+        "label": string;
+    }
     interface KiInputAttributes {
         "type": KiInputType;
         "label": string;
@@ -2078,6 +2425,10 @@ declare namespace LocalJSX {
         "shape": KiProgressShape;
         "label": string;
     }
+    interface KiQrAttributes {
+        "value": string;
+        "label": string;
+    }
     interface KiRadioAttributes {
         "value": string;
         "disabled": boolean;
@@ -2088,6 +2439,10 @@ declare namespace LocalJSX {
         "label": string;
         "required": boolean;
         "disabled": boolean;
+    }
+    interface KiScrollerAttributes {
+        "orientation": KiScrollerOrientation;
+        "label": string;
     }
     interface KiSelectAttributes {
         "label": string;
@@ -2135,6 +2490,9 @@ declare namespace LocalJSX {
         "label": string;
         "placement": KiTooltipPlacement;
     }
+    interface KiVideoAttributes {
+        "label": string;
+    }
 
     interface IntrinsicElements {
         "ki-alert": Omit<KiAlert, keyof KiAlertAttributes> & { [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K] };
@@ -2147,13 +2505,16 @@ declare namespace LocalJSX {
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] };
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
         "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] };
+        "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] };
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
         "ki-list": KiList;
         "ki-list-item": KiListItem;
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
         "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] };
+        "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
+        "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] };
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] };
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
@@ -2162,6 +2523,7 @@ declare namespace LocalJSX {
         "ki-tabs": Omit<KiTabs, keyof KiTabsAttributes> & { [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K] };
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
         "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
+        "ki-video": Omit<KiVideo, keyof KiVideoAttributes> & { [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -2294,6 +2656,25 @@ declare module "@stencil/core" {
              */
             "ki-icon-button": LocalJSX.IntrinsicElements["ki-icon-button"] & JSXBase.HTMLAttributes<HTMLKiIconButtonElement>;
             /**
+             * A non-interactive page-position indicator: one dot per position of a
+             * bounded sequence, exactly one highlighted as current.
+             * @whenToUse show the current position within a bounded, sequential set of
+             * peer views whose navigation lives elsewhere: carousel slides, unlabeled
+             * onboarding steps, gallery pages. Wire `count` and `current` (1-based) to
+             * the sequence the consumer renders and give it a `label` (required
+             * authoring: assistive technology reads one graphic named
+             * "<label>, <current> / <count>"). Below two positions an indicator carries
+             * no information.
+             * @whenNotToUse section navigation (ki-tabs), task completion or loading
+             * (ki-progress), labeled step flows (a stepper is a separate roadmap item),
+             * interactive pagination (a future feature — the indicator takes no focus
+             * and no input; navigation belongs to the composing carousel's own
+             * controls), or conveying quantity without a current position. Position
+             * changes are never announced by the indicator itself (no live region): the
+             * composing carousel owns announcements.
+             */
+            "ki-indicator": LocalJSX.IntrinsicElements["ki-indicator"] & JSXBase.HTMLAttributes<HTMLKiIndicatorElement>;
+            /**
              * A token-styled single-line text field with native input semantics.
              * @whenToUse collect one line of free text from a person, always with a
              * visible `label`; choose the `type` and `autocomplete` that match the entry
@@ -2345,6 +2726,26 @@ declare module "@stencil/core" {
              */
             "ki-progress": LocalJSX.IntrinsicElements["ki-progress"] & JSXBase.HTMLAttributes<HTMLKiProgressElement>;
             /**
+             * A machine-scannable QR code that hands a declared value — a link, a
+             * pairing payload — from the screen to a nearby camera, encoded locally
+             * and restyled entirely through tokens.
+             * @whenToUse hand a URL or machine-readable payload from the screen to a
+             * nearby camera device: login pairing, tickets and passes, "continue on
+             * mobile" links, Wi-Fi sharing. Declare `value` (encoded verbatim, always
+             * locally) and a purpose-stating `label` ("Open onmars.dev on your phone"),
+             * and always offer the same payload through an accessible alternative next
+             * to the code — a visible link or copyable text — because a QR code is only
+             * useful to someone who can point a second device's camera at the screen.
+             * @whenNotToUse data the person must read on this same screen (render text
+             * or a link), one-dimensional barcodes (out of scope), anything interactive
+             * (a QR code is not a button — pair it with a real control instead), secret
+             * values (anyone who can photograph the screen can decode them), or as the
+             * sole carrier of the payload (the accessible alternative is mandatory
+             * guidance). An always-empty ki-qr and a value beyond the ~2,331-byte
+             * capacity are authoring mistakes: both render nothing, silently.
+             */
+            "ki-qr": LocalJSX.IntrinsicElements["ki-qr"] & JSXBase.HTMLAttributes<HTMLKiQrElement>;
+            /**
              * One option in a token-styled radio group.
              * @whenToUse place inside `ki-radio-group` when a person must choose
              * exactly one of a small visible set.
@@ -2362,6 +2763,23 @@ declare module "@stencil/core" {
              * authored selection on options; set this group's `value` instead.
              */
             "ki-radio-group": LocalJSX.IntrinsicElements["ki-radio-group"] & JSXBase.HTMLAttributes<HTMLKiRadioGroupElement>;
+            /**
+             * A bounded scroll container that clips its content along one declared axis
+             * and replaces platform scrollbar chrome with a token-resolved indicator.
+             * @whenToUse a bounded region inside a view whose content can outgrow it:
+             * chat or message panes, code and log blocks, tag rows, sidebar navigation,
+             * tall menus inside cards. Give it bounds (its size comes entirely from your
+             * layout) and a `label` (required: the accessible name of the scroll
+             * region). Scrolling stays native — wheel, touch, keyboard and indicator
+             * drag operate the viewport directly.
+             * @whenNotToUse page-level scrolling (the browser's job), carousels or
+             * paginated media (future indicator/carousel patterns), virtualized long
+             * collections, multi-column tabular data, or nesting scrollers (v1
+             * guarantees a single scroll axis per region). Cross-axis overflow is an
+             * authoring mistake: the scroller scrolls its declared axis only and clips
+             * the other — wrap or size content on the cross axis.
+             */
+            "ki-scroller": LocalJSX.IntrinsicElements["ki-scroller"] & JSXBase.HTMLAttributes<HTMLKiScrollerElement>;
             /**
              * A form-associated select-only combobox for choosing one option from
              * declarative `ki-option` children.
@@ -2445,6 +2863,26 @@ declare module "@stencil/core" {
              * pattern for those cases.
              */
             "ki-tooltip": LocalJSX.IntrinsicElements["ki-tooltip"] & JSXBase.HTMLAttributes<HTMLKiTooltipElement>;
+            /**
+             * A themed video surface: a calm poster facade with exactly one accessible
+             * play control over a slotted native `<video>` element. From the first
+             * activation on, playback, scrubbing, volume, captions and fullscreen belong
+             * to the native player — Kimen ships no custom chrome.
+             * @whenToUse playable content the person deliberately chooses to watch —
+             * product tours, talks, tutorials, announcements — presented as a poster
+             * with one play control. Slot exactly one native `<video>` carrying its own
+             * `poster`, sources and `<track>` captions, omit `controls` (the component
+             * enables the native chrome the moment the facade yields, FR-002), and give
+             * the control a `label` (required: the accessible name of the play button).
+             * @whenNotToUse decorative background or ambient loops (plain CSS and
+             * `<video>` are the tool), audio-only content (a future audio component),
+             * embeds from streaming platforms that ship their own player chrome (use
+             * their embed), or static imagery (use an image, not a video). `autoplay`
+             * on the slotted media is unsupported: the facade's contract is that
+             * playback begins only by explicit user activation — never on scroll,
+             * hover or visibility (FR-003).
+             */
+            "ki-video": LocalJSX.IntrinsicElements["ki-video"] & JSXBase.HTMLAttributes<HTMLKiVideoElement>;
         }
     }
 }

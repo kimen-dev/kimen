@@ -1,0 +1,85 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-video" />
+
+# ki-video
+
+A themed video surface: a calm poster facade with exactly one accessible
+play control over a slotted native `<video>` element. From the first
+activation on, playback, scrubbing, volume, captions and fullscreen belong
+to the native player — Kimen ships no custom chrome.
+
+**When to use** — playable content the person deliberately chooses to watch:
+product tours, talks, tutorials, announcements. Slot exactly one native
+`<video>` carrying its own `poster`, sources and `<track>` captions, omit
+`controls` (the component enables the native chrome the moment the facade
+yields), and give the control a `label` (required: the accessible name of
+the play button).
+
+**When NOT to use** — decorative background or ambient loops (plain CSS and
+`<video>` are the tool), audio-only content (a future audio component),
+embeds from streaming platforms that ship their own player chrome (use
+their embed), or static imagery (use an image, not a video). `autoplay` on
+the slotted media is unsupported: playback begins only by explicit user
+activation — never on scroll, hover or visibility.
+
+## Examples
+
+The frame fills its container's inline size and the media keeps its own
+intrinsic aspect ratio (declare it with `width`/`height`; 16:9 is the
+design-source demonstration, not a constraint):
+
+```html
+<ki-video label="Play the product tour">
+  <video muted playsinline width="1280" height="720" poster="tour.jpg">
+    <source src="tour.webm" type="video/webm" />
+    <track kind="captions" srclang="es" label="Español" src="tour.es.vtt" />
+  </video>
+</ki-video>
+```
+
+Everything on the media element stays yours: sources, poster, tracks and
+the native media events (`play`, `pause`, `ended`, `timeupdate`, …) keep
+firing on the element you own — ki-video emits no events of its own. When
+the media ends, the native player's end state shows; the facade does not
+reappear (replay happens through the native controls).
+
+## Customization
+
+| Token                            | Controls                                                        |
+| -------------------------------- | --------------------------------------------------------------- |
+| `--ki-video-frame-radius`        | Frame corners (onmars: 16px; material3: 12dp)                   |
+| `--ki-video-scrim-color`         | Overlay scrim behind the play container (m3: transparent)       |
+| `--ki-video-scrim-radius`        | Overlay scrim shape (onmars: 28px)                              |
+| `--ki-video-scrim-padding`       | Scrim clearance around the play container (onmars: 16px)        |
+| `--ki-video-backdrop-blur`       | Glass backdrop of scrim and container (m3: none)                |
+| `--ki-video-play-size`           | Play container box (56px)                                       |
+| `--ki-video-play-icon-size`      | Play glyph size (28px)                                          |
+| `--ki-video-play-radius`         | Play container shape (onmars: 14px; material3: round)           |
+| `--ki-video-play-bg`             | Play container surface (onmars: inverse; m3: primary)           |
+| `--ki-video-play-fg`             | Play glyph, via `currentColor`                                  |
+| `--ki-video-play-border-color`   | Play container bevel (m3: none)                                 |
+| `--ki-video-play-border-width`   | Play container bevel width (hairline)                           |
+| `--ki-video-play-shadow`         | Play container effects (onmars glass pair; m3: none)            |
+| `--ki-video-focus-ring-*`        | Play control focus ring: `color`, `width`, `offset`             |
+| `--ki-video-motion-duration`     | Facade dismissal fade (zero under reduced motion)               |
+
+No variant, tone or size attributes: the Figma sm/md frames are scale
+demonstrations and shape is a theme decision. Shadow parts: `::part(frame)`
+(the media frame) and `::part(play)` (the play control).
+
+## Accessibility
+
+- The play control is a real button named from `label` — the facade's only
+  Tab stop, with the theme's visible focus ring. `label` is required: an
+  unnamed control renders but fails the accessibility audit.
+- The frame contributes no role, name or state of its own; the slotted
+  media's native semantics — including captions tracks — pass through
+  untouched.
+- The play control carries its own token surface, so glyph contrast meets
+  the 3:1 non-text minimum regardless of the poster imagery behind it.
+- The component never autoplays (WCAG 1.4.2 / 2.2.2 by construction);
+  playback starts only from the play control or, afterwards, the native
+  player, whose own keyboard support carries the session.
+- Facade dismissal is an instant visibility change under
+  `prefers-reduced-motion`: the fade's computed durations resolve to zero.

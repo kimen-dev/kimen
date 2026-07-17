@@ -1,0 +1,90 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-indicator" />
+
+# ki-indicator
+
+A non-interactive page-position indicator: one dot per position of a
+bounded sequence, exactly one highlighted as current.
+
+**When to use** — show the current position within a bounded, sequential
+set of peer views whose navigation lives elsewhere: carousel slides,
+unlabeled onboarding steps, gallery pages. Wire `count` and `current`
+(1-based) to the sequence and give it a `label` (required authoring: the
+exposed name reads "&lt;label&gt;, &lt;current&gt; / &lt;count&gt;").
+Below two positions an indicator carries no information.
+
+**When NOT to use** — section navigation (`ki-tabs`), task completion or
+loading (`ki-progress`), labeled step flows (a stepper is a separate
+roadmap item), interactive pagination (a future feature — the indicator
+takes no focus and no input; navigation belongs to the composing
+carousel's own controls), or conveying quantity without a current
+position.
+
+## Examples
+
+Two integers determine everything; the dots are generated, never authored
+as children:
+
+```html
+<ki-indicator label="Slide position" count="5" current="2"></ki-indicator>
+```
+
+Malformed declarations never break the row: an out-of-range `current`
+clamps to the sequence bounds, a non-numeric one falls back to the first
+position, and an invalid `count` renders no dots (an authoring mistake,
+not an error state):
+
+```html
+<ki-indicator label="Slide position" count="5" current="9"></ki-indicator>
+<!-- fifth dot current -->
+<ki-indicator label="Slide position" count="5" current="soon"></ki-indicator>
+<!-- first dot current -->
+```
+
+When the sequence advances, update `current` and the highlight and the
+exposed text follow immediately; the indicator itself announces nothing
+(no live region) — the composing carousel owns announcements:
+
+```js
+indicator.current = slideIndex + 1; // 1-based
+```
+
+## Customization
+
+| Token                                        | Controls                                                                 |
+| -------------------------------------------- | ------------------------------------------------------------------------ |
+| `--ki-indicator-gap`                         | Space between dots (onmars: 6px; material3: 8px)                         |
+| `--ki-indicator-dot-inline-size`             | Resting dot inline size (8px in both shipped themes)                     |
+| `--ki-indicator-dot-block-size`              | Resting dot block size (8px in both shipped themes)                      |
+| `--ki-indicator-dot-radius`                  | Resting dot shape (round by token, never an attribute)                   |
+| `--ki-indicator-dot-color`                   | Resting dot fill (scheme-inverse alpha: flips with dark)                 |
+| `--ki-indicator-dot-current-inline-size`     | Current dot inline size (onmars: 32px pill; material3: 8px circle)       |
+| `--ki-indicator-dot-current-block-size`      | Current dot block size (onmars: 16px; material3: 8px)                    |
+| `--ki-indicator-dot-current-radius`          | Current dot shape (round in both shipped themes)                         |
+| `--ki-indicator-dot-current-color`           | Current dot paint (onmars: ring alpha; material3: primary)               |
+| `--ki-indicator-dot-current-hole-block-size` | Transparent hole cut from the current pill (onmars: 6px; material3: 0)   |
+| `--ki-indicator-motion-duration`             | Highlight transfer transition (disabled under reduced motion)            |
+
+The current treatment is pure construction over these tokens: the ring
+width derives as `(block-size − hole) / 2`, so the onmars hollow pill and
+the material3 solid color-emphasized circle are the same CSS with
+different token values. Elongation, color or both are theme decisions,
+never attributes. Parts: `::part(indicator)` (the row), `::part(dot)`
+(every dot) and `::part(dot-current)` (additionally on the current dot).
+
+## Accessibility
+
+- Exposed as a single non-interactive graphic (role `img`) named
+  "&lt;label&gt;, &lt;current&gt; / &lt;count&gt;" — a wordless numeric
+  position, no hardcoded human language. Without a `label` the name
+  degrades to the bare position text; label it.
+- The individual dots are presentational: no role, name or state of their
+  own. Never focusable, zero tab stops, no events.
+- Position changes are NOT announced (no live region): an autoplaying
+  carousel driving a live indicator would spam screen-reader users. The
+  composing carousel owns announcements.
+- The highlight transfer honors `prefers-reduced-motion`: with it, the
+  highlight moves with zero transitional animation.
+- In right-to-left documents the dot order follows the writing direction:
+  the first position leads from the right edge.

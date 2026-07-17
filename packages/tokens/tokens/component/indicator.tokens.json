@@ -1,0 +1,54 @@
+{
+  "ki": {
+    "indicator": {
+      "gap": {
+        "$value": "{ki.space.sm}",
+        "$description": "dimension used by the indicator component for the space between dots: Space/sm, the exact variable bound as the 6px gap of the composed Nav_indicator row (node 14195:5866, specs/024-ki-indicator/design-extraction.md)."
+      },
+      "dot": {
+        "inline-size": {
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the indicator component for the resting dot inline size: Space/md, the exact variable bound as the 8px width of the State=inactive symbol; the painted circle is 8x8 centered in the 16px row line."
+        },
+        "block-size": {
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the indicator component for the resting dot block size: the 8px circle diameter measured in the State=inactive vector (the 16px frame height is row alignment, carried by the current dot)."
+        },
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the indicator component for the resting dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent)."
+        },
+        "color": {
+          "$value": "{ki.inverse-white.alpha-18}",
+          "$description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_18, the exact variable bound to every Indicator variant fill (Black/18 light, White/18 dark) — the scheme flip rides the semantic layer."
+        },
+        "current": {
+          "inline-size": {
+            "$value": "{ki.space.10xl}",
+            "$description": "dimension used by the indicator component for the current dot inline size: Space/10xl, the exact variable bound as the 32px width of the State=active pill — the MarsUI elongation lives here, never in an attribute (FR-007)."
+          },
+          "block-size": {
+            "$value": "{ki.space.3xl}",
+            "$description": "dimension used by the indicator component for the current dot block size: Space/3xl, the exact variable bound as the 16px height of the State=active pill (the full row line; declared family extension, design-extraction §Decisiones)."
+          },
+          "radius": {
+            "$value": "{ki.radius.round}",
+            "$description": "dimension used by the indicator component for the current dot shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent)."
+          },
+          "color": {
+            "$value": "{ki.inverse-white.alpha-18}",
+            "$description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_18, the exact fill of the State=active ring vector (Black/18 light, White/18 dark) — painted as the pill ring in onmars, as the solid dot in themes that zero the hole."
+          },
+          "hole-block-size": {
+            "$value": "{ki.space.sm}",
+            "$description": "dimension used by the indicator component for the block size of the transparent hole cut from the current pill: the 6px cutout height measured in the State=active vector; the ring width derives by construction as (current block size − hole block size) / 2 and a theme resolves it to zero for a solid dot (declared family extension, design-extraction §Decisiones)."
+          }
+        }
+      },
+      "motion-duration": {
+        "$value": "{ki.motion.duration.fast}",
+        "$description": "duration used by the indicator component for the highlight transfer between dots: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-008; disabled under reduced motion by construction)."
+      }
+    }
+  }
+}

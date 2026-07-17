@@ -1,0 +1,70 @@
+/* Tokens only (Art. VI): every visual value resolves from --ki-indicator-*.
+ * Logical properties only (Art. IV): the row is a plain flex line, so the
+ * dot order and the gap follow the writing direction natively (FR-010) —
+ * in RTL the first position's dot leads from the right edge with zero
+ * direction code.
+ *
+ * The current treatment is pure construction over theme tokens (FR-007):
+ * the MarsUI State=active vector is a pill with a pill-shaped hole cut out
+ * (even-odd path), which CSS reproduces exactly as a transparent-center box
+ * whose border carries the paint — ring width = (block-size − hole) / 2
+ * (5px onmars) and the hole's own radius derives from the border geometry
+ * (8 − 5 = 3, the measured cutout). A theme that zeroes the hole collapses
+ * the ring into a solid dot (material3's uniform circle), so elongation,
+ * color or both stay per-theme token decisions, never attributes.
+ *
+ * Unrecognized attributes or values match nothing here and nothing in the
+ * component code, so the default appearance holds by construction — zero
+ * validation code (FR-009, badge/divider precedent). */
+
+:host {
+  display: inline-flex;
+}
+
+[part="indicator"] {
+  display: flex;
+  align-items: center;
+  gap: var(--ki-indicator-gap);
+}
+
+[part~="dot"] {
+  box-sizing: border-box;
+  inline-size: var(--ki-indicator-dot-inline-size);
+  block-size: var(--ki-indicator-dot-block-size);
+  border-radius: var(--ki-indicator-dot-radius);
+  background: var(--ki-indicator-dot-color);
+
+  /* The only motion in the component: the highlight transfer (FR-008),
+   * theme-token duration, no motion required to be functional. */
+  transition:
+    inline-size var(--ki-indicator-motion-duration),
+    block-size var(--ki-indicator-motion-duration),
+    border-width var(--ki-indicator-motion-duration),
+    border-color var(--ki-indicator-motion-duration),
+    background-color var(--ki-indicator-motion-duration);
+}
+
+[part~="dot-current"] {
+  inline-size: var(--ki-indicator-dot-current-inline-size);
+  block-size: var(--ki-indicator-dot-current-block-size);
+  border-radius: var(--ki-indicator-dot-current-radius);
+
+  /* The hole is a cutout by definition (the Figma even-odd path shows the
+   * surface beneath), not a themable fill: transparent by construction. */
+  background: transparent;
+  border: calc(
+      (
+        var(--ki-indicator-dot-current-block-size) -
+        var(--ki-indicator-dot-current-hole-block-size)
+      ) /
+      2
+    )
+    solid var(--ki-indicator-dot-current-color);
+}
+
+/* FR-008 (Art. V): reduced motion moves the highlight with no transition. */
+@media (prefers-reduced-motion: reduce) {
+  [part~="dot"] {
+    transition: none;
+  }
+}

@@ -1,0 +1,95 @@
+/* Tokens only (Art. VI): every visual value resolves from --ki-scroller-*.
+ * Logical properties only (Art. IV) — except inside the webkit scrollbar
+ * section, where the platform defines physical-only box properties (the
+ * scoped disable below carries the justification).
+ *
+ * An unrecognized orientation value matches no [orientation="horizontal"]
+ * selector, so the vertical :host defaults apply — fallback by CSS
+ * construction, zero validation code (FR-002/FR-009, divider precedent).
+ *
+ * The indicator IS the native scrollbar, restyled from tokens (FR-004: the
+ * component never intercepts or re-implements scrolling):
+ * - Chromium/WebKit: ::-webkit-scrollbar* carries the full extraction —
+ *   rail = thumb-thickness + 2×gutter (4 + 2·2 = 8px onmars), pill radius,
+ *   Space/xs end insets. A custom webkit scrollbar occupies layout, so the
+ *   indicator appears and disappears measurably with overflow (FR-003).
+ * - Firefox: the standard scrollbar-width/scrollbar-color fallback keeps
+ *   thumb and track colors token-resolved (metrics stay platform).
+ * The host imposes no intrinsic size (FR-001): bounds come entirely from
+ * the consumer's layout — an unconstrained scroller never overflows. */
+
+:host {
+  display: block;
+}
+
+[part="viewport"] {
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: hidden;
+  overflow-block: auto;
+  background: var(--ki-scroller-surface);
+}
+
+[part="viewport"]:focus {
+  outline: none;
+}
+
+/* The keyboard-focusable scroll region (FR-005) shows the theme's focus
+ * ring — the ki-dialog focusable-surface precedent. */
+[part="viewport"]:focus-visible {
+  outline: var(--ki-scroller-focus-ring-width) solid var(--ki-scroller-focus-ring-color);
+  outline-offset: var(--ki-scroller-focus-ring-offset);
+}
+
+:host([orientation="horizontal"]) [part="viewport"] {
+  overflow: hidden;
+  overflow-inline: auto;
+}
+
+/* Webkit scrollbar chrome: vendor-prefixed pseudo-elements by platform
+ * contract, and physical-only sizing — a scrollbar box has no writing-mode;
+ * `width` sizes the vertical rail, `height` the horizontal one, so both are
+ * set to the same token expression and the axis picks its own. */
+/* stylelint-disable selector-no-vendor-prefix, csstools/use-logical */
+[part="viewport"]::-webkit-scrollbar {
+  width: calc(var(--ki-scroller-thumb-thickness) + 2 * var(--ki-scroller-gutter));
+  height: calc(var(--ki-scroller-thumb-thickness) + 2 * var(--ki-scroller-gutter));
+  background: var(--ki-scroller-track-color);
+}
+
+/* The gutter (design extraction): a transparent border clipped out of the
+ * paint keeps the thumb at its token thickness centered in the rail. The
+ * minimum thumb length runs along the scroll axis only — base rule =
+ * vertical; the horizontal override below swaps axes, so unknown
+ * orientation values keep the vertical behavior by construction. */
+[part="viewport"]::-webkit-scrollbar-thumb {
+  min-height: var(--ki-scroller-thumb-min-length);
+  background: var(--ki-scroller-thumb-color);
+  background-clip: padding-box;
+  border: var(--ki-scroller-gutter) solid transparent;
+  border-radius: var(--ki-scroller-thumb-radius);
+}
+
+:host([orientation="horizontal"]) [part="viewport"]::-webkit-scrollbar-thumb {
+  min-height: auto;
+  min-width: var(--ki-scroller-thumb-min-length);
+}
+
+/* Space/xs end insets from the extraction: the indicator's rail is inset
+ * at both ends, exactly like the Figma padding along the scroll axis. The
+ * content's scroll range is untouched. */
+[part="viewport"]::-webkit-scrollbar-track {
+  margin: var(--ki-scroller-track-inset);
+}
+/* stylelint-enable selector-no-vendor-prefix, csstools/use-logical */
+
+/* Standard fallback (Firefox): token-resolved thumb/track colors on the
+ * thin platform scrollbar. Guarded so engines with the webkit pseudos keep
+ * the full branded rail above instead of the standard-path downgrade. */
+@supports not selector(::-webkit-scrollbar) {
+  [part="viewport"] {
+    scrollbar-color: var(--ki-scroller-thumb-color) var(--ki-scroller-track-color);
+    scrollbar-width: thin;
+  }
+}

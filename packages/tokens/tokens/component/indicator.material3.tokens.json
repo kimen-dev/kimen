@@ -1,0 +1,34 @@
+{
+  "ki": {
+    "indicator": {
+      "gap": {
+        "$value": "{ki.space.md}",
+        "$description": "Material 3 dimension used by the indicator component for the space between dots: M3 ships no page indicator (the carousel conveys position through item size), so the theme applies the M2-era pager-dot convention of 8dp separation (theme-author decision, spec Assumptions)."
+      },
+      "dot": {
+        "color": {
+          "$value": "{ki.inverse-white.alpha-32}",
+          "$description": "Material 3 color used by the indicator component for the resting dot fill: the M2-era pager-dot convention dims resting dots to a low-emphasis on-surface alpha (theme-author decision; the scheme flip rides the semantic layer)."
+        },
+        "current": {
+          "inline-size": {
+            "$value": "{ki.space.md}",
+            "$description": "Material 3 dimension used by the indicator component for the current dot inline size: uniform 8dp circles per the M2-era pager-dot convention — emphasis is color, not elongation (theme-author decision, spec Assumptions)."
+          },
+          "block-size": {
+            "$value": "{ki.space.md}",
+            "$description": "Material 3 dimension used by the indicator component for the current dot block size: uniform 8dp circles per the M2-era pager-dot convention (theme-author decision)."
+          },
+          "color": {
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "Material 3 color used by the indicator component for the current dot: the M2-era pager-dot convention emphasizes the current position by color alone — the theme's primary surface role (theme-author decision)."
+          },
+          "hole-block-size": {
+            "$value": "{ki.space.zero}",
+            "$description": "Material 3 dimension used by the indicator component for the current pill hole: zero — the ring construction collapses to a solid dot, the uniform-circle M2 reading (rings width derives as (block size − hole) / 2)."
+          }
+        }
+      }
+    }
+  }
+}
