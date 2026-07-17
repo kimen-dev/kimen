@@ -184,6 +184,10 @@ async function mountGallery(component: VisualComponent, theme: Theme): Promise<H
     'background:var(--ki-surface-s0)',
     'color:var(--ki-text-high-em)',
     'font-family:var(--ki-font-family-body)',
+    // The deterministic focus lands inside text fields, whose blinking caret
+    // is nondeterministic at capture time (the gate caught a 45-125px phase
+    // drift on the ki-input galleries). Transparent caret, identical layout.
+    'caret-color:transparent',
   ].join(';');
   wrapper.innerHTML = gallery.html;
   document.body.append(wrapper);
