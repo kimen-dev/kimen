@@ -129,6 +129,16 @@ export default defineConfig({
         fastForwardClock: defineBrowserCommand(async ({ page }, milliseconds: number) => {
           await page.clock.fastForward(milliseconds);
         }),
+        // Visual captures must not inherit pointer position from earlier
+        // functional specs in the same browser page: their userEvent clicks
+        // leave the mouse wherever the last interaction happened, and a
+        // pointer resting over a gallery control flips its :hover state
+        // (the armed gate caught a stable 125/45px two-state drift on the
+        // ki-input galleries). (0,0) reproduces the mint-run conditions
+        // exactly — visual-baselines runs only visual specs, mouse untouched.
+        resetPointer: defineBrowserCommand(async ({ page }) => {
+          await page.mouse.move(0, 0);
+        }),
         resumeClock: defineBrowserCommand(async ({ page }) => {
           await page.clock.resume();
         }),
