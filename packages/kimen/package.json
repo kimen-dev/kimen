@@ -47,8 +47,8 @@
       },
       {
         "id": "runtime-catalog",
-        "state": "planned",
-        "text": "Neutral runtime component catalog planned"
+        "state": "available",
+        "text": "Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary"
       },
       {
         "id": "web-components-foundation",
