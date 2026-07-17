@@ -467,7 +467,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/002-ki-button-marsui-fidelity.json',
+      '../../changes/api/003-components-marsui-language.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -482,10 +482,10 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   assert.deepEqual(result.newRootSymbols, []);
   assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].components).length, 20);
   assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].rootSymbols).length, 32);
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 993);
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1002);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    993,
+    1002,
   );
 });

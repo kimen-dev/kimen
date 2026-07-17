@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "7f9a12f6d1f8f29ab96d82e0799d00543b3506cfa6940bea5b8f0efc36f9cb9a",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Fase V.2 (on top of V.1): the verified MarsUI language extends systemically to the remaining components - additive focus-ring shadow tokens (the V.1 double mechanism: Focus/primary glow under the existing opaque WCAG indicator) on input/textarea/select/checkbox/radio/switch/tab/alert-dismiss, and deliberate effective-value changes: select listbox shadow joins the elevation ramp (e3, M3 override e2), card=e1 and dialog=e4 replace migrated M2 approximations, alert info/warning fg completes the per-tone em pattern, tabs divider becomes the 1px hairline, progress indicator snaps to the med-em 500 fill pattern, select/radio hovers move to the neutral em ramps. Every extrapolation beyond a direct Figma source is declared in token descriptions for founder ratification. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}

@@ -29,8 +29,8 @@
       },
       "indicator": {
         "color": {
-          "$value": "{ki.surface.primary-high-em}",
-          "$description": "color used by the progress component for indicator color."
+          "$value": "{ki.surface.primary-med-em}",
+          "$description": "MarsUI fills components with the med-em (500) tone of the ramp (marsui-design-dna.md §1; specs/002-ki-button/design-extraction.md §§2.1-2.4 delta 500-vs-high-em): progress indicator uses surface.primary-med-em."
         }
       },
       "indeterminate": {

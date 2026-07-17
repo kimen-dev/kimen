@@ -7,8 +7,8 @@
       },
       "divider": {
         "width": {
-          "$value": "{ki.space.xxs}",
-          "$description": "dimension used by the tabs component for divider width."
+          "$value": "{ki.size.border.hairline}",
+          "$description": "MarsUI hairline stroke as the tab bar divider: same 1px divider width as the verified ki-list divider pattern (marsui-design-dna.md §1 outline hairlines)."
         },
         "color": {
           "$value": "{ki.outline.low-em}",

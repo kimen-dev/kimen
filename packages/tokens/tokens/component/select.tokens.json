@@ -93,8 +93,8 @@
           "$description": "color used by the select component for hover foreground."
         },
         "border": {
-          "$value": "{ki.outline.primary-high-em}",
-          "$description": "color used by the select component for hover border."
+          "$value": "{ki.outline.high-em}",
+          "$description": "color used by the select component for hover border. Brief §1: hover moves along the neutral outline em ramp (Black/12), matching ki-input/ki-textarea; the primary accent outline is the focus language (Focus/primary), not hover."
         },
         "label-fg": {
           "$value": "{ki.text.high-em}",
@@ -152,7 +152,12 @@
         },
         "elevation": {
           "$value": "{ki.elevation.shadow-med}",
-          "$description": "color used by the select component for listbox elevation."
+          "$description": "color used by the select component for listbox elevation. Legacy of the pre-ramp hand-composed listbox shadow, superseded by ki.select.listbox.shadow; kept published because the public-api contract requires deprecation metadata at least one minor before removal."
+        },
+        "shadow": {
+          "$value": "{ki.elevation.e3}",
+          "$type": "shadow",
+          "$description": "shadow used by the select component for the listbox: MarsUI elevation ramp e3 (brief §5), the medium floating-surface level, replacing the former hand-composed offset/color shadow. Declared level: e3 (M3 analog: menu/dialog band; material3 overrides to e2 = md.sys.elevation.level2 for menus)."
         },
         "padding": {
           "$value": "{ki.space.xs}",
@@ -179,6 +184,11 @@
         "offset": {
           "$value": "{ki.space.xxs}",
           "$description": "dimension used by the select component for focus ring offset."
+        },
+        "shadow": {
+          "$value": "{ki.focus.primary}",
+          "$type": "shadow",
+          "$description": "shadow used by the select component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md \u00a72.5, same double mechanism as ki-button: glow plus the opaque indicator)."
         }
       }
     }

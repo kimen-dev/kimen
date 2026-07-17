@@ -35,8 +35,8 @@
         "$type": "border"
       },
       "shadow": {
-        "$value": "{ki.foundation.migrated.component-dialog.dialog.shadow}",
-        "$description": "shadow used by the dialog component for dialog shadow.",
+        "$value": "{ki.elevation.e4}",
+        "$description": "Dialog elevation: MarsUI elevation ramp level e4 (brief §5, high modal surface; replaces the migrated approximation). material3 keeps its own e3 override (M3 dialog = level3).",
         "$type": "shadow"
       },
       "backdrop-bg": {

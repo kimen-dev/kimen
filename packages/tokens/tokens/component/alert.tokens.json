@@ -93,8 +93,8 @@
           "$description": "color used by the alert component for info background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}",
-          "$description": "color used by the alert component for info foreground."
+          "$value": "{ki.text.info-high-em}",
+          "$description": "color used by the alert component for info foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 7.3:1)."
         },
         "border": {
           "$value": "{ki.outline.info-med-em}",
@@ -107,8 +107,8 @@
           "$description": "color used by the alert component for warning background."
         },
         "fg": {
-          "$value": "{ki.text.high-em}",
-          "$description": "color used by the alert component for warning foreground."
+          "$value": "{ki.text.warning-high-em}",
+          "$description": "color used by the alert component for warning foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 5.5:1)."
         },
         "border": {
           "$value": "{ki.outline.warning-med-em}",
@@ -147,6 +147,11 @@
         "offset": {
           "$value": "{ki.space.xxs}",
           "$description": "dimension used by the alert component for focus ring offset."
+        },
+        "shadow": {
+          "$value": "{ki.focus.primary}",
+          "$type": "shadow",
+          "$description": "shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
         }
       }
     }

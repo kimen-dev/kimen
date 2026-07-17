@@ -62,11 +62,14 @@
   --_ki-select-label-fg: var(--ki-select-disabled-label-fg);
 }
 
+/* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
+   Focus/primary glow (3px spread at 40%) under the opaque outline ring. */
 [part="trigger"]:focus-visible {
   --_ki-select-bg: var(--ki-select-focus-bg);
   --_ki-select-fg: var(--ki-select-focus-fg);
   --_ki-select-border: var(--ki-select-focus-border);
 
+  box-shadow: var(--ki-select-focus-ring-shadow);
   outline-offset: var(--ki-select-focus-ring-offset);
   outline: var(--ki-select-focus-ring-width) solid var(--ki-select-focus-ring-color);
 }
@@ -95,8 +98,11 @@
 [part="listbox"] {
   background: var(--ki-select-listbox-bg);
   border-radius: var(--ki-select-listbox-radius);
-  box-shadow: 0 var(--ki-select-border-width) var(--ki-select-listbox-offset)
-    var(--ki-select-listbox-elevation);
+
+  /* MarsUI elevation ramp e3 (brief §5, medium floating surface) instead of
+     the former hand-composed offset/color shadow; material3 resolves the
+     token to md.sys.elevation.level2 (menu). */
+  box-shadow: var(--ki-select-listbox-shadow);
   box-sizing: border-box;
   inset-block-start: calc(100% + var(--ki-select-listbox-offset));
   inset-inline-start: 0;
