@@ -1,0 +1,47 @@
+/* Tokens only (Art. VI): every visual value resolves from --ki-status-*.
+ * Logical properties only (Art. IV): a single dot exposes no start/end
+ * order (FR-011).
+ *
+ * An unrecognized tone value matches no [tone="..."] selector, so the
+ * neutral base fill applies — fallback by CSS construction, zero
+ * validation code (FR-007, badge/divider precedent).
+ *
+ * The ring (FR-002) is a box-shadow spread layer stacked over the theme's
+ * dot effects (switch focus-ring precedent): it paints OUTSIDE the dot's
+ * box — the dot keeps its token size, exactly like the 4x4 Figma symbol
+ * whose 2px Outline stroke overflows the frame — and never shifts layout. */
+
+:host {
+  display: inline-flex;
+}
+
+[part="dot"] {
+  display: block;
+  inline-size: var(--ki-status-size);
+  block-size: var(--ki-status-size);
+  border-radius: var(--ki-status-radius);
+  background: var(--ki-status-neutral-color);
+  box-shadow: var(--ki-status-shadow);
+}
+
+:host([tone="success"]) [part="dot"] {
+  background: var(--ki-status-success-color);
+}
+
+:host([tone="danger"]) [part="dot"] {
+  background: var(--ki-status-danger-color);
+}
+
+:host([tone="info"]) [part="dot"] {
+  background: var(--ki-status-info-color);
+}
+
+:host([tone="warning"]) [part="dot"] {
+  background: var(--ki-status-warning-color);
+}
+
+:host([ring]) [part="dot"] {
+  box-shadow:
+    0 0 0 var(--ki-status-ring-width) var(--ki-status-ring-color),
+    var(--ki-status-shadow);
+}

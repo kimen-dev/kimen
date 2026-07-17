@@ -366,17 +366,28 @@ test('real legacy root remains frozen at 20 values and 12 explicitly deprecated 
   assert.equal(grown.values.length, 21);
 });
 
-test('real component inventory and package exports have the same 20 direct subpaths', async () => {
+test('real component inventory and package exports have the same 25 direct subpaths', async () => {
   const components = await discoverComponents({ workspaceRoot });
   const packageJson = JSON.parse(
     await readFile(join(workspaceRoot, 'packages/elements/package.json'), 'utf8'),
   );
   const directSubpaths = resolveComponentSubpaths(packageJson.exports, components);
 
-  assert.equal(components.length, 20);
+  assert.equal(components.length, 25);
+  // Components born after the 018 root freeze ship ONLY via their direct
+  // subpath: the frozen legacy root stays at 20 and is a strict subset of
+  // the inventory (Fase N wave 1 adds ki-divider, ki-icon-button and
+  // ki-status, specs 020-ki-divider, 022-ki-icon-button and 021-ki-status,
+  // plus the ki-avatar + ki-avatar-group companion pair, spec 019-ki-avatar).
+  const legacyTags = frozenLegacyRoot.values.map(({ from }) => from.split('/').at(-2)).sort();
+  const inventoryTags = components.map(({ tag }) => tag);
   assert.deepEqual(
-    components.map(({ tag }) => tag),
-    frozenLegacyRoot.values.map(({ from }) => from.split('/').at(-2)).sort(),
+    inventoryTags.filter((tag) => legacyTags.includes(tag)),
+    legacyTags,
+  );
+  assert.deepEqual(
+    inventoryTags.filter((tag) => !legacyTags.includes(tag)),
+    ['ki-avatar', 'ki-avatar-group', 'ki-divider', 'ki-icon-button', 'ki-status'],
   );
   assert.deepEqual(
     directSubpaths.map(({ publicSubpath }) => publicSubpath),

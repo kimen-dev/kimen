@@ -28,12 +28,12 @@
     {
       "name": "onmars tokens stylesheet",
       "path": "dist/css/tokens.css",
-      "limit": "10 KB"
+      "limit": "11 KB"
     },
     {
       "name": "material3 tokens stylesheet",
       "path": "dist/css/tokens.material3.css",
-      "limit": "10 KB"
+      "limit": "11 KB"
     }
   ],
   "nx": {

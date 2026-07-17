@@ -467,7 +467,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/003-components-marsui-language.json',
+      '../../changes/api/004-fase-n-wave1.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -476,16 +476,26 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   assert.equal(candidate.surfaceSha256, declaration.candidateSha256);
   // Fase T declares deliberate effective-value changes (dialog/tooltip/listbox
   // sizes, tooltip shadow, list dividers) — a digest-bound MAJOR declaration.
+  // Fase N wave 1 adds the additive ki-divider element (spec 020-ki-divider):
+  // 4 --ki-divider-* component token leaves — the additive ki-status element
+  // (spec 021-ki-status): 10 --ki-status-* component token leaves — the
+  // additive ki-icon-button element (spec 022-ki-icon-button): 195
+  // --ki-icon-button-* component token leaves (the button variant × tone ×
+  // state matrix applied to the icon-only control) — and the additive
+  // ki-avatar + ki-avatar-group companion pair (spec 019-ki-avatar): 25
+  // --ki-avatar-* and 26 --ki-avatar-group-* component token leaves (the
+  // six-step size/font/glyph ramps plus group overlap/ring/counter).
+  // 25 components in total.
   assert.equal(result.release, 'major');
   assert.equal(result.decision, 'passed');
   assert.deepEqual(result.removals, []);
   assert.deepEqual(result.newRootSymbols, []);
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].components).length, 20);
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].components).length, 25);
   assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].rootSymbols).length, 32);
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1002);
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1262);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1002,
+    1262,
   );
 });

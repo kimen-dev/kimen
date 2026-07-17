@@ -315,6 +315,527 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-avatar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiAvatar",
+          "customElement": true,
+          "tagName": "ki-avatar",
+          "description": "A static identity visual that shows a person or entity at a glance through\na fallback chain: portrait, then initials, then a built-in generic figure.",
+          "whenToUse": "a compact identity visual for a person or entity — a comment\nauthor, a contact list item, a project member. Set `label` whenever the\navatar is the only carrier of the identity (no adjacent visible name);\ncompose several into `ki-avatar-group` for a compact \"who is involved\"\nstack with overflow.",
+          "whenNotToUse": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), for presence/verification adornments overlaid on the corner\n(a future overlay concern shared with the nav badge), or unlabeled when no\nadjacent text names the identity.",
+          "attributes": [
+            {
+              "name": "initials",
+              "fieldName": "initials",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initials rendered verbatim as the second fallback step — never derived\nfrom the label, never truncated (FR-003). Catalog guidance: one to two\ncharacters. With a label present the initials are presentational;\nassistive technology receives the label alone."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name for the identity (\"Ana García\"). With a label the avatar\nis exposed as a named non-interactive image (role `img`) in every content\nmode — the portrait never carries a second alternative text of its own.\nWithout a label the avatar is decorative and contributes nothing to the\naccessibility tree; the identity must then live in adjacent visible text\n(FR-002)."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\""
+              },
+              "default": "'md'",
+              "description": "Size step over the shared scale; per-size metrics (box, initials font,\nfigure glyph) are per-theme component tokens, never hardcoded (FR-004).\nAn unrecognized value matches no style selector, so the avatar keeps the\ndefault medium metrics (fallback by CSS construction, FR-007)."
+            },
+            {
+              "name": "src",
+              "fieldName": "src",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Portrait URL, the first step of the fallback chain. When it fails to\nload — initially or at runtime — the avatar silently falls back to the\ninitials (or the generic figure) with no error, no layout change and no\nevent (FR-001). Loading policy follows the platform image defaults."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "initials",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Initials rendered verbatim as the second fallback step — never derived\nfrom the label, never truncated (FR-003). Catalog guidance: one to two\ncharacters. With a label present the initials are presentational;\nassistive technology receives the label alone.",
+              "attribute": "initials",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name for the identity (\"Ana García\"). With a label the avatar\nis exposed as a named non-interactive image (role `img`) in every content\nmode — the portrait never carries a second alternative text of its own.\nWithout a label the avatar is decorative and contributes nothing to the\naccessibility tree; the identity must then live in adjacent visible text\n(FR-002).",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\""
+              },
+              "default": "'md'",
+              "description": "Size step over the shared scale; per-size metrics (box, initials font,\nfigure glyph) are per-theme component tokens, never hardcoded (FR-004).\nAn unrecognized value matches no style selector, so the avatar keeps the\ndefault medium metrics (fallback by CSS construction, FR-007).",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Portrait URL, the first step of the fallback chain. When it fails to\nload — initially or at runtime — the avatar silently falls back to the\ninitials (or the generic figure) with no error, no layout change and no\nevent (FR-001). Loading policy follows the platform image defaults.",
+              "attribute": "src",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "avatar",
+              "description": "The avatar box: size, shape, surface, border and typography."
+            },
+            {
+              "name": "icon",
+              "description": "The built-in generic person figure of the last fallback step."
+            },
+            {
+              "name": "image",
+              "description": "The portrait image when `src` is set and loads."
+            },
+            {
+              "name": "initials",
+              "description": "The verbatim initials text of the second fallback step."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-avatar-bg",
+              "description": "color used by the avatar component for the initials/figure surface: Surface/primary_med_em, the exact variable behind the Type=text gradient start and the Type=icon solid fill. The Figma text gradient (primary_med_em -> primary_low_em_alpha 20%) is deliberately flattened to its solid start color — the token pipeline models no gradients and the spec defines one family-level bg (declared deviation, specs/019-ki-avatar/design-extraction.md decision 2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-avatar-border-color",
+              "description": "color used by the avatar component for the surface border: Outline/base_em (Black/3 light, White/3 dark), the exact variable on Type=text variants."
+            },
+            {
+              "name": "--ki-avatar-border-width",
+              "description": "dimension used by the avatar component for the surface border (MarsUI 1px hairline on Type=text; applied to the token surface behind initials and figure, dropped under a loaded portrait — design-extraction decision 4)."
+            },
+            {
+              "name": "--ki-avatar-fg",
+              "description": "color used by the avatar component for the initials text and the generic-figure glyph (via currentColor): Text/primary_on_primary, the exact variable on every Type=text variant."
+            },
+            {
+              "name": "--ki-avatar-font-family",
+              "description": "font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter)."
+            },
+            {
+              "name": "--ki-avatar-font-weight",
+              "description": "font weight used by the avatar component for initials (MarsUI Typeface/weight/body/medium: 600)."
+            },
+            {
+              "name": "--ki-avatar-lg-font-size",
+              "description": "dimension used by the avatar component for lg initials (MarsUI UI/Body 2: 15px)."
+            },
+            {
+              "name": "--ki-avatar-lg-icon-size",
+              "description": "dimension used by the avatar component for the lg generic-figure glyph (MarsUI Icon/User 24px, Space/7xl)."
+            },
+            {
+              "name": "--ki-avatar-lg-size",
+              "description": "dimension used by the avatar component for the lg box (48px circle, Figma Space/14xl)."
+            },
+            {
+              "name": "--ki-avatar-md-font-size",
+              "description": "dimension used by the avatar component for md initials (MarsUI UI/Para: body_1 13px)."
+            },
+            {
+              "name": "--ki-avatar-md-icon-size",
+              "description": "dimension used by the avatar component for the md generic-figure glyph (MarsUI Icon/User 20px, Space/5xl)."
+            },
+            {
+              "name": "--ki-avatar-md-size",
+              "description": "dimension used by the avatar component for the md box (40px circle, Figma Space/12xl, node 10011:947)."
+            },
+            {
+              "name": "--ki-avatar-radius",
+              "description": "dimension used by the avatar component for the shape: Radius/radius_round bound to every avatar variant — the circle is a radius token, never an attribute (002 shape precedent, FR-005)."
+            },
+            {
+              "name": "--ki-avatar-sm-font-size",
+              "description": "dimension used by the avatar component for sm initials (MarsUI UI/Caption 2: 12px)."
+            },
+            {
+              "name": "--ki-avatar-sm-icon-size",
+              "description": "dimension used by the avatar component for the sm generic-figure glyph (MarsUI Icon/User 18px, Space/4xl)."
+            },
+            {
+              "name": "--ki-avatar-sm-size",
+              "description": "dimension used by the avatar component for the sm box (32px circle, Figma Space/10xl)."
+            },
+            {
+              "name": "--ki-avatar-xl-font-size",
+              "description": "dimension used by the avatar component for xl initials (MarsUI UI/Title 2: 18px)."
+            },
+            {
+              "name": "--ki-avatar-xl-icon-size",
+              "description": "dimension used by the avatar component for the xl generic-figure glyph (MarsUI Icon/User 28px, Space/9xl)."
+            },
+            {
+              "name": "--ki-avatar-xl-size",
+              "description": "dimension used by the avatar component for the xl box (56px circle, Figma Space/16xl)."
+            },
+            {
+              "name": "--ki-avatar-xs-font-size",
+              "description": "dimension used by the avatar component for xs initials (MarsUI UI/Caption 1: 10px, same step as xxs — verified on Type=text Size=xs 10108:6226)."
+            },
+            {
+              "name": "--ki-avatar-xs-icon-size",
+              "description": "dimension used by the avatar component for the xs generic-figure glyph (MarsUI Icon/User 14px, same step as xxs — NOT the icon-button 16px ramp; verified on 10108:6230)."
+            },
+            {
+              "name": "--ki-avatar-xs-size",
+              "description": "dimension used by the avatar component for the xs box (24px circle, Figma Space/7xl)."
+            },
+            {
+              "name": "--ki-avatar-xxs-font-size",
+              "description": "dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px)."
+            },
+            {
+              "name": "--ki-avatar-xxs-icon-size",
+              "description": "dimension used by the avatar component for the xxs generic-figure glyph (MarsUI Icon/User 14px, Space/2xl)."
+            },
+            {
+              "name": "--ki-avatar-xxs-size",
+              "description": "dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md)."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiAvatar",
+          "declaration": {
+            "name": "KiAvatar",
+            "module": "dist/components/ki-avatar.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-avatar",
+          "declaration": {
+            "name": "KiAvatar",
+            "module": "dist/components/ki-avatar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-avatar-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiAvatarGroup",
+          "customElement": true,
+          "tagName": "ki-avatar-group",
+          "description": "A token-styled companion container that stacks `ki-avatar` children as one\noverlapping row with a configurable visible cap and a static \"+N\" overflow\ncounter.",
+          "whenToUse": "a compact \"who is involved\" stack — the members of a shared\ndocument, project card or event row — where space deserves only the first\nfew identities and an exact \"+N\" counter accounts for the rest.",
+          "whenNotToUse": "as a member picker or expandable overflow (future interactive\ngrouping — the counter is static text, never a button), for a single\nidentity (use `ki-avatar` alone), or with children other than `ki-avatar`\n(foreign markup is unsupported and not repaired, 016 precedent).",
+          "attributes": [
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Visible cap for the member stack. When the member count exceeds it, the\nfirst `max` members render followed by a \"+N\" counter accounting exactly\nfor the hidden rest. Without it — or when it is not a positive whole\nnumber — every member renders and no counter appears; malformed\nagent-generated markup never breaks the page (FR-009, S14, S15)."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\""
+              },
+              "default": "'md'",
+              "description": "Size step governing the metrics of every visible member and the counter\n(avatar vocabulary, FR-010). Member-declared sizes are overridden inside\na group so the stack stays uniform (S6). An unrecognized value matches\nno style selector, so the group keeps the default medium metrics\n(FR-007)."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "max",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Visible cap for the member stack. When the member count exceeds it, the\nfirst `max` members render followed by a \"+N\" counter accounting exactly\nfor the hidden rest. Without it — or when it is not a positive whole\nnumber — every member renders and no counter appears; malformed\nagent-generated markup never breaks the page (FR-009, S14, S15).",
+              "attribute": "max",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\" | \"xxs\""
+              },
+              "default": "'md'",
+              "description": "Size step governing the metrics of every visible member and the counter\n(avatar vocabulary, FR-010). Member-declared sizes are overridden inside\na group so the stack stays uniform (S6). An unrecognized value matches\nno style selector, so the group keeps the default medium metrics\n(FR-007).",
+              "attribute": "size",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "`ki-avatar` members, stacked in source order. Members beyond the\nvisible cap are neither rendered nor exposed to assistive technology."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "counter",
+              "description": "The static \"+N\" overflow text trailing the stack."
+            },
+            {
+              "name": "group",
+              "description": "The stack row containing the members and the counter."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-avatar-font-family",
+              "description": "font family used by the avatar component for initials (MarsUI Typeface/family/body: Inter)."
+            },
+            {
+              "name": "--ki-avatar-font-weight",
+              "description": "font weight used by the avatar component for initials (MarsUI Typeface/weight/body/medium: 600)."
+            },
+            {
+              "name": "--ki-avatar-group-counter-bg",
+              "description": "color used by the avatar group component for the +N counter surface: Surface/special/secondary_alpha_base, the exact variable on the secondary-button-styled counter of every capped Avatar_group frame."
+            },
+            {
+              "name": "--ki-avatar-group-counter-border-color",
+              "description": "color used by the avatar group component for the counter border: Outline/secondary_button_top, the exact variable on the counter pill (the secondary-button bevel top edge)."
+            },
+            {
+              "name": "--ki-avatar-group-counter-border-width",
+              "description": "dimension used by the avatar group component for the counter border (MarsUI 1px hairline on the counter pill)."
+            },
+            {
+              "name": "--ki-avatar-group-counter-fg",
+              "description": "color used by the avatar group component for the +N counter text: Text/high_em, the exact variable on the counter label."
+            },
+            {
+              "name": "--ki-avatar-group-counter-radius",
+              "description": "dimension used by the avatar group component for the counter shape: Radius/component/radius_* resolves to 1000 in the MarsUI Round mode — the pill is a radius token, never an attribute."
+            },
+            {
+              "name": "--ki-avatar-group-counter-shadow",
+              "description": "shadow used by the avatar group component for the counter effects: the exact Component_effect/secondary_default pair (drop 0/2/1.5/-0.5 Elevation/shadow + inner White/3 0/2/3) without its backdrop blur (glass restraint, 021 decision 3)."
+            },
+            {
+              "name": "--ki-avatar-group-lg-counter-font-size",
+              "description": "dimension used by the avatar group component for the lg counter text (body_2 15px on the 48px frame)."
+            },
+            {
+              "name": "--ki-avatar-group-lg-counter-padding-inline",
+              "description": "dimension used by the avatar group component for the lg counter inline padding (Space/xl 12px on the 48px frame)."
+            },
+            {
+              "name": "--ki-avatar-group-lg-overlap",
+              "description": "dimension used by the avatar group component for the lg member overlap (the exact -12px on the 48px Avatar_group frame 10090:2873)."
+            },
+            {
+              "name": "--ki-avatar-group-md-counter-font-size",
+              "description": "dimension used by the avatar group component for the md counter text (body_1 13px on the 40px frame)."
+            },
+            {
+              "name": "--ki-avatar-group-md-counter-padding-inline",
+              "description": "dimension used by the avatar group component for the md counter inline padding (Space/lg 10px on the 40px frame)."
+            },
+            {
+              "name": "--ki-avatar-group-md-overlap",
+              "description": "dimension used by the avatar group component for the md member overlap (the exact -12px on the 40px Avatar_group frame 10087:2701)."
+            },
+            {
+              "name": "--ki-avatar-group-ring-color",
+              "description": "color used by the avatar group component for the separating ring: transparent while the onmars ring width is zero (FR-008; a future theme may resolve both)."
+            },
+            {
+              "name": "--ki-avatar-group-ring-width",
+              "description": "dimension used by the avatar group component for the separating ring around stacked members: NO Avatar_group frame draws a ring (verified across all five sizes), so onmars resolves the capability to zero — the ring stays a theme decision, never an attribute (FR-008)."
+            },
+            {
+              "name": "--ki-avatar-group-sm-counter-font-size",
+              "description": "dimension used by the avatar group component for the sm counter text (body_1 13px on the 32px frame — one step above the sm initials, verified)."
+            },
+            {
+              "name": "--ki-avatar-group-sm-counter-padding-inline",
+              "description": "dimension used by the avatar group component for the sm counter inline padding (Space/md 8px on the 32px frame)."
+            },
+            {
+              "name": "--ki-avatar-group-sm-overlap",
+              "description": "dimension used by the avatar group component for the sm member overlap (the exact -8px on the 32px Avatar_group frame 10087:2601)."
+            },
+            {
+              "name": "--ki-avatar-group-xl-counter-font-size",
+              "description": "dimension used by the avatar group component for the xl counter text (title_2 18px on the 56px frame)."
+            },
+            {
+              "name": "--ki-avatar-group-xl-counter-padding-inline",
+              "description": "dimension used by the avatar group component for the xl counter inline padding (Space/2xl 14px on the 56px frame)."
+            },
+            {
+              "name": "--ki-avatar-group-xl-overlap",
+              "description": "dimension used by the avatar group component for the xl member overlap (the exact -12px on the 56px Avatar_group frame 10090:2973)."
+            },
+            {
+              "name": "--ki-avatar-group-xs-counter-font-size",
+              "description": "dimension used by the avatar group component for the xs counter text (synthesized 24px step following the avatar xs initials size, declared for founder review)."
+            },
+            {
+              "name": "--ki-avatar-group-xs-counter-padding-inline",
+              "description": "dimension used by the avatar group component for the xs counter inline padding (synthesized 24px step extending the verified 8/10/12/14 ramp, declared for founder review)."
+            },
+            {
+              "name": "--ki-avatar-group-xs-overlap",
+              "description": "dimension used by the avatar group component for the xs member overlap: the 24px group step exists in no Figma frame (five-step set), so it inherits the -8px overlap of the neighboring 20/32px frames (synthesized step, spec 019 Assumptions)."
+            },
+            {
+              "name": "--ki-avatar-group-xxs-counter-font-size",
+              "description": "dimension used by the avatar group component for the xxs counter text: no counter exists on the 20px frame, so the value follows the avatar xxs initials step (synthesized, declared for founder review)."
+            },
+            {
+              "name": "--ki-avatar-group-xxs-counter-padding-inline",
+              "description": "dimension used by the avatar group component for the xxs counter inline padding: the 20px Figma frame ships no counter, so the step extends the verified 8/10/12/14 ramp downward (synthesized, declared for founder review)."
+            },
+            {
+              "name": "--ki-avatar-group-xxs-overlap",
+              "description": "dimension used by the avatar group component for the xxs member overlap (the -8px stack step on the 20px Avatar_group frame — named xs in Figma, the vocabulary skew recorded in spec 019 Assumptions)."
+            },
+            {
+              "name": "--ki-avatar-lg-font-size",
+              "description": "dimension used by the avatar component for lg initials (MarsUI UI/Body 2: 15px)."
+            },
+            {
+              "name": "--ki-avatar-lg-icon-size",
+              "description": "dimension used by the avatar component for the lg generic-figure glyph (MarsUI Icon/User 24px, Space/7xl)."
+            },
+            {
+              "name": "--ki-avatar-lg-size",
+              "description": "dimension used by the avatar component for the lg box (48px circle, Figma Space/14xl)."
+            },
+            {
+              "name": "--ki-avatar-md-font-size",
+              "description": "dimension used by the avatar component for md initials (MarsUI UI/Para: body_1 13px)."
+            },
+            {
+              "name": "--ki-avatar-md-icon-size",
+              "description": "dimension used by the avatar component for the md generic-figure glyph (MarsUI Icon/User 20px, Space/5xl)."
+            },
+            {
+              "name": "--ki-avatar-md-size",
+              "description": "dimension used by the avatar component for the md box (40px circle, Figma Space/12xl, node 10011:947)."
+            },
+            {
+              "name": "--ki-avatar-radius",
+              "description": "dimension used by the avatar component for the shape: Radius/radius_round bound to every avatar variant — the circle is a radius token, never an attribute (002 shape precedent, FR-005)."
+            },
+            {
+              "name": "--ki-avatar-sm-font-size",
+              "description": "dimension used by the avatar component for sm initials (MarsUI UI/Caption 2: 12px)."
+            },
+            {
+              "name": "--ki-avatar-sm-icon-size",
+              "description": "dimension used by the avatar component for the sm generic-figure glyph (MarsUI Icon/User 18px, Space/4xl)."
+            },
+            {
+              "name": "--ki-avatar-sm-size",
+              "description": "dimension used by the avatar component for the sm box (32px circle, Figma Space/10xl)."
+            },
+            {
+              "name": "--ki-avatar-xl-font-size",
+              "description": "dimension used by the avatar component for xl initials (MarsUI UI/Title 2: 18px)."
+            },
+            {
+              "name": "--ki-avatar-xl-icon-size",
+              "description": "dimension used by the avatar component for the xl generic-figure glyph (MarsUI Icon/User 28px, Space/9xl)."
+            },
+            {
+              "name": "--ki-avatar-xl-size",
+              "description": "dimension used by the avatar component for the xl box (56px circle, Figma Space/16xl)."
+            },
+            {
+              "name": "--ki-avatar-xs-font-size",
+              "description": "dimension used by the avatar component for xs initials (MarsUI UI/Caption 1: 10px, same step as xxs — verified on Type=text Size=xs 10108:6226)."
+            },
+            {
+              "name": "--ki-avatar-xs-icon-size",
+              "description": "dimension used by the avatar component for the xs generic-figure glyph (MarsUI Icon/User 14px, same step as xxs — NOT the icon-button 16px ramp; verified on 10108:6230)."
+            },
+            {
+              "name": "--ki-avatar-xs-size",
+              "description": "dimension used by the avatar component for the xs box (24px circle, Figma Space/7xl)."
+            },
+            {
+              "name": "--ki-avatar-xxs-font-size",
+              "description": "dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px)."
+            },
+            {
+              "name": "--ki-avatar-xxs-icon-size",
+              "description": "dimension used by the avatar component for the xxs generic-figure glyph (MarsUI Icon/User 14px, Space/2xl)."
+            },
+            {
+              "name": "--ki-avatar-xxs-size",
+              "description": "dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md)."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiAvatarGroup",
+          "declaration": {
+            "name": "KiAvatarGroup",
+            "module": "dist/components/ki-avatar-group.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-avatar-group",
+          "declaration": {
+            "name": "KiAvatarGroup",
+            "module": "dist/components/ki-avatar-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-badge.js",
       "declarations": [
         {
@@ -2379,6 +2900,1033 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-divider.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiDivider",
+          "customElement": true,
+          "tagName": "ki-divider",
+          "description": "A static, decorative rule that visually separates adjacent content.",
+          "whenToUse": "visually separate adjacent content when spacing alone is not\nenough: grouped settings sections, toolbar action groups, distinct\nregions inside a card — horizontal between stacked content, vertical\nbetween side-by-side content.",
+          "whenNotToUse": "between list items (separation is a ki-list theme-token\ndecision), semantic thematic breaks in running prose (native `<hr>`\ncarries those semantics — the divider is deliberately decorative and\ncontributes no role, name or announcement), as a border or outline\nsubstitute (surface/border tokens), or purely decorative flourishes\n(prefer white space).",
+          "attributes": [
+            {
+              "name": "orientation",
+              "fieldName": "orientation",
+              "type": {
+                "text": "\"horizontal\" | \"vertical\""
+              },
+              "default": "'horizontal'",
+              "description": "Layout axis of the rule: `horizontal` spans the available inline size\nbetween stacked content; `vertical` stretches to the cross size its\nlayout context provides, between side-by-side content. A structural\naxis, never appearance — thickness, color, end caps and gutter are\nper-theme `--ki-divider-*` tokens. An unrecognized value matches no\nstyle selector, so the divider keeps the default horizontal rendering\n(fallback by CSS construction — no validation code)."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "orientation",
+              "privacy": "public",
+              "type": {
+                "text": "\"horizontal\" | \"vertical\""
+              },
+              "default": "'horizontal'",
+              "description": "Layout axis of the rule: `horizontal` spans the available inline size\nbetween stacked content; `vertical` stretches to the cross size its\nlayout context provides, between side-by-side content. A structural\naxis, never appearance — thickness, color, end caps and gutter are\nper-theme `--ki-divider-*` tokens. An unrecognized value matches no\nstyle selector, so the divider keeps the default horizontal rendering\n(fallback by CSS construction — no validation code).",
+              "attribute": "orientation",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "divider",
+              "description": "The rule itself: thickness, color and end-cap radius."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-divider-color",
+              "description": "color used by the divider component for the rule: Outline/base_em (Black/3 light, White/3 dark), the exact variable bound to every Figma divider variant and the same semantic role ki-list uses for item dividers."
+            },
+            {
+              "name": "--ki-divider-radius",
+              "description": "dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps)."
+            },
+            {
+              "name": "--ki-divider-spacing",
+              "description": "dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007)."
+            },
+            {
+              "name": "--ki-divider-thickness",
+              "description": "dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md)."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiDivider",
+          "declaration": {
+            "name": "KiDivider",
+            "module": "dist/components/ki-divider.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-divider",
+          "declaration": {
+            "name": "KiDivider",
+            "module": "dist/components/ki-divider.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-icon-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiIconButton",
+          "customElement": true,
+          "tagName": "ki-icon-button",
+          "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
+          "whenToUse": "a compact, widely understood action where space precludes a\nvisible label: toolbars, card and dialog corners (close), media transport,\ndata-row actions. Always supply `label`; usually pair with ki-tooltip for\nsighted discoverability.",
+          "whenNotToUse": "whenever a visible label fits (use ki-button), toggling\nstate (a future toggle icon button), navigation (use a link), or form\nsubmit/reset (ki-icon-button is not form-associated; use ki-button, whose\nvisible label communicates the consequence).",
+          "attributes": [
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button.\nWhen NOT to use: do not use disabled for pending/loading semantics."
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button)."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Token-backed square size. Every size keeps at least the 24×24 minimum\npointer target (`xs` sits exactly on it); choose the size that matches\nthe density of the surrounding UI.\nWhen NOT to use: do not shrink below `xs` through tokens; no theme may\ngo under the WCAG 2.2 pointer-target floor."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"neutral\" | \"success\""
+              },
+              "default": "'neutral'",
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`."
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+              },
+              "default": "'secondary'",
+              "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Prevents activation, removes the icon button from keyboard reach, and\nexposes the unavailable state through the internal native button.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Token-backed square size. Every size keeps at least the 24×24 minimum\npointer target (`xs` sits exactly on it); choose the size that matches\nthe density of the surrounding UI.\nWhen NOT to use: do not shrink below `xs` through tokens; no theme may\ngo under the WCAG 2.2 pointer-target floor.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"neutral\" | \"success\""
+              },
+              "default": "'neutral'",
+              "description": "Semantic intent for the action, independent of hierarchy. Use `success`\nfor confirming actions and `danger` for destructive actions.\nWhen NOT to use: do not use tone for visual hierarchy; use `variant`.",
+              "attribute": "tone",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "privacy": "public",
+              "type": {
+                "text": "\"ghost\" | \"primary\" | \"quaternary\" | \"secondary\" | \"tertiary\""
+              },
+              "default": "'secondary'",
+              "description": "Visual hierarchy for the action. Use `primary` for the single main action\nin a view and lower-emphasis variants for supporting actions.\nWhen NOT to use: do not use variant to signal success or danger; use\n`tone` for intent.",
+              "attribute": "variant",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "Exactly one decorative icon. The slot is presentational: its\ncontent is hidden from assistive technology and never contributes to the\naccessible name — that comes from `label` alone."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "button",
+              "description": "Internal native button."
+            },
+            {
+              "name": "icon",
+              "description": "Icon wrapper around the default slot."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-icon-button-backdrop-blur",
+              "description": "dimension used by the icon button component for the glass variants (primary/secondary) backdrop blur, identical to the button glass. material3 resolves to blur none via the semantic override."
+            },
+            {
+              "name": "--ki-icon-button-border-width",
+              "description": "dimension used by the icon button component for border width (MarsUI bevel/outline stroke: 1px, INNER — the square box already contains it)."
+            },
+            {
+              "name": "--ki-icon-button-focus-ring-color",
+              "description": "color used by the icon button component for focus ring color (the opaque WCAG 1.4.11 indicator)."
+            },
+            {
+              "name": "--ki-icon-button-focus-ring-offset",
+              "description": "dimension used by the icon button component for focus ring offset."
+            },
+            {
+              "name": "--ki-icon-button-focus-ring-shadow",
+              "description": "shadow used by the icon button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring, V.1 double mechanism)."
+            },
+            {
+              "name": "--ki-icon-button-focus-ring-width",
+              "description": "dimension used by the icon button component for focus ring width."
+            },
+            {
+              "name": "--ki-icon-button-ghost-active-shadow",
+              "description": "value used by the icon button component for ghost active shadow."
+            },
+            {
+              "name": "--ki-icon-button-ghost-danger-active-bg",
+              "description": "color used by the icon button component for ghost danger active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-danger-active-border",
+              "description": "color used by the icon button component for ghost danger active border."
+            },
+            {
+              "name": "--ki-icon-button-ghost-danger-active-fg",
+              "description": "color used by the icon button component for ghost danger active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-ghost-danger-hover-bg",
+              "description": "color used by the icon button component for ghost danger hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-danger-hover-border",
+              "description": "color used by the icon button component for ghost danger hover border."
+            },
+            {
+              "name": "--ki-icon-button-ghost-danger-hover-fg",
+              "description": "color used by the icon button component for ghost danger hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-ghost-danger-rest-bg",
+              "description": "color used by the icon button component for ghost danger rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-danger-rest-border",
+              "description": "color used by the icon button component for ghost danger rest border."
+            },
+            {
+              "name": "--ki-icon-button-ghost-danger-rest-fg",
+              "description": "color used by the icon button component for ghost danger rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-ghost-disabled-shadow",
+              "description": "value used by the icon button component for ghost disabled shadow (Figma disabled drops every shadow)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-hover-shadow",
+              "description": "value used by the icon button component for ghost hover shadow."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-active-bg",
+              "description": "color used by the icon button component for ghost neutral active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-active-border",
+              "description": "color used by the icon button component for ghost neutral active border."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-active-fg",
+              "description": "color used by the icon button component for ghost neutral active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-disabled-bg",
+              "description": "color used by the icon button component for ghost disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-disabled-border",
+              "description": "color used by the icon button component for ghost disabled border (Figma disabled drops the bevel)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-disabled-fg",
+              "description": "color used by the icon button component for ghost disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-hover-bg",
+              "description": "color used by the icon button component for ghost neutral hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-hover-border",
+              "description": "color used by the icon button component for ghost neutral hover border."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-hover-fg",
+              "description": "color used by the icon button component for ghost neutral hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-rest-bg",
+              "description": "color used by the icon button component for ghost neutral rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-rest-border",
+              "description": "color used by the icon button component for ghost neutral rest border."
+            },
+            {
+              "name": "--ki-icon-button-ghost-neutral-rest-fg",
+              "description": "color used by the icon button component for ghost neutral rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-ghost-rest-shadow",
+              "description": "value used by the icon button component for ghost rest shadow."
+            },
+            {
+              "name": "--ki-icon-button-ghost-success-active-bg",
+              "description": "color used by the icon button component for ghost success active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-success-active-border",
+              "description": "color used by the icon button component for ghost success active border."
+            },
+            {
+              "name": "--ki-icon-button-ghost-success-active-fg",
+              "description": "color used by the icon button component for ghost success active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-ghost-success-hover-bg",
+              "description": "color used by the icon button component for ghost success hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-success-hover-border",
+              "description": "color used by the icon button component for ghost success hover border."
+            },
+            {
+              "name": "--ki-icon-button-ghost-success-hover-fg",
+              "description": "color used by the icon button component for ghost success hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-ghost-success-rest-bg",
+              "description": "color used by the icon button component for ghost success rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-ghost-success-rest-border",
+              "description": "color used by the icon button component for ghost success rest border."
+            },
+            {
+              "name": "--ki-icon-button-ghost-success-rest-fg",
+              "description": "color used by the icon button component for ghost success rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-lg-icon-size",
+              "description": "dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px)."
+            },
+            {
+              "name": "--ki-icon-button-lg-radius",
+              "description": "dimension used by the icon button component for lg radius (12, same ramp as button)."
+            },
+            {
+              "name": "--ki-icon-button-lg-size",
+              "description": "dimension used by the icon button component for lg box (48px square)."
+            },
+            {
+              "name": "--ki-icon-button-md-icon-size",
+              "description": "dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3)."
+            },
+            {
+              "name": "--ki-icon-button-md-radius",
+              "description": "dimension used by the icon button component for md radius (10, same ramp as button)."
+            },
+            {
+              "name": "--ki-icon-button-md-size",
+              "description": "dimension used by the icon button component for md box (40px square, Figma node 10078:3129)."
+            },
+            {
+              "name": "--ki-icon-button-primary-active-shadow",
+              "description": "shadow used by the icon button component for primary active shadow (MarsUI Component_effect/primary_default; MarsUI defines no pressed state, mirrors rest)."
+            },
+            {
+              "name": "--ki-icon-button-primary-danger-active-bg",
+              "description": "color used by the icon button component for primary danger active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-primary-danger-active-border",
+              "description": "color used by the icon button component for primary danger active border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-primary-danger-active-fg",
+              "description": "color used by the icon button component for primary danger active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-primary-danger-hover-bg",
+              "description": "color used by the icon button component for primary danger hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-primary-danger-hover-border",
+              "description": "color used by the icon button component for primary danger hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-primary-danger-hover-fg",
+              "description": "color used by the icon button component for primary danger hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-primary-danger-rest-bg",
+              "description": "color used by the icon button component for primary danger rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-primary-danger-rest-border",
+              "description": "color used by the icon button component for primary danger rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-primary-danger-rest-fg",
+              "description": "color used by the icon button component for primary danger rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-primary-disabled-shadow",
+              "description": "value used by the icon button component for primary disabled shadow (Figma disabled drops every shadow)."
+            },
+            {
+              "name": "--ki-icon-button-primary-hover-overlay",
+              "description": "color used by the icon button component for the primary hover overlay layer (MarsUI hover_overlay, identical to the button overlay)."
+            },
+            {
+              "name": "--ki-icon-button-primary-hover-shadow",
+              "description": "shadow used by the icon button component for primary hover shadow (MarsUI Component_effect/primary_hover)."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-active-bg",
+              "description": "color used by the icon button component for primary neutral active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-active-border",
+              "description": "color used by the icon button component for primary neutral active border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-active-fg",
+              "description": "color used by the icon button component for primary neutral active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-disabled-bg",
+              "description": "color used by the icon button component for primary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification)."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-disabled-border",
+              "description": "color used by the icon button component for primary disabled border (Figma disabled drops the bevel)."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-disabled-fg",
+              "description": "color used by the icon button component for primary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification)."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-hover-bg",
+              "description": "color used by the icon button component for primary neutral hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-hover-border",
+              "description": "color used by the icon button component for primary neutral hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-hover-fg",
+              "description": "color used by the icon button component for primary neutral hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-rest-bg",
+              "description": "color used by the icon button component for primary neutral rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-rest-border",
+              "description": "color used by the icon button component for primary neutral rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-primary-neutral-rest-fg",
+              "description": "color used by the icon button component for primary neutral rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-primary-rest-border-bottom",
+              "description": "color used by the icon button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom, identical to the button bevel)."
+            },
+            {
+              "name": "--ki-icon-button-primary-rest-shadow",
+              "description": "shadow used by the icon button component for primary rest shadow (MarsUI Component_effect/primary_default)."
+            },
+            {
+              "name": "--ki-icon-button-primary-success-active-bg",
+              "description": "color used by the icon button component for primary success active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-primary-success-active-border",
+              "description": "color used by the icon button component for primary success active border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-primary-success-active-fg",
+              "description": "color used by the icon button component for primary success active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-primary-success-hover-bg",
+              "description": "color used by the icon button component for primary success hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-primary-success-hover-border",
+              "description": "color used by the icon button component for primary success hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-primary-success-hover-fg",
+              "description": "color used by the icon button component for primary success hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-primary-success-rest-bg",
+              "description": "color used by the icon button component for primary success rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-primary-success-rest-border",
+              "description": "color used by the icon button component for primary success rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-primary-success-rest-fg",
+              "description": "color used by the icon button component for primary success rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-active-shadow",
+              "description": "value used by the icon button component for quaternary active shadow."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-danger-active-bg",
+              "description": "color used by the icon button component for quaternary danger active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-danger-active-border",
+              "description": "color used by the icon button component for quaternary danger active border."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-danger-active-fg",
+              "description": "color used by the icon button component for quaternary danger active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-danger-hover-bg",
+              "description": "color used by the icon button component for quaternary danger hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-danger-hover-border",
+              "description": "color used by the icon button component for quaternary danger hover border."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-danger-hover-fg",
+              "description": "color used by the icon button component for quaternary danger hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-danger-rest-bg",
+              "description": "color used by the icon button component for quaternary danger rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-danger-rest-border",
+              "description": "color used by the icon button component for quaternary danger rest border."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-danger-rest-fg",
+              "description": "color used by the icon button component for quaternary danger rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-disabled-shadow",
+              "description": "value used by the icon button component for quaternary disabled shadow (Figma disabled drops every shadow)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-hover-shadow",
+              "description": "value used by the icon button component for quaternary hover shadow."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-active-bg",
+              "description": "color used by the icon button component for quaternary neutral active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-active-border",
+              "description": "color used by the icon button component for quaternary neutral active border."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-active-fg",
+              "description": "color used by the icon button component for quaternary neutral active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-disabled-bg",
+              "description": "color used by the icon button component for quaternary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-disabled-border",
+              "description": "color used by the icon button component for quaternary disabled border (Figma disabled drops the bevel)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-disabled-fg",
+              "description": "color used by the icon button component for quaternary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-hover-bg",
+              "description": "color used by the icon button component for quaternary neutral hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-hover-border",
+              "description": "color used by the icon button component for quaternary neutral hover border."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-hover-fg",
+              "description": "color used by the icon button component for quaternary neutral hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-rest-bg",
+              "description": "color used by the icon button component for quaternary neutral rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-rest-border",
+              "description": "color used by the icon button component for quaternary neutral rest border."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-neutral-rest-fg",
+              "description": "color used by the icon button component for quaternary neutral rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-rest-shadow",
+              "description": "value used by the icon button component for quaternary rest shadow."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-success-active-bg",
+              "description": "color used by the icon button component for quaternary success active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-success-active-border",
+              "description": "color used by the icon button component for quaternary success active border."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-success-active-fg",
+              "description": "color used by the icon button component for quaternary success active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-success-hover-bg",
+              "description": "color used by the icon button component for quaternary success hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-success-hover-border",
+              "description": "color used by the icon button component for quaternary success hover border."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-success-hover-fg",
+              "description": "color used by the icon button component for quaternary success hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-success-rest-bg",
+              "description": "color used by the icon button component for quaternary success rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-success-rest-border",
+              "description": "color used by the icon button component for quaternary success rest border."
+            },
+            {
+              "name": "--ki-icon-button-quaternary-success-rest-fg",
+              "description": "color used by the icon button component for quaternary success rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-secondary-active-shadow",
+              "description": "shadow used by the icon button component for secondary active shadow (MarsUI Component_effect/secondary_default; MarsUI defines no pressed state, mirrors rest)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-danger-active-bg",
+              "description": "color used by the icon button component for secondary danger active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-danger-active-border",
+              "description": "color used by the icon button component for secondary danger active border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-danger-active-fg",
+              "description": "color used by the icon button component for secondary danger active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-secondary-danger-hover-bg",
+              "description": "color used by the icon button component for secondary danger hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-danger-hover-border",
+              "description": "color used by the icon button component for secondary danger hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-danger-hover-fg",
+              "description": "color used by the icon button component for secondary danger hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-secondary-danger-rest-bg",
+              "description": "color used by the icon button component for secondary danger rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-danger-rest-border",
+              "description": "color used by the icon button component for secondary danger rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-danger-rest-fg",
+              "description": "color used by the icon button component for secondary danger rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-secondary-disabled-shadow",
+              "description": "value used by the icon button component for secondary disabled shadow (Figma disabled drops every shadow)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-hover-overlay",
+              "description": "color used by the icon button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, identical to the button overlay)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-hover-shadow",
+              "description": "shadow used by the icon button component for secondary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-active-bg",
+              "description": "color used by the icon button component for secondary neutral active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-active-border",
+              "description": "color used by the icon button component for secondary neutral active border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-active-fg",
+              "description": "color used by the icon button component for secondary neutral active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-disabled-bg",
+              "description": "color used by the icon button component for secondary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-disabled-border",
+              "description": "color used by the icon button component for secondary disabled border (Figma disabled drops the bevel)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-disabled-fg",
+              "description": "color used by the icon button component for secondary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-hover-bg",
+              "description": "color used by the icon button component for secondary neutral hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-hover-border",
+              "description": "color used by the icon button component for secondary neutral hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-hover-fg",
+              "description": "color used by the icon button component for secondary neutral hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-rest-bg",
+              "description": "color used by the icon button component for secondary neutral rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-rest-border",
+              "description": "color used by the icon button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-neutral-rest-fg",
+              "description": "color used by the icon button component for secondary neutral rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-secondary-rest-border-bottom",
+              "description": "color used by the icon button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom, identical to the button bevel)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-rest-shadow",
+              "description": "shadow used by the icon button component for secondary rest shadow (MarsUI Component_effect/secondary_default)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-success-active-bg",
+              "description": "color used by the icon button component for secondary success active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-success-active-border",
+              "description": "color used by the icon button component for secondary success active border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-success-active-fg",
+              "description": "color used by the icon button component for secondary success active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-secondary-success-hover-bg",
+              "description": "color used by the icon button component for secondary success hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-success-hover-border",
+              "description": "color used by the icon button component for secondary success hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-success-hover-fg",
+              "description": "color used by the icon button component for secondary success hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-secondary-success-rest-bg",
+              "description": "color used by the icon button component for secondary success rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-success-rest-border",
+              "description": "color used by the icon button component for secondary success rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-icon-button-secondary-success-rest-fg",
+              "description": "color used by the icon button component for secondary success rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-sm-icon-size",
+              "description": "dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px)."
+            },
+            {
+              "name": "--ki-icon-button-sm-radius",
+              "description": "dimension used by the icon button component for sm radius (8, same ramp as button)."
+            },
+            {
+              "name": "--ki-icon-button-sm-size",
+              "description": "dimension used by the icon button component for sm box (32px square)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-active-shadow",
+              "description": "shadow used by the icon button component for tertiary active shadow (MarsUI Component_effect/migrated tertiary ramp; MarsUI defines no pressed state, mirrors rest)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-danger-active-bg",
+              "description": "color used by the icon button component for tertiary danger active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-danger-active-border",
+              "description": "color used by the icon button component for tertiary danger active border."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-danger-active-fg",
+              "description": "color used by the icon button component for tertiary danger active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-danger-hover-bg",
+              "description": "color used by the icon button component for tertiary danger hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-danger-hover-border",
+              "description": "color used by the icon button component for tertiary danger hover border."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-danger-hover-fg",
+              "description": "color used by the icon button component for tertiary danger hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-danger-rest-bg",
+              "description": "color used by the icon button component for tertiary danger rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-danger-rest-border",
+              "description": "color used by the icon button component for tertiary danger rest border."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-danger-rest-fg",
+              "description": "color used by the icon button component for tertiary danger rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-disabled-shadow",
+              "description": "value used by the icon button component for tertiary disabled shadow (Figma disabled drops every shadow)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-hover-shadow",
+              "description": "shadow used by the icon button component for tertiary hover shadow (MarsUI Component_effect/migrated tertiary ramp)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-active-bg",
+              "description": "color used by the icon button component for tertiary neutral active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-active-border",
+              "description": "color used by the icon button component for tertiary neutral active border."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-active-fg",
+              "description": "color used by the icon button component for tertiary neutral active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-disabled-bg",
+              "description": "color used by the icon button component for tertiary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-disabled-border",
+              "description": "color used by the icon button component for tertiary disabled border (Figma disabled drops the bevel)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-disabled-fg",
+              "description": "color used by the icon button component for tertiary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-hover-bg",
+              "description": "color used by the icon button component for tertiary neutral hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-hover-border",
+              "description": "color used by the icon button component for tertiary neutral hover border."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-hover-fg",
+              "description": "color used by the icon button component for tertiary neutral hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-rest-bg",
+              "description": "color used by the icon button component for tertiary neutral rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-rest-border",
+              "description": "color used by the icon button component for tertiary neutral rest border."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-neutral-rest-fg",
+              "description": "color used by the icon button component for tertiary neutral rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-rest-shadow",
+              "description": "shadow used by the icon button component for tertiary rest shadow (MarsUI Component_effect/migrated tertiary ramp)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-success-active-bg",
+              "description": "color used by the icon button component for tertiary success active background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-success-active-border",
+              "description": "color used by the icon button component for tertiary success active border."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-success-active-fg",
+              "description": "color used by the icon button component for tertiary success active foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-success-hover-bg",
+              "description": "color used by the icon button component for tertiary success hover background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-success-hover-border",
+              "description": "color used by the icon button component for tertiary success hover border."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-success-hover-fg",
+              "description": "color used by the icon button component for tertiary success hover foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-success-rest-bg",
+              "description": "color used by the icon button component for tertiary success rest background (same semantic reference as the button matrix, 002)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-success-rest-border",
+              "description": "color used by the icon button component for tertiary success rest border."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-success-rest-fg",
+              "description": "color used by the icon button component for tertiary success rest foreground — the icon inherits it via currentColor."
+            },
+            {
+              "name": "--ki-icon-button-xl-icon-size",
+              "description": "dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px)."
+            },
+            {
+              "name": "--ki-icon-button-xl-radius",
+              "description": "dimension used by the icon button component for xl radius (14, same ramp as button)."
+            },
+            {
+              "name": "--ki-icon-button-xl-size",
+              "description": "dimension used by the icon button component for xl box (56px square)."
+            },
+            {
+              "name": "--ki-icon-button-xs-icon-size",
+              "description": "dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon)."
+            },
+            {
+              "name": "--ki-icon-button-xs-radius",
+              "description": "dimension used by the icon button component for xs radius (Figma Radius/component/radius_xs 6, same ramp as button)."
+            },
+            {
+              "name": "--ki-icon-button-xs-size",
+              "description": "dimension used by the icon button component for xs box (24px square, Figma Space/7xl)."
+            },
+            {
+              "name": "--ki-transparent-inverse",
+              "description": "semantic color for transparent inverse."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiIconButton",
+          "declaration": {
+            "name": "KiIconButton",
+            "module": "dist/components/ki-icon-button.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-icon-button",
+          "declaration": {
+            "name": "KiIconButton",
+            "module": "dist/components/ki-icon-button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-input.js",
       "declarations": [
         {
@@ -4165,6 +5713,154 @@
           "declaration": {
             "name": "KiSelect",
             "module": "dist/components/ki-select.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-status.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiStatus",
+          "customElement": true,
+          "tagName": "ki-status",
+          "description": "A tiny, non-interactive status dot that marks the state of a nearby item.",
+          "whenToUse": "mark a state with minimal footprint adjacent to (or overlaid\non) the item it describes: presence on an avatar, health of a service\nlist entry, connection state in a toolbar. Label it (`label`) or pair it\nwith adjacent visible text — color is never the only carrier of the\nmeaning (WCAG 1.4.1).",
+          "whenNotToUse": "short labeled status text (that pill is ki-badge — this dot\nnever renders text), notification counters or the overlay attachment\nmechanism (a future, separate nav-badge concern), messages that need\nattention or announcement (ki-alert — the dot has no live region),\nprogress or loading (ki-progress). An unlabeled dot without adjacent\nvisible text is an authoring mistake (WCAG 1.4.1).",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name for the state (\"Online\", \"Build failing\"). With a\nlabel the dot is exposed to assistive technology as a named\nnon-interactive image (role `img`); without one it is decorative and\ncontributes nothing to the accessibility tree — the meaning must then\nlive in adjacent visible text (FR-003, FR-008). The label is never\nrendered visually: visible status text belongs to ki-badge. Runtime\nchanges are not announced (no live region, FR-005)."
+            },
+            {
+              "name": "ring",
+              "fieldName": "ring",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a separating ring around the dot for placement over media (an\navatar photo), keeping it distinguishable from the pixels beneath. A\nper-instance functional axis — MarsUI ships Outline=True|False as\nsibling variants under one theme (recorded deviation from the 002\ntoken-only rule) — while ring width and color stay per-theme\n`--ki-status-ring-*` tokens. The ring paints outside the dot's box and\nnever shifts layout."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Semantic intent, never appearance: each tone resolves its fill from\nthe per-theme `--ki-status-{tone}-color` tokens. An unrecognized value\nmatches no style selector, so the dot keeps the neutral appearance\n(fallback by CSS construction — no validation code, FR-007)."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name for the state (\"Online\", \"Build failing\"). With a\nlabel the dot is exposed to assistive technology as a named\nnon-interactive image (role `img`); without one it is decorative and\ncontributes nothing to the accessibility tree — the meaning must then\nlive in adjacent visible text (FR-003, FR-008). The label is never\nrendered visually: visible status text belongs to ki-badge. Runtime\nchanges are not announced (no live region, FR-005).",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "ring",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a separating ring around the dot for placement over media (an\navatar photo), keeping it distinguishable from the pixels beneath. A\nper-instance functional axis — MarsUI ships Outline=True|False as\nsibling variants under one theme (recorded deviation from the 002\ntoken-only rule) — while ring width and color stay per-theme\n`--ki-status-ring-*` tokens. The ring paints outside the dot's box and\nnever shifts layout.",
+              "attribute": "ring",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Semantic intent, never appearance: each tone resolves its fill from\nthe per-theme `--ki-status-{tone}-color` tokens. An unrecognized value\nmatches no style selector, so the dot keeps the neutral appearance\n(fallback by CSS construction — no validation code, FR-007).",
+              "attribute": "tone",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "dot",
+              "description": "The dot itself: size, tone fill, radius, ring and effects."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-status-danger-color",
+              "description": "color used by the status component for the danger tone fill: Surface/danger_med_em, the exact variable bound to the Type=danger Status variant (Danger/500)."
+            },
+            {
+              "name": "--ki-status-info-color",
+              "description": "color used by the status component for the info tone fill: no Figma Status variant ships an info Type, so the fill extrapolates the verified med-em 500 pattern to the Info ramp (001 contract, 010/015 precedent) — declared for founder ratification."
+            },
+            {
+              "name": "--ki-status-neutral-color",
+              "description": "color used by the status component for the neutral tone fill: Surface/disabled_high_em, the exact variable bound to the Type=disabled Status variant (Gray/500 light, White/32 dark) — MarsUI's disabled gray maps to the charter neutral tone (spec Assumptions)."
+            },
+            {
+              "name": "--ki-status-radius",
+              "description": "dimension used by the status component for the dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent)."
+            },
+            {
+              "name": "--ki-status-ring-color",
+              "description": "color used by the status component for the separating ring: Outline/inverse_black, the exact variable bound to Outline=True variants — white over light surfaces, black over dark ones, so the ring reads as a cutout from the underlying media (FR-002)."
+            },
+            {
+              "name": "--ki-status-ring-width",
+              "description": "dimension used by the status component for the separating ring: the 2px stroke on every Outline=True Status variant (FR-002)."
+            },
+            {
+              "name": "--ki-status-shadow",
+              "description": "shadow used by the status component for the dot effects: the exact MarsUI pair on every Status variant — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers. The effect's backdrop blur is deliberately NOT applied: a 4px dot has no glass surface to blur (brief §5 perf note, glass restraint)."
+            },
+            {
+              "name": "--ki-status-size",
+              "description": "dimension used by the status component for the dot: the MarsUI 4px dot, Space/xs bound to every Status variant (specs/021-ki-status/design-extraction.md). One size per theme, never an attribute (FR-006)."
+            },
+            {
+              "name": "--ki-status-success-color",
+              "description": "color used by the status component for the success tone fill: Surface/success_med_em, the exact variable bound to the Type=success Status variant (Success/500)."
+            },
+            {
+              "name": "--ki-status-warning-color",
+              "description": "color used by the status component for the warning tone fill: Surface/warning_med_em, the exact variable bound to the Type=warning Status variant (Warning/500)."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiStatus",
+          "declaration": {
+            "name": "KiStatus",
+            "module": "dist/components/ki-status.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-status",
+          "declaration": {
+            "name": "KiStatus",
+            "module": "dist/components/ki-status.js"
           }
         }
       ]

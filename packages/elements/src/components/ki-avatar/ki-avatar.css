@@ -1,0 +1,91 @@
+/* Tokens only (Art. VI): every visual value resolves from a --ki-avatar-*
+ * token. Logical properties only (Art. IV).
+ *
+ * The private --_avatar-* indirection resolves the per-size metrics once:
+ * the base is the md step, each recognized size attribute overrides it, and
+ * an unrecognized value matches no selector so md applies — fallback by CSS
+ * construction, zero validation code (FR-004, FR-007, status precedent).
+ * ki-avatar-group re-declares the same private properties from its outer
+ * tree via ::slotted, which the cascade lets win over :host, so a group
+ * uniformly overrides member-declared sizes (FR-010, S6). */
+
+:host {
+  --_avatar-size: var(--ki-avatar-md-size);
+  --_avatar-font-size: var(--ki-avatar-md-font-size);
+  --_avatar-icon-size: var(--ki-avatar-md-icon-size);
+
+  display: inline-flex;
+}
+
+:host([size="xxs"]) {
+  --_avatar-size: var(--ki-avatar-xxs-size);
+  --_avatar-font-size: var(--ki-avatar-xxs-font-size);
+  --_avatar-icon-size: var(--ki-avatar-xxs-icon-size);
+}
+
+:host([size="xs"]) {
+  --_avatar-size: var(--ki-avatar-xs-size);
+  --_avatar-font-size: var(--ki-avatar-xs-font-size);
+  --_avatar-icon-size: var(--ki-avatar-xs-icon-size);
+}
+
+:host([size="sm"]) {
+  --_avatar-size: var(--ki-avatar-sm-size);
+  --_avatar-font-size: var(--ki-avatar-sm-font-size);
+  --_avatar-icon-size: var(--ki-avatar-sm-icon-size);
+}
+
+:host([size="lg"]) {
+  --_avatar-size: var(--ki-avatar-lg-size);
+  --_avatar-font-size: var(--ki-avatar-lg-font-size);
+  --_avatar-icon-size: var(--ki-avatar-lg-icon-size);
+}
+
+:host([size="xl"]) {
+  --_avatar-size: var(--ki-avatar-xl-size);
+  --_avatar-font-size: var(--ki-avatar-xl-font-size);
+  --_avatar-icon-size: var(--ki-avatar-xl-icon-size);
+}
+
+[part="avatar"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  inline-size: var(--_avatar-size);
+  block-size: var(--_avatar-size);
+  overflow: hidden;
+  border: var(--ki-avatar-border-width) solid var(--ki-avatar-border-color);
+  border-radius: var(--ki-avatar-radius);
+  background: var(--ki-avatar-bg);
+  color: var(--ki-avatar-fg);
+  font-family: var(--ki-avatar-font-family);
+  font-size: var(--_avatar-font-size);
+  font-weight: var(--ki-avatar-font-weight);
+}
+
+/* A loaded portrait covers the token surface entirely: the surface and its
+ * hairline drop so no border rings the photo (design-extraction decision 4). */
+[part="avatar"].has-portrait {
+  border: none;
+  background: none;
+}
+
+[part="image"] {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* Verbatim initials, never wrapped or truncated by the component (FR-003). */
+[part="initials"] {
+  line-height: 1;
+  white-space: nowrap;
+}
+
+[part="icon"] {
+  display: block;
+  inline-size: var(--_avatar-icon-size);
+  block-size: var(--_avatar-icon-size);
+}

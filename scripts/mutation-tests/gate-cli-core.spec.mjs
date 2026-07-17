@@ -33,6 +33,7 @@ import {
 } from '../run-infra-tests.mjs';
 
 const requiredGroups = Object.freeze([
+  { id: 'ki-avatar-group', members: ['ki-avatar-group', 'ki-avatar'] },
   { id: 'ki-radio-group', members: ['ki-radio-group', 'ki-radio'] },
   { id: 'ki-select', members: ['ki-select', 'ki-option'] },
   { id: 'ki-tabs', members: ['ki-tabs', 'ki-tab', 'ki-tab-panel'] },
@@ -150,7 +151,7 @@ it('writes the human component inventory summary', async () => {
 
   expect(result.inventory).toHaveLength(2);
   expect(output).toEqual([
-    'GATE component-inventory: PASS (2 components, 3 composite groups, 2 frozen root symbols)\n',
+    'GATE component-inventory: PASS (2 components, 4 composite groups, 2 frozen root symbols)\n',
   ]);
 });
 

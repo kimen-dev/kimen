@@ -2,6 +2,10 @@
   "schemaVersion": 1,
   "groups": [
     {
+      "id": "ki-avatar-group",
+      "members": ["ki-avatar-group", "ki-avatar"]
+    },
+    {
       "id": "ki-radio-group",
       "members": ["ki-radio-group", "ki-radio"]
     },
