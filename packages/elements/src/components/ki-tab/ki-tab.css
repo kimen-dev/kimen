@@ -57,6 +57,11 @@
 }
 
 :host(:focus-visible) {
+  /* MarsUI Focus/primary: 3px 40%-alpha spread ring
+     (specs/002-ki-button/design-extraction.md §2.5). The opaque 2px outline
+     stays as the WCAG 1.4.11-proof indicator: the soft ring alone is below
+     3:1 against adjacent surfaces. */
+  box-shadow: var(--ki-tab-focus-ring-shadow);
   outline: var(--ki-tab-focus-ring-width) solid var(--ki-tab-focus-ring-color);
   outline-offset: var(--ki-tab-focus-ring-offset);
 }

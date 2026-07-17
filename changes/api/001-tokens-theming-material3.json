@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "a3a3818d66c9b26fc5b2767160cafb12a2cc429ccd298d2ff227400606f5f2fe",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Fase M3 (on top of fase T): material3 becomes a faithful Material 3 baseline theme - tonal palettes (secondary/tertiary/error/neutral/neutral-variant), md.sys color roles, state layers, the 15-role type scale, shape scale, elevation levels 1-5 (key+ambient, glass effects flattened for M3), and the M3 motion system; additive semantic names (state-layer, motion, secondary/tertiary, surface tint, inverse-primary) exist in every composition with coherent onmars values (S6). Deliberate effective-value changes are confined to the material3 sheets (danger roles snap to the error palette, on-*-container roles snap to the current 2023 baseline tones, dialog motion leaves the M2 legacy curve) plus the removal of orphaned migrated primitives. Nothing is published yet (0.0.0, private); founder-reviewed in the fase M3 PR.",
+  "release": "major",
+  "schemaVersion": 1
+}

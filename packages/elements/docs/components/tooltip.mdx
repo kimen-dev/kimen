@@ -1,0 +1,70 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-tooltip" />
+
+# ki-tooltip
+
+A transient, text-only description bubble for one slotted trigger.
+
+**When to use** — add a brief clarifying hint for an icon-only, abbreviated,
+or otherwise ambiguous control when the same information is discoverable
+elsewhere in the interface.
+
+**When NOT to use** — essential or unique information in a tooltip;
+interactive or rich content in a tooltip; form validation messages, disabled
+controls, or touch-primary flows. Use visible layout text or a future
+`ki-popover` pattern for those cases.
+
+## Examples
+
+`label` is the entire tooltip content; the default slot holds exactly one
+interactive trigger. The string is reflected to the trigger's accessible
+description without changing its name:
+
+```html
+<ki-tooltip label="Copies a shareable link to the clipboard">
+  <ki-button size="sm">Copy link</ki-button>
+</ki-tooltip>
+```
+
+`placement` (default `top`) is a preference — the component may flip or
+clamp it to keep the bubble inside the viewport, and unknown values fall
+back to `top`:
+
+```html
+<ki-tooltip label="Downloads the report as PDF" placement="bottom">
+  <ki-button size="sm">Export</ki-button>
+</ki-tooltip>
+```
+
+An empty or whitespace-only `label` renders no tooltip and exposes no
+description — useful for conditional hints:
+
+```html
+<ki-tooltip label="">
+  <ki-button size="sm">No hint here</ki-button>
+</ki-tooltip>
+```
+
+## Customization
+
+| Token                          | Controls                     |
+| ------------------------------ | ---------------------------- |
+| `--ki-tooltip-bg`              | Bubble background            |
+| `--ki-tooltip-fg`              | Bubble text color            |
+| `--ki-tooltip-max-inline-size` | Maximum bubble width         |
+| `--ki-tooltip-offset`          | Distance from the trigger    |
+| `--ki-tooltip-radius`          | Bubble corner radius         |
+
+Single shadow part: `::part(tooltip)` (the non-focusable tooltip bubble).
+
+## Accessibility
+
+- The tooltip supplements the trigger's accessible name through
+  `aria-description` — it never provides the name itself; the trigger must
+  already be labeled.
+- Never put essential or unique information in a tooltip: it must remain
+  discoverable elsewhere, because tooltips are unreliable on touch and for
+  users who never hover.
+- Do not attach tooltips to disabled controls, and do not depend on
+  `placement` for meaning or reading order.

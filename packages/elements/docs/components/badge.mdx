@@ -1,0 +1,68 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-badge" />
+
+# ki-badge
+
+A static, non-interactive status pill.
+
+**When to use** — annotate an entity with short status text (a state, a
+category) whose meaning is carried by the label itself; the tone color only
+reinforces the text, it never replaces it.
+
+**When NOT to use** — feedback that must be announced (that is `ki-alert`'s
+job — the badge has no live region), an interactive chip, filter or button,
+empty content (the label IS the meaning), or a notification-counter overlay
+(a future, separate concern).
+
+## Examples
+
+`tone` is semantic intent, never appearance — each tone resolves its colors
+from the `--ki-badge-{tone}-*` tokens, and an unrecognized value keeps the
+neutral appearance by CSS construction:
+
+```html
+<ki-badge>Draft</ki-badge>
+<ki-badge tone="info">Beta</ki-badge>
+<ki-badge tone="success">Active</ki-badge>
+<ki-badge tone="warning">Trial ends soon</ki-badge>
+<ki-badge tone="danger">Suspended</ki-badge>
+```
+
+`size` selects the metric scale (`sm` or `md`, default `md`):
+
+```html
+<ki-badge tone="success" size="sm">Synced</ki-badge>
+```
+
+A typical placement — trailing meta on a list entry:
+
+```html
+<ki-list>
+  <ki-list-item>
+    Production deploy
+    <ki-badge slot="end" tone="success">Healthy</ki-badge>
+  </ki-list-item>
+</ki-list>
+```
+
+## Customization
+
+| Token                     | Controls                      |
+| ------------------------- | ----------------------------- |
+| `--ki-badge-neutral-bg`   | Neutral tone background       |
+| `--ki-badge-neutral-fg`   | Neutral tone text color       |
+| `--ki-badge-md-height`    | Pill height for the `md` size |
+| `--ki-badge-md-radius`    | Pill radius for the `md` size |
+| `--ki-badge-font-weight`  | Label font weight             |
+
+Tones follow `--ki-badge-{tone}-{bg|border|fg}`; metrics follow
+`--ki-badge-{sm|md}-*`. Single shadow part: `::part(badge)` (the pill:
+background, foreground, border, radius, metrics and typography).
+
+## Accessibility
+
+- The label text is the sole carrier of meaning — never rely on the tone
+  color alone, and never render an empty badge.
+- The badge is static: no role, no live region, no tab stop. Status changes
+  that must be announced belong to `ki-alert`.

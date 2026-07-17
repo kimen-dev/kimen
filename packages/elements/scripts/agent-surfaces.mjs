@@ -221,6 +221,7 @@ export function buildLlmsTxt(docs, pkg, preamble, inputs = {}) {
   ];
 
   for (const component of docs.components ?? []) {
+    const usage = renderUsage(component);
     lines.push(
       '',
       `### ${component.tag}`,
@@ -229,6 +230,7 @@ export function buildLlmsTxt(docs, pkg, preamble, inputs = {}) {
       '',
       `When to use: ${getDocsTag(component, 'whenToUse')}`,
       `When NOT to use: ${getDocsTag(component, 'whenNotToUse')}`,
+      ...(usage === null ? [] : ['', usage]),
       '',
       renderList(
         'Attributes',
@@ -395,6 +397,23 @@ function trimOneTrailingLf(value) {
 
 function oneLine(value) {
   return value.replace(/\s*\n\s*/g, ' ').trim();
+}
+
+// Stencil docs-json carries each component's usage/*.md files verbatim in
+// `usage`. Render them under an Examples heading, sorted by file name with
+// codepoint order (locale-independent, so artifacts stay byte-identical
+// across machines). Executable (ts/js) fences inside usage examples are run
+// by scripts/consumer-contract.mjs on release, exactly like the preamble.
+function renderUsage(component) {
+  const entries = Object.entries(component.usage ?? {})
+    .filter(([, text]) => typeof text === 'string' && text.trim().length > 0)
+    .sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0));
+
+  if (entries.length === 0) {
+    return null;
+  }
+
+  return `Examples:\n\n${entries.map(([, text]) => text.trim()).join('\n\n')}`;
 }
 
 function renderList(label, entries) {

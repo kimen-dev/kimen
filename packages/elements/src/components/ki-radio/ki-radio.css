@@ -19,6 +19,7 @@
   --_ki-radio-focus-ring-color: var(--ki-radio-focus-ring-color);
   --_ki-radio-focus-ring-width: var(--ki-radio-focus-ring-width);
   --_ki-radio-focus-ring-offset: var(--ki-radio-focus-ring-offset);
+  --_ki-radio-focus-ring-shadow: var(--ki-radio-focus-ring-shadow);
 
   display: inline-block;
   color: var(--ki-text-high-em);
@@ -115,7 +116,10 @@ input:checked ~ [part="control"]::before {
   transform: scale(1);
 }
 
+/* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
+   Focus/primary glow (3px spread at 40%) under the opaque outline ring. */
 input:focus-visible ~ [part="control"] {
+  box-shadow: var(--_ki-radio-focus-ring-shadow);
   outline: var(--_ki-radio-focus-ring-width) solid var(--_ki-radio-focus-ring-color);
   outline-offset: var(--_ki-radio-focus-ring-offset);
 }
