@@ -1,18 +1,26 @@
-# Test-quality feedback runs once per day, never once per PR revision.
+# Test-quality feedback runs on dedicated cadences, never once per PR revision
+# (Art. III): a daily changed-core pass and a Sunday full-component pass that
+# also enforces the coverage regression floors.
 name: mutation
 
 on:
   schedule:
+    # Daily: mutate only core files changed in the preceding 24 hours.
     - cron: '17 3 * * *'
+    # Weekly (Sunday): full mutation of every component implementation plus
+    # the coverage-threshold suite. Each job selects its cadence via
+    # github.event.schedule, so the heavy work runs once per week.
+    - cron: '41 2 * * 0'
 
 permissions: {}
 
 concurrency:
-  group: mutation-daily
+  group: mutation-${{ github.event.schedule }}
   cancel-in-progress: true
 
 jobs:
   mutation:
+    if: github.event.schedule == '17 3 * * *'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     permissions:
@@ -58,3 +66,126 @@ jobs:
 
       - name: Daily changed-core mutation
         run: GITHUB_STEP_SUMMARY="$RUNNER_TEMP/kimen-mutation-summary.md" pnpm run test:mutation
+
+  full-mutation:
+    if: github.event.schedule == '41 2 * * 0'
+    runs-on: ubuntu-latest
+    # A filtered 3-component validation run measured 67 mutants in ~11 s
+    # locally (perTest coverage, mock-doc suite); the ~1300-mutant full scope
+    # extrapolates to well under an hour on a 4-vCPU runner. 120 covers
+    # several times that for suite growth.
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: block
+          # The two actions.githubusercontent.com/blob endpoints receive the
+          # weekly report artifact upload; everything else matches the daily job.
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            results-receiver.actions.githubusercontent.com:443
+            *.blob.core.windows.net:443
+
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      - name: Allocate isolated writable caches
+        run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # tee preserves the Stryker log plus the final canonical scope report in
+      # the artifact; the machine-readable result is the Stryker mutation.json
+      # written under the isolated mutation cache. The default bash shell runs
+      # with pipefail, so a red mutation run still fails this step.
+      - name: Weekly full-elements mutation
+        # Explicit bash so GitHub runs with -o pipefail: without it the
+        # default `bash -e {0}` would let a red mutation run exit green
+        # through tee's exit status.
+        shell: bash
+        run: |
+          mkdir -p reports/mutation
+          GITHUB_STEP_SUMMARY="$RUNNER_TEMP/kimen-mutation-summary.md" \
+            bash scripts/gates/run-mutation.sh --scope full-elements |
+            tee reports/mutation/full-elements-run.log
+
+      - name: Publish weekly mutation report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: mutation-full-elements
+          path: |
+            reports/mutation/full-elements-run.log
+            reports/cache/mutation/elements/*/mutation.json
+
+  coverage:
+    if: github.event.schedule == '41 2 * * 0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: block
+          # Same allowlist as the PR quality job: the coverage suite builds
+          # the packages and runs the Chromium browser suite.
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            cdn.playwright.dev:443
+            playwright.azureedge.net:443
+            playwright.download.prss.microsoft.com:443
+            packages.microsoft.com:443
+            dl.google.com:443
+            azure.archive.ubuntu.com:80
+            storage.googleapis.com:443
+            archive.ubuntu.com:443
+            security.ubuntu.com:443
+
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      - name: Allocate isolated writable caches
+        run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
+
+      - name: Build
+        run: pnpm exec nx run-many -t build
+
+      # Coverage thresholds (vitest.coverage.config.ts) are regression floors
+      # 2 points under the recorded baselines; they enforce here weekly, never
+      # in the PR gate (Art. III).
+      - name: Coverage regression floors
+        run: pnpm --filter @kimen/elements run test:coverage

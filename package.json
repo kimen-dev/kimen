@@ -28,6 +28,7 @@
     "generate:capabilities": "node scripts/gates/check-capabilities.mjs --generate",
     "check:capabilities": "node scripts/gates/check-capabilities.mjs --static-only",
     "test:mutation": "bash scripts/gates/run-mutation.sh",
+    "test:mutation:full": "bash scripts/gates/run-mutation.sh --scope full-elements",
     "test:sandbox": "bash sandbox/tests/run-local.sh",
     "check:workflows": "node scripts/gates/check-workflows.mjs",
     "gates": "bash scripts/gates/gates-suite.sh",

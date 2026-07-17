@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
@@ -15,6 +15,17 @@ const loadMutationPolicy = () => import(mutationPolicyUrl.href);
 
 const aHash = (character) => character.repeat(64);
 
+// Component sources exercised by the weekly full-elements scope: two
+// implementation files, one co-located core .ts helper, plus spec and css
+// files the classifier must keep out of the mutate set.
+const componentFixtureFiles = {
+  'packages/elements/src/components/ki-button/ki-button.css': ':host { display: block; }\n',
+  'packages/elements/src/components/ki-button/ki-button.spec.tsx': 'export const spec = 1;\n',
+  'packages/elements/src/components/ki-button/ki-button.tsx': 'export const button = 1;\n',
+  'packages/elements/src/components/ki-progress/ki-progress.math.ts': 'export const math = 1;\n',
+  'packages/elements/src/components/ki-progress/ki-progress.tsx': 'export const progress = 1;\n',
+};
+
 const createCliFixture = async (t) => {
   const workspaceRoot = await mkdtemp(join(tmpdir(), 'kimen-mutation-policy-'));
   t.after(() => rm(workspaceRoot, { recursive: true, force: true }));
@@ -26,6 +37,13 @@ const createCliFixture = async (t) => {
     writeFile(join(workspaceRoot, 'vitest.mutation.node.config.ts'), 'export default {};\n'),
     writeFile(join(workspaceRoot, 'pnpm-lock.yaml'), 'lockfileVersion: 9.0\n'),
   ]);
+  await Promise.all(
+    Object.entries(componentFixtureFiles).map(async ([path, contents]) => {
+      const absolutePath = join(workspaceRoot, path);
+      await mkdir(dirname(absolutePath), { recursive: true });
+      await writeFile(absolutePath, contents);
+    }),
+  );
   return workspaceRoot;
 };
 
@@ -226,4 +244,64 @@ test('@spec:018 S3 CLI JSON stdin is canonical and rejects unclassified executab
   assert.notEqual(unclassified.status, 0);
   assert.equal(unclassified.stdout, '');
   assert.match(unclassified.stderr, /unclassified.*experimental\/new-core\.ts/i);
+});
+
+test('@spec:018 S3 CLI full-elements scope mutates every component implementation through the classifier', async (t) => {
+  const workspaceRoot = await createCliFixture(t);
+
+  const result = runMutationCli({ workspaceRoot, paths: ['--scope', 'full-elements'] });
+
+  assert.equal(result.status, 0, result.stderr);
+  const report = JSON.parse(result.stdout);
+  assert.deepEqual(report.groups, {
+    elements: [
+      'packages/elements/src/components/ki-button/ki-button.tsx',
+      'packages/elements/src/components/ki-progress/ki-progress.math.ts',
+      'packages/elements/src/components/ki-progress/ki-progress.tsx',
+    ],
+    node: [],
+  });
+  const spec = report.files.find(({ path }) => path.endsWith('ki-button.spec.tsx'));
+  assert.equal(spec?.classification, 'excluded');
+  assert.equal(
+    report.files.some(({ path }) => path.endsWith('.css')),
+    false,
+    'full-elements discovery collects only executable component sources',
+  );
+  assert.match(report.runnerScopes.elements, /^[0-9a-f]{64}$/);
+  assert.equal(report.runnerScopes.node, null);
+});
+
+test('@spec:018 S3 CLI full-elements scope narrows to named components and rejects unknown names', async (t) => {
+  const workspaceRoot = await createCliFixture(t);
+
+  const filtered = runMutationCli({
+    workspaceRoot,
+    paths: ['--scope', 'full-elements', 'ki-progress'],
+  });
+  const unknown = runMutationCli({
+    workspaceRoot,
+    paths: ['--scope', 'full-elements', 'ki-missing'],
+  });
+
+  assert.equal(filtered.status, 0, filtered.stderr);
+  assert.deepEqual(JSON.parse(filtered.stdout).groups.elements, [
+    'packages/elements/src/components/ki-progress/ki-progress.math.ts',
+    'packages/elements/src/components/ki-progress/ki-progress.tsx',
+  ]);
+  assert.notEqual(unknown.status, 0);
+  assert.equal(unknown.stdout, '');
+  assert.match(unknown.stderr, /no component directory named.*ki-missing/i);
+});
+
+test('@spec:018 S3 CLI rejects an unknown or missing mutation scope before any mutation work', async (t) => {
+  const workspaceRoot = await createCliFixture(t);
+
+  const unknownScope = runMutationCli({ workspaceRoot, paths: ['--scope', 'everything'] });
+  const missingValue = runMutationCli({ workspaceRoot, paths: ['--scope'] });
+
+  assert.notEqual(unknownScope.status, 0);
+  assert.match(unknownScope.stderr, /unknown mutation scope.*everything/i);
+  assert.notEqual(missingValue.status, 0);
+  assert.match(missingValue.stderr, /--scope requires a value/i);
 });
