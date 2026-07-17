@@ -16,6 +16,11 @@ const assertCommonMutationPolicy = (config, configFile) => {
   assert.deepEqual(config.reporters, ['clear-text', 'json']);
   assert.deepEqual(config.plugins, ['@stryker-mutator/vitest-runner']);
   assert.deepEqual(config.ignorePatterns, [
+    // /.claude keeps the tracked .claude/skills directory symlink out of
+    // Stryker sandboxes: fs.copyFile follows the link into a directory and
+    // fails (ENOTSUP on macOS, EISDIR on Linux), which broke every elements
+    // mutation run. Agent tooling is classified out of mutation scope anyway.
+    '/.claude',
     '/.nx',
     '/.stryker-tmp',
     '/packages/*/dist',

@@ -2,7 +2,7 @@
 
 import { execFile } from 'node:child_process';
 import { constants as fsConstants } from 'node:fs';
-import { access, lstat, mkdir, open, realpath, rm } from 'node:fs/promises';
+import { access, lstat, mkdir, open, readdir, realpath, rm } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
@@ -330,6 +330,74 @@ export const discoverChangedPaths = async ({
   };
 };
 
+const FULL_ELEMENTS_ROOT = 'packages/elements/src/components';
+const COMPONENT_NAME_PATTERN = /^[a-z0-9][a-z0-9-]*$/;
+
+/**
+ * Weekly full-component scope: every executable component source under
+ * packages/elements/src/components. The classifier stays the single policy
+ * authority — spec/story/declaration files collected here are classified as
+ * excluded, exactly as in changed-core mode, so only elements-core
+ * implementation files are mutated. Optional filters name component
+ * directories (diagnostic narrowing, e.g. `--scope full-elements ki-badge`).
+ */
+const discoverFullElementsScope = async ({ workspaceRoot, filters }) => {
+  const componentsRoot = resolve(workspaceRoot, FULL_ELEMENTS_ROOT);
+  let entries;
+  try {
+    entries = await readdir(componentsRoot, { withFileTypes: true });
+  } catch (error) {
+    throw new Error(`full-elements scope requires ${FULL_ELEMENTS_ROOT}: ${error.message}`, {
+      cause: error,
+    });
+  }
+  const components = entries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+  let selected = components;
+  if (filters.length > 0) {
+    const malformed = filters.filter((filter) => !COMPONENT_NAME_PATTERN.test(filter));
+    if (malformed.length > 0) {
+      throw new Error(
+        `full-elements scope filters must be component directory names: ${malformed.join(', ')}`,
+      );
+    }
+    const unknown = filters.filter((filter) => !components.includes(filter));
+    if (unknown.length > 0) {
+      throw new Error(
+        `full-elements scope has no component directory named: ${unknown.join(', ')}`,
+      );
+    }
+    selected = [...new Set(filters)].sort();
+  }
+  const paths = [];
+  for (const component of selected) {
+    const files = await readdir(join(componentsRoot, component), {
+      recursive: true,
+      withFileTypes: true,
+    });
+    for (const file of files) {
+      if (!file.isFile() || !/\.tsx?$/.test(file.name)) {
+        continue;
+      }
+      paths.push(relative(workspaceRoot, join(file.parentPath, file.name)).split(sep).join('/'));
+    }
+  }
+  return {
+    baseSha: null,
+    baseSource: filters.length > 0 ? 'full-elements scope (filtered)' : 'full-elements scope',
+    paths: paths.sort(),
+  };
+};
+
+const SCOPE_DISCOVERIES = Object.freeze({
+  'full-elements': discoverFullElementsScope,
+});
+
+const discoverScopedPaths = async ({ workspaceRoot, scope, filters }) =>
+  SCOPE_DISCOVERIES[scope]({ workspaceRoot, filters });
+
 export const validateRunnableFiles = async ({ files, workspaceRoot }) => {
   const physicalWorkspaceRoot = await realpath(workspaceRoot);
   const coreFiles = files.filter((file) => file.classification === 'core');
@@ -529,21 +597,38 @@ const parseCliArguments = (arguments_) => {
   let run = false;
   let force = false;
   let pathsOnly = false;
+  let scope;
+  let expectScopeValue = false;
   for (const argument of arguments_) {
-    if (!pathsOnly && argument === '--') {
+    if (expectScopeValue) {
+      if (!Object.hasOwn(SCOPE_DISCOVERIES, argument)) {
+        throw new Error(
+          `Unknown mutation scope: ${argument} (supported: ${Object.keys(SCOPE_DISCOVERIES).join(', ')})`,
+        );
+      }
+      scope = argument;
+      expectScopeValue = false;
+    } else if (!pathsOnly && argument === '--') {
       pathsOnly = true;
     } else if (!pathsOnly && argument === '--run') {
       run = true;
     } else if (!pathsOnly && argument === '--force') {
       run = true;
       force = true;
+    } else if (!pathsOnly && argument === '--scope') {
+      expectScopeValue = true;
     } else if (!pathsOnly && argument.startsWith('--')) {
       throw new Error(`Unknown mutation option: ${argument}`);
     } else {
       paths.push(argument);
     }
   }
-  return { force, paths, run };
+  if (expectScopeValue) {
+    throw new Error(
+      `--scope requires a value (supported: ${Object.keys(SCOPE_DISCOVERIES).join(', ')})`,
+    );
+  }
+  return { force, paths, run, scope };
 };
 
 export const main = async ({
@@ -553,16 +638,31 @@ export const main = async ({
 } = {}) => {
   const options = parseCliArguments(arguments_);
   if (!options.run) {
-    const paths = await readChangedPaths(options.paths);
+    const paths =
+      options.scope === undefined
+        ? await readChangedPaths(options.paths)
+        : (
+            await discoverScopedPaths({
+              workspaceRoot,
+              scope: options.scope,
+              filters: options.paths,
+            })
+          ).paths;
     const report = await buildReport({ paths, workspaceRoot });
     process.stdout.write(canonicalJson(report));
     return;
   }
 
   const discovery =
-    options.paths.length > 0
-      ? { baseSha: null, baseSource: 'explicit paths', paths: options.paths }
-      : await discoverChangedPaths({ workspaceRoot, environment });
+    options.scope !== undefined
+      ? await discoverScopedPaths({
+          workspaceRoot,
+          scope: options.scope,
+          filters: options.paths,
+        })
+      : options.paths.length > 0
+        ? { baseSha: null, baseSource: 'explicit paths', paths: options.paths }
+        : await discoverChangedPaths({ workspaceRoot, environment });
   const report = await buildReport({ paths: discovery.paths, workspaceRoot });
   await validateRunnableFiles({ files: report.files, workspaceRoot });
   const mutation = await runMutationGroups({

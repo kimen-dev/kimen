@@ -1,0 +1,99 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-select" />
+
+# ki-select
+
+A form-associated select-only combobox for choosing one option from
+declarative `ki-option` children.
+
+**When to use** — choose exactly one value from a known closed list,
+especially when there are roughly five or more choices or space is limited.
+
+**When NOT to use** — `ki-radio-group` for a few always-visible choices,
+`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for binary
+decisions, or multiselect and command menus.
+
+## Examples
+
+`label` is mandatory — unlabeled selects are invalid usage. `ki-option`
+children are data only: they do not paint; the select mirrors them as rows
+in its own popup listbox:
+
+```html
+<ki-select label="Plan" name="plan" placeholder="Choose a plan">
+  <ki-option value="free">Free</ki-option>
+  <ki-option value="pro">Pro</ki-option>
+  <ki-option value="enterprise">Enterprise</ki-option>
+</ki-select>
+```
+
+An option without `value` falls back to its trimmed text (native `option`
+parity), disabled options are skipped by keyboard highlight, and `required`
+demands a non-empty submitted value:
+
+```html
+<ki-select label="Region" name="region" required>
+  <ki-option>Europe</ki-option>
+  <ki-option>North America</ki-option>
+  <ki-option disabled>Asia-Pacific (coming soon)</ki-option>
+</ki-select>
+```
+
+The `value` attribute declares the reset/default selection:
+
+```html
+<ki-select label="Theme" name="theme" value="auto">
+  <ki-option value="auto">Follow system</ki-option>
+  <ki-option value="light">Light</ki-option>
+  <ki-option value="dark">Dark</ki-option>
+</ki-select>
+```
+
+## Recipe: reacting to a committed selection
+
+The select dispatches composed `input` and `change` events when the user
+commits an option. The `value` property is the live projection of the
+selected option (or `""` when unselected); assigning it selects the first
+matching option silently:
+
+```html
+<ki-select id="plan" label="Plan" name="plan" placeholder="Choose a plan">
+  <ki-option value="free">Free</ki-option>
+  <ki-option value="pro">Pro</ki-option>
+</ki-select>
+
+<script type="module">
+  const select = document.getElementById('plan');
+  select.addEventListener('change', () => {
+    console.log('committed:', select.value);
+  });
+  // Programmatic selection — silent, no events:
+  select.value = 'pro';
+</script>
+```
+
+## Customization
+
+| Token                       | Controls                            |
+| --------------------------- | ----------------------------------- |
+| `--ki-select-rest-bg`       | Trigger resting background          |
+| `--ki-select-height`        | Trigger block size                  |
+| `--ki-select-radius`        | Trigger corner radius               |
+| `--ki-select-listbox-bg`    | Popup listbox background            |
+| `--ki-option-highlight-bg`  | Keyboard-highlighted row background |
+
+Rows use the `--ki-option-*` tokens. Shadow parts: `::part(trigger)` (native
+button carrying the combobox role), `::part(label)`, `::part(value)`
+(displayed selection or placeholder), `::part(indicator)`,
+`::part(listbox)` and `::part(option)` (mirrored row).
+
+## Accessibility
+
+- The visible `label` names the combobox trigger; it is mandatory.
+- The trigger is a native button exposing the combobox role; the platform
+  validation message for `required` is donated by a hidden native select.
+- Disabled options are exposed as unavailable and skipped by keyboard
+  highlight; `disabled` on the select removes it from keyboard reach and
+  from form submission.
+- Never author selection on `ki-option` — set `ki-select.value` instead.

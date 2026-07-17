@@ -45,17 +45,38 @@ export const distSourceCoveragePlugin = {
 /**
  * Coverage stays inactive unless --coverage is passed: the ordinary `test`
  * and `test-browser` targets remain coverage-free (Art. III: coverage is
- * diagnostic, never a gate — no thresholds until a baseline exists). Scope is
- * production src only: specs, stories and the Stencil-generated
- * components.d.ts are not product code. Reports are outputs, not caches, so
- * they land in the gitignored repo-root reports/ tree, a sibling of the
- * KIMEN_CACHE_ROOT default (reports/cache).
+ * diagnostic, never a PR gate). Scope is production src only: specs, stories
+ * and the Stencil-generated components.d.ts are not product code. Reports
+ * are outputs, not caches, so they land in the gitignored repo-root reports/
+ * tree, a sibling of the KIMEN_CACHE_ROOT default (reports/cache).
  *
- * Baseline (2026-07-16, `pnpm --filter @kimen/elements run test:coverage`),
- * recorded so future threshold work (Fase Q) starts from a known floor:
+ * Baseline (2026-07-16, `pnpm --filter @kimen/elements run test:coverage`):
  * - elements-unit: 69.95% lines / 63.27% branches / 72.23% functions
  * - elements-browser-chromium: 90.53% lines / 77.97% branches / 97.41% functions
  */
+interface CoverageThresholds {
+  lines: number;
+  branches: number;
+  functions: number;
+}
+
+/**
+ * Regression floors, set 2 points below each recorded baseline so ordinary
+ * noise passes but a real coverage regression fails `test:coverage`. They
+ * enforce only where --coverage runs — the weekly mutation.yml cadence and
+ * explicit local runs — never in the PR gate (Art. III).
+ *
+ * Ratchet is MANUAL and upward-only: when a new baseline is recorded above
+ * the current one, update the baseline comment above and raise these floors
+ * to the new baseline minus 2 in the same change. Floors never go down
+ * without founder judgment. The chromium browser suite is the only browser
+ * suite with V8 coverage, so it is the only browser key here.
+ */
+const coverageThresholds: Record<string, CoverageThresholds> = {
+  'elements-unit': { lines: 68, branches: 61, functions: 70 },
+  'elements-browser-chromium': { lines: 88, branches: 75, functions: 95 },
+};
+
 export function coverageOptions(
   suite: string,
   executedDistInclude: string[],
@@ -66,7 +87,9 @@ export function coverageOptions(
   include: string[];
   exclude: string[];
   excludeAfterRemap: boolean;
+  thresholds?: CoverageThresholds;
 } {
+  const thresholds = coverageThresholds[suite];
   return {
     provider: 'v8',
     reporter: ['text', 'json-summary', 'html'],
@@ -80,5 +103,6 @@ export function coverageOptions(
     include: ['src/**/*.{ts,tsx}', ...executedDistInclude],
     exclude: ['src/**/*.spec.{ts,tsx}', 'src/**/*.stories.{ts,tsx}', 'src/components.d.ts'],
     excludeAfterRemap: true,
+    ...(thresholds === undefined ? {} : { thresholds }),
   };
 }

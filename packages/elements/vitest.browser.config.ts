@@ -1,4 +1,5 @@
-import { join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { basename, dirname, join } from 'node:path';
 
 import { defineBrowserCommand, playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
@@ -34,6 +35,14 @@ const provider = playwright(
 export default defineConfig({
   ...(cacheDir ? { cacheDir } : {}),
   plugins: [distSourceCoveragePlugin],
+  optimizeDeps: {
+    // dist/components imports @stencil/core/internal/client at runtime.
+    // Pre-bundling it up front prevents the mid-run dependency discovery
+    // reload ("Vite unexpectedly reloaded a test") that on a cold cache can
+    // re-execute a failed test inside the same run and mask a genuine
+    // failure (observed while validating the visual-regression harness).
+    include: ['@stencil/core/internal/client'],
+  },
   test: {
     name: `elements-browser-${browser}`,
     include: ['browser-tests/**/*.browser.spec.{ts,tsx}'],
@@ -84,6 +93,30 @@ export default defineConfig({
               .getByRole(role, name === undefined ? undefined : { name })
               .ariaSnapshot({ timeout: 1000 }),
         ),
+        // Two-step arming of the visual gate (see browser-tests/README.md):
+        // the harness asks the server whether the versioned ARMED marker is
+        // flipped, whether the platform baseline PNG for a capture exists,
+        // and whether this run was launched with an explicit --update mode.
+        // The filesystem checks must run server-side — the browser cannot
+        // see __screenshots__/.
+        visualGateStatus: defineBrowserCommand(async ({ project, testPath }, screenshotName) => {
+          if (typeof screenshotName !== 'string' || testPath === undefined) {
+            throw new TypeError('visualGateStatus requires a screenshot name and a test path');
+          }
+          const testDirectory = dirname(testPath);
+          const armedMarker = join(testDirectory, 'visual/ARMED');
+          const baseline = join(
+            testDirectory,
+            '__screenshots__',
+            basename(testPath),
+            `${screenshotName}-${project.config.browser.name}-${process.platform}.png`,
+          );
+          return {
+            armed: readFileSync(armedMarker, 'utf8').trim() === 'true',
+            baselineExists: existsSync(baseline),
+            updateMode: project.serializedConfig.snapshotOptions.updateSnapshot,
+          };
+        }),
         installClock: defineBrowserCommand(async ({ page }) => {
           await page.clock.install();
         }),

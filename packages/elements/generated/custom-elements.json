@@ -200,6 +200,10 @@
               "description": "dimension used by the alert component for focus ring offset."
             },
             {
+              "name": "--ki-alert-focus-ring-shadow",
+              "description": "shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+            },
+            {
               "name": "--ki-alert-focus-ring-width",
               "description": "dimension used by the alert component for focus ring width."
             },
@@ -229,7 +233,7 @@
             },
             {
               "name": "--ki-alert-info-fg",
-              "description": "color used by the alert component for info foreground."
+              "description": "color used by the alert component for info foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 7.3:1)."
             },
             {
               "name": "--ki-alert-line-height",
@@ -281,7 +285,7 @@
             },
             {
               "name": "--ki-alert-warning-fg",
-              "description": "color used by the alert component for warning foreground."
+              "description": "color used by the alert component for warning foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 5.5:1)."
             },
             {
               "name": "--ki-outline-none",
@@ -701,8 +705,12 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-button-backdrop-blur",
+              "description": "backdrop blur used by the button component glass variants (primary/secondary). material3 resolves to blur none via the semantic override."
+            },
+            {
               "name": "--ki-button-border-width",
-              "description": "dimension used by the button component for border width."
+              "description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px)."
             },
             {
               "name": "--ki-button-focus-ring-color",
@@ -711,6 +719,10 @@
             {
               "name": "--ki-button-focus-ring-offset",
               "description": "dimension used by the button component for focus ring offset."
+            },
+            {
+              "name": "--ki-button-focus-ring-shadow",
+              "description": "shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring)."
             },
             {
               "name": "--ki-button-focus-ring-width",
@@ -898,7 +910,7 @@
             },
             {
               "name": "--ki-button-md-gap",
-              "description": "dimension used by the button component for md gap."
+              "description": "dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px)."
             },
             {
               "name": "--ki-button-md-height",
@@ -925,8 +937,12 @@
               "description": "dimension used by the button component for md radius."
             },
             {
+              "name": "--ki-button-padding-block",
+              "description": "dimension used by the button component for padding block (MarsUI: 4px in every size)."
+            },
+            {
               "name": "--ki-button-primary-active-shadow",
-              "description": "value used by the button component for primary active shadow."
+              "description": "shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest)."
             },
             {
               "name": "--ki-button-primary-danger-active-bg",
@@ -934,7 +950,7 @@
             },
             {
               "name": "--ki-button-primary-danger-active-border",
-              "description": "color used by the button component for primary danger active border."
+              "description": "color used by the button component for primary danger active border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-primary-danger-active-fg",
@@ -942,11 +958,11 @@
             },
             {
               "name": "--ki-button-primary-danger-hover-bg",
-              "description": "color used by the button component for primary danger hover background."
+              "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
             },
             {
               "name": "--ki-button-primary-danger-hover-border",
-              "description": "color used by the button component for primary danger hover border."
+              "description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-primary-danger-hover-fg",
@@ -954,11 +970,11 @@
             },
             {
               "name": "--ki-button-primary-danger-rest-bg",
-              "description": "color used by the button component for primary danger rest background."
+              "description": "color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification)."
             },
             {
               "name": "--ki-button-primary-danger-rest-border",
-              "description": "color used by the button component for primary danger rest border."
+              "description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-primary-danger-rest-fg",
@@ -969,16 +985,20 @@
               "description": "value used by the button component for primary disabled shadow."
             },
             {
+              "name": "--ki-button-primary-hover-overlay",
+              "description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5)."
+            },
+            {
               "name": "--ki-button-primary-hover-shadow",
-              "description": "shadow used by the button component for button primary hover shadow."
+              "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover)."
             },
             {
               "name": "--ki-button-primary-neutral-active-bg",
-              "description": "color used by the button component for primary neutral active background."
+              "description": "color used by the button component for primary neutral active background (MarsUI defines no pressed state; mirrors rest)."
             },
             {
               "name": "--ki-button-primary-neutral-active-border",
-              "description": "color used by the button component for primary neutral active border."
+              "description": "color used by the button component for primary neutral active border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-primary-neutral-active-fg",
@@ -986,7 +1006,7 @@
             },
             {
               "name": "--ki-button-primary-neutral-disabled-bg",
-              "description": "color used by the button component for primary neutral disabled background."
+              "description": "color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification)."
             },
             {
               "name": "--ki-button-primary-neutral-disabled-border",
@@ -994,15 +1014,15 @@
             },
             {
               "name": "--ki-button-primary-neutral-disabled-fg",
-              "description": "color used by the button component for primary neutral disabled foreground."
+              "description": "color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification)."
             },
             {
               "name": "--ki-button-primary-neutral-hover-bg",
-              "description": "color used by the button component for primary neutral hover background."
+              "description": "color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
             },
             {
               "name": "--ki-button-primary-neutral-hover-border",
-              "description": "color used by the button component for primary neutral hover border."
+              "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-primary-neutral-hover-fg",
@@ -1010,19 +1030,23 @@
             },
             {
               "name": "--ki-button-primary-neutral-rest-bg",
-              "description": "color used by the button component for primary neutral rest background."
+              "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500)."
             },
             {
               "name": "--ki-button-primary-neutral-rest-border",
-              "description": "color used by the button component for primary neutral rest border."
+              "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-primary-neutral-rest-fg",
               "description": "color used by the button component for primary neutral rest foreground."
             },
             {
+              "name": "--ki-button-primary-rest-border-bottom",
+              "description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom)."
+            },
+            {
               "name": "--ki-button-primary-rest-shadow",
-              "description": "shadow used by the button component for button primary rest shadow."
+              "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default)."
             },
             {
               "name": "--ki-button-primary-success-active-bg",
@@ -1030,7 +1054,7 @@
             },
             {
               "name": "--ki-button-primary-success-active-border",
-              "description": "color used by the button component for primary success active border."
+              "description": "color used by the button component for primary success active border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-primary-success-active-fg",
@@ -1038,11 +1062,11 @@
             },
             {
               "name": "--ki-button-primary-success-hover-bg",
-              "description": "color used by the button component for primary success hover background."
+              "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
             },
             {
               "name": "--ki-button-primary-success-hover-border",
-              "description": "color used by the button component for primary success hover border."
+              "description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-primary-success-hover-fg",
@@ -1050,11 +1074,11 @@
             },
             {
               "name": "--ki-button-primary-success-rest-bg",
-              "description": "color used by the button component for primary success rest background."
+              "description": "color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification)."
             },
             {
               "name": "--ki-button-primary-success-rest-border",
-              "description": "color used by the button component for primary success rest border."
+              "description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-primary-success-rest-fg",
@@ -1198,7 +1222,7 @@
             },
             {
               "name": "--ki-button-secondary-active-shadow",
-              "description": "value used by the button component for secondary active shadow."
+              "description": "shadow used by the button component for secondary active shadow (MarsUI defines no pressed state; mirrors rest)."
             },
             {
               "name": "--ki-button-secondary-danger-active-bg",
@@ -1206,7 +1230,7 @@
             },
             {
               "name": "--ki-button-secondary-danger-active-border",
-              "description": "color used by the button component for secondary danger active border."
+              "description": "color used by the button component for secondary danger active border (MarsUI bevel top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-danger-active-fg",
@@ -1218,7 +1242,7 @@
             },
             {
               "name": "--ki-button-secondary-danger-hover-border",
-              "description": "color used by the button component for secondary danger hover border."
+              "description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-danger-hover-fg",
@@ -1230,7 +1254,7 @@
             },
             {
               "name": "--ki-button-secondary-danger-rest-border",
-              "description": "color used by the button component for secondary danger rest border."
+              "description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-danger-rest-fg",
@@ -1241,20 +1265,24 @@
               "description": "value used by the button component for secondary disabled shadow."
             },
             {
+              "name": "--ki-button-secondary-hover-overlay",
+              "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3)."
+            },
+            {
               "name": "--ki-button-secondary-hover-shadow",
-              "description": "value used by the button component for secondary hover shadow."
+              "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover)."
             },
             {
               "name": "--ki-button-secondary-neutral-active-bg",
-              "description": "color used by the button component for secondary neutral active background."
+              "description": "color used by the button component for secondary neutral active background (MarsUI defines no pressed state; mirrors rest)."
             },
             {
               "name": "--ki-button-secondary-neutral-active-border",
-              "description": "color used by the button component for secondary neutral active border."
+              "description": "color used by the button component for secondary neutral active border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-secondary-neutral-active-fg",
-              "description": "color used by the button component for secondary neutral active foreground."
+              "description": "color used by the button component for secondary neutral active foreground (MarsUI text/high_em)."
             },
             {
               "name": "--ki-button-secondary-neutral-disabled-bg",
@@ -1270,31 +1298,35 @@
             },
             {
               "name": "--ki-button-secondary-neutral-hover-bg",
-              "description": "color used by the button component for secondary neutral hover background."
+              "description": "color used by the button component for secondary neutral hover background (MarsUI: rest fill; hover darkening comes from the hover overlay)."
             },
             {
               "name": "--ki-button-secondary-neutral-hover-border",
-              "description": "color used by the button component for secondary neutral hover border."
+              "description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-secondary-neutral-hover-fg",
-              "description": "color used by the button component for secondary neutral hover foreground."
+              "description": "color used by the button component for secondary neutral hover foreground (MarsUI text/high_em)."
             },
             {
               "name": "--ki-button-secondary-neutral-rest-bg",
-              "description": "color used by the button component for secondary neutral rest background."
+              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint)."
             },
             {
               "name": "--ki-button-secondary-neutral-rest-border",
-              "description": "color used by the button component for secondary neutral rest border."
+              "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
             },
             {
               "name": "--ki-button-secondary-neutral-rest-fg",
-              "description": "color used by the button component for secondary neutral rest foreground."
+              "description": "color used by the button component for secondary neutral rest foreground (MarsUI text/high_em)."
+            },
+            {
+              "name": "--ki-button-secondary-rest-border-bottom",
+              "description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom)."
             },
             {
               "name": "--ki-button-secondary-rest-shadow",
-              "description": "value used by the button component for secondary rest shadow."
+              "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default)."
             },
             {
               "name": "--ki-button-secondary-success-active-bg",
@@ -1302,7 +1334,7 @@
             },
             {
               "name": "--ki-button-secondary-success-active-border",
-              "description": "color used by the button component for secondary success active border."
+              "description": "color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-success-active-fg",
@@ -1314,7 +1346,7 @@
             },
             {
               "name": "--ki-button-secondary-success-hover-border",
-              "description": "color used by the button component for secondary success hover border."
+              "description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-success-hover-fg",
@@ -1326,7 +1358,7 @@
             },
             {
               "name": "--ki-button-secondary-success-rest-border",
-              "description": "color used by the button component for secondary success rest border."
+              "description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait)."
             },
             {
               "name": "--ki-button-secondary-success-rest-fg",
@@ -1338,7 +1370,7 @@
             },
             {
               "name": "--ki-button-sm-gap",
-              "description": "dimension used by the button component for sm gap."
+              "description": "dimension used by the button component for sm gap (interpolated between xs and md effective gaps)."
             },
             {
               "name": "--ki-button-sm-height",
@@ -1506,7 +1538,7 @@
             },
             {
               "name": "--ki-button-xl-gap",
-              "description": "dimension used by the button component for xl gap."
+              "description": "dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px)."
             },
             {
               "name": "--ki-button-xl-height",
@@ -1526,7 +1558,7 @@
             },
             {
               "name": "--ki-button-xl-padding-inline",
-              "description": "dimension used by the button component for xl padding inline."
+              "description": "dimension used by the button component for xl padding inline (MarsUI 14px)."
             },
             {
               "name": "--ki-button-xl-radius",
@@ -1534,11 +1566,11 @@
             },
             {
               "name": "--ki-button-xs-font-size",
-              "description": "dimension used by the button component for xs font size."
+              "description": "dimension used by the button component for xs font size (MarsUI caption_1 10px)."
             },
             {
               "name": "--ki-button-xs-gap",
-              "description": "dimension used by the button component for xs gap."
+              "description": "dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px)."
             },
             {
               "name": "--ki-button-xs-height",
@@ -1546,11 +1578,11 @@
             },
             {
               "name": "--ki-button-xs-icon-size",
-              "description": "dimension used by the button component for xs icon size."
+              "description": "dimension used by the button component for xs icon size (MarsUI 14px)."
             },
             {
               "name": "--ki-button-xs-line-height",
-              "description": "dimension used by the button component for xs line height."
+              "description": "dimension used by the button component for xs line height (MarsUI caption_1 16px)."
             },
             {
               "name": "--ki-button-xs-min-target",
@@ -1563,6 +1595,10 @@
             {
               "name": "--ki-button-xs-radius",
               "description": "dimension used by the button component for xs radius."
+            },
+            {
+              "name": "--ki-transparent-inverse",
+              "description": "semantic color for transparent inverse."
             }
           ]
         }
@@ -1660,7 +1696,7 @@
             },
             {
               "name": "--ki-card-elevation",
-              "description": "shadow used by the card component for card elevation."
+              "description": "Card resting elevation: MarsUI elevation ramp level e1 (brief §5, drop 0/1/1/-0.5 in the scheme shadow color; replaces the migrated M2-era shadow)."
             },
             {
               "name": "--ki-card-fg",
@@ -1927,6 +1963,10 @@
             {
               "name": "--ki-checkbox-focus-ring-offset",
               "description": "dimension used by the checkbox component for focus ring offset."
+            },
+            {
+              "name": "--ki-checkbox-focus-ring-shadow",
+              "description": "shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
             },
             {
               "name": "--ki-checkbox-focus-ring-width",
@@ -2285,11 +2325,11 @@
             },
             {
               "name": "--ki-dialog-max-width",
-              "description": "dimension used by the dialog component for max width."
+              "description": "dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale)."
             },
             {
               "name": "--ki-dialog-min-width",
-              "description": "dimension used by the dialog component for min width."
+              "description": "dimension used by the dialog component for min width (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
             },
             {
               "name": "--ki-dialog-motion-duration",
@@ -2309,7 +2349,7 @@
             },
             {
               "name": "--ki-dialog-shadow",
-              "description": "shadow used by the dialog component for dialog shadow."
+              "description": "Dialog elevation: MarsUI elevation ramp level e4 (brief §5, high modal surface; replaces the migrated approximation). material3 keeps its own e3 override (M3 dialog = level3)."
             },
             {
               "name": "--ki-typography-family-body",
@@ -2623,6 +2663,10 @@
             {
               "name": "--ki-input-focus-ring-offset",
               "description": "dimension used by the input component for focus ring offset."
+            },
+            {
+              "name": "--ki-input-focus-ring-shadow",
+              "description": "shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
             },
             {
               "name": "--ki-input-focus-ring-width",
@@ -3218,7 +3262,7 @@
             },
             {
               "name": "--ki-progress-indicator-color",
-              "description": "color used by the progress component for indicator color."
+              "description": "MarsUI fills components with the med-em (500) tone of the ramp (marsui-design-dna.md §1; specs/002-ki-button/design-extraction.md §§2.1-2.4 delta 500-vs-high-em): progress indicator uses surface.primary-med-em."
             },
             {
               "name": "--ki-progress-linear-radius",
@@ -3363,6 +3407,10 @@
               "description": "dimension used by the radio component for focus ring offset."
             },
             {
+              "name": "--ki-radio-focus-ring-shadow",
+              "description": "shadow used by the radio component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+            },
+            {
               "name": "--ki-radio-focus-ring-width",
               "description": "dimension used by the radio component for focus ring width."
             },
@@ -3412,7 +3460,7 @@
             },
             {
               "name": "--ki-radio-selected-hover-bg",
-              "description": "color used by the radio component for selected hover background."
+              "description": "color used by the radio component for selected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp); the primary-tinted alpha stays in radio.material3."
             },
             {
               "name": "--ki-radio-selected-hover-border",
@@ -3436,7 +3484,7 @@
             },
             {
               "name": "--ki-radio-unselected-active-bg",
-              "description": "color used by the radio component for unselected active background."
+              "description": "color used by the radio component for unselected active background. Brief §1: neutral surface em ramp one step above hover (s1→s2), matching ki-checkbox unchecked active; the primary-tinted alpha stays in radio.material3."
             },
             {
               "name": "--ki-radio-unselected-active-border",
@@ -3460,7 +3508,7 @@
             },
             {
               "name": "--ki-radio-unselected-hover-bg",
-              "description": "color used by the radio component for unselected hover background."
+              "description": "color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3."
             },
             {
               "name": "--ki-radio-unselected-hover-border",
@@ -3984,6 +4032,10 @@
               "description": "dimension used by the select component for focus ring offset."
             },
             {
+              "name": "--ki-select-focus-ring-shadow",
+              "description": "shadow used by the select component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+            },
+            {
               "name": "--ki-select-focus-ring-width",
               "description": "dimension used by the select component for focus ring width."
             },
@@ -4005,7 +4057,7 @@
             },
             {
               "name": "--ki-select-hover-border",
-              "description": "color used by the select component for hover border."
+              "description": "color used by the select component for hover border. Brief §1: hover moves along the neutral outline em ramp (Black/12), matching ki-input/ki-textarea; the primary accent outline is the focus language (Focus/primary), not hover."
             },
             {
               "name": "--ki-select-hover-fg",
@@ -4040,12 +4092,8 @@
               "description": "color used by the select component for listbox background."
             },
             {
-              "name": "--ki-select-listbox-elevation",
-              "description": "color used by the select component for listbox elevation."
-            },
-            {
               "name": "--ki-select-listbox-max-block-size",
-              "description": "dimension used by the select component for listbox max block size."
+              "description": "dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
             },
             {
               "name": "--ki-select-listbox-offset",
@@ -4058,6 +4106,10 @@
             {
               "name": "--ki-select-listbox-radius",
               "description": "dimension used by the select component for listbox radius."
+            },
+            {
+              "name": "--ki-select-listbox-shadow",
+              "description": "shadow used by the select component for the listbox: MarsUI elevation ramp e3 (brief §5), the medium floating-surface level, replacing the former hand-composed offset/color shadow. Declared level: e3 (M3 analog: menu/dialog band; material3 overrides to e2 = md.sys.elevation.level2 for menus)."
             },
             {
               "name": "--ki-select-min-target",
@@ -4304,6 +4356,10 @@
               "description": "dimension used by the switch component for focus ring offset."
             },
             {
+              "name": "--ki-switch-focus-ring-shadow",
+              "description": "shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+            },
+            {
               "name": "--ki-switch-focus-ring-width",
               "description": "dimension used by the switch component for focus ring width."
             },
@@ -4521,6 +4577,10 @@
             {
               "name": "--ki-tab-focus-ring-offset",
               "description": "dimension used by the tab component for focus ring offset."
+            },
+            {
+              "name": "--ki-tab-focus-ring-shadow",
+              "description": "shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
             },
             {
               "name": "--ki-tab-focus-ring-width",
@@ -4837,7 +4897,7 @@
             },
             {
               "name": "--ki-tabs-divider-width",
-              "description": "dimension used by the tabs component for divider width."
+              "description": "MarsUI hairline stroke as the tab bar divider: same 1px divider width as the verified ki-list divider pattern (marsui-design-dna.md §1 outline hairlines)."
             },
             {
               "name": "--ki-tabs-gap",
@@ -5148,6 +5208,10 @@
               "description": "dimension used by the textarea component for focus ring offset."
             },
             {
+              "name": "--ki-textarea-focus-ring-shadow",
+              "description": "shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+            },
+            {
               "name": "--ki-textarea-focus-ring-width",
               "description": "dimension used by the textarea component for focus ring width."
             },
@@ -5395,7 +5459,7 @@
             },
             {
               "name": "--ki-tooltip-max-inline-size",
-              "description": "dimension used by the tooltip component for max inline size."
+              "description": "dimension used by the tooltip component for max inline size (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
             },
             {
               "name": "--ki-tooltip-offset",

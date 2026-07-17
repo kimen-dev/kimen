@@ -5,6 +5,10 @@ import customElements from '../generated/docs.json';
 // Tokens-only styling (Art. VI): components are unstyled without the token
 // contract, so the workshop loads the same CSS the consumer would.
 import '@kimen/tokens/css';
+// The material3 sheet is scoped to [data-ki-theme='material3'], so loading it
+// statically is inert until the theme toolbar sets the attribute (opt-in by
+// attribute, exactly like a consumer loading both stylesheets).
+import '@kimen/tokens/css/material3';
 // The shipped package deliberately does NOT auto-define custom elements
 // (single-export-module, side-effect free), so the workshop registers them
 // itself from the custom-elements build: statically importable, so Vite can
@@ -39,9 +43,19 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    theme: {
+      description: 'Kimen theme (data-ki-theme)',
+      toolbar: {
+        title: 'Theme',
+        icon: 'paintbrush',
+        items: ['onmars', 'material3'],
+        dynamicTitle: true,
+      },
+    },
   },
   initialGlobals: {
     colorScheme: 'auto',
+    theme: 'onmars',
   },
   decorators: [
     (story, context) => {
@@ -50,6 +64,14 @@ const preview: Preview = {
         document.documentElement.setAttribute('data-ki-color-scheme', scheme);
       } else {
         document.documentElement.removeAttribute('data-ki-color-scheme');
+      }
+      // onmars is the default theme reached by removing the attribute, the
+      // same fallback path a consumer gets for unknown theme names.
+      const theme = context.globals['theme'] as string;
+      if (theme === 'material3') {
+        document.documentElement.setAttribute('data-ki-theme', theme);
+      } else {
+        document.documentElement.removeAttribute('data-ki-theme');
       }
       return story();
     },

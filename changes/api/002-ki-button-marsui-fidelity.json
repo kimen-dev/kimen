@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "a00617895dc5ad06cc7c395a20754dae7d03f5b9619a70567ea8bef704b34565",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Fase V.1 (on top of fases T and M3): ki-button reaches MarsUI visual fidelity - additive button tokens (backdrop-blur, focus-ring shadow, padding-block, hover overlays, bevel border-bottom pairs) plus deliberate effective-value changes extracted variant-by-variant from the Figma Button sets (primary ramp snaps to brand 500 with lightening hover overlays, secondary becomes the neutral glass surface, bevels and layered glass shadows wired, focus ring at the 40% Focus/primary alpha, xs typography and icon sizes corrected, ki.blur primitives adopt the official Figma radius/2 export convention). AA-forced divergences from Figma (danger/success on ramp 700, accessible disabled pair) are documented in the token descriptions with the 010 D2 precedent, pending founder ratification. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}

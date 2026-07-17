@@ -411,6 +411,50 @@ describe('agent surfaces', () => {
     );
   });
 
+  it('S2 buildLlmsTxt renders usage examples between guidance and attributes, sorted by file name', async () => {
+    const docs = normalizeDocs(await readJson(docsUrl));
+    const component = docs.components[0];
+    component.usage = {
+      'b-form': 'Inside a form:\n\n```html\n<form><ki-button>Save</ki-button></form>\n```\n',
+      'a-basic':
+        'A primary action:\n\n```html\n<ki-button variant="primary">Save</ki-button>\n```\n',
+    };
+    const summary = buildLlmsTxt(docs, (await readJson(pkgUrl)) as PackageFixture, preamble);
+
+    expect(summary).toContain(
+      [
+        `When NOT to use: ${guidance(component, 'whenNotToUse') ?? ''}`,
+        '',
+        'Examples:',
+        '',
+        'A primary action:',
+        '',
+        '```html',
+        '<ki-button variant="primary">Save</ki-button>',
+        '```',
+        '',
+        'Inside a form:',
+        '',
+        '```html',
+        '<form><ki-button>Save</ki-button></form>',
+        '```',
+        '',
+        'Attributes:',
+      ].join('\n'),
+    );
+  });
+
+  it('S2 buildLlmsTxt renders no Examples section for components without usage files', async () => {
+    const docs = normalizeDocs(await readJson(docsUrl));
+    for (const component of docs.components) {
+      component.usage = {};
+    }
+    const summary = buildLlmsTxt(docs, (await readJson(pkgUrl)) as PackageFixture, preamble);
+
+    expect(summary).not.toContain('Examples:');
+    expect(summary).toContain('When NOT to use:');
+  });
+
   it('S3 buildLlmsTxt carries when-to-use guidance verbatim from docsTags', async () => {
     const docs = normalizeDocs(await readJson(docsUrl));
     const component = docs.components[0];

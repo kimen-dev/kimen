@@ -1,0 +1,94 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-button" />
+
+# ki-button
+
+A token-styled action button with native button semantics.
+
+**When to use** — trigger the single main action of a view, supporting
+actions in descending hierarchy, or confirming/destructive actions through
+tone.
+
+**When NOT to use** — navigation, icon-only actions, persistent toggles, or
+loading/progress semantics.
+
+## Examples
+
+Visual hierarchy comes from `variant` (default `secondary`); use `primary`
+for the single main action in a view:
+
+```html
+<ki-button variant="primary">Save changes</ki-button>
+<ki-button>Cancel</ki-button>
+<ki-button variant="tertiary">Duplicate</ki-button>
+<ki-button variant="ghost">Learn more</ki-button>
+```
+
+Semantic intent comes from `tone` (default `neutral`), independent of
+hierarchy — never use `variant` to signal success or danger:
+
+```html
+<ki-button variant="primary" tone="success">Confirm order</ki-button>
+<ki-button variant="secondary" tone="danger">Delete draft</ki-button>
+```
+
+Sizes (`xs` to `xl`, default `md`) and the `start`/`end` icon slots — the
+default slot stays the label because it is the accessible name source:
+
+```html
+<ki-button size="sm">Compact</ki-button>
+<ki-button size="xl" variant="primary">Get started</ki-button>
+<ki-button>
+  <span slot="start" aria-hidden="true">↓</span>
+  Download
+</ki-button>
+```
+
+## Recipe: buttons in a form
+
+The default `type` is `submit`, matching the native button. To cancel a
+submission, call `preventDefault()` on the form's `submit` event — unlike a
+native button, `preventDefault()` on the `click` event does not cancel it:
+
+```html
+<form id="profile">
+  <ki-input name="name" label="Display name" required></ki-input>
+  <ki-button type="submit" variant="primary" name="intent" value="save">Save</ki-button>
+  <ki-button type="reset">Reset</ki-button>
+</form>
+
+<script type="module">
+  document.getElementById('profile').addEventListener('submit', (event) => {
+    event.preventDefault(); // cancel here, not on the button's click event
+    console.log(Object.fromEntries(new FormData(event.target)));
+  });
+</script>
+```
+
+Use `type="button"` when the action must never submit a form.
+
+## Customization
+
+| Token                                   | Controls                              |
+| --------------------------------------- | ------------------------------------- |
+| `--ki-button-primary-neutral-rest-bg`   | Primary variant resting background    |
+| `--ki-button-md-height`                 | Height of the `md` size (per-size)    |
+| `--ki-button-md-radius`                 | Corner radius of the `md` size        |
+| `--ki-button-font-weight`               | Label font weight                     |
+| `--ki-button-focus-ring-color`          | Keyboard focus ring color             |
+
+The full matrix follows `--ki-button-{variant}-{tone}-{state}-{bg|border|fg}`
+and `--ki-button-{size}-*`. Shadow parts: `::part(button)` (internal native
+button) and `::part(label)` (label wrapper).
+
+## Accessibility
+
+- The default slot is the accessible name source — always provide visible
+  label text; `ki-button` is not for icon-only compact controls.
+- Native button semantics come from the internal native button: Space and
+  Enter activation, form association and `event.submitter` behavior.
+- `disabled` removes the button from keyboard reach and exposes the
+  unavailable state; do not use it for pending/loading semantics.
+- Every size keeps at least the minimum pointer target
+  (`--ki-button-{size}-min-target`).

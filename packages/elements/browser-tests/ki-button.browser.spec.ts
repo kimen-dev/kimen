@@ -249,13 +249,50 @@ describe('ki-button in a real browser', () => {
     );
   });
 
-  it('zero axe violations across the variant tone size matrix (SC-003)', async () => {
+  it('exact heights, glass effects and zero axe violations across the variant tone size matrix (SC-003)', async () => {
     cleanup();
     ensureTokens();
+    // Figma Button set heights per size; the Figma stroke is INNER, so the
+    // 1px border must not add to the scale
+    // (specs/002-ki-button/design-extraction.md §1).
+    const expectedHeights = { xs: 24, sm: 32, md: 40, lg: 48, xl: 56 } as const;
     for (const variant of variants) {
       for (const tone of tones) {
         for (const size of sizes) {
-          await mount(`${variant} ${tone} ${size}`, { variant, tone, size });
+          const el = await mount(`${variant} ${tone} ${size}`, { variant, tone, size });
+          const button = requireButton(el);
+          await waitForStyles();
+
+          // Border-box height must be exactly 24/32/40/48/56 per size
+          // (specs/002-ki-button/design-extraction.md §1: alturas exactas).
+          expect(button.getBoundingClientRect().height, `${variant}/${tone}/${size} height`).toBe(
+            expectedHeights[size],
+          );
+
+          if (tone !== 'neutral' || size !== 'md') {
+            continue;
+          }
+          const style = getComputedStyle(button);
+          if (variant === 'primary' || variant === 'secondary') {
+            // Glass variants carry the MarsUI Blur/24 backdrop, exported as
+            // blur(12px) (specs/002-ki-button/design-extraction.md §0, §2.1-2.2).
+            expect(style.backdropFilter, `${variant} glass backdrop`).toContain('blur');
+          }
+          if (variant === 'ghost') {
+            // Non-glass variants stay off the glass path entirely: computed
+            // backdrop-filter is none, not blur(0)
+            // (specs/002-ki-button/design-extraction.md §2: effects belong to
+            // the primary/secondary Component_effect styles).
+            expect(style.backdropFilter, 'ghost has no backdrop filter').toBe('none');
+          }
+          if (variant === 'primary') {
+            // MarsUI bevel: the block-end border edge is darker than the
+            // block-start edge (Black/18 vs Black/8,
+            // specs/002-ki-button/design-extraction.md §2.1).
+            expect(style.borderBlockEndColor, 'primary bevel bottom differs from top').not.toBe(
+              style.borderBlockStartColor,
+            );
+          }
         }
       }
     }
@@ -421,20 +458,25 @@ describe('ki-button in a real browser', () => {
   it('S10 resolves forced dark appearance from onmars dark component tokens', async () => {
     cleanup();
     ensureTokens();
-    const light = await mount('Save', { variant: 'primary', tone: 'neutral' });
+    // Probe the SECONDARY glass fill: per the Figma extraction
+    // (specs/002-ki-button/design-extraction.md §2.1) the primary fill is
+    // Surface/primary_med_em = brand 500 in BOTH schemes, so it can no longer
+    // prove the dark switch; the secondary Surface/special/secondary_alpha_base
+    // is scheme-dependent.
+    const light = await mount('Save', { variant: 'secondary', tone: 'neutral' });
     await waitForStyles();
     const lightBg = getComputedStyle(requireButton(light)).backgroundColor;
     light.remove();
 
     document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
-    const el = await mount('Save', { variant: 'primary', tone: 'neutral' });
+    const el = await mount('Save', { variant: 'secondary', tone: 'neutral' });
     const button = requireButton(el);
     await waitForStyles();
 
     const darkBg = getComputedStyle(button).backgroundColor;
     expect(darkBg).toBe(
       readTokenColor(
-        `--ki-button-primary-neutral-${button.matches(':hover') ? 'hover' : 'rest'}-bg`,
+        `--ki-button-secondary-neutral-${button.matches(':hover') ? 'hover' : 'rest'}-bg`,
       ),
     );
     expect(darkBg, 'forced dark must change the resolved fill').not.toBe(lightBg);

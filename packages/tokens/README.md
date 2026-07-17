@@ -39,11 +39,35 @@ Scheme override:
 the stylesheet follows `prefers-color-scheme`. Unknown theme names and missing
 theme stylesheets fall back to onmars through the cascade.
 
+## Material 3 theme fonts
+
+The material3 theme resolves its font stacks to `Roboto` (body/display),
+`Roboto Mono` (mono) and `Roboto Slab` (serif), but the stylesheet does not
+load any webfont — a deliberate decision: tokens never trigger network
+requests. If Roboto is not installed or loaded, the stacks fall back to
+`system-ui` / `ui-monospace` / `Georgia`, which keeps the theme usable with
+metric-compatible defaults.
+
+To get the authentic Material 3 look, load Roboto yourself, for example from
+Google Fonts:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap"
+  rel="stylesheet"
+/>
+```
+
+Add `family=Roboto+Mono` or `family=Roboto+Slab` to the query only if your
+page uses the mono/serif token families.
+
 ## Theme authoring
 
 A complete theme reassigns theme-layer tokens and semantic-layer tokens while
 sharing primitives. The public contract is the `--ki-*` custom-property name
 set; every theme must expose the same names in light and dark schemes.
 
-The approved public contract for this feature is documented in
-`../../specs/001-tokens-theming/contracts/theming-contract.md`.
+The approved public contract for this feature is documented in the
+[theming contract](https://github.com/kimen-dev/kimen/blob/main/specs/001-tokens-theming/contracts/theming-contract.md).
