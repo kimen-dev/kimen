@@ -53,6 +53,13 @@ const avatarSizes = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
 const avatarPortrait =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAJklEQVR42mNIKFmBFblFtGBFDKMaaKKhZ84RrMjEKQUrGtVAEw0AykRZEK3RLr0AAAAASUVORK5CYII=';
 
+// Deterministic 32x18 (16:9) four-quadrant PNG poster for the ki-video
+// gallery: a sourceless <video> takes its intrinsic ratio from the poster
+// frame, so the fixture itself must carry the 16:9 the gallery guards.
+// Same slate family and generation flow as the avatar portrait above.
+const videoPoster =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAASCAYAAAA6yNxSAAAAM0lEQVR42mNILtzwnxLsGtpKEWYYdcCoA0YdMOqA3llH/lOCjR2TKcKjDhh1wKgDRh0AAAhDRtyaKKpFAAAAAElFTkSuQmCC';
+
 const avatarSizeRow = (attributes: string): string =>
   avatarSizes.map((size) => `<ki-avatar size="${size}"${attributes}></ki-avatar>`).join('');
 
@@ -87,6 +94,11 @@ const selectOptions = [
   '<ki-option value="fr">France</ki-option>',
   '<ki-option value="pt">Portugal</ki-option>',
 ].join('');
+
+const scrollerLines = Array.from(
+  { length: 8 },
+  (_, index) => `<p style="margin:0;">Release note line ${String(index + 1)}</p>`,
+).join('');
 
 const tabsFixture = (value: string): string =>
   [
@@ -251,6 +263,18 @@ const galleries = {
         '</div>',
     ].join(''),
   },
+  'ki-indicator': {
+    html: [
+      // The current dot across the positional states: first, middle, last
+      // (current is 1-based; the highlight treatment is the capture's core).
+      row('<ki-indicator count="5" current="1" label="Slides"></ki-indicator>'),
+      row('<ki-indicator count="5" current="3" label="Slides"></ki-indicator>'),
+      row('<ki-indicator count="5" current="5" label="Slides"></ki-indicator>'),
+      // Short and long collections hold the same dot metrics and gap.
+      row('<ki-indicator count="2" current="1" label="Pages"></ki-indicator>'),
+      row('<ki-indicator count="8" current="4" label="Pages"></ki-indicator>'),
+    ].join(''),
+  },
   'ki-input': {
     html: [
       row('<ki-input label="Name" placeholder="Jane Doe"></ki-input>'),
@@ -317,6 +341,20 @@ const galleries = {
       ),
     ].join(''),
   },
+  'ki-qr': {
+    html: [
+      // Default square anatomy beside the token-driven MarsUI round type:
+      // the same ASCII value encodes in both (the matrix is deterministic —
+      // fixed mask selection by penalty), so only the shape tokens differ.
+      // The 4-module quiet-zone floor is part of the captured geometry.
+      row(
+        '<ki-qr value="https://onmars.dev" label="Open onmars.dev on your phone"></ki-qr>' +
+          '<div style="--ki-qr-module-radius:4px;--ki-qr-finder-radius:14px;">' +
+          '<ki-qr value="https://onmars.dev" label="Open onmars.dev on your phone"></ki-qr>' +
+          '</div>',
+      ),
+    ].join(''),
+  },
   'ki-radio': {
     focusFirst: true,
     html: [
@@ -337,6 +375,25 @@ const galleries = {
       '<ki-radio value="basic">Basic</ki-radio>',
       '<ki-radio value="pro">Pro</ki-radio>',
       '</ki-radio-group>',
+    ].join(''),
+  },
+  'ki-scroller': {
+    // What this gallery guards is the CLIPPING geometry: exact cut lines at
+    // the bounds on each declared axis plus the quiet fitting state. The
+    // indicator itself cannot appear here — headless Chromium runs overlay
+    // scrollbars, which occupy no layout and paint only during interaction
+    // (verified empirically: even ::-webkit-scrollbar with opaque test
+    // colors paints nothing at rest) — so the token-resolved rail is
+    // guarded by the functional suite's computed-style assertions instead.
+    html: [
+      // Vertical overflow clipped at 120px, scroll position 0.
+      `<ki-scroller label="Release notes" style="block-size:120px;inline-size:280px;">${scrollerLines}</ki-scroller>`,
+      // Horizontal overflow: one non-wrapping run clips at the inline edge.
+      '<ki-scroller orientation="horizontal" label="Tags" style="inline-size:280px;">' +
+        '<div style="white-space:nowrap;">alpha beta gamma delta epsilon zeta eta theta iota kappa lambda</div>' +
+        '</ki-scroller>',
+      // No overflow: the quiet state stays indistinguishable from a div.
+      '<ki-scroller label="Short list" style="block-size:96px;inline-size:280px;"><p style="margin:0;">Fits entirely.</p></ki-scroller>',
     ].join(''),
   },
   'ki-select': {
@@ -409,6 +466,16 @@ const galleries = {
     html: row(
       '<ki-tooltip label="Explains the save action" placement="top"><ki-button>Save</ki-button></ki-tooltip>',
     ),
+  },
+  'ki-video': {
+    html: [
+      // The poster facade with the glass play control, wide and narrow: the
+      // deterministic quadrant PNG stands in for the consumer's poster and
+      // the width/height attributes carry the 16:9 intrinsic ratio. No
+      // source is ever declared, so nothing can load or play (Art. X).
+      `<ki-video label="Play the product tour"><video muted playsinline width="1280" height="720" poster="${videoPoster}"></video></ki-video>`,
+      `<div style="inline-size:240px;"><ki-video label="Play the teaser"><video muted playsinline width="1280" height="720" poster="${videoPoster}"></video></ki-video></div>`,
+    ].join(''),
   },
 } as const satisfies Record<string, VisualGallery>;
 
