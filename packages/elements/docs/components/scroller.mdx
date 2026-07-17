@@ -1,0 +1,88 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-scroller" />
+
+# ki-scroller
+
+A bounded scroll container that clips its content along one declared axis
+and replaces platform scrollbar chrome with a token-resolved indicator.
+
+**When to use** — a bounded region inside a view whose content can outgrow
+it: chat or message panes, code and log blocks, tag rows, sidebar
+navigation, tall menus inside cards. Give it bounds (its size comes entirely
+from your layout) and a `label` (required: the accessible name of the
+scroll region).
+
+**When NOT to use** — page-level scrolling (the browser's job), carousels or
+paginated media (future indicator/carousel patterns), virtualized long
+collections, multi-column tabular data, or nesting scrollers (v1 guarantees
+a single scroll axis per region). Cross-axis overflow is an authoring
+mistake: the scroller scrolls its declared axis only and clips the other —
+wrap or size content on the cross axis.
+
+## Examples
+
+Bounds are yours: an unconstrained scroller never overflows and renders as
+a plain container. While content overflows, the indicator appears and the
+viewport joins the Tab order; when it fits again, both go away:
+
+```html
+<ki-scroller label="Release notes" style="block-size: 12rem">
+  <h2>March</h2>
+  <ul>
+    <li>Fixed the indicator</li>
+  </ul>
+</ki-scroller>
+```
+
+`orientation` is the component's only structural axis, mapping the design
+source's `Type` axis. An unrecognized value keeps the default vertical
+behavior by CSS construction:
+
+```html
+<ki-scroller orientation="horizontal" label="Weekly timeline">
+  <div style="display: flex; inline-size: max-content">…</div>
+</ki-scroller>
+```
+
+Scrolling stays native — wheel, touchpad, touch, indicator drag and the
+standard keys (arrows, Page Up/Down, Home/End) operate the viewport
+directly; the component never intercepts, re-targets or animates scroll
+input, so `prefers-reduced-motion` adds no obligation.
+
+## Customization
+
+| Token                            | Controls                                                    |
+| -------------------------------- | ----------------------------------------------------------- |
+| `--ki-scroller-thumb-color`      | Indicator thumb color (onmars: `inverse-white/alpha-6`)     |
+| `--ki-scroller-thumb-thickness`  | Thumb cross size (onmars: 4px; material3: 8px)              |
+| `--ki-scroller-thumb-radius`     | Thumb shape (onmars: pill; material3: square)               |
+| `--ki-scroller-thumb-min-length` | Minimum thumb length along the scroll axis (16px)           |
+| `--ki-scroller-track-color`      | Track color (transparent in both shipped themes)            |
+| `--ki-scroller-gutter`           | Clearance each side of the thumb (onmars: 2px; m3: zero)    |
+| `--ki-scroller-track-inset`      | Rail end insets (onmars: 4px; material3: zero)              |
+| `--ki-scroller-surface`          | Viewport surface (transparent in both shipped themes)       |
+| `--ki-scroller-focus-ring-*`     | Viewport focus ring: `color`, `width`, `offset`             |
+
+The rail thickness is `thumb-thickness + 2×gutter` (the Figma 8px cross
+size in both shipped themes). Indicator thickness, shape and any
+hover/active emphasis are pure-appearance theme token decisions — there are
+no size or state attributes. Single shadow part: `::part(viewport)` (the
+scroll viewport; the indicator itself is scrollbar chrome, tokens-only in
+v1). In Firefox the indicator falls back to the standard
+`scrollbar-width`/`scrollbar-color` path: token colors on platform metrics.
+
+## Accessibility
+
+- Assistive technology receives a `region` named from `label`; the slotted
+  content keeps its own semantics. `label` is required — an unlabeled
+  scroller renders but fails the accessibility audit.
+- While content overflows, the viewport is reachable via Tab and scrollable
+  with the standard keys (WCAG 2.1.1, axe `scrollable-region-focusable`);
+  while it fits, the scroller adds no Tab stop. The transition follows
+  content and bounds changes at runtime.
+- Region role and name stay stable regardless of overflow; only
+  focusability toggles, so announcements don't churn.
+- Interactive elements slotted inside keep their own focus and events; the
+  viewport's Tab stop precedes them while it exists. The platform's native
+  scroll-into-view behavior applies untouched.

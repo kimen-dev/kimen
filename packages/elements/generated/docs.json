@@ -1998,6 +1998,153 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-indicator/ki-indicator.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-indicator",
+      "docs": "A non-interactive page-position indicator: one dot per position of a\nbounded sequence, exactly one highlighted as current.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "show the current position within a bounded, sequential set of\npeer views whose navigation lives elsewhere: carousel slides, unlabeled\nonboarding steps, gallery pages. Wire `count` and `current` (1-based) to\nthe sequence the consumer renders and give it a `label` (required\nauthoring: assistive technology reads one graphic named\n\"<label>, <current> / <count>\"). Below two positions an indicator carries\nno information."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "section navigation (ki-tabs), task completion or loading\n(ki-progress), labeled step flows (a stepper is a separate roadmap item),\ninteractive pagination (a future feature — the indicator takes no focus\nand no input; navigation belongs to the composing carousel's own\ncontrols), or conveying quantity without a current position. Position\nchanges are never announced by the indicator itself (no live region): the\ncomposing carousel owns announcements."
+        },
+        {
+          "name": "part",
+          "text": "indicator - The row container: layout and the token-driven gap."
+        },
+        {
+          "name": "part",
+          "text": "dot - Every dot: size, shape and color."
+        },
+        {
+          "name": "part",
+          "text": "dot-current - Additionally on the current dot: the highlight treatment."
+        }
+      ],
+      "usage": {},
+      "props": [
+        {
+          "name": "count",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "count",
+          "reflectToAttr": false,
+          "docs": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "current",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "current",
+          "reflectToAttr": false,
+          "docs": "The current position, 1-based to match the exposed position text\n(\"2 / 5\"). Exactly one dot presents the current appearance whenever\n`count` >= 1: values above `count` clamp to the last position, values\nbelow 1 and non-numeric values fall back to the first (FR-003). Updates\nre-render in place — the highlight and the exposed text follow\nimmediately, re-applying the normalization (FR-004).",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the sequence (\"Slide position\"). The exposed name\ncombines it with the wordless numeric position —\n\"<label>, <current> / <count>\" — on a single non-interactive graphic;\nwithout a label the name degrades to the bare position text (documented\nas required authoring, FR-005). The label is never rendered visually\nand position changes are never announced (no live region, FR-006).",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "dot",
+          "docs": "Every dot: size, shape and color."
+        },
+        {
+          "name": "dot-current",
+          "docs": "Additionally on the current dot: the highlight treatment."
+        },
+        {
+          "name": "indicator",
+          "docs": "The row container: layout and the token-driven gap."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-input/ki-input.tsx",
       "encapsulation": "shadow",
       "tag": "ki-input",
@@ -2785,6 +2932,106 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-qr/ki-qr.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-qr",
+      "docs": "A machine-scannable QR code that hands a declared value — a link, a\npairing payload — from the screen to a nearby camera, encoded locally\nand restyled entirely through tokens.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "hand a URL or machine-readable payload from the screen to a\nnearby camera device: login pairing, tickets and passes, \"continue on\nmobile\" links, Wi-Fi sharing. Declare `value` (encoded verbatim, always\nlocally) and a purpose-stating `label` (\"Open onmars.dev on your phone\"),\nand always offer the same payload through an accessible alternative next\nto the code — a visible link or copyable text — because a QR code is only\nuseful to someone who can point a second device's camera at the screen."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "data the person must read on this same screen (render text\nor a link), one-dimensional barcodes (out of scope), anything interactive\n(a QR code is not a button — pair it with a real control instead), secret\nvalues (anyone who can photograph the screen can decode them), or as the\nsole carrier of the payload (the accessible alternative is mandatory\nguidance). An always-empty ki-qr and a value beyond the ~2,331-byte\ncapacity are authoring mistakes: both render nothing, silently."
+        },
+        {
+          "name": "part",
+          "text": "code - The code tile: size, tile background and corners, quiet zone, module and finder shape/color."
+        }
+      ],
+      "usage": {},
+      "props": [
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name stating the code's purpose (\"Open onmars.dev on your\nphone\"). The component exposes exactly one non-interactive image named\nby it, falling back to the encoded value when absent (FR-005) — never\nan unnamed graphic. The label is never rendered visually, and naming\nthe purpose is what tells assistive-technology users to look for the\naccessible alternative carrying the same payload (documented catalog\nguidance, FR-013).",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "The exact text the code encodes — the single source of the content,\nencoded locally as one UTF-8 byte segment at error-correction level M\n(non-ASCII text additionally carries the UTF-8 ECI designator, so real\nscanners decode the declared string rather than an ISO-8859-1\nmisreading), so an independent decoder recovers it byte-for-byte,\nincluding non-ASCII text (FR-001), and no network request is ever made — the value is\ndata, never behavior: the component never interprets, resolves,\nnavigates to or fetches it (FR-002). Changes re-encode in place. When\nabsent, empty or beyond the capacity of the densest symbol (~2,331\nbytes at level M), nothing renders and nothing errors (FR-003).",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "code",
+          "docs": "The code tile: size, tile background and corners, quiet zone, module and finder shape/color."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-radio/ki-radio.tsx",
       "encapsulation": "shadow",
       "tag": "ki-radio",
@@ -3073,6 +3320,124 @@
         {
           "name": "label",
           "docs": "Visible group label and accessible-name source."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-scroller/ki-scroller.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-scroller",
+      "docs": "A bounded scroll container that clips its content along one declared axis\nand replaces platform scrollbar chrome with a token-resolved indicator.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "a bounded region inside a view whose content can outgrow it:\nchat or message panes, code and log blocks, tag rows, sidebar navigation,\ntall menus inside cards. Give it bounds (its size comes entirely from your\nlayout) and a `label` (required: the accessible name of the scroll\nregion). Scrolling stays native — wheel, touch, keyboard and indicator\ndrag operate the viewport directly."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "page-level scrolling (the browser's job), carousels or\npaginated media (future indicator/carousel patterns), virtualized long\ncollections, multi-column tabular data, or nesting scrollers (v1\nguarantees a single scroll axis per region). Cross-axis overflow is an\nauthoring mistake: the scroller scrolls its declared axis only and clips\nthe other — wrap or size content on the cross axis."
+        },
+        {
+          "name": "slot",
+          "text": "- The scrollable content: it keeps its own semantics and sizes the scroll extent along the declared axis."
+        },
+        {
+          "name": "part",
+          "text": "viewport - The scroll viewport: surface, focus ring and, as native\nscrollbar chrome styled from `--ki-scroller-*` tokens, the indicator."
+        }
+      ],
+      "usage": {},
+      "props": [
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the scroll region (\"Release notes\", \"Chat\nmessages\"). Assistive technology receives a `region` with this name\nwhose slotted content keeps its own semantics (FR-006). Documented as\nrequired: a scroller without a label renders but exposes no accessible\nname and fails the accessibility audit (015-ki-progress precedent).\nThe label is never rendered visually.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "complexType": {
+            "original": "KiScrollerOrientation",
+            "resolved": "\"horizontal\" | \"vertical\"",
+            "references": {
+              "KiScrollerOrientation": {
+                "location": "local",
+                "path": "src/components/ki-scroller/ki-scroller.tsx",
+                "id": "src/components/ki-scroller/ki-scroller.tsx::KiScrollerOrientation"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "orientation",
+          "reflectToAttr": true,
+          "docs": "Declared scroll axis, mapping the design source's `Type` axis:\n`vertical` (default) scrolls the block axis, `horizontal` the inline\naxis. One axis per instance; the cross axis clips. A structural axis,\nnever appearance — thickness, shape and colors of the indicator are\nper-theme `--ki-scroller-*` tokens. An unrecognized value matches no\nstyle selector and no `horizontal` code path, so the scroller keeps\nthe default vertical behavior (fallback by CSS construction plus a\nsingle strict comparison — no validation code, FR-002/FR-009).",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'vertical'"
+            }
+          ],
+          "default": "'vertical'",
+          "values": [
+            {
+              "value": "horizontal",
+              "type": "string"
+            },
+            {
+              "value": "vertical",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The scrollable content: it keeps its own semantics and sizes the scroll extent along the declared axis."
+        }
+      ],
+      "parts": [
+        {
+          "name": "viewport",
+          "docs": "The scroll viewport: surface, focus ring and, as native\nscrollbar chrome styled from `--ki-scroller-*` tokens, the indicator."
         }
       ],
       "states": [],
@@ -4467,6 +4832,92 @@
       "dependents": [],
       "dependencies": [],
       "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-video/ki-video.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-video",
+      "docs": "A themed video surface: a calm poster facade with exactly one accessible\nplay control over a slotted native `<video>` element. From the first\nactivation on, playback, scrubbing, volume, captions and fullscreen belong\nto the native player — Kimen ships no custom chrome.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "playable content the person deliberately chooses to watch —\nproduct tours, talks, tutorials, announcements — presented as a poster\nwith one play control. Slot exactly one native `<video>` carrying its own\n`poster`, sources and `<track>` captions, omit `controls` (the component\nenables the native chrome the moment the facade yields, FR-002), and give\nthe control a `label` (required: the accessible name of the play button)."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "decorative background or ambient loops (plain CSS and\n`<video>` are the tool), audio-only content (a future audio component),\nembeds from streaming platforms that ship their own player chrome (use\ntheir embed), or static imagery (use an image, not a video). `autoplay`\non the slotted media is unsupported: the facade's contract is that\nplayback begins only by explicit user activation — never on scroll,\nhover or visibility — so preexisting `autoplay` and `controls` on the\nslotted media are cleared when it arrives, and any playback already\nrunning is paused (FR-003; the native chrome returns at activation)."
+        },
+        {
+          "name": "slot",
+          "text": "- Exactly one native `<video>` element carrying its own poster, sources and `<track>` captions."
+        },
+        {
+          "name": "part",
+          "text": "frame - The media frame: radius, clipping, the themed surface."
+        },
+        {
+          "name": "part",
+          "text": "play - The play control: overlay scrim, glass container and glyph."
+        }
+      ],
+      "usage": {},
+      "props": [
+        {
+          "name": "label",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the play control (\"Play the product tour\"). The\ncontrol is a real button exposing role button with exactly this name;\nthe frame contributes no role, name or state of its own (FR-004,\nFR-005). Documented as required: no default human-language string is\nbaked in, and an unlabeled control renders but fails the accessibility\naudit (015-ki-progress precedent). The label is never rendered visually.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "undefined"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Exactly one native `<video>` element carrying its own poster, sources and `<track>` captions."
+        }
+      ],
+      "parts": [
+        {
+          "name": "frame",
+          "docs": "The media frame: radius, clipping, the themed surface."
+        },
+        {
+          "name": "play",
+          "docs": "The play control: overlay scrim, glass container and glyph."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
     }
   ],
   "typeLibrary": {
@@ -4539,6 +4990,11 @@
       "declaration": "export type KiProgressShape = 'linear' | 'circular';",
       "docstring": "",
       "path": "src/components/ki-progress/ki-progress.tsx"
+    },
+    "src/components/ki-scroller/ki-scroller.tsx::KiScrollerOrientation": {
+      "declaration": "export type KiScrollerOrientation = 'vertical' | 'horizontal';",
+      "docstring": "",
+      "path": "src/components/ki-scroller/ki-scroller.tsx"
     },
     "src/components/ki-status/ki-status.tsx::KiStatusTone": {
       "declaration": "export type KiStatusTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",

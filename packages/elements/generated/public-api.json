@@ -6218,6 +6218,180 @@
               }
             }
           },
+          "ki-indicator": {
+            "attributes": {
+              "count": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).",
+                "replacement": null,
+                "required": false,
+                "type": "number | undefined"
+              },
+              "current": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The current position, 1-based to match the exposed position text\n(\"2 / 5\"). Exactly one dot presents the current appearance whenever\n`count` >= 1: values above `count` clamp to the last position, values\nbelow 1 and non-numeric values fall back to the first (FR-003). Updates\nre-render in place — the highlight and the exposed text follow\nimmediately, re-applying the normalization (FR-004).",
+                "replacement": null,
+                "required": false,
+                "type": "number | undefined"
+              },
+              "label": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Accessible name of the sequence (\"Slide position\"). The exposed name\ncombines it with the wordless numeric position —\n\"<label>, <current> / <count>\" — on a single non-interactive graphic;\nwithout a label the name degrades to the bare position text (documented\nas required authoring, FR-005). The label is never rendered visually\nand position changes are never announced (no live region, FR-006).",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              }
+            },
+            "cssProperties": {
+              "--ki-indicator-dot-block-size": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the indicator component for the resting dot block size: the 8px circle diameter measured in the State=inactive vector (the 16px frame height is row alignment, carried by the current dot).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-indicator-dot-color": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_18, the exact variable bound to every Indicator variant fill (Black/18 light, White/18 dark) — the scheme flip rides the semantic layer.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-indicator-dot-current-block-size": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the indicator component for the current dot block size: Space/3xl, the exact variable bound as the 16px height of the State=active pill (the full row line; declared family extension, design-extraction §Decisiones).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-indicator-dot-current-color": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_18, the exact fill of the State=active ring vector (Black/18 light, White/18 dark) — painted as the pill ring in onmars, as the solid dot in themes that zero the hole.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-indicator-dot-current-hole-block-size": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the indicator component for the block size of the transparent hole cut from the current pill: the 6px cutout height measured in the State=active vector; the ring width derives by construction as (current block size − hole block size) / 2 and a theme resolves it to zero for a solid dot (declared family extension, design-extraction §Decisiones).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-indicator-dot-current-inline-size": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the indicator component for the current dot inline size: Space/10xl, the exact variable bound as the 32px width of the State=active pill — the MarsUI elongation lives here, never in an attribute (FR-007).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-indicator-dot-current-radius": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the indicator component for the current dot shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-indicator-dot-inline-size": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the indicator component for the resting dot inline size: Space/md, the exact variable bound as the 8px width of the State=inactive symbol; the painted circle is 8x8 centered in the 16px row line.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-indicator-dot-radius": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the indicator component for the resting dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-indicator-gap": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the indicator component for the space between dots: Space/sm, the exact variable bound as the 6px gap of the composed Nav_indicator row (node 14195:5866, specs/024-ki-indicator/design-extraction.md).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-indicator-motion-duration": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "duration used by the indicator component for the highlight transfer between dots: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-008; disabled under reduced motion by construction).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "description": "A non-interactive page-position indicator: one dot per position of a\nbounded sequence, exactly one highlighted as current.",
+            "events": {},
+            "methods": {},
+            "parts": {
+              "dot": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Every dot: size, shape and color.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "dot-current": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Additionally on the current dot: the highlight treatment.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "indicator": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The row container: layout and the token-driven gap.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "properties": {
+              "count": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).",
+                "replacement": null,
+                "required": false,
+                "type": "number | undefined"
+              },
+              "current": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The current position, 1-based to match the exposed position text\n(\"2 / 5\"). Exactly one dot presents the current appearance whenever\n`count` >= 1: values above `count` clamp to the last position, values\nbelow 1 and non-numeric values fall back to the first (FR-003). Updates\nre-render in place — the highlight and the exposed text follow\nimmediately, re-applying the normalization (FR-004).",
+                "replacement": null,
+                "required": false,
+                "type": "number | undefined"
+              },
+              "label": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Accessible name of the sequence (\"Slide position\"). The exposed name\ncombines it with the wordless numeric position —\n\"<label>, <current> / <count>\" — on a single non-interactive graphic;\nwithout a label the name degrades to the bare position text (documented\nas required authoring, FR-005). The label is never rendered visually\nand position changes are never announced (no live region, FR-006).",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              }
+            },
+            "slots": {}
+          },
           "ki-input": {
             "attributes": {
               "autocomplete": {
@@ -7310,6 +7484,116 @@
             },
             "slots": {}
           },
+          "ki-qr": {
+            "attributes": {
+              "label": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Accessible name stating the code's purpose (\"Open onmars.dev on your\nphone\"). The component exposes exactly one non-interactive image named\nby it, falling back to the encoded value when absent (FR-005) — never\nan unnamed graphic. The label is never rendered visually, and naming\nthe purpose is what tells assistive-technology users to look for the\naccessible alternative carrying the same payload (documented catalog\nguidance, FR-013).",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              },
+              "value": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The exact text the code encodes — the single source of the content,\nencoded locally as one UTF-8 byte segment at error-correction level M\n(non-ASCII text additionally carries the UTF-8 ECI designator, so real\nscanners decode the declared string rather than an ISO-8859-1\nmisreading), so an independent decoder recovers it byte-for-byte,\nincluding non-ASCII text (FR-001), and no network request is ever made — the value is\ndata, never behavior: the component never interprets, resolves,\nnavigates to or fetches it (FR-002). Changes re-encode in place. When\nabsent, empty or beyond the capacity of the densest symbol (~2,331\nbytes at level M), nothing renders and nothing errors (FR-003).",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              }
+            },
+            "cssProperties": {
+              "--ki-qr-background": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the qr component for the light tile behind the modules: the Figma symbol is transparent over the showcase card's Surface/s0 white, but a scannable code owns its tile — the scheme-stable white keeps dark-on-light module contrast in both schemes (FR-010, a documented theme obligation).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-qr-color": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the qr component for the dark modules and finder rings: the Figma fill binds Text/high_em (#0a0c11), which flips light under the dark scheme and would invert the code, so the theme obligation (FR-010: dark modules on a light tile in both schemes) resolves the scheme-stable black ink instead (design-extraction §2, declared for founder ratification).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-qr-finder-radius": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the qr component for the corner radius of the three finder rings, applied to the ring's midline in the code's internal coordinate space of 8px per module: Type=square renders square concentric finders (radius 0); the documented round value is {ki.radius.2xl} (14px midline = 18px outer edge, the 2.25-module radius measured on Type=round); the inner-edge and center radii derive by construction (stroke geometry and a 3/7 scale — design-extraction §5).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-qr-module-radius": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the qr component for the corner radius of every data module, in the code's internal coordinate space of 8px per module: Type=square (the set default) renders pure squares (radius 0); the documented round value is {ki.radius.xs} (4px = half a module, the MarsUI Type=round dot carried as a token value, never an attribute — FR-007, 002 shape precedent).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-qr-quiet-zone": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the qr component for the light quiet zone around the modules: the 8px band measured on both 128px variants (about two modules of the sample matrices), painted as tile padding and preserved at any token-driven size (FR-008).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-qr-radius": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the qr component for the tile corners: the QR_code frames are square with no own radius (the rounded showcase card beneath is framing, not anatomy — design-extraction §1).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-qr-size": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the qr component for the code's square box: the 128px QR_code frame (node 16158:27561) binds no size variable and the space scale has no 8rem step, so onmars resolves the nearest step (120px); consumers rescale through this token — the code always stays 1:1 (specs/026-ki-qr/design-extraction.md §4, declared for founder ratification).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "description": "A machine-scannable QR code that hands a declared value — a link, a\npairing payload — from the screen to a nearby camera, encoded locally\nand restyled entirely through tokens.",
+            "events": {},
+            "methods": {},
+            "parts": {
+              "code": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The code tile: size, tile background and corners, quiet zone, module and finder shape/color.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "properties": {
+              "label": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Accessible name stating the code's purpose (\"Open onmars.dev on your\nphone\"). The component exposes exactly one non-interactive image named\nby it, falling back to the encoded value when absent (FR-005) — never\nan unnamed graphic. The label is never rendered visually, and naming\nthe purpose is what tells assistive-technology users to look for the\naccessible alternative carrying the same payload (documented catalog\nguidance, FR-013).",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              },
+              "value": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The exact text the code encodes — the single source of the content,\nencoded locally as one UTF-8 byte segment at error-correction level M\n(non-ASCII text additionally carries the UTF-8 ECI designator, so real\nscanners decode the declared string rather than an ISO-8859-1\nmisreading), so an independent decoder recovers it byte-for-byte,\nincluding non-ASCII text (FR-001), and no network request is ever made — the value is\ndata, never behavior: the component never interprets, resolves,\nnavigates to or fetches it (FR-002). Changes re-encode in place. When\nabsent, empty or beyond the capacity of the densest symbol (~2,331\nbytes at level M), nothing renders and nothing errors (FR-003).",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              }
+            },
+            "slots": {}
+          },
           "ki-radio": {
             "attributes": {
               "disabled": {
@@ -7870,6 +8154,157 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "`ki-radio` options. Document order is navigation order.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            }
+          },
+          "ki-scroller": {
+            "attributes": {
+              "label": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Accessible name of the scroll region (\"Release notes\", \"Chat\nmessages\"). Assistive technology receives a `region` with this name\nwhose slotted content keeps its own semantics (FR-006). Documented as\nrequired: a scroller without a label renders but exposes no accessible\nname and fails the accessibility audit (015-ki-progress precedent).\nThe label is never rendered visually.",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              },
+              "orientation": {
+                "default": "'vertical'",
+                "deprecatedSince": null,
+                "description": "Declared scroll axis, mapping the design source's `Type` axis:\n`vertical` (default) scrolls the block axis, `horizontal` the inline\naxis. One axis per instance; the cross axis clips. A structural axis,\nnever appearance — thickness, shape and colors of the indicator are\nper-theme `--ki-scroller-*` tokens. An unrecognized value matches no\nstyle selector and no `horizontal` code path, so the scroller keeps\nthe default vertical behavior (fallback by CSS construction plus a\nsingle strict comparison — no validation code, FR-002/FR-009).",
+                "replacement": null,
+                "required": false,
+                "type": "\"horizontal\" | \"vertical\""
+              }
+            },
+            "cssProperties": {
+              "--ki-scroller-focus-ring-color": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the scroller component for the viewport focus ring: the keyboard-focusable scroll region (FR-005) adopts the ki-dialog focus-ring pair verbatim.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-scroller-focus-ring-offset": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-scroller-focus-ring-width": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the scroller component for the viewport focus ring width (ki-dialog precedent).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-scroller-gutter": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the scroller component for the clearance on each side of the thumb: the 2px padding-inline of the 8px Scroller rail (rail thickness = thumb-thickness + 2×gutter).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-scroller-surface": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the scroller component for the viewport surface: transparent in onmars — the scroller shows the consumer's own surface; a theme may resolve a proper surface here (FR-007).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-scroller-thumb-color": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_6, the exact variable bound to the scroll pill on both Scroller variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-scroller-thumb-min-length": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the scroller component for the minimum thumb length along the scroll axis: the 16px min-height on the Figma scroll pill; the actual length stays the native visible-fraction proportion (FR-003).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-scroller-thumb-radius": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the scroller component for the thumb shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-scroller-thumb-thickness": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-scroller-track-color": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-scroller-track-inset": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "description": "A bounded scroll container that clips its content along one declared axis\nand replaces platform scrollbar chrome with a token-resolved indicator.",
+            "events": {},
+            "methods": {},
+            "parts": {
+              "viewport": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The scroll viewport: surface, focus ring and, as native\nscrollbar chrome styled from `--ki-scroller-*` tokens, the indicator.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "properties": {
+              "label": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Accessible name of the scroll region (\"Release notes\", \"Chat\nmessages\"). Assistive technology receives a `region` with this name\nwhose slotted content keeps its own semantics (FR-006). Documented as\nrequired: a scroller without a label renders but exposes no accessible\nname and fails the accessibility audit (015-ki-progress precedent).\nThe label is never rendered visually.",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              },
+              "orientation": {
+                "default": "'vertical'",
+                "deprecatedSince": null,
+                "description": "Declared scroll axis, mapping the design source's `Type` axis:\n`vertical` (default) scrolls the block axis, `horizontal` the inline\naxis. One axis per instance; the cross axis clips. A structural axis,\nnever appearance — thickness, shape and colors of the indicator are\nper-theme `--ki-scroller-*` tokens. An unrecognized value matches no\nstyle selector and no `horizontal` code path, so the scroller keeps\nthe default vertical behavior (fallback by CSS construction plus a\nsingle strict comparison — no validation code, FR-002/FR-009).",
+                "replacement": null,
+                "required": false,
+                "type": "\"horizontal\" | \"vertical\""
+              }
+            },
+            "slots": {
+              "": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The scrollable content: it keeps its own semantics and sizes the scroll extent along the declared axis.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -10362,6 +10797,197 @@
                 "type": null
               }
             }
+          },
+          "ki-video": {
+            "attributes": {
+              "label": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Accessible name of the play control (\"Play the product tour\"). The\ncontrol is a real button exposing role button with exactly this name;\nthe frame contributes no role, name or state of its own (FR-004,\nFR-005). Documented as required: no default human-language string is\nbaked in, and an unlabeled control renders but fails the accessibility\naudit (015-ki-progress precedent). The label is never rendered visually.",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              }
+            },
+            "cssProperties": {
+              "--ki-video-backdrop-blur": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the video component for the glass backdrop of the scrim and the play container (MarsUI Blur/24, identical to the button glass). material3 resolves to blur none via the semantic override.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-focus-ring-color": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the video component for the play control focus ring: the keyboard-reachable facade control (FR-004, S6) adopts the ki-dialog/ki-icon-button focus-ring pair verbatim.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-focus-ring-offset": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the video component for the play control focus ring offset (ki-dialog precedent).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-focus-ring-width": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the video component for the play control focus ring width (ki-dialog precedent).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-frame-radius": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the video component for the frame corners: Radius/big_component/radius_xs, the exact variable bound to the Size=md Video frame (node 12089:6570, specs/025-ki-video/design-extraction.md) — the sm frame's radius_md is the scale demo, not a second API value.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-motion-duration": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "duration used by the video component for the facade dismissal fade: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-013; disabled under reduced motion by construction, 024 precedent).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-play-bg": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the video component for the play container surface: Surface/inverse_white, the exact variable bound to the Icon_button fill (black over light, white over dark) — the control carries its own surface so glyph contrast never depends on the poster imagery (FR-008).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-play-border-color": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the video component for the play container bevel: Outline/primary_button_top, the exact variable bound to the Icon_button stroke — the verified ki-button glass bevel.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-play-border-width": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the video component for the play container bevel width (MarsUI hairline stroke, ki-icon-button precedent).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-play-fg": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the video component for the play glyph: Text/inverse_black, the counterpart of the inverse container surface (white over light, black over dark) — the glyph inherits it via currentColor; the -bg/-fg pair is swept by the contrast gate (FR-008).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-play-icon-size": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the video component for the play glyph: the 28px Icon/Placeholder_xl slot measured inside the Size=md play container (the ki-icon-button xl icon size).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-play-radius": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the video component for the play container shape: Radius/component/radius_xl, the exact variable bound to the Size=md Icon_button instance (14px, the ki-icon-button xl radius).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-play-shadow": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "shadow used by the video component for the play container effects: the exact MarsUI glass pair on the Icon_button instance — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers (ki-status/ki-icon-button precedent).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-play-size": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the video component for the play container box: the 56px Icon_button instance of the Size=md Video (the ki-icon-button xl box; the sm variant's 40px box is the scale demo).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-scrim-color": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the video component for the overlay scrim behind the play control: Inverse_white/alpha_6, the exact variable bound to the Play halo on both Video variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-scrim-padding": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the video component for the scrim clearance around the play container: Space/3xl, the exact variable bound as the Size=md Play halo padding (16px on every side).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-video-scrim-radius": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "dimension used by the video component for the overlay scrim shape: Radius/component/radius_6xl, the exact variable bound to the Size=md Play halo (28px pill-cornered square).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "description": "A themed video surface: a calm poster facade with exactly one accessible\nplay control over a slotted native `<video>` element. From the first\nactivation on, playback, scrubbing, volume, captions and fullscreen belong\nto the native player — Kimen ships no custom chrome.",
+            "events": {},
+            "methods": {},
+            "parts": {
+              "frame": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The media frame: radius, clipping, the themed surface.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "play": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The play control: overlay scrim, glass container and glyph.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            },
+            "properties": {
+              "label": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Accessible name of the play control (\"Play the product tour\"). The\ncontrol is a real button exposing role button with exactly this name;\nthe frame contributes no role, name or state of its own (FR-004,\nFR-005). Documented as required: no default human-language string is\nbaked in, and an unlabeled control renders but fails the accessibility\naudit (015-ki-progress precedent). The label is never rendered visually.",
+                "replacement": null,
+                "required": false,
+                "type": "string | undefined"
+              }
+            },
+            "slots": {
+              "": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Exactly one native `<video>` element carrying its own poster, sources and `<track>` captions.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            }
           }
         },
         "exports": {
@@ -10420,6 +11046,11 @@
             "replacement": null,
             "target": "./dist/components/ki-icon-button.js"
           },
+          "./ki-indicator": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./dist/components/ki-indicator.js"
+          },
           "./ki-input": {
             "deprecatedSince": null,
             "replacement": null,
@@ -10445,6 +11076,11 @@
             "replacement": null,
             "target": "./dist/components/ki-progress.js"
           },
+          "./ki-qr": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./dist/components/ki-qr.js"
+          },
           "./ki-radio": {
             "deprecatedSince": null,
             "replacement": null,
@@ -10454,6 +11090,11 @@
             "deprecatedSince": null,
             "replacement": null,
             "target": "./dist/components/ki-radio-group.js"
+          },
+          "./ki-scroller": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./dist/components/ki-scroller.js"
           },
           "./ki-select": {
             "deprecatedSince": null,
@@ -10494,6 +11135,11 @@
             "deprecatedSince": null,
             "replacement": null,
             "target": "./dist/components/ki-tooltip.js"
+          },
+          "./ki-video": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./dist/components/ki-video.js"
           },
           "./loader": {
             "deprecatedSince": null,
@@ -10994,6 +11640,25 @@
             },
             "target": "./dist/components/ki-icon-button.js"
           },
+          "./ki-indicator": {
+            "declaration": "./dist/components/ki-indicator.d.ts",
+            "symbols": {
+              "KiIndicator": {
+                "kinds": [
+                  "type",
+                  "value"
+                ],
+                "signature": "interface KiIndicator extends Components.KiIndicator, HTMLElement {\n}\nexport const KiIndicator: {\n    prototype: KiIndicator;\n    new (): KiIndicator;\n};"
+              },
+              "defineCustomElement": {
+                "kinds": [
+                  "value"
+                ],
+                "signature": "export const defineCustomElement: () => void;"
+              }
+            },
+            "target": "./dist/components/ki-indicator.js"
+          },
           "./ki-input": {
             "declaration": "./dist/components/ki-input.d.ts",
             "symbols": {
@@ -11101,6 +11766,25 @@
             },
             "target": "./dist/components/ki-progress.js"
           },
+          "./ki-qr": {
+            "declaration": "./dist/components/ki-qr.d.ts",
+            "symbols": {
+              "KiQr": {
+                "kinds": [
+                  "type",
+                  "value"
+                ],
+                "signature": "interface KiQr extends Components.KiQr, HTMLElement {\n}\nexport const KiQr: {\n    prototype: KiQr;\n    new (): KiQr;\n};"
+              },
+              "defineCustomElement": {
+                "kinds": [
+                  "value"
+                ],
+                "signature": "export const defineCustomElement: () => void;"
+              }
+            },
+            "target": "./dist/components/ki-qr.js"
+          },
           "./ki-radio": {
             "declaration": "./dist/components/ki-radio.d.ts",
             "symbols": {
@@ -11138,6 +11822,31 @@
               }
             },
             "target": "./dist/components/ki-radio-group.js"
+          },
+          "./ki-scroller": {
+            "declaration": "./dist/components/ki-scroller.d.ts",
+            "symbols": {
+              "KiScroller": {
+                "kinds": [
+                  "type",
+                  "value"
+                ],
+                "signature": "interface KiScroller extends Components.KiScroller, HTMLElement {\n}\nexport const KiScroller: {\n    prototype: KiScroller;\n    new (): KiScroller;\n};"
+              },
+              "KiScrollerOrientation": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiScrollerOrientation = 'vertical' | 'horizontal';"
+              },
+              "defineCustomElement": {
+                "kinds": [
+                  "value"
+                ],
+                "signature": "export const defineCustomElement: () => void;"
+              }
+            },
+            "target": "./dist/components/ki-scroller.js"
           },
           "./ki-select": {
             "declaration": "./dist/components/ki-select.d.ts",
@@ -11303,6 +12012,25 @@
             },
             "target": "./dist/components/ki-tooltip.js"
           },
+          "./ki-video": {
+            "declaration": "./dist/components/ki-video.d.ts",
+            "symbols": {
+              "KiVideo": {
+                "kinds": [
+                  "type",
+                  "value"
+                ],
+                "signature": "interface KiVideo extends Components.KiVideo, HTMLElement {\n}\nexport const KiVideo: {\n    prototype: KiVideo;\n    new (): KiVideo;\n};"
+              },
+              "defineCustomElement": {
+                "kinds": [
+                  "value"
+                ],
+                "signature": "export const defineCustomElement: () => void;"
+              }
+            },
+            "target": "./dist/components/ki-video.js"
+          },
           "./loader": {
             "declaration": "./loader/index.d.ts",
             "symbols": {
@@ -11310,7 +12038,7 @@
                 "kinds": [
                   "namespace"
                 ],
-                "signature": "export namespace Components {\n    interface KiAlert {\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n        \"dismissible\": boolean;\n        \"heading\"?: string;\n        \"tone\": KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\": KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\": KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\": KiBadgeSize;\n        \"tone\": KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\": boolean;\n        \"name\"?: string;\n        \"size\": KiButtonSize;\n        \"tone\": KiButtonTone;\n        \"type\": KiButtonType;\n        \"value\"?: string;\n        \"variant\": KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"indeterminate\": boolean;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"close\": () => Promise<void>;\n        \"closeOnBackdrop\": boolean;\n        \"heading\"?: string;\n        \"open\": boolean;\n        \"show\": () => Promise<void>;\n    }\n    interface KiDivider {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\": boolean;\n        \"label\"?: string;\n        \"size\": KiIconButtonSize;\n        \"tone\": KiIconButtonTone;\n        \"variant\": KiIconButtonVariant;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"label\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"type\": KiInputType;\n        \"value\": string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\": boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\": boolean;\n        \"label\"?: string;\n        \"max\": number;\n        \"shape\": KiProgressShape;\n        \"value\": number;\n    }\n    interface KiRadio {\n        \"disabled\": boolean;\n        \"value\": string;\n    }\n    interface KiRadioGroup {\n        \"disabled\": boolean;\n        \"label\": string;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiSelect {\n        \"disabled\": boolean;\n        \"label\": string;\n        \"name\"?: string;\n        \"placeholder\": string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\": boolean;\n        \"tone\": KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\": boolean;\n        \"selected\": boolean;\n        \"value\": string;\n    }\n    interface KiTabPanel {\n        \"value\": string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"value\": string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"label\": string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"rows\": number;\n        \"value\": string;\n    }\n    interface KiTooltip {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n}"
+                "signature": "export namespace Components {\n    interface KiAlert {\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n        \"dismissible\": boolean;\n        \"heading\"?: string;\n        \"tone\": KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\": KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\": KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\": KiBadgeSize;\n        \"tone\": KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\": boolean;\n        \"name\"?: string;\n        \"size\": KiButtonSize;\n        \"tone\": KiButtonTone;\n        \"type\": KiButtonType;\n        \"value\"?: string;\n        \"variant\": KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"indeterminate\": boolean;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"close\": () => Promise<void>;\n        \"closeOnBackdrop\": boolean;\n        \"heading\"?: string;\n        \"open\": boolean;\n        \"show\": () => Promise<void>;\n    }\n    interface KiDivider {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\": boolean;\n        \"label\"?: string;\n        \"size\": KiIconButtonSize;\n        \"tone\": KiIconButtonTone;\n        \"variant\": KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\"?: string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"label\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"type\": KiInputType;\n        \"value\": string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\": boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\": boolean;\n        \"label\"?: string;\n        \"max\": number;\n        \"shape\": KiProgressShape;\n        \"value\": number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\": boolean;\n        \"value\": string;\n    }\n    interface KiRadioGroup {\n        \"disabled\": boolean;\n        \"label\": string;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiScroller {\n        \"label\"?: string;\n        \"orientation\": KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\": boolean;\n        \"label\": string;\n        \"name\"?: string;\n        \"placeholder\": string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\": boolean;\n        \"tone\": KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\": boolean;\n        \"selected\": boolean;\n        \"value\": string;\n    }\n    interface KiTabPanel {\n        \"value\": string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"value\": string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"label\": string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"rows\": number;\n        \"value\": string;\n    }\n    interface KiTooltip {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\"?: string;\n    }\n}"
               },
               "CustomElementsDefineOptions": {
                 "kinds": [
@@ -11322,7 +12050,7 @@
                 "kinds": [
                   "namespace"
                 ],
-                "signature": "declare namespace LocalJSX {\n    type OneOf<K extends string, PropT, AttrT = PropT> = {\n        [P in K]: PropT;\n    } & {\n        [P in `attr:${K}` | `prop:${K}`]?: never;\n    } | {\n        [P in `attr:${K}`]: AttrT;\n    } & {\n        [P in K | `prop:${K}`]?: never;\n    } | {\n        [P in `prop:${K}`]: PropT;\n    } & {\n        [P in K | `attr:${K}`]?: never;\n    };\n    interface KiAlert {\n        \"dismissLabel\"?: string;\n        \"dismissed\"?: boolean;\n        \"dismissible\"?: boolean;\n        \"heading\"?: string;\n        \"onKi-dismiss\"?: (event: KiAlertCustomEvent<null>) => void;\n        \"tone\"?: KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\"?: KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\"?: KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\"?: KiBadgeSize;\n        \"tone\"?: KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"name\"?: string;\n        \"size\"?: KiButtonSize;\n        \"tone\"?: KiButtonTone;\n        \"type\"?: KiButtonType;\n        \"value\"?: string;\n        \"variant\"?: KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"indeterminate\"?: boolean;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"closeOnBackdrop\"?: boolean;\n        \"heading\"?: string;\n        \"onKi-close\"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;\n        \"open\"?: boolean;\n    }\n    interface KiDivider {\n        \"orientation\"?: KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\"?: boolean;\n        \"label\"?: string;\n        \"size\"?: KiIconButtonSize;\n        \"tone\"?: KiIconButtonTone;\n        \"variant\"?: KiIconButtonVariant;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"type\"?: KiInputType;\n        \"value\"?: string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\"?: boolean;\n        \"label\"?: string;\n        \"max\"?: number;\n        \"shape\"?: KiProgressShape;\n        \"value\"?: number;\n    }\n    interface KiRadio {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiRadioGroup {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\": string;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiSelect {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\"?: boolean;\n        \"tone\"?: KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\"?: boolean;\n        \"selected\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiTabPanel {\n        \"value\"?: string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"onKi-change\"?: (event: KiTabsCustomEvent<{\n            value: string;\n        }>) => void;\n        \"value\"?: string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\": string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"rows\"?: number;\n        \"value\"?: string;\n    }\n    interface KiTooltip {\n        \"label\"?: string;\n        \"placement\"?: KiTooltipPlacement;\n    }\n    interface KiAlertAttributes {\n        \"tone\": KiAlertTone | (string & {});\n        \"heading\": string;\n        \"dismissible\": boolean;\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n    }\n    interface KiAvatarAttributes {\n        \"label\": string;\n        \"src\": string;\n        \"initials\": string;\n        \"size\": KiAvatarSize;\n    }\n    interface KiAvatarGroupAttributes {\n        \"max\": number;\n        \"size\": KiAvatarSize;\n    }\n    interface KiBadgeAttributes {\n        \"tone\": KiBadgeTone;\n        \"size\": KiBadgeSize;\n    }\n    interface KiButtonAttributes {\n        \"variant\": KiButtonVariant;\n        \"tone\": KiButtonTone;\n        \"size\": KiButtonSize;\n        \"type\": KiButtonType;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiCheckboxAttributes {\n        \"checked\": boolean;\n        \"indeterminate\": boolean;\n        \"disabled\": boolean;\n        \"required\": boolean;\n        \"name\": string;\n        \"value\": string;\n    }\n    interface KiDialogAttributes {\n        \"open\": boolean;\n        \"heading\": string;\n        \"closeOnBackdrop\": boolean;\n    }\n    interface KiDividerAttributes {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButtonAttributes {\n        \"variant\": KiIconButtonVariant;\n        \"tone\": KiIconButtonTone;\n        \"size\": KiIconButtonSize;\n        \"label\": string;\n        \"disabled\": boolean;\n    }\n    interface KiInputAttributes {\n        \"type\": KiInputType;\n        \"label\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n    }\n    interface KiOptionAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiProgressAttributes {\n        \"value\": number;\n        \"max\": number;\n        \"indeterminate\": boolean;\n        \"shape\": KiProgressShape;\n        \"label\": string;\n    }\n    interface KiRadioAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiRadioGroupAttributes {\n        \"name\": string;\n        \"value\": string;\n        \"label\": string;\n        \"required\": boolean;\n        \"disabled\": boolean;\n    }\n    interface KiSelectAttributes {\n        \"label\": string;\n        \"placeholder\": string;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n        \"required\": boolean;\n    }\n    interface KiStatusAttributes {\n        \"tone\": KiStatusTone;\n        \"ring\": boolean;\n        \"label\": string;\n    }\n    interface KiSwitchAttributes {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"name\": string;\n        \"value\": string;\n    }\n    interface KiTabAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n        \"selected\": boolean;\n    }\n    interface KiTabPanelAttributes {\n        \"value\": string;\n    }\n    interface KiTabsAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiTextareaAttributes {\n        \"label\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"rows\": number;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n    }\n    interface KiTooltipAttributes {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface IntrinsicElements {\n        \"ki-alert\": Omit<KiAlert, keyof KiAlertAttributes> & {\n            [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K];\n        };\n        \"ki-avatar\": Omit<KiAvatar, keyof KiAvatarAttributes> & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K];\n        };\n        \"ki-avatar-group\": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K];\n        };\n        \"ki-badge\": Omit<KiBadge, keyof KiBadgeAttributes> & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K];\n        };\n        \"ki-button\": Omit<KiButton, keyof KiButtonAttributes> & {\n            [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K];\n        };\n        \"ki-card\": KiCard;\n        \"ki-checkbox\": Omit<KiCheckbox, keyof KiCheckboxAttributes> & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K];\n        };\n        \"ki-dialog\": Omit<KiDialog, keyof KiDialogAttributes> & {\n            [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K];\n        };\n        \"ki-divider\": Omit<KiDivider, keyof KiDividerAttributes> & {\n            [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K];\n        };\n        \"ki-icon-button\": Omit<KiIconButton, keyof KiIconButtonAttributes> & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K];\n        };\n        \"ki-input\": Omit<KiInput, keyof KiInputAttributes> & {\n            [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K];\n        };\n        \"ki-list\": KiList;\n        \"ki-list-item\": KiListItem;\n        \"ki-option\": Omit<KiOption, keyof KiOptionAttributes> & {\n            [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K];\n        };\n        \"ki-progress\": Omit<KiProgress, keyof KiProgressAttributes> & {\n            [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K];\n        };\n        \"ki-radio\": Omit<KiRadio, keyof KiRadioAttributes> & {\n            [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K];\n        };\n        \"ki-radio-group\": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K];\n        } & OneOf<\"label\", KiRadioGroup[\"label\"], KiRadioGroupAttributes[\"label\"]>;\n        \"ki-select\": Omit<KiSelect, keyof KiSelectAttributes> & {\n            [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K];\n        };\n        \"ki-status\": Omit<KiStatus, keyof KiStatusAttributes> & {\n            [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K];\n        };\n        \"ki-switch\": Omit<KiSwitch, keyof KiSwitchAttributes> & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K];\n        };\n        \"ki-tab\": Omit<KiTab, keyof KiTabAttributes> & {\n            [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K];\n        };\n        \"ki-tab-panel\": Omit<KiTabPanel, keyof KiTabPanelAttributes> & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K];\n        };\n        \"ki-tabs\": Omit<KiTabs, keyof KiTabsAttributes> & {\n            [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K];\n        };\n        \"ki-textarea\": Omit<KiTextarea, keyof KiTextareaAttributes> & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K];\n        } & OneOf<\"label\", KiTextarea[\"label\"], KiTextareaAttributes[\"label\"]>;\n        \"ki-tooltip\": Omit<KiTooltip, keyof KiTooltipAttributes> & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K];\n        };\n    }\n}"
+                "signature": "declare namespace LocalJSX {\n    type OneOf<K extends string, PropT, AttrT = PropT> = {\n        [P in K]: PropT;\n    } & {\n        [P in `attr:${K}` | `prop:${K}`]?: never;\n    } | {\n        [P in `attr:${K}`]: AttrT;\n    } & {\n        [P in K | `prop:${K}`]?: never;\n    } | {\n        [P in `prop:${K}`]: PropT;\n    } & {\n        [P in K | `attr:${K}`]?: never;\n    };\n    interface KiAlert {\n        \"dismissLabel\"?: string;\n        \"dismissed\"?: boolean;\n        \"dismissible\"?: boolean;\n        \"heading\"?: string;\n        \"onKi-dismiss\"?: (event: KiAlertCustomEvent<null>) => void;\n        \"tone\"?: KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\"?: KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\"?: KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\"?: KiBadgeSize;\n        \"tone\"?: KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"name\"?: string;\n        \"size\"?: KiButtonSize;\n        \"tone\"?: KiButtonTone;\n        \"type\"?: KiButtonType;\n        \"value\"?: string;\n        \"variant\"?: KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"indeterminate\"?: boolean;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"closeOnBackdrop\"?: boolean;\n        \"heading\"?: string;\n        \"onKi-close\"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;\n        \"open\"?: boolean;\n    }\n    interface KiDivider {\n        \"orientation\"?: KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\"?: boolean;\n        \"label\"?: string;\n        \"size\"?: KiIconButtonSize;\n        \"tone\"?: KiIconButtonTone;\n        \"variant\"?: KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\"?: string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"type\"?: KiInputType;\n        \"value\"?: string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\"?: boolean;\n        \"label\"?: string;\n        \"max\"?: number;\n        \"shape\"?: KiProgressShape;\n        \"value\"?: number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiRadioGroup {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\": string;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiScroller {\n        \"label\"?: string;\n        \"orientation\"?: KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\"?: boolean;\n        \"tone\"?: KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\"?: boolean;\n        \"selected\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiTabPanel {\n        \"value\"?: string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"onKi-change\"?: (event: KiTabsCustomEvent<{\n            value: string;\n        }>) => void;\n        \"value\"?: string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\": string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"rows\"?: number;\n        \"value\"?: string;\n    }\n    interface KiTooltip {\n        \"label\"?: string;\n        \"placement\"?: KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\"?: string;\n    }\n    interface KiAlertAttributes {\n        \"tone\": KiAlertTone | (string & {});\n        \"heading\": string;\n        \"dismissible\": boolean;\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n    }\n    interface KiAvatarAttributes {\n        \"label\": string;\n        \"src\": string;\n        \"initials\": string;\n        \"size\": KiAvatarSize;\n    }\n    interface KiAvatarGroupAttributes {\n        \"max\": number;\n        \"size\": KiAvatarSize;\n    }\n    interface KiBadgeAttributes {\n        \"tone\": KiBadgeTone;\n        \"size\": KiBadgeSize;\n    }\n    interface KiButtonAttributes {\n        \"variant\": KiButtonVariant;\n        \"tone\": KiButtonTone;\n        \"size\": KiButtonSize;\n        \"type\": KiButtonType;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiCheckboxAttributes {\n        \"checked\": boolean;\n        \"indeterminate\": boolean;\n        \"disabled\": boolean;\n        \"required\": boolean;\n        \"name\": string;\n        \"value\": string;\n    }\n    interface KiDialogAttributes {\n        \"open\": boolean;\n        \"heading\": string;\n        \"closeOnBackdrop\": boolean;\n    }\n    interface KiDividerAttributes {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButtonAttributes {\n        \"variant\": KiIconButtonVariant;\n        \"tone\": KiIconButtonTone;\n        \"size\": KiIconButtonSize;\n        \"label\": string;\n        \"disabled\": boolean;\n    }\n    interface KiIndicatorAttributes {\n        \"count\": number;\n        \"current\": number;\n        \"label\": string;\n    }\n    interface KiInputAttributes {\n        \"type\": KiInputType;\n        \"label\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n    }\n    interface KiOptionAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiProgressAttributes {\n        \"value\": number;\n        \"max\": number;\n        \"indeterminate\": boolean;\n        \"shape\": KiProgressShape;\n        \"label\": string;\n    }\n    interface KiQrAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiRadioAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiRadioGroupAttributes {\n        \"name\": string;\n        \"value\": string;\n        \"label\": string;\n        \"required\": boolean;\n        \"disabled\": boolean;\n    }\n    interface KiScrollerAttributes {\n        \"orientation\": KiScrollerOrientation;\n        \"label\": string;\n    }\n    interface KiSelectAttributes {\n        \"label\": string;\n        \"placeholder\": string;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n        \"required\": boolean;\n    }\n    interface KiStatusAttributes {\n        \"tone\": KiStatusTone;\n        \"ring\": boolean;\n        \"label\": string;\n    }\n    interface KiSwitchAttributes {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"name\": string;\n        \"value\": string;\n    }\n    interface KiTabAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n        \"selected\": boolean;\n    }\n    interface KiTabPanelAttributes {\n        \"value\": string;\n    }\n    interface KiTabsAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiTextareaAttributes {\n        \"label\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"rows\": number;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n    }\n    interface KiTooltipAttributes {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideoAttributes {\n        \"label\": string;\n    }\n    interface IntrinsicElements {\n        \"ki-alert\": Omit<KiAlert, keyof KiAlertAttributes> & {\n            [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K];\n        };\n        \"ki-avatar\": Omit<KiAvatar, keyof KiAvatarAttributes> & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K];\n        };\n        \"ki-avatar-group\": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K];\n        };\n        \"ki-badge\": Omit<KiBadge, keyof KiBadgeAttributes> & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K];\n        };\n        \"ki-button\": Omit<KiButton, keyof KiButtonAttributes> & {\n            [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K];\n        };\n        \"ki-card\": KiCard;\n        \"ki-checkbox\": Omit<KiCheckbox, keyof KiCheckboxAttributes> & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K];\n        };\n        \"ki-dialog\": Omit<KiDialog, keyof KiDialogAttributes> & {\n            [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K];\n        };\n        \"ki-divider\": Omit<KiDivider, keyof KiDividerAttributes> & {\n            [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K];\n        };\n        \"ki-icon-button\": Omit<KiIconButton, keyof KiIconButtonAttributes> & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K];\n        };\n        \"ki-indicator\": Omit<KiIndicator, keyof KiIndicatorAttributes> & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K];\n        };\n        \"ki-input\": Omit<KiInput, keyof KiInputAttributes> & {\n            [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K];\n        };\n        \"ki-list\": KiList;\n        \"ki-list-item\": KiListItem;\n        \"ki-option\": Omit<KiOption, keyof KiOptionAttributes> & {\n            [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K];\n        };\n        \"ki-progress\": Omit<KiProgress, keyof KiProgressAttributes> & {\n            [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K];\n        };\n        \"ki-qr\": Omit<KiQr, keyof KiQrAttributes> & {\n            [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K];\n        };\n        \"ki-radio\": Omit<KiRadio, keyof KiRadioAttributes> & {\n            [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K];\n        };\n        \"ki-radio-group\": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K];\n        } & OneOf<\"label\", KiRadioGroup[\"label\"], KiRadioGroupAttributes[\"label\"]>;\n        \"ki-scroller\": Omit<KiScroller, keyof KiScrollerAttributes> & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K];\n        };\n        \"ki-select\": Omit<KiSelect, keyof KiSelectAttributes> & {\n            [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K];\n        };\n        \"ki-status\": Omit<KiStatus, keyof KiStatusAttributes> & {\n            [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K];\n        };\n        \"ki-switch\": Omit<KiSwitch, keyof KiSwitchAttributes> & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K];\n        };\n        \"ki-tab\": Omit<KiTab, keyof KiTabAttributes> & {\n            [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K];\n        };\n        \"ki-tab-panel\": Omit<KiTabPanel, keyof KiTabPanelAttributes> & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K];\n        };\n        \"ki-tabs\": Omit<KiTabs, keyof KiTabsAttributes> & {\n            [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K];\n        };\n        \"ki-textarea\": Omit<KiTextarea, keyof KiTextareaAttributes> & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K];\n        } & OneOf<\"label\", KiTextarea[\"label\"], KiTextareaAttributes[\"label\"]>;\n        \"ki-tooltip\": Omit<KiTooltip, keyof KiTooltipAttributes> & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K];\n        };\n        \"ki-video\": Omit<KiVideo, keyof KiVideoAttributes> & {\n            [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K];\n        };\n    }\n}"
               },
               "KiAlertCustomEvent": {
                 "kinds": [
@@ -11431,6 +12159,12 @@
                   "type"
                 ],
                 "signature": "export type KiProgressShape = 'linear' | 'circular';"
+              },
+              "KiScrollerOrientation": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiScrollerOrientation = 'vertical' | 'horizontal';"
               },
               "KiStatusTone": {
                 "kinds": [
@@ -12327,6 +13061,17 @@
                 "--ki-icon-button-xs-icon-size": "1rem",
                 "--ki-icon-button-xs-radius": "6px",
                 "--ki-icon-button-xs-size": "1.5rem",
+                "--ki-indicator-dot-block-size": "0.5rem",
+                "--ki-indicator-dot-color": "rgba(255,255,255,0.18)",
+                "--ki-indicator-dot-current-block-size": "1rem",
+                "--ki-indicator-dot-current-color": "rgba(255,255,255,0.18)",
+                "--ki-indicator-dot-current-hole-block-size": "0.375rem",
+                "--ki-indicator-dot-current-inline-size": "2rem",
+                "--ki-indicator-dot-current-radius": "1000px",
+                "--ki-indicator-dot-inline-size": "0.5rem",
+                "--ki-indicator-dot-radius": "1000px",
+                "--ki-indicator-gap": "0.375rem",
+                "--ki-indicator-motion-duration": "120ms",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0.125rem",
                 "--ki-input-border-inline-end-width": "0.125rem",
@@ -12517,6 +13262,13 @@
                 "--ki-progress-linear-radius": "1000px",
                 "--ki-progress-linear-thickness": "0.25rem",
                 "--ki-progress-track-color": "#242424",
+                "--ki-qr-background": "#ffffff",
+                "--ki-qr-color": "#000000",
+                "--ki-qr-finder-radius": "0",
+                "--ki-qr-module-radius": "0",
+                "--ki-qr-quiet-zone": "0.5rem",
+                "--ki-qr-radius": "0",
+                "--ki-qr-size": "7.5rem",
                 "--ki-radio-border-width": "0.125rem",
                 "--ki-radio-control-radius": "1000px",
                 "--ki-radio-control-size": "1.25rem",
@@ -12558,6 +13310,17 @@
                 "--ki-radio-unselected-rest-bg": "#0a0a0a",
                 "--ki-radio-unselected-rest-border": "rgba(255,255,255,0.12)",
                 "--ki-radio-unselected-rest-fg": "#b59cd8",
+                "--ki-scroller-focus-ring-color": "#b59cd8",
+                "--ki-scroller-focus-ring-offset": "0.125rem",
+                "--ki-scroller-focus-ring-width": "0.125rem",
+                "--ki-scroller-gutter": "0.125rem",
+                "--ki-scroller-surface": "rgba(0,0,0,0)",
+                "--ki-scroller-thumb-color": "rgba(255,255,255,0.05)",
+                "--ki-scroller-thumb-min-length": "1rem",
+                "--ki-scroller-thumb-radius": "1000px",
+                "--ki-scroller-thumb-thickness": "0.25rem",
+                "--ki-scroller-track-color": "rgba(0,0,0,0)",
+                "--ki-scroller-track-inset": "0.25rem",
                 "--ki-select-border-block-end-width": "0.125rem",
                 "--ki-select-border-block-start-width": "0.125rem",
                 "--ki-select-border-inline-end-width": "0.125rem",
@@ -12927,7 +13690,24 @@
                 "--ki-typography-weight-display-bold": "700",
                 "--ki-typography-weight-display-medium": "500",
                 "--ki-typography-weight-display-normal": "400",
-                "--ki-typography-weight-display-semibold": "600"
+                "--ki-typography-weight-display-semibold": "600",
+                "--ki-video-backdrop-blur": "12px",
+                "--ki-video-focus-ring-color": "#b59cd8",
+                "--ki-video-focus-ring-offset": "0.125rem",
+                "--ki-video-focus-ring-width": "0.125rem",
+                "--ki-video-frame-radius": "16px",
+                "--ki-video-motion-duration": "120ms",
+                "--ki-video-play-bg": "#ffffff",
+                "--ki-video-play-border-color": "rgba(0,0,0,0.12)",
+                "--ki-video-play-border-width": "1px",
+                "--ki-video-play-fg": "#000000",
+                "--ki-video-play-icon-size": "1.75rem",
+                "--ki-video-play-radius": "14px",
+                "--ki-video-play-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
+                "--ki-video-play-size": "3.5rem",
+                "--ki-video-scrim-color": "rgba(255,255,255,0.05)",
+                "--ki-video-scrim-padding": "1rem",
+                "--ki-video-scrim-radius": "28px"
               },
               "light": {
                 "--ki-alert-border-width": "0.125rem",
@@ -13591,6 +14371,17 @@
                 "--ki-icon-button-xs-icon-size": "1rem",
                 "--ki-icon-button-xs-radius": "6px",
                 "--ki-icon-button-xs-size": "1.5rem",
+                "--ki-indicator-dot-block-size": "0.5rem",
+                "--ki-indicator-dot-color": "rgba(0,0,0,0.18)",
+                "--ki-indicator-dot-current-block-size": "1rem",
+                "--ki-indicator-dot-current-color": "rgba(0,0,0,0.18)",
+                "--ki-indicator-dot-current-hole-block-size": "0.375rem",
+                "--ki-indicator-dot-current-inline-size": "2rem",
+                "--ki-indicator-dot-current-radius": "1000px",
+                "--ki-indicator-dot-inline-size": "0.5rem",
+                "--ki-indicator-dot-radius": "1000px",
+                "--ki-indicator-gap": "0.375rem",
+                "--ki-indicator-motion-duration": "120ms",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0.125rem",
                 "--ki-input-border-inline-end-width": "0.125rem",
@@ -13781,6 +14572,13 @@
                 "--ki-progress-linear-radius": "1000px",
                 "--ki-progress-linear-thickness": "0.25rem",
                 "--ki-progress-track-color": "#ececf0",
+                "--ki-qr-background": "#ffffff",
+                "--ki-qr-color": "#000000",
+                "--ki-qr-finder-radius": "0",
+                "--ki-qr-module-radius": "0",
+                "--ki-qr-quiet-zone": "0.5rem",
+                "--ki-qr-radius": "0",
+                "--ki-qr-size": "7.5rem",
                 "--ki-radio-border-width": "0.125rem",
                 "--ki-radio-control-radius": "1000px",
                 "--ki-radio-control-size": "1.25rem",
@@ -13822,6 +14620,17 @@
                 "--ki-radio-unselected-rest-bg": "#ffffff",
                 "--ki-radio-unselected-rest-border": "rgba(0,0,0,0.12)",
                 "--ki-radio-unselected-rest-fg": "#5f3993",
+                "--ki-scroller-focus-ring-color": "#845abe",
+                "--ki-scroller-focus-ring-offset": "0.125rem",
+                "--ki-scroller-focus-ring-width": "0.125rem",
+                "--ki-scroller-gutter": "0.125rem",
+                "--ki-scroller-surface": "rgba(255,255,255,0)",
+                "--ki-scroller-thumb-color": "rgba(0,0,0,0.05)",
+                "--ki-scroller-thumb-min-length": "1rem",
+                "--ki-scroller-thumb-radius": "1000px",
+                "--ki-scroller-thumb-thickness": "0.25rem",
+                "--ki-scroller-track-color": "rgba(255,255,255,0)",
+                "--ki-scroller-track-inset": "0.25rem",
                 "--ki-select-border-block-end-width": "0.125rem",
                 "--ki-select-border-block-start-width": "0.125rem",
                 "--ki-select-border-inline-end-width": "0.125rem",
@@ -14191,7 +15000,24 @@
                 "--ki-typography-weight-display-bold": "700",
                 "--ki-typography-weight-display-medium": "500",
                 "--ki-typography-weight-display-normal": "400",
-                "--ki-typography-weight-display-semibold": "600"
+                "--ki-typography-weight-display-semibold": "600",
+                "--ki-video-backdrop-blur": "12px",
+                "--ki-video-focus-ring-color": "#845abe",
+                "--ki-video-focus-ring-offset": "0.125rem",
+                "--ki-video-focus-ring-width": "0.125rem",
+                "--ki-video-frame-radius": "16px",
+                "--ki-video-motion-duration": "120ms",
+                "--ki-video-play-bg": "#000000",
+                "--ki-video-play-border-color": "rgba(0,0,0,0.08)",
+                "--ki-video-play-border-width": "1px",
+                "--ki-video-play-fg": "#ffffff",
+                "--ki-video-play-icon-size": "1.75rem",
+                "--ki-video-play-radius": "14px",
+                "--ki-video-play-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
+                "--ki-video-play-size": "3.5rem",
+                "--ki-video-scrim-color": "rgba(0,0,0,0.05)",
+                "--ki-video-scrim-padding": "1rem",
+                "--ki-video-scrim-radius": "28px"
               }
             },
             "target": "./dist/css/tokens.css"
@@ -14860,6 +15686,17 @@
                 "--ki-icon-button-xs-icon-size": "1rem",
                 "--ki-icon-button-xs-radius": "9999px",
                 "--ki-icon-button-xs-size": "1.5rem",
+                "--ki-indicator-dot-block-size": "0.5rem",
+                "--ki-indicator-dot-color": "rgba(0,0,0,0.32)",
+                "--ki-indicator-dot-current-block-size": "0.5rem",
+                "--ki-indicator-dot-current-color": "#eaddff",
+                "--ki-indicator-dot-current-hole-block-size": "0",
+                "--ki-indicator-dot-current-inline-size": "0.5rem",
+                "--ki-indicator-dot-current-radius": "9999px",
+                "--ki-indicator-dot-inline-size": "0.5rem",
+                "--ki-indicator-dot-radius": "9999px",
+                "--ki-indicator-gap": "0.5rem",
+                "--ki-indicator-motion-duration": "100ms",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0",
                 "--ki-input-border-inline-end-width": "0",
@@ -15050,6 +15887,13 @@
                 "--ki-progress-linear-radius": "9999px",
                 "--ki-progress-linear-thickness": "0.25rem",
                 "--ki-progress-track-color": "#2b2930",
+                "--ki-qr-background": "#ffffff",
+                "--ki-qr-color": "#000000",
+                "--ki-qr-finder-radius": "0",
+                "--ki-qr-module-radius": "0",
+                "--ki-qr-quiet-zone": "1rem",
+                "--ki-qr-radius": "12px",
+                "--ki-qr-size": "7.5rem",
                 "--ki-radio-border-width": "0.125rem",
                 "--ki-radio-control-radius": "9999px",
                 "--ki-radio-control-size": "1.25rem",
@@ -15091,6 +15935,17 @@
                 "--ki-radio-unselected-rest-bg": "#141218",
                 "--ki-radio-unselected-rest-border": "#938f99",
                 "--ki-radio-unselected-rest-fg": "#eaddff",
+                "--ki-scroller-focus-ring-color": "#d0bcff",
+                "--ki-scroller-focus-ring-offset": "0.125rem",
+                "--ki-scroller-focus-ring-width": "0.125rem",
+                "--ki-scroller-gutter": "0",
+                "--ki-scroller-surface": "rgba(0,0,0,0)",
+                "--ki-scroller-thumb-color": "#49454f",
+                "--ki-scroller-thumb-min-length": "1rem",
+                "--ki-scroller-thumb-radius": "0",
+                "--ki-scroller-thumb-thickness": "0.5rem",
+                "--ki-scroller-track-color": "rgba(0,0,0,0)",
+                "--ki-scroller-track-inset": "0",
                 "--ki-select-border-block-end-width": "0.125rem",
                 "--ki-select-border-block-start-width": "0",
                 "--ki-select-border-inline-end-width": "0",
@@ -15460,7 +16315,24 @@
                 "--ki-typography-weight-display-bold": "700",
                 "--ki-typography-weight-display-medium": "500",
                 "--ki-typography-weight-display-normal": "400",
-                "--ki-typography-weight-display-semibold": "500"
+                "--ki-typography-weight-display-semibold": "500",
+                "--ki-video-backdrop-blur": "0",
+                "--ki-video-focus-ring-color": "#d0bcff",
+                "--ki-video-focus-ring-offset": "0.125rem",
+                "--ki-video-focus-ring-width": "0.125rem",
+                "--ki-video-frame-radius": "12px",
+                "--ki-video-motion-duration": "100ms",
+                "--ki-video-play-bg": "#d0bcff",
+                "--ki-video-play-border-color": "rgba(0,0,0,0)",
+                "--ki-video-play-border-width": "1px",
+                "--ki-video-play-fg": "#381e72",
+                "--ki-video-play-icon-size": "1.75rem",
+                "--ki-video-play-radius": "9999px",
+                "--ki-video-play-shadow": "none",
+                "--ki-video-play-size": "3.5rem",
+                "--ki-video-scrim-color": "rgba(0,0,0,0)",
+                "--ki-video-scrim-padding": "0",
+                "--ki-video-scrim-radius": "28px"
               },
               "light": {
                 "--ki-alert-border-width": "0.125rem",
@@ -16124,6 +16996,17 @@
                 "--ki-icon-button-xs-icon-size": "1rem",
                 "--ki-icon-button-xs-radius": "9999px",
                 "--ki-icon-button-xs-size": "1.5rem",
+                "--ki-indicator-dot-block-size": "0.5rem",
+                "--ki-indicator-dot-color": "rgba(0,0,0,0.32)",
+                "--ki-indicator-dot-current-block-size": "0.5rem",
+                "--ki-indicator-dot-current-color": "#4f378b",
+                "--ki-indicator-dot-current-hole-block-size": "0",
+                "--ki-indicator-dot-current-inline-size": "0.5rem",
+                "--ki-indicator-dot-current-radius": "9999px",
+                "--ki-indicator-dot-inline-size": "0.5rem",
+                "--ki-indicator-dot-radius": "9999px",
+                "--ki-indicator-gap": "0.5rem",
+                "--ki-indicator-motion-duration": "100ms",
                 "--ki-input-border-block-end-width": "0.125rem",
                 "--ki-input-border-block-start-width": "0",
                 "--ki-input-border-inline-end-width": "0",
@@ -16314,6 +17197,13 @@
                 "--ki-progress-linear-radius": "9999px",
                 "--ki-progress-linear-thickness": "0.25rem",
                 "--ki-progress-track-color": "#ece6f0",
+                "--ki-qr-background": "#ffffff",
+                "--ki-qr-color": "#000000",
+                "--ki-qr-finder-radius": "0",
+                "--ki-qr-module-radius": "0",
+                "--ki-qr-quiet-zone": "1rem",
+                "--ki-qr-radius": "12px",
+                "--ki-qr-size": "7.5rem",
                 "--ki-radio-border-width": "0.125rem",
                 "--ki-radio-control-radius": "9999px",
                 "--ki-radio-control-size": "1.25rem",
@@ -16355,6 +17245,17 @@
                 "--ki-radio-unselected-rest-bg": "#fef7ff",
                 "--ki-radio-unselected-rest-border": "#79747e",
                 "--ki-radio-unselected-rest-fg": "#4f378b",
+                "--ki-scroller-focus-ring-color": "#6750a4",
+                "--ki-scroller-focus-ring-offset": "0.125rem",
+                "--ki-scroller-focus-ring-width": "0.125rem",
+                "--ki-scroller-gutter": "0",
+                "--ki-scroller-surface": "rgba(255,255,255,0)",
+                "--ki-scroller-thumb-color": "#cac4d0",
+                "--ki-scroller-thumb-min-length": "1rem",
+                "--ki-scroller-thumb-radius": "0",
+                "--ki-scroller-thumb-thickness": "0.5rem",
+                "--ki-scroller-track-color": "rgba(255,255,255,0)",
+                "--ki-scroller-track-inset": "0",
                 "--ki-select-border-block-end-width": "0.125rem",
                 "--ki-select-border-block-start-width": "0",
                 "--ki-select-border-inline-end-width": "0",
@@ -16724,7 +17625,24 @@
                 "--ki-typography-weight-display-bold": "700",
                 "--ki-typography-weight-display-medium": "500",
                 "--ki-typography-weight-display-normal": "400",
-                "--ki-typography-weight-display-semibold": "500"
+                "--ki-typography-weight-display-semibold": "500",
+                "--ki-video-backdrop-blur": "0",
+                "--ki-video-focus-ring-color": "#6750a4",
+                "--ki-video-focus-ring-offset": "0.125rem",
+                "--ki-video-focus-ring-width": "0.125rem",
+                "--ki-video-frame-radius": "12px",
+                "--ki-video-motion-duration": "100ms",
+                "--ki-video-play-bg": "#6750a4",
+                "--ki-video-play-border-color": "rgba(255,255,255,0)",
+                "--ki-video-play-border-width": "1px",
+                "--ki-video-play-fg": "#ffffff",
+                "--ki-video-play-icon-size": "1.75rem",
+                "--ki-video-play-radius": "9999px",
+                "--ki-video-play-shadow": "none",
+                "--ki-video-play-size": "3.5rem",
+                "--ki-video-scrim-color": "rgba(255,255,255,0)",
+                "--ki-video-scrim-padding": "0",
+                "--ki-video-scrim-radius": "28px"
               }
             },
             "target": "./dist/css/tokens.material3.css"
@@ -22957,6 +23875,94 @@
             "required": false,
             "type": null
           },
+          "--ki-indicator-dot-block-size": {
+            "default": "0.5rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the indicator component for the resting dot block size: the 8px circle diameter measured in the State=inactive vector (the 16px frame height is row alignment, carried by the current dot).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-indicator-dot-color": {
+            "default": "#0000002e",
+            "deprecatedSince": null,
+            "description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_18, the exact variable bound to every Indicator variant fill (Black/18 light, White/18 dark) — the scheme flip rides the semantic layer.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-indicator-dot-current-block-size": {
+            "default": "1rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the indicator component for the current dot block size: Space/3xl, the exact variable bound as the 16px height of the State=active pill (the full row line; declared family extension, design-extraction §Decisiones).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-indicator-dot-current-color": {
+            "default": "#0000002e",
+            "deprecatedSince": null,
+            "description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_18, the exact fill of the State=active ring vector (Black/18 light, White/18 dark) — painted as the pill ring in onmars, as the solid dot in themes that zero the hole.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-indicator-dot-current-hole-block-size": {
+            "default": "0.375rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the indicator component for the block size of the transparent hole cut from the current pill: the 6px cutout height measured in the State=active vector; the ring width derives by construction as (current block size − hole block size) / 2 and a theme resolves it to zero for a solid dot (declared family extension, design-extraction §Decisiones).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-indicator-dot-current-inline-size": {
+            "default": "2rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the indicator component for the current dot inline size: Space/10xl, the exact variable bound as the 32px width of the State=active pill — the MarsUI elongation lives here, never in an attribute (FR-007).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-indicator-dot-current-radius": {
+            "default": "1000px",
+            "deprecatedSince": null,
+            "description": "dimension used by the indicator component for the current dot shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-indicator-dot-inline-size": {
+            "default": "0.5rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the indicator component for the resting dot inline size: Space/md, the exact variable bound as the 8px width of the State=inactive symbol; the painted circle is 8x8 centered in the 16px row line.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-indicator-dot-radius": {
+            "default": "1000px",
+            "deprecatedSince": null,
+            "description": "dimension used by the indicator component for the resting dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-indicator-gap": {
+            "default": "0.375rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the indicator component for the space between dots: Space/sm, the exact variable bound as the 6px gap of the composed Nav_indicator row (node 14195:5866, specs/024-ki-indicator/design-extraction.md).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-indicator-motion-duration": {
+            "default": "120ms",
+            "deprecatedSince": null,
+            "description": "duration used by the indicator component for the highlight transfer between dots: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-008; disabled under reduced motion by construction).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
           "--ki-input-border-block-end-width": {
             "default": "0.125rem",
             "deprecatedSince": null,
@@ -24518,6 +25524,62 @@
             "required": false,
             "type": null
           },
+          "--ki-qr-background": {
+            "default": "#ffffff",
+            "deprecatedSince": null,
+            "description": "color used by the qr component for the light tile behind the modules: the Figma symbol is transparent over the showcase card's Surface/s0 white, but a scannable code owns its tile — the scheme-stable white keeps dark-on-light module contrast in both schemes (FR-010, a documented theme obligation).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-qr-color": {
+            "default": "#000000",
+            "deprecatedSince": null,
+            "description": "color used by the qr component for the dark modules and finder rings: the Figma fill binds Text/high_em (#0a0c11), which flips light under the dark scheme and would invert the code, so the theme obligation (FR-010: dark modules on a light tile in both schemes) resolves the scheme-stable black ink instead (design-extraction §2, declared for founder ratification).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-qr-finder-radius": {
+            "default": "0px",
+            "deprecatedSince": null,
+            "description": "dimension used by the qr component for the corner radius of the three finder rings, applied to the ring's midline in the code's internal coordinate space of 8px per module: Type=square renders square concentric finders (radius 0); the documented round value is {ki.radius.2xl} (14px midline = 18px outer edge, the 2.25-module radius measured on Type=round); the inner-edge and center radii derive by construction (stroke geometry and a 3/7 scale — design-extraction §5).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-qr-module-radius": {
+            "default": "0px",
+            "deprecatedSince": null,
+            "description": "dimension used by the qr component for the corner radius of every data module, in the code's internal coordinate space of 8px per module: Type=square (the set default) renders pure squares (radius 0); the documented round value is {ki.radius.xs} (4px = half a module, the MarsUI Type=round dot carried as a token value, never an attribute — FR-007, 002 shape precedent).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-qr-quiet-zone": {
+            "default": "0.5rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the qr component for the light quiet zone around the modules: the 8px band measured on both 128px variants (about two modules of the sample matrices), painted as tile padding and preserved at any token-driven size (FR-008).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-qr-radius": {
+            "default": "0px",
+            "deprecatedSince": null,
+            "description": "dimension used by the qr component for the tile corners: the QR_code frames are square with no own radius (the rounded showcase card beneath is framing, not anatomy — design-extraction §1).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-qr-size": {
+            "default": "7.5rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the qr component for the code's square box: the 128px QR_code frame (node 16158:27561) binds no size variable and the space scale has no 8rem step, so onmars resolves the nearest step (120px); consumers rescale through this token — the code always stays 1:1 (specs/026-ki-qr/design-extraction.md §4, declared for founder ratification).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
           "--ki-radio-border-width": {
             "default": "0.125rem",
             "deprecatedSince": null,
@@ -24848,6 +25910,94 @@
             "default": "#5f3993",
             "deprecatedSince": null,
             "description": "color used by the radio component for unselected rest foreground.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-scroller-focus-ring-color": {
+            "default": "#845abe",
+            "deprecatedSince": null,
+            "description": "color used by the scroller component for the viewport focus ring: the keyboard-focusable scroll region (FR-005) adopts the ki-dialog focus-ring pair verbatim.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-scroller-focus-ring-offset": {
+            "default": "0.125rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-scroller-focus-ring-width": {
+            "default": "0.125rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the scroller component for the viewport focus ring width (ki-dialog precedent).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-scroller-gutter": {
+            "default": "0.125rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the scroller component for the clearance on each side of the thumb: the 2px padding-inline of the 8px Scroller rail (rail thickness = thumb-thickness + 2×gutter).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-scroller-surface": {
+            "default": "#ffffff00",
+            "deprecatedSince": null,
+            "description": "color used by the scroller component for the viewport surface: transparent in onmars — the scroller shows the consumer's own surface; a theme may resolve a proper surface here (FR-007).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-scroller-thumb-color": {
+            "default": "#0000000d",
+            "deprecatedSince": null,
+            "description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_6, the exact variable bound to the scroll pill on both Scroller variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-scroller-thumb-min-length": {
+            "default": "1rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the scroller component for the minimum thumb length along the scroll axis: the 16px min-height on the Figma scroll pill; the actual length stays the native visible-fraction proportion (FR-003).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-scroller-thumb-radius": {
+            "default": "1000px",
+            "deprecatedSince": null,
+            "description": "dimension used by the scroller component for the thumb shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-scroller-thumb-thickness": {
+            "default": "0.25rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-scroller-track-color": {
+            "default": "#ffffff00",
+            "deprecatedSince": null,
+            "description": "color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-scroller-track-inset": {
+            "default": "0.25rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5).",
             "replacement": null,
             "required": false,
             "type": null
@@ -27914,11 +29064,169 @@
             "replacement": null,
             "required": false,
             "type": "fontWeight"
+          },
+          "--ki-video-backdrop-blur": {
+            "default": "12px",
+            "deprecatedSince": null,
+            "description": "dimension used by the video component for the glass backdrop of the scrim and the play container (MarsUI Blur/24, identical to the button glass). material3 resolves to blur none via the semantic override.",
+            "replacement": null,
+            "required": false,
+            "type": "dimension"
+          },
+          "--ki-video-focus-ring-color": {
+            "default": "#845abe",
+            "deprecatedSince": null,
+            "description": "color used by the video component for the play control focus ring: the keyboard-reachable facade control (FR-004, S6) adopts the ki-dialog/ki-icon-button focus-ring pair verbatim.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-focus-ring-offset": {
+            "default": "0.125rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the video component for the play control focus ring offset (ki-dialog precedent).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-focus-ring-width": {
+            "default": "0.125rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the video component for the play control focus ring width (ki-dialog precedent).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-frame-radius": {
+            "default": "16px",
+            "deprecatedSince": null,
+            "description": "dimension used by the video component for the frame corners: Radius/big_component/radius_xs, the exact variable bound to the Size=md Video frame (node 12089:6570, specs/025-ki-video/design-extraction.md) — the sm frame's radius_md is the scale demo, not a second API value.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-motion-duration": {
+            "default": "120ms",
+            "deprecatedSince": null,
+            "description": "duration used by the video component for the facade dismissal fade: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-013; disabled under reduced motion by construction, 024 precedent).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-play-bg": {
+            "default": "#000000",
+            "deprecatedSince": null,
+            "description": "color used by the video component for the play container surface: Surface/inverse_white, the exact variable bound to the Icon_button fill (black over light, white over dark) — the control carries its own surface so glyph contrast never depends on the poster imagery (FR-008).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-play-border-color": {
+            "default": "#00000014",
+            "deprecatedSince": null,
+            "description": "color used by the video component for the play container bevel: Outline/primary_button_top, the exact variable bound to the Icon_button stroke — the verified ki-button glass bevel.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-play-border-width": {
+            "default": "1px",
+            "deprecatedSince": null,
+            "description": "dimension used by the video component for the play container bevel width (MarsUI hairline stroke, ki-icon-button precedent).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-play-fg": {
+            "default": "#ffffff",
+            "deprecatedSince": null,
+            "description": "color used by the video component for the play glyph: Text/inverse_black, the counterpart of the inverse container surface (white over light, black over dark) — the glyph inherits it via currentColor; the -bg/-fg pair is swept by the contrast gate (FR-008).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-play-icon-size": {
+            "default": "1.75rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the video component for the play glyph: the 28px Icon/Placeholder_xl slot measured inside the Size=md play container (the ki-icon-button xl icon size).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-play-radius": {
+            "default": "14px",
+            "deprecatedSince": null,
+            "description": "dimension used by the video component for the play container shape: Radius/component/radius_xl, the exact variable bound to the Size=md Icon_button instance (14px, the ki-icon-button xl radius).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-play-shadow": {
+            "default": [
+              {
+                "blur": "1px",
+                "color": "#00000008",
+                "offsetX": 0,
+                "offsetY": "1px",
+                "spread": "-0.5px"
+              },
+              {
+                "blur": "3px",
+                "color": "#ffffff1f",
+                "inset": true,
+                "offsetX": {
+                  "unit": "px",
+                  "value": 0
+                },
+                "offsetY": "3px",
+                "spread": {
+                  "unit": "px",
+                  "value": 0
+                }
+              }
+            ],
+            "deprecatedSince": null,
+            "description": "shadow used by the video component for the play container effects: the exact MarsUI glass pair on the Icon_button instance — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers (ki-status/ki-icon-button precedent).",
+            "replacement": null,
+            "required": false,
+            "type": "shadow"
+          },
+          "--ki-video-play-size": {
+            "default": "3.5rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the video component for the play container box: the 56px Icon_button instance of the Size=md Video (the ki-icon-button xl box; the sm variant's 40px box is the scale demo).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-scrim-color": {
+            "default": "#0000000d",
+            "deprecatedSince": null,
+            "description": "color used by the video component for the overlay scrim behind the play control: Inverse_white/alpha_6, the exact variable bound to the Play halo on both Video variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer.",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-scrim-padding": {
+            "default": "1rem",
+            "deprecatedSince": null,
+            "description": "dimension used by the video component for the scrim clearance around the play container: Space/3xl, the exact variable bound as the Size=md Play halo padding (16px on every side).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
+          "--ki-video-scrim-radius": {
+            "default": "28px",
+            "deprecatedSince": null,
+            "description": "dimension used by the video component for the overlay scrim shape: Radius/component/radius_6xl, the exact variable bound to the Size=md Play halo (28px pill-cornered square).",
+            "replacement": null,
+            "required": false,
+            "type": null
           }
         },
         "version": "0.0.0"
       }
     }
   },
-  "surfaceSha256": "82aaa7b0000cdbaad14a32f9e78cca0551e52aeafbfac8d9181ff7810e162c93"
+  "surfaceSha256": "c2776c2eb4bcedfb9640e61e16aebd347297fbcef313063503a1e453c1c54087"
 }

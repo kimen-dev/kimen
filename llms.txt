@@ -1061,6 +1061,54 @@ CSS custom properties:
 - `--ki-icon-button-xs-size`: dimension used by the icon button component for xs box (24px square, Figma Space/7xl).
 - `--ki-transparent-inverse`: semantic color for transparent inverse.
 
+### ki-indicator
+
+A non-interactive page-position indicator: one dot per position of a bounded sequence, exactly one highlighted as current.
+
+When to use: show the current position within a bounded, sequential set of
+peer views whose navigation lives elsewhere: carousel slides, unlabeled
+onboarding steps, gallery pages. Wire `count` and `current` (1-based) to
+the sequence the consumer renders and give it a `label` (required
+authoring: assistive technology reads one graphic named
+"<label>, <current> / <count>"). Below two positions an indicator carries
+no information.
+When NOT to use: section navigation (ki-tabs), task completion or loading
+(ki-progress), labeled step flows (a stepper is a separate roadmap item),
+interactive pagination (a future feature — the indicator takes no focus
+and no input; navigation belongs to the composing carousel's own
+controls), or conveying quantity without a current position. Position
+changes are never announced by the indicator itself (no live region): the
+composing carousel owns announcements.
+
+Attributes:
+- `count` (number | undefined): Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent).
+- `current` (number | undefined): The current position, 1-based to match the exposed position text ("2 / 5"). Exactly one dot presents the current appearance whenever `count` >= 1: values above `count` clamp to the last position, values below 1 and non-numeric values fall back to the first (FR-003). Updates re-render in place — the highlight and the exposed text follow immediately, re-applying the normalization (FR-004).
+- `label` (string | undefined): Accessible name of the sequence ("Slide position"). The exposed name combines it with the wordless numeric position — "<label>, <current> / <count>" — on a single non-interactive graphic; without a label the name degrades to the bare position text (documented as required authoring, FR-005). The label is never rendered visually and position changes are never announced (no live region, FR-006).
+
+Slots: none
+
+Parts:
+- `dot`: Every dot: size, shape and color.
+- `dot-current`: Additionally on the current dot: the highlight treatment.
+- `indicator`: The row container: layout and the token-driven gap.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-indicator-dot-block-size`: dimension used by the indicator component for the resting dot block size: the 8px circle diameter measured in the State=inactive vector (the 16px frame height is row alignment, carried by the current dot).
+- `--ki-indicator-dot-color`: color used by the indicator component for the resting dot fill: Inverse_white/alpha_18, the exact variable bound to every Indicator variant fill (Black/18 light, White/18 dark) — the scheme flip rides the semantic layer.
+- `--ki-indicator-dot-current-block-size`: dimension used by the indicator component for the current dot block size: Space/3xl, the exact variable bound as the 16px height of the State=active pill (the full row line; declared family extension, design-extraction §Decisiones).
+- `--ki-indicator-dot-current-color`: color used by the indicator component for the current dot treatment: Inverse_white/alpha_18, the exact fill of the State=active ring vector (Black/18 light, White/18 dark) — painted as the pill ring in onmars, as the solid dot in themes that zero the hole.
+- `--ki-indicator-dot-current-hole-block-size`: dimension used by the indicator component for the block size of the transparent hole cut from the current pill: the 6px cutout height measured in the State=active vector; the ring width derives by construction as (current block size − hole block size) / 2 and a theme resolves it to zero for a solid dot (declared family extension, design-extraction §Decisiones).
+- `--ki-indicator-dot-current-inline-size`: dimension used by the indicator component for the current dot inline size: Space/10xl, the exact variable bound as the 32px width of the State=active pill — the MarsUI elongation lives here, never in an attribute (FR-007).
+- `--ki-indicator-dot-current-radius`: dimension used by the indicator component for the current dot shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent).
+- `--ki-indicator-dot-inline-size`: dimension used by the indicator component for the resting dot inline size: Space/md, the exact variable bound as the 8px width of the State=inactive symbol; the painted circle is 8x8 centered in the 16px row line.
+- `--ki-indicator-dot-radius`: dimension used by the indicator component for the resting dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent).
+- `--ki-indicator-gap`: dimension used by the indicator component for the space between dots: Space/sm, the exact variable bound as the 6px gap of the composed Nav_indicator row (node 14195:5866, specs/024-ki-indicator/design-extraction.md).
+- `--ki-indicator-motion-duration`: duration used by the indicator component for the highlight transfer between dots: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-008; disabled under reduced motion by construction).
+
 ### ki-input
 
 A token-styled single-line text field with native input semantics.
@@ -1304,6 +1352,47 @@ CSS custom properties:
 - `--ki-progress-linear-thickness`: dimension used by the progress component for linear thickness.
 - `--ki-progress-track-color`: color used by the progress component for track color.
 
+### ki-qr
+
+A machine-scannable QR code that hands a declared value — a link, a pairing payload — from the screen to a nearby camera, encoded locally and restyled entirely through tokens.
+
+When to use: hand a URL or machine-readable payload from the screen to a
+nearby camera device: login pairing, tickets and passes, "continue on
+mobile" links, Wi-Fi sharing. Declare `value` (encoded verbatim, always
+locally) and a purpose-stating `label` ("Open onmars.dev on your phone"),
+and always offer the same payload through an accessible alternative next
+to the code — a visible link or copyable text — because a QR code is only
+useful to someone who can point a second device's camera at the screen.
+When NOT to use: data the person must read on this same screen (render text
+or a link), one-dimensional barcodes (out of scope), anything interactive
+(a QR code is not a button — pair it with a real control instead), secret
+values (anyone who can photograph the screen can decode them), or as the
+sole carrier of the payload (the accessible alternative is mandatory
+guidance). An always-empty ki-qr and a value beyond the ~2,331-byte
+capacity are authoring mistakes: both render nothing, silently.
+
+Attributes:
+- `label` (string | undefined): Accessible name stating the code's purpose ("Open onmars.dev on your phone"). The component exposes exactly one non-interactive image named by it, falling back to the encoded value when absent (FR-005) — never an unnamed graphic. The label is never rendered visually, and naming the purpose is what tells assistive-technology users to look for the accessible alternative carrying the same payload (documented catalog guidance, FR-013).
+- `value` (string | undefined): The exact text the code encodes — the single source of the content, encoded locally as one UTF-8 byte segment at error-correction level M (non-ASCII text additionally carries the UTF-8 ECI designator, so real scanners decode the declared string rather than an ISO-8859-1 misreading), so an independent decoder recovers it byte-for-byte, including non-ASCII text (FR-001), and no network request is ever made — the value is data, never behavior: the component never interprets, resolves, navigates to or fetches it (FR-002). Changes re-encode in place. When absent, empty or beyond the capacity of the densest symbol (~2,331 bytes at level M), nothing renders and nothing errors (FR-003).
+
+Slots: none
+
+Parts:
+- `code`: The code tile: size, tile background and corners, quiet zone, module and finder shape/color.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-qr-background`: color used by the qr component for the light tile behind the modules: the Figma symbol is transparent over the showcase card's Surface/s0 white, but a scannable code owns its tile — the scheme-stable white keeps dark-on-light module contrast in both schemes (FR-010, a documented theme obligation).
+- `--ki-qr-color`: color used by the qr component for the dark modules and finder rings: the Figma fill binds Text/high_em (#0a0c11), which flips light under the dark scheme and would invert the code, so the theme obligation (FR-010: dark modules on a light tile in both schemes) resolves the scheme-stable black ink instead (design-extraction §2, declared for founder ratification).
+- `--ki-qr-finder-radius`: dimension used by the qr component for the corner radius of the three finder rings, applied to the ring's midline in the code's internal coordinate space of 8px per module: Type=square renders square concentric finders (radius 0); the documented round value is {ki.radius.2xl} (14px midline = 18px outer edge, the 2.25-module radius measured on Type=round); the inner-edge and center radii derive by construction (stroke geometry and a 3/7 scale — design-extraction §5).
+- `--ki-qr-module-radius`: dimension used by the qr component for the corner radius of every data module, in the code's internal coordinate space of 8px per module: Type=square (the set default) renders pure squares (radius 0); the documented round value is {ki.radius.xs} (4px = half a module, the MarsUI Type=round dot carried as a token value, never an attribute — FR-007, 002 shape precedent).
+- `--ki-qr-quiet-zone`: dimension used by the qr component for the light quiet zone around the modules: the 8px band measured on both 128px variants (about two modules of the sample matrices), painted as tile padding and preserved at any token-driven size (FR-008).
+- `--ki-qr-radius`: dimension used by the qr component for the tile corners: the QR_code frames are square with no own radius (the rounded showcase card beneath is framing, not anatomy — design-extraction §1).
+- `--ki-qr-size`: dimension used by the qr component for the code's square box: the 128px QR_code frame (node 16158:27561) binds no size variable and the space scale has no 8rem step, so onmars resolves the nearest step (120px); consumers rescale through this token — the code always stays 1:1 (specs/026-ki-qr/design-extraction.md §4, declared for founder ratification).
+
 ### ki-radio
 
 One option in a token-styled radio group.
@@ -1406,6 +1495,50 @@ CSS custom properties:
 - `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+
+### ki-scroller
+
+A bounded scroll container that clips its content along one declared axis and replaces platform scrollbar chrome with a token-resolved indicator.
+
+When to use: a bounded region inside a view whose content can outgrow it:
+chat or message panes, code and log blocks, tag rows, sidebar navigation,
+tall menus inside cards. Give it bounds (its size comes entirely from your
+layout) and a `label` (required: the accessible name of the scroll
+region). Scrolling stays native — wheel, touch, keyboard and indicator
+drag operate the viewport directly.
+When NOT to use: page-level scrolling (the browser's job), carousels or
+paginated media (future indicator/carousel patterns), virtualized long
+collections, multi-column tabular data, or nesting scrollers (v1
+guarantees a single scroll axis per region). Cross-axis overflow is an
+authoring mistake: the scroller scrolls its declared axis only and clips
+the other — wrap or size content on the cross axis.
+
+Attributes:
+- `label` (string | undefined): Accessible name of the scroll region ("Release notes", "Chat messages"). Assistive technology receives a `region` with this name whose slotted content keeps its own semantics (FR-006). Documented as required: a scroller without a label renders but exposes no accessible name and fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
+- `orientation` ("horizontal" | "vertical", default 'vertical'): Declared scroll axis, mapping the design source's `Type` axis: `vertical` (default) scrolls the block axis, `horizontal` the inline axis. One axis per instance; the cross axis clips. A structural axis, never appearance — thickness, shape and colors of the indicator are per-theme `--ki-scroller-*` tokens. An unrecognized value matches no style selector and no `horizontal` code path, so the scroller keeps the default vertical behavior (fallback by CSS construction plus a single strict comparison — no validation code, FR-002/FR-009).
+
+Slots:
+- (default): The scrollable content: it keeps its own semantics and sizes the scroll extent along the declared axis.
+
+Parts:
+- `viewport`: The scroll viewport: surface, focus ring and, as native scrollbar chrome styled from `--ki-scroller-*` tokens, the indicator.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-scroller-focus-ring-color`: color used by the scroller component for the viewport focus ring: the keyboard-focusable scroll region (FR-005) adopts the ki-dialog focus-ring pair verbatim.
+- `--ki-scroller-focus-ring-offset`: dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent).
+- `--ki-scroller-focus-ring-width`: dimension used by the scroller component for the viewport focus ring width (ki-dialog precedent).
+- `--ki-scroller-gutter`: dimension used by the scroller component for the clearance on each side of the thumb: the 2px padding-inline of the 8px Scroller rail (rail thickness = thumb-thickness + 2×gutter).
+- `--ki-scroller-surface`: color used by the scroller component for the viewport surface: transparent in onmars — the scroller shows the consumer's own surface; a theme may resolve a proper surface here (FR-007).
+- `--ki-scroller-thumb-color`: color used by the scroller component for the indicator thumb: Inverse_white/alpha_6, the exact variable bound to the scroll pill on both Scroller variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md).
+- `--ki-scroller-thumb-min-length`: dimension used by the scroller component for the minimum thumb length along the scroll axis: the 16px min-height on the Figma scroll pill; the actual length stays the native visible-fraction proportion (FR-003).
+- `--ki-scroller-thumb-radius`: dimension used by the scroller component for the thumb shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent).
+- `--ki-scroller-thumb-thickness`: dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17).
+- `--ki-scroller-track-color`: color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute.
+- `--ki-scroller-track-inset`: dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5).
 
 ### ki-select
 
@@ -1908,3 +2041,56 @@ CSS custom properties:
 - `--ki-tooltip-padding-inline`: dimension used by the tooltip component for padding inline.
 - `--ki-tooltip-radius`: dimension used by the tooltip component for radius.
 - `--ki-tooltip-shadow`: shadow used by the tooltip component for tooltip shadow.
+
+### ki-video
+
+A themed video surface: a calm poster facade with exactly one accessible play control over a slotted native `<video>` element. From the first activation on, playback, scrubbing, volume, captions and fullscreen belong to the native player — Kimen ships no custom chrome.
+
+When to use: playable content the person deliberately chooses to watch —
+product tours, talks, tutorials, announcements — presented as a poster
+with one play control. Slot exactly one native `<video>` carrying its own
+`poster`, sources and `<track>` captions, omit `controls` (the component
+enables the native chrome the moment the facade yields, FR-002), and give
+the control a `label` (required: the accessible name of the play button).
+When NOT to use: decorative background or ambient loops (plain CSS and
+`<video>` are the tool), audio-only content (a future audio component),
+embeds from streaming platforms that ship their own player chrome (use
+their embed), or static imagery (use an image, not a video). `autoplay`
+on the slotted media is unsupported: the facade's contract is that
+playback begins only by explicit user activation — never on scroll,
+hover or visibility — so preexisting `autoplay` and `controls` on the
+slotted media are cleared when it arrives, and any playback already
+running is paused (FR-003; the native chrome returns at activation).
+
+Attributes:
+- `label` (string | undefined): Accessible name of the play control ("Play the product tour"). The control is a real button exposing role button with exactly this name; the frame contributes no role, name or state of its own (FR-004, FR-005). Documented as required: no default human-language string is baked in, and an unlabeled control renders but fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
+
+Slots:
+- (default): Exactly one native `<video>` element carrying its own poster, sources and `<track>` captions.
+
+Parts:
+- `frame`: The media frame: radius, clipping, the themed surface.
+- `play`: The play control: overlay scrim, glass container and glyph.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-video-backdrop-blur`: dimension used by the video component for the glass backdrop of the scrim and the play container (MarsUI Blur/24, identical to the button glass). material3 resolves to blur none via the semantic override.
+- `--ki-video-focus-ring-color`: color used by the video component for the play control focus ring: the keyboard-reachable facade control (FR-004, S6) adopts the ki-dialog/ki-icon-button focus-ring pair verbatim.
+- `--ki-video-focus-ring-offset`: dimension used by the video component for the play control focus ring offset (ki-dialog precedent).
+- `--ki-video-focus-ring-width`: dimension used by the video component for the play control focus ring width (ki-dialog precedent).
+- `--ki-video-frame-radius`: dimension used by the video component for the frame corners: Radius/big_component/radius_xs, the exact variable bound to the Size=md Video frame (node 12089:6570, specs/025-ki-video/design-extraction.md) — the sm frame's radius_md is the scale demo, not a second API value.
+- `--ki-video-motion-duration`: duration used by the video component for the facade dismissal fade: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-013; disabled under reduced motion by construction, 024 precedent).
+- `--ki-video-play-bg`: color used by the video component for the play container surface: Surface/inverse_white, the exact variable bound to the Icon_button fill (black over light, white over dark) — the control carries its own surface so glyph contrast never depends on the poster imagery (FR-008).
+- `--ki-video-play-border-color`: color used by the video component for the play container bevel: Outline/primary_button_top, the exact variable bound to the Icon_button stroke — the verified ki-button glass bevel.
+- `--ki-video-play-border-width`: dimension used by the video component for the play container bevel width (MarsUI hairline stroke, ki-icon-button precedent).
+- `--ki-video-play-fg`: color used by the video component for the play glyph: Text/inverse_black, the counterpart of the inverse container surface (white over light, black over dark) — the glyph inherits it via currentColor; the -bg/-fg pair is swept by the contrast gate (FR-008).
+- `--ki-video-play-icon-size`: dimension used by the video component for the play glyph: the 28px Icon/Placeholder_xl slot measured inside the Size=md play container (the ki-icon-button xl icon size).
+- `--ki-video-play-radius`: dimension used by the video component for the play container shape: Radius/component/radius_xl, the exact variable bound to the Size=md Icon_button instance (14px, the ki-icon-button xl radius).
+- `--ki-video-play-shadow`: shadow used by the video component for the play container effects: the exact MarsUI glass pair on the Icon_button instance — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers (ki-status/ki-icon-button precedent).
+- `--ki-video-play-size`: dimension used by the video component for the play container box: the 56px Icon_button instance of the Size=md Video (the ki-icon-button xl box; the sm variant's 40px box is the scale demo).
+- `--ki-video-scrim-color`: color used by the video component for the overlay scrim behind the play control: Inverse_white/alpha_6, the exact variable bound to the Play halo on both Video variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer.
+- `--ki-video-scrim-padding`: dimension used by the video component for the scrim clearance around the play container: Space/3xl, the exact variable bound as the Size=md Play halo padding (16px on every side).
+- `--ki-video-scrim-radius`: dimension used by the video component for the overlay scrim shape: Radius/component/radius_6xl, the exact variable bound to the Size=md Play halo (28px pill-cornered square).

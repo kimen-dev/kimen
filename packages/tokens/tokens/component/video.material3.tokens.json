@@ -1,0 +1,38 @@
+{
+  "ki": {
+    "video": {
+      "frame-radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Material 3 dimension used by the video component for the frame corners: M3 ships no video component (verified 2026-07-17), so the frame adopts md.sys.shape.corner.medium (12dp) through the material3 radius scale — the ki-card media shape precedent (theme-author decision, spec Assumptions)."
+      },
+      "scrim-color": {
+        "$value": "{ki.transparent-inverse}",
+        "$description": "Material 3 color used by the video component for the overlay scrim: transparent — M3 surfaces are flat and the MarsUI glass halo is disabled; the play container carries the whole affordance (theme-author decision)."
+      },
+      "scrim-padding": {
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 dimension used by the video component for the scrim clearance: zero — with the halo disabled the play control collapses to its 56dp container, still above the 48dp M3 touch target (theme-author decision)."
+      },
+      "play-radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "Material 3 dimension used by the video component for the play container shape: M3 shape Round, the same decision as the ki-icon-button material3 override."
+      },
+      "play-bg": {
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "Material 3 color used by the video component for the play container surface: the filled icon button container role (md.sys.color.primary), the closest M3 pattern named by the spec's design-source analysis — the -bg/-fg pair is swept by the contrast gate (FR-008)."
+      },
+      "play-fg": {
+        "$value": "{ki.text.primary-on-primary}",
+        "$description": "Material 3 color used by the video component for the play glyph: on-primary over the filled container, inherited via currentColor (filled icon button pairing)."
+      },
+      "play-border-color": {
+        "$value": "{ki.outline.none}",
+        "$description": "Material 3 color used by the video component for the play container border: none — the MarsUI glass bevel is disabled (ki-icon-button material3 precedent)."
+      },
+      "play-shadow": {
+        "$value": "none",
+        "$description": "value used by the video component for the play container effects under Material 3: flat — the MarsUI glass pair (e1 drop + inner white highlight) is disabled (ki-icon-button material3 precedent)."
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "ki": {
+    "scroller": {
+      "thumb-color": {
+        "$value": "{ki.inverse-white.alpha-6}",
+        "$description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_6, the exact variable bound to the scroll pill on both Scroller variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md)."
+      },
+      "thumb-thickness": {
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17)."
+      },
+      "thumb-radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "dimension used by the scroller component for the thumb shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent)."
+      },
+      "thumb-min-length": {
+        "$value": "{ki.space.3xl}",
+        "$description": "dimension used by the scroller component for the minimum thumb length along the scroll axis: the 16px min-height on the Figma scroll pill; the actual length stays the native visible-fraction proportion (FR-003)."
+      },
+      "track-color": {
+        "$value": "{ki.transparent-inverse}",
+        "$description": "color used by the scroller component for the track: the MarsUI pill floats directly on the content surface with no visible track — transparent in onmars; a theme opts into a visible track through this token, never an attribute."
+      },
+      "gutter": {
+        "$value": "{ki.space.xxs}",
+        "$description": "dimension used by the scroller component for the clearance on each side of the thumb: the 2px padding-inline of the 8px Scroller rail (rail thickness = thumb-thickness + 2×gutter)."
+      },
+      "track-inset": {
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5)."
+      },
+      "surface": {
+        "$value": "{ki.transparent-inverse}",
+        "$description": "color used by the scroller component for the viewport surface: transparent in onmars — the scroller shows the consumer's own surface; a theme may resolve a proper surface here (FR-007)."
+      },
+      "focus-ring": {
+        "color": {
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the scroller component for the viewport focus ring: the keyboard-focusable scroll region (FR-005) adopts the ki-dialog focus-ring pair verbatim."
+        },
+        "width": {
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the scroller component for the viewport focus ring width (ki-dialog precedent)."
+        },
+        "offset": {
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent)."
+        }
+      }
+    }
+  }
+}

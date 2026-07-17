@@ -1,0 +1,78 @@
+{
+  "ki": {
+    "video": {
+      "frame-radius": {
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "dimension used by the video component for the frame corners: Radius/big_component/radius_xs, the exact variable bound to the Size=md Video frame (node 12089:6570, specs/025-ki-video/design-extraction.md) — the sm frame's radius_md is the scale demo, not a second API value."
+      },
+      "scrim-color": {
+        "$value": "{ki.inverse-white.alpha-6}",
+        "$description": "color used by the video component for the overlay scrim behind the play control: Inverse_white/alpha_6, the exact variable bound to the Play halo on both Video variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer."
+      },
+      "scrim-radius": {
+        "$value": "{ki.radius.component.6xl}",
+        "$description": "dimension used by the video component for the overlay scrim shape: Radius/component/radius_6xl, the exact variable bound to the Size=md Play halo (28px pill-cornered square)."
+      },
+      "scrim-padding": {
+        "$value": "{ki.space.3xl}",
+        "$description": "dimension used by the video component for the scrim clearance around the play container: Space/3xl, the exact variable bound as the Size=md Play halo padding (16px on every side)."
+      },
+      "backdrop-blur": {
+        "$value": "{ki.effect.component.backdrop-blur}",
+        "$type": "dimension",
+        "$description": "dimension used by the video component for the glass backdrop of the scrim and the play container (MarsUI Blur/24, identical to the button glass). material3 resolves to blur none via the semantic override."
+      },
+      "play-size": {
+        "$value": "{ki.space.16xl}",
+        "$description": "dimension used by the video component for the play container box: the 56px Icon_button instance of the Size=md Video (the ki-icon-button xl box; the sm variant's 40px box is the scale demo)."
+      },
+      "play-icon-size": {
+        "$value": "{ki.space.9xl}",
+        "$description": "dimension used by the video component for the play glyph: the 28px Icon/Placeholder_xl slot measured inside the Size=md play container (the ki-icon-button xl icon size)."
+      },
+      "play-radius": {
+        "$value": "{ki.radius.component.xl}",
+        "$description": "dimension used by the video component for the play container shape: Radius/component/radius_xl, the exact variable bound to the Size=md Icon_button instance (14px, the ki-icon-button xl radius)."
+      },
+      "play-bg": {
+        "$value": "{ki.surface.inverse-white}",
+        "$description": "color used by the video component for the play container surface: Surface/inverse_white, the exact variable bound to the Icon_button fill (black over light, white over dark) — the control carries its own surface so glyph contrast never depends on the poster imagery (FR-008)."
+      },
+      "play-fg": {
+        "$value": "{ki.text.inverse-black}",
+        "$description": "color used by the video component for the play glyph: Text/inverse_black, the counterpart of the inverse container surface (white over light, black over dark) — the glyph inherits it via currentColor; the -bg/-fg pair is swept by the contrast gate (FR-008)."
+      },
+      "play-border-color": {
+        "$value": "{ki.outline.primary-button-top}",
+        "$description": "color used by the video component for the play container bevel: Outline/primary_button_top, the exact variable bound to the Icon_button stroke — the verified ki-button glass bevel."
+      },
+      "play-border-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "dimension used by the video component for the play container bevel width (MarsUI hairline stroke, ki-icon-button precedent)."
+      },
+      "play-shadow": {
+        "$value": "{ki.effect.component.primary.default.shadow}",
+        "$type": "shadow",
+        "$description": "shadow used by the video component for the play container effects: the exact MarsUI glass pair on the Icon_button instance — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers (ki-status/ki-icon-button precedent)."
+      },
+      "focus-ring": {
+        "color": {
+          "$value": "{ki.outline.primary-high-em}",
+          "$description": "color used by the video component for the play control focus ring: the keyboard-reachable facade control (FR-004, S6) adopts the ki-dialog/ki-icon-button focus-ring pair verbatim."
+        },
+        "width": {
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the video component for the play control focus ring width (ki-dialog precedent)."
+        },
+        "offset": {
+          "$value": "{ki.space.xxs}",
+          "$description": "dimension used by the video component for the play control focus ring offset (ki-dialog precedent)."
+        }
+      },
+      "motion-duration": {
+        "$value": "{ki.motion.duration.fast}",
+        "$description": "duration used by the video component for the facade dismissal fade: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-013; disabled under reduced motion by construction, 024 precedent)."
+      }
+    }
+  }
+}

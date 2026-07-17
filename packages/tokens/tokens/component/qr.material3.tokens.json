@@ -1,0 +1,14 @@
+{
+  "ki": {
+    "qr": {
+      "quiet-zone": {
+        "$value": "{ki.space.3xl}",
+        "$description": "Material 3 dimension used by the qr component for the quiet zone: M3 ships no QR-code component (spec Assumptions, same absence class as avatar), so the theme applies a generous 16dp light margin as a theme-author decision — scanner headroom on the rounded tile; module and tile colors inherit the scheme-stable dark-on-light pair (the same scannability obligation, FR-010)."
+      },
+      "radius": {
+        "$value": "{ki.radius.component.lg}",
+        "$description": "Material 3 dimension used by the qr component for the tile corners: md.sys.shape.corner.medium (12dp) via the material3 radius scale — a theme-author decision (no M3 QR artifact exists); modules and finders stay square through the inherited shape tokens (cascade 001)."
+      }
+    }
+  }
+}

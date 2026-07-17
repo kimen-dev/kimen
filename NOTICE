@@ -114,3 +114,52 @@ fallback face:
 
   The font file is used only as a test fixture; it is not part of any
   published package.
+
+================================================================================
+Third-party notices: QR Code generator library (MIT)
+================================================================================
+
+The ki-qr component vendors a minimal adaptation of the reference QR Code
+generator by Project Nayuki so that encoding is local, auditable and adds no
+runtime npm dependency (constitution Art. X):
+
+  - packages/elements/src/components/ki-qr/qr-encoder.ts
+    QR Code generator library (TypeScript) — Project Nayuki
+    https://www.nayuki.io/page/qr-code-generator-library
+    https://github.com/nayuki/QR-Code-generator
+    Version pinned: release v1.8.0
+    Reference file: typescript-javascript/qrcodegen.ts
+    SHA-256 (reference file at v1.8.0):
+    c4749095a91bf9696e3a303998b9905e467094f53041e64393e65e6d887737fd
+    Copyright (c) Project Nayuki
+    License: MIT
+
+  Kimen adaptations (the file header carries the same record): TypeScript
+  namespace converted to an ES module with a single `encodeQr` entry point;
+  only the byte mode at the fixed MEDIUM error-correction level is kept
+  (numeric/alphanumeric/kanji/ECI segments, ECC boosting and the mask
+  override are removed); capacity overflow returns null instead of throwing;
+  tables trimmed to the MEDIUM rows; grids flattened to Uint8Array; strict
+  TypeScript hardening. The algorithm — function patterns, Reed-Solomon ECC
+  over GF(2^8/0x11D), block interleaving, mask selection and penalty
+  scoring, format/version bits — is Nayuki's, per ISO/IEC 18004.
+
+MIT License (applies to the upstream material identified above):
+
+  Permission is hereby granted, free of charge, to any person obtaining a
+  copy of this software and associated documentation files (the "Software"),
+  to deal in the Software without restriction, including without limitation
+  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  and/or sell copies of the Software, and to permit persons to whom the
+  Software is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+  DEALINGS IN THE SOFTWARE.
