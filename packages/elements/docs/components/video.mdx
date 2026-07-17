@@ -21,7 +21,10 @@ the play button).
 embeds from streaming platforms that ship their own player chrome (use
 their embed), or static imagery (use an image, not a video). `autoplay` on
 the slotted media is unsupported: playback begins only by explicit user
-activation — never on scroll, hover or visibility.
+activation — never on scroll, hover or visibility — so preexisting
+`autoplay` and `controls` on the slotted media are cleared when it arrives
+(playback already underway is paused), and the native chrome returns at
+activation.
 
 ## Examples
 

@@ -19,6 +19,8 @@ export type KiScrollerOrientation = 'vertical' | 'horizontal';
  * authoring mistake: the scroller scrolls its declared axis only and clips
  * the other — wrap or size content on the cross axis.
  *
+ * @slot - The scrollable content: it keeps its own semantics and sizes the scroll extent along the declared axis.
+ *
  * @part viewport - The scroll viewport: surface, focus ring and, as native
  * scrollbar chrome styled from `--ki-scroller-*` tokens, the indicator.
  */

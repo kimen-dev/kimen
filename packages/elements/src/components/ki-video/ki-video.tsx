@@ -1,4 +1,4 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, Element, h, Prop, State } from '@stencil/core';
 
 /**
  * A themed video surface: a calm poster facade with exactly one accessible
@@ -18,7 +18,11 @@ import { Component, h, Prop, State } from '@stencil/core';
  * their embed), or static imagery (use an image, not a video). `autoplay`
  * on the slotted media is unsupported: the facade's contract is that
  * playback begins only by explicit user activation — never on scroll,
- * hover or visibility (FR-003).
+ * hover or visibility — so preexisting `autoplay` and `controls` on the
+ * slotted media are cleared when it arrives, and any playback already
+ * running is paused (FR-003; the native chrome returns at activation).
+ *
+ * @slot - Exactly one native `<video>` element carrying its own poster, sources and `<track>` captions.
  *
  * @part frame - The media frame: radius, clipping, the themed surface.
  * @part play - The play control: overlay scrim, glass container and glyph.
@@ -47,10 +51,58 @@ export class KiVideo {
    */
   @State() private playing = false;
 
+  @Element() host!: HTMLElement;
+
   private frame: HTMLDivElement | undefined;
 
   private readonly setFrameRef = (frame?: HTMLDivElement): void => {
     this.frame = frame;
+  };
+
+  componentDidLoad(): void {
+    this.neutralizeSlottedMedia();
+  }
+
+  /**
+   * The consumer's media element behind the facade. Slot assignment is the
+   * browser truth; the light-DOM children are the same elements in
+   * mock-doc, whose slots implement no assignment API.
+   */
+  private slottedMedia(): HTMLVideoElement | undefined {
+    const slot = this.frame?.querySelector('slot');
+    const assigned: readonly Element[] =
+      typeof slot?.assignedElements === 'function'
+        ? slot.assignedElements({ flatten: true })
+        : [...this.host.children];
+    return assigned.find((element): element is HTMLVideoElement => element.localName === 'video');
+  }
+
+  /**
+   * The facade owns the pre-activation surface (S1/S6: the play control is
+   * the only interactive element) and playback never self-starts (FR-003),
+   * so preexisting `controls` and `autoplay` on the slotted media — common
+   * markup, and muted autoplay is broadly permitted — are cleared the
+   * moment it arrives, and playback already underway is paused. From the
+   * first activation on the media is the native player's (FR-002) and the
+   * component never touches it again.
+   */
+  private readonly neutralizeSlottedMedia = (): void => {
+    if (this.playing) {
+      return;
+    }
+    const media = this.slottedMedia();
+    if (!media) {
+      return;
+    }
+    media.autoplay = false;
+    media.removeAttribute('autoplay');
+    media.controls = false;
+    media.removeAttribute('controls');
+    // The strict comparison plus typeof detour keeps mock-doc (no media
+    // pipeline: `paused` and `pause` are absent) safe, mirroring play().
+    if (!media.paused && typeof media.pause === 'function') {
+      media.pause();
+    }
   };
 
   /**
@@ -63,10 +115,7 @@ export class KiVideo {
     if (this.playing) {
       return;
     }
-    const slot = this.frame?.querySelector('slot');
-    const media = (slot?.assignedElements({ flatten: true }) ?? []).find(
-      (element): element is HTMLVideoElement => element.localName === 'video',
-    );
+    const media = this.slottedMedia();
     if (!media) {
       // Children other than one native <video> are documented as
       // unsupported: there is no player to hand the surface to, and the
@@ -98,7 +147,7 @@ export class KiVideo {
     // FR-013): a removed node could never honor a theme's dismissal motion.
     return (
       <div part="frame" class={{ playing: this.playing }} ref={this.setFrameRef}>
-        <slot></slot>
+        <slot onSlotchange={this.neutralizeSlottedMedia}></slot>
         <button part="play" type="button" aria-label={this.label} onClick={this.handleActivate}>
           <span class="control" aria-hidden="true">
             <svg class="glyph" viewBox="0 0 24 24">

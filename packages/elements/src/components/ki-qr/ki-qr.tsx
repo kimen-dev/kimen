@@ -40,9 +40,11 @@ const MODULE = 8;
 export class KiQr {
   /**
    * The exact text the code encodes — the single source of the content,
-   * encoded locally as one UTF-8 byte segment at error-correction level M,
-   * so an independent decoder recovers it byte-for-byte, including
-   * non-ASCII text (FR-001), and no network request is ever made — the value is
+   * encoded locally as one UTF-8 byte segment at error-correction level M
+   * (non-ASCII text additionally carries the UTF-8 ECI designator, so real
+   * scanners decode the declared string rather than an ISO-8859-1
+   * misreading), so an independent decoder recovers it byte-for-byte,
+   * including non-ASCII text (FR-001), and no network request is ever made — the value is
    * data, never behavior: the component never interprets, resolves,
    * navigates to or fetches it (FR-002). Changes re-encode in place. When
    * absent, empty or beyond the capacity of the densest symbol (~2,331
@@ -105,7 +107,18 @@ export class KiQr {
     const name = this.label !== undefined && this.label !== '' ? this.label : value;
     return (
       <Host role="img" aria-label={name}>
-        <svg part="code" viewBox={`0 0 ${String(units)} ${String(units)}`} aria-hidden="true">
+        {/* The private ratio hands the stylesheet the symbol's module count:
+            padding of size×4/(modules+8) is exactly four modules of quiet
+            zone once the border-box subtracts itself (ISO/IEC 18004 scanner
+            floor), and the stylesheet takes the larger of it and the
+            theme's quiet-zone token (`--_ki-` privates stay outside the
+            token surface, ki-progress precedent). */}
+        <svg
+          part="code"
+          viewBox={`0 0 ${String(units)} ${String(units)}`}
+          aria-hidden="true"
+          style={{ '--_ki-qr-quiet-ratio': String(4 / (matrix.size + 8)) }}
+        >
           {finders.map(([fx, fy]) => [
             <rect
               class="finder"

@@ -2994,7 +2994,7 @@
           "mutable": false,
           "attr": "value",
           "reflectToAttr": false,
-          "docs": "The exact text the code encodes — the single source of the content,\nencoded locally as one UTF-8 byte segment at error-correction level M,\nso an independent decoder recovers it byte-for-byte, including\nnon-ASCII text (FR-001), and no network request is ever made — the value is\ndata, never behavior: the component never interprets, resolves,\nnavigates to or fetches it (FR-002). Changes re-encode in place. When\nabsent, empty or beyond the capacity of the densest symbol (~2,331\nbytes at level M), nothing renders and nothing errors (FR-003).",
+          "docs": "The exact text the code encodes — the single source of the content,\nencoded locally as one UTF-8 byte segment at error-correction level M\n(non-ASCII text additionally carries the UTF-8 ECI designator, so real\nscanners decode the declared string rather than an ISO-8859-1\nmisreading), so an independent decoder recovers it byte-for-byte,\nincluding non-ASCII text (FR-001), and no network request is ever made — the value is\ndata, never behavior: the component never interprets, resolves,\nnavigates to or fetches it (FR-002). Changes re-encode in place. When\nabsent, empty or beyond the capacity of the densest symbol (~2,331\nbytes at level M), nothing renders and nothing errors (FR-003).",
           "docsTags": [
             {
               "name": "default",
@@ -3342,6 +3342,10 @@
           "text": "page-level scrolling (the browser's job), carousels or\npaginated media (future indicator/carousel patterns), virtualized long\ncollections, multi-column tabular data, or nesting scrollers (v1\nguarantees a single scroll axis per region). Cross-axis overflow is an\nauthoring mistake: the scroller scrolls its declared axis only and clips\nthe other — wrap or size content on the cross axis."
         },
         {
+          "name": "slot",
+          "text": "- The scrollable content: it keeps its own semantics and sizes the scroll extent along the declared axis."
+        },
+        {
           "name": "part",
           "text": "viewport - The scroll viewport: surface, focus ring and, as native\nscrollbar chrome styled from `--ki-scroller-*` tokens, the indicator."
         }
@@ -3424,7 +3428,12 @@
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The scrollable content: it keeps its own semantics and sizes the scroll extent along the declared axis."
+        }
+      ],
       "parts": [
         {
           "name": "viewport",
@@ -4836,7 +4845,11 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "decorative background or ambient loops (plain CSS and\n`<video>` are the tool), audio-only content (a future audio component),\nembeds from streaming platforms that ship their own player chrome (use\ntheir embed), or static imagery (use an image, not a video). `autoplay`\non the slotted media is unsupported: the facade's contract is that\nplayback begins only by explicit user activation — never on scroll,\nhover or visibility (FR-003)."
+          "text": "decorative background or ambient loops (plain CSS and\n`<video>` are the tool), audio-only content (a future audio component),\nembeds from streaming platforms that ship their own player chrome (use\ntheir embed), or static imagery (use an image, not a video). `autoplay`\non the slotted media is unsupported: the facade's contract is that\nplayback begins only by explicit user activation — never on scroll,\nhover or visibility — so preexisting `autoplay` and `controls` on the\nslotted media are cleared when it arrives, and any playback already\nrunning is paused (FR-003; the native chrome returns at activation)."
+        },
+        {
+          "name": "slot",
+          "text": "- Exactly one native `<video>` element carrying its own poster, sources and `<track>` captions."
         },
         {
           "name": "part",
@@ -4885,7 +4898,12 @@
       "events": [],
       "listeners": [],
       "styles": [],
-      "slots": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Exactly one native `<video>` element carrying its own poster, sources and `<track>` captions."
+        }
+      ],
       "parts": [
         {
           "name": "frame",

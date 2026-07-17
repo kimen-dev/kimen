@@ -12,6 +12,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import axe from 'axe-core';
 import jsQR from 'jsqr';
+import type { ECIChunk } from 'jsqr/dist/decoder/decodeData';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-qr.js';
@@ -153,9 +154,10 @@ const MARGIN = 64;
  * Independent round-trip decode of the RENDERED code (FR-001): the shadow
  * SVG is cloned with every rect's token-resolved computed paint and radius
  * baked in as attributes, rasterized over the tile color, and read back
- * with jsQR. Returns the decoded bytes as UTF-8 text, or null.
+ * with jsQR. Returns the decoder's full verdict (bytes, segment chunks),
+ * or null.
  */
-async function decodeRendered(el: KiQrElement): Promise<string | null> {
+async function decodeRenderedRaw(el: KiQrElement): Promise<ReturnType<typeof jsQR>> {
   const svg = el.shadowRoot?.querySelector<SVGSVGElement>('svg[part="code"]');
   if (!svg) {
     return null;
@@ -195,11 +197,16 @@ async function decodeRendered(el: KiQrElement): Promise<string | null> {
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.drawImage(image, MARGIN, MARGIN, RASTER, RASTER);
     const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
-    const found = jsQR(pixels.data, pixels.width, pixels.height);
-    return found ? new TextDecoder().decode(new Uint8Array(found.binaryData)) : null;
+    return jsQR(pixels.data, pixels.width, pixels.height);
   } finally {
     URL.revokeObjectURL(url);
   }
+}
+
+/** The decoded payload as UTF-8 text (the byte-exact channel), or null. */
+async function decodeRendered(el: KiQrElement): Promise<string | null> {
+  const found = await decodeRenderedRaw(el);
+  return found ? new TextDecoder().decode(new Uint8Array(found.binaryData)) : null;
 }
 
 describe('ki-qr', () => {
@@ -215,13 +222,29 @@ describe('ki-qr', () => {
     ];
     for (const value of values) {
       const el = await mount(landmark(), { value, label: 'Open on your phone' });
-      expect(await decodeRendered(el), `round trip of ${value}`).toBe(value);
+      const found = await decodeRenderedRaw(el);
+      expect(
+        found ? new TextDecoder().decode(new Uint8Array(found.binaryData)) : null,
+        `round trip of ${value}`,
+      ).toBe(value);
+      // Non-ASCII payloads must declare their bytes to real scanners: the
+      // UTF-8 ECI designator (assignment 26) precedes the byte segment so
+      // spec-compliant readers decode the declared string instead of an
+      // ISO-8859-1 misreading; pure ASCII reads identically under every
+      // interpretation and stays designator-free (FR-001).
+      const needsEci = Array.from(new TextEncoder().encode(value)).some((byte) => byte >= 0x80);
+      const eciChunk = found?.chunks.find(
+        (chunk): chunk is ECIChunk => (chunk.type as string) === 'eci',
+      );
+      expect(eciChunk?.assignmentNumber, `UTF-8 ECI designator of ${value}`).toBe(
+        needsEci ? 26 : undefined,
+      );
       el.remove();
     }
 
     // Geometry and paint resolve from tokens (FR-006): the 120px square
-    // tile, the 8px quiet zone and the scheme-stable dark-on-light pair
-    // at scanner-safe non-text contrast (FR-010).
+    // tile, the token-floored quiet zone and the scheme-stable
+    // dark-on-light pair at scanner-safe non-text contrast (FR-010).
     const el = await mount(landmark(), { value: 'https://onmars.dev', label: 'Open' });
     const code = codeOf(el);
     const rect = code.getBoundingClientRect();
@@ -229,7 +252,13 @@ describe('ki-qr', () => {
     expect(rect.height).toBe(rect.width);
     const style = getComputedStyle(code);
     expect(style.backgroundColor).toBe(readTokenColor('--ki-qr-background'));
-    expect(Number.parseFloat(style.paddingBlockStart)).toBe(readTokenLength('--ki-qr-quiet-zone'));
+    // The quiet zone honors the token as a floor and never drops under the
+    // four modules scanners assume (ISO/IEC 18004): this version-2 symbol
+    // (25 modules) derives a 4-module padding wider than the 8px token.
+    const padding = Number.parseFloat(style.paddingBlockStart);
+    expect(padding).toBeGreaterThanOrEqual(readTokenLength('--ki-qr-quiet-zone'));
+    const moduleSize = (rect.width - 2 * padding) / 25;
+    expect(padding / moduleSize).toBeCloseTo(4, 1);
     const module = code.querySelector('.module');
     expect(module).toBeTruthy();
     if (!module) {

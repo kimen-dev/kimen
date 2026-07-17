@@ -534,7 +534,7 @@ export namespace Components {
          */
         "label"?: string;
         /**
-          * The exact text the code encodes — the single source of the content, encoded locally as one UTF-8 byte segment at error-correction level M, so an independent decoder recovers it byte-for-byte, including non-ASCII text (FR-001), and no network request is ever made — the value is data, never behavior: the component never interprets, resolves, navigates to or fetches it (FR-002). Changes re-encode in place. When absent, empty or beyond the capacity of the densest symbol (~2,331 bytes at level M), nothing renders and nothing errors (FR-003).
+          * The exact text the code encodes — the single source of the content, encoded locally as one UTF-8 byte segment at error-correction level M (non-ASCII text additionally carries the UTF-8 ECI designator, so real scanners decode the declared string rather than an ISO-8859-1 misreading), so an independent decoder recovers it byte-for-byte, including non-ASCII text (FR-001), and no network request is ever made — the value is data, never behavior: the component never interprets, resolves, navigates to or fetches it (FR-002). Changes re-encode in place. When absent, empty or beyond the capacity of the densest symbol (~2,331 bytes at level M), nothing renders and nothing errors (FR-003).
           * @default undefined
          */
         "value"?: string;
@@ -873,7 +873,9 @@ export namespace Components {
      * their embed), or static imagery (use an image, not a video). `autoplay`
      * on the slotted media is unsupported: the facade's contract is that
      * playback begins only by explicit user activation — never on scroll,
-     * hover or visibility (FR-003).
+     * hover or visibility — so preexisting `autoplay` and `controls` on the
+     * slotted media are cleared when it arrives, and any playback already
+     * running is paused (FR-003; the native chrome returns at activation).
      */
     interface KiVideo {
         /**
@@ -1419,7 +1421,9 @@ declare global {
      * their embed), or static imagery (use an image, not a video). `autoplay`
      * on the slotted media is unsupported: the facade's contract is that
      * playback begins only by explicit user activation — never on scroll,
-     * hover or visibility (FR-003).
+     * hover or visibility — so preexisting `autoplay` and `controls` on the
+     * slotted media are cleared when it arrives, and any playback already
+     * running is paused (FR-003; the native chrome returns at activation).
      */
     interface HTMLKiVideoElement extends Components.KiVideo, HTMLStencilElement {
     }
@@ -1976,7 +1980,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The exact text the code encodes — the single source of the content, encoded locally as one UTF-8 byte segment at error-correction level M, so an independent decoder recovers it byte-for-byte, including non-ASCII text (FR-001), and no network request is ever made — the value is data, never behavior: the component never interprets, resolves, navigates to or fetches it (FR-002). Changes re-encode in place. When absent, empty or beyond the capacity of the densest symbol (~2,331 bytes at level M), nothing renders and nothing errors (FR-003).
+          * The exact text the code encodes — the single source of the content, encoded locally as one UTF-8 byte segment at error-correction level M (non-ASCII text additionally carries the UTF-8 ECI designator, so real scanners decode the declared string rather than an ISO-8859-1 misreading), so an independent decoder recovers it byte-for-byte, including non-ASCII text (FR-001), and no network request is ever made — the value is data, never behavior: the component never interprets, resolves, navigates to or fetches it (FR-002). Changes re-encode in place. When absent, empty or beyond the capacity of the densest symbol (~2,331 bytes at level M), nothing renders and nothing errors (FR-003).
           * @default undefined
          */
         "value"?: string;
@@ -2335,7 +2339,9 @@ declare namespace LocalJSX {
      * their embed), or static imagery (use an image, not a video). `autoplay`
      * on the slotted media is unsupported: the facade's contract is that
      * playback begins only by explicit user activation — never on scroll,
-     * hover or visibility (FR-003).
+     * hover or visibility — so preexisting `autoplay` and `controls` on the
+     * slotted media are cleared when it arrives, and any playback already
+     * running is paused (FR-003; the native chrome returns at activation).
      */
     interface KiVideo {
         /**
@@ -2880,7 +2886,9 @@ declare module "@stencil/core" {
              * their embed), or static imagery (use an image, not a video). `autoplay`
              * on the slotted media is unsupported: the facade's contract is that
              * playback begins only by explicit user activation — never on scroll,
-             * hover or visibility (FR-003).
+             * hover or visibility — so preexisting `autoplay` and `controls` on the
+             * slotted media are cleared when it arrives, and any playback already
+             * running is paused (FR-003; the native chrome returns at activation).
              */
             "ki-video": LocalJSX.IntrinsicElements["ki-video"] & JSXBase.HTMLAttributes<HTMLKiVideoElement>;
         }

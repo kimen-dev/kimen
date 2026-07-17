@@ -254,6 +254,45 @@ describe('ki-video', () => {
     expect(media.muted).toBe(true);
   });
 
+  it('S1 preexisting native controls on the slotted media are stripped until activation', async () => {
+    cleanup();
+    const media = mediaFixture();
+    media.setAttribute('controls', '');
+    media.controls = true;
+    const el = await mount(landmark(), { label: 'Play the product tour' }, media);
+    const slotted = mediaOf(el);
+
+    // Before activation the centered play control is the ONLY interactive
+    // element (S1/S6): common `<video controls>` markup must not leave a
+    // second keyboard-reachable surface behind the facade.
+    await waitUntil(() => !slotted.hasAttribute('controls'), 'controls were not stripped');
+    expect(slotted.controls).toBe(false);
+    expect(el.shadowRoot?.querySelectorAll('button, [tabindex]')).toHaveLength(1);
+
+    // Activation hands the surface to the native player (FR-002).
+    await userEvent.click(playControlOf(el));
+    await waitUntil(() => slotted.controls, 'activation did not restore the native controls');
+  });
+
+  it('S3 preexisting autoplay on the slotted media is neutralized: playback must not precede activation', async () => {
+    cleanup();
+    const media = mediaFixture();
+    media.setAttribute('autoplay', '');
+    // Simulate autoplay already underway before the component upgrades
+    // (muted autoplay is broadly permitted): playback must not survive
+    // the facade's mount (FR-003).
+    const playback: unknown = media.play();
+    if (playback instanceof Promise) {
+      playback.catch(() => undefined);
+    }
+    const el = await mount(landmark(), { label: 'Play the product tour' }, media);
+    const slotted = mediaOf(el);
+
+    await waitUntil(() => !slotted.hasAttribute('autoplay'), 'autoplay was not cleared');
+    expect(slotted.autoplay).toBe(false);
+    await waitUntil(() => slotted.paused, 'pre-activation playback was not paused');
+  });
+
   it('S4 the frame follows a narrow container and the media keeps its 16:9 proportions', async () => {
     cleanup();
     const pane = document.createElement('div');

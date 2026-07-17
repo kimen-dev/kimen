@@ -34,7 +34,9 @@ One attribute carries the content; the matrix is derived, never authored:
 
 The value is data, never behavior: it is encoded byte-for-byte as one UTF-8
 segment at error-correction level M and never interpreted, resolved,
-navigated to or fetched. Non-ASCII text round-trips exactly:
+navigated to or fetched. Non-ASCII text round-trips exactly — it carries the
+UTF-8 ECI designator, so real scanners decode the declared string instead of
+an ISO-8859-1 misreading:
 
 ```html
 <ki-qr value="Reunión mañana — Zúrich" label="Add the meeting to your phone"></ki-qr>
@@ -61,7 +63,7 @@ attributes copied from other design systems are ignored:
 | `--ki-qr-background`     | The light tile behind the modules (scheme-stable white in both shipped themes)  |
 | `--ki-qr-module-radius`  | Data-module corner radius: 0 square (default), 4px full round dots              |
 | `--ki-qr-finder-radius`  | Finder-ring midline radius: 0 square (default), 14px the MarsUI round rings     |
-| `--ki-qr-quiet-zone`     | The light margin around the modules (onmars: 8px; material3: 16px)              |
+| `--ki-qr-quiet-zone`     | Floor of the light margin around the modules (onmars: 8px; material3: 16px); the rendered margin never drops under the four modules scanners assume |
 | `--ki-qr-radius`         | Tile corners (onmars: 0; material3: 12px)                                       |
 
 The MarsUI `Type` square|round axis is carried entirely by the two shape

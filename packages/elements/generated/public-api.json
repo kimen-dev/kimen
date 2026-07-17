@@ -7497,7 +7497,7 @@
               "value": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "The exact text the code encodes — the single source of the content,\nencoded locally as one UTF-8 byte segment at error-correction level M,\nso an independent decoder recovers it byte-for-byte, including\nnon-ASCII text (FR-001), and no network request is ever made — the value is\ndata, never behavior: the component never interprets, resolves,\nnavigates to or fetches it (FR-002). Changes re-encode in place. When\nabsent, empty or beyond the capacity of the densest symbol (~2,331\nbytes at level M), nothing renders and nothing errors (FR-003).",
+                "description": "The exact text the code encodes — the single source of the content,\nencoded locally as one UTF-8 byte segment at error-correction level M\n(non-ASCII text additionally carries the UTF-8 ECI designator, so real\nscanners decode the declared string rather than an ISO-8859-1\nmisreading), so an independent decoder recovers it byte-for-byte,\nincluding non-ASCII text (FR-001), and no network request is ever made — the value is\ndata, never behavior: the component never interprets, resolves,\nnavigates to or fetches it (FR-002). Changes re-encode in place. When\nabsent, empty or beyond the capacity of the densest symbol (~2,331\nbytes at level M), nothing renders and nothing errors (FR-003).",
                 "replacement": null,
                 "required": false,
                 "type": "string | undefined"
@@ -7586,7 +7586,7 @@
               "value": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "The exact text the code encodes — the single source of the content,\nencoded locally as one UTF-8 byte segment at error-correction level M,\nso an independent decoder recovers it byte-for-byte, including\nnon-ASCII text (FR-001), and no network request is ever made — the value is\ndata, never behavior: the component never interprets, resolves,\nnavigates to or fetches it (FR-002). Changes re-encode in place. When\nabsent, empty or beyond the capacity of the densest symbol (~2,331\nbytes at level M), nothing renders and nothing errors (FR-003).",
+                "description": "The exact text the code encodes — the single source of the content,\nencoded locally as one UTF-8 byte segment at error-correction level M\n(non-ASCII text additionally carries the UTF-8 ECI designator, so real\nscanners decode the declared string rather than an ISO-8859-1\nmisreading), so an independent decoder recovers it byte-for-byte,\nincluding non-ASCII text (FR-001), and no network request is ever made — the value is\ndata, never behavior: the component never interprets, resolves,\nnavigates to or fetches it (FR-002). Changes re-encode in place. When\nabsent, empty or beyond the capacity of the densest symbol (~2,331\nbytes at level M), nothing renders and nothing errors (FR-003).",
                 "replacement": null,
                 "required": false,
                 "type": "string | undefined"
@@ -8300,7 +8300,16 @@
                 "type": "\"horizontal\" | \"vertical\""
               }
             },
-            "slots": {}
+            "slots": {
+              "": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "The scrollable content: it keeps its own semantics and sizes the scroll extent along the declared axis.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            }
           },
           "ki-select": {
             "attributes": {
@@ -10969,7 +10978,16 @@
                 "type": "string | undefined"
               }
             },
-            "slots": {}
+            "slots": {
+              "": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "Exactly one native `<video>` element carrying its own poster, sources and `<track>` captions.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              }
+            }
           }
         },
         "exports": {
@@ -29210,5 +29228,5 @@
       }
     }
   },
-  "surfaceSha256": "9c9107cd3ba651530271a36fe3a5b246977c777436b6389b58781357c6a99b59"
+  "surfaceSha256": "c2776c2eb4bcedfb9640e61e16aebd347297fbcef313063503a1e453c1c54087"
 }

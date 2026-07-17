@@ -31,6 +31,21 @@ describe('ki-video', () => {
     expect(media?.hasAttribute('autoplay')).toBe(false);
   });
 
+  it('S3 clears preexisting autoplay and native controls from the slotted media', async () => {
+    const { root } = await render(
+      <ki-video label="Play the product tour">
+        <video poster="poster.png" muted autoplay controls></video>
+      </ki-video>,
+    );
+    // Common consumer markup must not defeat the facade contract: playback
+    // never self-starts (FR-003) and the play control stays the only
+    // interactive element until activation (S1); the browser suite asserts
+    // the live pause and the controls round-trip.
+    const media = root.querySelector('video');
+    expect(media?.hasAttribute('autoplay')).toBe(false);
+    expect(media?.hasAttribute('controls')).toBe(false);
+  });
+
   it('S5 keeps the default anatomy and an operable play control under an unrecognized variant attribute', async () => {
     const { root } = await render(
       <ki-video label="Play the product tour">

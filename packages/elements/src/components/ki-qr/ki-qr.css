@@ -25,7 +25,12 @@
   box-sizing: border-box;
   inline-size: var(--ki-qr-size);
   aspect-ratio: 1;
-  padding: var(--ki-qr-quiet-zone);
+
+  /* The quiet zone honors the theme token as a floor but never drops under
+   * the four modules scanners assume (ISO/IEC 18004): the component derives
+   * `--_ki-qr-quiet-ratio` as 4/(modules+8), so size×ratio is exactly a
+   * four-module padding for the rendered symbol. */
+  padding: max(var(--ki-qr-quiet-zone), calc(var(--ki-qr-size) * var(--_ki-qr-quiet-ratio)));
   background: var(--ki-qr-background);
   border-radius: var(--ki-qr-radius);
 }

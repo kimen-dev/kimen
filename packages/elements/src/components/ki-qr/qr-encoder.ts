@@ -463,18 +463,28 @@ function getPenaltyScore(grid: Grid): number {
  * Encodes the given bytes as one byte-mode segment at error-correction
  * level M — the encodeSegments flow of the reference with the version
  * search, terminator, padding, ECC interleaving, function patterns and
- * automatic mask selection intact. Returns null when the data exceeds the
- * capacity of the densest symbol (version 40 at level M), instead of
- * throwing (FR-003 fail-soft).
+ * automatic mask selection intact. Non-ASCII data (any byte ≥ 0x80: the
+ * caller encodes UTF-8) is preceded by the UTF-8 ECI designator
+ * (assignment 26), so a spec-compliant reader decodes the declared string
+ * instead of falling back to its ISO-8859-1/locale default (FR-001);
+ * pure-ASCII data stays designator-free, reading identically under every
+ * interpretation. Returns null when the data exceeds the capacity of the
+ * densest symbol (version 40 at level M), instead of throwing (FR-003
+ * fail-soft).
  */
 export function encodeQr(data: Uint8Array): QrMatrix | null {
+  const needsEci = data.some((byte) => byte >= 0x80);
+  // ECI header: mode indicator 0111 plus the one-byte assignment number
+  // (26 < 128 takes the single-byte form).
+  const eciBits = needsEci ? 12 : 0;
   // Version search: the smallest symbol whose data capacity fits the
-  // single byte segment (4 mode bits + the count field + 8 bits per byte).
+  // single byte segment (the optional ECI header + 4 mode bits + the
+  // count field + 8 bits per byte).
   let version = 0;
   let dataUsedBits = 0;
   for (let candidate = MIN_VERSION; candidate <= MAX_VERSION; candidate++) {
     const capacityBits = getNumDataCodewords(candidate) * 8;
-    const usedBits = 4 + byteCountBits(candidate) + data.length * 8;
+    const usedBits = eciBits + 4 + byteCountBits(candidate) + data.length * 8;
     if (usedBits <= capacityBits) {
       version = candidate;
       dataUsedBits = usedBits;
@@ -485,14 +495,19 @@ export function encodeQr(data: Uint8Array): QrMatrix | null {
     return null;
   }
 
-  // Bit assembly: mode indicator 0100 (byte), character count, the data
-  // bytes, the terminator, bit padding and the 0xEC/0x11 pad codewords.
+  // Bit assembly: the optional ECI designator, mode indicator 0100 (byte),
+  // character count, the data bytes, the terminator, bit padding and the
+  // 0xEC/0x11 pad codewords.
   const bits: number[] = [];
   const appendBits = (value: number, length: number): void => {
     for (let i = length - 1; i >= 0; i--) {
       bits.push((value >>> i) & 1);
     }
   };
+  if (needsEci) {
+    appendBits(7, 4); // ECI mode indicator is 0b0111
+    appendBits(26, 8); // ECI assignment 26: UTF-8
+  }
   appendBits(4, 4); // Byte-mode indicator is 0b0100
   appendBits(data.length, byteCountBits(version));
   for (const byte of data) {
