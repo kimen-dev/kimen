@@ -1,0 +1,21 @@
+{
+  "ki": {
+    "status": {
+      "size": {
+        "$value": "{ki.space.sm}",
+        "$description": "Material 3 dimension used by the status component for the dot: M3 ships no standalone status dot, so the size maps from the badge in dot form (md.comp.badge, ~6dp) per the approved spec's Constitutional Surface."
+      },
+      "shadow": {
+        "$value": {
+          "color": "{ki.color.transparent.black}",
+          "offsetX": 0,
+          "offsetY": 0,
+          "blur": 0,
+          "spread": 0
+        },
+        "$description": "Material 3 shadow used by the status component: the M3 badge dot is flat (no elevation documented), so the theme resolves the effect to a transparent level0 shadow (tooltip.material3 precedent; FR-006 allows a theme to resolve effects to none).",
+        "$type": "shadow"
+      }
+    }
+  }
+}

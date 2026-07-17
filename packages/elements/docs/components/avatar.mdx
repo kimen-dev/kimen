@@ -1,0 +1,97 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-avatar" />
+
+# ki-avatar
+
+A static identity visual that shows a person or entity at a glance through a
+fallback chain — portrait, then initials, then a built-in generic figure —
+with the companion container `ki-avatar-group` stacking several members
+behind a "+N" overflow counter.
+
+**When to use** — a compact identity visual for a person or entity: a
+comment author, a contact list item, a project member. Set `label` whenever
+the avatar is the only carrier of the identity (no adjacent visible name).
+Use `ki-avatar-group` for a compact "who is involved" stack with an exact
+overflow counter.
+
+**When NOT to use** — as a clickable control (compose the avatar inside an
+interactive host such as `ki-button`), for logos or arbitrary illustrations
+(plain `img`), for presence/verification adornments overlaid on the corner
+(a future overlay concern shared with the nav badge), as a member picker or
+expandable overflow (the counter is static text, never a button), or
+unlabeled when no adjacent text names the identity.
+
+## Examples
+
+The fallback chain is content, never a `type` attribute: a portrait that
+loads wins, initials render verbatim otherwise, and the generic figure
+covers the rest. A portrait that fails to download never leaves a
+broken-image hole:
+
+```html
+<ki-avatar label="Ana García" src="ana.png" initials="AG"></ki-avatar>
+<ki-avatar label="Ana García" initials="AG"></ki-avatar>
+<ki-avatar label="Guest"></ki-avatar>
+```
+
+Beside a visible name the avatar is decorative — omit `label` and the
+accessibility tree hears the name exactly once:
+
+```html
+<p><ki-avatar initials="AG" size="sm"></ki-avatar> Ana García</p>
+```
+
+The group caps the stack and accounts for the rest, exactly and always.
+Members beyond the cap are neither rendered nor exposed; the group's `size`
+overrides member-declared sizes so the stack stays uniform:
+
+```html
+<ki-avatar-group max="3" size="sm">
+  <ki-avatar label="Ana García" initials="AG"></ki-avatar>
+  <ki-avatar label="Sam Bel" initials="SB"></ki-avatar>
+  <ki-avatar label="Iris Toma" initials="IT"></ki-avatar>
+  <ki-avatar label="Leo Duarte" initials="LD"></ki-avatar>
+  <ki-avatar label="Mia Chen" initials="MC"></ki-avatar>
+</ki-avatar-group>
+<!-- renders Ana, Sam, Iris and a "+2" counter -->
+```
+
+Malformed agent output never breaks a page: an unrecognized `size` renders
+at the default medium metrics, and a cap that is not a positive whole number
+shows every member with no counter (never "+0").
+
+## Customization
+
+| Token                                          | Controls                                                    |
+| ---------------------------------------------- | ----------------------------------------------------------- |
+| `--ki-avatar-{size}-size`                      | Box per step (xxs–xl: 20/24/32/40/48/56 in onmars)          |
+| `--ki-avatar-{size}-font-size`                 | Initials text per step                                      |
+| `--ki-avatar-{size}-icon-size`                 | Generic figure glyph per step                               |
+| `--ki-avatar-radius`                           | Shape (round by token, never an attribute)                  |
+| `--ki-avatar-bg` / `--ki-avatar-fg`            | Surface behind initials/figure and their color              |
+| `--ki-avatar-border-width` / `-border-color`   | Surface hairline (dropped under a loaded portrait)          |
+| `--ki-avatar-font-family` / `-font-weight`     | Initials typography                                         |
+| `--ki-avatar-group-{size}-overlap`             | Stack overlap per step (onmars: 8/8/8/12/12/12)             |
+| `--ki-avatar-group-{size}-counter-*`           | Counter padding and text per step                           |
+| `--ki-avatar-group-ring-width` / `-ring-color` | Separating ring around members (onmars resolves it to zero) |
+| `--ki-avatar-group-counter-{bg,fg,border-width,border-color,radius,shadow}` | The "+N" pill                  |
+
+Shadow parts: on `ki-avatar`, `::part(avatar)` (box), `::part(image)`,
+`::part(initials)` and `::part(icon)`; on `ki-avatar-group`,
+`::part(group)` (the stack row) and `::part(counter)`.
+
+## Accessibility
+
+- With a `label`, the avatar is exposed as a named non-interactive image
+  (role `img`) in every content mode — the initials are presentational and
+  the portrait carries no second alternative text. Without a label the
+  avatar contributes nothing to the accessibility tree.
+- Never focusable, zero tab stops, no events, no pointer affordance — for a
+  clickable profile pattern, compose the avatar inside an interactive host.
+- In a group, assistive technology receives each visible member's name and
+  the overflow as the static text "+N"; hidden members leave no other trace.
+- The stack and its trailing counter follow the document's writing
+  direction (logical properties only).
+- Initials are never derived from the label: supply one to two characters
+  appropriate for the person's locale and script.

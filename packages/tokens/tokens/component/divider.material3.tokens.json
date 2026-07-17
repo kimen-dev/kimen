@@ -1,0 +1,22 @@
+{
+  "ki": {
+    "divider": {
+      "thickness": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Material 3 dimension used by the divider component for the rule thickness: md.comp.divider.thickness, 1dp."
+      },
+      "color": {
+        "$value": "{ki.outline.med-em}",
+        "$description": "Material 3 color used by the divider component for the rule: md.sys.color.outline-variant (ki.outline.med-em precedent from the ki-tabs divider)."
+      },
+      "radius": {
+        "$value": "{ki.radius.0}",
+        "$description": "Material 3 dimension used by the divider component for the end caps: M3 dividers are square-ended rules, no cap treatment."
+      },
+      "spacing": {
+        "$value": "{ki.space.zero}",
+        "$description": "Material 3 dimension used by the divider component for the gutter: M3 dividers carry no built-in gutter — spacing comes from the surrounding layout (FR-007 allows a zero gutter)."
+      }
+    }
+  }
+}

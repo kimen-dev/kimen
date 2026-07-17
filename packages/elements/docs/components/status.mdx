@@ -1,0 +1,81 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-status" />
+
+# ki-status
+
+A tiny, non-interactive status dot that marks the state of a nearby item.
+
+**When to use** — mark a state with minimal footprint adjacent to (or
+overlaid on) the item it describes: presence on an avatar, health of a
+service list entry, connection state in a toolbar. Label it (`label`) or
+pair it with adjacent visible text — color is never the only carrier of
+the meaning (WCAG 1.4.1).
+
+**When NOT to use** — short labeled status text (`ki-badge` renders the
+pill with the label — this dot never renders text), notification counters
+or the overlay attachment mechanism (a future, separate nav-badge
+concern), messages that need attention or announcement (`ki-alert` — the
+dot has no live region), progress or loading (`ki-progress`). An unlabeled
+dot without adjacent visible text is an authoring mistake (WCAG 1.4.1).
+
+## Examples
+
+`tone` describes intent, never appearance. An unrecognized value keeps the
+neutral appearance by CSS construction — malformed agent output never
+breaks a page:
+
+```html
+<ki-status tone="success" label="Online"></ki-status>
+<ki-status tone="danger" label="Build failing"></ki-status>
+```
+
+An unlabeled dot is pure decoration for assistive technology; the adjacent
+visible text must then carry the meaning:
+
+```html
+<p><ki-status tone="success"></ki-status> Online</p>
+```
+
+Over media, enable the ring so the dot stays legible; positioning the dot
+(a corner overlay on an avatar) is the consumer's layout concern:
+
+```html
+<div style="position: relative">
+  <img src="avatar.png" alt="" />
+  <ki-status
+    tone="success"
+    ring
+    label="Online"
+    style="position: absolute; inset-block-end: 0; inset-inline-end: 0"
+  ></ki-status>
+</div>
+```
+
+## Customization
+
+| Token                      | Controls                                                        |
+| -------------------------- | --------------------------------------------------------------- |
+| `--ki-status-size`         | Dot size (onmars: 4px; material3: ~6dp)                         |
+| `--ki-status-radius`       | Dot shape (round by token, never an attribute)                  |
+| `--ki-status-shadow`       | Dot effects (onmars: e1 + inner glass highlight; material3: flat) |
+| `--ki-status-ring-width`   | Separating ring stroke (onmars: 2px)                            |
+| `--ki-status-ring-color`   | Ring color (scheme-inverse: white light, black dark)            |
+| `--ki-status-{tone}-color` | Per-tone fill (neutral, success, danger, info, warning)         |
+
+The dot has exactly one size per theme and the ring paints outside the
+dot's box without shifting layout. Single shadow part: `::part(dot)` (the
+dot itself: size, tone fill, radius, ring and effects).
+
+## Accessibility
+
+- With a `label`, the dot is exposed as a named non-interactive image
+  (role `img`); without one it is decorative and contributes nothing to
+  the accessibility tree.
+- Never focusable, zero tab stops, no events, no pointer affordance.
+- Runtime tone changes are NOT announced (no live region): state changes
+  that must reach assistive technology are the host application's concern,
+  and announced feedback belongs to `ki-alert`.
+- Color is never the only carrier of the meaning: the `label` or adjacent
+  visible text names the state (WCAG 1.4.1); forced-colors environments
+  may flatten the fill and the meaning survives.

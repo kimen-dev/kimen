@@ -6,18 +6,28 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
+import { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
+import { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar";
 import { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 import { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 import { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
+import { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+import { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 import { KiInputType } from "./components/ki-input/ki-input";
 import { KiProgressShape } from "./components/ki-progress/ki-progress";
+import { KiStatusTone } from "./components/ki-status/ki-status";
 import { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export { KiAlertTone } from "./components/ki-alert/ki-alert.tone.js";
+export { KiAvatarSize } from "./components/ki-avatar/ki-avatar";
+export { KiAvatarSize as KiAvatarSize1 } from "./components/ki-avatar/ki-avatar";
 export { KiBadgeSize, KiBadgeTone } from "./components/ki-badge/ki-badge";
 export { KiButtonSize, KiButtonTone, KiButtonType, KiButtonVariant } from "./components/ki-button/ki-button";
 export { KiDialogCloseDetail } from "./components/ki-dialog/ki-dialog";
+export { KiDividerOrientation } from "./components/ki-divider/ki-divider";
+export { KiIconButtonSize, KiIconButtonTone, KiIconButtonVariant } from "./components/ki-icon-button/ki-icon-button";
 export { KiInputType } from "./components/ki-input/ki-input";
 export { KiProgressShape } from "./components/ki-progress/ki-progress";
+export { KiStatusTone } from "./components/ki-status/ki-status";
 export { KiTooltipPlacement } from "./components/ki-tooltip/ki-tooltip.position.js";
 export namespace Components {
     /**
@@ -60,6 +70,66 @@ export namespace Components {
           * @default 'neutral'
          */
         "tone": KiAlertTone | (string & {});
+    }
+    /**
+     * A static identity visual that shows a person or entity at a glance through
+     * a fallback chain: portrait, then initials, then a built-in generic figure.
+     * @whenToUse a compact identity visual for a person or entity — a comment
+     * author, a contact list item, a project member. Set `label` whenever the
+     * avatar is the only carrier of the identity (no adjacent visible name);
+     * compose several into `ki-avatar-group` for a compact "who is involved"
+     * stack with overflow.
+     * @whenNotToUse as a clickable control (compose the avatar inside an
+     * interactive host such as ki-button), for logos or arbitrary illustrations
+     * (plain `img`), for presence/verification adornments overlaid on the corner
+     * (a future overlay concern shared with the nav badge), or unlabeled when no
+     * adjacent text names the identity.
+     */
+    interface KiAvatar {
+        /**
+          * Initials rendered verbatim as the second fallback step — never derived from the label, never truncated (FR-003). Catalog guidance: one to two characters. With a label present the initials are presentational; assistive technology receives the label alone.
+          * @default undefined
+         */
+        "initials"?: string;
+        /**
+          * Accessible name for the identity ("Ana García"). With a label the avatar is exposed as a named non-interactive image (role `img`) in every content mode — the portrait never carries a second alternative text of its own. Without a label the avatar is decorative and contributes nothing to the accessibility tree; the identity must then live in adjacent visible text (FR-002).
+          * @default undefined
+         */
+        "label"?: string;
+        /**
+          * Size step over the shared scale; per-size metrics (box, initials font, figure glyph) are per-theme component tokens, never hardcoded (FR-004). An unrecognized value matches no style selector, so the avatar keeps the default medium metrics (fallback by CSS construction, FR-007).
+          * @default 'md'
+         */
+        "size": KiAvatarSize;
+        /**
+          * Portrait URL, the first step of the fallback chain. When it fails to load — initially or at runtime — the avatar silently falls back to the initials (or the generic figure) with no error, no layout change and no event (FR-001). Loading policy follows the platform image defaults.
+          * @default undefined
+         */
+        "src"?: string;
+    }
+    /**
+     * A token-styled companion container that stacks `ki-avatar` children as one
+     * overlapping row with a configurable visible cap and a static "+N" overflow
+     * counter.
+     * @whenToUse a compact "who is involved" stack — the members of a shared
+     * document, project card or event row — where space deserves only the first
+     * few identities and an exact "+N" counter accounts for the rest.
+     * @whenNotToUse as a member picker or expandable overflow (future interactive
+     * grouping — the counter is static text, never a button), for a single
+     * identity (use `ki-avatar` alone), or with children other than `ki-avatar`
+     * (foreign markup is unsupported and not repaired, 016 precedent).
+     */
+    interface KiAvatarGroup {
+        /**
+          * Visible cap for the member stack. When the member count exceeds it, the first `max` members render followed by a "+N" counter accounting exactly for the hidden rest. Without it — or when it is not a positive whole number — every member renders and no counter appears; malformed agent-generated markup never breaks the page (FR-009, S14, S15).
+          * @default undefined
+         */
+        "max"?: number;
+        /**
+          * Size step governing the metrics of every visible member and the counter (avatar vocabulary, FR-010). Member-declared sizes are overridden inside a group so the stack stays uniform (S6). An unrecognized value matches no style selector, so the group keeps the default medium metrics (FR-007).
+          * @default 'md'
+         */
+        "size": KiAvatarSize1;
     }
     /**
      * A static, non-interactive status pill.
@@ -212,6 +282,64 @@ export namespace Components {
           * Opens the dialog modally. No-op when already open. Equivalent to adding the host `open` attribute. When to use: call from the invoker that should receive focus again after close. When NOT to use: do not call repeatedly to refresh content; update slotted content directly while open.
          */
         "show": () => Promise<void>;
+    }
+    /**
+     * A static, decorative rule that visually separates adjacent content.
+     * @whenToUse visually separate adjacent content when spacing alone is not
+     * enough: grouped settings sections, toolbar action groups, distinct
+     * regions inside a card — horizontal between stacked content, vertical
+     * between side-by-side content.
+     * @whenNotToUse between list items (separation is a ki-list theme-token
+     * decision), semantic thematic breaks in running prose (native `<hr>`
+     * carries those semantics — the divider is deliberately decorative and
+     * contributes no role, name or announcement), as a border or outline
+     * substitute (surface/border tokens), or purely decorative flourishes
+     * (prefer white space).
+     */
+    interface KiDivider {
+        /**
+          * Layout axis of the rule: `horizontal` spans the available inline size between stacked content; `vertical` stretches to the cross size its layout context provides, between side-by-side content. A structural axis, never appearance — thickness, color, end caps and gutter are per-theme `--ki-divider-*` tokens. An unrecognized value matches no style selector, so the divider keeps the default horizontal rendering (fallback by CSS construction — no validation code).
+          * @default 'horizontal'
+         */
+        "orientation": KiDividerOrientation;
+    }
+    /**
+     * A token-styled, icon-only action button with native button semantics and a
+     * mandatory accessible name.
+     * @whenToUse a compact, widely understood action where space precludes a
+     * visible label: toolbars, card and dialog corners (close), media transport,
+     * data-row actions. Always supply `label`; usually pair with ki-tooltip for
+     * sighted discoverability.
+     * @whenNotToUse whenever a visible label fits (use ki-button), toggling
+     * state (a future toggle icon button), navigation (use a link), or form
+     * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
+     * visible label communicates the consequence).
+     */
+    interface KiIconButton {
+        /**
+          * Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
+         */
+        "label"?: string;
+        /**
+          * Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
+          * @default 'md'
+         */
+        "size": KiIconButtonSize;
+        /**
+          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+          * @default 'neutral'
+         */
+        "tone": KiIconButtonTone;
+        /**
+          * Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * @default 'secondary'
+         */
+        "variant": KiIconButtonVariant;
     }
     /**
      * A token-styled single-line text field with native input semantics.
@@ -437,6 +565,37 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A tiny, non-interactive status dot that marks the state of a nearby item.
+     * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
+     * on) the item it describes: presence on an avatar, health of a service
+     * list entry, connection state in a toolbar. Label it (`label`) or pair it
+     * with adjacent visible text — color is never the only carrier of the
+     * meaning (WCAG 1.4.1).
+     * @whenNotToUse short labeled status text (that pill is ki-badge — this dot
+     * never renders text), notification counters or the overlay attachment
+     * mechanism (a future, separate nav-badge concern), messages that need
+     * attention or announcement (ki-alert — the dot has no live region),
+     * progress or loading (ki-progress). An unlabeled dot without adjacent
+     * visible text is an authoring mistake (WCAG 1.4.1).
+     */
+    interface KiStatus {
+        /**
+          * Accessible name for the state ("Online", "Build failing"). With a label the dot is exposed to assistive technology as a named non-interactive image (role `img`); without one it is decorative and contributes nothing to the accessibility tree — the meaning must then live in adjacent visible text (FR-003, FR-008). The label is never rendered visually: visible status text belongs to ki-badge. Runtime changes are not announced (no live region, FR-005).
+          * @default undefined
+         */
+        "label"?: string;
+        /**
+          * Draws a separating ring around the dot for placement over media (an avatar photo), keeping it distinguishable from the pixels beneath. A per-instance functional axis — MarsUI ships Outline=True|False as sibling variants under one theme (recorded deviation from the 002 token-only rule) — while ring width and color stay per-theme `--ki-status-ring-*` tokens. The ring paints outside the dot's box and never shifts layout.
+          * @default false
+         */
+        "ring": boolean;
+        /**
+          * Semantic intent, never appearance: each tone resolves its fill from the per-theme `--ki-status-{tone}-color` tokens. An unrecognized value matches no style selector, so the dot keeps the neutral appearance (fallback by CSS construction — no validation code, FR-007).
+          * @default 'neutral'
+         */
+        "tone": KiStatusTone;
+    }
+    /**
      * A token-styled switch for immediate on/off settings.
      * @whenToUse binary settings whose change takes effect immediately, always
      * with a slotted label.
@@ -648,6 +807,44 @@ declare global {
         new (): HTMLKiAlertElement;
     };
     /**
+     * A static identity visual that shows a person or entity at a glance through
+     * a fallback chain: portrait, then initials, then a built-in generic figure.
+     * @whenToUse a compact identity visual for a person or entity — a comment
+     * author, a contact list item, a project member. Set `label` whenever the
+     * avatar is the only carrier of the identity (no adjacent visible name);
+     * compose several into `ki-avatar-group` for a compact "who is involved"
+     * stack with overflow.
+     * @whenNotToUse as a clickable control (compose the avatar inside an
+     * interactive host such as ki-button), for logos or arbitrary illustrations
+     * (plain `img`), for presence/verification adornments overlaid on the corner
+     * (a future overlay concern shared with the nav badge), or unlabeled when no
+     * adjacent text names the identity.
+     */
+    interface HTMLKiAvatarElement extends Components.KiAvatar, HTMLStencilElement {
+    }
+    var HTMLKiAvatarElement: {
+        prototype: HTMLKiAvatarElement;
+        new (): HTMLKiAvatarElement;
+    };
+    /**
+     * A token-styled companion container that stacks `ki-avatar` children as one
+     * overlapping row with a configurable visible cap and a static "+N" overflow
+     * counter.
+     * @whenToUse a compact "who is involved" stack — the members of a shared
+     * document, project card or event row — where space deserves only the first
+     * few identities and an exact "+N" counter accounts for the rest.
+     * @whenNotToUse as a member picker or expandable overflow (future interactive
+     * grouping — the counter is static text, never a button), for a single
+     * identity (use `ki-avatar` alone), or with children other than `ki-avatar`
+     * (foreign markup is unsupported and not repaired, 016 precedent).
+     */
+    interface HTMLKiAvatarGroupElement extends Components.KiAvatarGroup, HTMLStencilElement {
+    }
+    var HTMLKiAvatarGroupElement: {
+        prototype: HTMLKiAvatarGroupElement;
+        new (): HTMLKiAvatarGroupElement;
+    };
+    /**
      * A static, non-interactive status pill.
      * @whenToUse annotate an entity with short status text (a state, a
      * category) whose meaning is carried by the label itself; the tone color
@@ -736,6 +933,43 @@ declare global {
     var HTMLKiDialogElement: {
         prototype: HTMLKiDialogElement;
         new (): HTMLKiDialogElement;
+    };
+    /**
+     * A static, decorative rule that visually separates adjacent content.
+     * @whenToUse visually separate adjacent content when spacing alone is not
+     * enough: grouped settings sections, toolbar action groups, distinct
+     * regions inside a card — horizontal between stacked content, vertical
+     * between side-by-side content.
+     * @whenNotToUse between list items (separation is a ki-list theme-token
+     * decision), semantic thematic breaks in running prose (native `<hr>`
+     * carries those semantics — the divider is deliberately decorative and
+     * contributes no role, name or announcement), as a border or outline
+     * substitute (surface/border tokens), or purely decorative flourishes
+     * (prefer white space).
+     */
+    interface HTMLKiDividerElement extends Components.KiDivider, HTMLStencilElement {
+    }
+    var HTMLKiDividerElement: {
+        prototype: HTMLKiDividerElement;
+        new (): HTMLKiDividerElement;
+    };
+    /**
+     * A token-styled, icon-only action button with native button semantics and a
+     * mandatory accessible name.
+     * @whenToUse a compact, widely understood action where space precludes a
+     * visible label: toolbars, card and dialog corners (close), media transport,
+     * data-row actions. Always supply `label`; usually pair with ki-tooltip for
+     * sighted discoverability.
+     * @whenNotToUse whenever a visible label fits (use ki-button), toggling
+     * state (a future toggle icon button), navigation (use a link), or form
+     * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
+     * visible label communicates the consequence).
+     */
+    interface HTMLKiIconButtonElement extends Components.KiIconButton, HTMLStencilElement {
+    }
+    var HTMLKiIconButtonElement: {
+        prototype: HTMLKiIconButtonElement;
+        new (): HTMLKiIconButtonElement;
     };
     /**
      * A token-styled single-line text field with native input semantics.
@@ -857,6 +1091,26 @@ declare global {
         new (): HTMLKiSelectElement;
     };
     /**
+     * A tiny, non-interactive status dot that marks the state of a nearby item.
+     * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
+     * on) the item it describes: presence on an avatar, health of a service
+     * list entry, connection state in a toolbar. Label it (`label`) or pair it
+     * with adjacent visible text — color is never the only carrier of the
+     * meaning (WCAG 1.4.1).
+     * @whenNotToUse short labeled status text (that pill is ki-badge — this dot
+     * never renders text), notification counters or the overlay attachment
+     * mechanism (a future, separate nav-badge concern), messages that need
+     * attention or announcement (ki-alert — the dot has no live region),
+     * progress or loading (ki-progress). An unlabeled dot without adjacent
+     * visible text is an authoring mistake (WCAG 1.4.1).
+     */
+    interface HTMLKiStatusElement extends Components.KiStatus, HTMLStencilElement {
+    }
+    var HTMLKiStatusElement: {
+        prototype: HTMLKiStatusElement;
+        new (): HTMLKiStatusElement;
+    };
+    /**
      * A token-styled switch for immediate on/off settings.
      * @whenToUse binary settings whose change takes effect immediately, always
      * with a slotted label.
@@ -957,11 +1211,15 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "ki-alert": HTMLKiAlertElement;
+        "ki-avatar": HTMLKiAvatarElement;
+        "ki-avatar-group": HTMLKiAvatarGroupElement;
         "ki-badge": HTMLKiBadgeElement;
         "ki-button": HTMLKiButtonElement;
         "ki-card": HTMLKiCardElement;
         "ki-checkbox": HTMLKiCheckboxElement;
         "ki-dialog": HTMLKiDialogElement;
+        "ki-divider": HTMLKiDividerElement;
+        "ki-icon-button": HTMLKiIconButtonElement;
         "ki-input": HTMLKiInputElement;
         "ki-list": HTMLKiListElement;
         "ki-list-item": HTMLKiListItemElement;
@@ -970,6 +1228,7 @@ declare global {
         "ki-radio": HTMLKiRadioElement;
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-select": HTMLKiSelectElement;
+        "ki-status": HTMLKiStatusElement;
         "ki-switch": HTMLKiSwitchElement;
         "ki-tab": HTMLKiTabElement;
         "ki-tab-panel": HTMLKiTabPanelElement;
@@ -1025,6 +1284,66 @@ declare namespace LocalJSX {
           * @default 'neutral'
          */
         "tone"?: KiAlertTone | (string & {});
+    }
+    /**
+     * A static identity visual that shows a person or entity at a glance through
+     * a fallback chain: portrait, then initials, then a built-in generic figure.
+     * @whenToUse a compact identity visual for a person or entity — a comment
+     * author, a contact list item, a project member. Set `label` whenever the
+     * avatar is the only carrier of the identity (no adjacent visible name);
+     * compose several into `ki-avatar-group` for a compact "who is involved"
+     * stack with overflow.
+     * @whenNotToUse as a clickable control (compose the avatar inside an
+     * interactive host such as ki-button), for logos or arbitrary illustrations
+     * (plain `img`), for presence/verification adornments overlaid on the corner
+     * (a future overlay concern shared with the nav badge), or unlabeled when no
+     * adjacent text names the identity.
+     */
+    interface KiAvatar {
+        /**
+          * Initials rendered verbatim as the second fallback step — never derived from the label, never truncated (FR-003). Catalog guidance: one to two characters. With a label present the initials are presentational; assistive technology receives the label alone.
+          * @default undefined
+         */
+        "initials"?: string;
+        /**
+          * Accessible name for the identity ("Ana García"). With a label the avatar is exposed as a named non-interactive image (role `img`) in every content mode — the portrait never carries a second alternative text of its own. Without a label the avatar is decorative and contributes nothing to the accessibility tree; the identity must then live in adjacent visible text (FR-002).
+          * @default undefined
+         */
+        "label"?: string;
+        /**
+          * Size step over the shared scale; per-size metrics (box, initials font, figure glyph) are per-theme component tokens, never hardcoded (FR-004). An unrecognized value matches no style selector, so the avatar keeps the default medium metrics (fallback by CSS construction, FR-007).
+          * @default 'md'
+         */
+        "size"?: KiAvatarSize;
+        /**
+          * Portrait URL, the first step of the fallback chain. When it fails to load — initially or at runtime — the avatar silently falls back to the initials (or the generic figure) with no error, no layout change and no event (FR-001). Loading policy follows the platform image defaults.
+          * @default undefined
+         */
+        "src"?: string;
+    }
+    /**
+     * A token-styled companion container that stacks `ki-avatar` children as one
+     * overlapping row with a configurable visible cap and a static "+N" overflow
+     * counter.
+     * @whenToUse a compact "who is involved" stack — the members of a shared
+     * document, project card or event row — where space deserves only the first
+     * few identities and an exact "+N" counter accounts for the rest.
+     * @whenNotToUse as a member picker or expandable overflow (future interactive
+     * grouping — the counter is static text, never a button), for a single
+     * identity (use `ki-avatar` alone), or with children other than `ki-avatar`
+     * (foreign markup is unsupported and not repaired, 016 precedent).
+     */
+    interface KiAvatarGroup {
+        /**
+          * Visible cap for the member stack. When the member count exceeds it, the first `max` members render followed by a "+N" counter accounting exactly for the hidden rest. Without it — or when it is not a positive whole number — every member renders and no counter appears; malformed agent-generated markup never breaks the page (FR-009, S14, S15).
+          * @default undefined
+         */
+        "max"?: number;
+        /**
+          * Size step governing the metrics of every visible member and the counter (avatar vocabulary, FR-010). Member-declared sizes are overridden inside a group so the stack stays uniform (S6). An unrecognized value matches no style selector, so the group keeps the default medium metrics (FR-007).
+          * @default 'md'
+         */
+        "size"?: KiAvatarSize1;
     }
     /**
      * A static, non-interactive status pill.
@@ -1181,6 +1500,64 @@ declare namespace LocalJSX {
           * @default false
          */
         "open"?: boolean;
+    }
+    /**
+     * A static, decorative rule that visually separates adjacent content.
+     * @whenToUse visually separate adjacent content when spacing alone is not
+     * enough: grouped settings sections, toolbar action groups, distinct
+     * regions inside a card — horizontal between stacked content, vertical
+     * between side-by-side content.
+     * @whenNotToUse between list items (separation is a ki-list theme-token
+     * decision), semantic thematic breaks in running prose (native `<hr>`
+     * carries those semantics — the divider is deliberately decorative and
+     * contributes no role, name or announcement), as a border or outline
+     * substitute (surface/border tokens), or purely decorative flourishes
+     * (prefer white space).
+     */
+    interface KiDivider {
+        /**
+          * Layout axis of the rule: `horizontal` spans the available inline size between stacked content; `vertical` stretches to the cross size its layout context provides, between side-by-side content. A structural axis, never appearance — thickness, color, end caps and gutter are per-theme `--ki-divider-*` tokens. An unrecognized value matches no style selector, so the divider keeps the default horizontal rendering (fallback by CSS construction — no validation code).
+          * @default 'horizontal'
+         */
+        "orientation"?: KiDividerOrientation;
+    }
+    /**
+     * A token-styled, icon-only action button with native button semantics and a
+     * mandatory accessible name.
+     * @whenToUse a compact, widely understood action where space precludes a
+     * visible label: toolbars, card and dialog corners (close), media transport,
+     * data-row actions. Always supply `label`; usually pair with ki-tooltip for
+     * sighted discoverability.
+     * @whenNotToUse whenever a visible label fits (use ki-button), toggling
+     * state (a future toggle icon button), navigation (use a link), or form
+     * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
+     * visible label communicates the consequence).
+     */
+    interface KiIconButton {
+        /**
+          * Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
+         */
+        "label"?: string;
+        /**
+          * Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
+          * @default 'md'
+         */
+        "size"?: KiIconButtonSize;
+        /**
+          * Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
+          * @default 'neutral'
+         */
+        "tone"?: KiIconButtonTone;
+        /**
+          * Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+          * @default 'secondary'
+         */
+        "variant"?: KiIconButtonVariant;
     }
     /**
      * A token-styled single-line text field with native input semantics.
@@ -1418,6 +1795,37 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A tiny, non-interactive status dot that marks the state of a nearby item.
+     * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
+     * on) the item it describes: presence on an avatar, health of a service
+     * list entry, connection state in a toolbar. Label it (`label`) or pair it
+     * with adjacent visible text — color is never the only carrier of the
+     * meaning (WCAG 1.4.1).
+     * @whenNotToUse short labeled status text (that pill is ki-badge — this dot
+     * never renders text), notification counters or the overlay attachment
+     * mechanism (a future, separate nav-badge concern), messages that need
+     * attention or announcement (ki-alert — the dot has no live region),
+     * progress or loading (ki-progress). An unlabeled dot without adjacent
+     * visible text is an authoring mistake (WCAG 1.4.1).
+     */
+    interface KiStatus {
+        /**
+          * Accessible name for the state ("Online", "Build failing"). With a label the dot is exposed to assistive technology as a named non-interactive image (role `img`); without one it is decorative and contributes nothing to the accessibility tree — the meaning must then live in adjacent visible text (FR-003, FR-008). The label is never rendered visually: visible status text belongs to ki-badge. Runtime changes are not announced (no live region, FR-005).
+          * @default undefined
+         */
+        "label"?: string;
+        /**
+          * Draws a separating ring around the dot for placement over media (an avatar photo), keeping it distinguishable from the pixels beneath. A per-instance functional axis — MarsUI ships Outline=True|False as sibling variants under one theme (recorded deviation from the 002 token-only rule) — while ring width and color stay per-theme `--ki-status-ring-*` tokens. The ring paints outside the dot's box and never shifts layout.
+          * @default false
+         */
+        "ring"?: boolean;
+        /**
+          * Semantic intent, never appearance: each tone resolves its fill from the per-theme `--ki-status-{tone}-color` tokens. An unrecognized value matches no style selector, so the dot keeps the neutral appearance (fallback by CSS construction — no validation code, FR-007).
+          * @default 'neutral'
+         */
+        "tone"?: KiStatusTone;
+    }
+    /**
      * A token-styled switch for immediate on/off settings.
      * @whenToUse binary settings whose change takes effect immediately, always
      * with a slotted label.
@@ -1602,6 +2010,16 @@ declare namespace LocalJSX {
         "dismissLabel": string;
         "dismissed": boolean;
     }
+    interface KiAvatarAttributes {
+        "label": string;
+        "src": string;
+        "initials": string;
+        "size": KiAvatarSize;
+    }
+    interface KiAvatarGroupAttributes {
+        "max": number;
+        "size": KiAvatarSize;
+    }
     interface KiBadgeAttributes {
         "tone": KiBadgeTone;
         "size": KiBadgeSize;
@@ -1627,6 +2045,16 @@ declare namespace LocalJSX {
         "open": boolean;
         "heading": string;
         "closeOnBackdrop": boolean;
+    }
+    interface KiDividerAttributes {
+        "orientation": KiDividerOrientation;
+    }
+    interface KiIconButtonAttributes {
+        "variant": KiIconButtonVariant;
+        "tone": KiIconButtonTone;
+        "size": KiIconButtonSize;
+        "label": string;
+        "disabled": boolean;
     }
     interface KiInputAttributes {
         "type": KiInputType;
@@ -1669,6 +2097,11 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "required": boolean;
     }
+    interface KiStatusAttributes {
+        "tone": KiStatusTone;
+        "ring": boolean;
+        "label": string;
+    }
     interface KiSwitchAttributes {
         "checked": boolean;
         "disabled": boolean;
@@ -1705,11 +2138,15 @@ declare namespace LocalJSX {
 
     interface IntrinsicElements {
         "ki-alert": Omit<KiAlert, keyof KiAlertAttributes> & { [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K] } & { [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K] };
+        "ki-avatar": Omit<KiAvatar, keyof KiAvatarAttributes> & { [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K] } & { [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K] };
+        "ki-avatar-group": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K] } & { [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K] };
         "ki-badge": Omit<KiBadge, keyof KiBadgeAttributes> & { [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K] } & { [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K] };
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
         "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] };
+        "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
+        "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] };
         "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
         "ki-list": KiList;
         "ki-list-item": KiListItem;
@@ -1718,6 +2155,7 @@ declare namespace LocalJSX {
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] };
+        "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
         "ki-tab-panel": Omit<KiTabPanel, keyof KiTabPanelAttributes> & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K] } & { [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K] };
@@ -1746,6 +2184,34 @@ declare module "@stencil/core" {
              * guaranteed.
              */
             "ki-alert": LocalJSX.IntrinsicElements["ki-alert"] & JSXBase.HTMLAttributes<HTMLKiAlertElement>;
+            /**
+             * A static identity visual that shows a person or entity at a glance through
+             * a fallback chain: portrait, then initials, then a built-in generic figure.
+             * @whenToUse a compact identity visual for a person or entity — a comment
+             * author, a contact list item, a project member. Set `label` whenever the
+             * avatar is the only carrier of the identity (no adjacent visible name);
+             * compose several into `ki-avatar-group` for a compact "who is involved"
+             * stack with overflow.
+             * @whenNotToUse as a clickable control (compose the avatar inside an
+             * interactive host such as ki-button), for logos or arbitrary illustrations
+             * (plain `img`), for presence/verification adornments overlaid on the corner
+             * (a future overlay concern shared with the nav badge), or unlabeled when no
+             * adjacent text names the identity.
+             */
+            "ki-avatar": LocalJSX.IntrinsicElements["ki-avatar"] & JSXBase.HTMLAttributes<HTMLKiAvatarElement>;
+            /**
+             * A token-styled companion container that stacks `ki-avatar` children as one
+             * overlapping row with a configurable visible cap and a static "+N" overflow
+             * counter.
+             * @whenToUse a compact "who is involved" stack — the members of a shared
+             * document, project card or event row — where space deserves only the first
+             * few identities and an exact "+N" counter accounts for the rest.
+             * @whenNotToUse as a member picker or expandable overflow (future interactive
+             * grouping — the counter is static text, never a button), for a single
+             * identity (use `ki-avatar` alone), or with children other than `ki-avatar`
+             * (foreign markup is unsupported and not repaired, 016 precedent).
+             */
+            "ki-avatar-group": LocalJSX.IntrinsicElements["ki-avatar-group"] & JSXBase.HTMLAttributes<HTMLKiAvatarGroupElement>;
             /**
              * A static, non-interactive status pill.
              * @whenToUse annotate an entity with short status text (a state, a
@@ -1800,6 +2266,33 @@ declare module "@stencil/core" {
              * (navigate or use a future full-screen variant), menus, or pickers.
              */
             "ki-dialog": LocalJSX.IntrinsicElements["ki-dialog"] & JSXBase.HTMLAttributes<HTMLKiDialogElement>;
+            /**
+             * A static, decorative rule that visually separates adjacent content.
+             * @whenToUse visually separate adjacent content when spacing alone is not
+             * enough: grouped settings sections, toolbar action groups, distinct
+             * regions inside a card — horizontal between stacked content, vertical
+             * between side-by-side content.
+             * @whenNotToUse between list items (separation is a ki-list theme-token
+             * decision), semantic thematic breaks in running prose (native `<hr>`
+             * carries those semantics — the divider is deliberately decorative and
+             * contributes no role, name or announcement), as a border or outline
+             * substitute (surface/border tokens), or purely decorative flourishes
+             * (prefer white space).
+             */
+            "ki-divider": LocalJSX.IntrinsicElements["ki-divider"] & JSXBase.HTMLAttributes<HTMLKiDividerElement>;
+            /**
+             * A token-styled, icon-only action button with native button semantics and a
+             * mandatory accessible name.
+             * @whenToUse a compact, widely understood action where space precludes a
+             * visible label: toolbars, card and dialog corners (close), media transport,
+             * data-row actions. Always supply `label`; usually pair with ki-tooltip for
+             * sighted discoverability.
+             * @whenNotToUse whenever a visible label fits (use ki-button), toggling
+             * state (a future toggle icon button), navigation (use a link), or form
+             * submit/reset (ki-icon-button is not form-associated; use ki-button, whose
+             * visible label communicates the consequence).
+             */
+            "ki-icon-button": LocalJSX.IntrinsicElements["ki-icon-button"] & JSXBase.HTMLAttributes<HTMLKiIconButtonElement>;
             /**
              * A token-styled single-line text field with native input semantics.
              * @whenToUse collect one line of free text from a person, always with a
@@ -1879,6 +2372,21 @@ declare module "@stencil/core" {
              * binary decisions, or multiselect and command menus.
              */
             "ki-select": LocalJSX.IntrinsicElements["ki-select"] & JSXBase.HTMLAttributes<HTMLKiSelectElement>;
+            /**
+             * A tiny, non-interactive status dot that marks the state of a nearby item.
+             * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
+             * on) the item it describes: presence on an avatar, health of a service
+             * list entry, connection state in a toolbar. Label it (`label`) or pair it
+             * with adjacent visible text — color is never the only carrier of the
+             * meaning (WCAG 1.4.1).
+             * @whenNotToUse short labeled status text (that pill is ki-badge — this dot
+             * never renders text), notification counters or the overlay attachment
+             * mechanism (a future, separate nav-badge concern), messages that need
+             * attention or announcement (ki-alert — the dot has no live region),
+             * progress or loading (ki-progress). An unlabeled dot without adjacent
+             * visible text is an authoring mistake (WCAG 1.4.1).
+             */
+            "ki-status": LocalJSX.IntrinsicElements["ki-status"] & JSXBase.HTMLAttributes<HTMLKiStatusElement>;
             /**
              * A token-styled switch for immediate on/off settings.
              * @whenToUse binary settings whose change takes effect immediately, always

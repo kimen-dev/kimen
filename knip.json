@@ -19,6 +19,19 @@
       "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"],
       "stencil": false
     },
+    "packages/elements": {
+      "entry": [
+        "src/index.ts",
+        "src/components/*/*.tsx",
+        "!src/components/*/*.stories.tsx",
+        "!src/components/*/*.spec.tsx",
+        "*.config.{ts,mjs}",
+        "vitest.setup.mjs",
+        "size-limit/**/*.{ts,tsx}"
+      ],
+      "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"],
+      "stencil": false
+    },
     "packages/kimen": {
       "entry": ["index.mjs"],
       "project": ["**/*.mjs"]

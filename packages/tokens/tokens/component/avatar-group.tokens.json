@@ -1,0 +1,123 @@
+{
+  "ki": {
+    "avatar-group": {
+      "xxs": {
+        "overlap": {
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the avatar group component for the xxs member overlap (the -8px stack step on the 20px Avatar_group frame — named xs in Figma, the vocabulary skew recorded in spec 019 Assumptions)."
+        },
+        "counter-padding-inline": {
+          "$value": "{ki.space.xs}",
+          "$description": "dimension used by the avatar group component for the xxs counter inline padding: the 20px Figma frame ships no counter, so the step extends the verified 8/10/12/14 ramp downward (synthesized, declared for founder review)."
+        },
+        "counter-font-size": {
+          "$value": "{ki.typography.size.caption-1}",
+          "$description": "dimension used by the avatar group component for the xxs counter text: no counter exists on the 20px frame, so the value follows the avatar xxs initials step (synthesized, declared for founder review)."
+        }
+      },
+      "xs": {
+        "overlap": {
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the avatar group component for the xs member overlap: the 24px group step exists in no Figma frame (five-step set), so it inherits the -8px overlap of the neighboring 20/32px frames (synthesized step, spec 019 Assumptions)."
+        },
+        "counter-padding-inline": {
+          "$value": "{ki.space.sm}",
+          "$description": "dimension used by the avatar group component for the xs counter inline padding (synthesized 24px step extending the verified 8/10/12/14 ramp, declared for founder review)."
+        },
+        "counter-font-size": {
+          "$value": "{ki.typography.size.caption-1}",
+          "$description": "dimension used by the avatar group component for the xs counter text (synthesized 24px step following the avatar xs initials size, declared for founder review)."
+        }
+      },
+      "sm": {
+        "overlap": {
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the avatar group component for the sm member overlap (the exact -8px on the 32px Avatar_group frame 10087:2601)."
+        },
+        "counter-padding-inline": {
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the avatar group component for the sm counter inline padding (Space/md 8px on the 32px frame)."
+        },
+        "counter-font-size": {
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the avatar group component for the sm counter text (body_1 13px on the 32px frame — one step above the sm initials, verified)."
+        }
+      },
+      "md": {
+        "overlap": {
+          "$value": "{ki.space.xl}",
+          "$description": "dimension used by the avatar group component for the md member overlap (the exact -12px on the 40px Avatar_group frame 10087:2701)."
+        },
+        "counter-padding-inline": {
+          "$value": "{ki.space.lg}",
+          "$description": "dimension used by the avatar group component for the md counter inline padding (Space/lg 10px on the 40px frame)."
+        },
+        "counter-font-size": {
+          "$value": "{ki.typography.size.body-1}",
+          "$description": "dimension used by the avatar group component for the md counter text (body_1 13px on the 40px frame)."
+        }
+      },
+      "lg": {
+        "overlap": {
+          "$value": "{ki.space.xl}",
+          "$description": "dimension used by the avatar group component for the lg member overlap (the exact -12px on the 48px Avatar_group frame 10090:2873)."
+        },
+        "counter-padding-inline": {
+          "$value": "{ki.space.xl}",
+          "$description": "dimension used by the avatar group component for the lg counter inline padding (Space/xl 12px on the 48px frame)."
+        },
+        "counter-font-size": {
+          "$value": "{ki.typography.size.body-2}",
+          "$description": "dimension used by the avatar group component for the lg counter text (body_2 15px on the 48px frame)."
+        }
+      },
+      "xl": {
+        "overlap": {
+          "$value": "{ki.space.xl}",
+          "$description": "dimension used by the avatar group component for the xl member overlap (the exact -12px on the 56px Avatar_group frame 10090:2973)."
+        },
+        "counter-padding-inline": {
+          "$value": "{ki.space.2xl}",
+          "$description": "dimension used by the avatar group component for the xl counter inline padding (Space/2xl 14px on the 56px frame)."
+        },
+        "counter-font-size": {
+          "$value": "{ki.typography.size.title-2}",
+          "$description": "dimension used by the avatar group component for the xl counter text (title_2 18px on the 56px frame)."
+        }
+      },
+      "ring-width": {
+        "$value": "{ki.space.zero}",
+        "$description": "dimension used by the avatar group component for the separating ring around stacked members: NO Avatar_group frame draws a ring (verified across all five sizes), so onmars resolves the capability to zero — the ring stays a theme decision, never an attribute (FR-008)."
+      },
+      "ring-color": {
+        "$value": "{ki.outline.none}",
+        "$description": "color used by the avatar group component for the separating ring: transparent while the onmars ring width is zero (FR-008; a future theme may resolve both)."
+      },
+      "counter-bg": {
+        "$value": "{ki.surface.special.secondary-alpha-base}",
+        "$description": "color used by the avatar group component for the +N counter surface: Surface/special/secondary_alpha_base, the exact variable on the secondary-button-styled counter of every capped Avatar_group frame."
+      },
+      "counter-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "color used by the avatar group component for the +N counter text: Text/high_em, the exact variable on the counter label."
+      },
+      "counter-border-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "dimension used by the avatar group component for the counter border (MarsUI 1px hairline on the counter pill)."
+      },
+      "counter-border-color": {
+        "$value": "{ki.outline.secondary-button-top}",
+        "$description": "color used by the avatar group component for the counter border: Outline/secondary_button_top, the exact variable on the counter pill (the secondary-button bevel top edge)."
+      },
+      "counter-radius": {
+        "$value": "{ki.radius.round}",
+        "$description": "dimension used by the avatar group component for the counter shape: Radius/component/radius_* resolves to 1000 in the MarsUI Round mode — the pill is a radius token, never an attribute."
+      },
+      "counter-shadow": {
+        "$value": "{ki.effect.component.secondary.default.shadow}",
+        "$type": "shadow",
+        "$description": "shadow used by the avatar group component for the counter effects: the exact Component_effect/secondary_default pair (drop 0/2/1.5/-0.5 Elevation/shadow + inner White/3 0/2/3) without its backdrop blur (glass restraint, 021 decision 3)."
+      }
+    }
+  }
+}

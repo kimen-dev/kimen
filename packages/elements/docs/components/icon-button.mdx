@@ -1,0 +1,95 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-icon-button" />
+
+# ki-icon-button
+
+A token-styled, icon-only action button with native button semantics and a
+mandatory accessible name.
+
+**When to use** — a compact, widely understood action where space precludes a
+visible label: toolbars, card and dialog corners (close), media transport,
+data-row actions. Always supply `label`; usually pair with `ki-tooltip` for
+sighted discoverability.
+
+**When NOT to use** — whenever a visible label fits (use `ki-button`),
+toggling state (a future toggle icon button), navigation (use a link), or
+form submit/reset (`ki-icon-button` is not form-associated; use `ki-button`,
+whose visible label communicates the consequence).
+
+## Examples
+
+The default slot holds exactly one decorative icon; the accessible name
+always comes from the required `label` attribute, never from the slot:
+
+```html
+<ki-icon-button label="Close">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" /></svg>
+</ki-icon-button>
+```
+
+Visual hierarchy comes from `variant` (default `secondary`) and semantic
+intent from `tone` (default `neutral`) — never use `variant` to signal
+success or danger:
+
+```html
+<ki-icon-button variant="primary" label="Play">…</ki-icon-button>
+<ki-icon-button variant="ghost" tone="danger" label="Delete row">…</ki-icon-button>
+```
+
+Sizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) to `xl`
+(56px, default `md`); each size pairs a square box with its own icon size:
+
+```html
+<ki-icon-button size="xs" label="Clear">…</ki-icon-button>
+<ki-icon-button size="xl" variant="primary" label="Record">…</ki-icon-button>
+```
+
+## Recipe: an icon button in a toolbar with a tooltip
+
+`ki-tooltip` supplies the visible affordance and writes the accessible
+description; `label` stays the accessible name:
+
+```html
+<ki-tooltip text="Closes the dialog">
+  <ki-icon-button label="Close">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" /></svg>
+  </ki-icon-button>
+</ki-tooltip>
+```
+
+Inside a native form, activating an icon button never submits or resets the
+form: the component is not form-associated. An icon-only submit control is a
+when-NOT-to-use — reach for `ki-button`.
+
+## Customization
+
+| Token                                        | Controls                            |
+| -------------------------------------------- | ----------------------------------- |
+| `--ki-icon-button-primary-neutral-rest-bg`   | Primary variant resting background  |
+| `--ki-icon-button-md-size`                   | Square box of the `md` size         |
+| `--ki-icon-button-md-icon-size`              | Icon size of the `md` size          |
+| `--ki-icon-button-md-radius`                 | Corner radius of the `md` size      |
+| `--ki-icon-button-focus-ring-color`          | Keyboard focus ring color           |
+
+The full matrix follows
+`--ki-icon-button-{variant}-{tone}-{state}-{bg|border|fg}` and
+`--ki-icon-button-{size}-*`. Shadow parts: `::part(button)` (internal native
+button) and `::part(icon)` (icon wrapper).
+
+## Accessibility
+
+- `label` is required: it becomes the accessible name of the internal native
+  button. An icon button without one exposes no name and fails the
+  accessibility audit — the component never invents a fallback.
+- The default slot is presentational: slotted content is hidden from
+  assistive technology and never contributes to the accessible name. Mark
+  raw SVGs `aria-hidden="true"` anyway as belt and braces.
+- Native button semantics come from the internal native button: Space and
+  Enter activation, visible focus in every theme.
+- `disabled` removes the icon button from keyboard reach and exposes the
+  unavailable state; do not use it for pending/loading semantics.
+- Every size keeps at least the 24×24 pointer target; `xs` sits exactly on
+  the WCAG 2.2 floor and no theme may go below it.
+- An `aria-description` set on the host (e.g. by a wrapping `ki-tooltip`)
+  forwards to the internal button, tracks changes and removal.
