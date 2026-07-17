@@ -467,23 +467,25 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/018-project-integrity-hardening.json',
+      '../../changes/api/001-tokens-theming-marsui-dna.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
   const result = evaluatePublicApiChange({ baseline, candidate, declaration });
 
   assert.equal(candidate.surfaceSha256, declaration.candidateSha256);
-  assert.equal(result.release, 'minor');
+  // Fase T declares deliberate effective-value changes (dialog/tooltip/listbox
+  // sizes, tooltip shadow, list dividers) — a digest-bound MAJOR declaration.
+  assert.equal(result.release, 'major');
   assert.equal(result.decision, 'passed');
   assert.deepEqual(result.removals, []);
   assert.deepEqual(result.newRootSymbols, []);
   assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].components).length, 20);
   assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].rootSymbols).length, 32);
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 942);
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 955);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    942,
+    955,
   );
 });

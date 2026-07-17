@@ -2285,11 +2285,11 @@
             },
             {
               "name": "--ki-dialog-max-width",
-              "description": "dimension used by the dialog component for max width."
+              "description": "dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale)."
             },
             {
               "name": "--ki-dialog-min-width",
-              "description": "dimension used by the dialog component for min width."
+              "description": "dimension used by the dialog component for min width (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
             },
             {
               "name": "--ki-dialog-motion-duration",
@@ -4045,7 +4045,7 @@
             },
             {
               "name": "--ki-select-listbox-max-block-size",
-              "description": "dimension used by the select component for listbox max block size."
+              "description": "dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
             },
             {
               "name": "--ki-select-listbox-offset",
@@ -5395,7 +5395,7 @@
             },
             {
               "name": "--ki-tooltip-max-inline-size",
-              "description": "dimension used by the tooltip component for max inline size."
+              "description": "dimension used by the tooltip component for max inline size (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
             },
             {
               "name": "--ki-tooltip-offset",

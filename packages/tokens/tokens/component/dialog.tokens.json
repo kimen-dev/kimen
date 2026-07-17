@@ -14,12 +14,12 @@
         "$description": "dimension used by the dialog component for gap."
       },
       "min-width": {
-        "$value": "{ki.space.25xl}",
-        "$description": "dimension used by the dialog component for min width."
+        "$value": "{ki.size.surface.sm}",
+        "$description": "dimension used by the dialog component for min width (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
       },
       "max-width": {
-        "$value": "{ki.space.26xl}",
-        "$description": "dimension used by the dialog component for max width."
+        "$value": "{ki.size.surface.md}",
+        "$description": "dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale)."
       },
       "bg": {
         "$value": "{ki.surface.s1}",
