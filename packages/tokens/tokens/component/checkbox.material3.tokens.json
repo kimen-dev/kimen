@@ -2,8 +2,8 @@
   "ki": {
     "checkbox": {
       "radius": {
-        "$value": "{ki.radius.xs}",
-        "$description": "Material 3 dimension used by the checkbox component for radius."
+        "$value": "{ki.radius.component.xxs}",
+        "$description": "M3 shape scale extra-small (4dp) via the material3 radius scale (the md.comp.checkbox 2dp container has no step in the md.sys.shape scale; extra-small is the nearest)."
       },
       "checked": {
         "rest": {

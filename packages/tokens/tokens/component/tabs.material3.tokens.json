@@ -1,0 +1,20 @@
+{
+  "ki": {
+    "tabs": {
+      "gap": {
+        "$value": "{ki.space.zero}",
+        "$description": "M3 primary tabs sit flush in the tab bar: no inter-tab gap (md.comp.primary-navigation-tab)."
+      },
+      "divider": {
+        "width": {
+          "$value": "{ki.size.border.hairline}",
+          "$description": "M3 md.comp.divider.thickness: 1dp divider under the tab bar."
+        },
+        "color": {
+          "$value": "{ki.outline.med-em}",
+          "$description": "M3 md.sys.color.outline-variant as the tab bar divider (ki.outline.med-em resolves to neutral-variant 80 light / 30 dark, the outline-variant pair)."
+        }
+      }
+    }
+  }
+}

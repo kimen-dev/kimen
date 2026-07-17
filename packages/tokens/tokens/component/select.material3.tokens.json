@@ -6,8 +6,8 @@
         "$description": "Material 3 dimension used by the select component for height."
       },
       "radius": {
-        "$value": "{ki.radius.xs}",
-        "$description": "Material 3 dimension used by the select component for radius."
+        "$value": "{ki.radius.component.xs}",
+        "$description": "M3 text-field container shape: md.sys.shape.corner.extra-small (4dp) via the material3 radius scale."
       },
       "border-block-start-width": {
         "$value": "{ki.space.zero}",
@@ -103,8 +103,8 @@
           "$description": "Material 3 color used by the select component for listbox background."
         },
         "radius": {
-          "$value": "{ki.radius.md}",
-          "$description": "Material 3 dimension used by the select component for listbox radius."
+          "$value": "{ki.radius.component.xs}",
+          "$description": "M3 menu container shape: md.sys.shape.corner.extra-small (4dp) via the material3 radius scale."
         },
         "elevation": {
           "$value": "{ki.elevation.shadow-med}",

@@ -31,16 +31,20 @@
         },
         "$type": "color",
         "high-em": {
-          "$value": "{ki.foundation.migrated.semantic-material3.surface.s4}"
+          "$value": "{ki.foundation.material3.palette.neutral.90}",
+          "$description": "M3 md.sys.color.on-surface dark (neutral tone 90)."
         },
         "med-em": {
-          "$value": "{ki.foundation.migrated.themes-material3.color.brand.base-em}"
+          "$value": "{ki.foundation.material3.palette.neutral-variant.80}",
+          "$description": "M3 md.sys.color.on-surface-variant dark (neutral-variant tone 80)."
         },
         "low-em": {
-          "$value": "{ki.foundation.migrated.semantic-material3.text.base-em}"
+          "$value": "{ki.foundation.material3.palette.neutral-variant.60}",
+          "$description": "M3 md.sys.color.outline dark (neutral-variant tone 60)."
         },
         "base-em": {
-          "$value": "{ki.foundation.migrated.themes-material3.color.brand.low-em}"
+          "$value": "{ki.foundation.material3.palette.neutral-variant.50}",
+          "$description": "Neutral-variant tone 50, kept from the migrated value for visual continuity; the current M3 outline-variant dark role is tone 30 — retained pending founder review to avoid an unreviewed contrast sweep."
         },
         "primary-text-on-primary": {
           "$value": "{ki.foundation.migrated.themes-material3.color.brand.800}"
@@ -153,17 +157,37 @@
       "primary-base-em-alpha": {
         "$value": "{ki.foundation.migrated.modes-material3-dark.surface.primary-base-em-alpha}"
       },
+      "secondary-med-em": {
+        "$value": "{ki.foundation.material3.palette.secondary.80}",
+        "$description": "M3 md.sys.color.secondary dark (secondary tone 80)."
+      },
+      "secondary-low-em": {
+        "$value": "{ki.foundation.material3.palette.secondary.30}",
+        "$description": "M3 md.sys.color.secondary-container dark (secondary tone 30)."
+      },
+      "tertiary-med-em": {
+        "$value": "{ki.foundation.material3.palette.tertiary.80}",
+        "$description": "M3 md.sys.color.tertiary dark (tertiary tone 80)."
+      },
+      "tertiary-low-em": {
+        "$value": "{ki.foundation.material3.palette.tertiary.30}",
+        "$description": "M3 md.sys.color.tertiary-container dark (tertiary tone 30)."
+      },
       "danger-high-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-low-em}"
+        "$value": "{ki.foundation.material3.palette.error.80}",
+        "$description": "M3 md.sys.color.error dark (error tone 80)."
       },
       "danger-med-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-low-em}"
+        "$value": "{ki.foundation.material3.palette.error.80}",
+        "$description": "M3 md.sys.color.error dark (error tone 80)."
       },
       "danger-low-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-high-em-hover}"
+        "$value": "{ki.foundation.material3.palette.error.30}",
+        "$description": "M3 md.sys.color.error-container dark (error tone 30)."
       },
       "danger-base-em": {
-        "$value": "{ki.foundation.migrated.modes-material3-dark.outline.danger-low-em}"
+        "$value": "{ki.foundation.material3.palette.error.10}",
+        "$description": "M3 error tone 10: faintest dark danger tint."
       },
       "danger-low-em-alpha": {
         "$value": "{ki.foundation.migrated.modes-material3-dark.outline.danger-low-em-alpha}"
@@ -193,7 +217,8 @@
         "$value": "{ki.color.brand.200}"
       },
       "danger-high-em-hover": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-low-em}"
+        "$value": "{ki.foundation.material3.palette.error.80}",
+        "$description": "Hover of the M3 dark error surface (error tone 80)."
       },
       "success-high-em": {
         "$value": "{ki.color.success.300}"
@@ -220,28 +245,49 @@
     "text": {
       "$type": "color",
       "high-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.surface.s4}"
+        "$value": "{ki.foundation.material3.palette.neutral.90}",
+        "$description": "M3 md.sys.color.on-surface dark (neutral tone 90)."
       },
       "med-em": {
-        "$value": "{ki.foundation.migrated.themes-material3.color.brand.base-em}"
+        "$value": "{ki.foundation.material3.palette.neutral-variant.80}",
+        "$description": "M3 md.sys.color.on-surface-variant dark (neutral-variant tone 80)."
       },
       "low-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.text.base-em}"
+        "$value": "{ki.foundation.material3.palette.neutral-variant.60}",
+        "$description": "M3 md.sys.color.outline dark (neutral-variant tone 60)."
       },
       "base-em": {
-        "$value": "{ki.foundation.migrated.themes-material3.color.brand.low-em}"
+        "$value": "{ki.foundation.material3.palette.neutral-variant.50}",
+        "$description": "M3 neutral-variant tone 50 as faintest dark text."
       },
       "primary-on-primary": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.800}"
       },
       "primary-on-primary-light": {
-        "$value": "{ki.foundation.migrated.themes-material3.color.brand.200}"
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.100}",
+        "$description": "M3 md.sys.color.on-primary-container dark (primary tone 90)."
       },
       "secondary-on-primary": {
         "$value": "{ki.foundation.migrated.modes-material3-dark.color.brand.secondary-text-on-primary}"
       },
       "secondary-on-primary-light": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.100}"
+      },
+      "primary-on-secondary": {
+        "$value": "{ki.foundation.material3.palette.secondary.20}",
+        "$description": "M3 md.sys.color.on-secondary dark (secondary tone 20)."
+      },
+      "primary-on-secondary-light": {
+        "$value": "{ki.foundation.material3.palette.secondary.90}",
+        "$description": "M3 md.sys.color.on-secondary-container dark (secondary tone 90)."
+      },
+      "primary-on-tertiary": {
+        "$value": "{ki.foundation.material3.palette.tertiary.20}",
+        "$description": "M3 md.sys.color.on-tertiary dark (tertiary tone 20)."
+      },
+      "primary-on-tertiary-light": {
+        "$value": "{ki.foundation.material3.palette.tertiary.90}",
+        "$description": "M3 md.sys.color.on-tertiary-container dark (tertiary tone 90)."
       },
       "text-on-neutral": {
         "$value": "{ki.color.black.100}"
@@ -251,6 +297,10 @@
       },
       "inverse-black": {
         "$value": "{ki.color.black.100}"
+      },
+      "inverse-primary": {
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.500}",
+        "$description": "M3 md.sys.color.inverse-primary dark (primary tone 40)."
       },
       "primary-high-em": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.100}"
@@ -265,22 +315,26 @@
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.700}"
       },
       "danger-high-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-low-em}"
+        "$value": "{ki.foundation.material3.palette.error.80}",
+        "$description": "M3 md.sys.color.error dark (error tone 80) as high-emphasis danger text."
       },
       "danger-med-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-low-em}"
+        "$value": "{ki.foundation.material3.palette.error.80}",
+        "$description": "M3 md.sys.color.error dark (error tone 80) as mid-emphasis danger text."
       },
       "danger-low-em": {
         "$value": "{ki.foundation.migrated.modes-material3-dark.text.danger-low-em}"
       },
       "danger-base-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-high-em-hover}"
+        "$value": "{ki.foundation.material3.palette.error.30}",
+        "$description": "M3 error tone 30: faintest dark danger text."
       },
       "none": {
         "$value": "{ki.color.transparent.black}"
       },
       "primary-on-danger": {
-        "$value": "{ki.foundation.migrated.modes-material3-dark.text.primary-on-danger}"
+        "$value": "{ki.foundation.material3.palette.error.20}",
+        "$description": "M3 md.sys.color.on-error dark (error tone 20)."
       },
       "success-high-em": {
         "$value": "{ki.color.success.300}"
@@ -301,10 +355,12 @@
     "outline": {
       "$type": "color",
       "high-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.text.base-em}"
+        "$value": "{ki.foundation.material3.palette.neutral-variant.60}",
+        "$description": "M3 md.sys.color.outline dark (neutral-variant tone 60)."
       },
       "strong": {
-        "$value": "{ki.foundation.migrated.semantic-material3.text.base-em}"
+        "$value": "{ki.foundation.material3.palette.neutral-variant.60}",
+        "$description": "M3 md.sys.color.outline dark (neutral-variant tone 60)."
       },
       "med-em": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.med-em}"
@@ -340,13 +396,16 @@
         "$value": "{ki.foundation.migrated.modes-material3-dark.outline.primary-base-em-alpha}"
       },
       "danger-high-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.outline.danger-low-em}"
+        "$value": "{ki.foundation.material3.palette.error.80}",
+        "$description": "M3 md.sys.color.error dark (error tone 80) as outline."
       },
       "danger-med-em": {
-        "$value": "{ki.foundation.migrated.semantic-material3.surface.danger-high-em-hover}"
+        "$value": "{ki.foundation.material3.palette.error.30}",
+        "$description": "M3 md.sys.color.error-container dark (error tone 30) as outline."
       },
       "danger-low-em": {
-        "$value": "{ki.foundation.migrated.modes-material3-dark.outline.danger-low-em}"
+        "$value": "{ki.foundation.material3.palette.error.10}",
+        "$description": "M3 error tone 10 outline."
       },
       "danger-base-em": {
         "$value": "{ki.foundation.migrated.modes-material3-dark.outline.danger-base-em}"
@@ -386,6 +445,25 @@
       },
       "med-em-inverse": {
         "$value": "{ki.color.white.8}"
+      }
+    },
+    "state-layer": {
+      "$type": "color",
+      "hover": {
+        "$value": "{ki.foundation.material3.state-layer.dark.hover}",
+        "$description": "M3 hover state layer dark: 8% of md.sys.color.on-surface (neutral tone 90)."
+      },
+      "focus": {
+        "$value": "{ki.foundation.material3.state-layer.dark.focus}",
+        "$description": "M3 focus state layer dark: 12% of md.sys.color.on-surface (neutral tone 90)."
+      },
+      "pressed": {
+        "$value": "{ki.foundation.material3.state-layer.dark.focus}",
+        "$description": "M3 pressed state layer dark: 12% of md.sys.color.on-surface (shares the focus value)."
+      },
+      "dragged": {
+        "$value": "{ki.foundation.material3.state-layer.dark.dragged}",
+        "$description": "M3 dragged state layer dark: 16% of md.sys.color.on-surface (neutral tone 90)."
       }
     },
     "elevation": {
@@ -525,88 +603,6 @@
                   ]
                 }
               }
-            }
-          }
-        },
-        "component-card-material3": {
-          "card": {
-            "elevation": {
-              "$type": "shadow",
-              "$value": [
-                {
-                  "color": "{ki.color.black.32}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": {
-                    "value": 1,
-                    "unit": "px"
-                  },
-                  "blur": {
-                    "value": 2,
-                    "unit": "px"
-                  },
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
-                },
-                {
-                  "color": "{ki.color.black.24}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": {
-                    "value": 2,
-                    "unit": "px"
-                  },
-                  "blur": {
-                    "value": 6,
-                    "unit": "px"
-                  },
-                  "spread": {
-                    "value": 2,
-                    "unit": "px"
-                  }
-                }
-              ]
-            }
-          }
-        },
-        "component-dialog-material3": {
-          "dialog": {
-            "shadow": {
-              "$type": "shadow",
-              "$value": [
-                {
-                  "color": "{ki.color.black.24}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": "{ki.space.xxs}",
-                  "blur": "{ki.space.xs}",
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
-                },
-                {
-                  "color": "{ki.foundation.migrated.semantic-material3.overlay.med-em}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": "{ki.space.xs}",
-                  "blur": "{ki.space.md}",
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
-                }
-              ]
             }
           }
         }

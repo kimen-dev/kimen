@@ -1,0 +1,10 @@
+{
+  "ki": {
+    "radio-group": {
+      "gap": {
+        "$value": "{ki.space.3xl}",
+        "$description": "16dp option gap derived from the M3 layout grid (16/24dp rhythm); M3 publishes no md.comp gap token for radio lists."
+      }
+    }
+  }
+}
