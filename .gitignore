@@ -36,6 +36,11 @@ coverage/
 reports/
 playwright-report/
 test-results/
+# Visual regression (Art. X): the CI-generated linux baselines are the only
+# versioned arbiters. Local darwin baselines are a personal safety net and
+# failed-comparison attachments (actual/diff PNGs) are run artifacts.
+packages/elements/browser-tests/__screenshots__/**/*-darwin.png
+packages/elements/.vitest-attachments/
 # Generated actuals belong to infrastructure fixtures, never to traceability.
 scripts/tests/fixtures/output/
 

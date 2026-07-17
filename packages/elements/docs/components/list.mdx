@@ -1,0 +1,87 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-list" />
+
+# ki-list
+
+A non-interactive vertical list container for read-only collections of
+similar entries composed with `ki-list-item` children.
+
+**When to use** — settings, contacts, results or activity feeds where each
+item composes leading media, primary text, optional secondary text and
+trailing meta or a slotted control.
+
+**When NOT to use** — menus, selectable option lists, tabular data,
+navigation, whole-item clickable rows or lone items outside a list.
+
+## Examples
+
+The list accepts only `ki-list-item` children; other children are
+unsupported. Each item's default slot is the primary text line:
+
+```html
+<ki-list>
+  <ki-list-item>Ada Lovelace</ki-list-item>
+  <ki-list-item>Grace Hopper</ki-list-item>
+  <ki-list-item>Margaret Hamilton</ki-list-item>
+</ki-list>
+```
+
+Full item composition — `start` for leading media, `secondary` for
+supporting text (its presence selects the multi-line min-height token) and
+`end` for trailing media, meta text or a slotted control:
+
+```html
+<ki-list>
+  <ki-list-item>
+    <img slot="start" src="/avatars/ada.png" alt="" />
+    Ada Lovelace
+    <span slot="secondary">Analytical engine programs</span>
+    <ki-badge slot="end" tone="success">Active</ki-badge>
+  </ki-list-item>
+  <ki-list-item>
+    <img slot="start" src="/avatars/grace.png" alt="" />
+    Grace Hopper
+    <span slot="secondary">Compilers and COBOL</span>
+    <span slot="end">1906–1992</span>
+  </ki-list-item>
+</ki-list>
+```
+
+A settings entry with a control slotted in the `end` region — the control
+is interactive, the row is not:
+
+```html
+<ki-list>
+  <ki-list-item>
+    Two-factor authentication
+    <span slot="secondary">Enabled via authenticator app</span>
+    <ki-button slot="end" size="sm" variant="tertiary">Manage</ki-button>
+  </ki-list-item>
+</ki-list>
+```
+
+## Customization
+
+| Token                           | Controls                              |
+| ------------------------------- | ------------------------------------- |
+| `--ki-list-gap`                 | Gap between items                     |
+| `--ki-list-item-divider-color`  | Between-item divider color            |
+| `--ki-list-item-min-height`     | Single-line item minimum height       |
+| `--ki-list-item-primary-fg`     | Primary text color                    |
+| `--ki-list-item-secondary-fg`   | Secondary text color                  |
+
+Shadow parts: on the list, `::part(list)` (surface, padding, gap and
+divider styling); on each item, `::part(item)` (row surface),
+`::part(start)`, `::part(content)` (text column) and `::part(end)`.
+
+## Accessibility
+
+- The list and its items are non-interactive and read-only: no row is a
+  click target. Interactivity lives in controls slotted into a region
+  (such as the `ki-button` above), which keep their own semantics and focus
+  behavior.
+- Give leading media a meaningful `alt`, or `alt=""` when decorative next
+  to the primary text.
+- `ki-list-item` is valid only as a child of `ki-list` — never use it as a
+  menu item, option, table row or navigation link.

@@ -155,7 +155,10 @@ input {
   border-radius: var(--ki-checkbox-radius);
 }
 
+/* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
+   Focus/primary glow (3px spread at 40%) under the opaque outline ring. */
 input:focus-visible ~ [part="control"] {
+  box-shadow: var(--ki-checkbox-focus-ring-shadow);
   outline: var(--ki-checkbox-focus-ring-width) solid var(--ki-checkbox-focus-ring-color);
   outline-offset: var(--ki-checkbox-focus-ring-offset);
 }

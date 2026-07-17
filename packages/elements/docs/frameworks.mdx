@@ -1,0 +1,227 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Frameworks" />
+
+# Framework integration
+
+Kimen components are standard custom elements, so they work in React, Vue,
+Angular — and no framework at all — **without wrappers**. Generated framework
+wrappers (`@kimen/react`, …) are planned but not published yet; the patterns
+on this page are the supported integration path today, and they keep working
+unchanged after wrappers ship.
+
+Every setup is the same two steps, regardless of framework:
+
+```ts
+import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
+import '@kimen/tokens/css';
+
+defineKiButton();
+```
+
+Register each element you use from its subpath (tree-shakable; internally
+nested Kimen elements are defined recursively), or register the whole catalog
+at once with the lazy loader:
+
+```ts
+import { defineCustomElements } from '@kimen/elements/loader';
+
+defineCustomElements();
+```
+
+Registration is client-side: on server-rendered pages the `ki-*` tags render
+as plain markup and upgrade in the browser once the registration code runs.
+
+## Two kinds of events, one rule
+
+- **Re-dispatched native events** — native `input` events are composed and
+  cross the shadow boundary on their own; native `change` is not, so every
+  Kimen form control (`ki-input`, `ki-textarea`, `ki-select`, `ki-checkbox`,
+  `ki-radio-group`, `ki-switch`) re-dispatches it as a composed event at the
+  host. Listen for plain `change`/`input` exactly as on native controls.
+- **`ki-*` CustomEvents** — component notifications with a typed `detail`:
+  `ki-change` on `ki-tabs` (`detail.value`), `ki-close` on `ki-dialog`
+  (`detail.reason`: `'method' | 'escape' | 'backdrop'`), and `ki-dismiss` on
+  `ki-alert` (`detail` is `null`).
+
+Both kinds are ordinary DOM events, so `addEventListener` always works —
+that is the whole framework contract:
+
+```ts
+const tabs = document.querySelector('ki-tabs');
+
+tabs?.addEventListener('ki-change', (event) => {
+  console.log((event as CustomEvent<{ value: string }>).detail.value);
+});
+```
+
+## React 19
+
+React 19 supports custom elements out of the box: props that match a property
+on the element instance are assigned as properties, everything else becomes
+an attribute (during SSR, primitive props render as attributes and
+non-primitives are omitted). Events bind declaratively with `on` + the
+literal event name — **casing and dashes preserved** — so `onki-dismiss`
+listens for `ki-dismiss`:
+
+```tsx
+// main.tsx — register once, at the entry point
+import { defineCustomElement as defineKiAlert } from '@kimen/elements/ki-alert';
+import '@kimen/tokens/css';
+
+defineKiAlert();
+```
+
+```tsx
+// App.tsx
+export function App() {
+  return (
+    <ki-alert tone="warning" dismissible onki-dismiss={() => console.log('acknowledged')}>
+      Your session expires in five minutes.
+    </ki-alert>
+  );
+}
+```
+
+TypeScript does not know `ki-*` tags until you declare them. The element
+interfaces exported from each subpath carry the prop types, so a small
+augmentation gives you typed JSX (the generated
+`generated/custom-elements.json` manifest is the machine-readable contract if
+you prefer to generate these):
+
+```tsx
+// ki-elements.d.ts
+import type { DetailedHTMLProps, HTMLAttributes } from 'react';
+import type { KiAlert } from '@kimen/elements/ki-alert';
+
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'ki-alert': DetailedHTMLProps<HTMLAttributes<KiAlert>, KiAlert> & {
+        tone?: KiAlert['tone'];
+        dismissible?: boolean;
+        'dismiss-label'?: string;
+        'onki-dismiss'?: (event: CustomEvent<null>) => void;
+      };
+    }
+  }
+}
+```
+
+## Vue 3
+
+Tell the template compiler that `ki-*` tags are custom elements so it neither
+warns nor tries to resolve them as Vue components:
+
+```ts
+// vite.config.ts
+import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('ki-'),
+        },
+      },
+    }),
+  ],
+});
+```
+
+(Apps using the runtime compiler set the same predicate on
+`app.config.compilerOptions.isCustomElement`.)
+
+Then bind props with `:` and listen with `@` — `@change` hears the composed
+native event, and `ki-*` events bind the same way (`@ki-close`,
+`@ki-change`):
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import type { KiInput } from '@kimen/elements/ki-input';
+import { defineCustomElement as defineKiInput } from '@kimen/elements/ki-input';
+import '@kimen/tokens/css';
+
+defineKiInput();
+
+const email = ref('');
+const onChange = (event: Event) => {
+  email.value = (event.target as KiInput).value;
+};
+</script>
+
+<template>
+  <ki-input label="Work email" type="email" :value="email" @change="onChange" />
+</template>
+```
+
+## Angular
+
+Add `CUSTOM_ELEMENTS_SCHEMA` so the compiler accepts non-Angular tags, bind
+properties with `[...]` and events with `(...)` — Angular attaches them with
+`addEventListener`, so `(change)` and `(ki-close)` both work as-is:
+
+```ts
+// main.ts — register once, at the entry point
+import { defineCustomElement as defineKiSwitch } from '@kimen/elements/ki-switch';
+
+defineKiSwitch();
+```
+
+```ts
+// notifications.component.ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import type { KiSwitch } from '@kimen/elements/ki-switch';
+
+@Component({
+  selector: 'app-notifications',
+  standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `
+    <ki-switch [checked]="enabled" (change)="onChange($event)">Email notifications</ki-switch>
+  `,
+})
+export class NotificationsComponent {
+  enabled = true;
+
+  onChange(event: Event): void {
+    this.enabled = (event.target as KiSwitch).checked;
+  }
+}
+```
+
+Load the token stylesheet globally, for example via `angular.json`:
+
+```json
+"styles": ["src/styles.css", "node_modules/@kimen/tokens/dist/css/tokens.css"]
+```
+
+## Native form participation — no bindings required
+
+Kimen form controls are form-associated custom elements (`ElementInternals`,
+constitution Art. IV): they contribute `name`/`value` to their owning
+`<form>`, run native constraint validation (`required`), follow `form.reset()`
+and appear in `FormData` — exactly like native inputs. Because this is the
+platform, it behaves identically in React, Vue, Angular and plain HTML; you
+do not need framework form bindings for submission:
+
+```html
+<form id="signup">
+  <ki-input label="Work email" name="email" type="email" required></ki-input>
+  <ki-checkbox name="tos" required>I accept the terms</ki-checkbox>
+  <ki-button variant="primary">Create account</ki-button>
+</form>
+
+<script type="module">
+  document.querySelector('#signup').addEventListener('submit', (event) => {
+    event.preventDefault();
+    console.log(Object.fromEntries(new FormData(event.target)));
+  });
+</script>
+```
+
+(`ki-button` submits by default — its `type` is `submit`, matching the native
+button; cancel submissions from the form's `submit` event, not from `click`.)

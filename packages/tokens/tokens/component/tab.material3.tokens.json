@@ -87,16 +87,16 @@
       },
       "indicator": {
         "size": {
-          "$value": "{ki.space.xxs}",
-          "$description": "Material 3 dimension used by the tab component for indicator size."
+          "$value": "{ki.foundation.material3.component.tab.active-indicator-height}",
+          "$description": "M3 md.comp.primary-navigation-tab.active-indicator.height: 3dp indicator thickness."
         },
         "color": {
           "$value": "{ki.outline.primary-high-em}",
-          "$description": "Material 3 color used by the tab component for indicator color."
+          "$description": "M3 md.comp.primary-navigation-tab.active-indicator.color: md.sys.color.primary."
         },
         "radius": {
           "$value": "{ki.radius.round}",
-          "$description": "Material 3 dimension used by the tab component for indicator radius."
+          "$description": "Approximation of md.comp.primary-navigation-tab.active-indicator.shape (3dp top corners only): corner.full rounds all corners of the 3px bar; exact top-only rounding would need dedicated component CSS support."
         }
       }
     }

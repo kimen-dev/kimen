@@ -622,6 +622,206 @@
         }
       }
     },
+    "blur": {
+      "$type": "dimension",
+      "none": {
+        "$value": "0px",
+        "$description": "Blur/0: backdrop blur disabled. Themes without glass surfaces (material3) alias the component backdrop blur here."
+      },
+      "8": {
+        "$value": "4px",
+        "$description": "MarsUI Blur/8 (Figma radius 8 → CSS blur 4px, official export convention radius/2)."
+      },
+      "16": {
+        "$value": "8px",
+        "$description": "MarsUI Blur/16 (Figma radius 16 → CSS blur 8px, official export convention radius/2)."
+      },
+      "24": {
+        "$value": "12px",
+        "$description": "MarsUI Blur/24 (Figma radius 24 → CSS blur 12px, official export convention radius/2)."
+      },
+      "48": {
+        "$value": "24px",
+        "$description": "MarsUI Blur/48 (Figma radius 48 → CSS blur 24px, official export convention radius/2)."
+      },
+      "96": {
+        "$value": "48px",
+        "$description": "MarsUI Blur/96 (Figma radius 96 → CSS blur 48px, official export convention radius/2)."
+      }
+    },
+    "shadow": {
+      "$type": "dimension",
+      "distance": {
+        "1": {
+          "$value": "1px",
+          "$description": "MarsUI Elevation/e1 layer geometry: 1px offset/blur."
+        },
+        "2": {
+          "$value": "3px",
+          "$description": "MarsUI Elevation/e2 layer geometry: 3px offset/blur (also the Component_effect inner-highlight offset/blur)."
+        },
+        "3": {
+          "$value": "20px",
+          "$description": "MarsUI Elevation/e3 layer geometry: 20px offset/blur."
+        },
+        "4": {
+          "$value": "32px",
+          "$description": "MarsUI Elevation/e4 layer geometry: 32px offset/blur."
+        },
+        "5": {
+          "$value": "56px",
+          "$description": "MarsUI Elevation/e5 layer geometry: 56px offset/blur."
+        },
+        "6": {
+          "$value": "72px",
+          "$description": "MarsUI Elevation/e6 layer geometry: 72px offset/blur."
+        }
+      },
+      "spread": {
+        "1": {
+          "$value": "-0.5px",
+          "$description": "MarsUI Elevation/e1 layer spread: -0.5px."
+        },
+        "2": {
+          "$value": "-1.5px",
+          "$description": "MarsUI Elevation/e2 layer spread: -1.5px."
+        },
+        "3": {
+          "$value": "-12px",
+          "$description": "MarsUI Elevation/e3 layer spread: -12px."
+        },
+        "4": {
+          "$value": "-16px",
+          "$description": "MarsUI Elevation/e4 layer spread: -16px."
+        },
+        "5": {
+          "$value": "-28px",
+          "$description": "MarsUI Elevation/e5 layer spread: -28px."
+        },
+        "6": {
+          "$value": "-36px",
+          "$description": "MarsUI Elevation/e6 layer spread: -36px."
+        }
+      },
+      "effect-y": {
+        "$value": "2px",
+        "$description": "MarsUI Component_effect/secondary drop and inner-highlight offset: 2px."
+      },
+      "effect-blur": {
+        "$value": "1.5px",
+        "$description": "MarsUI Component_effect/secondary_default drop blur: 1.5px."
+      },
+      "ring": {
+        "$value": "3px",
+        "$description": "MarsUI Focus/*: 3px focus-ring spread."
+      },
+      "inner": {
+        "$type": "shadow",
+        "primary-default": {
+          "$value": {
+            "color": "{ki.color.white.12}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            },
+            "inset": true
+          },
+          "$description": "MarsUI Component_effect/primary_default inner highlight: inset White/12 0/3/3."
+        },
+        "primary-hover": {
+          "$value": {
+            "color": "{ki.color.white.18}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            },
+            "inset": true
+          },
+          "$description": "MarsUI Component_effect/primary_hover inner highlight: inset White/18 0/3/3."
+        },
+        "secondary-default": {
+          "$value": {
+            "color": "{ki.color.white.3}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": "{ki.shadow.effect-y}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            },
+            "inset": true
+          },
+          "$description": "MarsUI Component_effect/secondary_default inner highlight: inset White/3 0/2/3."
+        },
+        "secondary-hover": {
+          "$value": {
+            "color": "{ki.color.white.8}",
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": "{ki.shadow.effect-y}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            },
+            "inset": true
+          },
+          "$description": "MarsUI Component_effect/secondary_hover inner highlight: inset White/8 0/2/3."
+        }
+      }
+    },
+    "size": {
+      "$type": "dimension",
+      "border": {
+        "hairline": {
+          "$value": "1px",
+          "$description": "MarsUI hairline stroke: 1px divider/border width."
+        }
+      },
+      "surface": {
+        "xxs": {
+          "$value": "18rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Floating hint surfaces such as tooltips."
+        },
+        "xs": {
+          "$value": "20rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space). Small floating surfaces such as listboxes."
+        },
+        "sm": {
+          "$value": "24rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space)."
+        },
+        "md": {
+          "$value": "32rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space)."
+        },
+        "lg": {
+          "$value": "40rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space)."
+        },
+        "xl": {
+          "$value": "48rem",
+          "$description": "Surface size scale (MarsUI brief: sizes for large surfaces in rem, decoupled from ki.space)."
+        }
+      }
+    },
     "foundation": {
       "migrated": {
         "modes-material3-dark": {
@@ -824,38 +1024,6 @@
               "serif": {
                 "$type": "fontFamily",
                 "$value": ["Roboto Slab", "Georgia", "serif"]
-              }
-            },
-            "letter-spacing": {
-              "lg": {
-                "$type": "dimension",
-                "$value": "-0.0069em"
-              },
-              "md": {
-                "$type": "dimension",
-                "$value": "0.00625em"
-              },
-              "sm": {
-                "$type": "dimension",
-                "$value": "0.0179em"
-              },
-              "spaced-out": {
-                "$type": "dimension",
-                "$value": "0.045em"
-              },
-              "xs": {
-                "$type": "dimension",
-                "$value": "0.03125em"
-              }
-            },
-            "size": {
-              "heading-5": {
-                "$type": "dimension",
-                "$value": "2.8125rem"
-              },
-              "heading-6": {
-                "$type": "dimension",
-                "$value": "3.5625rem"
               }
             }
           }
@@ -1400,96 +1568,836 @@
               "$value": "0.0625rem"
             }
           }
+        }
+      },
+      "material3": {
+        "palette": {
+          "$type": "color",
+          "$description": "Material 3 baseline reference tonal palettes (md.ref.palette.*), standard tones 0-100. The primary palette already ships as the material3 brand ramp.",
+          "secondary": {
+            "0": {
+              "$value": "#000000"
+            },
+            "10": {
+              "$value": "#1d192b"
+            },
+            "20": {
+              "$value": "#332d41"
+            },
+            "30": {
+              "$value": "#4a4458"
+            },
+            "40": {
+              "$value": "#625b71"
+            },
+            "50": {
+              "$value": "#7a7289"
+            },
+            "60": {
+              "$value": "#958da5"
+            },
+            "70": {
+              "$value": "#b0a7c0"
+            },
+            "80": {
+              "$value": "#ccc2dc"
+            },
+            "90": {
+              "$value": "#e8def8"
+            },
+            "95": {
+              "$value": "#f6edff"
+            },
+            "99": {
+              "$value": "#fffbfe"
+            },
+            "100": {
+              "$value": "#ffffff"
+            },
+            "$description": "M3 md.ref.palette.secondary (baseline key color #625b71)."
+          },
+          "tertiary": {
+            "0": {
+              "$value": "#000000"
+            },
+            "10": {
+              "$value": "#31111d"
+            },
+            "20": {
+              "$value": "#492532"
+            },
+            "30": {
+              "$value": "#633b48"
+            },
+            "40": {
+              "$value": "#7d5260"
+            },
+            "50": {
+              "$value": "#986977"
+            },
+            "60": {
+              "$value": "#b58392"
+            },
+            "70": {
+              "$value": "#d29dac"
+            },
+            "80": {
+              "$value": "#efb8c8"
+            },
+            "90": {
+              "$value": "#ffd8e4"
+            },
+            "95": {
+              "$value": "#ffecf1"
+            },
+            "99": {
+              "$value": "#fffbfa"
+            },
+            "100": {
+              "$value": "#ffffff"
+            },
+            "$description": "M3 md.ref.palette.tertiary (baseline key color #7d5260)."
+          },
+          "error": {
+            "0": {
+              "$value": "#000000"
+            },
+            "10": {
+              "$value": "#410e0b"
+            },
+            "20": {
+              "$value": "#601410"
+            },
+            "30": {
+              "$value": "#8c1d18"
+            },
+            "40": {
+              "$value": "#b3261e"
+            },
+            "50": {
+              "$value": "#dc362e"
+            },
+            "60": {
+              "$value": "#e46962"
+            },
+            "70": {
+              "$value": "#ec928e"
+            },
+            "80": {
+              "$value": "#f2b8b5"
+            },
+            "90": {
+              "$value": "#f9dedc"
+            },
+            "95": {
+              "$value": "#fceeee"
+            },
+            "99": {
+              "$value": "#fffbf9"
+            },
+            "100": {
+              "$value": "#ffffff"
+            },
+            "$description": "M3 md.ref.palette.error (baseline key color #b3261e)."
+          },
+          "neutral": {
+            "0": {
+              "$value": "#000000"
+            },
+            "10": {
+              "$value": "#1d1b20"
+            },
+            "20": {
+              "$value": "#322f35"
+            },
+            "30": {
+              "$value": "#48464c"
+            },
+            "40": {
+              "$value": "#605d64"
+            },
+            "50": {
+              "$value": "#79767d"
+            },
+            "60": {
+              "$value": "#938f96"
+            },
+            "70": {
+              "$value": "#aea9b1"
+            },
+            "80": {
+              "$value": "#cac5cd"
+            },
+            "90": {
+              "$value": "#e6e0e9"
+            },
+            "95": {
+              "$value": "#f5eff7"
+            },
+            "99": {
+              "$value": "#fffbff"
+            },
+            "100": {
+              "$value": "#ffffff"
+            },
+            "$description": "M3 md.ref.palette.neutral (baseline). Standard tones only; the extended surface tones (4, 6, 12, 17, 22, 24, 87, 92, 94, 96, 98) stay in the migrated material3 primitives."
+          },
+          "neutral-variant": {
+            "0": {
+              "$value": "#000000"
+            },
+            "10": {
+              "$value": "#1d1a22"
+            },
+            "20": {
+              "$value": "#322f37"
+            },
+            "30": {
+              "$value": "#49454f"
+            },
+            "40": {
+              "$value": "#605d66"
+            },
+            "50": {
+              "$value": "#79747e"
+            },
+            "60": {
+              "$value": "#938f99"
+            },
+            "70": {
+              "$value": "#aea9b4"
+            },
+            "80": {
+              "$value": "#cac4d0"
+            },
+            "90": {
+              "$value": "#e7e0ec"
+            },
+            "95": {
+              "$value": "#f5eefa"
+            },
+            "99": {
+              "$value": "#fffbfe"
+            },
+            "100": {
+              "$value": "#ffffff"
+            },
+            "$description": "M3 md.ref.palette.neutral-variant (baseline)."
+          }
         },
-        "component-card-material3": {
-          "card": {
-            "elevation": {
-              "$type": "shadow",
-              "$value": [
-                {
-                  "color": "{ki.color.black.24}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": {
-                    "value": 1,
-                    "unit": "px"
-                  },
-                  "blur": {
-                    "value": 2,
-                    "unit": "px"
-                  },
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
-                },
-                {
-                  "color": "{ki.color.black.8}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": {
-                    "value": 2,
-                    "unit": "px"
-                  },
-                  "blur": {
-                    "value": 6,
-                    "unit": "px"
-                  },
-                  "spread": {
-                    "value": 2,
-                    "unit": "px"
-                  }
-                }
-              ]
+        "state-layer": {
+          "$type": "color",
+          "$description": "M3 state-layer colors: md.sys.state.{hover,focus,pressed,dragged}.state-layer-opacity (8% / 12% / 12% / 16%) of md.sys.color.on-surface (light #1d1b20 = neutral10, dark #e6e0e9 = neutral90). Pressed shares the focus value (both 12%).",
+          "light": {
+            "hover": {
+              "$value": "#1d1b2014"
+            },
+            "focus": {
+              "$value": "#1d1b201f"
+            },
+            "dragged": {
+              "$value": "#1d1b2029"
+            }
+          },
+          "dark": {
+            "hover": {
+              "$value": "#e6e0e914"
+            },
+            "focus": {
+              "$value": "#e6e0e91f"
+            },
+            "dragged": {
+              "$value": "#e6e0e929"
             }
           }
         },
-        "component-dialog-material3": {
-          "dialog": {
-            "motion": {
-              "duration": {
-                "$type": "duration",
-                "$value": "200ms"
-              },
-              "easing": {
-                "$type": "cubicBezier",
-                "$value": [0, 0, 0.2, 1]
-              }
+        "shape": {
+          "corner": {
+            "$type": "dimension",
+            "$description": "M3 baseline shape scale (md.sys.shape.corner.*).",
+            "none": {
+              "$value": "0px",
+              "$description": "M3 md.sys.shape.corner.none (0dp)."
             },
-            "shadow": {
-              "$type": "shadow",
-              "$value": [
-                {
-                  "color": "{ki.color.black.8}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": "{ki.space.xxs}",
-                  "blur": "{ki.space.xs}",
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
+            "extra-small": {
+              "$value": "4px",
+              "$description": "M3 md.sys.shape.corner.extra-small (4dp)."
+            },
+            "small": {
+              "$value": "8px",
+              "$description": "M3 md.sys.shape.corner.small (8dp)."
+            },
+            "medium": {
+              "$value": "12px",
+              "$description": "M3 md.sys.shape.corner.medium (12dp)."
+            },
+            "large": {
+              "$value": "16px",
+              "$description": "M3 md.sys.shape.corner.large (16dp)."
+            },
+            "extra-large": {
+              "$value": "28px",
+              "$description": "M3 md.sys.shape.corner.extra-large (28dp)."
+            },
+            "full": {
+              "$value": "9999px",
+              "$description": "M3 md.sys.shape.corner.full (pill)."
+            }
+          }
+        },
+        "typescale": {
+          "$description": "M3 baseline type scale (md.sys.typescale.*), px compiled to rem/em. Role weights: display/headline/title-large/body use regular (400); title-medium/title-small/label use medium (500). The display-extended-* steps are a Kimen extension beyond display-large (M3 defines no larger role) so the ki display-1..3 hierarchy survives in the M3 rhythm.",
+          "size": {
+            "$type": "dimension",
+            "display-large": {
+              "$value": "3.5625rem",
+              "$description": "M3 md.sys.typescale.display-large.size (57px)."
+            },
+            "display-medium": {
+              "$value": "2.8125rem",
+              "$description": "M3 md.sys.typescale.display-medium.size (45px)."
+            },
+            "display-small": {
+              "$value": "2.25rem",
+              "$description": "M3 md.sys.typescale.display-small.size (36px)."
+            },
+            "headline-large": {
+              "$value": "2rem",
+              "$description": "M3 md.sys.typescale.headline-large.size (32px)."
+            },
+            "headline-medium": {
+              "$value": "1.75rem",
+              "$description": "M3 md.sys.typescale.headline-medium.size (28px)."
+            },
+            "headline-small": {
+              "$value": "1.5rem",
+              "$description": "M3 md.sys.typescale.headline-small.size (24px)."
+            },
+            "title-large": {
+              "$value": "1.375rem",
+              "$description": "M3 md.sys.typescale.title-large.size (22px)."
+            },
+            "title-medium": {
+              "$value": "1rem",
+              "$description": "M3 md.sys.typescale.title-medium.size (16px)."
+            },
+            "title-small": {
+              "$value": "0.875rem",
+              "$description": "M3 md.sys.typescale.title-small.size (14px)."
+            },
+            "body-large": {
+              "$value": "1rem",
+              "$description": "M3 md.sys.typescale.body-large.size (16px)."
+            },
+            "body-medium": {
+              "$value": "0.875rem",
+              "$description": "M3 md.sys.typescale.body-medium.size (14px)."
+            },
+            "body-small": {
+              "$value": "0.75rem",
+              "$description": "M3 md.sys.typescale.body-small.size (12px)."
+            },
+            "label-large": {
+              "$value": "0.875rem",
+              "$description": "M3 md.sys.typescale.label-large.size (14px)."
+            },
+            "label-medium": {
+              "$value": "0.75rem",
+              "$description": "M3 md.sys.typescale.label-medium.size (12px)."
+            },
+            "label-small": {
+              "$value": "0.6875rem",
+              "$description": "M3 md.sys.typescale.label-small.size (11px)."
+            },
+            "display-extended-1": {
+              "$value": "4rem",
+              "$description": "Kimen extension beyond M3 display-large (64px; M3 ends at 57px)."
+            },
+            "display-extended-2": {
+              "$value": "4.5rem",
+              "$description": "Kimen extension beyond M3 display-large (72px)."
+            },
+            "display-extended-3": {
+              "$value": "5rem",
+              "$description": "Kimen extension beyond M3 display-large (80px)."
+            }
+          },
+          "line-height": {
+            "$type": "dimension",
+            "display-large": {
+              "$value": "4rem",
+              "$description": "M3 md.sys.typescale.display-large.line-height (64px)."
+            },
+            "display-medium": {
+              "$value": "3.25rem",
+              "$description": "M3 md.sys.typescale.display-medium.line-height (52px)."
+            },
+            "display-small": {
+              "$value": "2.75rem",
+              "$description": "M3 md.sys.typescale.display-small.line-height (44px)."
+            },
+            "headline-large": {
+              "$value": "2.5rem",
+              "$description": "M3 md.sys.typescale.headline-large.line-height (40px)."
+            },
+            "headline-medium": {
+              "$value": "2.25rem",
+              "$description": "M3 md.sys.typescale.headline-medium.line-height (36px)."
+            },
+            "headline-small": {
+              "$value": "2rem",
+              "$description": "M3 md.sys.typescale.headline-small.line-height (32px)."
+            },
+            "title-large": {
+              "$value": "1.75rem",
+              "$description": "M3 md.sys.typescale.title-large.line-height (28px)."
+            },
+            "title-medium": {
+              "$value": "1.5rem",
+              "$description": "M3 md.sys.typescale.title-medium.line-height (24px)."
+            },
+            "title-small": {
+              "$value": "1.25rem",
+              "$description": "M3 md.sys.typescale.title-small.line-height (20px)."
+            },
+            "body-large": {
+              "$value": "1.5rem",
+              "$description": "M3 md.sys.typescale.body-large.line-height (24px)."
+            },
+            "body-medium": {
+              "$value": "1.25rem",
+              "$description": "M3 md.sys.typescale.body-medium.line-height (20px)."
+            },
+            "body-small": {
+              "$value": "1rem",
+              "$description": "M3 md.sys.typescale.body-small.line-height (16px)."
+            },
+            "label-large": {
+              "$value": "1.25rem",
+              "$description": "M3 md.sys.typescale.label-large.line-height (20px)."
+            },
+            "label-medium": {
+              "$value": "1rem",
+              "$description": "M3 md.sys.typescale.label-medium.line-height (16px)."
+            },
+            "label-small": {
+              "$value": "1rem",
+              "$description": "M3 md.sys.typescale.label-small.line-height (16px)."
+            },
+            "display-extended-1": {
+              "$value": "4.5rem",
+              "$description": "Kimen extension beyond M3 display-large (72px)."
+            },
+            "display-extended-2": {
+              "$value": "5rem",
+              "$description": "Kimen extension beyond M3 display-large (80px)."
+            },
+            "display-extended-3": {
+              "$value": "5.5rem",
+              "$description": "Kimen extension beyond M3 display-large (88px)."
+            }
+          },
+          "tracking": {
+            "$type": "dimension",
+            "$description": "M3 md.sys.typescale.<role>.tracking compiled from px to em at the role size.",
+            "display-large": {
+              "$value": "-0.0044em",
+              "$description": "M3 md.sys.typescale.display-large.tracking (-0.25px at 57px)."
+            },
+            "display-medium": {
+              "$value": "0em",
+              "$description": "M3 md.sys.typescale.display-medium.tracking (0px)."
+            },
+            "display-small": {
+              "$value": "0em",
+              "$description": "M3 md.sys.typescale.display-small.tracking (0px)."
+            },
+            "headline-large": {
+              "$value": "0em",
+              "$description": "M3 md.sys.typescale.headline-large.tracking (0px)."
+            },
+            "headline-medium": {
+              "$value": "0em",
+              "$description": "M3 md.sys.typescale.headline-medium.tracking (0px)."
+            },
+            "headline-small": {
+              "$value": "0em",
+              "$description": "M3 md.sys.typescale.headline-small.tracking (0px)."
+            },
+            "title-large": {
+              "$value": "0em",
+              "$description": "M3 md.sys.typescale.title-large.tracking (0px)."
+            },
+            "title-medium": {
+              "$value": "0.009375em",
+              "$description": "M3 md.sys.typescale.title-medium.tracking (0.15px at 16px)."
+            },
+            "title-small": {
+              "$value": "0.0071em",
+              "$description": "M3 md.sys.typescale.title-small.tracking (0.1px at 14px)."
+            },
+            "body-large": {
+              "$value": "0.03125em",
+              "$description": "M3 md.sys.typescale.body-large.tracking (0.5px at 16px)."
+            },
+            "body-medium": {
+              "$value": "0.0179em",
+              "$description": "M3 md.sys.typescale.body-medium.tracking (0.25px at 14px)."
+            },
+            "body-small": {
+              "$value": "0.0333em",
+              "$description": "M3 md.sys.typescale.body-small.tracking (0.4px at 12px)."
+            },
+            "label-large": {
+              "$value": "0.0071em",
+              "$description": "M3 md.sys.typescale.label-large.tracking (0.1px at 14px)."
+            },
+            "label-medium": {
+              "$value": "0.0417em",
+              "$description": "M3 md.sys.typescale.label-medium.tracking (0.5px at 12px)."
+            },
+            "label-small": {
+              "$value": "0.0455em",
+              "$description": "M3 md.sys.typescale.label-small.tracking (0.5px at 11px)."
+            }
+          },
+          "weight": {
+            "$type": "fontWeight",
+            "regular": {
+              "$value": 400,
+              "$description": "M3 md.ref.typeface.weight-regular (display, headline, title-large, body)."
+            },
+            "medium": {
+              "$value": 500,
+              "$description": "M3 md.ref.typeface.weight-medium (title-medium, title-small, label)."
+            },
+            "bold": {
+              "$value": 700,
+              "$description": "M3 md.ref.typeface.weight-bold (emphasis only; no baseline role uses it)."
+            }
+          }
+        },
+        "elevation": {
+          "$description": "M3 baseline elevation (md.sys.elevation.level1-5): a key shadow (black 30%) plus an ambient shadow (black 15%). M3 dark keeps the same shadow geometry and expresses elevation through surface tint instead.",
+          "key-color": {
+            "$type": "color",
+            "$value": "#0000004d",
+            "$description": "M3 key (umbra) shadow color: md.sys.color.shadow (#000000) at 30%."
+          },
+          "ambient-color": {
+            "$type": "color",
+            "$value": "#00000026",
+            "$description": "M3 ambient (penumbra) shadow color: md.sys.color.shadow (#000000) at 15%."
+          },
+          "level-1": {
+            "$type": "shadow",
+            "$value": [
+              {
+                "color": "{ki.foundation.material3.elevation.key-color}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
                 },
-                {
-                  "color": "{ki.color.black.5}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": "{ki.space.xs}",
-                  "blur": "{ki.space.md}",
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
+                "offsetY": {
+                  "value": 1,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 2,
+                  "unit": "px"
+                },
+                "spread": {
+                  "value": 0,
+                  "unit": "px"
                 }
-              ]
+              },
+              {
+                "color": "{ki.foundation.material3.elevation.ambient-color}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "offsetY": {
+                  "value": 1,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 3,
+                  "unit": "px"
+                },
+                "spread": {
+                  "value": 1,
+                  "unit": "px"
+                }
+              }
+            ],
+            "$description": "M3 md.sys.elevation.level1: key 0 1 2 0 (30%) + ambient 0 1 3 1 (15%)."
+          },
+          "level-2": {
+            "$type": "shadow",
+            "$value": [
+              {
+                "color": "{ki.foundation.material3.elevation.key-color}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "offsetY": {
+                  "value": 1,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 2,
+                  "unit": "px"
+                },
+                "spread": {
+                  "value": 0,
+                  "unit": "px"
+                }
+              },
+              {
+                "color": "{ki.foundation.material3.elevation.ambient-color}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "offsetY": {
+                  "value": 2,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 6,
+                  "unit": "px"
+                },
+                "spread": {
+                  "value": 2,
+                  "unit": "px"
+                }
+              }
+            ],
+            "$description": "M3 md.sys.elevation.level2: key 0 1 2 0 (30%) + ambient 0 2 6 2 (15%)."
+          },
+          "level-3": {
+            "$type": "shadow",
+            "$value": [
+              {
+                "color": "{ki.foundation.material3.elevation.key-color}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "offsetY": {
+                  "value": 1,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 3,
+                  "unit": "px"
+                },
+                "spread": {
+                  "value": 0,
+                  "unit": "px"
+                }
+              },
+              {
+                "color": "{ki.foundation.material3.elevation.ambient-color}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "offsetY": {
+                  "value": 4,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 8,
+                  "unit": "px"
+                },
+                "spread": {
+                  "value": 3,
+                  "unit": "px"
+                }
+              }
+            ],
+            "$description": "M3 md.sys.elevation.level3: key 0 1 3 0 (30%) + ambient 0 4 8 3 (15%)."
+          },
+          "level-4": {
+            "$type": "shadow",
+            "$value": [
+              {
+                "color": "{ki.foundation.material3.elevation.key-color}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "offsetY": {
+                  "value": 2,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 3,
+                  "unit": "px"
+                },
+                "spread": {
+                  "value": 0,
+                  "unit": "px"
+                }
+              },
+              {
+                "color": "{ki.foundation.material3.elevation.ambient-color}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "offsetY": {
+                  "value": 6,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 10,
+                  "unit": "px"
+                },
+                "spread": {
+                  "value": 4,
+                  "unit": "px"
+                }
+              }
+            ],
+            "$description": "M3 md.sys.elevation.level4: key 0 2 3 0 (30%) + ambient 0 6 10 4 (15%)."
+          },
+          "level-5": {
+            "$type": "shadow",
+            "$value": [
+              {
+                "color": "{ki.foundation.material3.elevation.key-color}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "offsetY": {
+                  "value": 4,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 4,
+                  "unit": "px"
+                },
+                "spread": {
+                  "value": 0,
+                  "unit": "px"
+                }
+              },
+              {
+                "color": "{ki.foundation.material3.elevation.ambient-color}",
+                "offsetX": {
+                  "value": 0,
+                  "unit": "px"
+                },
+                "offsetY": {
+                  "value": 8,
+                  "unit": "px"
+                },
+                "blur": {
+                  "value": 12,
+                  "unit": "px"
+                },
+                "spread": {
+                  "value": 6,
+                  "unit": "px"
+                }
+              }
+            ],
+            "$description": "M3 md.sys.elevation.level5: key 0 4 4 0 (30%) + ambient 0 8 12 6 (15%)."
+          }
+        },
+        "motion": {
+          "duration": {
+            "$type": "duration",
+            "$description": "M3 baseline duration scale (md.sys.motion.duration.*).",
+            "short-1": {
+              "$value": "50ms",
+              "$description": "M3 md.sys.motion.duration.short1."
+            },
+            "short-2": {
+              "$value": "100ms",
+              "$description": "M3 md.sys.motion.duration.short2."
+            },
+            "short-3": {
+              "$value": "150ms",
+              "$description": "M3 md.sys.motion.duration.short3."
+            },
+            "short-4": {
+              "$value": "200ms",
+              "$description": "M3 md.sys.motion.duration.short4."
+            },
+            "medium-1": {
+              "$value": "250ms",
+              "$description": "M3 md.sys.motion.duration.medium1."
+            },
+            "medium-2": {
+              "$value": "300ms",
+              "$description": "M3 md.sys.motion.duration.medium2."
+            },
+            "medium-3": {
+              "$value": "350ms",
+              "$description": "M3 md.sys.motion.duration.medium3."
+            },
+            "medium-4": {
+              "$value": "400ms",
+              "$description": "M3 md.sys.motion.duration.medium4."
+            },
+            "long-1": {
+              "$value": "450ms",
+              "$description": "M3 md.sys.motion.duration.long1."
+            },
+            "long-2": {
+              "$value": "500ms",
+              "$description": "M3 md.sys.motion.duration.long2."
+            },
+            "long-3": {
+              "$value": "550ms",
+              "$description": "M3 md.sys.motion.duration.long3."
+            },
+            "long-4": {
+              "$value": "600ms",
+              "$description": "M3 md.sys.motion.duration.long4."
+            }
+          },
+          "easing": {
+            "$type": "cubicBezier",
+            "$description": "M3 baseline easing set (md.sys.motion.easing.*).",
+            "emphasized": {
+              "$value": [0.2, 0, 0, 1],
+              "$description": "M3 md.sys.motion.easing.emphasized (cubic-bezier approximation of the emphasized path)."
+            },
+            "emphasized-decelerate": {
+              "$value": [0.05, 0.7, 0.1, 1],
+              "$description": "M3 md.sys.motion.easing.emphasized-decelerate."
+            },
+            "emphasized-accelerate": {
+              "$value": [0.3, 0, 0.8, 0.15],
+              "$description": "M3 md.sys.motion.easing.emphasized-accelerate."
+            },
+            "standard": {
+              "$value": [0.2, 0, 0, 1],
+              "$description": "M3 md.sys.motion.easing.standard."
+            },
+            "standard-decelerate": {
+              "$value": [0, 0, 0, 1],
+              "$description": "M3 md.sys.motion.easing.standard-decelerate."
+            },
+            "standard-accelerate": {
+              "$value": [0.3, 0, 1, 1],
+              "$description": "M3 md.sys.motion.easing.standard-accelerate."
+            }
+          }
+        },
+        "component": {
+          "tab": {
+            "active-indicator-height": {
+              "$type": "dimension",
+              "$value": "3px",
+              "$description": "M3 md.comp.primary-navigation-tab.active-indicator.height: 3dp active tab indicator thickness."
             }
           }
         }
@@ -1499,6 +2407,14 @@
       "$type": "duration",
       "fast": {
         "$value": "120ms"
+      },
+      "moderate": {
+        "$value": "240ms",
+        "$description": "MarsUI motion scale: 2x the 120ms base, for medium transitions."
+      },
+      "slow": {
+        "$value": "360ms",
+        "$description": "MarsUI motion scale: 3x the 120ms base, for large or emphatic transitions."
       }
     },
     "easing": {
@@ -1508,6 +2424,10 @@
       },
       "out": {
         "$value": [0, 0, 0.58, 1]
+      },
+      "in": {
+        "$value": [0.42, 0, 1, 1],
+        "$description": "MarsUI accelerate curve: mirror of ki.easing.out (CSS ease-in)."
       }
     }
   }

@@ -1,0 +1,96 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-alert" />
+
+# ki-alert
+
+A persistent inline status message with token-backed tone semantics.
+
+**When to use** — show a persistent inline message about the state of a page
+or section, such as a failed save, completed operation, or service notice,
+that remains until the condition is resolved or the person dismisses it.
+Express severity with `tone`, never custom styling.
+
+**When NOT to use** — transient confirmations that expire on their own
+belong to the future `ki-toast`; tiny status descriptors attached to another
+element belong to `ki-badge`; blocking decisions belong to `ki-dialog`;
+inline field-level validation belongs to the form control.
+
+## Examples
+
+`tone` (default `neutral`) drives both the token-backed colors and the
+live-region urgency — `danger` and `warning` expose `role="alert"`, the
+rest expose `role="status"`. Unknown values keep rendering with the neutral
+appearance:
+
+```html
+<ki-alert tone="info">Scheduled maintenance on Saturday from 02:00 UTC.</ki-alert>
+<ki-alert tone="success">Your changes were saved.</ki-alert>
+<ki-alert tone="danger">Payment failed. Update your billing details.</ki-alert>
+```
+
+The optional `heading` renders emphasized text before the message inside the
+live region — it is a `strong` element, not a document heading, so it never
+changes page outline:
+
+```html
+<ki-alert tone="warning" heading="Storage almost full">
+  You are using 92% of your plan.
+</ki-alert>
+```
+
+## Recipe: dismissal and re-showing
+
+`dismissible` renders one native dismiss button (the alert adds no tab stop
+without it). `ki-dismiss` fires only for user activation — after the alert
+is hidden and focus has been handed to the next control; `detail` is `null`
+and the event is not cancelable. The reflected `dismissed` attribute is the
+state: applications may set or clear it, and clearing it re-shows the alert
+as a dynamic live-region appearance:
+
+```html
+<ki-alert id="save-status" tone="danger" heading="Save failed" dismissible>
+  Your changes could not be saved. Retry or copy your work elsewhere.
+</ki-alert>
+
+<script type="module">
+  const alert = document.getElementById('save-status');
+
+  alert.addEventListener('ki-dismiss', () => {
+    // User acknowledged; the alert is already hidden. Record it if needed.
+  });
+
+  // Later, when the condition recurs, re-show the same alert:
+  // alert.dismissed = false;
+</script>
+```
+
+Programmatic `dismissed` changes do not fire `ki-dismiss` — do not listen
+for them as dismissal events.
+
+## Customization
+
+| Token                       | Controls                            |
+| --------------------------- | ----------------------------------- |
+| `--ki-alert-success-bg`     | Success tone background             |
+| `--ki-alert-success-border` | Success tone border color           |
+| `--ki-alert-success-fg`     | Success tone text color             |
+| `--ki-alert-radius`         | Alert corner radius                 |
+| `--ki-alert-padding-inline` | Horizontal padding                  |
+
+Each tone has its own `--ki-alert-{tone}-{bg|border|fg}` triplet. Shadow
+parts: `::part(alert)` (outer surface), `::part(heading)` (rendered only
+when non-empty), `::part(message)` (body wrapper) and `::part(dismiss)`
+(native dismiss button, rendered only when dismissible).
+
+## Accessibility
+
+- Alerts that must be announced should be inserted dynamically, or re-shown
+  by clearing `dismissed`; alerts present at initial page load expose their
+  role, but platform announcement is not guaranteed.
+- The dismiss button sits outside the live-region boundary, so its
+  accessible name is not announced as part of the alert message; override
+  `dismiss-label` (default `'Dismiss'`) for localization — it is the
+  component's only built-in user-visible text.
+- Choose `tone` for the state it describes, not for looks: it selects
+  between `role="alert"` (interrupting) and `role="status"` (polite).

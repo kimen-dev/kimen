@@ -1,0 +1,100 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Accessibility" />
+
+# Accessibility
+
+Kimen's normative target is **WCAG 2.2 AA plus EN 301 549** (the EAA
+harmonized standard) — a constitutional, non-negotiable requirement, not a
+best effort. axe-core runs in CI with zero tolerated violations, and it is
+treated as the floor, not the proof: every new interaction pattern also gets
+a manual APG walkthrough documented in its PR. The structural rule behind
+every component: semantic HTML first, and **no ARIA is better than wrong
+ARIA** — ARIA appears only as part of a complete APG pattern.
+
+This page is the cross-cutting model. Each component page under
+*Docs → Components* documents its own specifics.
+
+## You own the accessible name
+
+Components never invent labels, so every accessible name is yours to provide
+— and required for valid usage:
+
+| Component | Naming surface |
+| --- | --- |
+| `ki-input`, `ki-textarea`, `ki-select` | `label` prop — mandatory; `placeholder` is never a label substitute |
+| `ki-radio-group` | `label` prop — unlabeled groups fail accessibility gates |
+| `ki-checkbox`, `ki-switch`, `ki-radio` | default slot — the label is the accessible-name source |
+| `ki-button` | default slot — the label; icon-only usage is unsupported |
+| `ki-progress` | `label` prop — name what is progressing (e.g. "Uploading report.pdf") |
+| `ki-dialog` | `heading` prop — APG modal dialogs require an accessible name |
+| `ki-tabs` | `label` prop — names the tablist |
+| `ki-alert` | `dismiss-label` prop — names the dismiss button |
+| `ki-tooltip` | `label` prop — becomes the trigger's accessible *description*, never its name |
+
+## Localizable strings — the library ships no language
+
+No component hardcodes user-visible text: your slotted content and label
+props are the words, so the library works in any language without an i18n
+layer. Default accessible labels are overridable props by constitutional rule
+(Art. IV). The single built-in user-visible string today is `ki-alert`'s
+default `Dismiss`; override it via `dismiss-label` whenever the document
+language is not English:
+
+```html
+<ki-alert tone="success" dismissible dismiss-label="Cerrar">Cambios guardados.</ki-alert>
+```
+
+## RTL by construction
+
+Layout uses **CSS logical properties only** — lint-enforced, with an RTL
+showcase in CI. `start`/`end` slots, paddings, label order and even
+`ki-switch` thumb travel follow the document's writing direction. There is no
+`dir` prop to pass and nothing to configure:
+
+```html
+<html dir="rtl">
+  <!-- every ki-* component follows; icons slotted as `start` lead the text -->
+</html>
+```
+
+## Motion respects the user
+
+`prefers-reduced-motion` is respected: components that animate (dialog,
+switch, checkbox, radio, progress) gate their transitions behind
+`@media (prefers-reduced-motion: no-preference)`, so a reduced-motion user
+gets instant state changes rather than "shorter" animation.
+
+## Focus is always visible — with a double ring
+
+Every component is fully keyboard operable with visible focus, and focus is
+never fully obscured. Focus indication is a **double mechanism**: an opaque
+indicator (the WCAG-solid part, meeting non-text contrast) plus a soft glow
+(a 3px spread ring at 40% alpha, exposed as the `--ki-*-focus-ring-shadow`
+tokens). Both are tokens: themes may restyle them, but they are part of the
+AA contract — restyle, never remove.
+
+## Contrast and pointer targets
+
+Token pairs meet **4.5:1 for text and 3:1 for non-text UI**, and pointer
+targets are at least **24×24px**. This is not a manual promise: an automated
+contrast check over the built stylesheets of both themes (onmars and
+material3) runs as a blocking CI gate (`pnpm --filter @kimen/tokens run
+contrast`). Where a theme's visual language diverges from AA on a non-text
+ornament, the divergence is declared in the spec, never silent.
+
+## Customizing without breaking it
+
+Reach for customization surfaces in this order (Art. VI):
+
+1. **Tokens** — reassign `--ki-*` custom properties at `:root` or on a
+   subtree. The a11y-relevant tokens (focus ring, text/surface pairs) are
+   part of the AA contract: re-check contrast when you re-theme.
+2. **`::part()`** — one-off structural tweaks. Avoid `display: none` on parts
+   that carry the accessible name or focus indicator.
+3. **Slots** — replace content entirely. Remember slotted content is often
+   the accessible-name source (buttons, checkboxes, switches): keep real text
+   in it, and mark purely decorative slotted icons with `aria-hidden="true"`.
+
+If a customization would need `!important`, that is an API bug — report it
+rather than working around it.

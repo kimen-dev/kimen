@@ -1,0 +1,108 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-dialog" />
+
+# ki-dialog
+
+A modal dialog for one interrupting decision or short focused task.
+
+**When to use** — destructive confirmations, blocking choices, and brief
+critical input that must be resolved before returning to the page. Always
+provide a `heading`, place actions in the `footer` slot, wire each footer
+action to `close()`, and in destructive confirmations put `autofocus` on
+the least destructive action.
+
+**When NOT to use** — non-blocking feedback (`ki-alert`, future `ki-toast`),
+supplementary hints (`ki-tooltip`), long forms or multi-step flows (navigate
+or use a future full-screen variant), menus, or pickers.
+
+## Examples
+
+The reflected `open` attribute is the only public source of truth — add it
+or call `show()` to open, remove it or call `close()` to close. When open,
+the native dialog enters the top layer and the page behind is inert:
+
+```html
+<ki-dialog heading="Session expired">
+  Sign in again to continue where you left off.
+  <ki-button slot="footer" variant="primary">Sign in</ki-button>
+</ki-dialog>
+```
+
+Low-risk dialogs may opt into backdrop light-dismiss. Boolean presence
+semantics apply: `close-on-backdrop="false"` still enables it — omit the
+attribute entirely for critical confirmations:
+
+```html
+<ki-dialog heading="Keyboard shortcuts" close-on-backdrop>
+  Press ? anywhere to reopen this reference.
+  <ki-button slot="footer">Got it</ki-button>
+</ki-dialog>
+```
+
+## Recipe: destructive confirmation with `ki-close` reason
+
+Footer actions never close the dialog automatically — wire each one to
+`close()`. After every close path the dialog fires `ki-close` (not
+cancelable — it is a post-close notification, never a veto point) whose
+`detail.reason` reports how it closed: `method` for `close()`/`open`
+removal, `escape` for the Escape key, `backdrop` for opt-in backdrop
+dismissal:
+
+```html
+<ki-button id="open-delete" tone="danger">Delete account…</ki-button>
+
+<ki-dialog id="confirm" heading="Delete account?">
+  This permanently removes your account and all project data.
+  <ki-button slot="footer" autofocus data-action="cancel">Cancel</ki-button>
+  <ki-button slot="footer" tone="danger" data-action="confirm">Delete</ki-button>
+</ki-dialog>
+
+<script type="module">
+  const dialog = document.getElementById('confirm');
+  let confirmed = false;
+
+  document.getElementById('open-delete').addEventListener('click', () => {
+    confirmed = false;
+    dialog.show();
+  });
+
+  for (const action of dialog.querySelectorAll('[data-action]')) {
+    action.addEventListener('click', () => {
+      confirmed = action.dataset.action === 'confirm';
+      dialog.close();
+    });
+  }
+
+  dialog.addEventListener('ki-close', (event) => {
+    // reason: 'method' | 'escape' | 'backdrop'
+    console.log('closed via', event.detail.reason, '— confirmed:', confirmed);
+  });
+</script>
+```
+
+## Customization
+
+| Token                      | Controls                          |
+| -------------------------- | --------------------------------- |
+| `--ki-dialog-max-width`    | Maximum dialog inline size        |
+| `--ki-dialog-bg`           | Dialog surface background         |
+| `--ki-dialog-radius`       | Dialog corner radius              |
+| `--ki-dialog-backdrop-bg`  | Backdrop scrim color              |
+| `--ki-dialog-shadow`       | Dialog elevation shadow           |
+
+Shadow parts: `::part(dialog)` (native dialog surface), `::part(heading)`
+(visible h2 title, rendered only when `heading` is non-empty),
+`::part(body)` (scrollable body region) and `::part(footer)` (action row,
+collapsed when empty).
+
+## Accessibility
+
+- Always provide a `heading` — it is the visible title and the accessible
+  name; APG modal dialogs require an accessible name.
+- Focus returns to the invoker through the native mechanism after close;
+  call `show()` from the control that should regain focus.
+- In destructive confirmations, put `autofocus` on the least destructive
+  footer action.
+- Do not set the internal native `dialog`'s `open` attribute; the host
+  attribute is the only public source of truth.

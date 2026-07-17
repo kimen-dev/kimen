@@ -18,12 +18,12 @@
         "$description": "Material 3 dimension used by the card component for border width."
       },
       "radius": {
-        "$value": "{ki.radius.xl}",
-        "$description": "Material 3 dimension used by the card component for radius."
+        "$value": "{ki.radius.component.lg}",
+        "$description": "M3 card container shape: md.sys.shape.corner.medium (12dp) via the material3 radius scale."
       },
       "elevation": {
-        "$value": "{ki.foundation.migrated.component-card-material3.card.elevation}",
-        "$description": "Material 3 shadow used by the card component for card elevation.",
+        "$value": "{ki.elevation.e1}",
+        "$description": "M3 elevated card container elevation: md.sys.elevation.level1 via ki.elevation.e1 (replaces the migrated M2-era shadow pair).",
         "$type": "shadow"
       },
       "gap": {

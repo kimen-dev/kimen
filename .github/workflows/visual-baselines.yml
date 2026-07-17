@@ -1,0 +1,80 @@
+# Visual baselines regenerate only on explicit founder dispatch. The linux
+# PNGs produced here are the sole versioned arbiters of the visual gate
+# (Art. X); the founder reviews the uploaded artifact and commits it — the
+# update is a human decision, never an automatic side effect.
+name: visual-baselines
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: visual-baselines-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            cdn.playwright.dev:443
+            playwright.azureedge.net:443
+            playwright.download.prss.microsoft.com:443
+            packages.microsoft.com:443
+            dl.google.com:443
+            azure.archive.ubuntu.com:80
+            storage.googleapis.com:443
+            archive.ubuntu.com:443
+            security.ubuntu.com:443
+
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      - name: Allocate isolated writable caches
+        run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
+
+      - name: Build packages
+        run: pnpm exec nx run-many -t build
+
+      # `--update=all` must bind its value with `=`: vitest's CLI declares
+      # `--update [type]`, so a bare `--update .visual.` would consume the
+      # file filter as the update TYPE and run the full unfiltered suite
+      # without updating anything. The `.visual.` positional then filters to
+      # the visual specs only.
+      - name: Regenerate linux visual baselines
+        run: >-
+          pnpm --filter @kimen/elements exec vitest run
+          --config vitest.browser.config.ts --update=all .visual.
+
+      - name: Upload baselines for founder review
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: visual-baselines-linux
+          path: packages/elements/browser-tests/__screenshots__/
+          if-no-files-found: error

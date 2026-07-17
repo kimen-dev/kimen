@@ -29,4 +29,50 @@ describe('ki-list mock-doc anatomy', () => {
     expect(root.getAttribute('variant')).toBe('two-line');
     expect(root.shadowRoot?.querySelector('[part="list"] > slot')?.tagName).toBe('SLOT');
   });
+
+  it('S1 keeps the items in source order through the single default slot', async () => {
+    const { root } = await render(
+      <ki-list>
+        <ki-list-item>Email</ki-list-item>
+        <ki-list-item>Notifications</ki-list-item>
+        <ki-list-item>Storage</ki-list-item>
+      </ki-list>,
+    );
+    // String() reconciles Stencil's bundled TS (textContent nullable) with
+    // the root type-aware lint (string in TS 6 lib.dom) — hence the local
+    // exception for the conversion rule (ki-badge.spec.tsx precedent).
+    const texts = [...root.querySelectorAll('ki-list-item')].map((item) =>
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
+      String(item.textContent).trim(),
+    );
+
+    expect(texts).toEqual(['Email', 'Notifications', 'Storage']);
+    expect(root.shadowRoot?.querySelectorAll('slot')).toHaveLength(1);
+  });
+
+  it('S6 exposes one listitem role per item under the list role', async () => {
+    const { root } = await render(
+      <ki-list>
+        <ki-list-item>Email</ki-list-item>
+        <ki-list-item>Notifications</ki-list-item>
+        <ki-list-item>Storage</ki-list-item>
+      </ki-list>,
+    );
+    const itemRoles = [...root.querySelectorAll('ki-list-item')].map((item) =>
+      item.getAttribute('role'),
+    );
+
+    expect(root.getAttribute('role')).toBe('list');
+    expect(itemRoles).toEqual(['listitem', 'listitem', 'listitem']);
+  });
+
+  it('S6 keeps an author-provided role instead of forcing the list default', async () => {
+    // Semantics ownership: the default role is structural only; an author role
+    // (e.g. presentation) must win so authors can opt out of list semantics.
+    const { root } = await render(
+      h('ki-list', { role: 'presentation' }, h('ki-list-item', null, 'Storage')),
+    );
+
+    expect(root.getAttribute('role')).toBe('presentation');
+  });
 });

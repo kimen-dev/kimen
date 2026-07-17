@@ -39,11 +39,11 @@
           "$description": "dimension used by the list component for item radius."
         },
         "divider-width": {
-          "$value": "{ki.space.zero}",
+          "$value": "{ki.size.border.hairline}",
           "$description": "dimension used by the list component for item divider width."
         },
         "divider-color": {
-          "$value": "{ki.outline.low-em}",
+          "$value": "{ki.outline.base-em}",
           "$description": "color used by the list component for item divider color."
         },
         "primary-font-size": {

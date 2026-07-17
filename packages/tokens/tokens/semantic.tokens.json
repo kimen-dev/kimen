@@ -136,6 +136,26 @@
         "$value": "{ki.color.brand.500-alpha-1}",
         "$description": "semantic color for surface primary base em alpha."
       },
+      "tint": {
+        "$value": "{ki.color.brand.500}",
+        "$description": "Surface tint color mixed into elevated surfaces. M3 md.sys.color.surface-tint (= primary; tone 40 light, 80 dark via the brand ramp). onmars: the brand accent — MarsUI elevation is shadow-based, so the tint stays the primary accent."
+      },
+      "secondary-med-em": {
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "Secondary accent surface. M3 md.sys.color.secondary (secondary tone 40 light / 80 dark). onmars is a single-accent theme: the secondary accent resolves to the primary accent surface."
+      },
+      "secondary-low-em": {
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Secondary container surface. M3 md.sys.color.secondary-container (secondary tone 90 light / 30 dark). onmars single-accent: resolves to the primary container equivalent."
+      },
+      "tertiary-med-em": {
+        "$value": "{ki.surface.primary-med-em}",
+        "$description": "Tertiary accent surface. M3 md.sys.color.tertiary (tertiary tone 40 light / 80 dark). onmars is a single-accent theme: the tertiary accent resolves to the primary accent surface."
+      },
+      "tertiary-low-em": {
+        "$value": "{ki.surface.primary-low-em}",
+        "$description": "Tertiary container surface. M3 md.sys.color.tertiary-container (tertiary tone 90 light / 30 dark). onmars single-accent: resolves to the primary container equivalent."
+      },
       "info-high-em": {
         "$value": "{ki.color.info.600}",
         "$description": "semantic color for surface info high em."
@@ -311,6 +331,22 @@
         "$value": "{ki.color.brand.secondary-text-on-primary-light}",
         "$description": "semantic color for text secondary on primary light."
       },
+      "primary-on-secondary": {
+        "$value": "{ki.text.primary-on-primary}",
+        "$description": "Primary-emphasis text on the secondary accent surface. M3 md.sys.color.on-secondary (secondary tone 100 light / 20 dark). onmars single-accent: resolves to text primary on primary."
+      },
+      "primary-on-secondary-light": {
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Primary-emphasis text on the secondary container surface. M3 md.sys.color.on-secondary-container (secondary tone 10 light / 90 dark). onmars single-accent: resolves to text primary on primary light."
+      },
+      "primary-on-tertiary": {
+        "$value": "{ki.text.primary-on-primary}",
+        "$description": "Primary-emphasis text on the tertiary accent surface. M3 md.sys.color.on-tertiary (tertiary tone 100 light / 20 dark). onmars single-accent: resolves to text primary on primary."
+      },
+      "primary-on-tertiary-light": {
+        "$value": "{ki.text.primary-on-primary-light}",
+        "$description": "Primary-emphasis text on the tertiary container surface. M3 md.sys.color.on-tertiary-container (tertiary tone 10 light / 90 dark). onmars single-accent: resolves to text primary on primary light."
+      },
       "primary-on-success": {
         "$value": "{ki.color.brand.primary-text-on-success}",
         "$description": "semantic color for text primary on success."
@@ -338,6 +374,10 @@
       "inverse-black": {
         "$value": "{ki.color.white.100}",
         "$description": "semantic color for text inverse black."
+      },
+      "inverse-primary": {
+        "$value": "{ki.color.brand.300}",
+        "$description": "Primary accent legible on the inverse surface. M3 md.sys.color.inverse-primary (primary tone 80 light / 40 dark). onmars: the opposite-scheme primary text tone (brand 300 light, brand 600 dark)."
       },
       "primary-high-em": {
         "$value": "{ki.color.brand.600}",
@@ -764,6 +804,25 @@
         "$description": "semantic color for overlay med em inverse."
       }
     },
+    "state-layer": {
+      "$type": "color",
+      "hover": {
+        "$value": "{ki.surface.hover-overlay}",
+        "$description": "Hover interaction state layer. M3 md.sys.state.hover.state-layer-opacity: 8% of the on-color. onmars: the MarsUI hover_overlay (White/5 light, Black/5 dark)."
+      },
+      "focus": {
+        "$value": "{ki.color.white.8}",
+        "$description": "Focus interaction state layer. M3 md.sys.state.focus.state-layer-opacity: 12% of the on-color. onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark)."
+      },
+      "pressed": {
+        "$value": "{ki.color.white.8}",
+        "$description": "Pressed interaction state layer. M3 md.sys.state.pressed.state-layer-opacity: 12% of the on-color (same as focus). onmars: MarsUI overlay one step above hover_overlay (White/8 light, Black/8 dark)."
+      },
+      "dragged": {
+        "$value": "{ki.color.white.12}",
+        "$description": "Dragged interaction state layer. M3 md.sys.state.dragged.state-layer-opacity: 16% of the on-color. onmars: MarsUI overlay two steps above hover_overlay (White/12 light, Black/12 dark)."
+      }
+    },
     "elevation": {
       "$type": "color",
       "shadow": {
@@ -777,6 +836,315 @@
       "shadow-dark": {
         "$value": "{ki.color.black.32}",
         "$description": "semantic color for elevation shadow dark."
+      },
+      "e1": {
+        "$type": "shadow",
+        "$value": {
+          "color": "{ki.elevation.shadow}",
+          "offsetX": 0,
+          "offsetY": "{ki.shadow.distance.1}",
+          "blur": "{ki.shadow.distance.1}",
+          "spread": "{ki.shadow.spread.1}"
+        },
+        "$description": "MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow."
+      },
+      "e2": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.1}",
+            "blur": "{ki.shadow.distance.1}",
+            "spread": "{ki.shadow.spread.1}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": "{ki.shadow.spread.2}"
+          }
+        ],
+        "$description": "MarsUI Elevation/e2 (cumulative: e1 layers plus 0/3/3/-1.5)."
+      },
+      "e3": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.1}",
+            "blur": "{ki.shadow.distance.1}",
+            "spread": "{ki.shadow.spread.1}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": "{ki.shadow.spread.2}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.3}",
+            "blur": "{ki.shadow.distance.3}",
+            "spread": "{ki.shadow.spread.3}"
+          }
+        ],
+        "$description": "MarsUI Elevation/e3 (cumulative: e2 layers plus 0/20/20/-12)."
+      },
+      "e4": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.1}",
+            "blur": "{ki.shadow.distance.1}",
+            "spread": "{ki.shadow.spread.1}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": "{ki.shadow.spread.2}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.3}",
+            "blur": "{ki.shadow.distance.3}",
+            "spread": "{ki.shadow.spread.3}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.4}",
+            "blur": "{ki.shadow.distance.4}",
+            "spread": "{ki.shadow.spread.4}"
+          }
+        ],
+        "$description": "MarsUI Elevation/e4 (cumulative: e3 layers plus 0/32/32/-16)."
+      },
+      "e5": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.1}",
+            "blur": "{ki.shadow.distance.1}",
+            "spread": "{ki.shadow.spread.1}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": "{ki.shadow.spread.2}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.3}",
+            "blur": "{ki.shadow.distance.3}",
+            "spread": "{ki.shadow.spread.3}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.4}",
+            "blur": "{ki.shadow.distance.4}",
+            "spread": "{ki.shadow.spread.4}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.5}",
+            "blur": "{ki.shadow.distance.5}",
+            "spread": "{ki.shadow.spread.5}"
+          }
+        ],
+        "$description": "MarsUI Elevation/e5 (cumulative: e4 layers plus 0/56/56/-28)."
+      },
+      "e6": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.1}",
+            "blur": "{ki.shadow.distance.1}",
+            "spread": "{ki.shadow.spread.1}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": "{ki.shadow.spread.2}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.3}",
+            "blur": "{ki.shadow.distance.3}",
+            "spread": "{ki.shadow.spread.3}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.4}",
+            "blur": "{ki.shadow.distance.4}",
+            "spread": "{ki.shadow.spread.4}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.5}",
+            "blur": "{ki.shadow.distance.5}",
+            "spread": "{ki.shadow.spread.5}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.6}",
+            "blur": "{ki.shadow.distance.6}",
+            "spread": "{ki.shadow.spread.6}"
+          }
+        ],
+        "$description": "MarsUI Elevation/e6 (cumulative: e5 layers plus 0/72/72/-36)."
+      }
+    },
+    "effect": {
+      "component": {
+        "backdrop-blur": {
+          "$type": "dimension",
+          "$value": "{ki.blur.24}",
+          "$description": "MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate)."
+        },
+        "primary": {
+          "default": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": [
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.1}",
+                  "blur": "{ki.shadow.distance.1}",
+                  "spread": "{ki.shadow.spread.1}"
+                },
+                "{ki.shadow.inner.primary-default}"
+              ],
+              "$description": "MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow."
+            }
+          },
+          "hover": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": [
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.1}",
+                  "blur": "{ki.shadow.distance.1}",
+                  "spread": "{ki.shadow.spread.1}"
+                },
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.2}",
+                  "blur": "{ki.shadow.distance.2}",
+                  "spread": "{ki.shadow.spread.2}"
+                },
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.3}",
+                  "blur": "{ki.shadow.distance.3}",
+                  "spread": "{ki.shadow.spread.3}"
+                },
+                "{ki.shadow.inner.primary-hover}"
+              ],
+              "$description": "MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            }
+          }
+        },
+        "secondary": {
+          "default": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": [
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.effect-y}",
+                  "blur": "{ki.shadow.effect-blur}",
+                  "spread": "{ki.shadow.spread.1}"
+                },
+                "{ki.shadow.inner.secondary-default}"
+              ],
+              "$description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            }
+          },
+          "hover": {
+            "shadow": {
+              "$type": "shadow",
+              "$value": [
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.1}",
+                  "blur": "{ki.shadow.distance.1}",
+                  "spread": "{ki.shadow.spread.1}"
+                },
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.2}",
+                  "blur": "{ki.shadow.distance.2}",
+                  "spread": "{ki.shadow.spread.2}"
+                },
+                {
+                  "color": "{ki.elevation.shadow}",
+                  "offsetX": 0,
+                  "offsetY": "{ki.shadow.distance.3}",
+                  "blur": "{ki.shadow.distance.3}",
+                  "spread": "{ki.shadow.spread.3}"
+                },
+                "{ki.shadow.inner.secondary-hover}"
+              ],
+              "$description": "MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            }
+          }
+        }
+      }
+    },
+    "focus": {
+      "$type": "shadow",
+      "primary": {
+        "$value": {
+          "color": "{ki.outline.primary-low-em-alpha}",
+          "offsetX": 0,
+          "offsetY": 0,
+          "blur": 0,
+          "spread": "{ki.shadow.ring}"
+        },
+        "$description": "MarsUI Focus/primary: 3px spread focus ring of the MarsUI style Outline/primary_base_em_alpha = brand 500 at 40% (Kimen name: outline.primary-low-em-alpha / brand.500-alpha-4; the Kimen outline.primary-base-em-alpha resolves to 20% and does not match the Figma Focus style — specs/002-ki-button/design-extraction.md §2.5)."
+      },
+      "gray": {
+        "$value": {
+          "color": "{ki.outline.med-em}",
+          "offsetX": 0,
+          "offsetY": 0,
+          "blur": 0,
+          "spread": "{ki.shadow.ring}"
+        },
+        "$description": "MarsUI Focus/gray: 3px spread focus ring of Outline/med_em (scheme-aware via the outline token)."
       }
     },
     "transparent-inverse": {
@@ -1037,6 +1405,54 @@
         "fast": {
           "$value": "{ki.duration.fast}",
           "$description": "Fast interaction transition duration."
+        },
+        "short-1": {
+          "$value": "{ki.duration.fast}",
+          "$description": "Shortest step of the duration scale. M3 md.sys.motion.duration.short1 (50ms). onmars: the MarsUI single-speed language (120ms), short steps collapse onto ki.duration.fast."
+        },
+        "short-2": {
+          "$value": "{ki.duration.fast}",
+          "$description": "M3 md.sys.motion.duration.short2 (100ms). onmars: MarsUI 120ms (ki.duration.fast)."
+        },
+        "short-3": {
+          "$value": "{ki.duration.fast}",
+          "$description": "M3 md.sys.motion.duration.short3 (150ms). onmars: MarsUI 120ms (ki.duration.fast)."
+        },
+        "short-4": {
+          "$value": "{ki.duration.fast}",
+          "$description": "M3 md.sys.motion.duration.short4 (200ms). onmars: MarsUI 120ms (ki.duration.fast)."
+        },
+        "medium-1": {
+          "$value": "{ki.duration.moderate}",
+          "$description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
+        },
+        "medium-2": {
+          "$value": "{ki.duration.moderate}",
+          "$description": "M3 md.sys.motion.duration.medium2 (300ms). onmars: MarsUI moderate step (240ms)."
+        },
+        "medium-3": {
+          "$value": "{ki.duration.moderate}",
+          "$description": "M3 md.sys.motion.duration.medium3 (350ms). onmars: MarsUI moderate step (240ms)."
+        },
+        "medium-4": {
+          "$value": "{ki.duration.moderate}",
+          "$description": "M3 md.sys.motion.duration.medium4 (400ms). onmars: MarsUI moderate step (240ms)."
+        },
+        "long-1": {
+          "$value": "{ki.duration.slow}",
+          "$description": "M3 md.sys.motion.duration.long1 (450ms). onmars: MarsUI slow step (360ms, 3x the 120ms base)."
+        },
+        "long-2": {
+          "$value": "{ki.duration.slow}",
+          "$description": "M3 md.sys.motion.duration.long2 (500ms). onmars: MarsUI slow step (360ms)."
+        },
+        "long-3": {
+          "$value": "{ki.duration.slow}",
+          "$description": "M3 md.sys.motion.duration.long3 (550ms). onmars: MarsUI slow step (360ms)."
+        },
+        "long-4": {
+          "$value": "{ki.duration.slow}",
+          "$description": "M3 md.sys.motion.duration.long4 (600ms). onmars: MarsUI slow step (360ms)."
         }
       },
       "easing": {
@@ -1048,6 +1464,26 @@
         "out": {
           "$value": "{ki.easing.out}",
           "$description": "Decelerating interaction transition easing curve."
+        },
+        "emphasized": {
+          "$value": "{ki.easing.standard}",
+          "$description": "Expressive hero-transition curve. M3 md.sys.motion.easing.emphasized. onmars: the MarsUI standard curve (single-curve language)."
+        },
+        "emphasized-decelerate": {
+          "$value": "{ki.easing.out}",
+          "$description": "Expressive entrance curve. M3 md.sys.motion.easing.emphasized-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out)."
+        },
+        "emphasized-accelerate": {
+          "$value": "{ki.easing.in}",
+          "$description": "Expressive exit curve. M3 md.sys.motion.easing.emphasized-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in)."
+        },
+        "standard-decelerate": {
+          "$value": "{ki.easing.out}",
+          "$description": "Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out)."
+        },
+        "standard-accelerate": {
+          "$value": "{ki.easing.in}",
+          "$description": "Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in)."
         }
       }
     }

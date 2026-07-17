@@ -13,6 +13,16 @@
   --_ki-button-fg: var(--ki-button-secondary-neutral-rest-fg);
   --_ki-button-border: var(--ki-button-secondary-neutral-rest-border);
   --_ki-button-shadow: var(--ki-button-secondary-rest-shadow);
+  --_ki-button-border-bottom: var(--ki-button-secondary-rest-border-bottom);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-backdrop-blur: var(--ki-button-backdrop-blur);
+
+  /* Glass backdrop is a variant trait: only the glass variants (primary and
+     the secondary default) establish the full filter; non-glass variants
+     reset it below so backdrop-filter computes `none` off the glass path.
+     Declared and accepted: under material3 the blur token resolves to 0, so
+     glass variants compute blur(0px) — visually identical to none. */
+  --_ki-button-backdrop-filter: blur(var(--_ki-button-backdrop-blur));
 
   display: inline-block;
 }
@@ -59,6 +69,14 @@
   --_ki-button-line-height: var(--ki-button-xl-line-height);
   --_ki-button-icon-size: var(--ki-button-xl-icon-size);
   --_ki-button-min-target: var(--ki-button-xl-min-target);
+}
+
+/* Bevel bottom edge (specs/002-ki-button/design-extraction.md §2: MarsUI
+   paints the top and bottom borders with different alphas). Variant-level
+   like the shadows; identical across rest/hover/active, switched off by the
+   disabled section. */
+:host([variant="primary"]) {
+  --_ki-button-border-bottom: var(--ki-button-primary-rest-border-bottom);
 }
 
 :host([variant="primary"][tone="neutral"]) {
@@ -159,11 +177,25 @@
   --_ki-button-shadow: var(--ki-button-ghost-rest-shadow);
 }
 
+/* Non-glass variants: uniform border (the bottom edge follows the border
+   token through every state) and no glass backdrop — `initial` makes the
+   private filter property guaranteed-invalid so backdrop-filter takes its
+   `none` fallback (off the glass path entirely, not blur(0)). */
+:host([variant="tertiary"]),
+:host([variant="quaternary"]),
+:host([variant="ghost"]) {
+  --_ki-button-border-bottom: var(--_ki-button-border);
+  --_ki-button-backdrop-blur: initial;
+  --_ki-button-backdrop-filter: initial;
+}
+
 :host(:hover:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-secondary-neutral-hover-bg);
   --_ki-button-fg: var(--ki-button-secondary-neutral-hover-fg);
   --_ki-button-border: var(--ki-button-secondary-neutral-hover-border);
   --_ki-button-shadow: var(--ki-button-secondary-hover-shadow);
+  --_ki-button-overlay: var(--ki-button-secondary-hover-overlay);
+  --_ki-button-overlay-image: linear-gradient(var(--_ki-button-overlay), var(--_ki-button-overlay));
 }
 
 :host([variant="primary"][tone="neutral"]:hover:not(:disabled)) {
@@ -171,6 +203,8 @@
   --_ki-button-fg: var(--ki-button-primary-neutral-hover-fg);
   --_ki-button-border: var(--ki-button-primary-neutral-hover-border);
   --_ki-button-shadow: var(--ki-button-primary-hover-shadow);
+  --_ki-button-overlay: var(--ki-button-primary-hover-overlay);
+  --_ki-button-overlay-image: linear-gradient(var(--_ki-button-overlay), var(--_ki-button-overlay));
 }
 
 :host([variant="primary"][tone="success"]:hover:not(:disabled)) {
@@ -178,6 +212,8 @@
   --_ki-button-fg: var(--ki-button-primary-success-hover-fg);
   --_ki-button-border: var(--ki-button-primary-success-hover-border);
   --_ki-button-shadow: var(--ki-button-primary-hover-shadow);
+  --_ki-button-overlay: var(--ki-button-primary-hover-overlay);
+  --_ki-button-overlay-image: linear-gradient(var(--_ki-button-overlay), var(--_ki-button-overlay));
 }
 
 :host([variant="primary"][tone="danger"]:hover:not(:disabled)) {
@@ -185,6 +221,8 @@
   --_ki-button-fg: var(--ki-button-primary-danger-hover-fg);
   --_ki-button-border: var(--ki-button-primary-danger-hover-border);
   --_ki-button-shadow: var(--ki-button-primary-hover-shadow);
+  --_ki-button-overlay: var(--ki-button-primary-hover-overlay);
+  --_ki-button-overlay-image: linear-gradient(var(--_ki-button-overlay), var(--_ki-button-overlay));
 }
 
 :host([variant="secondary"][tone="success"]:hover:not(:disabled)) {
@@ -192,6 +230,10 @@
   --_ki-button-fg: var(--ki-button-secondary-success-hover-fg);
   --_ki-button-border: var(--ki-button-secondary-success-hover-border);
   --_ki-button-shadow: var(--ki-button-secondary-hover-shadow);
+
+  /* Toned secondary hovers swap the fill (50 -> 100); no extra overlay. */
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="secondary"][tone="danger"]:hover:not(:disabled)) {
@@ -199,6 +241,10 @@
   --_ki-button-fg: var(--ki-button-secondary-danger-hover-fg);
   --_ki-button-border: var(--ki-button-secondary-danger-hover-border);
   --_ki-button-shadow: var(--ki-button-secondary-hover-shadow);
+
+  /* Toned secondary hovers swap the fill (50 -> 100); no extra overlay. */
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="tertiary"][tone="neutral"]:hover:not(:disabled)) {
@@ -264,20 +310,38 @@
   --_ki-button-shadow: var(--ki-button-ghost-hover-shadow);
 }
 
+/* Non-glass variants never take the hover overlay set by the generic
+   :host(:hover) base block above. */
+:host([variant="tertiary"]:hover:not(:disabled)),
+:host([variant="quaternary"]:hover:not(:disabled)),
+:host([variant="ghost"]:hover:not(:disabled)) {
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
+}
+
 :host(:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-secondary-neutral-active-bg);
   --_ki-button-fg: var(--ki-button-secondary-neutral-active-fg);
   --_ki-button-border: var(--ki-button-secondary-neutral-active-border);
   --_ki-button-shadow: var(--ki-button-secondary-active-shadow);
+
+  /* Pressed = pure rest fill + e1: the hover overlay resets so the pressed
+     appearance is identical for mouse (:hover also matches) and keyboard. */
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 /* Pressed appearance per variant x tone: mirrors the hover blocks; the
-   generic :host(:active) above only covers the secondary-neutral base. */
+   generic :host(:active) above only covers the secondary-neutral base.
+   Every block also resets the hover overlay (pressed = rest fill + e1,
+   identical for mouse and keyboard activation). */
 :host([variant="primary"][tone="neutral"]:active:not(:disabled)) {
   --_ki-button-bg: var(--ki-button-primary-neutral-active-bg);
   --_ki-button-fg: var(--ki-button-primary-neutral-active-fg);
   --_ki-button-border: var(--ki-button-primary-neutral-active-border);
   --_ki-button-shadow: var(--ki-button-primary-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="primary"][tone="success"]:active:not(:disabled)) {
@@ -285,6 +349,8 @@
   --_ki-button-fg: var(--ki-button-primary-success-active-fg);
   --_ki-button-border: var(--ki-button-primary-success-active-border);
   --_ki-button-shadow: var(--ki-button-primary-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="primary"][tone="danger"]:active:not(:disabled)) {
@@ -292,6 +358,8 @@
   --_ki-button-fg: var(--ki-button-primary-danger-active-fg);
   --_ki-button-border: var(--ki-button-primary-danger-active-border);
   --_ki-button-shadow: var(--ki-button-primary-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="secondary"][tone="success"]:active:not(:disabled)) {
@@ -299,6 +367,8 @@
   --_ki-button-fg: var(--ki-button-secondary-success-active-fg);
   --_ki-button-border: var(--ki-button-secondary-success-active-border);
   --_ki-button-shadow: var(--ki-button-secondary-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="secondary"][tone="danger"]:active:not(:disabled)) {
@@ -306,6 +376,8 @@
   --_ki-button-fg: var(--ki-button-secondary-danger-active-fg);
   --_ki-button-border: var(--ki-button-secondary-danger-active-border);
   --_ki-button-shadow: var(--ki-button-secondary-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="tertiary"][tone="neutral"]:active:not(:disabled)) {
@@ -313,6 +385,8 @@
   --_ki-button-fg: var(--ki-button-tertiary-neutral-active-fg);
   --_ki-button-border: var(--ki-button-tertiary-neutral-active-border);
   --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="tertiary"][tone="success"]:active:not(:disabled)) {
@@ -320,6 +394,8 @@
   --_ki-button-fg: var(--ki-button-tertiary-success-active-fg);
   --_ki-button-border: var(--ki-button-tertiary-success-active-border);
   --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="tertiary"][tone="danger"]:active:not(:disabled)) {
@@ -327,6 +403,8 @@
   --_ki-button-fg: var(--ki-button-tertiary-danger-active-fg);
   --_ki-button-border: var(--ki-button-tertiary-danger-active-border);
   --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="quaternary"][tone="neutral"]:active:not(:disabled)) {
@@ -334,6 +412,8 @@
   --_ki-button-fg: var(--ki-button-quaternary-neutral-active-fg);
   --_ki-button-border: var(--ki-button-quaternary-neutral-active-border);
   --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="quaternary"][tone="success"]:active:not(:disabled)) {
@@ -341,6 +421,8 @@
   --_ki-button-fg: var(--ki-button-quaternary-success-active-fg);
   --_ki-button-border: var(--ki-button-quaternary-success-active-border);
   --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="quaternary"][tone="danger"]:active:not(:disabled)) {
@@ -348,6 +430,8 @@
   --_ki-button-fg: var(--ki-button-quaternary-danger-active-fg);
   --_ki-button-border: var(--ki-button-quaternary-danger-active-border);
   --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="ghost"][tone="neutral"]:active:not(:disabled)) {
@@ -355,6 +439,8 @@
   --_ki-button-fg: var(--ki-button-ghost-neutral-active-fg);
   --_ki-button-border: var(--ki-button-ghost-neutral-active-border);
   --_ki-button-shadow: var(--ki-button-ghost-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="ghost"][tone="success"]:active:not(:disabled)) {
@@ -362,6 +448,8 @@
   --_ki-button-fg: var(--ki-button-ghost-success-active-fg);
   --_ki-button-border: var(--ki-button-ghost-success-active-border);
   --_ki-button-shadow: var(--ki-button-ghost-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 :host([variant="ghost"][tone="danger"]:active:not(:disabled)) {
@@ -369,6 +457,8 @@
   --_ki-button-fg: var(--ki-button-ghost-danger-active-fg);
   --_ki-button-border: var(--ki-button-ghost-danger-active-border);
   --_ki-button-shadow: var(--ki-button-ghost-active-shadow);
+  --_ki-button-overlay: var(--ki-transparent-inverse);
+  --_ki-button-overlay-image: initial;
 }
 
 /* Disabled resolves the disabled matrix cells (tone-independent). These
@@ -380,6 +470,10 @@
   --_ki-button-fg: var(--ki-button-secondary-neutral-disabled-fg);
   --_ki-button-border: var(--ki-button-secondary-neutral-disabled-border);
   --_ki-button-shadow: var(--ki-button-secondary-disabled-shadow);
+
+  /* Bevel off when disabled (Figma: borderless); the bottom edge follows
+     the per-variant disabled border cell through the var() indirection. */
+  --_ki-button-border-bottom: var(--_ki-button-border);
 }
 
 :host([variant="primary"]:disabled) {
@@ -420,8 +514,29 @@
 button {
   align-items: center;
   appearance: none;
+
+  /* MarsUI glass backdrop (Blur/24 → CSS blur 12px, radius/2 convention,
+     specs/002-ki-button/design-extraction.md §0). Off-path by default: only
+     the glass variants set --_ki-button-backdrop-filter; everything else
+     (and consumers without the token loaded) resolves the `none` fallback.
+     material3 keeps the glass path but its blur token is 0 → blur(0px),
+     declared and accepted. Stencil does not autoprefix, so the -webkit-
+     alias ships explicitly for Safari. */
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: var(--_ki-button-backdrop-filter, none);
+  backdrop-filter: var(--_ki-button-backdrop-filter, none);
   background-color: var(--_ki-button-bg);
+
+  /* MarsUI hover overlay painted as a flat gradient layer over the fill
+     (hover keeps the rest fill and composites White/5 or Black/3 on top).
+     At rest nothing paints: only the :hover blocks that use the overlay set
+     --_ki-button-overlay-image, so the default is background-image: none. */
+  background-image: var(--_ki-button-overlay-image, none);
   border-color: var(--_ki-button-border);
+
+  /* Bevel: the block-end edge diverges from the other three (must come
+     after the border-color shorthand to win the longhand). */
+  border-block-end-color: var(--_ki-button-border-bottom);
   border-radius: var(--_ki-button-radius);
   border-style: solid;
   border-width: var(--ki-button-border-width);
@@ -437,7 +552,11 @@ button {
   line-height: var(--_ki-button-line-height);
   min-block-size: var(--_ki-button-height);
   min-inline-size: var(--_ki-button-min-target);
-  padding-block: 0;
+
+  /* Figma strokes are INNER: the 4px padding-block already contains the 1px
+     border, so the border width is subtracted to keep every size at exactly
+     24/32/40/48/56 (specs/002-ki-button/design-extraction.md §1). */
+  padding-block: calc(var(--ki-button-padding-block) - var(--ki-button-border-width));
   padding-inline: var(--_ki-button-padding-inline);
   text-align: center;
   touch-action: manipulation;
@@ -454,9 +573,11 @@ button:focus {
 }
 
 button:focus-visible {
-  box-shadow:
-    0 0 0 var(--ki-button-focus-ring-width) var(--ki-button-focus-ring-color),
-    var(--_ki-button-shadow);
+  /* MarsUI Focus/primary: 3px 40%-alpha spread ring
+     (specs/002-ki-button/design-extraction.md §2.5). The opaque 2px outline
+     stays as the WCAG 1.4.11-proof indicator: the soft ring alone is below
+     3:1 against adjacent surfaces. */
+  box-shadow: var(--ki-button-focus-ring-shadow), var(--_ki-button-shadow);
   outline-color: var(--ki-button-focus-ring-color);
 }
 
