@@ -1,0 +1,109 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-input" />
+
+# ki-input
+
+A token-styled single-line text field with native input semantics.
+
+**When to use** — collect one line of free text from a person, always with a
+visible `label`; choose the `type` and `autocomplete` that match the entry
+purpose.
+
+**When NOT to use** — multiline text, predefined choices, boolean state,
+numeric stepper entry, or placeholder-only labeling.
+
+## Examples
+
+`label` is mandatory for valid usage — never use `placeholder` as a label
+substitute:
+
+```html
+<ki-input label="Display name" name="name"></ki-input>
+<ki-input
+  label="Email"
+  name="email"
+  type="email"
+  autocomplete="email"
+  placeholder="you@example.com"
+  required
+></ki-input>
+```
+
+Entry kinds are native single-line types (`text`, `email`, `password`,
+`search`, `tel`, `url` — unknown values fall back to `text`; `number` is not
+a v1 input kind):
+
+```html
+<ki-input label="Password" name="password" type="password" autocomplete="current-password"></ki-input>
+<ki-input label="Website" name="site" type="url"></ki-input>
+```
+
+The `start`/`end` slots hold icon or text affixes inside the field, and
+`readonly` keeps a value focusable and selectable while rejecting edits:
+
+```html
+<ki-input label="Amount" name="amount">
+  <span slot="start" aria-hidden="true">$</span>
+  <span slot="end" aria-hidden="true">USD</span>
+</ki-input>
+<ki-input label="Account ID" value="ACC-2041" readonly></ki-input>
+```
+
+## Recipe: a form with native validation
+
+`required` participates in native constraint validation: an invalid
+submission is blocked by the platform before `submit` fires, and the invalid
+appearance shows only after a blocked submission attempt or an invalidating
+user commit — never on initial render. To
+observe user edits, listen for `input` and `change` (both re-dispatched
+composed across the shadow boundary); do not poll `value`:
+
+```html
+<form id="signup">
+  <ki-input label="Email" name="email" type="email" autocomplete="email" required></ki-input>
+  <ki-checkbox name="terms" required>I accept the terms</ki-checkbox>
+  <ki-button type="submit" variant="primary">Create account</ki-button>
+</form>
+
+<script type="module">
+  const form = document.getElementById('signup');
+  form.addEventListener('submit', (event) => {
+    event.preventDefault(); // only reached when every field is valid
+    console.log(Object.fromEntries(new FormData(form))); // { email: '…', terms: 'on' }
+  });
+  form.querySelector('ki-input').addEventListener('change', (event) => {
+    console.log('committed:', event.target.value);
+  });
+</script>
+```
+
+Note one deliberate deviation from native: programmatically assigning the
+`value` ATTRIBUTE also replaces the displayed value, silently — a native
+input would keep the user's dirty value. Form reset restores the attribute's
+current value.
+
+## Customization
+
+| Token                        | Controls                             |
+| ---------------------------- | ------------------------------------ |
+| `--ki-input-rest-bg`         | Field resting background             |
+| `--ki-input-rest-border`     | Field resting border color           |
+| `--ki-input-height`          | Field block size                     |
+| `--ki-input-radius`          | Field corner radius                  |
+| `--ki-input-focus-ring-color`| Keyboard focus ring color            |
+
+States follow `--ki-input-{rest|hover|focus|invalid|readonly|disabled}-*`.
+Shadow parts: `::part(field)` (enclosure: background, border, radius, focus
+ring), `::part(input)` (native input: caret and selection) and
+`::part(label)` (visible label).
+
+## Accessibility
+
+- The visible `label` is the accessible name — it is mandatory, and
+  `placeholder` never substitutes for it.
+- `disabled` removes the field from keyboard reach and excludes it from
+  forms; use `readonly` when the value should remain focusable, selectable
+  and submitted.
+- The invalid state is exposed through the internal native input's
+  constraint validation, so assistive technology hears the platform message.

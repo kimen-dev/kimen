@@ -13,7 +13,27 @@ import '@kimen/tokens/css';
 defineKiButton();
 ```
 
-Load `@kimen/tokens/css` once for the onmars default theme. Theme variants are selected with package-supported theme attributes and remain token-driven.
+Load `@kimen/tokens/css` once for the onmars default theme.
+
+## Theming
+
+All themes reassign the same `--ki-*` custom properties, so switching themes
+restyles every component with no code changes. Two attributes on the document
+root drive selection:
+
+- `data-ki-color-scheme`: `light` or `dark` forces a color scheme for any
+  theme, overriding the OS preference. Without it, stylesheets follow
+  `prefers-color-scheme`.
+- `data-ki-theme`: opts into a non-default theme. Unknown theme names match no
+  selector and fall back to onmars through the cascade.
+
+To use the bundled Material 3 reference theme, side-effect import its
+stylesheet (exported as `@kimen/tokens/css/material3`) in addition to
+`@kimen/tokens/css`, then select it on the document root:
+
+```html
+<html data-ki-theme="material3" data-ki-color-scheme="dark">
+```
 
 ## Components
 
@@ -156,6 +176,36 @@ When to use: trigger the single main action of a view, supporting actions
 in descending hierarchy, or confirming/destructive actions through tone.
 When NOT to use: navigation, icon-only actions, persistent toggles, or
 loading/progress semantics.
+
+Examples:
+
+A standalone primary action:
+
+```html
+<ki-button variant="primary">Save</ki-button>
+```
+
+`type` defaults to `submit`, so a bare `ki-button` inside a form submits it; opt out with `type="button"`:
+
+```html
+<form>
+  <ki-button type="button">Cancel</ki-button>
+  <ki-button variant="primary">Save changes</ki-button>
+</form>
+```
+
+Programmatic creation after registration; string attributes and properties are interchangeable:
+
+```ts
+import { defineCustomElement } from '@kimen/elements/ki-button';
+
+defineCustomElement();
+
+const saveButton = document.createElement('ki-button');
+saveButton.setAttribute('type', 'button');
+saveButton.textContent = 'Save';
+document.body.append(saveButton);
+```
 
 Attributes:
 - `disabled` (boolean, default false): Prevents activation, removes the button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
@@ -550,6 +600,26 @@ When NOT to use: non-blocking feedback (`ki-alert`, future `ki-toast`),
 supplementary hints (`ki-tooltip`), long forms or multi-step flows
 (navigate or use a future full-screen variant), menus, or pickers.
 
+Examples:
+
+A modal confirmation; `heading` names the dialog for assistive technology and actions go in the `footer` slot:
+
+```html
+<ki-dialog heading="Delete draft?" id="confirm-dialog">
+  <p>This permanently removes the draft.</p>
+  <ki-button slot="footer" type="button">Cancel</ki-button>
+  <ki-button slot="footer" tone="danger" variant="primary">Delete</ki-button>
+</ki-dialog>
+```
+
+Open it with the `show()` method (and close with `close()`); the `ki-close` event reports why it closed in `detail.reason` (`method`, `escape`, or `backdrop`):
+
+```html
+<ki-button type="button" onclick="document.getElementById('confirm-dialog').show()">
+  Delete draft
+</ki-button>
+```
+
 Attributes:
 - `close-on-backdrop` (boolean, default false): Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
 - `heading` (string | undefined): Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
@@ -602,6 +672,24 @@ visible `label`; choose the `type` and `autocomplete` that match the entry
 purpose.
 When NOT to use: multiline text, predefined choices, boolean state, numeric
 stepper entry, or placeholder-only labeling.
+
+Examples:
+
+A labeled field participating in native form submission (`label` is mandatory; it is the accessible name):
+
+```html
+<form>
+  <ki-input label="Work email" name="email" type="email" required></ki-input>
+  <ki-button variant="primary">Subscribe</ki-button>
+</form>
+```
+
+Read-only and disabled are distinct states — read-only stays focusable and is submitted, disabled is neither:
+
+```html
+<ki-input label="Plan" value="Pro" readonly></ki-input>
+<ki-input label="Legacy ID" value="A-1042" disabled></ki-input>
+```
 
 Attributes:
 - `autocomplete` (string | undefined): Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
@@ -931,6 +1019,31 @@ When NOT to use: `ki-radio-group` for a few always-visible choices,
 `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
 binary decisions, or multiselect and command menus.
 
+Examples:
+
+Options are declared as `ki-option` children; the option text is the visible label and `value` is the submitted value:
+
+```html
+<ki-select label="Country" name="country" placeholder="Choose a country">
+  <ki-option value="es">Spain</ki-option>
+  <ki-option value="fr">France</ki-option>
+  <ki-option value="pt">Portugal</ki-option>
+</ki-select>
+```
+
+An option without `value` submits its trimmed label text, and `required` blocks submission while empty:
+
+```html
+<form>
+  <ki-select label="Team size" name="size" required>
+    <ki-option>1-10</ki-option>
+    <ki-option>11-50</ki-option>
+    <ki-option disabled>51+</ki-option>
+  </ki-select>
+  <ki-button variant="primary">Continue</ki-button>
+</form>
+```
+
 Attributes:
 - `disabled` (boolean, default false): Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
 - `label` (string, default ''): Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
@@ -1183,6 +1296,30 @@ with one visible panel at a time.
 When NOT to use: selecting form values
 (use `ki-radio-group`), page navigation (use links), step flows, or
 standalone `ki-tab` / `ki-tab-panel` children outside this group.
+
+Examples:
+
+Tabs pair with panels through a shared `value`; the group's `value` selects the active pair and `label` names the tablist:
+
+```html
+<ki-tabs label="Settings" value="email">
+  <ki-tab value="email">Email</ki-tab>
+  <ki-tab value="security">Security</ki-tab>
+  <ki-tab-panel value="email">Email delivery preferences</ki-tab-panel>
+  <ki-tab-panel value="security">Security and sign-in preferences</ki-tab-panel>
+</ki-tabs>
+```
+
+A disabled tab stays visible but cannot be selected by any modality; user selection dispatches a composed `ki-change` event carrying the new value in `detail.value` (programmatic `value` writes stay silent):
+
+```html
+<ki-tabs label="Billing" value="plans">
+  <ki-tab value="plans">Plans</ki-tab>
+  <ki-tab value="invoices" disabled>Invoices</ki-tab>
+  <ki-tab-panel value="plans">Plan management</ki-tab-panel>
+  <ki-tab-panel value="invoices">Invoice history</ki-tab-panel>
+</ki-tabs>
+```
 
 Attributes:
 - `label` (string | undefined): Accessible name for the tablist. Always provide one when multiple tab groups may appear in a view. When NOT to use: do not use `label` as a visible heading; render visible context in surrounding content.

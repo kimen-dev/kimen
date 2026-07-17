@@ -1,0 +1,77 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-card" />
+
+# ki-card
+
+A non-interactive card surface for grouping related content.
+
+**When to use** — group related media, heading, supporting text and actions
+into one scannable surface visually distinct from the page; fill any subset
+of regions. Supply the heading element yourself in the `header` slot — plain
+text slotted there carries no heading semantics for assistive technology.
+
+**When NOT to use** — as a button or link target, form control, fieldset,
+page landmark, section replacement or nested card. For an interactive card,
+slot the button or link INSIDE a region (whole-card interactivity is a
+future feature, not this component).
+
+## Examples
+
+All four regions — `media`, `header`, default (body) and `footer`:
+
+```html
+<ki-card>
+  <img slot="media" src="/telemetry.png" alt="Orbit trajectory plot" />
+  <h3 slot="header">Mission telemetry</h3>
+  <p>Latest downlink completed at 14:02 UTC. All systems nominal.</p>
+  <ki-button slot="footer" variant="tertiary">View details</ki-button>
+</ki-card>
+```
+
+Any subset of regions works — a text-only card is valid:
+
+```html
+<ki-card>
+  <h3 slot="header">Storage almost full</h3>
+  <p>You are using 92% of your plan. Consider archiving old projects.</p>
+</ki-card>
+```
+
+Actions belong in the `footer` slot (there is no dedicated actions slot in
+v1), and interactive elements always go inside a region — never make the
+card itself the click target:
+
+```html
+<ki-card>
+  <h3 slot="header">Invite your team</h3>
+  <p>Collaborators can review specs and approve merges.</p>
+  <ki-button slot="footer" variant="primary">Invite</ki-button>
+  <ki-button slot="footer" variant="ghost">Later</ki-button>
+</ki-card>
+```
+
+## Customization
+
+| Token                    | Controls                                |
+| ------------------------ | --------------------------------------- |
+| `--ki-card-bg`           | Card surface background                 |
+| `--ki-card-radius`       | Card corner radius                      |
+| `--ki-card-elevation`    | Card shadow (elevation ramp)            |
+| `--ki-card-border-color` | Card border color                       |
+| `--ki-card-gap`          | Gap between regions                     |
+
+Per-region padding is available through
+`--ki-card-{media|header|body|footer}-padding`. Shadow parts:
+`::part(card)` (surface), `::part(media)`, `::part(header)`,
+`::part(body)` and `::part(footer)` (region wrappers).
+
+## Accessibility
+
+- The card is non-interactive and adds no landmark or heading semantics of
+  its own — supply a real heading element (for example `h3`) in the
+  `header` slot at the level the surrounding document needs.
+- Give slotted media a meaningful `alt`, or an empty `alt=""` when
+  decorative.
+- Keep interactive elements inside regions so their own semantics and focus
+  behavior stay intact.
