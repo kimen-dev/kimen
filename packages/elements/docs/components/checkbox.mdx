@@ -1,0 +1,95 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-checkbox" />
+
+# ki-checkbox
+
+A form-associated checkbox for selecting independent options.
+
+**When to use** — selecting one or more independent options that a form
+submits later, including a "select all" parent that presents partial
+selection with `indeterminate`. Always provide a visible label in the
+default slot.
+
+**When NOT to use** — a single mutually exclusive choice, an immediate
+on/off effect, triggering an action, unlabeled/icon-only usage, or
+`checked="false"` to mean unchecked. Boolean attributes use presence
+semantics; omit `checked` to express unchecked.
+
+## Examples
+
+The default slot is the visible label, the accessible name source and a
+native activation surface:
+
+```html
+<ki-checkbox name="newsletter" value="weekly">Send me the weekly digest</ki-checkbox>
+<ki-checkbox name="terms" required>I accept the terms of service</ki-checkbox>
+```
+
+When checked, the submitted value pairs `name` with `value` (or `on` when
+`value` is omitted, matching the native checkbox); unchecked checkboxes
+contribute no form entry:
+
+```html
+<ki-checkbox name="channels" value="email" checked>Email</ki-checkbox>
+<ki-checkbox name="channels" value="sms">SMS</ki-checkbox>
+<ki-checkbox name="channels" value="fax" disabled>Fax</ki-checkbox>
+```
+
+## Recipe: a "select all" parent with `indeterminate`
+
+`indeterminate` is presentation-only mixed state: it renders the dash mark
+and exposes "mixed" to assistive technology, but never changes the submitted
+value — model data remains binary through `checked`. Any user toggle clears
+it. User activation emits composed `input` then `change`; programmatic
+assignment is silent, so the sync below cannot loop:
+
+```html
+<ki-checkbox id="all">Select all</ki-checkbox>
+<ki-checkbox class="row" name="rows" value="a" checked>Row A</ki-checkbox>
+<ki-checkbox class="row" name="rows" value="b">Row B</ki-checkbox>
+<ki-checkbox class="row" name="rows" value="c">Row C</ki-checkbox>
+
+<script type="module">
+  const all = document.getElementById('all');
+  const rows = [...document.querySelectorAll('.row')];
+
+  const sync = () => {
+    const checked = rows.filter((row) => row.checked).length;
+    all.checked = checked === rows.length;
+    all.indeterminate = checked > 0 && checked < rows.length;
+  };
+
+  for (const row of rows) row.addEventListener('change', sync);
+  all.addEventListener('change', () => {
+    for (const row of rows) row.checked = all.checked;
+  });
+  sync();
+</script>
+```
+
+## Customization
+
+| Token                             | Controls                        |
+| --------------------------------- | ------------------------------- |
+| `--ki-checkbox-control-size`      | Box dimensions                  |
+| `--ki-checkbox-checked-rest-bg`   | Checked resting background      |
+| `--ki-checkbox-radius`            | Box corner radius               |
+| `--ki-checkbox-gap`               | Gap between box and label       |
+| `--ki-checkbox-focus-ring-color`  | Keyboard focus ring color       |
+
+States follow
+`--ki-checkbox-{unchecked|checked|indeterminate}-{rest|hover|active|disabled}-*`.
+Shadow parts: `::part(control)` (visual box, border, focus ring and
+currentColor marks) and `::part(label)` (label wrapper).
+
+## Accessibility
+
+- The visible label in the default slot is mandatory — it is the accessible
+  name and extends the activation surface.
+- `indeterminate` is forwarded to the internal native input, so assistive
+  technology announces the mixed state.
+- `required` shows the invalid appearance only after a blocked submission
+  attempt or an invalidating user toggle, never on initial render.
+- `disabled` removes the checkbox from keyboard reach and excludes it from
+  form data; do not use it for validation errors or pending state.

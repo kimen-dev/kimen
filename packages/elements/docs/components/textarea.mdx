@@ -1,0 +1,96 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-textarea" />
+
+# ki-textarea
+
+A token-styled multiline text field with native form semantics.
+
+**When to use** — free-form text longer than one line, such as comments,
+descriptions, messages, delivery notes, or addresses when paired with a
+matching `autocomplete` purpose.
+
+**When NOT to use** — single-line values (`ki-input`), constrained choices,
+rich or formatted text editing, or search boxes.
+
+Agent note (from the component contract): initial text is declared through
+the `value` attribute; element text content is ignored. Enter inserts a line
+break and never submits the enclosing form — the inverse of `ki-input`.
+
+## Examples
+
+`label` is always required; `rows` sets the stable visible line count
+(default `2`; no auto-grow or user resize handle exists in v1):
+
+```html
+<ki-textarea label="Comments" name="comments" rows="4"></ki-textarea>
+<ki-textarea
+  label="Delivery notes"
+  name="notes"
+  rows="3"
+  placeholder="Gate code, preferred entrance…"
+></ki-textarea>
+```
+
+Expose an autofill purpose when one applies, and mark mandatory long-form
+text with `required`:
+
+```html
+<ki-textarea
+  label="Shipping address"
+  name="address"
+  rows="4"
+  autocomplete="street-address"
+  required
+></ki-textarea>
+```
+
+Initial text comes from the `value` attribute — not from text between the
+tags — and `readonly` keeps text selectable and submitted while rejecting
+edits:
+
+```html
+<ki-textarea label="Bio" name="bio" value="Web components enthusiast."></ki-textarea>
+<ki-textarea label="Accepted policy" value="Version 2.1, accepted 2026-05-02." readonly></ki-textarea>
+```
+
+## Recipe: reading and presetting the value
+
+Programmatic `value` assignments replace the display and emit no events;
+listen for the composed `change` event to observe user commits:
+
+```html
+<ki-textarea id="feedback" label="Feedback" rows="4"></ki-textarea>
+
+<script type="module">
+  const field = document.getElementById('feedback');
+  field.value = 'Draft restored from local storage.\n\nEdit freely.';
+  field.addEventListener('change', () => {
+    console.log('committed text:', field.value); // line breaks included
+  });
+</script>
+```
+
+## Customization
+
+| Token                             | Controls                        |
+| --------------------------------- | ------------------------------- |
+| `--ki-textarea-rest-bg`           | Field resting background        |
+| `--ki-textarea-rest-border`       | Field resting border color      |
+| `--ki-textarea-radius`            | Field corner radius             |
+| `--ki-textarea-padding-inline`    | Horizontal text padding         |
+| `--ki-textarea-focus-ring-color`  | Keyboard focus ring color       |
+
+States follow
+`--ki-textarea-{rest|hover|focus|invalid|readonly|disabled}-*`. Shadow
+parts: `::part(field)` (enclosure wrapper), `::part(textarea)` (native
+multiline control) and `::part(label)` (visible label).
+
+## Accessibility
+
+- The visible `label` is the accessible name source; never substitute
+  placeholder text for it.
+- `readonly` fields are validation-exempt like native textareas — do not
+  pair `readonly` with `required` expecting it to block submission.
+- `disabled` removes editing, focus, validation and form-data contribution;
+  prefer `readonly` for review text that should still submit.

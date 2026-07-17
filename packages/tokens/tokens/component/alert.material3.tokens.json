@@ -2,8 +2,8 @@
   "ki": {
     "alert": {
       "radius": {
-        "$value": "{ki.radius.lg}",
-        "$description": "Material 3 dimension used by the alert component for radius."
+        "$value": "{ki.radius.component.lg}",
+        "$description": "M3 card-like container shape for the alert: md.sys.shape.corner.medium (12dp) via the material3 radius scale."
       },
       "neutral": {
         "bg": {

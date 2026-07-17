@@ -1,0 +1,89 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-progress" />
+
+# ki-progress
+
+A token-styled, non-interactive progress indicator for known or unknown
+duration work.
+
+**When to use** — communicate advancement of an ongoing task such as upload,
+download, installation or multi-step processing. Use `value`/`max` when the
+completed fraction is known; use `indeterminate` when work is ongoing but
+its duration cannot be measured, including loading-indicator use cases.
+Choose `linear` in page flows and lists, and `circular` in compact or
+centered placements. Always set `label` to what is progressing.
+
+**When NOT to use** — static measurements within a known range such as disk
+usage or scores (gauge/meter), step-by-step wizard navigation (stepper),
+skeleton placeholders while content loads, or operations that finish in
+under about one second.
+
+## Examples
+
+Determinate progress — `value` is clamped to `0..max` (default `max` is
+`100`) for both presentation and ARIA:
+
+```html
+<ki-progress label="Uploading report.pdf" value="42"></ki-progress>
+<ki-progress label="Installing dependencies" value="3" max="8"></ki-progress>
+```
+
+Unknown duration — `indeterminate` exposes no completed fraction, and
+`value` is ignored while it is set:
+
+```html
+<ki-progress label="Contacting server" indeterminate></ki-progress>
+```
+
+`shape` (default `linear`) picks the structural presentation; unknown values
+render linear:
+
+```html
+<ki-progress label="Syncing" shape="circular" indeterminate></ki-progress>
+<ki-progress label="Export progress" shape="circular" value="80"></ki-progress>
+```
+
+## Recipe: driving a determinate task
+
+Update `value` as work advances; switch to `indeterminate` instead of
+fabricating a value when the duration becomes unknown:
+
+```html
+<ki-progress id="upload" label="Uploading report.pdf" value="0"></ki-progress>
+
+<script type="module">
+  const progress = document.getElementById('upload');
+
+  // As upload events arrive:
+  progress.value = 42;
+  progress.value = 87;
+
+  // Server-side processing of unknown duration begins:
+  progress.indeterminate = true;
+</script>
+```
+
+## Customization
+
+| Token                              | Controls                        |
+| ---------------------------------- | ------------------------------- |
+| `--ki-progress-indicator-color`    | Advancing fill or arc ink       |
+| `--ki-progress-track-color`        | Channel or ring ink             |
+| `--ki-progress-linear-thickness`   | Linear bar thickness            |
+| `--ki-progress-circular-size`      | Circular ring dimensions        |
+| `--ki-progress-linear-radius`      | Linear bar corner radius        |
+
+Shadow parts: `::part(track)` (the full channel or ring) and
+`::part(indicator)` (the advancing fill or arc, including the
+indeterminate animation).
+
+## Accessibility
+
+- Always set `label` to what is progressing (for example "Uploading
+  report.pdf") — without it the internal progressbar exposes no accessible
+  name; avoid generic labels like "Loading" when the task can be named.
+- Malformed numbers are normalized: non-finite, zero or negative `max`
+  becomes `100`; malformed `value` falls back to `0`.
+- The indeterminate motion is declared only when reduced motion is not
+  requested.

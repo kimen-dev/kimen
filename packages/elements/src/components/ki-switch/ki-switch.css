@@ -115,9 +115,13 @@ input {
   position: absolute;
 }
 
+/* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
+   Focus/primary glow (3px spread at 40%) under the opaque ring. */
 input:focus + [part="track"],
 input:focus-visible + [part="track"] {
-  box-shadow: 0 0 0 var(--ki-switch-focus-ring-width) var(--ki-switch-focus-ring-color);
+  box-shadow:
+    var(--ki-switch-focus-ring-shadow),
+    0 0 0 var(--ki-switch-focus-ring-width) var(--ki-switch-focus-ring-color);
   outline-color: var(--ki-switch-focus-ring-color);
 }
 

@@ -23,12 +23,18 @@ test('PR quality is one required job without mutation or containment', async () 
   assert.deepEqual(requiredChecks, ['quality']);
 });
 
-test('mutation runs once daily and never on pull requests or pushes', async () => {
+test('mutation runs on two dedicated cadences and never on pull requests or pushes', async () => {
   const workflow = await readRepositoryFile('.github/workflows/mutation.yml');
 
   assert.match(workflow, /^ {2}schedule:$/mu);
-  assert.equal((workflow.match(/cron:/gu) ?? []).length, 1);
+  // Exactly two crons: the daily changed-core pass plus the weekly (Sunday)
+  // full-elements mutation and coverage floors. Expensive feedback stays on
+  // dedicated schedules — the PR pipeline keeps one required result (Art. III).
+  assert.equal((workflow.match(/cron:/gu) ?? []).length, 2);
   assert.match(workflow, /--before='24 hours ago'/u);
+  assert.match(workflow, /run-mutation\.sh --scope full-elements/u);
+  assert.match(workflow, /test:coverage/u);
+  assert.match(workflow, /upload-artifact@[a-f0-9]{40}/u);
   assert.doesNotMatch(workflow, /^ {2}(?:pull_request|push|workflow_dispatch):/gmu);
 });
 

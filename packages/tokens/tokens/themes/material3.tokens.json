@@ -53,16 +53,20 @@
           "$value": "{ki.foundation.migrated.themes-material3.color.brand.500-alpha-5}"
         },
         "high-em": {
-          "$value": "{ki.foundation.migrated.themes-material3.color.brand.high-em}"
+          "$value": "{ki.foundation.material3.palette.neutral.10}",
+          "$description": "M3 md.sys.color.on-surface (neutral tone 10)."
         },
         "med-em": {
-          "$value": "{ki.foundation.migrated.themes-material3.color.brand.med-em}"
+          "$value": "{ki.foundation.material3.palette.neutral-variant.30}",
+          "$description": "M3 md.sys.color.on-surface-variant (neutral-variant tone 30)."
         },
         "low-em": {
-          "$value": "{ki.foundation.migrated.themes-material3.color.brand.low-em}"
+          "$value": "{ki.foundation.material3.palette.neutral-variant.50}",
+          "$description": "M3 md.sys.color.outline (neutral-variant tone 50)."
         },
         "base-em": {
-          "$value": "{ki.foundation.migrated.themes-material3.color.brand.base-em}"
+          "$value": "{ki.foundation.material3.palette.neutral-variant.80}",
+          "$description": "M3 md.sys.color.outline-variant (neutral-variant tone 80)."
         },
         "primary-text-on-primary": {
           "$value": "{ki.color.white.100}"
@@ -103,159 +107,277 @@
       "size": {
         "$type": "dimension",
         "caption-1": {
-          "$value": "{ki.foundation.migrated.themes-onmars.font.size.overline}"
+          "$value": "{ki.foundation.material3.typescale.size.label-small}",
+          "$description": "M3 md.sys.typescale.label-small.size (11px; M3 has no caption role — label-small is the closest)."
         },
         "overline": {
-          "$value": "{ki.foundation.migrated.themes-onmars.font.size.overline}"
+          "$value": "{ki.foundation.material3.typescale.size.label-small}",
+          "$description": "M3 md.sys.typescale.label-small.size (11px; the M2 overline role folded into label-small in M3)."
         },
         "caption-2": {
-          "$value": "{ki.space.xl}"
+          "$value": "{ki.foundation.material3.typescale.size.label-medium}",
+          "$description": "M3 md.sys.typescale.label-medium.size (12px)."
         },
         "body-1": {
-          "$value": "{ki.space.2xl}"
+          "$value": "{ki.foundation.material3.typescale.size.body-medium}",
+          "$description": "M3 md.sys.typescale.body-medium.size (14px)."
         },
         "body-2": {
-          "$value": "{ki.space.3xl}"
+          "$value": "{ki.foundation.material3.typescale.size.body-large}",
+          "$description": "M3 md.sys.typescale.body-large.size (16px)."
         },
         "title-1": {
-          "$value": "{ki.space.2xl}"
+          "$value": "{ki.foundation.material3.typescale.size.title-medium}",
+          "$description": "M3 md.sys.typescale.title-medium.size (16px; the M3 title one step below title-large = ki title-2)."
         },
         "title-2": {
-          "$value": "{ki.space.6xl}"
+          "$value": "{ki.foundation.material3.typescale.size.title-large}",
+          "$description": "M3 md.sys.typescale.title-large.size (22px)."
         },
         "heading-1": {
-          "$value": "{ki.space.7xl}"
+          "$value": "{ki.foundation.material3.typescale.size.headline-small}",
+          "$description": "M3 md.sys.typescale.headline-small.size (24px)."
         },
         "heading-2": {
-          "$value": "{ki.space.9xl}"
+          "$value": "{ki.foundation.material3.typescale.size.headline-medium}",
+          "$description": "M3 md.sys.typescale.headline-medium.size (28px)."
         },
         "heading-3": {
-          "$value": "{ki.space.10xl}"
+          "$value": "{ki.foundation.material3.typescale.size.headline-large}",
+          "$description": "M3 md.sys.typescale.headline-large.size (32px)."
         },
         "heading-4": {
-          "$value": "{ki.space.11xl}"
+          "$value": "{ki.foundation.material3.typescale.size.display-small}",
+          "$description": "M3 md.sys.typescale.display-small.size (36px)."
         },
         "heading-5": {
-          "$value": "{ki.foundation.migrated.themes-material3.font.size.heading-5}"
+          "$value": "{ki.foundation.material3.typescale.size.display-medium}",
+          "$description": "M3 md.sys.typescale.display-medium.size (45px)."
         },
         "heading-6": {
-          "$value": "{ki.foundation.migrated.themes-material3.font.size.heading-6}"
+          "$value": "{ki.foundation.material3.typescale.size.display-large}",
+          "$description": "M3 md.sys.typescale.display-large.size (57px)."
         },
         "display-1": {
-          "$value": "{ki.space.18xl}"
+          "$value": "{ki.foundation.material3.typescale.size.display-extended-1}",
+          "$description": "Kimen extension beyond M3 display-large (64px; M3 defines no role above 57px)."
         },
         "display-2": {
-          "$value": "{ki.space.19xl}"
+          "$value": "{ki.foundation.material3.typescale.size.display-extended-2}",
+          "$description": "Kimen extension beyond M3 display-large (72px)."
         },
         "display-3": {
-          "$value": "{ki.space.20xl}"
+          "$value": "{ki.foundation.material3.typescale.size.display-extended-3}",
+          "$description": "Kimen extension beyond M3 display-large (80px)."
         }
       },
       "line-height": {
         "$type": "dimension",
         "overline": {
-          "$value": "{ki.space.3xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.label-small}",
+          "$description": "M3 md.sys.typescale.label-small.line-height (16px)."
         },
         "caption-1": {
-          "$value": "{ki.space.3xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.label-small}",
+          "$description": "M3 md.sys.typescale.label-small.line-height (16px)."
         },
         "caption-2": {
-          "$value": "{ki.space.3xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.label-medium}",
+          "$description": "M3 md.sys.typescale.label-medium.line-height (16px)."
         },
         "para": {
-          "$value": "{ki.space.5xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.body-medium}",
+          "$description": "M3 md.sys.typescale.body-medium.line-height (20px), paired with ki body-1."
         },
         "body-1": {
-          "$value": "{ki.space.5xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.body-medium}",
+          "$description": "M3 md.sys.typescale.body-medium.line-height (20px)."
         },
         "body-2": {
-          "$value": "{ki.space.7xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.body-large}",
+          "$description": "M3 md.sys.typescale.body-large.line-height (24px)."
         },
         "title-1": {
-          "$value": "{ki.space.5xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.title-medium}",
+          "$description": "M3 md.sys.typescale.title-medium.line-height (24px)."
         },
         "title-2": {
-          "$value": "{ki.space.9xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.title-large}",
+          "$description": "M3 md.sys.typescale.title-large.line-height (28px)."
         },
         "heading-1": {
-          "$value": "{ki.space.10xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.headline-small}",
+          "$description": "M3 md.sys.typescale.headline-small.line-height (32px)."
         },
         "heading-2": {
-          "$value": "{ki.space.11xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.headline-medium}",
+          "$description": "M3 md.sys.typescale.headline-medium.line-height (36px)."
         },
         "heading-3": {
-          "$value": "{ki.space.12xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.headline-large}",
+          "$description": "M3 md.sys.typescale.headline-large.line-height (40px)."
         },
         "heading-4": {
-          "$value": "{ki.space.13xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.display-small}",
+          "$description": "M3 md.sys.typescale.display-small.line-height (44px)."
         },
         "heading-5": {
-          "$value": "{ki.space.15xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.display-medium}",
+          "$description": "M3 md.sys.typescale.display-medium.line-height (52px)."
         },
         "heading-6": {
-          "$value": "{ki.space.18xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.display-large}",
+          "$description": "M3 md.sys.typescale.display-large.line-height (64px)."
         },
         "display-1": {
-          "$value": "{ki.space.19xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.display-extended-1}",
+          "$description": "Kimen extension beyond M3 display-large (72px)."
         },
         "display-2": {
-          "$value": "{ki.space.20xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.display-extended-2}",
+          "$description": "Kimen extension beyond M3 display-large (80px)."
         },
         "display-3": {
-          "$value": "{ki.space.21xl}"
+          "$value": "{ki.foundation.material3.typescale.line-height.display-extended-3}",
+          "$description": "Kimen extension beyond M3 display-large (88px)."
         }
       },
       "weight": {
         "$type": "fontWeight",
         "display": {
           "normal": {
-            "$value": "{ki.foundation.migrated.themes-onmars.font.weight.display.normal}"
+            "$value": "{ki.foundation.material3.typescale.weight.regular}",
+            "$description": "M3 md.ref.typeface.weight-regular (400): display and headline roles run regular."
           },
           "medium": {
-            "$value": "{ki.foundation.migrated.themes-onmars.font.weight.body.normal}"
+            "$value": "{ki.foundation.material3.typescale.weight.medium}",
+            "$description": "M3 md.ref.typeface.weight-medium (500)."
           },
           "semibold": {
-            "$value": "{ki.foundation.migrated.themes-onmars.font.weight.body.normal}"
+            "$value": "{ki.foundation.material3.typescale.weight.medium}",
+            "$description": "M3 md.ref.typeface.weight-medium (500): M3 defines no semibold; medium is its strongest role weight."
           },
           "bold": {
-            "$value": "{ki.foundation.migrated.themes-onmars.font.weight.body.semibold}"
+            "$value": "{ki.foundation.material3.typescale.weight.bold}",
+            "$description": "M3 md.ref.typeface.weight-bold (700), reserved for emphasis."
           }
         },
         "body": {
           "normal": {
-            "$value": "{ki.foundation.migrated.themes-onmars.font.weight.display.normal}"
+            "$value": "{ki.foundation.material3.typescale.weight.regular}",
+            "$description": "M3 md.ref.typeface.weight-regular (400): body roles run regular."
           },
           "medium": {
-            "$value": "{ki.foundation.migrated.themes-onmars.font.weight.body.normal}"
+            "$value": "{ki.foundation.material3.typescale.weight.medium}",
+            "$description": "M3 md.ref.typeface.weight-medium (500): title-medium/small and label roles."
           },
           "semibold": {
-            "$value": "{ki.foundation.migrated.themes-onmars.font.weight.body.normal}"
+            "$value": "{ki.foundation.material3.typescale.weight.medium}",
+            "$description": "M3 md.ref.typeface.weight-medium (500): M3 defines no semibold; medium is its strongest role weight."
           },
           "bold": {
-            "$value": "{ki.foundation.migrated.themes-onmars.font.weight.body.semibold}"
+            "$value": "{ki.foundation.material3.typescale.weight.bold}",
+            "$description": "M3 md.ref.typeface.weight-bold (700), reserved for emphasis."
           }
         }
       },
       "letter-spacing": {
         "$type": "dimension",
-        "$description": "Material 3 tracking values compiled from px to em at the mapped size.",
+        "$description": "M3 md.sys.typescale.<role>.tracking compiled from px to em at the role size.",
         "none": {
           "$value": "{ki.foundation.migrated.themes-onmars.font.letter-spacing.none}"
         },
         "spaced-out": {
-          "$value": "{ki.foundation.migrated.themes-material3.font.letter-spacing.spaced-out}"
+          "$value": "{ki.foundation.material3.typescale.tracking.label-small}",
+          "$description": "M3 md.sys.typescale.label-small.tracking (0.5px at 11px)."
         },
         "xs": {
-          "$value": "{ki.foundation.migrated.themes-material3.font.letter-spacing.xs}"
+          "$value": "{ki.foundation.material3.typescale.tracking.body-large}",
+          "$description": "M3 md.sys.typescale.body-large.tracking (0.5px at 16px)."
         },
         "sm": {
-          "$value": "{ki.foundation.migrated.themes-material3.font.letter-spacing.sm}"
+          "$value": "{ki.foundation.material3.typescale.tracking.body-medium}",
+          "$description": "M3 md.sys.typescale.body-medium.tracking (0.25px at 14px)."
         },
         "md": {
-          "$value": "{ki.foundation.migrated.themes-material3.font.letter-spacing.md}"
+          "$value": "{ki.foundation.material3.typescale.tracking.label-large}",
+          "$description": "M3 md.sys.typescale.label-large.tracking (0.1px at 14px)."
         },
         "lg": {
-          "$value": "{ki.foundation.migrated.themes-material3.font.letter-spacing.lg}"
+          "$value": "{ki.foundation.material3.typescale.tracking.display-large}",
+          "$description": "M3 md.sys.typescale.display-large.tracking (-0.25px at 57px), the only negative M3 tracking."
+        }
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "$description": "material3 shape system: the ki radius ramps snap to the M3 baseline shape scale (md.sys.shape.corner.*).",
+      "round": {
+        "$value": "{ki.foundation.material3.shape.corner.full}",
+        "$description": "M3 md.sys.shape.corner.full (pill)."
+      },
+      "component": {
+        "xxs": {
+          "$value": "{ki.foundation.material3.shape.corner.extra-small}",
+          "$description": "M3 md.sys.shape.corner.extra-small (4dp)."
+        },
+        "xs": {
+          "$value": "{ki.foundation.material3.shape.corner.extra-small}",
+          "$description": "M3 md.sys.shape.corner.extra-small (4dp; onmars 6px snaps down)."
+        },
+        "sm": {
+          "$value": "{ki.foundation.material3.shape.corner.small}",
+          "$description": "M3 md.sys.shape.corner.small (8dp)."
+        },
+        "md": {
+          "$value": "{ki.foundation.material3.shape.corner.small}",
+          "$description": "M3 md.sys.shape.corner.small (8dp; onmars 10px snaps down)."
+        },
+        "lg": {
+          "$value": "{ki.foundation.material3.shape.corner.medium}",
+          "$description": "M3 md.sys.shape.corner.medium (12dp)."
+        },
+        "xl": {
+          "$value": "{ki.foundation.material3.shape.corner.medium}",
+          "$description": "M3 md.sys.shape.corner.medium (12dp; onmars 14px snaps down)."
+        },
+        "2xl": {
+          "$value": "{ki.foundation.material3.shape.corner.large}",
+          "$description": "M3 md.sys.shape.corner.large (16dp)."
+        },
+        "3xl": {
+          "$value": "{ki.foundation.material3.shape.corner.large}",
+          "$description": "M3 md.sys.shape.corner.large (16dp; onmars 18px snaps down)."
+        },
+        "4xl": {
+          "$value": "{ki.foundation.material3.shape.corner.large}",
+          "$description": "M3 md.sys.shape.corner.large (16dp; onmars 20px snaps down)."
+        },
+        "5xl": {
+          "$value": "{ki.foundation.material3.shape.corner.extra-large}",
+          "$description": "M3 md.sys.shape.corner.extra-large (28dp; onmars 24px snaps up)."
+        },
+        "6xl": {
+          "$value": "{ki.foundation.material3.shape.corner.extra-large}",
+          "$description": "M3 md.sys.shape.corner.extra-large (28dp)."
+        }
+      },
+      "big-component": {
+        "xs": {
+          "$value": "{ki.foundation.material3.shape.corner.large}",
+          "$description": "M3 md.sys.shape.corner.large (16dp)."
+        },
+        "sm": {
+          "$value": "{ki.foundation.material3.shape.corner.large}",
+          "$description": "M3 md.sys.shape.corner.large (16dp; onmars 20px snaps down)."
+        },
+        "md": {
+          "$value": "{ki.foundation.material3.shape.corner.extra-large}",
+          "$description": "M3 md.sys.shape.corner.extra-large (28dp; onmars 24px snaps up)."
+        },
+        "lg": {
+          "$value": "{ki.foundation.material3.shape.corner.extra-large}",
+          "$description": "M3 md.sys.shape.corner.extra-large (28dp)."
         }
       }
     },

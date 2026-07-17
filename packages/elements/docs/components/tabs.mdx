@@ -1,0 +1,103 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-tabs" />
+
+# ki-tabs
+
+A tab group for switching between peer content views.
+
+**When to use** — switch between small sets of peer views inside the same
+page, with one visible panel at a time.
+
+**When NOT to use** — selecting form values (use `ki-radio-group`), page
+navigation (use links), step flows, or standalone `ki-tab` / `ki-tab-panel`
+children outside this group.
+
+## Examples
+
+Each `ki-tab` pairs with the `ki-tab-panel` that shares its `value`; the
+group's `value` attribute declares the initially selected view. Orphan and
+duplicate panels stay hidden:
+
+```html
+<ki-tabs label="Project sections" value="code">
+  <ki-tab value="code">Code</ki-tab>
+  <ki-tab value="issues">Issues</ki-tab>
+  <ki-tab value="settings" disabled>Settings</ki-tab>
+
+  <ki-tab-panel value="code">Repository files and branches.</ki-tab-panel>
+  <ki-tab-panel value="issues">Open and recently closed issues.</ki-tab-panel>
+  <ki-tab-panel value="settings">Project configuration.</ki-tab-panel>
+</ki-tabs>
+```
+
+Tabs accept `start`/`end` slot media next to their label. Never author
+`selected` on a `ki-tab` — it is output-only state written by the group;
+set the group's `value` instead:
+
+```html
+<ki-tabs label="Inbox views">
+  <ki-tab value="all">
+    <span slot="start" aria-hidden="true">✉</span>
+    All mail
+  </ki-tab>
+  <ki-tab value="unread">Unread</ki-tab>
+
+  <ki-tab-panel value="all">Every conversation.</ki-tab-panel>
+  <ki-tab-panel value="unread">Unread conversations only.</ki-tab-panel>
+</ki-tabs>
+```
+
+Without a `value` attribute the group falls back to the first enabled tab.
+
+## Recipe: listening for `ki-change`
+
+`ki-change` fires once after a user-driven selection change from pointer or
+keyboard navigation. `detail.value` is the resolved selected value and the
+group's `value` property is already current when listeners run. Programmatic
+`value` writes and the first-render fallback are silent:
+
+```html
+<ki-tabs id="sections" label="Project sections" value="code">
+  <ki-tab value="code">Code</ki-tab>
+  <ki-tab value="issues">Issues</ki-tab>
+  <ki-tab-panel value="code">Repository files.</ki-tab-panel>
+  <ki-tab-panel value="issues">Open issues.</ki-tab-panel>
+</ki-tabs>
+
+<script type="module">
+  const tabs = document.getElementById('sections');
+  tabs.addEventListener('ki-change', (event) => {
+    console.log('selected view:', event.detail.value);
+    // e.g. persist the selection or lazy-load panel data here
+  });
+  // Programmatic selection — silent, no ki-change:
+  tabs.value = 'issues';
+</script>
+```
+
+## Customization
+
+| Token                          | Controls                          |
+| ------------------------------ | --------------------------------- |
+| `--ki-tabs-gap`                | Gap between tabs in the strip     |
+| `--ki-tabs-divider-color`      | Divider under the tab strip       |
+| `--ki-tab-indicator-color`     | Selected-tab marker color         |
+| `--ki-tab-selected-rest-fg`    | Selected tab resting text color   |
+| `--ki-tab-panel-padding-block` | Panel vertical padding            |
+
+Tab states follow `--ki-tab-{unselected|selected}-{rest|hover|active|disabled}-*`.
+Shadow parts: on the group, `::part(tablist)`; on each tab, `::part(tab)`
+and `::part(indicator)`; on each panel, `::part(panel)`.
+
+## Accessibility
+
+- Set the group's `label` — it names the tablist; always provide one when
+  multiple tab groups may appear in a view. It is not a visible heading;
+  render visible context in surrounding content.
+- Tab labels come from each tab's default slot (the accessible name
+  source).
+- Arrow keys move between tabs; `disabled` tabs are excluded from selection
+  by every modality.
+- The first tab with a given `value` owns it — later duplicates render but
+  are not selectable.
