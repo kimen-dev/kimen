@@ -18,7 +18,7 @@
 // first linux baselines. See ../README.md for the full bootstrap and
 // regeneration flow.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { commands, page, userEvent } from 'vitest/browser';
+import { commands, page } from 'vitest/browser';
 
 import material3Css from '@kimen/tokens/css/material3?raw';
 import onmarsCss from '@kimen/tokens/css?raw';
@@ -241,7 +241,19 @@ export function runVisualSuite(options: VisualSuiteOptions): void {
         }
         const wrapper = await mountGallery(component, theme);
         if (visualGalleries[component].focusFirst === true) {
-          await userEvent.keyboard('{Tab}');
+          // Deterministic focus: keyboard Tab lands wherever the iframe's
+          // previous focus state sends it, which varied between CI runs and
+          // flipped the focus ring in and out of the baseline (116px drift
+          // caught by the armed gate on its first verification run). The
+          // explicit focusVisible option (Chromium supports it, and this
+          // suite is chromium-only) paints the :focus-visible ring on the
+          // exact first host regardless of prior focus or heuristics.
+          const first = [...wrapper.querySelectorAll<HTMLElement>('*')].find((el) =>
+            el.tagName.startsWith('KI-'),
+          );
+          first?.focus({ focusVisible: true });
+          await nextFrame();
+          await nextFrame();
         }
 
         await expect(wrapper).toMatchScreenshot(screenshotName, {
