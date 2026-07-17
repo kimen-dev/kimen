@@ -72,3 +72,45 @@ Note in particular: agentic-actions-auditor and supply-chain-risk-auditor
 CC-BY-SA-4.0; those files remain under CC-BY-SA-4.0 (share-alike) even though
 this repository is otherwise Apache-2.0. Remaining vendored skills are MIT or
 Apache-2.0 as recorded per directory.
+
+================================================================================
+Third-party notices: Inter font (SIL OFL 1.1)
+================================================================================
+
+The visual-regression harness vendors the Inter variable font as a static
+test fixture so screenshot baselines never depend on the fonts installed on
+a CI runner image:
+
+  - packages/elements/browser-tests/visual/fonts/InterVariable.woff2
+    Inter — https://rsms.me/inter/ (https://github.com/rsms/inter)
+    Fetched from: https://rsms.me/inter/font-files/InterVariable.woff2
+    Font revision: 4.66 (WOFF2 metadata)
+    SHA-256: 693b77d4f32ee9b8bfc995589b5fad5e99adf2832738661f5402f9978429a8e3
+    Copyright (c) 2016 The Inter Project Authors
+    License: SIL Open Font License 1.1 —
+    https://github.com/rsms/inter/blob/master/LICENSE.txt
+
+  The font file is used only as a test fixture; it is not part of any
+  published package.
+
+================================================================================
+Third-party notices: Roboto font (Apache License 2.0)
+================================================================================
+
+The visual-regression harness also vendors the Roboto variable font so the
+material3 theme galleries render their real typeface instead of a platform
+fallback face:
+
+  - packages/elements/browser-tests/visual/fonts/RobotoVariable.woff2
+    Roboto — https://fonts.google.com/specimen/Roboto
+    (https://github.com/googlefonts/roboto-classic)
+    Fetched from: https://fonts.gstatic.com/s/roboto/v51/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBHMdazQ.woff2
+    (Google Fonts API woff2, latin subset, variable wght 100..900)
+    Font revision: Version 3.015; 2026 (WOFF2 metadata)
+    SHA-256: 0a44e0bb6ba5c8537e8814c148ef7755f1bce12112361231f595ecc584a18d7a
+    Copyright 2011 The Roboto Project Authors
+    License: Apache License 2.0 —
+    https://www.apache.org/licenses/LICENSE-2.0
+
+  The font file is used only as a test fixture; it is not part of any
+  published package.
