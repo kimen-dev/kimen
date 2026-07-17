@@ -1,8 +1,13 @@
 // @spec:001-tokens-theming
-import { beforeEach, describe, expect, it } from 'vitest';
+import axe from 'axe-core';
+import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import onmarsCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
+import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
+import { defineCustomElement as defineKiBadge } from '../dist/components/ki-badge.js';
+import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
+import { defineCustomElement as defineKiCard } from '../dist/components/ki-card.js';
 
 const STYLE_ID = 'kimen-tokens-test-style';
 const MATERIAL3_STYLE_ID = 'kimen-material3-tokens-test-style';
@@ -87,9 +92,37 @@ function extractSchemeTokenNames(css: string): { light: string[]; dark: string[]
   };
 }
 
+beforeAll(() => {
+  defineKiAlert();
+  defineKiBadge();
+  defineKiButton();
+  defineKiCard();
+});
+
 beforeEach(() => {
   resetDocument();
 });
+
+async function mountComponentTree(): Promise<HTMLElement> {
+  const main = document.createElement('main');
+  main.innerHTML = `
+    <ki-button>Save changes</ki-button>
+    <ki-badge>3</ki-badge>
+    <ki-alert heading="Heads up">We could not save your changes</ki-alert>
+    <ki-card>
+      <h2 slot="header">Monthly report</h2>
+      <p>Revenue increased.</p>
+    </ki-card>
+  `;
+  document.body.append(main);
+  await customElements.whenDefined('ki-button');
+  await customElements.whenDefined('ki-badge');
+  await customElements.whenDefined('ki-alert');
+  await customElements.whenDefined('ki-card');
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  return main;
+}
 
 describe('S1 onmars light default tokens', () => {
   it('S1 resolves the onmars brand and base surface without configuration', () => {
@@ -139,5 +172,29 @@ describe('material3 theme and fallback', () => {
     document.documentElement.setAttribute('data-ki-theme', 'acme');
 
     expectTokenColor('--ki-color-brand-500', '#845abe');
+  });
+});
+
+describe('token-driven accessibility of a component tree', () => {
+  // One axe case per theme proves the token VALUES each theme resolves keep a
+  // representative multi-component tree accessible (contrast included) —
+  // the per-component axe scans only ever run under onmars.
+  it('S1 has zero axe violations for a component tree under the default onmars theme', async () => {
+    injectStylesheet(onmarsCss);
+    const main = await mountComponentTree();
+
+    expect((await axe.run(main)).violations).toEqual([]);
+    main.remove();
+  });
+
+  it('S5 has zero axe violations for the same component tree under material3', async () => {
+    injectStylesheet(onmarsCss);
+    injectStylesheet(material3Css, MATERIAL3_STYLE_ID);
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    const main = await mountComponentTree();
+
+    expectTokenColor('--ki-color-brand-500', '#6750a4');
+    expect((await axe.run(main)).violations).toEqual([]);
+    main.remove();
   });
 });
