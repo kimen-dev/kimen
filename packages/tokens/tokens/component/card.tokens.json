@@ -22,8 +22,8 @@
         "$description": "dimension used by the card component for radius."
       },
       "elevation": {
-        "$value": "{ki.foundation.migrated.component-card.card.elevation}",
-        "$description": "shadow used by the card component for card elevation.",
+        "$value": "{ki.elevation.e1}",
+        "$description": "Card resting elevation: MarsUI elevation ramp level e1 (brief §5, drop 0/1/1/-0.5 in the scheme shadow color; replaces the migrated M2-era shadow).",
         "$type": "shadow"
       },
       "gap": {

@@ -82,7 +82,10 @@
   border-radius: var(--ki-input-radius);
 }
 
+/* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
+   Focus/primary glow (3px spread at 40%) under the opaque outline ring. */
 :host(:focus-within) [part="field"] {
+  box-shadow: var(--ki-input-focus-ring-shadow);
   outline: var(--ki-input-focus-ring-width) solid var(--ki-input-focus-ring-color);
   outline-offset: var(--ki-input-focus-ring-offset);
 }

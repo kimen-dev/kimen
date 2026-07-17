@@ -29,8 +29,8 @@
       },
       "indicator": {
         "color": {
-          "$value": "{ki.surface.primary-high-em}",
-          "$description": "Material 3 color used by the progress component for indicator color."
+          "$value": "{ki.surface.primary-med-em}",
+          "$description": "M3 md.comp.linear-progress-indicator.active-indicator.color: md.sys.color.primary (ki.surface.primary-med-em is the documented md.sys.color.primary mapping in the M3 composition)."
         }
       }
     }

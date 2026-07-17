@@ -229,6 +229,11 @@
         "offset": {
           "$value": "{ki.space.xxs}",
           "$description": "dimension used by the input component for focus ring offset."
+        },
+        "shadow": {
+          "$value": "{ki.focus.primary}",
+          "$type": "shadow",
+          "$description": "shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md \u00a72.5, same double mechanism as ki-button: glow plus the opaque indicator)."
         }
       }
     }

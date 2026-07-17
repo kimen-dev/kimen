@@ -49,8 +49,8 @@
           "$description": "Material 3 color used by the select component for hover foreground."
         },
         "border": {
-          "$value": "{ki.outline.primary-high-em}",
-          "$description": "Material 3 color used by the select component for hover border."
+          "$value": "{ki.outline.high-em}",
+          "$description": "Material 3 color used by the select component for hover border: M3 hover uses the on-surface outline (primary is reserved for the focused indicator), matching input.material3."
         },
         "label-fg": {
           "$value": "{ki.text.high-em}",
@@ -106,9 +106,10 @@
           "$value": "{ki.radius.component.xs}",
           "$description": "M3 menu container shape: md.sys.shape.corner.extra-small (4dp) via the material3 radius scale."
         },
-        "elevation": {
-          "$value": "{ki.elevation.shadow-med}",
-          "$description": "Material 3 color used by the select component for listbox elevation."
+        "shadow": {
+          "$value": "{ki.elevation.e2}",
+          "$type": "shadow",
+          "$description": "M3 menu container elevation: md.sys.elevation.level2 via the shared ramp (ki.elevation.e2 resolves to level-2 in the material3 semantic layer)."
         }
       },
       "focus-ring": {

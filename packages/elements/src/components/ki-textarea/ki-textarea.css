@@ -74,8 +74,11 @@
   min-block-size: var(--ki-textarea-min-target);
 }
 
+/* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
+   Focus/primary glow (3px spread at 40%) plus the opaque ring layers. */
 :host(:focus-within) [part="field"] {
   box-shadow:
+    var(--ki-textarea-focus-ring-shadow),
     0 0 0 var(--ki-textarea-focus-ring-offset) var(--ki-surface-s0),
     0 0 0 calc(var(--ki-textarea-focus-ring-offset) + var(--ki-textarea-focus-ring-width))
     var(--ki-textarea-focus-ring-color);

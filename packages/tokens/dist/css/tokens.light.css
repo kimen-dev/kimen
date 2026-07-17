@@ -922,7 +922,7 @@
   --ki-tab-focus-ring-width: var(--ki-space-xxs); /** dimension used by the tab component for focus ring width. */
   --ki-tab-focus-ring-offset: var(--ki-space-xxs); /** dimension used by the tab component for focus ring offset. */
   --ki-tabs-gap: var(--ki-space-xs); /** dimension used by the tabs component for gap. */
-  --ki-tabs-divider-width: var(--ki-space-xxs); /** dimension used by the tabs component for divider width. */
+  --ki-tabs-divider-width: var(--ki-size-border-hairline); /** MarsUI hairline stroke as the tab bar divider: same 1px divider width as the verified ki-list divider pattern (marsui-design-dna.md §1 outline hairlines). */
   --ki-textarea-padding-inline: var(--ki-space-md); /** dimension used by the textarea component for padding inline. */
   --ki-textarea-padding-block: var(--ki-space-sm); /** dimension used by the textarea component for padding block. */
   --ki-textarea-label-gap: var(--ki-space-xs); /** dimension used by the textarea component for label gap. */
@@ -1057,8 +1057,10 @@
   --ki-alert-danger-fg: var(--ki-text-danger-high-em); /** color used by the alert component for danger foreground. */
   --ki-alert-danger-border: var(--ki-outline-danger-med-em); /** color used by the alert component for danger border. */
   --ki-alert-info-bg: var(--ki-surface-info-base-em); /** color used by the alert component for info background. */
+  --ki-alert-info-fg: var(--ki-text-info-high-em); /** color used by the alert component for info foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 7.3:1). */
   --ki-alert-info-border: var(--ki-outline-info-med-em); /** color used by the alert component for info border. */
   --ki-alert-warning-bg: var(--ki-surface-warning-base-em); /** color used by the alert component for warning background. */
+  --ki-alert-warning-fg: var(--ki-text-warning-high-em); /** color used by the alert component for warning foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 5.5:1). */
   --ki-alert-warning-border: var(--ki-outline-warning-med-em); /** color used by the alert component for warning border. */
   --ki-badge-neutral-bg: var(--ki-surface-s2); /** color used by the badge component for neutral background. */
   --ki-badge-neutral-border: var(--ki-outline-none); /** color used by the badge component for neutral border. */
@@ -1220,7 +1222,6 @@
   --ki-button-ghost-danger-disabled-bg: var(--ki-transparent-inverse); /** color used by the button component for ghost danger disabled background. */
   --ki-button-ghost-danger-disabled-border: var(--ki-outline-none); /** color used by the button component for ghost danger disabled border. */
   --ki-card-border-color: var(--ki-outline-none); /** color used by the card component for border color. */
-  --ki-card-elevation: var(--ki-foundation-migrated-component-card-card-elevation); /** shadow used by the card component for card elevation. */
   --ki-checkbox-unchecked-rest-bg: var(--ki-surface-s0); /** color used by the checkbox component for unchecked rest background. */
   --ki-checkbox-unchecked-rest-border: var(--ki-outline-strong); /** color used by the checkbox component for unchecked rest border. */
   --ki-checkbox-unchecked-hover-bg: var(--ki-surface-s1); /** color used by the checkbox component for unchecked hover background. */
@@ -1242,7 +1243,6 @@
   --ki-checkbox-invalid-border: var(--ki-outline-danger-high-em); /** color used by the checkbox component for invalid border. */
   --ki-dialog-bg: var(--ki-surface-s1); /** color used by the dialog component for background. */
   --ki-dialog-border: var(--ki-foundation-migrated-component-dialog-dialog-border); /** border used by the dialog component for border. */
-  --ki-dialog-shadow: var(--ki-foundation-migrated-component-dialog-dialog-shadow); /** shadow used by the dialog component for dialog shadow. */
   --ki-dialog-backdrop-bg: var(--ki-overlay-high-em); /** color used by the dialog component for backdrop background. */
   --ki-input-border-block-start-width: var(--ki-input-border-width); /** dimension used by the input component for border block start width. */
   --ki-input-border-block-end-width: var(--ki-input-border-width); /** dimension used by the input component for border block end width. */
@@ -1262,9 +1262,12 @@
   --ki-progress-track-color: var(--ki-surface-s3); /** color used by the progress component for track color. */
   --ki-radio-unselected-rest-bg: var(--ki-surface-s0); /** color used by the radio component for unselected rest background. */
   --ki-radio-unselected-rest-border: var(--ki-outline-high-em); /** color used by the radio component for unselected rest border. */
+  --ki-radio-unselected-hover-bg: var(--ki-surface-s1); /** color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3. */
+  --ki-radio-unselected-active-bg: var(--ki-surface-s2); /** color used by the radio component for unselected active background. Brief §1: neutral surface em ramp one step above hover (s1→s2), matching ki-checkbox unchecked active; the primary-tinted alpha stays in radio.material3. */
   --ki-radio-unselected-disabled-bg: var(--ki-surface-disabled-low-em); /** color used by the radio component for unselected disabled background. */
   --ki-radio-unselected-disabled-border: var(--ki-outline-med-em); /** color used by the radio component for unselected disabled border. */
   --ki-radio-selected-rest-bg: var(--ki-surface-s0); /** color used by the radio component for selected rest background. */
+  --ki-radio-selected-hover-bg: var(--ki-surface-s1); /** color used by the radio component for selected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp); the primary-tinted alpha stays in radio.material3. */
   --ki-radio-selected-active-bg: var(--ki-surface-s0); /** color used by the radio component for selected active background. */
   --ki-radio-selected-disabled-bg: var(--ki-surface-disabled-low-em); /** color used by the radio component for selected disabled background. */
   --ki-radio-selected-disabled-border: var(--ki-outline-med-em); /** color used by the radio component for selected disabled border. */
@@ -1275,11 +1278,12 @@
   --ki-select-rest-bg: var(--ki-surface-s0); /** color used by the select component for rest background. */
   --ki-select-rest-border: var(--ki-outline-high-em); /** color used by the select component for rest border. */
   --ki-select-hover-bg: var(--ki-surface-s1); /** color used by the select component for hover background. */
+  --ki-select-hover-border: var(--ki-outline-high-em); /** color used by the select component for hover border. Brief §1: hover moves along the neutral outline em ramp (Black/12), matching ki-input/ki-textarea; the primary accent outline is the focus language (Focus/primary), not hover. */
   --ki-select-focus-bg: var(--ki-surface-s0); /** color used by the select component for focus background. */
   --ki-select-disabled-bg: var(--ki-surface-disabled-base-em); /** color used by the select component for disabled background. */
   --ki-select-disabled-border: var(--ki-outline-low-em); /** color used by the select component for disabled border. */
   --ki-select-listbox-bg: var(--ki-surface-s1); /** color used by the select component for listbox background. */
-  --ki-select-listbox-elevation: var(--ki-elevation-shadow-med); /** color used by the select component for listbox elevation. */
+  --ki-select-listbox-elevation: var(--ki-elevation-shadow-med); /** color used by the select component for listbox elevation. Legacy of the pre-ramp hand-composed listbox shadow, superseded by ki.select.listbox.shadow; kept published because the public-api contract requires deprecation metadata at least one minor before removal. */
   --ki-switch-unchecked-rest-track: var(--ki-surface-s3); /** color used by the switch component for unchecked rest track. */
   --ki-switch-unchecked-rest-border: var(--ki-outline-high-em); /** color used by the switch component for unchecked rest border. */
   --ki-switch-unchecked-hover-track: var(--ki-surface-s4); /** color used by the switch component for unchecked hover track. */
@@ -1342,8 +1346,6 @@
   --ki-alert-heading-font-size: var(--ki-typography-size-body-2); /** dimension used by the alert component for heading font size. */
   --ki-alert-heading-font-weight: var(--ki-typography-weight-body-semibold); /** font weight used by the alert component for heading font weight. */
   --ki-alert-neutral-fg: var(--ki-text-high-em); /** color used by the alert component for neutral foreground. */
-  --ki-alert-info-fg: var(--ki-text-high-em); /** color used by the alert component for info foreground. */
-  --ki-alert-warning-fg: var(--ki-text-high-em); /** color used by the alert component for warning foreground. */
   --ki-alert-dismiss-rest-fg: var(--ki-text-high-em); /** color used by the alert component for dismiss rest foreground. */
   --ki-alert-dismiss-hover-fg: var(--ki-text-high-em); /** color used by the alert component for dismiss hover foreground. */
   --ki-alert-dismiss-active-fg: var(--ki-text-high-em); /** color used by the alert component for dismiss active foreground. */
@@ -1404,6 +1406,7 @@
   --ki-button-ghost-neutral-active-fg: var(--ki-text-primary-high-em); /** color used by the button component for ghost neutral active foreground. */
   --ki-card-bg: var(--ki-surface-raised); /** color used by the card component for background. */
   --ki-card-fg: var(--ki-text-high-em); /** color used by the card component for foreground. */
+  --ki-card-elevation: var(--ki-elevation-e1); /** Card resting elevation: MarsUI elevation ramp level e1 (brief §5, drop 0/1/1/-0.5 in the scheme shadow color; replaces the migrated M2-era shadow). */
   --ki-checkbox-label-font-size: var(--ki-typography-size-body-1); /** dimension used by the checkbox component for label font size. */
   --ki-checkbox-label-font-weight: var(--ki-typography-weight-body-normal); /** font weight used by the checkbox component for label font weight. */
   --ki-checkbox-label-line-height: var(--ki-typography-line-height-body-1); /** dimension used by the checkbox component for label line height. */
@@ -1426,6 +1429,7 @@
   --ki-checkbox-indeterminate-active-fg: var(--ki-text-primary-on-primary); /** color used by the checkbox component for indeterminate active foreground. */
   --ki-checkbox-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the checkbox component for focus ring color. */
   --ki-dialog-fg: var(--ki-text-high-em); /** color used by the dialog component for foreground. */
+  --ki-dialog-shadow: var(--ki-elevation-e4); /** Dialog elevation: MarsUI elevation ramp level e4 (brief §5, high modal surface; replaces the migrated approximation). material3 keeps its own e3 override (M3 dialog = level3). */
   --ki-dialog-heading-font-size: var(--ki-typography-size-title-2); /** dimension used by the dialog component for heading font size. */
   --ki-dialog-heading-font-weight: var(--ki-typography-weight-body-semibold); /** font weight used by the dialog component for heading font weight. */
   --ki-dialog-heading-line-height: var(--ki-typography-line-height-title-2); /** dimension used by the dialog component for heading line height. */
@@ -1461,7 +1465,7 @@
   --ki-option-selected-bg: var(--ki-surface-primary-low-em); /** color used by the option component for selected background. */
   --ki-option-selected-fg: var(--ki-text-high-em); /** color used by the option component for selected foreground. */
   --ki-option-disabled-fg: var(--ki-text-low-em); /** color used by the option component for disabled foreground. */
-  --ki-progress-indicator-color: var(--ki-surface-primary-high-em); /** color used by the progress component for indicator color. */
+  --ki-progress-indicator-color: var(--ki-surface-primary-med-em); /** MarsUI fills components with the med-em (500) tone of the ramp (marsui-design-dna.md §1; specs/002-ki-button/design-extraction.md §§2.1-2.4 delta 500-vs-high-em): progress indicator uses surface.primary-med-em. */
   --ki-radio-group-label-font-size: var(--ki-typography-size-body-1); /** dimension used by the radio group component for label font size. */
   --ki-radio-group-label-font-weight: var(--ki-typography-weight-body-medium); /** font weight used by the radio group component for label font weight. */
   --ki-radio-group-label-line-height: var(--ki-typography-line-height-body-1); /** dimension used by the radio group component for label line height. */
@@ -1469,15 +1473,12 @@
   --ki-radio-label-font-weight: var(--ki-typography-weight-body-normal); /** font weight used by the radio component for label font weight. */
   --ki-radio-label-line-height: var(--ki-typography-line-height-body-1); /** dimension used by the radio component for label line height. */
   --ki-radio-unselected-rest-fg: var(--ki-text-primary-high-em); /** color used by the radio component for unselected rest foreground. */
-  --ki-radio-unselected-hover-bg: var(--ki-surface-primary-base-em-alpha); /** color used by the radio component for unselected hover background. */
   --ki-radio-unselected-hover-fg: var(--ki-text-primary-high-em); /** color used by the radio component for unselected hover foreground. */
   --ki-radio-unselected-hover-border: var(--ki-outline-primary-high-em); /** color used by the radio component for unselected hover border. */
-  --ki-radio-unselected-active-bg: var(--ki-surface-primary-low-em-alpha); /** color used by the radio component for unselected active background. */
   --ki-radio-unselected-active-fg: var(--ki-text-primary-high-em); /** color used by the radio component for unselected active foreground. */
   --ki-radio-unselected-active-border: var(--ki-outline-primary-high-em); /** color used by the radio component for unselected active border. */
   --ki-radio-selected-rest-fg: var(--ki-surface-primary-high-em); /** color used by the radio component for selected rest foreground. */
   --ki-radio-selected-rest-border: var(--ki-outline-primary-high-em); /** color used by the radio component for selected rest border. */
-  --ki-radio-selected-hover-bg: var(--ki-surface-primary-base-em-alpha); /** color used by the radio component for selected hover background. */
   --ki-radio-selected-hover-fg: var(--ki-surface-primary-high-em); /** color used by the radio component for selected hover foreground. */
   --ki-radio-selected-hover-border: var(--ki-outline-primary-high-em); /** color used by the radio component for selected hover border. */
   --ki-radio-selected-active-fg: var(--ki-surface-primary-high-em); /** color used by the radio component for selected active foreground. */
@@ -1490,7 +1491,6 @@
   --ki-select-rest-fg: var(--ki-text-high-em); /** color used by the select component for rest foreground. */
   --ki-select-rest-label-fg: var(--ki-text-med-em); /** color used by the select component for rest label foreground. */
   --ki-select-hover-fg: var(--ki-text-high-em); /** color used by the select component for hover foreground. */
-  --ki-select-hover-border: var(--ki-outline-primary-high-em); /** color used by the select component for hover border. */
   --ki-select-hover-label-fg: var(--ki-text-high-em); /** color used by the select component for hover label foreground. */
   --ki-select-focus-fg: var(--ki-text-high-em); /** color used by the select component for focus foreground. */
   --ki-select-focus-border: var(--ki-outline-primary-high-em); /** color used by the select component for focus border. */
@@ -1498,6 +1498,7 @@
   --ki-select-disabled-fg: var(--ki-text-low-em); /** color used by the select component for disabled foreground. */
   --ki-select-disabled-label-fg: var(--ki-text-low-em); /** color used by the select component for disabled label foreground. */
   --ki-select-placeholder-fg: var(--ki-text-med-em); /** color used by the select component for placeholder foreground. */
+  --ki-select-listbox-shadow: var(--ki-elevation-e3); /** shadow used by the select component for the listbox: MarsUI elevation ramp e3 (brief §5), the medium floating-surface level, replacing the former hand-composed offset/color shadow. Declared level: e3 (M3 analog: menu/dialog band; material3 overrides to e2 = md.sys.elevation.level2 for menus). */
   --ki-select-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the select component for focus ring color. */
   --ki-switch-unchecked-rest-thumb: var(--ki-text-high-em); /** color used by the switch component for unchecked rest thumb. */
   --ki-switch-unchecked-hover-thumb: var(--ki-text-high-em); /** color used by the switch component for unchecked hover thumb. */
@@ -1544,6 +1545,7 @@
   --ki-textarea-invalid-placeholder-fg: var(--ki-text-med-em); /** color used by the textarea component for invalid placeholder foreground. */
   --ki-textarea-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the textarea component for focus ring color. */
   --ki-tooltip-shadow: var(--ki-elevation-e2); /** shadow used by the tooltip component for tooltip shadow. */
+  --ki-alert-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-button-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring). */
   --ki-button-primary-neutral-disabled-fg: var(--ki-text-muted); /** color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification). */
   --ki-button-primary-success-disabled-fg: var(--ki-text-muted); /** color used by the button component for primary success disabled foreground. */
@@ -1563,6 +1565,7 @@
   --ki-checkbox-unchecked-disabled-fg: var(--ki-text-muted); /** color used by the checkbox component for unchecked disabled foreground. */
   --ki-checkbox-checked-disabled-fg: var(--ki-text-muted); /** color used by the checkbox component for checked disabled foreground. */
   --ki-checkbox-indeterminate-disabled-fg: var(--ki-text-muted); /** color used by the checkbox component for indeterminate disabled foreground. */
+  --ki-checkbox-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-input-rest-fg: var(--ki-text-base); /** color used by the input component for rest foreground. */
   --ki-input-rest-label-fg: var(--ki-text-muted); /** color used by the input component for rest label foreground. */
   --ki-input-rest-placeholder-fg: var(--ki-text-muted); /** color used by the input component for rest placeholder foreground. */
@@ -1579,11 +1582,17 @@
   --ki-input-readonly-placeholder-fg: var(--ki-text-muted); /** color used by the input component for readonly placeholder foreground. */
   --ki-input-invalid-fg: var(--ki-text-base); /** color used by the input component for invalid foreground. */
   --ki-input-invalid-placeholder-fg: var(--ki-text-muted); /** color used by the input component for invalid placeholder foreground. */
+  --ki-input-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-radio-unselected-disabled-fg: var(--ki-text-muted); /** color used by the radio component for unselected disabled foreground. */
   --ki-radio-selected-disabled-fg: var(--ki-text-muted); /** color used by the radio component for selected disabled foreground. */
+  --ki-radio-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the radio component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
+  --ki-select-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the select component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
+  --ki-switch-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-tab-selected-disabled-fg: var(--ki-text-muted); /** color used by the tab component for selected disabled foreground. */
   --ki-tab-unselected-disabled-fg: var(--ki-text-muted); /** color used by the tab component for unselected disabled foreground. */
+  --ki-tab-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-textarea-disabled-fg: var(--ki-text-muted); /** color used by the textarea component for disabled foreground. */
   --ki-textarea-disabled-label-fg: var(--ki-text-muted); /** color used by the textarea component for disabled label foreground. */
   --ki-textarea-disabled-placeholder-fg: var(--ki-text-muted); /** color used by the textarea component for disabled placeholder foreground. */
+  --ki-textarea-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
 }

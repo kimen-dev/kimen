@@ -1354,7 +1354,7 @@
   --ki-option-disabled-fg: var(--ki-text-low-em); /** Material 3 color used by the option component for disabled foreground. */
   --ki-progress-linear-radius: var(--ki-radius-round); /** Material 3 dimension used by the progress component for linear radius. */
   --ki-progress-track-color: var(--ki-surface-s3); /** Material 3 color used by the progress component for track color. */
-  --ki-progress-indicator-color: var(--ki-surface-primary-high-em); /** Material 3 color used by the progress component for indicator color. */
+  --ki-progress-indicator-color: var(--ki-surface-primary-med-em); /** M3 md.comp.linear-progress-indicator.active-indicator.color: md.sys.color.primary (ki.surface.primary-med-em is the documented md.sys.color.primary mapping in the M3 composition). */
   --ki-radio-control-radius: var(--ki-radius-round); /** dimension used by the radio component for control radius. */
   --ki-radio-unselected-rest-bg: var(--ki-surface-s0); /** Material 3 color used by the radio component for unselected rest background. */
   --ki-radio-unselected-rest-fg: var(--ki-text-primary-high-em); /** Material 3 color used by the radio component for unselected rest foreground. */
@@ -1384,7 +1384,7 @@
   --ki-select-rest-label-fg: var(--ki-text-med-em); /** Material 3 color used by the select component for rest label foreground. */
   --ki-select-hover-bg: var(--ki-surface-s3); /** Material 3 color used by the select component for hover background. */
   --ki-select-hover-fg: var(--ki-text-high-em); /** Material 3 color used by the select component for hover foreground. */
-  --ki-select-hover-border: var(--ki-outline-primary-high-em); /** Material 3 color used by the select component for hover border. */
+  --ki-select-hover-border: var(--ki-outline-high-em); /** Material 3 color used by the select component for hover border: M3 hover uses the on-surface outline (primary is reserved for the focused indicator), matching input.material3. */
   --ki-select-hover-label-fg: var(--ki-text-high-em); /** Material 3 color used by the select component for hover label foreground. */
   --ki-select-focus-bg: var(--ki-surface-s2); /** Material 3 color used by the select component for focus background. */
   --ki-select-focus-fg: var(--ki-text-high-em); /** Material 3 color used by the select component for focus foreground. */
@@ -1397,7 +1397,7 @@
   --ki-select-placeholder-fg: var(--ki-text-med-em); /** Material 3 color used by the select component for placeholder foreground. */
   --ki-select-listbox-bg: var(--ki-surface-s2); /** Material 3 color used by the select component for listbox background. */
   --ki-select-listbox-radius: var(--ki-radius-component-xs); /** M3 menu container shape: md.sys.shape.corner.extra-small (4dp) via the material3 radius scale. */
-  --ki-select-listbox-elevation: var(--ki-elevation-shadow-med); /** Material 3 color used by the select component for listbox elevation. */
+  --ki-select-listbox-elevation: var(--ki-elevation-shadow-med); /** color used by the select component for listbox elevation. Legacy of the pre-ramp hand-composed listbox shadow, superseded by ki.select.listbox.shadow; kept published because the public-api contract requires deprecation metadata at least one minor before removal. */
   --ki-select-focus-ring-color: var(--ki-outline-primary-high-em); /** Material 3 color used by the select component for focus ring color. */
   --ki-switch-track-radius: var(--ki-radius-round); /** dimension used by the switch component for track radius. */
   --ki-switch-thumb-radius: var(--ki-radius-round); /** dimension used by the switch component for thumb radius. */
@@ -1483,6 +1483,7 @@
   --ki-alert-line-height: var(--ki-typography-line-height-body-1); /** dimension used by the alert component for line height. */
   --ki-alert-heading-font-size: var(--ki-typography-size-body-2); /** dimension used by the alert component for heading font size. */
   --ki-alert-heading-font-weight: var(--ki-typography-weight-body-semibold); /** font weight used by the alert component for heading font weight. */
+  --ki-alert-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-badge-sm-font-size: var(--ki-typography-size-caption-2); /** dimension used by the badge component for sm font size. */
   --ki-badge-sm-line-height: var(--ki-typography-line-height-caption-2); /** dimension used by the badge component for sm line height. */
   --ki-badge-md-font-size: var(--ki-typography-size-body-1); /** dimension used by the badge component for md font size. */
@@ -1537,6 +1538,7 @@
   --ki-checkbox-checked-disabled-fg: var(--ki-text-muted); /** Material 3 color used by the checkbox component for checked disabled foreground. */
   --ki-checkbox-indeterminate-hover-bg: var(--ki-surface-primary-high-em-hover); /** Material 3 color used by the checkbox component for indeterminate hover background. */
   --ki-checkbox-indeterminate-disabled-fg: var(--ki-text-muted); /** Material 3 color used by the checkbox component for indeterminate disabled foreground. */
+  --ki-checkbox-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-dialog-shadow: var(--ki-elevation-e3); /** M3 dialog container elevation: md.sys.elevation.level3 via ki.elevation.e3 (replaces the migrated approximation). */
   --ki-dialog-heading-font-size: var(--ki-typography-size-title-2); /** Material 3 dimension used by the dialog component for heading font size. */
   --ki-dialog-heading-font-weight: var(--ki-typography-weight-body-normal); /** Material 3 font weight used by the dialog component for heading font weight. */
@@ -1547,6 +1549,7 @@
   --ki-input-label-font-size: var(--ki-typography-size-caption-2); /** Material 3 dimension used by the input component for label font size. */
   --ki-input-label-font-weight: var(--ki-typography-weight-body-normal); /** Material 3 font weight used by the input component for label font weight. */
   --ki-input-label-line-height: var(--ki-typography-line-height-caption-2); /** Material 3 dimension used by the input component for label line height. */
+  --ki-input-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-list-item-primary-font-size: var(--ki-typography-size-body-1); /** Material 3 dimension used by the list component for item primary font size. */
   --ki-list-item-primary-line-height: var(--ki-typography-line-height-body-1); /** Material 3 dimension used by the list component for item primary line height. */
   --ki-list-item-primary-font-weight: var(--ki-typography-weight-body-normal); /** Material 3 font weight used by the list component for item primary font weight. */
@@ -1565,11 +1568,15 @@
   --ki-radio-unselected-disabled-fg: var(--ki-text-muted); /** Material 3 color used by the radio component for unselected disabled foreground. */
   --ki-radio-selected-hover-bg: var(--ki-surface-primary-base-em-alpha); /** Material 3 color used by the radio component for selected hover background. */
   --ki-radio-selected-disabled-fg: var(--ki-text-muted); /** Material 3 color used by the radio component for selected disabled foreground. */
+  --ki-radio-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the radio component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-select-font-size: var(--ki-typography-size-body-1); /** dimension used by the select component for font size. */
   --ki-select-label-font-size: var(--ki-typography-size-caption-1); /** dimension used by the select component for label font size. */
   --ki-select-label-font-weight: var(--ki-typography-weight-body-medium); /** font weight used by the select component for label font weight. */
   --ki-select-label-line-height: var(--ki-typography-line-height-caption-1); /** dimension used by the select component for label line height. */
+  --ki-select-listbox-shadow: var(--ki-elevation-e2); /** M3 menu container elevation: md.sys.elevation.level2 via the shared ramp (ki.elevation.e2 resolves to level-2 in the material3 semantic layer). */
+  --ki-select-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the select component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-switch-checked-hover-track: var(--ki-surface-primary-high-em-hover); /** Material 3 color used by the switch component for checked hover track. */
+  --ki-switch-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-tab-font-size: var(--ki-typography-size-body-1); /** dimension used by the tab component for font size. */
   --ki-tab-font-weight: var(--ki-typography-weight-body-medium); /** font weight used by the tab component for font weight. */
   --ki-tab-line-height: var(--ki-typography-line-height-body-1); /** dimension used by the tab component for line height. */
@@ -1577,6 +1584,7 @@
   --ki-tab-selected-active-bg: var(--ki-surface-primary-low-em-alpha); /** Material 3 color used by the tab component for selected active background. */
   --ki-tab-selected-disabled-fg: var(--ki-text-muted); /** Material 3 color used by the tab component for selected disabled foreground. */
   --ki-tab-unselected-disabled-fg: var(--ki-text-muted); /** Material 3 color used by the tab component for unselected disabled foreground. */
+  --ki-tab-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
   --ki-textarea-font-size: var(--ki-typography-size-body-1); /** dimension used by the textarea component for font size. */
   --ki-textarea-font-weight: var(--ki-typography-weight-body-normal); /** font weight used by the textarea component for font weight. */
   --ki-textarea-line-height: var(--ki-typography-line-height-body-1); /** dimension used by the textarea component for line height. */
@@ -1586,4 +1594,5 @@
   --ki-textarea-disabled-fg: var(--ki-text-muted); /** color used by the textarea component for disabled foreground. */
   --ki-textarea-disabled-label-fg: var(--ki-text-muted); /** color used by the textarea component for disabled label foreground. */
   --ki-textarea-disabled-placeholder-fg: var(--ki-text-muted); /** color used by the textarea component for disabled placeholder foreground. */
+  --ki-textarea-focus-ring-shadow: var(--ki-focus-primary); /** shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator). */
 }
