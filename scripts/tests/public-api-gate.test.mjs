@@ -296,7 +296,7 @@ test('[S10] public API stays in fast quality while packed consumers stay release
 
   assert.equal(
     packageJson.scripts['check:api'],
-    'node --test scripts/tests/css-token-surface.test.mjs scripts/tests/public-api.test.mjs scripts/tests/public-api-gate.test.mjs scripts/tests/public-api-snapshot.test.mjs && node scripts/gates/check-public-api.mjs --baseline changes/api/baselines/0.0.0.json --candidate packages/elements/generated/public-api.json --declaration changes/api/001-tokens-theming-material3.json',
+    'node --test scripts/tests/css-token-surface.test.mjs scripts/tests/public-api.test.mjs scripts/tests/public-api-gate.test.mjs scripts/tests/public-api-snapshot.test.mjs && node scripts/gates/check-public-api.mjs --baseline changes/api/baselines/0.0.0.json --candidate packages/elements/generated/public-api.json --declaration changes/api/002-ki-button-marsui-fidelity.json',
   );
   assert.equal(
     packageJson.scripts['test:consumer-contract'],
