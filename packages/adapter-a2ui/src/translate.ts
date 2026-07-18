@@ -52,6 +52,16 @@ export interface TranslateInput {
   readonly declaredActions: readonly string[] | null;
 }
 
+/**
+ * The translation depth budget: the component graph is untrusted protocol
+ * input, so a pathologically deep (or cyclic) surface must fail closed as a
+ * structured rejection BEFORE the recursive walk overflows the JS stack — the
+ * guarded renderer's own depth budget only runs once a finite tree exists.
+ * 256 matches the catalog validation depth budget and is far beyond any real
+ * UI composition.
+ */
+const MAX_TRANSLATION_DEPTH = 256;
+
 interface WalkContext {
   readonly surfaceId: string;
   readonly components: ReadonlyMap<string, A2uiComponentInstance>;
@@ -59,6 +69,8 @@ interface WalkContext {
   readonly degradations: A2uiDegradationReport[];
   readonly encounteredActions: Set<string>;
   readonly pathToComponentId: Map<string, string>;
+  /** Ids currently on the recursion stack — a repeat is a cycle (fail closed). */
+  readonly ancestors: Set<string>;
   abort: A2uiDiagnostic | null;
 }
 
@@ -125,9 +137,30 @@ function abortWith(context: WalkContext, diagnostic: A2uiDiagnostic): null {
  * null when the walk aborts fail-closed. `path` mirrors the guarded renderer's
  * own path scheme so a dispatched action maps back to its A2UI component id.
  */
-function resolveNode(id: string, path: string, context: WalkContext): UiSpecNode | string | null {
+function resolveNode(
+  id: string,
+  path: string,
+  depth: number,
+  context: WalkContext,
+): UiSpecNode | string | null {
   if (context.abort !== null) {
     return null;
+  }
+  if (depth > MAX_TRANSLATION_DEPTH) {
+    return abortWith(context, {
+      message: `surface nesting exceeds the ${String(MAX_TRANSLATION_DEPTH)}-level translation depth budget`,
+      path,
+      rule: 'depth-budget',
+      value: String(depth),
+    });
+  }
+  if (context.ancestors.has(id)) {
+    return abortWith(context, {
+      message: `component id "${id}" references itself through the component graph (cycle)`,
+      path,
+      rule: 'cycle',
+      value: id,
+    });
   }
   const instance = context.components.get(id);
   if (instance === undefined) {
@@ -203,7 +236,12 @@ function resolveNode(id: string, path: string, context: WalkContext): UiSpecNode
     };
   }
 
-  return buildMappedNode(id, type, body, coverage, path, context);
+  // Only a mapped node can recurse into children; guard the recursion against
+  // cycles by tracking this id as an ancestor for the duration of its subtree.
+  context.ancestors.add(id);
+  const node = buildMappedNode(id, type, body, coverage, path, depth, context);
+  context.ancestors.delete(id);
+  return node;
 }
 
 function buildMappedNode(
@@ -212,6 +250,7 @@ function buildMappedNode(
   body: Record<string, unknown>,
   coverage: Extract<(typeof A2UI_COVERAGE)[string], { kind: 'mapped' }>,
   path: string,
+  depth: number,
   context: WalkContext,
 ): UiSpecNode | null {
   const props: Record<string, ResolvedScalar> = {};
@@ -319,7 +358,7 @@ function buildMappedNode(
           return;
         }
         const childPath = `${path}.slots.[${String(slotChildren.length)}]`;
-        const child = resolveNode(childId, childPath, context);
+        const child = resolveNode(childId, childPath, depth + 1, context);
         if (child !== null) {
           slotChildren.push(child);
         }
@@ -350,6 +389,7 @@ function buildMappedNode(
 export function translateSurface(input: TranslateInput): TranslationResult {
   const context: WalkContext = {
     abort: null,
+    ancestors: new Set<string>(),
     components: input.components,
     dataModel: input.dataModel,
     degradations: [],
@@ -358,7 +398,7 @@ export function translateSurface(input: TranslateInput): TranslationResult {
     surfaceId: input.surfaceId,
   };
 
-  const root = resolveNode(input.rootId, 'root', context);
+  const root = resolveNode(input.rootId, 'root', 1, context);
 
   if (context.abort !== null) {
     return {

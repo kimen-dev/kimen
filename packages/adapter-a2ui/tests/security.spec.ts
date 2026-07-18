@@ -188,3 +188,112 @@ describe('the guardrail is a security boundary no message can bypass', () => {
     expect(surface.textContent).not.toContain('onerror');
   });
 });
+
+// Hardening beyond the frozen scenarios: the adapter is the security boundary
+// for untrusted runtime data (Codex review of PR #59). Hostile envelopes,
+// prototype-polluting paths, cyclic graphs, non-transactional state and
+// off-tree forbidden types all fail closed.
+describe('the adapter treats every message as hostile runtime data', () => {
+  let adapter: ReturnType<typeof createA2uiAdapter>;
+  const adapterApply = (message: unknown): ReturnType<typeof adapter.apply> =>
+    adapter.apply(message as Parameters<typeof adapter.apply>[0]);
+  const orderSurfaceOnly = (): ReturnType<typeof adapter.apply> =>
+    adapterApply({
+      surfaceUpdate: {
+        surfaceId: 'checkout',
+        root: 'card',
+        components: [
+          { id: 'card', component: { Card: { children: { explicitList: ['confirm'] } } } },
+          {
+            id: 'confirm',
+            component: {
+              Button: {
+                label: { literalString: 'Confirm order' },
+                action: { name: 'confirm-order' },
+              },
+            },
+          },
+        ],
+      },
+    });
+
+  beforeEach(() => {
+    adapter = createA2uiAdapter({ protocolVersion: '0.9.1', surface });
+  });
+
+  it('rejects a prototype-polluting data-model path without touching Object.prototype', () => {
+    orderSurfaceOnly();
+    const result = adapterApply({
+      dataModelUpdate: { surfaceId: 'checkout', path: '/__proto__/polluted', contents: 'x' },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics.some((d) => d.rule === 'forbidden-key')).toBe(true);
+    expect(({} as Record<string, unknown>)['polluted']).toBeUndefined();
+  });
+
+  it('rolls a failed incremental update back out of surface state', () => {
+    orderSurfaceOnly();
+    // A rejected update (undeclared action) must not linger in state.
+    const rejected = adapterApply({
+      surfaceUpdate: {
+        surfaceId: 'checkout',
+        components: [
+          { id: 'card', component: { Card: { children: { explicitList: ['confirm', 'evil'] } } } },
+          { id: 'evil', component: { Button: { action: { name: 'exfiltrate' } } } },
+        ],
+      },
+    });
+    expect(rejected.ok).toBe(false);
+
+    // A later re-render succeeds and shows no trace of the rejected components.
+    const rerender = adapterApply({ dataModelUpdate: { surfaceId: 'checkout', contents: {} } });
+    expect(rerender.ok).toBe(true);
+    const buttons = [...surface.querySelectorAll('ki-button')];
+    expect(buttons).toHaveLength(1);
+    expect(buttons[0]?.textContent).toBe('Confirm order');
+  });
+
+  it('returns a diagnostic for a malformed message instead of throwing', () => {
+    expect(() => adapterApply(null)).not.toThrow();
+    expect(adapterApply(null).ok).toBe(false);
+    const nonArray = adapterApply({ surfaceUpdate: { surfaceId: 's', components: 'nope' } });
+    expect(nonArray.ok).toBe(false);
+    expect(nonArray.diagnostics.some((d) => d.rule === 'malformed-message')).toBe(true);
+  });
+
+  it('rejects a cyclic component graph before the stack overflows', () => {
+    const result = adapterApply({
+      surfaceUpdate: {
+        surfaceId: 's',
+        root: 'card',
+        components: [{ id: 'card', component: { Card: { children: { explicitList: ['card'] } } } }],
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics.some((d) => d.rule === 'cycle')).toBe(true);
+    expect(surface.childNodes).toHaveLength(0);
+  });
+
+  it('rejects a forbidden type even when it is off the rendered tree', () => {
+    const result = adapterApply({
+      surfaceUpdate: {
+        surfaceId: 's',
+        root: 'card',
+        components: [
+          { id: 'card', component: { Card: { children: { explicitList: ['confirm'] } } } },
+          { id: 'confirm', component: { Button: { label: { literalString: 'OK' } } } },
+          // Never referenced by root, but present in the update:
+          { id: 'evil', component: { html: { content: { literalString: '<script>x</script>' } } } },
+        ],
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics.some((d) => d.rule === 'forbidden-type' && d.value === 'html')).toBe(
+      true,
+    );
+    expect(surface.childNodes).toHaveLength(0);
+  });
+});

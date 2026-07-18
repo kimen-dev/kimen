@@ -94,3 +94,14 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
 export const FALLBACK_LABEL = 'Unsupported component';
 export const FALLBACK_CATALOG_TAG = 'ki-badge';
 export const FALLBACK_TONE = 'warning';
+
+/**
+ * The single decision point for "is this A2UI type forbidden?" (FR-002/FR-004,
+ * S7): returns the security reason when the matrix declares the type forbidden,
+ * else null. Both the adapter's whole-message scan and the translation walk
+ * consult this one function so the forbidden set never forks (Art. I).
+ */
+export function forbiddenReason(type: string): string | null {
+  const entry = A2UI_COVERAGE[type];
+  return entry?.kind === 'forbidden' ? entry.reason : null;
+}
