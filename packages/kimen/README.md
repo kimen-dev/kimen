@@ -20,7 +20,8 @@ Apache-2.0 · Copyright 2026 Marcela Gotta
 <!-- kimen:capabilities:kimen-readme-status:start -->
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
 - **hardening** — Changed-core mutation quality gate in hardening
-- **planned** — A2UI, MCP Apps, AG-UI and json-render protocol adapters planned
+- **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer
+- **planned** — MCP Apps, AG-UI and json-render protocol adapters planned
 - **available** — Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary
 - **available** — Machine-readable Web Components foundation with token-driven theming
 <!-- kimen:capabilities:kimen-readme-status:end -->

@@ -41,9 +41,14 @@
         "text": "Changed-core mutation quality gate in hardening"
       },
       {
-        "id": "protocol-adapters",
+        "id": "protocol-adapter-a2ui",
+        "state": "available",
+        "text": "A2UI protocol adapter: declarative A2UI messages render through the guarded renderer"
+      },
+      {
+        "id": "protocol-adapters-remaining",
         "state": "planned",
-        "text": "A2UI, MCP Apps, AG-UI and json-render protocol adapters planned"
+        "text": "MCP Apps, AG-UI and json-render protocol adapters planned"
       },
       {
         "id": "runtime-catalog",
