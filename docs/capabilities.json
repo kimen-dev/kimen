@@ -88,8 +88,8 @@
     },
     {
       "id": "runtime-catalog",
-      "state": "planned",
-      "evidence": [],
+      "state": "available",
+      "evidence": ["build", "catalog-sync", "test"],
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",
@@ -100,8 +100,8 @@
         "root-readme-status",
         "site-status"
       ],
-      "availableText": "",
-      "plannedText": "Neutral runtime component catalog planned"
+      "availableText": "Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary",
+      "plannedText": ""
     },
     {
       "id": "web-components-foundation",

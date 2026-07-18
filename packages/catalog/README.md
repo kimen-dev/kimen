@@ -1,18 +1,77 @@
 # @kimen/catalog
 
-**Status**: planned — not implemented, not published. Today the package is a
-placeholder entry point that only anchors the deterministic gates.
+The neutral runtime catalog of Kimen's GenUI layer (constitution Art. VIII):
+the machine-readable schema of what agents may emit — every published
+`ki-*` element with typed props, slots, events and when-to-use guidance —
+plus the validation entry point that accepts or rejects agent-emitted UI
+specs at the GenUI boundary. The catalog and the `<ki-*>` components are the
+durable assets; protocol adapters (A2UI, MCP Apps) are deliberately
+disposable and live in their own packages.
 
-This package will be the neutral, schema-constrained catalog at the heart of
-Kimen's GenUI layer: the machine-readable schema of what agents may emit
-(components, props, declared actions, when-to-use metadata) and the guarded
-renderer that validates incoming JSON specs and renders only catalog
-components. The guardrail is treated as a security boundary — agents never
-emit open HTML — and streaming or partial specs will render progressively.
+The catalog artifact (`src/generated/catalog.ts`) is generated from the
+committed Custom Elements Manifest of `@kimen/elements` (Art. I) — never
+hand-maintained — and the `catalog-sync` gate fails any drift between the
+committed artifact and a fresh regeneration. It declares its own schema
+version (`catalogSchemaVersion`) and the elements version it derives from.
 
-Protocol adapters (A2UI first, then MCP Apps) are deliberately disposable;
-the catalog and the `<ki-*>` components are the durable assets. The real
-implementation enters through the Spec Kit flow with its own approved spec.
+## Usage
+
+```ts
+import { catalogData, validateUiSpec } from '@kimen/catalog';
+
+// What may an agent emit? One entry per published element:
+catalogData.components['ki-button'].props.variant;
+// { type: 'enum', values: ['ghost', 'primary', 'quaternary', 'secondary', 'tertiary'], ... }
+
+// Validate an agent-emitted UI spec before anything renders:
+const report = validateUiSpec({
+  version: 1,
+  actions: ['confirm-order'],
+  root: {
+    component: 'ki-card',
+    slots: {
+      header: ['Confirm your order'],
+      footer: [
+        {
+          component: 'ki-button',
+          props: { variant: 'primary' },
+          action: 'confirm-order',
+          slots: { '': ['Confirm'] },
+        },
+      ],
+    },
+  },
+});
+report.ok; // true — or false with issues naming each offender and location
+```
+
+A UI spec is data, never code. Validation rejects — naming the offender —
+unknown components, unknown props, wrong-typed values, undeclared slots,
+bindings to actions the spec's `actions` list never declares,
+prototype-pollution keys (`__proto__`, `constructor`, `prototype`) anywhere
+in the document, payloads beyond the declared size budget
+(`VALIDATION_MAX_BYTES`, overridable per call with `maxBytes`) and nesting
+beyond the depth budget (`VALIDATION_MAX_DEPTH`). Object input crosses an
+iterative purity wall before any other check: validation never invokes
+getters or `toJSON` on the input (accessor properties, functions and other
+non-JSON values are rejected as not-data), shared object references and
+cycles are rejected (a spec is a JSON tree), and every later check runs on
+the plain-data snapshot, so mutating the original mid-validation changes
+nothing.
+
+### What validation does NOT protect against
+
+URL-scheme allowlisting (`javascript:`, `data:` and other executable
+schemes) and markup inertness are render-path invariants owned by the
+guarded renderer (spec 028): the safe-scheme policy is a render decision,
+and duplicating it here would create two drifting sources for one rule
+(Art. I). Catalog validation is a schema boundary, never content
+sanitization — a host that renders outside the guarded renderer is outside
+the guardrail.
+
+The v1 spec format exposes no styling surface: no CSS values, no per-spec
+token reassignment. Appearance stays at the consuming application's token
+layer (Art. VI).
 
 See phase 4 of the [roadmap](../../docs/roadmap.md).
 
@@ -20,6 +79,6 @@ See phase 4 of the [roadmap](../../docs/roadmap.md).
 - **planned** — Schema-constrained guarded renderer planned
 - **hardening** — Changed-core mutation quality gate in hardening
 - **planned** — A2UI, MCP Apps, AG-UI and json-render protocol adapters planned
-- **planned** — Neutral runtime component catalog planned
+- **available** — Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary
 - **available** — Machine-readable Web Components foundation with token-driven theming
 <!-- kimen:capabilities:catalog-readme-status:end -->

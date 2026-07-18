@@ -20,6 +20,8 @@ const surfaces = Object.freeze([
   'packages/elements/llms.txt',
 ]);
 
+const catalog = Object.freeze(['packages/catalog/src/generated/catalog.ts']);
+
 export const generatedGroups = Object.freeze({
   tokens: Object.freeze({
     required: tokens,
@@ -32,6 +34,10 @@ export const generatedGroups = Object.freeze({
       'packages/elements/generated',
       'packages/elements/llms.txt',
     ]),
+  }),
+  catalog: Object.freeze({
+    required: catalog,
+    scopes: Object.freeze(['packages/catalog/src/generated']),
   }),
 });
 
@@ -54,7 +60,9 @@ const lines = (source) => source.split(/\r?\n/u).filter(Boolean);
 export function validateGeneratedSync({ root, group, executeGit = git }) {
   const contract = generatedGroups[group];
   if (contract === undefined) {
-    throw new Error(`generated sync group must be tokens or surfaces; received ${String(group)}`);
+    throw new Error(
+      `generated sync group must be tokens, surfaces or catalog; received ${String(group)}`,
+    );
   }
   const required = new Set(contract.required);
   for (const path of contract.required) {
@@ -95,7 +103,7 @@ export function runGeneratedSyncCli({
   executeGit = git,
 } = {}) {
   if (arguments_.length !== 1) {
-    throw new Error('usage: check-generated-sync.mjs <tokens|surfaces>');
+    throw new Error('usage: check-generated-sync.mjs <tokens|surfaces|catalog>');
   }
   const result = validateGeneratedSync({ root, group: arguments_[0], executeGit });
   stdout.write(`PASS generated-sync ${result.group}: ${String(result.files)} tracked files\n`);

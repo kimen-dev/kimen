@@ -18,12 +18,43 @@
     }
   },
   "scripts": {
-    "build": "tsc -b --pretty false"
+    "build": "node scripts/generate-catalog.mjs && tsc -b --pretty false",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "vitest": "^4.1.9"
   },
   "nx": {
     "tags": [
       "scope:catalog"
-    ]
+    ],
+    "targets": {
+      "build": {
+        "dependsOn": [
+          "^build",
+          {
+            "projects": [
+              "@kimen/elements"
+            ],
+            "target": "build"
+          }
+        ],
+        "inputs": [
+          "{projectRoot}/**/*",
+          "!{projectRoot}/src/generated/**",
+          "{workspaceRoot}/packages/elements/generated/custom-elements.json",
+          "{workspaceRoot}/packages/elements/package.json"
+        ],
+        "outputs": [
+          "{projectRoot}/dist",
+          "{projectRoot}/src/generated"
+        ]
+      }
+    }
   },
   "kimenCapabilities": {
     "generatedFrom": "docs/capabilities.json",
@@ -49,8 +80,8 @@
       },
       {
         "id": "runtime-catalog",
-        "state": "planned",
-        "text": "Neutral runtime component catalog planned"
+        "state": "available",
+        "text": "Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary"
       },
       {
         "id": "web-components-foundation",

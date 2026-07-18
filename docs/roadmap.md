@@ -52,6 +52,6 @@ Follow progress through issues and pull requests.
 - **planned** — Schema-constrained guarded renderer planned
 - **hardening** — Changed-core mutation quality gate in hardening
 - **planned** — A2UI, MCP Apps, AG-UI and json-render protocol adapters planned
-- **planned** — Neutral runtime component catalog planned
+- **available** — Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary
 - **available** — Machine-readable Web Components foundation with token-driven theming
 <!-- kimen:capabilities:roadmap-status:end -->

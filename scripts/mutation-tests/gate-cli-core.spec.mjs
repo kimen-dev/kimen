@@ -188,7 +188,7 @@ it('accepts exactly the tracked, declared, byte-clean generated group', async ()
 
 it('rejects an unknown generated group', () => {
   expect(() => validateGeneratedSync({ root: '/workspace', group: 'unknown' })).toThrowError(
-    'generated sync group must be tokens or surfaces; received unknown',
+    'generated sync group must be tokens, surfaces or catalog; received unknown',
   );
 });
 
@@ -265,7 +265,7 @@ it.each([
   ['tokens', 'surfaces'],
 ])('rejects invalid generated sync CLI arity %#', (arguments_) => {
   expect(() => runGeneratedSyncCli({ arguments_ })).toThrowError(
-    'usage: check-generated-sync.mjs <tokens|surfaces>',
+    'usage: check-generated-sync.mjs <tokens|surfaces|catalog>',
   );
 });
 

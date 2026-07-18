@@ -97,6 +97,7 @@ run_core_gate format pnpm run format:check
 run_core_gate build pnpm exec nx run-many -t build
 run_core_gate tokens-sync node scripts/gates/check-generated-sync.mjs tokens
 run_core_gate surfaces-sync node scripts/gates/check-generated-sync.mjs surfaces
+run_core_gate catalog-sync node scripts/gates/check-generated-sync.mjs catalog
 run_core_gate public-api pnpm run check:api
 run_core_gate token-contract pnpm run check:tokens
 run_core_gate component-inventory pnpm run check:component-inventory
