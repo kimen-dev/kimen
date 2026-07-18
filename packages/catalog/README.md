@@ -91,6 +91,10 @@ const result = renderUiSpec(spec, {
 if (!result.ok) console.warn(result.diagnostics); // machine-readable, inert
 ```
 
+A re-render on the same surface replaces the previous tree (and its action
+listeners) atomically once validation succeeds; a rejected re-render leaves
+the previous content intact.
+
 The renderer adds no schema of its own — catalog membership, prop types,
 declared actions and the purity wall all come from the validation layer
 above (Art. I). Over that it enforces the safe-render semantics: **no code
@@ -100,15 +104,19 @@ only `http`, `https` and relative references, every other scheme rejected
 naming the prop and scheme), **declared budgets** (depth, node count, payload
 size — a spec exactly at a budget renders, one beyond it is rejected before
 any node attaches), **version skew** (a spec declaring an unsupported
-`catalogSchemaVersion` is rejected naming both versions), and **declarative
-actions only** (a bound control dispatches its one declared action, as
-data, on the single `onAction` channel — no other callback exists).
+`catalogSchemaVersion` — as a top-level field of the spec document, or via
+the render option — is rejected naming both versions), and **declarative
+actions only** (a bound control dispatches its one declared action, as data,
+on the single `onAction` channel — activation suppresses the native default
+and stops bubbling, so exactly one action fires even for nested action-bound
+nodes or a button inside a form; no other callback exists).
 
 `createStreamingRenderer` renders a streamed spec progressively: a node
-attaches only after it fully validates, an invalid node fails closed while
-previously validated content remains, and the budgets bind the accumulated
-stream so a stream that never closes still trips its payload budget and
-halts fail-closed.
+attaches only after it fully validates; an invalid node halts the stream
+fail-closed while previously validated content remains; the budgets bind the
+accumulated stream so a stream that never closes still trips its payload
+budget; and once halted — by an invalid node, a tripped budget, version skew
+or `close()` — every further push is rejected.
 
 Every rejection is a `RenderDiagnostic` — node path, violated rule and
 offending value — pure data, safe to display because a host renders it as

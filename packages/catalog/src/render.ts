@@ -13,8 +13,10 @@
  * SSR/DSD is a deferred bet.
  */
 import { catalogData } from './generated/catalog.js';
-import type { UiSpec, UiSpecNode } from './validate.js';
+import type { CatalogEntry, UiSpec, UiSpecNode } from './validate.js';
 import { toPlainData, validatePlainData } from './validate.js';
+
+const componentEntries: Readonly<Record<string, CatalogEntry>> = catalogData.components;
 
 /**
  * A machine-readable rejection record (FR-007): the node path, the violated
@@ -225,9 +227,26 @@ function buildNode(
   }
   if (node.action !== undefined && onAction !== undefined) {
     const action = node.action;
-    element.addEventListener('click', () => {
+    // A guarded action is the ONLY interaction channel (S4): suppress the
+    // native default (a submit button's form submission) and stop the event
+    // bubbling to an ancestor action listener, so exactly one declared action
+    // dispatches per activation and no other callback or code path runs.
+    element.addEventListener('click', (event: Event) => {
+      event.preventDefault();
+      event.stopPropagation();
       onAction({ action, data: { ...props }, path });
     });
+    // Declaratively neutralize a form-submitting default when the catalog
+    // types this component's `type` prop and the spec left it unset: pin it
+    // to "button" so no native submit path runs alongside the action.
+    const typeConstraint = componentEntries[node.component]?.props['type'];
+    if (
+      typeConstraint?.type === 'enum' &&
+      typeConstraint.values?.includes('button') === true &&
+      props['type'] === undefined
+    ) {
+      element.setAttribute('type', 'button');
+    }
   }
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     children.forEach((child, index) => {
@@ -261,36 +280,53 @@ interface PreparedSpec {
   readonly diagnostics: readonly RenderDiagnostic[];
 }
 
+/** The fail-closed version-skew diagnostic (FR-012/S13), or null when supported. */
+function versionDiagnostic(declared: string | undefined): RenderDiagnostic | null {
+  if (declared === undefined || declared === catalogData.catalogSchemaVersion) {
+    return null;
+  }
+  return {
+    message: `spec declares catalog schema version "${declared}"; this renderer supports "${catalogData.catalogSchemaVersion}"`,
+    path: 'spec.catalogSchemaVersion',
+    rule: 'unsupported-version',
+    value: declared,
+  };
+}
+
 /**
  * The shared validation pipeline for one spec/node payload: purity wall →
- * optional catalog-schema-version gate → catalog validation → renderer
- * guards (budgets, URL allowlist). Returns the typed spec only when every
- * layer passes; otherwise fail-closed diagnostics and no spec.
+ * catalog-schema-version gate → catalog validation → renderer guards
+ * (budgets, URL allowlist). Returns the typed spec only when every layer
+ * passes; otherwise fail-closed diagnostics and no spec.
  */
 function prepare(
   input: unknown,
   budgets: RenderBudgets,
-  catalogSchemaVersion: string | undefined,
+  optionsVersion: string | undefined,
 ): PreparedSpec {
   const { data, issues } = toPlainData(input, ABSOLUTE_MAX_BYTES);
   if (issues.length > 0) {
     return { diagnostics: issues.map(toDiagnostic), spec: undefined as unknown as UiSpec };
   }
-  if (
-    catalogSchemaVersion !== undefined &&
-    catalogSchemaVersion !== catalogData.catalogSchemaVersion
-  ) {
-    return {
-      diagnostics: [
-        {
-          message: `spec declares catalog schema version "${catalogSchemaVersion}"; this renderer supports "${catalogData.catalogSchemaVersion}"`,
-          path: 'spec.catalogSchemaVersion',
-          rule: 'unsupported-version',
-          value: catalogSchemaVersion,
-        },
-      ],
-      spec: undefined as unknown as UiSpec,
-    };
+  // The agent's own declaration (FR-012/S13) is authoritative; the option is
+  // the host fallback. The neutral spec schema is strict, so a declared
+  // version travels as a top-level field the renderer reads and strips off
+  // the plain-data clone (safe — it is the renderer's own object) before
+  // catalog validation would reject the extra key.
+  let declaredVersion = optionsVersion;
+  if (data !== null && typeof data === 'object' && !Array.isArray(data)) {
+    const record = data as Record<string, unknown>;
+    const field = record['catalogSchemaVersion'];
+    if (typeof field === 'string') {
+      declaredVersion = field;
+    }
+    if ('catalogSchemaVersion' in record) {
+      delete record['catalogSchemaVersion'];
+    }
+  }
+  const skew = versionDiagnostic(declaredVersion);
+  if (skew !== null) {
+    return { diagnostics: [skew], spec: undefined as unknown as UiSpec };
   }
   const bytes = payloadBytes(data);
   if (bytes > budgets.maxBytes) {
@@ -334,7 +370,10 @@ function toDiagnostic(issue: {
  * Renders a complete untrusted UI spec into `surface`, fail-closed and
  * atomic (FR-007): full validation precedes the first attach, so a rejected
  * spec touches the surface not at all. On success the validated tree is
- * built into a fragment and attached in one operation.
+ * built into a fragment and REPLACES the surface's content in one operation,
+ * so a re-render swaps the previous tree (and its action listeners) rather
+ * than duplicating it; a rejected re-render leaves the previous content
+ * intact.
  */
 export function renderUiSpec(input: unknown, options: RenderOptions): RenderResult {
   const budgets: RenderBudgets = { ...DEFAULT_RENDER_BUDGETS, ...options.budgets };
@@ -343,9 +382,7 @@ export function renderUiSpec(input: unknown, options: RenderOptions): RenderResu
     return { diagnostics: prepared.diagnostics, ok: false };
   }
   const doc = ownerDocument(options.surface);
-  const fragment = doc.createDocumentFragment();
-  fragment.appendChild(buildNode(prepared.spec.root, 'root', doc, options.onAction));
-  options.surface.appendChild(fragment);
+  options.surface.replaceChildren(buildNode(prepared.spec.root, 'root', doc, options.onAction));
   return { diagnostics: [], ok: true };
 }
 
@@ -378,18 +415,21 @@ export function createStreamingRenderer(
   const declaredActions = options.actions ?? [];
   let accumulatedBytes = 0;
   let accumulatedNodes = 0;
-  let halted: RenderDiagnostic | null = null;
+  // The version-skew gate (FR-012/S13) applies to a stream up front: an
+  // unsupported catalog schema version halts every push before any chunk
+  // attaches, so future or laxer chunks can never render.
+  let halted: RenderDiagnostic | null = versionDiagnostic(options.catalogSchemaVersion);
 
   return {
     close(): void {
-      halted = halted ?? {
-        message: 'stream closed',
-        path: 'stream',
-        rule: 'closed',
-      };
+      halted = halted ?? { message: 'stream closed', path: 'stream', rule: 'closed' };
     },
     push(node: unknown): RenderResult {
-      if (halted !== null && halted.rule !== 'closed') {
+      // Once halted for ANY reason — a prior invalid chunk (FR-008), a
+      // tripped accumulated budget (S15), version skew, or close() — every
+      // further push is rejected; an untrusted stream never mutates the
+      // surface again after it has been rejected or completed.
+      if (halted !== null) {
         return { diagnostics: [halted], ok: false };
       }
       // Wrap the streamed node as a one-node neutral document so it crosses
@@ -398,6 +438,7 @@ export function createStreamingRenderer(
       const wrapped = { actions: declaredActions, root: node, version: 1 };
       const { data, issues } = toPlainData(wrapped, ABSOLUTE_MAX_BYTES);
       if (issues.length > 0) {
+        halted = issues[0] === undefined ? null : toDiagnostic(issues[0]);
         return { diagnostics: issues.map(toDiagnostic), ok: false };
       }
       const chunkBytes = payloadBytes((data as { root: unknown }).root);
@@ -412,7 +453,15 @@ export function createStreamingRenderer(
       }
       const report = validatePlainData(data);
       if (!report.ok || report.spec === undefined) {
-        return { diagnostics: report.issues.map(toDiagnostic), ok: false };
+        // FR-008: an invalid chunk halts the stream fail-closed; its subtree
+        // never attaches and previously validated content remains.
+        const diagnostics = report.issues.map(toDiagnostic);
+        halted = diagnostics[0] ?? {
+          message: 'invalid chunk',
+          path: 'stream',
+          rule: 'malformed-spec',
+        };
+        return { diagnostics, ok: false };
       }
       const remainingNodeBudget: RenderBudgets = {
         ...budgets,
@@ -421,12 +470,7 @@ export function createStreamingRenderer(
       const state: GuardState = { budgets: remainingNodeBudget, diagnostics: [], nodes: 0 };
       guardNode(report.spec.root, 'root', 1, state);
       if (state.diagnostics.length > 0) {
-        // A node-count overflow is an accumulated-budget halt; a depth or URL
-        // violation rejects only this node and leaves the stream open.
-        const overflow = state.diagnostics.find((d) => d.rule === 'node-count-budget');
-        if (overflow !== undefined) {
-          halted = overflow;
-        }
+        halted = state.diagnostics[0] ?? null;
         return { diagnostics: state.diagnostics, ok: false };
       }
       accumulatedBytes += chunkBytes;

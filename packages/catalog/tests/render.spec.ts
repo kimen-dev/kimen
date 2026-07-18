@@ -83,11 +83,61 @@ describe('renderUiSpec — only declared props and actions pass', () => {
     const onAction = vi.fn<(event: ActionEvent) => void>();
     renderUiSpec(payButton(), { surface, onAction });
     const button = surface.querySelector('ki-button');
-    button?.dispatchEvent(new Event('click'));
+    button?.dispatchEvent(new Event('click', { bubbles: true }));
     expect(onAction).toHaveBeenCalledTimes(1);
     const event = onAction.mock.calls[0]?.[0];
     expect(event?.action).toBe('submit-order');
     expect(event?.data).toEqual({ variant: 'primary' });
+  });
+
+  it('S4 dispatches only the innermost action when action-bound nodes nest', () => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    renderUiSpec(
+      {
+        version: 1,
+        actions: ['card-action', 'button-action'],
+        root: {
+          component: 'ki-card',
+          action: 'card-action',
+          slots: {
+            '': [{ component: 'ki-button', action: 'button-action', slots: { '': ['Go'] } }],
+          },
+        },
+      },
+      { surface, onAction },
+    );
+    surface
+      .querySelector('ki-button')
+      ?.dispatchEvent(new Event('click', { bubbles: true, cancelable: true }));
+    expect(onAction).toHaveBeenCalledTimes(1);
+    expect(onAction.mock.calls[0]?.[0]?.action).toBe('button-action');
+  });
+
+  it('S4 neutralizes a form-submitting default on an action-bound button', () => {
+    const form = document.createElement('form');
+    const onSubmit = vi.fn((event: Event) => {
+      event.preventDefault();
+    });
+    form.addEventListener('submit', onSubmit);
+    surface.appendChild(form);
+    renderUiSpec(payButton(), { surface: form, onAction: vi.fn() });
+    // ki-button's documented default type is "submit"; the renderer pins an
+    // action-bound button to type="button" so no native submission runs.
+    expect(form.querySelector('ki-button')?.getAttribute('type')).toBe('button');
+    form.querySelector('ki-button')?.dispatchEvent(new Event('click', { bubbles: true }));
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it('re-render replaces prior content only after validation succeeds', () => {
+    renderUiSpec(payButton(), { surface });
+    expect(surface.querySelectorAll('ki-card')).toHaveLength(1);
+    // A valid re-render swaps the tree, never duplicates it.
+    renderUiSpec(payButton(), { surface });
+    expect(surface.querySelectorAll('ki-card')).toHaveLength(1);
+    // A rejected re-render leaves the previous content intact.
+    const rejected = renderUiSpec({ version: 1, root: { component: 'iframe' } }, { surface });
+    expect(rejected.ok).toBe(false);
+    expect(surface.querySelectorAll('ki-card')).toHaveLength(1);
   });
 
   it('S5 rejects a binding to an event the catalog does not declare', () => {
@@ -242,6 +292,35 @@ describe('renderUiSpec — observability and version skew', () => {
     expect(diagnostic?.value).toBe('99.0.0');
   });
 
+  it('S13 reads the catalog schema version the agent declares in the spec document', () => {
+    // The neutral format is strict, so a declared version travels as a
+    // top-level field the renderer reads and strips before validation.
+    const unsupported = renderUiSpec(
+      { catalogSchemaVersion: '99.0.0', version: 1, root: { component: 'ki-card' } },
+      { surface },
+    );
+    expect(unsupported.ok).toBe(false);
+    expect(unsupported.diagnostics[0]?.rule).toBe('unsupported-version');
+
+    const supported = renderUiSpec(
+      { catalogSchemaVersion: '1.0.0', version: 1, root: { component: 'ki-card' } },
+      { surface },
+    );
+    expect(supported.ok).toBe(true);
+    expect(surface.querySelector('ki-card')).not.toBeNull();
+  });
+
+  it('S10 preserves the offending value for a wrong-typed prop', () => {
+    const result = renderUiSpec(
+      { version: 1, root: { component: 'ki-button', props: { disabled: 'false' } } },
+      { surface },
+    );
+    expect(result.ok).toBe(false);
+    const diagnostic = result.diagnostics[0];
+    expect(diagnostic?.rule).toBe('invalid-prop-type');
+    expect(diagnostic?.value).toBe('false');
+  });
+
   it('S16 keeps a hostile offending value inert inside its diagnostic', () => {
     const hostile = '<img src=x onerror=alert(1)>';
     const result = renderUiSpec(
@@ -268,7 +347,7 @@ describe('createStreamingRenderer — progressive rendering without weakening th
     // The stream is still open — no close() was called.
   });
 
-  it('S12 fails an invalid mid-stream node closed while validated content remains', () => {
+  it('S12 halts fail-closed on an invalid mid-stream node while validated content remains', () => {
     const stream = createStreamingRenderer({ surface });
     expect(stream.push({ component: 'ki-card', slots: { '': ['first'] } }).ok).toBe(true);
     const bad = stream.push({ component: 'script' });
@@ -276,6 +355,28 @@ describe('createStreamingRenderer — progressive rendering without weakening th
     expect(bad.diagnostics[0]?.rule).toBe('unknown-component');
     expect(surface.querySelectorAll('ki-card')).toHaveLength(1);
     expect(surface.querySelector('script')).toBeNull();
+    // The stream is halted: a subsequent valid push never attaches (FR-008).
+    const after = stream.push({ component: 'ki-badge' });
+    expect(after.ok).toBe(false);
+    expect(surface.querySelector('ki-badge')).toBeNull();
+  });
+
+  it('S13 halts a stream declaring an unsupported catalog schema version', () => {
+    const stream = createStreamingRenderer({ surface, catalogSchemaVersion: '99.0.0' });
+    const result = stream.push({ component: 'ki-card' });
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics[0]?.rule).toBe('unsupported-version');
+    expect(surface.querySelector('ki-card')).toBeNull();
+  });
+
+  it('rejects pushes after the stream is closed', () => {
+    const stream = createStreamingRenderer({ surface });
+    expect(stream.push({ component: 'ki-card' }).ok).toBe(true);
+    stream.close();
+    const after = stream.push({ component: 'ki-badge' });
+    expect(after.ok).toBe(false);
+    expect(surface.querySelector('ki-badge')).toBeNull();
+    expect(surface.querySelectorAll('ki-card')).toHaveLength(1);
   });
 
   it('S15 halts fail-closed when the accumulated stream trips the payload budget', () => {

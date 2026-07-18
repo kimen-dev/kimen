@@ -336,6 +336,7 @@ function checkProp(
           code: 'invalid-prop-type',
           message: `${component} prop "${name}" expects a ${constraint.type} value`,
           path,
+          value: String(value),
         });
       }
       return;
@@ -349,6 +350,7 @@ function checkProp(
             .map((allowed) => `"${allowed}"`)
             .join(', ')}`,
           path,
+          value: String(value),
         });
       }
       return;
