@@ -32,8 +32,8 @@
     "claims": [
       {
         "id": "guarded-renderer",
-        "state": "planned",
-        "text": "Schema-constrained guarded renderer planned"
+        "state": "available",
+        "text": "Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed"
       },
       {
         "id": "mutation-quality-gate",

@@ -37,8 +37,8 @@
   "capabilities": [
     {
       "id": "guarded-renderer",
-      "state": "planned",
-      "evidence": [],
+      "state": "available",
+      "evidence": ["build", "test"],
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",
@@ -49,8 +49,8 @@
         "root-readme-status",
         "site-status"
       ],
-      "availableText": "",
-      "plannedText": "Schema-constrained guarded renderer planned"
+      "availableText": "Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed",
+      "plannedText": ""
     },
     {
       "id": "mutation-quality-gate",
