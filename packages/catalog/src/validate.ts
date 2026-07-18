@@ -77,6 +77,8 @@ export interface ValidationIssue {
   /** Location in the spec document, e.g. `root.slots.footer[0].props.tone`. */
   readonly path: string;
   readonly message: string;
+  /** The offending value named by the issue (component, prop, key, action). */
+  readonly value?: string | undefined;
 }
 
 export interface ValidationReport {
@@ -266,6 +268,7 @@ function snapshotPlainData(input: unknown, maxBytes: number): Snapshot {
             code: 'forbidden-key',
             message: `forbidden key "${key}" is not allowed in a UI spec`,
             path: `${path}.${key}`,
+            value: key,
           });
           break;
         }
@@ -333,6 +336,7 @@ function checkProp(
           code: 'invalid-prop-type',
           message: `${component} prop "${name}" expects a ${constraint.type} value`,
           path,
+          value: String(value),
         });
       }
       return;
@@ -346,6 +350,7 @@ function checkProp(
             .map((allowed) => `"${allowed}"`)
             .join(', ')}`,
           path,
+          value: String(value),
         });
       }
       return;
@@ -365,6 +370,7 @@ function checkNode(
       code: 'unknown-component',
       message: `component "${node.component}" is outside the catalog`,
       path: `${path}.component`,
+      value: node.component,
     });
   }
   for (const [name, value] of Object.entries(node.props ?? {})) {
@@ -374,6 +380,7 @@ function checkNode(
         code: 'unknown-prop',
         message: `${node.component} declares no prop "${name}"`,
         path: `${path}.props.${name}`,
+        value: name,
       });
       continue;
     }
@@ -386,6 +393,7 @@ function checkNode(
       code: 'undeclared-action',
       message: `action "${node.action}" is not declared in the spec's action list`,
       path: `${path}.action`,
+      value: node.action,
     });
   }
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
@@ -394,6 +402,7 @@ function checkNode(
         code: 'unknown-slot',
         message: `${node.component} declares no slot "${slotName}"`,
         path: `${path}.slots.${slotName}`,
+        value: slotName,
       });
     }
     children.forEach((child, index) => {
@@ -402,6 +411,70 @@ function checkNode(
       }
     });
   }
+}
+
+/**
+ * Crosses untrusted input to a plain-data clone through the purity wall
+ * (string input is parsed as JSON after a byte-budget pre-check; object input
+ * is snapshotted without invoking foreign code). Returns the clone plus any
+ * issues; on a non-empty `issues`, `data` is undefined. The guarded renderer
+ * (spec 028) reuses this so both boundaries share one purity wall (Art. I).
+ */
+export function toPlainData(
+  input: unknown,
+  maxBytes: number = VALIDATION_MAX_BYTES,
+): { data: unknown; issues: readonly ValidationIssue[] } {
+  if (typeof input === 'string') {
+    const byteLength = new TextEncoder().encode(input).length;
+    if (byteLength > maxBytes) {
+      return {
+        data: undefined,
+        issues: [
+          {
+            code: 'size-budget',
+            message: `spec payload of ${String(byteLength)} bytes exceeds the ${String(maxBytes)}-byte validation budget`,
+            path: '',
+          },
+        ],
+      };
+    }
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(input);
+    } catch {
+      return {
+        data: undefined,
+        issues: [{ code: 'malformed-spec', message: 'the spec is not valid JSON', path: '' }],
+      };
+    }
+    return snapshotPlainData(parsed, maxBytes);
+  }
+  return snapshotPlainData(input, maxBytes);
+}
+
+/**
+ * Validates already-plain data (a `toPlainData` clone) against the catalog:
+ * neutral-format shape, catalog membership, prop types, declared actions and
+ * slots. Returns the typed spec alongside the report so a caller that will
+ * render (spec 028) never re-parses. Never touches untrusted input directly.
+ */
+export function validatePlainData(data: unknown): ValidationReport & { spec?: UiSpec } {
+  const parsed = uiSpecSchema.safeParse(data);
+  if (!parsed.success) {
+    return {
+      issues: parsed.error.issues.map((issue) => ({
+        code: 'malformed-spec',
+        message: issue.message,
+        path: ['spec', ...issue.path.map(String)].join('.'),
+      })),
+      ok: false,
+    };
+  }
+
+  const issues: ValidationIssue[] = [];
+  const declaredActions = new Set(parsed.data.actions ?? []);
+  checkNode(parsed.data.root, 'root', declaredActions, issues);
+  return { issues, ok: issues.length === 0, spec: parsed.data };
 }
 
 /**
@@ -417,51 +490,10 @@ export function validateUiSpec(
   input: unknown,
   options: { readonly maxBytes?: number } = {},
 ): ValidationReport {
-  const maxBytes = options.maxBytes ?? VALIDATION_MAX_BYTES;
-  let document: unknown = input;
-  if (typeof input === 'string') {
-    const byteLength = new TextEncoder().encode(input).length;
-    if (byteLength > maxBytes) {
-      return {
-        issues: [
-          {
-            code: 'size-budget',
-            message: `spec payload of ${String(byteLength)} bytes exceeds the ${String(maxBytes)}-byte validation budget`,
-            path: '',
-          },
-        ],
-        ok: false,
-      };
-    }
-    try {
-      document = JSON.parse(input);
-    } catch {
-      return {
-        issues: [{ code: 'malformed-spec', message: 'the spec is not valid JSON', path: '' }],
-        ok: false,
-      };
-    }
+  const { data, issues } = toPlainData(input, options.maxBytes ?? VALIDATION_MAX_BYTES);
+  if (issues.length > 0) {
+    return { issues, ok: false };
   }
-
-  const snapshot = snapshotPlainData(document, maxBytes);
-  if (snapshot.issues.length > 0) {
-    return { issues: snapshot.issues, ok: false };
-  }
-
-  const parsed = uiSpecSchema.safeParse(snapshot.data);
-  if (!parsed.success) {
-    return {
-      issues: parsed.error.issues.map((issue) => ({
-        code: 'malformed-spec',
-        message: issue.message,
-        path: ['spec', ...issue.path.map(String)].join('.'),
-      })),
-      ok: false,
-    };
-  }
-
-  const issues: ValidationIssue[] = [];
-  const declaredActions = new Set(parsed.data.actions ?? []);
-  checkNode(parsed.data.root, 'root', declaredActions, issues);
-  return { issues, ok: issues.length === 0 };
+  const report = validatePlainData(data);
+  return { issues: report.issues, ok: report.ok };
 }

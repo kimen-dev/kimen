@@ -7,11 +7,23 @@
  *
  * The surface is protocol-neutral by contract (FR-009): no A2UI, MCP Apps,
  * AG-UI or json-render vocabulary; protocol churn belongs to the disposable
- * adapters built on top (specs 029/030).
+ * adapters built on top (specs 029/030). The guarded renderer (spec 028)
+ * renders untrusted specs into the DOM through this same catalog.
  */
 import { catalogData } from './generated/catalog.js';
 
 export { catalogData } from './generated/catalog.js';
+export {
+  type ActionEvent,
+  createStreamingRenderer,
+  DEFAULT_RENDER_BUDGETS,
+  type RenderBudgets,
+  type RenderDiagnostic,
+  type RenderOptions,
+  type RenderResult,
+  renderUiSpec,
+  type StreamingRenderer,
+} from './render.js';
 export {
   type CatalogEntry,
   type CatalogPropConstraint,

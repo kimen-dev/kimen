@@ -49,7 +49,7 @@ single source of truth.
 Follow progress through issues and pull requests.
 
 <!-- kimen:capabilities:roadmap-status:start -->
-- **planned** — Schema-constrained guarded renderer planned
+- **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
 - **hardening** — Changed-core mutation quality gate in hardening
 - **planned** — A2UI, MCP Apps, AG-UI and json-render protocol adapters planned
 - **available** — Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary

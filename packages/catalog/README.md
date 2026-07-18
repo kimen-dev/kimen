@@ -63,9 +63,9 @@ nothing.
 
 URL-scheme allowlisting (`javascript:`, `data:` and other executable
 schemes) and markup inertness are render-path invariants owned by the
-guarded renderer (spec 028): the safe-scheme policy is a render decision,
-and duplicating it here would create two drifting sources for one rule
-(Art. I). Catalog validation is a schema boundary, never content
+guarded renderer (below): the safe-scheme policy is a render decision, and
+duplicating it in `validateUiSpec` would create two drifting sources for one
+rule (Art. I). Catalog validation is a schema boundary, never content
 sanitization — a host that renders outside the guarded renderer is outside
 the guardrail.
 
@@ -73,10 +73,59 @@ The v1 spec format exposes no styling surface: no CSS values, no per-spec
 token reassignment. Appearance stays at the consuming application's token
 layer (Art. VI).
 
+## Guarded renderer
+
+`renderUiSpec` renders an untrusted spec into a host-owned surface,
+fail-closed and atomic — full validation precedes the first attach, so a
+rejected spec never touches the DOM:
+
+```ts
+import { renderUiSpec } from '@kimen/catalog';
+
+const result = renderUiSpec(spec, {
+  surface: document.querySelector('#genui'),
+  onAction: (event) => console.log(event.action, event.data),
+  budgets: { maxDepth: 32, maxNodes: 512, maxBytes: 262_144 },
+  catalogSchemaVersion: '1.0.0',
+});
+if (!result.ok) console.warn(result.diagnostics); // machine-readable, inert
+```
+
+A re-render on the same surface replaces the previous tree (and its action
+listeners) atomically once validation succeeds; a rejected re-render leaves
+the previous content intact.
+
+The renderer adds no schema of its own — catalog membership, prop types,
+declared actions and the purity wall all come from the validation layer
+above (Art. I). Over that it enforces the safe-render semantics: **no code
+path from spec data** (text is attached as inert text nodes, never parsed as
+markup; the catalog exposes no event-handler props; URL-typed props accept
+only `http`, `https` and relative references, every other scheme rejected
+naming the prop and scheme), **declared budgets** (depth, node count, payload
+size — a spec exactly at a budget renders, one beyond it is rejected before
+any node attaches), **version skew** (a spec declaring an unsupported
+`catalogSchemaVersion` — as a top-level field of the spec document, or via
+the render option — is rejected naming both versions), and **declarative
+actions only** (a bound control dispatches its one declared action, as data,
+on the single `onAction` channel — activation suppresses the native default
+and stops bubbling, so exactly one action fires even for nested action-bound
+nodes or a button inside a form; no other callback exists).
+
+`createStreamingRenderer` renders a streamed spec progressively: a node
+attaches only after it fully validates; an invalid node halts the stream
+fail-closed while previously validated content remains; the budgets bind the
+accumulated stream so a stream that never closes still trips its payload
+budget; and once halted — by an invalid node, a tripped budget, version skew
+or `close()` — every further push is rejected.
+
+Every rejection is a `RenderDiagnostic` — node path, violated rule and
+offending value — pure data, safe to display because a host renders it as
+text.
+
 See phase 4 of the [roadmap](../../docs/roadmap.md).
 
 <!-- kimen:capabilities:catalog-readme-status:start -->
-- **planned** — Schema-constrained guarded renderer planned
+- **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
 - **hardening** — Changed-core mutation quality gate in hardening
 - **planned** — A2UI, MCP Apps, AG-UI and json-render protocol adapters planned
 - **available** — Neutral runtime component catalog with schema-validated UI specs at the GenUI boundary
