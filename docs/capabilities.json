@@ -87,6 +87,23 @@
       "plannedText": ""
     },
     {
+      "id": "protocol-adapter-mcp-apps",
+      "state": "available",
+      "evidence": ["build", "test"],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "MCP Apps adapter: Kimen surfaces reach MCP Apps hosts as self-contained ui:// resources rendered through the guarded renderer",
+      "plannedText": ""
+    },
+    {
       "id": "protocol-adapters-remaining",
       "state": "planned",
       "evidence": [],
@@ -101,7 +118,7 @@
         "site-status"
       ],
       "availableText": "",
-      "plannedText": "MCP Apps, AG-UI and json-render protocol adapters planned"
+      "plannedText": "AG-UI and json-render protocol adapters planned"
     },
     {
       "id": "runtime-catalog",

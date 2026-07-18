@@ -46,9 +46,14 @@
         "text": "A2UI protocol adapter: declarative A2UI messages render through the guarded renderer"
       },
       {
+        "id": "protocol-adapter-mcp-apps",
+        "state": "available",
+        "text": "MCP Apps adapter: Kimen surfaces reach MCP Apps hosts as self-contained ui:// resources rendered through the guarded renderer"
+      },
+      {
         "id": "protocol-adapters-remaining",
         "state": "planned",
-        "text": "MCP Apps, AG-UI and json-render protocol adapters planned"
+        "text": "AG-UI and json-render protocol adapters planned"
       },
       {
         "id": "runtime-catalog",

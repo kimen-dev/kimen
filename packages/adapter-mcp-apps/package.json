@@ -1,0 +1,59 @@
+{
+  "name": "@kimen/adapter-mcp-apps",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Kimen adapter for MCP Apps (SEP-1865): disposable by design (constitution Art. VIII). Exposes Kimen surfaces to MCP Apps hosts as predeclared, self-contained ui:// resources rendered only through the guarded renderer. Supported protocol versions live in COMPAT.md, versioned with the adapter.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "node scripts/generate-surface.mjs && tsc -b --pretty false",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@kimen/catalog": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "esbuild": "0.28.1",
+    "happy-dom": "20.10.6",
+    "vitest": "^4.1.9"
+  },
+  "nx": {
+    "tags": [
+      "scope:adapter"
+    ],
+    "targets": {
+      "build": {
+        "dependsOn": [
+          "^build",
+          {
+            "projects": [
+              "@kimen/catalog"
+            ],
+            "target": "build"
+          }
+        ],
+        "inputs": [
+          "{projectRoot}/**/*",
+          "!{projectRoot}/src/generated/**"
+        ],
+        "outputs": [
+          "{projectRoot}/dist",
+          "{projectRoot}/src/generated"
+        ]
+      }
+    }
+  }
+}
