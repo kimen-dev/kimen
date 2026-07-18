@@ -19,6 +19,16 @@
       "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"],
       "stencil": false
     },
+    "packages/adapter-mcp-apps": {
+      "entry": [
+        "src/index.ts",
+        "src/surface-runtime.ts",
+        "scripts/generate-surface.mjs",
+        "*.config.{ts,mjs}"
+      ],
+      "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"],
+      "stencil": false
+    },
     "packages/elements": {
       "entry": [
         "src/index.ts",
