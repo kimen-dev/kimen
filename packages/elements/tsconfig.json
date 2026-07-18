@@ -5,6 +5,13 @@
     "incremental": false,
     "declaration": false,
     "experimentalDecorators": true,
+    // Stencil's decorators (`@Component`, `@Prop`, `AttachInternals`, …) are
+    // compile-time constructs absent from the runtime client bundle. verbatim
+    // module syntax (inherited from the base) would keep their imports as
+    // runtime imports, which the Stencil bundler then flags MISSING_EXPORT for
+    // every component. Disabling it here lets TS elide the decorator imports
+    // after Stencil's transform — a warning-free build (the expected outcome).
+    "verbatimModuleSyntax": false,
     "noPropertyAccessFromIndexSignature": false,
     "jsx": "react",
     "jsxFactory": "h",
