@@ -1,0 +1,37 @@
+{
+  "name": "@kimen/adapter-a2ui",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Kimen adapter for A2UI: disposable by design (constitution Art. VIII). Translates declarative A2UI messages into the neutral catalog and renders them only through the guarded renderer. Supported protocol versions live in COMPAT.md, versioned with the adapter.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@kimen/catalog": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "happy-dom": "20.10.6",
+    "vitest": "^4.1.9"
+  },
+  "nx": {
+    "tags": [
+      "scope:adapter"
+    ]
+  }
+}
