@@ -73,15 +73,29 @@ jobs:
       - name: Prepare Chromium for core consumer validation
         run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
 
-      - name: Validate deterministic core
-        run: bash scripts/gates/gates-core.sh
+      # Release validation runs the FULL fast suite (core + the Chromium
+      # browser gate), not just the core gates a PR runs: the browser gate
+      # completes the current-run evidence the capability binding below needs
+      # (web-components-foundation rests on test-browser).
+      - name: Validate deterministic core and browser suite
+        run: bash scripts/gates/gates-suite.sh
 
       # Release verification adds packaging (constitution Art. III): publint
       # over every workspace package plus attw --profile esm-only, so type and
       # export resolution is proven before a candidate is built. Deliberately
-      # absent from gates-core.sh (see scripts/tests/integrity-wiring.test.mjs).
+      # absent from the gate suite (see scripts/tests/integrity-wiring.test.mjs).
       - name: Validate packaging contract
         run: pnpm run packaging
+
+      # Bind every "available" capability claim to green gate evidence for THIS
+      # exact release revision (018-project-integrity-hardening S13). The suite
+      # above wrote the current-run gate evidence; this refuses to build a
+      # candidate whose published status over-claims what the gates prove.
+      - name: Bind available capability claims to green release evidence
+        run: >-
+          node scripts/gates/check-capabilities.mjs
+          --write-evidence "$RUNNER_TEMP/capability-evidence.json"
+          --gate-evidence "$KIMEN_CACHE_ROOT/gate-evidence/current-run.tsv"
 
       - name: Build exact immutable candidate
         id: candidate

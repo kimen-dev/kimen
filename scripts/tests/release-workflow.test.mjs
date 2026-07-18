@@ -109,13 +109,30 @@ test('@spec:018-project-integrity-hardening S6 prerelease permits the runner apt
 
 test('@spec:018-project-integrity-hardening S8 release validation proves the packaging contract before the candidate is built', () => {
   const validateCore = readJob(releaseWorkflow, 'validate-core');
-  const coreGate = 'bash scripts/gates/gates-core.sh';
+  const coreGate = 'bash scripts/gates/gates-suite.sh';
   const packagingGate = 'pnpm run packaging';
   const candidateBuild = 'node scripts/release/candidate-cli.mjs build';
 
   assert.equal(occurrenceCount(validateCore, packagingGate), 1);
   assert.ok(validateCore.indexOf(packagingGate) > validateCore.indexOf(coreGate));
   assert.ok(validateCore.indexOf(packagingGate) < validateCore.indexOf(candidateBuild));
+});
+
+test('@spec:018-project-integrity-hardening S13 release binds available capability claims to green gate evidence', () => {
+  const validateCore = readJob(releaseWorkflow, 'validate-core');
+  const suiteGate = 'bash scripts/gates/gates-suite.sh';
+  const evidenceBinding = 'scripts/gates/check-capabilities.mjs';
+  const candidateBuild = 'node scripts/release/candidate-cli.mjs build';
+
+  // The binding consumes the full-suite current-run evidence at the release SHA.
+  assert.equal(occurrenceCount(validateCore, '--write-evidence'), 1);
+  assert.match(
+    validateCore,
+    /--gate-evidence "\$KIMEN_CACHE_ROOT\/gate-evidence\/current-run\.tsv"/u,
+  );
+  // It runs on the suite evidence and gates the candidate build.
+  assert.ok(validateCore.indexOf(evidenceBinding) > validateCore.indexOf(suiteGate));
+  assert.ok(validateCore.indexOf(evidenceBinding) < validateCore.indexOf(candidateBuild));
 });
 
 test('@spec:018-project-integrity-hardening S6 browsers and independent verification consume validate-core output', () => {
