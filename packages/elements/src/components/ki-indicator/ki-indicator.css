@@ -19,6 +19,7 @@
 
 :host {
   display: inline-flex;
+  font-family: var(--ki-typography-family-body);
 }
 
 [part="indicator"] {

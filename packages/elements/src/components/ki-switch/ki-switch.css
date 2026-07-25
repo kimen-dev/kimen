@@ -9,6 +9,7 @@
   display: inline-block;
   min-block-size: var(--ki-switch-min-target);
   min-inline-size: var(--ki-switch-min-target);
+  font-family: var(--ki-typography-family-body);
 }
 
 :host([checked]) {

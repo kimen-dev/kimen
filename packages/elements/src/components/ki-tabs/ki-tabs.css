@@ -6,6 +6,7 @@
   --_ki-tabs-divider-color: var(--ki-tabs-divider-color);
 
   display: block;
+  font-family: var(--ki-typography-family-body);
 }
 
 [part="tablist"] {

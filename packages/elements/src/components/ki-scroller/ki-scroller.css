@@ -20,6 +20,7 @@
 
 :host {
   display: block;
+  font-family: var(--ki-typography-family-body);
 }
 
 [part="viewport"] {

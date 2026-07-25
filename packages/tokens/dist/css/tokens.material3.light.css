@@ -992,9 +992,9 @@
   --ki-status-size: var(--ki-space-sm); /** Material 3 dimension used by the status component for the dot: M3 ships no standalone status dot, so the size maps from the badge in dot form (md.comp.badge, ~6dp) per the approved spec's Constitutional Surface. */
   --ki-status-shadow: 0 0 0 0 var(--ki-color-transparent-black); /** Material 3 shadow used by the status component: the M3 badge dot is flat (no elevation documented), so the theme resolves the effect to a transparent level0 shadow (tooltip.material3 precedent; FR-006 allows a theme to resolve effects to none). */
   --ki-status-ring-width: var(--ki-space-xxs); /** dimension used by the status component for the separating ring: the 2px stroke on every Outline=True Status variant (FR-002). */
-  --ki-switch-track-width: var(--ki-space-10xl); /** dimension used by the switch component for track width. */
-  --ki-switch-track-height: var(--ki-space-6xl); /** dimension used by the switch component for track height. */
-  --ki-switch-thumb-size: var(--ki-space-5xl); /** dimension used by the switch component for thumb size. */
+  --ki-switch-track-width: var(--ki-space-15xl); /** dimension used by the switch component for track width. */
+  --ki-switch-track-height: var(--ki-space-10xl); /** dimension used by the switch component for track height. */
+  --ki-switch-thumb-size: var(--ki-space-7xl); /** dimension used by the switch component for thumb size. */
   --ki-switch-thumb-inset: var(--ki-space-xs); /** dimension used by the switch component for thumb inset. */
   --ki-switch-gap: var(--ki-space-sm); /** dimension used by the switch component for gap. */
   --ki-switch-border-width: var(--ki-space-xxs); /** dimension used by the switch component for border width. */

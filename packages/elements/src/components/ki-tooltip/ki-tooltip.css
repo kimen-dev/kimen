@@ -16,6 +16,7 @@
 
   display: inline-block;
   position: relative;
+  font-family: var(--ki-typography-family-body);
 }
 
 .tooltip {

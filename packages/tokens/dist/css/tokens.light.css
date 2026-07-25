@@ -982,13 +982,13 @@
   --ki-status-size: var(--ki-space-xs); /** dimension used by the status component for the dot: the MarsUI 4px dot, Space/xs bound to every Status variant (specs/021-ki-status/design-extraction.md). One size per theme, never an attribute (FR-006). */
   --ki-status-radius: var(--ki-radius-round); /** dimension used by the status component for the dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent). */
   --ki-status-ring-width: var(--ki-space-xxs); /** dimension used by the status component for the separating ring: the 2px stroke on every Outline=True Status variant (FR-002). */
-  --ki-switch-track-width: var(--ki-space-10xl); /** dimension used by the switch component for track width. */
+  --ki-switch-track-width: var(--ki-space-12xl); /** dimension used by the switch component for track width. */
   --ki-switch-track-height: var(--ki-space-6xl); /** dimension used by the switch component for track height. */
-  --ki-switch-thumb-size: var(--ki-space-5xl); /** dimension used by the switch component for thumb size. */
-  --ki-switch-thumb-inset: var(--ki-space-xs); /** dimension used by the switch component for thumb inset. */
+  --ki-switch-thumb-size: var(--ki-space-4xl); /** dimension used by the switch component for thumb size. */
+  --ki-switch-thumb-inset: var(--ki-space-xxs); /** dimension used by the switch component for thumb inset. */
   --ki-switch-gap: var(--ki-space-sm); /** dimension used by the switch component for gap. */
-  --ki-switch-track-radius: var(--ki-radius-round); /** dimension used by the switch component for track radius. */
-  --ki-switch-thumb-radius: var(--ki-radius-round); /** dimension used by the switch component for thumb radius. */
+  --ki-switch-track-radius: var(--ki-radius-md); /** dimension used by the switch component for track radius. */
+  --ki-switch-thumb-radius: var(--ki-radius-sm); /** dimension used by the switch component for thumb radius. */
   --ki-switch-border-width: var(--ki-space-xxs); /** dimension used by the switch component for border width. */
   --ki-switch-min-target: var(--ki-space-7xl); /** dimension used by the switch component for min target. */
   --ki-switch-focus-ring-width: var(--ki-space-xxs); /** dimension used by the switch component for focus ring width. */
@@ -1798,15 +1798,15 @@
   --ki-select-listbox-shadow: var(--ki-elevation-e3); /** shadow used by the select component for the listbox: MarsUI elevation ramp e3 (brief §5), the medium floating-surface level, replacing the former hand-composed offset/color shadow. Declared level: e3 (M3 analog: menu/dialog band; material3 overrides to e2 = md.sys.elevation.level2 for menus). */
   --ki-select-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the select component for focus ring color. */
   --ki-status-shadow: var(--ki-effect-component-primary-default-shadow); /** shadow used by the status component for the dot effects: the exact MarsUI pair on every Status variant — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers. The effect's backdrop blur is deliberately NOT applied: a 4px dot has no glass surface to blur (brief §5 perf note, glass restraint). */
-  --ki-switch-unchecked-rest-thumb: var(--ki-text-high-em); /** color used by the switch component for unchecked rest thumb. */
-  --ki-switch-unchecked-hover-thumb: var(--ki-text-high-em); /** color used by the switch component for unchecked hover thumb. */
-  --ki-switch-unchecked-active-thumb: var(--ki-text-high-em); /** color used by the switch component for unchecked active thumb. */
-  --ki-switch-checked-rest-track: var(--ki-surface-primary-high-em); /** color used by the switch component for checked rest track. */
-  --ki-switch-checked-rest-thumb: var(--ki-text-primary-on-primary); /** color used by the switch component for checked rest thumb. */
-  --ki-switch-checked-hover-track: var(--ki-surface-primary-high-em-hover); /** color used by the switch component for checked hover track. */
-  --ki-switch-checked-hover-thumb: var(--ki-text-primary-on-primary); /** color used by the switch component for checked hover thumb. */
-  --ki-switch-checked-active-track: var(--ki-surface-primary-med-em); /** color used by the switch component for checked active track. */
-  --ki-switch-checked-active-thumb: var(--ki-text-primary-on-primary); /** color used by the switch component for checked active thumb. */
+  --ki-switch-unchecked-rest-thumb: var(--ki-surface-special-light-s0-dark-s4); /** color used by the switch component for unchecked rest thumb. */
+  --ki-switch-unchecked-hover-thumb: var(--ki-surface-special-light-s0-dark-s4); /** color used by the switch component for unchecked hover thumb. */
+  --ki-switch-unchecked-active-thumb: var(--ki-surface-special-light-s0-dark-s4); /** color used by the switch component for unchecked active thumb. */
+  --ki-switch-checked-rest-track: var(--ki-surface-primary-med-em); /** color used by the switch component for checked rest track. */
+  --ki-switch-checked-rest-thumb: var(--ki-surface-special-light-s0-dark-s4); /** color used by the switch component for checked rest thumb. */
+  --ki-switch-checked-hover-track: var(--ki-surface-primary-high-em); /** color used by the switch component for checked hover track. */
+  --ki-switch-checked-hover-thumb: var(--ki-surface-special-light-s0-dark-s4); /** color used by the switch component for checked hover thumb. */
+  --ki-switch-checked-active-track: var(--ki-surface-primary-high-em); /** color used by the switch component for checked active track. */
+  --ki-switch-checked-active-thumb: var(--ki-surface-special-light-s0-dark-s4); /** color used by the switch component for checked active thumb. */
   --ki-switch-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the switch component for focus ring color. */
   --ki-tab-panel-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the tab panel component for focus ring color. */
   --ki-tab-font-size: var(--ki-typography-size-body-1); /** dimension used by the tab component for font size. */

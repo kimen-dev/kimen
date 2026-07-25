@@ -13,6 +13,7 @@
 
 :host {
   display: block;
+  font-family: var(--ki-typography-family-body);
 }
 
 [part="frame"] {
@@ -34,6 +35,9 @@
  * fit-content box, direction-agnostic (RTL edge case). */
 [part="play"] {
   position: absolute;
+
+  /* The user agent sets `font` on <button>; re-inherit the host family. */
+  font-family: inherit;
   inset: 0;
   margin: auto;
   inline-size: fit-content;

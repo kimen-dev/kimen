@@ -8,6 +8,7 @@
   --_ki-list-item-divider-color: var(--ki-list-item-divider-color);
 
   display: block;
+  font-family: var(--ki-typography-family-body);
 }
 
 [part="list"] {

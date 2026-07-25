@@ -24,6 +24,7 @@
   --_ki-icon-button-backdrop-filter: blur(var(--_ki-icon-button-backdrop-blur));
 
   display: inline-block;
+  font-family: var(--ki-typography-family-body);
 }
 
 :host([size="xs"]) {
@@ -506,6 +507,10 @@
 button {
   align-items: center;
   appearance: none;
+
+  /* The user agent sets `font` on <button>; without this the host family
+     never reaches the control (bare-page contract). */
+  font-family: inherit;
 
   /* MarsUI glass backdrop (Blur/24 → CSS blur 12px, radius/2 convention,
      002 §0). Off-path by default: only the glass variants set

@@ -7,6 +7,7 @@
   display: block;
   background: var(--_ki-tab-panel-bg);
   outline: none;
+  font-family: var(--ki-typography-family-body);
 }
 
 :host([hidden]) {

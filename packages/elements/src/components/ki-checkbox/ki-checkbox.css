@@ -6,6 +6,7 @@
   --_ki-checkbox-border: var(--ki-checkbox-unchecked-rest-border);
 
   display: inline-block;
+  font-family: var(--ki-typography-family-body);
 }
 
 :host([checked]) {
