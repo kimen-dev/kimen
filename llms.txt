@@ -1468,7 +1468,7 @@ CSS custom properties:
 - `--ki-radio-unselected-rest-border`: color used by the radio component for unselected rest border.
 - `--ki-radio-unselected-rest-fg`: color used by the radio component for unselected rest foreground.
 - `--ki-text-high-em`: semantic color for text high em.
-- `--ki-text-muted`: Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em.
+- `--ki-text-med-em`: semantic color for text med em.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-radio-group
@@ -1504,6 +1504,7 @@ CSS custom properties:
 - `--ki-radio-group-label-font-weight`: font weight used by the radio group component for label font weight.
 - `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height.
 - `--ki-text-high-em`: semantic color for text high em.
+- `--ki-text-med-em`: semantic color for text med em.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-scroller

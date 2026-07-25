@@ -8014,10 +8014,10 @@
                 "required": false,
                 "type": null
               },
-              "--ki-text-muted": {
+              "--ki-text-med-em": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em.",
+                "description": "semantic color for text med em.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -8161,6 +8161,14 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "semantic color for text high em.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-text-med-em": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic color for text med em.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -29414,5 +29422,5 @@
       }
     }
   },
-  "surfaceSha256": "a03d51322d41f4b80cc0916fb69daccc92bb4e3e78531ecf90f4535e3b9b183c"
+  "surfaceSha256": "ffa913fe45749f73faa00017a1e0dce32fc4ca66f8b4d0c9ff5d55e6239971f3"
 }

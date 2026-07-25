@@ -11,6 +11,14 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* Written by this component onto its own host whenever the group is
+   effectively disabled — by the `disabled` prop OR by an ancestor
+   <fieldset disabled>, which reflects nothing. Without it the group label
+   stayed at full emphasis above a row of visibly disabled options. */
+:host([data-ki-group-disabled]) {
+  color: var(--ki-text-med-em);
+}
+
 [part="label"] {
   display: block;
   margin-block-end: var(--_ki-radio-group-gap);

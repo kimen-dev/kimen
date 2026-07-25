@@ -5392,8 +5392,8 @@
               "description": "semantic color for text high em."
             },
             {
-              "name": "--ki-text-muted",
-              "description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em."
+              "name": "--ki-text-med-em",
+              "description": "semantic color for text med em."
             },
             {
               "name": "--ki-typography-family-body",
@@ -5571,6 +5571,10 @@
             {
               "name": "--ki-text-high-em",
               "description": "semantic color for text high em."
+            },
+            {
+              "name": "--ki-text-med-em",
+              "description": "semantic color for text med em."
             },
             {
               "name": "--ki-typography-family-body",
