@@ -65,8 +65,20 @@ the token surface. If your page is deliberately single-scheme, set
 `data-ki-color-scheme` and both the tokens **and** the browser follow that
 choice.
 
-Skipping it is supported: components render correctly on their own. What you
-lose is the page around them.
+Skipping it is supported in the light scheme. In the dark scheme it costs more
+than the page around them, and the number is measured rather than estimated: on
+a page loading only the token stylesheet, with the visitor's OS set to dark,
+**14 of 29 components render text that falls below 4.5:1** — most of it at
+1.00:1, white on white. Nothing is broken in the components; they correctly
+paint their dark-scheme foreground. The user agent simply keeps a light canvas,
+because `color-scheme` is still `normal` and only the page contract declares it.
+
+So: load it, or pin the page with `data-ki-color-scheme="light"`. Doing neither
+is the one combination the library cannot render legibly.
+
+The measurement lives in `bare-page.browser.spec.ts` — it walks the flat tree
+through shadow boundaries, composites the real backdrop behind every rendered
+string, and holds all 29 components to 4.5:1 in both schemes.
 
 ## Surfaces
 

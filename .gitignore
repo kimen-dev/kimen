@@ -34,6 +34,9 @@ site-dist/
 coverage/
 .stryker-tmp/
 reports/
+
+# Playwright MCP page snapshots: agent tool output, never project content.
+.playwright-mcp/
 playwright-report/
 test-results/
 # Visual regression (Art. X): the CI-generated linux baselines are the only
