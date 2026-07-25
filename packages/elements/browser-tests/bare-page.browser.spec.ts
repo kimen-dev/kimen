@@ -163,6 +163,16 @@ function ratio(fg: Rgba, bg: Rgba): number {
  * shadow boundaries via `getRootNode().host`, not just `parentElement`, because
  * slotted content's painted backdrop is the shadow element containing the
  * `<slot>`. Stops at the first opaque layer; falls back to the canvas.
+ *
+ * KNOWN LIMITATION, stated rather than discovered later: only
+ * `backgroundColor` is read, so a surface painted purely with a
+ * `background-image` gradient composites straight through. It does not bite
+ * today — ki-button, the one component shipping MarsUI's gradient material,
+ * paints its fill with `background-color` and uses `background-image` only for
+ * an overlay that defaults to `none`, so the label measures against the real
+ * brand fill. It is exactly the case axe reports as `bgGradient` incomplete,
+ * and if a component ever paints its whole surface from a gradient this walk
+ * must learn to sample it.
  */
 function flatParent(node: Element): Element | null {
   // Slotted content is painted over the shadow element containing the <slot>,
