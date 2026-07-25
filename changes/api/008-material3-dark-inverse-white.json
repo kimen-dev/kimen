@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "a03d51322d41f4b80cc0916fb69daccc92bb4e3e78531ecf90f4535e3b9b183c",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "material3's dark scheme inherits the inverse-white flip (same 0.0.0 baseline as 003/004/005/006/007; this declaration advances the sealed candidate, so the cumulative delta stays MAJOR). No public name is added, renamed or removed: the delta is entirely effective-value changes to already-published leaves, confined to the material3 dark context. ki.inverse-white.* means the inverse of the surface — black alphas on a light canvas, white alphas on a dark one. onmars overrides all fifteen steps in tokens/modes/dark.tokens.json; material3 overrode none, and material3DarkConfig does not include the onmars dark file (its sources are LAYERS + MATERIAL3_OVERRIDES + tokens/modes/material3.dark.tokens.json), so the whole family stayed at its LIGHT values on material3's dark canvas. The token that exposed it is --ki-indicator-dot-color, whose own description asserts that 'the scheme flip rides the semantic layer'; in material3 it rode nothing, leaving a black-32 pager dot on a #141218 page at 1.05:1. --ki-scroller-thumb-color and the ki-video controls consume the same family. This is a missing override rather than a theme decision: the description states the intent and the second theme silently failed to honour it. The fifteen material3 dark values now mirror the onmars dark ones. Measured effect on the indicator dot in material3 dark: 1.05:1 to 2.89:1. The residual gap to the 3:1 bar is a separate, founder-gated question about indicator emphasis (audit decision 5) and is not addressed here. No committed screenshot changes: the visual harness captures material3 in the light scheme only, so material3's dark scheme has never had a baseline.",
+  "release": "major",
+  "schemaVersion": 1
+}
