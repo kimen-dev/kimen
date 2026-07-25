@@ -15,6 +15,7 @@
   --_avatar-icon-size: var(--ki-avatar-md-icon-size);
 
   display: inline-flex;
+  font-family: var(--ki-avatar-font-family);
 }
 
 :host([size="xxs"]) {

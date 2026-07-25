@@ -15,8 +15,8 @@ repository approval marker.
 First Kimen selection control: `<ki-checkbox>`, a form-associated binary
 checkbox with an `indeterminate` presentation-only mixed state (the value
 stays binary), whose API abstracts the Material 3 checkbox under the batch
-charter (MarsUI ships no checkbox frame — full-file sweep verified
-2026-07-08; onmars styles the control from the 001 token vocabulary alone),
+charter (MarsUI ships checkbox masters after all — see the Correction below;
+onmars styles the control from the 001 token vocabulary alone in v1),
 with no variant/tone/size axes in v1, styled exclusively through a new
 `--ki-checkbox-*` component token layer. Technical approach: a native
 `<input type="checkbox">` inside the shadow root, wrapped by a shadow
@@ -35,6 +35,23 @@ are reflected live per the charter's style-driving rule, with boolean
 PRESENCE semantics enforced at load. Details and rationales in
 [research.md](./research.md) (D1–D10); API surface in
 [contracts/checkbox-contract.md](./contracts/checkbox-contract.md).
+
+**Correction (2026-07-25)**: this Summary previously justified the v1 scope
+with "MarsUI ships no checkbox frame — full-file sweep verified
+2026-07-08". That sweep was a false negative: the Figma `get_metadata` tool
+called without a `nodeId` lists only 10 of the MarsUI file's 54 pages and
+presents them as the whole file, so the Checkboxes page was never seen.
+Re-enumerating with `use_figma` (`figma.root.children`) finds page
+Checkboxes (node 10101:4054) carrying `Checkbox` (node 10030:982 —
+`States` = unchecked | hover | checked | checked_focused | disabled |
+indeterminate | indeterminate_disabled × `Size` = sm | md | lg) and
+`Checkbox_label` (node 10095:3846 — `Direction` = left | right × `Size` =
+sm | md). Every planning step that rests on the absence is unsound on that
+count — notably the "no variant/tone/size axes in v1" scope and the
+single-size structure block of the `--ki-checkbox-*` layer (research D8) —
+and is superseded by a design extraction against those masters, still
+outstanding. Nothing in this plan is changed by this note; re-scoping is a
+founder decision.
 
 ## Technical Context
 

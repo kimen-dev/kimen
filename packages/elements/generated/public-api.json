@@ -324,6 +324,14 @@
                 "replacement": null,
                 "required": false,
                 "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
               }
             },
             "description": "A persistent inline status message with token-backed tone semantics.",
@@ -3518,6 +3526,14 @@
                 "replacement": null,
                 "required": false,
                 "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
               }
             },
             "description": "A non-interactive card surface for grouping related content.",
@@ -4084,6 +4100,14 @@
                 "replacement": null,
                 "required": false,
                 "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
               }
             },
             "description": "A form-associated checkbox for selecting independent options.",
@@ -4501,6 +4525,14 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -6142,6 +6174,14 @@
                 "replacement": null,
                 "required": false,
                 "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
               }
             },
             "description": "A token-styled, icon-only action button with native button semantics and a\nmandatory accessible name.",
@@ -6330,6 +6370,14 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "duration used by the indicator component for the highlight transfer between dots: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-008; disabled under reduced motion by construction).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -7049,6 +7097,14 @@
                 "replacement": null,
                 "required": false,
                 "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
               }
             },
             "description": "A non-interactive vertical list container for read-only collections of\nsimilar entries composed with `ki-list-item` children.",
@@ -7187,6 +7243,14 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "dimension used by the list component for item secondary line height.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -7417,6 +7481,14 @@
                 "replacement": null,
                 "required": false,
                 "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
               }
             },
             "description": "A token-styled, non-interactive progress indicator for known or unknown\nduration work.",
@@ -7556,6 +7628,14 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "dimension used by the qr component for the code's square box: the 128px QR_code frame (node 16158:27561) binds no size variable and the space scale has no 8rem step, so onmars resolves the nearest step (120px); consumers rescale through this token — the code always stays 1:1 (specs/026-ki-qr/design-extraction.md §4, declared for founder ratification).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -8264,6 +8344,14 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "dimension used by the scroller component for the rail end insets: Space/xs bound as the 4px padding along the scroll axis of both Scroller variants (design-extraction §Decisiones 5).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -9049,6 +9137,14 @@
                 "replacement": null,
                 "required": false,
                 "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
               }
             },
             "description": "A tiny, non-interactive status dot that marks the state of a nearby item.",
@@ -9436,6 +9532,14 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "color used by the switch component for unchecked rest track.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -9925,6 +10029,14 @@
                 "replacement": null,
                 "required": false,
                 "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
               }
             },
             "description": "One content view paired with a `ki-tab` inside `ki-tabs`.",
@@ -10001,6 +10113,14 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "dimension used by the tabs component for gap.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -10533,10 +10653,10 @@
                 "required": false,
                 "type": null
               },
-              "--ki-typography-family-base": {
+              "--ki-typography-family-body": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.typography.family.body.",
+                "description": "semantic font family for typography family body.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -10754,6 +10874,14 @@
                 "replacement": null,
                 "required": false,
                 "type": null
+              },
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
               }
             },
             "description": "A transient, text-only description bubble for one slotted trigger.",
@@ -10810,6 +10938,14 @@
               }
             },
             "cssProperties": {
+              "--ki-typography-family-body": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "semantic font family for typography family body.",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
               "--ki-video-backdrop-blur": {
                 "default": null,
                 "deprecatedSince": null,
@@ -12377,6 +12513,11 @@
             "replacement": null,
             "target": "./dist/css/tokens.css"
           },
+          "./css/base": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./dist/css/base.css"
+          },
           "./css/material3": {
             "deprecatedSince": null,
             "replacement": null,
@@ -12388,6 +12529,11 @@
             "declaration": null,
             "symbols": {},
             "target": "./dist/css/tokens.css"
+          },
+          "./css/base": {
+            "declaration": null,
+            "symbols": {},
+            "target": "./dist/css/base.css"
           },
           "./css/material3": {
             "declaration": null,
@@ -12411,7 +12557,7 @@
                 "--ki-alert-dismiss-size": "1.5rem",
                 "--ki-alert-focus-ring-color": "#b59cd8",
                 "--ki-alert-focus-ring-offset": "0.125rem",
-                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-alert-focus-ring-width": "0.125rem",
                 "--ki-alert-font-size": "0.8125rem",
                 "--ki-alert-gap": "0.375rem",
@@ -12516,7 +12662,7 @@
                 "--ki-button-border-width": "1px",
                 "--ki-button-focus-ring-color": "#b59cd8",
                 "--ki-button-focus-ring-offset": "0.125rem",
-                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Inter,system-ui,sans-serif",
                 "--ki-button-font-weight": "600",
@@ -12792,7 +12938,7 @@
                 "--ki-checkbox-control-size": "1.25rem",
                 "--ki-checkbox-focus-ring-color": "#b59cd8",
                 "--ki-checkbox-focus-ring-offset": "0.125rem",
-                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-checkbox-focus-ring-width": "0.125rem",
                 "--ki-checkbox-gap": "0.375rem",
                 "--ki-checkbox-indeterminate-active-bg": "#845abe",
@@ -12865,12 +13011,12 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.48)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.12)",
                 "--ki-focus-gray": "0 0 0 3px rgba(255,255,255,0.08)",
-                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-icon-button-backdrop-blur": "12px",
                 "--ki-icon-button-border-width": "1px",
                 "--ki-icon-button-focus-ring-color": "#b59cd8",
                 "--ki-icon-button-focus-ring-offset": "0.125rem",
-                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-icon-button-focus-ring-width": "0.125rem",
                 "--ki-icon-button-ghost-active-shadow": "none",
                 "--ki-icon-button-ghost-danger-active-bg": "#72130e",
@@ -13089,7 +13235,7 @@
                 "--ki-input-focus-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-input-focus-ring-color": "#b59cd8",
                 "--ki-input-focus-ring-offset": "0.125rem",
-                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-input-focus-ring-width": "0.125rem",
                 "--ki-input-font-size": "0.8125rem",
                 "--ki-input-font-weight": "500",
@@ -13275,7 +13421,7 @@
                 "--ki-radio-dot-size": "0.5rem",
                 "--ki-radio-focus-ring-color": "#b59cd8",
                 "--ki-radio-focus-ring-offset": "0.125rem",
-                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-radio-focus-ring-width": "0.125rem",
                 "--ki-radio-gap": "0.375rem",
                 "--ki-radio-group-gap": "0.375rem",
@@ -13336,7 +13482,7 @@
                 "--ki-select-focus-label-fg": "#ffffff",
                 "--ki-select-focus-ring-color": "#b59cd8",
                 "--ki-select-focus-ring-offset": "0.125rem",
-                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-select-focus-ring-width": "0.125rem",
                 "--ki-select-font-size": "0.8125rem",
                 "--ki-select-gap": "0.25rem",
@@ -13456,44 +13602,44 @@
                 "--ki-surface-white": "#ffffff",
                 "--ki-switch-border-width": "0.125rem",
                 "--ki-switch-checked-active-border": "rgba(0,0,0,0)",
-                "--ki-switch-checked-active-thumb": "#ffffff",
+                "--ki-switch-checked-active-thumb": "#2e2e2e",
                 "--ki-switch-checked-active-track": "#845abe",
                 "--ki-switch-checked-disabled-border": "rgba(255,255,255,0.18)",
                 "--ki-switch-checked-disabled-thumb": "rgba(255,255,255,0.32)",
                 "--ki-switch-checked-disabled-track": "rgba(255,255,255,0.12)",
                 "--ki-switch-checked-hover-border": "rgba(0,0,0,0)",
-                "--ki-switch-checked-hover-thumb": "#ffffff",
-                "--ki-switch-checked-hover-track": "#5f3993",
+                "--ki-switch-checked-hover-thumb": "#2e2e2e",
+                "--ki-switch-checked-hover-track": "#845abe",
                 "--ki-switch-checked-rest-border": "rgba(0,0,0,0)",
-                "--ki-switch-checked-rest-thumb": "#ffffff",
+                "--ki-switch-checked-rest-thumb": "#2e2e2e",
                 "--ki-switch-checked-rest-track": "#845abe",
                 "--ki-switch-focus-ring-color": "#b59cd8",
                 "--ki-switch-focus-ring-offset": "0.125rem",
-                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-switch-focus-ring-width": "0.125rem",
                 "--ki-switch-gap": "0.375rem",
                 "--ki-switch-min-target": "1.5rem",
-                "--ki-switch-thumb-inset": "0.25rem",
-                "--ki-switch-thumb-radius": "1000px",
-                "--ki-switch-thumb-size": "1.25rem",
+                "--ki-switch-thumb-inset": "0.125rem",
+                "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-track-height": "1.375rem",
-                "--ki-switch-track-radius": "1000px",
-                "--ki-switch-track-width": "2rem",
+                "--ki-switch-track-radius": "8px",
+                "--ki-switch-track-width": "2.5rem",
                 "--ki-switch-unchecked-active-border": "rgba(255,255,255,0.12)",
-                "--ki-switch-unchecked-active-thumb": "#ffffff",
+                "--ki-switch-unchecked-active-thumb": "#2e2e2e",
                 "--ki-switch-unchecked-active-track": "#3a3a3a",
                 "--ki-switch-unchecked-disabled-border": "rgba(255,255,255,0.18)",
                 "--ki-switch-unchecked-disabled-thumb": "rgba(255,255,255,0.32)",
                 "--ki-switch-unchecked-disabled-track": "rgba(255,255,255,0.12)",
                 "--ki-switch-unchecked-hover-border": "rgba(255,255,255,0.12)",
-                "--ki-switch-unchecked-hover-thumb": "#ffffff",
+                "--ki-switch-unchecked-hover-thumb": "#2e2e2e",
                 "--ki-switch-unchecked-hover-track": "#2e2e2e",
                 "--ki-switch-unchecked-rest-border": "rgba(255,255,255,0.12)",
-                "--ki-switch-unchecked-rest-thumb": "#ffffff",
+                "--ki-switch-unchecked-rest-thumb": "#2e2e2e",
                 "--ki-switch-unchecked-rest-track": "#242424",
                 "--ki-tab-focus-ring-color": "#b59cd8",
                 "--ki-tab-focus-ring-offset": "0.125rem",
-                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-tab-focus-ring-width": "0.125rem",
                 "--ki-tab-font-size": "0.8125rem",
                 "--ki-tab-font-weight": "600",
@@ -13592,7 +13738,7 @@
                 "--ki-textarea-focus-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-focus-ring-color": "#b59cd8",
                 "--ki-textarea-focus-ring-offset": "0.125rem",
-                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-textarea-focus-ring-width": "0.125rem",
                 "--ki-textarea-font-size": "0.8125rem",
                 "--ki-textarea-font-weight": "500",
@@ -13721,7 +13867,7 @@
                 "--ki-alert-dismiss-size": "1.5rem",
                 "--ki-alert-focus-ring-color": "#845abe",
                 "--ki-alert-focus-ring-offset": "0.125rem",
-                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-alert-focus-ring-width": "0.125rem",
                 "--ki-alert-font-size": "0.8125rem",
                 "--ki-alert-gap": "0.375rem",
@@ -13826,7 +13972,7 @@
                 "--ki-button-border-width": "1px",
                 "--ki-button-focus-ring-color": "#845abe",
                 "--ki-button-focus-ring-offset": "0.125rem",
-                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Inter,system-ui,sans-serif",
                 "--ki-button-font-weight": "600",
@@ -14102,7 +14248,7 @@
                 "--ki-checkbox-control-size": "1.25rem",
                 "--ki-checkbox-focus-ring-color": "#845abe",
                 "--ki-checkbox-focus-ring-offset": "0.125rem",
-                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-checkbox-focus-ring-width": "0.125rem",
                 "--ki-checkbox-gap": "0.375rem",
                 "--ki-checkbox-indeterminate-active-bg": "#5f3993",
@@ -14175,12 +14321,12 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.32)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.05)",
                 "--ki-focus-gray": "0 0 0 3px rgba(0,0,0,0.08)",
-                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-icon-button-backdrop-blur": "12px",
                 "--ki-icon-button-border-width": "1px",
                 "--ki-icon-button-focus-ring-color": "#845abe",
                 "--ki-icon-button-focus-ring-offset": "0.125rem",
-                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-icon-button-focus-ring-width": "0.125rem",
                 "--ki-icon-button-ghost-active-shadow": "none",
                 "--ki-icon-button-ghost-danger-active-bg": "#ffebed",
@@ -14399,7 +14545,7 @@
                 "--ki-input-focus-placeholder-fg": "#5b616d",
                 "--ki-input-focus-ring-color": "#845abe",
                 "--ki-input-focus-ring-offset": "0.125rem",
-                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-input-focus-ring-width": "0.125rem",
                 "--ki-input-font-size": "0.8125rem",
                 "--ki-input-font-weight": "500",
@@ -14585,7 +14731,7 @@
                 "--ki-radio-dot-size": "0.5rem",
                 "--ki-radio-focus-ring-color": "#845abe",
                 "--ki-radio-focus-ring-offset": "0.125rem",
-                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-radio-focus-ring-width": "0.125rem",
                 "--ki-radio-gap": "0.375rem",
                 "--ki-radio-group-gap": "0.375rem",
@@ -14646,7 +14792,7 @@
                 "--ki-select-focus-label-fg": "#0a0c11",
                 "--ki-select-focus-ring-color": "#845abe",
                 "--ki-select-focus-ring-offset": "0.125rem",
-                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-select-focus-ring-width": "0.125rem",
                 "--ki-select-font-size": "0.8125rem",
                 "--ki-select-gap": "0.25rem",
@@ -14767,43 +14913,43 @@
                 "--ki-switch-border-width": "0.125rem",
                 "--ki-switch-checked-active-border": "rgba(255,255,255,0)",
                 "--ki-switch-checked-active-thumb": "#ffffff",
-                "--ki-switch-checked-active-track": "#845abe",
+                "--ki-switch-checked-active-track": "#5f3993",
                 "--ki-switch-checked-disabled-border": "#dddfe4",
                 "--ki-switch-checked-disabled-thumb": "#afb3bb",
                 "--ki-switch-checked-disabled-track": "#ececf0",
                 "--ki-switch-checked-hover-border": "rgba(255,255,255,0)",
                 "--ki-switch-checked-hover-thumb": "#ffffff",
-                "--ki-switch-checked-hover-track": "#845abe",
+                "--ki-switch-checked-hover-track": "#5f3993",
                 "--ki-switch-checked-rest-border": "rgba(255,255,255,0)",
                 "--ki-switch-checked-rest-thumb": "#ffffff",
-                "--ki-switch-checked-rest-track": "#5f3993",
+                "--ki-switch-checked-rest-track": "#845abe",
                 "--ki-switch-focus-ring-color": "#845abe",
                 "--ki-switch-focus-ring-offset": "0.125rem",
-                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-switch-focus-ring-width": "0.125rem",
                 "--ki-switch-gap": "0.375rem",
                 "--ki-switch-min-target": "1.5rem",
-                "--ki-switch-thumb-inset": "0.25rem",
-                "--ki-switch-thumb-radius": "1000px",
-                "--ki-switch-thumb-size": "1.25rem",
+                "--ki-switch-thumb-inset": "0.125rem",
+                "--ki-switch-thumb-radius": "6px",
+                "--ki-switch-thumb-size": "1.125rem",
                 "--ki-switch-track-height": "1.375rem",
-                "--ki-switch-track-radius": "1000px",
-                "--ki-switch-track-width": "2rem",
+                "--ki-switch-track-radius": "8px",
+                "--ki-switch-track-width": "2.5rem",
                 "--ki-switch-unchecked-active-border": "rgba(0,0,0,0.12)",
-                "--ki-switch-unchecked-active-thumb": "#0a0c11",
+                "--ki-switch-unchecked-active-thumb": "#ffffff",
                 "--ki-switch-unchecked-active-track": "#c3c6cc",
                 "--ki-switch-unchecked-disabled-border": "#dddfe4",
                 "--ki-switch-unchecked-disabled-thumb": "#afb3bb",
                 "--ki-switch-unchecked-disabled-track": "#ececf0",
                 "--ki-switch-unchecked-hover-border": "rgba(0,0,0,0.12)",
-                "--ki-switch-unchecked-hover-thumb": "#0a0c11",
+                "--ki-switch-unchecked-hover-thumb": "#ffffff",
                 "--ki-switch-unchecked-hover-track": "#dddfe4",
                 "--ki-switch-unchecked-rest-border": "rgba(0,0,0,0.12)",
-                "--ki-switch-unchecked-rest-thumb": "#0a0c11",
+                "--ki-switch-unchecked-rest-thumb": "#ffffff",
                 "--ki-switch-unchecked-rest-track": "#ececf0",
                 "--ki-tab-focus-ring-color": "#845abe",
                 "--ki-tab-focus-ring-offset": "0.125rem",
-                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-tab-focus-ring-width": "0.125rem",
                 "--ki-tab-font-size": "0.8125rem",
                 "--ki-tab-font-weight": "600",
@@ -14902,7 +15048,7 @@
                 "--ki-textarea-focus-placeholder-fg": "#5b616d",
                 "--ki-textarea-focus-ring-color": "#845abe",
                 "--ki-textarea-focus-ring-offset": "0.125rem",
-                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-textarea-focus-ring-width": "0.125rem",
                 "--ki-textarea-font-size": "0.8125rem",
                 "--ki-textarea-font-weight": "500",
@@ -15022,6 +15168,10 @@
             },
             "target": "./dist/css/tokens.css"
           },
+          "./css/base": {
+            "pageContract": true,
+            "target": "./dist/css/base.css"
+          },
           "./css/material3": {
             "contexts": {
               "dark": {
@@ -15036,7 +15186,7 @@
                 "--ki-alert-dismiss-size": "1.5rem",
                 "--ki-alert-focus-ring-color": "#d0bcff",
                 "--ki-alert-focus-ring-offset": "0.125rem",
-                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-alert-focus-ring-width": "0.125rem",
                 "--ki-alert-font-size": "0.875rem",
                 "--ki-alert-gap": "0.375rem",
@@ -15141,7 +15291,7 @@
                 "--ki-button-border-width": "0.0625rem",
                 "--ki-button-focus-ring-color": "#d0bcff",
                 "--ki-button-focus-ring-offset": "0.125rem",
-                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Roboto,system-ui,sans-serif",
                 "--ki-button-font-weight": "500",
@@ -15417,7 +15567,7 @@
                 "--ki-checkbox-control-size": "1.25rem",
                 "--ki-checkbox-focus-ring-color": "#d0bcff",
                 "--ki-checkbox-focus-ring-offset": "0.125rem",
-                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-checkbox-focus-ring-width": "0.125rem",
                 "--ki-checkbox-gap": "0.375rem",
                 "--ki-checkbox-indeterminate-active-bg": "#eaddff",
@@ -15490,12 +15640,12 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.32)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.24)",
                 "--ki-focus-gray": "0 0 0 3px #49454f",
-                "--ki-focus-primary": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-focus-primary": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-icon-button-backdrop-blur": "0",
                 "--ki-icon-button-border-width": "0.0625rem",
                 "--ki-icon-button-focus-ring-color": "#d0bcff",
                 "--ki-icon-button-focus-ring-offset": "0.125rem",
-                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-icon-button-focus-ring-width": "0.125rem",
                 "--ki-icon-button-ghost-active-shadow": "none",
                 "--ki-icon-button-ghost-danger-active-bg": "#8c1d18",
@@ -15714,7 +15864,7 @@
                 "--ki-input-focus-placeholder-fg": "#cac4d0",
                 "--ki-input-focus-ring-color": "#d0bcff",
                 "--ki-input-focus-ring-offset": "0.125rem",
-                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-input-focus-ring-width": "0.125rem",
                 "--ki-input-font-size": "0.875rem",
                 "--ki-input-font-weight": "400",
@@ -15900,7 +16050,7 @@
                 "--ki-radio-dot-size": "0.5rem",
                 "--ki-radio-focus-ring-color": "#d0bcff",
                 "--ki-radio-focus-ring-offset": "0.125rem",
-                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-radio-focus-ring-width": "0.125rem",
                 "--ki-radio-gap": "0.375rem",
                 "--ki-radio-group-gap": "1rem",
@@ -15961,7 +16111,7 @@
                 "--ki-select-focus-label-fg": "#d0bcff",
                 "--ki-select-focus-ring-color": "#d0bcff",
                 "--ki-select-focus-ring-offset": "0.125rem",
-                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-select-focus-ring-width": "0.125rem",
                 "--ki-select-font-size": "0.875rem",
                 "--ki-select-gap": "0.25rem",
@@ -16094,16 +16244,16 @@
                 "--ki-switch-checked-rest-track": "#d0bcff",
                 "--ki-switch-focus-ring-color": "#d0bcff",
                 "--ki-switch-focus-ring-offset": "0.125rem",
-                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-switch-focus-ring-width": "0.125rem",
                 "--ki-switch-gap": "0.375rem",
                 "--ki-switch-min-target": "1.5rem",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
-                "--ki-switch-thumb-size": "1.25rem",
-                "--ki-switch-track-height": "1.375rem",
+                "--ki-switch-thumb-size": "1.5rem",
+                "--ki-switch-track-height": "2rem",
                 "--ki-switch-track-radius": "9999px",
-                "--ki-switch-track-width": "2rem",
+                "--ki-switch-track-width": "3.25rem",
                 "--ki-switch-unchecked-active-border": "#938f99",
                 "--ki-switch-unchecked-active-thumb": "#938f99",
                 "--ki-switch-unchecked-active-track": "#3b383e",
@@ -16118,7 +16268,7 @@
                 "--ki-switch-unchecked-rest-track": "#2b2930",
                 "--ki-tab-focus-ring-color": "#d0bcff",
                 "--ki-tab-focus-ring-offset": "0.125rem",
-                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-tab-focus-ring-width": "0.125rem",
                 "--ki-tab-font-size": "0.875rem",
                 "--ki-tab-font-weight": "500",
@@ -16217,7 +16367,7 @@
                 "--ki-textarea-focus-placeholder-fg": "#cac4d0",
                 "--ki-textarea-focus-ring-color": "#d0bcff",
                 "--ki-textarea-focus-ring-offset": "0.125rem",
-                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-textarea-focus-ring-width": "0.125rem",
                 "--ki-textarea-font-size": "0.875rem",
                 "--ki-textarea-font-weight": "400",
@@ -16346,7 +16496,7 @@
                 "--ki-alert-dismiss-size": "1.5rem",
                 "--ki-alert-focus-ring-color": "#6750a4",
                 "--ki-alert-focus-ring-offset": "0.125rem",
-                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-alert-focus-ring-width": "0.125rem",
                 "--ki-alert-font-size": "0.875rem",
                 "--ki-alert-gap": "0.375rem",
@@ -16451,7 +16601,7 @@
                 "--ki-button-border-width": "0.0625rem",
                 "--ki-button-focus-ring-color": "#6750a4",
                 "--ki-button-focus-ring-offset": "0.125rem",
-                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Roboto,system-ui,sans-serif",
                 "--ki-button-font-weight": "500",
@@ -16727,7 +16877,7 @@
                 "--ki-checkbox-control-size": "1.25rem",
                 "--ki-checkbox-focus-ring-color": "#6750a4",
                 "--ki-checkbox-focus-ring-offset": "0.125rem",
-                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-checkbox-focus-ring-width": "0.125rem",
                 "--ki-checkbox-gap": "0.375rem",
                 "--ki-checkbox-indeterminate-active-bg": "#4f378b",
@@ -16800,12 +16950,12 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.24)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.08)",
                 "--ki-focus-gray": "0 0 0 3px #cac4d0",
-                "--ki-focus-primary": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-focus-primary": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-icon-button-backdrop-blur": "0",
                 "--ki-icon-button-border-width": "0.0625rem",
                 "--ki-icon-button-focus-ring-color": "#6750a4",
                 "--ki-icon-button-focus-ring-offset": "0.125rem",
-                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-icon-button-focus-ring-width": "0.125rem",
                 "--ki-icon-button-ghost-active-shadow": "none",
                 "--ki-icon-button-ghost-danger-active-bg": "#f9dedc",
@@ -17024,7 +17174,7 @@
                 "--ki-input-focus-placeholder-fg": "#49454f",
                 "--ki-input-focus-ring-color": "#6750a4",
                 "--ki-input-focus-ring-offset": "0.125rem",
-                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-input-focus-ring-width": "0.125rem",
                 "--ki-input-font-size": "0.875rem",
                 "--ki-input-font-weight": "400",
@@ -17210,7 +17360,7 @@
                 "--ki-radio-dot-size": "0.5rem",
                 "--ki-radio-focus-ring-color": "#6750a4",
                 "--ki-radio-focus-ring-offset": "0.125rem",
-                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-radio-focus-ring-width": "0.125rem",
                 "--ki-radio-gap": "0.375rem",
                 "--ki-radio-group-gap": "1rem",
@@ -17271,7 +17421,7 @@
                 "--ki-select-focus-label-fg": "#6750a4",
                 "--ki-select-focus-ring-color": "#6750a4",
                 "--ki-select-focus-ring-offset": "0.125rem",
-                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-select-focus-ring-width": "0.125rem",
                 "--ki-select-font-size": "0.875rem",
                 "--ki-select-gap": "0.25rem",
@@ -17404,16 +17554,16 @@
                 "--ki-switch-checked-rest-track": "#6750a4",
                 "--ki-switch-focus-ring-color": "#6750a4",
                 "--ki-switch-focus-ring-offset": "0.125rem",
-                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-switch-focus-ring-width": "0.125rem",
                 "--ki-switch-gap": "0.375rem",
                 "--ki-switch-min-target": "1.5rem",
                 "--ki-switch-thumb-inset": "0.25rem",
                 "--ki-switch-thumb-radius": "9999px",
-                "--ki-switch-thumb-size": "1.25rem",
-                "--ki-switch-track-height": "1.375rem",
+                "--ki-switch-thumb-size": "1.5rem",
+                "--ki-switch-track-height": "2rem",
                 "--ki-switch-track-radius": "9999px",
-                "--ki-switch-track-width": "2rem",
+                "--ki-switch-track-width": "3.25rem",
                 "--ki-switch-unchecked-active-border": "#79747e",
                 "--ki-switch-unchecked-active-thumb": "#79747e",
                 "--ki-switch-unchecked-active-track": "#ded8e1",
@@ -17428,7 +17578,7 @@
                 "--ki-switch-unchecked-rest-track": "#ece6f0",
                 "--ki-tab-focus-ring-color": "#6750a4",
                 "--ki-tab-focus-ring-offset": "0.125rem",
-                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-tab-focus-ring-width": "0.125rem",
                 "--ki-tab-font-size": "0.875rem",
                 "--ki-tab-font-weight": "500",
@@ -17527,7 +17677,7 @@
                 "--ki-textarea-focus-placeholder-fg": "#49454f",
                 "--ki-textarea-focus-ring-color": "#6750a4",
                 "--ki-textarea-focus-ring-offset": "0.125rem",
-                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-textarea-focus-ring-width": "0.125rem",
                 "--ki-textarea-font-size": "0.875rem",
                 "--ki-textarea-font-weight": "400",
@@ -17740,7 +17890,7 @@
           "--ki-alert-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -18616,7 +18766,7 @@
           "--ki-button-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -21117,7 +21267,7 @@
           "--ki-checkbox-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -22021,13 +22171,13 @@
           "--ki-focus-primary": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
             },
             "deprecatedSince": null,
-            "description": "MarsUI Focus/primary: 3px spread focus ring of the MarsUI style Outline/primary_base_em_alpha = brand 500 at 40% (Kimen name: outline.primary-low-em-alpha / brand.500-alpha-4; the Kimen outline.primary-base-em-alpha resolves to 20% and does not match the Figma Focus style — specs/002-ki-button/design-extraction.md §2.5).",
+            "description": "MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha, read from the Figma master as #845abe33 = brand 500 at 20% (Kimen name: outline.primary-base-em-alpha / brand.500-alpha-2). The previous 40% (outline.primary-low-em-alpha / brand.500-alpha-4) came from specs/002-ki-button/design-extraction.md §2.5, which read the alpha off the Dark canvas mode and recorded it as the Light value; the ring shipped 2x too strong in light and 2.8x in dark across twelve components.",
             "replacement": null,
             "required": false,
             "type": "shadow"
@@ -22067,7 +22217,7 @@
           "--ki-icon-button-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -24102,7 +24252,7 @@
           "--ki-input-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -25631,7 +25781,7 @@
           "--ki-radio-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -26125,7 +26275,7 @@
           "--ki-select-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -27141,7 +27291,7 @@
             "type": null
           },
           "--ki-switch-checked-active-track": {
-            "default": "#845abe",
+            "default": "#5f3993",
             "deprecatedSince": null,
             "description": "color used by the switch component for checked active track.",
             "replacement": null,
@@ -27189,7 +27339,7 @@
             "type": null
           },
           "--ki-switch-checked-hover-track": {
-            "default": "#845abe",
+            "default": "#5f3993",
             "deprecatedSince": null,
             "description": "color used by the switch component for checked hover track.",
             "replacement": null,
@@ -27213,7 +27363,7 @@
             "type": null
           },
           "--ki-switch-checked-rest-track": {
-            "default": "#5f3993",
+            "default": "#845abe",
             "deprecatedSince": null,
             "description": "color used by the switch component for checked rest track.",
             "replacement": null,
@@ -27239,7 +27389,7 @@
           "--ki-switch-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -27275,7 +27425,7 @@
             "type": null
           },
           "--ki-switch-thumb-inset": {
-            "default": "0.25rem",
+            "default": "0.125rem",
             "deprecatedSince": null,
             "description": "dimension used by the switch component for thumb inset.",
             "replacement": null,
@@ -27283,7 +27433,7 @@
             "type": null
           },
           "--ki-switch-thumb-radius": {
-            "default": "1000px",
+            "default": "6px",
             "deprecatedSince": null,
             "description": "dimension used by the switch component for thumb radius.",
             "replacement": null,
@@ -27291,7 +27441,7 @@
             "type": null
           },
           "--ki-switch-thumb-size": {
-            "default": "1.25rem",
+            "default": "1.125rem",
             "deprecatedSince": null,
             "description": "dimension used by the switch component for thumb size.",
             "replacement": null,
@@ -27307,7 +27457,7 @@
             "type": null
           },
           "--ki-switch-track-radius": {
-            "default": "1000px",
+            "default": "8px",
             "deprecatedSince": null,
             "description": "dimension used by the switch component for track radius.",
             "replacement": null,
@@ -27315,7 +27465,7 @@
             "type": null
           },
           "--ki-switch-track-width": {
-            "default": "2rem",
+            "default": "2.5rem",
             "deprecatedSince": null,
             "description": "dimension used by the switch component for track width.",
             "replacement": null,
@@ -27331,7 +27481,7 @@
             "type": null
           },
           "--ki-switch-unchecked-active-thumb": {
-            "default": "#0a0c11",
+            "default": "#ffffff",
             "deprecatedSince": null,
             "description": "color used by the switch component for unchecked active thumb.",
             "replacement": null,
@@ -27379,7 +27529,7 @@
             "type": null
           },
           "--ki-switch-unchecked-hover-thumb": {
-            "default": "#0a0c11",
+            "default": "#ffffff",
             "deprecatedSince": null,
             "description": "color used by the switch component for unchecked hover thumb.",
             "replacement": null,
@@ -27403,7 +27553,7 @@
             "type": null
           },
           "--ki-switch-unchecked-rest-thumb": {
-            "default": "#0a0c11",
+            "default": "#ffffff",
             "deprecatedSince": null,
             "description": "color used by the switch component for unchecked rest thumb.",
             "replacement": null,
@@ -27437,7 +27587,7 @@
           "--ki-tab-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -28235,7 +28385,7 @@
           "--ki-textarea-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -29228,5 +29378,5 @@
       }
     }
   },
-  "surfaceSha256": "c2776c2eb4bcedfb9640e61e16aebd347297fbcef313063503a1e453c1c54087"
+  "surfaceSha256": "9595a7e24c729d4c2a78f1cb1081db9a32ee52df1a77ff4ddc8f516dbe2d818d"
 }

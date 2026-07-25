@@ -21,6 +21,7 @@
   --_ki-dialog-motion-easing: var(--ki-dialog-motion-easing);
 
   display: block;
+  font-family: var(--ki-typography-family-body);
 }
 
 [part="dialog"] {

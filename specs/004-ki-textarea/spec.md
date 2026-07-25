@@ -27,18 +27,36 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 
 ## Design-source analysis (Figma)
 
+> **Correction 2026-07-25 — the 2026-07-08 MarsUI verification was a false
+> negative.** The "full-file page sweep" recorded in this section and in
+> Assumptions was performed with the Figma `get_metadata` tool called without a
+> node id. That call returns only 10 of the MarsUI file's 54 pages while
+> presenting them as the complete page list, so the sweep never reached the
+> page it claimed to have swept. The MarsUI textarea master exists: page
+> **Input fields** (node 12046:706) ships the `Input_cell` component set (node
+> 8016:286) whose axis `Type` includes `textarea`, crossed with `Size` = xs |
+> sm | md | lg | xl; `Input_cell_special` (node 12041:566) repeats
+> `Type=textarea` at md and lg in resting and focused states. Enumerated
+> 2026-07-25 with `use_figma` over `figma.root.children`, the only reliable
+> page enumerator. Every "no textarea frame" claim below is therefore false,
+> and every design decision that was justified by that absence rests on a
+> refuted premise and needs re-derivation from a design extraction against
+> those nodes. Such decisions are left standing and marked inline — changing
+> them is the founder's call. No functional requirement, scenario or
+> acceptance criterion is altered by this correction.
+
 The API below abstracts what both reference designs need, so that neither
 theme lacks expressive power (and future themes inherit the same guarantee):
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-textarea |
 |---|---|---|---|
-| Component split | No textarea (nor any text-field) frame in MarsUI — full-file sweep verified 2026-07-08; the onmars token vocabulary covers it | No separate textarea component: multi-line is a configuration of the text field | A dedicated `ki-textarea` element: the underlying native control and its form semantics (Enter inserts a line, height in `rows`, content as text not attribute) differ from single-line input |
-| Container style | No MarsUI textarea frame (verified 2026-07-08); the onmars surface treatment grounds in the 001 token vocabulary | Filled and outlined text-field styles | Surface treatment (filled vs outlined) is a theme decision expressed in component tokens, never a prop (002 shape precedent) |
-| Label | No MarsUI textarea frame (verified 2026-07-08), so no label treatment to mirror | Label floats between placeholder position and the field's edge | Visible `label` prop rendered statically by the component and sourcing the accessible name; M3's floating-label motion is not reproduced in v1 (the component has no motion, so no reduced-motion surface) |
-| Supporting text / counter | No MarsUI textarea frame and no supporting-text or counter artifact in the file (verified 2026-07-08) | Supporting text and character counter below the field | Out of v1 scope, post-v1 additive (charter alignment with ki-input); constraint validation itself still participates natively |
-| Height / size | The onmars token layer ships an xs–xl metrics vocabulary; MarsUI has no textarea frame, so no textarea-specific usage exists (verified 2026-07-08) | The multi-line field's height comes from its configured lines, not a size ramp | `rows` attribute sets the visible line count (default 2, native parity); no `size` axis in v1; all metrics resolve from component tokens |
-| Interaction states | Tone ramps and text-emphasis levels exist in the onmars token vocabulary (001 extraction); MarsUI has no textarea state frames (verified 2026-07-08) | enabled, hovered, focused, error, disabled | CSS states (hover, focus-visible, disabled, readonly, invalid), token-styled, never props (state vocabulary aligned with ki-input 003); on-screen validation-message display remains post-v1 |
-| Auto-grow | No MarsUI textarea frame and no auto-grow artifact (verified 2026-07-08) | Multi-line field may grow as the user types | Out of v1 (charter): height is fixed by `rows`; auto-grow is a possible future additive feature |
+| Component split | `Input_cell` component set (node 8016:286) on page Input fields (node 12046:706), enumerated 2026-07-25: multi-line is one value of the axis `Type` = `textarea`, crossed with `Size` = xs \| sm \| md \| lg \| xl; `Input_cell_special` (node 12041:566) repeats `Type=textarea` at md and lg in resting and focused states. Supersedes the 2026-07-08 "no text-field frame" reading (false negative) | No separate textarea component: multi-line is a configuration of the text field | A dedicated `ki-textarea` element: the underlying native control and its form semantics (Enter inserts a line, height in `rows`, content as text not attribute) differ from single-line input. **[Correction 2026-07-25: the absence claim is refuted, but this decision never rested on it — it rests on native form semantics — and stands. MarsUI, like M3, models multi-line as a variant of one input cell.]** |
+| Container style | `Input_cell` (node 8016:286) carries the MarsUI enclosure for `Type=textarea`; its surface treatment is NOT yet extracted (design extraction against the master pending). Supersedes the 2026-07-08 "no textarea frame" reading | Filled and outlined text-field styles | Surface treatment (filled vs outlined) is a theme decision expressed in component tokens, never a prop (002 shape precedent). **[Correction 2026-07-25: an onmars enclosure does exist to mirror; the token values must be derived from node 8016:286 rather than grounded in the 001 vocabulary alone.]** |
+| Label | The master exists (`Input_cell` node 8016:286, `Type=textarea`); whether it carries a label treatment, and which, is UNEXTRACTED. The 2026-07-08 "no label treatment to mirror" reading was a false negative, not an extraction | Label floats between placeholder position and the field's edge | Visible `label` prop rendered statically by the component and sourcing the accessible name; M3's floating-label motion is not reproduced in v1 (the component has no motion, so no reduced-motion surface). **[Correction 2026-07-25: premise refuted — the decision is retained as written but needs re-derivation against node 8016:286; founder call.]** |
+| Supporting text / counter | The master exists (`Input_cell` node 8016:286, `Type=textarea`; `Input_cell_special` node 12041:566); whether either ships supporting text or a counter is UNEXTRACTED. The 2026-07-08 "no such artifact in the file" reading was a false negative, not an extraction | Supporting text and character counter below the field | Out of v1 scope, post-v1 additive (charter alignment with ki-input); constraint validation itself still participates natively. **[Correction 2026-07-25: premise refuted — the scope decision is retained but must be re-checked against the master before v1 closes; founder call.]** |
+| Height / size | The onmars token layer ships an xs–xl metrics vocabulary AND the master consumes it: `Input_cell` (node 8016:286) crosses `Type=textarea` with `Size` = xs \| sm \| md \| lg \| xl, so a five-step textarea-specific size ramp does exist (enumerated 2026-07-25); `Input_cell_special` (node 12041:566) covers md and lg. Directly contradicts the 2026-07-08 "no textarea-specific usage" reading | The multi-line field's height comes from its configured lines, not a size ramp | `rows` attribute sets the visible line count (default 2, native parity); no `size` axis in v1; all metrics resolve from component tokens. **[Correction 2026-07-25: the "no `size` axis" decision was justified by an absence that does not hold — MarsUI ships an xs–xl textarea ramp. The decision is retained exactly as written and is now UNJUSTIFIED pending re-derivation against node 8016:286; founder call.]** |
+| Interaction states | Tone ramps and text-emphasis levels exist in the onmars token vocabulary (001 extraction); MarsUI does ship textarea state frames — `Input_cell_special` (node 12041:566) carries `Type=textarea` at md and lg in resting and focused states (enumerated 2026-07-25), and the state coverage of `Input_cell` (node 8016:286) is unextracted. Supersedes the 2026-07-08 "no state frames" reading | enabled, hovered, focused, error, disabled | CSS states (hover, focus-visible, disabled, readonly, invalid), token-styled, never props (state vocabulary aligned with ki-input 003); on-screen validation-message display remains post-v1. **[Correction 2026-07-25: premise refuted — at least resting and focused exist in MarsUI, so the state matrix was invented against a false absence. Retained as written pending re-derivation against nodes 8016:286 / 12041:566; founder call.]** |
+| Auto-grow | The master exists (`Input_cell` node 8016:286, `Type=textarea` × `Size` xs–xl); whether any variant expresses growth behavior is UNEXTRACTED — a static frame set cannot settle it either way. The 2026-07-08 "no auto-grow artifact" reading was a false negative, not an extraction | Multi-line field may grow as the user types | Out of v1 (charter): height is fixed by `rows`; auto-grow is a possible future additive feature. **[Correction 2026-07-25: premise refuted — decision retained on the charter alone, which is the half of the justification that survives.]** |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -493,23 +511,36 @@ Feature: Textarea
 
 - Default `rows` is 2, matching the native multiline control (Art. IV, least
   surprise); themes may still size line metrics through tokens.
-  [NEEDS CLARIFICATION: default row count rests on native parity — MarsUI
-  verification 2026-07-08 found no textarea frame, so there is no
-  design-source default to mirror; founder to confirm or override at
-  gate 1.]
+  [NEEDS CLARIFICATION: default row count rests on native parity. The
+  2026-07-08 MarsUI verification that reported "no textarea frame", and
+  therefore no design-source default to mirror, is a false negative
+  (correction 2026-07-25, see Design-source analysis); the `Input_cell`
+  master (node 8016:286, `Type=textarea` × `Size` xs–xl) may well carry a
+  design-source height per size step. Founder to confirm or override at
+  gate 1, against an extraction of that node rather than on native parity
+  alone.]
 - No `size` axis in v1: Material 3's multi-line field takes its height from
   its configured lines rather than a size ramp; adding `size` later is an
   additive MINOR change (charter allows subsets with justification).
-  MarsUI verification 2026-07-08: no textarea frame exists, hence no size
-  ramp to inherit; `size` stays out of v1 and any future axis lands as
-  additive MINOR.
+  Correction 2026-07-25: the 2026-07-08 verification ("no textarea frame
+  exists, hence no size ramp to inherit") is a false negative — the
+  `Input_cell` master (node 8016:286, page Input fields 12046:706) crosses
+  `Type=textarea` with `Size` = xs | sm | md | lg | xl, so a five-step
+  textarea size ramp DOES exist in MarsUI. The premise of this assumption is
+  refuted. The exclusion of `size` from v1 is left standing exactly as
+  written, but it is no longer justified and must be re-derived against the
+  master before it can be treated as settled — founder call.
 - No slots in v1 (deviation from ki-input's `start`/`end` affix slots,
   justified per charter): the label is a prop, and leading/trailing affixes
   on a multiline field are awkward in M3's multi-line configuration.
   Simplest design that satisfies the scenarios (Art. VII); affix slots would
-  be additive MINOR later. MarsUI verification 2026-07-08: no textarea
-  frame exists, so no multiline affixes are shown anywhere; slots stay out
-  of v1 and would land as additive MINOR.
+  be additive MINOR later. Correction 2026-07-25: the 2026-07-08
+  verification ("no textarea frame exists, so no multiline affixes are shown
+  anywhere") is a false negative — the `Input_cell` master (node 8016:286)
+  does contain `Type=textarea`, and whether its variants show leading or
+  trailing affixes is unextracted. The MarsUI half of this justification is
+  withdrawn; the charter and M3 half stands. The no-slots decision is left
+  as written pending a design extraction against the master — founder call.
 - The initial value is declared through the `value` attribute, never through
   element text content (API parity with ki-input, one uniform authoring
   contract for agents across the batch). The Input section's contrast with
@@ -551,11 +582,24 @@ Feature: Textarea
   validation-message display and supporting text remain post-v1; validity
   itself is reported through native constraint validation and the
   accessibility tree.
-- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
-  file): no textarea or text-field frame exists — the file covers buttons,
-  avatars, icons, feature icons, media and miscellaneous artifacts only.
-  The API stands on the M3 inventory plus the batch charter; of the three
-  formerly MarsUI-dependent scope decisions, size ramp and affix slots are
-  resolved by the verification (no frame, stay out of v1), and the default
-  row count keeps its [NEEDS CLARIFICATION] marker as a founder call on
-  native parity.
+- MarsUI verification, corrected 2026-07-25 — supersedes the 2026-07-08
+  entry. The 2026-07-08 "full page sweep" of the MarsUI Figma file concluded
+  that no textarea or text-field frame exists and that the file covers
+  buttons, avatars, icons, feature icons, media and miscellaneous artifacts
+  only. That conclusion is FALSE: the sweep used `get_metadata` without a
+  node id, a call that returns 10 of the file's 54 pages while presenting
+  them as the complete page list, so it never reached the pages it claimed
+  to have swept. The MarsUI textarea master is page Input fields (node
+  12046:706) → `Input_cell` (node 8016:286), axis `Type` = `textarea`
+  crossed with `Size` = xs | sm | md | lg | xl, plus `Input_cell_special`
+  (node 12041:566), `Type` = `textarea` at md and lg in resting and focused
+  states — enumerated 2026-07-25 with `use_figma` over
+  `figma.root.children`. Consequences: of the three formerly
+  MarsUI-dependent scope decisions, the size-ramp exclusion and the
+  affix-slot exclusion have lost the justification recorded for them and
+  must be re-derived against the master (founder call), and the default row
+  count keeps its [NEEDS CLARIFICATION] marker — now answerable from the
+  master's per-size geometry rather than from native parity alone. The API
+  otherwise still stands on the M3 inventory plus the batch charter, and no
+  functional requirement, scenario or acceptance criterion in this spec is
+  changed by this correction.

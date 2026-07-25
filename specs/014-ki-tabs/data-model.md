@@ -166,9 +166,13 @@ reduced motion satisfied by construction and measured under emulation
 ```
 
 - strip structure: 3; tab structure: 7 (single scale — no size axis, spec
-  assumption); tab ink matrix: 2 × 4 × 2 = 16 (`fg` = label text ink,
-  `-bg` names the effective backdrop — 007/008 convention); indicator: 3
-  (pure CSS bar, no SVG); tab focus ring: 3; panel: 6 (padding + one
+  assumption; **premise refuted 2026-07-25** — the MarsUI master `Tab_nav`
+  `10048:1249` ships 5 sizes, see the correction note in
+  [spec.md](./spec.md); the token count stands but the single-scale
+  rationale awaits re-derivation); tab ink matrix: 2 × 4 × 2 = 16
+  (`fg` = label text ink, `-bg` names the effective backdrop — 007/008
+  convention); indicator: 3 (pure CSS bar, no SVG);
+  tab focus ring: 3; panel: 6 (padding + one
   semantic-surface bg + focus ring);
 - = 38 tokens per theme; every value references the 001 semantic layer;
   material3 overrides the tab ink matrix + indicator in

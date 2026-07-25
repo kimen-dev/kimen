@@ -1,18 +1,30 @@
 # Phase 0 Research: ki-tooltip
 
 Decisions that resolve every open technical question in the plan. Sources:
-the spec (M3 plain-tooltip guidance; MarsUI verified 2026-07-08 — no tooltip
-frame exists, onmars styles from the 001 token vocabulary), the WAI-ARIA APG
-Tooltip pattern (read with the pattern in hand for D2/D3/D10), WCAG 1.4.13
-(content on hover or focus), the ARIA 1.3 `aria-description` draft and the
-cross-root ARIA / Reference Target explainers (D2), the 001 token
-architecture, the 002 ki-button implementation (`--_ki-*` CSS indirection,
-fallback-by-construction), the 007 ki-radio-group plan set (the repo's
-precedent for a contract that crosses the shadow boundary: what the platform
-cannot provide across shadow roots, the component provides — and every
-cross-shadow claim is VERIFIED, never assumed) and the 011 ki-alert plan set
-(non-form component conventions, no-motion-by-construction, contrast-sweep
-extension design).
+the spec (M3 plain-tooltip guidance; MarsUI `Tooltip` master, node 12089:7621
+on the `Tooltip` page node 12089:7619 — eight directional variants with an
+arrow, unread pending design extraction; onmars styles from the 001 token
+vocabulary), the WAI-ARIA APG Tooltip pattern (read with the pattern in hand
+for D2/D3/D10), WCAG 1.4.13 (content on hover or focus), the ARIA 1.3
+`aria-description` draft and the cross-root ARIA / Reference Target
+explainers (D2), the 001 token architecture, the 002 ki-button
+implementation (`--_ki-*` CSS indirection, fallback-by-construction), the
+007 ki-radio-group plan set (the repo's precedent for a contract that
+crosses the shadow boundary: what the platform cannot provide across shadow
+roots, the component provides — and every cross-shadow claim is VERIFIED,
+never assumed) and the 011 ki-alert plan set (non-form component
+conventions, no-motion-by-construction, contrast-sweep extension design).
+
+> **Correction, 2026-07-25.** This research was written on the basis that
+> MarsUI had no tooltip frame ("verified 2026-07-08"). That verification was a
+> false negative: the sweep enumerated the file with the Figma `get_metadata`
+> tool without a nodeId, which returns only 10 of the file's 54 pages while
+> presenting them as the complete page list, and the `Tooltip` page was not
+> among them. Re-enumerating with `use_figma` (`figma.root.children`) — the
+> only reliable enumerator — found the `Tooltip` master, node 12089:7621. Any
+> reasoning below that leans on the absence is unsound and is superseded by a
+> design extraction against that node, which has not yet been performed. See
+> the correction block in [spec.md](./spec.md) for the affected decisions.
 
 Shared decisions inherited from the siblings (cited, not re-derived):
 
@@ -69,7 +81,12 @@ on every scroll/resize while open; without CSS anchor positioning (not in
 the Art. IV engine baseline yet, D4) that is strictly more JS for no
 approved scenario; recorded as the tracked upgrade path together with
 anchor positioning; rejected for v1. (c) arrow/caret element — the spec
-excludes an arrow part in v1; rejected.
+excludes an arrow part in v1; rejected. The spec's exclusion rests on a
+refuted premise (2026-07-25 correction: the MarsUI `Tooltip` master, node
+12089:7621, ships an arrow), so this rejection needs re-derivation with the
+decision; it is a v1 scope call, not an architectural obstacle — the bubble's
+`visibility`-based hidden state and one-shot measurement (D4) accommodate an
+arrow element unchanged.
 
 ## D2 — Description association across the shadow boundary: reflect `label` to `aria-description` on the slotted trigger
 

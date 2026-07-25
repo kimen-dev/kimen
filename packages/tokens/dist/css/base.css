@@ -1,0 +1,25 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ *
+ * Kimen page contract — opt-in, import after a theme stylesheet:
+ *   import '@kimen/tokens/css';
+ *   import '@kimen/tokens/css/base';
+ *
+ * A page that is deliberately light-only or dark-only sets
+ * data-ki-color-scheme on <html> instead of relying on the visitor's
+ * preference; both the tokens and the user agent then follow that choice.
+ */
+:root {
+  color-scheme: light dark;
+  background-color: var(--ki-surface-s0);
+  color: var(--ki-text-high-em);
+  font-family: var(--ki-typography-family-body);
+}
+
+:root[data-ki-color-scheme="light"] {
+  color-scheme: light;
+}
+
+:root[data-ki-color-scheme="dark"] {
+  color-scheme: dark;
+}

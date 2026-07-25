@@ -25,6 +25,7 @@
   --_ki-button-backdrop-filter: blur(var(--_ki-button-backdrop-blur));
 
   display: inline-block;
+  font-family: var(--ki-button-font-family);
 }
 
 :host([size="xs"]) {

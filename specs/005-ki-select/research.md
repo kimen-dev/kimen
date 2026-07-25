@@ -2,8 +2,12 @@
 
 Decisions that resolve every open technical question in the plan. Sources:
 the spec (M3 exposed dropdown menu — a menu anchored to a text field;
-MarsUI verified 2026-07-08 — no select frame exists, onmars styles from the
-001 token vocabulary alone), the WAI-ARIA APG Combobox pattern in its
+MarsUI DOES ship a `Dropdown` master on the Input fields page — page
+`12046:706`, set `12041:1595` — so the "verified 2026-07-08 — no select
+frame exists" premise cited here is refuted; onmars still styles from the
+001 token vocabulary alone throughout this document, pending
+re-derivation — see the correction note below), the WAI-ARIA APG Combobox
+pattern in its
 **select-only** variant (read with the pattern and its select-only example
 in hand for D1/D2/D5/D10), the HTML constraint-validation and
 form-associated custom elements (FACE) specs, the 001 token architecture,
@@ -12,6 +16,21 @@ indirection), the 003 ki-input plan set (the value-carrying form-control
 sibling) and the 007 ki-radio-group plan set (the composite sibling) —
 sibling decisions under the same charter are CITED and reused rather than
 re-derived (Art. VII).
+
+**Correction note (2026-07-25) — the 2026-07-08 MarsUI sweep was a FALSE
+NEGATIVE**: that sweep used the Figma `get_metadata` tool without a
+`nodeId`, which returns only 10 of the MarsUI file's 54 pages and presents
+them as the complete page list. The Input fields page (`12046:706`) was
+never returned, so the `Dropdown` master (`12041:1595`; axes `States` =
+default \| default_dark \| hover \| focus \| primary_light \| active \|
+danger \| disabled × `Auto_layout` = TRUE \| FALSE) was never seen. Any
+reasoning in this document that leans on "onmars has no select frame to
+honour" is therefore unsound and is superseded by a design-extraction
+against that master. The visual/token decisions below (notably D8's ink
+matrices and metric families) are the ones affected; the platform-derived
+decisions (D1's shadow-scope constraint, the APG keyboard path, FACE and
+constraint-validation behavior) do not depend on the sweep and stand. The
+reliable enumerator is `use_figma` over `figma.root.children`.
 
 Shared decisions inherited from the siblings (cited, not re-derived):
 

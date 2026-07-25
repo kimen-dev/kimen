@@ -261,9 +261,15 @@ describe('ki-tooltip pointer path in a real browser', () => {
 
   it('S11 start placement renders on the right side under RTL', async () => {
     document.documentElement.setAttribute('dir', 'rtl');
+    // The inline offset must leave the bubble room on the trigger's
+    // inline-start edge (the RIGHT edge under RTL), otherwise the documented
+    // collision flip fires and this asserts the fallback rather than the
+    // requested placement. 120px was tuned when ki-tooltip declared no
+    // font-family and the bubble rendered in the user agent serif; with the
+    // token typeface the same label is wider than the room it left.
     const { host, trigger } = await mount({
       placement: 'start',
-      style: { marginBlockStart: '120px', marginInlineStart: '120px' },
+      style: { marginBlockStart: '120px', marginInlineStart: '220px' },
     });
     await hoverTrigger(host, trigger);
 

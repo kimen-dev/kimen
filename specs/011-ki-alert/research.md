@@ -1,8 +1,24 @@
 # Phase 0 Research: ki-alert
 
+> **Correction (2026-07-25).** The "no MarsUI alert frame, verified
+> 2026-07-08" premise cited below is a false negative: the sweep behind it
+> called the Figma MCP `get_metadata` tool without a `nodeId`, which lists
+> only 10 of the MarsUI file's 54 pages as if that were the whole file.
+> Re-enumeration with `use_figma` (`figma.root.children`) shows the master
+> exists — page `Alerts` `12074:6200` → `Alert` `12074:6202` (5 variants, 10
+> properties) — alongside `Info_note` `12126:4670` (page `Info Notes`
+> `12126:4668`) and `Toast` `12071:5771` (page `Toasts` `12051:292`), the
+> latter being the artifact this research treats as the file's only message
+> component. Any decision below whose rationale leans on the alert's absence
+> from MarsUI is unsound as argued and is superseded by a design extraction
+> against `Alert 12074:6202`, not yet performed; the D7 onmars ramp choices
+> in particular were made with no master to measure against. No decision is
+> changed here — the affected ones are marked in place for the founder.
+
 Decisions that resolve every open technical question in the plan. Sources:
-the spec (design-source analysis: no MarsUI alert frame, no M3 alert — the
-transient Toast/snackbar maps to the future ki-toast; verified 2026-07-08),
+the spec (design-source analysis: no M3 alert — the transient M3 snackbar
+maps to the future ki-toast; the companion claim that MarsUI had no alert
+frame, "verified 2026-07-08", is refuted — see the correction above),
 the WAI-ARIA APG Alert pattern and the ARIA `alert`/`status` role
 definitions, the 001 token architecture, the 002 ki-button implementation
 (native shadow button, `--_ki-*` CSS indirection, focus-ring tokens,
@@ -294,8 +310,11 @@ family against all five tone backgrounds first, and per-tone inks arrive
 only if a theme cannot satisfy that (additive, declared at the merge
 gate); rejected for v1 (Art. VII). (c) tone icons + their tokens — the
 spec's Assumptions explicitly exclude tone icons and `start`/`end` slots
-in v1 (additive MINOR post-v1, recorded from the MarsUI Toast anatomy);
-rejected.
+in v1 (additive MINOR post-v1, recorded from the anatomy of the MarsUI
+`Toast` `12071:5771`, not from the alert master); **that exclusion rests
+on the refuted 2026-07-08 sweep (correction above) and needs
+re-derivation against `Alert 12074:6202`, which may itself carry a tone
+icon**; rejected for v1 as recorded.
 
 ## D8 — Contrast gate: extend the component sweep to `--ki-alert-*`
 

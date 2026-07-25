@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const tokens = Object.freeze([
+  'packages/tokens/dist/css/base.css',
   'packages/tokens/dist/css/tokens.css',
   'packages/tokens/dist/css/tokens.dark.css',
   'packages/tokens/dist/css/tokens.light.css',

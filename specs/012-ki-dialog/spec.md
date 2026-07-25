@@ -27,20 +27,36 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 
 The API below is the union of patterns found in both reference designs, so
 that neither theme lacks expressive power (and future themes inherit the same
-guarantee). The MarsUI file was verified page by page on 2026-07-08: it
-contains no dialog component set — its only modal-adjacent artifacts are a
-`Modal_overlay` full-viewport scrim symbol and a `Modal_dragger` sheet drag
-handle (Miscellaneous page); the cells below record those verified facts.
+guarantee). MarsUI DOES carry a dialog master: page **Modals**
+(`14153:2128`) holds the **`Modal`** component (`16414:19664`), composed
+from `Modal_header` (`14160:29188`) and `Modal_actions` (`14158:28301`). The
+`Modal_overlay` full-viewport scrim symbol and the `Modal_dragger` sheet drag
+handle (Miscellaneous page) are adjacent artifacts, not the dialog anatomy.
+
+> **CORRECTION 2026-07-25 — the "full page sweep" of 2026-07-08 was a false
+> negative.** That sweep enumerated the MarsUI file with the Figma
+> `get_metadata` tool called without a `nodeId`, which returns only 10 of the
+> file's 54 pages while presenting them as the complete page list. The
+> **Modals** page was never among them, so "MarsUI contains no dialog
+> component set" was recorded as a verified fact when it is false.
+> Re-enumeration with `use_figma` (`figma.root.children`) — the only reliable
+> enumerator — confirms the master cited above. Consequently every assertion
+> of absence in this section, and every design decision that rests on one, is
+> unsound; the design-source analysis is SUPERSEDED by a design-extraction
+> against `Modal` (`16414:19664`) that has not yet been performed. The cells
+> and decisions below are left exactly as written — retracting or re-deriving
+> them is the founder's call (Art. II) — and are marked **[premise refuted]**
+> wherever the absence was load-bearing.
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-dialog |
 |---|---|---|---|
-| Anatomy | No dialog component set in MarsUI (verified 2026-07-08); only `Modal_overlay` (scrim) and `Modal_dragger` (sheet handle) exist — no dialog container anatomy | Basic dialog: container, headline, supporting text, end-aligned text-button actions; optional hero icon | `heading` attribute (title and accessible name) + default slot (body) + `footer` slot (actions). A hero icon composes inside the body; a dedicated slot can arrive later as additive MINOR |
-| Modality and scrim | onmars ships surface levels s0–s5 in its token vocabulary; the `Modal_overlay` scrim symbol confirms a scrim-over-page treatment (verified 2026-07-08), though no dialog surface frame exists | Modal: a scrim covers the page and blocks interaction until the dialog is resolved | Modal-only v1: while open, everything behind the dialog is inert; the backdrop is styled through `--ki-dialog-backdrop-*` tokens |
-| Dismissal | No dialog frame, hence no dismissal affordances to read (verified 2026-07-08) | Resolved through its actions; scrim/back dismissal follows platform convention | Escape always closes; backdrop click closes only with the opt-in `close-on-backdrop` attribute (a stray click must not destroy a critical confirmation); `close()` / removing `open` close programmatically; every path reports `ki-close` |
-| Sizing | onmars metrics xs–xl exist in the token vocabulary; MarsUI has no dialog frame, so no dialog-specific sizing exists (verified 2026-07-08) | Width bounded between min and max constraints; no size scale on the basic dialog | No `size` attribute in v1; width bounds, padding, gap and radius are per-theme component tokens |
-| Emphasis / intent | onmars tone ramps (incl. info/warning) exist at the semantic layer; no dialog frame and no dialog-level emphasis axis in MarsUI (verified 2026-07-08) | No color-variant or emphasis axis on dialogs | No `variant`, no `tone` in v1: Material 3 shows no emphasis or intent axis on the basic dialog and MarsUI has no dialog at all; a future axis would be evaluated as an additive MINOR change (Art. VII) |
-| Full-screen | No full-screen dialog component (verified 2026-07-08); `Modal_dragger` hints at sheet-style modals in MarsUI applications but no dialog set exists | Separate full-screen dialog for compact screens, with a header close affordance | Out of scope for v1; future additive variant |
-| Motion | No dialog frame and no dialog motion artifacts in MarsUI (verified 2026-07-08) | Entrance/exit transitions | Open/close motion is a theme decision expressed through `--ki-dialog-motion-*` tokens and is disabled under `prefers-reduced-motion` |
+| Anatomy | **[premise refuted]** `Modal` (`16414:19664`, page Modals `14153:2128`) composes `Modal_header` (`14160:29188`) and `Modal_actions` (`14158:28301`) — a header / body / actions anatomy that was never read (2026-07-08 false negative); `Modal_overlay` (scrim) and `Modal_dragger` (sheet handle) are adjacent artifacts, not the container anatomy. Needs design-extraction | Basic dialog: container, headline, supporting text, end-aligned text-button actions; optional hero icon | `heading` attribute (title and accessible name) + default slot (body) + `footer` slot (actions). A hero icon composes inside the body; a dedicated slot can arrive later as additive MINOR |
+| Modality and scrim | onmars ships surface levels s0–s5 in its token vocabulary; the `Modal_overlay` scrim symbol confirms a scrim-over-page treatment. The dialog surface frame DOES exist — `Modal` (`16414:19664`) — and its surface treatment is still unread (2026-07-08 false negative) | Modal: a scrim covers the page and blocks interaction until the dialog is resolved | Modal-only v1: while open, everything behind the dialog is inert; the backdrop is styled through `--ki-dialog-backdrop-*` tokens |
+| Dismissal | **[premise refuted]** the dismissal affordances of `Modal` (`16414:19664`) — in particular whatever `Modal_header` (`14160:29188`) carries — were never read (2026-07-08 false negative), not absent. Needs design-extraction | Resolved through its actions; scrim/back dismissal follows platform convention | Escape always closes; backdrop click closes only with the opt-in `close-on-backdrop` attribute (a stray click must not destroy a critical confirmation); `close()` / removing `open` close programmatically; every path reports `ki-close` |
+| Sizing | **[premise refuted]** onmars metrics xs–xl exist in the token vocabulary; the dialog frame `Modal` (`16414:19664`) exists and its width/padding/gap values were never read (2026-07-08 false negative) — whether MarsUI carries a dialog size axis is UNKNOWN, not answered. Needs design-extraction | Width bounded between min and max constraints; no size scale on the basic dialog | **[rests on a refuted premise — re-derive]** No `size` attribute in v1; width bounds, padding, gap and radius are per-theme component tokens |
+| Emphasis / intent | **[premise refuted]** onmars tone ramps (incl. info/warning) exist at the semantic layer; the dialog frame `Modal` (`16414:19664`) exists and was never inspected for a dialog-level emphasis axis (2026-07-08 false negative) — the axis is UNVERIFIED, not absent. Needs design-extraction | No color-variant or emphasis axis on dialogs | **[rests on a refuted premise — re-derive]** No `variant`, no `tone` in v1: Material 3 shows no emphasis or intent axis on the basic dialog and ~~MarsUI has no dialog at all~~ (that clause is refuted — `Modal` `16414:19664`); a future axis would be evaluated as an additive MINOR change (Art. VII) |
+| Full-screen | **[premise refuted]** whether `Modal` (`16414:19664`) carries a full-screen variant is UNKNOWN — the 2026-07-08 sweep never opened the Modals page, so its "no full-screen dialog component" claim carries no evidential weight; `Modal_dragger` hints at sheet-style modals in MarsUI applications. Needs design-extraction | Separate full-screen dialog for compact screens, with a header close affordance | Out of scope for v1; future additive variant |
+| Motion | **[premise refuted]** the dialog frame `Modal` (`16414:19664`) exists and was never inspected for motion artifacts (2026-07-08 false negative) — "no dialog motion in MarsUI" is UNVERIFIED, not established. Needs design-extraction | Entrance/exit transitions | Open/close motion is a theme decision expressed through `--ki-dialog-motion-*` tokens and is disabled under `prefers-reduced-motion` |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -418,10 +434,14 @@ Feature: Dialog
   cancelable before-close event (e.g. dirty-form veto) would be an additive
   future enhancement.
 - No `variant`, `tone` or `size` axes in v1: Material 3 does not scale the
-  basic dialog on an emphasis, intent or size axis, and MarsUI verification
-  2026-07-08 found no dialog frame at all (see the last bullet); should a
-  future design source reveal one, it is evaluated as an additive MINOR
-  change.
+  basic dialog on an emphasis, intent or size axis. **[rests on a refuted
+  premise — re-derive]** the second half of this justification — "MarsUI
+  verification 2026-07-08 found no dialog frame at all" — is false: the
+  frame is `Modal` (`16414:19664`) on page Modals (`14153:2128`), see the
+  last bullet. The v1 decision stands as written pending founder judgement,
+  but its MarsUI half must be re-derived from the master before it can be
+  relied on; should a design source reveal such an axis, it is evaluated as
+  an additive MINOR change.
   Width bounds, spacing and radius are per-theme component tokens (002
   precedent: appearance axes a theme can decide are tokens, not props).
 - Component token naming is flat (`--ki-dialog-bg`, not the charter's
@@ -438,11 +458,22 @@ Feature: Dialog
   dialog–form coupling (close-on-submit) is not part of the v1 contract.
 - Stacked dialogs rely on platform top-layer ordering (Escape closes the
   topmost); stacking is not an advertised v1 pattern.
-- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
+- ~~MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
   file): no dialog component set exists; the modal-adjacent artifacts are
   `Modal_overlay` (a full-viewport scrim symbol) and `Modal_dragger` (a
   sheet-style drag handle), neither of which defines a dialog anatomy. The
   formerly blocking pending cells are resolved with these verified facts —
-  no anatomy amendments are needed; a future emphasis/intent or size axis
-  from any design source is evaluated as an additive MINOR change (it does
-  not retract this v1 surface).
+  no anatomy amendments are needed.~~ **RETRACTED 2026-07-25.** The
+  2026-07-08 "full page sweep" was not a sweep: it enumerated the file with
+  the Figma `get_metadata` tool without a `nodeId`, which returns 10 of the
+  file's 54 pages as if that were the whole list. The Modals page
+  (`14153:2128`) was outside those 10, so the dialog master `Modal`
+  (`16414:19664`) — composed from `Modal_header` (`14160:29188`) and
+  `Modal_actions` (`14158:28301`) — went unseen. Re-enumerated with
+  `use_figma` (`figma.root.children`), the only reliable enumerator. The
+  pending anatomy cells are therefore NOT resolved: they await a
+  design-extraction against `Modal` (`16414:19664`). Whether that
+  extraction retracts, widens or leaves the v1 surface untouched is the
+  founder's call; a future emphasis/intent or size axis from any design
+  source is still evaluated as an additive MINOR change (it does not
+  retract this v1 surface).

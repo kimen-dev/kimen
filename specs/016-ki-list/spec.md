@@ -28,14 +28,32 @@ The API below is the union of patterns found in both reference designs, so
 that neither theme lacks expressive power (and future themes inherit the same
 guarantee):
 
+> **Correction 2026-07-25 — the MarsUI column below rested on a false
+> negative.** The "full-file sweep" recorded on 2026-07-08 was run with the
+> Figma MCP `get_metadata` tool called without a nodeId, which returns only 10
+> of the MarsUI file's 54 pages and presents that truncated listing as the
+> complete page list. The list masters sit on pages it never returned, so the
+> sweep concluded they did not exist. Re-enumerated with `use_figma`
+> (`figma.root.children`), the only reliable enumerator: MarsUI ships a
+> dedicated **List** page (node `10113:6434`) carrying the `List` master (node
+> `10063:2066`), which varies over **3 sizes × 3 states** — the states
+> including a hover fill of `#000000` at 3% opacity and an active fill at 5%.
+> The nearest container master is `Dropmenu` (node `12127:30113`). Every
+> reading below that was derived from the absence is therefore unsound and is
+> superseded by a design extraction against those masters (the 019–026
+> `design-extraction.md` method). The decisions themselves are left standing:
+> re-deriving them is a founder call, not an agent call. The behavior contract
+> (S1–S11, FR-001–FR-013) is untouched by this correction; the design-source
+> rationale and the onmars token grounding are not.
+
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-list |
 |---|---|---|---|
-| Item anatomy | No list or list-item component in MarsUI (full-file sweep verified 2026-07-08); the closest row-like artifact is `Profile_dropdown` (leading avatar + text + trailing chevron), a menu trigger rather than a list item | leading element (icon, avatar or image), one to three lines of text (headline + supporting text), trailing element (icon, meta text or control) | `ki-list-item` slots: `start` (leading media), default (primary text), `secondary` (supporting text), `end` (trailing media/meta) |
+| Item anatomy | **Refuted premise — see the correction above.** MarsUI does ship a list master: `List` (node `10063:2066`) on the dedicated List page (node `10113:6434`), with `Dropmenu` (node `12127:30113`) as the nearest container master; their anatomy is unextracted. The "no list or list-item component, closest row-like artifact is `Profile_dropdown`" reading came from the truncated 2026-07-08 page listing | leading element (icon, avatar or image), one to three lines of text (headline + supporting text), trailing element (icon, meta text or control) | `ki-list-item` slots: `start` (leading media), default (primary text), `secondary` (supporting text), `end` (trailing media/meta) |
 | Text hierarchy | text emphasis levels shipped in the token layer (001 extraction) map naturally to primary vs secondary text | headline and supporting-text type roles | primary and secondary text styled via `--ki-list-item-*` font and foreground tokens resolving from the semantic text-emphasis layer |
-| Height / density | xs–xl metric ramp exists in the shipped token vocabulary (001), but no verified evidence that lists scale through it | item height follows line count (one-line vs multi-line conditions), not a size prop | no `size` attribute: item min-height per line count is a per-theme component token; height derives from the content composed |
-| Separation | No list frame; MarsUI ships standalone `Divider_horizontal` / `Divider_vertical` component sets (align × ends=pointed\|rounded) rather than any list-divider attribute (verified 2026-07-08) | optional divider between items | separation (divider, spacing or nothing) is a theme token decision expressed in `--ki-list-item-*` border/gap tokens, never an attribute (002 Round/Square precedent, charter rule on pure-appearance axes) |
-| Surface | surface ramp s0–s5 shipped in the token layer (001 extraction); which step the list sits on is a theme decision | list container on a surface color role | list background resolves from the semantic surface layer through `--ki-list-*` tokens |
-| Interactivity & selection | No list frame, hence no interactive-item states to read (verified 2026-07-08) | interactive list items exist (hover/focus/pressed states, selection, drag) | Out of scope for v1: the list is non-interactive; controls compose inside the `start`/`end` slots (interactive list, menu and selection patterns are future features; the complex data table is explicitly out of v1 per roadmap) |
+| Height / density | **Refuted premise — see the correction above.** The 2026-07-08 "no verified evidence that lists scale through it" rested on the false negative: the `List` master (node `10063:2066`) varies over **3 sizes**, an unmeasured but real MarsUI scale; the xs–xl metric ramp shipped in the token vocabulary (001) was never checked against it | item height follows line count (one-line vs multi-line conditions), not a size prop | no `size` attribute: item min-height per line count is a per-theme component token; height derives from the content composed. **Decision retained, premise refuted — the absent size axis needs re-derivation against the master's 3 sizes (founder call)** |
+| Separation | **Partly refuted premise — see the correction above.** The standalone `Divider_horizontal` / `Divider_vertical` component sets (align × ends=pointed\|rounded) do exist as recorded; the accompanying "no list frame" does not — the `List` master (node `10063:2066`) exists and has never been inspected for how it separates its rows | optional divider between items | separation (divider, spacing or nothing) is a theme token decision expressed in `--ki-list-item-*` border/gap tokens, never an attribute (002 Round/Square precedent, charter rule on pure-appearance axes). **Decision retained; the onmars separation value needs re-derivation against the master (founder call)** |
+| Surface | surface ramp s0–s5 shipped in the token layer (001 extraction); which step the list sits on was left a theme decision for want of a master to measure — the `List` master (node `10063:2066`) and `Dropmenu` (node `12127:30113`) named in the correction above now give a measurable answer | list container on a surface color role | list background resolves from the semantic surface layer through `--ki-list-*` tokens |
+| Interactivity & selection | **Refuted premise — see the correction above.** MarsUI does carry interactive-item states: the `List` master (node `10063:2066`) varies over **3 states**, including a hover fill of `#000000` at 3% opacity and an active fill at 5%. The claim that there was nothing to read came from the truncated 2026-07-08 page listing | interactive list items exist (hover/focus/pressed states, selection, drag) | Out of scope for v1: the list is non-interactive; controls compose inside the `start`/`end` slots (interactive list, menu and selection patterns are future features; the complex data table is explicitly out of v1 per roadmap). **Decision retained, premise refuted — the non-interactive v1 scope now diverges from a documented MarsUI state matrix and needs re-derivation (founder call)** |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -412,7 +430,12 @@ Feature: List
   count, not by a size prop, and neither design source demonstrably exposes
   an emphasis or intent axis for lists; heights and separation are per-theme
   component tokens. If the MarsUI frames reveal a genuine scale it lands as
-  additive MINOR.
+  additive MINOR. (**Correction 2026-07-25, premise refuted**: the "neither
+  design source demonstrably exposes" half was a false negative — the `List`
+  master (node `10063:2066`) varies over 3 sizes, so the MarsUI frames do
+  reveal a scale. The decision stands as shipped; whether the scale is a
+  `size` attribute, a per-theme token step or nothing at all is a founder
+  re-derivation against the master, not an agent call.)
 - Non-interactive v1 is a charter scope decision: item selection, whole-item
   click/navigation, drag, menus and the M3 interactive item states are
   future features; until then the catalog documents them as when-NOT-to-use.
@@ -428,16 +451,34 @@ Feature: List
 - Separation (M3 optional divider) is a pure-appearance axis each theme
   decides through component tokens (charter rule; 002 shape precedent); no
   divider attribute exists.
-- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
-  file): no list or list-item component exists — the row-like
-  `Profile_dropdown` is a menu trigger, and separation ships as standalone
-  `Divider_horizontal`/`Divider_vertical` components, consistent with
-  keeping the divider out of the item API. The formerly batched gate-1
-  decision (approve with frames unverified vs hold) is resolved: there is
-  no MarsUI list artifact to diverge from, so no non-additive divergence
-  (divider attribute, dense variant, three-region anatomy) exists; any
-  future MarsUI list pattern re-enters through this spec as additive
-  MINOR.
+- **MarsUI verification 2026-07-08 — WITHDRAWN 2026-07-25 (false negative).**
+  The "full page sweep of the MarsUI Figma file" was run with the Figma MCP
+  `get_metadata` tool called without a nodeId, which returns only 10 of the
+  file's 54 pages and presents that truncated listing as the complete page
+  list; the list masters sit on pages it never returned. Re-enumerated with
+  `use_figma` (`figma.root.children`), the only reliable enumerator: MarsUI
+  ships a dedicated **List** page (node `10113:6434`) carrying the `List`
+  master (node `10063:2066`), varying over 3 sizes × 3 states — the states
+  including a hover fill of `#000000` at 3% opacity and an active fill at 5%
+  — with `Dropmenu` (node `12127:30113`) as the nearest container master.
+  The statement that no list or list-item component exists — and that the
+  row-like `Profile_dropdown` is the closest artifact — is false as a claim
+  about the file. Only the standalone
+  `Divider_horizontal`/`Divider_vertical` component sets survive the
+  withdrawal, and they no longer stand alone as the file's separation
+  evidence.
+- **Consequence of the withdrawal (premise refuted, decisions retained).**
+  The formerly batched gate-1 decision was resolved on the ground that
+  "there is no MarsUI list artifact to diverge from, so no non-additive
+  divergence (divider attribute, dense variant, three-region anatomy)
+  exists". That resolution is unsound: an artifact exists, and it carries
+  exactly the two axes the divergence question was about — a size ramp and
+  an interactive state matrix. Nothing is reverted here and the ratification
+  is not revoked; the reasoning is superseded by a design extraction against
+  the masters above (the 019–026 `design-extraction.md` method), after which
+  re-deriving the size, separation and interactivity decisions is a founder
+  call. Any MarsUI list pattern that re-enters after that extraction still
+  does so through this spec as additive MINOR.
 - Structural `list`/`listitem` roles on the hosts (FR-005) are a justified
   deviation from the charter's "semantic HTML first" default: slotted
   light-DOM children make native `<ul>`/`<li>` semantics unable to cross the

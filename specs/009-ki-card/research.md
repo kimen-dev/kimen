@@ -6,6 +6,22 @@ container — so there are few decisions, and none introduces machinery beyond
 what the approved scenarios require (Art. VII). Sources: the spec's design
 analysis, the 001 token architecture and the 002 component precedent.
 
+> **Correction 2026-07-25 — D2's onmars grounding rests on a refuted premise.**
+> The spec's design analysis, cited above as a source, carried a false
+> negative: the 2026-07-08 "full page sweep" was run with the Figma MCP
+> `get_metadata` tool called without a nodeId, which returns only 10 of the
+> MarsUI file's 54 pages and presents them as the complete list. MarsUI does
+> ship card masters — `Chart` (node `16187:3670`) and `Dashboard_info` (node
+> `16189:4286`) inside the Dashboard page (node `16186:4305`), and `Price_card`
+> (node `20132:26455`) inside the Pricing page (node `20132:25228`) —
+> enumerated with `use_figma` (`figma.root.children`), the only reliable
+> enumerator. They bind the `Radius/big_component` ramp (16 / 28 →
+> `{ki.radius.big-component.xs}` / `{ki.radius.big-component.lg}`), not the raw
+> radius primitives D2 selects. D1, D3 and D4 are unaffected: they answer
+> platform and test questions, not design-source ones. D2 stands as shipped,
+> but its onmars values are superseded by a design extraction against those
+> masters — a founder call (spec.md, Assumptions).
+
 ## D1 — Empty-region collapse: `slotchange` state, not `:has()`
 
 **Decision**: the shadow root renders the surface
@@ -62,7 +78,12 @@ the button there is no variant × tone × state matrix — the card is static �
 so the family stays flat and small. Expressing the M3 style axis as plain
 token values is the whole point of the spec's "no variant attribute"
 decision: a future theme change of card style is a token diff, never a
-markup or component diff (S6).
+markup or component diff (S6). **Premise correction (2026-07-25)**: the onmars
+half of this decision was taken with no MarsUI card believed to exist to
+mirror; masters do exist (note above), so the onmars geometry choice — the
+`ki.radius.*` primitives rather than the `Radius/big_component` ramp the
+masters bind — is retained but needs re-derivation. The material3 half is
+unaffected.
 
 **Alternatives considered**: component CSS referencing semantic tokens
 directly — themes could not restyle the card (border vs shadow trade-off)

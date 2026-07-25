@@ -16,6 +16,7 @@
   --_group-counter-font-size: var(--ki-avatar-group-md-counter-font-size);
 
   display: inline-flex;
+  font-family: var(--ki-avatar-font-family);
 }
 
 ::slotted(ki-avatar) {

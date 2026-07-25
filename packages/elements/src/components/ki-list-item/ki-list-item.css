@@ -16,6 +16,7 @@
   --_ki-list-item-secondary-fg: var(--ki-list-item-secondary-fg);
 
   display: block;
+  font-family: var(--ki-typography-family-body);
 }
 
 :host(.has-secondary) {

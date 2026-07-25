@@ -13,6 +13,7 @@
 :host {
   display: block;
   padding-block: calc(max(var(--ki-divider-spacing) - var(--ki-divider-thickness), 0px) / 2);
+  font-family: var(--ki-typography-family-body);
 }
 
 [part="divider"] {

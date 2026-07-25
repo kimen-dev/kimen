@@ -6,6 +6,7 @@
   --_ki-textarea-placeholder-fg: var(--ki-textarea-rest-placeholder-fg);
 
   display: block;
+  font-family: var(--ki-typography-family-body);
 }
 
 :host(:hover) {
@@ -58,7 +59,7 @@
 
 [part="label"] {
   color: var(--_ki-textarea-label-fg);
-  font-family: var(--ki-typography-family-base);
+  font-family: var(--ki-typography-family-body);
   font-size: var(--ki-textarea-label-font-size);
   font-weight: var(--ki-textarea-label-font-weight);
   line-height: var(--ki-textarea-label-line-height);
@@ -96,7 +97,7 @@
   background: transparent;
   color: var(--_ki-textarea-fg);
   font: inherit;
-  font-family: var(--ki-typography-family-base);
+  font-family: var(--ki-typography-family-body);
   font-size: var(--ki-textarea-font-size);
   font-weight: var(--ki-textarea-font-weight);
   line-height: var(--ki-textarea-line-height);

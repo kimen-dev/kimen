@@ -39,6 +39,20 @@ glyph on the Icons page — so its column records that verified absence
 alongside what the 001 token extraction and the 002 button analysis
 established:
 
+> **Method note, 2026-07-25.** The 2026-07-08 sweep is not the evidence it
+> claims to be. It enumerated the MarsUI file with the Figma `get_metadata`
+> tool called without a nodeId, which returns only 10 of the file's 54 pages
+> while presenting them as the complete page list — the same defect that put a
+> false "no master exists" claim into thirteen sibling specs. Those thirteen
+> were wrong. This one, re-checked on 2026-07-25 against the full page list
+> obtained with `use_figma` (`figma.root.children`), still stands: no progress
+> master was found. But the absence is only established for the pages actually
+> searched, and "verified page by page" overstates what was done. Treat the
+> MarsUI column below as *not contradicted* rather than as *verified absent*,
+> and re-check before any decision rests on it. The single actionable
+> observation from the re-check: every bar-shaped MarsUI artifact (Scroller,
+> Indicator) settles on 8 px, against this component's 4 px linear thickness.
+
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-progress |
 |---|---|---|---|
 | Component split / modes | No linear or circular progress component in MarsUI (full-file sweep verified 2026-07-08); the only waiting-related artifact is the `Icon / Loader` glyph (24 px spinner icon) | Two separate components — linear and circular progress indicators — each with determinate and indeterminate modes; a newer loading-indicator artifact covers expressive waiting | One element: `shape: linear \| circular` plus an `indeterminate` boolean; the M3 loading-indicator use maps to the indeterminate mode (Art. VII, no extra component) |

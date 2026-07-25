@@ -25,21 +25,45 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 ## Design-source analysis (Figma)
 
 The API below abstracts the patterns confirmed in the M3 inventory note for
-this component; the MarsUI column was verified against the Figma file on
-2026-07-08 (full page sweep: MarsUI contains no switch component), and the
-abstraction is additionally validated against the onmars token vocabulary
-extracted in 001, so neither theme lacks expressive power (future themes
-inherit the same guarantee). Per the batch charter's honesty rule, cells not
+this component, and the abstraction is additionally validated against the
+onmars token vocabulary extracted in 001, so neither theme lacks expressive
+power (future themes inherit the same guarantee). MarsUI does ship a switch
+master: the `Toggle` component set (node 10023:1125) on the file's dedicated
+`Toggle` page (node 10102:4096), with a `Type` axis (`switch_OFF`,
+`switch_ON`, `switch_ON_focused`, `switch_OFF_disabled`,
+`switch_ON_disabled`) crossed with a `Size` axis (`sm`, `md`, `lg`,
+`mobile`), alongside the `Toggle_label` set (node 10101:3995, `Direction`
+left/right × `Size` sm/md). Per the batch charter's honesty rule, cells not
 grounded in a read source — two M3 cells below — carry an explicit pending
 mark instead of invented content:
 
+> **Correction, 2026-07-25 — the "full page sweep" of 2026-07-08 was a false
+> negative.** That sweep enumerated the MarsUI file with the Figma
+> `get_metadata` tool called without a nodeId, which returns only 10 of the
+> file's 54 pages while presenting them as the complete page list; the
+> `Toggle` page was never in what it returned. The file has since been
+> re-enumerated with `use_figma` (`figma.root.children`), the only reliable
+> enumerator, and the masters above were found. Every claim in this spec of
+> the form "no switch frame in MarsUI (verified 2026-07-08)" is false, and
+> the reasoning that depended on it is unsound; it is superseded by a design
+> extraction against node 10023:1125, which has not yet been performed. Only
+> the `md` anatomy has been read so far — base well 46×28 r10, track 40×22
+> r8 (`#dddfe4` unchecked, `#845abe` checked), thumb 22×18 r6 in a white
+> gradient carrying a (0, 2) blur 3 spread −1.5 shadow, 14 px of travel — so
+> the sm/lg/mobile metrics, the focused and disabled variants and the
+> `Toggle_label` composition remain unread. Decisions that were argued FROM
+> the absence — above all the exclusion of a `size` axis, which the `Size`
+> axis on node 10023:1125 directly contradicts — are marked as resting on a
+> refuted premise and are left in place: re-deriving them is the founder's
+> call, not a documentation fix.
+
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-switch |
 |---|---|---|---|
-| On/off state | No switch frame in MarsUI (full-file sweep verified 2026-07-08); the onmars token vocabulary covers it | Selected / unselected: a track with a handle that travels on selection | `checked` boolean attribute; both visual states resolve from component tokens |
-| Thumb icons | No MarsUI switch frame, hence no thumb-icon artifact (verified 2026-07-08) | Optional icons inside the handle for the on and off states | Out of v1 scope (Art. VII); a future additive surface (slots or theme tokens), never an attribute now |
-| Size | No MarsUI switch frame, so no switch size scale exists (verified 2026-07-08) | (pending verification against the M3 kit frames — not in the per-component M3 inventory note; Figma connector unavailable 2026-07-08; to confirm at gate 1) | No `size` attribute in v1 (charter: `size` only where the design sources scale the control); all metrics are per-theme component tokens |
-| Interaction states | No MarsUI switch frame (verified 2026-07-08); the button state matrix (default/hover/focus/disabled, 002) is the file's closest state precedent | enabled, hovered, focused, pressed, disabled | CSS states (hover, focus-visible, active, disabled), never props; all token-styled (002 precedent) |
-| Label | No MarsUI switch frame (verified 2026-07-08); the onmars text-emphasis token vocabulary (001) covers label styling | (pending verification against the M3 kit frames — not in the per-component M3 inventory note; Figma connector unavailable 2026-07-08; to confirm at gate 1) | Default slot carries the label and is the accessible-name source (charter slot convention) |
+| On/off state | `Toggle` set (node 10023:1125): the `Type` axis carries `switch_OFF` and `switch_ON`; at `md` the track is 40×22 r8, `#dddfe4` off and `#845abe` on, with the thumb travelling 14 px. The onmars token vocabulary covers the same states | Selected / unselected: a track with a handle that travels on selection | `checked` boolean attribute; both visual states resolve from component tokens |
+| Thumb icons | No thumb-icon artifact in the read `md` anatomy of node 10023:1125 (plain 22×18 r6 white-gradient thumb with a (0, 2) blur 3 spread −1.5 shadow); the remaining sizes and variants are unread — pending the design extraction | Optional icons inside the handle for the on and off states | Out of v1 scope (Art. VII); a future additive surface (slots or theme tokens), never an attribute now |
+| Size | **Refuted premise (2026-07-25)** — node 10023:1125 ships a `Size` axis (`sm`, `md`, `lg`, `mobile`) and `Toggle_label` (node 10101:3995) a `Size` axis (`sm`, `md`). MarsUI does scale the control; only the `md` metrics have been read | (pending verification against the M3 kit frames — not in the per-component M3 inventory note; Figma connector unavailable 2026-07-08; to confirm at gate 1) | No `size` attribute in v1 (charter: `size` only where the design sources scale the control) — **decision left in place but resting on a refuted premise**, since MarsUI now meets that charter condition; re-derivation is the founder's call. All metrics are per-theme component tokens |
+| Interaction states | The `Type` axis on node 10023:1125 carries `switch_ON_focused`, `switch_OFF_disabled` and `switch_ON_disabled`; the per-variant inks are unread (design extraction pending). The button state matrix (default/hover/focus/disabled, 002) remains the closest extracted state precedent | enabled, hovered, focused, pressed, disabled | CSS states (hover, focus-visible, active, disabled), never props; all token-styled (002 precedent) |
+| Label | `Toggle_label` set (node 10101:3995): `Direction` (`left`, `right`) × `Size` (`sm`, `md`) — MarsUI ships a labelled composition, and its `Direction` axis is a label-position axis the v1 abstraction does not carry; its geometry and typography are unread. The onmars text-emphasis token vocabulary (001) covers label styling | (pending verification against the M3 kit frames — not in the per-component M3 inventory note; Figma connector unavailable 2026-07-08; to confirm at gate 1) | Default slot carries the label and is the accessible-name source (charter slot convention) |
 | Switch vs checkbox semantics | — (product guidance, not a frame pattern) | Switch = immediate effect; checkbox = selection for later submission | Catalog when-to-use / when-NOT-to-use metadata (Art. I), not API surface |
 | Form participation | — (behavioral, not a frame pattern) | Form-associated control | ElementInternals per the 002 pattern: `name`/`value`, reset restores defaults, disabled fieldset/form honored |
 
@@ -428,12 +452,19 @@ Feature: Switch
 
 ## Assumptions
 
-- No `size` attribute in v1: neither design source is confirmed to scale
-  the switch — MarsUI verification 2026-07-08 found no switch frame at all
-  and the M3 size cell remains pending frame verification — and the charter
-  grants `size` only where the design sources actually scale the control,
-  so Art. VII (no speculative props) excludes it. If M3 verification finds
-  scaled switches, `size` arrives as an additive MINOR.
+- No `size` attribute in v1 — **decision left in place, premise refuted
+  (2026-07-25)**: it rested on "neither design source is confirmed to scale
+  the switch", which still holds for M3 (the size cell remains pending frame
+  verification) but is false for MarsUI. The 2026-07-08 sweep that reported
+  no switch frame was a false negative caused by the truncated page listing
+  (see the Design-source analysis correction): node 10023:1125 ships a
+  `Size` axis (`sm`, `md`, `lg`, `mobile`) and `Toggle_label` (node
+  10101:3995) a `Size` axis (`sm`, `md`), so the charter condition — `size`
+  only where the design sources actually scale the control — is met by
+  MarsUI and the Art. VII exclusion no longer follows. The exclusion is NOT
+  silently reversed here: re-deriving it against a design extraction of the
+  real master is the founder's call. If it is reversed, `size` arrives as an
+  additive MINOR.
 - No `variant`/`tone` in v1: the switch has no emphasis scale and a single
   accent role in the reference design; the charter allows fewer axes than
   the 002 subset (Art. VII — no speculative props).
@@ -458,14 +489,23 @@ Feature: Switch
   never breaks.
 - The label is required content: the default slot is the accessible-name
   source and usage without it is documented as invalid in the catalog.
-- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
-  file): no switch component exists; the onmars token vocabulary already
-  extracted in 001 (surfaces, tone ramps, metrics) is sufficient to theme
-  the abstraction above.
+- MarsUI verification, corrected 2026-07-25: the `Toggle` component set
+  (node 10023:1125) and `Toggle_label` (node 10101:3995) exist on the
+  `Toggle` page (node 10102:4096). The 2026-07-08 "full page sweep" that
+  recorded "no switch component exists" was a false negative caused by the
+  truncated page listing (see the Design-source analysis correction), so
+  that finding must not be relied on. The onmars token vocabulary already
+  extracted in 001 (surfaces, tone ramps, metrics) remains sufficient to
+  theme the abstraction above, but sufficiency is no longer the same claim
+  as fidelity: only the `md` anatomy of node 10023:1125 has been read, and a
+  design extraction against the master is outstanding.
 - Gate 1 approval of this spec endorses an abstraction grounded in the
-  per-component M3 inventory note plus the 001 token vocabulary: the
-  MarsUI column is verified (2026-07-08 — no switch component exists in
-  the file), two M3 cells (size, labeling pattern) remain unverified, and
-  the founder assumes that remaining risk explicitly. If the M3 frames
-  later contradict a scope decision taken here, the correction arrives as
-  an additive change, never a breaking one.
+  per-component M3 inventory note plus the 001 token vocabulary. That
+  approval was taken on a MarsUI column recorded as verified (2026-07-08 —
+  "no switch component exists in the file"); the correction of 2026-07-25
+  shows that reading to be a false negative, so the risk the founder assumed
+  at gate 1 was understated: two M3 cells (size, labeling pattern) remain
+  unverified AND the MarsUI master (node 10023:1125) is real but largely
+  unread. If the M3 frames, or a design extraction against the MarsUI
+  master, later contradict a scope decision taken here, the correction
+  arrives as an additive change, never a breaking one.

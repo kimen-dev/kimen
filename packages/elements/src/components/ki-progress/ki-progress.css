@@ -10,6 +10,7 @@
   --_ki-progress-indeterminate-duration: var(--ki-progress-indeterminate-duration);
 
   display: block;
+  font-family: var(--ki-typography-family-body);
 }
 
 .base {

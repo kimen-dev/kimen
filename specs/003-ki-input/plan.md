@@ -14,9 +14,11 @@ approval marker.
 
 Second real Kimen component and first value-carrying form control:
 `<ki-input>`, a form-associated single-line text field whose API abstracts
-the Material 3 text-field pattern under the batch charter (MarsUI ships no
-input frame — full-file sweep verified 2026-07-08; onmars styles the field
-from the 001 token vocabulary alone), with six entry kinds and no
+the Material 3 text-field pattern under the batch charter (this summary
+originally read "MarsUI ships no input frame — full-file sweep verified
+2026-07-08; onmars styles the field from the 001 token vocabulary alone";
+that parenthetical is withdrawn — see the correction below), with six entry
+kinds and no
 variant/tone/size axes in v1, styled exclusively through a new
 `--ki-input-*` component token layer so both shipped themes — and the M3
 filled/outlined enclosure choice — resolve from tokens alone. Technical
@@ -32,6 +34,24 @@ implicit Enter submission, `formResetCallback` for native dirty-value reset.
 `value` attribute declares the default only. Details and rationales in
 [research.md](./research.md) (D1–D10); API surface in
 [contracts/input-contract.md](./contracts/input-contract.md).
+
+> **Correction — 2026-07-25 (MarsUI evidence).** The 2026-07-08 "full-file
+> sweep" was a false negative: it used the Figma `get_metadata` tool without
+> a `nodeId`, which returns only 10 of the MarsUI file's 54 pages and
+> presents that truncated listing as the complete page list. MarsUI does
+> ship input masters — page Input fields `12046:706` → `Input_field`
+> `12022:7132` (9 states, incl. dark and digit variants) and `Input_cell`
+> `8016:286` (`Type` = default | default_with_button | textarea × `Size` =
+> xs / sm / md / lg / xl), composed with `Input_label` `12021:6068` and
+> `Hint_label` `12021:6331`; enumerated with `use_figma`
+> (`figma.root.children`), the only reliable enumerator. Anything in this
+> plan that rests on MarsUI having no field to mirror — the "onmars styles
+> from the 001 token vocabulary alone" premise and the no-size-axis
+> component token layer — is unsound and is superseded by a design
+> extraction against those masters (research.md D8 carries the same marker).
+> The plan's platform approach, its Constitution Check and the shipped
+> implementation are unaffected; re-deriving the styling decisions is a
+> founder call.
 
 ## Technical Context
 

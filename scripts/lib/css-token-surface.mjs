@@ -1,4 +1,6 @@
 const CSS_EXPORT = /^\.\/css(?:\/([a-z0-9]+(?:-[a-z0-9]+)*))?$/u;
+/** The one exported stylesheet that consumes tokens instead of publishing them. */
+const PAGE_CONTRACT_EXPORT = './css/base';
 const CUSTOM_PROPERTY = /^--ki-[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const ZERO_DIMENSION =
   /(^|[^a-zA-Z0-9_.-])[-+]?0(?:\.0+)?(?:ch|cm|dvh|dvw|em|ex|in|lh|mm|pc|pt|px|q|rem|rlh|svh|svw|vh|vmax|vmin|vw)(?=$|[^a-zA-Z0-9_-])/giu;
@@ -361,6 +363,76 @@ function oneStylesheet({ subpath, target, css, publicTokenNames }) {
   return { target, contexts: { light: lightValues, dark: automaticValues } };
 }
 
+/**
+ * The page contract (`./css/base`) is the one exported stylesheet that PUBLISHES
+ * no tokens: it only consumes them, so it carries none of the token surface and
+ * is exempt from the three-rule theme grammar above. It exists because
+ * `color-scheme` — the declaration that keeps a light-only page from rendering
+ * dark component surfaces on a user-agent white canvas — is not a custom
+ * property and therefore cannot live in a theme sheet.
+ *
+ * The exemption is narrow and fails closed in both directions: declaring any
+ * `--ki-*` custom property here would smuggle a token past the surface gate,
+ * and declaring a literal visual value would bypass Art. VI. Both are rejected.
+ */
+function onePageContract({ subpath, target, css }) {
+  const label = `${subpath} stylesheet`;
+  const source = stripComments(css, label);
+  // The theme grammar's parseRules() rejects every non-custom-property
+  // declaration, which is exactly what this sheet is made of, so the page
+  // contract gets its own flat parser. It accepts only top-level rules: no
+  // at-rules, no nesting.
+  const allowedLiterals = new Set(['light', 'dark', 'light dark', 'normal', 'only light']);
+  let cursor = 0;
+  let ruleCount = 0;
+  while (cursor < source.length) {
+    while (cursor < source.length && /[\s;]/u.test(source[cursor])) cursor += 1;
+    if (cursor >= source.length) break;
+    const opening = findStructuralCharacter(source, cursor, '{', label);
+    if (opening === -1) throw new Error(`${label} contains trailing CSS outside a block`);
+    const prelude = canonicalPrelude(source.slice(cursor, opening).trim());
+    if (prelude === '') throw new Error(`${label} contains a block without a prelude`);
+    if (prelude.startsWith('@')) {
+      throw new Error(`${label} contains unsupported conditional rule ${prelude}`);
+    }
+    const closing = matchingBrace(source, opening, label);
+    const body = source.slice(opening + 1, closing);
+    if (body.includes('{') || body.includes('}')) {
+      throw new Error(`${label} contains an unexpected nested rule`);
+    }
+    for (const raw of splitTopLevel(body, ';', label)) {
+      const declaration = raw.trim();
+      if (declaration === '') continue;
+      const colon = declaration.indexOf(':');
+      if (colon <= 0) throw new Error(`${label} contains an invalid declaration`);
+      const property = declaration.slice(0, colon).trim();
+      const value = declaration.slice(colon + 1).trim();
+      if (value === '') throw new Error(`${label} contains unsupported declaration ${property}`);
+      if (property.startsWith('--')) {
+        throw new Error(`${label} must not publish token ${property}`);
+      }
+      const references = [...value.matchAll(/var\(\s*(--[a-zA-Z0-9-]+)/gu)].map(
+        (match) => match[1],
+      );
+      if (references.length > 0) {
+        for (const name of references) {
+          if (!CUSTOM_PROPERTY.test(name)) {
+            throw new Error(`${label} references non-public custom property ${name}`);
+          }
+        }
+        continue;
+      }
+      if (!allowedLiterals.has(value)) {
+        throw new Error(`${label} declares the hardcoded value ${property}: ${value}`);
+      }
+    }
+    ruleCount += 1;
+    cursor = closing + 1;
+  }
+  if (ruleCount === 0) throw new Error(`${label} declares no page contract`);
+  return { target, pageContract: true };
+}
+
 /** Build the effective public-token contract of each exported combined stylesheet. */
 export function buildPublicStylesheetSurface({
   packageExports,
@@ -396,6 +468,9 @@ export function buildPublicStylesheetSurface({
       const css = sources[subpath];
       if (typeof css !== 'string' || css.trim() === '') {
         throw new Error(`${subpath} stylesheet source must be a non-empty string`);
+      }
+      if (subpath === PAGE_CONTRACT_EXPORT) {
+        return [subpath, onePageContract({ subpath, target, css })];
       }
       return [subpath, oneStylesheet({ subpath, target, css, publicTokenNames: names })];
     }),

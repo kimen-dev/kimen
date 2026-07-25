@@ -6,11 +6,31 @@ decision applies unchanged, this file ADOPTS it by citation instead of
 re-deriving it (Art. VII — the second control reuses the first one's
 answers; divergence exists only where the native multiline control
 genuinely differs). Sources: the spec (M3 multi-line inventory; MarsUI
-verified 2026-07-08 — no textarea frame exists, onmars styles from the 001
-token vocabulary), the 003 research (D1–D10), the 002 ki-button
-implementation (ElementInternals pattern, `--_ki-*` CSS indirection), the
-HTML form-associated custom elements (FACE) spec and the
+master enumerated 2026-07-25 — page Input fields (node 12046:706) →
+`Input_cell` (node 8016:286), `Type=textarea` × `Size` xs–xl, plus
+`Input_cell_special` (node 12041:566), `Type=textarea` at md and lg in
+resting and focused states; the 2026-07-08 "no textarea frame" reading was
+a false negative, see the correction below), the 003 research (D1–D10), the
+002 ki-button implementation (ElementInternals pattern, `--_ki-*` CSS
+indirection), the HTML form-associated custom elements (FACE) spec and the
 constraint-validation API.
+
+**Correction 2026-07-25 — MarsUI design source.** The 2026-07-08 "full page
+sweep" this file inherited from the spec was performed with `get_metadata`
+called without a node id, which returns only 10 of the MarsUI file's 54
+pages while presenting them as the complete page list. It never reached the
+Input fields page, so its "no textarea frame" conclusion is false and the
+reasoning that depended on it is unsound; it is superseded by a design
+extraction against nodes 8016:286 and 12041:566, which has not yet been
+performed. Affected below: D9's "single scale — no size axis", whose
+spec-side justification was the absent frame although MarsUI ships an xs–xl
+textarea ramp; D1's no-slots, whose spec assumption cited the absent frame
+as corroboration; and D6's default `rows`, whose gate-1 marker was framed as
+having no design-source default to mirror. Those decisions are left exactly
+as written — changing them is the founder's call — but they rest on a
+refuted premise and need re-derivation. Nothing in D1–D12 that derives from
+native semantics, the FACE spec, the constraint-validation API or the 003
+adoptions is affected.
 
 ## D1 — Shadow anatomy: native `<textarea>` + component-rendered `<label for>`, no slots
 

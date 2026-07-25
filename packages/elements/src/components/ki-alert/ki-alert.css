@@ -22,6 +22,7 @@
   --_ki-alert-focus-ring-shadow: var(--ki-alert-focus-ring-shadow);
 
   display: block;
+  font-family: var(--ki-typography-family-body);
 }
 
 :host([dismissed]) {

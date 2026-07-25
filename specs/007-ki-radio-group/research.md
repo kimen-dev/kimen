@@ -1,15 +1,34 @@
 # Phase 0 Research: ki-radio-group
 
 Decisions that resolve every open technical question in the plan. Sources:
-the spec (M3 documents only the standalone radio button; MarsUI verified
-2026-07-08 — no radio frame exists, onmars styles from the 001 token
-vocabulary), the WAI-ARIA APG Radio Group pattern (read with the pattern in
-hand for D1/D6), the HTML spec's radio button group definition (grouping by
-tree + form owner + `name`), the 001 token architecture, the 002 ki-button
-implementation (ElementInternals pattern, `--_ki-*` CSS indirection), the
-003 ki-input plan set and the 006 ki-checkbox / 008 ki-switch plan sets —
-the sibling form controls planned under the same charter, whose applicable
-decisions are CITED and reused rather than re-derived (Art. VII).
+the spec (M3 documents only the standalone radio button; MarsUI ships the
+`Radio` component set — node 10053:1943 — and `Radio_label` — node
+10100:3931 — on the `Radio buttons` page, node 10102:4075, verified
+2026-07-25; onmars styles from the 001 token vocabulary until a design
+extraction against those masters is performed), the WAI-ARIA APG Radio Group
+pattern (read with the pattern in hand for D1/D6), the HTML spec's radio
+button group definition (grouping by tree + form owner + `name`), the 001
+token architecture, the 002 ki-button implementation (ElementInternals
+pattern, `--_ki-*` CSS indirection), the 003 ki-input plan set and the
+006 ki-checkbox / 008 ki-switch plan sets — the sibling form controls
+planned under the same charter, whose applicable decisions are CITED and
+reused rather than re-derived (Art. VII).
+
+> **Correction, 2026-07-25 — this research was framed by a false negative.**
+> The premise "MarsUI verified 2026-07-08 — no radio frame exists" came from
+> a sweep that enumerated the file with the Figma `get_metadata` tool called
+> without a nodeId, which returns only 10 of the file's 54 pages while
+> presenting them as the complete page list; the `Radio buttons` page was
+> never in what it returned. Re-enumerated with `use_figma`
+> (`figma.root.children`), the only reliable enumerator, the file yields the
+> masters cited above. Every decision below that leans on the absence of a
+> MarsUI radio is unsound as argued and is superseded by a design extraction
+> against nodes 10053:1943 and 10100:3931, which has not yet been performed.
+> Two consequences are already known and marked in place: the masters carry
+> a `Size` axis (`sm`/`md`), and the master's selected state is a filled
+> disc, not a ring with an inner dot — see the marks in D1 and D8. The
+> decisions stand as written; re-deriving them is the founder's call (see
+> spec.md, Design-source analysis).
 
 Shared decisions inherited from the siblings (cited, not re-derived):
 
@@ -55,6 +74,15 @@ with `shadow: { delegatesFocus: true }`. The internal input carries NO
 and owns everything the platform cannot provide across shadow boundaries:
 mutual exclusivity, the roving tabindex, arrow-key navigation and form
 participation (D4–D7).
+
+**Anatomy mark (correction, 2026-07-25)**: the `control` span is described
+above as a token-styled RING with an inner dot. The MarsUI master (`Radio`,
+node 10053:1943) renders its selected state as a FILLED DISC, so that
+description inverts the design source rather than expressing it. It is left
+as written: the base-element decision (native input per option, coordinated
+by the group) is independent of how the selected state is painted, and
+re-deriving the painting belongs to the pending design extraction and the
+founder, not to this correction.
 
 **The constraint that frames the choice**: the HTML radio button group is
 scoped by tree + form owner + `name`. Each `ki-radio`'s internal input
@@ -465,6 +493,18 @@ MarsUI has no radio frame). The inner dot is pure CSS (`::before` on the
 `control` span, inks via the indirection layer) — a circle needs no SVG,
 so 006 D7's currentColor-SVG machinery is NOT inherited: less anatomy,
 same token contract. No invalid ink family (D7's declared narrowing).
+
+**Rests on a refuted premise (2026-07-25)**: "MarsUI has no radio frame" is
+false — the `Radio` master (node 10053:1943) exists, carries a `Size` axis
+(`sm`/`md`), and renders its selected state as a FILLED DISC rather than a
+ring with an inner dot. Two parts of this decision therefore need
+re-derivation against the master: the single-step control geometry (the
+no-size-axis half of the rationale) and the `dot-size` /
+`fg`-as-inner-dot-ink / `border`-as-ring split of the matrix. The token
+family, its names and the contrast-gate extension stand as written until
+the founder re-derives them; the M3 half of the argument and the 3:1
+non-text pairing (WCAG 1.4.11) are unaffected either way, since a filled
+disc is a non-text state indicator exactly as an inner dot is.
 
 **Alternatives considered**: (a) one shared `--ki-selection-*` family
 with 006 — themes must be free to style checkbox and radio independently

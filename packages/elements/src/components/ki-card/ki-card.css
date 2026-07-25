@@ -14,6 +14,7 @@
   --_ki-card-footer-padding: var(--ki-card-footer-padding);
 
   display: block;
+  font-family: var(--ki-typography-family-body);
 }
 
 [part="card"] {

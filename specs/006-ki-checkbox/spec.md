@@ -24,24 +24,41 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 
 ## Design-source analysis (Figma)
 
-The API below is derived from the Material 3 Design Kit: the MarsUI file was
-verified page by page on 2026-07-08 and contains no checkbox component at
-all (its component inventory covers buttons, avatars, icons, feature icons,
-media and miscellaneous artifacts), so the MarsUI column records that
-verified absence and the onmars theme styles ki-checkbox from the 001 token
-vocabulary alone. The formerly at-risk decisions (`size` axis, error visual,
-label anatomy) are resolved by the verification: MarsUI shows none of them,
-and any future MarsUI checkbox artifact would re-enter through this spec as
-additive MINOR:
+The API below was derived from the Material 3 Design Kit alone, on the
+premise that the MarsUI file shipped no checkbox artifact. That premise is
+false. MarsUI ships checkbox masters on a dedicated page, and the MarsUI
+column below now cites them:
+
+- page **Checkboxes** (node `10101:4054`)
+  - `Checkbox` (node `10030:982`) — axis `States` = unchecked | hover |
+    checked | checked_focused | disabled | indeterminate |
+    indeterminate_disabled, × axis `Size` = sm | md | lg
+  - `Checkbox_label` (node `10095:3846`) — axis `Direction` = left | right,
+    × axis `Size` = sm | md
+
+**Correction (2026-07-25)**: the "full page sweep verified 2026-07-08"
+recorded throughout this spec was a FALSE NEGATIVE. It was performed with
+the Figma `get_metadata` tool called without a `nodeId`, which returns only
+10 of the MarsUI file's 54 pages while presenting that slice as the complete
+page list; the Checkboxes page was never in it. The masters above were
+enumerated with `use_figma` (`figma.root.children`), the only reliable
+enumerator. Every reasoning step in this spec that rests on the absence is
+therefore unsound and is superseded by a design extraction against those
+masters, which is still outstanding. The three decisions this spec recorded
+as "resolved by the verification" — the `size` axis, the error visual and
+the label anatomy — are not resolved; they are open. Affected cells and
+assumptions are flagged **[premise refuted — re-derive]** below. The
+decisions themselves are left exactly as shipped: whether each survives
+re-derivation is a founder call, not a documentation edit.
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-checkbox |
 |---|---|---|---|
-| Selection states | No checkbox frame in MarsUI (full-file sweep verified 2026-07-08); the file's only tick artifacts are icon glyphs (Check, Tick, Verification_tick) | Unselected / selected / indeterminate: tri-state visual, the value stays binary | `checked` boolean + `indeterminate` boolean presentation flag; the submitted value follows `checked` alone |
-| Interaction states | No MarsUI checkbox frame (verified 2026-07-08); the button state matrix (default/hover/focus/disabled, 002) is the file's closest state precedent | enabled, hovered, focused, pressed, disabled | CSS states (hover, focus-visible, active, disabled), never props; all token-styled (002 precedent) |
-| Error / validity | No MarsUI checkbox frame and no checkbox-level error artifact (verified 2026-07-08); tone ramps exist only at the token layer (001) | Error configuration of the checkbox | Constraint validation via `required`; the invalid presentation is a CSS state resolved from tokens, never a prop |
-| Label & anatomy | No MarsUI checkbox frame (verified 2026-07-08); the onmars text-emphasis token vocabulary (001 extraction) covers label styling | Control paired with a label; the label names the control | Default slot is the label and the accessible-name source; activating the label toggles the control |
-| Size & shape | No MarsUI checkbox frame (verified 2026-07-08); onmars ships an xs–xl metric vocabulary (001) with no checkbox-specific usage | Single fixed control size inside a larger touch target; fixed radius | No `size` attribute in v1; control size, radius and gap are per-theme component tokens (a size axis would be an additive MINOR later) |
-| Grouping ("select all") | No MarsUI checkbox frame, hence no grouping artifact (verified 2026-07-08) | Parent/child selection illustrated with the indeterminate state | Application-level composition; no checkbox-group element in v1 (Art. VII) |
+| Selection states | `Checkbox` set (node 10030:982, Checkboxes page 10101:4054, enumerated 2026-07-25): axis `States` ships unchecked, checked, indeterminate and indeterminate_disabled — the same tri-state selection vocabulary as M3 | Unselected / selected / indeterminate: tri-state visual, the value stays binary | `checked` boolean + `indeterminate` boolean presentation flag; the submitted value follows `checked` alone |
+| Interaction states | `Checkbox` (node 10030:982): axis `States` ships hover, checked_focused and disabled alongside the selection values — MarsUI carries its own checkbox state matrix, so the borrowed 002 button precedent is no longer the closest source | enabled, hovered, focused, pressed, disabled | CSS states (hover, focus-visible, active, disabled), never props; all token-styled (002 precedent) |
+| Error / validity | `Checkbox` (node 10030:982): the enumerated `States` axis carries no error/invalid value, so this is the one row the master does not fill; tone ramps still exist only at the token layer (001). The absence must be re-confirmed against the master during extraction, not inherited from the refuted sweep | Error configuration of the checkbox | Constraint validation via `required`; the invalid presentation is a CSS state resolved from tokens, never a prop |
+| Label & anatomy | **[premise refuted — re-derive]** `Checkbox_label` set (node 10095:3846, same page): axes `Direction` = left \| right and `Size` = sm \| md — MarsUI ships a labelled composition with an explicit label-side axis, not the bare control this row assumed | Control paired with a label; the label names the control | Default slot is the label and the accessible-name source; activating the label toggles the control. **[premise refuted — re-derive]**: this row was recorded as "resolved by the verification"; the master's `Direction` axis is unaccounted for. Decision left as shipped pending founder re-derivation |
+| Size & shape | **[premise refuted — re-derive]** `Checkbox` (node 10030:982) ships an explicit `Size` axis = sm \| md \| lg, and `Checkbox_label` (node 10095:3846) ships `Size` = sm \| md; the onmars xs–xl metric vocabulary (001) is no longer the only checkbox-relevant metric source | Single fixed control size inside a larger touch target; fixed radius | No `size` attribute in v1; control size, radius and gap are per-theme component tokens (a size axis would be an additive MINOR later). **[premise refuted — re-derive]**: the no-size-axis decision was justified by MarsUI having no checkbox frame; the master ships three sizes, so the justification is void. Decision left as shipped pending founder re-derivation |
+| Grouping ("select all") | No grouping artifact on the Checkboxes page (10101:4054), which ships `Checkbox` (10030:982) and `Checkbox_label` (10095:3846) only — an absence now established from the enumerated page, not from the refuted sweep | Parent/child selection illustrated with the indeterminate state | Application-level composition; no checkbox-group element in v1 (Art. VII) |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -495,7 +512,12 @@ Feature: Checkbox
   MarsUI verification 2026-07-08 found no checkbox frame at all; metrics
   are per-theme component tokens. A size axis, should a design source ever
   demand one, would be an additive MINOR (charter allows a subset with
-  justification).
+  justification). **[premise refuted — re-derive]** the MarsUI half of this
+  justification is void (Correction 2026-07-25): `Checkbox` (node
+  10030:982) ships `Size` = sm | md | lg and `Checkbox_label` (node
+  10095:3846) ships `Size` = sm | md, so a design source does demand one.
+  The v1 decision stands as written pending founder re-derivation against a
+  real extraction; only the reasoning is retracted here.
 - Because ki-checkbox carries no enum attributes, the charter-mandated
   unknown-value fallback scenario (002 S11 pattern) maps to
   boolean-attribute robustness: any present `checked` value — including
@@ -535,8 +557,15 @@ Feature: Checkbox
   activation.
 - Disabled follows native semantics (not focusable), as decided in 002; the
   focusable-when-disabled pattern remains a possible future enhancement.
-- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
-  file): no checkbox component exists; the Design-source table records
-  that verified absence and the onmars theme styles ki-checkbox from the
-  001 token vocabulary. Any future MarsUI checkbox artifact re-enters
-  through this spec as additive MINOR.
+- MarsUI verification, re-run 2026-07-25 with `use_figma`
+  (`figma.root.children`): the checkbox masters exist — page Checkboxes
+  (node 10101:4054) carrying `Checkbox` (node 10030:982, `States` ×
+  `Size` sm | md | lg) and `Checkbox_label` (node 10095:3846, `Direction`
+  × `Size` sm | md). This supersedes the 2026-07-08 "full page sweep",
+  which was a false negative: `get_metadata` called without a `nodeId`
+  returned 10 of the file's 54 pages as though that were the whole file, so
+  the recorded absence was never verified at all. The onmars theme still
+  styles ki-checkbox from the 001 token vocabulary in v1, but that is now an
+  unextracted default rather than a verified necessity; a design extraction
+  against the masters above is outstanding, and its outcome — including any
+  size or label-direction axis — is a founder decision.

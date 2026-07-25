@@ -13,6 +13,8 @@
   --_ki-badge-radius: var(--ki-badge-md-radius);
   --_ki-badge-font-size: var(--ki-badge-md-font-size);
   --_ki-badge-line-height: var(--ki-badge-md-line-height);
+
+  font-family: var(--ki-badge-font-family);
 }
 
 :host([tone="success"]) {

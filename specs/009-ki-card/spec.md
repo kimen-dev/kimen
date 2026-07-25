@@ -27,14 +27,34 @@ The API below is the union of patterns found in both reference designs, so
 that neither theme lacks expressive power (and future themes inherit the same
 guarantee):
 
+> **Correction 2026-07-25 — the MarsUI column below rested on a false
+> negative.** The "full page sweep" recorded on 2026-07-08 was run with the
+> Figma MCP `get_metadata` tool called without a nodeId, which returns only 10
+> of the MarsUI file's 54 pages and presents that truncated listing as the
+> complete page list. The card masters sit on pages it never returned, so the
+> sweep concluded they did not exist. Re-enumerated with `use_figma`
+> (`figma.root.children`), the only reliable enumerator: MarsUI has **no
+> dedicated card page**, but it does ship card masters — `Chart` (node
+> `16187:3670`) and `Dashboard_info` (node `16189:4286`) inside the Dashboard
+> page (node `16186:4305`), and `Price_card` (node `20132:26455`) inside the
+> Pricing page (node `20132:25228`). They bind the `Radius/big_component` ramp
+> (16 / 28 → `{ki.radius.big-component.xs}` / `{ki.radius.big-component.lg}`),
+> not the raw radius primitives. Every reading below that was derived from the
+> absence is therefore unsound and is superseded by a design extraction against
+> those masters (the 019–026 `design-extraction.md` method). The decisions
+> themselves are left standing: re-deriving them is a founder call, not an
+> agent call. The behavior contract (S1–S8, FR-001–FR-013) is untouched by this
+> correction; the design-source rationale and the onmars token grounding are
+> not.
+
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-card |
 |---|---|---|---|
-| Style axis | No card component in MarsUI (full-file sweep verified 2026-07-08); the surface ramp in the 001 token vocabulary is the onmars ground | 3 card types: elevated, filled, outlined | No attribute: elevation and border resolve from `--ki-card-*` component tokens; each theme picks its card style in the token layer (002 Round/Square precedent) |
-| Surface | surface ramp s0–s5 shipped in the token layer (001 extraction); which step the card maps to is a theme decision | surface-container color roles per card type | card surface, border and elevation are component tokens resolving from the semantic surface layer |
-| Content anatomy | No MarsUI card frame (verified 2026-07-08); the file's only card-shaped artifacts are documentation covers/thumbnails, not UI components | media/image, header (title + subhead), supporting text, actions row | slots: `media`, `header`, default (body), `footer`; actions compose inside `footer` |
-| Shape | No MarsUI card frame (verified 2026-07-08); radius conventions exist only in the 001 token vocabulary | corner radius from the M3 shape scale | radius is a component token per theme, never a prop |
-| Interactivity | No MarsUI card frame, hence no actionable-card artifact (verified 2026-07-08) | actionable cards exist (whole-card click with hover/pressed states) | Out of scope for v1: the card is non-interactive; interactive elements compose inside slots (whole-card interactivity is a possible future feature) |
-| Size | xs–xl metric ramp exists in the shipped token vocabulary (001), but no verified evidence that cards scale through it | no size ramp; paddings fixed by the spec | no `size` attribute; paddings and gaps are per-theme component tokens |
+| Style axis | **Refuted premise — see the correction above.** Card masters exist: `Chart` (`16187:3670`) and `Dashboard_info` (`16189:4286`) on Dashboard (`16186:4305`), `Price_card` (`20132:26455`) on Pricing (`20132:25228`); their style treatment is unextracted. The 001 surface ramp was taken as the onmars ground only because the 2026-07-08 sweep reported no master | 3 card types: elevated, filled, outlined | No attribute: elevation and border resolve from `--ki-card-*` component tokens; each theme picks its card style in the token layer (002 Round/Square precedent). **Decision retained, premise refuted — needs re-derivation against the masters (founder call)** |
+| Surface | surface ramp s0–s5 shipped in the token layer (001 extraction); which step the card maps to was left a theme decision for want of a master to measure — the masters named in the correction above now give a measurable answer | surface-container color roles per card type | card surface, border and elevation are component tokens resolving from the semantic surface layer |
+| Content anatomy | **Refuted premise — see the correction above.** MarsUI does ship card masters (`Chart` `16187:3670`, `Dashboard_info` `16189:4286`, `Price_card` `20132:26455`); their anatomy is unextracted. The "only card-shaped artifacts are documentation covers/thumbnails" reading came from the truncated 2026-07-08 page listing | media/image, header (title + subhead), supporting text, actions row | slots: `media`, `header`, default (body), `footer`; actions compose inside `footer`. **Decision retained, premise refuted — the region set needs re-derivation against the masters (founder call)** |
+| Shape | **Refuted premise — see the correction above.** The card masters bind the `Radius/big_component` ramp (16 / 28), not the raw radius primitives: a measurable MarsUI shape convention the 2026-07-08 sweep missed | corner radius from the M3 shape scale | radius is a component token per theme, never a prop. **Decision retained; the onmars value needs re-derivation against `Radius/big_component` (founder call)** |
+| Interactivity | **Refuted premise — see the correction above.** The masters exist and were never inspected for hover/pressed or whole-card-click artifacts | actionable cards exist (whole-card click with hover/pressed states) | Out of scope for v1: the card is non-interactive; interactive elements compose inside slots (whole-card interactivity is a possible future feature). **Decision retained, premise refuted — needs re-derivation once the masters are extracted (founder call)** |
+| Size | xs–xl metric ramp exists in the shipped token vocabulary (001); the 2026-07-08 "no verified evidence that cards scale through it" rested on the false negative — the masters (`Chart`, `Dashboard_info`, `Price_card`) were never measured for a scale | no size ramp; paddings fixed by the spec | no `size` attribute; paddings and gaps are per-theme component tokens. **Decision retained, premise refuted — needs re-derivation against the masters (founder call)** |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -361,29 +381,52 @@ Feature: Card
   future features; until then the catalog documents them as when-NOT-to-use.
 - No `size` or `tone` attributes: neither design source demonstrably scales
   cards through a size or intent ramp that the component must expose;
-  metrics are per-theme tokens. (M3 confirmed; MarsUI verified 2026-07-08 —
-  no card frame exists, so no card scale; any future one lands as additive
-  MINOR.)
+  metrics are per-theme tokens. (M3 confirmed. The MarsUI half is **refuted**:
+  the 2026-07-08 reading "no card frame exists, so no card scale" was a false
+  negative — `Chart` `16187:3670`, `Dashboard_info` `16189:4286` and
+  `Price_card` `20132:26455` exist and were never measured for a scale. The
+  decision stands as written pending founder re-derivation; any size axis
+  lands as additive MINOR.)
 - Media full-bleed is a theme decision, not a structural rule: padding is
   per-region (`--ki-card-{media|header|body|footer}-padding`, applied to the
   regions, never to the card surface), and both shipped themes zero the
   media region's padding to match M3's edge-to-edge media. A theme that pads
   its media region instead needs no component change. This keeps the only
-  M3-grounded layout behavior out of the structural contract; MarsUI has no
-  card frame to constrain it either way (verified 2026-07-08).
+  M3-grounded layout behavior out of the structural contract. (**Correction
+  2026-07-25**: the clause "MarsUI has no card frame to constrain it either
+  way" was a false negative — the masters named in the Design-source
+  correction may well constrain it and have not been measured. The decision
+  stands pending founder re-derivation.)
 - No dedicated `actions` slot in v1: actions compose inside `footer`
   (Art. VII — simplest design that satisfies the scenarios); a dedicated
   `actions` slot would be an additive MINOR change later.
-- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
-  file): no card component exists — the closest artifacts (File_cover,
-  Project thumbnail sheets) are documentation scaffolding, not UI cards.
-  **Explicit decision submitted for founder ratification at gate 1**: the
-  onmars `--ki-card-*` token values are defined without a reference frame —
-  grounded in the shipped 001 vocabulary (surface ramp s0–s5, radius and
-  spacing scales) — because none exists to mirror. The API surface itself
-  (four slots, no attributes) does not depend on that decision: it stands
-  on the charter's binding v1 scope for 009 and the M3 anatomy; if a future
-  MarsUI card pattern appears it lands as additive MINOR.
+- **MarsUI verification 2026-07-08 — WITHDRAWN 2026-07-25 (false negative).**
+  The "full page sweep of the MarsUI Figma file" was run with the Figma MCP
+  `get_metadata` tool called without a nodeId, which returns only 10 of the
+  file's 54 pages and presents that truncated listing as the complete page
+  list; the card masters sit on pages it never returned. Re-enumerated with
+  `use_figma` (`figma.root.children`), the only reliable enumerator: MarsUI
+  has no dedicated card page, but it ships card masters — `Chart` (node
+  `16187:3670`) and `Dashboard_info` (node `16189:4286`) inside the Dashboard
+  page (node `16186:4305`), and `Price_card` (node `20132:26455`) inside the
+  Pricing page (node `20132:25228`), all binding the `Radius/big_component`
+  ramp (16 / 28), not the raw radius primitives. The statement that no card
+  component exists — and that the closest artifacts (File_cover, Project
+  thumbnail sheets) are documentation scaffolding — is false as a claim about
+  the file.
+- **Consequence of the withdrawal (premise refuted, decision retained).** The
+  gate-1-ratified decision reads: the onmars `--ki-card-*` token values are
+  defined without a reference frame — grounded in the shipped 001 vocabulary
+  (surface ramp s0–s5, radius and spacing scales) — *because none exists to
+  mirror*. That justification no longer holds: a reference frame exists, and
+  it binds a radius ramp the shipped values do not use. The token values stay
+  exactly as shipped and the ratification is not revoked here; the reasoning
+  behind them is unsound and is superseded by a design extraction against the
+  masters above (the 019–026 `design-extraction.md` method). Re-deriving or
+  confirming them is a founder call, not an agent call. The API surface itself
+  (four slots, no attributes) never depended on the absence: it stands on the
+  charter's binding v1 scope for 009 and the M3 anatomy; if the extracted
+  MarsUI card pattern demands more, it lands as additive MINOR.
 - No RTL scenario: the card has no `start`/`end` slots and its regions stack
   in the block direction, so there is no observable inline order to assert
   (the 002 S13 precedent does not apply); FR-012 still mandates logical

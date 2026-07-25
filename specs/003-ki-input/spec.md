@@ -29,20 +29,38 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 
 The API below abstracts the patterns of both reference designs so that
 neither theme lacks expressive power. Per the batch honesty rule, the
-Material 3 column is grounded in the M3 text-field inventory notes; MarsUI
-cells record the result of the 2026-07-08 verification against the MarsUI
-Figma file (full page sweep: Buttons, Avatars, Feature Icons, Icons, Media,
-Miscellaneous plus documentation/branding pages), on top of what the 001
-token extraction and the 002 button analysis established:
+Material 3 column is grounded in the M3 text-field inventory notes; the
+MarsUI cells were originally recorded from a 2026-07-08 "full page sweep"
+of the MarsUI Figma file (reported as: Buttons, Avatars, Feature Icons,
+Icons, Media, Miscellaneous plus documentation/branding pages), on top of
+what the 001 token extraction and the 002 button analysis established.
+
+> **Correction — 2026-07-25 (MarsUI evidence).** The 2026-07-08 sweep was a
+> false negative and every claim of MarsUI absence in this section is void.
+> The sweep used the Figma `get_metadata` tool called without a `nodeId`,
+> which returns only 10 of the MarsUI file's 54 pages and presents that
+> truncated listing as the complete page list; the page holding the field
+> masters was never in it. MarsUI does ship input masters: page **Input
+> fields `12046:706`** → **`Input_field` `12022:7132`** (9 states, including
+> dark and digit variants) and **`Input_cell` `8016:286`** (`Type` =
+> default | default_with_button | textarea × `Size` = xs / sm / md / lg /
+> xl), composed with **`Input_label` `12021:6068`** and **`Hint_label`
+> `12021:6331`**. The enumeration was redone with `use_figma`
+> (`figma.root.children`), the only reliable enumerator. Any reasoning that
+> rested on the absence claim is therefore unsound; the MarsUI column below
+> is superseded by a design extraction against the real masters (the 019+
+> `design-extraction.md` pattern). This note changes no functional
+> requirement, no Gherkin scenario and no shipped API — re-deriving the
+> affected design decisions is a founder call.
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-input |
 |---|---|---|---|
-| Container style | No text-field frame in MarsUI (full-file sweep verified 2026-07-08); the onmars enclosure is a token-layer decision grounded in the 001 vocabulary | Two enclosure styles: filled and outlined | NOT a prop: the enclosure is a per-theme decision resolved by `--ki-input-*` tokens (002 precedent: pure-appearance axes are token-layer decisions); the family includes per-logical-side border-width tokens so both enclosures — outlined's full border and filled's bottom-only active indicator — are expressible |
-| Anatomy | No text-field frame in MarsUI (verified 2026-07-08); the Icons page ships field-adjacent glyphs only (Search, Eye/Hide for password reveal) | Container, label, input text, leading icon, trailing icon, prefix/suffix, supporting text | Visible `label` attribute (the accessible-name source), the entry area, and `start`/`end` slots for icons and text affixes. Supporting text: OUT of v1, additive later |
-| Validation display | No MarsUI input frame and no field-level error-state artifact (verified 2026-07-08); tone ramps exist only at the token layer (001) | Error state surfaces through supporting text and container/label colors | Constraint validation participates natively (`required` plus the entry kind's own validity, e.g. a malformed email); the on-screen message line is deferred together with supporting text (post-v1 additive) |
-| Interaction states | State ramps (rest/hover/focus/disabled) exist in the onmars token vocabulary and were proven for 002; MarsUI has no input-specific state frames (verified 2026-07-08) | Enabled, hovered, focused, error, disabled | CSS states (hover, focus-visible, disabled, readonly, invalid) styled exclusively through tokens, never props |
-| Size | xs–xl metric scale exists in the onmars token vocabulary (001 extraction); MarsUI has no input frame, so no input-specific sizing to mirror (verified 2026-07-08) | No size axis in the text-field inventory | No `size` attribute in v1 (charter scope); height, padding and typography are per-theme component tokens. A size axis would be an additive MINOR if the MarsUI frames confirm one |
-| Value kinds | No MarsUI input frame (verified 2026-07-08), hence no per-kind field artifacts | Text fields are value-kind agnostic in the kit | `type`: text (default) / email / password / url / tel / search, preserving native entry semantics per kind. `number` excluded from v1 (spinner + locale complexity) |
+| Container style | MarsUI ships the enclosure as real masters: `Input_field` `12022:7132` and `Input_cell` `8016:286` (page Input fields `12046:706`). The original cell read "no text-field frame in MarsUI (full-file sweep verified 2026-07-08); the onmars enclosure is a token-layer decision grounded in the 001 vocabulary" — a false negative (see correction above) | Two enclosure styles: filled and outlined | NOT a prop: the enclosure is a per-theme decision resolved by `--ki-input-*` tokens (002 precedent: pure-appearance axes are token-layer decisions); the family includes per-logical-side border-width tokens so both enclosures — outlined's full border and filled's bottom-only active indicator — are expressible. **Premise refuted 2026-07-25**: the "nothing in MarsUI to mirror" half of this rationale is void; the 002 pure-appearance precedent still stands on its own, but whether onmars' enclosure resolves from tokens alone needs re-derivation against `Input_field`/`Input_cell` (founder call) |
+| Anatomy | MarsUI anatomy is defined by `Input_field` `12022:7132` composed with `Input_label` `12021:6068` and `Hint_label` `12021:6331`; `Input_cell` `8016:286` adds `Type` = default \| default_with_button \| textarea. The original cell read "no text-field frame in MarsUI (verified 2026-07-08); the Icons page ships field-adjacent glyphs only (Search, Eye/Hide for password reveal)" — a false negative (see correction above) | Container, label, input text, leading icon, trailing icon, prefix/suffix, supporting text | Visible `label` attribute (the accessible-name source), the entry area, and `start`/`end` slots for icons and text affixes. Supporting text: OUT of v1, additive later. **Premise refuted 2026-07-25**: MarsUI does ship a `Hint_label` master and a `default_with_button` trailing affix, so this anatomy can no longer cite MarsUI silence; the charter-scoped deferral stands as shipped, but the anatomy needs re-derivation against the masters (founder call) |
+| Validation display | `Input_field` `12022:7132` ships 9 states and composes `Hint_label` `12021:6331`; whether any state or the hint carries an error rendering is a question for the extraction, not a settled absence. The original cell read "no MarsUI input frame and no field-level error-state artifact (verified 2026-07-08); tone ramps exist only at the token layer (001)" — a false negative (see correction above) | Error state surfaces through supporting text and container/label colors | Constraint validation participates natively (`required` plus the entry kind's own validity, e.g. a malformed email); the on-screen message line is deferred together with supporting text (post-v1 additive). **Premise refuted 2026-07-25**: the deferral can no longer cite the absence of a MarsUI error artifact; it stands as shipped pending re-derivation against `Input_field`'s states and `Hint_label` (founder call) |
+| Interaction states | State ramps (rest/hover/focus/disabled) exist in the onmars token vocabulary and were proven for 002; MarsUI also ships input-specific state frames — `Input_field` `12022:7132` carries 9 states, including dark and digit variants. The original cell read "MarsUI has no input-specific state frames (verified 2026-07-08)" — a false negative (see correction above) | Enabled, hovered, focused, error, disabled | CSS states (hover, focus-visible, disabled, readonly, invalid) styled exclusively through tokens, never props. **Premise partly refuted 2026-07-25**: the states-not-props rule is independent of MarsUI and stands, but the state list itself was assembled without the masters and needs re-derivation against `Input_field`'s 9 states (founder call) |
+| Size | xs–xl metric scale exists in the onmars token vocabulary (001 extraction), and MarsUI ships an explicit input `Size` axis — `Input_cell` `8016:286` varies xs / sm / md / lg / xl. The original cell read "MarsUI has no input frame, so no input-specific sizing to mirror (verified 2026-07-08)" — a false negative (see correction above) | No size axis in the text-field inventory | No `size` attribute in v1 (charter scope); height, padding and typography are per-theme component tokens. **Premise refuted 2026-07-25**: this cell's own escape clause — "a size axis would be an additive MINOR if the MarsUI frames confirm one" — is now triggered, since `Input_cell` `8016:286` confirms xs–xl. v1 stands as shipped; whether to add the axis is a founder call and requires re-derivation against the master |
+| Value kinds | Per-kind field artifacts do exist: `Input_field` `12022:7132`'s 9 states include digit variants, and `Input_cell` `8016:286` distinguishes `Type` = default \| default_with_button \| textarea. The original cell read "no MarsUI input frame (verified 2026-07-08), hence no per-kind field artifacts" — a false negative (see correction above) | Text fields are value-kind agnostic in the kit | `type`: text (default) / email / password / url / tel / search, preserving native entry semantics per kind. `number` excluded from v1 (spinner + locale complexity). **Premise refuted 2026-07-25**: the shipped `type` list stands, but its coverage against MarsUI's digit variants (and the relation of `Type=textarea` to 004-ki-textarea) needs re-derivation against the masters (founder call) |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -513,13 +531,22 @@ Feature: Input
   the native entry control is guaranteed by construction; a slotted rich
   label could arrive later as an additive MINOR.
 - No `size`, `variant` or `tone` attributes in v1: the M3 text-field
-  inventory shows no emphasis or size axis, and MarsUI verification
-  2026-07-08 found no input frame at all (charter scope). Introducing a
-  size axis later would be additive MINOR.
+  inventory shows no emphasis or size axis, and the charter scopes v1
+  without them. The second half of this assumption as originally written —
+  that "MarsUI verification 2026-07-08 found no input frame at all" — is a
+  refuted premise (see the 2026-07-25 correction in Design-source
+  analysis): `Input_cell` `8016:286` ships an explicit xs / sm / md / lg /
+  xl `Size` axis. The v1 decision stands as shipped, but its MarsUI
+  justification is void and needs re-derivation; introducing a size axis
+  later would still be additive MINOR.
 - The enclosure style (M3 filled vs outlined) is a per-theme token
   decision; the material3 theme picks one M3 enclosure as its reference
-  rendering, and onmars decides its own from the token vocabulary alone —
-  MarsUI verification 2026-07-08 found no input frame to mirror. The
+  rendering, and onmars decides its own from the token vocabulary alone.
+  The reason originally given for that last clause — "MarsUI verification
+  2026-07-08 found no input frame to mirror" — is a refuted premise (see
+  the 2026-07-25 correction): `Input_field` `12022:7132` and `Input_cell`
+  `8016:286` are the MarsUI enclosure masters, and onmars should be derived
+  from them. The decision stands as shipped pending re-derivation; the
   component API is identical either way.
 - `type="number"` is excluded from v1 (spinner UI + locale/formatting
   complexity, per charter); it is a post-v1 additive candidate.
@@ -550,8 +577,19 @@ Feature: Input
   replaces the displayed value without emitting `input`/`change` (events
   report user actions only); form reset restores the attribute-declared
   default, discarding user edits and programmatic assignments alike.
-- MarsUI verification 2026-07-08 (full page sweep of the MarsUI Figma
-  file): no text-field/input frame exists — the file covers buttons,
-  avatars, icons, feature icons, media and miscellaneous artifacts only.
-  The API therefore stands on the M3 inventory plus the batch charter, and
-  the onmars theme styles ki-input from the 001 token vocabulary.
+- MarsUI evidence (corrected 2026-07-25). The assumption recorded here on
+  2026-07-08 — that a "full page sweep" of the MarsUI Figma file had
+  established that no text-field/input frame exists, the file covering
+  buttons, avatars, icons, feature icons, media and miscellaneous artifacts
+  only — is WITHDRAWN. It came from `get_metadata` called without a
+  `nodeId`, which lists only 10 of the file's 54 pages while presenting that
+  listing as complete; the page holding the field masters was not among
+  them. The masters are page Input fields `12046:706` → `Input_field`
+  `12022:7132` (9 states, incl. dark and digit variants) and `Input_cell`
+  `8016:286` (`Type` = default | default_with_button | textarea × `Size` =
+  xs / sm / md / lg / xl), plus `Input_label` `12021:6068` and `Hint_label`
+  `12021:6331`, enumerated with `use_figma` (`figma.root.children`). The v1
+  API as shipped stands on the M3 inventory plus the batch charter; every
+  design decision that cited MarsUI silence rests on a refuted premise and
+  is superseded by a design extraction against those masters — re-deriving
+  them is a founder call.
