@@ -328,15 +328,51 @@ export function controlBoundaryCells(declarations) {
 // The assertion a bar-shaped readout actually needs: its filled part must be
 // readable against its unfilled part, because the boundary between them IS the
 // value. Held to 1.4.11's 3:1, like any other non-text state indicator.
-const PROGRESS_CONTRAST_PAIRS = [
-  { indicator: '--ki-progress-indicator-color', track: '--ki-progress-track-color' },
-];
+//
+// DERIVED, not listed. A hardcoded per-component table is precisely what this
+// file was rescued from twice (see componentPairs above: "was per-component and
+// silently ignored every new matrix"). Any component publishing BOTH an
+// indicator and a track is a bar-shaped readout and is swept automatically.
+// Today that derives to --ki-progress alone, so the measured set is unchanged —
+// but a renamed token becomes a named canary failure instead of an obscure
+// `Missing token` throw, and the next slider or meter arrives already covered.
+const READOUT_ROLE = /-(indicator|track)(?:-color)?$/u;
 
-function sweepProgressIndicators(theme, scheme, declarations) {
+export function ratioReadoutPairs(declarations) {
+  const stems = new Map();
+
+  for (const name of declarations.keys()) {
+    const role = name.match(READOUT_ROLE);
+    const component = name.match(/^--ki-([a-z][a-z0-9]*)-/u);
+    if (role === null || component === null || SEMANTIC_LAYERS.has(component[1])) {
+      continue;
+    }
+    const stem = name.slice(0, name.length - role[0].length);
+    const entry = stems.get(stem) ?? { stem };
+    entry[role[1]] = name;
+    stems.set(stem, entry);
+  }
+
+  return [...stems.values()].filter(
+    (entry) => entry.indicator !== undefined && entry.track !== undefined,
+  );
+}
+
+function sweepRatioReadouts(theme, scheme, declarations) {
   const failures = [];
   const page = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+  const pairs = ratioReadoutPairs(declarations);
 
-  for (const pair of PROGRESS_CONTRAST_PAIRS) {
+  // The canary: ki-progress is the only bar-shaped readout in the inventory and
+  // is always present, so a zero-length derivation means the naming convention
+  // drifted, not that the library stopped having one.
+  if (pairs.length === 0) {
+    failures.push(
+      `${theme}/${scheme}: no indicator/track readout pairs derived — the token naming convention drifted`,
+    );
+  }
+
+  for (const pair of pairs) {
     const rawTrack = parseColor(resolveCustomProperty(pair.track, declarations));
     const rawIndicator = parseColor(resolveCustomProperty(pair.indicator, declarations));
     const track = rawTrack.a < 1 ? compositeOver(rawTrack, page) : rawTrack;
@@ -392,7 +428,7 @@ function evaluateStylesheet(theme, stylesheet) {
   for (const [scheme, declarations] of Object.entries(schemes)) {
     const swept = componentPairs(declarations);
     failures.push(...sweepControlBoundaries(theme, scheme, declarations));
-    failures.push(...sweepProgressIndicators(theme, scheme, declarations));
+    failures.push(...sweepRatioReadouts(theme, scheme, declarations));
 
     if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
       failures.push(

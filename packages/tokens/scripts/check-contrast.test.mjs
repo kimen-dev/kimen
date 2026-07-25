@@ -7,6 +7,7 @@ import {
   contrastRatio,
   controlBoundaryCells,
   parseColor,
+  ratioReadoutPairs,
   relativeLuminance,
   resolveContrastPairs,
 } from './check-contrast.mjs';
@@ -126,6 +127,27 @@ test('control-boundary sweep groups an empty-box control by cell and needs an ed
     ['--ki-input-rest', ['--ki-input-rest-bg', '--ki-input-rest-border']],
     ['--ki-switch-unchecked-rest', ['--ki-switch-unchecked-rest-track']],
   ]);
+});
+
+test('readout pairs are derived from indicator/track siblings, not listed', () => {
+  const declarations = new Map([
+    // a bar-shaped readout: both members present → derived
+    ['--ki-progress-indicator-color', '#845abe'],
+    ['--ki-progress-track-color', '#ececf0'],
+    // a track with no indicator is not a readout — the switch is a control,
+    // measured by the boundary sweep instead
+    ['--ki-switch-unchecked-rest-track', '#ececf0'],
+    // an indicator with no track has no unfilled part to be read against
+    ['--ki-indicator-dot-color', '#00000030'],
+    // semantic layer, not a component
+    ['--ki-surface-track', '#eeeeee'],
+    ['--ki-surface-indicator', '#111111'],
+  ]);
+
+  assert.deepEqual(
+    ratioReadoutPairs(declarations).map((pair) => [pair.stem, pair.indicator, pair.track]),
+    [['--ki-progress', '--ki-progress-indicator-color', '--ki-progress-track-color']],
+  );
 });
 
 test('a component whose name extends an empty-box name is not pooled into it', () => {
