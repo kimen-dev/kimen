@@ -4,9 +4,9 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { defineCustomElement } from '../dist/components/ki-avatar.js';
+import { expectAccessible } from './axe';
 
 type KiAvatarElement = HTMLElement & {
   label?: string;
@@ -202,8 +202,7 @@ describe('ki-avatar', () => {
     expect(el.getAttribute('aria-hidden')).toBeNull();
     expect(el.getAttribute('tabindex')).toBeNull();
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S9 keeps an unlabeled avatar out of the accessibility tree beside the visible name', async () => {
@@ -220,8 +219,7 @@ describe('ki-avatar', () => {
     expect(el.getAttribute('aria-label')).toBeNull();
     expect(row.textContent).toContain('Ana García');
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S11 restyles shape, colors and metrics through material3 tokens alone', async () => {
@@ -246,7 +244,6 @@ describe('ki-avatar', () => {
     );
     expect(box.getBoundingClientRect().width).toBe(readTokenLength('--ki-avatar-md-size'));
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

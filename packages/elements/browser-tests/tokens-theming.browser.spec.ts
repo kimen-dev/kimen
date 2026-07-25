@@ -1,5 +1,4 @@
 // @spec:001-tokens-theming
-import axe from 'axe-core';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import onmarsCss from '@kimen/tokens/css?raw';
@@ -8,6 +7,7 @@ import { defineCustomElement as defineKiAlert } from '../dist/components/ki-aler
 import { defineCustomElement as defineKiBadge } from '../dist/components/ki-badge.js';
 import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 import { defineCustomElement as defineKiCard } from '../dist/components/ki-card.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'kimen-tokens-test-style';
 const MATERIAL3_STYLE_ID = 'kimen-material3-tokens-test-style';
@@ -183,7 +183,7 @@ describe('token-driven accessibility of a component tree', () => {
     injectStylesheet(onmarsCss);
     const main = await mountComponentTree();
 
-    expect((await axe.run(main)).violations).toEqual([]);
+    await expectAccessible(main);
     main.remove();
   });
 
@@ -194,7 +194,7 @@ describe('token-driven accessibility of a component tree', () => {
     const main = await mountComponentTree();
 
     expectTokenColor('--ki-color-brand-500', '#6750a4');
-    expect((await axe.run(main)).violations).toEqual([]);
+    await expectAccessible(main);
     main.remove();
   });
 });

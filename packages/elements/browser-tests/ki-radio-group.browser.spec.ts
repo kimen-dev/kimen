@@ -4,11 +4,11 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineRadio } from '../dist/components/ki-radio.js';
 import { defineCustomElement as defineRadioGroup } from '../dist/components/ki-radio-group.js';
+import { expectAccessible } from './axe';
 
 type KiRadioGroupElement = HTMLElement & {
   disabled: boolean;
@@ -242,8 +242,7 @@ describe('ki-radio-group in a real browser', () => {
     cleanup();
     const el = await mount();
     el.querySelectorAll('ki-radio')[2]?.setAttribute('disabled', '');
-    const results = await axe.run(el);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(el);
   });
 
   it('S5 Tab reaches the group as a single stop on the selected option with visible focus', async () => {

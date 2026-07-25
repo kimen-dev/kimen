@@ -1,4 +1,3 @@
-import axe from 'axe-core';
 import { page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
@@ -9,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-button.js';
+import { expectAccessible } from './axe';
 
 type KiButtonElement = HTMLElement & {
   disabled: boolean;
@@ -210,8 +210,7 @@ describe('ki-button in a real browser', () => {
     // No axe violations with the forwarded description present.
     el.setAttribute('aria-description', 'Sends immediately');
     await settle();
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S2 observes no activation from a real click on a disabled button', async () => {
@@ -297,8 +296,7 @@ describe('ki-button in a real browser', () => {
       }
     }
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S13 keeps start and end slots in logical order under RTL', async () => {

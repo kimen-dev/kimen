@@ -1,9 +1,9 @@
 // @spec:025-ki-video
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-video.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-video-dark-tokens';
 
@@ -86,7 +86,6 @@ describe('ki-video under the dark scheme', () => {
     expect(readTokenColor('--ki-video-play-bg')).not.toBe(lightPlayBg);
     expect(readTokenColor('--ki-video-scrim-color')).not.toBe(lightScrim);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

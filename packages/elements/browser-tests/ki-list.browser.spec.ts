@@ -1,5 +1,4 @@
 // @spec:016-ki-list
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 
@@ -11,6 +10,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '../dist/components/ki-list-item.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-list-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-list-browser-material3-token-style';
@@ -235,8 +235,7 @@ describe('ki-list in a real browser', () => {
       </ki-list>
     `);
 
-    const results = await axe.run(document.querySelector('main') ?? document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.querySelector('main') ?? document.body);
   });
 
   it('S6 exposes one list that OWNS exactly three named list items in the accessibility tree', async () => {

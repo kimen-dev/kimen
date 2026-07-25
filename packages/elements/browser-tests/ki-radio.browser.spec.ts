@@ -1,4 +1,3 @@
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:007-ki-radio-group
@@ -6,6 +5,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // ki-radio-group composite suite (research D9).
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement } from '../dist/components/ki-radio.js';
+import { expectAccessible } from './axe';
 
 type KiRadioElement = HTMLElement & { disabled: boolean; value: string };
 
@@ -64,8 +64,7 @@ describe('ki-radio in a real browser', () => {
   it('has zero axe violations (Art. V floor)', async () => {
     document.body.replaceChildren();
     const el = await mount();
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
     el.remove();
   });
 });

@@ -1,6 +1,5 @@
 import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 
@@ -9,6 +8,7 @@ import { page, userEvent } from 'vitest/browser';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import { defineCustomElement } from '../dist/components/ki-switch.js';
+import { expectAccessible } from './axe';
 
 type KiSwitchElement = HTMLElement & {
   checked: boolean;
@@ -309,8 +309,7 @@ describe('ki-switch in a real browser', () => {
       }
     }
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S10 submitted FormData contains newsletter=on when the switch is on', async () => {

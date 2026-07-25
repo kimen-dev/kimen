@@ -1,6 +1,5 @@
 import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 
@@ -10,6 +9,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiTab } from '../dist/components/ki-tab.js';
 import { defineCustomElement as defineKiTabPanel } from '../dist/components/ki-tab-panel.js';
 import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.js';
+import { expectAccessible } from './axe';
 
 type KiTabsElement = HTMLElement & { value: string };
 const browserCommands = commands as unknown as {
@@ -266,11 +266,11 @@ describe('ki-tabs assistive technology outcomes in a real browser', () => {
   it('S7 S8 has zero axe violations across selected and disabled states', async () => {
     const tabs = await mount(fixture());
 
-    expect((await axe.run(main())).violations).toEqual([]);
+    await expectAccessible(main());
 
     await userEvent.click(tab(tabs, 'notifications'));
 
-    expect((await axe.run(main())).violations).toEqual([]);
+    await expectAccessible(main());
   });
 });
 

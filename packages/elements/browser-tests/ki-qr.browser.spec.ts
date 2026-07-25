@@ -10,12 +10,12 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // that shares no code with the vendored encoder). Byte-exactness is asserted
 // through the decoder's raw bytes, not its lossy text guess.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import jsQR from 'jsqr';
 import type { ECIChunk } from 'jsqr/dist/decoder/decodeData';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-qr.js';
+import { expectAccessible } from './axe';
 
 type KiQrElement = HTMLElement & { value?: string; label?: string };
 
@@ -293,8 +293,7 @@ describe('ki-qr', () => {
     expect(el.getAttribute('role')).toBeNull();
 
     // The page around it keeps rendering and auditing clean.
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S4 renders the default appearance under an unrecognized shape attribute and still decodes', async () => {
@@ -358,8 +357,7 @@ describe('ki-qr', () => {
     const snapshot = await browserCommands.ariaSnapshot('#s6-qr');
     expect(snapshot.trim()).toBe('- img "Open onmars.dev on your phone"');
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S7 names the image with the encoded value when no label exists', async () => {
@@ -408,8 +406,7 @@ describe('ki-qr', () => {
     );
 
     expect(await decodeRendered(el)).toBe('https://onmars.dev');
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S9 rounds the modules through the shape tokens alone and keeps decoding', async () => {
@@ -467,7 +464,6 @@ describe('ki-qr', () => {
     expect(el.shadowRoot?.querySelector('svg')).toBeNull();
     expect(el.getAttribute('aria-hidden')).toBe('true');
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

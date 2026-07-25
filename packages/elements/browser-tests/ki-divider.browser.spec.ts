@@ -4,10 +4,10 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-divider.js';
+import { expectAccessible } from './axe';
 
 type KiDividerElement = HTMLElement & { orientation: string };
 
@@ -201,8 +201,7 @@ describe('ki-divider', () => {
     row.style.blockSize = '48px';
     landmark().appendChild(row);
     await mount(row, { orientation: 'vertical' });
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S6 restyles thickness, color and spacing through material3 tokens alone', async () => {
@@ -232,7 +231,6 @@ describe('ki-divider', () => {
     expect(el.getBoundingClientRect().height).toBe(readTokenLength('--ki-divider-thickness'));
     expect(el.getBoundingClientRect().height).not.toBe(onmarsCross);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

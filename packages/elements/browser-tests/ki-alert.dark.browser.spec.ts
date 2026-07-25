@@ -1,10 +1,10 @@
 // @spec:011-ki-alert
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement } from '../dist/components/ki-alert.js';
+import { expectAccessible } from './axe';
 
 const browserCommands = commands as unknown as {
   emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
@@ -87,7 +87,6 @@ describe('ki-alert under the dark scheme', () => {
         readTokenColor(`--ki-alert-${tone}-bg`),
       );
     }
-    const results = await axe.run(document.querySelector('main') ?? document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.querySelector('main') ?? document.body);
   });
 });

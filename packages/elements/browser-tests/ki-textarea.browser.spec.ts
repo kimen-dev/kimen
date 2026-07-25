@@ -4,10 +4,10 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-textarea.js';
+import { expectAccessible } from './axe';
 
 type KiTextareaElement = HTMLElement & {
   autocomplete?: string;
@@ -345,8 +345,7 @@ describe('ki-textarea in a real browser', () => {
     await mount({ readonly: true, value: 'No refunds after 30 days' }, main);
     await mount({ required: true, value: '' }, main);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S12 submits its text with the form and preserves multiline FormData', async () => {

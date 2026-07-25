@@ -4,11 +4,11 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III). mock-doc has no showModal,
 // top layer, inertness, Escape close requests, or ::backdrop.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
+import { expectAccessible } from './axe';
 
 type CloseReason = 'method' | 'escape' | 'backdrop';
 type KiCloseEvent = CustomEvent<{ reason: CloseReason }>;
@@ -210,12 +210,10 @@ describe('ki-dialog in a real browser', () => {
     document.body.append(main);
     const el = await mountDialog({}, main);
 
-    let results = await axe.run(main);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main);
 
     await openDialog(el);
-    results = await axe.run(main);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main);
   });
 
   it('S1 opening the dialog presents it above an inert page', async () => {
@@ -503,8 +501,7 @@ describe('ki-dialog in a real browser', () => {
 
     await expect.element(page.getByRole('dialog', { name: 'Delete account?' })).toBeInTheDocument();
     expect(internalDialog(el).matches(':modal')).toBe(true);
-    const results = await axe.run(main);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main);
   });
 
   it('S10 hides background links from assistive technology while open and restores them after close', async () => {

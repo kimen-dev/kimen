@@ -1,5 +1,4 @@
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:014-ki-tabs
@@ -10,6 +9,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { defineCustomElement } from '../dist/components/ki-tab-panel.js';
 import { defineCustomElement as defineKiTab } from '../dist/components/ki-tab.js';
 import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-tab-panel-browser-token-style';
 
@@ -73,7 +73,7 @@ describe('ki-tab-panel anatomy in a real browser', () => {
     await new Promise((resolve) => requestAnimationFrame(resolve));
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
-    expect((await axe.run(main)).violations).toEqual([]);
+    await expectAccessible(main);
     main.remove();
   });
 });

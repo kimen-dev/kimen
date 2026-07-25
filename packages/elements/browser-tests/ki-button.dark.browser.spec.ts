@@ -2,13 +2,13 @@
 // Dark-scheme axe pass (clean-context review, round 1: the light-only axe
 // run could not see dark contrast failures; the extended contrast gate is
 // the deterministic arithmetic, this is the rendered-tree floor on top).
-import axe from 'axe-core';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, it } from 'vitest';
 import { commands } from 'vitest/browser';
 
 import material3Css from '@kimen/tokens/css/material3?raw';
 import onmarsCss from '@kimen/tokens/css?raw';
 import { defineCustomElement } from '../dist/components/ki-button.js';
+import { expectAccessible } from './axe';
 
 const defineKiButtonElement: () => void = defineCustomElement;
 const browserCommands = commands as unknown as {
@@ -55,8 +55,7 @@ describe('ki-button under the dark scheme', () => {
 
     await mountMatrix();
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S9 has zero axe violations across the matrix in material3 dark', async () => {
@@ -66,8 +65,7 @@ describe('ki-button under the dark scheme', () => {
 
     await mountMatrix();
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
     document.documentElement.removeAttribute('data-ki-theme');
   });
 });
