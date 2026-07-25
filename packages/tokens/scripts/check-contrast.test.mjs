@@ -5,6 +5,7 @@ import {
   componentPairs,
   compositeOver,
   contrastRatio,
+  controlBoundaryCells,
   parseColor,
   relativeLuminance,
   resolveContrastPairs,
@@ -89,4 +90,32 @@ test('non-text control cells (radio ring/dot) require 3:1, text cells 4.5:1', ()
 
   assert.equal(byComponent.radio, 3);
   assert.equal(byComponent.input, 4.5);
+});
+
+test('control-boundary sweep groups an empty-box control by cell and needs an edge', () => {
+  const declarations = new Map([
+    // a field cell: fill + boundary group under one stem
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-border', 'rgba(0, 0, 0, 0.08)'],
+    // a track IS the control's own box, so it qualifies without a border
+    ['--ki-progress-track-color', '#ececf0'],
+    // a floating surface with no edge of its own → elevation identifies it,
+    // not a boundary; must not be swept here
+    ['--ki-select-listbox-bg', '#f9f9fa'],
+    // disabled → exempt
+    ['--ki-input-disabled-bg', '#fafafa'],
+    ['--ki-input-disabled-border', 'rgba(0, 0, 0, 0.08)'],
+    // a label-bearing component is out of scope entirely
+    ['--ki-button-ghost-neutral-rest-bg', 'rgba(0, 0, 0, 0)'],
+    ['--ki-button-ghost-neutral-rest-border', 'rgba(0, 0, 0, 0)'],
+  ]);
+
+  const cells = controlBoundaryCells(declarations)
+    .map((cell) => [cell.stem, [...cell.members].sort()])
+    .sort();
+
+  assert.deepEqual(cells, [
+    ['--ki-input-rest', ['--ki-input-rest-bg', '--ki-input-rest-border']],
+    ['--ki-progress', ['--ki-progress-track-color']],
+  ]);
 });

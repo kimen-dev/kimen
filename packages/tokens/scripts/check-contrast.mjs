@@ -229,6 +229,96 @@ export function componentPairs(declarations) {
   return pairs;
 }
 
+// WCAG 1.4.11 — the control-boundary sweep.
+//
+// A control that can be EMPTY carries no label inside its own box, so the box
+// IS the only thing that identifies the component: an unfilled text field with
+// no visible edge is not perceivable as a text field. For those components the
+// strongest of {fill, boundary} must clear 3:1 against every page surface the
+// control can sit on.
+//
+// Components whose identity is carried by their own label — button, badge,
+// tab, alert, tooltip — are deliberately out of scope. A ghost button is
+// *supposed* to be invisible until hover; its `-fg`/`-bg` pair is already
+// swept at 4.5:1 by componentPairs() above.
+const EMPTY_BOX_COMPONENTS = new Set([
+  'checkbox',
+  'input',
+  'progress',
+  'radio',
+  'select',
+  'switch',
+  'textarea',
+]);
+// Literal transcription of the Figma frames assumed a single #ffffff canvas,
+// which is how --ki-input-rest-border shipped at 1.19:1 against a fill
+// identical to the page. A control must survive the surfaces it is actually
+// dropped onto, not the one it was drawn on.
+const CONTROL_PAGE_SURFACES = ['--ki-surface-s0', '--ki-surface-s1', '--ki-surface-s2'];
+// A cell qualifies only if it declares an edge of its own — a `-border` or a
+// `-track`. A `-bg` alone is a floating surface (ki-select's listbox), which is
+// identified by elevation, not by a boundary, and is measured elsewhere.
+const BOUNDARY_ROLE = /-(?:border|track)(?:-color)?$/u;
+const CELL_ROLE = /-(?:bg|border|track)(?:-color)?$/u;
+
+export function controlBoundaryCells(declarations) {
+  const cells = new Map();
+
+  for (const name of declarations.keys()) {
+    const component = name.match(/^--ki-([a-z][a-z0-9]*)-/u);
+    if (component === null || !EMPTY_BOX_COMPONENTS.has(component[1])) {
+      continue;
+    }
+    // Disabled cells are exempt (WCAG 1.4.3 and 1.4.11 both exclude inactive
+    // controls), exactly as the text sweep exempts them.
+    if (/-disabled/u.test(name)) {
+      continue;
+    }
+    const role = name.match(CELL_ROLE);
+    if (role === null) {
+      continue;
+    }
+    const stem = name.slice(0, name.length - role[0].length);
+    const cell = cells.get(stem) ?? { stem, members: [], hasEdge: false };
+    cell.members.push(name);
+    cell.hasEdge ||= BOUNDARY_ROLE.test(name);
+    cells.set(stem, cell);
+  }
+
+  return [...cells.values()].filter((cell) => cell.hasEdge);
+}
+
+function sweepControlBoundaries(theme, scheme, declarations) {
+  const failures = [];
+
+  for (const surfaceName of CONTROL_PAGE_SURFACES) {
+    const page = parseColor(resolveCustomProperty(surfaceName, declarations));
+
+    for (const cell of controlBoundaryCells(declarations)) {
+      let best = 0;
+      let via = null;
+
+      for (const member of cell.members) {
+        const raw = parseColor(resolveCustomProperty(member, declarations));
+        const opaque = raw.a < 1 ? compositeOver(raw, page) : raw;
+        const ratio = contrastRatio(opaque, page);
+        if (ratio > best) {
+          best = ratio;
+          via = member;
+        }
+      }
+
+      if (best < NON_TEXT_MIN_RATIO) {
+        failures.push(
+          `${theme}/${scheme} ${cell.stem} on ${surfaceName}: ${best} (min ${NON_TEXT_MIN_RATIO}, strongest edge ${via})`,
+        );
+      }
+    }
+  }
+
+  return failures;
+}
+
 function evaluateStylesheet(theme, stylesheet) {
   const css = readFileSync(stylesheet, 'utf8');
   const schemes = collectSchemeDeclarations(css);
@@ -236,6 +326,7 @@ function evaluateStylesheet(theme, stylesheet) {
 
   for (const [scheme, declarations] of Object.entries(schemes)) {
     const swept = componentPairs(declarations);
+    failures.push(...sweepControlBoundaries(theme, scheme, declarations));
 
     if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
       failures.push(
