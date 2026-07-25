@@ -18,7 +18,7 @@
         },
         "hover": {
           "track": {
-            "$value": "{ki.surface.primary-high-em-hover}",
+            "$value": "{ki.surface.primary-med-em-hover}",
             "$description": "Material 3 color used by the switch component for checked hover track."
           },
           "thumb": {
@@ -32,7 +32,7 @@
         },
         "active": {
           "track": {
-            "$value": "{ki.surface.primary-high-em}",
+            "$value": "{ki.surface.primary-med-em-hover}",
             "$description": "Material 3 color used by the switch component for checked active track."
           },
           "thumb": {
@@ -80,7 +80,7 @@
             "$description": "Material 3 color used by the switch component for unchecked rest thumb."
           },
           "border": {
-            "$value": "{ki.outline.high-em}",
+            "$value": "{ki.outline.control}",
             "$description": "Material 3 color used by the switch component for unchecked rest border."
           }
         },
@@ -94,7 +94,7 @@
             "$description": "Material 3 color used by the switch component for unchecked hover thumb."
           },
           "border": {
-            "$value": "{ki.outline.high-em}",
+            "$value": "{ki.outline.control-hover}",
             "$description": "Material 3 color used by the switch component for unchecked hover border."
           }
         },
@@ -108,7 +108,7 @@
             "$description": "Material 3 color used by the switch component for unchecked active thumb."
           },
           "border": {
-            "$value": "{ki.outline.high-em}",
+            "$value": "{ki.outline.control-hover}",
             "$description": "Material 3 color used by the switch component for unchecked active border."
           }
         }

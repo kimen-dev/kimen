@@ -145,6 +145,9 @@
       "primary-med-em": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.200}"
       },
+      "primary-med-em-hover": {
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.100}"
+      },
       "primary-low-em": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.700}"
       },
@@ -361,6 +364,14 @@
       "strong": {
         "$value": "{ki.foundation.material3.palette.neutral-variant.60}",
         "$description": "M3 md.sys.color.outline dark (neutral-variant tone 60)."
+      },
+      "control": {
+        "$value": "{ki.foundation.material3.palette.neutral-variant.60}",
+        "$description": "M3 md.sys.color.outline dark (neutral-variant tone 60)."
+      },
+      "control-hover": {
+        "$value": "{ki.foundation.material3.palette.neutral-variant.80}",
+        "$description": "M3 md.sys.color.outline-variant dark — the hover step, brighter on a dark canvas."
       },
       "med-em": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.med-em}"

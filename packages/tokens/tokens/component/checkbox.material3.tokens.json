@@ -8,7 +8,7 @@
       "checked": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}",
+            "$value": "{ki.surface.primary-med-em}",
             "$description": "Material 3 color used by the checkbox component for checked rest background."
           },
           "fg": {
@@ -22,7 +22,7 @@
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em-hover}",
+            "$value": "{ki.surface.primary-med-em-hover}",
             "$description": "Material 3 color used by the checkbox component for checked hover background."
           },
           "fg": {
@@ -36,7 +36,7 @@
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}",
+            "$value": "{ki.surface.primary-med-em}",
             "$description": "Material 3 color used by the checkbox component for checked active background."
           },
           "fg": {
@@ -66,7 +66,7 @@
       "indeterminate": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}",
+            "$value": "{ki.surface.primary-med-em}",
             "$description": "Material 3 color used by the checkbox component for indeterminate rest background."
           },
           "fg": {
@@ -80,7 +80,7 @@
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em-hover}",
+            "$value": "{ki.surface.primary-med-em-hover}",
             "$description": "Material 3 color used by the checkbox component for indeterminate hover background."
           },
           "fg": {
@@ -94,7 +94,7 @@
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}",
+            "$value": "{ki.surface.primary-med-em}",
             "$description": "Material 3 color used by the checkbox component for indeterminate active background."
           },
           "fg": {

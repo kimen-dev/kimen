@@ -48,6 +48,10 @@
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.500}",
         "$description": "M3 md.sys.color.primary (primary tone 40)."
       },
+      "primary-med-em-hover": {
+        "$value": "{ki.foundation.migrated.themes-material3.color.brand.600}",
+        "$description": "Hover of M3 md.sys.color.primary — one tone step darker on a light canvas."
+      },
       "primary-low-em": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.100}",
         "$description": "M3 md.sys.color.primary-container (primary tone 90)."
@@ -237,6 +241,14 @@
       "strong": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.low-em}",
         "$description": "Material 3 semantic color for outline strong."
+      },
+      "control": {
+        "$value": "{ki.foundation.material3.palette.neutral-variant.50}",
+        "$description": "M3 md.sys.color.outline — Material 3's own role for the boundary of a control that can be empty. Must be pinned here: without it material3 would inherit the onmars black-48 wash."
+      },
+      "control-hover": {
+        "$value": "{ki.foundation.material3.palette.neutral-variant.30}",
+        "$description": "M3 md.sys.color.on-surface-variant — the hover step of the control boundary."
       },
       "med-em": {
         "$value": "{ki.foundation.migrated.themes-material3.color.brand.base-em}",

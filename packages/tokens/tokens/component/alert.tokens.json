@@ -151,7 +151,7 @@
         "shadow": {
           "$value": "{ki.focus.primary}",
           "$type": "shadow",
-          "$description": "shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+          "$description": "shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
         }
       }
     }

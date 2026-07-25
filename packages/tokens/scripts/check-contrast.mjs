@@ -9,7 +9,14 @@ const NON_TEXT_MIN_RATIO = 3;
 // --ki-text-* tokens, checked separately via CONTRAST_PAIRS. Holding these to
 // 4.5:1 is wrong; the original per-component checker set radio's dot cells to
 // 3:1 for exactly this reason (Codex review of 007).
-const NON_TEXT_COMPONENTS = new Set(['radio']);
+//
+// checkbox joins for the same reason, and it was always misclassified: its
+// `-fg` is consumed by exactly one rule — `[part="control"] { color }` — which
+// the `.mark` SVG inherits (`fill: none`, stroked path). It is a graphical
+// object under WCAG 1.4.11, never text under 1.4.3. It passed at 4.5:1 only
+// because the fill happened to be dark enough, and that accident is what hid
+// the checked fill sitting at 2.35:1 against a dark page.
+const NON_TEXT_COMPONENTS = new Set(['checkbox', 'radio']);
 const THEMES = [
   { name: 'onmars', stylesheet: new URL('../dist/css/tokens.css', import.meta.url) },
   { name: 'material3', stylesheet: new URL('../dist/css/tokens.material3.css', import.meta.url) },
@@ -259,7 +266,11 @@ const CONTROL_PAGE_SURFACES = ['--ki-surface-s0', '--ki-surface-s1', '--ki-surfa
 // `-track`. A `-bg` alone is a floating surface (ki-select's listbox), which is
 // identified by elevation, not by a boundary, and is measured elsewhere.
 const BOUNDARY_ROLE = /-(?:border|track)(?:-color)?$/u;
-const CELL_ROLE = /-(?:bg|border|track)(?:-color)?$/u;
+// A cell is the WHOLE control, so its own indicator counts: a progress bar is
+// identified by its filled `-indicator`, not by the rail behind it, and a
+// switch by its `-thumb` as much as its track. Measuring only fill and border
+// would demand a 3:1 rail that no design system draws.
+const CELL_ROLE = /-(?:bg|border|track|indicator|thumb|dot|bar)(?:-color)?$/u;
 
 export function controlBoundaryCells(declarations) {
   const cells = new Map();

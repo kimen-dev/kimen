@@ -95,7 +95,7 @@
           "$description": "Material 3 color used by the input component for rest foreground."
         },
         "border": {
-          "$value": "{ki.outline.high-em}",
+          "$value": "{ki.outline.control}",
           "$description": "Material 3 color used by the input component for rest border."
         },
         "label-fg": {
@@ -117,7 +117,7 @@
           "$description": "Material 3 color used by the input component for hover foreground."
         },
         "border": {
-          "$value": "{ki.outline.high-em}",
+          "$value": "{ki.outline.control-hover}",
           "$description": "Material 3 color used by the input component for hover border."
         },
         "label-fg": {
@@ -183,7 +183,7 @@
           "$description": "Material 3 color used by the input component for readonly foreground."
         },
         "border": {
-          "$value": "{ki.outline.med-em}",
+          "$value": "{ki.outline.control}",
           "$description": "Material 3 color used by the input component for readonly border."
         },
         "label-fg": {

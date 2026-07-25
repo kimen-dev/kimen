@@ -120,6 +120,10 @@
         "$value": "{ki.color.brand.500}",
         "$description": "semantic color for surface primary med em."
       },
+      "primary-med-em-hover": {
+        "$value": "{ki.color.brand.600}",
+        "$description": "Hover of surface primary-med-em. Intensifies in the direction the scheme reads as 'more': darker on a light canvas (600), brighter on a dark one (400). Selection controls whose resting fill is the MarsUI default brand surface (brand-500) need a hover that is a real delta in BOTH schemes — primary-high-em collapses onto primary-med-em in dark."
+      },
       "primary-low-em": {
         "$value": "{ki.color.brand.100}",
         "$description": "semantic color for surface primary low em."
@@ -489,6 +493,14 @@
       "strong": {
         "$value": "{ki.color.black.48}",
         "$description": "semantic color for outline strong."
+      },
+      "control": {
+        "$value": "{ki.color.black.48}",
+        "$description": "The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as a bevel over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation."
+      },
+      "control-hover": {
+        "$value": "{ki.color.black.56}",
+        "$description": "Hover of outline-control. One step stronger, so hover stays a measurable delta on fields whose fill does not change on hover."
       },
       "med-em": {
         "$value": "{ki.color.black.8}",

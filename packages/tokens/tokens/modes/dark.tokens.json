@@ -85,6 +85,9 @@
       "primary-med-em": {
         "$value": "{ki.color.brand.500}"
       },
+      "primary-med-em-hover": {
+        "$value": "{ki.color.brand.400}"
+      },
       "primary-low-em": {
         "$value": "{ki.color.brand.900}"
       },
@@ -300,6 +303,12 @@
       },
       "strong": {
         "$value": "{ki.color.white.48}"
+      },
+      "control": {
+        "$value": "{ki.color.white.48}"
+      },
+      "control-hover": {
+        "$value": "{ki.color.white.56}"
       },
       "med-em": {
         "$value": "{ki.color.white.8}"

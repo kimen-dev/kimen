@@ -77,6 +77,8 @@
     --ki-text-none: var(--ki-color-transparent-black); /** semantic color for text none. */
     --ki-outline-high-em: var(--ki-color-white-12); /** semantic color for outline high em. */
     --ki-outline-strong: var(--ki-color-white-48); /** semantic color for outline strong. */
+    --ki-outline-control: var(--ki-color-white-48); /** The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as a bevel over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation. */
+    --ki-outline-control-hover: var(--ki-color-white-56); /** Hover of outline-control. One step stronger, so hover stays a measurable delta on fields whose fill does not change on hover. */
     --ki-outline-med-em: var(--ki-color-white-8); /** semantic color for outline med em. */
     --ki-outline-low-em: var(--ki-color-white-5); /** semantic color for outline low em. */
     --ki-outline-base-em: var(--ki-color-white-3); /** semantic color for outline base em. */
@@ -168,6 +170,7 @@
     --ki-surface-special-light-s4-dark-s5: var(--ki-surface-s5); /** semantic color for surface special light s4 dark s5. */
     --ki-surface-primary-high-em: var(--ki-color-brand-500); /** semantic color for surface primary high em. */
     --ki-surface-primary-med-em: var(--ki-color-brand-500); /** semantic color for surface primary med em. */
+    --ki-surface-primary-med-em-hover: var(--ki-color-brand-400); /** Hover of surface primary-med-em. Intensifies in the direction the scheme reads as 'more': darker on a light canvas (600), brighter on a dark one (400). Selection controls whose resting fill is the MarsUI default brand surface (brand-500) need a hover that is a real delta in BOTH schemes — primary-high-em collapses onto primary-med-em in dark. */
     --ki-surface-primary-low-em: var(--ki-color-brand-900); /** semantic color for surface primary low em. */
     --ki-surface-primary-base-em: var(--ki-color-brand-950); /** semantic color for surface primary base em. */
     --ki-surface-primary-low-em-alpha: var(--ki-color-brand-500-alpha-5); /** semantic color for surface primary low em alpha. */
@@ -265,6 +268,8 @@
   --ki-text-none: var(--ki-color-transparent-black); /** semantic color for text none. */
   --ki-outline-high-em: var(--ki-color-white-12); /** semantic color for outline high em. */
   --ki-outline-strong: var(--ki-color-white-48); /** semantic color for outline strong. */
+  --ki-outline-control: var(--ki-color-white-48); /** The boundary of a control that can be EMPTY — field, checkbox, radio, switch. Such a control carries no label inside its own box, so the box IS what identifies it and must clear WCAG 1.4.11's 3:1 against every surface it can sit on (s0-s2). Pinned to an accessibility floor, NOT to a position in the emphasis ramp: rebalancing outline.base/low/med/high must never silently erase a control's edge. MarsUI draws Outline/Black-8 here, but as a bevel over a filled cell on a fixed canvas — transcribed literally it measured 1.19:1 against a fill identical to the page (audit 2026-07-25). Declared deviation. */
+  --ki-outline-control-hover: var(--ki-color-white-56); /** Hover of outline-control. One step stronger, so hover stays a measurable delta on fields whose fill does not change on hover. */
   --ki-outline-med-em: var(--ki-color-white-8); /** semantic color for outline med em. */
   --ki-outline-low-em: var(--ki-color-white-5); /** semantic color for outline low em. */
   --ki-outline-base-em: var(--ki-color-white-3); /** semantic color for outline base em. */
@@ -356,6 +361,7 @@
   --ki-surface-special-light-s4-dark-s5: var(--ki-surface-s5); /** semantic color for surface special light s4 dark s5. */
   --ki-surface-primary-high-em: var(--ki-color-brand-500); /** semantic color for surface primary high em. */
   --ki-surface-primary-med-em: var(--ki-color-brand-500); /** semantic color for surface primary med em. */
+  --ki-surface-primary-med-em-hover: var(--ki-color-brand-400); /** Hover of surface primary-med-em. Intensifies in the direction the scheme reads as 'more': darker on a light canvas (600), brighter on a dark one (400). Selection controls whose resting fill is the MarsUI default brand surface (brand-500) need a hover that is a real delta in BOTH schemes — primary-high-em collapses onto primary-med-em in dark. */
   --ki-surface-primary-low-em: var(--ki-color-brand-900); /** semantic color for surface primary low em. */
   --ki-surface-primary-base-em: var(--ki-color-brand-950); /** semantic color for surface primary base em. */
   --ki-surface-primary-low-em-alpha: var(--ki-color-brand-500-alpha-5); /** semantic color for surface primary low em alpha. */

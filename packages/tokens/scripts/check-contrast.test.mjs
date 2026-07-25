@@ -76,10 +76,13 @@ test('component sweep is generic: any component bg/fg pair, semantic layers and 
   ]);
 });
 
-test('non-text control cells (radio ring/dot) require 3:1, text cells 4.5:1', () => {
+test('non-text control cells (radio ring/dot, checkbox mark) require 3:1, text cells 4.5:1', () => {
   const declarations = new Map([
     ['--ki-radio-selected-rest-bg', '#ffffff'],
     ['--ki-radio-selected-rest-fg', '#767676'],
+    // the checkbox `-fg` is inherited by the stroked `.mark` SVG, not by text
+    ['--ki-checkbox-checked-rest-bg', '#845abe'],
+    ['--ki-checkbox-checked-rest-fg', '#ffffff'],
     ['--ki-input-rest-bg', '#ffffff'],
     ['--ki-input-rest-fg', '#111111'],
   ]);
@@ -89,6 +92,7 @@ test('non-text control cells (radio ring/dot) require 3:1, text cells 4.5:1', ()
   );
 
   assert.equal(byComponent.radio, 3);
+  assert.equal(byComponent.checkbox, 3);
   assert.equal(byComponent.input, 4.5);
 });
 

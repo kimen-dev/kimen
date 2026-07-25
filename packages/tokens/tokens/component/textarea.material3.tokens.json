@@ -35,7 +35,7 @@
           "$description": "Material 3 color used by the textarea component for rest foreground."
         },
         "border": {
-          "$value": "{ki.outline.high-em}",
+          "$value": "{ki.outline.control}",
           "$description": "Material 3 color used by the textarea component for rest border."
         },
         "label-fg": {
@@ -57,7 +57,7 @@
           "$description": "Material 3 color used by the textarea component for hover foreground."
         },
         "border": {
-          "$value": "{ki.outline.high-em}",
+          "$value": "{ki.outline.control-hover}",
           "$description": "Material 3 color used by the textarea component for hover border."
         },
         "label-fg": {

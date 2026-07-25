@@ -12,7 +12,7 @@
             "$description": "Material 3 color used by the radio component for unselected rest foreground."
           },
           "border": {
-            "$value": "{ki.outline.high-em}",
+            "$value": "{ki.outline.control}",
             "$description": "Material 3 color used by the radio component for unselected rest border."
           }
         },
@@ -26,7 +26,7 @@
             "$description": "Material 3 color used by the radio component for unselected hover foreground."
           },
           "border": {
-            "$value": "{ki.outline.primary-med-em}",
+            "$value": "{ki.outline.control-hover}",
             "$description": "Material 3 color used by the radio component for unselected hover border."
           }
         },
