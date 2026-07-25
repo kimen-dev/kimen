@@ -102,7 +102,11 @@ test('control-boundary sweep groups an empty-box control by cell and needs an ed
     ['--ki-input-rest-bg', '#ffffff'],
     ['--ki-input-rest-border', 'rgba(0, 0, 0, 0.08)'],
     // a track IS the control's own box, so it qualifies without a border
+    ['--ki-switch-unchecked-rest-track', '#ececf0'],
+    // an indicator's extent is data-dependent and can be zero, so it must not
+    // count as an edge — ki-progress at value=0 paints none of it
     ['--ki-progress-track-color', '#ececf0'],
+    ['--ki-progress-indicator-color', '#845abe'],
     // a floating surface with no edge of its own → elevation identifies it,
     // not a boundary; must not be swept here
     ['--ki-select-listbox-bg', '#f9f9fa'],
@@ -120,7 +124,7 @@ test('control-boundary sweep groups an empty-box control by cell and needs an ed
 
   assert.deepEqual(cells, [
     ['--ki-input-rest', ['--ki-input-rest-bg', '--ki-input-rest-border']],
-    ['--ki-progress', ['--ki-progress-track-color']],
+    ['--ki-switch-unchecked-rest', ['--ki-switch-unchecked-rest-track']],
   ]);
 });
 

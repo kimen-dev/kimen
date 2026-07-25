@@ -251,12 +251,20 @@ export function componentPairs(declarations) {
 const EMPTY_BOX_COMPONENTS = new Set([
   'checkbox',
   'input',
-  'progress',
   'radio',
   'select',
   'switch',
   'textarea',
 ]);
+// ki-progress is deliberately NOT here, and not because it has a label — it
+// renders none (`label` becomes aria-label only), so at value=0 the only
+// painted thing really is its rail. It is excluded because "the rail must
+// clear 3:1 against the page" is provably self-defeating: on a white page the
+// rail would need luminance <= 0.30, while keeping the brand indicator
+// readable against that rail needs >= 0.578 or <= 0.0198. The only rail
+// satisfying both is near-black. A progress bar is identified by the ratio
+// between indicator and track — that is where the information is — so that is
+// what PROGRESS_CONTRAST_PAIRS asserts instead.
 // The component segment is matched on the FIRST word, so a component whose
 // name extends an empty-box name would be pooled into it and measured against
 // a rule written for the control itself — the same defect that silently files
@@ -278,11 +286,14 @@ const CONTROL_PAGE_SURFACES = ['--ki-surface-s0', '--ki-surface-s1', '--ki-surfa
 // `-track`. A `-bg` alone is a floating surface (ki-select's listbox), which is
 // identified by elevation, not by a boundary, and is measured elsewhere.
 const BOUNDARY_ROLE = /-(?:border|track)(?:-color)?$/u;
-// A cell is the WHOLE control, so its own indicator counts: a progress bar is
-// identified by its filled `-indicator`, not by the rail behind it, and a
-// switch by its `-thumb` as much as its track. Measuring only fill and border
-// would demand a 3:1 rail that no design system draws.
-const CELL_ROLE = /-(?:bg|border|track|indicator|thumb|dot|bar)(?:-color)?$/u;
+// A cell counts only the members painted WHENEVER that cell is active. A
+// switch's `-thumb` qualifies; an `-indicator`, `-bar` or `-dot` does not,
+// because its extent is data- or selection-dependent and can be zero. Counting
+// those let a control certify itself with something nobody can see: with
+// ki-progress at its default value=0 the indicator has zero width, yet it
+// measured 4.49-5.02:1 and carried the cell while the rail a user actually
+// sees sat at 1.05-1.18:1 (Codex review of #64).
+const CELL_ROLE = /-(?:bg|border|track|thumb)(?:-color)?$/u;
 
 export function controlBoundaryCells(declarations) {
   const cells = new Map();
@@ -312,6 +323,34 @@ export function controlBoundaryCells(declarations) {
   }
 
   return [...cells.values()].filter((cell) => cell.hasEdge);
+}
+
+// The assertion a bar-shaped readout actually needs: its filled part must be
+// readable against its unfilled part, because the boundary between them IS the
+// value. Held to 1.4.11's 3:1, like any other non-text state indicator.
+const PROGRESS_CONTRAST_PAIRS = [
+  { indicator: '--ki-progress-indicator-color', track: '--ki-progress-track-color' },
+];
+
+function sweepProgressIndicators(theme, scheme, declarations) {
+  const failures = [];
+  const page = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+
+  for (const pair of PROGRESS_CONTRAST_PAIRS) {
+    const rawTrack = parseColor(resolveCustomProperty(pair.track, declarations));
+    const rawIndicator = parseColor(resolveCustomProperty(pair.indicator, declarations));
+    const track = rawTrack.a < 1 ? compositeOver(rawTrack, page) : rawTrack;
+    const indicator = rawIndicator.a < 1 ? compositeOver(rawIndicator, track) : rawIndicator;
+    const ratio = contrastRatio(indicator, track);
+
+    if (ratio < NON_TEXT_MIN_RATIO) {
+      failures.push(
+        `${theme}/${scheme} ${pair.indicator} on ${pair.track}: ${ratio} (min ${NON_TEXT_MIN_RATIO})`,
+      );
+    }
+  }
+
+  return failures;
 }
 
 function sweepControlBoundaries(theme, scheme, declarations) {
@@ -353,6 +392,7 @@ function evaluateStylesheet(theme, stylesheet) {
   for (const [scheme, declarations] of Object.entries(schemes)) {
     const swept = componentPairs(declarations);
     failures.push(...sweepControlBoundaries(theme, scheme, declarations));
+    failures.push(...sweepProgressIndicators(theme, scheme, declarations));
 
     if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
       failures.push(

@@ -62,10 +62,10 @@ describe('ki-checkbox under the dark scheme', () => {
     let el = await mount('light');
     const lightBackground = controlBackground(el);
     const lightPage = readTokenColor('--ki-surface-s0');
-    expect([
-      readTokenColor('--ki-checkbox-checked-rest-bg'),
-      readTokenColor('--ki-checkbox-checked-hover-bg'),
-    ]).toContain(lightBackground);
+    const lightHover = readTokenColor('--ki-checkbox-checked-hover-bg');
+    expect([readTokenColor('--ki-checkbox-checked-rest-bg'), lightHover]).toContain(
+      lightBackground,
+    );
 
     el = await mount('dark');
     const background = controlBackground(el);
@@ -84,5 +84,19 @@ describe('ki-checkbox under the dark scheme', () => {
     expect(readTokenColor('--ki-surface-s0'), 'forced dark must change the scheme').not.toBe(
       lightPage,
     );
+
+    // The page surface proves the dark BLOCK applied; it does not prove this
+    // component's own scheme-specific role did. --ki-surface-primary-med-em-hover
+    // is overridden for dark (brand 600 light -> brand 400 dark) precisely
+    // because primary-high-em collapses onto primary-med-em there, leaving the
+    // checked hover with no delta. Drop that override and every other assertion
+    // here still holds, so it is pinned directly. Probed on the token rather
+    // than on the rendered control: the pointer may rest over the freshly
+    // mounted control, so the rendered value is rest OR hover and cannot
+    // identify the hover cell on its own.
+    expect(
+      readTokenColor('--ki-checkbox-checked-hover-bg'),
+      'the checked hover fill must carry its own dark value',
+    ).not.toBe(lightHover);
   });
 });
