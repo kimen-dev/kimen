@@ -49,7 +49,9 @@ import { defineCustomElement as defineKiVideo } from '../dist/components/ki-vide
 import { visualGalleries } from './visual/galleries';
 import type { VisualComponent } from './visual/galleries';
 
+const TEXT_MIN_RATIO = 4.5;
 const browserCommands = commands as unknown as {
+  emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
   emulateReducedMotion: (value: 'no-preference' | 'reduce' | null) => Promise<void>;
 };
 
@@ -111,6 +113,134 @@ function normalizeFamily(value: string): string {
 
 async function nextFrame(): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+interface Rgba {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+}
+
+function parseRgb(value: string): Rgba {
+  const parts = value.match(/[\d.]+/gu);
+  if (parts === null || parts.length < 3) {
+    return { r: 0, g: 0, b: 0, a: 0 };
+  }
+  return {
+    r: Number(parts[0]),
+    g: Number(parts[1]),
+    b: Number(parts[2]),
+    a: parts[3] === undefined ? 1 : Number(parts[3]),
+  };
+}
+
+function over(fg: Rgba, bg: Rgba): Rgba {
+  const a = fg.a + bg.a * (1 - fg.a);
+  if (a === 0) {
+    return { r: 0, g: 0, b: 0, a: 0 };
+  }
+  const mix = (f: number, b: number): number => (f * fg.a + b * bg.a * (1 - fg.a)) / a;
+  return { r: mix(fg.r, bg.r), g: mix(fg.g, bg.g), b: mix(fg.b, bg.b), a };
+}
+
+function luminance({ r, g, b }: Rgba): number {
+  const channel = (value: number): number => {
+    const n = value / 255;
+    return n <= 0.04045 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+}
+
+function ratio(fg: Rgba, bg: Rgba): number {
+  const lighter = Math.max(luminance(fg), luminance(bg));
+  const darker = Math.min(luminance(fg), luminance(bg));
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/**
+ * The colour actually behind an element, composited up the FLAT tree — through
+ * shadow boundaries via `getRootNode().host`, not just `parentElement`, because
+ * slotted content's painted backdrop is the shadow element containing the
+ * `<slot>`. Stops at the first opaque layer; falls back to the canvas.
+ *
+ * KNOWN LIMITATION, stated rather than discovered later: only
+ * `backgroundColor` is read, so a surface painted purely with a
+ * `background-image` gradient composites straight through. It does not bite
+ * today — ki-button, the one component shipping MarsUI's gradient material,
+ * paints its fill with `background-color` and uses `background-image` only for
+ * an overlay that defaults to `none`, so the label measures against the real
+ * brand fill. It is exactly the case axe reports as `bgGradient` incomplete,
+ * and if a component ever paints its whole surface from a gradient this walk
+ * must learn to sample it.
+ */
+function flatParent(node: Element): Element | null {
+  // Slotted content is painted over the shadow element containing the <slot>,
+  // which `parentElement` never reaches — it returns the light-DOM parent.
+  const slot = (node as HTMLElement).assignedSlot;
+  if (slot !== null) {
+    return slot;
+  }
+  if (node.parentElement !== null) {
+    return node.parentElement;
+  }
+  const root = node.getRootNode();
+  return root instanceof ShadowRoot ? root.host : null;
+}
+
+function backdropOf(element: Element): Rgba {
+  let composited: Rgba = { r: 0, g: 0, b: 0, a: 0 };
+  let node: Element | null = flatParent(element);
+  while (node !== null) {
+    composited = over(composited, parseRgb(getComputedStyle(node).backgroundColor));
+    if (composited.a >= 1) {
+      return composited;
+    }
+    node = flatParent(node);
+  }
+  // Nothing opaque anywhere: the user agent canvas. A bare page that has not
+  // opted into the page contract leaves this white in both schemes, which is
+  // precisely the mismatch this suite exists to measure.
+  return { r: 255, g: 255, b: 255, a: 1 };
+}
+
+/**
+ * Inactive text is exempt (WCAG 1.4.3), the same exemption the token contrast
+ * sweep grants its `-disabled-` cells. Walked up the FLAT tree so a disabled
+ * host reaches the row its shadow renders.
+ */
+function isInactive(element: Element): boolean {
+  let node: Element | null = element;
+  while (node !== null) {
+    if (node.hasAttribute('disabled') || node.getAttribute('aria-disabled') === 'true') {
+      return true;
+    }
+    node = flatParent(node);
+  }
+  return false;
+}
+
+/** Elements rendering their own visible text, light DOM and shadow alike. */
+function textBearing(wrapper: HTMLElement): HTMLElement[] {
+  const candidates = [...wrapper.querySelectorAll<HTMLElement>('*'), ...shadowDescendants(wrapper)];
+  return candidates.filter((element) => {
+    const ownText = [...element.childNodes]
+      .filter((node) => node.nodeType === Node.TEXT_NODE)
+      .map((node) => node.textContent ?? '')
+      .join('')
+      .trim();
+    if (ownText === '' || isInactive(element)) {
+      return false;
+    }
+    // The bare `checkVisibility()` ignores `visibility` and `opacity`, so a
+    // tooltip bubble parked at `visibility: hidden` — which is how the rest
+    // state is captured — reads as painted and measures its own unset surface.
+    return element.checkVisibility({
+      contentVisibilityAuto: true,
+      opacityProperty: true,
+      visibilityProperty: true,
+    });
+  });
 }
 
 function shadowHosts(root: ParentNode): HTMLElement[] {
@@ -292,6 +422,70 @@ describe('page contract', () => {
     expect(root.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
     expect(root.backgroundColor).not.toBe(root.color);
     expect(normalizeFamily(root.fontFamily)).toBe(normalizeFamily(expectedFontFamily()));
+  });
+});
+
+/**
+ * Legibility of every rendered string, measured on the page the library
+ * actually promises: token stylesheet plus the opt-in page contract, in both
+ * schemes. Text colour and the backdrop behind it are read from the live flat
+ * tree — through shadow boundaries — and composited, so a component that paints
+ * its own surface is measured against THAT surface and not against the page.
+ *
+ * Measured rather than inferred from CSS. The static rule the audit proposed —
+ * "no rule declares `background` without a sibling `color`" — flags 29 rules on
+ * this HEAD, and almost all are decorative layers that correctly set no colour
+ * (scrollbar thumbs, the dialog backdrop, status dots, switch tracks), two of
+ * which resolve to a transparent token anyway. Reading pixels has no such
+ * false positives.
+ *
+ * NOTE, and it is a real limitation: WITHOUT the page contract in the dark
+ * scheme this measures 15 of 29 components rendering white-on-white — the token
+ * sheet flips to its dark values, every component correctly paints its
+ * dark-scheme foreground, and the user agent keeps a white canvas because
+ * `color-scheme` is still `normal`. That is not 15 broken components; it is the
+ * documented cost of leaving the page contract opt-in, and whether to keep it
+ * optional is a founder decision, not something this suite should decide by
+ * asserting a contract the package does not make.
+ */
+describe.each(['light', 'dark'] as const)('bare-page legibility [%s]', (scheme) => {
+  const CONTRACT_STYLE_ID = `legibility-contract-${scheme}`;
+
+  beforeAll(async () => {
+    await browserCommands.emulateColorScheme(scheme);
+    const style = document.createElement('style');
+    style.id = CONTRACT_STYLE_ID;
+    style.textContent = pageContractCss;
+    document.head.append(style);
+  });
+
+  afterAll(async () => {
+    document.getElementById(CONTRACT_STYLE_ID)?.remove();
+    await browserCommands.emulateColorScheme(null);
+  });
+
+  it.each(components)('%s renders every string legibly', async (component) => {
+    const wrapper = await mountBare(component);
+    const illegible = textBearing(wrapper)
+      .map((element) => {
+        const fg = parseRgb(getComputedStyle(element).color);
+        const bg = backdropOf(element);
+        return {
+          ratio: ratio(over(fg, bg), bg),
+          text: element.textContent.trim().slice(0, 30),
+          part: element.getAttribute('part') ?? element.localName,
+        };
+      })
+      // Disabled text is exempt (WCAG 1.4.3), the same exemption the token
+      // contrast sweep grants.
+      .filter((entry) => entry.ratio < TEXT_MIN_RATIO);
+
+    expect(
+      illegible,
+      `${component} renders text below ${String(TEXT_MIN_RATIO)}:1 against the surface behind it: ${illegible
+        .map((entry) => `${entry.part} "${entry.text}" at ${entry.ratio.toFixed(2)}:1`)
+        .join('; ')}`,
+    ).toEqual([]);
   });
 });
 

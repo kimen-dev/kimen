@@ -759,21 +759,21 @@
     --ki-outline-primary-button-bottom: var(--ki-color-black-24); /** Material 3 semantic color for outline primary button bottom. */
     --ki-outline-secondary-button-top: var(--ki-color-white-8); /** Material 3 semantic color for outline secondary button top. */
     --ki-outline-secondary-button-bottom: var(--ki-color-white-12); /** Material 3 semantic color for outline secondary button bottom. */
-    --ki-inverse-white-alpha-3: var(--ki-color-black-3); /** semantic color for inverse white alpha 3. */
-    --ki-inverse-white-alpha-6: var(--ki-color-black-5); /** semantic color for inverse white alpha 6. */
-    --ki-inverse-white-alpha-9: var(--ki-color-black-8); /** semantic color for inverse white alpha 9. */
-    --ki-inverse-white-alpha-12: var(--ki-color-black-12); /** semantic color for inverse white alpha 12. */
-    --ki-inverse-white-alpha-18: var(--ki-color-black-18); /** semantic color for inverse white alpha 18. */
-    --ki-inverse-white-alpha-24: var(--ki-color-black-24); /** semantic color for inverse white alpha 24. */
-    --ki-inverse-white-alpha-32: var(--ki-color-black-32); /** semantic color for inverse white alpha 32. */
-    --ki-inverse-white-alpha-40: var(--ki-color-black-40); /** semantic color for inverse white alpha 40. */
-    --ki-inverse-white-alpha-48: var(--ki-color-black-48); /** semantic color for inverse white alpha 48. */
-    --ki-inverse-white-alpha-56: var(--ki-color-black-56); /** semantic color for inverse white alpha 56. */
-    --ki-inverse-white-alpha-64: var(--ki-color-black-64); /** semantic color for inverse white alpha 64. */
-    --ki-inverse-white-alpha-72: var(--ki-color-black-72); /** semantic color for inverse white alpha 72. */
-    --ki-inverse-white-alpha-80: var(--ki-color-black-80); /** semantic color for inverse white alpha 80. */
-    --ki-inverse-white-alpha-88: var(--ki-color-black-88); /** semantic color for inverse white alpha 88. */
-    --ki-inverse-white-alpha-solid: var(--ki-color-black-100); /** semantic color for inverse white alpha solid. */
+    --ki-inverse-white-alpha-3: var(--ki-color-white-3); /** semantic color for inverse white alpha 3. */
+    --ki-inverse-white-alpha-6: var(--ki-color-white-5); /** semantic color for inverse white alpha 6. */
+    --ki-inverse-white-alpha-9: var(--ki-color-white-8); /** semantic color for inverse white alpha 9. */
+    --ki-inverse-white-alpha-12: var(--ki-color-white-12); /** semantic color for inverse white alpha 12. */
+    --ki-inverse-white-alpha-18: var(--ki-color-white-18); /** semantic color for inverse white alpha 18. */
+    --ki-inverse-white-alpha-24: var(--ki-color-white-24); /** semantic color for inverse white alpha 24. */
+    --ki-inverse-white-alpha-32: var(--ki-color-white-32); /** semantic color for inverse white alpha 32. */
+    --ki-inverse-white-alpha-40: var(--ki-color-white-40); /** semantic color for inverse white alpha 40. */
+    --ki-inverse-white-alpha-48: var(--ki-color-white-48); /** semantic color for inverse white alpha 48. */
+    --ki-inverse-white-alpha-56: var(--ki-color-white-56); /** semantic color for inverse white alpha 56. */
+    --ki-inverse-white-alpha-64: var(--ki-color-white-64); /** semantic color for inverse white alpha 64. */
+    --ki-inverse-white-alpha-72: var(--ki-color-white-72); /** semantic color for inverse white alpha 72. */
+    --ki-inverse-white-alpha-80: var(--ki-color-white-80); /** semantic color for inverse white alpha 80. */
+    --ki-inverse-white-alpha-88: var(--ki-color-white-88); /** semantic color for inverse white alpha 88. */
+    --ki-inverse-white-alpha-solid: var(--ki-color-white-100); /** semantic color for inverse white alpha solid. */
     --ki-inverse-black-alpha-3: var(--ki-color-white-3); /** semantic color for inverse black alpha 3. */
     --ki-inverse-black-alpha-6: var(--ki-color-white-5); /** semantic color for inverse black alpha 6. */
     --ki-inverse-black-alpha-9: var(--ki-color-white-8); /** semantic color for inverse black alpha 9. */
@@ -2664,21 +2664,21 @@
   --ki-outline-primary-button-bottom: var(--ki-color-black-24); /** Material 3 semantic color for outline primary button bottom. */
   --ki-outline-secondary-button-top: var(--ki-color-white-8); /** Material 3 semantic color for outline secondary button top. */
   --ki-outline-secondary-button-bottom: var(--ki-color-white-12); /** Material 3 semantic color for outline secondary button bottom. */
-  --ki-inverse-white-alpha-3: var(--ki-color-black-3); /** semantic color for inverse white alpha 3. */
-  --ki-inverse-white-alpha-6: var(--ki-color-black-5); /** semantic color for inverse white alpha 6. */
-  --ki-inverse-white-alpha-9: var(--ki-color-black-8); /** semantic color for inverse white alpha 9. */
-  --ki-inverse-white-alpha-12: var(--ki-color-black-12); /** semantic color for inverse white alpha 12. */
-  --ki-inverse-white-alpha-18: var(--ki-color-black-18); /** semantic color for inverse white alpha 18. */
-  --ki-inverse-white-alpha-24: var(--ki-color-black-24); /** semantic color for inverse white alpha 24. */
-  --ki-inverse-white-alpha-32: var(--ki-color-black-32); /** semantic color for inverse white alpha 32. */
-  --ki-inverse-white-alpha-40: var(--ki-color-black-40); /** semantic color for inverse white alpha 40. */
-  --ki-inverse-white-alpha-48: var(--ki-color-black-48); /** semantic color for inverse white alpha 48. */
-  --ki-inverse-white-alpha-56: var(--ki-color-black-56); /** semantic color for inverse white alpha 56. */
-  --ki-inverse-white-alpha-64: var(--ki-color-black-64); /** semantic color for inverse white alpha 64. */
-  --ki-inverse-white-alpha-72: var(--ki-color-black-72); /** semantic color for inverse white alpha 72. */
-  --ki-inverse-white-alpha-80: var(--ki-color-black-80); /** semantic color for inverse white alpha 80. */
-  --ki-inverse-white-alpha-88: var(--ki-color-black-88); /** semantic color for inverse white alpha 88. */
-  --ki-inverse-white-alpha-solid: var(--ki-color-black-100); /** semantic color for inverse white alpha solid. */
+  --ki-inverse-white-alpha-3: var(--ki-color-white-3); /** semantic color for inverse white alpha 3. */
+  --ki-inverse-white-alpha-6: var(--ki-color-white-5); /** semantic color for inverse white alpha 6. */
+  --ki-inverse-white-alpha-9: var(--ki-color-white-8); /** semantic color for inverse white alpha 9. */
+  --ki-inverse-white-alpha-12: var(--ki-color-white-12); /** semantic color for inverse white alpha 12. */
+  --ki-inverse-white-alpha-18: var(--ki-color-white-18); /** semantic color for inverse white alpha 18. */
+  --ki-inverse-white-alpha-24: var(--ki-color-white-24); /** semantic color for inverse white alpha 24. */
+  --ki-inverse-white-alpha-32: var(--ki-color-white-32); /** semantic color for inverse white alpha 32. */
+  --ki-inverse-white-alpha-40: var(--ki-color-white-40); /** semantic color for inverse white alpha 40. */
+  --ki-inverse-white-alpha-48: var(--ki-color-white-48); /** semantic color for inverse white alpha 48. */
+  --ki-inverse-white-alpha-56: var(--ki-color-white-56); /** semantic color for inverse white alpha 56. */
+  --ki-inverse-white-alpha-64: var(--ki-color-white-64); /** semantic color for inverse white alpha 64. */
+  --ki-inverse-white-alpha-72: var(--ki-color-white-72); /** semantic color for inverse white alpha 72. */
+  --ki-inverse-white-alpha-80: var(--ki-color-white-80); /** semantic color for inverse white alpha 80. */
+  --ki-inverse-white-alpha-88: var(--ki-color-white-88); /** semantic color for inverse white alpha 88. */
+  --ki-inverse-white-alpha-solid: var(--ki-color-white-100); /** semantic color for inverse white alpha solid. */
   --ki-inverse-black-alpha-3: var(--ki-color-white-3); /** semantic color for inverse black alpha 3. */
   --ki-inverse-black-alpha-6: var(--ki-color-white-5); /** semantic color for inverse black alpha 6. */
   --ki-inverse-black-alpha-9: var(--ki-color-white-8); /** semantic color for inverse black alpha 9. */

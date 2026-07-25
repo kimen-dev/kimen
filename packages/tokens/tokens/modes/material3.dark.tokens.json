@@ -355,6 +355,54 @@
         "$value": "{ki.color.success.950}"
       }
     },
+    "inverse-white": {
+      "$type": "color",
+      "alpha-3": {
+        "$value": "{ki.color.white.3}"
+      },
+      "alpha-6": {
+        "$value": "{ki.color.white.5}"
+      },
+      "alpha-9": {
+        "$value": "{ki.color.white.8}"
+      },
+      "alpha-12": {
+        "$value": "{ki.color.white.12}"
+      },
+      "alpha-18": {
+        "$value": "{ki.color.white.18}"
+      },
+      "alpha-24": {
+        "$value": "{ki.color.white.24}"
+      },
+      "alpha-32": {
+        "$value": "{ki.color.white.32}"
+      },
+      "alpha-40": {
+        "$value": "{ki.color.white.40}"
+      },
+      "alpha-48": {
+        "$value": "{ki.color.white.48}"
+      },
+      "alpha-56": {
+        "$value": "{ki.color.white.56}"
+      },
+      "alpha-64": {
+        "$value": "{ki.color.white.64}"
+      },
+      "alpha-72": {
+        "$value": "{ki.color.white.72}"
+      },
+      "alpha-80": {
+        "$value": "{ki.color.white.80}"
+      },
+      "alpha-88": {
+        "$value": "{ki.color.white.88}"
+      },
+      "alpha-solid": {
+        "$value": "{ki.color.white.100}"
+      }
+    },
     "outline": {
       "$type": "color",
       "high-em": {
