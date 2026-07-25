@@ -9,6 +9,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-icon-button.js';
+import { expectAccessible } from './axe';
 
 type KiIconButtonElement = HTMLElement & {
   disabled: boolean;
@@ -203,8 +204,7 @@ describe('ki-icon-button in a real browser', () => {
     expect(icon?.getAttribute('aria-hidden')).toBe('true');
     expect(button.textContent.trim()).toBe('');
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S6 fails the accessibility audit when rendered without a label', async () => {
@@ -265,8 +265,7 @@ describe('ki-icon-button in a real browser', () => {
     // No axe violations with the forwarded description present.
     el.setAttribute('aria-description', 'Closes the dialog');
     await settle();
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S9 never submits an enclosing form', async () => {
@@ -452,7 +451,6 @@ describe('ki-icon-button in a real browser', () => {
       }
     }
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

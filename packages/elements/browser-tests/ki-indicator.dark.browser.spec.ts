@@ -1,9 +1,9 @@
 // @spec:024-ki-indicator
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-indicator.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-indicator-dark-tokens';
 
@@ -89,7 +89,6 @@ describe('ki-indicator under the dark scheme', () => {
     expect(darkResting, 'forced dark must change the resting fill').not.toBe(lightResting);
     expect(darkRing, 'forced dark must change the current ring').not.toBe(lightRing);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

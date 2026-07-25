@@ -1,10 +1,10 @@
 // @spec:012-ki-dialog
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
+import { expectAccessible } from './axe';
 
 type KiDialogElement = HTMLElement & {
   open: boolean;
@@ -91,7 +91,6 @@ describe('ki-dialog under the dark scheme', () => {
     expect(getComputedStyle(dialog, '::backdrop').backgroundColor).toBe(
       readToken('--ki-dialog-backdrop-bg'),
     );
-    const results = await axe.run(main);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main);
   });
 });

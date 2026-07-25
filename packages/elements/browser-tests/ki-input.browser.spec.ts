@@ -4,10 +4,10 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-input.js';
+import { expectAccessible } from './axe';
 
 type KiInputElement = HTMLElement & {
   disabled: boolean;
@@ -353,8 +353,7 @@ describe('ki-input in a real browser', () => {
       }
     }
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S12 submitted FormData contains the field name and value', async () => {

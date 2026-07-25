@@ -14,10 +14,10 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // heard" posture (S3). The 16:9 ratio comes from the width/height
 // attributes, exactly as consumer markup declares it.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-video.js';
+import { expectAccessible } from './axe';
 
 type KiVideoElement = HTMLElement & { label?: string };
 
@@ -370,8 +370,7 @@ describe('ki-video', () => {
     expect(frameOf(el).getAttribute('aria-label')).toBeNull();
     expect(el.getAttribute('role')).toBeNull();
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S9 captions on the slotted media stay available after playback starts', async () => {
@@ -420,8 +419,7 @@ describe('ki-video', () => {
     expect(onmarsPlayRadius).toBe(14);
     expect(readTokenColor('--ki-video-play-bg')).not.toBe(onmarsPlayBg);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S12 reduced motion dismisses the facade without transitional motion', async () => {

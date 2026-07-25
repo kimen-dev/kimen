@@ -1,11 +1,11 @@
 // @spec:016-ki-list
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 
 import onmarsCss from '@kimen/tokens/css?raw';
 import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '../dist/components/ki-list-item.js';
+import { expectAccessible } from './axe';
 
 const browserCommands = commands as unknown as {
   emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
@@ -61,7 +61,6 @@ describe('ki-list under the dark scheme', () => {
     }
 
     expect(getComputedStyle(listPart).backgroundColor).toBe('rgb(10, 10, 10)');
-    const results = await axe.run(document.querySelector('main') ?? document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.querySelector('main') ?? document.body);
   });
 });

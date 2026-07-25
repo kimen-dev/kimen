@@ -3,11 +3,11 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // Real-browser tests consume the BUILT custom-elements output (what ships is
 // what is asserted), never internals (Art. III).
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
+import { expectAccessible } from './axe';
 
 type KiSelectElement = HTMLElement & {
   value: string;
@@ -233,17 +233,14 @@ describe('ki-select in a real browser', () => {
 
   it('S11 S12 has zero axe violations inside main across closed, open, and disabled states', async () => {
     const el = await mountSelect();
-    let results = await axe.run(main());
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main());
 
     trigger(el).click();
     await new Promise((resolve) => requestAnimationFrame(resolve));
-    results = await axe.run(main());
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main());
 
     await mountSelect('disabled');
-    results = await axe.run(main());
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main());
   });
 
   it('S6 S7 opens from keyboard with aria-activedescendant in the same shadow scope', async () => {

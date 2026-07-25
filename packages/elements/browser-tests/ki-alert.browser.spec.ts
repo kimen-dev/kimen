@@ -4,10 +4,10 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-alert.js';
+import { expectAccessible } from './axe';
 
 type KiAlertElement = HTMLElement & {
   dismissed: boolean;
@@ -240,8 +240,7 @@ describe('ki-alert in a real browser', () => {
       await mount(`${tone} alert`, { heading: `${tone} heading`, tone }, main);
     }
 
-    const results = await axe.run(main);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main);
   });
 
   it('S3 dismissing a dismissible alert hides it and dispatches one non-cancelable event', async () => {
@@ -467,8 +466,7 @@ describe('ki-alert in a real browser', () => {
     await mount('Backup completed', { dismissible: true }, main);
     await mount('Copia completada', { dismissible: true, 'dismiss-label': 'Descartar' }, main);
 
-    const results = await axe.run(main);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main);
   });
 
   it('S13 material3 restyles all five alert tones through tokens alone', async () => {

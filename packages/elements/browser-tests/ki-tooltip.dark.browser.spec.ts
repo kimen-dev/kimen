@@ -1,10 +1,10 @@
 // @spec:013-ki-tooltip
-import axe from 'axe-core';
 import { commands, page, userEvent } from 'vitest/browser';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
+import { expectAccessible } from './axe';
 
 type KiTooltipElement = HTMLElement & {
   label: string;
@@ -100,7 +100,6 @@ describe('ki-tooltip in forced dark scheme', () => {
     if (!main) {
       throw new Error('Expected dark tooltip fixture to render in main');
     }
-    const results = await axe.run(main);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main);
   });
 });

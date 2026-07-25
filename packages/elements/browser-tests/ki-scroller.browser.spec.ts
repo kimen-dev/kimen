@@ -13,10 +13,10 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // scrollable), the viewport is actually scrollable, the paint sources
 // resolve from tokens, and the Tab stop follows the overflow state.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-scroller.js';
+import { expectAccessible } from './axe';
 
 type KiScrollerElement = HTMLElement & { orientation: string; label?: string };
 
@@ -328,8 +328,7 @@ describe('ki-scroller', () => {
     expect(snapshot).toMatch(/- heading "March"/);
     expect(snapshot).toMatch(/- listitem/);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S10 material3 restyles the indicator through tokens alone with unchanged markup', async () => {
@@ -369,8 +368,7 @@ describe('ki-scroller', () => {
     expect(onmarsRadius).toBeGreaterThan(0);
     expect(scrollAxes(viewport)).toEqual({ block: 'auto', inline: 'hidden' });
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S12 a horizontal scroller in a right-to-left document starts at the right edge', async () => {

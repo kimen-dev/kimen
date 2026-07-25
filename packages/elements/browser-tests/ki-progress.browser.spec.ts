@@ -1,6 +1,5 @@
 import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 
@@ -9,6 +8,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import { defineCustomElement } from '../dist/components/ki-progress.js';
+import { expectAccessible } from './axe';
 
 type KiProgressElement = HTMLElement & {
   indeterminate: boolean;
@@ -251,8 +251,7 @@ describe('ki-progress in a real browser', () => {
     await cleanupMedia();
     await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
 
-    const results = await axe.run(requireMain());
-    expect(results.violations).toEqual([]);
+    await expectAccessible(requireMain());
   });
 
   it('S3 shows running infinite indeterminate activity in both shapes without a completed fraction', async () => {
@@ -347,8 +346,7 @@ describe('ki-progress in a real browser', () => {
       await mount({ label: `${shape} indeterminate`, shape, indeterminate: true });
     }
 
-    const results = await axe.run(requireMain());
-    expect(results.violations).toEqual([]);
+    await expectAccessible(requireMain());
   });
 
   it('S10 restyles the shape mode matrix from material3 progress tokens without markup changes', async () => {

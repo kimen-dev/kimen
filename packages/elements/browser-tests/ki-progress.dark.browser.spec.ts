@@ -1,9 +1,9 @@
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:015-ki-progress
 import { defineCustomElement } from '../dist/components/ki-progress.js';
+import { expectAccessible } from './axe';
 
 type KiProgressElement = HTMLElement & {
   indeterminate: boolean;
@@ -140,7 +140,6 @@ describe('ki-progress forced dark appearance', () => {
       }
     }
 
-    const results = await axe.run(requireMain());
-    expect(results.violations).toEqual([]);
+    await expectAccessible(requireMain());
   });
 });

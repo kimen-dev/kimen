@@ -1,10 +1,10 @@
 import material3Css from '@kimen/tokens/css/material3?raw';
 // @spec:006-ki-checkbox
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-checkbox.js';
+import { expectAccessible } from './axe';
 
 type KiCheckboxElement = HTMLElement & {
   checked: boolean;
@@ -453,7 +453,6 @@ describe('ki-checkbox in a real browser', () => {
     await mount('Disabled', { disabled: true }, main);
     await mount('Required invalid', { required: true }, main);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

@@ -1,10 +1,10 @@
 // @spec:026-ki-qr
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import jsQR from 'jsqr';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-qr.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-qr-dark-tokens';
 
@@ -153,7 +153,6 @@ describe('ki-qr under the dark scheme', () => {
     // And the rendered code still decodes to its value.
     expect(await decodeRendered(el)).toBe('https://onmars.dev');
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

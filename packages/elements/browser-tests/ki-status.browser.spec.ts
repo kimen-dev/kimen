@@ -4,10 +4,10 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-status.js';
+import { expectAccessible } from './axe';
 
 type KiStatusElement = HTMLElement & { tone: string; ring: boolean; label?: string };
 
@@ -190,8 +190,7 @@ describe('ki-status', () => {
     expect(dot.getAttribute('tabindex')).toBeNull();
     expect(dot.textContent).toBe('');
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S7 keeps an unlabeled dot out of the accessibility tree beside its visible text', async () => {
@@ -212,8 +211,7 @@ describe('ki-status', () => {
     expect(dot.textContent).toBe('');
     expect(row.textContent).toBe('Online');
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S8 restyles size, fill and effects through material3 tokens alone', async () => {
@@ -239,7 +237,6 @@ describe('ki-status', () => {
     expect(dot.getBoundingClientRect().width).toBe(readTokenLength('--ki-status-size'));
     expect(dot.getBoundingClientRect().width).not.toBe(onmarsSize);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

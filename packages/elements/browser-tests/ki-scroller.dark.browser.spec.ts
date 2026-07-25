@@ -1,9 +1,9 @@
 // @spec:023-ki-scroller
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-scroller.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-scroller-dark-tokens';
 
@@ -90,7 +90,6 @@ describe('ki-scroller under the dark scheme', () => {
     expect(darkThumbColor).not.toBe(lightThumbColor);
     expect(viewport.scrollHeight).toBeGreaterThan(viewport.clientHeight);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

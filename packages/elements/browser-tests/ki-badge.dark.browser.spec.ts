@@ -1,10 +1,10 @@
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 
 // @spec:010-ki-badge
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement } from '../dist/components/ki-badge.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-badge-dark-tokens';
 
@@ -82,7 +82,6 @@ describe('ki-badge under the dark scheme', () => {
     expect(darkBg).toBe(readTokenColor('--ki-badge-success-bg'));
     expect(darkBg, 'forced dark must change the pill surface').not.toBe(lightBg);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

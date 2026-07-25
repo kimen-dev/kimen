@@ -4,10 +4,10 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
+import { expectAccessible } from './axe';
 
 type KiTooltipElement = HTMLElement & {
   label: string;
@@ -443,8 +443,7 @@ describe('ki-tooltip pointer path in a real browser', () => {
     await nextFrame();
     await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
 
-    const results = await axe.run(main);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main);
   });
 
   it('S1 has zero axe violations across placements shown and hidden', async () => {
@@ -465,7 +464,6 @@ describe('ki-tooltip pointer path in a real browser', () => {
       await hoverTrigger(host, trigger);
     }
 
-    const results = await axe.run(main);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(main);
   });
 });

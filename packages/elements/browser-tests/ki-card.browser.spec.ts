@@ -1,4 +1,3 @@
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 
@@ -10,6 +9,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement as defineButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-card.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-card-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-card-browser-material3-token-style';
@@ -182,8 +182,7 @@ describe('ki-card in a real browser', () => {
     await nextFrame();
     await nextFrame();
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S4 moves focus to slotted content and never to the card host', async () => {
@@ -292,8 +291,7 @@ describe('ki-card in a real browser', () => {
       </ki-card>
     `);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('stacks regions in block order and resolves region padding under RTL', async () => {

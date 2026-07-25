@@ -11,10 +11,10 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // part, and a theme that zeroes the hole collapses the same construction
 // into a solid color-emphasized dot (material3).
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-indicator.js';
+import { expectAccessible } from './axe';
 
 type KiIndicatorElement = HTMLElement & { count?: number; current?: number; label?: string };
 
@@ -292,8 +292,7 @@ describe('ki-indicator', () => {
       expect(dot.textContent).toBe('');
     }
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S9 restyles size, shape, spacing and colors through material3 tokens alone', async () => {
@@ -328,8 +327,7 @@ describe('ki-indicator', () => {
     expect(currentPaint).not.toBe(onmarsCurrentPaint);
     expect(readTokenColor('--ki-indicator-dot-color')).not.toBe(onmarsRestingColor);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S11 the first position leads the row from the right edge in a right-to-left document', async () => {

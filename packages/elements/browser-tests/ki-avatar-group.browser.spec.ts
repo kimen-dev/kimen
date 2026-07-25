@@ -3,11 +3,11 @@
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiAvatar } from '../dist/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '../dist/components/ki-avatar-group.js';
+import { expectAccessible } from './axe';
 
 type KiAvatarGroupElement = HTMLElement & { max?: number; size: string };
 
@@ -196,8 +196,7 @@ describe('ki-avatar-group', () => {
     }
     expect(counterOf(el)?.textContent).toBe('+5');
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   it('S13 follows a right-to-left document: the stack leads right, the counter trails left', async () => {
@@ -237,7 +236,6 @@ describe('ki-avatar-group', () => {
     expect(counterOf(el)).toBeNull();
     expect(el.shadowRoot?.textContent).not.toContain('+0');
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

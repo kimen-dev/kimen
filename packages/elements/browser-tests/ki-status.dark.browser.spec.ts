@@ -1,10 +1,10 @@
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 
 // @spec:021-ki-status
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement } from '../dist/components/ki-status.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-status-dark-tokens';
 
@@ -86,7 +86,6 @@ describe('ki-status under the dark scheme', () => {
     expect(darkColor).toBe(readTokenColor('--ki-status-neutral-color'));
     expect(darkColor, 'forced dark must change the neutral fill').not.toBe(lightColor);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

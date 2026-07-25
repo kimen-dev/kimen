@@ -1,4 +1,3 @@
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 
@@ -6,6 +5,7 @@ import { commands } from 'vitest/browser';
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement as defineKiAvatar } from '../dist/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '../dist/components/ki-avatar-group.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-avatar-dark-tokens';
 
@@ -121,7 +121,6 @@ describe('ki-avatar under the dark scheme', () => {
     expect(darkCounterBg).toBe(readTokenColor('--ki-avatar-group-counter-bg'));
     expect(darkCounterBg, 'forced dark must change the counter surface').not.toBe(lightCounterBg);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

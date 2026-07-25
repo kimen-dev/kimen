@@ -1,5 +1,4 @@
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:005-ki-select
@@ -9,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // materialize as accessible rows in that parent context.
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-option-browser-token-style';
 
@@ -67,7 +67,7 @@ describe('ki-option in a real browser', () => {
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
-    expect((await axe.run(main)).violations).toEqual([]);
+    await expectAccessible(main);
     main.remove();
   });
 });

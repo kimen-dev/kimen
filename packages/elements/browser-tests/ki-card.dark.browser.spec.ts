@@ -2,13 +2,13 @@
 // Dark-scheme axe pass plus rendered token resolution for ki-card. The
 // arithmetic contrast gate checks token pairs; this browser test checks the
 // forced-scheme CSS path and rendered tree.
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 
 import onmarsCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-card.js';
+import { expectAccessible } from './axe';
 
 const browserCommands = commands as unknown as {
   emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
@@ -102,8 +102,7 @@ describe('ki-card under the dark scheme', () => {
 
     await mount();
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 
   // Review round 1 (SC-003): material3 × dark was declared in the spec's
@@ -124,7 +123,6 @@ describe('ki-card under the dark scheme', () => {
     expect(darkBg).toBe(readTokenColor('--ki-card-bg'));
     expect(darkBg, 'material3 forced dark must change the resolved surface').not.toBe(lightBg);
 
-    const results = await axe.run(document.body);
-    expect(results.violations).toEqual([]);
+    await expectAccessible(document.body);
   });
 });

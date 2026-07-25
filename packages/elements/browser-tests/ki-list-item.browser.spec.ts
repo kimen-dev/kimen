@@ -4,11 +4,11 @@
 // convention. The axe scan runs here with items mounted inside their list,
 // because a lone listitem has no valid accessibility contract outside a list.
 import tokensCss from '@kimen/tokens/css?raw';
-import axe from 'axe-core';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { defineCustomElement } from '../dist/components/ki-list-item.js';
 import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
+import { expectAccessible } from './axe';
 
 const STYLE_ID = 'ki-list-item-browser-token-style';
 
@@ -69,7 +69,7 @@ describe('ki-list-item anatomy in a real browser', () => {
     await new Promise((resolve) => requestAnimationFrame(resolve));
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
-    expect((await axe.run(main)).violations).toEqual([]);
+    await expectAccessible(main);
     main.remove();
   });
 });
