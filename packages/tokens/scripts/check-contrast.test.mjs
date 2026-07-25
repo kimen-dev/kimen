@@ -123,3 +123,16 @@ test('control-boundary sweep groups an empty-box control by cell and needs an ed
     ['--ki-progress', ['--ki-progress-track-color']],
   ]);
 });
+
+test('a component whose name extends an empty-box name is not pooled into it', () => {
+  // The component segment is matched on the first word, so `--ki-radio-group-*`
+  // would be swept as `radio` and measured against a rule written for the
+  // control itself. ki-radio-group publishes no colour cells today, which is
+  // why nothing failed — a latent trap, not a live one.
+  const declarations = new Map([
+    ['--ki-radio-group-rest-bg', '#ffffff'],
+    ['--ki-radio-group-rest-border', 'rgba(0, 0, 0, 0.08)'],
+  ]);
+
+  assert.deepEqual(controlBoundaryCells(declarations), []);
+});

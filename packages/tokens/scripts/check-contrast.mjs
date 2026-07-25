@@ -257,6 +257,18 @@ const EMPTY_BOX_COMPONENTS = new Set([
   'switch',
   'textarea',
 ]);
+// The component segment is matched on the FIRST word, so a component whose
+// name extends an empty-box name would be pooled into it and measured against
+// a rule written for the control itself — the same defect that silently files
+// every --ki-icon-button-* pair under `icon` in the text sweep above. ki-radio-
+// group is the only such name in the current inventory, and it publishes no
+// colour cells today, so the trap is latent rather than live. It is guarded
+// here rather than resolved from the component inventory because that module
+// lives in scripts/lib, is async and pulls in typescript; this script is a
+// synchronous, self-contained part of @kimen/tokens. Resolving it properly is
+// the same change as replacing the `button` canary with an inventory-equality
+// assertion, and belongs with it.
+const SHADOWED_BY_EMPTY_BOX = new Set(['radio-group']);
 // Literal transcription of the Figma frames assumed a single #ffffff canvas,
 // which is how --ki-input-rest-border shipped at 1.19:1 against a fill
 // identical to the page. A control must survive the surfaces it is actually
@@ -278,6 +290,9 @@ export function controlBoundaryCells(declarations) {
   for (const name of declarations.keys()) {
     const component = name.match(/^--ki-([a-z][a-z0-9]*)-/u);
     if (component === null || !EMPTY_BOX_COMPONENTS.has(component[1])) {
+      continue;
+    }
+    if ([...SHADOWED_BY_EMPTY_BOX].some((longer) => name.startsWith(`--ki-${longer}-`))) {
       continue;
     }
     // Disabled cells are exempt (WCAG 1.4.3 and 1.4.11 both exclude inactive
