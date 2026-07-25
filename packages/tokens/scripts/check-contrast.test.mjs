@@ -5,7 +5,9 @@ import {
   componentPairs,
   compositeOver,
   contrastRatio,
+  controlBoundaryCells,
   parseColor,
+  ratioReadoutPairs,
   relativeLuminance,
   resolveContrastPairs,
 } from './check-contrast.mjs';
@@ -75,10 +77,13 @@ test('component sweep is generic: any component bg/fg pair, semantic layers and 
   ]);
 });
 
-test('non-text control cells (radio ring/dot) require 3:1, text cells 4.5:1', () => {
+test('non-text control cells (radio ring/dot, checkbox mark) require 3:1, text cells 4.5:1', () => {
   const declarations = new Map([
     ['--ki-radio-selected-rest-bg', '#ffffff'],
     ['--ki-radio-selected-rest-fg', '#767676'],
+    // the checkbox `-fg` is inherited by the stroked `.mark` SVG, not by text
+    ['--ki-checkbox-checked-rest-bg', '#845abe'],
+    ['--ki-checkbox-checked-rest-fg', '#ffffff'],
     ['--ki-input-rest-bg', '#ffffff'],
     ['--ki-input-rest-fg', '#111111'],
   ]);
@@ -88,5 +93,72 @@ test('non-text control cells (radio ring/dot) require 3:1, text cells 4.5:1', ()
   );
 
   assert.equal(byComponent.radio, 3);
+  assert.equal(byComponent.checkbox, 3);
   assert.equal(byComponent.input, 4.5);
+});
+
+test('control-boundary sweep groups an empty-box control by cell and needs an edge', () => {
+  const declarations = new Map([
+    // a field cell: fill + boundary group under one stem
+    ['--ki-input-rest-bg', '#ffffff'],
+    ['--ki-input-rest-border', 'rgba(0, 0, 0, 0.08)'],
+    // a track IS the control's own box, so it qualifies without a border
+    ['--ki-switch-unchecked-rest-track', '#ececf0'],
+    // an indicator's extent is data-dependent and can be zero, so it must not
+    // count as an edge — ki-progress at value=0 paints none of it
+    ['--ki-progress-track-color', '#ececf0'],
+    ['--ki-progress-indicator-color', '#845abe'],
+    // a floating surface with no edge of its own → elevation identifies it,
+    // not a boundary; must not be swept here
+    ['--ki-select-listbox-bg', '#f9f9fa'],
+    // disabled → exempt
+    ['--ki-input-disabled-bg', '#fafafa'],
+    ['--ki-input-disabled-border', 'rgba(0, 0, 0, 0.08)'],
+    // a label-bearing component is out of scope entirely
+    ['--ki-button-ghost-neutral-rest-bg', 'rgba(0, 0, 0, 0)'],
+    ['--ki-button-ghost-neutral-rest-border', 'rgba(0, 0, 0, 0)'],
+  ]);
+
+  const cells = controlBoundaryCells(declarations)
+    .map((cell) => [cell.stem, [...cell.members].sort()])
+    .sort();
+
+  assert.deepEqual(cells, [
+    ['--ki-input-rest', ['--ki-input-rest-bg', '--ki-input-rest-border']],
+    ['--ki-switch-unchecked-rest', ['--ki-switch-unchecked-rest-track']],
+  ]);
+});
+
+test('readout pairs are derived from indicator/track siblings, not listed', () => {
+  const declarations = new Map([
+    // a bar-shaped readout: both members present → derived
+    ['--ki-progress-indicator-color', '#845abe'],
+    ['--ki-progress-track-color', '#ececf0'],
+    // a track with no indicator is not a readout — the switch is a control,
+    // measured by the boundary sweep instead
+    ['--ki-switch-unchecked-rest-track', '#ececf0'],
+    // an indicator with no track has no unfilled part to be read against
+    ['--ki-indicator-dot-color', '#00000030'],
+    // semantic layer, not a component
+    ['--ki-surface-track', '#eeeeee'],
+    ['--ki-surface-indicator', '#111111'],
+  ]);
+
+  assert.deepEqual(
+    ratioReadoutPairs(declarations).map((pair) => [pair.stem, pair.indicator, pair.track]),
+    [['--ki-progress', '--ki-progress-indicator-color', '--ki-progress-track-color']],
+  );
+});
+
+test('a component whose name extends an empty-box name is not pooled into it', () => {
+  // The component segment is matched on the first word, so `--ki-radio-group-*`
+  // would be swept as `radio` and measured against a rule written for the
+  // control itself. ki-radio-group publishes no colour cells today, which is
+  // why nothing failed — a latent trap, not a live one.
+  const declarations = new Map([
+    ['--ki-radio-group-rest-bg', '#ffffff'],
+    ['--ki-radio-group-rest-border', 'rgba(0, 0, 0, 0.08)'],
+  ]);
+
+  assert.deepEqual(controlBoundaryCells(declarations), []);
 });

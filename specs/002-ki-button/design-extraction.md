@@ -168,6 +168,27 @@ Figma = overlay Black/3 sobre el mismo fondo, no salto brand.50→brand.100.
 
 ### 2.5 Focus (contraste con brief §5; no extraído por variante)
 
+> **Corrección, 2026-07-25 — el alfa es 20 %, no 40 %.** El valor que registra
+> este apartado se leyó en el modo de lienzo **Dark** y se anotó como si fuera
+> el valor Light. Releído el 2026-07-25 directamente del conjunto de variables
+> del master `Toggle` (nodo `10023:1125`, página `Toggle 10102:4096`),
+> `Outline/primary_base_em_alpha` vale **`#845abe33` = brand-500 al 20 %**, que
+> es exactamente lo que ata el estilo de efecto `Focus/primary`. El
+> `#845abe66` de abajo es el valor Dark.
+>
+> Consecuencia: la última viñeta descarta el token correcto —
+> `ki.outline.primary-base-em-alpha` **sí** es el que ata el estilo Focus, y
+> su alpha-2 no es un desajuste sino el valor bueno. Ese descarte se citó como
+> autoridad («patrón V.1 §2.5») en los doce componentes que consumen el anillo,
+> que embarcaron un foco 2× demasiado fuerte en claro y 2,8× en oscuro. El
+> alias quedó repuntado en `ki.focus.primary` (PR #63) y las ocho
+> descripciones de componente que repetían el 40 % quedaron corregidas en la
+> PR de la frontera de control. Se conserva el texto original: fue premisa de
+> decisiones aguas abajo y hay que poder rastrearlo.
+>
+> El apunte sobre `Focus/gray` **no** queda refutado y sigue sin cumplirse:
+> `--ki-focus-gray` existe, resuelve correctamente y no lo referencia nadie.
+
 - Figma `Focus/primary`: drop-shadow spread **3px** de `Outline/primary_base_em_alpha`
   (**#845abe66**, alpha 40%). `Focus/gray`: spread 3px de `Outline/med_em` (Black/8).
 - Kimen: `box-shadow 0 0 0 2px` `outline.primary-high-em` = **#845abe opaco** + outline 2px.
@@ -243,6 +264,8 @@ success.700 #2c6a2b), danger (bg danger.50 #fff3f2, fg danger.700 #cd2118), info
    (no 16); gap efectivo icono↔texto 4/6/8 (Kimen 2/4/6, −2px en todos los tamaños).
    Alturas y radios por tamaño ✓ exactos.
 6. **Focus**: anillo 3px #845abe66 (40%) vs 2px #845abe opaco actual.
+   *(Corregido 2026-07-25: el alfa es 20 % — `#845abe33` — leído del master
+   `Toggle 10023:1125`; el 66 es el valor del modo Dark. Véase §2.5.)*
 7. **Icon_button**: sin equivalente icon-only en Kimen (40×40, padding 0, icono 20px en md).
 8. **Status vs ki-badge**: desajuste estructural completo (dot 4px con rampa 500, bisel,
    blur y variante outline blanca 2px vs píldora de texto soft 50/700); faltan tono disabled

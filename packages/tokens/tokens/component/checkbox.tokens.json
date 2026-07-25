@@ -46,7 +46,7 @@
             "$description": "color used by the checkbox component for unchecked rest foreground."
           },
           "border": {
-            "$value": "{ki.outline.strong}",
+            "$value": "{ki.outline.control}",
             "$description": "color used by the checkbox component for unchecked rest border."
           }
         },
@@ -96,7 +96,7 @@
       "checked": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}",
+            "$value": "{ki.surface.primary-med-em}",
             "$description": "color used by the checkbox component for checked rest background."
           },
           "fg": {
@@ -110,7 +110,7 @@
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em-hover}",
+            "$value": "{ki.surface.primary-med-em-hover}",
             "$description": "color used by the checkbox component for checked hover background."
           },
           "fg": {
@@ -124,7 +124,7 @@
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}",
+            "$value": "{ki.surface.primary-med-em}",
             "$description": "color used by the checkbox component for checked active background."
           },
           "fg": {
@@ -154,7 +154,7 @@
       "indeterminate": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}",
+            "$value": "{ki.surface.primary-med-em}",
             "$description": "color used by the checkbox component for indeterminate rest background."
           },
           "fg": {
@@ -168,7 +168,7 @@
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em-hover}",
+            "$value": "{ki.surface.primary-med-em-hover}",
             "$description": "color used by the checkbox component for indeterminate hover background."
           },
           "fg": {
@@ -182,7 +182,7 @@
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.primary-high-em}",
+            "$value": "{ki.surface.primary-med-em}",
             "$description": "color used by the checkbox component for indeterminate active background."
           },
           "fg": {
@@ -239,7 +239,7 @@
         "shadow": {
           "$value": "{ki.focus.primary}",
           "$type": "shadow",
-          "$description": "shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md \u00a72.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+          "$description": "shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
         }
       }
     }

@@ -56,6 +56,11 @@ Los marcos superponen además un dot de presencia (`Status`) y un check
 `Icon/Verification_tick` en las esquinas: artefactos por capas, NO ejes del
 set — fuera de v1 (Adornments del spec, deferral compartido con 010/021).
 
+> **Corrección, 2026-07-25.** «NO ejes del set» es falso: `avatar 10010:1415`
+> declara `Status` e `Icon` como propiedades **BOOLEAN** del componente. El
+> deferral a v1 se mantiene, pero como decisión de alcance. Véase la
+> decisión 8.
+
 ### Rampas por tamaño (verificadas símbolo a símbolo)
 
 | Size | Caja (Space) | Icono User (Space) | Estilo texto | font/line |
@@ -153,6 +158,22 @@ pero baja a **14** en xs y xxs (verificado en ambos símbolos).
    implementa con z-index descendente asignado por el grupo a los miembros
    visibles (coordinación de composite, precedente 007) — no existe CSS puro
    por-índice para N arbitrario. El contador queda estático (capa base).
+
+   > **Corrección, 2026-07-25 — el z-order NO está invertido.** El
+   > «verificado en screenshot» no era verificable: los seis marcos de
+   > `Avatar_group 10087:2600` usan seis fotos distintas, así que el
+   > solapamiento no permite deducir el orden de pintado a ojo. La propiedad
+   > que sí lo declara es explícita y vale lo contrario:
+   > **`itemReverseZIndex` es `false` en los cinco marcos**. El miembro que
+   > encabeza pinta *debajo* del siguiente y el contador `+N` pinta **encima**
+   > de todos, no debajo.
+   >
+   > Lo embarcado hace lo opuesto (`zIndex = visibleCount − index`) y mete el
+   > contador bajo el último avatar. Esta decisión es la causa directa de ese
+   > bloqueante, y la aserción de `ki-avatar-group.browser.spec.ts` que
+   > consagra la inversión como correcta hay que darle la vuelta junto con la
+   > implementación. Se conserva el texto original: fue la premisa que
+   > autorizó el código.
 6. **Skew de vocabulario y pasos sintetizados** (Assumptions del spec): el
    marco de 20 px del grupo se llama "xs" en Figma pero usa las métricas xxs
    del avatar → vocabulario unificado xxs–xl en ambos elementos. El paso xs
@@ -167,3 +188,15 @@ pero baja a **14** en xs y xxs (verificado en ambos símbolos).
 8. **Adornos fuera de v1**: presencia y verificación de los marcos son capas
    superpuestas, no ejes del set (Type × Size verificado) — deferral
    compartido con 010/021, documentado como when-NOT-to-use.
+
+   > **Corrección, 2026-07-25 — `Status` e `Icon` son propiedades declaradas,
+   > no capas sueltas.** El master `avatar 10010:1415` declara ambas como
+   > propiedades **BOOLEAN** del componente, igual que `Type` y `Size` son
+   > propiedades VARIANT. No son artefactos superpuestos por el maquetador de
+   > la página: son parte de la API del set.
+   >
+   > El deferral a v1 sigue siendo una decisión de alcance perfectamente
+   > defendible, pero hay que sostenerlo como **decisión de alcance**, no como
+   > lectura del diseño — el argumento «no son ejes del set» es falso. Lo
+   > mismo aplica a la nota equivalente en §1 sobre el dot de presencia y el
+   > `Icon/Verification_tick`.

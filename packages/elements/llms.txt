@@ -88,7 +88,7 @@ CSS custom properties:
 - `--ki-alert-dismiss-size`: dimension used by the alert component for dismiss size.
 - `--ki-alert-focus-ring-color`: color used by the alert component for focus ring color.
 - `--ki-alert-focus-ring-offset`: dimension used by the alert component for focus ring offset.
-- `--ki-alert-focus-ring-shadow`: shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator).
+- `--ki-alert-focus-ring-shadow`: shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-alert-focus-ring-width`: dimension used by the alert component for focus ring width.
 - `--ki-alert-font-size`: dimension used by the alert component for font size.
 - `--ki-alert-gap`: dimension used by the alert component for gap.
@@ -686,7 +686,7 @@ CSS custom properties:
 - `--ki-checkbox-control-size`: dimension used by the checkbox component for control size.
 - `--ki-checkbox-focus-ring-color`: color used by the checkbox component for focus ring color.
 - `--ki-checkbox-focus-ring-offset`: dimension used by the checkbox component for focus ring offset.
-- `--ki-checkbox-focus-ring-shadow`: shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator).
+- `--ki-checkbox-focus-ring-shadow`: shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-checkbox-focus-ring-width`: dimension used by the checkbox component for focus ring width.
 - `--ki-checkbox-gap`: dimension used by the checkbox component for gap.
 - `--ki-checkbox-indeterminate-active-bg`: color used by the checkbox component for indeterminate active background.
@@ -1184,7 +1184,7 @@ CSS custom properties:
 - `--ki-input-focus-placeholder-fg`: color used by the input component for focus placeholder foreground.
 - `--ki-input-focus-ring-color`: color used by the input component for focus ring color.
 - `--ki-input-focus-ring-offset`: dimension used by the input component for focus ring offset.
-- `--ki-input-focus-ring-shadow`: shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator).
+- `--ki-input-focus-ring-shadow`: shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-input-focus-ring-width`: dimension used by the input component for focus ring width.
 - `--ki-input-font-size`: dimension used by the input component for font size.
 - `--ki-input-font-weight`: font weight used by the input component for font weight.
@@ -1436,7 +1436,7 @@ CSS custom properties:
 - `--ki-radio-dot-size`: dimension used by the radio component for dot size.
 - `--ki-radio-focus-ring-color`: color used by the radio component for focus ring color.
 - `--ki-radio-focus-ring-offset`: dimension used by the radio component for focus ring offset.
-- `--ki-radio-focus-ring-shadow`: shadow used by the radio component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator).
+- `--ki-radio-focus-ring-shadow`: shadow used by the radio component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-radio-focus-ring-width`: dimension used by the radio component for focus ring width.
 - `--ki-radio-gap`: dimension used by the radio component for gap.
 - `--ki-radio-label-font-size`: dimension used by the radio component for label font size.
@@ -1639,7 +1639,7 @@ CSS custom properties:
 - `--ki-select-focus-label-fg`: color used by the select component for focus label foreground.
 - `--ki-select-focus-ring-color`: color used by the select component for focus ring color.
 - `--ki-select-focus-ring-offset`: dimension used by the select component for focus ring offset.
-- `--ki-select-focus-ring-shadow`: shadow used by the select component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator).
+- `--ki-select-focus-ring-shadow`: shadow used by the select component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-select-focus-ring-width`: dimension used by the select component for focus ring width.
 - `--ki-select-font-size`: dimension used by the select component for font size.
 - `--ki-select-gap`: dimension used by the select component for gap.
@@ -1758,7 +1758,7 @@ CSS custom properties:
 - `--ki-switch-checked-rest-track`: color used by the switch component for checked rest track.
 - `--ki-switch-focus-ring-color`: color used by the switch component for focus ring color.
 - `--ki-switch-focus-ring-offset`: dimension used by the switch component for focus ring offset.
-- `--ki-switch-focus-ring-shadow`: shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator).
+- `--ki-switch-focus-ring-shadow`: shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-switch-focus-ring-width`: dimension used by the switch component for focus ring width.
 - `--ki-switch-gap`: dimension used by the switch component for gap.
 - `--ki-switch-min-target`: dimension used by the switch component for min target.
@@ -1813,7 +1813,7 @@ Methods: none
 CSS custom properties:
 - `--ki-tab-focus-ring-color`: color used by the tab component for focus ring color.
 - `--ki-tab-focus-ring-offset`: dimension used by the tab component for focus ring offset.
-- `--ki-tab-focus-ring-shadow`: shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator).
+- `--ki-tab-focus-ring-shadow`: shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-tab-focus-ring-width`: dimension used by the tab component for focus ring width.
 - `--ki-tab-font-size`: dimension used by the tab component for font size.
 - `--ki-tab-font-weight`: font weight used by the tab component for font weight.
@@ -1983,7 +1983,7 @@ CSS custom properties:
 - `--ki-textarea-focus-placeholder-fg`: color used by the textarea component for focus placeholder foreground.
 - `--ki-textarea-focus-ring-color`: color used by the textarea component for focus ring color.
 - `--ki-textarea-focus-ring-offset`: dimension used by the textarea component for focus ring offset.
-- `--ki-textarea-focus-ring-shadow`: shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator).
+- `--ki-textarea-focus-ring-shadow`: shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-textarea-focus-ring-width`: dimension used by the textarea component for focus ring width.
 - `--ki-textarea-font-size`: dimension used by the textarea component for font size.
 - `--ki-textarea-font-weight`: font weight used by the textarea component for font weight.

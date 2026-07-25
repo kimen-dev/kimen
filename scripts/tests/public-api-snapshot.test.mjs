@@ -467,7 +467,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/006-wave1-host-contract.json',
+      '../../changes/api/007-control-boundary-role.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -500,10 +500,16 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   assert.deepEqual(result.newRootSymbols, []);
   assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].components).length, 29);
   assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].rootSymbols).length, 32);
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1308);
+  // The control-boundary role (changes/api/007) adds three semantic leaves:
+  // --ki-outline-control and --ki-outline-control-hover, the boundary of a
+  // control that can be empty, pinned to WCAG 1.4.11's 3:1 rather than to a
+  // position in the emphasis ramp; and --ki-surface-primary-med-em-hover, the
+  // hover of the MarsUI default brand surface, which the selection family had
+  // no scheme-correct step for.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1311);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1308,
+    1311,
   );
 });

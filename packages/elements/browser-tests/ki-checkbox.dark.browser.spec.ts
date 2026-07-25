@@ -56,25 +56,47 @@ function controlBackground(el: KiCheckboxElement): string {
 
 describe('ki-checkbox under the dark scheme', () => {
   it('S17 resolves the checked control from dark onmars token values', async () => {
-    // Capture the forced-light value first so the dark assertion below is
-    // falsable: a probe alone resolves whatever scheme is active and would
-    // stay green even if the dark block never applied (ki-card.dark pattern).
+    // Each scheme is checked against the tokens read while that scheme is the
+    // active one. The pointer may rest over the freshly mounted control, so
+    // the observed value is one of the two interaction states.
     let el = await mount('light');
     const lightBackground = controlBackground(el);
+    const lightPage = readTokenColor('--ki-surface-s0');
+    const lightHover = readTokenColor('--ki-checkbox-checked-hover-bg');
+    expect([readTokenColor('--ki-checkbox-checked-rest-bg'), lightHover]).toContain(
+      lightBackground,
+    );
 
     el = await mount('dark');
     const background = controlBackground(el);
-
-    // The pointer may rest over the freshly mounted control, so the observed
-    // value is one of the two dark interaction states; both mounts share the
-    // same geometry, so the interaction state matches across schemes.
     expect([
       readTokenColor('--ki-checkbox-checked-rest-bg'),
       readTokenColor('--ki-checkbox-checked-hover-bg'),
     ]).toContain(background);
-    expect(background, 'forced dark must change the resolved control surface').not.toBe(
-      lightBackground,
-    );
     expect(background).not.toBe('rgba(0, 0, 0, 0)');
+
+    // Falsability, unchanged in intent: a probe alone resolves whatever scheme
+    // is active and would stay green even if the dark block never applied
+    // (ki-card.dark pattern). It is probed on the page surface, not on the
+    // control fill: the checked fill is MarsUI's default brand surface
+    // (brand 500) and resolves to the same value in BOTH schemes by design,
+    // exactly as the ki-switch checked track does.
+    expect(readTokenColor('--ki-surface-s0'), 'forced dark must change the scheme').not.toBe(
+      lightPage,
+    );
+
+    // The page surface proves the dark BLOCK applied; it does not prove this
+    // component's own scheme-specific role did. --ki-surface-primary-med-em-hover
+    // is overridden for dark (brand 600 light -> brand 400 dark) precisely
+    // because primary-high-em collapses onto primary-med-em there, leaving the
+    // checked hover with no delta. Drop that override and every other assertion
+    // here still holds, so it is pinned directly. Probed on the token rather
+    // than on the rendered control: the pointer may rest over the freshly
+    // mounted control, so the rendered value is rest OR hover and cannot
+    // identify the hover cell on its own.
+    expect(
+      readTokenColor('--ki-checkbox-checked-hover-bg'),
+      'the checked hover fill must carry its own dark value',
+    ).not.toBe(lightHover);
   });
 });

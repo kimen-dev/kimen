@@ -201,7 +201,7 @@
             },
             {
               "name": "--ki-alert-focus-ring-shadow",
-              "description": "shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+              "description": "shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
             },
             {
               "name": "--ki-alert-focus-ring-width",
@@ -2495,7 +2495,7 @@
             },
             {
               "name": "--ki-checkbox-focus-ring-shadow",
-              "description": "shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+              "description": "shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
             },
             {
               "name": "--ki-checkbox-focus-ring-width",
@@ -4394,7 +4394,7 @@
             },
             {
               "name": "--ki-input-focus-ring-shadow",
-              "description": "shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+              "description": "shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
             },
             {
               "name": "--ki-input-focus-ring-width",
@@ -5265,7 +5265,7 @@
             },
             {
               "name": "--ki-radio-focus-ring-shadow",
-              "description": "shadow used by the radio component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+              "description": "shadow used by the radio component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
             },
             {
               "name": "--ki-radio-focus-ring-width",
@@ -6030,7 +6030,7 @@
             },
             {
               "name": "--ki-select-focus-ring-shadow",
-              "description": "shadow used by the select component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+              "description": "shadow used by the select component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
             },
             {
               "name": "--ki-select-focus-ring-width",
@@ -6506,7 +6506,7 @@
             },
             {
               "name": "--ki-switch-focus-ring-shadow",
-              "description": "shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+              "description": "shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
             },
             {
               "name": "--ki-switch-focus-ring-width",
@@ -6733,7 +6733,7 @@
             },
             {
               "name": "--ki-tab-focus-ring-shadow",
-              "description": "shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+              "description": "shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
             },
             {
               "name": "--ki-tab-focus-ring-width",
@@ -7370,7 +7370,7 @@
             },
             {
               "name": "--ki-textarea-focus-ring-shadow",
-              "description": "shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 40% — specs/002-ki-button/design-extraction.md §2.5, same double mechanism as ki-button: glow plus the opaque indicator)."
+              "description": "shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator)."
             },
             {
               "name": "--ki-textarea-focus-ring-width",
