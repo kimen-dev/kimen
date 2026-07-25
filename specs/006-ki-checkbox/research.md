@@ -1,14 +1,31 @@
 # Phase 0 Research: ki-checkbox
 
 Decisions that resolve every open technical question in the plan. Sources:
-the spec (M3 checkbox inventory; MarsUI verified 2026-07-08 — no checkbox
-frame exists, onmars styles from the 001 token vocabulary), the 001 token
-architecture, the 002 ki-button implementation (ElementInternals pattern,
+the spec (M3 checkbox inventory; MarsUI checkbox masters — see the
+Correction below, which retracts the "no checkbox frame exists" premise
+these decisions were taken under), the 001 token architecture, the 002
+ki-button implementation (ElementInternals pattern,
 `--_ki-*` CSS indirection, temporary-submitter machinery — not needed here),
 the 003 ki-input plan (research D1–D10: sibling form control planned under
 the same charter; its applicable decisions are cited and reused rather than
 re-derived), the HTML form-associated custom elements (FACE) spec and the
 constraint-validation API.
+
+**Correction (2026-07-25)**: these decisions were taken under the premise,
+recorded in spec.md as a "full page sweep verified 2026-07-08", that MarsUI
+ships no checkbox frame. That sweep was a false negative — the Figma
+`get_metadata` tool called without a `nodeId` returns only 10 of the MarsUI
+file's 54 pages and presents them as the complete page list, so the
+Checkboxes page was never examined. Re-enumerating with `use_figma`
+(`figma.root.children`) finds page Checkboxes (node 10101:4054) carrying
+`Checkbox` (node 10030:982 — `States` = unchecked | hover | checked |
+checked_focused | disabled | indeterminate | indeterminate_disabled ×
+`Size` = sm | md | lg) and `Checkbox_label` (node 10095:3846 — `Direction`
+= left | right × `Size` = sm | md). Any decision below whose rationale
+leans on the MarsUI absence is unsound on that count and is superseded by a
+design extraction against those masters, still outstanding; the affected
+rationale is flagged **[premise refuted — re-derive]** in place. No
+decision is changed here — re-derivation is a founder call.
 
 ## D1 — Shadow anatomy: native `<input type="checkbox">` wrapped by a shadow `<label>`; label = default slot
 
@@ -288,10 +305,13 @@ already validates, and is asserted visually in the browser suite. Disabled
 cells are exempt (WCAG 1.4.3, existing gate rule).
 
 **Rationale**: the spec's constitutional surface fixes this exact
-vocabulary (no variant/tone/size axes — MarsUI has no checkbox frame, M3's
-checkbox is a single fixed-size control), so the 002 variant × tone matrix
-collapses to selection × interaction. The matrix is explicit rather than
-clever because provable one-step re-theming (S16) is the product
+vocabulary (no variant/tone/size axes — M3's checkbox is a single
+fixed-size control; the parallel claim that MarsUI has no checkbox frame is
+**[premise refuted — re-derive]**, MarsUI's `Checkbox` (node 10030:982)
+ships `Size` = sm | md | lg, so the single-valued structure block above
+rests on a refuted premise and needs re-derivation), so the 002 variant ×
+tone matrix collapses to selection × interaction. The matrix is explicit
+rather than clever because provable one-step re-theming (S16) is the product
 differentiator (same rationale as 003 D8).
 
 **Alternatives considered**: (a) collapsing checked and indeterminate into

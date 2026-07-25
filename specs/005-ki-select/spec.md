@@ -29,21 +29,33 @@ guarantee):
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-select |
 |---|---|---|---|
-| Component identity | No select or dropdown-list component set in MarsUI (full-file sweep verified 2026-07-08); nearest artifacts are `Profile_dropdown` (avatar + name + chevron menu trigger) and `Payment_method` (Select_method=visa\|mastercard\|apple_pay\|g_pay picker row) — neither is a form select | No select component; the equivalent is the exposed dropdown menu — a menu anchored to a text field | One `ki-select` trigger plus a popup list of `ki-option` children; each theme styles trigger and popup through component tokens (material3 via its text-field + menu roles) |
-| Trigger anatomy | No select trigger frame (verified 2026-07-08); `Profile_dropdown` is the file's only trigger-like anatomy (leading avatar, label, trailing chevron) and chevron glyphs exist on the Icons page | Text field container in filled or outlined style, with a label and a trailing dropdown icon | Visible `label` attribute, displayed value or placeholder, component-rendered dropdown indicator. Filled vs outlined is a token-layer decision, NOT a prop (002 shape precedent) |
-| Popup surface | The extracted onmars token vocabulary ships surface levels s0–s5 for elevated surfaces (001); MarsUI ships no select popup frame (verified 2026-07-08) | Menu container elevated over the surface role | Popup background, elevation, radius and padding are `--ki-select-*` component tokens resolving from each theme's surface roles |
-| Option states | The onmars vocabulary carries text-emphasis levels (001); MarsUI ships no option-list frames (verified 2026-07-08) | Menu list items with enabled, hovered, focused, disabled and selected states | Option states styled via option state tokens and CSS states, never props; the selected option is exposed as selected to assistive technology |
-| Size | The onmars vocabulary carries an xs–xl metric ramp (001); MarsUI has no select frame, so no select size scale exists (verified 2026-07-08) | Single text-field height; no size scale for menus in the kit | No `size` attribute in v1 (charter: only where the sources scale the control); heights and metrics are per-theme component tokens. A size axis would be an additive MINOR if the MarsUI frames confirm one |
-| Interaction states (trigger) | No MarsUI select frame (verified 2026-07-08); the button state matrix (default/hover/focus/disabled, 002) is the file's closest state precedent | enabled, hovered, focused, disabled | CSS states (hover, focus-visible, disabled), token-styled, never props |
-| Semantic intent | No MarsUI select frame and no select-level tone artifact (verified 2026-07-08) | Text field error state exists; validation-message display is a separate text-field concern | No `tone` axis; constraint validation (`required`) participates natively, validation-message display is post-v1 (003 precedent) |
+| Component identity | `Dropdown` component set on the **Input fields** page (page node `12046:706`, set node `12041:1595`), axes `States` = default \| default_dark \| hover \| focus \| primary_light \| active \| danger \| disabled × `Auto_layout` = TRUE \| FALSE (re-enumerated 2026-07-25 with `use_figma`); the former "no select or dropdown-list component set in MarsUI (full-file sweep verified 2026-07-08)" reading was a FALSE NEGATIVE — see the correction note below. Secondary artifacts are `Profile_dropdown` (avatar + name + chevron menu trigger) and `Payment_method` (Select_method=visa\|mastercard\|apple_pay\|g_pay picker row) | No select component; the equivalent is the exposed dropdown menu — a menu anchored to a text field | One `ki-select` trigger plus a popup list of `ki-option` children; each theme styles trigger and popup through component tokens (material3 via its text-field + menu roles) |
+| Trigger anatomy | The trigger anatomy is defined by the `Dropdown` master (`12041:1595`) and is NOT yet extracted; the former "no select trigger frame (verified 2026-07-08)" claim is refuted (correction note below). `Profile_dropdown` remains a secondary trigger-like anatomy (leading avatar, label, trailing chevron) and chevron glyphs exist on the Icons page | Text field container in filled or outlined style, with a label and a trailing dropdown icon | Visible `label` attribute, displayed value or placeholder, component-rendered dropdown indicator. Filled vs outlined is a token-layer decision, NOT a prop (002 shape precedent) |
+| Popup surface | The extracted onmars token vocabulary ships surface levels s0–s5 for elevated surfaces (001); whether the `Dropdown` master (`12041:1595`) also frames an open popup/list surface is UNVERIFIED pending extraction — the former "MarsUI ships no select popup frame (verified 2026-07-08)" claim is refuted (correction note below) | Menu container elevated over the surface role | Popup background, elevation, radius and padding are `--ki-select-*` component tokens resolving from each theme's surface roles |
+| Option states | The onmars vocabulary carries text-emphasis levels (001); the `Dropdown` master (`12041:1595`) carries a `States` axis (default, default_dark, hover, focus, primary_light, active, danger, disabled) and whether it also frames option rows is UNVERIFIED pending extraction — the former "MarsUI ships no option-list frames (verified 2026-07-08)" claim is refuted (correction note below) | Menu list items with enabled, hovered, focused, disabled and selected states | Option states styled via option state tokens and CSS states, never props; the selected option is exposed as selected to assistive technology |
+| Size | The onmars vocabulary carries an xs–xl metric ramp (001); the `Dropdown` master (`12041:1595`) exposes no size axis — its variant matrix is `States` × `Auto_layout` (TRUE\|FALSE) — but the premise recorded here, "MarsUI has no select frame, so no select size scale exists (verified 2026-07-08)", was false, and the `Auto_layout` axis is an unextracted layout-sizing distinction | Single text-field height; no size scale for menus in the kit | No `size` attribute in v1 (charter: only where the sources scale the control); heights and metrics are per-theme component tokens. A size axis would be an additive MINOR if the MarsUI frames confirm one. **Premise refuted (2026-07-25)** — the MarsUI half of this justification rested on the false-negative sweep; the decision stands unchanged pending re-derivation against `12041:1595` (founder call) |
+| Interaction states (trigger) | The `Dropdown` master (`12041:1595`) carries its OWN `States` axis — default, default_dark, hover, focus, primary_light, active, danger, disabled — which is wider than the button matrix (default/hover/focus/disabled, 002) borrowed here as a precedent; the former "no MarsUI select frame (verified 2026-07-08)" claim is refuted | enabled, hovered, focused, disabled | CSS states (hover, focus-visible, disabled), token-styled, never props. **Premise refuted (2026-07-25)** — the state list assumed here was derived from a borrowed precedent because the master was believed absent; the mapping of `active`, `primary_light`, `danger` and `default_dark` needs re-derivation against `12041:1595` (founder call) |
+| Semantic intent | The `Dropdown` master's `States` axis (`12041:1595`) includes `danger` and `primary_light`, i.e. a tone-like distinction DOES exist at select level; the former "no MarsUI select frame and no select-level tone artifact (verified 2026-07-08)" claim is refuted | Text field error state exists; validation-message display is a separate text-field concern | No `tone` axis; constraint validation (`required`) participates natively, validation-message display is post-v1 (003 precedent). **Premise refuted (2026-07-25)** — this decision was justified by the absence of a select-level tone artifact, which the master contradicts; it stands unchanged pending re-derivation against `12041:1595` (founder call) |
 
-**Verification note (resolved 2026-07-08)**: the MarsUI file was swept page
-by page and contains no select component, so the former non-additive risk
-(a MarsUI select contradicting the trigger anatomy, parts list or token
-families) is void — there is nothing to contradict. The API is derived from
-Material 3 plus the onmars token vocabulary (001/002) by fact, not by lack
-of verification; the onmars theme styles ki-select from tokens alone. Any
-future MarsUI select artifact would be evaluated as additive MINOR.
+**Correction note (2026-07-25) — the 2026-07-08 sweep was a FALSE
+NEGATIVE**: the "full-file sweep" cited throughout the table above was run
+with the Figma `get_metadata` tool called without a `nodeId`. That call
+returns only 10 of the MarsUI file's 54 pages and presents the truncated
+listing as the complete page list. The **Input fields** page (`12046:706`)
+was never in the returned set, so the `Dropdown` master (`12041:1595`) was
+never seen. MarsUI DOES ship a select/dropdown master, re-enumerated with
+`use_figma` over `figma.root.children` — the only reliable enumerator;
+`get_metadata` without a `nodeId` must never be used to prove absence.
+
+Consequently the superseded note's conclusion — that the non-additive risk
+(a MarsUI select contradicting the trigger anatomy, parts list, state matrix
+or token families) was "void because there is nothing to contradict" — is
+unsound: the master exists and CAN contradict any of them. The design-source
+table stands only until a design-extraction against `12041:1595` replaces
+it, and every axis decision that cited the absence as its justification
+(Size, Interaction states, Semantic intent, and the matching entry under
+Assumptions) is flagged above for re-derivation. Those decisions are left
+unchanged here — reopening them is the founder's call, not this note's.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -554,9 +566,15 @@ Feature: Select
 ## Assumptions
 
 - No `size`, `variant` or `tone` axes in v1: the M3 exposed dropdown menu
-  offers no such scales, and MarsUI verification 2026-07-08 found no select
-  frames at all (charter allows a subset with justification); any confirmed
-  axis later is an additive MINOR.
+  offers no such scales, and the MarsUI half of this justification —
+  "verification 2026-07-08 found no select frames at all" — is REFUTED (see
+  the correction note in Design-source analysis): the `Dropdown` master
+  `12041:1595` on the Input fields page (`12046:706`) exposes `States`
+  (default, default_dark, hover, focus, primary_light, active, danger,
+  disabled) × `Auto_layout`, which bears at least on the `tone` question.
+  The assumption is left standing as written (charter allows a subset with
+  justification) but rests on a refuted premise and needs re-derivation
+  against that master; any confirmed axis later is an additive MINOR.
 - The selection's single source of truth is `ki-select`'s `value`;
   `ki-option` carries no `selected` attribute in v1 (avoids a dual source of
   truth; native-`selected` sugar could be additive later).

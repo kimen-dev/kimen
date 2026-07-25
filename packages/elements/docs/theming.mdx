@@ -44,6 +44,30 @@ Both themes follow the OS by default and can be forced either way:
 
 The **Scheme** toolbar above drives exactly this attribute.
 
+### The page contract
+
+A token stylesheet can only carry custom properties, so it cannot declare
+`color-scheme`. Without that declaration the tokens flip to their dark values
+for a visitor who prefers dark while the browser keeps painting a light canvas,
+light scrollbars and light autofill — dark Kimen surfaces on a white page.
+
+Load the opt-in page contract alongside a theme to close that gap. It declares
+`color-scheme`, paints the page from `--ki-surface-s0` / `--ki-text-high-em`,
+and sets the body family:
+
+```html
+<link rel="stylesheet" href="@kimen/tokens/css" />
+<link rel="stylesheet" href="@kimen/tokens/css/base" />
+```
+
+It publishes no tokens of its own — it only consumes them, so it never widens
+the token surface. If your page is deliberately single-scheme, set
+`data-ki-color-scheme` and both the tokens **and** the browser follow that
+choice.
+
+Skipping it is supported: components render correctly on their own. What you
+lose is the page around them.
+
 ## Surfaces
 
 The semantic surface scale in the current scheme (each swatch reads its

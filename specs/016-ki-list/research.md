@@ -11,6 +11,20 @@ are CITED and reused rather than re-derived, Art. VII) and the
 two-element file/test conventions only — none of its coordination machinery
 applies to a non-interactive list).
 
+> **Correction, 2026-07-25.** This research was written on the basis that
+> MarsUI had no list frame ("verified 2026-07-08"). That verification was a
+> false negative: the sweep enumerated the file with the Figma `get_metadata`
+> tool without a nodeId, which returns only 10 of the file's 54 pages while
+> presenting them as the complete page list, and the `List` page was not among
+> them. Re-enumerating with `use_figma` (`figma.root.children`) — the only
+> reliable enumerator — found the List page, node `10113:6434`, carrying the
+> `List` master, node `10063:2066` (3 sizes × 3 states, the states including a
+> hover fill of `#000000` at 3% opacity and an active fill at 5%); the nearest
+> container master is `Dropmenu`, node `12127:30113`. Any reasoning below that
+> leans on the absence is unsound and is superseded by a design extraction
+> against those nodes, which has not yet been performed. See the correction
+> block in [spec.md](./spec.md) for the affected decisions.
+
 Shared decisions inherited from the siblings (cited, not re-derived):
 
 - **Empty-region collapse via `slotchange` state, never `:has()`/`:empty`**
@@ -142,9 +156,13 @@ divider on the slotted items themselves —
 `--ki-list-item-divider-{width|color}` as the spec's constitutional surface
 fixes them. Theme values carry the M3 divider axis: **onmars** sets
 `divider-width` to `{ki.space.zero}` and separates through `--ki-list-gap`
-(faithful to MarsUI, which ships dividers as standalone `Divider_*`
-components and has no list frame — spec design analysis, verified
-2026-07-08); **material3** sets a hairline width referencing the semantic
+(justified as faithful to MarsUI, which ships dividers as standalone
+`Divider_*` components and "has no list frame" — spec design analysis,
+verified 2026-07-08; **premise refuted 2026-07-25, see the correction at the
+top of this file**: the `List` master, node `10063:2066`, does exist and has
+never been inspected for how it separates its rows, so the onmars zero-width
+value rests on a false negative and needs re-derivation — a founder call, not
+an agent one); **material3** sets a hairline width referencing the semantic
 outline ramp with a zero list gap (M3's optional divider, expressed as
 values — S7's observable difference). A future `ki-divider` component
 remains a separate roadmap item; this mechanism neither uses nor blocks it.
@@ -195,7 +213,11 @@ model; rejected.
 attribute, no xs–xl ramp for lists (the spec's design analysis found no
 evidence lists scale through MarsUI's metric ramp, and M3 scales by line
 count); the only height vocabulary is the two min-height steps. Anything
-more would be speculative (Art. VII).
+more would be speculative (Art. VII). (**Correction 2026-07-25, premise
+refuted**: the "no evidence lists scale" half was a false negative — the
+`List` master, node `10063:2066`, varies over 3 sizes. The token set is not
+changed here; whether the MarsUI scale belongs in this file as extra
+min-height steps is a founder re-derivation against that master.)
 
 **One declared addition**: `ki.list.item.padding-block` does not appear in
 the constitutional surface's token enumeration (which lists

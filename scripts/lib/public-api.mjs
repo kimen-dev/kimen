@@ -201,6 +201,18 @@ function validateStylesheets(packageName, packageSurface) {
         `${packageName}.stylesheets.${subpath}.target must match its public export`,
       );
     }
+    // The page contract (`./css/base`) consumes tokens instead of publishing
+    // them, so it carries no per-context token map — declaring one would mean
+    // it had smuggled tokens past the surface gate. See
+    // scripts/lib/css-token-surface.mjs onePageContract().
+    if (stylesheet.pageContract === true) {
+      if (stylesheet.contexts !== undefined) {
+        throw new TypeError(
+          `${packageName}.stylesheets.${subpath} is a page contract and must publish no token contexts`,
+        );
+      }
+      continue;
+    }
     const contexts = assertRecord(
       stylesheet.contexts,
       `${packageName}.stylesheets.${subpath}.contexts`,

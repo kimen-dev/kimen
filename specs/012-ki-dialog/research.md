@@ -1,14 +1,27 @@
 # Phase 0 Research: ki-dialog
 
 Decisions that resolve every open technical question in the plan. Sources:
-the spec (design-source analysis: no MarsUI dialog frame — only the
-`Modal_overlay` scrim symbol; Material 3 basic dialog; verified 2026-07-08),
-the WAI-ARIA APG Dialog (Modal) pattern, the WHATWG HTML `<dialog>`
-algorithms (show-modal, dialog focusing steps, close-the-dialog, close
-requests), the 001 token architecture, the 002 ki-button implementation
+the spec (design-source analysis: MarsUI `Modal` (`16414:19664`) on page
+Modals (`14153:2128`), with `Modal_header` (`14160:29188`) and
+`Modal_actions` (`14158:28301`); the `Modal_overlay` scrim symbol; Material 3
+basic dialog), the WAI-ARIA APG Dialog (Modal) pattern, the WHATWG HTML
+`<dialog>` algorithms (show-modal, dialog focusing steps, close-the-dialog,
+close requests), the 001 token architecture, the 002 ki-button implementation
 (`--_ki-*` CSS indirection, focus-ring tokens, browser-suite layout) and the
 008/009/011 sibling plans (contrast-sweep extension mechanism, slot-emptiness
 tracking, test layout — decisions cited rather than re-derived, Art. VII).
+
+> **CORRECTION 2026-07-25.** These decisions were taken against a spec that
+> stated "no MarsUI dialog frame — only the `Modal_overlay` scrim symbol
+> (verified 2026-07-08)". That was a false negative: the 2026-07-08 "full
+> page sweep" used the Figma `get_metadata` tool without a `nodeId`, which
+> returns only 10 of the MarsUI file's 54 pages as if they were the complete
+> list, and the Modals page (`14153:2128`) was not among them. Re-enumerated
+> with `use_figma` (`figma.root.children`), the master `Modal`
+> (`16414:19664`) exists. Any reasoning below that leans on the MarsUI
+> dialog being absent is unsound and is superseded by a design-extraction
+> against that master, which has not yet been performed; the technical
+> decisions (platform behaviour, ARIA, token plumbing) are unaffected.
 
 ## D1 — Base: native `<dialog>` + `showModal()` inside the shadow root; the host `open` attribute drives it through methods only
 
@@ -338,9 +351,12 @@ dialog[open], dialog[open]::backdrop {
   motion tokens exist anywhere in 001 (verified against
   `packages/tokens/tokens/` on 2026-07-08: no duration/easing token in any
   layer). `--ki-dialog-motion-{duration|easing}` therefore carry LITERAL
-  values at the component layer: onmars `0ms` / `linear` (MarsUI shows no
-  dialog motion artifacts — spec design analysis; the dialog appears
-  instantly under the default theme) and material3 ~`200ms` / an M3
+  values at the component layer: onmars `0ms` / `linear` (**[rests on a
+  refuted premise — re-derive]** the justification "MarsUI shows no dialog
+  motion artifacts" came from the spec design analysis, whose 2026-07-08
+  sweep never opened the Modals page; `Modal` (`16414:19664`) exists and its
+  motion has not been inspected — the `0ms` value stands pending founder
+  judgement, not as a read fact) and material3 ~`200ms` / an M3
   decelerate cubic-bezier (M3 declares entrance transitions). This deviates
   from "every component value references the semantic layer" because there
   is no semantic motion layer to reference, and inventing `ki.motion.*` for

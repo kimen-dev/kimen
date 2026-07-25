@@ -50,3 +50,42 @@ await writeFile(
 );
 
 console.log('✔ dist/css/tokens.material3.css (theme: material3 — light + dark)');
+
+// The page contract (opt-in): the three declarations a consumer page needs and
+// that a token sheet cannot carry. `color-scheme` is the load-bearing one —
+// without it a light-only page whose visitor prefers dark gets Kimen's dark
+// component surfaces on a user-agent white canvas, with light scrollbars,
+// light autofill and, in the worst case, an invisible field label.
+//
+// This sheet publishes NO tokens: it only consumes them. That is what keeps it
+// outside the public token surface (scripts/lib/css-token-surface.mjs).
+const pageContractCss = `/**
+ * Do not edit directly, this file was auto-generated.
+ *
+ * Kimen page contract — opt-in, import after a theme stylesheet:
+ *   import '@kimen/tokens/css';
+ *   import '@kimen/tokens/css/base';
+ *
+ * A page that is deliberately light-only or dark-only sets
+ * data-ki-color-scheme on <html> instead of relying on the visitor's
+ * preference; both the tokens and the user agent then follow that choice.
+ */
+:root {
+  color-scheme: light dark;
+  background-color: var(--ki-surface-s0);
+  color: var(--ki-text-high-em);
+  font-family: var(--ki-typography-family-body);
+}
+
+:root[data-ki-color-scheme="light"] {
+  color-scheme: light;
+}
+
+:root[data-ki-color-scheme="dark"] {
+  color-scheme: dark;
+}
+`;
+
+await writeFile(new URL('./dist/css/base.css', import.meta.url), pageContractCss);
+
+console.log('✔ dist/css/base.css (page contract — opt-in)');

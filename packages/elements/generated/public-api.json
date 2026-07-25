@@ -12513,6 +12513,11 @@
             "replacement": null,
             "target": "./dist/css/tokens.css"
           },
+          "./css/base": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./dist/css/base.css"
+          },
           "./css/material3": {
             "deprecatedSince": null,
             "replacement": null,
@@ -12524,6 +12529,11 @@
             "declaration": null,
             "symbols": {},
             "target": "./dist/css/tokens.css"
+          },
+          "./css/base": {
+            "declaration": null,
+            "symbols": {},
+            "target": "./dist/css/base.css"
           },
           "./css/material3": {
             "declaration": null,
@@ -12547,7 +12557,7 @@
                 "--ki-alert-dismiss-size": "1.5rem",
                 "--ki-alert-focus-ring-color": "#b59cd8",
                 "--ki-alert-focus-ring-offset": "0.125rem",
-                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-alert-focus-ring-width": "0.125rem",
                 "--ki-alert-font-size": "0.8125rem",
                 "--ki-alert-gap": "0.375rem",
@@ -12652,7 +12662,7 @@
                 "--ki-button-border-width": "1px",
                 "--ki-button-focus-ring-color": "#b59cd8",
                 "--ki-button-focus-ring-offset": "0.125rem",
-                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Inter,system-ui,sans-serif",
                 "--ki-button-font-weight": "600",
@@ -12928,7 +12938,7 @@
                 "--ki-checkbox-control-size": "1.25rem",
                 "--ki-checkbox-focus-ring-color": "#b59cd8",
                 "--ki-checkbox-focus-ring-offset": "0.125rem",
-                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-checkbox-focus-ring-width": "0.125rem",
                 "--ki-checkbox-gap": "0.375rem",
                 "--ki-checkbox-indeterminate-active-bg": "#845abe",
@@ -13001,12 +13011,12 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.48)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.12)",
                 "--ki-focus-gray": "0 0 0 3px rgba(255,255,255,0.08)",
-                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-icon-button-backdrop-blur": "12px",
                 "--ki-icon-button-border-width": "1px",
                 "--ki-icon-button-focus-ring-color": "#b59cd8",
                 "--ki-icon-button-focus-ring-offset": "0.125rem",
-                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-icon-button-focus-ring-width": "0.125rem",
                 "--ki-icon-button-ghost-active-shadow": "none",
                 "--ki-icon-button-ghost-danger-active-bg": "#72130e",
@@ -13225,7 +13235,7 @@
                 "--ki-input-focus-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-input-focus-ring-color": "#b59cd8",
                 "--ki-input-focus-ring-offset": "0.125rem",
-                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-input-focus-ring-width": "0.125rem",
                 "--ki-input-font-size": "0.8125rem",
                 "--ki-input-font-weight": "500",
@@ -13411,7 +13421,7 @@
                 "--ki-radio-dot-size": "0.5rem",
                 "--ki-radio-focus-ring-color": "#b59cd8",
                 "--ki-radio-focus-ring-offset": "0.125rem",
-                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-radio-focus-ring-width": "0.125rem",
                 "--ki-radio-gap": "0.375rem",
                 "--ki-radio-group-gap": "0.375rem",
@@ -13472,7 +13482,7 @@
                 "--ki-select-focus-label-fg": "#ffffff",
                 "--ki-select-focus-ring-color": "#b59cd8",
                 "--ki-select-focus-ring-offset": "0.125rem",
-                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-select-focus-ring-width": "0.125rem",
                 "--ki-select-font-size": "0.8125rem",
                 "--ki-select-gap": "0.25rem",
@@ -13605,7 +13615,7 @@
                 "--ki-switch-checked-rest-track": "#845abe",
                 "--ki-switch-focus-ring-color": "#b59cd8",
                 "--ki-switch-focus-ring-offset": "0.125rem",
-                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-switch-focus-ring-width": "0.125rem",
                 "--ki-switch-gap": "0.375rem",
                 "--ki-switch-min-target": "1.5rem",
@@ -13629,7 +13639,7 @@
                 "--ki-switch-unchecked-rest-track": "#242424",
                 "--ki-tab-focus-ring-color": "#b59cd8",
                 "--ki-tab-focus-ring-offset": "0.125rem",
-                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-tab-focus-ring-width": "0.125rem",
                 "--ki-tab-font-size": "0.8125rem",
                 "--ki-tab-font-weight": "600",
@@ -13728,7 +13738,7 @@
                 "--ki-textarea-focus-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-focus-ring-color": "#b59cd8",
                 "--ki-textarea-focus-ring-offset": "0.125rem",
-                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.56)",
+                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
                 "--ki-textarea-focus-ring-width": "0.125rem",
                 "--ki-textarea-font-size": "0.8125rem",
                 "--ki-textarea-font-weight": "500",
@@ -13857,7 +13867,7 @@
                 "--ki-alert-dismiss-size": "1.5rem",
                 "--ki-alert-focus-ring-color": "#845abe",
                 "--ki-alert-focus-ring-offset": "0.125rem",
-                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-alert-focus-ring-width": "0.125rem",
                 "--ki-alert-font-size": "0.8125rem",
                 "--ki-alert-gap": "0.375rem",
@@ -13962,7 +13972,7 @@
                 "--ki-button-border-width": "1px",
                 "--ki-button-focus-ring-color": "#845abe",
                 "--ki-button-focus-ring-offset": "0.125rem",
-                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Inter,system-ui,sans-serif",
                 "--ki-button-font-weight": "600",
@@ -14238,7 +14248,7 @@
                 "--ki-checkbox-control-size": "1.25rem",
                 "--ki-checkbox-focus-ring-color": "#845abe",
                 "--ki-checkbox-focus-ring-offset": "0.125rem",
-                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-checkbox-focus-ring-width": "0.125rem",
                 "--ki-checkbox-gap": "0.375rem",
                 "--ki-checkbox-indeterminate-active-bg": "#5f3993",
@@ -14311,12 +14321,12 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.32)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.05)",
                 "--ki-focus-gray": "0 0 0 3px rgba(0,0,0,0.08)",
-                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-focus-primary": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-icon-button-backdrop-blur": "12px",
                 "--ki-icon-button-border-width": "1px",
                 "--ki-icon-button-focus-ring-color": "#845abe",
                 "--ki-icon-button-focus-ring-offset": "0.125rem",
-                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-icon-button-focus-ring-width": "0.125rem",
                 "--ki-icon-button-ghost-active-shadow": "none",
                 "--ki-icon-button-ghost-danger-active-bg": "#ffebed",
@@ -14535,7 +14545,7 @@
                 "--ki-input-focus-placeholder-fg": "#5b616d",
                 "--ki-input-focus-ring-color": "#845abe",
                 "--ki-input-focus-ring-offset": "0.125rem",
-                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-input-focus-ring-width": "0.125rem",
                 "--ki-input-font-size": "0.8125rem",
                 "--ki-input-font-weight": "500",
@@ -14721,7 +14731,7 @@
                 "--ki-radio-dot-size": "0.5rem",
                 "--ki-radio-focus-ring-color": "#845abe",
                 "--ki-radio-focus-ring-offset": "0.125rem",
-                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-radio-focus-ring-width": "0.125rem",
                 "--ki-radio-gap": "0.375rem",
                 "--ki-radio-group-gap": "0.375rem",
@@ -14782,7 +14792,7 @@
                 "--ki-select-focus-label-fg": "#0a0c11",
                 "--ki-select-focus-ring-color": "#845abe",
                 "--ki-select-focus-ring-offset": "0.125rem",
-                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-select-focus-ring-width": "0.125rem",
                 "--ki-select-font-size": "0.8125rem",
                 "--ki-select-gap": "0.25rem",
@@ -14915,7 +14925,7 @@
                 "--ki-switch-checked-rest-track": "#845abe",
                 "--ki-switch-focus-ring-color": "#845abe",
                 "--ki-switch-focus-ring-offset": "0.125rem",
-                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-switch-focus-ring-width": "0.125rem",
                 "--ki-switch-gap": "0.375rem",
                 "--ki-switch-min-target": "1.5rem",
@@ -14939,7 +14949,7 @@
                 "--ki-switch-unchecked-rest-track": "#ececf0",
                 "--ki-tab-focus-ring-color": "#845abe",
                 "--ki-tab-focus-ring-offset": "0.125rem",
-                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-tab-focus-ring-width": "0.125rem",
                 "--ki-tab-font-size": "0.8125rem",
                 "--ki-tab-font-weight": "600",
@@ -15038,7 +15048,7 @@
                 "--ki-textarea-focus-placeholder-fg": "#5b616d",
                 "--ki-textarea-focus-ring-color": "#845abe",
                 "--ki-textarea-focus-ring-offset": "0.125rem",
-                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
+                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
                 "--ki-textarea-focus-ring-width": "0.125rem",
                 "--ki-textarea-font-size": "0.8125rem",
                 "--ki-textarea-font-weight": "500",
@@ -15158,6 +15168,10 @@
             },
             "target": "./dist/css/tokens.css"
           },
+          "./css/base": {
+            "pageContract": true,
+            "target": "./dist/css/base.css"
+          },
           "./css/material3": {
             "contexts": {
               "dark": {
@@ -15172,7 +15186,7 @@
                 "--ki-alert-dismiss-size": "1.5rem",
                 "--ki-alert-focus-ring-color": "#d0bcff",
                 "--ki-alert-focus-ring-offset": "0.125rem",
-                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-alert-focus-ring-width": "0.125rem",
                 "--ki-alert-font-size": "0.875rem",
                 "--ki-alert-gap": "0.375rem",
@@ -15277,7 +15291,7 @@
                 "--ki-button-border-width": "0.0625rem",
                 "--ki-button-focus-ring-color": "#d0bcff",
                 "--ki-button-focus-ring-offset": "0.125rem",
-                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Roboto,system-ui,sans-serif",
                 "--ki-button-font-weight": "500",
@@ -15553,7 +15567,7 @@
                 "--ki-checkbox-control-size": "1.25rem",
                 "--ki-checkbox-focus-ring-color": "#d0bcff",
                 "--ki-checkbox-focus-ring-offset": "0.125rem",
-                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-checkbox-focus-ring-width": "0.125rem",
                 "--ki-checkbox-gap": "0.375rem",
                 "--ki-checkbox-indeterminate-active-bg": "#eaddff",
@@ -15626,12 +15640,12 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.32)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.24)",
                 "--ki-focus-gray": "0 0 0 3px #49454f",
-                "--ki-focus-primary": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-focus-primary": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-icon-button-backdrop-blur": "0",
                 "--ki-icon-button-border-width": "0.0625rem",
                 "--ki-icon-button-focus-ring-color": "#d0bcff",
                 "--ki-icon-button-focus-ring-offset": "0.125rem",
-                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-icon-button-focus-ring-width": "0.125rem",
                 "--ki-icon-button-ghost-active-shadow": "none",
                 "--ki-icon-button-ghost-danger-active-bg": "#8c1d18",
@@ -15850,7 +15864,7 @@
                 "--ki-input-focus-placeholder-fg": "#cac4d0",
                 "--ki-input-focus-ring-color": "#d0bcff",
                 "--ki-input-focus-ring-offset": "0.125rem",
-                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-input-focus-ring-width": "0.125rem",
                 "--ki-input-font-size": "0.875rem",
                 "--ki-input-font-weight": "400",
@@ -16036,7 +16050,7 @@
                 "--ki-radio-dot-size": "0.5rem",
                 "--ki-radio-focus-ring-color": "#d0bcff",
                 "--ki-radio-focus-ring-offset": "0.125rem",
-                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-radio-focus-ring-width": "0.125rem",
                 "--ki-radio-gap": "0.375rem",
                 "--ki-radio-group-gap": "1rem",
@@ -16097,7 +16111,7 @@
                 "--ki-select-focus-label-fg": "#d0bcff",
                 "--ki-select-focus-ring-color": "#d0bcff",
                 "--ki-select-focus-ring-offset": "0.125rem",
-                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-select-focus-ring-width": "0.125rem",
                 "--ki-select-font-size": "0.875rem",
                 "--ki-select-gap": "0.25rem",
@@ -16230,7 +16244,7 @@
                 "--ki-switch-checked-rest-track": "#d0bcff",
                 "--ki-switch-focus-ring-color": "#d0bcff",
                 "--ki-switch-focus-ring-offset": "0.125rem",
-                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-switch-focus-ring-width": "0.125rem",
                 "--ki-switch-gap": "0.375rem",
                 "--ki-switch-min-target": "1.5rem",
@@ -16254,7 +16268,7 @@
                 "--ki-switch-unchecked-rest-track": "#2b2930",
                 "--ki-tab-focus-ring-color": "#d0bcff",
                 "--ki-tab-focus-ring-offset": "0.125rem",
-                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-tab-focus-ring-width": "0.125rem",
                 "--ki-tab-font-size": "0.875rem",
                 "--ki-tab-font-weight": "500",
@@ -16353,7 +16367,7 @@
                 "--ki-textarea-focus-placeholder-fg": "#cac4d0",
                 "--ki-textarea-focus-ring-color": "#d0bcff",
                 "--ki-textarea-focus-ring-offset": "0.125rem",
-                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.32)",
+                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(208,188,255,0.16)",
                 "--ki-textarea-focus-ring-width": "0.125rem",
                 "--ki-textarea-font-size": "0.875rem",
                 "--ki-textarea-font-weight": "400",
@@ -16482,7 +16496,7 @@
                 "--ki-alert-dismiss-size": "1.5rem",
                 "--ki-alert-focus-ring-color": "#6750a4",
                 "--ki-alert-focus-ring-offset": "0.125rem",
-                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-alert-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-alert-focus-ring-width": "0.125rem",
                 "--ki-alert-font-size": "0.875rem",
                 "--ki-alert-gap": "0.375rem",
@@ -16587,7 +16601,7 @@
                 "--ki-button-border-width": "0.0625rem",
                 "--ki-button-focus-ring-color": "#6750a4",
                 "--ki-button-focus-ring-offset": "0.125rem",
-                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-button-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-button-focus-ring-width": "0.125rem",
                 "--ki-button-font-family": "Roboto,system-ui,sans-serif",
                 "--ki-button-font-weight": "500",
@@ -16863,7 +16877,7 @@
                 "--ki-checkbox-control-size": "1.25rem",
                 "--ki-checkbox-focus-ring-color": "#6750a4",
                 "--ki-checkbox-focus-ring-offset": "0.125rem",
-                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-checkbox-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-checkbox-focus-ring-width": "0.125rem",
                 "--ki-checkbox-gap": "0.375rem",
                 "--ki-checkbox-indeterminate-active-bg": "#4f378b",
@@ -16936,12 +16950,12 @@
                 "--ki-elevation-shadow-dark": "rgba(0,0,0,0.24)",
                 "--ki-elevation-shadow-med": "rgba(0,0,0,0.08)",
                 "--ki-focus-gray": "0 0 0 3px #cac4d0",
-                "--ki-focus-primary": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-focus-primary": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-icon-button-backdrop-blur": "0",
                 "--ki-icon-button-border-width": "0.0625rem",
                 "--ki-icon-button-focus-ring-color": "#6750a4",
                 "--ki-icon-button-focus-ring-offset": "0.125rem",
-                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-icon-button-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-icon-button-focus-ring-width": "0.125rem",
                 "--ki-icon-button-ghost-active-shadow": "none",
                 "--ki-icon-button-ghost-danger-active-bg": "#f9dedc",
@@ -17160,7 +17174,7 @@
                 "--ki-input-focus-placeholder-fg": "#49454f",
                 "--ki-input-focus-ring-color": "#6750a4",
                 "--ki-input-focus-ring-offset": "0.125rem",
-                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-input-focus-ring-width": "0.125rem",
                 "--ki-input-font-size": "0.875rem",
                 "--ki-input-font-weight": "400",
@@ -17346,7 +17360,7 @@
                 "--ki-radio-dot-size": "0.5rem",
                 "--ki-radio-focus-ring-color": "#6750a4",
                 "--ki-radio-focus-ring-offset": "0.125rem",
-                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-radio-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-radio-focus-ring-width": "0.125rem",
                 "--ki-radio-gap": "0.375rem",
                 "--ki-radio-group-gap": "1rem",
@@ -17407,7 +17421,7 @@
                 "--ki-select-focus-label-fg": "#6750a4",
                 "--ki-select-focus-ring-color": "#6750a4",
                 "--ki-select-focus-ring-offset": "0.125rem",
-                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-select-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-select-focus-ring-width": "0.125rem",
                 "--ki-select-font-size": "0.875rem",
                 "--ki-select-gap": "0.25rem",
@@ -17540,7 +17554,7 @@
                 "--ki-switch-checked-rest-track": "#6750a4",
                 "--ki-switch-focus-ring-color": "#6750a4",
                 "--ki-switch-focus-ring-offset": "0.125rem",
-                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-switch-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-switch-focus-ring-width": "0.125rem",
                 "--ki-switch-gap": "0.375rem",
                 "--ki-switch-min-target": "1.5rem",
@@ -17564,7 +17578,7 @@
                 "--ki-switch-unchecked-rest-track": "#ece6f0",
                 "--ki-tab-focus-ring-color": "#6750a4",
                 "--ki-tab-focus-ring-offset": "0.125rem",
-                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-tab-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-tab-focus-ring-width": "0.125rem",
                 "--ki-tab-font-size": "0.875rem",
                 "--ki-tab-font-weight": "500",
@@ -17663,7 +17677,7 @@
                 "--ki-textarea-focus-placeholder-fg": "#49454f",
                 "--ki-textarea-focus-ring-color": "#6750a4",
                 "--ki-textarea-focus-ring-offset": "0.125rem",
-                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.24)",
+                "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(103,80,164,0.1)",
                 "--ki-textarea-focus-ring-width": "0.125rem",
                 "--ki-textarea-font-size": "0.875rem",
                 "--ki-textarea-font-weight": "400",
@@ -17876,7 +17890,7 @@
           "--ki-alert-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -18752,7 +18766,7 @@
           "--ki-button-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -21253,7 +21267,7 @@
           "--ki-checkbox-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -22157,13 +22171,13 @@
           "--ki-focus-primary": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
             },
             "deprecatedSince": null,
-            "description": "MarsUI Focus/primary: 3px spread focus ring of the MarsUI style Outline/primary_base_em_alpha = brand 500 at 40% (Kimen name: outline.primary-low-em-alpha / brand.500-alpha-4; the Kimen outline.primary-base-em-alpha resolves to 20% and does not match the Figma Focus style — specs/002-ki-button/design-extraction.md §2.5).",
+            "description": "MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha, read from the Figma master as #845abe33 = brand 500 at 20% (Kimen name: outline.primary-base-em-alpha / brand.500-alpha-2). The previous 40% (outline.primary-low-em-alpha / brand.500-alpha-4) came from specs/002-ki-button/design-extraction.md §2.5, which read the alpha off the Dark canvas mode and recorded it as the Light value; the ring shipped 2x too strong in light and 2.8x in dark across twelve components.",
             "replacement": null,
             "required": false,
             "type": "shadow"
@@ -22203,7 +22217,7 @@
           "--ki-icon-button-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -24238,7 +24252,7 @@
           "--ki-input-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -25767,7 +25781,7 @@
           "--ki-radio-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -26261,7 +26275,7 @@
           "--ki-select-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -27375,7 +27389,7 @@
           "--ki-switch-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -27573,7 +27587,7 @@
           "--ki-tab-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -28371,7 +28385,7 @@
           "--ki-textarea-focus-ring-shadow": {
             "default": {
               "blur": 0,
-              "color": "#845abe66",
+              "color": "#845abe33",
               "offsetX": 0,
               "offsetY": 0,
               "spread": "3px"
@@ -29364,5 +29378,5 @@
       }
     }
   },
-  "surfaceSha256": "4124caa0c131db16388f319ca25de10f99c78267c96fba90005cee21968898c1"
+  "surfaceSha256": "9595a7e24c729d4c2a78f1cb1081db9a32ee52df1a77ff4ddc8f516dbe2d818d"
 }

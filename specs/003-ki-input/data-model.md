@@ -107,6 +107,15 @@ composed re-dispatched `change` are the only signals (S1, S2, S20).
 - ≈ 51 tokens per theme; every value references the 001 semantic layer;
   material3 overrides the same names in `input.material3.tokens.json`.
 
+**Premise refuted 2026-07-25**: the single-scale shape of this vocabulary and
+the derivation of its onmars values from the 001 semantic layer alone both
+followed from the 2026-07-08 claim that MarsUI shipped no input frame — a
+false negative (see the correction in spec.md, Design-source analysis).
+`Input_cell` `8016:286` ships an xs / sm / md / lg / xl `Size` axis and
+`Input_field` `12022:7132` carries 9 states. The vocabulary stands as
+shipped; re-deriving it from a design extraction against those masters is a
+founder call.
+
 ## Slots & parts
 
 | Surface | Name | Purpose |

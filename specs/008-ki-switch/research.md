@@ -1,14 +1,29 @@
 # Phase 0 Research: ki-switch
 
 Decisions that resolve every open technical question in the plan. Sources:
-the spec (M3 inventory note; MarsUI verified 2026-07-08 — no switch frame
-exists, onmars styles from the 001 token vocabulary), the WAI-ARIA APG
+the spec (M3 inventory note; onmars styles from the 001 token vocabulary —
+see the correction note below on the MarsUI reading), the WAI-ARIA APG
 switch pattern, the 001 token architecture, the 002 ki-button
 implementation (ElementInternals pattern, `--_ki-*` CSS indirection), the
 003 ki-input plan set (shadow-native-control anatomy, change re-dispatch,
 per-component test layout — decisions cited rather than re-derived,
 Art. VII), and the 006 ki-checkbox spec (the toggle sibling: reflection vs
 reset baseline, Space-only keyboard activation).
+
+> **Correction, 2026-07-25.** These decisions were taken against a spec that
+> recorded "MarsUI verified 2026-07-08 — no switch frame exists". That was a
+> false negative: the 2026-07-08 sweep enumerated the file with the Figma
+> `get_metadata` tool called without a nodeId, which returns only 10 of the
+> file's 54 pages while presenting them as the complete page list, and the
+> `Toggle` page (node 10102:4096) was not among them. Re-enumeration with
+> `use_figma` (`figma.root.children`), the only reliable enumerator, found
+> the `Toggle` component set (node 10023:1125 — `Type` × `Size`
+> sm/md/lg/mobile) and `Toggle_label` (node 10101:3995). Any rationale below
+> that leans on the absence of a MarsUI switch — D7's single-scale geometry
+> above all — rests on a refuted premise and is superseded by a design
+> extraction against node 10023:1125, which has not been performed. The
+> decisions are left in place: re-deriving them is the founder's call, not a
+> documentation fix.
 
 ## D1 — Base element: native `<input type="checkbox" role="switch">`
 
@@ -217,7 +232,10 @@ declared contract; rejected for v1.
 
 - `switch.tokens.json` — theme-neutral schema resolving from the 001
   semantic layer (onmars values by inheritance):
-  - structure, single scale — no size axis (spec): `track-width`,
+  - structure, single scale — no size axis (spec; that exclusion rests on a
+    refuted premise, since node 10023:1125 does carry a `Size` axis, and is
+    left in place pending founder re-derivation — see the correction note
+    above): `track-width`,
     `track-height`, `thumb-size`, `thumb-inset`, `gap` (control↔label),
     `track-radius`, `thumb-radius`, `border-width`, `min-target`
     (9 tokens) → geometry references `ki.space.*` / `ki.radius.*`
@@ -254,7 +272,11 @@ therefore not a read source), so per the spec's honesty rule and Art. VII
 the v1 geometry is a single `thumb-size`; if M3 frame verification later
 demands the morph, `--ki-switch-checked-thumb-size` arrives additively,
 defaulting by reference to the base — the exact base+override-by-reference
-pattern 003 D8 used for per-side border widths.
+pattern 003 D8 used for per-side border widths. The MarsUI `Size` axis
+uncovered by the 2026-07-25 correction (node 10023:1125) does not change
+the v1 token surface described here, but it does refute the premise that no
+design source scales the control; re-deriving the geometry against a design
+extraction of that master is the founder's call and would arrive additively.
 
 **Alternatives considered**: (a) component CSS referencing semantic
 tokens directly — themes could not remap track/thumb inks without

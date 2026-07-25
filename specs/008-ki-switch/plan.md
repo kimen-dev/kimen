@@ -15,9 +15,10 @@ approval marker.
 Third form-associated Kimen control: `<ki-switch>`, an on/off setting whose
 change takes effect immediately, distinguished in the catalog from
 ki-checkbox (selection for later submission). The API abstracts the M3
-switch pattern under the batch charter (MarsUI ships no switch frame —
-full-file sweep verified 2026-07-08; onmars styles the control from the 001
-token vocabulary alone): `checked`/`disabled`/`name`/`value`, default-slot
+switch pattern under the batch charter (onmars styles the control from the
+001 token vocabulary; see the correction note below — the 2026-07-08 claim
+that MarsUI ships no switch frame was a false negative):
+`checked`/`disabled`/`name`/`value`, default-slot
 label, `track`/`thumb`/`label` parts, composed platform `input`/`change`
 events, zero variant/tone/size axes. Technical approach: a visually hidden
 native `<input type="checkbox" role="switch">` inside a shadow `<label>`
@@ -33,6 +34,23 @@ with the 006 sibling). The contrast gate's per-component sweep is extended
 to the new `--ki-switch-*` family with non-text 3:1 pairs (WCAG 1.4.11).
 Details and rationales in [research.md](./research.md) (D1–D10); API
 surface in [contracts/switch-contract.md](./contracts/switch-contract.md).
+
+> **Correction, 2026-07-25 — MarsUI does ship a switch master.** The
+> "full-file sweep verified 2026-07-08" this Summary cited was a false
+> negative: it enumerated the file with the Figma `get_metadata` tool called
+> without a nodeId, which returns only 10 of the file's 54 pages and
+> presents them as the complete list. Re-enumeration with `use_figma`
+> (`figma.root.children`), the only reliable enumerator, found the `Toggle`
+> component set (node 10023:1125) and `Toggle_label` (node 10101:3995) on
+> the `Toggle` page (node 10102:4096). Scope decisions argued from the
+> absence — chiefly "zero variant/tone/size axes", against a master that
+> carries a `Size` axis (`sm`, `md`, `lg`, `mobile`) — rest on a refuted
+> premise and are left unchanged: re-deriving them against a design
+> extraction of node 10023:1125 is the founder's call, not a documentation
+> fix. Nothing else in the technical approach above (native checkbox base,
+> ElementInternals, logical inset travel, contrast-sweep extension) depends
+> on the refuted claim; the single-scale token geometry does, and is marked
+> at research D7.
 
 ## Technical Context
 

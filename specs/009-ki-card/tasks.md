@@ -48,8 +48,11 @@ component CSS consumes it (research.md D2; user-story-independent).
       reference into the semantic/primitive layers: surface from the
       `ki.surface.s0–s5` ramp (or `ki.surface.raised`) — which step is the
       onmars theme decision recorded here (spec Assumptions: defined from
-      the shipped 001 vocabulary while the MarsUI frames are pending, gate-1
-      ratified) — text from `ki.text.*`, border from `ki.outline.*`,
+      the shipped 001 vocabulary, gate-1 ratified — the premise that no
+      MarsUI card master existed was withdrawn 2026-07-25 as a false
+      negative; the masters are named in spec.md and the values await
+      founder re-derivation) — text from `ki.text.*`, border from
+      `ki.outline.*`,
       elevation a composed box-shadow referencing `ki.elevation.*` colors
       (the `--ki-button-*-shadow` precedent), geometry from
       `ki.radius.*`/`ki.space.*`.

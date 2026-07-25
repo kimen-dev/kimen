@@ -12,6 +12,7 @@
 // consumer loads and mounts the same galleries the visual gate uses inside a
 // wrapper carrying no inherited typography, colour or surface at all. What
 // survives here is what a stranger actually sees on their own page.
+import pageContractCss from '@kimen/tokens/css/base?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
@@ -233,6 +234,64 @@ describe('bare-page typography contract', () => {
       [...new Set(offenders)],
       `${component} renders a native control in the user agent typeface; it needs an explicit font reset`,
     ).toEqual([]);
+  });
+});
+
+describe('page contract', () => {
+  const PAGE_CONTRACT_STYLE_ID = 'bare-page-contract';
+
+  function loadPageContract(): void {
+    if (document.getElementById(PAGE_CONTRACT_STYLE_ID)) {
+      return;
+    }
+    const style = document.createElement('style');
+    style.id = PAGE_CONTRACT_STYLE_ID;
+    style.textContent = pageContractCss;
+    document.head.append(style);
+  }
+
+  afterAll(() => {
+    document.getElementById(PAGE_CONTRACT_STYLE_ID)?.remove();
+    document.documentElement.removeAttribute('data-ki-color-scheme');
+  });
+
+  // Without this the token sheet still flips to its dark values on
+  // prefers-color-scheme: dark, but the user agent keeps painting a light
+  // canvas, light scrollbars and light autofill — the founder's black alert on
+  // a white Storybook page, and an ki-input label that vanishes entirely.
+  it('opts the user agent into the same scheme the tokens follow', async () => {
+    await mountBare('ki-card');
+    expect(
+      getComputedStyle(document.documentElement).colorScheme,
+      'the token sheet alone cannot declare color-scheme; that is what @kimen/tokens/css/base is for',
+    ).toBe('normal');
+
+    loadPageContract();
+    expect(getComputedStyle(document.documentElement).colorScheme).toBe('light dark');
+  });
+
+  it('lets a single-scheme page pin the user agent alongside the tokens', async () => {
+    await mountBare('ki-card');
+    loadPageContract();
+
+    for (const scheme of ['light', 'dark'] as const) {
+      document.documentElement.setAttribute('data-ki-color-scheme', scheme);
+      expect(
+        getComputedStyle(document.documentElement).colorScheme,
+        `data-ki-color-scheme="${scheme}" must pin the user agent too, not just the tokens`,
+      ).toBe(scheme);
+    }
+    document.documentElement.removeAttribute('data-ki-color-scheme');
+  });
+
+  it('paints the page from tokens instead of leaving the user agent canvas', async () => {
+    await mountBare('ki-card');
+    loadPageContract();
+    const root = getComputedStyle(document.documentElement);
+
+    expect(root.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(root.backgroundColor).not.toBe(root.color);
+    expect(normalizeFamily(root.fontFamily)).toBe(normalizeFamily(expectedFontFamily()));
   });
 });
 

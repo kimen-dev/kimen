@@ -4,9 +4,24 @@ Decisions that resolve every open technical question in the plan. ki-badge is
 a static status descriptor — after ki-card, the second non-interactive
 component of the Fase 2 batch — so the decisions are few and none introduces
 machinery beyond what the approved scenarios require (Art. VII). Sources: the
-spec's design analysis (MarsUI verified 2026-07-08; M3 mapping PARTIAL), the
+spec's design analysis (M3 mapping PARTIAL; MarsUI corrected — see below), the
 001 token architecture, the 002 component precedent and the 009 planning
 precedent for non-interactive components.
+
+**Correction 2026-07-25 — the MarsUI input to this research was a false
+negative.** The "MarsUI verified 2026-07-08" design analysis this research
+builds on concluded that MarsUI contains no badge pill. That conclusion came
+from a Figma `get_metadata` call made without a nodeId, which returns only 10
+of the file's 54 pages and presents them as the complete page list. MarsUI
+does have a master: `Tag` (node 10106:4651, 81 variants) on the Tags page
+(node 10108:2455) — the non-interactive semantic label, enumerated with
+`use_figma` (`figma.root.children`), the only reliable enumerator; the
+interactive `Chip` set (node 10005:4414, Chips page node 10111:551) is a
+separate concern. Any decision below that leans on that absence is unsound as
+argued and is superseded by a design extraction against `Tag`, which has not
+yet been performed. The decisions are left standing as approved — revising
+them is the founder's call. Unaffected: the semantic-layer verification in D2,
+which was performed against the built token CSS, not against Figma.
 
 ## D1 — Anatomy and zero logic: host + one part, fallback by CSS construction
 
@@ -61,6 +76,12 @@ it; rejected (Art. VII).
   **Deviation from the button template, justified**: no
   `rest|hover|active|disabled` state segments and no focus-ring tokens — the
   badge is static and never focusable (spec Art. VI echo). ~28 tokens total.
+
+  **Premise note 2026-07-25**: the shape of this family — two sizes, five
+  tones — mirrors FR-001/FR-002, whose MarsUI justification is refuted in the
+  correction above; if the `Tag` (node 10106:4651) extraction changes those
+  axes, the token family changes with them. The soft-tint choice below is
+  unaffected: it rests on the built semantic layer, not on Figma.
 
   The shipped onmars treatment is the **soft tint**: per-tone
   `bg = {ki.surface.{tone}-base-em}` (opaque),

@@ -25,20 +25,39 @@ below is complete. Behavior enters the system exactly once, here (Art. II).
 
 ## Design-source analysis (Figma)
 
-Unlike ki-button, the two reference designs do NOT offer a 1:1 component to
-abstract over: Material 3 simply has no persistent inline alert. The API below
-therefore leans on the shared charter vocabulary (tones, tokens, slots) and on
-what the token layer already guarantees, so both shipped themes — and future
-ones — style the same contract from their own color roles:
+> **Correction (2026-07-25) — the "full-file sweep verified 2026-07-08" is a
+> false negative.** That sweep enumerated the MarsUI file
+> (`vbD864Afs8lTSXUgtABFSs`) with the Figma MCP `get_metadata` tool called
+> without a `nodeId`, which returns only 10 of the file's 54 pages while
+> presenting them as the complete page list. Re-enumeration with `use_figma`
+> (`figma.root.children`, the only reliable enumerator) shows that **MarsUI
+> does ship an alert master**: page `Alerts` `12074:6200` → component `Alert`
+> `12074:6202` (5 variants, 10 properties). Two further message masters sit
+> beside it and are conflated with it below: page `Info Notes` `12126:4668` →
+> `Info_note` `12126:4670` (15 variants), and page `Toasts` `12051:292` →
+> `12071:5771` (the `Toast` this section cites). Every claim of the form "no
+> alert frame in MarsUI" in the table and in Assumptions is therefore false,
+> and the reasoning that depends on it is unsound as argued: it is superseded
+> by a design extraction against `Alert 12074:6202`, which has not been
+> performed yet. This correction changes no functional requirement and no
+> Gherkin scenario — the decisions built on the refuted premise are marked in
+> place and are the founder's to re-derive.
+
+Unlike ki-button, this API was not abstracted from a matched pair of reference
+components: Material 3 simply has no persistent inline alert, and the MarsUI
+master that does exist (`Alert 12074:6202`) was missed by the refuted sweep
+above. The API below therefore leans on the shared charter vocabulary (tones,
+tokens, slots) and on what the token layer already guarantees, so both shipped
+themes — and future ones — style the same contract from their own color roles:
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-alert |
 |---|---|---|---|
-| Component existence | No dedicated alert/banner frame in MarsUI (full-file sweep verified 2026-07-08); the file's only message artifact is a transient `Toast` used in a documentation prototype, which maps to the future ki-toast, not to this persistent alert | No alert in M3: the snackbar is transient with a single action (it maps to the future ki-toast); the banner was an M2 component and did not carry into M3 | A persistent inline message; each theme styles it from its own container/on-color roles through `--ki-alert-*` tokens — no 1:1 M3 component is required, and the loose mapping is documented in the catalog's when-to-use |
+| Component existence | **Corrected 2026-07-25**: MarsUI ships a dedicated alert master — page `Alerts` `12074:6200` → `Alert` `12074:6202` (5 variants, 10 properties). Nor is it the file's only message artifact: `Info_note` `12126:4670` (page `Info Notes` `12126:4668`, 15 variants) and the transient `Toast` `12071:5771` (page `Toasts` `12051:292`) are separate masters, and only the last of the three maps to the future ki-toast. The 2026-07-08 full-file sweep that reported no alert frame is a false negative (correction note above) | No alert in M3: the snackbar is transient with a single action (it maps to the future ki-toast); the banner was an M2 component and did not carry into M3 | A persistent inline message; each theme styles it from its own container/on-color roles through `--ki-alert-*` tokens — no 1:1 M3 component is required, and the loose mapping is documented in the catalog's when-to-use. **[the onmars side of this abstraction was derived without the master — re-derive against `Alert 12074:6202`]** |
 | Semantic intent | Tone ramps already exist in the extracted onmars token vocabulary: success, danger, info and warning alongside neutral (001 extraction) | Error color roles plus container/on-container pairs; no per-tone message component | `tone`: five values — `neutral` (default), `success`, `danger`, `info`, `warning` — the charter's full feedback vocabulary, token-resolved |
-| Content anatomy | No alert frame (verified 2026-07-08); the MarsUI `Toast` shows leading tone icon + heading + supporting text + action buttons + close — toast anatomy, recorded for the future ki-toast | Snackbar anatomy (label + optional action + optional close icon) is transient and not 1:1 | Optional `heading` attribute + default slot for the message + opt-in dismiss control |
-| Dismissal | No alert frame (verified 2026-07-08); the MarsUI `Toast` auto-closes on a visible countdown and offers a close control — timer dismissal confirmed as toast behavior, not alert behavior | Snackbar dismisses on a timer or via its close affordance | Explicit user dismissal only, opt-in via `dismissible`, notified as `ki-dismiss`; no auto-timeout (that is toast behavior) |
-| Surface style (filled / outlined) | onmars surfaces s0–s5 exist in the token vocabulary; there is no alert frame to pin a surface to (verified 2026-07-08) | Container vs outlined surfaces are color-role decisions | No `variant`: filled-vs-outlined is a theme decision expressed in component tokens (002 precedent), never a prop |
-| Size | onmars metrics xs–xl exist as tokens; MarsUI has no alert frame, so no alert scale exists (verified 2026-07-08) | No equivalent to scale against | No `size` in v1; alert metrics are per-theme component tokens |
+| Content anatomy | **Corrected 2026-07-25**: the alert anatomy lives in `Alert 12074:6202` (5 variants, 10 properties) and has not been extracted. What this row records is the anatomy of the separate `Toast` `12071:5771` — leading tone icon + heading + supporting text + action buttons + close — which stays valid for the future ki-toast but was never evidence about this component | Snackbar anatomy (label + optional action + optional close icon) is transient and not 1:1 | Optional `heading` attribute + default slot for the message + opt-in dismiss control. **[rests on a refuted premise: derived without `Alert 12074:6202` — needs re-derivation]** |
+| Dismissal | **Corrected 2026-07-25**: the alert master `Alert 12074:6202` exists and its dismissal affordances are unextracted. The visible countdown and close control recorded here belong to the separate `Toast` `12071:5771` — evidence about toast behavior, which never spoke to the alert either way | Snackbar dismisses on a timer or via its close affordance | Explicit user dismissal only, opt-in via `dismissible`, notified as `ki-dismiss`; no auto-timeout (that is toast behavior). **[the opt-in half rests on a refuted premise — check the master's 10 properties for a close/dismissible axis before it stands]** |
+| Surface style (filled / outlined) | onmars surfaces s0–s5 exist in the token vocabulary; **corrected 2026-07-25** — there IS a frame to pin a surface to, `Alert 12074:6202`, whose 5 variants and 10 properties are unextracted | Container vs outlined surfaces are color-role decisions | No `variant`: filled-vs-outlined is a theme decision expressed in component tokens (002 precedent), never a prop. **[premise refuted — whether the master exposes an emphasis axis must be checked before this stands]** |
+| Size | onmars metrics xs–xl exist as tokens; **corrected 2026-07-25** — `Alert 12074:6202` exists, so "no alert scale exists" was never verified: whether its 10 properties carry a size axis is unknown until extraction | No equivalent to scale against | No `size` in v1; alert metrics are per-theme component tokens. **[rests on a refuted premise — needs re-derivation]** |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -489,13 +508,21 @@ Feature: Alert
   fits the host page, so v1 injects none. An opt-in heading-level attribute
   is a possible future additive MINOR change — flagged for the founder at
   gate 1.
-- No `variant` and no `size` in v1 (charter deviation justified): neither
-  source establishes an emphasis or size scale for alerts — Material 3 lacks
-  the component entirely and MarsUI verification 2026-07-08 found no alert
-  frame at all. Both axes would be additive MINOR changes later.
+- No `variant` and no `size` in v1 (charter deviation justified): Material 3
+  lacks the component entirely, and MarsUI verification 2026-07-08 reported
+  no alert frame at all. **The MarsUI half of that justification is refuted
+  (correction 2026-07-25): the master `Alert 12074:6202` exists with 5
+  variants and 10 properties, which may themselves establish an emphasis or
+  size scale. The decision stands as written but rests on a refuted premise
+  and must be re-derived from an extraction of that master — a founder
+  call.** Both axes would be additive MINOR changes later.
 - No tone icon and no `start`/`end` slots in v1: MarsUI verification
-  2026-07-08 found no alert frame; the file's transient `Toast` does show a
-  leading tone icon, so if that anatomy is ever inherited by the persistent
+  2026-07-08 reported no alert frame, and the icon evidence recorded here
+  comes from the separate transient `Toast` `12071:5771`. **That
+  verification is refuted (correction 2026-07-25) — `Alert 12074:6202` is
+  the master, and whether it carries a leading tone icon or leading/trailing
+  content is unextracted, so this exclusion rests on a refuted premise and
+  needs re-derivation.** If that anatomy is ever inherited by the persistent
   alert it lands as a theme token or an additive slot — per the recorded
   assumption this is additive MINOR post-v1.
 - No auto-dismiss timer: time-based disappearance is toast behavior and

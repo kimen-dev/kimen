@@ -1,11 +1,12 @@
 # Phase 0 Research: ki-tabs
 
 Decisions that resolve every open technical question in the plan. Sources:
-the spec (M3 documents primary/secondary tab styles; MarsUI verified
-2026-07-08 — no tabs component exists, onmars styles from the 001 token
-vocabulary), the WAI-ARIA APG Tabs pattern (read with the pattern in hand
-for D1/D2/D6 — the "Tabs with Automatic Activation" example is the
-normative reference), the 001 token architecture, the 002 ki-button
+the spec (M3 documents primary/secondary tab styles; MarsUI ships
+`Tab_nav` `10048:1249` and `Tab_nav_item` `10048:1068` on page
+`Tab Navigation` `10094:3627` — see the correction below; onmars styles
+from the 001 token vocabulary), the WAI-ARIA APG Tabs pattern (read with
+the pattern in hand for D1/D2/D6 — the "Tabs with Automatic Activation"
+example is the normative reference), the 001 token architecture, the 002 ki-button
 implementation (`--_ki-*` CSS indirection), and the sibling plan sets under
 the same charter, whose applicable decisions are CITED and reused rather
 than re-derived (Art. VII): 005 ki-select (the IDREF constraint analysis
@@ -15,6 +16,23 @@ parent-owned roving tabindex and keyboard model, pure-function keyboard
 core), 012 ki-dialog (`ki-*` event with object `detail`; the
 `emulateReducedMotion` browser command), 013 ki-tooltip (no-animation-in-v1
 posture), 016 ki-list (host roles via `ElementInternals.role`).
+
+> **Correction, 2026-07-25.** This research was written on the basis that
+> MarsUI had no tabs component ("verified 2026-07-08"). That verification was
+> a false negative: the sweep enumerated the file with the Figma MCP
+> `get_metadata` tool called without a `nodeId`, which returns only 10 of the
+> file's 54 pages while presenting them as the complete page list, and the
+> tab pages were not among them. Re-enumerating with `use_figma`
+> (`figma.root.children`) — the only reliable enumerator — found page
+> `Tab Navigation` `10094:3627` → `Tab_nav` `10048:1249` (5 sizes) and
+> `Tab_nav_item` `10048:1068` (15 variants), with the segmented control
+> `Switcher` `10004:1441` / `Switcher_item` `10004:1260` on the separate page
+> `Switcher` `10092:4500`. Any reasoning below that leans on the absence — in
+> particular the single-scale token layer in D8 — is unsound and is
+> superseded by a design extraction against those nodes, which has not yet
+> been performed. MarsUI ships no tab-panel master, so `ki-tab-panel` remains
+> a Kimen original. See the correction block in [spec.md](./spec.md) for the
+> affected decisions.
 
 Shared decisions inherited from the siblings (cited, not re-derived):
 
@@ -428,7 +446,10 @@ one file per published tag (spec constitutional surface):
     floor — inline size is content + `padding-inline`, ≥ 24 px by
     construction), `--ki-tab-padding-inline`, `--ki-tab-gap` (slot gap),
     `--ki-tab-radius`, `--ki-tab-font-size`, `--ki-tab-font-weight`,
-    `--ki-tab-line-height`. Single scale — no size axis (spec assumption).
+    `--ki-tab-line-height`. Single scale — no size axis (spec assumption;
+    **premise refuted 2026-07-25** — `Tab_nav` `10048:1249` ships 5 sizes,
+    so this structure block rests on a false negative and awaits
+    re-derivation with the spec assumption it cites).
   - selection × interaction ink matrix (16):
     `--ki-tab-{selected|unselected}-{rest|hover|active|disabled}-{fg|bg}`
     — `fg` is the label ink (TEXT), `bg` the tab surface. Convention

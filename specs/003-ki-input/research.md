@@ -1,12 +1,30 @@
 # Phase 0 Research: ki-input
 
 Decisions that resolve every open technical question in the plan. Sources:
-the spec (M3 text-field inventory; MarsUI verified 2026-07-08 — no input
-frame exists, onmars styles from the 001 token vocabulary),
+the spec (M3 text-field inventory; MarsUI evidence as corrected on
+2026-07-25 — see the note below),
 the 001 token architecture, the 002 ki-button implementation (ElementInternals
 pattern, `--_ki-*` CSS indirection, reflected attributes with
 fallback-by-construction), the HTML form-associated custom elements (FACE)
 spec and the constraint-validation API.
+
+> **Correction — 2026-07-25 (MarsUI evidence).** The source line above
+> originally read "MarsUI verified 2026-07-08 — no input frame exists,
+> onmars styles from the 001 token vocabulary". That verification was a
+> false negative: it used the Figma `get_metadata` tool without a `nodeId`,
+> which returns only 10 of the MarsUI file's 54 pages and presents the
+> truncated listing as the complete page list. MarsUI does ship input
+> masters — page Input fields `12046:706` → `Input_field` `12022:7132`
+> (9 states, incl. dark and digit variants) and `Input_cell` `8016:286`
+> (`Type` = default | default_with_button | textarea × `Size` = xs / sm /
+> md / lg / xl), with `Input_label` `12021:6068` and `Hint_label`
+> `12021:6331` as composition masters (enumerated with `use_figma`,
+> `figma.root.children`). Decisions below that lean on MarsUI having nothing
+> to mirror — notably the token-only styling premise behind D8 — rest on a
+> refuted premise and are superseded by a design extraction against those
+> masters. The platform decisions (D1–D7, D9, D10) are independent of the
+> MarsUI evidence and are unaffected; re-deriving the styling decisions is a
+> founder call.
 
 ## D1 — Shadow anatomy: native `<input>` + component-rendered `<label for>`
 
@@ -219,6 +237,15 @@ single token, material3 could not express its label behavior without
 touching component CSS, exactly the failure mode 002's D4 rejected. The
 matrix is explicit rather than clever because provable one-step re-theming
 (S16) is the product differentiator.
+
+**Premise refuted 2026-07-25**: two inputs to this decision came from the
+false-negative MarsUI sweep (see the correction at the top of this file) —
+the single-scale geometry ("no size axis (spec)"), now contradicted by
+`Input_cell` `8016:286`'s xs / sm / md / lg / xl axis, and the derivation of
+the onmars values from the 001 semantic layer by inheritance rather than
+from a master, now available in `Input_field` `12022:7132`. The token layer
+stands as shipped; its onmars values and the single-scale choice need
+re-derivation from a design extraction against those masters (founder call).
 
 **Alternatives considered**: (a) single `label`/`placeholder` color token —
 cannot express M3 focus/error label states from the token layer; rejected.

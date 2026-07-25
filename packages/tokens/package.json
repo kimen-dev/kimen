@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "description": "Kimen design tokens (DTCG) compiled to CSS custom properties. Primitive → theme → semantic layers; onmars is the default theme (light + dark).",
+  "description": "Kimen design tokens (DTCG) compiled to CSS custom properties. Primitive \u2192 theme \u2192 semantic layers; onmars is the default theme (light + dark).",
   "type": "module",
   "repository": {
     "type": "git",
@@ -15,6 +15,7 @@
   ],
   "exports": {
     "./css": "./dist/css/tokens.css",
+    "./css/base": "./dist/css/base.css",
     "./css/material3": "./dist/css/tokens.material3.css"
   },
   "scripts": {
@@ -34,6 +35,11 @@
       "name": "material3 tokens stylesheet",
       "path": "dist/css/tokens.material3.css",
       "limit": "11 KB"
+    },
+    {
+      "name": "page contract stylesheet",
+      "path": "dist/css/base.css",
+      "limit": "1 KB"
     }
   ],
   "nx": {

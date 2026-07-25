@@ -28,16 +28,42 @@ The API below abstracts the patterns found in both reference designs so that
 neither theme lacks expressive power (and future themes inherit the same
 guarantee). Material 3 specifies the standalone radio button; the grouping
 model comes from the platform (native radio semantics) and the APG radio
-group pattern:
+group pattern. MarsUI does ship a radio master: the `Radio` component set
+(node 10053:1943) and `Radio_label` (node 10100:3931) on the file's dedicated
+`Radio buttons` page (node 10102:4075). The MarsUI column below is corrected
+accordingly:
+
+> **Correction, 2026-07-25 — the "full-file sweep" of MarsUI dated 2026-07-08
+> was a false negative.** That sweep enumerated the file with the Figma
+> `get_metadata` tool called without a nodeId, which returns only 10 of the
+> file's 54 pages while presenting them as the complete page list; the
+> `Radio buttons` page was never in what it returned. The file has since been
+> re-enumerated with `use_figma` (`figma.root.children`), the only reliable
+> enumerator, and the masters above were found. Every claim in this spec of
+> the form "no radio frame in MarsUI (verified 2026-07-08)" is false, and the
+> reasoning that depended on it is unsound; it is superseded by a design
+> extraction against nodes 10053:1943 and 10100:3931, which has not yet been
+> performed. What the re-enumeration establishes is the masters' existence,
+> their node ids, their variant axes — `Radio`: `States` = inactive, hover,
+> active, active_focused, disabled × `Size` = sm, md; `Radio_label`:
+> `Direction` = left, right × `Size` = sm, md — and one anatomical fact that
+> contradicts this spec set: **the master's selected state is a filled disc,
+> not a ring with an inner dot** (research D1/D8 record the inverted
+> anatomy). Geometry, tokens and ink values remain unread. One absence does
+> survive, now re-verified against the real page: the `Radio buttons` page
+> carries no group-container frame, so the GROUP chrome (stack, spacing,
+> group label) stays a Kimen original. Decisions that were argued FROM the
+> absence are marked as resting on a refuted premise and are left in place:
+> re-deriving them is the founder's call, not a documentation fix.
 
 | Pattern | MarsUI (onmars) | Material 3 (material3) | Abstraction in ki-radio-group |
 |---|---|---|---|
-| Unit modeled | No radio button or radio-group frame in MarsUI (full-file sweep verified 2026-07-08); the onmars token vocabulary covers it | Standalone radio button; grouping, field name and label are composition concerns left outside the component | The GROUP is the component and the form control (APG radio group): `name`, `value`, `required` and arrow-key navigation live on `ki-radio-group`; `ki-radio` children carry option `value` + label |
-| Selection & interaction states | No MarsUI radio frame (verified 2026-07-08); the button state matrix (default/hover/focus/disabled, 002) is the file's closest state precedent | selected / unselected × enabled, hovered, focused, pressed, disabled state layers | CSS states (hover, focus-visible, active, disabled) styled through tokens, never props; selected state is owned by the group, never authored on the option |
-| Size | onmars token vocabulary carries an xs–xl metric scale; MarsUI has no radio frame, so no radio scale exists (verified 2026-07-08) | Single fixed control size (icon + state-layer target); no size scale | No `size` attribute in v1 (charter-sanctioned subset); control metrics are per-theme component tokens, so a future scale is additive |
-| Semantic intent | No MarsUI radio frame and no radio-level tone artifact (verified 2026-07-08) | No tone/error axis documented on the M3 radio button | No `tone` in v1 (Art. VII); additive later only if a design source demands it |
-| Label anatomy | No MarsUI radio frame (verified 2026-07-08); the onmars text-emphasis token vocabulary (001) covers label styling | Label external to the control, paired at composition time | `ki-radio` default slot = option label and accessible-name source; a group-level `label` names the whole field |
-| Group layout | No MarsUI radio frame, hence no group-layout artifact (verified 2026-07-08) | Not defined at component level | Vertical stack by default; spacing is a component token; no `orientation` attribute in v1 (open question for gate 1) |
+| Unit modeled | `Radio` component set (node 10053:1943) and `Radio_label` (node 10100:3931) on the `Radio buttons` page (node 10102:4075), verified 2026-07-25: the individual radio IS mastered, standalone and label-paired. The page carries no group-container frame, so the group itself has no MarsUI artifact and the onmars token vocabulary covers the group chrome | Standalone radio button; grouping, field name and label are composition concerns left outside the component | The GROUP is the component and the form control (APG radio group): `name`, `value`, `required` and arrow-key navigation live on `ki-radio-group`; `ki-radio` children carry option `value` + label |
+| Selection & interaction states | `Radio` (node 10053:1943) ships a `States` axis — inactive, hover, active, active_focused, disabled — verified 2026-07-25; its per-state ink and geometry are unread pending design extraction, but its selected state is a filled disc, not a ring with an inner dot. **Refuted premise**: the state matrix here was borrowed from the 002 button precedent because MarsUI supposedly had no radio state artifact — it needs re-derivation against this axis, together with the selected-state anatomy recorded in research D1/D8 | selected / unselected × enabled, hovered, focused, pressed, disabled state layers | CSS states (hover, focus-visible, active, disabled) styled through tokens, never props; selected state is owned by the group, never authored on the option |
+| Size | onmars token vocabulary carries an xs–xl metric scale, and `Radio` (node 10053:1943) and `Radio_label` (node 10100:3931) each carry a `Size` axis with `sm` and `md` values, so a radio-specific scale DOES exist (verified 2026-07-25); the metrics behind the two steps are unread pending design extraction. **Refuted premise**: "MarsUI has no radio frame, so no radio scale exists" is false — the no-`size`-attribute decision needs re-derivation against the sm/md axis | Single fixed control size (icon + state-layer target); no size scale | No `size` attribute in v1 (charter-sanctioned subset); control metrics are per-theme component tokens, so a future scale is additive |
+| Semantic intent | `Radio` (node 10053:1943) exposes only `States` and `Size` axes — no tone or semantic-intent axis (re-verified 2026-07-25 against the real master; the void 2026-07-08 claim is replaced, not restated) | No tone/error axis documented on the M3 radio button | No `tone` in v1 (Art. VII); additive later only if a design source demands it |
+| Label anatomy | `Radio_label` (node 10100:3931) masters the label-paired radio with a `Direction` axis (`left`, `right`) × `Size` (`sm`, `md`), verified 2026-07-25 — MarsUI places the label on either side of the control; its typography and control↔label gap are unread pending design extraction, and the onmars text-emphasis token vocabulary (001) remains the mapping ground. **Refuted premise**: the "no MarsUI radio frame" grounding is void, and the `Direction` axis has no counterpart in the abstraction — both need re-derivation | Label external to the control, paired at composition time | `ki-radio` default slot = option label and accessible-name source; a group-level `label` names the whole field |
+| Group layout | The `Radio buttons` page (node 10102:4075) masters the option (10053:1943) and the label-paired option (10100:3931) but carries no group-container frame, hence no group-layout artifact — this absence is RE-VERIFIED against the real page on 2026-07-25 and survives the correction | Not defined at component level | Vertical stack by default; spacing is a component token; no `orientation` attribute in v1 (open question for gate 1) |
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -515,10 +541,18 @@ Feature: Radio group
 - No `size` attribute in v1: the M3 radio button is single-size and MarsUI
   verification 2026-07-08 found no radio frame at all (charter-sanctioned
   subset). Control metrics are per-theme component tokens, so a future size
-  scale is an additive MINOR.
+  scale is an additive MINOR. **Rests on a refuted premise (2026-07-25)**:
+  the MarsUI half of this argument is void, and refuted rather than merely
+  unverified — the `Radio` master (node 10053:1943) and `Radio_label` (node
+  10100:3931) each carry a `Size` axis with `sm` and `md` values. The
+  decision stands as written until re-derived against the masters by the
+  founder; the M3 half of the argument is unaffected, and the additive-MINOR
+  path is the mechanism that will carry the scale if it is adopted.
 - No `tone` attribute in v1: neither grounded design source shows a
   semantic-intent axis on the radio control (Art. VII — no speculative
-  props).
+  props). Re-verified 2026-07-25 against the real MarsUI master (`Radio`,
+  node 10053:1943, whose only axes are `States` and `Size`), so this
+  assumption no longer rests on the refuted 2026-07-08 sweep.
 - No `orientation` attribute in v1: options stack vertically; all four
   arrow keys navigate per APG and horizontal arrows follow the writing
   direction (FR-005), so a horizontally laid-out group (theme or
