@@ -41,17 +41,19 @@
   font-size: var(--ki-select-font-size);
 }
 
-[part="trigger"]:hover {
-  --_ki-select-bg: var(--ki-select-hover-bg);
-  --_ki-select-fg: var(--ki-select-hover-fg);
-  --_ki-select-border: var(--ki-select-hover-border);
-}
+@media (hover: hover) {
+  [part="trigger"]:hover {
+    --_ki-select-bg: var(--ki-select-hover-bg);
+    --_ki-select-fg: var(--ki-select-hover-fg);
+    --_ki-select-border: var(--ki-select-hover-border);
+  }
 
-/* The label is a SIBLING of the trigger, so the interaction-state label token
-   must be set on the host (which both inherit from), not on the trigger where
-   it never reaches the label (codex review). */
-:host(:has([part="trigger"]:hover)) {
-  --_ki-select-label-fg: var(--ki-select-hover-label-fg);
+  /* The label is a SIBLING of the trigger, so the interaction-state label token
+     must be set on the host (which both inherit from), not on the trigger where
+     it never reaches the label (codex review). */
+  :host(:has([part="trigger"]:hover)) {
+    --_ki-select-label-fg: var(--ki-select-hover-label-fg);
+  }
 }
 
 :host(:has([part="trigger"]:focus-visible)) {
@@ -126,9 +128,11 @@
   align-items: center;
 }
 
-[part="option"]:hover {
-  --_ki-option-bg: var(--ki-option-hover-bg);
-  --_ki-option-fg: var(--ki-option-hover-fg);
+@media (hover: hover) {
+  [part="option"]:hover {
+    --_ki-option-bg: var(--ki-option-hover-bg);
+    --_ki-option-fg: var(--ki-option-hover-fg);
+  }
 }
 
 [part="option"][data-highlighted="true"] {

@@ -12,12 +12,14 @@
   font-family: var(--ki-typography-family-body);
 }
 
-:host(:hover:not(:disabled)) {
-  --_ki-input-bg: var(--ki-input-hover-bg);
-  --_ki-input-fg: var(--ki-input-hover-fg);
-  --_ki-input-border: var(--ki-input-hover-border);
-  --_ki-input-label-fg: var(--ki-input-hover-label-fg);
-  --_ki-input-placeholder-fg: var(--ki-input-hover-placeholder-fg);
+@media (hover: hover) {
+  :host(:hover:not(:disabled)) {
+    --_ki-input-bg: var(--ki-input-hover-bg);
+    --_ki-input-fg: var(--ki-input-hover-fg);
+    --_ki-input-border: var(--ki-input-hover-border);
+    --_ki-input-label-fg: var(--ki-input-hover-label-fg);
+    --_ki-input-placeholder-fg: var(--ki-input-hover-placeholder-fg);
+  }
 }
 
 :host(:focus-within:not(:disabled)) {
