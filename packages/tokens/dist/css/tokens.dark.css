@@ -49,6 +49,7 @@
     --ki-surface-disabled-base-em: var(--ki-color-white-8); /** semantic color for surface disabled base em. */
     --ki-surface-hover-overlay: var(--ki-color-black-5); /** semantic color for surface hover overlay. */
     --ki-surface-hover-overlay-inverse: var(--ki-color-white-3); /** semantic color for surface hover overlay inverse. */
+    --ki-surface-pressed-overlay-inverse: var(--ki-color-white-5); /** Pressed interaction overlay for a surface whose fill is LIGHT, so the wash darkens: the next rung above hover-overlay-inverse (Black/3 -> Black/5 light, White/3 -> White/5 dark). The mirror of ki.state-layer.pressed, which is the next rung above hover-overlay and washes the other way. Two conventions exist because ki-button paints primary on a dark fill and secondary on a light one; a single pressed overlay would lighten one of them on press and read as less pressed, not more. */
     --ki-surface-success-high-em-hover: var(--ki-color-success-800); /** semantic color for surface success high em hover. */
     --ki-surface-danger-high-em-hover: var(--ki-color-danger-800); /** semantic color for surface danger high em hover. */
     --ki-text-high-em: var(--ki-color-white-100); /** semantic color for text high em. */
@@ -240,6 +241,7 @@
   --ki-surface-disabled-base-em: var(--ki-color-white-8); /** semantic color for surface disabled base em. */
   --ki-surface-hover-overlay: var(--ki-color-black-5); /** semantic color for surface hover overlay. */
   --ki-surface-hover-overlay-inverse: var(--ki-color-white-3); /** semantic color for surface hover overlay inverse. */
+  --ki-surface-pressed-overlay-inverse: var(--ki-color-white-5); /** Pressed interaction overlay for a surface whose fill is LIGHT, so the wash darkens: the next rung above hover-overlay-inverse (Black/3 -> Black/5 light, White/3 -> White/5 dark). The mirror of ki.state-layer.pressed, which is the next rung above hover-overlay and washes the other way. Two conventions exist because ki-button paints primary on a dark fill and secondary on a light one; a single pressed overlay would lighten one of them on press and read as less pressed, not more. */
   --ki-surface-success-high-em-hover: var(--ki-color-success-800); /** semantic color for surface success high em hover. */
   --ki-surface-danger-high-em-hover: var(--ki-color-danger-800); /** semantic color for surface danger high em hover. */
   --ki-text-high-em: var(--ki-color-white-100); /** semantic color for text high em. */

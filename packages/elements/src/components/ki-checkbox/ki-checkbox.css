@@ -39,24 +39,6 @@
   --_ki-checkbox-border: var(--ki-checkbox-indeterminate-hover-border);
 }
 
-:host(:active:not([disabled], :state(fieldset-disabled))) {
-  --_ki-checkbox-bg: var(--ki-checkbox-unchecked-active-bg);
-  --_ki-checkbox-fg: var(--ki-checkbox-unchecked-active-fg);
-  --_ki-checkbox-border: var(--ki-checkbox-unchecked-active-border);
-}
-
-:host([checked]:active:not([disabled], :state(fieldset-disabled))) {
-  --_ki-checkbox-bg: var(--ki-checkbox-checked-active-bg);
-  --_ki-checkbox-fg: var(--ki-checkbox-checked-active-fg);
-  --_ki-checkbox-border: var(--ki-checkbox-checked-active-border);
-}
-
-:host([indeterminate]:active:not([disabled], :state(fieldset-disabled))) {
-  --_ki-checkbox-bg: var(--ki-checkbox-indeterminate-active-bg);
-  --_ki-checkbox-fg: var(--ki-checkbox-indeterminate-active-fg);
-  --_ki-checkbox-border: var(--ki-checkbox-indeterminate-active-border);
-}
-
 :host([disabled]) {
   --_ki-checkbox-bg: var(--ki-checkbox-unchecked-disabled-bg);
   --_ki-checkbox-fg: var(--ki-checkbox-unchecked-disabled-fg);
@@ -106,11 +88,8 @@
 }
 
 :host(.ki-user-invalid:hover),
-:host(.ki-user-invalid:active),
 :host(.ki-user-invalid[checked]:hover),
-:host(.ki-user-invalid[checked]:active),
-:host(.ki-user-invalid[indeterminate]:hover),
-:host(.ki-user-invalid[indeterminate]:active) {
+:host(.ki-user-invalid[indeterminate]:hover) {
   --_ki-checkbox-bg: var(--ki-checkbox-invalid-bg);
   --_ki-checkbox-fg: var(--ki-checkbox-invalid-fg);
   --_ki-checkbox-border: var(--ki-checkbox-invalid-border);
@@ -162,6 +141,45 @@ input:focus-visible ~ [part="control"] {
   box-shadow: var(--ki-checkbox-focus-ring-shadow);
   outline: var(--ki-checkbox-focus-ring-width) solid var(--ki-checkbox-focus-ring-color);
   outline-offset: var(--ki-checkbox-focus-ring-offset);
+}
+
+/* Pressed. `:active` reaches the host only for POINTER activation, so these
+   three rules were unreachable CSS for every keyboard user — measured in
+   Chromium: host `:active` false, inner `input:active` true. Rewritten against
+   the input, which receives `:active` on both paths, and moved below the
+   structural rules so specificity still descends down the file.
+   Unlike ki-button these values were never mirrors of rest (unchecked rest s0
+   -> active s2), so only the selector needed correcting; the appearance was
+   already designed, just unreachable without a mouse. */
+input:active:not([disabled], :state(fieldset-disabled)) ~ [part="control"] {
+  --_ki-checkbox-bg: var(--ki-checkbox-unchecked-active-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-unchecked-active-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-unchecked-active-border);
+}
+
+/* Ahead of the checked/indeterminate pressed rules so specificity descends
+   down the file (stylelint no-descending-specificity). Correctness is
+   unaffected: an invalid CHECKED control is matched by the
+   `.ki-user-invalid[checked]` selector below, which outranks the plain
+   `[checked]` rule regardless of order. */
+:host(.ki-user-invalid) input:active ~ [part="control"],
+:host(.ki-user-invalid[checked]) input:active ~ [part="control"],
+:host(.ki-user-invalid[indeterminate]) input:active ~ [part="control"] {
+  --_ki-checkbox-bg: var(--ki-checkbox-invalid-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-invalid-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-invalid-border);
+}
+
+:host([checked]) input:active:not([disabled], :state(fieldset-disabled)) ~ [part="control"] {
+  --_ki-checkbox-bg: var(--ki-checkbox-checked-active-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-checked-active-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-checked-active-border);
+}
+
+:host([indeterminate]) input:active:not([disabled], :state(fieldset-disabled)) ~ [part="control"] {
+  --_ki-checkbox-bg: var(--ki-checkbox-indeterminate-active-bg);
+  --_ki-checkbox-fg: var(--ki-checkbox-indeterminate-active-fg);
+  --_ki-checkbox-border: var(--ki-checkbox-indeterminate-active-border);
 }
 
 .mark {

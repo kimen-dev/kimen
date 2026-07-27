@@ -247,6 +247,11 @@
             "$value": "{ki.effect.component.primary.default.shadow}",
             "$type": "shadow",
             "$description": "shadow used by the icon button component for primary active shadow (MarsUI Component_effect/primary_default; MarsUI defines no pressed state, mirrors rest)."
+          },
+          "overlay": {
+            "$value": "{ki.state-layer.pressed}",
+            "$type": "color",
+            "$description": "Pressed state layer for the primary icon button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
           }
         },
         "disabled": {
@@ -432,6 +437,11 @@
             "$value": "{ki.effect.component.secondary.default.shadow}",
             "$type": "shadow",
             "$description": "shadow used by the icon button component for secondary active shadow (MarsUI Component_effect/secondary_default; MarsUI defines no pressed state, mirrors rest)."
+          },
+          "overlay": {
+            "$value": "{ki.surface.pressed-overlay-inverse}",
+            "$type": "color",
+            "$description": "Pressed state layer for the secondary icon button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
           }
         },
         "disabled": {

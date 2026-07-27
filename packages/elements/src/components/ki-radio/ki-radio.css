@@ -41,15 +41,6 @@
   --_ki-radio-selected-border: var(--ki-radio-selected-hover-border);
 }
 
-:host(:active:not([disabled], [data-ki-group-disabled])) {
-  --_ki-radio-bg: var(--ki-radio-unselected-active-bg);
-  --_ki-radio-fg: var(--ki-radio-unselected-active-fg);
-  --_ki-radio-border: var(--ki-radio-unselected-active-border);
-  --_ki-radio-selected-bg: var(--ki-radio-selected-active-bg);
-  --_ki-radio-selected-fg: var(--ki-radio-selected-active-fg);
-  --_ki-radio-selected-border: var(--ki-radio-selected-active-border);
-}
-
 :host([disabled]),
 :host([data-ki-group-disabled]) {
   --_ki-radio-bg: var(--ki-radio-unselected-disabled-bg);
@@ -130,6 +121,21 @@ input:focus-visible ~ [part="control"] {
   box-shadow: var(--_ki-radio-focus-ring-shadow);
   outline: var(--_ki-radio-focus-ring-width) solid var(--_ki-radio-focus-ring-color);
   outline-offset: var(--_ki-radio-focus-ring-offset);
+}
+
+/* Pressed. `:active` reaches the host only for POINTER activation, so this was
+   unreachable CSS for every keyboard user — measured in Chromium: host
+   `:active` false, inner `input:active` true. Rewritten against the input,
+   which receives `:active` on both paths, and moved below the structural rules
+   so specificity still descends down the file. The values were never mirrors
+   of rest; only the selector needed correcting. */
+input:active:not([disabled], [data-ki-group-disabled]) ~ [part="control"] {
+  --_ki-radio-bg: var(--ki-radio-unselected-active-bg);
+  --_ki-radio-fg: var(--ki-radio-unselected-active-fg);
+  --_ki-radio-border: var(--ki-radio-unselected-active-border);
+  --_ki-radio-selected-bg: var(--ki-radio-selected-active-bg);
+  --_ki-radio-selected-fg: var(--ki-radio-selected-active-fg);
+  --_ki-radio-selected-border: var(--ki-radio-selected-active-border);
 }
 
 [part="label"] {

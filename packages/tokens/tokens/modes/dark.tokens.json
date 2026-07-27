@@ -190,6 +190,9 @@
       "hover-overlay-inverse": {
         "$value": "{ki.color.white.3}"
       },
+      "pressed-overlay-inverse": {
+        "$value": "{ki.color.white.5}"
+      },
       "primary-high-em-hover": {
         "$value": "{ki.color.brand.600}"
       },

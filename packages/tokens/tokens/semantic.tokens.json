@@ -280,6 +280,10 @@
         "$value": "{ki.color.black.3}",
         "$description": "semantic color for surface hover overlay inverse."
       },
+      "pressed-overlay-inverse": {
+        "$value": "{ki.color.black.5}",
+        "$description": "Pressed interaction overlay for a surface whose fill is LIGHT, so the wash darkens: the next rung above hover-overlay-inverse (Black/3 -> Black/5 light, White/3 -> White/5 dark). The mirror of ki.state-layer.pressed, which is the next rung above hover-overlay and washes the other way. Two conventions exist because ki-button paints primary on a dark fill and secondary on a light one; a single pressed overlay would lighten one of them on press and read as less pressed, not more."
+      },
       "base": {
         "$value": "{ki.surface.s0}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.surface.s0."

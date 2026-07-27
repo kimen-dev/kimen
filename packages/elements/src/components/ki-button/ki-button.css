@@ -320,148 +320,6 @@
   --_ki-button-overlay-image: initial;
 }
 
-:host(:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-secondary-neutral-active-bg);
-  --_ki-button-fg: var(--ki-button-secondary-neutral-active-fg);
-  --_ki-button-border: var(--ki-button-secondary-neutral-active-border);
-  --_ki-button-shadow: var(--ki-button-secondary-active-shadow);
-
-  /* Pressed = pure rest fill + e1: the hover overlay resets so the pressed
-     appearance is identical for mouse (:hover also matches) and keyboard. */
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-/* Pressed appearance per variant x tone: mirrors the hover blocks; the
-   generic :host(:active) above only covers the secondary-neutral base.
-   Every block also resets the hover overlay (pressed = rest fill + e1,
-   identical for mouse and keyboard activation). */
-:host([variant="primary"][tone="neutral"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-primary-neutral-active-bg);
-  --_ki-button-fg: var(--ki-button-primary-neutral-active-fg);
-  --_ki-button-border: var(--ki-button-primary-neutral-active-border);
-  --_ki-button-shadow: var(--ki-button-primary-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="primary"][tone="success"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-primary-success-active-bg);
-  --_ki-button-fg: var(--ki-button-primary-success-active-fg);
-  --_ki-button-border: var(--ki-button-primary-success-active-border);
-  --_ki-button-shadow: var(--ki-button-primary-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="primary"][tone="danger"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-primary-danger-active-bg);
-  --_ki-button-fg: var(--ki-button-primary-danger-active-fg);
-  --_ki-button-border: var(--ki-button-primary-danger-active-border);
-  --_ki-button-shadow: var(--ki-button-primary-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="secondary"][tone="success"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-secondary-success-active-bg);
-  --_ki-button-fg: var(--ki-button-secondary-success-active-fg);
-  --_ki-button-border: var(--ki-button-secondary-success-active-border);
-  --_ki-button-shadow: var(--ki-button-secondary-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="secondary"][tone="danger"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-secondary-danger-active-bg);
-  --_ki-button-fg: var(--ki-button-secondary-danger-active-fg);
-  --_ki-button-border: var(--ki-button-secondary-danger-active-border);
-  --_ki-button-shadow: var(--ki-button-secondary-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="tertiary"][tone="neutral"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-tertiary-neutral-active-bg);
-  --_ki-button-fg: var(--ki-button-tertiary-neutral-active-fg);
-  --_ki-button-border: var(--ki-button-tertiary-neutral-active-border);
-  --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="tertiary"][tone="success"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-tertiary-success-active-bg);
-  --_ki-button-fg: var(--ki-button-tertiary-success-active-fg);
-  --_ki-button-border: var(--ki-button-tertiary-success-active-border);
-  --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="tertiary"][tone="danger"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-tertiary-danger-active-bg);
-  --_ki-button-fg: var(--ki-button-tertiary-danger-active-fg);
-  --_ki-button-border: var(--ki-button-tertiary-danger-active-border);
-  --_ki-button-shadow: var(--ki-button-tertiary-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="quaternary"][tone="neutral"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-quaternary-neutral-active-bg);
-  --_ki-button-fg: var(--ki-button-quaternary-neutral-active-fg);
-  --_ki-button-border: var(--ki-button-quaternary-neutral-active-border);
-  --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="quaternary"][tone="success"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-quaternary-success-active-bg);
-  --_ki-button-fg: var(--ki-button-quaternary-success-active-fg);
-  --_ki-button-border: var(--ki-button-quaternary-success-active-border);
-  --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="quaternary"][tone="danger"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-quaternary-danger-active-bg);
-  --_ki-button-fg: var(--ki-button-quaternary-danger-active-fg);
-  --_ki-button-border: var(--ki-button-quaternary-danger-active-border);
-  --_ki-button-shadow: var(--ki-button-quaternary-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="ghost"][tone="neutral"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-ghost-neutral-active-bg);
-  --_ki-button-fg: var(--ki-button-ghost-neutral-active-fg);
-  --_ki-button-border: var(--ki-button-ghost-neutral-active-border);
-  --_ki-button-shadow: var(--ki-button-ghost-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="ghost"][tone="success"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-ghost-success-active-bg);
-  --_ki-button-fg: var(--ki-button-ghost-success-active-fg);
-  --_ki-button-border: var(--ki-button-ghost-success-active-border);
-  --_ki-button-shadow: var(--ki-button-ghost-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
-:host([variant="ghost"][tone="danger"]:active:not(:disabled)) {
-  --_ki-button-bg: var(--ki-button-ghost-danger-active-bg);
-  --_ki-button-fg: var(--ki-button-ghost-danger-active-fg);
-  --_ki-button-border: var(--ki-button-ghost-danger-active-border);
-  --_ki-button-shadow: var(--ki-button-ghost-active-shadow);
-  --_ki-button-overlay: var(--ki-transparent-inverse);
-  --_ki-button-overlay-image: initial;
-}
-
 /* Disabled resolves the disabled matrix cells (tone-independent). These
    blocks come LAST: [variant][disabled] ties the [variant][tone] rest
    blocks at 0,3,0 specificity, so source order decides (regression:
@@ -580,6 +438,44 @@ button:focus-visible {
      3:1 against adjacent surfaces. */
   box-shadow: var(--ki-button-focus-ring-shadow), var(--_ki-button-shadow);
   outline-color: var(--ki-button-focus-ring-color);
+}
+
+/* Pressed.
+ *
+ * Written against the inner control, NOT `:host(:active)`. `:active` lands on
+ * the element being activated and propagates to the host only for POINTER
+ * activation; on keyboard the host never matches. Measured in Chromium on all
+ * five stateful components: host `:active` false, inner control `:active`
+ * true. So the 15 `:host(…:active)` blocks this replaces were unreachable CSS
+ * for every keyboard user, and no token value could have fixed that.
+ * `:host(:has(button:active))` cannot bridge it either — `:has()` does not
+ * cross the shadow boundary, verified in all three engines.
+ *
+ * One rule, not a matrix. Those 15 blocks set bg/fg/border to `-active-`
+ * tokens that are documented mirrors of rest, and then WITHDREW the hover
+ * overlay — so the pressed appearance was legible only as the removal of a
+ * hover that a keyboard or touch user never had. Pressed is now the overlay
+ * one step deeper instead, which reads from any starting state and is
+ * variant-independent by construction, the same reason Material 3 state
+ * layers are. `ki.state-layer.pressed` already carried the written MarsUI
+ * derivation ("overlay one step above hover_overlay") and was consumed by
+ * nothing; this binds it.
+ *
+ * Placed after the structural rules it now shares a target with, so
+ * specificity still descends down the file (stylelint no-descending-
+ * specificity). */
+button:active:not(:disabled) {
+  --_ki-button-overlay: var(--ki-button-secondary-active-overlay);
+  --_ki-button-overlay-image: linear-gradient(var(--_ki-button-overlay), var(--_ki-button-overlay));
+}
+
+/* Primary paints on a dark brand fill, so its wash lightens; every other
+   variant paints on a light one and darkens. Two rules, mirroring exactly the
+   two hover overlays this file already carries — a single pressed overlay
+   would LIGHTEN the primary button on press and read as less pressed, not
+   more. */
+:host([variant="primary"]) button:active:not(:disabled) {
+  --_ki-button-overlay: var(--ki-button-primary-active-overlay);
 }
 
 [part="label"] {

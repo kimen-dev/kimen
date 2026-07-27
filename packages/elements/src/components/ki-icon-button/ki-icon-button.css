@@ -310,148 +310,6 @@
   --_ki-icon-button-overlay-image: initial;
 }
 
-:host(:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-secondary-neutral-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-secondary-neutral-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-secondary-neutral-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-secondary-active-shadow);
-
-  /* Pressed = pure rest fill + e1: the hover overlay resets so the pressed
-     appearance is identical for mouse (:hover also matches) and keyboard. */
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-/* Pressed appearance per variant x tone: mirrors the hover blocks; the
-   generic :host(:active) above only covers the secondary-neutral base.
-   Every block also resets the hover overlay (pressed = rest fill + e1,
-   identical for mouse and keyboard activation). */
-:host([variant="primary"][tone="neutral"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-primary-neutral-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-primary-neutral-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-primary-neutral-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-primary-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="primary"][tone="success"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-primary-success-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-primary-success-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-primary-success-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-primary-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="primary"][tone="danger"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-primary-danger-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-primary-danger-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-primary-danger-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-primary-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="secondary"][tone="success"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-secondary-success-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-secondary-success-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-secondary-success-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-secondary-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="secondary"][tone="danger"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-secondary-danger-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-secondary-danger-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-secondary-danger-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-secondary-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="tertiary"][tone="neutral"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-tertiary-neutral-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-tertiary-neutral-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-tertiary-neutral-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-tertiary-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="tertiary"][tone="success"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-tertiary-success-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-tertiary-success-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-tertiary-success-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-tertiary-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="tertiary"][tone="danger"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-tertiary-danger-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-tertiary-danger-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-tertiary-danger-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-tertiary-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="quaternary"][tone="neutral"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-quaternary-neutral-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-quaternary-neutral-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-quaternary-neutral-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-quaternary-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="quaternary"][tone="success"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-quaternary-success-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-quaternary-success-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-quaternary-success-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-quaternary-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="quaternary"][tone="danger"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-quaternary-danger-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-quaternary-danger-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-quaternary-danger-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-quaternary-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="ghost"][tone="neutral"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-ghost-neutral-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-ghost-neutral-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-ghost-neutral-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-ghost-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="ghost"][tone="success"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-ghost-success-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-ghost-success-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-ghost-success-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-ghost-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
-:host([variant="ghost"][tone="danger"]:active:not([disabled])) {
-  --_ki-icon-button-bg: var(--ki-icon-button-ghost-danger-active-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-ghost-danger-active-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-ghost-danger-active-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-ghost-active-shadow);
-  --_ki-icon-button-overlay: var(--ki-transparent-inverse);
-  --_ki-icon-button-overlay-image: initial;
-}
-
 /* Disabled resolves the disabled matrix cells (tone-independent), keyed on
    the REFLECTED [disabled] attribute: unlike ki-button, this host is not
    form-associated, so :host(:disabled) can never match (S2 regression caught
@@ -572,6 +430,27 @@ button:focus-visible {
      alone is below 3:1 against adjacent surfaces. */
   box-shadow: var(--ki-icon-button-focus-ring-shadow), var(--_ki-icon-button-shadow);
   outline-color: var(--ki-icon-button-focus-ring-color);
+}
+
+/* Pressed. Same correction as ki-button, same reason: `:active` lands on the
+   element being activated and reaches the host only for POINTER activation, so
+   the 15 `:host(…:active)` blocks this replaces were unreachable CSS for every
+   keyboard user. Written against the inner control, which receives `:active` on
+   both paths, and placed after the structural rules it shares a target with so
+   specificity still descends down the file.
+   Two rules because this component carries two overlay conventions already:
+   primary paints on a dark brand fill and its wash lightens, every other
+   variant paints on a light one and darkens. */
+button:active:not(:disabled) {
+  --_ki-icon-button-overlay: var(--ki-icon-button-secondary-active-overlay);
+  --_ki-icon-button-overlay-image: linear-gradient(
+    var(--_ki-icon-button-overlay),
+    var(--_ki-icon-button-overlay)
+  );
+}
+
+:host([variant="primary"]) button:active:not(:disabled) {
+  --_ki-icon-button-overlay: var(--ki-icon-button-primary-active-overlay);
 }
 
 /* The single decorative icon: sized by the per-size icon token, centered by
