@@ -32,6 +32,13 @@
 // prerelease firefox/webkit engines the command reports that it could not
 // emulate and the measurement fails loudly rather than passing silently; the
 // audit still runs everywhere.
+//
+// Nothing here reads the ambient pointer, and nothing assumes one. Headless
+// Chromium has no input devices and on some platforms says so: "with nothing
+// emulated" is a different device on the CI runner than on the machine this
+// was written on, which is how the first version came out green here and red
+// there. Every assertion names the world it wants and finds out whether it got
+// there.
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
@@ -76,6 +83,7 @@ const browserCommands = commands as unknown as {
 const TOKENS_STYLE_ID = 'pointer-capability-tokens';
 const WITNESS_STYLE_ID = 'pointer-capability-witness-style';
 const SHADOW_RENDER_DEADLINE_MS = 1500;
+const EMULATION_SETTLE_DEADLINE_MS = 2000;
 // Bound on the measurement, not on the contract: enough instances to cover
 // the variants a gallery opens with, few enough to keep 29 components inside
 // one suite. Whatever this leaves out, the audit still reads.
@@ -334,6 +342,35 @@ async function park(): Promise<void> {
   await nextFrame();
 }
 
+/**
+ * Ask for a pointer capability and wait until the page reports it; report
+ * whether it ever did.
+ *
+ * The wait is not politeness. CDP acknowledges the emulation before the page
+ * has re-evaluated its media queries, and a measurement started too early runs
+ * under the device it was about to stop being.
+ *
+ * Nothing here reads the ambient state, and no caller may assume one. Headless
+ * Chromium has no input devices and on some platforms says so, so "with
+ * nothing emulated" is a different device on the CI runner than on the machine
+ * this was written on. Every assertion states which world it wants and finds
+ * out whether it got there.
+ */
+async function settleHoverCapability(capability: 'hover' | 'none' | null): Promise<boolean> {
+  if (!(await browserCommands.emulateHoverCapability(capability))) {
+    return false;
+  }
+  if (capability === null) {
+    return true;
+  }
+  const wanted = capability === 'none' ? '(hover: none)' : '(hover: hover)';
+  const deadline = Date.now() + EMULATION_SETTLE_DEADLINE_MS;
+  while (!matchMedia(wanted).matches && Date.now() < deadline) {
+    await nextFrame();
+  }
+  return matchMedia(wanted).matches;
+}
+
 /** Hover every subject in turn; report the ones whose hover repainted the gallery. */
 async function repaintingSubjects(
   gallery: HTMLElement,
@@ -430,12 +467,8 @@ describe('hover capability measurement', () => {
   it('emulates a device with no hovering pointer', async () => {
     try {
       expect(
-        await browserCommands.emulateHoverCapability('none'),
-        'this engine has no CDP, so a touch device cannot be emulated and only the audit above ran',
-      ).toBe(true);
-      expect(
-        matchMedia('(hover: none)').matches,
-        'the emulation was accepted but the page still reports a hovering pointer',
+        await settleHoverCapability('none'),
+        'this engine could not be put on a touch device, so only the audit above ran',
       ).toBe(true);
       expect(matchMedia('(hover: hover)').matches).toBe(false);
       expect(
@@ -443,31 +476,39 @@ describe('hover capability measurement', () => {
         'an ungated :hover rule stopped repainting under the emulation, so the harness is no longer delivering hovers and every clean result below would be meaningless',
       ).toBe(true);
     } finally {
-      await browserCommands.emulateHoverCapability(null);
+      await settleHoverCapability(null);
     }
-    expect(
-      matchMedia('(hover: hover)').matches,
-      'the emulation did not lift, so every later assertion would measure a touch device',
-    ).toBe(true);
   });
 
-  // Liveness, once: a gate written the wrong way round would silence hover for
-  // mouse users too, and every per-component assertion below would still be
-  // green. ki-button carries the largest hover matrix in the library.
+  // Liveness: a gate written the wrong way round would silence hover for mouse
+  // users too. The audit above already refuses any query that is not
+  // `(hover: hover)`, so this is the paint-level second opinion, on ki-button —
+  // the largest hover matrix in the library.
+  //
+  // It asserts in both directions rather than skipping: where the engine can be
+  // a mouse, hover MUST repaint; where it cannot be one at all, hover must NOT.
+  // Only the first of those is a statement about mouse users, so on an engine
+  // with no pointer (headless Linux) that half is carried by the audit alone.
   it('leaves hover working for a pointer that has it', async () => {
+    const hovering = await settleHoverCapability('hover');
     const gallery = await mount('ki-button');
     const { subjects } = measurementPlan(gallery);
     const { repainting, unreached } = await repaintingSubjects(gallery, subjects);
     expect(unreached).toEqual([]);
     expect(
-      repainting.length,
-      'no ki-button hover repainted for a mouse user: hover is not gated, it is gone',
-    ).toBeGreaterThan(0);
+      repainting.length > 0,
+      hovering
+        ? 'no ki-button hover repainted for a mouse user: hover is not gated, it is gone'
+        : 'this engine could not be made a mouse, and ki-button repainted on hover anyway: the gate is not holding',
+    ).toBe(hovering);
   });
 
   it.each(components)('%s paints no hover on a device without one', async (component) => {
     try {
-      expect(await browserCommands.emulateHoverCapability('none')).toBe(true);
+      expect(
+        await settleHoverCapability('none'),
+        `the page never reported a touch device, so ${component} was about to be measured under the wrong one`,
+      ).toBe(true);
       expect(
         await witnessDelivers(),
         `the ungated witness went inert, so this run cannot tell a gated ${component} from an undelivered hover`,
@@ -483,7 +524,7 @@ describe('hover capability measurement', () => {
         `${component} repaints on hover on a device with no hovering pointer; on a touch screen that paint latches on the tap and stays until the user taps elsewhere (${coverage})`,
       ).toEqual([]);
     } finally {
-      await browserCommands.emulateHoverCapability(null);
+      await settleHoverCapability(null);
     }
   });
 });
