@@ -14691,7 +14691,7 @@
                 "--ki-button-quaternary-success-rest-bg": "rgba(0,0,0,0)",
                 "--ki-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-button-quaternary-success-rest-fg": "#9cda9b",
-                "--ki-button-secondary-active-overlay": "rgba(0,0,0,0.05)",
+                "--ki-button-secondary-active-overlay": "rgba(230,224,233,0.12)",
                 "--ki-button-secondary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-secondary-danger-active-bg": "#8c1d18",
                 "--ki-button-secondary-danger-active-border": "rgba(0,0,0,0)",
@@ -15016,7 +15016,7 @@
                 "--ki-icon-button-quaternary-success-rest-bg": "rgba(0,0,0,0)",
                 "--ki-icon-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-icon-button-quaternary-success-rest-fg": "#9cda9b",
-                "--ki-icon-button-secondary-active-overlay": "rgba(0,0,0,0.05)",
+                "--ki-icon-button-secondary-active-overlay": "rgba(230,224,233,0.12)",
                 "--ki-icon-button-secondary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-icon-button-secondary-danger-active-bg": "#8c1d18",
                 "--ki-icon-button-secondary-danger-active-border": "rgba(0,0,0,0)",
@@ -16009,7 +16009,7 @@
                 "--ki-button-quaternary-success-rest-bg": "rgba(255,255,255,0)",
                 "--ki-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-button-quaternary-success-rest-fg": "#2c6a2b",
-                "--ki-button-secondary-active-overlay": "rgba(0,0,0,0.05)",
+                "--ki-button-secondary-active-overlay": "rgba(29,27,32,0.12)",
                 "--ki-button-secondary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-secondary-danger-active-bg": "#f9dedc",
                 "--ki-button-secondary-danger-active-border": "rgba(255,255,255,0)",
@@ -16334,7 +16334,7 @@
                 "--ki-icon-button-quaternary-success-rest-bg": "rgba(255,255,255,0)",
                 "--ki-icon-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-icon-button-quaternary-success-rest-fg": "#2c6a2b",
-                "--ki-icon-button-secondary-active-overlay": "rgba(0,0,0,0.05)",
+                "--ki-icon-button-secondary-active-overlay": "rgba(29,27,32,0.12)",
                 "--ki-icon-button-secondary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-icon-button-secondary-danger-active-bg": "#f9dedc",
                 "--ki-icon-button-secondary-danger-active-border": "rgba(255,255,255,0)",
@@ -28714,5 +28714,5 @@
       }
     }
   },
-  "surfaceSha256": "0a2e875dd4161aee2ff66d393d5bb42c53eed1522e42dda4565673e42da07162"
+  "surfaceSha256": "fcc1504834d80323c924bc2d917fa1fabc80a35bb78cc12b432374413f5b4b7f"
 }

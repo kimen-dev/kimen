@@ -186,6 +186,13 @@
             "$type": "color",
             "$description": "M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim."
           }
+        },
+        "active": {
+          "overlay": {
+            "$value": "{ki.state-layer.pressed}",
+            "$type": "color",
+            "$description": "M3 md.sys.state pressed state layer (12% of on-surface). Without it this cell inherits the onmars ki.surface.pressed-overlay-inverse, which washes the fill 5% DARKER: weaker than the 8% hover wash in the light composition and the opposite direction to it in the dark one, where the M3 state layers are light on-surface."
+          }
         }
       }
     }

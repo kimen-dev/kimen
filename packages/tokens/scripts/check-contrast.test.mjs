@@ -6,6 +6,7 @@ import {
   compositeOver,
   contrastRatio,
   controlBoundaryCells,
+  overlayRamps,
   parseColor,
   ratioReadoutPairs,
   relativeLuminance,
@@ -147,6 +148,32 @@ test('readout pairs are derived from indicator/track siblings, not listed', () =
   assert.deepEqual(
     ratioReadoutPairs(declarations).map((pair) => [pair.stem, pair.indicator, pair.track]),
     [['--ki-progress', '--ki-progress-indicator-color', '--ki-progress-track-color']],
+  );
+});
+
+test('overlay ramps pair hover with active and collect every fill they wash', () => {
+  const declarations = new Map([
+    // a complete ramp: both overlays present, three tones under the same stem
+    ['--ki-button-secondary-hover-overlay', 'rgba(0, 0, 0, 0.03)'],
+    ['--ki-button-secondary-active-overlay', 'rgba(0, 0, 0, 0.05)'],
+    ['--ki-button-secondary-neutral-rest-bg', '#ffffff'],
+    ['--ki-button-secondary-danger-rest-bg', '#fdecec'],
+    // hover with no pressed sibling is not a ramp: nothing claims to be a step
+    // beyond it (tertiary and ghost carry their state in the fill instead)
+    ['--ki-button-tertiary-hover-overlay', 'rgba(0, 0, 0, 0.03)'],
+    ['--ki-button-tertiary-neutral-rest-bg', 'rgba(0, 0, 0, 0)'],
+  ]);
+
+  assert.deepEqual(
+    overlayRamps(declarations).map((ramp) => [ramp.stem, ramp.hover, ramp.active, ramp.fills]),
+    [
+      [
+        '--ki-button-secondary',
+        '--ki-button-secondary-hover-overlay',
+        '--ki-button-secondary-active-overlay',
+        ['--ki-button-secondary-neutral-rest-bg', '--ki-button-secondary-danger-rest-bg'],
+      ],
+    ],
   );
 });
 
