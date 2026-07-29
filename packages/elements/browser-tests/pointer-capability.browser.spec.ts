@@ -28,10 +28,12 @@
 // features directly, Chromium accepted the call and changed nothing, and all
 // fifteen components "failed" for a reason that had nothing to do with them.
 //
-// Touch emulation is a CDP call, so the measurement runs on Chromium. On the
-// prerelease firefox/webkit engines the command reports that it could not
-// emulate and the measurement fails loudly rather than passing silently; the
-// audit still runs everywhere.
+// Touch emulation is a CDP call, so the measurement runs on Chromium alone,
+// and the prerelease firefox/webkit engines select it out rather than fail on
+// an emulation they were never going to have. The skip is not taken on trust:
+// the classification behind it is itself asserted, so a Chromium that lost the
+// emulation fails instead of joining the engines that never had it. The audit,
+// which emulates nothing, runs on all three.
 //
 // Nothing here reads the ambient pointer, and nothing assumes one. Headless
 // Chromium has no input devices and on some platforms says so: "with nothing
@@ -96,6 +98,25 @@ const HOSTS_PER_TAG = 6;
  * question a hover style is asking.
  */
 const HOVER_CAPABILITY_QUERY = '(hover:hover)';
+
+/**
+ * Touch emulation is a CDP call, and CDP is Chromium's. The prerelease matrix
+ * runs this same suite on firefox and webkit (release.yml), where the command
+ * can only report that it could not emulate — so the measurement is selected
+ * out there rather than asserted into failing, and the audit above, which
+ * needs no emulation, carries those engines on its own.
+ *
+ * Read from the user agent because a skip is decided at collection time,
+ * before any command can be called. The test below cross-checks this reading
+ * against what the command actually manages, so a wrong guess cannot silently
+ * disable the measurement.
+ */
+const ENGINE = navigator.userAgent;
+// `Chrome/` and not a word-bounded match: headless Chromium reports
+// `HeadlessChrome/`, where nothing separates the two words and a \b never
+// fires. The first version of this line skipped the whole measurement on the
+// engine it was written for, and the assertion below is what said so.
+const CDP_ENGINE = ENGINE.includes('Chrome/');
 
 const defineAll: readonly (() => void)[] = [
   defineKiAlert,
@@ -464,17 +485,26 @@ describe('hover capability audit', () => {
 });
 
 describe('hover capability measurement', () => {
-  it('emulates a device with no hovering pointer', async () => {
+  // Whether this engine can be measured at all is asserted, not assumed: the
+  // classification the skips below are built on is itself under test, so a
+  // Chromium that stopped supporting the emulation fails here instead of
+  // quietly joining the engines that never could.
+  it('can be put on a touch device exactly where CDP exists', async () => {
     try {
+      const emulated = await settleHoverCapability('none');
       expect(
-        await settleHoverCapability('none'),
-        'this engine could not be put on a touch device, so only the audit above ran',
-      ).toBe(true);
-      expect(matchMedia('(hover: hover)').matches).toBe(false);
-      expect(
-        await witnessDelivers(),
-        'an ungated :hover rule stopped repainting under the emulation, so the harness is no longer delivering hovers and every clean result below would be meaningless',
-      ).toBe(true);
+        emulated,
+        emulated
+          ? `${ENGINE} emulated a touch device but is classified as unmeasurable, so the measurement below was skipped for nothing`
+          : `${ENGINE} could not be put on a touch device; on Chromium that is a regression, everywhere else the audit above is the whole contract`,
+      ).toBe(CDP_ENGINE);
+      if (emulated) {
+        expect(matchMedia('(hover: hover)').matches).toBe(false);
+        expect(
+          await witnessDelivers(),
+          'an ungated :hover rule stopped repainting under the emulation, so the harness is no longer delivering hovers and every clean result below would be meaningless',
+        ).toBe(true);
+      }
     } finally {
       await settleHoverCapability(null);
     }
@@ -489,7 +519,7 @@ describe('hover capability measurement', () => {
   // a mouse, hover MUST repaint; where it cannot be one at all, hover must NOT.
   // Only the first of those is a statement about mouse users, so on an engine
   // with no pointer (headless Linux) that half is carried by the audit alone.
-  it('leaves hover working for a pointer that has it', async () => {
+  it.skipIf(!CDP_ENGINE)('leaves hover working for a pointer that has it', async () => {
     const hovering = await settleHoverCapability('hover');
     const gallery = await mount('ki-button');
     const { subjects } = measurementPlan(gallery);
@@ -503,28 +533,31 @@ describe('hover capability measurement', () => {
     ).toBe(hovering);
   });
 
-  it.each(components)('%s paints no hover on a device without one', async (component) => {
-    try {
-      expect(
-        await settleHoverCapability('none'),
-        `the page never reported a touch device, so ${component} was about to be measured under the wrong one`,
-      ).toBe(true);
-      expect(
-        await witnessDelivers(),
-        `the ungated witness went inert, so this run cannot tell a gated ${component} from an undelivered hover`,
-      ).toBe(true);
+  it.skipIf(!CDP_ENGINE).each(components)(
+    '%s paints no hover on a device without one',
+    async (component) => {
+      try {
+        expect(
+          await settleHoverCapability('none'),
+          `the page never reported a touch device, so ${component} was about to be measured under the wrong one`,
+        ).toBe(true);
+        expect(
+          await witnessDelivers(),
+          `the ungated witness went inert, so this run cannot tell a gated ${component} from an undelivered hover`,
+        ).toBe(true);
 
-      const gallery = await mount(component);
-      const { subjects, rules, capped } = measurementPlan(gallery);
-      const coverage = `${String(subjects.size)} subjects from ${String(rules.length)} hover rules${capped.length === 0 ? '' : `; sampled ${capped.join(', ')}`}`;
-      const { repainting, unreached } = await repaintingSubjects(gallery, subjects);
-      expect(unreached, `${component} has hover subjects no pointer could reach`).toEqual([]);
-      expect(
-        repainting,
-        `${component} repaints on hover on a device with no hovering pointer; on a touch screen that paint latches on the tap and stays until the user taps elsewhere (${coverage})`,
-      ).toEqual([]);
-    } finally {
-      await settleHoverCapability(null);
-    }
-  });
+        const gallery = await mount(component);
+        const { subjects, rules, capped } = measurementPlan(gallery);
+        const coverage = `${String(subjects.size)} subjects from ${String(rules.length)} hover rules${capped.length === 0 ? '' : `; sampled ${capped.join(', ')}`}`;
+        const { repainting, unreached } = await repaintingSubjects(gallery, subjects);
+        expect(unreached, `${component} has hover subjects no pointer could reach`).toEqual([]);
+        expect(
+          repainting,
+          `${component} repaints on hover on a device with no hovering pointer; on a touch screen that paint latches on the tap and stays until the user taps elsewhere (${coverage})`,
+        ).toEqual([]);
+      } finally {
+        await settleHoverCapability(null);
+      }
+    },
+  );
 });
