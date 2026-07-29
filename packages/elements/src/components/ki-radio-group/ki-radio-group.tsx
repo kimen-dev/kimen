@@ -242,6 +242,15 @@ export class KiRadioGroup {
     const assigned = slot
       ?.assignedElements()
       .filter((element): element is KiRadioElement => this.isKiRadio(element));
+    // syncInputs() only ever walks the CURRENT roster, so a radio that has just
+    // left takes the group's disabled marker with it and keeps it forever —
+    // standalone, permanently disabled-looking, with its own `disabled`
+    // property unable to explain why. The marker is a claim of ownership, so it
+    // is withdrawn here, before the roster that justified it is replaced.
+    const departed = this.roster.filter((radio) => !(assigned ?? []).includes(radio));
+    for (const radio of departed) {
+      radio.removeAttribute('data-ki-group-disabled');
+    }
     this.roster = assigned ?? [];
     this.disabledObserver?.disconnect();
     if (typeof MutationObserver !== 'function') {

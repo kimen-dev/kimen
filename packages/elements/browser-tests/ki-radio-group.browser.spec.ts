@@ -93,6 +93,22 @@ function radios(el: KiRadioGroupElement): HTMLInputElement[] {
   });
 }
 
+async function settleFrames(count = 3): Promise<void> {
+  for (let index = 0; index < count; index += 1) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+}
+
+/** What a radio's control actually paints, disabled or not. */
+function controlPaint(radio: Element): string {
+  const control = radio.shadowRoot?.querySelector('[part="control"]');
+  if (!control) {
+    throw new Error('ki-radio did not render a control');
+  }
+  const style = getComputedStyle(control);
+  return [style.backgroundColor, style.borderColor, style.opacity, style.color].join('|');
+}
+
 function radioAt(el: KiRadioGroupElement, index: number): HTMLInputElement {
   const input = radios(el)[index];
   if (!input) {
@@ -347,6 +363,42 @@ describe('ki-radio-group in a real browser', () => {
     await userEvent.keyboard('{Tab}');
 
     expect(document.activeElement).toBe(after);
+  });
+
+  // The group pushes its disabled state onto its members as a marker, and a
+  // marker is a claim of ownership: the moment a radio leaves the group, the
+  // claim is void. The assertion is on paint rather than on the attribute
+  // because the attribute is the mechanism and the appearance is the promise —
+  // a radio that keeps the marker is a permanently disabled-looking control
+  // its own `disabled` property can no longer explain.
+  it('S19 a radio taken out of a disabled group stops looking disabled', async () => {
+    cleanup();
+    const group = await mount({ disabled: true });
+    const departing = group.querySelector('ki-radio');
+    expect(departing).not.toBeNull();
+    if (departing === null) {
+      return;
+    }
+
+    // Like for like: a radio that was never in a group, mounted from the same
+    // markup, is the only honest reference for "not disabled".
+    const reference = document.createElement('ki-radio');
+    reference.setAttribute('value', 'email');
+    reference.textContent = 'Email';
+    document.body.append(reference);
+    await settleFrames();
+
+    document.body.append(departing);
+    await settleFrames();
+
+    expect(
+      departing.hasAttribute('data-ki-group-disabled'),
+      'the group kept its disabled marker on a radio it no longer owns',
+    ).toBe(false);
+    expect(
+      controlPaint(departing),
+      'a radio removed from a disabled group still paints disabled outside it',
+    ).toBe(controlPaint(reference));
   });
 
   it('S20 Tab skips a disabled group entirely', async () => {
