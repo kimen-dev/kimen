@@ -24,8 +24,15 @@ const COMPONENT_DIR = 'tokens/component/';
 // Table cells are markdown text parsed by MDX: pipes break the table and
 // braces/angle brackets would be read as JSX. Inline code spans (the token
 // name and value cells) only need the pipe escape.
+//
+// Semgrep reads the chain below as hand-rolled HTML escaping and asks for
+// DOMPurify. It is not sanitization: the input is our own committed token
+// `$description` strings, the output is an MDX table cell in generated docs,
+// and the five characters are MDX/table syntax rather than an injection
+// allowlist. There is no untrusted input and no DOM on this path — it is a
+// manual build tool, not a gate. Suppressed with the reason on the record.
 const escapeText = (text) =>
-  text
+  text // nosemgrep: javascript.audit.detect-replaceall-sanitization.detect-replaceall-sanitization
     .replaceAll('\n', ' ')
     .replaceAll('|', '\\|')
     .replaceAll('{', '&#123;')
