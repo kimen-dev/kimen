@@ -389,6 +389,87 @@ function sweepRatioReadouts(theme, scheme, declarations) {
   return failures;
 }
 
+// The interaction ramp.
+//
+// Pressed has one job: to read as MORE engaged than hover. A pressed wash
+// weaker than the hover wash — or washing the other way — is the "un-hover on
+// press" that the onmars theme carried until the pressed rederivation, and it
+// survived in the alternate theme because a theme that overrides hover and not
+// active inherits the two halves from different places. Derived from the token
+// names, so a variant that grows an overlay pair is swept the day it appears.
+const OVERLAY_ROLE = /-(hover|active)-overlay$/u;
+
+export function overlayRamps(declarations) {
+  const stems = new Map();
+
+  for (const name of declarations.keys()) {
+    const role = name.match(OVERLAY_ROLE);
+    const component = name.match(/^--ki-([a-z][a-z0-9-]*?)-/u);
+    if (role === null || component === null) {
+      continue;
+    }
+    const stem = name.slice(0, name.length - role[0].length);
+    const entry = stems.get(stem) ?? { stem };
+    entry[role[1]] = name;
+    stems.set(stem, entry);
+  }
+
+  return [...stems.values()]
+    .filter((entry) => entry.hover !== undefined && entry.active !== undefined)
+    .map((entry) => ({
+      ...entry,
+      // The overlay is tone-independent; the fill it washes is not. Every rest
+      // fill under the same stem is a surface this pair has to work over.
+      fills: [...declarations.keys()].filter((name) =>
+        new RegExp(`^${entry.stem}(?:-[a-z0-9]+)?-rest-bg$`, 'u').test(name),
+      ),
+    }));
+}
+
+function sweepOverlayRamps(theme, scheme, declarations) {
+  const failures = [];
+  const page = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+  const ramps = overlayRamps(declarations);
+
+  if (ramps.length === 0) {
+    failures.push(
+      `${theme}/${scheme}: no hover/active overlay pairs derived — the token naming convention drifted`,
+    );
+  }
+
+  for (const ramp of ramps) {
+    const hover = parseColor(resolveCustomProperty(ramp.hover, declarations));
+    const active = parseColor(resolveCustomProperty(ramp.active, declarations));
+
+    if (ramp.fills.length === 0) {
+      failures.push(`${theme}/${scheme} ${ramp.stem}: an overlay pair with no rest fill to wash`);
+      continue;
+    }
+
+    for (const fillName of ramp.fills) {
+      const rawFill = parseColor(resolveCustomProperty(fillName, declarations));
+      const fill = rawFill.a < 1 ? compositeOver(rawFill, page) : rawFill;
+      const rest = relativeLuminance(fill);
+      const hovered = relativeLuminance(compositeOver(hover, fill)) - rest;
+      const pressed = relativeLuminance(compositeOver(active, fill)) - rest;
+
+      if (hovered !== 0 && Math.sign(pressed) !== Math.sign(hovered)) {
+        failures.push(
+          `${theme}/${scheme} ${ramp.active} over ${fillName}: washes ${pressed > 0 ? 'lighter' : 'darker'} where ${ramp.hover} washes ${hovered > 0 ? 'lighter' : 'darker'} — pressed reverses hover`,
+        );
+        continue;
+      }
+      if (Math.abs(pressed) <= Math.abs(hovered)) {
+        failures.push(
+          `${theme}/${scheme} ${ramp.active} over ${fillName}: moves the fill by ${Math.abs(pressed).toFixed(4)} where ${ramp.hover} moves it by ${Math.abs(hovered).toFixed(4)} — pressed is not a step beyond hover`,
+        );
+      }
+    }
+  }
+
+  return failures;
+}
+
 function sweepControlBoundaries(theme, scheme, declarations) {
   const failures = [];
 
@@ -429,6 +510,7 @@ function evaluateStylesheet(theme, stylesheet) {
     const swept = componentPairs(declarations);
     failures.push(...sweepControlBoundaries(theme, scheme, declarations));
     failures.push(...sweepRatioReadouts(theme, scheme, declarations));
+    failures.push(...sweepOverlayRamps(theme, scheme, declarations));
 
     if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
       failures.push(

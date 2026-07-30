@@ -467,7 +467,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/009-radio-group-disabled-visual.json',
+      '../../changes/api/010-pressed-state-reachable.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -500,16 +500,23 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   assert.deepEqual(result.newRootSymbols, []);
   assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].components).length, 29);
   assert.equal(Object.keys(candidate.surface.packages['@kimen/elements'].rootSymbols).length, 32);
+  // The pressed state layer (changes/api/010) adds three more:
+  // --ki-surface-pressed-overlay-inverse, the darkening mirror of
+  // ki.state-layer.pressed for a control whose fill is light, plus the
+  // primary/secondary active.overlay pair on each of ki-button and
+  // ki-icon-button — two rules per component, not one, because each already
+  // carries two overlay conventions: primary washes lighter over a dark brand
+  // fill, everything else washes darker over a light one.
   // The control-boundary role (changes/api/007) adds three semantic leaves:
   // --ki-outline-control and --ki-outline-control-hover, the boundary of a
   // control that can be empty, pinned to WCAG 1.4.11's 3:1 rather than to a
   // position in the emphasis ramp; and --ki-surface-primary-med-em-hover, the
   // hover of the MarsUI default brand surface, which the selection family had
   // no scheme-correct step for.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1311);
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1316);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1311,
+    1316,
   );
 });

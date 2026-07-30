@@ -128,8 +128,8 @@
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.s0}",
-            "$description": "color used by the radio component for selected active background."
+            "$value": "{ki.surface.s2}",
+            "$description": "Pressed fill of the SELECTED radio. Was {ki.surface.s0}, i.e. identical to its own rest fill, so pressing an already-selected option reverted the hover step instead of deepening it — the same \"pressed = un-hover\" shape removed from ki-button, and legible only to a pointer user who had hovered first. Now follows the ramp its unselected sibling already follows: rest s0, hover s1, pressed s2."
           },
           "fg": {
             "$value": "{ki.surface.primary-high-em}",

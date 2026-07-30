@@ -1601,38 +1601,6 @@
                 "required": false,
                 "type": null
               },
-              "--ki-button-ghost-active-shadow": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "value used by the button component for ghost active shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-ghost-danger-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for ghost danger active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-ghost-danger-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for ghost danger active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-ghost-danger-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for ghost danger active foreground.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
               "--ki-button-ghost-danger-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
@@ -1693,30 +1661,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "value used by the button component for ghost hover shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-ghost-neutral-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for ghost neutral active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-ghost-neutral-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for ghost neutral active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-ghost-neutral-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for ghost neutral active foreground.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -1797,30 +1741,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "value used by the button component for ghost rest shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-ghost-success-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for ghost success active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-ghost-success-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for ghost success active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-ghost-success-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for ghost success active foreground.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2009,34 +1929,10 @@
                 "required": false,
                 "type": null
               },
-              "--ki-button-primary-active-shadow": {
+              "--ki-button-primary-active-overlay": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-primary-danger-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for primary danger active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-primary-danger-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for primary danger active border (MarsUI bevel top/inline edge).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-primary-danger-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for primary danger active foreground.",
+                "description": "Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2109,30 +2005,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-primary-neutral-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for primary neutral active background (MarsUI defines no pressed state; mirrors rest).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-primary-neutral-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for primary neutral active border (MarsUI bevel top/inline edge).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-primary-neutral-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for primary neutral active foreground.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2225,30 +2097,6 @@
                 "required": false,
                 "type": null
               },
-              "--ki-button-primary-success-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for primary success active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-primary-success-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for primary success active border (MarsUI bevel top/inline edge).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-primary-success-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for primary success active foreground.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
               "--ki-button-primary-success-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
@@ -2293,38 +2141,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "color used by the button component for primary success rest foreground.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-quaternary-active-shadow": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "value used by the button component for quaternary active shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-quaternary-danger-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for quaternary danger active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-quaternary-danger-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for quaternary danger active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-quaternary-danger-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for quaternary danger active foreground.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2389,30 +2205,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "value used by the button component for quaternary hover shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-quaternary-neutral-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for quaternary neutral active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-quaternary-neutral-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for quaternary neutral active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-quaternary-neutral-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for quaternary neutral active foreground.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2497,30 +2289,6 @@
                 "required": false,
                 "type": null
               },
-              "--ki-button-quaternary-success-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for quaternary success active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-quaternary-success-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for quaternary success active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-quaternary-success-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for quaternary success active foreground.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
               "--ki-button-quaternary-success-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
@@ -2569,34 +2337,10 @@
                 "required": false,
                 "type": null
               },
-              "--ki-button-secondary-active-shadow": {
+              "--ki-button-secondary-active-overlay": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "shadow used by the button component for secondary active shadow (MarsUI defines no pressed state; mirrors rest).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-secondary-danger-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for secondary danger active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-secondary-danger-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for secondary danger active border (MarsUI bevel top/inline edge, variant trait).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-secondary-danger-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for secondary danger active foreground.",
+                "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2669,30 +2413,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-secondary-neutral-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral active background (MarsUI defines no pressed state; mirrors rest).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-secondary-neutral-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral active border (MarsUI bevel top/inline edge).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-secondary-neutral-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for secondary neutral active foreground (MarsUI text/high_em).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2781,30 +2501,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-secondary-success-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for secondary success active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-secondary-success-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-secondary-success-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for secondary success active foreground.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -2921,38 +2617,6 @@
                 "required": false,
                 "type": null
               },
-              "--ki-button-tertiary-active-shadow": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "shadow used by the button component for button tertiary active shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-tertiary-danger-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for tertiary danger active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-tertiary-danger-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for tertiary danger active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-tertiary-danger-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for tertiary danger active foreground.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
               "--ki-button-tertiary-danger-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
@@ -3013,30 +2677,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "shadow used by the button component for button tertiary hover shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-tertiary-neutral-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for tertiary neutral active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-tertiary-neutral-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for tertiary neutral active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-tertiary-neutral-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for tertiary neutral active foreground.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -3117,30 +2757,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "shadow used by the button component for button tertiary rest shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-tertiary-success-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for tertiary success active background.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-tertiary-success-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for tertiary success active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-button-tertiary-success-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the button component for tertiary success active foreground.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -4655,38 +4271,6 @@
                 "required": false,
                 "type": null
               },
-              "--ki-icon-button-ghost-active-shadow": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "value used by the icon button component for ghost active shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-ghost-danger-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for ghost danger active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-ghost-danger-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for ghost danger active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-ghost-danger-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for ghost danger active foreground — the icon inherits it via currentColor.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
               "--ki-icon-button-ghost-danger-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
@@ -4747,30 +4331,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "value used by the icon button component for ghost hover shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-ghost-neutral-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for ghost neutral active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-ghost-neutral-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for ghost neutral active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-ghost-neutral-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for ghost neutral active foreground — the icon inherits it via currentColor.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -4851,30 +4411,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "value used by the icon button component for ghost rest shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-ghost-success-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for ghost success active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-ghost-success-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for ghost success active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-ghost-success-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for ghost success active foreground — the icon inherits it via currentColor.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -4975,34 +4511,10 @@
                 "required": false,
                 "type": null
               },
-              "--ki-icon-button-primary-active-shadow": {
+              "--ki-icon-button-primary-active-overlay": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "shadow used by the icon button component for primary active shadow (MarsUI Component_effect/primary_default; MarsUI defines no pressed state, mirrors rest).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-primary-danger-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for primary danger active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-primary-danger-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for primary danger active border (MarsUI bevel top/inline edge).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-primary-danger-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for primary danger active foreground — the icon inherits it via currentColor.",
+                "description": "Pressed state layer for the primary icon button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -5075,30 +4587,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "shadow used by the icon button component for primary hover shadow (MarsUI Component_effect/primary_hover).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-primary-neutral-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for primary neutral active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-primary-neutral-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for primary neutral active border (MarsUI bevel top/inline edge).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-primary-neutral-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for primary neutral active foreground — the icon inherits it via currentColor.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -5191,30 +4679,6 @@
                 "required": false,
                 "type": null
               },
-              "--ki-icon-button-primary-success-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for primary success active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-primary-success-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for primary success active border (MarsUI bevel top/inline edge).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-primary-success-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for primary success active foreground — the icon inherits it via currentColor.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
               "--ki-icon-button-primary-success-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
@@ -5259,38 +4723,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "color used by the icon button component for primary success rest foreground — the icon inherits it via currentColor.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-quaternary-active-shadow": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "value used by the icon button component for quaternary active shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-quaternary-danger-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for quaternary danger active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-quaternary-danger-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for quaternary danger active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-quaternary-danger-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for quaternary danger active foreground — the icon inherits it via currentColor.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -5355,30 +4787,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "value used by the icon button component for quaternary hover shadow.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-quaternary-neutral-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for quaternary neutral active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-quaternary-neutral-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for quaternary neutral active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-quaternary-neutral-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for quaternary neutral active foreground — the icon inherits it via currentColor.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -5463,30 +4871,6 @@
                 "required": false,
                 "type": null
               },
-              "--ki-icon-button-quaternary-success-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for quaternary success active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-quaternary-success-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for quaternary success active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-quaternary-success-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for quaternary success active foreground — the icon inherits it via currentColor.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
               "--ki-icon-button-quaternary-success-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
@@ -5535,34 +4919,10 @@
                 "required": false,
                 "type": null
               },
-              "--ki-icon-button-secondary-active-shadow": {
+              "--ki-icon-button-secondary-active-overlay": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "shadow used by the icon button component for secondary active shadow (MarsUI Component_effect/secondary_default; MarsUI defines no pressed state, mirrors rest).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-secondary-danger-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for secondary danger active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-secondary-danger-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for secondary danger active border (MarsUI bevel top/inline edge).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-secondary-danger-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for secondary danger active foreground — the icon inherits it via currentColor.",
+                "description": "Pressed state layer for the secondary icon button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -5635,30 +4995,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "shadow used by the icon button component for secondary hover shadow (MarsUI Component_effect/secondary_hover).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-secondary-neutral-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for secondary neutral active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-secondary-neutral-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for secondary neutral active border (MarsUI bevel top/inline edge).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-secondary-neutral-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for secondary neutral active foreground — the icon inherits it via currentColor.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -5751,30 +5087,6 @@
                 "required": false,
                 "type": null
               },
-              "--ki-icon-button-secondary-success-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for secondary success active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-secondary-success-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for secondary success active border (MarsUI bevel top/inline edge).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-secondary-success-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for secondary success active foreground — the icon inherits it via currentColor.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
               "--ki-icon-button-secondary-success-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
@@ -5847,38 +5159,6 @@
                 "required": false,
                 "type": null
               },
-              "--ki-icon-button-tertiary-active-shadow": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "shadow used by the icon button component for tertiary active shadow (MarsUI Component_effect/migrated tertiary ramp; MarsUI defines no pressed state, mirrors rest).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-tertiary-danger-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for tertiary danger active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-tertiary-danger-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for tertiary danger active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-tertiary-danger-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for tertiary danger active foreground — the icon inherits it via currentColor.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
               "--ki-icon-button-tertiary-danger-hover-bg": {
                 "default": null,
                 "deprecatedSince": null,
@@ -5939,30 +5219,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "shadow used by the icon button component for tertiary hover shadow (MarsUI Component_effect/migrated tertiary ramp).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-tertiary-neutral-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for tertiary neutral active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-tertiary-neutral-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for tertiary neutral active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-tertiary-neutral-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for tertiary neutral active foreground — the icon inherits it via currentColor.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -6043,30 +5299,6 @@
                 "default": null,
                 "deprecatedSince": null,
                 "description": "shadow used by the icon button component for tertiary rest shadow (MarsUI Component_effect/migrated tertiary ramp).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-tertiary-success-active-bg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for tertiary success active background (same semantic reference as the button matrix, 002).",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-tertiary-success-active-border": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for tertiary success active border.",
-                "replacement": null,
-                "required": false,
-                "type": null
-              },
-              "--ki-icon-button-tertiary-success-active-fg": {
-                "default": null,
-                "deprecatedSince": null,
-                "description": "color used by the icon button component for tertiary success active foreground — the icon inherits it via currentColor.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -7817,7 +7049,7 @@
               "--ki-radio-selected-active-bg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the radio component for selected active background.",
+                "description": "Pressed fill of the SELECTED radio. Was {ki.surface.s0}, i.e. identical to its own rest fill, so pressing an already-selected option reverted the hover step instead of deepening it — the same \"pressed = un-hover\" shape removed from ki-button, and legible only to a pointer user who had hovered first. Now follows the ramp its unselected sibling already follows: rest s0, hover s1, pressed s2.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -12731,6 +11963,7 @@
                 "--ki-button-md-padding-inline": "0.625rem",
                 "--ki-button-md-radius": "10px",
                 "--ki-button-padding-block": "0.25rem",
+                "--ki-button-primary-active-overlay": "rgba(0,0,0,0.08)",
                 "--ki-button-primary-active-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-button-primary-danger-active-bg": "#cd2118",
                 "--ki-button-primary-danger-active-border": "rgba(0,0,0,0.12)",
@@ -12813,6 +12046,7 @@
                 "--ki-button-quaternary-success-rest-bg": "rgba(0,0,0,0)",
                 "--ki-button-quaternary-success-rest-border": "#409b3f",
                 "--ki-button-quaternary-success-rest-fg": "#9cda9b",
+                "--ki-button-secondary-active-overlay": "rgba(255,255,255,0.05)",
                 "--ki-button-secondary-active-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.08),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
                 "--ki-button-secondary-danger-active-bg": "#72130e",
                 "--ki-button-secondary-danger-active-border": "rgba(255,255,255,0.03)",
@@ -13066,6 +12300,7 @@
                 "--ki-icon-button-md-icon-size": "1.25rem",
                 "--ki-icon-button-md-radius": "10px",
                 "--ki-icon-button-md-size": "2.5rem",
+                "--ki-icon-button-primary-active-overlay": "rgba(0,0,0,0.08)",
                 "--ki-icon-button-primary-active-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-icon-button-primary-danger-active-bg": "#cd2118",
                 "--ki-icon-button-primary-danger-active-border": "rgba(0,0,0,0.12)",
@@ -13136,6 +12371,7 @@
                 "--ki-icon-button-quaternary-success-rest-bg": "rgba(0,0,0,0)",
                 "--ki-icon-button-quaternary-success-rest-border": "#409b3f",
                 "--ki-icon-button-quaternary-success-rest-fg": "#9cda9b",
+                "--ki-icon-button-secondary-active-overlay": "rgba(255,255,255,0.05)",
                 "--ki-icon-button-secondary-active-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.08),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
                 "--ki-icon-button-secondary-danger-active-bg": "#72130e",
                 "--ki-icon-button-secondary-danger-active-border": "rgba(255,255,255,0.03)",
@@ -13442,7 +12678,7 @@
                 "--ki-radio-label-font-weight": "500",
                 "--ki-radio-label-line-height": "1.5rem",
                 "--ki-radio-min-target": "1.5rem",
-                "--ki-radio-selected-active-bg": "#0a0a0a",
+                "--ki-radio-selected-active-bg": "#1a1a1a",
                 "--ki-radio-selected-active-border": "#b59cd8",
                 "--ki-radio-selected-active-fg": "#845abe",
                 "--ki-radio-selected-disabled-bg": "rgba(255,255,255,0.12)",
@@ -13560,6 +12796,7 @@
                 "--ki-surface-info-med-em": "#13b9ec",
                 "--ki-surface-inverse-black": "#000000",
                 "--ki-surface-inverse-white": "#ffffff",
+                "--ki-surface-pressed-overlay-inverse": "rgba(255,255,255,0.05)",
                 "--ki-surface-primary-base-em": "#170e25",
                 "--ki-surface-primary-base-em-alpha": "rgba(132,90,190,0.2)",
                 "--ki-surface-primary-high-em": "#845abe",
@@ -14044,6 +13281,7 @@
                 "--ki-button-md-padding-inline": "0.625rem",
                 "--ki-button-md-radius": "10px",
                 "--ki-button-padding-block": "0.25rem",
+                "--ki-button-primary-active-overlay": "rgba(255,255,255,0.08)",
                 "--ki-button-primary-active-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-button-primary-danger-active-bg": "#cd2118",
                 "--ki-button-primary-danger-active-border": "rgba(0,0,0,0.08)",
@@ -14126,6 +13364,7 @@
                 "--ki-button-quaternary-success-rest-bg": "rgba(255,255,255,0)",
                 "--ki-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-button-quaternary-success-rest-fg": "#2c6a2b",
+                "--ki-button-secondary-active-overlay": "rgba(0,0,0,0.05)",
                 "--ki-button-secondary-active-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.03),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
                 "--ki-button-secondary-danger-active-bg": "#ffebed",
                 "--ki-button-secondary-danger-active-border": "rgba(0,0,0,0.05)",
@@ -14379,6 +13618,7 @@
                 "--ki-icon-button-md-icon-size": "1.25rem",
                 "--ki-icon-button-md-radius": "10px",
                 "--ki-icon-button-md-size": "2.5rem",
+                "--ki-icon-button-primary-active-overlay": "rgba(255,255,255,0.08)",
                 "--ki-icon-button-primary-active-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-icon-button-primary-danger-active-bg": "#cd2118",
                 "--ki-icon-button-primary-danger-active-border": "rgba(0,0,0,0.08)",
@@ -14449,6 +13689,7 @@
                 "--ki-icon-button-quaternary-success-rest-bg": "rgba(255,255,255,0)",
                 "--ki-icon-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-icon-button-quaternary-success-rest-fg": "#2c6a2b",
+                "--ki-icon-button-secondary-active-overlay": "rgba(0,0,0,0.05)",
                 "--ki-icon-button-secondary-active-shadow": "0 2px 1.5px -0.5px rgba(0,0,0,0.03),inset 0 2px 3px 0 rgba(255,255,255,0.03)",
                 "--ki-icon-button-secondary-danger-active-bg": "#ffebed",
                 "--ki-icon-button-secondary-danger-active-border": "rgba(0,0,0,0.05)",
@@ -14755,7 +13996,7 @@
                 "--ki-radio-label-font-weight": "500",
                 "--ki-radio-label-line-height": "1.5rem",
                 "--ki-radio-min-target": "1.5rem",
-                "--ki-radio-selected-active-bg": "#ffffff",
+                "--ki-radio-selected-active-bg": "#f2f2f4",
                 "--ki-radio-selected-active-border": "#845abe",
                 "--ki-radio-selected-active-fg": "#5f3993",
                 "--ki-radio-selected-disabled-bg": "#ececf0",
@@ -14873,6 +14114,7 @@
                 "--ki-surface-info-med-em": "#13b9ec",
                 "--ki-surface-inverse-black": "#ffffff",
                 "--ki-surface-inverse-white": "#000000",
+                "--ki-surface-pressed-overlay-inverse": "rgba(0,0,0,0.05)",
                 "--ki-surface-primary-base-em": "#f7f4fb",
                 "--ki-surface-primary-base-em-alpha": "rgba(132,90,190,0.12)",
                 "--ki-surface-primary-high-em": "#5f3993",
@@ -15366,6 +14608,7 @@
                 "--ki-button-md-padding-inline": "0.625rem",
                 "--ki-button-md-radius": "9999px",
                 "--ki-button-padding-block": "0.25rem",
+                "--ki-button-primary-active-overlay": "rgba(230,224,233,0.12)",
                 "--ki-button-primary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-primary-danger-active-bg": "#f2b8b5",
                 "--ki-button-primary-danger-active-border": "rgba(0,0,0,0)",
@@ -15448,6 +14691,7 @@
                 "--ki-button-quaternary-success-rest-bg": "rgba(0,0,0,0)",
                 "--ki-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-button-quaternary-success-rest-fg": "#9cda9b",
+                "--ki-button-secondary-active-overlay": "rgba(230,224,233,0.12)",
                 "--ki-button-secondary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-secondary-danger-active-bg": "#8c1d18",
                 "--ki-button-secondary-danger-active-border": "rgba(0,0,0,0)",
@@ -15701,6 +14945,7 @@
                 "--ki-icon-button-md-icon-size": "1.25rem",
                 "--ki-icon-button-md-radius": "9999px",
                 "--ki-icon-button-md-size": "2.5rem",
+                "--ki-icon-button-primary-active-overlay": "rgba(230,224,233,0.12)",
                 "--ki-icon-button-primary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-icon-button-primary-danger-active-bg": "#f2b8b5",
                 "--ki-icon-button-primary-danger-active-border": "rgba(0,0,0,0)",
@@ -15771,6 +15016,7 @@
                 "--ki-icon-button-quaternary-success-rest-bg": "rgba(0,0,0,0)",
                 "--ki-icon-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-icon-button-quaternary-success-rest-fg": "#9cda9b",
+                "--ki-icon-button-secondary-active-overlay": "rgba(230,224,233,0.12)",
                 "--ki-icon-button-secondary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-icon-button-secondary-danger-active-bg": "#8c1d18",
                 "--ki-icon-button-secondary-danger-active-border": "rgba(0,0,0,0)",
@@ -16195,6 +15441,7 @@
                 "--ki-surface-info-med-em": "#13b9ec",
                 "--ki-surface-inverse-black": "#000000",
                 "--ki-surface-inverse-white": "#ffffff",
+                "--ki-surface-pressed-overlay-inverse": "rgba(0,0,0,0.05)",
                 "--ki-surface-primary-base-em": "#381e72",
                 "--ki-surface-primary-base-em-alpha": "rgba(208,188,255,0.1)",
                 "--ki-surface-primary-high-em": "#eaddff",
@@ -16679,6 +15926,7 @@
                 "--ki-button-md-padding-inline": "0.625rem",
                 "--ki-button-md-radius": "9999px",
                 "--ki-button-padding-block": "0.25rem",
+                "--ki-button-primary-active-overlay": "rgba(29,27,32,0.12)",
                 "--ki-button-primary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-primary-danger-active-bg": "#b3261e",
                 "--ki-button-primary-danger-active-border": "rgba(255,255,255,0)",
@@ -16761,6 +16009,7 @@
                 "--ki-button-quaternary-success-rest-bg": "rgba(255,255,255,0)",
                 "--ki-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-button-quaternary-success-rest-fg": "#2c6a2b",
+                "--ki-button-secondary-active-overlay": "rgba(29,27,32,0.12)",
                 "--ki-button-secondary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-button-secondary-danger-active-bg": "#f9dedc",
                 "--ki-button-secondary-danger-active-border": "rgba(255,255,255,0)",
@@ -17014,6 +16263,7 @@
                 "--ki-icon-button-md-icon-size": "1.25rem",
                 "--ki-icon-button-md-radius": "9999px",
                 "--ki-icon-button-md-size": "2.5rem",
+                "--ki-icon-button-primary-active-overlay": "rgba(29,27,32,0.12)",
                 "--ki-icon-button-primary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-icon-button-primary-danger-active-bg": "#b3261e",
                 "--ki-icon-button-primary-danger-active-border": "rgba(255,255,255,0)",
@@ -17084,6 +16334,7 @@
                 "--ki-icon-button-quaternary-success-rest-bg": "rgba(255,255,255,0)",
                 "--ki-icon-button-quaternary-success-rest-border": "#9cda9b",
                 "--ki-icon-button-quaternary-success-rest-fg": "#2c6a2b",
+                "--ki-icon-button-secondary-active-overlay": "rgba(29,27,32,0.12)",
                 "--ki-icon-button-secondary-active-shadow": "0 1px 2px 0 rgba(0,0,0,0.3),0 1px 3px 1px rgba(0,0,0,0.15)",
                 "--ki-icon-button-secondary-danger-active-bg": "#f9dedc",
                 "--ki-icon-button-secondary-danger-active-border": "rgba(255,255,255,0)",
@@ -17508,6 +16759,7 @@
                 "--ki-surface-info-med-em": "#13b9ec",
                 "--ki-surface-inverse-black": "#ffffff",
                 "--ki-surface-inverse-white": "#000000",
+                "--ki-surface-pressed-overlay-inverse": "rgba(0,0,0,0.05)",
                 "--ki-surface-primary-base-em": "#f7f2fa",
                 "--ki-surface-primary-base-em-alpha": "rgba(103,80,164,0.08)",
                 "--ki-surface-primary-high-em": "#4f378b",
@@ -19281,6 +18533,14 @@
             "required": false,
             "type": null
           },
+          "--ki-button-primary-active-overlay": {
+            "default": "#ffffff14",
+            "deprecatedSince": null,
+            "description": "Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
           "--ki-button-primary-active-shadow": {
             "default": [
               {
@@ -20016,6 +19276,14 @@
             "replacement": null,
             "required": false,
             "type": null
+          },
+          "--ki-button-secondary-active-overlay": {
+            "default": "#0000000d",
+            "deprecatedSince": null,
+            "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
+            "replacement": null,
+            "required": false,
+            "type": "color"
           },
           "--ki-button-secondary-active-shadow": {
             "default": [
@@ -22576,6 +21844,14 @@
             "required": false,
             "type": null
           },
+          "--ki-icon-button-primary-active-overlay": {
+            "default": "#ffffff14",
+            "deprecatedSince": null,
+            "description": "Pressed state layer for the primary icon button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
           "--ki-icon-button-primary-active-shadow": {
             "default": [
               {
@@ -23215,6 +22491,14 @@
             "replacement": null,
             "required": false,
             "type": null
+          },
+          "--ki-icon-button-secondary-active-overlay": {
+            "default": "#0000000d",
+            "deprecatedSince": null,
+            "description": "Pressed state layer for the secondary icon button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.",
+            "replacement": null,
+            "required": false,
+            "type": "color"
           },
           "--ki-icon-button-secondary-active-shadow": {
             "default": [
@@ -25909,9 +25193,9 @@
             "type": null
           },
           "--ki-radio-selected-active-bg": {
-            "default": "#ffffff",
+            "default": "#f2f2f4",
             "deprecatedSince": null,
-            "description": "color used by the radio component for selected active background.",
+            "description": "Pressed fill of the SELECTED radio. Was {ki.surface.s0}, i.e. identical to its own rest fill, so pressing an already-selected option reverted the hover step instead of deepening it — the same \"pressed = un-hover\" shape removed from ki-button, and legible only to a pointer user who had hovered first. Now follows the ramp its unselected sibling already follows: rest s0, hover s1, pressed s2.",
             "replacement": null,
             "required": false,
             "type": null
@@ -26898,6 +26182,14 @@
             "default": "#000000",
             "deprecatedSince": null,
             "description": "semantic color for surface inverse white.",
+            "replacement": null,
+            "required": false,
+            "type": "color"
+          },
+          "--ki-surface-pressed-overlay-inverse": {
+            "default": "#0000000d",
+            "deprecatedSince": null,
+            "description": "Pressed interaction overlay for a surface whose fill is LIGHT, so the wash darkens: the next rung above hover-overlay-inverse (Black/3 -> Black/5 light, White/3 -> White/5 dark). The mirror of ki.state-layer.pressed, which is the next rung above hover-overlay and washes the other way. Two conventions exist because ki-button paints primary on a dark fill and secondary on a light one; a single pressed overlay would lighten one of them on press and read as less pressed, not more.",
             "replacement": null,
             "required": false,
             "type": "color"
@@ -29422,5 +28714,5 @@
       }
     }
   },
-  "surfaceSha256": "ffa913fe45749f73faa00017a1e0dce32fc4ca66f8b4d0c9ff5d55e6239971f3"
+  "surfaceSha256": "fcc1504834d80323c924bc2d917fa1fabc80a35bb78cc12b432374413f5b4b7f"
 }

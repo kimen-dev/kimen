@@ -669,6 +669,7 @@
   --ki-surface-disabled-base-em: var(--ki-foundation-migrated-semantic-material3-outline-base-em); /** Material 3 semantic color for surface disabled base em. */
   --ki-surface-hover-overlay: var(--ki-foundation-migrated-semantic-material3-surface-hover-overlay); /** Material 3 semantic color for surface hover overlay. */
   --ki-surface-hover-overlay-inverse: var(--ki-color-white-8); /** Material 3 semantic color for surface hover overlay inverse. */
+  --ki-surface-pressed-overlay-inverse: var(--ki-color-black-5); /** Pressed interaction overlay for a surface whose fill is LIGHT, so the wash darkens: the next rung above hover-overlay-inverse (Black/3 -> Black/5 light, White/3 -> White/5 dark). The mirror of ki.state-layer.pressed, which is the next rung above hover-overlay and washes the other way. Two conventions exist because ki-button paints primary on a dark fill and secondary on a light one; a single pressed overlay would lighten one of them on press and read as less pressed, not more. */
   --ki-surface-success-high-em-hover: var(--ki-color-success-800); /** semantic color for surface success high em hover. */
   --ki-surface-danger-high-em-hover: var(--ki-foundation-material3-palette-error-30); /** Hover of the M3 error surface: error tone 30. */
   --ki-text-high-em: var(--ki-foundation-migrated-themes-material3-color-brand-high-em); /** Material 3 semantic color for text high em. */
@@ -1216,6 +1217,7 @@
   --ki-button-primary-danger-disabled-border: var(--ki-outline-none); /** color used by the button component for primary danger disabled border. */
   --ki-button-primary-rest-border-bottom: var(--ki-outline-none); /** Material 3 primary buttons carry no border: the MarsUI bevel bottom edge is disabled. */
   --ki-button-primary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+  --ki-button-primary-active-overlay: var(--ki-state-layer-pressed); /** Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. */
   --ki-button-secondary-neutral-rest-bg: var(--ki-surface-special-secondary-alpha-base); /** color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint). */
   --ki-button-secondary-neutral-rest-fg: var(--ki-text-high-em); /** color used by the button component for secondary neutral rest foreground (MarsUI text/high_em). */
   --ki-button-secondary-neutral-rest-border: var(--ki-outline-none); /** Material 3 secondary buttons carry no border: the MarsUI glass bevel is disabled. */
@@ -1251,6 +1253,7 @@
   --ki-button-secondary-danger-disabled-border: var(--ki-outline-none); /** color used by the button component for secondary danger disabled border. */
   --ki-button-secondary-rest-border-bottom: var(--ki-outline-none); /** Material 3 secondary buttons carry no border: the MarsUI bevel bottom edge is disabled. */
   --ki-button-secondary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+  --ki-button-secondary-active-overlay: var(--ki-state-layer-pressed); /** M3 md.sys.state pressed state layer (12% of on-surface). Without it this cell inherits the onmars ki.surface.pressed-overlay-inverse, which washes the fill 5% DARKER: weaker than the 8% hover wash in the light composition and the opposite direction to it in the dark one, where the M3 state layers are light on-surface. */
   --ki-button-tertiary-neutral-rest-bg: var(--ki-surface-s0); /** color used by the button component for tertiary neutral rest background. */
   --ki-button-tertiary-neutral-rest-fg: var(--ki-text-primary-high-em); /** color used by the button component for tertiary neutral rest foreground. */
   --ki-button-tertiary-neutral-rest-border: var(--ki-outline-none); /** color used by the button component for tertiary neutral rest border. */
@@ -1434,6 +1437,7 @@
   --ki-icon-button-primary-danger-active-border: var(--ki-outline-none); /** Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled. */
   --ki-icon-button-primary-rest-border-bottom: var(--ki-outline-none); /** Material 3 primary icon buttons carry no border: the MarsUI bevel bottom edge is disabled. */
   --ki-icon-button-primary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+  --ki-icon-button-primary-active-overlay: var(--ki-state-layer-pressed); /** Pressed state layer for the primary icon button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. */
   --ki-icon-button-secondary-neutral-rest-bg: var(--ki-surface-special-secondary-alpha-base); /** color used by the icon button component for secondary neutral rest background (same semantic reference as the button matrix, 002). */
   --ki-icon-button-secondary-neutral-rest-fg: var(--ki-text-high-em); /** color used by the icon button component for secondary neutral rest foreground — the icon inherits it via currentColor. */
   --ki-icon-button-secondary-neutral-rest-border: var(--ki-outline-none); /** Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled. */
@@ -1465,6 +1469,7 @@
   --ki-icon-button-secondary-danger-active-border: var(--ki-outline-none); /** Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled. */
   --ki-icon-button-secondary-rest-border-bottom: var(--ki-outline-none); /** Material 3 secondary icon buttons carry no border: the MarsUI bevel bottom edge is disabled. */
   --ki-icon-button-secondary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+  --ki-icon-button-secondary-active-overlay: var(--ki-state-layer-pressed); /** M3 md.sys.state pressed state layer (12% of on-surface). Without it this cell inherits the onmars ki.surface.pressed-overlay-inverse, which washes the fill 5% DARKER: weaker than the 8% hover wash in the light composition and the opposite direction to it in the dark one, where the M3 state layers are light on-surface. */
   --ki-icon-button-tertiary-neutral-rest-bg: var(--ki-surface-s0); /** color used by the icon button component for tertiary neutral rest background (same semantic reference as the button matrix, 002). */
   --ki-icon-button-tertiary-neutral-rest-fg: var(--ki-text-primary-high-em); /** color used by the icon button component for tertiary neutral rest foreground — the icon inherits it via currentColor. */
   --ki-icon-button-tertiary-neutral-rest-border: var(--ki-outline-none); /** color used by the icon button component for tertiary neutral rest border. */
@@ -2578,6 +2583,7 @@
     --ki-surface-disabled-base-em: var(--ki-color-white-8); /** Material 3 semantic color for surface disabled base em. */
     --ki-surface-hover-overlay: var(--ki-color-white-8); /** Material 3 semantic color for surface hover overlay. */
     --ki-surface-hover-overlay-inverse: var(--ki-color-black-8); /** Material 3 semantic color for surface hover overlay inverse. */
+    --ki-surface-pressed-overlay-inverse: var(--ki-color-black-5); /** Pressed interaction overlay for a surface whose fill is LIGHT, so the wash darkens: the next rung above hover-overlay-inverse (Black/3 -> Black/5 light, White/3 -> White/5 dark). The mirror of ki.state-layer.pressed, which is the next rung above hover-overlay and washes the other way. Two conventions exist because ki-button paints primary on a dark fill and secondary on a light one; a single pressed overlay would lighten one of them on press and read as less pressed, not more. */
     --ki-surface-success-high-em-hover: var(--ki-color-success-200); /** semantic color for surface success high em hover. */
     --ki-surface-danger-high-em-hover: var(--ki-foundation-material3-palette-error-80); /** Hover of the M3 dark error surface (error tone 80). */
     --ki-text-high-em: var(--ki-foundation-material3-palette-neutral-90); /** M3 md.sys.color.on-surface dark (neutral tone 90). */
@@ -3126,6 +3132,7 @@
     --ki-button-primary-danger-disabled-border: var(--ki-outline-none); /** color used by the button component for primary danger disabled border. */
     --ki-button-primary-rest-border-bottom: var(--ki-outline-none); /** Material 3 primary buttons carry no border: the MarsUI bevel bottom edge is disabled. */
     --ki-button-primary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+    --ki-button-primary-active-overlay: var(--ki-state-layer-pressed); /** Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. */
     --ki-button-secondary-neutral-rest-bg: var(--ki-surface-special-secondary-alpha-base); /** color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint). */
     --ki-button-secondary-neutral-rest-fg: var(--ki-text-high-em); /** color used by the button component for secondary neutral rest foreground (MarsUI text/high_em). */
     --ki-button-secondary-neutral-rest-border: var(--ki-outline-none); /** Material 3 secondary buttons carry no border: the MarsUI glass bevel is disabled. */
@@ -3161,6 +3168,7 @@
     --ki-button-secondary-danger-disabled-border: var(--ki-outline-none); /** color used by the button component for secondary danger disabled border. */
     --ki-button-secondary-rest-border-bottom: var(--ki-outline-none); /** Material 3 secondary buttons carry no border: the MarsUI bevel bottom edge is disabled. */
     --ki-button-secondary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+    --ki-button-secondary-active-overlay: var(--ki-state-layer-pressed); /** M3 md.sys.state pressed state layer (12% of on-surface). Without it this cell inherits the onmars ki.surface.pressed-overlay-inverse, which washes the fill 5% DARKER: weaker than the 8% hover wash in the light composition and the opposite direction to it in the dark one, where the M3 state layers are light on-surface. */
     --ki-button-tertiary-neutral-rest-bg: var(--ki-surface-s0); /** color used by the button component for tertiary neutral rest background. */
     --ki-button-tertiary-neutral-rest-fg: var(--ki-text-primary-high-em); /** color used by the button component for tertiary neutral rest foreground. */
     --ki-button-tertiary-neutral-rest-border: var(--ki-outline-none); /** color used by the button component for tertiary neutral rest border. */
@@ -3349,6 +3357,7 @@
     --ki-icon-button-primary-danger-active-border: var(--ki-outline-none); /** Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled. */
     --ki-icon-button-primary-rest-border-bottom: var(--ki-outline-none); /** Material 3 primary icon buttons carry no border: the MarsUI bevel bottom edge is disabled. */
     --ki-icon-button-primary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+    --ki-icon-button-primary-active-overlay: var(--ki-state-layer-pressed); /** Pressed state layer for the primary icon button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. */
     --ki-icon-button-secondary-neutral-rest-bg: var(--ki-surface-special-secondary-alpha-base); /** color used by the icon button component for secondary neutral rest background (same semantic reference as the button matrix, 002). */
     --ki-icon-button-secondary-neutral-rest-fg: var(--ki-text-high-em); /** color used by the icon button component for secondary neutral rest foreground — the icon inherits it via currentColor. */
     --ki-icon-button-secondary-neutral-rest-border: var(--ki-outline-none); /** Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled. */
@@ -3380,6 +3389,7 @@
     --ki-icon-button-secondary-danger-active-border: var(--ki-outline-none); /** Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled. */
     --ki-icon-button-secondary-rest-border-bottom: var(--ki-outline-none); /** Material 3 secondary icon buttons carry no border: the MarsUI bevel bottom edge is disabled. */
     --ki-icon-button-secondary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+    --ki-icon-button-secondary-active-overlay: var(--ki-state-layer-pressed); /** M3 md.sys.state pressed state layer (12% of on-surface). Without it this cell inherits the onmars ki.surface.pressed-overlay-inverse, which washes the fill 5% DARKER: weaker than the 8% hover wash in the light composition and the opposite direction to it in the dark one, where the M3 state layers are light on-surface. */
     --ki-icon-button-tertiary-neutral-rest-bg: var(--ki-surface-s0); /** color used by the icon button component for tertiary neutral rest background (same semantic reference as the button matrix, 002). */
     --ki-icon-button-tertiary-neutral-rest-fg: var(--ki-text-primary-high-em); /** color used by the icon button component for tertiary neutral rest foreground — the icon inherits it via currentColor. */
     --ki-icon-button-tertiary-neutral-rest-border: var(--ki-outline-none); /** color used by the icon button component for tertiary neutral rest border. */
@@ -4483,6 +4493,7 @@
   --ki-surface-disabled-base-em: var(--ki-color-white-8); /** Material 3 semantic color for surface disabled base em. */
   --ki-surface-hover-overlay: var(--ki-color-white-8); /** Material 3 semantic color for surface hover overlay. */
   --ki-surface-hover-overlay-inverse: var(--ki-color-black-8); /** Material 3 semantic color for surface hover overlay inverse. */
+  --ki-surface-pressed-overlay-inverse: var(--ki-color-black-5); /** Pressed interaction overlay for a surface whose fill is LIGHT, so the wash darkens: the next rung above hover-overlay-inverse (Black/3 -> Black/5 light, White/3 -> White/5 dark). The mirror of ki.state-layer.pressed, which is the next rung above hover-overlay and washes the other way. Two conventions exist because ki-button paints primary on a dark fill and secondary on a light one; a single pressed overlay would lighten one of them on press and read as less pressed, not more. */
   --ki-surface-success-high-em-hover: var(--ki-color-success-200); /** semantic color for surface success high em hover. */
   --ki-surface-danger-high-em-hover: var(--ki-foundation-material3-palette-error-80); /** Hover of the M3 dark error surface (error tone 80). */
   --ki-text-high-em: var(--ki-foundation-material3-palette-neutral-90); /** M3 md.sys.color.on-surface dark (neutral tone 90). */
@@ -5031,6 +5042,7 @@
   --ki-button-primary-danger-disabled-border: var(--ki-outline-none); /** color used by the button component for primary danger disabled border. */
   --ki-button-primary-rest-border-bottom: var(--ki-outline-none); /** Material 3 primary buttons carry no border: the MarsUI bevel bottom edge is disabled. */
   --ki-button-primary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+  --ki-button-primary-active-overlay: var(--ki-state-layer-pressed); /** Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. */
   --ki-button-secondary-neutral-rest-bg: var(--ki-surface-special-secondary-alpha-base); /** color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint). */
   --ki-button-secondary-neutral-rest-fg: var(--ki-text-high-em); /** color used by the button component for secondary neutral rest foreground (MarsUI text/high_em). */
   --ki-button-secondary-neutral-rest-border: var(--ki-outline-none); /** Material 3 secondary buttons carry no border: the MarsUI glass bevel is disabled. */
@@ -5066,6 +5078,7 @@
   --ki-button-secondary-danger-disabled-border: var(--ki-outline-none); /** color used by the button component for secondary danger disabled border. */
   --ki-button-secondary-rest-border-bottom: var(--ki-outline-none); /** Material 3 secondary buttons carry no border: the MarsUI bevel bottom edge is disabled. */
   --ki-button-secondary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+  --ki-button-secondary-active-overlay: var(--ki-state-layer-pressed); /** M3 md.sys.state pressed state layer (12% of on-surface). Without it this cell inherits the onmars ki.surface.pressed-overlay-inverse, which washes the fill 5% DARKER: weaker than the 8% hover wash in the light composition and the opposite direction to it in the dark one, where the M3 state layers are light on-surface. */
   --ki-button-tertiary-neutral-rest-bg: var(--ki-surface-s0); /** color used by the button component for tertiary neutral rest background. */
   --ki-button-tertiary-neutral-rest-fg: var(--ki-text-primary-high-em); /** color used by the button component for tertiary neutral rest foreground. */
   --ki-button-tertiary-neutral-rest-border: var(--ki-outline-none); /** color used by the button component for tertiary neutral rest border. */
@@ -5254,6 +5267,7 @@
   --ki-icon-button-primary-danger-active-border: var(--ki-outline-none); /** Material 3 primary icon buttons carry no border: the MarsUI glass bevel is disabled. */
   --ki-icon-button-primary-rest-border-bottom: var(--ki-outline-none); /** Material 3 primary icon buttons carry no border: the MarsUI bevel bottom edge is disabled. */
   --ki-icon-button-primary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+  --ki-icon-button-primary-active-overlay: var(--ki-state-layer-pressed); /** Pressed state layer for the primary icon button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. */
   --ki-icon-button-secondary-neutral-rest-bg: var(--ki-surface-special-secondary-alpha-base); /** color used by the icon button component for secondary neutral rest background (same semantic reference as the button matrix, 002). */
   --ki-icon-button-secondary-neutral-rest-fg: var(--ki-text-high-em); /** color used by the icon button component for secondary neutral rest foreground — the icon inherits it via currentColor. */
   --ki-icon-button-secondary-neutral-rest-border: var(--ki-outline-none); /** Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled. */
@@ -5285,6 +5299,7 @@
   --ki-icon-button-secondary-danger-active-border: var(--ki-outline-none); /** Material 3 secondary icon buttons carry no border: the MarsUI glass bevel is disabled. */
   --ki-icon-button-secondary-rest-border-bottom: var(--ki-outline-none); /** Material 3 secondary icon buttons carry no border: the MarsUI bevel bottom edge is disabled. */
   --ki-icon-button-secondary-hover-overlay: var(--ki-state-layer-hover); /** M3 md.sys.state hover state layer (8% of on-surface) replacing the inherited MarsUI onmars hover_overlay scrim. */
+  --ki-icon-button-secondary-active-overlay: var(--ki-state-layer-pressed); /** M3 md.sys.state pressed state layer (12% of on-surface). Without it this cell inherits the onmars ki.surface.pressed-overlay-inverse, which washes the fill 5% DARKER: weaker than the 8% hover wash in the light composition and the opposite direction to it in the dark one, where the M3 state layers are light on-surface. */
   --ki-icon-button-tertiary-neutral-rest-bg: var(--ki-surface-s0); /** color used by the icon button component for tertiary neutral rest background (same semantic reference as the button matrix, 002). */
   --ki-icon-button-tertiary-neutral-rest-fg: var(--ki-text-primary-high-em); /** color used by the icon button component for tertiary neutral rest foreground — the icon inherits it via currentColor. */
   --ki-icon-button-tertiary-neutral-rest-border: var(--ki-outline-none); /** color used by the icon button component for tertiary neutral rest border. */

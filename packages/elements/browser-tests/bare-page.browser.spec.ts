@@ -15,7 +15,7 @@
 import pageContractCss from '@kimen/tokens/css/base?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { commands } from 'vitest/browser';
+import { commands, userEvent } from 'vitest/browser';
 
 import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
 import { defineCustomElement as defineKiAvatar } from '../dist/components/ki-avatar.js';
@@ -581,5 +581,62 @@ describe('bare-page state-delta contract', () => {
       signature(disabled as Element),
       'a disabled group is indistinguishable from an enabled one: the flag reaches the shadow input and the ARIA tree, but every disabled visual keys on :host([disabled]) and the host never gets it',
     ).not.toBe(signature(enabled as Element));
+  });
+
+  /**
+   * A pressed appearance that only exists as the WITHDRAWAL of a hover
+   * appearance renders nothing at all to a keyboard user, because there was no
+   * hover to withdraw. `:active` matches while Space is held on a focused
+   * control in every engine, so this needs no pointer emulation and no device.
+   *
+   * Measured directly before this suite existed: holding Space on a focused
+   * ki-button left background, background-image, box-shadow and colour all
+   * byte-identical to the focused resting state.
+   */
+  const PRESSABLE = [
+    'ki-button',
+    'ki-icon-button',
+    'ki-checkbox',
+    'ki-radio',
+    'ki-switch',
+  ] as const;
+
+  it.each(PRESSABLE)('%s changes appearance while held with the keyboard', async (component) => {
+    const wrapper = await mountBare(component);
+    const host = wrapper.querySelector<HTMLElement>(component);
+    expect(host, `${component} must mount`).not.toBeNull();
+    if (host === null) {
+      return;
+    }
+
+    const painted = (): string => {
+      const inner =
+        host.shadowRoot?.querySelector<HTMLElement>('[part="control"], [part="track"], button') ??
+        host;
+      const style = getComputedStyle(inner);
+      return [style.backgroundColor, style.backgroundImage, style.boxShadow, style.color].join('|');
+    };
+
+    // Focus the inner control, not the host: ki-radio ships inside a
+    // ki-radio-group whose roster sets `tabIndex = -1` on every input that is
+    // not the group's single tab stop, so focusing the host lands nowhere and
+    // the key press never reaches anything.
+    const focusable =
+      host.shadowRoot?.querySelector<HTMLElement>('input, button, [tabindex]') ?? host;
+    focusable.focus();
+    await nextFrame();
+    const focused = painted();
+
+    // `{ }>}` holds the key down; the matching `{/ }` releases it.
+    await userEvent.keyboard('{ >}');
+    await nextFrame();
+    await nextFrame();
+    const held = painted();
+    await userEvent.keyboard('{/ }');
+
+    expect(
+      held,
+      `${component} looks identical while a keyboard user is holding it down; a pressed appearance built as the withdrawal of a hover appearance shows nothing to anyone who never hovered`,
+    ).not.toBe(focused);
   });
 });

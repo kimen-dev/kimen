@@ -35,18 +35,6 @@
   --_ki-switch-border: var(--ki-switch-checked-hover-border);
 }
 
-:host(:active:not(:disabled)) {
-  --_ki-switch-track: var(--ki-switch-unchecked-active-track);
-  --_ki-switch-thumb: var(--ki-switch-unchecked-active-thumb);
-  --_ki-switch-border: var(--ki-switch-unchecked-active-border);
-}
-
-:host([checked]:active:not(:disabled)) {
-  --_ki-switch-track: var(--ki-switch-checked-active-track);
-  --_ki-switch-thumb: var(--ki-switch-checked-active-thumb);
-  --_ki-switch-border: var(--ki-switch-checked-active-border);
-}
-
 :host(:disabled) {
   --_ki-switch-track: var(--ki-switch-unchecked-disabled-track);
   --_ki-switch-thumb: var(--ki-switch-unchecked-disabled-thumb);
@@ -124,6 +112,24 @@ input:focus-visible + [part="track"] {
     var(--ki-switch-focus-ring-shadow),
     0 0 0 var(--ki-switch-focus-ring-width) var(--ki-switch-focus-ring-color);
   outline-color: var(--ki-switch-focus-ring-color);
+}
+
+/* Pressed. `:active` reaches the host only for POINTER activation, so this was
+   unreachable CSS for every keyboard user — measured in Chromium: host
+   `:active` false, inner `input:active` true. Rewritten against the input,
+   which receives `:active` on both paths, and moved below the structural rules
+   so specificity still descends down the file. The values were never mirrors
+   of rest; only the selector needed correcting. */
+input:active:not(:disabled) ~ [part="track"] {
+  --_ki-switch-track: var(--ki-switch-unchecked-active-track);
+  --_ki-switch-thumb: var(--ki-switch-unchecked-active-thumb);
+  --_ki-switch-border: var(--ki-switch-unchecked-active-border);
+}
+
+:host([checked]) input:active:not(:disabled) ~ [part="track"] {
+  --_ki-switch-track: var(--ki-switch-checked-active-track);
+  --_ki-switch-thumb: var(--ki-switch-checked-active-thumb);
+  --_ki-switch-border: var(--ki-switch-checked-active-border);
 }
 
 [part="label"] {
