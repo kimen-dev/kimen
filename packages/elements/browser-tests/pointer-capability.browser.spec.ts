@@ -42,7 +42,7 @@
 // there. Every assertion names the world it wants and finds out whether it got
 // there.
 import tokensCss from '@kimen/tokens/css?raw';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 
 import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
@@ -448,6 +448,24 @@ beforeAll(() => {
   for (const define of defineAll) {
     define();
   }
+});
+
+// This apparatus is loud, and none of it is scoped to this file. The emulation
+// is a CDP call against the tab, and the gallery, the witness and their
+// stylesheet live in the shared document — so whatever the last test leaves is
+// inherited by whichever spec file runs next. A leftover emulated touch device
+// makes a later focus assertion miss, and the leftover witness is a black 96px
+// square under a later contrast scan. Restoring inside the test bodies only
+// covers the runs where nothing threw, which is the wrong half.
+afterEach(async () => {
+  await browserCommands.emulateHoverCapability(null);
+  await browserCommands.resetPointer();
+});
+
+afterAll(() => {
+  document.body.replaceChildren();
+  document.getElementById(TOKENS_STYLE_ID)?.remove();
+  document.getElementById(WITNESS_STYLE_ID)?.remove();
 });
 
 describe('hover capability audit', () => {
