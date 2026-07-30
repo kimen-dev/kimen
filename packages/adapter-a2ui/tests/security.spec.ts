@@ -232,6 +232,50 @@ describe('the adapter treats every message as hostile runtime data', () => {
     expect(({} as Record<string, unknown>)['polluted']).toBeUndefined();
   });
 
+  it('resolves a bound path against own data only, never an inherited property', () => {
+    // The write path already refuses prototype-polluting keys (above), but the
+    // READ path walked with plain property access — which follows the prototype
+    // chain. The surface renders into a page the adapter does not own: anything
+    // already on `Object.prototype` there is readable by a bound path, so a
+    // message could show text that never entered the data model.
+    Object.defineProperty(Object.prototype, 'kimenInherited', {
+      configurable: true,
+      enumerable: false,
+      value: 'INHERITED VALUE',
+      writable: true,
+    });
+
+    try {
+      for (const path of ['/kimenInherited', '/__proto__/kimenInherited']) {
+        const result = adapterApply({
+          surfaceUpdate: {
+            surfaceId: 'checkout',
+            root: 'card',
+            components: [
+              { id: 'card', component: { Card: { children: { explicitList: ['confirm'] } } } },
+              {
+                id: 'confirm',
+                component: {
+                  Button: {
+                    label: { path, literalString: 'Confirm order' },
+                    action: { name: 'confirm-order' },
+                  },
+                },
+              },
+            ],
+          },
+        });
+
+        expect(result.ok).toBe(true);
+        // The path resolves to nothing, so the declared literal seed wins.
+        expect(surface.textContent).not.toContain('INHERITED VALUE');
+        expect(surface.querySelector('ki-button')?.textContent).toBe('Confirm order');
+      }
+    } finally {
+      Reflect.deleteProperty(Object.prototype, 'kimenInherited');
+    }
+  });
+
   it('rolls a failed incremental update back out of surface state', () => {
     orderSurfaceOnly();
     // A rejected update (undeclared action) must not linger in state.
