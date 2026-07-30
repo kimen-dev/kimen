@@ -242,6 +242,15 @@ export class KiRadioGroup {
     const assigned = slot
       ?.assignedElements()
       .filter((element): element is KiRadioElement => this.isKiRadio(element));
+    // syncInputs() only ever walks the CURRENT roster, so a radio that has just
+    // left takes the group's disabled marker with it and keeps it forever —
+    // standalone, permanently disabled-looking, with its own `disabled`
+    // property unable to explain why. The marker is a claim of ownership, so it
+    // is withdrawn here, before the roster that justified it is replaced.
+    const departed = this.roster.filter((radio) => !(assigned ?? []).includes(radio));
+    for (const radio of departed) {
+      radio.removeAttribute('data-ki-group-disabled');
+    }
     this.roster = assigned ?? [];
     this.disabledObserver?.disconnect();
     if (typeof MutationObserver !== 'function') {
@@ -310,7 +319,35 @@ export class KiRadioGroup {
   }
 
   private syncInputs(): void {
+    // Marked on the group's own host too, not just the members: `disabled` is a
+    // reflected prop, but `formDisabled` (an ancestor <fieldset disabled>) is
+    // not, so `:host([disabled])` alone would leave the group label at full
+    // emphasis for exactly the case S15 covers behaviourally.
+    if (this.effectiveDisabled) {
+      this.host.setAttribute('data-ki-group-disabled', '');
+    } else {
+      this.host.removeAttribute('data-ki-group-disabled');
+    }
+
     for (const radio of this.roster) {
+      // The group's own `disabled` reached the shadow input and the ARIA tree
+      // and nothing else, because every disabled visual in ki-radio.css keys on
+      // `:host([disabled])` and the host never got it — so a disabled group
+      // rendered pixel-identical to an enabled one and still lit up on hover.
+      // Marked with a distinct attribute rather than the member's own
+      // `disabled` (ki-avatar-group precedent): writing `disabled` would make
+      // the group unable to tell an option the consumer disabled from one it
+      // disabled itself, and would clear the former on re-enable. It would also
+      // feed the roster's own `disabled` MutationObserver.
+      // set/remove rather than toggleAttribute: Stencil's mock-doc, which the
+      // unit suite renders against, does not implement toggleAttribute — which
+      // is why the ki-avatar-group precedent uses this pair too.
+      if (this.effectiveDisabled) {
+        radio.setAttribute('data-ki-group-disabled', '');
+      } else {
+        radio.removeAttribute('data-ki-group-disabled');
+      }
+
       const input = this.inputFor(radio);
       if (!input) {
         continue;

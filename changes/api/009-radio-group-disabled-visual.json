@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "ffa913fe45749f73faa00017a1e0dce32fc4ca66f8b4d0c9ff5d55e6239971f3",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "A disabled radio group looks disabled (same 0.0.0 baseline as 003 through 008; this declaration advances the sealed candidate, so the cumulative delta stays MAJOR). No published token is added, renamed or removed; the surface delta is confined to the CSS custom properties the CEM records ki-radio and ki-radio-group as CONSUMING. (1) ki-radio-group's `disabled` was written to each member's shadow input and to the ARIA tree and nowhere else, because every disabled visual in ki-radio.css keys on :host([disabled]) and the member host never received it. A disabled group therefore rendered pixel-identical to an enabled one and still changed under the pointer. The group now marks each member, and its own host, with `data-ki-group-disabled`, following the ki-avatar-group precedent for a composite pushing state onto its members. A distinct attribute rather than the member's own `disabled`, deliberately: writing `disabled` would leave the group unable to tell an option the consumer disabled from one it disabled itself, would clear the former on re-enable, and would feed the roster's own `disabled` MutationObserver. The group's own host is marked too because `disabled` is a reflected prop while `formDisabled` (an ancestor fieldset) is not, so :host([disabled]) alone would leave the group label at full emphasis for exactly the case S15 covers behaviourally. ki-radio's hover and active selectors now exclude the new attribute as well, so a disabled group stops reacting to the pointer. (2) Both components stop consuming --ki-text-muted, whose own description marks it a deprecated pre-Fase-1 alias, in favour of --ki-text-med-em, which it aliases. Identical resolved value in both schemes, so this half is visually inert; it is the same correction applied to ki-textarea's deprecated family alias in declaration 006. (3) Three committed linux baselines move — the ki-radio-group galleries in onmars light, material3 light and onmars dark — because they encoded the defect.",
+  "release": "major",
+  "schemaVersion": 1
+}

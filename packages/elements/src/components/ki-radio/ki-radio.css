@@ -26,7 +26,13 @@
   font-family: var(--ki-typography-family-body);
 }
 
-:host(:hover:not([disabled])) {
+/* `[data-ki-group-disabled]` is written by ki-radio-group onto each member
+   host, following the ki-avatar-group precedent for a composite pushing state
+   onto its members. It is NOT the member's own `disabled`: keeping them apart
+   is what lets the group be re-enabled without clearing an option the consumer
+   disabled deliberately. Every state selector below must honour both, or a
+   disabled group keeps reacting to the pointer. */
+:host(:hover:not([disabled], [data-ki-group-disabled])) {
   --_ki-radio-bg: var(--ki-radio-unselected-hover-bg);
   --_ki-radio-fg: var(--ki-radio-unselected-hover-fg);
   --_ki-radio-border: var(--ki-radio-unselected-hover-border);
@@ -35,7 +41,7 @@
   --_ki-radio-selected-border: var(--ki-radio-selected-hover-border);
 }
 
-:host(:active:not([disabled])) {
+:host(:active:not([disabled], [data-ki-group-disabled])) {
   --_ki-radio-bg: var(--ki-radio-unselected-active-bg);
   --_ki-radio-fg: var(--ki-radio-unselected-active-fg);
   --_ki-radio-border: var(--ki-radio-unselected-active-border);
@@ -44,7 +50,8 @@
   --_ki-radio-selected-border: var(--ki-radio-selected-active-border);
 }
 
-:host([disabled]) {
+:host([disabled]),
+:host([data-ki-group-disabled]) {
   --_ki-radio-bg: var(--ki-radio-unselected-disabled-bg);
   --_ki-radio-fg: var(--ki-radio-unselected-disabled-fg);
   --_ki-radio-border: var(--ki-radio-unselected-disabled-border);
@@ -52,7 +59,7 @@
   --_ki-radio-selected-fg: var(--ki-radio-selected-disabled-fg);
   --_ki-radio-selected-border: var(--ki-radio-selected-disabled-border);
 
-  color: var(--ki-text-muted);
+  color: var(--ki-text-med-em);
   cursor: default;
 }
 
@@ -65,7 +72,8 @@ label {
   cursor: pointer;
 }
 
-:host([disabled]) label {
+:host([disabled]) label,
+:host([data-ki-group-disabled]) label {
   cursor: default;
 }
 

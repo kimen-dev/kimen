@@ -440,10 +440,10 @@ describe('page contract', () => {
  * false positives.
  *
  * NOTE, and it is a real limitation: WITHOUT the page contract in the dark
- * scheme this measures 15 of 29 components rendering white-on-white — the token
+ * scheme this measures 14 of 29 components rendering white-on-white — the token
  * sheet flips to its dark values, every component correctly paints its
  * dark-scheme foreground, and the user agent keeps a white canvas because
- * `color-scheme` is still `normal`. That is not 15 broken components; it is the
+ * `color-scheme` is still `normal`. That is not 14 broken components; it is the
  * documented cost of leaving the page contract opt-in, and whether to keep it
  * optional is a founder decision, not something this suite should decide by
  * asserting a contract the package does not make.
@@ -532,5 +532,54 @@ describe('bare-page state-delta contract', () => {
       off.width,
       'ki-switch thumb must fit inside the track it travels in',
     ).toBeLessThanOrEqual(trackBox.width - off.width);
+  });
+
+  /**
+   * `disabled` on the GROUP is written to each member's shadow `<input>`, never
+   * to the `ki-radio` host — and every disabled visual in ki-radio.css keys on
+   * `:host([disabled])`. So the flag reaches the accessibility tree and the
+   * pointer handlers, and reaches nothing a sighted user can see.
+   *
+   * The existing S19 spec is not wrong, it is simply about something else: it
+   * asserts the group ignores selection and exposes `aria-disabled="true"`.
+   * Both hold. Neither is appearance.
+   */
+  it('ki-radio-group renders a disabled group differently from an enabled one', async () => {
+    // NOT the gallery fixture: its two groups carry different `value`s, so
+    // their signatures differ because a different member is checked. That
+    // passes while measuring nothing. These two are identical but for the flag.
+    const wrapper = await mountBare('ki-radio-group');
+    wrapper.innerHTML = ['', ' disabled']
+      .map(
+        (flag) =>
+          `<ki-radio-group label="Plan"${flag} value="pro"><ki-radio value="basic">Basic</ki-radio><ki-radio value="pro">Pro</ki-radio></ki-radio-group>`,
+      )
+      .join('');
+    await waitForShadowRender(wrapper);
+    await nextFrame();
+    const groups = [...wrapper.querySelectorAll('ki-radio-group')];
+    expect(groups, 'the fixture must mount an enabled and a disabled group').toHaveLength(2);
+
+    const signature = (group: Element): string =>
+      [...group.querySelectorAll('ki-radio')]
+        .map((radio) => {
+          const control = radio.shadowRoot?.querySelector('[part="control"]');
+          const host = getComputedStyle(radio);
+          const box = control === null || control === undefined ? null : getComputedStyle(control);
+          return [
+            box?.backgroundColor,
+            box?.borderColor,
+            box?.opacity,
+            host.color,
+            host.cursor,
+          ].join('|');
+        })
+        .join('||');
+
+    const [enabled, disabled] = groups;
+    expect(
+      signature(disabled as Element),
+      'a disabled group is indistinguishable from an enabled one: the flag reaches the shadow input and the ARIA tree, but every disabled visual keys on :host([disabled]) and the host never gets it',
+    ).not.toBe(signature(enabled as Element));
   });
 });
