@@ -21,22 +21,24 @@
   --_ki-checkbox-border: var(--ki-checkbox-indeterminate-rest-border);
 }
 
-:host(:hover:not([disabled], :state(fieldset-disabled))) {
-  --_ki-checkbox-bg: var(--ki-checkbox-unchecked-hover-bg);
-  --_ki-checkbox-fg: var(--ki-checkbox-unchecked-hover-fg);
-  --_ki-checkbox-border: var(--ki-checkbox-unchecked-hover-border);
-}
+@media (hover: hover) {
+  :host(:hover:not([disabled], :state(fieldset-disabled))) {
+    --_ki-checkbox-bg: var(--ki-checkbox-unchecked-hover-bg);
+    --_ki-checkbox-fg: var(--ki-checkbox-unchecked-hover-fg);
+    --_ki-checkbox-border: var(--ki-checkbox-unchecked-hover-border);
+  }
 
-:host([checked]:hover:not([disabled], :state(fieldset-disabled))) {
-  --_ki-checkbox-bg: var(--ki-checkbox-checked-hover-bg);
-  --_ki-checkbox-fg: var(--ki-checkbox-checked-hover-fg);
-  --_ki-checkbox-border: var(--ki-checkbox-checked-hover-border);
-}
+  :host([checked]:hover:not([disabled], :state(fieldset-disabled))) {
+    --_ki-checkbox-bg: var(--ki-checkbox-checked-hover-bg);
+    --_ki-checkbox-fg: var(--ki-checkbox-checked-hover-fg);
+    --_ki-checkbox-border: var(--ki-checkbox-checked-hover-border);
+  }
 
-:host([indeterminate]:hover:not([disabled], :state(fieldset-disabled))) {
-  --_ki-checkbox-bg: var(--ki-checkbox-indeterminate-hover-bg);
-  --_ki-checkbox-fg: var(--ki-checkbox-indeterminate-hover-fg);
-  --_ki-checkbox-border: var(--ki-checkbox-indeterminate-hover-border);
+  :host([indeterminate]:hover:not([disabled], :state(fieldset-disabled))) {
+    --_ki-checkbox-bg: var(--ki-checkbox-indeterminate-hover-bg);
+    --_ki-checkbox-fg: var(--ki-checkbox-indeterminate-hover-fg);
+    --_ki-checkbox-border: var(--ki-checkbox-indeterminate-hover-border);
+  }
 }
 
 :host([disabled]) {
@@ -87,12 +89,14 @@
   --_ki-checkbox-border: var(--ki-checkbox-invalid-border);
 }
 
-:host(.ki-user-invalid:hover),
-:host(.ki-user-invalid[checked]:hover),
-:host(.ki-user-invalid[indeterminate]:hover) {
-  --_ki-checkbox-bg: var(--ki-checkbox-invalid-bg);
-  --_ki-checkbox-fg: var(--ki-checkbox-invalid-fg);
-  --_ki-checkbox-border: var(--ki-checkbox-invalid-border);
+@media (hover: hover) {
+  :host(.ki-user-invalid:hover),
+  :host(.ki-user-invalid[checked]:hover),
+  :host(.ki-user-invalid[indeterminate]:hover) {
+    --_ki-checkbox-bg: var(--ki-checkbox-invalid-bg);
+    --_ki-checkbox-fg: var(--ki-checkbox-invalid-fg);
+    --_ki-checkbox-border: var(--ki-checkbox-invalid-border);
+  }
 }
 
 label {

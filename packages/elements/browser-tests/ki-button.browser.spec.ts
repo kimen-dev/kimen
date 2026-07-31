@@ -113,6 +113,17 @@ function readTokenColor(name: string): string {
   return value;
 }
 
+/**
+ * Which state token the fill should resolve to right now.
+ *
+ * Hover paint lives behind `@media (hover: hover)`. `:hover` latches on a
+ * device that cannot hover — that is the whole reason the query is there — so
+ * predicting one without the other predicts a cascade that never ran.
+ */
+function paintedState(el: Element): 'hover' | 'rest' {
+  return el.matches(':hover') && matchMedia('(hover: hover)').matches ? 'hover' : 'rest';
+}
+
 describe('ki-button in a real browser', () => {
   it('S1 dispatches one activation for a real click', async () => {
     cleanup();
@@ -438,7 +449,7 @@ describe('ki-button in a real browser', () => {
         const button = requireButton(el);
         await waitForStyles();
 
-        const state = button.matches(':hover') ? 'hover' : 'rest';
+        const state = paintedState(button);
         const expected = readTokenColor(`--ki-button-${variant}-${tone}-${state}-bg`);
         const actual = getComputedStyle(button).backgroundColor;
         expect(actual, `${variant}/${tone}`).toBe(expected);
@@ -472,11 +483,7 @@ describe('ki-button in a real browser', () => {
     await waitForStyles();
 
     const darkBg = getComputedStyle(button).backgroundColor;
-    expect(darkBg).toBe(
-      readTokenColor(
-        `--ki-button-secondary-neutral-${button.matches(':hover') ? 'hover' : 'rest'}-bg`,
-      ),
-    );
+    expect(darkBg).toBe(readTokenColor(`--ki-button-secondary-neutral-${paintedState(button)}-bg`));
     expect(darkBg, 'forced dark must change the resolved fill').not.toBe(lightBg);
   });
 

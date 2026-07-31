@@ -23,6 +23,16 @@ if (!supportedBrowsers.some((browser) => browser === configuredBrowser)) {
 }
 
 const browser = configuredBrowser as SupportedBrowser;
+
+// The interaction media features (`hover`, `pointer`) are the only way to ask
+// a page "can this device hover?", and Playwright's emulateMedia() does not
+// carry them — they are set over CDP, which exists on Chromium alone. The
+// session is kept alive per page on purpose: Chrome drops the overrides set
+// through a session when that session detaches, so a detach-per-call would
+// undo the emulation before the test could read it.
+const cdpSessions = new WeakMap<object, Promise<{ send: CdpSend }>>();
+type CdpSend = (method: string, params: Record<string, unknown>) => Promise<unknown>;
+
 const cacheRoot = process.env['KIMEN_CACHE_ROOT'];
 const cacheDir = cacheRoot ? join(cacheRoot, `vite/elements-browser-${browser}`) : undefined;
 // Playwright's default headless Chromium selects a separate headless-shell
@@ -62,6 +72,39 @@ export default defineConfig({
         emulateColorScheme: defineBrowserCommand(
           async ({ page }, scheme: 'dark' | 'light' | null) => {
             await page.emulateMedia({ colorScheme: scheme });
+          },
+        ),
+        // Emulate a device with no hovering pointer (a touch screen), or lift
+        // it. Returns false where CDP does not exist, so a spec can report the
+        // engine it could not measure instead of skipping in silence.
+        //
+        // NOT Emulation.setEmulatedMedia: Chromium accepts `hover` and
+        // `pointer` in its feature list and then ignores them — measured, the
+        // page kept reporting `(hover: hover)`. The primary pointer type
+        // follows touch emulation instead, and that does reach the iframe a
+        // vitest spec runs inside. Mouse input is deliberately NOT re-emitted
+        // as touch (setEmitTouchEventsForMouse stays off): a real touch screen
+        // latches :hover on the tap, so the measurement has to be able to
+        // deliver a hover to a device that says it cannot hover.
+        emulateHoverCapability: defineBrowserCommand(
+          async ({ page }, capability: 'hover' | 'none' | null) => {
+            let session: { send: CdpSend };
+            try {
+              let pending = cdpSessions.get(page);
+              if (pending === undefined) {
+                pending = page.context().newCDPSession(page) as Promise<{ send: CdpSend }>;
+                cdpSessions.set(page, pending);
+              }
+              session = await pending;
+            } catch {
+              cdpSessions.delete(page);
+              return false;
+            }
+            await session.send(
+              'Emulation.setTouchEmulationEnabled',
+              capability === 'none' ? { enabled: true, maxTouchPoints: 5 } : { enabled: false },
+            );
+            return true;
           },
         ),
         // The real computed accessibility tree (Playwright's ariaSnapshot,

@@ -23,16 +23,18 @@
   );
 }
 
-:host(:hover:not(:disabled)) {
-  --_ki-switch-track: var(--ki-switch-unchecked-hover-track);
-  --_ki-switch-thumb: var(--ki-switch-unchecked-hover-thumb);
-  --_ki-switch-border: var(--ki-switch-unchecked-hover-border);
-}
+@media (hover: hover) {
+  :host(:hover:not(:disabled)) {
+    --_ki-switch-track: var(--ki-switch-unchecked-hover-track);
+    --_ki-switch-thumb: var(--ki-switch-unchecked-hover-thumb);
+    --_ki-switch-border: var(--ki-switch-unchecked-hover-border);
+  }
 
-:host([checked]:hover:not(:disabled)) {
-  --_ki-switch-track: var(--ki-switch-checked-hover-track);
-  --_ki-switch-thumb: var(--ki-switch-checked-hover-thumb);
-  --_ki-switch-border: var(--ki-switch-checked-hover-border);
+  :host([checked]:hover:not(:disabled)) {
+    --_ki-switch-track: var(--ki-switch-checked-hover-track);
+    --_ki-switch-thumb: var(--ki-switch-checked-hover-thumb);
+    --_ki-switch-border: var(--ki-switch-checked-hover-border);
+  }
 }
 
 :host(:disabled) {
