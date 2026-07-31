@@ -18,12 +18,24 @@ SEMGREP_VERSION='1.168.0'
 # data, and other rules match them.
 EXCLUDES=(--exclude .specify --exclude .agents --exclude .claude --exclude .semgrep)
 
-if command -v semgrep >/dev/null 2>&1; then
+# The engine is part of the pin. A different Semgrep on PATH can parse or
+# evaluate the same vendored rules differently, so a local pass on it predicts
+# nothing about the required check — which is the whole reason this script
+# exists. Take it only when its version matches; otherwise run the pinned one.
+installed_version() {
+  command -v semgrep >/dev/null 2>&1 || return 1
+  semgrep --version 2>/dev/null | head -1 | tr -d '[:space:]'
+}
+
+found="$(installed_version)"
+
+if [ "$found" = "$SEMGREP_VERSION" ]; then
   runner=(semgrep)
 elif command -v uvx >/dev/null 2>&1; then
   runner=(uvx --from "semgrep==${SEMGREP_VERSION}" semgrep)
 else
-  echo "GATE semgrep: FAIL (no semgrep and no uvx on PATH)" >&2
+  echo "GATE semgrep: FAIL (need semgrep ${SEMGREP_VERSION}, or uvx to fetch it)" >&2
+  echo "  on PATH: ${found:-none}" >&2
   echo "  install: pipx install semgrep==${SEMGREP_VERSION}" >&2
   exit 1
 fi

@@ -44,24 +44,19 @@ jobs:
         with:
           persist-credentials: false
 
-      # SAST belongs in the one required result, not only in the scheduled
-      # depth: a finding that cannot fail the change introducing it is found
-      # after the merge, which is how #68 turned security.yml red behind a
-      # green pull request.
+      # The scan itself is a gate inside gates-suite.sh, not a step here, so the
+      # command that defines local readiness runs exactly what this job does.
+      # Only the engine is installed here: on a runner it is not on PATH, and
+      # the gate would otherwise fetch it through uvx on every run.
       #
-      # It runs on the vendored ruleset (.semgrep/) rather than the registry,
-      # so the required check stays a pure function of the tree — `p/default`
+      # It scans the vendored ruleset (.semgrep/) rather than the registry, so
+      # the required check stays a pure function of the tree — `p/default`
       # resolves server-side, and an upstream rule change could otherwise
       # redden a pull request that changed nothing (Art. X). security.yml keeps
       # the live registry on its schedule: the pinned set blocks, the live set
       # explores.
-      #
-      # Before the suite on purpose: ~50s that can save a 30-minute run.
       - name: Install Semgrep (pinned)
         run: pipx install semgrep==1.168.0
-
-      - name: Semgrep (vendored ruleset)
-        run: bash scripts/gates/semgrep-scan.sh
 
       - name: Allocate isolated writable caches
         run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
