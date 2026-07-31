@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/node": "^26.1.0",
     "happy-dom": "20.10.6",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.10"
   },
   "nx": {
     "tags": [
