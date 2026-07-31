@@ -5,11 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  qs: 6.15.3
   axios: 1.18.0
   brace-expansion: 5.0.8
   fast-uri: 3.1.4
   postcss: 8.5.18
+  minimatch@3: 3.1.5
+  qs: 6.15.3
 
 patchedDependencies:
   minimatch@3.1.5:
