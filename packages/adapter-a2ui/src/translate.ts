@@ -84,6 +84,22 @@ function readModelPath(model: unknown, path: string): ResolvedScalar | undefined
     if (cursor === null || typeof cursor !== 'object' || Array.isArray(cursor)) {
       return undefined;
     }
+    // Own properties only. Plain access follows the prototype chain, so a bound
+    // path could read whatever the embedding page left on `Object.prototype` —
+    // content that never entered the data model — and `__proto__` would walk
+    // there directly. This is the read-side mirror of the forbidden-key check
+    // that already guards `dataModelUpdate` writes (Art. VIII).
+    if (!Object.hasOwn(cursor, segment)) {
+      return undefined;
+    }
+    // The rule suppressed below describes WRITING to a prototype ("adding or
+    // modifying attributes of an object prototype"); this walk only reads, and
+    // the guard above means
+    // it cannot leave the model's own properties. Covered by "resolves a bound
+    // path against own data only" in tests/security.spec.ts. The structural
+    // alternative the rule prefers — carrying the data model on a null-prototype
+    // object — is an adapter-wide change, not a read-path fix.
+    // nosemgrep: javascript.lang.security.audit.prototype-pollution.prototype-pollution-loop.prototype-pollution-loop
     cursor = (cursor as Record<string, unknown>)[segment];
   }
   if (typeof cursor === 'string' || typeof cursor === 'number' || typeof cursor === 'boolean') {
