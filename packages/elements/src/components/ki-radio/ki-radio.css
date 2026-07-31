@@ -32,13 +32,15 @@
    is what lets the group be re-enabled without clearing an option the consumer
    disabled deliberately. Every state selector below must honour both, or a
    disabled group keeps reacting to the pointer. */
-:host(:hover:not([disabled], [data-ki-group-disabled])) {
-  --_ki-radio-bg: var(--ki-radio-unselected-hover-bg);
-  --_ki-radio-fg: var(--ki-radio-unselected-hover-fg);
-  --_ki-radio-border: var(--ki-radio-unselected-hover-border);
-  --_ki-radio-selected-bg: var(--ki-radio-selected-hover-bg);
-  --_ki-radio-selected-fg: var(--ki-radio-selected-hover-fg);
-  --_ki-radio-selected-border: var(--ki-radio-selected-hover-border);
+@media (hover: hover) {
+  :host(:hover:not([disabled], [data-ki-group-disabled])) {
+    --_ki-radio-bg: var(--ki-radio-unselected-hover-bg);
+    --_ki-radio-fg: var(--ki-radio-unselected-hover-fg);
+    --_ki-radio-border: var(--ki-radio-unselected-hover-border);
+    --_ki-radio-selected-bg: var(--ki-radio-selected-hover-bg);
+    --_ki-radio-selected-fg: var(--ki-radio-selected-hover-fg);
+    --_ki-radio-selected-border: var(--ki-radio-selected-hover-border);
+  }
 }
 
 :host([disabled]),

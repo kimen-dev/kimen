@@ -24,14 +24,16 @@
   --_ki-tab-bg: var(--ki-tab-selected-rest-bg);
 }
 
-:host(:hover) {
-  --_ki-tab-fg: var(--ki-tab-unselected-hover-fg);
-  --_ki-tab-bg: var(--ki-tab-unselected-hover-bg);
-}
+@media (hover: hover) {
+  :host(:hover) {
+    --_ki-tab-fg: var(--ki-tab-unselected-hover-fg);
+    --_ki-tab-bg: var(--ki-tab-unselected-hover-bg);
+  }
 
-:host([selected]:hover) {
-  --_ki-tab-fg: var(--ki-tab-selected-hover-fg);
-  --_ki-tab-bg: var(--ki-tab-selected-hover-bg);
+  :host([selected]:hover) {
+    --_ki-tab-fg: var(--ki-tab-selected-hover-fg);
+    --_ki-tab-bg: var(--ki-tab-selected-hover-bg);
+  }
 }
 
 :host(:active) {

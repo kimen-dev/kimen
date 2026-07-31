@@ -116,7 +116,10 @@ function readTokenColor(name: string): string {
 }
 
 function checkboxState(el: KiCheckboxElement): 'hover' | 'rest' {
-  return el.matches(':hover') ? 'hover' : 'rest';
+  // Hover paint lives behind `@media (hover: hover)`. `:hover` latches on a
+  // device that cannot hover — that is the whole reason the query is there —
+  // so predicting one without the other predicts a cascade that never ran.
+  return el.matches(':hover') && matchMedia('(hover: hover)').matches ? 'hover' : 'rest';
 }
 
 function formEntries(form: HTMLFormElement): Record<string, string> {
