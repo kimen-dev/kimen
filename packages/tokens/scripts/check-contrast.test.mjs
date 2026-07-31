@@ -177,6 +177,35 @@ test('overlay ramps pair hover with active and collect every fill they wash', ()
   );
 });
 
+test('a stem is matched literally, so a metacharacter in it pools nothing extra', () => {
+  // The stem is cut from a name the sweep read out of the stylesheet, not from
+  // a list it controls. Built into a pattern, a `.` in it stops meaning itself
+  // and starts matching any character — quietly washing a neighbouring stem's
+  // fill with overlays that were never declared over it.
+  const declarations = new Map([
+    ['--ki-button-secondary.x-hover-overlay', 'rgba(0, 0, 0, 0.03)'],
+    ['--ki-button-secondary.x-active-overlay', 'rgba(0, 0, 0, 0.05)'],
+    ['--ki-button-secondary.x-neutral-rest-bg', '#ffffff'],
+    // One character apart, and a different stem: it must not be collected.
+    ['--ki-button-secondaryQx-neutral-rest-bg', '#000000'],
+  ]);
+
+  assert.deepEqual(overlayRamps(declarations)[0].fills, [
+    '--ki-button-secondary.x-neutral-rest-bg',
+  ]);
+});
+
+test('a rest fill whose name only overlaps the stem tail is not collected', () => {
+  const declarations = new Map([
+    ['--ki-a-rest-b-hover-overlay', 'rgba(0, 0, 0, 0.03)'],
+    ['--ki-a-rest-b-active-overlay', 'rgba(0, 0, 0, 0.05)'],
+    // Shorter than the stem plus the suffix: it cannot be a fill under it.
+    ['--ki-a-rest-bg', '#ffffff'],
+  ]);
+
+  assert.deepEqual(overlayRamps(declarations)[0].fills, []);
+});
+
 test('a component whose name extends an empty-box name is not pooled into it', () => {
   // The component segment is matched on the first word, so `--ki-radio-group-*`
   // would be swept as `radio` and measured against a rule written for the

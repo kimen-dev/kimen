@@ -399,6 +399,30 @@ function sweepRatioReadouts(theme, scheme, declarations) {
 // names, so a variant that grows an overlay pair is swept the day it appears.
 const OVERLAY_ROLE = /-(hover|active)-overlay$/u;
 
+const REST_FILL_SUFFIX = '-rest-bg';
+const TONE_SEGMENT = /^[a-z0-9]+$/u;
+
+/**
+ * Is `name` a rest fill under `stem` — the stem's own, or one tone segment
+ * below it?
+ *
+ * Compared as strings rather than through a pattern built from `stem`. The
+ * stem is cut from a name the sweep read out of the stylesheet, so it is not
+ * a shape this file gets to choose: a regex metacharacter in it would stop
+ * meaning itself and start matching any character, pooling a neighbouring
+ * stem's fill into a ramp that never washed it.
+ */
+function isRestFillOf(stem, name) {
+  if (name.length < stem.length + REST_FILL_SUFFIX.length) {
+    return false;
+  }
+  if (!name.startsWith(stem) || !name.endsWith(REST_FILL_SUFFIX)) {
+    return false;
+  }
+  const tone = name.slice(stem.length, name.length - REST_FILL_SUFFIX.length);
+  return tone === '' || (tone.startsWith('-') && TONE_SEGMENT.test(tone.slice(1)));
+}
+
 export function overlayRamps(declarations) {
   const stems = new Map();
 
@@ -420,9 +444,7 @@ export function overlayRamps(declarations) {
       ...entry,
       // The overlay is tone-independent; the fill it washes is not. Every rest
       // fill under the same stem is a surface this pair has to work over.
-      fills: [...declarations.keys()].filter((name) =>
-        new RegExp(`^${entry.stem}(?:-[a-z0-9]+)?-rest-bg$`, 'u').test(name),
-      ),
+      fills: [...declarations.keys()].filter((name) => isRestFillOf(entry.stem, name)),
     }));
 }
 
