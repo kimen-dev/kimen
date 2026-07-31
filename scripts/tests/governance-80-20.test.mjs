@@ -124,3 +124,49 @@ test('security scans are scheduled and dependency review is path-scoped', async 
   assert.doesNotMatch(security, /^ {2}pull_request:/gmu);
   assert.match(dependencies, /^ {2}pull_request:[\s\S]*?paths:[\s\S]*?pnpm-lock\.yaml/mu);
 });
+
+test('SAST blocks inside the one required result on pinned rules, and explores on a schedule', async () => {
+  const [ci, security, gate, core] = await Promise.all([
+    readRepositoryFile('.github/workflows/ci.yml'),
+    readRepositoryFile('.github/workflows/security.yml'),
+    readRepositoryFile('scripts/gates/semgrep-scan.sh'),
+    readRepositoryFile('scripts/gates/gates-core.sh'),
+  ]);
+
+  // The scan is a gate in the suite, not a workflow step: `gates-suite.sh` is
+  // what contributors run for local readiness, and a suite that omits a gate
+  // CI enforces reports green for changes CI rejects. CI only installs the
+  // engine.
+  assert.match(core, /run_core_gate semgrep bash scripts\/gates\/semgrep-scan\.sh/u);
+  assert.doesNotMatch(ci, /run: bash scripts\/gates\/semgrep-scan\.sh/u);
+  assert.match(ci, /pipx install semgrep==/u);
+
+  // The required result scans the ruleset pinned in-tree, so its verdict is a
+  // function of the tree alone: `p/default` resolves server-side, and an
+  // upstream rule change must not redden a pull request that changed nothing.
+  assert.match(gate, /--config \.semgrep\//u);
+  await access(new URL('.semgrep/p-default.vendored.yml', repositoryRoot));
+
+  // ...and the scheduled scan keeps the live registry. The pinned set blocks;
+  // the live set explores, and is how the pinned one finds out it is behind.
+  assert.match(security, /--config p\/default/u);
+  assert.doesNotMatch(security, /semgrep-scan\.sh/u);
+
+  // Both scans skip the ruleset itself. Rule files carry code patterns as
+  // data and other rules match them, so a scan that reads `.semgrep/` as
+  // source fails on its own configuration.
+  assert.match(gate, /--exclude \.semgrep/u);
+  assert.match(security, /--exclude \.semgrep/u);
+
+  // The engine version is part of the pin: a different Semgrep on PATH can
+  // evaluate the same rules differently, so the gate must not simply take it.
+  assert.match(gate, /installed_version|--version/u);
+
+  // One engine version across all three anchors. Three places to pin is three
+  // places to drift, and a drifted local runner reports on different rules
+  // than the gate it is meant to predict.
+  const pinned = (source) => /semgrep(?:_VERSION=['"]|[=@]=?)(\d+\.\d+\.\d+)/iu.exec(source)?.[1];
+  assert.equal(pinned(ci), pinned(security));
+  assert.equal(pinned(ci), pinned(gate));
+  assert.match(pinned(ci) ?? '', /^\d+\.\d+\.\d+$/u);
+});

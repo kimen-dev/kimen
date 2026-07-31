@@ -37,10 +37,26 @@ jobs:
             storage.googleapis.com:443
             archive.ubuntu.com:443
             security.ubuntu.com:443
+            pypi.org:443
+            files.pythonhosted.org:443
 
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           persist-credentials: false
+
+      # The scan itself is a gate inside gates-suite.sh, not a step here, so the
+      # command that defines local readiness runs exactly what this job does.
+      # Only the engine is installed here: on a runner it is not on PATH, and
+      # the gate would otherwise fetch it through uvx on every run.
+      #
+      # It scans the vendored ruleset (.semgrep/) rather than the registry, so
+      # the required check stays a pure function of the tree — `p/default`
+      # resolves server-side, and an upstream rule change could otherwise
+      # redden a pull request that changed nothing (Art. X). security.yml keeps
+      # the live registry on its schedule: the pinned set blocks, the live set
+      # explores.
+      - name: Install Semgrep (pinned)
+        run: pipx install semgrep==1.168.0
 
       - name: Allocate isolated writable caches
         run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"

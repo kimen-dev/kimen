@@ -44,10 +44,14 @@ jobs:
       - name: Install Semgrep (pinned)
         run: pipx install semgrep==1.168.0
 
+      # `.semgrep` is excluded for the same reason the pinned scan excludes it:
+      # rule files carry code patterns as data, and other rules match them. On
+      # this tree the live ruleset finds 6 such matches, every one of them rule
+      # content rather than repository code.
       - name: Semgrep scan (findings block)
         run: >-
           semgrep scan --config p/default --error --metrics=off
-          --exclude .specify --exclude .agents --exclude .claude
+          --exclude .specify --exclude .agents --exclude .claude --exclude .semgrep
 
   osv-scan:
     # kimen-workflow-policy: reusable-workflow-v1

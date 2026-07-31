@@ -89,6 +89,10 @@ agent_skills() {
 }
 
 run_core_gate workflows pnpm run check:workflows
+# SAST early and on the pinned ruleset: it is part of what the required result
+# asserts, so the suite that defines local readiness has to run it too. A suite
+# that omits a gate CI enforces reports green for changes CI rejects.
+run_core_gate semgrep bash scripts/gates/semgrep-scan.sh
 run_core_gate agent-skills agent_skills
 run_core_gate nx-graph nx_graph
 run_core_gate format pnpm run format:check
