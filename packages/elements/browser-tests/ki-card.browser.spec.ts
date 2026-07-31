@@ -185,6 +185,100 @@ describe('ki-card in a real browser', () => {
     await expectAccessible(document.body);
   });
 
+  /**
+   * A one-line description of where focus is and what could hold it.
+   *
+   * S4 fails intermittently on CI and has never reproduced locally: two
+   * hypotheses were measured over 40 rounds each — the slotted button not yet
+   * hydrated when `mount()` returns, and the Tab not landing before the
+   * sentinel is removed — and both came back clean on a developer machine.
+   * The failure only says `expected <body> to be <ki-button>`, which does not
+   * distinguish "the Tab went nowhere" from "the page never had focus" from
+   * "there was nothing focusable to reach".
+   *
+   * So the state is captured at each step and reported with the assertion.
+   * This changes nothing the test asserts; it makes the next red carry
+   * evidence instead of a bare comparison. Reads only, and synchronously, so
+   * it adds no await between the Tab and the assertion it describes.
+   */
+  const FOCUSABLE_SELECTOR =
+    'a[href],area[href],button,input,select,textarea,summary,iframe,[tabindex],[contenteditable]';
+
+  const nameOf = (node: Element | null | undefined): string =>
+    node === null || node === undefined
+      ? 'none'
+      : `${node.localName}${node.id === '' ? '' : `#${node.id}`}`;
+
+  /**
+   * The controls a Tab can actually stop on, including those inside open
+   * shadow roots.
+   *
+   * The whole subject of S4 lives in one: `ki-button` delegates focus to a
+   * `<button>` in its shadow tree, and `querySelectorAll` does not cross that
+   * boundary — a flat count reports "1 focusable" on a page with two tab stops
+   * and would send the next reader looking for a missing control that is
+   * there. Disabled controls and `tabindex="-1"` are excluded because neither
+   * is a sequential tab stop, which is the question being asked.
+   *
+   * Document order, not tab order: a positive `tabindex` would reorder the
+   * real sequence. Nothing here uses one, and this is a diagnostic rather than
+   * an assertion.
+   */
+  function sequentialTabStops(root: ParentNode): Element[] {
+    const stops: Element[] = [];
+
+    for (const element of root.querySelectorAll('*')) {
+      if (
+        element.matches(FOCUSABLE_SELECTOR) &&
+        !element.hasAttribute('disabled') &&
+        (element as HTMLElement).tabIndex >= 0
+      ) {
+        stops.push(element);
+      }
+      if (element.shadowRoot !== null) {
+        stops.push(...sequentialTabStops(element.shadowRoot));
+      }
+    }
+
+    return stops;
+  }
+
+  /**
+   * Where focus is, and what could hold it.
+   *
+   * S4 fails intermittently on CI and has never reproduced locally: two
+   * hypotheses were measured over 40 rounds each — the slotted button not yet
+   * hydrated when `mount()` returns, and the Tab not landing before the
+   * sentinel is removed — and both came back clean on a developer machine.
+   * The failure only says `expected <body> to be <ki-button>`, which does not
+   * distinguish "the Tab went nowhere" from "the page never had focus" from
+   * "there was nothing focusable to reach".
+   *
+   * So the state is captured at each step and reported with the assertion.
+   * This changes nothing the test asserts; it makes the next red carry
+   * evidence instead of a bare comparison. Reads only, and synchronously, so
+   * it adds no await between the Tab and the assertion it describes.
+   */
+  function focusReport(label: string, subject: Element | null): string {
+    // Focus inside a shadow root reports as the host, so follow it down.
+    let deep: Element | null = document.activeElement;
+    while (deep?.shadowRoot?.activeElement != null) {
+      deep = deep.shadowRoot.activeElement;
+    }
+
+    const inner = subject?.shadowRoot?.querySelector('button');
+    const stops = sequentialTabStops(document.body);
+    return [
+      label,
+      `hasFocus=${String(document.hasFocus())}`,
+      `active=${nameOf(document.activeElement)}`,
+      `deepActive=${nameOf(deep)}`,
+      `subjectHydrated=${String(Boolean(subject?.shadowRoot?.hasChildNodes()))}`,
+      `subjectInnerControl=${inner === null || inner === undefined ? 'none' : `button tabindex=${String(inner.tabIndex)}`}`,
+      `tabStops=${String(stops.length)}[${stops.map(nameOf).join(',')}]`,
+    ].join(' ');
+  }
+
   it('S4 moves focus to slotted content and never to the card host', async () => {
     cleanup();
     const el = await mount(`
@@ -203,14 +297,40 @@ describe('ki-card in a real browser', () => {
     // next tab stop deterministic; it is removed before the assertions.
     const sentinel = document.createElement('button');
     sentinel.textContent = 'sentinel';
+    sentinel.id = 'sentinel';
     document.body.prepend(sentinel);
     sentinel.focus();
 
-    await userEvent.keyboard('{Tab}');
-    sentinel.remove();
+    const beforeTab = focusReport('before-tab', button);
+    // The sentinel only makes the next tab stop deterministic if the document
+    // is focused and the sentinel actually holds it. Forcing that precondition
+    // to fail locally reproduced the CI signature exactly: with
+    // `hasFocus=false` the first synthetic Tab is spent entering the document
+    // and lands ON the first focusable — the sentinel — so the removal below
+    // sends activeElement to <body>. Stated here so a CI red says which of the
+    // two it was instead of leaving them indistinguishable.
+    expect(
+      document.hasFocus(),
+      `the page never held focus, so Tab has no anchor\n  ${beforeTab}`,
+    ).toBe(true);
+    expect(document.activeElement, `the sentinel did not take focus\n  ${beforeTab}`).toBe(
+      sentinel,
+    );
 
-    expect(document.activeElement).not.toBe(el);
-    expect(document.activeElement).toBe(button);
+    await userEvent.keyboard('{Tab}');
+    // Captured before the removal: taking the sentinel out while it still held
+    // focus would itself send activeElement to <body>, and the assertion below
+    // could not tell that apart from a Tab that went nowhere.
+    const afterTab = focusReport('after-tab', button);
+    sentinel.remove();
+    const afterRemoval = focusReport('after-removal', button);
+
+    const evidence = `\n  ${beforeTab}\n  ${afterTab}\n  ${afterRemoval}`;
+
+    expect(document.activeElement, `focus landed on the card host itself${evidence}`).not.toBe(el);
+    expect(document.activeElement, `focus never reached the slotted button${evidence}`).toBe(
+      button,
+    );
   });
 
   it('S5 exposes the slotted heading and body text without card role name or state', async () => {
