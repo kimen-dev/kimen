@@ -11,6 +11,11 @@ overrides:
   fast-uri: 3.1.4
   postcss: 8.5.18
 
+patchedDependencies:
+  minimatch@3.1.5:
+    hash: 3e64d536af3aaaa63bcd325ef7c0f4c9c0ba4e731cbf0986304a41c5870ac8b3
+    path: patches/minimatch@3.1.5.patch
+
 importers:
 
   .:
@@ -8419,7 +8424,7 @@ snapshots:
       hasown: 2.0.4
       jsx-ast-utils: 3.3.5
       language-tags: 1.0.9
-      minimatch: 3.1.5
+      minimatch: 3.1.5(patch_hash=3e64d536af3aaaa63bcd325ef7c0f4c9c0ba4e731cbf0986304a41c5870ac8b3)
       object.fromentries: 2.0.8
       safe-regex-test: 1.1.0
       string.prototype.includes: 2.0.1
@@ -9299,7 +9304,7 @@ snapshots:
     dependencies:
       brace-expansion: 5.0.8
 
-  minimatch@3.1.5:
+  minimatch@3.1.5(patch_hash=3e64d536af3aaaa63bcd325ef7c0f4c9c0ba4e731cbf0986304a41c5870ac8b3):
     dependencies:
       brace-expansion: 5.0.8
 

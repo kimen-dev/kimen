@@ -1,22 +1,13 @@
 packages:
   - "packages/*"
   - "tools/*"
+# Transitive dependencies may not be installed from exotic/untrusted sources.
+blockExoticSubdeps: true
 
 # Supply-chain hardening (constitution Art. X)
 # Wait 7 days (in minutes) before resolving newly published versions:
 # malicious releases are usually caught within days.
 minimumReleaseAge: 10080
-# A dependency update may never silently downgrade security settings.
-trustPolicy: no-downgrade
-# Version-pinned exceptions for packages ALREADY resolved in the lockfile
-# before this policy existed (added 2026-07-05). They re-admit exactly what
-# main ships today; any other version stays subject to the full policy.
-# semver@6.3.1: legacy babel/nx transitive, published (2023) after provenance
-# began on the 7.x line, so no-downgrade can never pass for it.
-trustPolicyExclude:
-  - "semver@6.3.1"
-# Transitive dependencies may not be installed from exotic/untrusted sources.
-blockExoticSubdeps: true
 
 # Resolution pins. These live here and not under `pnpm.overrides` in
 # package.json: pnpm 10 stopped reading that field, and a pin it does not read
@@ -28,7 +19,6 @@ blockExoticSubdeps: true
 # workspace declares directly, so an override is the only lever. Every pinned
 # version cleared minimumReleaseAge before being added.
 overrides:
-  qs: 6.15.3
   # GHSA-42h9-826w-cgv3 and nine more, 1.16.0 → 1.18.0.
   axios: 1.18.0
   # GHSA-3jxr-9vmj-r5cp and GHSA-mh99-v99m-4gvg. The 1.x line carries no fix
@@ -38,3 +28,15 @@ overrides:
   fast-uri: 3.1.4
   # GHSA-r28c-9q8g-f849.
   postcss: 8.5.18
+  qs: 6.15.3
+patchedDependencies:
+  minimatch@3.1.5: patches/minimatch@3.1.5.patch
+# A dependency update may never silently downgrade security settings.
+trustPolicy: no-downgrade
+# Version-pinned exceptions for packages ALREADY resolved in the lockfile
+# before this policy existed (added 2026-07-05). They re-admit exactly what
+# main ships today; any other version stays subject to the full policy.
+# semver@6.3.1: legacy babel/nx transitive, published (2023) after provenance
+# began on the 7.x line, so no-downgrade can never pass for it.
+trustPolicyExclude:
+  - "semver@6.3.1"
