@@ -25,6 +25,12 @@
       "matchDepTypes": ["packageManager"],
       "enabled": true,
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "minimatch is held at the exact version patches/minimatch@3.1.5.patch applies to. Renovate reads pnpm-workspace overrides but NOT patchedDependencies, so it cannot see that coupling: a bump here would land a patch that no longer applies and break installs. The two move together, by hand, or not at all.",
+      "matchPackageNames": ["minimatch"],
+      "enabled": false,
+      "minimumReleaseAge": false
     }
   ]
 }
