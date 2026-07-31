@@ -1,11 +1,36 @@
 packages:
   - "packages/*"
   - "tools/*"
+# Transitive dependencies may not be installed from exotic/untrusted sources.
+blockExoticSubdeps: true
 
 # Supply-chain hardening (constitution Art. X)
 # Wait 7 days (in minutes) before resolving newly published versions:
 # malicious releases are usually caught within days.
 minimumReleaseAge: 10080
+
+# Resolution pins. These live here and not under `pnpm.overrides` in
+# package.json: pnpm 10 stopped reading that field, and a pin it does not read
+# is a defence that exists on paper and not in the tree. `qs` sat there
+# unenforced — the lockfile happens to hold the intended version, but nothing
+# was holding it.
+#
+# The rest close advisories in transitive packages, which nothing in this
+# workspace declares directly, so an override is the only lever. Every pinned
+# version cleared minimumReleaseAge before being added.
+overrides:
+  # GHSA-42h9-826w-cgv3 and nine more, 1.16.0 → 1.18.0.
+  axios: 1.18.0
+  # GHSA-3jxr-9vmj-r5cp and GHSA-mh99-v99m-4gvg. The 1.x line carries no fix
+  # for the second, so both lines resolve to 5.0.8.
+  brace-expansion: 5.0.8
+  # GHSA-v2hh-gcrm-f6hx.
+  fast-uri: 3.1.4
+  # GHSA-r28c-9q8g-f849.
+  postcss: 8.5.18
+  qs: 6.15.3
+patchedDependencies:
+  minimatch@3.1.5: patches/minimatch@3.1.5.patch
 # A dependency update may never silently downgrade security settings.
 trustPolicy: no-downgrade
 # Version-pinned exceptions for packages ALREADY resolved in the lockfile
@@ -15,12 +40,3 @@ trustPolicy: no-downgrade
 # began on the 7.x line, so no-downgrade can never pass for it.
 trustPolicyExclude:
   - "semver@6.3.1"
-# TEMPORARY (remove after 2026-07-08): biome 2.5.2 platform binaries were
-# published 2026-07-01 and are already pinned in the lockfile; they mature
-# past minimumReleaseAge on 2026-07-08.
-minimumReleaseAgeExclude:
-  - "@biomejs/*"
-  - "@types/node@26.1.0"
-  - "vite@8.1.3"
-# Transitive dependencies may not be installed from exotic/untrusted sources.
-blockExoticSubdeps: true
