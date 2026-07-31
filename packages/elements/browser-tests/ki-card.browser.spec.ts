@@ -201,12 +201,65 @@ describe('ki-card in a real browser', () => {
    * evidence instead of a bare comparison. Reads only, and synchronously, so
    * it adds no await between the Tab and the assertion it describes.
    */
-  function focusReport(label: string, subject: Element | null): string {
-    const named = (node: Element | null | undefined): string =>
-      node === null || node === undefined
-        ? 'none'
-        : `${node.localName}${node.id === '' ? '' : `#${node.id}`}`;
+  const FOCUSABLE_SELECTOR =
+    'a[href],area[href],button,input,select,textarea,summary,iframe,[tabindex],[contenteditable]';
 
+  const nameOf = (node: Element | null | undefined): string =>
+    node === null || node === undefined
+      ? 'none'
+      : `${node.localName}${node.id === '' ? '' : `#${node.id}`}`;
+
+  /**
+   * The controls a Tab can actually stop on, including those inside open
+   * shadow roots.
+   *
+   * The whole subject of S4 lives in one: `ki-button` delegates focus to a
+   * `<button>` in its shadow tree, and `querySelectorAll` does not cross that
+   * boundary — a flat count reports "1 focusable" on a page with two tab stops
+   * and would send the next reader looking for a missing control that is
+   * there. Disabled controls and `tabindex="-1"` are excluded because neither
+   * is a sequential tab stop, which is the question being asked.
+   *
+   * Document order, not tab order: a positive `tabindex` would reorder the
+   * real sequence. Nothing here uses one, and this is a diagnostic rather than
+   * an assertion.
+   */
+  function sequentialTabStops(root: ParentNode): Element[] {
+    const stops: Element[] = [];
+
+    for (const element of root.querySelectorAll('*')) {
+      if (
+        element.matches(FOCUSABLE_SELECTOR) &&
+        !element.hasAttribute('disabled') &&
+        (element as HTMLElement).tabIndex >= 0
+      ) {
+        stops.push(element);
+      }
+      if (element.shadowRoot !== null) {
+        stops.push(...sequentialTabStops(element.shadowRoot));
+      }
+    }
+
+    return stops;
+  }
+
+  /**
+   * Where focus is, and what could hold it.
+   *
+   * S4 fails intermittently on CI and has never reproduced locally: two
+   * hypotheses were measured over 40 rounds each — the slotted button not yet
+   * hydrated when `mount()` returns, and the Tab not landing before the
+   * sentinel is removed — and both came back clean on a developer machine.
+   * The failure only says `expected <body> to be <ki-button>`, which does not
+   * distinguish "the Tab went nowhere" from "the page never had focus" from
+   * "there was nothing focusable to reach".
+   *
+   * So the state is captured at each step and reported with the assertion.
+   * This changes nothing the test asserts; it makes the next red carry
+   * evidence instead of a bare comparison. Reads only, and synchronously, so
+   * it adds no await between the Tab and the assertion it describes.
+   */
+  function focusReport(label: string, subject: Element | null): string {
     // Focus inside a shadow root reports as the host, so follow it down.
     let deep: Element | null = document.activeElement;
     while (deep?.shadowRoot?.activeElement != null) {
@@ -214,14 +267,15 @@ describe('ki-card in a real browser', () => {
     }
 
     const inner = subject?.shadowRoot?.querySelector('button');
+    const stops = sequentialTabStops(document.body);
     return [
       label,
       `hasFocus=${String(document.hasFocus())}`,
-      `active=${named(document.activeElement)}`,
-      `deepActive=${named(deep)}`,
+      `active=${nameOf(document.activeElement)}`,
+      `deepActive=${nameOf(deep)}`,
       `subjectHydrated=${String(Boolean(subject?.shadowRoot?.hasChildNodes()))}`,
       `subjectInnerControl=${inner === null || inner === undefined ? 'none' : `button tabindex=${String(inner.tabIndex)}`}`,
-      `bodyFocusables=${String(document.body.querySelectorAll('a[href],button,input,select,textarea,[tabindex]').length)}`,
+      `tabStops=${String(stops.length)}[${stops.map(nameOf).join(',')}]`,
     ].join(' ');
   }
 
@@ -255,9 +309,10 @@ describe('ki-card in a real browser', () => {
     // and lands ON the first focusable — the sentinel — so the removal below
     // sends activeElement to <body>. Stated here so a CI red says which of the
     // two it was instead of leaving them indistinguishable.
-    expect(document.hasFocus(), `the page never held focus, so Tab has no anchor${beforeTab}`).toBe(
-      true,
-    );
+    expect(
+      document.hasFocus(),
+      `the page never held focus, so Tab has no anchor\n  ${beforeTab}`,
+    ).toBe(true);
     expect(document.activeElement, `the sentinel did not take focus\n  ${beforeTab}`).toBe(
       sentinel,
     );
