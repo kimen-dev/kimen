@@ -45,6 +45,29 @@ test('sandbox containment runs only when its own surface changes', async () => {
   assert.match(workflow, /^ {2}push:[\s\S]*?paths:[\s\S]*?sandbox\/\*\*/mu);
 });
 
+test('renovate config is validated by Renovate, only when that surface changes', async () => {
+  const [workflow, gate, core] = await Promise.all([
+    readRepositoryFile('.github/workflows/renovate-config.yml'),
+    readRepositoryFile('scripts/gates/check-renovate-config.sh'),
+    readRepositoryFile('scripts/gates/gates-core.sh'),
+  ]);
+
+  assert.match(workflow, /^ {2}pull_request:[\s\S]*?paths:[\s\S]*?renovate\.json/mu);
+  assert.match(workflow, /^ {2}push:[\s\S]*?paths:[\s\S]*?renovate\.json/mu);
+
+  // Out of the one required result on purpose: this surface changes a few
+  // times a year, and the validator arrives as a large npx download that every
+  // other pull request would pay for nothing.
+  assert.doesNotMatch(core, /check-renovate-config/u);
+
+  // Pinned, never `@latest` — the verdict has to be a function of the tree
+  // (Art. X). Safe for this class: the config Renovate rejected is refused
+  // with the identical message by validators several majors older, so schema
+  // checking does not drift the way a rule registry does.
+  assert.match(gate, /^RENOVATE_VERSION='\d+\.\d+\.\d+'$/mu);
+  assert.doesNotMatch(gate, /renovate@latest/u);
+});
+
 test('containment build allows the npm registry used by its Dockerfile', async () => {
   const [workflow, dockerfile] = await Promise.all([
     readRepositoryFile('.github/workflows/containment.yml'),
