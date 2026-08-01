@@ -54,6 +54,11 @@ jobs:
           # engine-strict, so this pins the major the validator supports —
           # not the one the rest of CI runs on.
           node-version: 24
+          # This job never installs workspace dependencies; the validator
+          # arrives through npx. Left on, the cache step reads `packageManager`
+          # from package.json and fails looking for a pnpm this job has no
+          # reason to have.
+          package-manager-cache: false
 
       - name: Renovate config validation
         run: bash scripts/gates/check-renovate-config.sh
