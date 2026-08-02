@@ -51,16 +51,28 @@ function installForm(instance: KiButtonHarness) {
   return { form, requestSubmit, reset };
 }
 
-function clickEventHarness(): MouseEvent & {
+/**
+ * A click whose two cancellation calls are observable.
+ *
+ * The mocks come back beside the event rather than intersected into it.
+ * `MouseEvent` declares `preventDefault` as a method, so asserting on one
+ * pulled off the object is exactly what `@typescript-eslint/unbound-method`
+ * exists to catch — and from typescript-eslint 8.65 it sees through the
+ * intersection and says so. These are plain `vi.fn()` bindings that never read
+ * `this`, so the type says that instead of the rule being told to look away.
+ */
+function clickEventHarness(): {
+  event: MouseEvent;
   preventDefault: ReturnType<typeof vi.fn>;
   stopImmediatePropagation: ReturnType<typeof vi.fn>;
 } {
+  const preventDefault = vi.fn();
+  const stopImmediatePropagation = vi.fn();
+
   return {
-    preventDefault: vi.fn(),
-    stopImmediatePropagation: vi.fn(),
-  } as unknown as MouseEvent & {
-    preventDefault: ReturnType<typeof vi.fn>;
-    stopImmediatePropagation: ReturnType<typeof vi.fn>;
+    event: { preventDefault, stopImmediatePropagation } as unknown as MouseEvent,
+    preventDefault,
+    stopImmediatePropagation,
   };
 }
 
@@ -218,12 +230,12 @@ describe('ki-button', () => {
     const page = await sourceButton('<ki-button disabled>Save</ki-button>');
     const instance = sourceInstance(page.instance);
     const { requestSubmit, reset } = installForm(instance);
-    const event = clickEventHarness();
+    const click = clickEventHarness();
 
-    instance.handleClick(event);
+    instance.handleClick(click.event);
 
-    expect(event.preventDefault).toHaveBeenCalledOnce();
-    expect(event.stopImmediatePropagation).toHaveBeenCalledOnce();
+    expect(click.preventDefault).toHaveBeenCalledOnce();
+    expect(click.stopImmediatePropagation).toHaveBeenCalledOnce();
     expect(requestSubmit).not.toHaveBeenCalled();
     expect(reset).not.toHaveBeenCalled();
   });
@@ -232,29 +244,29 @@ describe('ki-button', () => {
     const page = await sourceButton();
     const instance = sourceInstance(page.instance);
     const { requestSubmit } = installForm(instance);
-    const event = clickEventHarness();
+    const click = clickEventHarness();
     instance.formDisabledCallback(true);
 
-    instance.handleClick(event);
+    instance.handleClick(click.event);
 
-    expect(event.preventDefault).toHaveBeenCalledOnce();
-    expect(event.stopImmediatePropagation).toHaveBeenCalledOnce();
+    expect(click.preventDefault).toHaveBeenCalledOnce();
+    expect(click.stopImmediatePropagation).toHaveBeenCalledOnce();
     expect(requestSubmit).not.toHaveBeenCalled();
   });
 
   it('S8 performs no form action for type button or without an owning form', async () => {
     const page = await sourceButton();
     const instance = sourceInstance(page.instance);
-    const event = clickEventHarness();
+    const click = clickEventHarness();
     instance.internals = { form: null };
 
-    instance.handleClick(event);
+    instance.handleClick(click.event);
     const { requestSubmit, reset } = installForm(instance);
     instance.type = 'button';
-    instance.handleClick(event);
+    instance.handleClick(click.event);
 
-    expect(event.preventDefault).not.toHaveBeenCalled();
-    expect(event.stopImmediatePropagation).not.toHaveBeenCalled();
+    expect(click.preventDefault).not.toHaveBeenCalled();
+    expect(click.stopImmediatePropagation).not.toHaveBeenCalled();
     expect(requestSubmit).not.toHaveBeenCalled();
     expect(reset).not.toHaveBeenCalled();
   });
@@ -265,7 +277,7 @@ describe('ki-button', () => {
     const { requestSubmit, reset } = installForm(instance);
     instance.type = 'reset';
 
-    instance.handleClick(clickEventHarness());
+    instance.handleClick(clickEventHarness().event);
 
     expect(reset).toHaveBeenCalledOnce();
     expect(requestSubmit).not.toHaveBeenCalled();
@@ -288,7 +300,7 @@ describe('ki-button', () => {
       expect(received.value).toBe('publish');
     });
 
-    instance.handleClick(clickEventHarness());
+    instance.handleClick(clickEventHarness().event);
 
     expect(requestSubmit).toHaveBeenCalledOnce();
     expect(reset).not.toHaveBeenCalled();
@@ -303,7 +315,7 @@ describe('ki-button', () => {
     delete instance.value;
     instance.type = 'launch';
 
-    instance.handleClick(clickEventHarness());
+    instance.handleClick(clickEventHarness().event);
 
     expect(requestSubmit).toHaveBeenCalledOnce();
     expect(requestSubmit.mock.calls[0]?.[0]).toMatchObject({
@@ -333,7 +345,7 @@ describe('ki-button', () => {
     });
 
     expect(() => {
-      instance.handleClick(clickEventHarness());
+      instance.handleClick(clickEventHarness().event);
     }).toThrow('submission failed');
     expect(nameSetter).not.toHaveBeenCalled();
     expect(valueSetter).not.toHaveBeenCalled();

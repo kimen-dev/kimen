@@ -260,14 +260,14 @@ it('writes the generated sync CLI summary', () => {
   expect(output).toEqual(['PASS generated-sync tokens: 6 tracked files\n']);
 });
 
-it.each([
-  [],
-  ['tokens', 'surfaces'],
-])('rejects invalid generated sync CLI arity %#', (arguments_) => {
-  expect(() => runGeneratedSyncCli({ arguments_ })).toThrowError(
-    'usage: check-generated-sync.mjs <tokens|surfaces|catalog>',
-  );
-});
+it.each([[], ['tokens', 'surfaces']])(
+  'rejects invalid generated sync CLI arity %#',
+  (arguments_) => {
+    expect(() => runGeneratedSyncCli({ arguments_ })).toThrowError(
+      'usage: check-generated-sync.mjs <tokens|surfaces|catalog>',
+    );
+  },
+);
 
 it('creates sorted ATTW entrypoint groups from the direct inventory', () => {
   expect(createAttwPlan([...inventory].reverse())).toEqual({

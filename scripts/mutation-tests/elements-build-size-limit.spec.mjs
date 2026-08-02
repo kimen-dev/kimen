@@ -81,17 +81,14 @@ describe('element size-budget mutation boundary', () => {
     );
   });
 
-  it.each([
-    undefined,
-    null,
-    {},
-    { id: 'solo', members: [] },
-    { id: 'solo', members: ['ki-a'] },
-  ])('rejects an invalid composite group %#', (group) => {
-    expect(() => renderCompositeEntry(group, '/workspace/elements')).toThrow(
-      'Composite entry requires at least two component members',
-    );
-  });
+  it.each([undefined, null, {}, { id: 'solo', members: [] }, { id: 'solo', members: ['ki-a'] }])(
+    'rejects an invalid composite group %#',
+    (group) => {
+      expect(() => renderCompositeEntry(group, '/workspace/elements')).toThrow(
+        'Composite entry requires at least two component members',
+      );
+    },
+  );
 
   it('derives sorted standalone and composite checks with exact limits and paths', () => {
     const config = createSizeLimitConfig({

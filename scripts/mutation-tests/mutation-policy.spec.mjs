@@ -380,15 +380,12 @@ describe('mutation policy report evaluation', () => {
     expect(() => evaluateMutationReport(report, ['a.mjs'])).toThrow(expected);
   });
 
-  it.each([
-    -1,
-    101,
-    Number.NaN,
-    Number.POSITIVE_INFINITY,
-    '70',
-  ])('@spec:018 S3 rejects invalid scalar score %#', (score) => {
-    expect(() => evaluateMutationScore(score)).toThrow(/finite number from 0 through 100/i);
-  });
+  it.each([-1, 101, Number.NaN, Number.POSITIVE_INFINITY, '70'])(
+    '@spec:018 S3 rejects invalid scalar score %#',
+    (score) => {
+      expect(() => evaluateMutationScore(score)).toThrow(/finite number from 0 through 100/i);
+    },
+  );
 
   it('@spec:018 S3 enforces all three exact stable thresholds', () => {
     expect(() =>

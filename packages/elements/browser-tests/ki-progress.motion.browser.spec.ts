@@ -64,15 +64,15 @@ function runningInfiniteAnimations(el: Element): Animation[] {
 }
 
 describe('ki-progress with reduced motion', () => {
-  it.each([
-    'linear',
-    'circular',
-  ] as const)('S6 renders indeterminate %s without running infinite animation under reduced motion', async (shape) => {
-    const el = await mount(shape);
+  it.each(['linear', 'circular'] as const)(
+    'S6 renders indeterminate %s without running infinite animation under reduced motion',
+    async (shape) => {
+      const el = await mount(shape);
 
-    expect(window.matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
-    expect(progressbar(el).hasAttribute('aria-valuenow')).toBe(false);
-    expect(indicator(el).getBoundingClientRect().width).toBeGreaterThan(0);
-    expect(runningInfiniteAnimations(indicator(el))).toHaveLength(0);
-  });
+      expect(window.matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
+      expect(progressbar(el).hasAttribute('aria-valuenow')).toBe(false);
+      expect(indicator(el).getBoundingClientRect().width).toBeGreaterThan(0);
+      expect(runningInfiniteAnimations(indicator(el))).toHaveLength(0);
+    },
+  );
 });

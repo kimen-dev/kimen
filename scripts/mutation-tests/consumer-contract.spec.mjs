@@ -998,24 +998,18 @@ describe('packed consumer mutation boundary', () => {
     );
   });
 
-  it.each([
-    'cjs',
-    'cts',
-    'ecmascript',
-    'jsx',
-    'mjs',
-    'mts',
-    'node',
-    'tsx',
-  ])('S8 fails closed for unsupported executable fence %s', (language) => {
-    expect(
-      thrownMessage(() =>
-        extractExecutableSnippets(
-          `\`\`\`js\naccepted();\n\`\`\`\n\`\`\`${language}\nskipped();\n\`\`\`\n`,
+  it.each(['cjs', 'cts', 'ecmascript', 'jsx', 'mjs', 'mts', 'node', 'tsx'])(
+    'S8 fails closed for unsupported executable fence %s',
+    (language) => {
+      expect(
+        thrownMessage(() =>
+          extractExecutableSnippets(
+            `\`\`\`js\naccepted();\n\`\`\`\n\`\`\`${language}\nskipped();\n\`\`\`\n`,
+          ),
         ),
-      ),
-    ).toBe(`consumer-contract: unsupported executable fence language or descriptor: ${language}`);
-  });
+      ).toBe(`consumer-contract: unsupported executable fence language or descriptor: ${language}`);
+    },
+  );
 
   it.each([
     '```js\naccepted();\n```\n```ts\nunclosed();\n',
@@ -1064,25 +1058,21 @@ describe('packed consumer mutation boundary', () => {
     ).toThrow(/unsupported installation fence.*powershell/iu);
   });
 
-  it.each([
-    '',
-    'bash',
-    'console',
-    'sh',
-    'shell',
-    'zsh',
-  ])('S8 observes the supported installation fence %s', (language) => {
-    expect(
-      extractInstallExamples(
-        `\`\`\`${language}\n$ npm install @kimen/elements @kimen/tokens\n\`\`\`\n`,
-      ),
-    ).toEqual([
-      {
-        command: 'npm install @kimen/elements @kimen/tokens',
-        packages: ['@kimen/elements', '@kimen/tokens'],
-      },
-    ]);
-  });
+  it.each(['', 'bash', 'console', 'sh', 'shell', 'zsh'])(
+    'S8 observes the supported installation fence %s',
+    (language) => {
+      expect(
+        extractInstallExamples(
+          `\`\`\`${language}\n$ npm install @kimen/elements @kimen/tokens\n\`\`\`\n`,
+        ),
+      ).toEqual([
+        {
+          command: 'npm install @kimen/elements @kimen/tokens',
+          packages: ['@kimen/elements', '@kimen/tokens'],
+        },
+      ]);
+    },
+  );
 
   it.each([
     'pnpm install @kimen/elements @kimen/tokens',
@@ -1116,18 +1106,21 @@ describe('packed consumer mutation boundary', () => {
       'bun',
       ['add', '/candidate/elements.tgz', '/candidate/tokens.tgz'],
     ],
-  ])('S8 substitutes tarball paths into documented command %s', (command, executable, arguments_) => {
-    const example = extractInstallExamples(`Run \`${command}\`.`)[0];
-    expect(
-      createInstallInvocation(
-        example,
-        new Map([
-          ['@kimen/elements', '/candidate/elements.tgz'],
-          ['@kimen/tokens', '/candidate/tokens.tgz'],
-        ]),
-      ),
-    ).toEqual({ executable, arguments: arguments_ });
-  });
+  ])(
+    'S8 substitutes tarball paths into documented command %s',
+    (command, executable, arguments_) => {
+      const example = extractInstallExamples(`Run \`${command}\`.`)[0];
+      expect(
+        createInstallInvocation(
+          example,
+          new Map([
+            ['@kimen/elements', '/candidate/elements.tgz'],
+            ['@kimen/tokens', '/candidate/tokens.tgz'],
+          ]),
+        ),
+      ).toEqual({ executable, arguments: arguments_ });
+    },
+  );
 
   it('S8 rejects unsupported invocation actions and packages without candidate tarballs', () => {
     const tarballs = new Map([['@kimen/elements', '/candidate/elements.tgz']]);
