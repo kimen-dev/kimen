@@ -258,17 +258,17 @@ describe('capability claim mutation boundary', () => {
     ).toThrow(error);
   });
 
-  it.each([
-    [{ sha, worktreeDigest: null }],
-    [{ sha, worktreeDigest: digest }],
-  ])('S13 accepts exact current green revision evidence %#', (revision) => {
-    expect(
-      evaluateCapabilityEvidence({
-        manifest: manifest(),
-        evidenceRecord: evidence(revision),
-        currentRevision: revision,
-        mandatoryEvidenceIds,
-      }),
-    ).toEqual({ decision: 'pass', availableCapabilityIds: ['foundation'] });
-  });
+  it.each([[{ sha, worktreeDigest: null }], [{ sha, worktreeDigest: digest }]])(
+    'S13 accepts exact current green revision evidence %#',
+    (revision) => {
+      expect(
+        evaluateCapabilityEvidence({
+          manifest: manifest(),
+          evidenceRecord: evidence(revision),
+          currentRevision: revision,
+          mandatoryEvidenceIds,
+        }),
+      ).toEqual({ decision: 'pass', availableCapabilityIds: ['foundation'] });
+    },
+  );
 });

@@ -84,22 +84,21 @@ describe('validateUiSpec', () => {
     expect(issue?.message).toContain('submit-order');
   });
 
-  it.each([
-    '__proto__',
-    'constructor',
-    'prototype',
-  ])('S13 rejects the prototype-pollution key "%s" naming it, without polluting any outside object', (key) => {
-    const before = Object.getOwnPropertyNames(Object.prototype).sort();
-    const report = validateUiSpec(
-      `{"version":1,"root":{"component":"ki-button","props":{${JSON.stringify(key)}:{"polluted":true}}}}`,
-    );
-    expect(report.ok).toBe(false);
-    const issue = report.issues[0];
-    expect(issue?.code).toBe('forbidden-key');
-    expect(issue?.message).toContain(key);
-    expect(Object.getOwnPropertyNames(Object.prototype).sort()).toEqual(before);
-    expect({} as { polluted?: boolean }).not.toHaveProperty('polluted');
-  });
+  it.each(['__proto__', 'constructor', 'prototype'])(
+    'S13 rejects the prototype-pollution key "%s" naming it, without polluting any outside object',
+    (key) => {
+      const before = Object.getOwnPropertyNames(Object.prototype).sort();
+      const report = validateUiSpec(
+        `{"version":1,"root":{"component":"ki-button","props":{${JSON.stringify(key)}:{"polluted":true}}}}`,
+      );
+      expect(report.ok).toBe(false);
+      const issue = report.issues[0];
+      expect(issue?.code).toBe('forbidden-key');
+      expect(issue?.message).toContain(key);
+      expect(Object.getOwnPropertyNames(Object.prototype).sort()).toEqual(before);
+      expect({} as { polluted?: boolean }).not.toHaveProperty('polluted');
+    },
+  );
 
   it('S14 rejects a spec beyond the validation size budget naming the exceeded budget', () => {
     const oversized = {

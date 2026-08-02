@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/node": "^26.1.0",
     "esbuild": "0.28.1",
-    "happy-dom": "20.10.6",
+    "happy-dom": "20.11.1",
     "vitest": "^4.1.10"
   },
   "nx": {

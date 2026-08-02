@@ -51,19 +51,18 @@ describe('renderUiSpec — only catalog components render', () => {
     expect(button?.textContent).toBe('Pay now');
   });
 
-  it.each([
-    'script',
-    'iframe',
-    'ki-not-in-catalog',
-  ])('S2 never renders a component type "%s" outside the catalog', (type) => {
-    const result = renderUiSpec({ version: 1, root: { component: type } }, { surface });
-    expect(result.ok).toBe(false);
-    expect(surface.childNodes).toHaveLength(0);
-    const diagnostic = result.diagnostics[0];
-    expect(diagnostic?.rule).toBe('unknown-component');
-    expect(diagnostic?.value).toBe(type);
-    expect(diagnostic?.message).toContain(type);
-  });
+  it.each(['script', 'iframe', 'ki-not-in-catalog'])(
+    'S2 never renders a component type "%s" outside the catalog',
+    (type) => {
+      const result = renderUiSpec({ version: 1, root: { component: type } }, { surface });
+      expect(result.ok).toBe(false);
+      expect(surface.childNodes).toHaveLength(0);
+      const diagnostic = result.diagnostics[0];
+      expect(diagnostic?.rule).toBe('unknown-component');
+      expect(diagnostic?.value).toBe(type);
+      expect(diagnostic?.message).toContain(type);
+    },
+  );
 });
 
 describe('renderUiSpec — only declared props and actions pass', () => {
@@ -169,21 +168,21 @@ describe('renderUiSpec — no code-execution path from spec data', () => {
     expect(alert?.textContent).toBe('<img src=x onerror=alert(1)>');
   });
 
-  it.each([
-    'javascript:alert(1)',
-    'data:text/html,<script>alert(1)</script>',
-  ])('S7 rejects the executable URL value "%s" naming the prop and scheme', (value) => {
-    const result = renderUiSpec(
-      { version: 1, root: { component: 'ki-avatar', props: { src: value, label: 'A' } } },
-      { surface },
-    );
-    expect(result.ok).toBe(false);
-    expect(surface.childNodes).toHaveLength(0);
-    const diagnostic = result.diagnostics[0];
-    expect(diagnostic?.rule).toBe('url-scheme');
-    expect(diagnostic?.message).toContain('src');
-    expect(diagnostic?.message).toContain(value.split(':')[0] ?? '');
-  });
+  it.each(['javascript:alert(1)', 'data:text/html,<script>alert(1)</script>'])(
+    'S7 rejects the executable URL value "%s" naming the prop and scheme',
+    (value) => {
+      const result = renderUiSpec(
+        { version: 1, root: { component: 'ki-avatar', props: { src: value, label: 'A' } } },
+        { surface },
+      );
+      expect(result.ok).toBe(false);
+      expect(surface.childNodes).toHaveLength(0);
+      const diagnostic = result.diagnostics[0];
+      expect(diagnostic?.rule).toBe('url-scheme');
+      expect(diagnostic?.message).toContain('src');
+      expect(diagnostic?.message).toContain(value.split(':')[0] ?? '');
+    },
+  );
 
   it('S7 accepts http, https and relative URL references', () => {
     for (const src of ['https://cdn.example/a.png', 'http://example/a.png', '/local/a.png']) {

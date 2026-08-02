@@ -503,11 +503,14 @@ describe('release candidate build and verification mutation boundary', () => {
       { AWS_WEB_IDENTITY_TOKEN_FILE: '/tmp/token' },
       /no OIDC identity/i,
     ],
-  ])('S7 verifier rejects %s before reading bytes', async (_name, digest, environment, expected) => {
-    await expect(
-      verifyCandidate({ archivePath: '/not-read', expectedSha256: digest, environment }),
-    ).rejects.toThrow(expected);
-  });
+  ])(
+    'S7 verifier rejects %s before reading bytes',
+    async (_name, digest, environment, expected) => {
+      await expect(
+        verifyCandidate({ archivePath: '/not-read', expectedSha256: digest, environment }),
+      ).rejects.toThrow(expected);
+    },
+  );
 
   it('S7 rejects outer candidate-byte tampering', async () => {
     const fixture = await createRepositoryFixture();

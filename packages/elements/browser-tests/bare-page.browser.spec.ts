@@ -343,28 +343,29 @@ describe('bare-page typography contract', () => {
   // Slotted and shadow text inherits through the flat tree, so :host covers
   // it — but the user agent stylesheet sets `font` on native form controls
   // and buttons, and that beats inheritance. Those need an explicit reset.
-  it.each(
-    components,
-  )('%s resolves the token typeface on its native controls', async (component) => {
-    const wrapper = await mountBare(component);
-    const expected = normalizeFamily(expectedFontFamily());
+  it.each(components)(
+    '%s resolves the token typeface on its native controls',
+    async (component) => {
+      const wrapper = await mountBare(component);
+      const expected = normalizeFamily(expectedFontFamily());
 
-    const offenders = shadowDescendants(wrapper)
-      .filter((element) => ['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA'].includes(element.tagName))
-      // Non-rendered proxies carry no glyphs, so their family can never reach
-      // a reader: the opacity:0 inputs behind a painted track, and the
-      // display:none validity donor ki-select keeps for constraint validation.
-      .filter((element) => element.checkVisibility() && getComputedStyle(element).opacity !== '0')
-      .filter((element) => normalizeFamily(getComputedStyle(element).fontFamily) !== expected)
-      .map(
-        (element) => `${element.tagName.toLowerCase()}: ${getComputedStyle(element).fontFamily}`,
-      );
+      const offenders = shadowDescendants(wrapper)
+        .filter((element) => ['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA'].includes(element.tagName))
+        // Non-rendered proxies carry no glyphs, so their family can never reach
+        // a reader: the opacity:0 inputs behind a painted track, and the
+        // display:none validity donor ki-select keeps for constraint validation.
+        .filter((element) => element.checkVisibility() && getComputedStyle(element).opacity !== '0')
+        .filter((element) => normalizeFamily(getComputedStyle(element).fontFamily) !== expected)
+        .map(
+          (element) => `${element.tagName.toLowerCase()}: ${getComputedStyle(element).fontFamily}`,
+        );
 
-    expect(
-      [...new Set(offenders)],
-      `${component} renders a native control in the user agent typeface; it needs an explicit font reset`,
-    ).toEqual([]);
-  });
+      expect(
+        [...new Set(offenders)],
+        `${component} renders a native control in the user agent typeface; it needs an explicit font reset`,
+      ).toEqual([]);
+    },
+  );
 });
 
 describe('page contract', () => {

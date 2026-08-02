@@ -135,31 +135,29 @@ it.each([
   expect(error.message).toBe('init requires root repo attempt base taskSha256');
 });
 
-it.each([
-  [],
-  ['/journal'],
-  ['/journal', 'attempt'],
-])('rejects incomplete update arguments %# before loading a journal', (...arguments_) => {
-  const error = captureJournalError(() =>
-    dispatchAttemptJournal({ arguments_: ['update', ...arguments_] }),
-  );
+it.each([[], ['/journal'], ['/journal', 'attempt']])(
+  'rejects incomplete update arguments %# before loading a journal',
+  (...arguments_) => {
+    const error = captureJournalError(() =>
+      dispatchAttemptJournal({ arguments_: ['update', ...arguments_] }),
+    );
 
-  expect(error.exitCode).toBe(64);
-  expect(error.message).toBe('update requires root attempt operation');
-});
+    expect(error.exitCode).toBe(64);
+    expect(error.message).toBe('update requires root attempt operation');
+  },
+);
 
-it.each([
-  [],
-  ['/journal'],
-  ['/journal', 'attempt'],
-])('rejects incomplete get arguments %# before loading a journal', (...arguments_) => {
-  const error = captureJournalError(() =>
-    dispatchAttemptJournal({ arguments_: ['get', ...arguments_], stdout: outputBuffer() }),
-  );
+it.each([[], ['/journal'], ['/journal', 'attempt']])(
+  'rejects incomplete get arguments %# before loading a journal',
+  (...arguments_) => {
+    const error = captureJournalError(() =>
+      dispatchAttemptJournal({ arguments_: ['get', ...arguments_], stdout: outputBuffer() }),
+    );
 
-  expect(error.exitCode).toBe(64);
-  expect(error.message).toBe('get requires root attempt field');
-});
+    expect(error.exitCode).toBe(64);
+    expect(error.message).toBe('get requires root attempt field');
+  },
+);
 
 it('initializes one private immutable binding and permits only an idempotent replay', async () => {
   const fixture = await createFixture();
