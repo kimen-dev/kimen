@@ -6,9 +6,7 @@
   "semanticCommitType": "chore",
   "semanticCommitScope": "deps",
   "separateMajorMinor": true,
-  "lockFileMaintenance": {
-    "enabled": true
-  },
+  "lockFileMaintenance": { "enabled": true },
   "packageRules": [
     {
       "description": "Supply-chain hardening (Art. X): wait 7 days before proposing newly published versions",
@@ -29,7 +27,7 @@
       "minimumReleaseAge": "7 days"
     },
     {
-      "description": "node is a floor here, not a pin, in both places it appears. `engines` says >=22 on purpose and .npmrc sets engine-strict, so an exact value locks every install out of every machine that is not on that patch \u2014 CI included. `node-version` in the workflows names a major so setup-node uses the toolchain already on the runner; an exact one makes it fetch a build from actions/node-versions, which the harden-runner egress allowlist refuses (ECONNREFUSED). Renovate proposed both in #79 and CI went red on the second.",
+      "description": "node is a floor here, not a pin, in both places it appears. `engines` says >=22 on purpose and .npmrc sets engine-strict, so an exact value locks every install out of every machine that is not on that patch — CI included. `node-version` in the workflows names a major so setup-node uses the toolchain already on the runner; an exact one makes it fetch a build from actions/node-versions, which the harden-runner egress allowlist refuses (ECONNREFUSED). Renovate proposed both in #79 and CI went red on the second.",
       "matchDepNames": ["node"],
       "matchDepTypes": ["engines", "uses-with"],
       "rangeStrategy": "replace",
