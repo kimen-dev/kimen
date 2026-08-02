@@ -1,0 +1,64 @@
+# Validates renovate.json against Renovate's own validator.
+#
+# Path-scoped rather than part of the one required result (Art. III/X): this
+# surface changes a few times a year, and the validator arrives through npx as
+# a large download that every other pull request would pay for nothing.
+#
+# It exists because #76 shipped a config the gate suite accepted and Renovate
+# refused, which stopped the bot opening pull requests until #78 fixed it.
+# Actions pinned to commit SHAs; trailing comment records the resolved tag.
+name: renovate-config
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'renovate.json'
+      - 'scripts/gates/check-renovate-config.sh'
+      - '.github/workflows/renovate-config.yml'
+  pull_request:
+    paths:
+      - 'renovate.json'
+      - 'scripts/gates/check-renovate-config.sh'
+      - '.github/workflows/renovate-config.yml'
+
+permissions: {}
+
+concurrency:
+  group: renovate-config-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  renovate-config:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          # Renovate declares engines.node ^24.11.0 and .npmrc sets
+          # engine-strict, so this pins the major the validator supports —
+          # not the one the rest of CI runs on.
+          node-version: 24
+          # This job never installs workspace dependencies; the validator
+          # arrives through npx. Left on, the cache step reads `packageManager`
+          # from package.json and fails looking for a pnpm this job has no
+          # reason to have.
+          package-manager-cache: false
+
+      - name: Renovate config validation
+        run: bash scripts/gates/check-renovate-config.sh
