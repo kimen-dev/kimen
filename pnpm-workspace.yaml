@@ -20,7 +20,7 @@ minimumReleaseAge: 10080
 # version cleared minimumReleaseAge before being added.
 overrides:
   # GHSA-42h9-826w-cgv3 and nine more, 1.16.0 → 1.18.0.
-  axios: 1.18.0
+  axios: 1.18.1
   # GHSA-3jxr-9vmj-r5cp and GHSA-mh99-v99m-4gvg. The 1.x line carries no fix
   # for the second, so both lines resolve to 5.0.8.
   brace-expansion: 5.0.8
