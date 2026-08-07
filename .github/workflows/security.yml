@@ -35,7 +35,7 @@ jobs:
             files.pythonhosted.org:443
             semgrep.dev:443
 
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
@@ -83,7 +83,7 @@ jobs:
             gitleaks.io:443
             license.gitleaks.io:443
 
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
           fetch-depth: 0 # full history: secrets hide in old commits
