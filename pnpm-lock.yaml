@@ -217,8 +217,8 @@ importers:
   tools/kimen-plugin:
     dependencies:
       '@nx/devkit':
-        specifier: 23.0.1
-        version: 23.0.1(nx@23.1.0)
+        specifier: 23.1.1
+        version: 23.1.1(nx@23.1.0)
 
 packages:
 
@@ -1568,13 +1568,13 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@nx/devkit@23.0.1':
-    resolution: {integrity: sha512-A/chuNS1RZwdbRe/Nf+w0qtPEFHLcZNPzo8Abw5mBxyXmy9yvHZpuZuqDbt/lASFU+TEb74xExL1AnKWwqpOIg==}
+  '@nx/devkit@23.1.0':
+    resolution: {integrity: sha512-4LPBrjwtretBQksqph2aXqz2Atd5+oO7RTVlQoOweU8Sh2A0wM8CNig8n+LX2iwxniPYRooLN4kRtKxO4mi2Mw==}
     peerDependencies:
       nx: '>= 22 <= 24 || ^23.0.0-0'
 
-  '@nx/devkit@23.1.0':
-    resolution: {integrity: sha512-4LPBrjwtretBQksqph2aXqz2Atd5+oO7RTVlQoOweU8Sh2A0wM8CNig8n+LX2iwxniPYRooLN4kRtKxO4mi2Mw==}
+  '@nx/devkit@23.1.1':
+    resolution: {integrity: sha512-FmBfS1xUkWYvDYH/ysO7gAqGlaRzugLac8SIC+X/p76WBmhM6tJhfRW/BQ8mxOFZoVLmwhIiR8X0dRPKdasFxw==}
     peerDependencies:
       nx: '>= 22 <= 24 || ^23.0.0-0'
 
@@ -6940,17 +6940,6 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@nx/devkit@23.0.1(nx@23.1.0)':
-    dependencies:
-      '@zkochan/js-yaml': 0.0.7
-      ejs: 5.0.1
-      enquirer: 2.3.6
-      minimatch: 10.2.5
-      nx: 23.1.0
-      semver: 7.8.5
-      tslib: 2.8.1
-      yargs-parser: 21.1.1
-
   '@nx/devkit@23.1.0(nx@23.1.0)':
     dependencies:
       '@zkochan/js-yaml': 0.0.7
@@ -6961,6 +6950,16 @@ snapshots:
       semver: 7.8.5
       tslib: 2.8.1
       yaml: 2.9.0
+      yargs-parser: 21.1.1
+
+  '@nx/devkit@23.1.1(nx@23.1.0)':
+    dependencies:
+      ejs: 5.0.1
+      enquirer: 2.3.6
+      minimatch: 10.2.5
+      nx: 23.1.0
+      semver: 7.8.5
+      tslib: 2.8.1
       yargs-parser: 21.1.1
 
   '@nx/eslint-plugin@23.1.0(@babel/traverse@7.29.7)(@typescript-eslint/parser@8.65.0(eslint@10.8.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.8.0(jiti@2.7.0))(nx@23.1.0)(typescript@6.0.3)':
