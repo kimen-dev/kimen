@@ -144,6 +144,15 @@ function readTokenLength(name: string): number {
   return value;
 }
 
+function readTokenTimingFunction(name: string): string {
+  const probe = document.createElement('div');
+  probe.style.transitionTimingFunction = `var(${name})`;
+  document.body.appendChild(probe);
+  const value = getComputedStyle(probe).transitionTimingFunction;
+  probe.remove();
+  return value;
+}
+
 describe('ki-indicator', () => {
   it('S1 renders one dot per position in a single row with only the second current, all from tokens', async () => {
     cleanup();
@@ -252,6 +261,39 @@ describe('ki-indicator', () => {
         expect(duration).toBe(0);
       }
     }
+    await browserCommands.emulateReducedMotion(null);
+  });
+
+  it('S6 drives the highlight transfer with the MarsUI standard easing token', async () => {
+    cleanup();
+    await browserCommands.emulateReducedMotion('no-preference');
+    const el = await mount(landmark(), { label: 'Slide position', count: '5', current: '2' });
+
+    // The transfer transition rides duration AND easing tokens (the MarsUI
+    // standard curve), never the UA default `ease`.
+    const expectedTiming = readTokenTimingFunction('--ki-indicator-motion-easing');
+    expect(expectedTiming).not.toBe('ease');
+    for (const dot of dotsOf(el)) {
+      const computed = getComputedStyle(dot);
+      const timings = computed.transitionTimingFunction
+        .split('),')
+        .map((timing) => (timing.trim().endsWith(')') ? timing.trim() : `${timing.trim()})`));
+      for (const timing of timings) {
+        expect(timing).toBe(expectedTiming);
+      }
+      const properties = computed.transitionProperty.split(',').map((p) => p.trim());
+      expect(properties).toContain('inline-size');
+      expect(properties).toContain('background-color');
+    }
+
+    // The row's gated entrance is opacity-only (never layout) and settles
+    // fully visible once the one-shot fade finishes.
+    expect(getComputedStyle(rowOf(el)).transitionProperty).toBe('opacity');
+    const settleDeadline = Date.now() + 2000;
+    while (el.getAnimations({ subtree: true }).length > 0 && Date.now() < settleDeadline) {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    expect(getComputedStyle(rowOf(el)).opacity).toBe('1');
     await browserCommands.emulateReducedMotion(null);
   });
 

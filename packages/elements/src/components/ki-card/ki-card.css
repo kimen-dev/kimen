@@ -1,5 +1,12 @@
 /* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
- * Logical properties only (Art. IV): direction-agnostic by construction. */
+ * Logical properties only (Art. IV): direction-agnostic by construction.
+ *
+ * MarsUI region spacing (Dashboard_info 16189:4286 / Chart 16187:3670): the
+ * SURFACE carries one block padding (space/3xl 16px) and the regions carry
+ * only their inline padding; rows are separated by the card flex gap, never
+ * by stacked region paddings. --ki-card-padding-block is the forward token
+ * hook (pending in tokens); until it lands the space/3xl semantic fallback
+ * keeps the measured 16px. */
 :host {
   --_ki-card-bg: var(--ki-card-bg);
   --_ki-card-fg: var(--ki-card-fg);
@@ -8,7 +15,9 @@
   --_ki-card-radius: var(--ki-card-radius);
   --_ki-card-elevation: var(--ki-card-elevation);
   --_ki-card-gap: var(--ki-card-gap);
+  --_ki-card-padding-block: var(--ki-card-padding-block);
   --_ki-card-media-padding: var(--ki-card-media-padding);
+  --_ki-card-media-radius: var(--ki-card-media-radius);
   --_ki-card-header-padding: var(--ki-card-header-padding);
   --_ki-card-body-padding: var(--ki-card-body-padding);
   --_ki-card-footer-padding: var(--ki-card-footer-padding);
@@ -21,6 +30,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--_ki-card-gap);
+  padding-block: var(--_ki-card-padding-block);
   color: var(--_ki-card-fg);
   background: var(--_ki-card-bg);
   border-color: var(--_ki-card-border-color);
@@ -38,22 +48,73 @@
   display: none;
 }
 
+/* MarsUI media inset (Chart master): the media region insets inline only
+ * (space/md once the token value lands); block rhythm comes from the card
+ * gap and surface padding. */
 [part="media"] {
-  padding-block: var(--_ki-card-media-padding);
   padding-inline: var(--_ki-card-media-padding);
 }
 
+/* Slotted media conforms to the card's inline size instead of driving the
+ * layout with its intrinsic size (ki-video ::slotted precedent), and takes
+ * the MarsUI nested-media radius (Radius/big_component/radius_sm). */
+slot[name="media"]::slotted(img),
+slot[name="media"]::slotted(video) {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--_ki-card-media-radius);
+}
+
 [part="header"] {
-  padding-block: var(--_ki-card-header-padding);
   padding-inline: var(--_ki-card-header-padding);
 }
 
 [part="body"] {
-  padding-block: var(--_ki-card-body-padding);
   padding-inline: var(--_ki-card-body-padding);
 }
 
 [part="footer"] {
-  padding-block: var(--_ki-card-footer-padding);
   padding-inline: var(--_ki-card-footer-padding);
+}
+
+/* Micro-motion (MarsUI soft-elevation language). Only the transitions and
+ * the entrance animation are gated: under reduced motion every end state
+ * still applies instantly (ki-switch/ki-dialog gating pattern). */
+@media (prefers-reduced-motion: no-preference) {
+  :host {
+    animation: ki-card-enter var(--ki-motion-duration-medium-1) var(--ki-motion-easing-out) both;
+  }
+
+  [part="card"] {
+    transition: box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+  }
+
+  slot[name="media"]::slotted(img),
+  slot[name="media"]::slotted(video) {
+    transition: transform var(--ki-motion-duration-medium-1) var(--ki-motion-easing-standard);
+  }
+
+  :host(:hover) slot[name="media"]::slotted(img),
+  :host(:hover) slot[name="media"]::slotted(video) {
+    transform: scale(1.02);
+  }
+}
+
+/* Resting e1 rises to e2 on hover — the two MarsUI resting levels. The end
+ * state lives outside the gate so reduced-motion users still get it. */
+:host(:hover) [part="card"] {
+  box-shadow: var(--ki-elevation-e2);
+}
+
+@keyframes ki-card-enter {
+  from {
+    opacity: 0;
+    translate: 0 var(--ki-motion-distance-sm);
+  }
+
+  to {
+    opacity: 1;
+    translate: none;
+  }
 }

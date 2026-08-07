@@ -214,6 +214,20 @@ describe('ki-video', () => {
     expect(
       Math.abs(playRect.top + playRect.height / 2 - (frameRect.top + frameRect.height / 2)),
     ).toBeLessThan(1.5);
+    // The Placeholder_xl play vector (12089:6573): inset 20.83% / 12.5% /
+    // 16.67% / 12.5% of the 28px icon slot, so the glyph ink spans 15x18 of
+    // the 24-unit viewBox — 17.5x21px rendered, not the old 12.8x13.9 path.
+    expect(readTokenLength('--ki-video-play-icon-size')).toBe(28);
+    const glyphPath = el.shadowRoot?.querySelector<SVGPathElement>('.glyph path');
+    expect(glyphPath).toBeTruthy();
+    if (!glyphPath) {
+      throw new Error('ki-video did not render its play glyph');
+    }
+    const ink = glyphPath.getBBox();
+    expect(ink.x).toBeCloseTo(5, 0);
+    expect(ink.y).toBeCloseTo(3, 0);
+    expect(ink.width).toBeCloseTo(15, 0);
+    expect(ink.height).toBeCloseTo(18, 0);
   });
 
   it('S2 activating the play control starts playback exactly once and yields to the native player', async () => {
@@ -238,6 +252,41 @@ describe('ki-video', () => {
     await new Promise((resolve) => requestAnimationFrame(resolve));
     expect(plays()).toBe(1);
     expect(getComputedStyle(playControlOf(el)).pointerEvents).toBe('none');
+  });
+
+  it('hovering the play control lifts the glass container through transform/box-shadow only', async () => {
+    cleanup();
+    await browserCommands.emulateReducedMotion('no-preference');
+    const el = await mount(landmark(), { label: 'Play the product tour' });
+    const control = el.shadowRoot?.querySelector<HTMLElement>('.control');
+    expect(control).toBeTruthy();
+    if (!control) {
+      throw new Error('ki-video did not render its glass container');
+    }
+    const rest = getComputedStyle(control).boxShadow;
+    expect(getComputedStyle(control).transform).toBe('none');
+
+    await userEvent.hover(playControlOf(el));
+
+    // The glass lift (Component_effect/primary_hover): the hover drops
+    // layer over the rest e6 stack and the container settles at 102% —
+    // box-shadow/transform only, so layout never moves; the transition
+    // itself is gated by prefers-reduced-motion (motion tokens).
+    await waitUntil(
+      () => getComputedStyle(control).boxShadow !== rest,
+      'hover did not lift the glass container',
+    );
+    await waitUntil(
+      () => getComputedStyle(control).transform.startsWith('matrix(1.02'),
+      'hover did not scale the glass container to 102%',
+    );
+
+    await userEvent.unhover(playControlOf(el));
+    await waitUntil(
+      () => getComputedStyle(control).transform === 'none',
+      'the glass container did not settle back at rest',
+    );
+    await browserCommands.emulateReducedMotion(null);
   });
 
   it('S3 the video never plays on its own: nothing starts and nothing sounds after load', async () => {

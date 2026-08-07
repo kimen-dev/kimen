@@ -5,6 +5,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { commands } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-avatar.js';
 import { expectAccessible } from './axe';
 
@@ -13,6 +14,10 @@ type KiAvatarElement = HTMLElement & {
   src?: string;
   initials?: string;
   size: string;
+};
+
+const browserCommands = commands as unknown as {
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
 };
 
 const STYLE_ID = 'ki-avatar-browser-token-style';
@@ -171,6 +176,32 @@ describe('ki-avatar', () => {
     }
     expect(icon.getBoundingClientRect().width).toBe(readTokenLength('--ki-avatar-md-icon-size'));
     expect(getComputedStyle(boxOf(el)).backgroundColor).toBe(readTokenColor('--ki-avatar-bg'));
+  });
+
+  it('fades each fallback step in through an opacity-only transition gated by reduced motion', async () => {
+    cleanup();
+    await browserCommands.emulateReducedMotion('no-preference');
+    const el = await mount(landmark(), {
+      label: 'Ana García',
+      src: portraitDataUri(),
+      initials: 'AG',
+    });
+    const image = el.shadowRoot?.querySelector<HTMLElement>('[part="image"]');
+    expect(image).toBeTruthy();
+    if (!image) {
+      throw new Error('portrait did not render');
+    }
+    // Opacity ALONE transitions (motion tokens): the silent-fallback
+    // contract keeps layout and the surface beneath untouched (FR-001).
+    expect(getComputedStyle(image).transitionProperty).toBe('opacity');
+    expect(Number.parseFloat(getComputedStyle(image).transitionDuration)).toBeGreaterThan(0);
+
+    // Under reduced motion the gate removes the transition entirely: every
+    // fallback step appears instantly (Art. V by construction).
+    await browserCommands.emulateReducedMotion('reduce');
+    expect(getComputedStyle(image).transitionProperty).toBe('all');
+    expect(Number.parseFloat(getComputedStyle(image).transitionDuration)).toBe(0);
+    await browserCommands.emulateReducedMotion(null);
   });
 
   it('S4 renders an unrecognized size at the default medium metrics', async () => {

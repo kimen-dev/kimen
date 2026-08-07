@@ -46,6 +46,11 @@ async function mount(tone: string): Promise<HTMLElement> {
   while (!el.shadowRoot?.querySelector('[part="badge"]') && Date.now() < deadline) {
     await new Promise((resolve) => requestAnimationFrame(resolve));
   }
+  // Axe contrast scans wait out the one-shot opacity entrance.
+  const settleDeadline = Date.now() + 2000;
+  while (el.getAnimations({ subtree: true }).length > 0 && Date.now() < settleDeadline) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
   return el;
 }
 

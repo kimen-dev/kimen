@@ -222,13 +222,19 @@ describe('ki-input in a real browser', () => {
     const el = await mount({ label: 'Email' });
     const input = requireInput(el);
     const field = requireField(el);
+    await waitForStyles();
+    const restBorder = getComputedStyle(field).borderBlockEndColor;
 
     await userEvent.keyboard('{Tab}');
     await waitForStyles();
 
     expect(el.shadowRoot?.activeElement).toBe(input);
-    const focused = getComputedStyle(field);
-    expect(`${focused.outlineStyle} ${focused.boxShadow}`).not.toBe('none none');
+    // Double mechanism (patrón V.1 §2.5): Focus/primary glow + outline ring.
+    await expect.poll(() => getComputedStyle(field).boxShadow).not.toBe('none');
+    expect(getComputedStyle(field).outlineStyle).not.toBe('none');
+    // MarsUI Input_field active (12022:7132): the border STAYS the rest
+    // hairline — focus must not swap it to an opaque brand line.
+    expect(getComputedStyle(field).borderBlockEndColor).toBe(restBorder);
   });
 
   it('S22 Tab reaches a readonly field with the same visible focus indication', async () => {
@@ -268,6 +274,14 @@ describe('ki-input in a real browser', () => {
 
     await expect.element(page.getByRole('textbox', { name: 'Email' })).toBeInTheDocument();
     expect(requireLabel(el).textContent.trim()).toBe('Email');
+
+    // Harness audit (fidelity pass): affix text renders at the cell type
+    // scale (13/24) in the muted label emphasis — never the host page's
+    // metrics (16px page-font text beside a 13px field).
+    const affixStyles = getComputedStyle(start);
+    expect(affixStyles.fontSize).toBe('13px');
+    expect(affixStyles.lineHeight).toBe('24px');
+    expect(affixStyles.color).toBe(getComputedStyle(requireLabel(el)).color);
   });
 
   // Review round 1 (Minor-7): S19's visibility observable belongs in the
@@ -280,6 +294,36 @@ describe('ki-input in a real browser', () => {
     expect(computed.display).not.toBe('none');
     expect(computed.visibility).not.toBe('hidden');
     expect(label.getBoundingClientRect().height).toBeGreaterThan(0);
+
+    // MarsUI Input_label 12021:6068: 13/20 semibold row with 2px (Space/xxs)
+    // inline padding.
+    expect(computed.fontSize).toBe('13px');
+    expect(computed.lineHeight).toBe('20px');
+    expect(computed.fontWeight).toBe('600');
+    expect(computed.paddingInlineStart).toBe('2px');
+    expect(computed.paddingInlineEnd).toBe('2px');
+  });
+
+  // Pixel-fidelity pin (MarsUI Input_field master 12022:7132, not
+  // scenario-traced): md cell is 40px min-height with 10px inline padding and
+  // a 1px hairline border; the text wrap adds 4px inline padding so the
+  // icon-to-text distance reads 8px.
+  it('pins the MarsUI Input_field md cell geometry', async () => {
+    cleanup();
+    const el = await mount({ label: 'Email' });
+    const field = requireField(el);
+    const input = requireInput(el);
+    await waitForStyles();
+
+    const fieldStyles = getComputedStyle(field);
+    expect(Math.round(field.getBoundingClientRect().height)).toBe(40);
+    expect(fieldStyles.paddingInlineStart).toBe('10px');
+    expect(fieldStyles.paddingInlineEnd).toBe('10px');
+    expect(fieldStyles.borderBlockEndWidth).toBe('1px');
+
+    const inputStyles = getComputedStyle(input);
+    expect(inputStyles.paddingInlineStart).toBe('4px');
+    expect(inputStyles.paddingInlineEnd).toBe('4px');
   });
 
   // Review round 1 (Minor-7): S20's silence contract verified in a real
@@ -507,7 +551,10 @@ describe('ki-input in a real browser', () => {
     form.requestSubmit();
     await waitForStyles();
 
-    expect(getComputedStyle(field).borderBlockEndColor).not.toBe(initialBorder);
+    await expect.poll(() => getComputedStyle(field).borderBlockEndColor).not.toBe(initialBorder);
+    // MarsUI Input_field danger: persistent Focus/danger ring while
+    // user-invalid (token-wave --ki-input-invalid-ring).
+    await expect.poll(() => getComputedStyle(field).boxShadow).not.toBe('none');
   });
 
   it('S15 disabled fieldset removes the entry from FormData', async () => {

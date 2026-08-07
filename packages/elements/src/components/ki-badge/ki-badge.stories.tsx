@@ -48,3 +48,42 @@ export const Sizes: Story = {
     </div>
   ),
 };
+
+/** The sm metrics hold across the non-neutral tones. */
+export const SmallTones: Story = {
+  render: (args) => (
+    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+      {(['success', 'danger', 'info', 'warning'] as const).map((tone) => (
+        <ki-badge {...args} size="sm" tone={tone}>
+          {tone}
+        </ki-badge>
+      ))}
+    </div>
+  ),
+};
+
+// Deliberately off-vocabulary: the runtime fallback contract under test.
+const legacyTone = 'legacy' as unknown as NonNullable<JSX.KiBadge['tone']>;
+
+/** An unrecognized tone falls back to the neutral treatment by construction. */
+export const UnknownToneFallback: Story = {
+  render: (args) => (
+    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+      <ki-badge {...args} tone={legacyTone}>
+        legacy
+      </ki-badge>
+      <ki-badge {...args} tone="neutral">
+        neutral
+      </ki-badge>
+    </div>
+  ),
+};
+
+/** Labels never wrap or truncate: the badge grows with its content. */
+export const LongLabel: Story = {
+  parameters: {
+    slots: {
+      default: 'Long-running migration in progress',
+    },
+  },
+};

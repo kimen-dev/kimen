@@ -252,17 +252,26 @@ describe('ki-textarea in a real browser', () => {
     cleanup();
     const el = await mount();
     const textarea = innerTextarea(el);
-    const field = el.shadowRoot?.querySelector('[part="field"]');
+    const field = requireElement(
+      el.shadowRoot?.querySelector('[part="field"]'),
+      'field part missing',
+    );
     await waitForStyles();
-    const before = getComputedStyle(requireElement(field, 'field part missing')).boxShadow;
+    const before = getComputedStyle(field).boxShadow;
+    const restBorder = getComputedStyle(field).borderBlockEndColor;
 
     await userEvent.keyboard('{Tab}');
     await waitForStyles();
 
     expect(el.shadowRoot?.activeElement).toBe(textarea);
-    expect(getComputedStyle(requireElement(field, 'field part missing')).boxShadow).not.toBe(
-      before,
-    );
+    await expect.poll(() => getComputedStyle(field).boxShadow).not.toBe(before);
+    // Double mechanism (patrón V.1 §2.5, matches ki-input): the gap ring is a
+    // real outline + offset now — surface-independent, unlike the retired
+    // literal-s0 shadow layer.
+    expect(getComputedStyle(field).outlineStyle).not.toBe('none');
+    expect(getComputedStyle(field).outlineOffset).toBe('2px');
+    // MarsUI active fields keep the rest hairline border — no opaque brand swap.
+    expect(getComputedStyle(field).borderBlockEndColor).toBe(restBorder);
   });
 
   it('S8 Enter inserts a newline and never submits the surrounding form', async () => {
@@ -425,9 +434,14 @@ describe('ki-textarea in a real browser', () => {
 
     expect(submitted).toBe(false);
     expect(textarea.validity.valueMissing).toBe(true);
-    expect(
-      getComputedStyle(requireElement(field, 'field part missing')).borderBlockEndColor,
-    ).not.toBe(initialBorder);
+    await expect
+      .poll(() => getComputedStyle(requireElement(field, 'field part missing')).borderBlockEndColor)
+      .not.toBe(initialBorder);
+    // MarsUI danger fields: persistent Focus/danger ring while user-invalid
+    // (token-wave --ki-textarea-invalid-ring).
+    await expect
+      .poll(() => getComputedStyle(requireElement(field, 'field part missing')).boxShadow)
+      .not.toBe('none');
   });
 
   it('S15 disabled fieldset makes the textarea inert', async () => {
@@ -552,5 +566,25 @@ describe('ki-textarea in a real browser', () => {
     expect(
       Math.round(requireElement(label, 'label part missing').getBoundingClientRect().right),
     ).toBe(Math.round(requireElement(field, 'field part missing').getBoundingClientRect().right));
+  });
+
+  // Pixel-fidelity pin (MarsUI Input_label 12021:6068, not scenario-traced):
+  // the label row is 13/20 semibold with 2px (Space/xxs) inline padding,
+  // matching ki-input so the two fields share one anatomy.
+  it('pins the MarsUI label row metrics', async () => {
+    cleanup();
+    const el = await mount();
+    await waitForStyles();
+    const label = requireElement(
+      el.shadowRoot?.querySelector('[part="label"]'),
+      'label part missing',
+    );
+
+    const styles = getComputedStyle(label);
+    expect(styles.fontSize).toBe('13px');
+    expect(styles.lineHeight).toBe('20px');
+    expect(styles.fontWeight).toBe('600');
+    expect(styles.paddingInlineStart).toBe('2px');
+    expect(styles.paddingInlineEnd).toBe('2px');
   });
 });

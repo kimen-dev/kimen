@@ -408,6 +408,41 @@ describe('ki-tabs theming behavior in a real browser', () => {
     expect(emailBox.right).toBeGreaterThan(notificationsBox.right);
   });
 
+  it('S17 runs the gated micro-motion only when motion is allowed', async () => {
+    await browserCommands.emulateReducedMotion('no-preference');
+    try {
+      const tabs = await mount(fixture());
+      const selectedIndicator = tab(tabs, 'email').shadowRoot?.querySelector('[part="indicator"]');
+      const restingIndicator = tab(tabs, 'notifications').shadowRoot?.querySelector(
+        '[part="indicator"]',
+      );
+      const panelPart = panel(tabs, 'email').shadowRoot?.querySelector('[part="panel"]');
+      if (
+        !(selectedIndicator instanceof HTMLElement) ||
+        !(restingIndicator instanceof HTMLElement) ||
+        !(panelPart instanceof HTMLElement)
+      ) {
+        throw new Error('Missing indicator or panel part');
+      }
+
+      // Indicator entrance: stays in flow and cross-fades instead of toggling
+      // display, so selection can grow the underline from center.
+      expect(getComputedStyle(selectedIndicator).opacity).toBe('1');
+      expect(getComputedStyle(selectedIndicator).transitionDuration).not.toBe('0s');
+      expect(getComputedStyle(restingIndicator).display).toBe('block');
+      expect(getComputedStyle(restingIndicator).opacity).toBe('0');
+
+      // Label em-shift cross-fade and focus-ring fade on the tab host.
+      expect(getComputedStyle(tab(tabs, 'email')).transitionProperty).toContain('color');
+      expect(getComputedStyle(tab(tabs, 'email')).transitionProperty).toContain('box-shadow');
+
+      // Revealed panel fades in and settles up through its enter animation.
+      expect(getComputedStyle(panelPart).animationName).toBe('ki-tab-panel-enter');
+    } finally {
+      await browserCommands.emulateReducedMotion(null);
+    }
+  });
+
   it('S17 switches panels without transition or animation under reduced motion', async () => {
     await browserCommands.emulateReducedMotion('reduce');
     const tabs = await mount(fixture());
@@ -416,13 +451,15 @@ describe('ki-tabs theming behavior in a real browser', () => {
 
     const visiblePanel = panel(tabs, 'notifications');
     const indicator = tab(tabs, 'notifications').shadowRoot?.querySelector('[part="indicator"]');
-    if (!(indicator instanceof HTMLElement)) {
-      throw new Error('Missing indicator part');
+    const panelPart = visiblePanel.shadowRoot?.querySelector('[part="panel"]');
+    if (!(indicator instanceof HTMLElement) || !(panelPart instanceof HTMLElement)) {
+      throw new Error('Missing indicator or panel part');
     }
 
     expect(visiblePanel.hasAttribute('hidden')).toBe(false);
     expect(getComputedStyle(visiblePanel).transitionDuration).toBe('0s');
     expect(getComputedStyle(visiblePanel).animationName).toBe('none');
+    expect(getComputedStyle(panelPart).animationName).toBe('none');
     expect(getComputedStyle(indicator).transitionDuration).toBe('0s');
     expect(getComputedStyle(indicator).animationName).toBe('none');
   });

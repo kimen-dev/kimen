@@ -12,7 +12,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import jsQR from 'jsqr';
 import type { ECIChunk } from 'jsqr/dist/decoder/decodeData';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-qr.js';
 import { expectAccessible } from './axe';
@@ -21,13 +21,22 @@ type KiQrElement = HTMLElement & { value?: string; label?: string };
 
 const browserCommands = commands as unknown as {
   ariaSnapshot: (selector: string) => Promise<string>;
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
 };
 
 const STYLE_ID = 'ki-qr-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-qr-browser-material3-token-style';
 
-beforeAll(() => {
+beforeAll(async () => {
   defineCustomElement();
+  // Geometry below is measured right after mount: reduced motion disables
+  // the gated mount/encode animations (Art. V construction), so every rect
+  // is the settled tile — the same determinism the visual harness relies on.
+  await browserCommands.emulateReducedMotion('reduce');
+});
+
+afterAll(async () => {
+  await browserCommands.emulateReducedMotion(null);
 });
 
 function ensureTokens(): void {
@@ -267,6 +276,12 @@ describe('ki-qr', () => {
     const moduleStyle = getComputedStyle(module);
     expect(moduleStyle.fill).toBe(readTokenColor('--ki-qr-color'));
     expect(contrastRatio(moduleStyle.fill, style.backgroundColor)).toBeGreaterThanOrEqual(3);
+    // Seam closure: the masters export the symbol as ONE merged vector with
+    // zero seams between touching modules, so each module rect carries a
+    // same-ink 0.5-user-unit stroke (1/16 module of overlap per shared
+    // edge) that closes the antialiasing hairlines inside dark clusters.
+    expect(moduleStyle.stroke).toBe(readTokenColor('--ki-qr-color'));
+    expect(Number.parseFloat(moduleStyle.strokeWidth)).toBeCloseTo(0.5, 5);
   });
 
   it('S2 re-encodes the code when the value changes', async () => {

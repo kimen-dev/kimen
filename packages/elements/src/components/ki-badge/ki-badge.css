@@ -1,6 +1,15 @@
 /* Tokens-only styling (Art. VI): every value resolves from --ki-badge-*.
    Unknown tone/size attributes match no selector, so the :host defaults
-   (neutral, md) apply — fallback by construction, zero validation code. */
+   (neutral, md) apply — fallback by construction, zero validation code.
+
+   MarsUI Tag master (10106:4651): tone tags draw no border in the default
+   state (ki.badge.border-width = 0); only the neutral (secondary glass) type
+   carries the raised-chip chrome — 1px bevel (Outline/secondary_button_top
+   over _bottom), Component_effect/secondary_default shadow pair (drop +
+   inner White/3 highlight) and the 12px glass backdrop blur. Tone selectors
+   reset the private effect vars to `initial` (guaranteed-invalid) so the
+   consuming declarations take their `none` fallback — the ki-button glass
+   precedent. */
 
 :host {
   display: inline-flex;
@@ -8,6 +17,10 @@
   --_ki-badge-bg: var(--ki-badge-neutral-bg);
   --_ki-badge-fg: var(--ki-badge-neutral-fg);
   --_ki-badge-border: var(--ki-badge-neutral-border);
+  --_ki-badge-border-bottom: var(--ki-outline-secondary-button-bottom);
+  --_ki-badge-border-width: var(--ki-badge-neutral-border-width);
+  --_ki-badge-shadow: var(--ki-effect-component-secondary-default-shadow);
+  --_ki-badge-backdrop-filter: blur(var(--ki-effect-component-backdrop-blur));
   --_ki-badge-height: var(--ki-badge-md-height);
   --_ki-badge-padding-inline: var(--ki-badge-md-padding-inline);
   --_ki-badge-radius: var(--ki-badge-md-radius);
@@ -21,24 +34,40 @@
   --_ki-badge-bg: var(--ki-badge-success-bg);
   --_ki-badge-fg: var(--ki-badge-success-fg);
   --_ki-badge-border: var(--ki-badge-success-border);
+  --_ki-badge-border-bottom: var(--ki-badge-success-border);
+  --_ki-badge-border-width: var(--ki-badge-border-width);
+  --_ki-badge-shadow: initial;
+  --_ki-badge-backdrop-filter: initial;
 }
 
 :host([tone="danger"]) {
   --_ki-badge-bg: var(--ki-badge-danger-bg);
   --_ki-badge-fg: var(--ki-badge-danger-fg);
   --_ki-badge-border: var(--ki-badge-danger-border);
+  --_ki-badge-border-bottom: var(--ki-badge-danger-border);
+  --_ki-badge-border-width: var(--ki-badge-border-width);
+  --_ki-badge-shadow: initial;
+  --_ki-badge-backdrop-filter: initial;
 }
 
 :host([tone="info"]) {
   --_ki-badge-bg: var(--ki-badge-info-bg);
   --_ki-badge-fg: var(--ki-badge-info-fg);
   --_ki-badge-border: var(--ki-badge-info-border);
+  --_ki-badge-border-bottom: var(--ki-badge-info-border);
+  --_ki-badge-border-width: var(--ki-badge-border-width);
+  --_ki-badge-shadow: initial;
+  --_ki-badge-backdrop-filter: initial;
 }
 
 :host([tone="warning"]) {
   --_ki-badge-bg: var(--ki-badge-warning-bg);
   --_ki-badge-fg: var(--ki-badge-warning-fg);
   --_ki-badge-border: var(--ki-badge-warning-border);
+  --_ki-badge-border-bottom: var(--ki-badge-warning-border);
+  --_ki-badge-border-width: var(--ki-badge-border-width);
+  --_ki-badge-shadow: initial;
+  --_ki-badge-backdrop-filter: initial;
 }
 
 :host([size="sm"]) {
@@ -52,15 +81,50 @@
 [part="badge"] {
   display: inline-flex;
   align-items: center;
+
+  /* border-box: block-size IS the MarsUI outer height (md 28 / sm 24) —
+     the bevel must never inflate the box. */
+  box-sizing: border-box;
   block-size: var(--_ki-badge-height);
   padding-inline: var(--_ki-badge-padding-inline);
-  border: var(--ki-badge-border-width) solid var(--_ki-badge-border);
+  border-color: var(--_ki-badge-border);
+  border-block-end-color: var(--_ki-badge-border-bottom);
+  border-style: solid;
+  border-width: var(--_ki-badge-border-width);
   border-radius: var(--_ki-badge-radius);
   background: var(--_ki-badge-bg);
+  box-shadow: var(--_ki-badge-shadow, none);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: var(--_ki-badge-backdrop-filter, none);
+  backdrop-filter: var(--_ki-badge-backdrop-filter, none);
   color: var(--_ki-badge-fg);
   font-family: var(--ki-badge-font-family);
   font-size: var(--_ki-badge-font-size);
   font-weight: var(--ki-badge-font-weight);
   line-height: var(--_ki-badge-line-height);
   white-space: nowrap;
+}
+
+/* Micro-motion (Art. V): paint-only (background/color/border-color crossfade
+ * on runtime tone changes) plus a one-shot transform/opacity entrance for
+ * dynamically inserted badges; gated so reduced-motion environments (and the
+ * visual harness) stay static by construction. */
+@media (prefers-reduced-motion: no-preference) {
+  :host {
+    animation: ki-badge-in var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  [part="badge"] {
+    transition:
+      background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
+      color var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
+      border-color var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+}
+
+@keyframes ki-badge-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
 }

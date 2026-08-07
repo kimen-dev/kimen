@@ -53,6 +53,18 @@ async function nextFrame(): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
+/** The gated entrance animation (opacity/translate) runs in this non-reduced
+ * instance: wait it out so geometry and axe contrast reads are end-state
+ * deterministic. `subtree: true` walks the flat tree, so slotted and
+ * shadow-tree animations are covered too. */
+async function settleMotion(): Promise<void> {
+  await Promise.all(
+    document.body
+      .getAnimations({ subtree: true })
+      .map((animation) => animation.finished.catch(() => undefined)),
+  );
+}
+
 async function mount(markup: string): Promise<HTMLElement> {
   ensureTokens();
   document.body.style.backgroundColor = 'var(--ki-surface-s0)';
@@ -64,6 +76,7 @@ async function mount(markup: string): Promise<HTMLElement> {
     await nextFrame();
   }
   await nextFrame();
+  await settleMotion();
   return el;
 }
 
@@ -127,7 +140,10 @@ describe('ki-card in a real browser', () => {
     expect(header.top).toBeLessThanOrEqual(body.top);
     expect(body.top).toBeLessThanOrEqual(footer.top);
     expect(computed.backgroundColor).toBe(readTokenColor('--ki-card-bg'));
-    expect(computed.backgroundColor).not.toBe(getComputedStyle(document.body).backgroundColor);
+    // MarsUI light cards sit on the s0 surface in the SAME white
+    // (Surface/special/light-s0_dark-s1): distinctness comes from the
+    // resting elevation, not a background delta.
+    expect(computed.boxShadow).not.toBe('none');
   });
 
   it('S2 renders a body-only card with no reserved space for absent regions', async () => {
@@ -135,11 +151,20 @@ describe('ki-card in a real browser', () => {
     const el = await mount('<ki-card>Storage is almost full</ki-card>');
     const card = cardPart(el).getBoundingClientRect();
     const body = regionPart(el, 'body').getBoundingClientRect();
+    const cardStyles = getComputedStyle(cardPart(el));
 
     expect(regionPart(el, 'media').getBoundingClientRect().height).toBe(0);
     expect(regionPart(el, 'header').getBoundingClientRect().height).toBe(0);
     expect(regionPart(el, 'footer').getBoundingClientRect().height).toBe(0);
-    expect(Math.round(card.height)).toBe(Math.round(body.height));
+    // The card is the body region plus the SURFACE block padding (MarsUI:
+    // one space/3xl padding on the wrap, none stacked on the regions).
+    expect(Math.round(card.height)).toBe(
+      Math.round(
+        body.height +
+          Number.parseFloat(cardStyles.paddingBlockStart) +
+          Number.parseFloat(cardStyles.paddingBlockEnd),
+      ),
+    );
   });
 
   it('S2 re-evaluates region emptiness when a slotted text node changes content', async () => {
@@ -433,5 +458,71 @@ describe('ki-card in a real browser', () => {
     expect(body.top).toBeLessThanOrEqual(footer.top);
     expect(bodyStyles.paddingInlineStart).toBe(bodyStyles.paddingInlineEnd);
     expect(bodyStyles.paddingInlineStart).not.toBe('0px');
+  });
+
+  it('resolves the MarsUI surface rhythm: one block padding on the card, inline-only regions', async () => {
+    cleanup();
+    const el = await mount(`
+      <ki-card>
+        <img slot="media" alt="" src="about:blank" />
+        <h2 slot="header">Monthly report</h2>
+        <p>Revenue increased.</p>
+      </ki-card>
+    `);
+    const cardStyles = getComputedStyle(cardPart(el));
+    const headerStyles = getComputedStyle(regionPart(el, 'header'));
+    const bodyStyles = getComputedStyle(regionPart(el, 'body'));
+
+    // Surface carries the single space/3xl block padding (Dashboard_info /
+    // Chart masters)...
+    expect(cardStyles.paddingBlockStart).toBe('16px');
+    expect(cardStyles.paddingBlockEnd).toBe('16px');
+    // ...and regions pad inline only: the old 16+16 stacked block paddings
+    // (32px of visual space between rows) are gone.
+    expect(headerStyles.paddingBlockStart).toBe('0px');
+    expect(headerStyles.paddingBlockEnd).toBe('0px');
+    expect(headerStyles.paddingInlineStart).toBe('16px');
+    expect(bodyStyles.paddingBlockStart).toBe('0px');
+    expect(bodyStyles.paddingBlockEnd).toBe('0px');
+    expect(bodyStyles.paddingInlineStart).toBe('16px');
+
+    // Slotted media conforms to the region inline size (ki-video precedent)
+    // and takes the nested big_component radius_sm.
+    const img = el.querySelector('img');
+    expect(img).toBeInstanceOf(HTMLImageElement);
+    if (!img) {
+      throw new Error('media fixture missing');
+    }
+    const imgStyles = getComputedStyle(img);
+    expect(imgStyles.display).toBe('block');
+    expect(imgStyles.borderRadius).toBe('20px');
+    expect(Math.round(img.getBoundingClientRect().width)).toBe(
+      Math.round(regionPart(el, 'media').getBoundingClientRect().width),
+    );
+  });
+
+  it('lifts the resting e1 elevation to e2 while hovered (MarsUI resting levels)', async () => {
+    cleanup();
+    const el = await mount('<ki-card>Storage is almost full</ki-card>');
+    // Pointer position persists across spec files in this page: park it on a
+    // probe below the card first so the resting read is hover-free.
+    const probe = document.createElement('button');
+    probe.textContent = 'probe';
+    document.body.append(probe);
+    await userEvent.hover(probe);
+    await expect
+      .poll(() => getComputedStyle(cardPart(el)).boxShadow)
+      .toBe(readTokenShadow('--ki-card-elevation'));
+
+    await userEvent.hover(el);
+    await expect
+      .poll(() => getComputedStyle(cardPart(el)).boxShadow)
+      .toBe(readTokenShadow('--ki-elevation-e2'));
+
+    await userEvent.hover(probe);
+    await expect
+      .poll(() => getComputedStyle(cardPart(el)).boxShadow)
+      .toBe(readTokenShadow('--ki-card-elevation'));
+    probe.remove();
   });
 });

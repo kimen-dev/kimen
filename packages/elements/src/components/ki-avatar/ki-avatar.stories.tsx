@@ -61,14 +61,10 @@ export const Sizes: Story = {
 
 /** Decorative beside the visible name: no label, nothing exposed to AT. */
 export const BesideVisibleText: Story = {
+  // The visible name inherits body_1/high-em from the workshop canvas
+  // contract, exactly as it would on a consumer page.
   render: () => (
-    <p
-      style={{
-        ...rowStyle,
-        fontFamily: 'var(--ki-typography-family-body)',
-        color: 'var(--ki-text-high-em)',
-      }}
-    >
+    <p style={rowStyle}>
       <ki-avatar initials="AG" size="sm" />
       <span>Ana García</span>
     </p>

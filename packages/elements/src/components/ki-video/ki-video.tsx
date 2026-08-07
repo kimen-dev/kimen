@@ -150,10 +150,15 @@ export class KiVideo {
         <slot onSlotchange={this.neutralizeSlottedMedia}></slot>
         <button part="play" type="button" aria-label={this.label} onClick={this.handleActivate}>
           <span class="control" aria-hidden="true">
+            {/* The MarsUI Placeholder_xl play vector (12089:6573): inset
+                20.83% / 12.5% / 16.67% / 12.5% of the icon slot, so the ink
+                spans exactly 15x18 of the 24-unit viewBox (17.5x21px in the
+                28px md slot). Rounded corners preserved; currentColor keeps
+                --ki-video-play-fg driving the fill. */}
             <svg class="glyph" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
-                d="M8.6 5.03c-1-.58-2.25.14-2.25 1.3v11.34c0 1.16 1.25 1.88 2.25 1.3l9.82-5.67c1-.58 1-2.02 0-2.6L8.6 5.03z"
+                d="M7.04 3.21C6.11 2.63 5 3.25 5 4.35L5 19.65C5 20.75 6.11 21.37 7.04 20.79L19.3 13.26C20.23 12.68 20.23 11.32 19.3 10.74L7.04 3.21Z"
               />
             </svg>
           </span>

@@ -18,17 +18,30 @@ const frameStyle = {
   display: 'block',
 };
 
+// The row's visible primary text already names the identity, so the leading
+// avatar is decorative (no label) per ki-avatar's own labeling contract.
+// The end-slot switch keeps its accessible name through visually hidden
+// slotted label text instead of duplicating the row's visible primary text.
+const visuallyHidden = {
+  position: 'absolute',
+  inlineSize: '1px',
+  blockSize: '1px',
+  overflow: 'hidden',
+  clipPath: 'inset(50%)',
+  whiteSpace: 'nowrap',
+};
+
 export const Playground: Story = {
   render: () => (
     <ki-list style={frameStyle}>
       <ki-list-item>
-        <span slot="start">AG</span>
+        <ki-avatar slot="start" initials="AG" size="sm" />
         Ana Garcia
         <span slot="secondary">ana@onmars.dev</span>
         <span slot="end">9:41</span>
       </ki-list-item>
       <ki-list-item>
-        <span slot="start">MK</span>
+        <ki-avatar slot="start" initials="MK" size="sm" />
         Mina Kapoor
         <span slot="secondary">mina@onmars.dev</span>
         <span slot="end">10:12</span>
@@ -41,13 +54,15 @@ export const Playground: Story = {
 export const Contacts: Story = {
   render: () => (
     <ki-list style={frameStyle}>
-      {[
-        ['AG', 'Ana Garcia', 'ana@onmars.dev', '9:41'],
-        ['MK', 'Mina Kapoor', 'mina@onmars.dev', '10:12'],
-        ['JL', 'Jules Lee', 'jules@onmars.dev', 'Yesterday'],
-      ].map(([avatar, name, email, time]) => (
+      {(
+        [
+          ['AG', 'Ana Garcia', 'ana@onmars.dev', '9:41'],
+          ['MK', 'Mina Kapoor', 'mina@onmars.dev', '10:12'],
+          ['JL', 'Jules Lee', 'jules@onmars.dev', 'Yesterday'],
+        ] as const
+      ).map(([initials, name, email, time]) => (
         <ki-list-item>
-          <span slot="start">{avatar}</span>
+          <ki-avatar slot="start" initials={initials} size="sm" />
           {name}
           <span slot="secondary">{email}</span>
           <span slot="end">{time}</span>
@@ -63,12 +78,16 @@ export const Settings: Story = {
       <ki-list-item>
         Email alerts
         <span slot="secondary">Product updates and account activity</span>
-        <input slot="end" role="switch" aria-label="Email alerts" type="checkbox" checked />
+        <ki-switch slot="end" name="alerts" checked>
+          <span style={visuallyHidden}>Email alerts</span>
+        </ki-switch>
       </ki-list-item>
       <ki-list-item>
         Weekly summary
         <span slot="secondary">A digest every Friday morning</span>
-        <input slot="end" role="switch" aria-label="Weekly summary" type="checkbox" />
+        <ki-switch slot="end" name="summary">
+          <span style={visuallyHidden}>Weekly summary</span>
+        </ki-switch>
       </ki-list-item>
     </ki-list>
   ),

@@ -434,6 +434,52 @@ describe('ki-checkbox in a real browser', () => {
     expect(getComputedStyle(controlOf(dark)).backgroundColor).not.toBe(lightBg);
   });
 
+  it('S7 unchecked control carries the MarsUI glass surface and solid states drop it', async () => {
+    cleanup();
+    const el = await mount('Email notifications');
+    await waitForStyles();
+    const control = controlOf(el);
+
+    // Component_effect/primary_default rides every state (drop + inner glow).
+    const restShadow = getComputedStyle(control).boxShadow;
+    expect(restShadow).not.toBe('none');
+    expect(restShadow).toContain('inset');
+
+    // Unchecked rest: vertical Surface/Special gradient.
+    expect(getComputedStyle(control).backgroundImage).toContain('linear-gradient');
+
+    // Checked: solid Surface/primary_med_em — the gradient is gone, the
+    // effect stack stays.
+    el.checked = true;
+    await waitForStyles();
+    expect(getComputedStyle(control).backgroundImage).toBe('none');
+    expect(getComputedStyle(control).boxShadow).not.toBe('none');
+  });
+
+  it('S8 indeterminate dash is the centered 8x2 rounded mark of the master', async () => {
+    cleanup();
+    const el = await mount('Select all', { indeterminate: true });
+    const dash = el.shadowRoot?.querySelector('.mark-dash path');
+    expect(dash).toBeInstanceOf(SVGPathElement);
+
+    // 8/18 of the box, centered: x 5..13 with round caps (was M4 9h10).
+    expect((dash as SVGPathElement).getAttribute('d')).toBe('M5 9h8');
+  });
+
+  it('S7 label row is items-start with the control centered on the first line', async () => {
+    cleanup();
+    const el = await mount('Email notifications');
+    await waitForStyles();
+    const label = el.shadowRoot?.querySelector('label');
+    expect(label).toBeInstanceOf(HTMLElement);
+
+    // Checkbox_label rows are items-START: the box rides line one instead of
+    // centering against a wrapped text block.
+    expect(getComputedStyle(label as HTMLElement).alignItems).toBe('flex-start');
+    // (line-height 24 - control 20) / 2 = 2px keeps single-line geometry.
+    expect(getComputedStyle(controlOf(el)).marginBlockStart).toBe('2px');
+  });
+
   it('S18 control leads and label trails under RTL', async () => {
     cleanup();
     document.documentElement.setAttribute('dir', 'rtl');

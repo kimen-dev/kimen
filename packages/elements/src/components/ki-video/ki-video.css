@@ -80,6 +80,21 @@
   backdrop-filter: blur(var(--ki-video-backdrop-blur));
 }
 
+/* Glass lift (MarsUI Component_effect/primary_hover): hovering the facade
+ * control adds the hover drop layers and the brighter inner highlight on
+ * top of the rest e6 stack, with a 2% scale. Press compresses to 97% and
+ * drops back to the primary_default effect. State styling stays outside
+ * the motion gate — only the transitions below are motion. */
+[part="play"]:hover .control {
+  box-shadow: var(--ki-video-play-shadow), var(--ki-effect-component-primary-hover-shadow);
+  transform: scale(1.02);
+}
+
+[part="play"]:active .control {
+  box-shadow: var(--ki-effect-component-primary-default-shadow);
+  transform: scale(0.97);
+}
+
 .glyph {
   inline-size: var(--ki-video-play-icon-size);
   block-size: var(--ki-video-play-icon-size);
@@ -110,5 +125,44 @@
 @media (prefers-reduced-motion: reduce) {
   [part="play"] {
     transition: none;
+  }
+}
+
+/* Micro-motion (MarsUI Component_effect language, ki-switch/ki-dialog
+ * gating precedent): transform/opacity/box-shadow/outline-color only,
+ * enabled only under no-preference so the reduce branch above stays the
+ * exact instant behavior S12 asserts. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Cinematic yield: the facade dismissal upgrades to the moderate step
+   * with a gentle 1 -> 1.06 scale-out, so the glass dissolves toward the
+   * viewer as the native player takes the surface. Visibility interpolates
+   * discretely with the same duration, gating the Tab order exactly as the
+   * base fade does. The rest outline is the ring drawn transparent so the
+   * keyboard focus ring blooms (outline-color only) instead of popping;
+   * :focus-visible above supplies the color at higher specificity. */
+  [part="play"] {
+    outline: var(--ki-video-focus-ring-width) solid transparent;
+    outline-offset: var(--ki-video-focus-ring-offset);
+    transition:
+      opacity var(--ki-motion-duration-medium-1) var(--ki-motion-easing-out),
+      transform var(--ki-motion-duration-medium-1) var(--ki-motion-easing-out),
+      visibility var(--ki-motion-duration-medium-1),
+      outline-color var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  .playing [part="play"] {
+    transform: scale(1.06);
+  }
+
+  /* The glass lift/press transfer on the play container. */
+  .control {
+    transition:
+      box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  /* Soft press exits on the accelerate curve. */
+  [part="play"]:active .control {
+    transition-timing-function: var(--ki-motion-easing-standard-accelerate);
   }
 }

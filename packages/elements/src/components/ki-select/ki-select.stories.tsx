@@ -11,6 +11,23 @@ const defaultOptions = () => [
   <ki-option value="pt">Portugal</ki-option>,
 ];
 
+// Opens the listbox through the shadow trigger so option rows (roster,
+// disabled styling, selection) are actually visible in captures. Waits for
+// the shadow trigger to exist: Stencil's first render settles a frame after
+// Storybook hands control to play().
+const openListbox = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const select = canvasElement.querySelector('ki-select');
+  if (!select) {
+    return;
+  }
+  const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+  for (let i = 0; i < 20 && !select.shadowRoot?.querySelector('[part="trigger"]'); i += 1) {
+    await nextFrame();
+  }
+  const trigger = select.shadowRoot?.querySelector<HTMLElement>('[part="trigger"]');
+  trigger?.click();
+};
+
 // The plugin's `parameters.slots` shorthand only projects a single vnode or a
 // string per slot, so slotted option LISTS are provided through `render`
 // (returning the options as real light-DOM children) — the shape a consumer
@@ -64,6 +81,7 @@ export const DisabledSelect: Story = {
   args: { disabled: true },
 };
 
+/** Open listbox: the disabled option row renders unavailable. */
 export const DisabledOption: Story = {
   render: (args) => (
     <ki-select {...args}>
@@ -74,8 +92,10 @@ export const DisabledOption: Story = {
       <ki-option value="pt">Portugal</ki-option>
     </ki-select>
   ),
+  play: openListbox,
 };
 
+/** Open listbox: the full eight-item roster is visible. */
 export const ManyOptions: Story = {
   render: (args) => (
     <ki-select {...args}>
@@ -86,6 +106,7 @@ export const ManyOptions: Story = {
       )}
     </ki-select>
   ),
+  play: openListbox,
 };
 
 export const Required: Story = {

@@ -439,15 +439,17 @@ describe('ki-icon-button in a real browser', () => {
             continue;
           }
           const style = getComputedStyle(button);
-          if (variant === 'primary' || variant === 'secondary') {
+          if (variant === 'primary' || variant === 'secondary' || variant === 'tertiary') {
             // Glass variants carry the MarsUI Blur/24 backdrop, exported as
-            // blur(12px) (002 §0; verified on the Icon_button set).
+            // blur(12px) (002 §0; verified on the Icon_button set); tertiary
+            // joined the glass set in the pixel pass (Figma 10078:2975:
+            // TERTIARY fill light-s0_dark-s2 + Blur24).
             expect(style.backdropFilter, `${variant} glass backdrop`).toContain('blur');
           }
-          if (variant === 'ghost') {
+          if (variant === 'ghost' || variant === 'quaternary') {
             // Non-glass variants stay off the glass path entirely: computed
             // backdrop-filter is none, not blur(0).
-            expect(style.backdropFilter, 'ghost has no backdrop filter').toBe('none');
+            expect(style.backdropFilter, `${variant} has no backdrop filter`).toBe('none');
           }
           if (variant === 'primary') {
             // MarsUI bevel: the block-end border edge is darker than the
@@ -456,10 +458,54 @@ describe('ki-icon-button in a real browser', () => {
               style.borderBlockStartColor,
             );
           }
+          if (variant === 'tertiary') {
+            // Pixel pass: tertiary carries the SECONDARY bevel pair
+            // (Figma 10078:2975: Outline/secondary_button_bottom block-end edge).
+            expect(style.borderBlockEndColor, 'tertiary bevel bottom (secondary pair)').toBe(
+              readTokenColor('--ki-icon-button-tertiary-rest-border-bottom'),
+            );
+          }
+          if (variant === 'quaternary') {
+            // Pixel pass: MarsUI quaternary draws NO border in any state
+            // (every border cell resolves ki.outline.none).
+            expect(style.borderBlockStartColor, 'quaternary borderless (top)').toBe(
+              readTokenColor('--ki-outline-none'),
+            );
+            expect(style.borderBlockEndColor, 'quaternary borderless (bottom)').toBe(
+              readTokenColor('--ki-outline-none'),
+            );
+          }
         }
       }
     }
 
     await expectAccessible(document.body);
+  });
+
+  it('focus-visible flattens the elevation to the ring-only shadow stack (Figma 10078:2975 focus column)', async () => {
+    cleanup();
+    ensureTokens();
+    const el = await mount('Close', { variant: 'primary' });
+    const button = requireButton(el);
+    await waitForStyles();
+    const restShadow = getComputedStyle(button).boxShadow;
+    expect(restShadow, 'primary rest carries an elevation stack').not.toBe('none');
+
+    await userEvent.keyboard('{Tab}');
+    expect(el.shadowRoot?.activeElement).toBe(button);
+    // The box-shadow micro-transition (fast motion token, 120ms) must settle
+    // before reading the focused stack.
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const probe = document.createElement('div');
+    probe.style.boxShadow = 'var(--ki-icon-button-focus-ring-shadow)';
+    document.body.append(probe);
+    const ringOnly = getComputedStyle(probe).boxShadow;
+    probe.remove();
+
+    const focusedShadow = getComputedStyle(button).boxShadow;
+    // Figma focus column: ALL drop shadows removed while focused, ring only.
+    expect(focusedShadow, 'focused stack is the ring alone').toBe(ringOnly);
+    expect(focusedShadow, 'variant elevation dropped while focused').not.toBe(restShadow);
   });
 });

@@ -49,7 +49,17 @@ async function mountMatrix(): Promise<HTMLElement[]> {
 
   await customElements.whenDefined('ki-alert');
   await nextFrame();
+  await motionSettled(main);
   return alerts;
+}
+
+/** Axe contrast scans must wait out the one-shot opacity entrance (the
+ * alert surface animates in under no-preference motion). */
+async function motionSettled(el: Element): Promise<void> {
+  const deadline = Date.now() + 2000;
+  while (el.getAnimations({ subtree: true }).length > 0 && Date.now() < deadline) {
+    await nextFrame();
+  }
 }
 
 function alertPart(el: HTMLElement): HTMLElement {

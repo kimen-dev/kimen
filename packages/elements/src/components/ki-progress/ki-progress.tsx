@@ -130,10 +130,14 @@ export class KiProgress {
   }
 
   private renderCircular() {
+    // The user grid matches the default 40px size token, so the CSS
+    // stroke-width token (4px) renders 1:1 and the ring's outer edge fills
+    // the box: r = (40 − track-width) / 2 = 18. If a theme diverges the
+    // track-width token from 4px the stroke thickens around r = 18.
     return (
-      <svg viewBox="0 0 48 48" aria-hidden="true">
-        <circle part="track" cx="24" cy="24" r="20" pathLength="100" />
-        <circle part="indicator" cx="24" cy="24" r="20" pathLength="100" />
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <circle part="track" cx="20" cy="20" r="18" pathLength="100" />
+        <circle part="indicator" cx="20" cy="20" r="18" pathLength="100" />
       </svg>
     );
   }
@@ -153,6 +157,9 @@ export class KiProgress {
         style={{
           '--_ki-progress-fraction': String(this.fraction),
           '--_ki-progress-dash': String(this.fraction * 100),
+          // Paint guard: round stroke caps paint a dot even at dash length
+          // 0, so the arc hides entirely at fraction 0.
+          '--_ki-progress-indicator-opacity': this.fraction === 0 ? '0' : '1',
         }}
       >
         {children}

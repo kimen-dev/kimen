@@ -148,10 +148,26 @@ function readToken(
   return value;
 }
 
+/**
+ * The linear fill is a full-width element positioned by transform (the
+ * MarsUI compositor-only glide): the visible fill is the intersection of
+ * the indicator's transformed rect with the clipping track.
+ */
 function linearFillRatio(el: KiProgressElement): number {
   const trackRect = track(el).getBoundingClientRect();
   const indicatorRect = indicator(el).getBoundingClientRect();
-  return indicatorRect.width / trackRect.width;
+  const visibleStart = Math.max(trackRect.left, indicatorRect.left);
+  const visibleEnd = Math.min(trackRect.right, indicatorRect.right);
+  return Math.max(0, visibleEnd - visibleStart) / trackRect.width;
+}
+
+/** Wait until the fill ratio settles at the expected fraction (the
+ * determinate glide transitions transform under no-preference motion). */
+async function waitForFillRatio(el: KiProgressElement, expected: number): Promise<void> {
+  const deadline = Date.now() + 2000;
+  while (Math.abs(linearFillRatio(el) - expected) > 0.01 && Date.now() < deadline) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
 }
 
 function circularDash(el: KiProgressElement): string {
@@ -209,6 +225,8 @@ describe('ki-progress in a real browser', () => {
 
     el.value = 80;
     await waitForRender(el);
+    // The value-change glide eases transform over the medium duration.
+    await waitForFillRatio(el, 0.8);
 
     expect(linearFillRatio(el)).toBeCloseTo(0.8, 1);
     expect(progressbar(el).getAttribute('aria-valuenow')).toBe('80');
@@ -389,10 +407,15 @@ describe('ki-progress in a real browser', () => {
     document.documentElement.setAttribute('dir', 'rtl');
     const el = await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
 
+    // The transformed full-width fill: the VISIBLE segment (intersection
+    // with the clipping track) anchors at the physical right edge.
     const trackRect = track(el).getBoundingClientRect();
     const indicatorRect = indicator(el).getBoundingClientRect();
-    expect(indicatorRect.right).toBeCloseTo(trackRect.right, 1);
-    expect(indicatorRect.left).toBeGreaterThan(trackRect.left);
+    const visibleStart = Math.max(trackRect.left, indicatorRect.left);
+    const visibleEnd = Math.min(trackRect.right, indicatorRect.right);
+    expect(visibleEnd).toBeCloseTo(trackRect.right, 1);
+    expect(visibleStart).toBeGreaterThan(trackRect.left);
+    expect((visibleEnd - visibleStart) / trackRect.width).toBeCloseTo(0.4, 1);
   });
 
   it('S5 renders an unrecognized shape with default linear metrics', async () => {
@@ -416,5 +439,60 @@ describe('ki-progress in a real browser', () => {
 
     expect(progressbar(el).getAttribute('aria-valuenow')).toBe('0');
     expect(linearFillRatio(el)).toBeCloseTo(0, 1);
+  });
+
+  it('S2 draws the circular ring on the 40-unit grid so the 4px stroke token renders 1:1', async () => {
+    cleanup();
+    await cleanupMedia();
+    const el = await mount({
+      label: 'Uploading report.pdf',
+      shape: 'circular',
+      value: '40',
+      max: '100',
+    });
+
+    // viewBox user grid == the 40px size token: stroke-width 4px = 4 user
+    // units exactly and the ring's outer edge (r 18 + 2) fills the box.
+    const svg = requireElement(requireShadow(el), 'svg');
+    expect(svg.getAttribute('viewBox')).toBe('0 0 40 40');
+    expect(indicator(el).getAttribute('r')).toBe('18');
+    expect(indicator(el).getAttribute('cx')).toBe('20');
+    expect(indicator(el).getAttribute('cy')).toBe('20');
+    expect(getComputedStyle(indicator(el)).strokeWidth).toBe(
+      readToken('--ki-progress-circular-track-width', 'inlineSize'),
+    );
+    expect(getComputedStyle(svg).inlineSize).toBe(
+      readToken('--ki-progress-circular-size', 'inlineSize'),
+    );
+  });
+
+  it('S2 rounds the arc caps to match the linear pill language', async () => {
+    cleanup();
+    await cleanupMedia();
+    const el = await mount({
+      label: 'Uploading report.pdf',
+      shape: 'circular',
+      value: '40',
+      max: '100',
+    });
+
+    expect(getComputedStyle(indicator(el)).strokeLinecap).toBe('round');
+    expect(getComputedStyle(indicator(el)).opacity).toBe('1');
+  });
+
+  it('S14 hides the round-cap dot artifact at fraction 0 in circular shape', async () => {
+    cleanup();
+    await cleanupMedia();
+    const zero = await mount({
+      label: 'Uploading report.pdf',
+      shape: 'circular',
+      value: '0',
+      max: '100',
+    });
+
+    // Round caps would paint a dot at dash length 0: the render zeroes the
+    // arc opacity exactly at fraction 0.
+    expect(getComputedStyle(indicator(zero)).opacity).toBe('0');
+    expect(progressbar(zero).getAttribute('aria-valuenow')).toBe('0');
   });
 });

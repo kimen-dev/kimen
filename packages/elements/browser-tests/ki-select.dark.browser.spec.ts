@@ -30,7 +30,24 @@ describe('ki-select dark scheme', () => {
     await customElements.whenDefined('ki-select');
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
-    const trigger = el.shadowRoot?.querySelector('[part="trigger"]');
-    expect(trigger ? getComputedStyle(trigger).backgroundColor : '').toBe('rgb(10, 10, 10)');
+    const trigger = el.shadowRoot?.querySelector<HTMLButtonElement>('[part="trigger"]');
+    expect(trigger).toBeInstanceOf(HTMLButtonElement);
+    if (!trigger) {
+      throw new Error('missing trigger');
+    }
+
+    // Dropdown rest fill Surface/Special/light-s0_dark-s2: Dark/800 #1a1a1a
+    // in dark (formerly dark-950 before the token-wave correction).
+    expect(getComputedStyle(trigger).backgroundColor).toBe('rgb(26, 26, 26)');
+    // ki.outline.control dark: White/48 (declared 1.4.11 deviation).
+    expect(getComputedStyle(trigger).borderBlockStartColor).toBe('rgba(255, 255, 255, 0.48)');
+
+    trigger.click();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    // Dropmenu glass panel in dark: Dark/700 at 80% + Blur/48 (24px).
+    const listbox = el.shadowRoot?.querySelector('[part="listbox"]');
+    expect(listbox ? getComputedStyle(listbox).backgroundColor : '').toBe('rgba(36, 36, 36, 0.8)');
+    expect(listbox ? getComputedStyle(listbox).backdropFilter : '').toBe('blur(24px)');
   });
 });

@@ -1,5 +1,7 @@
 /* Tokens only (Art. VI): every visual value resolves from a --ki-* token.
- * Logical properties only (Art. IV): direction-agnostic by construction. */
+ * Logical properties only (Art. IV): direction-agnostic by construction —
+ * the one exception is transform (physical by nature), which carries an
+ * explicit :dir(rtl) flip. */
 :host {
   --_ki-progress-linear-thickness: var(--ki-progress-linear-thickness);
   --_ki-progress-linear-radius: var(--ki-progress-linear-radius);
@@ -26,12 +28,18 @@
   background: var(--_ki-progress-track-color);
 }
 
+/* Full-width fill positioned by transform: value changes ride the compositor
+ * (no layout) and the leading edge keeps its pill radius — the track clips
+ * the off-start remainder. When the fraction var is unset (indeterminate)
+ * the calc is invalid at computed-value time, so transform resolves to none
+ * by construction. */
 .base-linear [part="indicator"] {
   display: block;
   block-size: 100%;
-  inline-size: calc(var(--_ki-progress-fraction) * 100%);
+  inline-size: 100%;
   border-radius: inherit;
   background: var(--_ki-progress-indicator-color);
+  transform: translateX(calc((var(--_ki-progress-fraction) - 1) * 100%));
 }
 
 .base-circular svg {
@@ -51,47 +59,106 @@
   stroke: var(--_ki-progress-track-color);
 }
 
+/* Round caps match the pill language of the linear variant. Round caps paint
+ * a dot even at dash length 0, so the render zeroes the indicator opacity at
+ * fraction 0 (paint guard, not motion — deliberately not gated). */
 .base-circular [part="indicator"] {
   stroke: var(--_ki-progress-indicator-color);
   stroke-dasharray: var(--_ki-progress-dash) 100;
+  stroke-linecap: round;
+  opacity: var(--_ki-progress-indicator-opacity, 1);
   transform-box: fill-box;
   transform-origin: center;
 }
 
+:host(:dir(rtl)) .base-linear [part="indicator"] {
+  transform: translateX(calc((1 - var(--_ki-progress-fraction)) * 100%));
+}
+
 :host([indeterminate]) .base-linear [part="indicator"] {
-  position: relative;
-  inset-inline-start: 0%;
   inline-size: 40%;
+  transform: none;
 }
 
 :host([indeterminate]) .base-circular [part="indicator"] {
   stroke-dasharray: 25 100;
 }
 
+/* Motion (Art. V): compositor/paint-only properties (transform, opacity,
+ * stroke-dasharray, rotation), all gated — reduced-motion environments (and
+ * the visual harness) keep the static geometry by construction. */
 @media (prefers-reduced-motion: no-preference) {
-  :host([indeterminate]) .base-linear [part="indicator"] {
-    animation: ki-progress-linear-indeterminate var(--_ki-progress-indeterminate-duration) linear
-      infinite;
+  .base-linear [part="indicator"] {
+    transition: transform var(--ki-motion-duration-medium-2) var(--ki-motion-easing-out);
   }
 
+  .base-circular [part="indicator"] {
+    transition:
+      stroke-dasharray var(--ki-motion-duration-medium-2) var(--ki-motion-easing-out),
+      opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  :host([indeterminate]) .base-linear [part="indicator"] {
+    animation: ki-progress-linear-indeterminate var(--_ki-progress-indeterminate-duration)
+      var(--ki-motion-easing-standard) infinite;
+  }
+
+  /* Layered spinner: the slow continuous rotation plus a paint-only arc that grows
+   * and shrinks with a drifting dashoffset, so head and tail chase each
+   * other instead of a frozen wedge spinning. */
   :host([indeterminate]) .base-circular [part="indicator"] {
-    animation: ki-progress-circular-indeterminate var(--_ki-progress-indeterminate-duration) linear
-      infinite;
+    animation:
+      ki-progress-circular-indeterminate var(--_ki-progress-indeterminate-duration) linear infinite,
+      ki-progress-circular-arc calc(var(--_ki-progress-indeterminate-duration) * 0.875)
+      var(--ki-motion-easing-standard) infinite;
+  }
+
+  :host([indeterminate]:dir(rtl)) .base-linear [part="indicator"] {
+    animation-name: ki-progress-linear-indeterminate-rtl;
   }
 }
 
+/* The 40%-wide segment sweeps in own-width units: -100% (fully off the
+ * start edge) → 250% (fully past the end of the track). */
 @keyframes ki-progress-linear-indeterminate {
   from {
-    inset-inline-start: -40%;
+    transform: translateX(-100%);
   }
 
   to {
-    inset-inline-start: 100%;
+    transform: translateX(250%);
+  }
+}
+
+@keyframes ki-progress-linear-indeterminate-rtl {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(-250%);
   }
 }
 
 @keyframes ki-progress-circular-indeterminate {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes ki-progress-circular-arc {
+  0% {
+    stroke-dasharray: 8 100;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 45 100;
+    stroke-dashoffset: -12;
+  }
+
+  100% {
+    stroke-dasharray: 8 100;
+    stroke-dashoffset: -92;
   }
 }

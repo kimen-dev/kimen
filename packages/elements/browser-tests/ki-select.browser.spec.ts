@@ -353,6 +353,13 @@ describe('ki-select in a real browser', () => {
     expect(trigger(el).getAttribute('aria-invalid')).toBe('true');
     expect(el.matches(':invalid')).toBe(true);
 
+    // MarsUI Dropdown danger state: a persistent 3px Focus/danger ring
+    // (danger-500 at 20% light) composes over the secondary_default rest
+    // elevation. Poll: box-shadow is motion-gated (120ms transition).
+    await expect
+      .poll(() => getComputedStyle(trigger(el)).boxShadow)
+      .toContain('rgba(240, 81, 73, 0.2)');
+
     trigger(el).click();
     await new Promise((resolve) => requestAnimationFrame(resolve));
     rows(el)[1]?.click();
@@ -409,8 +416,9 @@ describe('ki-select in a real browser', () => {
     style.textContent = material3Css;
     document.head.append(style);
     document.documentElement.setAttribute('data-ki-theme', 'material3');
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    expect(getComputedStyle(trigger(el)).backgroundColor).not.toBe(baseBg);
+    // Poll: background-color is motion-gated (120ms transition), so the first
+    // frame after retheming may still be mid-transition.
+    await expect.poll(() => getComputedStyle(trigger(el)).backgroundColor).not.toBe(baseBg);
 
     trigger(el).click();
     await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -423,5 +431,116 @@ describe('ki-select in a real browser', () => {
       ?.querySelector('[part="indicator"]')
       ?.getBoundingClientRect();
     expect(valueBox && indicatorBox ? valueBox.left > indicatorBox.left : false).toBe(true);
+  });
+
+  it('S17 paints the MarsUI Dropdown trigger geometry, typography, and rest elevation', async () => {
+    const el = await mountSelect();
+    const triggerEl = trigger(el);
+    const cs = getComputedStyle(triggerEl);
+
+    // Input_cell: min-height 40px border-box, padding-inline 10px (Space/lg),
+    // radius 10px (Radius/component/radius_md), 1px hairline border.
+    expect(triggerEl.getBoundingClientRect().height).toBe(40);
+    expect(cs.paddingInlineStart).toBe('10px');
+    expect(cs.paddingInlineEnd).toBe('10px');
+    expect(cs.borderTopLeftRadius).toBe('10px');
+    expect(cs.borderBlockStartWidth).toBe('1px');
+
+    // Value text UI/Body 1/medium: 13px / 24px / weight 600.
+    expect(cs.fontSize).toBe('13px');
+    expect(cs.fontWeight).toBe('600');
+    expect(cs.lineHeight).toBe('24px');
+
+    // Rest fill white (light) + Component_effect/secondary_default:
+    // drop 0/2/1.5/-0.5 Elevation/shadow plus inner White/3 0/2/3.
+    expect(cs.backgroundColor).toBe('rgb(255, 255, 255)');
+    expect(cs.boxShadow).not.toBe('none');
+    expect(cs.boxShadow).toContain('inset');
+
+    // Input_label row: UI/Para/medium 13/20/600 with 2px (Space/xxs) inset.
+    const label = el.shadowRoot?.querySelector('[part="label"]');
+    expect(label).toBeInstanceOf(HTMLElement);
+    const labelCs = label ? getComputedStyle(label) : null;
+    expect(labelCs?.paddingInlineStart).toBe('2px');
+    expect(labelCs?.fontSize).toBe('13px');
+    expect(labelCs?.fontWeight).toBe('600');
+    expect(labelCs?.lineHeight).toBe('20px');
+  });
+
+  it('S17 draws the indicator as an 18px slot with an inset hairline chevron that flips open', async () => {
+    const el = await mountSelect();
+    const indicator = el.shadowRoot?.querySelector('[part="indicator"]');
+    expect(indicator).toBeInstanceOf(HTMLElement);
+    if (!indicator) {
+      throw new Error('missing indicator');
+    }
+
+    // 18x18 icon slot; the glyph is an 8px (Space/md) border-box square whose
+    // trailing hairlines rotate into a ~11x6px chevron (box no longer paints).
+    const box = indicator.getBoundingClientRect();
+    expect(box.width).toBe(18);
+    expect(box.height).toBe(18);
+    const glyph = getComputedStyle(indicator, '::before');
+    expect(glyph.borderBottomWidth).toBe('1px');
+    expect(glyph.borderRightWidth).toBe('1px');
+    // 8px border-box square minus the 1px trailing hairline = 7px content box.
+    expect(glyph.width).toBe('7px');
+    expect(glyph.transform).not.toBe('none');
+
+    // Open state rotates the chevron half a turn (transform-only motion).
+    const restTransform = glyph.transform;
+    trigger(el).click();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await expect
+      .poll(() => getComputedStyle(indicator, '::before').transform)
+      .not.toBe(restTransform);
+  });
+
+  it('S17 opens a glass Dropmenu panel with MarsUI row geometry and highlight elevation', async () => {
+    const el = await mountSelect();
+    trigger(el).click();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    // Dropmenu panel: radius 20px (Radius/big_component/radius_sm), content
+    // inset 12px (Space/xl), White/80 glass + BACKGROUND_BLUR Blur/48 (24px),
+    // Elevation/e3.
+    const listbox = el.shadowRoot?.querySelector('[part="listbox"]');
+    expect(listbox).toBeInstanceOf(HTMLElement);
+    const listboxCs = listbox ? getComputedStyle(listbox) : null;
+    expect(listboxCs?.borderTopLeftRadius).toBe('20px');
+    expect(listboxCs?.paddingBlockStart).toBe('12px');
+    expect(listboxCs?.backdropFilter).toBe('blur(24px)');
+    expect(listboxCs?.backgroundColor).toBe('rgba(255, 255, 255, 0.8)');
+    expect(listboxCs?.boxShadow).not.toBe('none');
+
+    // Menu rows: height 36px (Space/11xl), radius 12px, padding-inline 8px,
+    // label UI/Para/medium 13/20/600.
+    const row = rowAt(el, 0);
+    const rowCs = getComputedStyle(row);
+    expect(rowCs.minHeight).toBe('36px');
+    expect(rowCs.borderTopLeftRadius).toBe('12px');
+    expect(rowCs.paddingInlineStart).toBe('8px');
+    expect(rowCs.fontSize).toBe('13px');
+    expect(rowCs.fontWeight).toBe('600');
+    expect(rowCs.lineHeight).toBe('20px');
+
+    // Pointer-open highlights the first enabled row: the hover_overlay_inverse
+    // wash rides Elevation/e1. Poll: box-shadow is motion-gated (120ms).
+    expect(row.getAttribute('data-highlighted')).toBe('true');
+    await expect.poll(() => getComputedStyle(rowAt(el, 0)).boxShadow).not.toBe('none');
+  });
+
+  it('S17 hovers with a hover_overlay_inverse wash over the same rest fill', async () => {
+    const el = await mountSelect();
+    const restBg = getComputedStyle(trigger(el)).backgroundColor;
+
+    await userEvent.hover(trigger(el));
+
+    // Figma hover: SAME fill + hover_overlay_inverse gradient (Black/3 light);
+    // the fill must NOT step to another surface.
+    await expect
+      .poll(() => getComputedStyle(trigger(el)).backgroundImage)
+      .toContain('linear-gradient');
+    expect(getComputedStyle(trigger(el)).backgroundColor).toBe(restBg);
   });
 });

@@ -204,6 +204,18 @@ describe('ki-divider', () => {
     await expectAccessible(document.body);
   });
 
+  it('fades the rule in on insertion through the motion-gated opacity transition', async () => {
+    cleanup();
+    const el = await mount(landmark());
+    const rule = ruleOf(el);
+
+    // This instance does not emulate reduced motion, so the gate is active:
+    // the only transition declared is the opacity entrance fade, and the
+    // rule settles fully opaque.
+    expect(getComputedStyle(rule).transitionProperty).toBe('opacity');
+    await expect.poll(() => getComputedStyle(rule).opacity).toBe('1');
+  });
+
   it('S6 restyles thickness, color and spacing through material3 tokens alone', async () => {
     cleanup();
     ensureTokens();

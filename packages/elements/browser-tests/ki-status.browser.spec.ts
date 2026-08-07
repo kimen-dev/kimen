@@ -81,6 +81,16 @@ function dotOf(el: KiStatusElement): HTMLElement {
   return dot;
 }
 
+/** Rect-based geometry must wait out the one-shot mount pop (the dot
+ * transitions transform/opacity from @starting-style under no-preference
+ * motion). */
+async function motionSettled(el: Element): Promise<void> {
+  const deadline = Date.now() + 2000;
+  while (el.getAnimations({ subtree: true }).length > 0 && Date.now() < deadline) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+}
+
 function readTokenColor(name: string): string {
   const probe = document.createElement('div');
   probe.style.color = `var(${name})`;
@@ -104,6 +114,7 @@ describe('ki-status', () => {
     cleanup();
     const online = await mount(landmark(), { label: 'Online', tone: 'success' });
     const onlineDot = dotOf(online);
+    await motionSettled(online);
     expect(getComputedStyle(onlineDot).backgroundColor).toBe(
       readTokenColor('--ki-status-success-color'),
     );
@@ -148,6 +159,7 @@ describe('ki-status', () => {
     el.style.position = 'absolute';
     el.style.insetBlockEnd = '0';
     el.style.insetInlineEnd = '0';
+    await motionSettled(el);
     const ringShadow = getComputedStyle(dotOf(el)).boxShadow;
 
     // The ring is a spread box-shadow layer in the theme ring color,
@@ -218,6 +230,7 @@ describe('ki-status', () => {
     cleanup();
     ensureTokens();
     const onmars = await mount(landmark(), { label: 'Build failing', tone: 'danger' });
+    await motionSettled(onmars);
     const onmarsColor = getComputedStyle(dotOf(onmars)).backgroundColor;
     const onmarsSize = dotOf(onmars).getBoundingClientRect().width;
     const markup = onmars.outerHTML;
@@ -226,6 +239,7 @@ describe('ki-status', () => {
     ensureMaterial3Tokens();
     document.documentElement.setAttribute('data-ki-theme', 'material3');
     const el = await mount(landmark(), { label: 'Build failing', tone: 'danger' });
+    await motionSettled(el);
     const dot = dotOf(el);
 
     expect(el.outerHTML).toBe(markup);
@@ -238,5 +252,26 @@ describe('ki-status', () => {
     expect(dot.getBoundingClientRect().width).not.toBe(onmarsSize);
 
     await expectAccessible(document.body);
+  });
+
+  it('S2 crossfades tone changes with paint-only motion from the motion tokens', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Online', tone: 'success' });
+    const dot = dotOf(el);
+    const computed = getComputedStyle(dot);
+
+    // Paint-only crossfade (background-color + box-shadow) plus the mount
+    // pop (transform/opacity), all riding --ki-motion-* tokens; the
+    // properties never include layout members.
+    const properties = computed.transitionProperty.split(',').map((p) => p.trim());
+    expect(properties).toContain('background-color');
+    expect(properties).toContain('box-shadow');
+    expect(properties).toContain('transform');
+    expect(properties).toContain('opacity');
+    expect(properties).not.toContain('width');
+    expect(properties).not.toContain('inline-size');
+    for (const duration of computed.transitionDuration.split(',')) {
+      expect(Number.parseFloat(duration)).toBeCloseTo(0.12, 2);
+    }
   });
 });

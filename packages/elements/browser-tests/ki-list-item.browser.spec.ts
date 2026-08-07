@@ -68,6 +68,13 @@ describe('ki-list-item anatomy in a real browser', () => {
     await customElements.whenDefined('ki-list-item');
     await new Promise((resolve) => requestAnimationFrame(resolve));
     await new Promise((resolve) => requestAnimationFrame(resolve));
+    // The gated mount-entrance stagger runs in this non-reduced instance:
+    // wait it out so axe reads end-state opacity for its contrast checks.
+    await Promise.all(
+      document.body
+        .getAnimations({ subtree: true })
+        .map((animation) => animation.finished.catch(() => undefined)),
+    );
 
     await expectAccessible(main);
     main.remove();

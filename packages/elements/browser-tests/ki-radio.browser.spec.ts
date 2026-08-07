@@ -61,6 +61,26 @@ describe('ki-radio in a real browser', () => {
     el.remove();
   });
 
+  it('carries the MarsUI glass surface on the circle and the dark shadow on the dot', async () => {
+    document.body.replaceChildren();
+    const el = await mount();
+    const control = el.shadowRoot?.querySelector('[part="control"]');
+    expect(control).toBeInstanceOf(HTMLElement);
+    const style = getComputedStyle(control as HTMLElement);
+
+    // Component_effect/primary_default: drop 0/1/1/-0.5 + inner White/12.
+    expect(style.boxShadow).not.toBe('none');
+    expect(style.boxShadow).toContain('inset');
+
+    // Unselected rest: vertical Surface/Special gradient.
+    expect(style.backgroundImage).toContain('linear-gradient');
+
+    // Selected dot: Small_dark_shadow (0/2/3/-1.5 Elevation/shadow_dark).
+    const dot = getComputedStyle(control as HTMLElement, '::before');
+    expect(dot.boxShadow).toContain('0px 2px 3px -1.5px');
+    el.remove();
+  });
+
   it('has zero axe violations (Art. V floor)', async () => {
     document.body.replaceChildren();
     const el = await mount();

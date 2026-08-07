@@ -148,6 +148,28 @@ function readToken(name: string): string {
   return value;
 }
 
+// The surface paints the MarsUI glass gradient (bg-start -> bg-end) over the
+// flat bg fallback; the probe resolves the same declaration for comparison.
+function readGradient(startName: string, endName: string): string {
+  const probe = document.createElement('div');
+  probe.style.backgroundImage = `linear-gradient(180deg, var(${startName}), var(${endName}))`;
+  document.body.append(probe);
+  const value = getComputedStyle(probe).backgroundImage;
+  probe.remove();
+  return value;
+}
+
+// MarsUI Focus/primary: the system 3px alpha ring appended to the resting
+// elevation on :focus-visible.
+function readFocusRing(): string {
+  const probe = document.createElement('div');
+  probe.style.boxShadow = 'var(--ki-focus-primary)';
+  document.body.append(probe);
+  const value = getComputedStyle(probe).boxShadow;
+  probe.remove();
+  return value;
+}
+
 function footerButton(el: KiDialogElement, label: string): HTMLButtonElement {
   const button = [...el.querySelectorAll<HTMLButtonElement>('button[slot="footer"]')].find(
     (candidate) => candidate.textContent === label,
@@ -162,6 +184,9 @@ function footerButton(el: KiDialogElement, label: string): HTMLButtonElement {
 async function openDialog(el: KiDialogElement): Promise<void> {
   await el.show();
   await waitFor(() => el.open && internalDialog(el).open, 'dialog opened modally');
+  // The enter fade/rise runs under no-preference; geometry and axe scans must
+  // observe the settled surface, never a mid-transition frame.
+  await waitFor(() => getComputedStyle(internalDialog(el)).opacity === '1', 'dialog enter settled');
 }
 
 function nextClose(el: KiDialogElement): Promise<KiCloseEvent> {
@@ -391,9 +416,13 @@ describe('ki-dialog in a real browser', () => {
     await openDialog(noFocusable);
     const surface = internalDialog(noFocusable);
     expect(activeElementDeep()).toBe(surface);
-    const styles = getComputedStyle(surface);
-    expect(styles.outlineStyle).not.toBe('none');
-    expect(styles.outlineWidth).not.toBe('0px');
+    // Visible focus is the MarsUI Focus/primary 3px alpha ring composited onto
+    // the resting elevation (the retired 2px opaque outline pair is gone).
+    const ring = readFocusRing();
+    await waitFor(
+      () => getComputedStyle(surface).boxShadow.includes(ring),
+      'focus-visible surface shows the MarsUI focus ring',
+    );
   });
 
   // Review round 1 (Critical): the CANONICAL footer is ki-button (shadow
@@ -566,7 +595,7 @@ describe('ki-dialog in a real browser', () => {
     const baseline = await mountDialog();
     await openDialog(baseline);
     const baselineDialog = internalDialog(baseline);
-    const onmarsBg = getComputedStyle(baselineDialog).backgroundColor;
+    const onmarsBg = getComputedStyle(baselineDialog).backgroundImage;
     const onmarsRadius = getComputedStyle(baselineDialog).borderRadius;
     await baseline.close();
     baseline.remove();
@@ -577,20 +606,69 @@ describe('ki-dialog in a real browser', () => {
     await openDialog(el);
     const dialog = internalDialog(el);
     // The theme swap resolves through the cascade, not a timer: wait on the
-    // observable outcome (the surface shows material3 token values).
-    const material3Bg = readToken('--ki-dialog-bg');
+    // observable outcome (the surface shows material3 token values). The
+    // surface paints the bg-start -> bg-end gradient (material3 resolves both
+    // stops to its opaque surface), so the gradient is the theme signal.
+    const material3Bg = readGradient('--ki-dialog-bg-start', '--ki-dialog-bg-end');
     await waitFor(
-      () => getComputedStyle(dialog).backgroundColor === material3Bg,
+      () => getComputedStyle(dialog).backgroundImage === material3Bg,
       'dialog surface resolved material3 token values',
     );
     const styles = getComputedStyle(dialog);
     const backdrop = getComputedStyle(dialog, '::backdrop');
 
-    expect(styles.backgroundColor).toBe(material3Bg);
-    expect(styles.backgroundColor).not.toBe(onmarsBg);
+    expect(styles.backgroundImage).toBe(material3Bg);
+    expect(styles.backgroundImage).not.toBe(onmarsBg);
     expect(styles.borderRadius).toBe(readToken('--ki-dialog-radius'));
     expect(styles.borderRadius).not.toBe(onmarsRadius);
     expect(backdrop.backgroundColor).toBe(readToken('--ki-dialog-backdrop-bg'));
+  });
+
+  it('S1 renders the MarsUI glass modal surface, typography, and centering', async () => {
+    cleanup();
+    const el = await mountDialog();
+    await openDialog(el);
+    const dialog = internalDialog(el);
+    const styles = getComputedStyle(dialog);
+
+    // Glass surface: bg-start -> bg-end gradient painted over a transparent
+    // color fallback, with the Blur/24 (CSS 12px) backdrop filter.
+    expect(styles.backgroundImage).toBe(readGradient('--ki-dialog-bg-start', '--ki-dialog-bg-end'));
+    expect(styles.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(styles.getPropertyValue('backdrop-filter')).toBe('blur(12px)');
+
+    // Compact Modal master geometry: radius 20, hairline border, e4 elevation
+    // (its deepest layer is 0 32 32 -16).
+    expect(styles.borderRadius).toBe('20px');
+    expect(styles.borderTopWidth).toBe('1px');
+    expect(styles.borderTopStyle).toBe('solid');
+    expect(styles.boxShadow).toContain('0px 32px 32px -16px');
+
+    // Centered composition: heading title_2 18/24 weight 700, body body_1
+    // 13/20 weight 500, both center-aligned.
+    const shadow = el.shadowRoot;
+    expect(shadow).not.toBeNull();
+    if (!shadow) {
+      throw new Error('ki-dialog did not attach a shadow root');
+    }
+    const heading = requireEl(shadow, '[part="heading"]');
+    const headingStyles = getComputedStyle(heading);
+    expect(headingStyles.textAlign).toBe('center');
+    expect(headingStyles.fontSize).toBe('18px');
+    expect(headingStyles.lineHeight).toBe('24px');
+    expect(headingStyles.fontWeight).toBe('700');
+
+    const body = bodyPart(el);
+    const bodyStyles = getComputedStyle(body);
+    expect(bodyStyles.textAlign).toBe('center');
+    expect(bodyStyles.fontSize).toBe('13px');
+    expect(bodyStyles.lineHeight).toBe('20px');
+    expect(bodyStyles.fontWeight).toBe('500');
+
+    // Slotted body copy inherits the body_1 typography from part body.
+    const paragraph = requireEl(el, 'p');
+    expect(getComputedStyle(paragraph).fontSize).toBe('13px');
+    expect(getComputedStyle(paragraph).lineHeight).toBe('20px');
   });
 
   it('S13 dialog actions follow the right-to-left writing direction', async () => {
