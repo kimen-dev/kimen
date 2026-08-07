@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "6fd919fe493718a0cdb33434b8432e3508648ac5ab6612b45812c25a9114414f",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "MarsUI fidelity pixel pass: 51 additive public token leaves (per-side tertiary bevels, field invalid rings and hint trios, label padding aliases, dialog/tooltip glass gradient pairs and backdrop blurs, card padding/media-radius/backdrop-blur, switch glyph geometry, select trigger typography and listbox blur, alert dismiss/text-gap set, scroller focus ring, tab bar metrics, motion instant/spring/distance set, focus danger, small dark shadow). Zero removals. Deliberate effective-value changes across shipped onmars token values to match the measured Figma masters (field surface matrices, toggle geometry, alert tints and border-width 0, badge glass neutral and radius, tab bar height 40px, dialog/tooltip radii and glass, tertiary button identity, quaternary transparent identity); material3 sheets stay byte-identical via pinned overrides except where declared in-token. Component CEM descriptions updated with the measured provenance. Nothing is published yet (0.0.0, private); founder-reviewed in the fidelity PR.",
+  "release": "major",
+  "schemaVersion": 1
+}
