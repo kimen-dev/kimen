@@ -112,6 +112,12 @@
             "$description": "Material 3 color used by the switch component for unchecked active border."
           }
         }
+      },
+      "border-width": {
+        "$value": "{ki.space.xxs}"
+      },
+      "thumb-width": {
+        "$value": "{ki.space.7xl}"
       }
     }
   }

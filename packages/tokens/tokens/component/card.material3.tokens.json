@@ -45,6 +45,10 @@
       "footer-padding": {
         "$value": "{ki.space.3xl}",
         "$description": "Material 3 dimension used by the card component for footer padding."
+      },
+      "backdrop-blur": {
+        "$value": "{ki.blur.none}",
+        "$type": "dimension"
       }
     }
   }

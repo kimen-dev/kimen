@@ -2,13 +2,13 @@
   "ki": {
     "tabs": {
       "gap": {
-        "$value": "{ki.space.xs}",
-        "$description": "dimension used by the tabs component for gap."
+        "$value": "{ki.space.8xl}",
+        "$description": "dimension used by the tabs component for gap (MarsUI md bar item gap Space/8xl 26px; the gap carries all spacing now that items have zero inline padding)."
       },
       "divider": {
         "width": {
-          "$value": "{ki.size.border.hairline}",
-          "$description": "MarsUI hairline stroke as the tab bar divider: same 1px divider width as the verified ki-list divider pattern (marsui-design-dna.md §1 outline hairlines)."
+          "$value": "{ki.space.zero}",
+          "$description": "dimension used by the tabs component for the tablist divider width (the Tab_nav bar has no stroke; the hook stays for consumers to opt back in — material3 keeps its hairline via its override)."
         },
         "color": {
           "$value": "{ki.outline.low-em}",

@@ -2,8 +2,8 @@
   "ki": {
     "dialog": {
       "radius": {
-        "$value": "{ki.radius.2xl}",
-        "$description": "dimension used by the dialog component for radius."
+        "$value": "{ki.radius.big-component.sm}",
+        "$description": "dimension used by the dialog component for radius (MarsUI compact Modal master 16414:19665: Radius/big_component/radius_sm 20px; the large variant anchors 24px big_component/radius_md)."
       },
       "padding": {
         "$value": "{ki.space.7xl}",
@@ -22,16 +22,29 @@
         "$description": "dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale)."
       },
       "bg": {
-        "$value": "{ki.surface.s1}",
-        "$description": "color used by the dialog component for background."
+        "$value": "{ki.surface.special.light-s0-dark-s2}",
+        "$description": "color used by the dialog component for background (flat fallback of the MarsUI glass gradient: Surface/Special/light-s0_dark-s2; components paint the gradient from ki.dialog.bg-start to ki.dialog.bg-end)."
+      },
+      "bg-start": {
+        "$value": "{ki.surface.special.blur-base-light}",
+        "$description": "color used by the dialog component for the glass gradient start (MarsUI Surface/Special/blur_base_light White/80; dark resolves rgba(36,36,36,0.8)). Paint background: linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end))."
+      },
+      "bg-end": {
+        "$value": "{ki.surface.special.light-s0-dark-s2}",
+        "$description": "color used by the dialog component for the glass gradient end (MarsUI Surface/Special/light-s0_dark-s2: white light / Dark/800 dark)."
+      },
+      "backdrop-blur": {
+        "$value": "{ki.effect.component.backdrop-blur}",
+        "$type": "dimension",
+        "$description": "backdrop blur used by the dialog component glass surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; material3 resolves to blur none via the semantic override; perf-measure before enabling per DNA section 5)."
       },
       "fg": {
         "$value": "{ki.text.high-em}",
         "$description": "color used by the dialog component for foreground."
       },
       "border": {
-        "$value": "{ki.foundation.migrated.component-dialog.dialog.border}",
-        "$description": "border used by the dialog component for border.",
+        "$value": "{ki.border.hairline-base-em}",
+        "$description": "border used by the dialog component for border (MarsUI 1px solid Outline/base_em Black/3 light / White/3 dark; retires the migrated Black/5 foundation reference).",
         "$type": "border"
       },
       "shadow": {
@@ -73,13 +86,13 @@
       },
       "motion": {
         "duration": {
-          "$value": "{ki.foundation.migrated.component-dialog.dialog.motion.duration}",
-          "$description": "duration used by the dialog component for dialog motion duration.",
+          "$value": "{ki.motion.duration.medium-1}",
+          "$description": "duration used by the dialog component for the enter transition (MarsUI moderate step 240ms; retires the migrated 0ms token that disabled the @starting-style fade).",
           "$type": "duration"
         },
         "easing": {
-          "$value": "{ki.foundation.migrated.component-dialog.dialog.motion.easing}",
-          "$description": "easing curve used by the dialog component for dialog motion easing.",
+          "$value": "{ki.motion.easing.out}",
+          "$description": "easing used by the dialog component for the enter transition (MarsUI decelerate curve; retires the migrated linear pair).",
           "$type": "cubicBezier"
         }
       }

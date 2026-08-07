@@ -67,6 +67,12 @@
           "$description": "M3 dialog enter transition: md.sys.motion.easing.emphasized-decelerate.",
           "$type": "cubicBezier"
         }
+      },
+      "bg-start": {
+        "$value": "{ki.surface.s3}"
+      },
+      "bg-end": {
+        "$value": "{ki.surface.s3}"
       }
     }
   }

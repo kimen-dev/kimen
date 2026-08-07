@@ -48,6 +48,10 @@
       "motion-duration": {
         "$value": "{ki.motion.duration.fast}",
         "$description": "duration used by the indicator component for the highlight transfer between dots: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-008; disabled under reduced motion by construction)."
+      },
+      "motion-easing": {
+        "$value": "{ki.motion.easing.standard}",
+        "$description": "easing used by the indicator component for the highlight-transfer transition (MarsUI standard curve; previously the UA default ease applied)."
       }
     }
   }

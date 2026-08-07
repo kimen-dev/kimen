@@ -2,24 +2,28 @@
   "ki": {
     "alert": {
       "padding-inline": {
-        "$value": "{ki.space.lg}",
-        "$description": "dimension used by the alert component for padding inline."
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the alert component for padding inline (MarsUI Alert master card: 12px on all four sides)."
       },
       "padding-block": {
-        "$value": "{ki.space.md}",
-        "$description": "dimension used by the alert component for padding block."
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the alert component for padding block (MarsUI Alert master card: 12px on all four sides)."
       },
       "gap": {
-        "$value": "{ki.space.sm}",
-        "$description": "dimension used by the alert component for gap."
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the alert component for gap (MarsUI Alert master card gap Space/xl 12px)."
+      },
+      "text-gap": {
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the alert component for the heading-to-message stack gap (MarsUI Text_wrap 4px, decoupled from the outer 12px card gap)."
       },
       "radius": {
-        "$value": "{ki.radius.lg}",
-        "$description": "dimension used by the alert component for radius."
+        "$value": "{ki.radius.component.md}",
+        "$description": "dimension used by the alert component for radius (Info Notes pills measure component radius 8-10px; same 10px value, repointed to the component ramp so personality modes reach it. The card-form Alert master anchors 16px big_component/radius_xs — applies if ki-alert grows the icon-chip card form)."
       },
       "border-width": {
-        "$value": "{ki.space.xxs}",
-        "$description": "dimension used by the alert component for border width."
+        "$value": "{ki.space.zero}",
+        "$description": "dimension used by the alert component for border width (MarsUI never strokes alert surfaces: Alert master, Info Notes and Toasts all carry width 0; tone lives in the fill and text. material3 keeps its 2px border via its override)."
       },
       "font-size": {
         "$value": "{ki.typography.size.body-1}",
@@ -29,21 +33,25 @@
         "$value": "{ki.typography.line-height.body-1}",
         "$description": "dimension used by the alert component for line height."
       },
+      "message-line-height": {
+        "$value": "{ki.typography.line-height.para}",
+        "$description": "dimension used by the alert component for message line height (MarsUI description is 13/20 line_height/para; the heading keeps 15/24)."
+      },
       "heading-font-size": {
         "$value": "{ki.typography.size.body-2}",
         "$description": "dimension used by the alert component for heading font size."
       },
       "heading-font-weight": {
-        "$value": "{ki.typography.weight.body.semibold}",
-        "$description": "font weight used by the alert component for heading font weight."
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "font weight used by the alert component for heading font weight (MarsUI UI/Body 2/medium: weight 600 on the master heading)."
       },
       "dismiss-size": {
         "$value": "{ki.space.7xl}",
         "$description": "dimension used by the alert component for dismiss size."
       },
       "dismiss-icon-size": {
-        "$value": "{ki.space.4xl}",
-        "$description": "dimension used by the alert component for dismiss icon size."
+        "$value": "{ki.space.3xl}",
+        "$description": "dimension used by the alert component for dismiss icon size (Figma close glyph box 16px inside the 24px raised circle; repointed from 18px per the fidelity audit)."
       },
       "neutral": {
         "bg": {
@@ -61,61 +69,69 @@
       },
       "success": {
         "bg": {
-          "$value": "{ki.surface.success-base-em}",
-          "$description": "color used by the alert component for success background."
+          "$value": "{ki.surface.success-base-em-alpha}",
+          "$description": "color used by the alert component for success background (MarsUI Surface/success_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
         },
         "fg": {
           "$value": "{ki.text.success-high-em}",
           "$description": "color used by the alert component for success foreground."
         },
         "border": {
-          "$value": "{ki.outline.success-med-em}",
-          "$description": "color used by the alert component for success border."
+          "$value": "{ki.outline.none}",
+          "$description": "color used by the alert component for success border (MarsUI draws no tone border on any alert/note/toast surface)."
         }
       },
       "danger": {
         "bg": {
-          "$value": "{ki.surface.danger-base-em}",
-          "$description": "color used by the alert component for danger background."
+          "$value": "{ki.surface.danger-base-em-alpha}",
+          "$description": "color used by the alert component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
         },
         "fg": {
           "$value": "{ki.text.danger-high-em}",
           "$description": "color used by the alert component for danger foreground."
         },
         "border": {
-          "$value": "{ki.outline.danger-med-em}",
-          "$description": "color used by the alert component for danger border."
+          "$value": "{ki.outline.none}",
+          "$description": "color used by the alert component for danger border (MarsUI draws no tone border on any alert/note/toast surface)."
         }
       },
       "info": {
         "bg": {
-          "$value": "{ki.surface.info-base-em}",
-          "$description": "color used by the alert component for info background."
+          "$value": "{ki.surface.info-base-em-alpha}",
+          "$description": "color used by the alert component for info background (MarsUI Surface/info_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
         },
         "fg": {
           "$value": "{ki.text.info-high-em}",
           "$description": "color used by the alert component for info foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 7.3:1)."
         },
         "border": {
-          "$value": "{ki.outline.info-med-em}",
-          "$description": "color used by the alert component for info border."
+          "$value": "{ki.outline.none}",
+          "$description": "color used by the alert component for info border (MarsUI draws no tone border on any alert/note/toast surface)."
         }
       },
       "warning": {
         "bg": {
-          "$value": "{ki.surface.warning-base-em}",
-          "$description": "color used by the alert component for warning background."
+          "$value": "{ki.surface.warning-base-em-alpha}",
+          "$description": "color used by the alert component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
         },
         "fg": {
           "$value": "{ki.text.warning-high-em}",
           "$description": "color used by the alert component for warning foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 5.5:1)."
         },
         "border": {
-          "$value": "{ki.outline.warning-med-em}",
-          "$description": "color used by the alert component for warning border."
+          "$value": "{ki.outline.none}",
+          "$description": "color used by the alert component for warning border (MarsUI draws no tone border on any alert/note/toast surface)."
         }
       },
       "dismiss": {
+        "border-width": {
+          "$value": "{ki.size.border.hairline}",
+          "$description": "dimension used by the alert component for the dismiss chip bevel stroke (MarsUI 24px raised circle: 1px Outline/secondary_button_top hairline)."
+        },
+        "radius": {
+          "$value": "{ki.radius.round}",
+          "$description": "dimension used by the alert component for the dismiss chip shape (MarsUI Radius/radius_round full circle)."
+        },
         "rest": {
           "fg": {
             "$value": "{ki.text.high-em}",
@@ -126,6 +142,10 @@
           "fg": {
             "$value": "{ki.text.high-em}",
             "$description": "color used by the alert component for dismiss hover foreground."
+          },
+          "bg": {
+            "$value": "{ki.surface.hover-overlay-inverse}",
+            "$description": "color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash — the dismiss chip previously had zero visible hover change)."
           }
         },
         "active": {

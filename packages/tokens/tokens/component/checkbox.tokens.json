@@ -10,12 +10,12 @@
         "$description": "dimension used by the checkbox component for min target."
       },
       "gap": {
-        "$value": "{ki.space.sm}",
-        "$description": "dimension used by the checkbox component for gap."
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the checkbox component for gap (MarsUI md label pairing: Space/xl 12px for the 20px box)."
       },
       "radius": {
-        "$value": "{ki.radius.xs}",
-        "$description": "dimension used by the checkbox component for radius."
+        "$value": "{ki.radius.sm}",
+        "$description": "dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap)."
       },
       "border-width": {
         "$value": "{ki.space.xxs}",
@@ -23,16 +23,16 @@
       },
       "label": {
         "font-size": {
-          "$value": "{ki.typography.size.body-1}",
-          "$description": "dimension used by the checkbox component for label font size."
+          "$value": "{ki.typography.size.body-2}",
+          "$description": "dimension used by the checkbox component for label font size (MarsUI md pairing: body_2 15px for the 20px box)."
         },
         "font-weight": {
           "$value": "{ki.typography.weight.body.normal}",
           "$description": "font weight used by the checkbox component for label font weight."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.body-1}",
-          "$description": "dimension used by the checkbox component for label line height."
+          "$value": "{ki.typography.line-height.body-2}",
+          "$description": "dimension used by the checkbox component for label line height (MarsUI body_2 24px)."
         }
       },
       "unchecked": {
@@ -80,12 +80,12 @@
         },
         "disabled": {
           "bg": {
-            "$value": "{ki.surface.disabled-low-em}",
-            "$description": "color used by the checkbox component for unchecked disabled background."
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the checkbox component for unchecked disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark)."
           },
           "fg": {
-            "$value": "{ki.text.muted}",
-            "$description": "color used by the checkbox component for unchecked disabled foreground."
+            "$value": "{ki.text.base-em}",
+            "$description": "color used by the checkbox component for unchecked disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias)."
           },
           "border": {
             "$value": "{ki.outline.med-em}",
@@ -138,12 +138,12 @@
         },
         "disabled": {
           "bg": {
-            "$value": "{ki.surface.disabled-low-em}",
-            "$description": "color used by the checkbox component for checked disabled background."
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the checkbox component for checked disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark)."
           },
           "fg": {
-            "$value": "{ki.text.muted}",
-            "$description": "color used by the checkbox component for checked disabled foreground."
+            "$value": "{ki.text.base-em}",
+            "$description": "color used by the checkbox component for checked disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias)."
           },
           "border": {
             "$value": "{ki.outline.none}",
@@ -154,54 +154,54 @@
       "indeterminate": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.primary-med-em}",
-            "$description": "color used by the checkbox component for indeterminate rest background."
+            "$value": "{ki.surface.primary-low-em-alpha}",
+            "$description": "color used by the checkbox component for indeterminate rest background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint)."
           },
           "fg": {
-            "$value": "{ki.text.primary-on-primary}",
-            "$description": "color used by the checkbox component for indeterminate rest foreground."
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "color used by the checkbox component for indeterminate rest dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative)."
           },
           "border": {
-            "$value": "{ki.outline.none}",
-            "$description": "color used by the checkbox component for indeterminate rest border."
+            "$value": "{ki.outline.primary-high-em}",
+            "$description": "color used by the checkbox component for indeterminate rest border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control)."
           }
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.primary-med-em-hover}",
-            "$description": "color used by the checkbox component for indeterminate hover background."
+            "$value": "{ki.surface.primary-low-em-alpha}",
+            "$description": "color used by the checkbox component for indeterminate hover background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint)."
           },
           "fg": {
-            "$value": "{ki.text.primary-on-primary}",
-            "$description": "color used by the checkbox component for indeterminate hover foreground."
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "color used by the checkbox component for indeterminate hover dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative)."
           },
           "border": {
-            "$value": "{ki.outline.none}",
-            "$description": "color used by the checkbox component for indeterminate hover border."
+            "$value": "{ki.outline.primary-high-em}",
+            "$description": "color used by the checkbox component for indeterminate hover border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control)."
           }
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.primary-med-em}",
-            "$description": "color used by the checkbox component for indeterminate active background."
+            "$value": "{ki.surface.primary-low-em-alpha}",
+            "$description": "color used by the checkbox component for indeterminate active background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint)."
           },
           "fg": {
-            "$value": "{ki.text.primary-on-primary}",
-            "$description": "color used by the checkbox component for indeterminate active foreground."
+            "$value": "{ki.text.primary-high-em}",
+            "$description": "color used by the checkbox component for indeterminate active dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative)."
           },
           "border": {
-            "$value": "{ki.outline.none}",
-            "$description": "color used by the checkbox component for indeterminate active border."
+            "$value": "{ki.outline.primary-high-em}",
+            "$description": "color used by the checkbox component for indeterminate active border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control)."
           }
         },
         "disabled": {
           "bg": {
-            "$value": "{ki.surface.disabled-low-em}",
-            "$description": "color used by the checkbox component for indeterminate disabled background."
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the checkbox component for indeterminate disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark)."
           },
           "fg": {
-            "$value": "{ki.text.muted}",
-            "$description": "color used by the checkbox component for indeterminate disabled foreground."
+            "$value": "{ki.text.base-em}",
+            "$description": "color used by the checkbox component for indeterminate disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias)."
           },
           "border": {
             "$value": "{ki.outline.none}",

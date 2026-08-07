@@ -573,36 +573,20 @@
       "$type": "color",
       "$value": "{ki.color.transparent.black}"
     },
+    "border": {
+      "hairline-base-em": {
+        "$type": "border",
+        "$value": {
+          "color": "{ki.color.white.3}",
+          "width": "{ki.size.border.hairline}",
+          "style": "solid"
+        }
+      }
+    },
     "foundation": {
       "migrated": {
         "component-button": {
           "button": {
-            "primary": {
-              "hover": {
-                "shadow": {
-                  "$type": "shadow",
-                  "$value": {
-                    "color": "{ki.color.black.8}",
-                    "offsetX": {
-                      "value": 0,
-                      "unit": "px"
-                    },
-                    "offsetY": {
-                      "value": 1,
-                      "unit": "px"
-                    },
-                    "blur": {
-                      "value": 1,
-                      "unit": "px"
-                    },
-                    "spread": {
-                      "value": -0.5,
-                      "unit": "px"
-                    }
-                  }
-                }
-              }
-            },
             "tertiary": {
               "active": {
                 "shadow": {
@@ -694,99 +678,6 @@
                   ]
                 }
               }
-            }
-          }
-        },
-        "component-card": {
-          "card": {
-            "elevation": {
-              "$type": "shadow",
-              "$value": [
-                {
-                  "color": "{ki.color.black.8}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": {
-                    "value": 1,
-                    "unit": "px"
-                  },
-                  "blur": {
-                    "value": 2,
-                    "unit": "px"
-                  },
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
-                },
-                {
-                  "color": "{ki.color.black.12}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": {
-                    "value": 2,
-                    "unit": "px"
-                  },
-                  "blur": {
-                    "value": 6,
-                    "unit": "px"
-                  },
-                  "spread": {
-                    "value": 2,
-                    "unit": "px"
-                  }
-                }
-              ]
-            }
-          }
-        },
-        "component-dialog": {
-          "dialog": {
-            "border": {
-              "$type": "border",
-              "$value": {
-                "color": "{ki.color.white.5}",
-                "width": {
-                  "value": 1,
-                  "unit": "px"
-                },
-                "style": "solid"
-              }
-            },
-            "shadow": {
-              "$type": "shadow",
-              "$value": [
-                {
-                  "color": "{ki.color.black.12}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": "{ki.space.xs}",
-                  "blur": "{ki.space.3xl}",
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
-                },
-                {
-                  "color": "{ki.color.black.8}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": "{ki.space.5xl}",
-                  "blur": "{ki.space.9xl}",
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
-                }
-              ]
             }
           }
         }
