@@ -157,15 +157,15 @@
           "cssProperties": [
             {
               "name": "--ki-alert-border-width",
-              "description": "dimension used by the alert component for border width."
+              "description": "dimension used by the alert component for border width (MarsUI never strokes alert surfaces: Alert master, Info Notes and Toasts all carry width 0; tone lives in the fill and text. material3 keeps its 2px border via its override)."
             },
             {
               "name": "--ki-alert-danger-bg",
-              "description": "color used by the alert component for danger background."
+              "description": "color used by the alert component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
             },
             {
               "name": "--ki-alert-danger-border",
-              "description": "color used by the alert component for danger border."
+              "description": "color used by the alert component for danger border (MarsUI draws no tone border on any alert/note/toast surface)."
             },
             {
               "name": "--ki-alert-danger-fg",
@@ -176,12 +176,24 @@
               "description": "color used by the alert component for dismiss active foreground."
             },
             {
+              "name": "--ki-alert-dismiss-border-width",
+              "description": "dimension used by the alert component for the dismiss chip bevel stroke (MarsUI 24px raised circle: 1px Outline/secondary_button_top hairline)."
+            },
+            {
+              "name": "--ki-alert-dismiss-hover-bg",
+              "description": "color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash — the dismiss chip previously had zero visible hover change)."
+            },
+            {
               "name": "--ki-alert-dismiss-hover-fg",
               "description": "color used by the alert component for dismiss hover foreground."
             },
             {
               "name": "--ki-alert-dismiss-icon-size",
-              "description": "dimension used by the alert component for dismiss icon size."
+              "description": "dimension used by the alert component for dismiss icon size (Figma close glyph box 16px inside the 24px raised circle; repointed from 18px per the fidelity audit)."
+            },
+            {
+              "name": "--ki-alert-dismiss-radius",
+              "description": "dimension used by the alert component for the dismiss chip shape (MarsUI Radius/radius_round full circle)."
             },
             {
               "name": "--ki-alert-dismiss-rest-fg",
@@ -213,7 +225,7 @@
             },
             {
               "name": "--ki-alert-gap",
-              "description": "dimension used by the alert component for gap."
+              "description": "dimension used by the alert component for gap (MarsUI Alert master card gap Space/xl 12px)."
             },
             {
               "name": "--ki-alert-heading-font-size",
@@ -221,15 +233,15 @@
             },
             {
               "name": "--ki-alert-heading-font-weight",
-              "description": "font weight used by the alert component for heading font weight."
+              "description": "font weight used by the alert component for heading font weight (MarsUI UI/Body 2/medium: weight 600 on the master heading)."
             },
             {
               "name": "--ki-alert-info-bg",
-              "description": "color used by the alert component for info background."
+              "description": "color used by the alert component for info background (MarsUI Surface/info_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
             },
             {
               "name": "--ki-alert-info-border",
-              "description": "color used by the alert component for info border."
+              "description": "color used by the alert component for info border (MarsUI draws no tone border on any alert/note/toast surface)."
             },
             {
               "name": "--ki-alert-info-fg",
@@ -238,6 +250,10 @@
             {
               "name": "--ki-alert-line-height",
               "description": "dimension used by the alert component for line height."
+            },
+            {
+              "name": "--ki-alert-message-line-height",
+              "description": "dimension used by the alert component for message line height (MarsUI description is 13/20 line_height/para; the heading keeps 15/24)."
             },
             {
               "name": "--ki-alert-neutral-bg",
@@ -253,43 +269,79 @@
             },
             {
               "name": "--ki-alert-padding-block",
-              "description": "dimension used by the alert component for padding block."
+              "description": "dimension used by the alert component for padding block (MarsUI Alert master card: 12px on all four sides)."
             },
             {
               "name": "--ki-alert-padding-inline",
-              "description": "dimension used by the alert component for padding inline."
+              "description": "dimension used by the alert component for padding inline (MarsUI Alert master card: 12px on all four sides)."
             },
             {
               "name": "--ki-alert-radius",
-              "description": "dimension used by the alert component for radius."
+              "description": "dimension used by the alert component for radius (Info Notes pills measure component radius 8-10px; same 10px value, repointed to the component ramp so personality modes reach it. The card-form Alert master anchors 16px big_component/radius_xs — applies if ki-alert grows the icon-chip card form)."
             },
             {
               "name": "--ki-alert-success-bg",
-              "description": "color used by the alert component for success background."
+              "description": "color used by the alert component for success background (MarsUI Surface/success_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
             },
             {
               "name": "--ki-alert-success-border",
-              "description": "color used by the alert component for success border."
+              "description": "color used by the alert component for success border (MarsUI draws no tone border on any alert/note/toast surface)."
             },
             {
               "name": "--ki-alert-success-fg",
               "description": "color used by the alert component for success foreground."
             },
             {
+              "name": "--ki-alert-text-gap",
+              "description": "dimension used by the alert component for the heading-to-message stack gap (MarsUI Text_wrap 4px, decoupled from the outer 12px card gap)."
+            },
+            {
               "name": "--ki-alert-warning-bg",
-              "description": "color used by the alert component for warning background."
+              "description": "color used by the alert component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs)."
             },
             {
               "name": "--ki-alert-warning-border",
-              "description": "color used by the alert component for warning border."
+              "description": "color used by the alert component for warning border (MarsUI draws no tone border on any alert/note/toast surface)."
             },
             {
               "name": "--ki-alert-warning-fg",
               "description": "color used by the alert component for warning foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 5.5:1)."
             },
             {
-              "name": "--ki-outline-none",
-              "description": "semantic color for outline none."
+              "name": "--ki-effect-component-backdrop-blur",
+              "description": "MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate)."
+            },
+            {
+              "name": "--ki-effect-component-secondary-default-shadow",
+              "description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            },
+            {
+              "name": "--ki-motion-distance-sm",
+              "description": "Motion travel distance sm (4px): small slide/settle offsets."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-duration-medium-1",
+              "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
+            },
+            {
+              "name": "--ki-outline-secondary-button-top",
+              "description": "semantic color for outline secondary button top."
+            },
+            {
+              "name": "--ki-surface-special-light-s0-dark-s2",
+              "description": "semantic color for surface special light s0 dark s2."
             },
             {
               "name": "--ki-typography-family-body",
@@ -531,6 +583,14 @@
             {
               "name": "--ki-avatar-xxs-size",
               "description": "dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md)."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
             }
           ]
         }
@@ -734,7 +794,7 @@
             },
             {
               "name": "--ki-avatar-group-xxs-counter-padding-inline",
-              "description": "dimension used by the avatar group component for the xxs counter inline padding: the 20px Figma frame ships no counter, so the step extends the verified 8/10/12/14 ramp downward (synthesized, declared for founder review)."
+              "description": "dimension used by the avatar group component for xxs counter padding inline (raised to clear the 8px member tuck so the + glyph is never occluded; the 20px Figma frame ships no counter — synthesized step, founder review pending)."
             },
             {
               "name": "--ki-avatar-group-xxs-overlap",
@@ -815,6 +875,26 @@
             {
               "name": "--ki-avatar-xxs-size",
               "description": "dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md)."
+            },
+            {
+              "name": "--ki-effect-component-secondary-hover-shadow",
+              "description": "MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-duration-medium-1",
+              "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
             }
           ]
         }
@@ -912,11 +992,11 @@
           "cssProperties": [
             {
               "name": "--ki-badge-border-width",
-              "description": "dimension used by the badge component for border width."
+              "description": "dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral glass type draws its 1px bevel via ki.badge.neutral.border-width. material3 keeps its border via its override)."
             },
             {
               "name": "--ki-badge-danger-bg",
-              "description": "color used by the badge component for danger background."
+              "description": "color used by the badge component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
             },
             {
               "name": "--ki-badge-danger-border",
@@ -936,7 +1016,7 @@
             },
             {
               "name": "--ki-badge-info-bg",
-              "description": "color used by the badge component for info background."
+              "description": "color used by the badge component for info background (MarsUI Surface/info_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
             },
             {
               "name": "--ki-badge-info-border",
@@ -948,31 +1028,35 @@
             },
             {
               "name": "--ki-badge-md-font-size",
-              "description": "dimension used by the badge component for md font size."
+              "description": "dimension used by the badge component for md font size (MarsUI UI/Caption 2: 12px at both sm and md; only xs drops to Caption 1)."
             },
             {
               "name": "--ki-badge-md-height",
-              "description": "dimension used by the badge component for md height."
+              "description": "dimension used by the badge component for md height (MarsUI Tag md outer height 28px)."
             },
             {
               "name": "--ki-badge-md-line-height",
-              "description": "dimension used by the badge component for md line height."
+              "description": "dimension used by the badge component for md line height (MarsUI caption_2 16px)."
             },
             {
               "name": "--ki-badge-md-padding-inline",
-              "description": "dimension used by the badge component for md padding inline."
+              "description": "dimension used by the badge component for md padding inline (MarsUI total text inset 10px; paired with the border-width 0 + border-box change so the badge does not shrink)."
             },
             {
               "name": "--ki-badge-md-radius",
-              "description": "dimension used by the badge component for md radius."
+              "description": "dimension used by the badge component for md radius (MarsUI Tag: Radius/component/radius_sm 8px at both sm and md)."
             },
             {
               "name": "--ki-badge-neutral-bg",
-              "description": "color used by the badge component for neutral background."
+              "description": "color used by the badge component for neutral background (MarsUI secondary glass Tag: Surface/special/secondary_alpha_base Gray-100 alpha light / Dark-700 blur base dark — the same fill as ki-button secondary; completes the glass bevel/blur/shadow the component already draws. material3 keeps the opaque s2 chip via its override)."
             },
             {
               "name": "--ki-badge-neutral-border",
-              "description": "color used by the badge component for neutral border."
+              "description": "color used by the badge component for neutral border (MarsUI secondary Tag bevel: Outline/secondary_button_top; drawn at ki.badge.neutral.border-width)."
+            },
+            {
+              "name": "--ki-badge-neutral-border-width",
+              "description": "dimension used by the badge component for the neutral (secondary glass) border width: MarsUI draws the 1px bevel only on this type."
             },
             {
               "name": "--ki-badge-neutral-fg",
@@ -992,15 +1076,15 @@
             },
             {
               "name": "--ki-badge-sm-padding-inline",
-              "description": "dimension used by the badge component for sm padding inline."
+              "description": "dimension used by the badge component for sm padding inline (MarsUI total text inset 8px; paired with the border-width 0 + border-box change)."
             },
             {
               "name": "--ki-badge-sm-radius",
-              "description": "dimension used by the badge component for sm radius."
+              "description": "dimension used by the badge component for sm radius (MarsUI Tag silhouette is an 8px rounded rect — Radius/component/radius_sm — never a pill)."
             },
             {
               "name": "--ki-badge-success-bg",
-              "description": "color used by the badge component for success background."
+              "description": "color used by the badge component for success background (MarsUI Surface/success_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
             },
             {
               "name": "--ki-badge-success-border",
@@ -1012,7 +1096,7 @@
             },
             {
               "name": "--ki-badge-warning-bg",
-              "description": "color used by the badge component for warning background."
+              "description": "color used by the badge component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
             },
             {
               "name": "--ki-badge-warning-border",
@@ -1021,6 +1105,26 @@
             {
               "name": "--ki-badge-warning-fg",
               "description": "color used by the badge component for warning foreground."
+            },
+            {
+              "name": "--ki-effect-component-backdrop-blur",
+              "description": "MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate)."
+            },
+            {
+              "name": "--ki-effect-component-secondary-default-shadow",
+              "description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-outline-secondary-button-bottom",
+              "description": "semantic color for outline secondary button bottom."
             }
           ]
         }
@@ -1358,6 +1462,10 @@
               "description": "color used by the button component for ghost success rest foreground."
             },
             {
+              "name": "--ki-button-label-padding-inline",
+              "description": "dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance)."
+            },
+            {
               "name": "--ki-button-lg-font-size",
               "description": "dimension used by the button component for lg font size."
             },
@@ -1539,7 +1647,7 @@
             },
             {
               "name": "--ki-button-quaternary-danger-hover-border",
-              "description": "color used by the button component for quaternary danger hover border."
+              "description": "color used by the button component for quaternary danger hover border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-button-quaternary-danger-hover-fg",
@@ -1551,7 +1659,7 @@
             },
             {
               "name": "--ki-button-quaternary-danger-rest-border",
-              "description": "color used by the button component for quaternary danger rest border."
+              "description": "color used by the button component for quaternary danger rest border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-button-quaternary-danger-rest-fg",
@@ -1571,7 +1679,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-disabled-border",
-              "description": "color used by the button component for quaternary neutral disabled border."
+              "description": "color used by the button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-button-quaternary-neutral-disabled-fg",
@@ -1579,15 +1687,15 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-bg",
-              "description": "color used by the button component for quaternary neutral hover background."
+              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-border",
-              "description": "color used by the button component for quaternary neutral hover border."
+              "description": "color used by the button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-fg",
-              "description": "color used by the button component for quaternary neutral hover foreground."
+              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
             },
             {
               "name": "--ki-button-quaternary-neutral-rest-bg",
@@ -1595,11 +1703,11 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-rest-border",
-              "description": "color used by the button component for quaternary neutral rest border."
+              "description": "color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-button-quaternary-neutral-rest-fg",
-              "description": "color used by the button component for quaternary neutral rest foreground."
+              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
             },
             {
               "name": "--ki-button-quaternary-rest-shadow",
@@ -1611,7 +1719,7 @@
             },
             {
               "name": "--ki-button-quaternary-success-hover-border",
-              "description": "color used by the button component for quaternary success hover border."
+              "description": "color used by the button component for quaternary success hover border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-button-quaternary-success-hover-fg",
@@ -1623,7 +1731,7 @@
             },
             {
               "name": "--ki-button-quaternary-success-rest-border",
-              "description": "color used by the button component for quaternary success rest border."
+              "description": "color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-button-quaternary-success-rest-fg",
@@ -1771,11 +1879,11 @@
             },
             {
               "name": "--ki-button-tertiary-danger-hover-bg",
-              "description": "color used by the button component for tertiary danger hover background."
+              "description": "color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
             {
               "name": "--ki-button-tertiary-danger-hover-border",
-              "description": "color used by the button component for tertiary danger hover border."
+              "description": "color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-danger-hover-fg",
@@ -1783,11 +1891,11 @@
             },
             {
               "name": "--ki-button-tertiary-danger-rest-bg",
-              "description": "color used by the button component for tertiary danger rest background."
+              "description": "color used by the button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
             },
             {
               "name": "--ki-button-tertiary-danger-rest-border",
-              "description": "color used by the button component for tertiary danger rest border."
+              "description": "color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-danger-rest-fg",
@@ -1799,7 +1907,7 @@
             },
             {
               "name": "--ki-button-tertiary-hover-shadow",
-              "description": "shadow used by the button component for button tertiary hover shadow."
+              "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover)."
             },
             {
               "name": "--ki-button-tertiary-neutral-disabled-bg",
@@ -1815,39 +1923,43 @@
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-bg",
-              "description": "color used by the button component for tertiary neutral hover background."
+              "description": "color used by the button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-border",
-              "description": "color used by the button component for tertiary neutral hover border."
+              "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-neutral-hover-fg",
-              "description": "color used by the button component for tertiary neutral hover foreground."
+              "description": "color used by the button component for tertiary neutral hover foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-bg",
-              "description": "color used by the button component for tertiary neutral rest background."
+              "description": "color used by the button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-border",
-              "description": "color used by the button component for tertiary neutral rest border."
+              "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-neutral-rest-fg",
-              "description": "color used by the button component for tertiary neutral rest foreground."
+              "description": "color used by the button component for tertiary neutral rest foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
+            },
+            {
+              "name": "--ki-button-tertiary-rest-border-bottom",
+              "description": "color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
             },
             {
               "name": "--ki-button-tertiary-rest-shadow",
-              "description": "shadow used by the button component for button tertiary rest shadow."
+              "description": "shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override)."
             },
             {
               "name": "--ki-button-tertiary-success-hover-bg",
-              "description": "color used by the button component for tertiary success hover background."
+              "description": "color used by the button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
             {
               "name": "--ki-button-tertiary-success-hover-border",
-              "description": "color used by the button component for tertiary success hover border."
+              "description": "color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-success-hover-fg",
@@ -1855,11 +1967,11 @@
             },
             {
               "name": "--ki-button-tertiary-success-rest-bg",
-              "description": "color used by the button component for tertiary success rest background."
+              "description": "color used by the button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
             },
             {
               "name": "--ki-button-tertiary-success-rest-border",
-              "description": "color used by the button component for tertiary success rest border."
+              "description": "color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-button-tertiary-success-rest-fg",
@@ -1928,6 +2040,14 @@
             {
               "name": "--ki-button-xs-radius",
               "description": "dimension used by the button component for xs radius."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
             },
             {
               "name": "--ki-transparent-inverse",
@@ -2013,7 +2133,7 @@
           "cssProperties": [
             {
               "name": "--ki-card-bg",
-              "description": "color used by the card component for background."
+              "description": "color used by the card component for background (MarsUI Dashboard masters bind Surface/special/light-s0_dark-s1: white light / Dark/900 dark; #f9f9fa is the nested media panel, so the old s1 value inverted the surface hierarchy)."
             },
             {
               "name": "--ki-card-body-padding",
@@ -2021,7 +2141,7 @@
             },
             {
               "name": "--ki-card-border-color",
-              "description": "color used by the card component for border color."
+              "description": "color used by the card component for border color (MarsUI Outline/base_em hairline — painted on large Chart cards; Dashboard_info leaves width 0, which stays the default via ki.card.border-width)."
             },
             {
               "name": "--ki-card-border-width",
@@ -2041,7 +2161,7 @@
             },
             {
               "name": "--ki-card-gap",
-              "description": "dimension used by the card component for gap."
+              "description": "dimension used by the card component for gap (MarsUI Dashboard_info/Chart inter-region rhythm 12px; material3 keeps zero via its override)."
             },
             {
               "name": "--ki-card-header-padding",
@@ -2049,11 +2169,43 @@
             },
             {
               "name": "--ki-card-media-padding",
-              "description": "dimension used by the card component for media padding."
+              "description": "dimension used by the card component for media padding (MarsUI Dashboard masters inset media panels 8px inline; material3 keeps full-bleed zero via its override)."
+            },
+            {
+              "name": "--ki-card-media-radius",
+              "description": "dimension used by the card component for slotted media corner radius (MarsUI nested media panel Radius/big_component/radius_sm 20px; formalizes the fallback ki-card.css already consumes)."
+            },
+            {
+              "name": "--ki-card-padding-block",
+              "description": "dimension used by the card component for the surface block padding (16px carried by the card surface itself so stacked region paddings no longer double to 32px; formalizes the fallback ki-card.css already consumes)."
             },
             {
               "name": "--ki-card-radius",
-              "description": "dimension used by the card component for radius."
+              "description": "dimension used by the card component for radius (MarsUI card surfaces ride the big_component scale: Dashboard_info 400x128 binds radius_xs 16px; large Chart cards anchor radius_lg 28px)."
+            },
+            {
+              "name": "--ki-elevation-e2",
+              "description": "MarsUI Elevation/e2 (cumulative: e1 layers plus 0/3/3/-1.5)."
+            },
+            {
+              "name": "--ki-motion-distance-sm",
+              "description": "Motion travel distance sm (4px): small slide/settle offsets."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-duration-medium-1",
+              "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
             },
             {
               "name": "--ki-typography-family-body",
@@ -2255,7 +2407,7 @@
             },
             {
               "name": "--ki-checkbox-checked-disabled-bg",
-              "description": "color used by the checkbox component for checked disabled background."
+              "description": "color used by the checkbox component for checked disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark)."
             },
             {
               "name": "--ki-checkbox-checked-disabled-border",
@@ -2263,7 +2415,7 @@
             },
             {
               "name": "--ki-checkbox-checked-disabled-fg",
-              "description": "color used by the checkbox component for checked disabled foreground."
+              "description": "color used by the checkbox component for checked disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias)."
             },
             {
               "name": "--ki-checkbox-checked-hover-bg",
@@ -2311,23 +2463,23 @@
             },
             {
               "name": "--ki-checkbox-gap",
-              "description": "dimension used by the checkbox component for gap."
+              "description": "dimension used by the checkbox component for gap (MarsUI md label pairing: Space/xl 12px for the 20px box)."
             },
             {
               "name": "--ki-checkbox-indeterminate-active-bg",
-              "description": "color used by the checkbox component for indeterminate active background."
+              "description": "color used by the checkbox component for indeterminate active background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint)."
             },
             {
               "name": "--ki-checkbox-indeterminate-active-border",
-              "description": "color used by the checkbox component for indeterminate active border."
+              "description": "color used by the checkbox component for indeterminate active border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control)."
             },
             {
               "name": "--ki-checkbox-indeterminate-active-fg",
-              "description": "color used by the checkbox component for indeterminate active foreground."
+              "description": "color used by the checkbox component for indeterminate active dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative)."
             },
             {
               "name": "--ki-checkbox-indeterminate-disabled-bg",
-              "description": "color used by the checkbox component for indeterminate disabled background."
+              "description": "color used by the checkbox component for indeterminate disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark)."
             },
             {
               "name": "--ki-checkbox-indeterminate-disabled-border",
@@ -2335,31 +2487,31 @@
             },
             {
               "name": "--ki-checkbox-indeterminate-disabled-fg",
-              "description": "color used by the checkbox component for indeterminate disabled foreground."
+              "description": "color used by the checkbox component for indeterminate disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias)."
             },
             {
               "name": "--ki-checkbox-indeterminate-hover-bg",
-              "description": "color used by the checkbox component for indeterminate hover background."
+              "description": "color used by the checkbox component for indeterminate hover background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint)."
             },
             {
               "name": "--ki-checkbox-indeterminate-hover-border",
-              "description": "color used by the checkbox component for indeterminate hover border."
+              "description": "color used by the checkbox component for indeterminate hover border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control)."
             },
             {
               "name": "--ki-checkbox-indeterminate-hover-fg",
-              "description": "color used by the checkbox component for indeterminate hover foreground."
+              "description": "color used by the checkbox component for indeterminate hover dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative)."
             },
             {
               "name": "--ki-checkbox-indeterminate-rest-bg",
-              "description": "color used by the checkbox component for indeterminate rest background."
+              "description": "color used by the checkbox component for indeterminate rest background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint)."
             },
             {
               "name": "--ki-checkbox-indeterminate-rest-border",
-              "description": "color used by the checkbox component for indeterminate rest border."
+              "description": "color used by the checkbox component for indeterminate rest border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control)."
             },
             {
               "name": "--ki-checkbox-indeterminate-rest-fg",
-              "description": "color used by the checkbox component for indeterminate rest foreground."
+              "description": "color used by the checkbox component for indeterminate rest dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative)."
             },
             {
               "name": "--ki-checkbox-invalid-bg",
@@ -2375,7 +2527,7 @@
             },
             {
               "name": "--ki-checkbox-label-font-size",
-              "description": "dimension used by the checkbox component for label font size."
+              "description": "dimension used by the checkbox component for label font size (MarsUI md pairing: body_2 15px for the 20px box)."
             },
             {
               "name": "--ki-checkbox-label-font-weight",
@@ -2383,7 +2535,7 @@
             },
             {
               "name": "--ki-checkbox-label-line-height",
-              "description": "dimension used by the checkbox component for label line height."
+              "description": "dimension used by the checkbox component for label line height (MarsUI body_2 24px)."
             },
             {
               "name": "--ki-checkbox-min-target",
@@ -2391,7 +2543,7 @@
             },
             {
               "name": "--ki-checkbox-radius",
-              "description": "dimension used by the checkbox component for radius."
+              "description": "dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap)."
             },
             {
               "name": "--ki-checkbox-unchecked-active-bg",
@@ -2407,7 +2559,7 @@
             },
             {
               "name": "--ki-checkbox-unchecked-disabled-bg",
-              "description": "color used by the checkbox component for unchecked disabled background."
+              "description": "color used by the checkbox component for unchecked disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark)."
             },
             {
               "name": "--ki-checkbox-unchecked-disabled-border",
@@ -2415,7 +2567,7 @@
             },
             {
               "name": "--ki-checkbox-unchecked-disabled-fg",
-              "description": "color used by the checkbox component for unchecked disabled foreground."
+              "description": "color used by the checkbox component for unchecked disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias)."
             },
             {
               "name": "--ki-checkbox-unchecked-hover-bg",
@@ -2442,12 +2594,32 @@
               "description": "color used by the checkbox component for unchecked rest foreground."
             },
             {
+              "name": "--ki-effect-component-primary-default-shadow",
+              "description": "MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow."
+            },
+            {
               "name": "--ki-motion-duration-fast",
               "description": "Fast interaction transition duration."
             },
             {
               "name": "--ki-motion-easing-out",
               "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-spring",
+              "description": "Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language)."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
+            },
+            {
+              "name": "--ki-surface-special-dark-s0-light-s2",
+              "description": "semantic color for surface special dark s0 light s2."
+            },
+            {
+              "name": "--ki-surface-special-light-s0-dark-s4",
+              "description": "semantic color for surface special light s0 dark s4."
             },
             {
               "name": "--ki-text-high-em",
@@ -2625,28 +2797,28 @@
               "description": "color used by the dialog component for backdrop background."
             },
             {
+              "name": "--ki-dialog-backdrop-blur",
+              "description": "backdrop blur used by the dialog component glass surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; material3 resolves to blur none via the semantic override; perf-measure before enabling per DNA section 5)."
+            },
+            {
               "name": "--ki-dialog-bg",
-              "description": "color used by the dialog component for background."
+              "description": "color used by the dialog component for background (flat fallback of the MarsUI glass gradient: Surface/Special/light-s0_dark-s2; components paint the gradient from ki.dialog.bg-start to ki.dialog.bg-end)."
+            },
+            {
+              "name": "--ki-dialog-bg-end",
+              "description": "color used by the dialog component for the glass gradient end (MarsUI Surface/Special/light-s0_dark-s2: white light / Dark/800 dark)."
+            },
+            {
+              "name": "--ki-dialog-bg-start",
+              "description": "color used by the dialog component for the glass gradient start (MarsUI Surface/Special/blur_base_light White/80; dark resolves rgba(36,36,36,0.8)). Paint background: linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end))."
             },
             {
               "name": "--ki-dialog-border",
-              "description": "border used by the dialog component for border."
+              "description": "border used by the dialog component for border (MarsUI 1px solid Outline/base_em Black/3 light / White/3 dark; retires the migrated Black/5 foundation reference)."
             },
             {
               "name": "--ki-dialog-fg",
               "description": "color used by the dialog component for foreground."
-            },
-            {
-              "name": "--ki-dialog-focus-ring-color",
-              "description": "color used by the dialog component for focus ring color."
-            },
-            {
-              "name": "--ki-dialog-focus-ring-offset",
-              "description": "dimension used by the dialog component for focus ring offset."
-            },
-            {
-              "name": "--ki-dialog-focus-ring-width",
-              "description": "dimension used by the dialog component for focus ring width."
             },
             {
               "name": "--ki-dialog-gap",
@@ -2674,11 +2846,11 @@
             },
             {
               "name": "--ki-dialog-motion-duration",
-              "description": "duration used by the dialog component for dialog motion duration."
+              "description": "duration used by the dialog component for the enter transition (MarsUI moderate step 240ms; retires the migrated 0ms token that disabled the @starting-style fade)."
             },
             {
               "name": "--ki-dialog-motion-easing",
-              "description": "easing curve used by the dialog component for dialog motion easing."
+              "description": "easing used by the dialog component for the enter transition (MarsUI decelerate curve; retires the migrated linear pair)."
             },
             {
               "name": "--ki-dialog-padding",
@@ -2686,15 +2858,47 @@
             },
             {
               "name": "--ki-dialog-radius",
-              "description": "dimension used by the dialog component for radius."
+              "description": "dimension used by the dialog component for radius (MarsUI compact Modal master 16414:19665: Radius/big_component/radius_sm 20px; the large variant anchors 24px big_component/radius_md)."
             },
             {
               "name": "--ki-dialog-shadow",
               "description": "Dialog elevation: MarsUI elevation ramp level e4 (brief §5, high modal surface; replaces the migrated approximation). material3 keeps its own e3 override (M3 dialog = level3)."
             },
             {
+              "name": "--ki-focus-primary",
+              "description": "MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha, read from the Figma master as #845abe33 = brand 500 at 20% (Kimen name: outline.primary-base-em-alpha / brand.500-alpha-2). The previous 40% (outline.primary-low-em-alpha / brand.500-alpha-4) came from specs/002-ki-button/design-extraction.md §2.5, which read the alpha off the Dark canvas mode and recorded it as the Light value; the ring shipped 2x too strong in light and 2.8x in dark across twelve components."
+            },
+            {
+              "name": "--ki-motion-distance-md",
+              "description": "Motion travel distance md (8px): entrance slide offsets (e.g. dialog rise)."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-standard-accelerate",
+              "description": "Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in)."
+            },
+            {
               "name": "--ki-typography-family-body",
               "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-para",
+              "description": "semantic dimension for typography line height para."
+            },
+            {
+              "name": "--ki-typography-size-body-1",
+              "description": "semantic dimension for typography size body 1."
+            },
+            {
+              "name": "--ki-typography-weight-body-normal",
+              "description": "semantic font weight for typography weight body normal."
             }
           ]
         }
@@ -2779,6 +2983,14 @@
             {
               "name": "--ki-divider-thickness",
               "description": "dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md)."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-standard-decelerate",
+              "description": "Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out)."
             },
             {
               "name": "--ki-typography-family-body",
@@ -3201,7 +3413,7 @@
             },
             {
               "name": "--ki-icon-button-quaternary-danger-hover-border",
-              "description": "color used by the icon button component for quaternary danger hover border."
+              "description": "color used by the icon button component for quaternary danger hover border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-icon-button-quaternary-danger-hover-fg",
@@ -3213,7 +3425,7 @@
             },
             {
               "name": "--ki-icon-button-quaternary-danger-rest-border",
-              "description": "color used by the icon button component for quaternary danger rest border."
+              "description": "color used by the icon button component for quaternary danger rest border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-icon-button-quaternary-danger-rest-fg",
@@ -3233,7 +3445,7 @@
             },
             {
               "name": "--ki-icon-button-quaternary-neutral-disabled-border",
-              "description": "color used by the icon button component for quaternary disabled border (Figma disabled drops the bevel)."
+              "description": "color used by the icon button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-icon-button-quaternary-neutral-disabled-fg",
@@ -3241,15 +3453,15 @@
             },
             {
               "name": "--ki-icon-button-quaternary-neutral-hover-bg",
-              "description": "color used by the icon button component for quaternary neutral hover background (same semantic reference as the button matrix, 002)."
+              "description": "color used by the icon button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
             },
             {
               "name": "--ki-icon-button-quaternary-neutral-hover-border",
-              "description": "color used by the icon button component for quaternary neutral hover border."
+              "description": "color used by the icon button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-icon-button-quaternary-neutral-hover-fg",
-              "description": "color used by the icon button component for quaternary neutral hover foreground — the icon inherits it via currentColor."
+              "description": "color used by the icon button component for quaternary neutral hover icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
             },
             {
               "name": "--ki-icon-button-quaternary-neutral-rest-bg",
@@ -3257,11 +3469,11 @@
             },
             {
               "name": "--ki-icon-button-quaternary-neutral-rest-border",
-              "description": "color used by the icon button component for quaternary neutral rest border."
+              "description": "color used by the icon button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-icon-button-quaternary-neutral-rest-fg",
-              "description": "color used by the icon button component for quaternary neutral rest foreground — the icon inherits it via currentColor."
+              "description": "color used by the icon button component for quaternary neutral rest icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
             },
             {
               "name": "--ki-icon-button-quaternary-rest-shadow",
@@ -3273,7 +3485,7 @@
             },
             {
               "name": "--ki-icon-button-quaternary-success-hover-border",
-              "description": "color used by the icon button component for quaternary success hover border."
+              "description": "color used by the icon button component for quaternary success hover border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-icon-button-quaternary-success-hover-fg",
@@ -3285,7 +3497,7 @@
             },
             {
               "name": "--ki-icon-button-quaternary-success-rest-border",
-              "description": "color used by the icon button component for quaternary success rest border."
+              "description": "color used by the icon button component for quaternary success rest border (MarsUI quaternary is borderless in every state)."
             },
             {
               "name": "--ki-icon-button-quaternary-success-rest-fg",
@@ -3413,11 +3625,11 @@
             },
             {
               "name": "--ki-icon-button-tertiary-danger-hover-bg",
-              "description": "color used by the icon button component for tertiary danger hover background (same semantic reference as the button matrix, 002)."
+              "description": "color used by the icon button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
             {
               "name": "--ki-icon-button-tertiary-danger-hover-border",
-              "description": "color used by the icon button component for tertiary danger hover border."
+              "description": "color used by the icon button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-icon-button-tertiary-danger-hover-fg",
@@ -3425,11 +3637,11 @@
             },
             {
               "name": "--ki-icon-button-tertiary-danger-rest-bg",
-              "description": "color used by the icon button component for tertiary danger rest background (same semantic reference as the button matrix, 002)."
+              "description": "color used by the icon button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
             },
             {
               "name": "--ki-icon-button-tertiary-danger-rest-border",
-              "description": "color used by the icon button component for tertiary danger rest border."
+              "description": "color used by the icon button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-icon-button-tertiary-danger-rest-fg",
@@ -3441,7 +3653,7 @@
             },
             {
               "name": "--ki-icon-button-tertiary-hover-shadow",
-              "description": "shadow used by the icon button component for tertiary hover shadow (MarsUI Component_effect/migrated tertiary ramp)."
+              "description": "shadow used by the icon button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover)."
             },
             {
               "name": "--ki-icon-button-tertiary-neutral-disabled-bg",
@@ -3457,39 +3669,43 @@
             },
             {
               "name": "--ki-icon-button-tertiary-neutral-hover-bg",
-              "description": "color used by the icon button component for tertiary neutral hover background (same semantic reference as the button matrix, 002)."
+              "description": "color used by the icon button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
             {
               "name": "--ki-icon-button-tertiary-neutral-hover-border",
-              "description": "color used by the icon button component for tertiary neutral hover border."
+              "description": "color used by the icon button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-icon-button-tertiary-neutral-hover-fg",
-              "description": "color used by the icon button component for tertiary neutral hover foreground — the icon inherits it via currentColor."
+              "description": "color used by the icon button component for tertiary neutral hover icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative)."
             },
             {
               "name": "--ki-icon-button-tertiary-neutral-rest-bg",
-              "description": "color used by the icon button component for tertiary neutral rest background (same semantic reference as the button matrix, 002)."
+              "description": "color used by the icon button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
             },
             {
               "name": "--ki-icon-button-tertiary-neutral-rest-border",
-              "description": "color used by the icon button component for tertiary neutral rest border."
+              "description": "color used by the icon button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-icon-button-tertiary-neutral-rest-fg",
-              "description": "color used by the icon button component for tertiary neutral rest foreground — the icon inherits it via currentColor."
+              "description": "color used by the icon button component for tertiary neutral rest icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative)."
+            },
+            {
+              "name": "--ki-icon-button-tertiary-rest-border-bottom",
+              "description": "color used by the icon button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
             },
             {
               "name": "--ki-icon-button-tertiary-rest-shadow",
-              "description": "shadow used by the icon button component for tertiary rest shadow (MarsUI Component_effect/migrated tertiary ramp)."
+              "description": "shadow used by the icon button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override)."
             },
             {
               "name": "--ki-icon-button-tertiary-success-hover-bg",
-              "description": "color used by the icon button component for tertiary success hover background (same semantic reference as the button matrix, 002)."
+              "description": "color used by the icon button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
             {
               "name": "--ki-icon-button-tertiary-success-hover-border",
-              "description": "color used by the icon button component for tertiary success hover border."
+              "description": "color used by the icon button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-icon-button-tertiary-success-hover-fg",
@@ -3497,11 +3713,11 @@
             },
             {
               "name": "--ki-icon-button-tertiary-success-rest-bg",
-              "description": "color used by the icon button component for tertiary success rest background (same semantic reference as the button matrix, 002)."
+              "description": "color used by the icon button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
             },
             {
               "name": "--ki-icon-button-tertiary-success-rest-border",
-              "description": "color used by the icon button component for tertiary success rest border."
+              "description": "color used by the icon button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             },
             {
               "name": "--ki-icon-button-tertiary-success-rest-fg",
@@ -3530,6 +3746,14 @@
             {
               "name": "--ki-icon-button-xs-size",
               "description": "dimension used by the icon button component for xs box (24px square, Figma Space/7xl)."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
             },
             {
               "name": "--ki-transparent-inverse",
@@ -3694,6 +3918,18 @@
             {
               "name": "--ki-indicator-motion-duration",
               "description": "duration used by the indicator component for the highlight transfer between dots: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-008; disabled under reduced motion by construction)."
+            },
+            {
+              "name": "--ki-indicator-motion-easing",
+              "description": "easing used by the indicator component for the highlight-transfer transition (MarsUI standard curve; previously the UA default ease applied)."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-standard-decelerate",
+              "description": "Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out)."
             },
             {
               "name": "--ki-typography-family-body",
@@ -3970,7 +4206,7 @@
             },
             {
               "name": "--ki-input-disabled-fg",
-              "description": "color used by the input component for disabled foreground."
+              "description": "color used by the input component for disabled foreground (MarsUI disabled text Text/base_em; disabled cells are exempt from the contrast sweep)."
             },
             {
               "name": "--ki-input-disabled-label-fg",
@@ -3982,11 +4218,7 @@
             },
             {
               "name": "--ki-input-focus-bg",
-              "description": "color used by the input component for focus background."
-            },
-            {
-              "name": "--ki-input-focus-border",
-              "description": "color used by the input component for focus border."
+              "description": "color used by the input component for focus background (MarsUI active state switches the fill to Surface/Special white / dark s2 — modeled with the scheme ladder s0)."
             },
             {
               "name": "--ki-input-focus-fg",
@@ -3994,11 +4226,11 @@
             },
             {
               "name": "--ki-input-focus-label-fg",
-              "description": "color used by the input component for focus label foreground."
+              "description": "color used by the input component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint)."
             },
             {
               "name": "--ki-input-focus-placeholder-fg",
-              "description": "color used by the input component for focus placeholder foreground."
+              "description": "color used by the input component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
             },
             {
               "name": "--ki-input-focus-ring-color",
@@ -4030,11 +4262,11 @@
             },
             {
               "name": "--ki-input-height",
-              "description": "dimension used by the input component for height."
+              "description": "dimension used by the input component for height (MarsUI Input_field md cell: min-height 40px; consume as min-block-size so the field can grow)."
             },
             {
               "name": "--ki-input-hover-bg",
-              "description": "color used by the input component for hover background."
+              "description": "color used by the input component for hover background (MarsUI hover = s2 + Black/3 overlay; s3 is the nearest token)."
             },
             {
               "name": "--ki-input-hover-border",
@@ -4046,11 +4278,11 @@
             },
             {
               "name": "--ki-input-hover-label-fg",
-              "description": "color used by the input component for hover label foreground."
+              "description": "color used by the input component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint)."
             },
             {
               "name": "--ki-input-hover-placeholder-fg",
-              "description": "color used by the input component for hover placeholder foreground."
+              "description": "color used by the input component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
             },
             {
               "name": "--ki-input-icon-size",
@@ -4058,7 +4290,7 @@
             },
             {
               "name": "--ki-input-invalid-bg",
-              "description": "color used by the input component for invalid background."
+              "description": "color used by the input component for invalid background (MarsUI danger state keeps the white active fill; the ring and hint carry the signal)."
             },
             {
               "name": "--ki-input-invalid-border",
@@ -4070,15 +4302,19 @@
             },
             {
               "name": "--ki-input-invalid-label-fg",
-              "description": "color used by the input component for invalid label foreground."
+              "description": "color used by the input component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint)."
             },
             {
               "name": "--ki-input-invalid-placeholder-fg",
-              "description": "color used by the input component for invalid placeholder foreground."
+              "description": "color used by the input component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+            },
+            {
+              "name": "--ki-input-invalid-ring",
+              "description": "shadow used by the input component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid))."
             },
             {
               "name": "--ki-input-label-font-size",
-              "description": "dimension used by the input component for label font size."
+              "description": "dimension used by the input component for label font size (MarsUI UI/Para/medium: body_1 13px)."
             },
             {
               "name": "--ki-input-label-font-weight",
@@ -4090,15 +4326,15 @@
             },
             {
               "name": "--ki-input-label-line-height",
-              "description": "dimension used by the input component for label line height."
+              "description": "dimension used by the input component for label line height (MarsUI line_height/para 20px)."
+            },
+            {
+              "name": "--ki-input-label-padding-inline",
+              "description": "dimension used by the input component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius)."
             },
             {
               "name": "--ki-input-line-height",
               "description": "dimension used by the input component for line height."
-            },
-            {
-              "name": "--ki-input-min-target",
-              "description": "dimension used by the input component for min target."
             },
             {
               "name": "--ki-input-padding-inline",
@@ -4106,11 +4342,11 @@
             },
             {
               "name": "--ki-input-radius",
-              "description": "dimension used by the input component for radius."
+              "description": "dimension used by the input component for radius (MarsUI Radius/component/radius_md 10px, the md Input_cell binding; component ramp so personality modes reach it)."
             },
             {
               "name": "--ki-input-readonly-bg",
-              "description": "color used by the input component for readonly background."
+              "description": "color used by the input component for readonly background (retires the deprecated ki.surface.raised alias; same resolved value)."
             },
             {
               "name": "--ki-input-readonly-border",
@@ -4122,15 +4358,15 @@
             },
             {
               "name": "--ki-input-readonly-label-fg",
-              "description": "color used by the input component for readonly label foreground."
+              "description": "color used by the input component for readonly label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint)."
             },
             {
               "name": "--ki-input-readonly-placeholder-fg",
-              "description": "color used by the input component for readonly placeholder foreground."
+              "description": "color used by the input component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
             },
             {
               "name": "--ki-input-rest-bg",
-              "description": "color used by the input component for rest background."
+              "description": "color used by the input component for rest background (MarsUI Input_field rest fill Surface/s2: the fill identifies the field, not the outline)."
             },
             {
               "name": "--ki-input-rest-border",
@@ -4142,11 +4378,23 @@
             },
             {
               "name": "--ki-input-rest-label-fg",
-              "description": "color used by the input component for rest label foreground."
+              "description": "color used by the input component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint)."
             },
             {
               "name": "--ki-input-rest-placeholder-fg",
-              "description": "color used by the input component for rest placeholder foreground."
+              "description": "color used by the input component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
             },
             {
               "name": "--ki-typography-family-body",
@@ -4208,7 +4456,7 @@
             },
             {
               "name": "--ki-list-gap",
-              "description": "dimension used by the list component for gap."
+              "description": "dimension used by the list component for gap (MarsUI compositions stack rows contiguously; --ki-list-gap stays as the theme hook)."
             },
             {
               "name": "--ki-list-item-divider-color",
@@ -4216,11 +4464,27 @@
             },
             {
               "name": "--ki-list-item-divider-width",
-              "description": "dimension used by the list component for item divider width."
+              "description": "dimension used by the list component for item divider width (no divider renders in any master variant; the color hook ki.list.item.divider-color stays so consumers can opt hairlines back in)."
             },
             {
               "name": "--ki-list-padding",
               "description": "dimension used by the list component for padding."
+            },
+            {
+              "name": "--ki-motion-distance-xs",
+              "description": "Motion travel distance xs (2px): hover-lift offsets."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-duration-medium-1",
+              "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
             },
             {
               "name": "--ki-typography-family-body",
@@ -4301,20 +4565,28 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-inverse-white-alpha-3",
+              "description": "semantic color for inverse white alpha 3."
+            },
+            {
+              "name": "--ki-inverse-white-alpha-6",
+              "description": "semantic color for inverse white alpha 6."
+            },
+            {
               "name": "--ki-list-item-gap",
-              "description": "dimension used by the list component for item gap."
+              "description": "dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions)."
             },
             {
               "name": "--ki-list-item-min-height",
-              "description": "dimension used by the list component for item min height."
+              "description": "dimension used by the list component for item min height (MarsUI md text-only row is ~40px content-sized: 20px line + 2x10 padding)."
             },
             {
               "name": "--ki-list-item-min-height-multiline",
-              "description": "dimension used by the list component for item min height multiline."
+              "description": "dimension used by the list component for multiline item min height (MarsUI md two-line row measures 56px)."
             },
             {
               "name": "--ki-list-item-padding-block",
-              "description": "dimension used by the list component for item padding block."
+              "description": "dimension used by the list component for item padding block (MarsUI md rows: Space/lg 10px)."
             },
             {
               "name": "--ki-list-item-padding-inline",
@@ -4334,7 +4606,7 @@
             },
             {
               "name": "--ki-list-item-primary-line-height",
-              "description": "dimension used by the list component for item primary line height."
+              "description": "dimension used by the list component for primary line height (MarsUI primary is UI/Para/medium 13/20, not UI/Body 1 13/24)."
             },
             {
               "name": "--ki-list-item-radius",
@@ -4346,7 +4618,7 @@
             },
             {
               "name": "--ki-list-item-secondary-font-size",
-              "description": "dimension used by the list component for item secondary font size."
+              "description": "dimension used by the list component for secondary font size (MarsUI description line is UI/Caption 2: 12px)."
             },
             {
               "name": "--ki-list-item-secondary-font-weight",
@@ -4354,7 +4626,15 @@
             },
             {
               "name": "--ki-list-item-secondary-line-height",
-              "description": "dimension used by the list component for item secondary line height."
+              "description": "dimension used by the list component for secondary line height (MarsUI caption_2 16px; same value as before with the correct provenance)."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
             },
             {
               "name": "--ki-typography-family-body",
@@ -4601,6 +4881,22 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-duration-medium-2",
+              "description": "M3 md.sys.motion.duration.medium2 (300ms). onmars: MarsUI moderate step (240ms)."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
+            },
+            {
               "name": "--ki-progress-circular-size",
               "description": "dimension used by the progress component for circular size."
             },
@@ -4718,12 +5014,28 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-duration-medium-1",
+              "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-standard-decelerate",
+              "description": "Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out)."
+            },
+            {
               "name": "--ki-qr-background",
               "description": "color used by the qr component for the light tile behind the modules: the Figma symbol is transparent over the showcase card's Surface/s0 white, but a scannable code owns its tile — the scheme-stable white keeps dark-on-light module contrast in both schemes (FR-010, a documented theme obligation)."
             },
             {
               "name": "--ki-qr-color",
-              "description": "color used by the qr component for the dark modules and finder rings: the Figma fill binds Text/high_em (#0a0c11), which flips light under the dark scheme and would invert the code, so the theme obligation (FR-010: dark modules on a light tile in both schemes) resolves the scheme-stable black ink instead (design-extraction §2, declared for founder ratification)."
+              "description": "color used by the qr component for module/finder ink (the master binds Text/high_em, whose light-scheme hue is Gray/950 #0a0c11; referenced as the scheme-stable primitive because FR-010 keeps QR ink from flipping in dark — 18.9:1 on white)."
             },
             {
               "name": "--ki-qr-finder-radius",
@@ -4743,7 +5055,7 @@
             },
             {
               "name": "--ki-qr-size",
-              "description": "dimension used by the qr component for the code's square box: the 128px QR_code frame (node 16158:27561) binds no size variable and the space scale has no 8rem step, so onmars resolves the nearest step (120px); consumers rescale through this token — the code always stays 1:1 (specs/026-ki-qr/design-extraction.md §4, declared for founder ratification)."
+              "description": "dimension used by the qr component for size (MarsUI 128x128 symbol frame via the dedicated ki.size.qr surface size; replaces the 120px space-scale approximation)."
             },
             {
               "name": "--ki-typography-family-body",
@@ -4848,8 +5160,16 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-effect-component-primary-default-shadow",
+              "description": "MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow."
+            },
+            {
               "name": "--ki-motion-duration-fast",
               "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-spring",
+              "description": "Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language)."
             },
             {
               "name": "--ki-motion-easing-standard",
@@ -4866,6 +5186,10 @@
             {
               "name": "--ki-radio-control-size",
               "description": "dimension used by the radio component for control size."
+            },
+            {
+              "name": "--ki-radio-dot-shadow",
+              "description": "shadow used by the radio component for the selected dot (MarsUI Small_dark_shadow: drop 0/2/3/-1.5 Elevation/shadow_dark, the lifted-dot look of the master)."
             },
             {
               "name": "--ki-radio-dot-size",
@@ -4889,11 +5213,11 @@
             },
             {
               "name": "--ki-radio-gap",
-              "description": "dimension used by the radio component for gap."
+              "description": "dimension used by the radio component for gap (MarsUI md label pairing: Space/xl 12px for the 20px circle / 24px target geometry)."
             },
             {
               "name": "--ki-radio-label-font-size",
-              "description": "dimension used by the radio component for label font size."
+              "description": "dimension used by the radio component for label font size (MarsUI md pairing: body_2 15px; line-height stays 24 and weight 500)."
             },
             {
               "name": "--ki-radio-label-font-weight",
@@ -4909,11 +5233,11 @@
             },
             {
               "name": "--ki-radio-selected-active-bg",
-              "description": "Pressed fill of the SELECTED radio. Was {ki.surface.s0}, i.e. identical to its own rest fill, so pressing an already-selected option reverted the hover step instead of deepening it — the same \"pressed = un-hover\" shape removed from ki-button, and legible only to a pointer user who had hovered first. Now follows the ramp its unselected sibling already follows: rest s0, hover s1, pressed s2."
+              "description": "color used by the radio component for selected active background (MarsUI defines no pressed state; mirrors rest)."
             },
             {
               "name": "--ki-radio-selected-active-border",
-              "description": "color used by the radio component for selected active border."
+              "description": "color used by the radio component for selected active border (same as the fill: borderless look)."
             },
             {
               "name": "--ki-radio-selected-active-fg",
@@ -4921,23 +5245,23 @@
             },
             {
               "name": "--ki-radio-selected-disabled-bg",
-              "description": "color used by the radio component for selected disabled background."
+              "description": "color used by the radio component for selected disabled background (MarsUI Surface/disabled_med_em Gray/300)."
             },
             {
               "name": "--ki-radio-selected-disabled-border",
-              "description": "color used by the radio component for selected disabled border."
+              "description": "color used by the radio component for selected disabled border (same as the fill: borderless look)."
             },
             {
               "name": "--ki-radio-selected-disabled-fg",
-              "description": "color used by the radio component for selected disabled foreground."
+              "description": "color used by the radio component for selected disabled dot (MarsUI Surface/disabled_base_em Gray/100 — a light dot one quiet value step above the gray donut, not a dark dot)."
             },
             {
               "name": "--ki-radio-selected-hover-bg",
-              "description": "color used by the radio component for selected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp); the primary-tinted alpha stays in radio.material3."
+              "description": "color used by the radio component for selected hover background (the master has no selected-hover variant; mirrors ki-checkbox checked hover: a real delta in both schemes)."
             },
             {
               "name": "--ki-radio-selected-hover-border",
-              "description": "color used by the radio component for selected hover border."
+              "description": "color used by the radio component for selected hover border (same as the fill: borderless look)."
             },
             {
               "name": "--ki-radio-selected-hover-fg",
@@ -4945,15 +5269,15 @@
             },
             {
               "name": "--ki-radio-selected-rest-bg",
-              "description": "color used by the radio component for selected rest background."
+              "description": "color used by the radio component for selected rest background (MarsUI active radio is a solid Surface/primary_med_em #845abe circle — the filled donut with a white dot is the signature, mirroring ki-checkbox checked)."
             },
             {
               "name": "--ki-radio-selected-rest-border",
-              "description": "color used by the radio component for selected rest border."
+              "description": "color used by the radio component for selected rest border (same as the fill: the selected circle is borderless in the master)."
             },
             {
               "name": "--ki-radio-selected-rest-fg",
-              "description": "color used by the radio component for selected rest foreground."
+              "description": "color used by the radio component for selected rest dot (MarsUI Text/primary_on_primary white 8px dot)."
             },
             {
               "name": "--ki-radio-unselected-active-bg",
@@ -4969,15 +5293,15 @@
             },
             {
               "name": "--ki-radio-unselected-disabled-bg",
-              "description": "color used by the radio component for unselected disabled background."
+              "description": "color used by the radio component for unselected disabled background (MarsUI Surface/disabled_med_em Gray/300)."
             },
             {
               "name": "--ki-radio-unselected-disabled-border",
-              "description": "color used by the radio component for unselected disabled border."
+              "description": "color used by the radio component for unselected disabled border (same as the fill: borderless look in the master)."
             },
             {
               "name": "--ki-radio-unselected-disabled-fg",
-              "description": "color used by the radio component for unselected disabled foreground."
+              "description": "color used by the radio component for unselected disabled dot color (dot is hidden unselected; kept coherent with the disabled ladder, retiring the deprecated ki.text.muted alias)."
             },
             {
               "name": "--ki-radio-unselected-hover-bg",
@@ -5002,6 +5326,14 @@
             {
               "name": "--ki-radio-unselected-rest-fg",
               "description": "color used by the radio component for unselected rest foreground."
+            },
+            {
+              "name": "--ki-surface-special-dark-s0-light-s2",
+              "description": "semantic color for surface special dark s0 light s2."
+            },
+            {
+              "name": "--ki-surface-special-light-s0-dark-s4",
+              "description": "semantic color for surface special light s0 dark s4."
             },
             {
               "name": "--ki-text-high-em",
@@ -5182,7 +5514,7 @@
             },
             {
               "name": "--ki-radio-group-label-line-height",
-              "description": "dimension used by the radio group component for label line height."
+              "description": "dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement)."
             },
             {
               "name": "--ki-text-high-em",
@@ -5289,12 +5621,24 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
               "name": "--ki-scroller-focus-ring-color",
               "description": "color used by the scroller component for the viewport focus ring: the keyboard-focusable scroll region (FR-005) adopts the ki-dialog focus-ring pair verbatim."
             },
             {
               "name": "--ki-scroller-focus-ring-offset",
               "description": "dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent)."
+            },
+            {
+              "name": "--ki-scroller-focus-ring-shadow",
+              "description": "shadow used by the scroller component for the viewport focus ring glow (MarsUI Focus/primary 3px 20%-alpha halo, the ki-button double mechanism; completes the theming hook ki-scroller.css already consumes)."
             },
             {
               "name": "--ki-scroller-focus-ring-width",
@@ -5533,6 +5877,38 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-effect-component-secondary-default-shadow",
+              "description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            },
+            {
+              "name": "--ki-elevation-e1",
+              "description": "MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow."
+            },
+            {
+              "name": "--ki-focus-danger",
+              "description": "MarsUI Focus/danger: persistent 3px spread ring of Outline/danger_base_em_alpha (danger-500 at 20% light / 40% dark) — the danger state signal on Input_field and Dropdown masters (measured rgb(252,220,219) over white). Pairs with a white fill and hairline border; Kimen keeps its opaque danger border on top as a declared a11y deviation."
+            },
+            {
+              "name": "--ki-motion-distance-sm",
+              "description": "Motion travel distance sm (4px): small slide/settle offsets."
+            },
+            {
+              "name": "--ki-motion-distance-xs",
+              "description": "Motion travel distance xs (2px): hover-lift offsets."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
+            },
+            {
               "name": "--ki-option-disabled-bg",
               "description": "color used by the option component for disabled background."
             },
@@ -5546,7 +5922,7 @@
             },
             {
               "name": "--ki-option-highlight-bg",
-              "description": "color used by the option component for highlight background."
+              "description": "color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; purple is reserved for the selected tint)."
             },
             {
               "name": "--ki-option-highlight-fg",
@@ -5554,7 +5930,7 @@
             },
             {
               "name": "--ki-option-hover-bg",
-              "description": "color used by the option component for hover background."
+              "description": "color used by the option component for hover background (MarsUI hover_overlay_inverse Black/3 wash over the glass panel — not a solid surface step)."
             },
             {
               "name": "--ki-option-hover-fg",
@@ -5562,7 +5938,7 @@
             },
             {
               "name": "--ki-option-min-target",
-              "description": "dimension used by the option component for min target."
+              "description": "dimension used by the option component for min target (MarsUI Dropmenu row height Space/11xl 36px; comfortably above the 24px a11y floor)."
             },
             {
               "name": "--ki-option-padding-inline",
@@ -5570,11 +5946,11 @@
             },
             {
               "name": "--ki-option-radius",
-              "description": "dimension used by the option component for radius."
+              "description": "dimension used by the option component for radius (MarsUI Radius/component/radius_lg 12px bound on Dropmenu rows)."
             },
             {
               "name": "--ki-option-rest-bg",
-              "description": "color used by the option component for rest background."
+              "description": "color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the glass panel; only hover/selected paint)."
             },
             {
               "name": "--ki-option-rest-fg",
@@ -5606,7 +5982,7 @@
             },
             {
               "name": "--ki-select-border-width",
-              "description": "dimension used by the select component for border width."
+              "description": "dimension used by the select component for border width (MarsUI Input_cell strokeWeight 1px; the color stays ki.outline.control per the declared a11y deviation — only the 2px width was undocumented)."
             },
             {
               "name": "--ki-select-disabled-bg",
@@ -5614,11 +5990,11 @@
             },
             {
               "name": "--ki-select-disabled-border",
-              "description": "color used by the select component for disabled border."
+              "description": "color used by the select component for disabled border (MarsUI Outline/base_em Black/3)."
             },
             {
               "name": "--ki-select-disabled-fg",
-              "description": "color used by the select component for disabled foreground."
+              "description": "color used by the select component for disabled foreground (MarsUI disabled text Text/base_em Gray/400; disabled cells are exempt from the contrast sweep)."
             },
             {
               "name": "--ki-select-disabled-label-fg",
@@ -5626,11 +6002,11 @@
             },
             {
               "name": "--ki-select-focus-bg",
-              "description": "color used by the select component for focus background."
+              "description": "color used by the select component for focus background (MarsUI Dropdown focus fill Surface/Special/light-s0_dark-s4)."
             },
             {
               "name": "--ki-select-focus-border",
-              "description": "color used by the select component for focus border."
+              "description": "color used by the select component for focus border (MarsUI active is glow-only: the border stays the rest hairline while Focus/primary carries the emphasis — repointed from ki.outline.primary-high-em per the fidelity audit; material3 keeps the opaque primary border via its override)."
             },
             {
               "name": "--ki-select-focus-fg",
@@ -5661,16 +6037,16 @@
               "description": "dimension used by the select component for font size."
             },
             {
+              "name": "--ki-select-font-weight",
+              "description": "font weight used by the select component for the trigger value (MarsUI UI/Body 1/medium: weight 600)."
+            },
+            {
               "name": "--ki-select-gap",
               "description": "dimension used by the select component for gap."
             },
             {
               "name": "--ki-select-height",
               "description": "dimension used by the select component for height."
-            },
-            {
-              "name": "--ki-select-hover-bg",
-              "description": "color used by the select component for hover background."
             },
             {
               "name": "--ki-select-hover-border",
@@ -5685,12 +6061,16 @@
               "description": "color used by the select component for hover label foreground."
             },
             {
+              "name": "--ki-select-indicator-glyph-size",
+              "description": "dimension used by the select component for the chevron glyph box inside the 18px indicator slot (MarsUI Dropdown chevron 8px border-box square drawn by [part=indicator]::before)."
+            },
+            {
               "name": "--ki-select-indicator-size",
               "description": "dimension used by the select component for indicator size."
             },
             {
               "name": "--ki-select-label-font-size",
-              "description": "dimension used by the select component for label font size."
+              "description": "dimension used by the select component for label font size (MarsUI UI/Para/medium: body_1 13px)."
             },
             {
               "name": "--ki-select-label-font-weight",
@@ -5702,11 +6082,23 @@
             },
             {
               "name": "--ki-select-label-line-height",
-              "description": "dimension used by the select component for label line height."
+              "description": "dimension used by the select component for label line height (MarsUI line_height/para 20px)."
+            },
+            {
+              "name": "--ki-select-label-padding-inline",
+              "description": "dimension used by the select component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input/ki-textarea)."
+            },
+            {
+              "name": "--ki-select-line-height",
+              "description": "dimension used by the select component for the trigger value line height (MarsUI body_1 24px)."
+            },
+            {
+              "name": "--ki-select-listbox-backdrop-blur",
+              "description": "backdrop blur used by the select component listbox glass panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; material3 resolves to blur none via its override)."
             },
             {
               "name": "--ki-select-listbox-bg",
-              "description": "color used by the select component for listbox background."
+              "description": "color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with backdrop-filter blur(var(--ki-select-listbox-backdrop-blur)))."
             },
             {
               "name": "--ki-select-listbox-max-block-size",
@@ -5718,11 +6110,11 @@
             },
             {
               "name": "--ki-select-listbox-padding",
-              "description": "dimension used by the select component for listbox padding."
+              "description": "dimension used by the select component for listbox padding (MarsUI Dropmenu content inset Space/xl 12px)."
             },
             {
               "name": "--ki-select-listbox-radius",
-              "description": "dimension used by the select component for listbox radius."
+              "description": "dimension used by the select component for listbox radius (MarsUI Radius/big_component/radius_sm 20px bound on the Dropmenu panel)."
             },
             {
               "name": "--ki-select-listbox-shadow",
@@ -5742,11 +6134,11 @@
             },
             {
               "name": "--ki-select-radius",
-              "description": "dimension used by the select component for radius."
+              "description": "dimension used by the select component for radius (MarsUI Radius/component/radius_md 10px; component ramp so personality modes reach it)."
             },
             {
               "name": "--ki-select-rest-bg",
-              "description": "color used by the select component for rest background."
+              "description": "color used by the select component for rest background (MarsUI Dropdown rest fill Surface/Special/light-s0_dark-s2: white light, Dark/800 dark)."
             },
             {
               "name": "--ki-select-rest-border",
@@ -5761,8 +6153,20 @@
               "description": "color used by the select component for rest label foreground."
             },
             {
+              "name": "--ki-surface-hover-overlay-inverse",
+              "description": "semantic color for surface hover overlay inverse."
+            },
+            {
               "name": "--ki-typography-family-body",
               "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-para",
+              "description": "semantic dimension for typography line height para."
+            },
+            {
+              "name": "--ki-typography-weight-body-medium",
+              "description": "semantic font weight for typography weight body medium."
             }
           ]
         }
@@ -5872,6 +6276,18 @@
             }
           ],
           "cssProperties": [
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-emphasized-decelerate",
+              "description": "Expressive entrance curve. M3 md.sys.motion.easing.emphasized-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out)."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
+            },
             {
               "name": "--ki-status-danger-color",
               "description": "color used by the status component for the danger tone fill: Surface/danger_med_em, the exact variable bound to the Type=danger Status variant (Danger/500)."
@@ -6057,8 +6473,16 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-effect-small-dark-shadow",
+              "description": "MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters."
+            },
+            {
               "name": "--ki-motion-duration-fast",
               "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
             },
             {
               "name": "--ki-motion-easing-standard",
@@ -6066,7 +6490,7 @@
             },
             {
               "name": "--ki-switch-border-width",
-              "description": "dimension used by the switch component for border width."
+              "description": "dimension used by the switch component for border width (MarsUI tracks are borderless; the 1px hairline in ki.outline.control is the declared WCAG 1.4.11 deviation at half the former weight, so the control stops reading as an outlined pill)."
             },
             {
               "name": "--ki-switch-checked-active-border",
@@ -6086,11 +6510,11 @@
             },
             {
               "name": "--ki-switch-checked-disabled-thumb",
-              "description": "color used by the switch component for checked disabled thumb."
+              "description": "color used by the switch component for checked disabled thumb (MarsUI pointer keeps its light construction in every state including disabled)."
             },
             {
               "name": "--ki-switch-checked-disabled-track",
-              "description": "color used by the switch component for checked disabled track."
+              "description": "color used by the switch component for checked disabled track (MarsUI disabled track keeps the OFF rest fill surface/disabled_med_em; the disabled signal lives in the glyph in the master)."
             },
             {
               "name": "--ki-switch-checked-hover-border",
@@ -6134,11 +6558,23 @@
             },
             {
               "name": "--ki-switch-gap",
-              "description": "dimension used by the switch component for gap."
+              "description": "dimension used by the switch component for gap (MarsUI sm label pairing: Space/md 8px)."
+            },
+            {
+              "name": "--ki-switch-glyph-dash-height",
+              "description": "dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash)."
+            },
+            {
+              "name": "--ki-switch-glyph-height",
+              "description": "dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height)."
+            },
+            {
+              "name": "--ki-switch-glyph-width",
+              "description": "dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb)."
             },
             {
               "name": "--ki-switch-min-target",
-              "description": "dimension used by the switch component for min target."
+              "description": "dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint)."
             },
             {
               "name": "--ki-switch-thumb-inset",
@@ -6146,11 +6582,15 @@
             },
             {
               "name": "--ki-switch-thumb-radius",
-              "description": "dimension used by the switch component for thumb radius."
+              "description": "dimension used by the switch component for thumb radius (MarsUI pointer corner radius is half the height with corner smoothing; radius_round clamps to the smoothed pill)."
             },
             {
               "name": "--ki-switch-thumb-size",
               "description": "dimension used by the switch component for thumb size."
+            },
+            {
+              "name": "--ki-switch-thumb-width",
+              "description": "dimension used by the switch component for thumb inline size (MarsUI md pointer is 22x18 — wider than tall; thumb-size remains the block size)."
             },
             {
               "name": "--ki-switch-track-height",
@@ -6174,7 +6614,7 @@
             },
             {
               "name": "--ki-switch-unchecked-active-track",
-              "description": "color used by the switch component for unchecked active track."
+              "description": "color used by the switch component for unchecked active track (one step beyond hover; the master defines no pressed variant)."
             },
             {
               "name": "--ki-switch-unchecked-disabled-border",
@@ -6182,11 +6622,11 @@
             },
             {
               "name": "--ki-switch-unchecked-disabled-thumb",
-              "description": "color used by the switch component for unchecked disabled thumb."
+              "description": "color used by the switch component for unchecked disabled thumb (MarsUI pointer keeps its light construction in every state including disabled)."
             },
             {
               "name": "--ki-switch-unchecked-disabled-track",
-              "description": "color used by the switch component for unchecked disabled track."
+              "description": "color used by the switch component for unchecked disabled track (MarsUI disabled track keeps the OFF rest fill surface/disabled_med_em; the disabled signal lives in the glyph in the master)."
             },
             {
               "name": "--ki-switch-unchecked-hover-border",
@@ -6198,7 +6638,7 @@
             },
             {
               "name": "--ki-switch-unchecked-hover-track",
-              "description": "color used by the switch component for unchecked hover track."
+              "description": "color used by the switch component for unchecked hover track (Kimen-invented one-step ramp over the corrected rest fill; the master defines no hover variant)."
             },
             {
               "name": "--ki-switch-unchecked-rest-border",
@@ -6210,11 +6650,35 @@
             },
             {
               "name": "--ki-switch-unchecked-rest-track",
-              "description": "color used by the switch component for unchecked rest track."
+              "description": "color used by the switch component for unchecked rest track (MarsUI OFF track = surface/disabled_med_em #dddfe4 light / White-18 dark — a solid soft fill, not an outlined pill)."
+            },
+            {
+              "name": "--ki-text-base-em",
+              "description": "semantic color for text base em."
+            },
+            {
+              "name": "--ki-text-high-em",
+              "description": "semantic color for text high em."
+            },
+            {
+              "name": "--ki-text-primary-on-primary-light",
+              "description": "semantic color for text primary on primary light."
             },
             {
               "name": "--ki-typography-family-body",
               "description": "semantic font family for typography family body."
+            },
+            {
+              "name": "--ki-typography-line-height-body-2",
+              "description": "semantic dimension for typography line height body 2."
+            },
+            {
+              "name": "--ki-typography-size-body-2",
+              "description": "semantic dimension for typography size body 2."
+            },
+            {
+              "name": "--ki-typography-weight-body-normal",
+              "description": "semantic font weight for typography weight body normal."
             }
           ]
         }
@@ -6344,6 +6808,22 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-motion-distance-xs",
+              "description": "Motion travel distance xs (2px): hover-lift offsets."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-standard",
+              "description": "Standard interaction transition easing curve."
+            },
+            {
               "name": "--ki-tab-focus-ring-color",
               "description": "color used by the tab component for focus ring color."
             },
@@ -6373,11 +6853,11 @@
             },
             {
               "name": "--ki-tab-indicator-color",
-              "description": "color used by the tab component for indicator color."
+              "description": "color used by the tab component for indicator color (MarsUI active underline is Outline/inverse_white: black in light, white in dark — the inverse neutral, not primary)."
             },
             {
               "name": "--ki-tab-indicator-radius",
-              "description": "dimension used by the tab component for indicator radius."
+              "description": "dimension used by the tab component for indicator radius (the master underline is a square-ended 2px bottom border)."
             },
             {
               "name": "--ki-tab-indicator-size",
@@ -6389,11 +6869,15 @@
             },
             {
               "name": "--ki-tab-min-block-size",
-              "description": "dimension used by the tab component for min block size."
+              "description": "dimension used by the tab component for min block size (MarsUI Tab_nav md bar height 40px: 24px body_1 label + 8px block-end clearance + underline; retargeted from ki.space.7xl per the fidelity audit — material3 pins its own value)."
+            },
+            {
+              "name": "--ki-tab-padding-block-end",
+              "description": "dimension used by the tab component for padding block end (MarsUI Tab_nav_item: 8px inset keeping the 2px underline clear of the 13/24 label; formalizes the fallback ki-tab.css already consumes)."
             },
             {
               "name": "--ki-tab-padding-inline",
-              "description": "dimension used by the tab component for padding inline."
+              "description": "dimension used by the tab component for padding inline (MarsUI items carry no inline padding: spacing comes from the bar gap and the underline spans the full item width)."
             },
             {
               "name": "--ki-tab-radius",
@@ -6401,67 +6885,67 @@
             },
             {
               "name": "--ki-tab-selected-active-bg",
-              "description": "color used by the tab component for selected active background."
+              "description": "color used by the tab component for selected active background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language)."
             },
             {
               "name": "--ki-tab-selected-active-fg",
-              "description": "color used by the tab component for selected active foreground."
+              "description": "color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240)."
             },
             {
               "name": "--ki-tab-selected-disabled-bg",
-              "description": "color used by the tab component for selected disabled background."
+              "description": "color used by the tab component for selected disabled background (no disabled variant exists in Tab_nav; disabled must be quieter than rest, not a filled pill)."
             },
             {
               "name": "--ki-tab-selected-disabled-fg",
-              "description": "color used by the tab component for selected disabled foreground."
+              "description": "color used by the tab component for selected disabled foreground (MarsUI disabled ladder: Gray/500 light / White-32 dark, the value ki-status and ki-switch already use for disabled glyphs)."
             },
             {
               "name": "--ki-tab-selected-hover-bg",
-              "description": "color used by the tab component for selected hover background."
+              "description": "color used by the tab component for selected hover background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language)."
             },
             {
               "name": "--ki-tab-selected-hover-fg",
-              "description": "color used by the tab component for selected hover foreground."
+              "description": "color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240)."
             },
             {
               "name": "--ki-tab-selected-rest-bg",
-              "description": "color used by the tab component for selected rest background."
+              "description": "color used by the tab component for selected rest background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language)."
             },
             {
               "name": "--ki-tab-selected-rest-fg",
-              "description": "color used by the tab component for selected rest foreground."
+              "description": "color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240)."
             },
             {
               "name": "--ki-tab-unselected-active-bg",
-              "description": "color used by the tab component for unselected active background."
+              "description": "color used by the tab component for unselected active background (MarsUI Tab_nav is transparent_inverse in every state)."
             },
             {
               "name": "--ki-tab-unselected-active-fg",
-              "description": "color used by the tab component for unselected active foreground."
+              "description": "color used by the tab component for unselected active foreground (mirrors hover; MarsUI defines no pressed variant)."
             },
             {
               "name": "--ki-tab-unselected-disabled-bg",
-              "description": "color used by the tab component for unselected disabled background."
+              "description": "color used by the tab component for unselected disabled background (no disabled variant exists in Tab_nav; disabled must be quieter than rest, not a filled pill)."
             },
             {
               "name": "--ki-tab-unselected-disabled-fg",
-              "description": "color used by the tab component for unselected disabled foreground."
+              "description": "color used by the tab component for unselected disabled foreground (MarsUI disabled ladder: Gray/500 light / White-32 dark, the value ki-status and ki-switch already use for disabled glyphs)."
             },
             {
               "name": "--ki-tab-unselected-hover-bg",
-              "description": "color used by the tab component for unselected hover background."
+              "description": "color used by the tab component for unselected hover background (MarsUI Tab_nav is transparent_inverse in every state)."
             },
             {
               "name": "--ki-tab-unselected-hover-fg",
-              "description": "color used by the tab component for unselected hover foreground."
+              "description": "color used by the tab component for unselected hover foreground (with rest at med_em, hover darkens one em step, preserving the master rest-to-hover direction)."
             },
             {
               "name": "--ki-tab-unselected-rest-bg",
-              "description": "color used by the tab component for unselected rest background."
+              "description": "color used by the tab component for unselected rest background (MarsUI Tab_nav is transparent_inverse in every state)."
             },
             {
               "name": "--ki-tab-unselected-rest-fg",
-              "description": "color used by the tab component for unselected rest foreground."
+              "description": "color used by the tab component for unselected rest foreground (Figma inactive is Text/low_em, which fails the 4.5:1 text gate at 13px; med_em is the gate-compliant rest value — declared deviation)."
             },
             {
               "name": "--ki-typography-family-body",
@@ -6541,8 +7025,24 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-motion-distance-sm",
+              "description": "Motion travel distance sm (4px): small slide/settle offsets."
+            },
+            {
+              "name": "--ki-motion-duration-medium-1",
+              "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
               "name": "--ki-tab-panel-bg",
-              "description": "color used by the tab panel component for background."
+              "description": "color used by the tab panel component for background (Tab_nav masters have no panel chrome: content sits on the ambient surface; the panel never paints a surface it does not own)."
+            },
+            {
+              "name": "--ki-tab-panel-fg",
+              "description": "color used by the tab panel component for foreground (pairs a scheme-correct text color with whatever ground the transparent panel sits on — fixes black-on-black slotted text in dark)."
             },
             {
               "name": "--ki-tab-panel-focus-ring-color",
@@ -6674,11 +7174,11 @@
             },
             {
               "name": "--ki-tabs-divider-width",
-              "description": "MarsUI hairline stroke as the tab bar divider: same 1px divider width as the verified ki-list divider pattern (marsui-design-dna.md §1 outline hairlines)."
+              "description": "dimension used by the tabs component for the tablist divider width (the Tab_nav bar has no stroke; the hook stays for consumers to opt back in — material3 keeps its hairline via its override)."
             },
             {
               "name": "--ki-tabs-gap",
-              "description": "dimension used by the tabs component for gap."
+              "description": "dimension used by the tabs component for gap (MarsUI md bar item gap Space/8xl 26px; the gap carries all spacing now that items have zero inline padding)."
             },
             {
               "name": "--ki-typography-family-body",
@@ -6921,8 +7421,12 @@
           ],
           "cssProperties": [
             {
-              "name": "--ki-surface-s0",
-              "description": "semantic color for surface s0."
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
             },
             {
               "name": "--ki-textarea-border-block-end-width",
@@ -6942,7 +7446,7 @@
             },
             {
               "name": "--ki-textarea-disabled-bg",
-              "description": "color used by the textarea component for disabled background."
+              "description": "color used by the textarea component for disabled background (MarsUI Surface/disabled_base_em Gray/100; aligned with ki-input)."
             },
             {
               "name": "--ki-textarea-disabled-border",
@@ -6962,11 +7466,7 @@
             },
             {
               "name": "--ki-textarea-focus-bg",
-              "description": "color used by the textarea component for focus background."
-            },
-            {
-              "name": "--ki-textarea-focus-border",
-              "description": "color used by the textarea component for focus border."
+              "description": "color used by the textarea component for focus background (MarsUI active fill switches to white / dark s2 — modeled with the scheme ladder s0)."
             },
             {
               "name": "--ki-textarea-focus-fg",
@@ -6974,11 +7474,11 @@
             },
             {
               "name": "--ki-textarea-focus-label-fg",
-              "description": "color used by the textarea component for focus label foreground."
+              "description": "color used by the textarea component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
             },
             {
               "name": "--ki-textarea-focus-placeholder-fg",
-              "description": "color used by the textarea component for focus placeholder foreground."
+              "description": "color used by the textarea component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
             },
             {
               "name": "--ki-textarea-focus-ring-color",
@@ -7006,7 +7506,7 @@
             },
             {
               "name": "--ki-textarea-hover-bg",
-              "description": "color used by the textarea component for hover background."
+              "description": "color used by the textarea component for hover background (MarsUI hover = s2 + Black/3 overlay; s3 is the nearest token)."
             },
             {
               "name": "--ki-textarea-hover-border",
@@ -7018,15 +7518,15 @@
             },
             {
               "name": "--ki-textarea-hover-label-fg",
-              "description": "color used by the textarea component for hover label foreground."
+              "description": "color used by the textarea component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
             },
             {
               "name": "--ki-textarea-hover-placeholder-fg",
-              "description": "color used by the textarea component for hover placeholder foreground."
+              "description": "color used by the textarea component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
             },
             {
               "name": "--ki-textarea-invalid-bg",
-              "description": "color used by the textarea component for invalid background."
+              "description": "color used by the textarea component for invalid background (MarsUI danger keeps the white active fill — no tinted slab; ring and hint carry the signal)."
             },
             {
               "name": "--ki-textarea-invalid-border",
@@ -7038,15 +7538,19 @@
             },
             {
               "name": "--ki-textarea-invalid-label-fg",
-              "description": "color used by the textarea component for invalid label foreground."
+              "description": "color used by the textarea component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
             },
             {
               "name": "--ki-textarea-invalid-placeholder-fg",
-              "description": "color used by the textarea component for invalid placeholder foreground."
+              "description": "color used by the textarea component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+            },
+            {
+              "name": "--ki-textarea-invalid-ring",
+              "description": "shadow used by the textarea component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid))."
             },
             {
               "name": "--ki-textarea-label-font-size",
-              "description": "dimension used by the textarea component for label font size."
+              "description": "dimension used by the textarea component for label font size (MarsUI UI/Para/medium: body_1 13px)."
             },
             {
               "name": "--ki-textarea-label-font-weight",
@@ -7058,7 +7562,11 @@
             },
             {
               "name": "--ki-textarea-label-line-height",
-              "description": "dimension used by the textarea component for label line height."
+              "description": "dimension used by the textarea component for label line height (MarsUI line_height/para 20px)."
+            },
+            {
+              "name": "--ki-textarea-label-padding-inline",
+              "description": "dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input)."
             },
             {
               "name": "--ki-textarea-line-height",
@@ -7070,15 +7578,15 @@
             },
             {
               "name": "--ki-textarea-padding-block",
-              "description": "dimension used by the textarea component for padding block."
+              "description": "dimension used by the textarea component for padding block (MarsUI 96px md textarea: 12px ink inset)."
             },
             {
               "name": "--ki-textarea-padding-inline",
-              "description": "dimension used by the textarea component for padding inline."
+              "description": "dimension used by the textarea component for padding inline (MarsUI 96px md textarea: 12px ink inset)."
             },
             {
               "name": "--ki-textarea-radius",
-              "description": "dimension used by the textarea component for radius."
+              "description": "dimension used by the textarea component for radius (MarsUI Radius/component/radius_md 10px for the md size; component ramp so personality modes reach it)."
             },
             {
               "name": "--ki-textarea-readonly-bg",
@@ -7094,15 +7602,15 @@
             },
             {
               "name": "--ki-textarea-readonly-label-fg",
-              "description": "color used by the textarea component for readonly label foreground."
+              "description": "color used by the textarea component for readonly label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
             },
             {
               "name": "--ki-textarea-readonly-placeholder-fg",
-              "description": "color used by the textarea component for readonly placeholder foreground."
+              "description": "color used by the textarea component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
             },
             {
               "name": "--ki-textarea-rest-bg",
-              "description": "color used by the textarea component for rest background."
+              "description": "color used by the textarea component for rest background (MarsUI textarea fill Surface/s2)."
             },
             {
               "name": "--ki-textarea-rest-border",
@@ -7114,11 +7622,11 @@
             },
             {
               "name": "--ki-textarea-rest-label-fg",
-              "description": "color used by the textarea component for rest label foreground."
+              "description": "color used by the textarea component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
             },
             {
               "name": "--ki-textarea-rest-placeholder-fg",
-              "description": "color used by the textarea component for rest placeholder foreground."
+              "description": "color used by the textarea component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
             },
             {
               "name": "--ki-typography-family-body",
@@ -7219,16 +7727,60 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-effect-component-secondary-default-shadow",
+              "description": "MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            },
+            {
+              "name": "--ki-motion-distance-sm",
+              "description": "Motion travel distance sm (4px): small slide/settle offsets."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-duration-instant",
+              "description": "Zero-duration step: transitions that must complete immediately (reduced-motion fallbacks, instant handoffs)."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-standard-accelerate",
+              "description": "Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in)."
+            },
+            {
+              "name": "--ki-outline-secondary-button-top",
+              "description": "semantic color for outline secondary button top."
+            },
+            {
+              "name": "--ki-tooltip-backdrop-blur",
+              "description": "backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override)."
+            },
+            {
               "name": "--ki-tooltip-bg",
-              "description": "color used by the tooltip component for background."
+              "description": "color used by the tooltip component for background (flat fallback of the MarsUI glass card gradient; the v1 inverse bubble predates the master — specs/013 correction block. material3 keeps the inverse bubble via its override)."
+            },
+            {
+              "name": "--ki-tooltip-bg-end",
+              "description": "color used by the tooltip component for the glass gradient end (MarsUI Surface/special/light-s0_dark-s2)."
+            },
+            {
+              "name": "--ki-tooltip-bg-start",
+              "description": "color used by the tooltip component for the glass gradient start (MarsUI Surface/special/blur_base_light White/80; dark Dark/700 blur base). Paint background: linear-gradient(180deg, var(--ki-tooltip-bg-start), var(--ki-tooltip-bg-end))."
+            },
+            {
+              "name": "--ki-tooltip-border-width",
+              "description": "dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending)."
             },
             {
               "name": "--ki-tooltip-fg",
-              "description": "color used by the tooltip component for foreground."
+              "description": "color used by the tooltip component for foreground (MarsUI title row Text/high_em; lands together with the glass background — white-on-glass would break contrast)."
             },
             {
               "name": "--ki-tooltip-font-size",
-              "description": "dimension used by the tooltip component for font size."
+              "description": "dimension used by the tooltip component for font size (MarsUI Heading_top style UI/Para/medium: body_1 13px)."
             },
             {
               "name": "--ki-tooltip-font-weight",
@@ -7236,31 +7788,31 @@
             },
             {
               "name": "--ki-tooltip-line-height",
-              "description": "dimension used by the tooltip component for line height."
+              "description": "dimension used by the tooltip component for line height (MarsUI line_height/para 20px)."
             },
             {
               "name": "--ki-tooltip-max-inline-size",
-              "description": "dimension used by the tooltip component for max inline size (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
+              "description": "dimension used by the tooltip component for max inline size (288px; the master card is fixed 280px wide in its rich variants — the 8px divergence is a documented text-only reduction)."
             },
             {
               "name": "--ki-tooltip-offset",
-              "description": "dimension used by the tooltip component for offset."
+              "description": "dimension used by the tooltip component for offset (MarsUI caret depth 8px with zero extra gap = trigger-to-card distance)."
             },
             {
               "name": "--ki-tooltip-padding-block",
-              "description": "dimension used by the tooltip component for padding block."
+              "description": "dimension used by the tooltip component for padding block (MarsUI card padding Space/xl 12px on all sides)."
             },
             {
               "name": "--ki-tooltip-padding-inline",
-              "description": "dimension used by the tooltip component for padding inline."
+              "description": "dimension used by the tooltip component for padding inline (MarsUI card padding Space/xl 12px on all sides)."
             },
             {
               "name": "--ki-tooltip-radius",
-              "description": "dimension used by the tooltip component for radius."
+              "description": "dimension used by the tooltip component for radius (MarsUI Tooltip master 12089:7621 List_wrap: Radius/big_component/radius_xs 16px)."
             },
             {
               "name": "--ki-tooltip-shadow",
-              "description": "shadow used by the tooltip component for tooltip shadow."
+              "description": "shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap)."
             },
             {
               "name": "--ki-typography-family-body",
@@ -7342,6 +7894,30 @@
           ],
           "cssProperties": [
             {
+              "name": "--ki-effect-component-primary-default-shadow",
+              "description": "MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow."
+            },
+            {
+              "name": "--ki-effect-component-primary-hover-shadow",
+              "description": "MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
+            },
+            {
+              "name": "--ki-motion-duration-fast",
+              "description": "Fast interaction transition duration."
+            },
+            {
+              "name": "--ki-motion-duration-medium-1",
+              "description": "M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base)."
+            },
+            {
+              "name": "--ki-motion-easing-out",
+              "description": "Decelerating interaction transition easing curve."
+            },
+            {
+              "name": "--ki-motion-easing-standard-accelerate",
+              "description": "Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in)."
+            },
+            {
               "name": "--ki-typography-family-body",
               "description": "semantic font family for typography family body."
             },
@@ -7395,7 +7971,7 @@
             },
             {
               "name": "--ki-video-play-shadow",
-              "description": "shadow used by the video component for the play container effects: the exact MarsUI glass pair on the Icon_button instance — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers (ki-status/ki-icon-button precedent)."
+              "description": "shadow used by the video component for the play control (MarsUI stacks Elevation/e6 on the button_wrap beneath the Component_effect/primary_default inner White/12 highlight — the measured master stack)."
             },
             {
               "name": "--ki-video-play-size",

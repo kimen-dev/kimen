@@ -1,4 +1,3 @@
- 
 import { AttachInternals, Component, Element, h, Listen, Prop, State, Watch } from '@stencil/core';
 import { booleanFromAttributePresence, checkboxFormValue } from './ki-checkbox.form';
 
