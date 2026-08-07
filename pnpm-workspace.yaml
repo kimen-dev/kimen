@@ -25,7 +25,7 @@ overrides:
   # for the second, so both lines resolve to 5.0.8.
   brace-expansion: 5.0.8
   # GHSA-v2hh-gcrm-f6hx.
-  fast-uri: 3.1.4
+  fast-uri: 3.1.5
   # GHSA-r28c-9q8g-f849.
   postcss: 8.5.23
   # Not an advisory: this holds the target of patches/minimatch@3.1.5.patch.
@@ -47,3 +47,6 @@ trustPolicy: no-downgrade
 # began on the 7.x line, so no-downgrade can never pass for it.
 trustPolicyExclude:
   - "semver@6.3.1"
+minimumReleaseAgeExclude:
+  # Renovate security update: fast-uri@3.1.5
+  - fast-uri@3.1.5
