@@ -42,7 +42,7 @@ overrides:
   # regenerates the lockfile on a schedule. Without this pin a new 3.x release
   # would move the lockfile out from under the patch and break installs.
   # Unpin only together with regenerating the patch.
-  minimatch@3: 3.1.5
+  minimatch@3: 10.2.6
   qs: 6.15.3
 patchedDependencies:
   minimatch@3.1.5: patches/minimatch@3.1.5.patch
