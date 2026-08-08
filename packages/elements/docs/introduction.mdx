@@ -4,10 +4,14 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Kimen component workshop
 
-**Kimen Elements** is the implemented Web Components foundation for Kimen's
-planned, multi-protocol GenUI system. Today it provides standards-first
-`<ki-*>` elements, generated machine contracts and token-driven theming in
-any host. The neutral catalog, guardrail and protocol adapters come later.
+**Kimen Elements** is the Web Components foundation of Kimen's
+multi-protocol GenUI system: **29** standards-first `<ki-*>` elements with
+generated machine contracts and token-driven theming in any host. The GenUI
+layer on top of it is implemented too — the neutral catalog
+(`@kimen/catalog`) validates agent-emitted UI specs and renders them through
+a fail-closed guarded renderer, and protocol adapters connect A2UI
+(`@kimen/adapter-a2ui`) and MCP Apps (`@kimen/adapter-mcp-apps`) hosts to
+that same guarded path.
 
 This Storybook is the **component workshop**: every published component with
 its props as live controls, its docs generated from the component contract
@@ -29,7 +33,10 @@ The **Scheme** toolbar switches light / dark / auto — it drives the same
 `data-ki-color-scheme` attribute a consuming page would use. The workshop
 also loads `@kimen/tokens/css/base` — the same page contract any consumer
 loads — so the canvas (surface, text color, body font) follows the scheme
-with you. See *Docs → Tokens & theming* for the full model.
+with you. The visual language you see is the MarsUI fidelity pass: motion,
+glass, per-side bevel and elevation token families are part of the shipped
+theme contract, not decoration bolted onto components. See
+*Docs → Tokens & theming* for the full model.
 
 ## Where things live
 
@@ -42,11 +49,12 @@ with you. See *Docs → Tokens & theming* for the full model.
 
 ## For agents
 
-Kimen treats machine legibility as a deliverable: components already produce
-when-to-use / when-NOT-to-use metadata, a generated manifest and `llms.txt`.
-A Zod-validated schema of what agents may emit is planned for the catalog
-phase. An API a capable agent cannot wire correctly from its description
-alone is a defect — file it as one.
+Kimen treats machine legibility as a deliverable: components produce
+when-to-use / when-NOT-to-use metadata, a generated manifest and `llms.txt`,
+and the neutral catalog enforces a Zod-validated schema of what agents may
+emit at the GenUI boundary — specs that fail validation never reach the DOM.
+An API a capable agent cannot wire correctly from its description alone is a
+defect — file it as one.
 
 {/* kimen:capabilities:elements-workshop-status:start */}
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed

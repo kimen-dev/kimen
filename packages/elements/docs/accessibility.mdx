@@ -26,11 +26,18 @@ Components never invent labels, so every accessible name is yours to provide
 | `ki-radio-group` | `label` prop — unlabeled groups fail accessibility gates |
 | `ki-checkbox`, `ki-switch`, `ki-radio` | default slot — the label is the accessible-name source |
 | `ki-button` | default slot — the label; icon-only usage is unsupported |
+| `ki-icon-button` | `label` prop — mandatory; the slotted icon is presentational and never contributes to the name |
 | `ki-progress` | `label` prop — name what is progressing (e.g. "Uploading report.pdf") |
 | `ki-dialog` | `heading` prop — APG modal dialogs require an accessible name |
 | `ki-tabs` | `label` prop — names the tablist |
 | `ki-alert` | `dismiss-label` prop — names the dismiss button |
 | `ki-tooltip` | `label` prop — becomes the trigger's accessible *description*, never its name |
+| `ki-scroller` | `label` prop — mandatory; names the scroll region |
+| `ki-video` | `label` prop — mandatory; names the single play control |
+| `ki-indicator` | `label` prop — the exposed name reads "&lt;label&gt;, &lt;current&gt; / &lt;count&gt;" |
+| `ki-qr` | `label` prop — name the purpose ("Open … on your phone"); falls back to the encoded value |
+| `ki-avatar` | `label` prop — required when no adjacent visible text names the identity; omit beside a visible name so the name is heard once |
+| `ki-status` | `label` prop — or adjacent visible text; an unlabeled dot is decorative and exposes nothing |
 
 ## Localizable strings — the library ships no language
 
@@ -61,9 +68,12 @@ showcase in CI. `start`/`end` slots, paddings, label order and even
 ## Motion respects the user
 
 `prefers-reduced-motion` is respected: components that animate (dialog,
-switch, checkbox, radio, progress) gate their transitions behind
-`@media (prefers-reduced-motion: no-preference)`, so a reduced-motion user
-gets instant state changes rather than "shorter" animation.
+switch, checkbox, radio, progress, indicator, video) gate their transitions
+behind `@media (prefers-reduced-motion: no-preference)`, so a reduced-motion
+user gets instant state changes rather than "shorter" animation. The motion
+token families (`--ki-motion-duration-*`, `--ki-motion-easing-*`,
+`--ki-motion-distance-*`) sit behind the same gate: themes retune motion,
+never bypass the gate.
 
 ## Focus is always visible — with a double ring
 

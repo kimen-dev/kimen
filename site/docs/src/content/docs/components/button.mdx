@@ -1,0 +1,93 @@
+---
+title: ki-button
+description: A token-styled action button with native button semantics.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A token-styled action button with native button semantics.
+
+<Demo
+  code={`<ki-button variant="primary" tone="success">Save changes</ki-button>`}
+/>
+
+## Examples
+
+### Variants
+
+Five emphasis levels, `secondary` by default. Use `primary` for the single
+main action of a view.
+
+<Demo
+  code={`<ki-button variant="primary">Primary</ki-button>
+<ki-button variant="secondary">Secondary</ki-button>
+<ki-button variant="tertiary">Tertiary</ki-button>
+<ki-button variant="quaternary">Quaternary</ki-button>
+<ki-button variant="ghost">Ghost</ki-button>`}
+/>
+
+### Tones
+
+`tone` carries intent (confirming, destructive) independently of hierarchy —
+never use it for visual emphasis.
+
+<Demo
+  code={`<ki-button variant="primary" tone="neutral">Neutral</ki-button>
+<ki-button variant="primary" tone="success">Success</ki-button>
+<ki-button variant="primary" tone="danger">Danger</ki-button>`}
+/>
+
+### Sizes
+
+<Demo
+  code={`<ki-button size="xs">xs</ki-button>
+<ki-button size="sm">sm</ki-button>
+<ki-button size="md">md</ki-button>
+<ki-button size="lg">lg</ki-button>
+<ki-button size="xl">xl</ki-button>`}
+/>
+
+### Slots and states
+
+Decorative slotted icons carry `aria-hidden="true"`; the slotted text is the
+accessible name.
+
+<Demo
+  code={`<ki-button variant="secondary">
+  <span slot="start" aria-hidden="true">→</span>
+  With slots
+</ki-button>
+<ki-button variant="primary" disabled>Disabled</ki-button>`}
+/>
+
+### Form participation
+
+`ki-button` defaults to `type="submit"`, exactly like a native button: it
+submits the owning form, runs constraint validation and contributes
+`name`/`value` to the form data. Cancel a submission from the form's
+`submit` event, not from `click`.
+
+<Demo
+  layout="block"
+  code={`<form onsubmit="event.preventDefault()">
+  <ki-button name="intent" value="save">Save draft</ki-button>
+</form>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-button" />
+
+## Accessibility
+
+The slotted text is the accessible name — icon-only usage is unsupported
+(that is [ki-icon-button](/kimen/docs/components/icon-button/)'s job, with
+its mandatory `label`). `disabled` removes the button from keyboard reach
+and exposes the unavailable state through the internal native button; do not
+use it for pending or loading semantics.
+
+## Workshop
+
+[Open ki-button in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-button--docs)
+— every state, with theme and scheme toolbars.

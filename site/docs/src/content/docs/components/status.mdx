@@ -1,0 +1,54 @@
+---
+title: ki-status
+description: A tiny, non-interactive status dot that marks the state of a nearby item.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A tiny, non-interactive status dot that marks the state of a nearby item —
+presence on an avatar, health of a service list entry, connection state in a
+toolbar.
+
+<Demo
+  code={`<ki-status tone="success" label="Online"></ki-status>
+<span>API gateway</span>`}
+/>
+
+## Examples
+
+### Tones
+
+<Demo
+  code={`<ki-status tone="neutral" label="Idle"></ki-status>
+<ki-status tone="info" label="Syncing"></ki-status>
+<ki-status tone="success" label="Online"></ki-status>
+<ki-status tone="warning" label="Degraded"></ki-status>
+<ki-status tone="danger" label="Down"></ki-status>`}
+/>
+
+### Ring
+
+`ring` adds a surface-colored ring so the dot stays legible when overlaid on
+media such as an avatar:
+
+<Demo
+  code={`<ki-status tone="success" ring label="Online"></ki-status>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-status" />
+
+## Accessibility
+
+Label it (`label`) or pair it with adjacent visible text — color is never
+the only carrier of the meaning (WCAG 1.4.1); an unlabeled dot without
+adjacent text is an authoring mistake. The dot never renders text (that pill
+is [ki-badge](/kimen/docs/components/badge/)) and has no live region
+(messages that need announcement are
+[ki-alert](/kimen/docs/components/alert/)).
+
+## Workshop
+
+[Open ki-status in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-status--docs)

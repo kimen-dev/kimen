@@ -148,7 +148,7 @@ describe('agent surface mutation boundary', () => {
     expect(output.endsWith('\n')).toBe(true);
   });
 
-  it('@spec:018 S9 writes normalized docs, published CEM and matching llms outputs', async () => {
+  it('@spec:018 S9 writes normalized docs, published CEM and a root llms extending the package summary', async () => {
     const root = await mkdtemp(join(tmpdir(), 'agent-surfaces-mutation-'));
     try {
       await writeFile(join(root, 'docs.json'), JSON.stringify({ timestamp: 'unstable', ...docs }));
@@ -181,9 +181,16 @@ describe('agent surface mutation boundary', () => {
       expect(await readFile(join(root, 'custom-elements.json'), 'utf8')).toContain(
         '"path": "dist/components/ki-dialog.js"',
       );
-      expect(await readFile(join(root, 'package-llms.txt'), 'utf8')).toBe(
-        await readFile(join(root, 'root-llms.txt'), 'utf8'),
-      );
+      // Default workspace root: the root summary extends the package one with
+      // the GenUI layer generated from the repository's committed sources.
+      const packageLlms = await readFile(join(root, 'package-llms.txt'), 'utf8');
+      const rootLlms = await readFile(join(root, 'root-llms.txt'), 'utf8');
+      expect(rootLlms.startsWith(packageLlms)).toBe(true);
+      expect(packageLlms).not.toContain('## GenUI layer');
+      expect(rootLlms).toContain('## GenUI layer');
+      expect(rootLlms).toContain('### @kimen/catalog');
+      expect(rootLlms).toContain('### @kimen/adapter-a2ui');
+      expect(rootLlms).toContain('### @kimen/adapter-mcp-apps');
     } finally {
       await rm(root, { recursive: true, force: true });
     }

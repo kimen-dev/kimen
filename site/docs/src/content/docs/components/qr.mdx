@@ -1,0 +1,40 @@
+---
+title: ki-qr
+description: A machine-scannable QR code, encoded locally and restyled entirely through tokens.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A machine-scannable QR code that hands a declared value — a link, a pairing
+payload — from the screen to a nearby camera. Encoding always happens
+locally; the value never leaves the page.
+
+<Demo
+  code={`<ki-qr value="https://kimen-dev.github.io/kimen/" label="Open the Kimen site on your phone"></ki-qr>
+<p><a href="https://kimen-dev.github.io/kimen/">kimen-dev.github.io/kimen</a></p>`}
+/>
+
+## Examples
+
+### Always pair with an accessible alternative
+
+A QR code is only useful to someone who can point a second device's camera
+at the screen, so the same payload must be reachable next to the code — a
+visible link or copyable text (mandatory guidance, shown in the demo above).
+
+## API reference
+
+<CemApi tag="ki-qr" />
+
+## Accessibility
+
+`label` states the purpose ("Open onmars.dev on your phone"), and the
+accessible alternative beside the code is not optional. Never encode secret
+values — anyone who can photograph the screen can decode them. An
+always-empty `ki-qr` and a value beyond the ~2,331-byte capacity are
+authoring mistakes: both render nothing, silently.
+
+## Workshop
+
+[Open ki-qr in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-qr--docs)

@@ -1,0 +1,114 @@
+---
+title: Getting Started
+description: Install the Kimen packages, load a theme and the page contract, and render your first ki-* component.
+---
+
+import Demo from '../../components/Demo.astro';
+
+Kimen ships two packages you install together: **`@kimen/elements`** (the
+`ki-*` web components) and **`@kimen/tokens`** (the design-token stylesheets
+that give them their appearance). Components resolve every visual value from
+tokens, so loading a token stylesheet is not optional styling — it is the
+styling.
+
+:::note
+Kimen is **pre-v1**. The packages build from the
+[repository](https://github.com/kimen-dev/kimen) today and publish to npm
+with trusted publishing and signed provenance at v1.0.0; the API documented
+here is the release contract.
+:::
+
+## Install
+
+```sh
+npm install @kimen/elements @kimen/tokens
+```
+
+## Load a theme — and the page contract
+
+Two stylesheets belong in every page: a theme (`css` is the default
+**onmars** theme) and the **page contract** (`css/base`):
+
+```ts
+import '@kimen/tokens/css'; /* onmars theme, light + dark */
+import '@kimen/tokens/css/base'; /* page contract: color-scheme + page colors */
+```
+
+The page contract declares `color-scheme`, paints the page from
+`--ki-surface-s0` / `--ki-text-high-em` and sets the body font family. A
+token stylesheet alone cannot declare `color-scheme`, so without the page
+contract a dark-preference visitor gets dark component foregrounds on a
+canvas the browser still paints light — measured, 14 of 29 components fall
+below 4.5:1 contrast in that combination. Load the contract, or pin the page
+with `data-ki-color-scheme="light"`. Doing neither is the one combination
+the library cannot render legibly. See
+[Themes &amp; color schemes](/kimen/docs/guides/theming/) for the full
+contract.
+
+## Register the elements
+
+Register everything at once with the lazy loader (each component's code
+loads on first use):
+
+```ts
+import { defineCustomElements } from '@kimen/elements/loader';
+
+defineCustomElements();
+```
+
+Or register only what you use, tree-shakably, from each element's subpath:
+
+```ts
+import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
+
+defineKiButton();
+```
+
+## Use a component
+
+<Demo
+  code={`<ki-button variant="primary" tone="success" size="md">
+  Save changes
+</ki-button>`}
+/>
+
+That is the whole model: HTML in, standard DOM events out. Form controls
+participate in native `<form>` submission with no framework bindings — see
+[Framework integration](/kimen/docs/guides/frameworks/).
+
+## Color schemes
+
+Both themes follow the operating system by default and can be forced either
+way with one attribute — no runtime code involved:
+
+```html
+<html data-ki-color-scheme="dark">  <!-- force dark -->
+<html data-ki-color-scheme="light"> <!-- force light -->
+<!-- no attribute: follows prefers-color-scheme -->
+```
+
+## A second theme, one attribute
+
+The **material3** reference theme proves the theming model: load its
+stylesheet and set one attribute, and every component re-skins with zero
+component changes.
+
+```html
+<link rel="stylesheet" href="@kimen/tokens/css" />
+<link rel="stylesheet" href="@kimen/tokens/css/material3" />
+<html data-ki-theme="material3">
+```
+
+An unknown `data-ki-theme` value matches no selector and the document simply
+stays on the default theme.
+
+## Next steps
+
+- [Themes &amp; color schemes](/kimen/docs/guides/theming/) — the theming
+  model and the page contract in depth.
+- [Design tokens](/kimen/docs/guides/tokens/) — the token layers and how to
+  customize without forking.
+- [Components](/kimen/docs/components/alert/) — all 29 elements with live
+  examples and generated API tables.
+- [Storybook workshop](/kimen/storybook/) — every component, every state,
+  with theme and scheme toolbars.

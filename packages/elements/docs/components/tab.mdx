@@ -1,0 +1,62 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-tab" />
+
+# ki-tab
+
+One selectable tab inside a `ki-tabs` view switcher.
+
+The group contract — the value pairing, `ki-change` event and keyboard
+model — lives on the *ki-tabs* page (Docs → Components → ki-tabs). Live
+stories: *Elements → ki-tab* in this Storybook.
+
+**When to use** — declare one selectable view label inside `ki-tabs`,
+pairing with the `ki-tab-panel` that shares its `value`. The default slot
+is the tab label; `start`/`end` hold optional media beside it.
+
+**When NOT to use** — outside a `ki-tabs` group, as a navigation link or
+form control, or with an authored `selected` attribute — `selected` is
+output-only state written by the group; set the group's `value` instead.
+
+## Examples
+
+Each tab pairs with the panel that shares its `value`; `disabled` tabs are
+excluded from selection by every modality:
+
+```html
+<ki-tabs label="Project sections" value="code">
+  <ki-tab value="code">Code</ki-tab>
+  <ki-tab value="issues">Issues</ki-tab>
+  <ki-tab value="settings" disabled>Settings</ki-tab>
+
+  <ki-tab-panel value="code">Repository files and branches.</ki-tab-panel>
+  <ki-tab-panel value="issues">Open and recently closed issues.</ki-tab-panel>
+  <ki-tab-panel value="settings">Project configuration.</ki-tab-panel>
+</ki-tabs>
+```
+
+`start`/`end` media sit beside the label without replacing it:
+
+```html
+<ki-tab value="all">
+  <span slot="start" aria-hidden="true">✉</span>
+  All mail
+</ki-tab>
+```
+
+## Customization
+
+Tab states follow
+`--ki-tab-{unselected|selected}-{rest|hover|active|disabled}-*`, with
+`--ki-tab-indicator-color` for the selected-tab marker. Shadow parts:
+`::part(tab)` (the tab surface) and `::part(indicator)` (the selected
+marker).
+
+## Accessibility
+
+- The default slot is the tab's accessible-name source — keep real text in
+  it and mark decorative slotted icons `aria-hidden="true"`.
+- Arrow keys move between tabs within the group's tablist; disabled tabs
+  are skipped.
+- The first tab with a given `value` owns it — later duplicates render but
+  are never selectable.

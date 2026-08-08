@@ -1,0 +1,42 @@
+---
+title: ki-indicator
+description: A non-interactive page-position indicator — one dot per position, exactly one current.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A non-interactive page-position indicator: one dot per position of a bounded
+sequence, exactly one highlighted as current — carousel slides, unlabeled
+onboarding steps, gallery pages.
+
+<Demo code={`<ki-indicator count="5" current="2" label="Gallery page"></ki-indicator>`} />
+
+## Examples
+
+### Wiring to a sequence
+
+`count` and `current` (1-based) mirror the sequence the composing component
+renders; the indicator itself takes no input and no focus:
+
+<Demo
+  code={`<ki-indicator count="3" current="1" label="Onboarding step"></ki-indicator>
+<ki-indicator count="3" current="3" label="Onboarding step"></ki-indicator>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-indicator" />
+
+## Accessibility
+
+`label` is required authoring: assistive technology reads one graphic named
+"&lt;label&gt;, &lt;current&gt; / &lt;count&gt;". Position changes are never
+announced by the indicator itself (no live region) — the composing carousel
+owns announcements and navigation. For section navigation use
+[ki-tabs](/kimen/docs/components/tabs/); for task completion use
+[ki-progress](/kimen/docs/components/progress/).
+
+## Workshop
+
+[Open ki-indicator in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-indicator--docs)

@@ -1,6 +1,7 @@
 packages:
   - "packages/*"
   - "tools/*"
+  - "site/docs"
 # Transitive dependencies may not be installed from exotic/untrusted sources.
 blockExoticSubdeps: true
 

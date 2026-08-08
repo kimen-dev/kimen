@@ -1,0 +1,67 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-list-item" />
+
+# ki-list-item
+
+A non-interactive item inside `ki-list`, composed from leading media,
+primary text, optional secondary text and trailing media or meta.
+
+The container contract — what the list accepts and how rows compose — lives
+on the *ki-list* page (Docs → Components → ki-list). Live stories:
+*Elements → ki-list-item* in this Storybook.
+
+**When to use** — one entry of a read-only collection inside `ki-list`:
+primary text in the default slot, `start` for leading media, `secondary`
+for supporting text and `end` for trailing meta or a slotted control.
+
+**When NOT to use** — outside a `ki-list` (it is valid only as a child of
+one), as a menu item, option, table row or navigation link, or as a
+whole-row click target (slot the interactive control into a region
+instead).
+
+## Examples
+
+The default slot is the primary text line; `secondary`'s presence selects
+the multi-line min-height token:
+
+```html
+<ki-list>
+  <ki-list-item>
+    <img slot="start" src="/avatars/ada.png" alt="" />
+    Ada Lovelace
+    <span slot="secondary">Analytical engine programs</span>
+    <ki-badge slot="end" tone="success">Active</ki-badge>
+  </ki-list-item>
+</ki-list>
+```
+
+A control slotted in the `end` region stays interactive while the row does
+not:
+
+```html
+<ki-list>
+  <ki-list-item>
+    Two-factor authentication
+    <span slot="secondary">Enabled via authenticator app</span>
+    <ki-button slot="end" size="sm" variant="tertiary">Manage</ki-button>
+  </ki-list-item>
+</ki-list>
+```
+
+## Customization
+
+Row metrics and text colors are token decisions:
+`--ki-list-item-min-height` (single-line), `--ki-list-item-divider-color`,
+`--ki-list-item-primary-fg` and `--ki-list-item-secondary-fg`. Shadow
+parts: `::part(item)` (row surface), `::part(start)`, `::part(content)`
+(text column) and `::part(end)`.
+
+## Accessibility
+
+- The row is non-interactive and read-only — it exposes no click target,
+  no role beyond list semantics and no tab stop of its own.
+- Interactivity lives in controls slotted into a region; they keep their
+  own semantics and focus behavior.
+- Give leading media a meaningful `alt`, or `alt=""` when decorative next
+  to the primary text.

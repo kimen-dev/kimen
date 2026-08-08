@@ -1,0 +1,61 @@
+---
+title: ki-alert
+description: A persistent inline status message with token-backed tone semantics.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A persistent inline status message with token-backed tone semantics.
+
+<Demo
+  layout="block"
+  code={`<ki-alert tone="success" heading="Changes saved">
+  Your profile is up to date.
+</ki-alert>`}
+/>
+
+## Examples
+
+### Tones
+
+Severity is expressed with `tone`, never custom styling.
+
+<Demo
+  layout="block"
+  code={`<ki-alert tone="neutral">A service notice.</ki-alert>
+<ki-alert tone="info">Scheduled maintenance on Sunday.</ki-alert>
+<ki-alert tone="success">Import completed.</ki-alert>
+<ki-alert tone="warning">Storage is almost full.</ki-alert>
+<ki-alert tone="danger">The save failed.</ki-alert>`}
+/>
+
+### Dismissible
+
+`dismissible` adds a close control named by `dismiss-label`; dismissal
+dispatches `ki-dismiss` and sets `dismissed`. Re-show an alert by clearing
+`dismissed`.
+
+<Demo
+  layout="block"
+  code={`<ki-alert tone="warning" dismissible dismiss-label="Dismiss warning">
+  Your session expires in five minutes.
+</ki-alert>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-alert" />
+
+## Accessibility
+
+Alerts that must be announced should be inserted dynamically (or re-shown by
+clearing `dismissed`); alerts present at initial page load are exposed with
+their role, but platform announcement is not guaranteed. The default
+`Dismiss` label is the library's single built-in user-visible string —
+override it via `dismiss-label` whenever the document language is not
+English.
+
+## Workshop
+
+[Open ki-alert in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-alert--docs)

@@ -22,6 +22,11 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
+    env:
+      # The docs site (@kimen/docs, Astro) builds fully offline: telemetry
+      # off, no remote fonts, Pagefind bundled — nothing beyond the npm
+      # registry egress already allowed for install.
+      ASTRO_TELEMETRY_DISABLED: "1"
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
@@ -57,7 +62,10 @@ jobs:
       - name: Build Storybook
         run: pnpm --filter @kimen/elements build-storybook
 
-      - name: Assemble site (landing at /, Storybook under /storybook/)
+      - name: Build docs site
+        run: pnpm --filter @kimen/docs build
+
+      - name: Assemble site (landing at /, docs under /docs/, Storybook under /storybook/)
         run: bash scripts/build-site.sh
 
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6

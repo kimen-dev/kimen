@@ -1,0 +1,49 @@
+---
+title: ki-divider
+description: A static, decorative rule that visually separates adjacent content.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A static, decorative rule that visually separates adjacent content when
+spacing alone is not enough.
+
+<Demo
+  layout="block"
+  code={`<p>Notification settings</p>
+<ki-divider></ki-divider>
+<p>Privacy settings</p>`}
+/>
+
+## Examples
+
+### Vertical
+
+`orientation="vertical"` separates side-by-side content; the divider takes
+its size from your layout:
+
+<Demo
+  code={`<div style="display: flex; align-items: center; gap: 0.75rem; block-size: 2rem;">
+  <span>Edit</span>
+  <ki-divider orientation="vertical"></ki-divider>
+  <span>Duplicate</span>
+  <ki-divider orientation="vertical"></ki-divider>
+  <span>Archive</span>
+</div>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-divider" />
+
+## Accessibility
+
+The divider is deliberately decorative: it contributes no role, name or
+announcement. For semantic thematic breaks in running prose, use native
+`<hr>`, which carries those semantics. Between list items, separation is a
+[ki-list](/kimen/docs/components/list/) theme-token decision, not a divider.
+
+## Workshop
+
+[Open ki-divider in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-divider--docs)

@@ -1,0 +1,54 @@
+---
+title: ki-switch
+description: A token-styled switch for immediate on/off settings.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A token-styled switch for binary settings whose change takes effect
+immediately — always with a slotted label.
+
+<Demo code={`<ki-switch checked>Email notifications</ki-switch>`} />
+
+## Examples
+
+### States
+
+<Demo
+  code={`<ki-switch>Off</ki-switch>
+<ki-switch checked>On</ki-switch>
+<ki-switch disabled>Disabled</ki-switch>`}
+/>
+
+### Listening for changes
+
+The composed `change` event fires at the host; read `checked` from the
+target:
+
+```ts
+import type { KiSwitch } from '@kimen/elements/ki-switch';
+
+const kiSwitch = document.querySelector('ki-switch');
+
+kiSwitch?.addEventListener('change', (event) => {
+  console.log((event.target as KiSwitch).checked);
+});
+```
+
+## API reference
+
+<CemApi tag="ki-switch" />
+
+## Accessibility
+
+The default slot is the accessible-name source — unlabeled usage is invalid.
+The thumb travel follows the writing direction in RTL, and the transition is
+gated behind `prefers-reduced-motion`. For selections collected for later
+form submission use [ki-checkbox](/kimen/docs/components/checkbox/); for
+mutually exclusive choices use
+[ki-radio-group](/kimen/docs/components/radio-group/).
+
+## Workshop
+
+[Open ki-switch in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-switch--docs)

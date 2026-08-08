@@ -20,6 +20,21 @@ complementary checks prove the adapter never opens a side channel: the static
 a runtime guarantee that every render call the adapter makes arrives at the
 guarded renderer — verified by substituting an instrumented double (S12).
 
+## When to use
+
+Use this adapter when your host receives declarative A2UI messages and should
+render them as Kimen components: it owns the A2UI-to-catalog translation, the
+`userAction` round-trip and per-node degradation, so you never touch the
+protocol shape yourself. If you control the spec format, skip the adapter and
+use [`@kimen/catalog`](../catalog/README.md) directly; if your host speaks
+MCP Apps, use [`@kimen/adapter-mcp-apps`](../adapter-mcp-apps/README.md).
+Transport is caller-owned either way — this package consumes
+already-delivered messages.
+
+The end-to-end walkthrough — transport wiring, the `userAction` round-trip,
+degradation handling and the COMPAT policy — is
+[Build an A2UI host with Kimen](../../docs/guides/a2ui-host.md).
+
 ## Usage
 
 ```ts
@@ -63,4 +78,5 @@ Transport is caller-owned: the adapter consumes already-delivered A2UI
 messages and emits `userAction` events to the supplied channel. `deleteSurface`
 drops adapter state; the host owns teardown of its surface element.
 
-See phase 5 of the [roadmap](../../docs/roadmap.md).
+See [Build an A2UI host with Kimen](../../docs/guides/a2ui-host.md) for the
+full guide, and the [roadmap](../../docs/roadmap.md) for project context.

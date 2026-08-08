@@ -1,0 +1,63 @@
+---
+title: ki-icon-button
+description: A token-styled, icon-only action button with a mandatory accessible name.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A token-styled, icon-only action button with native button semantics and a
+**mandatory accessible name** (`label`).
+
+<Demo
+  code={`<ki-icon-button label="Close">
+  <span aria-hidden="true">✕</span>
+</ki-icon-button>`}
+/>
+
+## Examples
+
+### Variants and tones
+
+The same five-level hierarchy and tone model as
+[ki-button](/kimen/docs/components/button/):
+
+<Demo
+  code={`<ki-icon-button variant="primary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
+<ki-icon-button variant="secondary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
+<ki-icon-button variant="tertiary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
+<ki-icon-button variant="quaternary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
+<ki-icon-button variant="ghost" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
+<ki-icon-button variant="primary" tone="danger" label="Delete item"><span aria-hidden="true">🗑</span></ki-icon-button>`}
+/>
+
+### With a tooltip
+
+Pair with [ki-tooltip](/kimen/docs/components/tooltip/) for sighted
+discoverability — the tooltip's `label` becomes the accessible
+*description*, complementing (never replacing) the icon button's own
+`label`:
+
+<Demo
+  code={`<ki-tooltip label="Closes the dialog">
+  <ki-icon-button label="Close">
+    <span aria-hidden="true">✕</span>
+  </ki-icon-button>
+</ki-tooltip>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-icon-button" />
+
+## Accessibility
+
+`label` is mandatory — there is no visible text to fall back on — and the
+slotted icon should carry `aria-hidden="true"`. Whenever a visible label
+fits, use [ki-button](/kimen/docs/components/button/) instead.
+`ki-icon-button` is not form-associated: form submit/reset belongs to
+`ki-button`, whose visible label communicates the consequence.
+
+## Workshop
+
+[Open ki-icon-button in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-icon-button--docs)

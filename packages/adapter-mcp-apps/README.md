@@ -25,6 +25,21 @@ never touching core.
   with no state change. Outbound traffic is limited to the surface's declared
   actions, mediated by the host.
 
+## When to use
+
+Use this adapter when you build an MCP server whose tool results should
+render as interactive Kimen surfaces in MCP Apps hosts: it produces the
+predeclared `ui://` resource, the tool metadata and the tool-result envelope
+on the server side, and `createSurfaceBridge` connects host traffic to the
+guarded renderer inside the surface. If you control the rendering host
+yourself, skip the adapter and use [`@kimen/catalog`](../catalog/README.md)
+directly; if your host speaks A2UI, use
+[`@kimen/adapter-a2ui`](../adapter-a2ui/README.md).
+
+The end-to-end walkthrough — declaring the surface, serving the resource,
+returning tool results and host negotiation — is
+[Ship an MCP App with Kimen](../../docs/guides/mcp-apps.md).
+
 ## Usage
 
 ```ts
@@ -51,4 +66,5 @@ the guarded renderer: it renders a `ui/toolResult`, ignores non-protocol
 traffic, and lets only declared actions leave as `ui/action`. A host announcing
 a protocol version outside `COMPAT.md` is refused at negotiation.
 
-See phase 5 of the [roadmap](../../docs/roadmap.md).
+See [Ship an MCP App with Kimen](../../docs/guides/mcp-apps.md) for the full
+guide, and the [roadmap](../../docs/roadmap.md) for project context.
