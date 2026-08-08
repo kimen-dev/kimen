@@ -122,7 +122,7 @@ jobs:
 
       - name: Upload immutable candidate
         id: upload
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: release-candidate
           path: ${{ runner.temp }}/release-candidate/candidate.tar
@@ -191,7 +191,7 @@ jobs:
         run: bash scripts/gates/gates-browser.sh "${{ matrix.engine }}"
 
       - name: Download candidate by immutable artifact ID
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           artifact-ids: ${{ needs.validate-core.outputs.artifact-id }}
           path: ${{ runner.temp }}/downloaded-candidate
@@ -305,7 +305,7 @@ jobs:
           persist-credentials: false
 
       - name: Download candidate by immutable artifact ID
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           artifact-ids: ${{ needs.validate-core.outputs.artifact-id }}
           path: ${{ runner.temp }}/downloaded-candidate
@@ -338,7 +338,7 @@ jobs:
             registry.npmjs.org:443
 
       - name: Download validated candidate by artifact ID
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           artifact-ids: ${{ needs.validate-core.outputs.artifact-id }}
           path: ${{ runner.temp }}/downloaded-candidate
