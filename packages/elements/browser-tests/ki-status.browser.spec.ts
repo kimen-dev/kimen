@@ -143,7 +143,15 @@ async function motionSettled(el: Element): Promise<void> {
       continue;
     }
     calm = false;
-    await Promise.allSettled(running.map((animation) => animation.finished));
+    // Bounded wait: `finished` can stall forever when an animation sticks in
+    // `running` (observed on loaded CI runners with the dialog's backdrop /
+    // focus-shadow transitions — issue #105), and an unbounded await here
+    // means the deadline above is never re-checked. Racing against the
+    // remaining budget keeps the settle loop, and the test, bounded.
+    await Promise.race([
+      Promise.allSettled(running.map((animation) => animation.finished)),
+      new Promise((resolve) => setTimeout(resolve, Math.max(0, deadline - Date.now()))),
+    ]);
     await new Promise((resolve) => requestAnimationFrame(resolve));
   }
 }

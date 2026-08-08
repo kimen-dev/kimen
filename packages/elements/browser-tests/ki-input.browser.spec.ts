@@ -205,7 +205,13 @@ async function waitForStyles(): Promise<void> {
       continue;
     }
     calm = false;
-    await Promise.allSettled(running.map((animation) => animation.finished));
+    // Bounded wait: `finished` can stall forever when an animation sticks in
+    // `running` (loaded-CI observation, issue #105); an unbounded await here
+    // skips the deadline re-check. Race against the remaining budget.
+    await Promise.race([
+      Promise.allSettled(running.map((animation) => animation.finished)),
+      new Promise((resolve) => setTimeout(resolve, Math.max(0, deadline - Date.now()))),
+    ]);
     await new Promise((resolve) => requestAnimationFrame(resolve));
   }
 }
