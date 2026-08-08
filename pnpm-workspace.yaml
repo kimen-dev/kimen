@@ -20,14 +20,14 @@ minimumReleaseAge: 10080
 # version cleared minimumReleaseAge before being added.
 overrides:
   # GHSA-42h9-826w-cgv3 and nine more, 1.16.0 → 1.18.0.
-  axios: 1.18.1
+  axios: 1.19.0
   # GHSA-3jxr-9vmj-r5cp and GHSA-mh99-v99m-4gvg. The 1.x line carries no fix
   # for the second, so both lines resolve to 5.0.8.
   brace-expansion: 5.0.8
   # GHSA-v2hh-gcrm-f6hx.
-  fast-uri: 3.1.4
+  fast-uri: 3.1.5
   # GHSA-r28c-9q8g-f849.
-  postcss: 8.5.23
+  postcss: 8.5.25
   # Not an advisory: this holds the target of patches/minimatch@3.1.5.patch.
   # `patchedDependencies` names an exact version, and Renovate does not read
   # that field — but it does read these overrides, and lockFileMaintenance
@@ -47,3 +47,6 @@ trustPolicy: no-downgrade
 # began on the 7.x line, so no-downgrade can never pass for it.
 trustPolicyExclude:
   - "semver@6.3.1"
+minimumReleaseAgeExclude:
+  # Renovate security update: fast-uri@3.1.5
+  - fast-uri@3.1.5
