@@ -84,10 +84,14 @@
  * control adds the hover drop layers and the brighter inner highlight on
  * top of the rest e6 stack, with a 2% scale. Press compresses to 97% and
  * drops back to the primary_default effect. State styling stays outside
- * the motion gate — only the transitions below are motion. */
-[part="play"]:hover .control {
-  box-shadow: var(--ki-video-play-shadow), var(--ki-effect-component-primary-hover-shadow);
-  transform: scale(1.02);
+ * the motion gate — only the transitions below are motion. Hover paint is
+ * gated on a hovering pointer: a touch screen latches :hover on the tap
+ * (pointer-capability contract). */
+@media (hover: hover) {
+  [part="play"]:hover .control {
+    box-shadow: var(--ki-video-play-shadow), var(--ki-effect-component-primary-hover-shadow);
+    transform: scale(1.02);
+  }
 }
 
 [part="play"]:active .control {

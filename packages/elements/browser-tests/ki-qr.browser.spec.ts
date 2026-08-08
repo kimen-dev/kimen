@@ -439,7 +439,12 @@ describe('ki-qr', () => {
     document.documentElement.style.setProperty('--ki-qr-module-radius', '4px');
     document.documentElement.style.setProperty('--ki-qr-finder-radius', '14px');
 
-    expect(Number.parseFloat(getComputedStyle(module).rx)).toBe(4);
+    // The render caps the module radius at 3 of the 8 module units: at the
+    // documented half-module value the dots become tangent circles, adjacent
+    // dark modules connect at a single point, and the contiguous scanline
+    // runs decoders need are severed (measured: jsQR reads rx 3, never
+    // rx 3.5+; the Figma master sidesteps it by exporting a seamless Union).
+    expect(Number.parseFloat(getComputedStyle(module).rx)).toBe(3);
     const finder = codeOf(el).querySelector('.finder');
     expect(finder).toBeTruthy();
     if (!finder) {

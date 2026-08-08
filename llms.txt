@@ -1431,6 +1431,7 @@ CSS custom properties:
 - `--ki-radio-selected-active-bg`: color used by the radio component for selected active background (MarsUI defines no pressed state; mirrors rest).
 - `--ki-radio-selected-active-border`: color used by the radio component for selected active border (same as the fill: borderless look).
 - `--ki-radio-selected-active-fg`: color used by the radio component for selected active foreground.
+- `--ki-radio-selected-active-overlay`: color used by the radio component for the selected pressed wash (ki-button active/overlay precedent). MarsUI defines no pressed fill and the brand ramp has no darker rung that survives the dark scheme, so the press composites the pressed state layer over the rest fill — a keyboard hold shows a real paint delta even under reduced motion, where the transform compress is gated off (bare-page state-delta contract).
 - `--ki-radio-selected-disabled-bg`: color used by the radio component for selected disabled background (MarsUI Surface/disabled_med_em Gray/300).
 - `--ki-radio-selected-disabled-border`: color used by the radio component for selected disabled border (same as the fill: borderless look).
 - `--ki-radio-selected-disabled-fg`: color used by the radio component for selected disabled dot (MarsUI Surface/disabled_base_em Gray/100 — a light dot one quiet value step above the gray donut, not a dark dot).

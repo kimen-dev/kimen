@@ -159,6 +159,20 @@ input:active:not([disabled], [data-ki-group-disabled]) ~ [part="control"] {
   --_ki-radio-selected-border: var(--ki-radio-selected-active-border);
 }
 
+/* Pressed fill delta for the SELECTED control (bare-page state-delta
+   contract): selected-active-bg mirrors rest — MarsUI defines no pressed
+   fill, and the brand ramp has no darker rung that survives the dark scheme
+   — so the press composites the pressed state layer over the rest fill via
+   the ki-button degenerate-gradient mechanism. Without it a keyboard user
+   holding Space on a selected radio sees nothing under reduced motion,
+   where the transform compress below is gated off. */
+input:active:checked:not([disabled], [data-ki-group-disabled]) ~ [part="control"] {
+  background-image: linear-gradient(
+    var(--ki-radio-selected-active-overlay),
+    var(--ki-radio-selected-active-overlay)
+  );
+}
+
 [part="label"] {
   font-size: var(--_ki-radio-label-font-size);
   font-weight: var(--_ki-radio-label-font-weight);

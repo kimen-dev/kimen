@@ -12,6 +12,87 @@
 // AND something else in this repository measures the same pixels.
 import axe from 'axe-core';
 import { expect } from 'vitest';
+import { userEvent } from 'vitest/browser';
+
+/**
+ * Upper bound on waiting for entry micro-motion, not an assertion: on expiry
+ * the scan proceeds and reports whatever it sees.
+ */
+const ENTRY_MOTION_SETTLE_DEADLINE_MS = 4000;
+
+async function nextFrame(): Promise<void> {
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+/**
+ * Every animation running anywhere under document.body, shadow trees
+ * included. Not document.getAnimations(): measured in this Chromium, it
+ * returns nothing for an animation whose target lives in a shadow root —
+ * only an element inside the shadow tree sees its own animations.
+ */
+function treeAnimations(): Animation[] {
+  const found = new Set<Animation>();
+  const collect = (element: Element): void => {
+    for (const animation of element.getAnimations({ subtree: true })) {
+      found.add(animation);
+    }
+  };
+  collect(document.body);
+  const walk = (node: ParentNode): void => {
+    for (const element of node.querySelectorAll('*')) {
+      const shadow = element.shadowRoot;
+      if (shadow !== null) {
+        for (const child of shadow.children) {
+          collect(child);
+        }
+        walk(shadow);
+      }
+    }
+  };
+  walk(document.body);
+  return [...found];
+}
+
+/**
+ * Let entry micro-motion finish before axe reads pixels.
+ *
+ * The fidelity pass gave components decorative entrance animations (Art. V)
+ * that fade in from opacity 0. axe multiplies that transient opacity into
+ * both foreground and background, so a scan taken mid-flight reports colour
+ * pairs no resting user ever sees (e.g. high-em #0a0c11 blended to #c8c8c9)
+ * and fails contrast on them. The resting state is the design fact under
+ * test. Indeterminate loops (ki-progress) never finish and are left out.
+ */
+async function settleEntryMotion(): Promise<void> {
+  const deadline = Date.now() + ENTRY_MOTION_SETTLE_DEADLINE_MS;
+  // A calm streak of two checks two frames apart: an entrance triggered by a
+  // late render pass can START after a first clean check, and a scan taken
+  // then sees a tree fading in from opacity 0 (axe reports the blended
+  // colours — e.g. "equalRatio", fg identical to bg — for a frame no
+  // resting user ever sees).
+  let calm = false;
+  for (;;) {
+    const running = treeAnimations().filter(
+      (animation) =>
+        animation.playState === 'running' && animation.effect?.getTiming().iterations !== Infinity,
+    );
+    if (Date.now() >= deadline) {
+      return;
+    }
+    if (running.length === 0) {
+      if (calm) {
+        return;
+      }
+      calm = true;
+      await nextFrame();
+      await nextFrame();
+      continue;
+    }
+    calm = false;
+    await Promise.allSettled(running.map((animation) => animation.finished));
+    await nextFrame();
+  }
+}
 
 /**
  * Reasons axe reports as undecidable, each paired with the instrument that
@@ -51,12 +132,43 @@ function detailsOf(results: axe.AxeResults): IncompleteDetail[] {
 }
 
 /**
+ * Rest the pointer on a transient corner probe (the ki-card hover-test
+ * pattern). The pointer position persists across spec files, and the
+ * fidelity pass gave components real hover paint — a pointer that happens to
+ * rest where a fixture mounts holds it in its hover state, whose paint is
+ * exactly what axe then refuses to reason about (the list-item ::after wash
+ * reports as "pseudoContent"). An axe scan is a rest-state claim unless the
+ * caller says otherwise.
+ */
+async function parkPointer(): Promise<void> {
+  const park = document.createElement('div');
+  park.style.cssText =
+    'position:fixed;inset-block-end:0;inset-inline-end:0;inline-size:8px;block-size:8px;';
+  document.body.append(park);
+  // Best-effort: an open modal covers the viewport and swallows the pointer
+  // (its backdrop is the hit target everywhere), so the hover cannot land —
+  // and the same top layer is what keeps the content below out of reach of
+  // a stray resting pointer, so there is nothing to park away from.
+  await userEvent.hover(park).catch(() => undefined);
+  park.remove();
+}
+
+/**
  * Assert a context is free of axe violations AND free of undecidable findings
  * outside the triage table above.
+ *
+ * `keepPointer` is for the scans whose SUBJECT is held open by the hover
+ * (ki-tooltip's shown-by-hover states): parking would dismiss the very state
+ * under audit.
  */
 export async function expectAccessible(
   context: Parameters<typeof axe.run>[0] = document.body,
+  options: { keepPointer?: boolean } = {},
 ): Promise<void> {
+  if (options.keepPointer !== true) {
+    await parkPointer();
+  }
+  await settleEntryMotion();
   const results = await axe.run(context);
   expect(results.violations).toEqual([]);
 

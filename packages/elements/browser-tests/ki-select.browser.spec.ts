@@ -483,8 +483,12 @@ describe('ki-select in a real browser', () => {
     const glyph = getComputedStyle(indicator, '::before');
     expect(glyph.borderBottomWidth).toBe('1px');
     expect(glyph.borderRightWidth).toBe('1px');
-    // 8px border-box square minus the 1px trailing hairline = 7px content box.
-    expect(glyph.width).toBe('7px');
+    // 8px BORDER-BOX square carrying the trailing hairlines. Chromium
+    // resolves the `width` property to its used value, which under
+    // `box-sizing: border-box` describes the border box (8px), not the 7px
+    // content box the first draft of this assertion predicted.
+    expect(glyph.boxSizing).toBe('border-box');
+    expect(glyph.width).toBe('8px');
     expect(glyph.transform).not.toBe('none');
 
     // Open state rotates the chevron half a turn (transform-only motion).

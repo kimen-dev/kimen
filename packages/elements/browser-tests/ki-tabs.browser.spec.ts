@@ -389,9 +389,12 @@ describe('ki-tabs theming behavior in a real browser', () => {
     document.documentElement.setAttribute('data-ki-theme', 'material3');
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
-    const material3Style = getComputedStyle(email);
+    // Poll the color: the fidelity pass transitions the tab foreground, so
+    // one frame after the theme flip it still reads the onmars value it is
+    // tweening away from. Custom properties below flip instantly.
+    await expect.poll(() => getComputedStyle(email).color).not.toBe(onmarsColor);
 
-    expect(material3Style.color).not.toBe(onmarsColor);
+    const material3Style = getComputedStyle(email);
     expect(material3Style.getPropertyValue('--ki-tab-indicator-color').trim()).not.toBe(
       onmarsIndicator,
     );

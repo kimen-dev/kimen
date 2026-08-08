@@ -122,6 +122,8 @@ describe('ki-tooltip in forced dark scheme', () => {
     if (!main) {
       throw new Error('Expected dark tooltip fixture to render in main');
     }
-    await expectAccessible(main);
+    // keepPointer: the shown state under audit is HELD OPEN by the hover —
+    // the default rest-state parking would dismiss it before the scan.
+    await expectAccessible(main, { keepPointer: true });
   });
 });

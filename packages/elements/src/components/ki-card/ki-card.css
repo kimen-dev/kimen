@@ -95,16 +95,23 @@ slot[name="media"]::slotted(video) {
     transition: transform var(--ki-motion-duration-medium-1) var(--ki-motion-easing-standard);
   }
 
-  :host(:hover) slot[name="media"]::slotted(img),
-  :host(:hover) slot[name="media"]::slotted(video) {
-    transform: scale(1.02);
+  /* Hover paint is additionally gated on a hovering pointer: a touch screen
+   * latches :hover on the tap (pointer-capability contract). */
+  @media (hover: hover) {
+    :host(:hover) slot[name="media"]::slotted(img),
+    :host(:hover) slot[name="media"]::slotted(video) {
+      transform: scale(1.02);
+    }
   }
 }
 
 /* Resting e1 rises to e2 on hover — the two MarsUI resting levels. The end
- * state lives outside the gate so reduced-motion users still get it. */
-:host(:hover) [part="card"] {
-  box-shadow: var(--ki-elevation-e2);
+ * state lives outside the motion gate so reduced-motion users still get it,
+ * but inside the hover-capability gate (pointer-capability contract). */
+@media (hover: hover) {
+  :host(:hover) [part="card"] {
+    box-shadow: var(--ki-elevation-e2);
+  }
 }
 
 @keyframes ki-card-enter {

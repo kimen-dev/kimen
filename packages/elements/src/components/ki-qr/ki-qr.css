@@ -49,7 +49,17 @@
    * round radius. shape-rendering crispEdges was rejected: it kills the
    * Type=round dots. */
   stroke-width: 0.5px;
-  rx: var(--ki-qr-module-radius);
+
+  /* Scannability clamp (S9: shaped modules must keep decoding): at the
+   * documented half-module radius (4 of the 8-units-per-module space) the
+   * dots become tangent circles and adjacent dark modules touch at a single
+   * point, which severs the contiguous scanline runs decoders locate the
+   * symbol by — measured: jsQR reads the symbol at rx 3, never at rx 3.5+.
+   * The Figma round master avoids this by exporting one merged Union with
+   * "zero seams"; a per-rect render preserves connectivity by capping the
+   * radius one unit under tangency. Geometry in the code's own module
+   * space, like the seam stroke above — not a themable length. */
+  rx: min(var(--ki-qr-module-radius), 3px);
 }
 
 .finder {

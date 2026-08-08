@@ -7718,6 +7718,14 @@
                 "required": false,
                 "type": null
               },
+              "--ki-radio-selected-active-overlay": {
+                "default": null,
+                "deprecatedSince": null,
+                "description": "color used by the radio component for the selected pressed wash (ki-button active/overlay precedent). MarsUI defines no pressed fill and the brand ramp has no darker rung that survives the dark scheme, so the press composites the pressed state layer over the rest fill — a keyboard hold shows a real paint delta even under reduced motion, where the transform compress is gated off (bare-page state-delta contract).",
+                "replacement": null,
+                "required": false,
+                "type": null
+              },
               "--ki-radio-selected-disabled-bg": {
                 "default": null,
                 "deprecatedSince": null,
@@ -13862,6 +13870,7 @@
                 "--ki-radio-selected-active-bg": "#845abe",
                 "--ki-radio-selected-active-border": "#845abe",
                 "--ki-radio-selected-active-fg": "#ffffff",
+                "--ki-radio-selected-active-overlay": "rgba(0,0,0,0.08)",
                 "--ki-radio-selected-disabled-bg": "rgba(255,255,255,0.18)",
                 "--ki-radio-selected-disabled-border": "rgba(255,255,255,0.18)",
                 "--ki-radio-selected-disabled-fg": "rgba(255,255,255,0.08)",
@@ -15231,6 +15240,7 @@
                 "--ki-radio-selected-active-bg": "#845abe",
                 "--ki-radio-selected-active-border": "#845abe",
                 "--ki-radio-selected-active-fg": "#ffffff",
+                "--ki-radio-selected-active-overlay": "rgba(255,255,255,0.08)",
                 "--ki-radio-selected-disabled-bg": "#dddfe4",
                 "--ki-radio-selected-disabled-border": "#dddfe4",
                 "--ki-radio-selected-disabled-fg": "#f2f2f4",
@@ -16609,6 +16619,7 @@
                 "--ki-radio-selected-active-bg": "#141218",
                 "--ki-radio-selected-active-border": "#d0bcff",
                 "--ki-radio-selected-active-fg": "#eaddff",
+                "--ki-radio-selected-active-overlay": "rgba(230,224,233,0.12)",
                 "--ki-radio-selected-disabled-bg": "rgba(255,255,255,0.12)",
                 "--ki-radio-selected-disabled-border": "#49454f",
                 "--ki-radio-selected-disabled-fg": "#cac4d0",
@@ -17978,6 +17989,7 @@
                 "--ki-radio-selected-active-bg": "#fef7ff",
                 "--ki-radio-selected-active-border": "#6750a4",
                 "--ki-radio-selected-active-fg": "#4f378b",
+                "--ki-radio-selected-active-overlay": "rgba(29,27,32,0.12)",
                 "--ki-radio-selected-disabled-bg": "#e7e0ec",
                 "--ki-radio-selected-disabled-border": "#cac4d0",
                 "--ki-radio-selected-disabled-fg": "#49454f",
@@ -26761,6 +26773,14 @@
             "required": false,
             "type": null
           },
+          "--ki-radio-selected-active-overlay": {
+            "default": "#ffffff14",
+            "deprecatedSince": null,
+            "description": "color used by the radio component for the selected pressed wash (ki-button active/overlay precedent). MarsUI defines no pressed fill and the brand ramp has no darker rung that survives the dark scheme, so the press composites the pressed state layer over the rest fill — a keyboard hold shows a real paint delta even under reduced motion, where the transform compress is gated off (bare-page state-delta contract).",
+            "replacement": null,
+            "required": false,
+            "type": null
+          },
           "--ki-radio-selected-disabled-bg": {
             "default": "#dddfe4",
             "deprecatedSince": null,
@@ -30496,5 +30516,5 @@
       }
     }
   },
-  "surfaceSha256": "6fd919fe493718a0cdb33434b8432e3508648ac5ab6612b45812c25a9114414f"
+  "surfaceSha256": "785e16323b484ec3cfa56b64a9d60b338542360546faf90737a37d3e685b1c41"
 }

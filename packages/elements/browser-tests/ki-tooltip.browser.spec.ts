@@ -541,6 +541,8 @@ describe('ki-tooltip pointer path in a real browser', () => {
       await hoverTrigger(host, trigger);
     }
 
-    await expectAccessible(main);
+    // keepPointer: the shown state under audit is HELD OPEN by the hover —
+    // the default rest-state parking would dismiss it before the scan.
+    await expectAccessible(main, { keepPointer: true });
   });
 });

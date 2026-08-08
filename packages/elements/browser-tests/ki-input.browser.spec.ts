@@ -140,8 +140,74 @@ function readTokenColor(name: string): string {
   return value;
 }
 
+/**
+ * Make the next computed-style read a REST read. The fidelity pass gave the
+ * field hover paint and state transitions, so one frame is not enough: the
+ * pointer may be resting where the field lays out (its position persists
+ * across spec files, and the floating label shifts the field under it on
+ * focus), and a state flip read mid-transition reports a colour between two
+ * tokens that matches neither. Park the pointer, then wait out every finite
+ * animation — walking shadow roots, because in this Chromium
+ * `getAnimations({subtree: true})` does not cross the shadow boundary.
+ */
 async function waitForStyles(): Promise<void> {
+  // Park the pointer on a transient probe pinned to the corner (ki-card's
+  // hover-test pattern): resetPointer's page origin can land INSIDE the
+  // tester iframe exactly where these fixtures mount, which puts the control
+  // in its hover state instead of clearing it.
+  const park = document.createElement('div');
+  park.style.cssText =
+    'position:fixed;inset-block-end:0;inset-inline-end:0;inline-size:8px;block-size:8px;';
+  document.body.append(park);
+  await userEvent.hover(park);
+  park.remove();
   await new Promise((resolve) => requestAnimationFrame(resolve));
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  const deadline = Date.now() + 4000;
+  // A calm streak of two checks two frames apart: a transition triggered by a
+  // late Stencil re-render (custom props resolving on the second pass) can
+  // START after a first clean check, and a read taken then lands mid-tween.
+  let calm = false;
+  for (;;) {
+    const found = new Set<Animation>();
+    const collect = (element: Element): void => {
+      for (const animation of element.getAnimations({ subtree: true })) {
+        found.add(animation);
+      }
+    };
+    collect(document.body);
+    const walk = (node: ParentNode): void => {
+      for (const element of node.querySelectorAll('*')) {
+        const shadow = element.shadowRoot;
+        if (shadow !== null) {
+          for (const child of shadow.children) {
+            collect(child);
+          }
+          walk(shadow);
+        }
+      }
+    };
+    walk(document.body);
+    const running = [...found].filter(
+      (animation) =>
+        animation.playState === 'running' && animation.effect?.getTiming().iterations !== Infinity,
+    );
+    if (Date.now() >= deadline) {
+      return;
+    }
+    if (running.length === 0) {
+      if (calm) {
+        return;
+      }
+      calm = true;
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      continue;
+    }
+    calm = false;
+    await Promise.allSettled(running.map((animation) => animation.finished));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
 }
 
 describe('ki-input in a real browser', () => {

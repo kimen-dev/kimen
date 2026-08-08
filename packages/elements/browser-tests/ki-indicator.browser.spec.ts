@@ -287,10 +287,13 @@ describe('ki-indicator', () => {
     }
 
     // The row's gated entrance is opacity-only (never layout) and settles
-    // fully visible once the one-shot fade finishes.
+    // fully visible once the one-shot fade finishes. Poll the end state
+    // itself: `el.getAnimations({subtree: true})` cannot see the transition
+    // because in this Chromium it does not cross the shadow boundary, and the
+    // fade may not even have STARTED yet on the frame after mount.
     expect(getComputedStyle(rowOf(el)).transitionProperty).toBe('opacity');
     const settleDeadline = Date.now() + 2000;
-    while (el.getAnimations({ subtree: true }).length > 0 && Date.now() < settleDeadline) {
+    while (getComputedStyle(rowOf(el)).opacity !== '1' && Date.now() < settleDeadline) {
       await new Promise((resolve) => requestAnimationFrame(resolve));
     }
     expect(getComputedStyle(rowOf(el)).opacity).toBe('1');

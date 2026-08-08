@@ -5244,6 +5244,10 @@
               "description": "color used by the radio component for selected active foreground."
             },
             {
+              "name": "--ki-radio-selected-active-overlay",
+              "description": "color used by the radio component for the selected pressed wash (ki-button active/overlay precedent). MarsUI defines no pressed fill and the brand ramp has no darker rung that survives the dark scheme, so the press composites the pressed state layer over the rest fill — a keyboard hold shows a real paint delta even under reduced motion, where the transform compress is gated off (bare-page state-delta contract)."
+            },
+            {
               "name": "--ki-radio-selected-disabled-bg",
               "description": "color used by the radio component for selected disabled background (MarsUI Surface/disabled_med_em Gray/300)."
             },

@@ -25,6 +25,12 @@ function injectStylesheet(): void {
   style.id = STYLE_ID;
   style.textContent = tokensCss;
   document.head.appendChild(style);
+  // The fidelity pass moved tone pills onto alpha surfaces
+  // (ki.surface.<tone>-base-em-alpha), which presume the scheme's page
+  // surface behind them — the same s0 every other dark spec paints. Without
+  // it the 12% wash composites over the tester's white page and axe measures
+  // a colour pair no themed page ever shows.
+  document.body.style.backgroundColor = 'var(--ki-surface-s0)';
 }
 
 function landmark(): HTMLElement {

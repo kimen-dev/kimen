@@ -86,7 +86,60 @@ function dotOf(el: KiStatusElement): HTMLElement {
  * motion). */
 async function motionSettled(el: Element): Promise<void> {
   const deadline = Date.now() + 2000;
-  while (el.getAnimations({ subtree: true }).length > 0 && Date.now() < deadline) {
+  // Walks shadow roots explicitly: in this Chromium `getAnimations({subtree})`
+  // does not cross the shadow boundary, so the dot's @starting-style
+  // transition was invisible to the old wait and geometry reads landed mid
+  // pop-in (a half-scaled dot). A calm streak of two clean checks two frames
+  // apart covers transitions that start on a late render pass.
+  const animations = (): Animation[] => {
+    const found = new Set<Animation>();
+    const collect = (element: Element): void => {
+      for (const animation of element.getAnimations({ subtree: true })) {
+        found.add(animation);
+      }
+    };
+    collect(el);
+    const walk = (node: ParentNode): void => {
+      for (const element of node.querySelectorAll('*')) {
+        const shadow = element.shadowRoot;
+        if (shadow !== null) {
+          for (const child of shadow.children) {
+            collect(child);
+          }
+          walk(shadow);
+        }
+      }
+    };
+    const shadow = el.shadowRoot;
+    if (shadow !== null) {
+      for (const child of shadow.children) {
+        collect(child);
+      }
+      walk(shadow);
+    }
+    walk(el);
+    return [...found];
+  };
+  let calm = false;
+  for (;;) {
+    const running = animations().filter(
+      (animation) =>
+        animation.playState === 'running' && animation.effect?.getTiming().iterations !== Infinity,
+    );
+    if (Date.now() >= deadline) {
+      return;
+    }
+    if (running.length === 0) {
+      if (calm) {
+        return;
+      }
+      calm = true;
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      continue;
+    }
+    calm = false;
+    await Promise.allSettled(running.map((animation) => animation.finished));
     await new Promise((resolve) => requestAnimationFrame(resolve));
   }
 }

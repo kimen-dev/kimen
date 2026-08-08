@@ -86,6 +86,10 @@ const TOKENS_STYLE_ID = 'pointer-capability-tokens';
 const WITNESS_STYLE_ID = 'pointer-capability-witness-style';
 const SHADOW_RENDER_DEADLINE_MS = 1500;
 const EMULATION_SETTLE_DEADLINE_MS = 2000;
+// Bounds the wait on entry micro-motion (medium-1 runs plus the avatar-group
+// stagger), not any assertion: on expiry the measurement proceeds and, if the
+// gallery truly cannot come to rest, fails loudly rather than waits forever.
+const ENTRY_MOTION_SETTLE_DEADLINE_MS = 4000;
 // Bound on the measurement, not on the contract: enough instances to cover
 // the variants a gallery opens with, few enough to keep 29 components inside
 // one suite. Whatever this leaves out, the audit still reads.
@@ -283,12 +287,18 @@ function hoverSubjects(host: HTMLElement, rule: StyleRule): HTMLElement[] {
   if (shadow === null) {
     return [];
   }
+  // A rule rooted at :host fires when the pointer rests anywhere on the host,
+  // so the host is the element to hover — regardless of which inner part the
+  // rule then paints. Checked before the [part] extraction: hovering the
+  // painted part instead asks vitest-browser to build a selector for a shadow
+  // element it cannot always express (ki-card's media variant crashes it),
+  // for a hover the host would have received anyway.
+  if (rule.selector.startsWith(':host')) {
+    return [host];
+  }
   const parts = [...rule.selector.matchAll(/\[part="([^"]+)"\]/gu)].map((match) => match[1] ?? '');
   if (parts.length > 0) {
     return parts.flatMap((part) => [...shadow.querySelectorAll<HTMLElement>(`[part~="${part}"]`)]);
-  }
-  if (rule.selector.startsWith(':host')) {
-    return [host];
   }
   return [...shadow.querySelectorAll<HTMLElement>(rule.selector.replaceAll(':hover', ''))];
 }
@@ -364,6 +374,66 @@ async function park(): Promise<void> {
 }
 
 /**
+ * Every animation running anywhere in the gallery's flattened tree.
+ *
+ * Not document.getAnimations(): measured here, it returns nothing for an
+ * animation whose target lives in a shadow root (and so does
+ * `gallery.getAnimations({subtree: true})`) — only an element INSIDE the
+ * shadow tree sees its own animations. So this walks every shadow root and
+ * asks each of its top-level elements for its subtree, deduplicating because
+ * nested calls overlap.
+ */
+function galleryAnimations(gallery: HTMLElement): Animation[] {
+  const found = new Set<Animation>();
+  const collect = (element: Element): void => {
+    for (const animation of element.getAnimations({ subtree: true })) {
+      found.add(animation);
+    }
+  };
+  collect(gallery);
+  const walk = (node: ParentNode): void => {
+    for (const element of node.querySelectorAll('*')) {
+      const shadow = element.shadowRoot;
+      if (shadow !== null) {
+        for (const child of shadow.children) {
+          collect(child);
+        }
+        walk(shadow);
+      }
+    }
+  };
+  walk(gallery);
+  return [...found];
+}
+
+/**
+ * Let the gallery's entry micro-motion finish before paint is compared.
+ *
+ * The fidelity pass gave several components decorative entrance animations
+ * (Art. V). A resting signature taken mid-flight differs from any later read
+ * for reasons that have nothing to do with hovering — the first subject
+ * hovered would be blamed for the frame the animation moved on its own — and
+ * a host still translating is one Playwright refuses to hover at all.
+ * `running` covers the delay phase too, so staggered entrances (avatar-group)
+ * are waited out, not raced. Indeterminate loops never finish and are left
+ * out: none of the measured galleries pairs one with a hover rule.
+ */
+async function settleEntryMotion(gallery: HTMLElement): Promise<void> {
+  const deadline = Date.now() + ENTRY_MOTION_SETTLE_DEADLINE_MS;
+  for (;;) {
+    const running = galleryAnimations(gallery).filter(
+      (animation) =>
+        animation.playState === 'running' && animation.effect?.getTiming().iterations !== Infinity,
+    );
+    if (running.length === 0 || Date.now() >= deadline) {
+      return;
+    }
+    await Promise.allSettled(running.map((animation) => animation.finished));
+    await nextFrame();
+  }
+}
+
+/**
  * Ask for a pointer capability and wait until the page reports it; report
  * whether it ever did.
  *
@@ -398,6 +468,7 @@ async function repaintingSubjects(
   subjects: Map<HTMLElement, string>,
 ): Promise<{ repainting: string[]; unreached: string[] }> {
   await park();
+  await settleEntryMotion(gallery);
   const resting = paintSignature(gallery);
   const repainting: string[] = [];
   const unreached: string[] = [];

@@ -1666,6 +1666,7 @@
   --ki-radio-selected-active-bg: var(--ki-surface-s0); /** Material 3 color used by the radio component for selected active background. */
   --ki-radio-selected-active-fg: var(--ki-surface-primary-high-em); /** Material 3 color used by the radio component for selected active foreground. */
   --ki-radio-selected-active-border: var(--ki-outline-primary-high-em); /** Material 3 color used by the radio component for selected active border. */
+  --ki-radio-selected-active-overlay: var(--ki-state-layer-pressed); /** color used by the radio component for the selected pressed wash (ki-button active/overlay precedent). MarsUI defines no pressed fill and the brand ramp has no darker rung that survives the dark scheme, so the press composites the pressed state layer over the rest fill — a keyboard hold shows a real paint delta even under reduced motion, where the transform compress is gated off (bare-page state-delta contract). */
   --ki-radio-selected-disabled-bg: var(--ki-surface-disabled-low-em); /** Material 3 color used by the radio component for selected disabled background. */
   --ki-radio-selected-disabled-border: var(--ki-outline-med-em); /** Material 3 color used by the radio component for selected disabled border. */
   --ki-radio-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the radio component for focus ring color. */
@@ -3630,6 +3631,7 @@
     --ki-radio-selected-active-bg: var(--ki-surface-s0); /** Material 3 color used by the radio component for selected active background. */
     --ki-radio-selected-active-fg: var(--ki-surface-primary-high-em); /** Material 3 color used by the radio component for selected active foreground. */
     --ki-radio-selected-active-border: var(--ki-outline-primary-high-em); /** Material 3 color used by the radio component for selected active border. */
+    --ki-radio-selected-active-overlay: var(--ki-state-layer-pressed); /** color used by the radio component for the selected pressed wash (ki-button active/overlay precedent). MarsUI defines no pressed fill and the brand ramp has no darker rung that survives the dark scheme, so the press composites the pressed state layer over the rest fill — a keyboard hold shows a real paint delta even under reduced motion, where the transform compress is gated off (bare-page state-delta contract). */
     --ki-radio-selected-disabled-bg: var(--ki-surface-disabled-low-em); /** Material 3 color used by the radio component for selected disabled background. */
     --ki-radio-selected-disabled-border: var(--ki-outline-med-em); /** Material 3 color used by the radio component for selected disabled border. */
     --ki-radio-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the radio component for focus ring color. */
@@ -5579,6 +5581,7 @@
   --ki-radio-selected-active-bg: var(--ki-surface-s0); /** Material 3 color used by the radio component for selected active background. */
   --ki-radio-selected-active-fg: var(--ki-surface-primary-high-em); /** Material 3 color used by the radio component for selected active foreground. */
   --ki-radio-selected-active-border: var(--ki-outline-primary-high-em); /** Material 3 color used by the radio component for selected active border. */
+  --ki-radio-selected-active-overlay: var(--ki-state-layer-pressed); /** color used by the radio component for the selected pressed wash (ki-button active/overlay precedent). MarsUI defines no pressed fill and the brand ramp has no darker rung that survives the dark scheme, so the press composites the pressed state layer over the rest fill — a keyboard hold shows a real paint delta even under reduced motion, where the transform compress is gated off (bare-page state-delta contract). */
   --ki-radio-selected-disabled-bg: var(--ki-surface-disabled-low-em); /** Material 3 color used by the radio component for selected disabled background. */
   --ki-radio-selected-disabled-border: var(--ki-outline-med-em); /** Material 3 color used by the radio component for selected disabled border. */
   --ki-radio-focus-ring-color: var(--ki-outline-primary-high-em); /** color used by the radio component for focus ring color. */

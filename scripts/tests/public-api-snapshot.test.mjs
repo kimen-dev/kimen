@@ -520,11 +520,16 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // blur, switch glyph geometry, select trigger typography and listbox blur,
   // the alert dismiss/text-gap set, the scroller focus ring, tab bar metrics,
   // the motion instant/spring/distance set, focus danger and the small dark
-  // shadow. 1316 + 51 = 1367.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1367);
+  // shadow. The fidelity test-failure pass adds one more on top:
+  // --ki-radio-selected-active-overlay, the selected radio's pressed
+  // state layer (the ki-button active/overlay precedent), because
+  // selected-active-bg mirrors rest and a keyboard hold on a selected radio
+  // otherwise shows no paint delta under reduced motion (bare-page
+  // state-delta contract). 1316 + 52 = 1368.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1368);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1367,
+    1368,
   );
 });

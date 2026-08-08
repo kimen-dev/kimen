@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 
 // @spec:009-ki-card
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -53,16 +53,45 @@ async function nextFrame(): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
-/** The gated entrance animation (opacity/translate) runs in this non-reduced
- * instance: wait it out so geometry and axe contrast reads are end-state
- * deterministic. `subtree: true` walks the flat tree, so slotted and
- * shadow-tree animations are covered too. */
+/** The gated entrance animation (opacity/translate) and the hover-exit
+ * transitions (box-shadow, media scale) run in this non-reduced instance:
+ * wait them out so geometry and axe contrast reads are end-state
+ * deterministic. NOT `document.body.getAnimations({subtree: true})`:
+ * measured in this Chromium it returns nothing for an animation whose
+ * target lives in a shadow root — only elements inside the shadow tree see
+ * their own animations, so this walks every shadow root explicitly. */
 async function settleMotion(): Promise<void> {
-  await Promise.all(
-    document.body
-      .getAnimations({ subtree: true })
-      .map((animation) => animation.finished.catch(() => undefined)),
-  );
+  const collect = (found: Set<Animation>, element: Element): void => {
+    for (const animation of element.getAnimations({ subtree: true })) {
+      found.add(animation);
+    }
+  };
+  const deadline = Date.now() + 4000;
+  for (;;) {
+    const found = new Set<Animation>();
+    collect(found, document.body);
+    const walk = (node: ParentNode): void => {
+      for (const element of node.querySelectorAll('*')) {
+        const shadow = element.shadowRoot;
+        if (shadow !== null) {
+          for (const child of shadow.children) {
+            collect(found, child);
+          }
+          walk(shadow);
+        }
+      }
+    };
+    walk(document.body);
+    const running = [...found].filter(
+      (animation) =>
+        animation.playState === 'running' && animation.effect?.getTiming().iterations !== Infinity,
+    );
+    if (running.length === 0 || Date.now() >= deadline) {
+      return;
+    }
+    await Promise.allSettled(running.map((animation) => animation.finished));
+    await nextFrame();
+  }
 }
 
 async function mount(markup: string): Promise<HTMLElement> {
@@ -75,6 +104,15 @@ async function mount(markup: string): Promise<HTMLElement> {
   while (!el.shadowRoot?.hasChildNodes() && Date.now() < deadline) {
     await nextFrame();
   }
+  await nextFrame();
+  // The fidelity pass gave the card real :hover paint (e2 lift, media
+  // scale). The pointer position persists across tests — the S5 click on the
+  // footer button leaves it parked over where every later card mounts — so a
+  // rest-state read taken without parking measures the hover state instead
+  // (e2 shadow, 1.02-scaled media). Park at the page origin, give the
+  // hover-exit transitions a frame to start, then settle all motion.
+  await (commands as unknown as { resetPointer: () => Promise<void> }).resetPointer();
+  await nextFrame();
   await nextFrame();
   await settleMotion();
   return el;
@@ -427,13 +465,19 @@ describe('ki-card in a real browser', () => {
     ensureMaterial3Tokens();
     document.documentElement.setAttribute('data-ki-theme', 'material3');
 
+    // Wrapped in <main> like the S1/S2 axe fixture: axe's best-practice
+    // region rule is about the PAGE (content outside landmarks), and a card
+    // is not a landmark. The component-level claims (contrast, structure)
+    // are unchanged by the wrapper.
     await mount(`
-      <ki-card>
-        <div slot="media">media</div>
-        <h2 slot="header">Monthly report</h2>
-        <p>Revenue increased.</p>
-        <ki-button slot="footer">Share</ki-button>
-      </ki-card>
+      <main>
+        <ki-card>
+          <div slot="media">media</div>
+          <h2 slot="header">Monthly report</h2>
+          <p>Revenue increased.</p>
+          <ki-button slot="footer">Share</ki-button>
+        </ki-card>
+      </main>
     `);
 
     await expectAccessible(document.body);
@@ -496,8 +540,19 @@ describe('ki-card in a real browser', () => {
     const imgStyles = getComputedStyle(img);
     expect(imgStyles.display).toBe('block');
     expect(imgStyles.borderRadius).toBe('20px');
+    // The media region is an inset sub-surface (Chart master): it pads
+    // space/md inline and the slotted media fills the CONTENT box, not the
+    // region border box.
+    const media = regionPart(el, 'media');
+    const mediaStyles = getComputedStyle(media);
+    expect(mediaStyles.paddingInlineStart).toBe('8px');
+    expect(mediaStyles.paddingInlineEnd).toBe('8px');
     expect(Math.round(img.getBoundingClientRect().width)).toBe(
-      Math.round(regionPart(el, 'media').getBoundingClientRect().width),
+      Math.round(
+        media.getBoundingClientRect().width -
+          Number.parseFloat(mediaStyles.paddingInlineStart) -
+          Number.parseFloat(mediaStyles.paddingInlineEnd),
+      ),
     );
   });
 

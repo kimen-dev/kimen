@@ -44,8 +44,12 @@
   inset-block: 0;
   inset-inline: 0;
   border-radius: inherit;
-  background: var(--ki-inverse-white-alpha-3);
-  opacity: 0;
+
+  /* No resting background: axe's color-contrast check refuses to decide
+   * ("pseudoContent") for any text under a pseudo-element that carries one,
+   * even at opacity 0. The wash colors live only in the states that paint
+   * them, and the fade runs on background-color instead of opacity. */
+  background-color: transparent;
   pointer-events: none;
 }
 
@@ -57,12 +61,17 @@
   }
 
   [part="item"]::after {
-    transition: opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+    transition: background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
   }
 }
 
-:host(:hover) [part="item"]::after {
-  opacity: 1;
+/* Hover paint is gated on a hovering pointer: a touch screen latches :hover
+ * on the tap (pointer-capability contract). :active below stays ungated —
+ * a press is real on every device. */
+@media (hover: hover) {
+  :host(:hover) [part="item"]::after {
+    background-color: var(--ki-inverse-white-alpha-3);
+  }
 }
 
 :host(:active) [part="item"] {
@@ -70,8 +79,7 @@
 }
 
 :host(:active) [part="item"]::after {
-  opacity: 1;
-  background: var(--ki-inverse-white-alpha-6);
+  background-color: var(--ki-inverse-white-alpha-6);
 }
 
 /* Leading media follows the scheme (MarsUI draws icons in the text ramp,

@@ -12,14 +12,15 @@
 
   /* Thumb travel: the thumb is statically anchored at the unchecked inset and
      TRANSLATED to the checked position (transform, not inset — animating
-     inset-inline-start forced layout every frame). Travel spans the track
-     content box minus the thumb and both insets; RTL negates the sign below
-     because translate is physical while the anchor inset is logical. */
+     inset-inline-start forced layout every frame). The master (Toggle
+     10023:1125 md) insets the 22px pointer 2px from the track's OUTER edge
+     — the hairline stroke overlaps the inset, it does not add to it — so
+     travel spans the track border box minus the thumb and both visual
+     insets: 40 - 22 - 2*2 = 14. RTL negates the sign below because
+     translate is physical while the anchor inset is logical. */
   --_ki-switch-travel-distance: calc(
     var(--ki-switch-track-width) -
     var(--ki-switch-thumb-width) -
-    2 *
-    var(--ki-switch-border-width) -
     2 *
     var(--ki-switch-thumb-inset)
   );
@@ -135,7 +136,10 @@ input {
   display: inline-grid;
   inline-size: var(--ki-switch-thumb-width);
   inset-block-start: calc((100% - var(--ki-switch-thumb-size)) / 2);
-  inset-inline-start: var(--ki-switch-thumb-inset);
+
+  /* The containing block is the track's PADDING box (inside the hairline),
+     so the master's 2px outer-edge inset is inset minus border here. */
+  inset-inline-start: calc(var(--ki-switch-thumb-inset) - var(--ki-switch-border-width));
   place-items: center;
   pointer-events: none;
   position: absolute;

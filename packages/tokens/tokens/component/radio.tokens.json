@@ -143,6 +143,10 @@
           "border": {
             "$value": "{ki.surface.primary-med-em}",
             "$description": "color used by the radio component for selected active border (same as the fill: borderless look)."
+          },
+          "overlay": {
+            "$value": "{ki.state-layer.pressed}",
+            "$description": "color used by the radio component for the selected pressed wash (ki-button active/overlay precedent). MarsUI defines no pressed fill and the brand ramp has no darker rung that survives the dark scheme, so the press composites the pressed state layer over the rest fill — a keyboard hold shows a real paint delta even under reduced motion, where the transform compress is gated off (bare-page state-delta contract)."
           }
         },
         "disabled": {

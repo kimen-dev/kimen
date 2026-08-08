@@ -451,9 +451,12 @@ describe('ki-alert in a real browser', () => {
     if (!button) {
       throw new Error('ki-alert did not render a dismiss button');
     }
-    const rect = button.getBoundingClientRect();
-    expect(rect.width).toBeGreaterThanOrEqual(24);
-    expect(rect.height).toBeGreaterThanOrEqual(24);
+    // Polled, not read once: the fidelity pass gave the chip a gated
+    // transform transition (press compress scale 0.96), and a one-shot read
+    // taken on the tail of that transition measures 24 x (1 - epsilon) —
+    // a frame, not a smaller target. The 24px floor itself is unchanged.
+    await expect.poll(() => button.getBoundingClientRect().width).toBeGreaterThanOrEqual(24);
+    await expect.poll(() => button.getBoundingClientRect().height).toBeGreaterThanOrEqual(24);
   });
 
   it('S11 exposes the default dismiss label as the button accessible name', async () => {

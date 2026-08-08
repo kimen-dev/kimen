@@ -144,9 +144,13 @@
  * (Component_effect secondary_default -> secondary_hover, box-shadow only):
  * a preview of the future expandable overflow without pretending the static
  * counter is a button. State styling stays outside the motion gate; only
- * the transition below is motion. */
-:host(:hover) [part="counter"] {
-  box-shadow: var(--ki-effect-component-secondary-hover-shadow);
+ * the transition below is motion. Hover paint is gated on a hovering
+ * pointer: a touch screen latches :hover on the tap (pointer-capability
+ * contract). */
+@media (hover: hover) {
+  :host(:hover) [part="counter"] {
+    box-shadow: var(--ki-effect-component-secondary-hover-shadow);
+  }
 }
 
 /* Micro-motion (MarsUI single-speed language, ki-switch/ki-dialog gating
