@@ -34,8 +34,8 @@
       "minimumReleaseAge": "7 days"
     }
   ],
-  "ignoreDeps": ["minimatch"],
+  "ignoreDeps": ["minimatch", "minimatch@3"],
   "description": [
-    "minimatch is in ignoreDeps because patches/minimatch@3.1.5.patch applies to that exact version and Renovate does not read pnpm patchedDependencies. pnpm-workspace.yaml pins it too; the pin, the patch and this entry move together, by hand, or not at all."
+    "minimatch is in ignoreDeps because patches/minimatch@3.1.5.patch applies to that exact version and Renovate does not read pnpm patchedDependencies. pnpm-workspace.yaml pins it too; the pin, the patch and this entry move together, by hand, or not at all. The pin's override key is `minimatch@3`, which Renovate reads as its own depName — bare `minimatch` does not match it, and #111 slipped through that gap and broke install by orphaning the patch. Both spellings stay listed."
   ]
 }
