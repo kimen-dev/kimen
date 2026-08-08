@@ -1,0 +1,60 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-option" />
+
+# ki-option
+
+A declarative data option rendered by its owning `ki-select`.
+
+The combobox contract — labeling, selection, events and form participation
+— lives on the *ki-select* page (Docs → Components → ki-select). Live
+stories: *Elements → ki-option* in this Storybook.
+
+**When to use** — declare one choice of a closed list inside `ki-select`.
+Options are data only: they do not paint; the select mirrors them as rows
+in its own popup listbox.
+
+**When NOT to use** — outside a `ki-select` (it renders nothing on its
+own), as a menu item or command entry, or to author selection state —
+never mark an option selected; set the owning select's `value` instead.
+
+## Examples
+
+`value` is what the form submits; the slotted text is what the person
+reads. An option without `value` falls back to its trimmed text (native
+`option` parity):
+
+```html
+<ki-select label="Plan" name="plan" placeholder="Choose a plan">
+  <ki-option value="free">Free</ki-option>
+  <ki-option value="pro">Pro</ki-option>
+  <ki-option>Enterprise</ki-option> <!-- value: "Enterprise" -->
+</ki-select>
+```
+
+`disabled` options render as unavailable rows and are skipped by keyboard
+highlight:
+
+```html
+<ki-select label="Region" name="region">
+  <ki-option>Europe</ki-option>
+  <ki-option disabled>Asia-Pacific (coming soon)</ki-option>
+</ki-select>
+```
+
+## Customization
+
+The mirrored rows are styled through the `--ki-option-*` tokens (for
+example `--ki-option-highlight-bg` for the keyboard-highlighted row) and
+the owning select's `::part(option)` — the option element itself paints
+nothing and exposes no parts.
+
+## Accessibility
+
+- The option's accessible role and state live on the mirrored row inside
+  the select's listbox; the platform announces availability and selection
+  from there.
+- Disabled options are exposed as unavailable rather than removed, so the
+  list a screen-reader user hears matches the list everyone sees.
+- Never author selection on an option — set `ki-select.value` so the
+  combobox, its value display and the form entry stay consistent.

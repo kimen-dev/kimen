@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-radio" />
+
+# ki-radio
+
+One option in a token-styled radio group.
+
+The group contract — labeling, selection, keyboard coordination, events and
+form participation — lives on the *ki-radio-group* page (Docs → Components
+→ ki-radio-group). Live stories: *Elements → ki-radio* in this Storybook.
+
+**When to use** — declare one mutually exclusive choice inside
+`ki-radio-group`, carrying only its own `value` and visible label text in
+the default slot.
+
+**When NOT to use** — outside a `ki-radio-group`, with a `name` attribute
+(the group contributes the single form entry; the internal native inputs
+are intentionally unnamed), or to author selection — set the group's
+`value` instead.
+
+## Examples
+
+Each radio owns its `value` (default `on`) and label; everything else
+belongs to the group:
+
+```html
+<ki-radio-group label="Delivery speed" name="delivery" value="standard">
+  <ki-radio value="standard">Standard (3–5 days)</ki-radio>
+  <ki-radio value="express">Express (1–2 days)</ki-radio>
+  <ki-radio value="overnight" disabled>Overnight (unavailable)</ki-radio>
+</ki-radio-group>
+```
+
+`disabled` on one radio removes that option from arrow-key navigation and
+selection while the rest of the group stays operable.
+
+## Customization
+
+Option states follow
+`--ki-radio-{unselected|selected}-{rest|hover|active|disabled}-*`, with
+`--ki-radio-control-size` (ring), `--ki-radio-dot-size` (selected dot) and
+`--ki-radio-gap` (ring-to-label gap). Shadow parts: `::part(control)`
+(ring and dot) and `::part(label)` (label wrapper).
+
+## Accessibility
+
+- The default slot is the visible label and the accessible-name source for
+  the option — never leave it empty.
+- Arrow-key order is document order, coordinated by the group; disabled
+  options are skipped.
+- Selection state is announced from the group's single tab stop, matching
+  the native radio-group pattern.

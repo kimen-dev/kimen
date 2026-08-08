@@ -1,0 +1,48 @@
+---
+title: ki-video
+description: A themed video surface — a calm poster facade with one accessible play control over a slotted native video.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A themed video surface: a calm poster facade with exactly one accessible
+play control over a slotted native `<video>` element. From the first
+activation on, playback, scrubbing, volume, captions and fullscreen belong
+to the native player — Kimen ships no custom chrome.
+
+<Demo
+  live={false}
+  code={`<ki-video label="Play the product tour">
+  <video poster="/tour-poster.jpg" preload="none">
+    <source src="/tour.webm" type="video/webm" />
+    <source src="/tour.mp4" type="video/mp4" />
+    <track kind="captions" src="/tour.en.vtt" srclang="en" label="English" />
+  </video>
+</ki-video>`}
+/>
+
+## The facade contract
+
+Slot exactly one native `<video>` carrying its own `poster`, sources and
+`<track>` captions, and **omit `controls`** — the component enables the
+native chrome the moment the facade yields. Playback begins only by
+explicit user activation, never on scroll, hover or visibility: preexisting
+`autoplay` and `controls` on the slotted media are cleared when it arrives,
+and any playback already running is paused.
+
+## API reference
+
+<CemApi tag="ki-video" />
+
+## Accessibility
+
+`label` is required — it names the play control ("Play the product tour").
+Captions travel with the slotted media as native `<track>` elements, so the
+native player's caption UI works untouched. For decorative background
+loops use plain CSS and `<video>`; for platform embeds that ship their own
+chrome, use their embed.
+
+## Workshop
+
+[Open ki-video in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-video--docs)

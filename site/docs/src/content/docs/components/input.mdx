@@ -1,0 +1,70 @@
+---
+title: ki-input
+description: A token-styled single-line text field with native input semantics.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A token-styled single-line text field with native input semantics. Always
+provide a visible `label`; choose the `type` and `autocomplete` that match
+the entry purpose.
+
+<Demo
+  layout="block"
+  code={`<ki-input label="Work email" name="email" type="email" required></ki-input>`}
+/>
+
+## Examples
+
+### In a form
+
+`label` is mandatory — it is the accessible name. The field participates in
+native form submission:
+
+<Demo
+  layout="block"
+  code={`<form onsubmit="event.preventDefault()">
+  <ki-input label="Work email" name="email" type="email" required></ki-input>
+  <ki-button variant="primary">Subscribe</ki-button>
+</form>`}
+/>
+
+### Read-only and disabled are distinct
+
+Read-only stays focusable and is submitted; disabled is neither:
+
+<Demo
+  layout="block"
+  code={`<ki-input label="Plan" value="Pro" readonly></ki-input>
+<ki-input label="Legacy ID" value="A-1042" disabled></ki-input>`}
+/>
+
+### Slots
+
+`start` and `end` hold decorations; they follow the writing direction in
+RTL:
+
+<Demo
+  layout="block"
+  code={`<ki-input label="Search components" type="search" placeholder="ki-button">
+  <span slot="start" aria-hidden="true">🔍</span>
+</ki-input>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-input" />
+
+## Accessibility
+
+`placeholder` is never a label substitute — the `label` prop is the
+accessible name. Native `input` events cross the shadow boundary on their
+own; the `change` event is re-dispatched composed at the host, so listen
+exactly as on a native input. For multiline text use
+[ki-textarea](/kimen/docs/components/textarea/); for predefined choices use
+[ki-select](/kimen/docs/components/select/).
+
+## Workshop
+
+[Open ki-input in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-input--docs)

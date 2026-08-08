@@ -1,0 +1,58 @@
+---
+title: ki-avatar
+description: A static identity visual with a portrait → initials → generic figure fallback chain.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A static identity visual that shows a person or entity at a glance through a
+fallback chain: portrait (`src`), then `initials`, then a built-in generic
+figure.
+
+<Demo
+  code={`<ki-avatar initials="MG" label="Mars Gotta"></ki-avatar>
+<ki-avatar label="Unknown collaborator"></ki-avatar>`}
+/>
+
+## Examples
+
+### Sizes
+
+<Demo
+  code={`<ki-avatar size="xxs" initials="MG" label="Mars Gotta"></ki-avatar>
+<ki-avatar size="xs" initials="MG" label="Mars Gotta"></ki-avatar>
+<ki-avatar size="sm" initials="MG" label="Mars Gotta"></ki-avatar>
+<ki-avatar size="md" initials="MG" label="Mars Gotta"></ki-avatar>
+<ki-avatar size="lg" initials="MG" label="Mars Gotta"></ki-avatar>
+<ki-avatar size="xl" initials="MG" label="Mars Gotta"></ki-avatar>`}
+/>
+
+### The fallback chain
+
+A failing or absent `src` falls back to `initials`; absent initials fall
+back to the generic figure. The identity never disappears:
+
+<Demo
+  code={`<ki-avatar src="/missing-portrait.png" initials="MG" label="Mars Gotta"></ki-avatar>`}
+/>
+
+Compose several avatars into
+[ki-avatar-group](/kimen/docs/components/avatar-group/) for a compact "who
+is involved" stack with overflow.
+
+## API reference
+
+<CemApi tag="ki-avatar" />
+
+## Accessibility
+
+Set `label` whenever the avatar is the only carrier of the identity — no
+adjacent visible name. An unlabeled avatar next to the person's visible name
+is fine; an unlabeled avatar alone is not. For a clickable avatar, compose
+it inside an interactive host such as `ki-button`; the avatar itself is
+never a control.
+
+## Workshop
+
+[Open ki-avatar in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-avatar--docs)

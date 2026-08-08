@@ -51,9 +51,15 @@ merges.
 - `/sandbox/`: Art. XI unattended-loop sandbox (credential-free, egress
   allowlist); see `sandbox/README.md`
 - `/scripts/gates/`: the deterministic gate suite (Art. X)
-- `packages/`: `tokens`, `elements`, `catalog`, `kimen` (placeholder),
-  `adapter-*` (future)
-- `/docs/`: public documentation (`roadmap.md`)
+- `packages/`: `tokens`, `elements`, `catalog`, `adapter-a2ui`,
+  `adapter-mcp-apps`, `kimen` (placeholder)
+- `/docs/`: public documentation — `roadmap.md`, `releasing.md`, `guides/`
+  (end-to-end GenUI guides), `migrations/`, `capabilities.json` (the
+  capability-claims source that drives the generated status blocks)
+- `/site/`: hand-written landing page (`index.html`, `landing.css`,
+  `landing.js`) plus the Starlight docs app at `site/docs/`; one Pages
+  artifact serves landing (`/kimen/`), docs (`/kimen/docs/`) and Storybook
+  (`/kimen/storybook/`)
 
 ## Conventions
 

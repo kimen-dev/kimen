@@ -1,0 +1,54 @@
+---
+title: ki-progress
+description: A token-styled, non-interactive progress indicator for known or unknown duration work.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A token-styled, non-interactive progress indicator for known or unknown
+duration work — uploads, downloads, installations, multi-step processing.
+
+<Demo
+  layout="block"
+  code={`<ki-progress value="64" label="Uploading report.pdf"></ki-progress>`}
+/>
+
+## Examples
+
+### Determinate and indeterminate
+
+Use `value`/`max` when the completed fraction is known; use `indeterminate`
+when work is ongoing but cannot be measured — including loading-indicator
+use cases:
+
+<Demo
+  layout="block"
+  code={`<ki-progress value="30" max="120" label="Processing 30 of 120 records"></ki-progress>
+<ki-progress indeterminate label="Connecting"></ki-progress>`}
+/>
+
+### Shapes
+
+`linear` fits page flows and lists; `circular` fits compact or centered
+placements:
+
+<Demo
+  code={`<ki-progress shape="circular" value="64" label="Uploading report.pdf"></ki-progress>
+<ki-progress shape="circular" indeterminate label="Loading results"></ki-progress>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-progress" />
+
+## Accessibility
+
+Always set `label` to *what is progressing* ("Uploading report.pdf", never
+just "Progress"). For static measurements within a known range (disk usage,
+scores) a gauge/meter is the right pattern, and step-by-step wizard
+navigation belongs to a future stepper — not this component.
+
+## Workshop
+
+[Open ki-progress in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-progress--docs)

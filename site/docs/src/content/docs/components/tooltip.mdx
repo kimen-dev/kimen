@@ -1,0 +1,57 @@
+---
+title: ki-tooltip
+description: A transient, text-only description bubble for one slotted trigger.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A transient, text-only description bubble for one slotted trigger — a brief
+clarifying hint for an icon-only, abbreviated or otherwise ambiguous
+control, when the same information is discoverable elsewhere.
+
+<Demo
+  code={`<ki-tooltip label="Closes the dialog">
+  <ki-icon-button label="Close">
+    <span aria-hidden="true">✕</span>
+  </ki-icon-button>
+</ki-tooltip>`}
+/>
+
+## Examples
+
+### Placement
+
+Four logical placements — `top` (default), `bottom`, `start` and `end` —
+that follow the writing direction in RTL:
+
+<Demo
+  code={`<ki-tooltip label="Above (default)" placement="top">
+  <ki-button type="button">top</ki-button>
+</ki-tooltip>
+<ki-tooltip label="Below" placement="bottom">
+  <ki-button type="button">bottom</ki-button>
+</ki-tooltip>
+<ki-tooltip label="Inline start" placement="start">
+  <ki-button type="button">start</ki-button>
+</ki-tooltip>
+<ki-tooltip label="Inline end" placement="end">
+  <ki-button type="button">end</ki-button>
+</ki-tooltip>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-tooltip" />
+
+## Accessibility
+
+The tooltip's `label` becomes the trigger's accessible **description**,
+never its name — the trigger still owns its own label. Never put essential
+or unique information, interactive content, or form validation messages in
+a tooltip; tooltips are unreliable on touch-primary flows and invisible to
+anyone who never hovers or focuses the trigger.
+
+## Workshop
+
+[Open ki-tooltip in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-tooltip--docs)

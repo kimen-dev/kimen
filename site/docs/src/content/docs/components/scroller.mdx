@@ -1,0 +1,67 @@
+---
+title: ki-scroller
+description: A bounded scroll container with a token-resolved indicator instead of platform scrollbar chrome.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A bounded scroll container that clips its content along one declared axis
+and replaces platform scrollbar chrome with a token-resolved indicator —
+chat panes, log blocks, tag rows, tall menus inside cards. Its size comes
+entirely from your layout; scrolling stays native (wheel, touch, keyboard,
+indicator drag).
+
+<Demo
+  layout="block"
+  code={`<ki-scroller label="Release notes" style="block-size: 8rem;">
+  <p>1.4.0 — Adds the scroller component.</p>
+  <p>1.3.2 — Fixes focus retention in dialogs.</p>
+  <p>1.3.1 — Corrects RTL thumb travel in switches.</p>
+  <p>1.3.0 — Introduces the motion token family.</p>
+  <p>1.2.0 — Ships the material3 reference theme.</p>
+  <p>1.1.0 — Adds form-associated custom elements.</p>
+  <p>1.0.0 — First stable release.</p>
+</ki-scroller>`}
+/>
+
+## Examples
+
+### Horizontal
+
+`orientation="horizontal"` scrolls the inline axis and clips the block axis:
+
+<Demo
+  layout="block"
+  code={`<ki-scroller label="Component tags" orientation="horizontal" style="inline-size: 100%;">
+  <div style="display: flex; gap: 0.5rem; inline-size: max-content;">
+    <ki-badge tone="info">alert</ki-badge>
+    <ki-badge tone="info">avatar</ki-badge>
+    <ki-badge tone="info">badge</ki-badge>
+    <ki-badge tone="info">button</ki-badge>
+    <ki-badge tone="info">card</ki-badge>
+    <ki-badge tone="info">checkbox</ki-badge>
+    <ki-badge tone="info">dialog</ki-badge>
+    <ki-badge tone="info">divider</ki-badge>
+    <ki-badge tone="info">indicator</ki-badge>
+    <ki-badge tone="info">input</ki-badge>
+    <ki-badge tone="info">progress</ki-badge>
+    <ki-badge tone="info">tooltip</ki-badge>
+  </div>
+</ki-scroller>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-scroller" />
+
+## Accessibility
+
+`label` is required — it names the scroll region for assistive technology.
+The scroller scrolls its declared axis only and clips the other; cross-axis
+overflow is an authoring mistake (wrap or size content on the cross axis).
+Page-level scrolling remains the browser's job.
+
+## Workshop
+
+[Open ki-scroller in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-scroller--docs)

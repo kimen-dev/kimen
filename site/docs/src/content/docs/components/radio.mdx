@@ -1,0 +1,36 @@
+---
+title: ki-radio
+description: One option in a token-styled radio group.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+One option in a token-styled
+[ki-radio-group](/kimen/docs/components/radio-group/). Place it inside a
+group when a person must choose exactly one of a small visible set — never
+standalone.
+
+<Demo
+  layout="block"
+  code={`<ki-radio-group label="Billing period" name="billing" value="monthly">
+  <ki-radio value="monthly">Monthly</ki-radio>
+  <ki-radio value="yearly">Yearly</ki-radio>
+</ki-radio-group>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-radio" />
+
+## Accessibility
+
+The default slot is the accessible-name source of the option. Selection is
+never authored on the radio — set the parent group's `value` instead; the
+group owns keyboard coordination (arrow keys move selection) and form
+participation.
+
+## Workshop
+
+Documented with its parent:
+[open ki-radio-group in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-radio-group--docs)

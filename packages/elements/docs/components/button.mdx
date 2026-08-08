@@ -15,15 +15,25 @@ loading/progress semantics.
 
 ## Examples
 
-Visual hierarchy comes from `variant` (default `secondary`); use `primary`
-for the single main action in a view:
+Visual hierarchy comes from `variant` — a five-level emphasis ramp
+(`primary` → `secondary` → `tertiary` → `quaternary` → `ghost`, default
+`secondary`); use `primary` for the single main action in a view:
 
 ```html
 <ki-button variant="primary">Save changes</ki-button>
 <ki-button>Cancel</ki-button>
 <ki-button variant="tertiary">Duplicate</ki-button>
+<ki-button variant="quaternary">Skip</ki-button>
 <ki-button variant="ghost">Learn more</ki-button>
 ```
+
+Each level has its own construction, all token-resolved: `primary` is the
+filled brand surface with the glass shadow and bevel pair; `secondary` is a
+translucent raised surface with the same bevel treatment; `tertiary` is a
+raised solid surface (light `s0` / dark `s2`) with a medium-emphasis label —
+a quieter surface button, not a text button; `quaternary` is bare —
+transparent at rest with only a hover/pressed overlay, no border, no
+shadow; `ghost` is transparent with a brand-tinted label and hover wash.
 
 Semantic intent comes from `tone` (default `neutral`), independent of
 hierarchy — never use `variant` to signal success or danger:
@@ -79,8 +89,11 @@ Use `type="button"` when the action must never submit a form.
 | `--ki-button-focus-ring-color`          | Keyboard focus ring color             |
 
 The full matrix follows `--ki-button-{variant}-{tone}-{state}-{bg|border|fg}`
-and `--ki-button-{size}-*`. Shadow parts: `::part(button)` (internal native
-button) and `::part(label)` (label wrapper).
+and `--ki-button-{size}-*`, plus the fidelity-pass effect tokens:
+`--ki-button-{variant}-{state}-shadow` and the per-side bevel
+`--ki-button-{variant}-rest-border-bottom` (raised variants only —
+`quaternary` and `ghost` declare no bevel). Shadow parts: `::part(button)`
+(internal native button) and `::part(label)` (label wrapper).
 
 ## Accessibility
 
