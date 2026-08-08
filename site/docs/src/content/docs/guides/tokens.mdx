@@ -1,0 +1,81 @@
+---
+title: Design tokens
+description: The Kimen token model — layers, families, and how to customize components without forking them.
+---
+
+Kimen components carry **zero hardcoded visual values** — a lint gate fails
+any color, size, radius, shadow or font that does not resolve from a
+`--ki-*` custom property. That single rule is what makes theming one
+attribute, keeps customization from becoming forking, and lets a contrast
+gate hold every token pair to WCAG numbers in CI.
+
+## The layers
+
+1. **Primitive** — raw ramps with no opinion about use:
+   `--ki-color-brand-500`, `--ki-color-gray-900`, `--ki-space-md`,
+   `--ki-font-size-heading-3`. Components never consume these directly.
+2. **Semantic** — meaning, not appearance: `--ki-surface-s0…s5` (the surface
+   elevation scale), `--ki-text-high-em` / `--ki-text-med-em` (text
+   emphasis), `--ki-outline-low-em`. Reassign this layer and an entire
+   product restyles — this is the layer the material3 reference theme
+   overrides.
+3. **Component** — the public styling contract of each element:
+   `--ki-button-primary-neutral-rest-bg`, `--ki-dialog-backdrop-blur`,
+   `--ki-alert-*`. Every component page lists its own tokens in its
+   generated *CSS custom properties* table.
+
+## The families
+
+Beyond color, the token surface covers everything a theme wants to control:
+
+- **Typography** — families (`--ki-typography-family-body`, `-display`,
+  `-mono`, `-serif`), sizes and weights.
+- **Elevation** — a six-step scale, `--ki-elevation-e1` through
+  `--ki-elevation-e6`.
+- **Motion** — durations (`--ki-motion-duration-instant`, `-fast`),
+  easings (`--ki-motion-easing-emphasized`, `-spring`) and distances
+  (`--ki-motion-distance-xs/sm/md`). Components gate animation behind
+  `prefers-reduced-motion`.
+- **Effects** — shadows and glass surfaces
+  (`--ki-effect-component-primary-default-shadow`,
+  backdrop blur and gradient pairs consumed by dialog, card and tooltip).
+
+The authoritative list is always the generated reference, never prose —
+see [the token reference](/kimen/docs/tokens/reference/).
+
+## Customizing
+
+Reassign tokens at `:root` for theme-wide changes, or on any subtree for a
+scoped change — custom properties cascade, so the override reaches every
+component inside:
+
+```css
+/* Brand-wide: rounder medium buttons */
+:root {
+  --ki-button-md-radius: 999px;
+}
+
+/* Scoped: a denser sidebar */
+.sidebar {
+  --ki-list-item-padding-block: 0.25rem;
+}
+```
+
+Three rules keep customization safe:
+
+1. **Prefer semantic over component tokens** — one semantic reassignment
+   restyles consistently; fifty component overrides drift.
+2. **Re-check contrast when you re-theme.** Kimen's own token pairs hold
+   4.5:1 for text and 3:1 for non-text UI in both schemes, verified by a
+   blocking CI gate over the built stylesheets. Your overrides inherit the
+   obligation, not the proof.
+3. **If you would need `!important`, stop** — that is an API bug in Kimen;
+   [report it](https://github.com/kimen-dev/kimen/issues).
+
+## Machine-readable
+
+The tokens ship as plain CSS custom properties in the built stylesheets
+(`@kimen/tokens/css`, `css/material3`, `css/base`) — no runtime, no
+preprocessor coupling. Per-component consumption is declared in the
+[Custom Elements Manifest](/kimen/docs/resources/working-with-ai/), so
+agents and tooling can read the styling contract the same way you do.

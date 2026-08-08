@@ -1,0 +1,58 @@
+---
+title: ki-select
+description: A form-associated select-only combobox for choosing one option from declarative ki-option children.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A form-associated select-only combobox for choosing exactly one value from a
+known closed list of [ki-option](/kimen/docs/components/option/) children —
+especially with roughly five or more choices or limited space.
+
+<Demo
+  layout="block"
+  code={`<ki-select label="Country" name="country" placeholder="Choose a country">
+  <ki-option value="es">Spain</ki-option>
+  <ki-option value="fr">France</ki-option>
+  <ki-option value="pt">Portugal</ki-option>
+</ki-select>`}
+/>
+
+## Examples
+
+### Required, in a form
+
+`required` blocks submission while empty; the selected option's `value` is
+submitted under `name`:
+
+<Demo
+  layout="block"
+  code={`<form onsubmit="event.preventDefault()">
+  <ki-select label="Team size" name="size" required>
+    <ki-option>1-10</ki-option>
+    <ki-option>11-50</ki-option>
+    <ki-option disabled>51+</ki-option>
+  </ki-select>
+  <ki-button variant="primary">Continue</ki-button>
+</form>`}
+/>
+
+An option without `value` submits its trimmed label text.
+
+## API reference
+
+<CemApi tag="ki-select" />
+
+## Accessibility
+
+The `label` prop is mandatory — `placeholder` is never a label substitute.
+The composed `change` event fires at the host exactly like a native select.
+For a few always-visible choices use
+[ki-radio-group](/kimen/docs/components/radio-group/); for free or
+searchable text use [ki-input](/kimen/docs/components/input/); multiselect
+and command menus are out of scope.
+
+## Workshop
+
+[Open ki-select in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-select--docs)

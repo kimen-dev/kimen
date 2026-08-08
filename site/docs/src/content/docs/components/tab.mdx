@@ -1,0 +1,36 @@
+---
+title: ki-tab
+description: One selectable tab inside a ki-tabs view switcher.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+One selectable tab inside a [ki-tabs](/kimen/docs/components/tabs/) view
+switcher. It labels the peer content view sharing its `value`, with optional
+`start` and `end` slot media — never standalone.
+
+<Demo
+  layout="block"
+  code={`<ki-tabs label="Settings" value="email">
+  <ki-tab value="email">Email</ki-tab>
+  <ki-tab value="security">Security</ki-tab>
+  <ki-tab-panel value="email">Email delivery preferences</ki-tab-panel>
+  <ki-tab-panel value="security">Security and sign-in preferences</ki-tab-panel>
+</ki-tabs>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-tab" />
+
+## Accessibility
+
+Selection is owned by the parent group: set `ki-tabs`' `value` instead of
+authoring `selected`. A `disabled` tab stays visible but cannot be selected
+by any modality.
+
+## Workshop
+
+Documented with its parent:
+[open ki-tabs in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-tabs--docs)

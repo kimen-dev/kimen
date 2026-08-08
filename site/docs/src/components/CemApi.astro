@@ -1,0 +1,314 @@
+---
+// Static API reference rendered at build time from the generated Custom
+// Elements Manifest of @kimen/elements (constitution Art. I: API facts are
+// never hand-written — this component is the only way component API tables
+// appear on the site). Zero client JavaScript; fully indexed by Pagefind.
+import manifest from '../../../../packages/elements/generated/custom-elements.json';
+
+interface Props {
+  /** Custom element tag name, e.g. "ki-button". */
+  tag: string;
+}
+
+const { tag } = Astro.props;
+
+type CemType = { text?: string } | undefined;
+interface CemMember {
+  kind: string;
+  name: string;
+  privacy?: string;
+  type?: CemType;
+  default?: string;
+  description?: string;
+  attribute?: string;
+  reflects?: boolean;
+  signature?: string;
+  return?: { type?: CemType };
+}
+interface CemDeclaration {
+  tagName?: string;
+  description?: string;
+  whenToUse?: string;
+  whenNotToUse?: string;
+  attributes?: Array<{
+    name: string;
+    fieldName?: string;
+    type?: CemType;
+    default?: string;
+    description?: string;
+  }>;
+  members?: CemMember[];
+  events?: Array<{ name: string; type?: CemType; description?: string }>;
+  slots?: Array<{ name: string; description?: string }>;
+  cssParts?: Array<{ name: string; description?: string }>;
+  cssProperties?: Array<{ name: string; description?: string; default?: string }>;
+  cssStates?: Array<{ name: string; description?: string }>;
+}
+
+const declarations: CemDeclaration[] = (
+  manifest as { modules: Array<{ declarations?: CemDeclaration[] }> }
+).modules.flatMap((m) => m.declarations ?? []);
+const decl = declarations.find((d) => d.tagName === tag);
+if (!decl) {
+  throw new Error(`CemApi: tag "${tag}" not found in custom-elements.json`);
+}
+
+const escapeHtml = (value: string): string =>
+  value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+
+/** Escape, then render `inline code` spans; collapse newlines to spaces. */
+const md = (value: string | undefined): string =>
+  escapeHtml(value ?? '')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replaceAll('\n', ' ');
+
+const code = (value: string | undefined): string =>
+  value ? `<code>${escapeHtml(value)}</code>` : '–';
+
+const attributes = decl.attributes ?? [];
+const methods = (decl.members ?? []).filter((m) => m.kind === 'method' && m.privacy !== 'private');
+const events = decl.events ?? [];
+const slots = decl.slots ?? [];
+const parts = decl.cssParts ?? [];
+const cssProperties = decl.cssProperties ?? [];
+const states = decl.cssStates ?? [];
+---
+
+<section class="cem-api" data-pagefind-body>
+  {
+    decl.whenToUse && (
+      <p>
+        <strong>When to use:</strong> <Fragment set:html={md(decl.whenToUse)} />
+      </p>
+    )
+  }
+  {
+    decl.whenNotToUse && (
+      <p>
+        <strong>When not to use:</strong> <Fragment set:html={md(decl.whenNotToUse)} />
+      </p>
+    )
+  }
+
+  {
+    attributes.length > 0 && (
+      <>
+        <h3 id={`${tag}-properties`}>Properties &amp; attributes</h3>
+        <div class="cem-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Attribute</th>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {attributes.map((a) => (
+                <tr>
+                  <td>
+                    <code>{a.name}</code>
+                  </td>
+                  <td>
+                    <code>{a.fieldName ?? a.name}</code>
+                  </td>
+                  <td set:html={code(a.type?.text)} />
+                  <td set:html={code(a.default)} />
+                  <td set:html={md(a.description)} />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  }
+
+  {
+    events.length > 0 && (
+      <>
+        <h3 id={`${tag}-events`}>Events</h3>
+        <div class="cem-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th>Detail type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {events.map((e) => (
+                <tr>
+                  <td>
+                    <code>{e.name}</code>
+                  </td>
+                  <td set:html={code(e.type?.text)} />
+                  <td set:html={md(e.description)} />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  }
+
+  {
+    methods.length > 0 && (
+      <>
+        <h3 id={`${tag}-methods`}>Methods</h3>
+        <div class="cem-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {methods.map((m) => (
+                <tr>
+                  <td set:html={code(m.signature ?? m.name)} />
+                  <td set:html={md(m.description)} />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  }
+
+  {
+    slots.length > 0 && (
+      <>
+        <h3 id={`${tag}-slots`}>Slots</h3>
+        <div class="cem-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Slot</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {slots.map((s) => (
+                <tr>
+                  <td>{s.name ? <code>{s.name}</code> : <em>(default)</em>}</td>
+                  <td set:html={md(s.description)} />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  }
+
+  {
+    parts.length > 0 && (
+      <>
+        <h3 id={`${tag}-css-parts`}>CSS parts</h3>
+        <div class="cem-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Part</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {parts.map((p) => (
+                <tr>
+                  <td>
+                    <code>{p.name}</code>
+                  </td>
+                  <td set:html={md(p.description)} />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  }
+
+  {
+    cssProperties.length > 0 && (
+      <>
+        <h3 id={`${tag}-css-properties`}>CSS custom properties</h3>
+        <p>
+          The public styling contract of <code>{tag}</code>: reassign these
+          tokens at <code>:root</code> or on a subtree — never override
+          internals.
+        </p>
+        <div class="cem-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cssProperties.map((p) => (
+                <tr>
+                  <td>
+                    <code>{p.name}</code>
+                  </td>
+                  <td set:html={md(p.description)} />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  }
+
+  {
+    states.length > 0 && (
+      <>
+        <h3 id={`${tag}-custom-states`}>Custom states</h3>
+        <div class="cem-table">
+          <table>
+            <thead>
+              <tr>
+                <th>State</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {states.map((s) => (
+                <tr>
+                  <td>
+                    <code>{s.name}</code>
+                  </td>
+                  <td set:html={md(s.description)} />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )
+  }
+</section>
+
+<style>
+  .cem-table {
+    overflow-x: auto;
+  }
+
+  .cem-table table {
+    display: table;
+    width: 100%;
+  }
+
+  .cem-table td:last-child {
+    min-width: 18rem;
+  }
+</style>

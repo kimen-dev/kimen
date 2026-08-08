@@ -1,0 +1,67 @@
+---
+title: ki-tabs
+description: A tab group for switching between peer content views.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A tab group for switching between small sets of peer views inside the same
+page, with one visible panel at a time. Tabs pair with panels through a
+shared `value`; the group's `value` selects the active pair and `label`
+names the tablist.
+
+<Demo
+  layout="block"
+  code={`<ki-tabs label="Settings" value="email">
+  <ki-tab value="email">Email</ki-tab>
+  <ki-tab value="security">Security</ki-tab>
+  <ki-tab-panel value="email">Email delivery preferences</ki-tab-panel>
+  <ki-tab-panel value="security">Security and sign-in preferences</ki-tab-panel>
+</ki-tabs>`}
+/>
+
+## Examples
+
+### Disabled tabs
+
+A disabled tab stays visible but cannot be selected by any modality:
+
+<Demo
+  layout="block"
+  code={`<ki-tabs label="Billing" value="plans">
+  <ki-tab value="plans">Plans</ki-tab>
+  <ki-tab value="invoices" disabled>Invoices</ki-tab>
+  <ki-tab-panel value="plans">Plan management</ki-tab-panel>
+  <ki-tab-panel value="invoices">Invoice history</ki-tab-panel>
+</ki-tabs>`}
+/>
+
+### The change event
+
+User selection dispatches a composed `ki-change` event carrying the new
+value in `detail.value`; programmatic `value` writes stay silent:
+
+```ts
+const tabs = document.querySelector('ki-tabs');
+
+tabs?.addEventListener('ki-change', (event) => {
+  console.log((event as CustomEvent<{ value: string }>).detail.value);
+});
+```
+
+## API reference
+
+<CemApi tag="ki-tabs" />
+
+## Accessibility
+
+`label` names the tablist, as the APG tabs pattern requires. Selection
+follows the pattern: the tablist is one tab stop and arrow keys move
+between tabs. Tabs are for peer views inside a page — for page navigation
+use links, for form values use
+[ki-radio-group](/kimen/docs/components/radio-group/).
+
+## Workshop
+
+[Open ki-tabs in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-tabs--docs)

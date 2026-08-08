@@ -1,0 +1,63 @@
+---
+title: ki-checkbox
+description: A form-associated checkbox for selecting independent options.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A form-associated checkbox for selecting independent options that a form
+submits later. Always provide a visible label in the default slot.
+
+<Demo code={`<ki-checkbox name="tos" required>I accept the terms</ki-checkbox>`} />
+
+## Examples
+
+### States
+
+Boolean attributes use presence semantics: omit `checked` to express
+unchecked — never write `checked="false"`.
+
+<Demo
+  code={`<ki-checkbox>Unchecked</ki-checkbox>
+<ki-checkbox checked>Checked</ki-checkbox>
+<ki-checkbox disabled>Disabled</ki-checkbox>`}
+/>
+
+### Indeterminate
+
+A "select all" parent presents partial selection with `indeterminate`:
+
+<Demo
+  code={`<ki-checkbox indeterminate>Select all (2 of 5 selected)</ki-checkbox>`}
+/>
+
+### In a form
+
+Checkboxes contribute `name`/`value` to `FormData` and honor `required`
+through native constraint validation:
+
+<Demo
+  layout="block"
+  code={`<form onsubmit="event.preventDefault()">
+  <ki-checkbox name="newsletter" value="weekly">Weekly digest</ki-checkbox>
+  <ki-checkbox name="tos" required>I accept the terms</ki-checkbox>
+  <ki-button variant="primary">Sign up</ki-button>
+</form>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-checkbox" />
+
+## Accessibility
+
+The default slot is the accessible-name source — unlabeled usage is invalid.
+For a single mutually exclusive choice use
+[ki-radio-group](/kimen/docs/components/radio-group/); for an immediate
+on/off effect use [ki-switch](/kimen/docs/components/switch/). The composed
+`change` event fires at the host exactly like a native checkbox.
+
+## Workshop
+
+[Open ki-checkbox in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-checkbox--docs)

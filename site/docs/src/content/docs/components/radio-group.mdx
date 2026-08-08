@@ -1,0 +1,57 @@
+---
+title: ki-radio-group
+description: A token-styled radio group that owns selection, keyboard coordination and form participation.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A token-styled radio group that owns selection, keyboard coordination and
+form participation for slotted
+[ki-radio](/kimen/docs/components/radio/) options — for choosing exactly one
+of a small set that should all be visible at once.
+
+<Demo
+  layout="block"
+  code={`<ki-radio-group label="Billing period" name="billing" value="monthly">
+  <ki-radio value="monthly">Monthly</ki-radio>
+  <ki-radio value="yearly">Yearly</ki-radio>
+  <ki-radio value="lifetime" disabled>Lifetime</ki-radio>
+</ki-radio-group>`}
+/>
+
+## Examples
+
+### In a form
+
+The group contributes `name`/`value` to `FormData`, honors `required`, and
+re-dispatches the composed `change` event at the host:
+
+<Demo
+  layout="block"
+  code={`<form onsubmit="event.preventDefault()">
+  <ki-radio-group label="Team size" name="size" required>
+    <ki-radio value="s">1-10</ki-radio>
+    <ki-radio value="m">11-50</ki-radio>
+    <ki-radio value="l">51+</ki-radio>
+  </ki-radio-group>
+  <ki-button variant="primary">Continue</ki-button>
+</form>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-radio-group" />
+
+## Accessibility
+
+The `label` prop is mandatory — unlabeled groups fail accessibility gates.
+Selection follows the APG radio-group pattern: arrow keys move it, the group
+is one tab stop. For many options or tight space use
+[ki-select](/kimen/docs/components/select/); for independent on/off settings
+use [ki-checkbox](/kimen/docs/components/checkbox/) or
+[ki-switch](/kimen/docs/components/switch/).
+
+## Workshop
+
+[Open ki-radio-group in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-radio-group--docs)

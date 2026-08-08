@@ -1,0 +1,40 @@
+---
+title: ki-list-item
+description: A non-interactive item inside ki-list — leading media, primary text, secondary text and trailing meta.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A non-interactive item inside [ki-list](/kimen/docs/components/list/),
+composed from leading media (`start`), primary text (default slot), optional
+secondary text (`secondary`) and trailing media or meta (`end`). Use it only
+as a child of `ki-list`.
+
+<Demo
+  layout="block"
+  code={`<ki-list>
+  <ki-list-item>
+    <span slot="start" aria-hidden="true">📄</span>
+    Quarterly report
+    <span slot="secondary">Updated 2 days ago</span>
+    <span slot="end">1.2 MB</span>
+  </ki-list-item>
+</ki-list>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-list-item" />
+
+## Accessibility
+
+The default slot is the primary text of the entry. Decorative slotted icons
+carry `aria-hidden="true"`. The item is never a menu item, option, row or
+link — those are different patterns; a control slotted in `end` remains an
+ordinary focusable control.
+
+## Workshop
+
+Documented with its parent:
+[open ki-list in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-list--docs)

@@ -6,7 +6,7 @@
     <title>Kimen — Web Components for generative UI</title>
     <meta
       name="description"
-      content="An AI-first Web Components foundation for generative UI. Tokens-only theming, deterministic quality gates and machine-readable contracts. Catalog and adapters planned. Apache-2.0."
+      content="An AI-first Web Components foundation for generative UI. Tokens-only theming, deterministic quality gates, machine-readable contracts and a guarded GenUI catalog with A2UI and MCP Apps adapters. Apache-2.0."
     />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <!-- SEO metadata only: a canonical link is never fetched or executed by
@@ -16,7 +16,7 @@
     <meta property="og:title" content="Kimen — Web Components for generative UI" />
     <meta
       property="og:description"
-      content="Standards-first web components with token theming and machine-readable contracts; guarded GenUI catalog planned."
+      content="Standards-first web components with token theming and machine-readable contracts; guarded GenUI catalog with A2UI and MCP Apps adapters."
     />
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)" />
@@ -68,6 +68,7 @@
         <span class="brand-stage">pre-v1</span>
       </a>
       <nav class="site-nav" aria-label="Site">
+        <a href="./docs/">Docs</a>
         <a href="./storybook/">Storybook</a>
         <a href="https://github.com/kimen-dev/kimen">GitHub</a>
       </nav>
@@ -80,8 +81,8 @@
         <h1 id="hero-title">The Web Components foundation for generative&nbsp;UI.</h1>
         <p class="lede">
           Kimen's implemented components work in any framework and under any brand. A neutral,
-          guarded catalog will connect agent specs to those components in a later phase. Theming
-          is one attribute. Quality is a gate, not a promise.
+          guarded catalog connects agent specs to those components today. Theming is one
+          attribute. Quality is a gate, not a promise.
         </p>
         <div class="hero-actions">
           <a class="cta cta-primary" href="https://github.com/kimen-dev/kimen">View on GitHub</a>
@@ -120,9 +121,9 @@
           <article class="card">
             <h3>A guarded catalog, by design</h3>
             <p>
-              The planned renderer will accept only catalog components and declared actions,
-              reject unknown props and expose no code-execution path from spec data. That
-              guardrail will be tested as a security boundary before it is presented as shipped.
+              The renderer accepts only catalog components and declared actions, rejects unknown
+              props and exposes no code-execution path from spec data. That guardrail is tested
+              as a security boundary, not presented on trust.
             </p>
           </article>
           <article class="card">
@@ -197,7 +198,7 @@
           <li><code>custom-elements.json</code> — machine-readable manifest of every prop, event, slot and part</li>
           <li><code>llms.txt</code> — the library, summarized for language models</li>
           <li>when-to-use / when-NOT-to-use metadata on every component</li>
-          <li>planned: a Zod-validated catalog schema for runtime GenUI (A2UI, MCP Apps, AG-UI, json-render)</li>
+          <li>a schema-validated catalog for runtime GenUI — A2UI and MCP Apps adapters shipped; AG-UI and json-render planned</li>
         </ul>
       </section>
 
@@ -208,8 +209,8 @@
           <li data-state="current"><span class="phase">Factory hardening</span> closing enforcement, mutation, release and sandbox gaps</li>
           <li data-state="done"><span class="phase">Tokens &amp; theming</span> three layers, two themes, re-theming proven in CI</li>
           <li data-state="current"><span class="phase">Core components</span> the essential ki-* set for GenUI — in progress</li>
-          <li data-state="next"><span class="phase">Catalog + guardrail</span> the schema of what agents may emit, rendered safely</li>
-          <li data-state="next"><span class="phase">Protocol adapters</span> A2UI first, MCP Apps next — disposable by design</li>
+          <li data-state="done"><span class="phase">Catalog + guardrail</span> the schema of what agents may emit, rendered safely</li>
+          <li data-state="done"><span class="phase">Protocol adapters</span> A2UI and MCP Apps shipped — disposable by design; AG-UI and json-render planned</li>
           <li data-state="next"><span class="phase">v1.0.0</span> npm with trusted publishing and signed provenance</li>
         </ol>
         <p class="section-lede">
@@ -238,6 +239,7 @@
       </p>
       <nav class="site-footer-nav" aria-label="Footer">
         <a href="https://github.com/kimen-dev/kimen">GitHub</a>
+        <a href="./docs/">Docs</a>
         <a href="./storybook/">Storybook</a>
         <a href="https://github.com/kimen-dev/kimen/blob/main/docs/roadmap.md">Roadmap</a>
       </nav>
