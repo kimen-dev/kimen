@@ -36,7 +36,7 @@ jobs:
             objects.githubusercontent.com:443
             registry.npmjs.org:443
 
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -92,7 +92,7 @@ jobs:
             results-receiver.actions.githubusercontent.com:443
             *.blob.core.windows.net:443
 
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
@@ -161,7 +161,7 @@ jobs:
             archive.ubuntu.com:443
             security.ubuntu.com:443
 
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
