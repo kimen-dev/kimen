@@ -32,15 +32,27 @@
   background: var(--ki-scroller-surface);
 }
 
+/* Focus-halo fade (ki-button focus pair language): only the box-shadow
+ * transition is gated; the ring itself applies instantly either way. */
+@media (prefers-reduced-motion: no-preference) {
+  [part="viewport"] {
+    transition: box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+}
+
 [part="viewport"]:focus {
   outline: none;
 }
 
 /* The keyboard-focusable scroll region (FR-005) shows the theme's focus
- * ring — the ki-dialog focusable-surface precedent. */
+ * ring: the opaque outline pair (ki-dialog precedent) PLUS the MarsUI
+ * Focus/primary 3px alpha halo that ki-button pairs with its outline.
+ * --ki-scroller-focus-ring-shadow is the forward token hook (pending in
+ * tokens); the semantic Focus/primary fallback keeps the halo until then. */
 [part="viewport"]:focus-visible {
   outline: var(--ki-scroller-focus-ring-width) solid var(--ki-scroller-focus-ring-color);
   outline-offset: var(--ki-scroller-focus-ring-offset);
+  box-shadow: var(--ki-scroller-focus-ring-shadow);
 }
 
 :host([orientation="horizontal"]) [part="viewport"] {

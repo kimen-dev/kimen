@@ -19,7 +19,7 @@
 import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 import { defineCustomElement as defineKiCheckbox } from '../dist/components/ki-checkbox.js';
 import { defineCustomElement as defineKiDialog } from '../dist/components/ki-dialog.js';
@@ -479,6 +479,19 @@ describe('composed user flows in a real browser', () => {
   // re-resolution on components that never remount.
   it('flow: re-resolves brand, surface and component tokens on a live tree when theme and scheme change', async () => {
     cleanup();
+    // The earlier flows leave the pointer wherever they last clicked, and the
+    // fidelity pass gave the field real hover paint — park it so every read
+    // below is a REST read. Likewise clear any inherited color-scheme
+    // emulation: this worker's page may have last run a spec that emulated
+    // dark (bare-page legibility, a dark gallery), and the s0 baseline read
+    // below is a statement about the LIGHT scheme.
+    const flowCommands = commands as unknown as {
+      resetPointer: () => Promise<void>;
+      emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
+    };
+    await flowCommands.emulateColorScheme(null);
+    await flowCommands.resetPointer();
+    await nextFrame();
     const main = await mountTree(
       `
       <ki-button>Save changes</ki-button>
@@ -505,7 +518,13 @@ describe('composed user flows in a real browser', () => {
       () => getComputedStyle(shadowButton(button)).backgroundColor !== onmarsButtonBg,
       'mounted button repainted from material3 tokens',
     );
-    expect(getComputedStyle(field()).backgroundColor).toBe(readTokenColor('--ki-input-rest-bg'));
+    // Eventually-equal, not read-now: the fidelity pass transitions the field
+    // surface, so a snapshot taken while the theme swap is still tweening
+    // reports a colour between the two tokens that matches neither.
+    await waitFor(
+      () => getComputedStyle(field()).backgroundColor === readTokenColor('--ki-input-rest-bg'),
+      'mounted field settled on the material3 rest-bg token',
+    );
     expect(button.isConnected && input.isConnected).toBe(true);
 
     // Back to onmars, then force dark over the light preference: the same
@@ -520,6 +539,11 @@ describe('composed user flows in a real browser', () => {
       () => getComputedStyle(field()).backgroundColor !== onmarsFieldBg,
       'mounted field repainted from dark tokens',
     );
-    expect(getComputedStyle(field()).backgroundColor).toBe(readTokenColor('--ki-input-rest-bg'));
+    // Same eventually-equal read as the material3 leg above, and for the
+    // same reason: the field surface tweens between schemes.
+    await waitFor(
+      () => getComputedStyle(field()).backgroundColor === readTokenColor('--ki-input-rest-bg'),
+      'mounted field settled on the dark rest-bg token',
+    );
   });
 });

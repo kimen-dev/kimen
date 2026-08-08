@@ -56,6 +56,23 @@ async function settle(): Promise<void> {
   await customElements.whenDefined('ki-list-item');
   await new Promise((resolve) => requestAnimationFrame(resolve));
   await new Promise((resolve) => requestAnimationFrame(resolve));
+  // The gated mount-entrance stagger runs in this non-reduced instance:
+  // wait it out so geometry and axe contrast reads are end-state
+  // deterministic (subtree walks the flat tree incl. slotted items).
+  await Promise.all(
+    document.body
+      .getAnimations({ subtree: true })
+      .map((animation) => animation.finished.catch(() => undefined)),
+  );
+}
+
+function readTokenColor(name: string): string {
+  const probe = document.createElement('div');
+  probe.style.color = `var(${name})`;
+  document.body.append(probe);
+  const value = getComputedStyle(probe).color;
+  probe.remove();
+  return value;
 }
 
 async function mountList(html: string): Promise<HTMLElement> {
@@ -143,6 +160,51 @@ describe('ki-list in a real browser', () => {
     expect(meta?.getBoundingClientRect().left).toBeGreaterThan(
       parts.content.getBoundingClientRect().right,
     );
+  });
+
+  it('S2 styles trailing meta and leading media from tokens instead of page defaults', async () => {
+    const list = await mountList(`
+      <ki-list>
+        <ki-list-item>
+          <span slot="start" data-test="avatar">AG</span>
+          <span data-test="primary">Ana Garcia</span>
+          <span slot="end" data-test="meta">9:41</span>
+        </ki-list-item>
+      </ki-list>
+    `);
+    const item = list.querySelector('ki-list-item');
+    if (!item) {
+      throw new Error('ki-list-item fixture missing');
+    }
+    const parts = itemParts(item);
+    const primary = parts.content.querySelector('.primary');
+    if (!primary) {
+      throw new Error('primary text part missing');
+    }
+    const endStyle = getComputedStyle(parts.end);
+    const startStyle = getComputedStyle(parts.start);
+
+    // MarsUI trail meta: the primary size ramp (body_1 13 / para 20, weight
+    // 600) in Text/med_em, right-aligned — never the 16px page default that
+    // rendered black-on-black in dark.
+    expect(endStyle.fontSize).toBe('13px');
+    expect(endStyle.lineHeight).toBe('20px');
+    expect(endStyle.fontWeight).toBe('600');
+    expect(endStyle.color).toBe(readTokenColor('--ki-list-item-secondary-fg'));
+    expect(endStyle.textAlign).toBe('end');
+    // Leading media inherits the scheme's primary fg (Gray/950 light,
+    // White/100 dark), matching the primary line.
+    expect(startStyle.color).toBe(readTokenColor('--ki-list-item-primary-fg'));
+    expect(startStyle.color).toBe(getComputedStyle(primary).color);
+    // Slotted content resolves through the part wrappers by inheritance.
+    const meta = list.querySelector('[data-test="meta"]');
+    const avatar = list.querySelector('[data-test="avatar"]');
+    if (!meta || !avatar) {
+      throw new Error('slotted fixtures missing');
+    }
+    expect(getComputedStyle(meta).fontSize).toBe('13px');
+    expect(getComputedStyle(meta).color).toBe(endStyle.color);
+    expect(getComputedStyle(avatar).color).toBe(startStyle.color);
   });
 
   it('S3 reserves no space for absent regions on a primary-only item', async () => {

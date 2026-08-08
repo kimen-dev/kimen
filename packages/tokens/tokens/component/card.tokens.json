@@ -2,24 +2,24 @@
   "ki": {
     "card": {
       "bg": {
-        "$value": "{ki.surface.raised}",
-        "$description": "color used by the card component for background."
+        "$value": "{ki.surface.special.light-s0-dark-s1}",
+        "$description": "color used by the card component for background (MarsUI Dashboard masters bind Surface/special/light-s0_dark-s1: white light / Dark/900 dark; #f9f9fa is the nested media panel, so the old s1 value inverted the surface hierarchy)."
       },
       "fg": {
         "$value": "{ki.text.high-em}",
         "$description": "color used by the card component for foreground."
       },
       "border-color": {
-        "$value": "{ki.outline.none}",
-        "$description": "color used by the card component for border color."
+        "$value": "{ki.outline.base-em}",
+        "$description": "color used by the card component for border color (MarsUI Outline/base_em hairline — painted on large Chart cards; Dashboard_info leaves width 0, which stays the default via ki.card.border-width)."
       },
       "border-width": {
         "$value": "{ki.space.zero}",
         "$description": "dimension used by the card component for border width."
       },
       "radius": {
-        "$value": "{ki.radius.lg}",
-        "$description": "dimension used by the card component for radius."
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "dimension used by the card component for radius (MarsUI card surfaces ride the big_component scale: Dashboard_info 400x128 binds radius_xs 16px; large Chart cards anchor radius_lg 28px)."
       },
       "elevation": {
         "$value": "{ki.elevation.e1}",
@@ -27,12 +27,25 @@
         "$type": "shadow"
       },
       "gap": {
-        "$value": "{ki.space.zero}",
-        "$description": "dimension used by the card component for gap."
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the card component for gap (MarsUI Dashboard_info/Chart inter-region rhythm 12px; material3 keeps zero via its override)."
       },
       "media-padding": {
-        "$value": "{ki.space.zero}",
-        "$description": "dimension used by the card component for media padding."
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the card component for media padding (MarsUI Dashboard masters inset media panels 8px inline; material3 keeps full-bleed zero via its override)."
+      },
+      "padding-block": {
+        "$value": "{ki.space.3xl}",
+        "$description": "dimension used by the card component for the surface block padding (16px carried by the card surface itself so stacked region paddings no longer double to 32px; formalizes the fallback ki-card.css already consumes)."
+      },
+      "media-radius": {
+        "$value": "{ki.radius.big-component.sm}",
+        "$description": "dimension used by the card component for slotted media corner radius (MarsUI nested media panel Radius/big_component/radius_sm 20px; formalizes the fallback ki-card.css already consumes)."
+      },
+      "backdrop-blur": {
+        "$value": "{ki.blur.96}",
+        "$type": "dimension",
+        "$description": "backdrop blur for the card glass surface (MarsUI Dashboard masters BACKGROUND_BLUR 96 = CSS 48px). Opt-in: ki-card.css does not consume it yet — enabling it is a component change gated on a perf measurement; material3 resolves blur none via its override."
       },
       "header-padding": {
         "$value": "{ki.space.3xl}",

@@ -455,44 +455,44 @@
         "neutral": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.s0}",
-              "$description": "color used by the icon button component for tertiary neutral rest background (same semantic reference as the button matrix, 002)."
+              "$value": "{ki.surface.special.light-s0-dark-s2}",
+              "$description": "color used by the icon button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}",
-              "$description": "color used by the icon button component for tertiary neutral rest foreground — the icon inherits it via currentColor."
+              "$value": "{ki.text.med-em}",
+              "$description": "color used by the icon button component for tertiary neutral rest icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative)."
             },
             "border": {
-              "$value": "{ki.outline.none}",
-              "$description": "color used by the icon button component for tertiary neutral rest border."
+              "$value": "{ki.outline.secondary-button-top}",
+              "$description": "color used by the icon button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.s1}",
-              "$description": "color used by the icon button component for tertiary neutral hover background (same semantic reference as the button matrix, 002)."
+              "$value": "{ki.surface.special.light-s1-dark-s2}",
+              "$description": "color used by the icon button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}",
-              "$description": "color used by the icon button component for tertiary neutral hover foreground — the icon inherits it via currentColor."
+              "$value": "{ki.text.med-em}",
+              "$description": "color used by the icon button component for tertiary neutral hover icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative)."
             },
             "border": {
-              "$value": "{ki.outline.none}",
-              "$description": "color used by the icon button component for tertiary neutral hover border."
+              "$value": "{ki.outline.secondary-button-top}",
+              "$description": "color used by the icon button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.s2}",
-              "$description": "color used by the icon button component for tertiary neutral active background (same semantic reference as the button matrix, 002)."
+              "$value": "{ki.surface.special.light-s2-dark-s3}",
+              "$description": "color used by the icon button component for tertiary neutral active background (MarsUI defines no pressed state; one step beyond hover in both schemes)."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}",
-              "$description": "color used by the icon button component for tertiary neutral active foreground — the icon inherits it via currentColor."
+              "$value": "{ki.text.med-em}",
+              "$description": "color used by the icon button component for tertiary neutral active icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative)."
             },
             "border": {
-              "$value": "{ki.outline.none}",
-              "$description": "color used by the icon button component for tertiary neutral active border."
+              "$value": "{ki.outline.secondary-button-top}",
+              "$description": "color used by the icon button component for tertiary neutral active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "disabled": {
@@ -513,110 +513,115 @@
         "success": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.s0}",
-              "$description": "color used by the icon button component for tertiary success rest background (same semantic reference as the button matrix, 002)."
+              "$value": "{ki.surface.special.light-s0-dark-s2}",
+              "$description": "color used by the icon button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
             },
             "fg": {
               "$value": "{ki.text.success-high-em}",
               "$description": "color used by the icon button component for tertiary success rest foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.none}",
-              "$description": "color used by the icon button component for tertiary success rest border."
+              "$value": "{ki.outline.secondary-button-top}",
+              "$description": "color used by the icon button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.s1}",
-              "$description": "color used by the icon button component for tertiary success hover background (same semantic reference as the button matrix, 002)."
+              "$value": "{ki.surface.special.light-s1-dark-s2}",
+              "$description": "color used by the icon button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
             "fg": {
               "$value": "{ki.text.success-high-em}",
               "$description": "color used by the icon button component for tertiary success hover foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.none}",
-              "$description": "color used by the icon button component for tertiary success hover border."
+              "$value": "{ki.outline.secondary-button-top}",
+              "$description": "color used by the icon button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.s2}",
-              "$description": "color used by the icon button component for tertiary success active background (same semantic reference as the button matrix, 002)."
+              "$value": "{ki.surface.special.light-s2-dark-s3}",
+              "$description": "color used by the icon button component for tertiary success active background (MarsUI defines no pressed state; one step beyond hover in both schemes)."
             },
             "fg": {
               "$value": "{ki.text.success-high-em}",
               "$description": "color used by the icon button component for tertiary success active foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.none}",
-              "$description": "color used by the icon button component for tertiary success active border."
+              "$value": "{ki.outline.secondary-button-top}",
+              "$description": "color used by the icon button component for tertiary success active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           }
         },
         "danger": {
           "rest": {
             "bg": {
-              "$value": "{ki.surface.s0}",
-              "$description": "color used by the icon button component for tertiary danger rest background (same semantic reference as the button matrix, 002)."
+              "$value": "{ki.surface.special.light-s0-dark-s2}",
+              "$description": "color used by the icon button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
             },
             "fg": {
               "$value": "{ki.text.danger-high-em}",
               "$description": "color used by the icon button component for tertiary danger rest foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.none}",
-              "$description": "color used by the icon button component for tertiary danger rest border."
+              "$value": "{ki.outline.secondary-button-top}",
+              "$description": "color used by the icon button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.s1}",
-              "$description": "color used by the icon button component for tertiary danger hover background (same semantic reference as the button matrix, 002)."
+              "$value": "{ki.surface.special.light-s1-dark-s2}",
+              "$description": "color used by the icon button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
             "fg": {
               "$value": "{ki.text.danger-high-em}",
               "$description": "color used by the icon button component for tertiary danger hover foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.none}",
-              "$description": "color used by the icon button component for tertiary danger hover border."
+              "$value": "{ki.outline.secondary-button-top}",
+              "$description": "color used by the icon button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.s2}",
-              "$description": "color used by the icon button component for tertiary danger active background (same semantic reference as the button matrix, 002)."
+              "$value": "{ki.surface.special.light-s2-dark-s3}",
+              "$description": "color used by the icon button component for tertiary danger active background (MarsUI defines no pressed state; one step beyond hover in both schemes)."
             },
             "fg": {
               "$value": "{ki.text.danger-high-em}",
               "$description": "color used by the icon button component for tertiary danger active foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.none}",
-              "$description": "color used by the icon button component for tertiary danger active border."
+              "$value": "{ki.outline.secondary-button-top}",
+              "$description": "color used by the icon button component for tertiary danger active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
             }
           }
         },
         "rest": {
           "shadow": {
-            "$value": "{ki.foundation.migrated.component-button.button.tertiary.active.shadow}",
+            "$value": "{ki.effect.component.secondary.default.shadow}",
             "$type": "shadow",
-            "$description": "shadow used by the icon button component for tertiary rest shadow (MarsUI Component_effect/migrated tertiary ramp)."
+            "$description": "shadow used by the icon button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override)."
+          },
+          "border-bottom": {
+            "$value": "{ki.outline.secondary-button-bottom}",
+            "$type": "color",
+            "$description": "color used by the icon button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
           }
         },
         "hover": {
           "shadow": {
-            "$value": "{ki.foundation.migrated.component-button.button.tertiary.hover.shadow}",
+            "$value": "{ki.effect.component.secondary.hover.shadow}",
             "$type": "shadow",
-            "$description": "shadow used by the icon button component for tertiary hover shadow (MarsUI Component_effect/migrated tertiary ramp)."
+            "$description": "shadow used by the icon button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover)."
           }
         },
         "active": {
           "shadow": {
-            "$value": "{ki.foundation.migrated.component-button.button.tertiary.active.shadow}",
+            "$value": "{ki.effect.component.secondary.default.shadow}",
             "$type": "shadow",
-            "$description": "shadow used by the icon button component for tertiary active shadow (MarsUI Component_effect/migrated tertiary ramp; MarsUI defines no pressed state, mirrors rest)."
+            "$description": "shadow used by the icon button component for tertiary active shadow (MarsUI defines no pressed state; mirrors rest)."
           }
         },
         "disabled": {
@@ -634,40 +639,40 @@
               "$description": "color used by the icon button component for quaternary neutral rest background (same semantic reference as the button matrix, 002)."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}",
-              "$description": "color used by the icon button component for quaternary neutral rest foreground — the icon inherits it via currentColor."
+              "$value": "{ki.text.med-em}",
+              "$description": "color used by the icon button component for quaternary neutral rest icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
             },
             "border": {
-              "$value": "{ki.outline.primary-med-em}",
-              "$description": "color used by the icon button component for quaternary neutral rest border."
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the icon button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state)."
             }
           },
           "hover": {
             "bg": {
-              "$value": "{ki.surface.primary-base-em-alpha}",
-              "$description": "color used by the icon button component for quaternary neutral hover background (same semantic reference as the button matrix, 002)."
+              "$value": "{ki.surface.hover-overlay-inverse}",
+              "$description": "color used by the icon button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}",
-              "$description": "color used by the icon button component for quaternary neutral hover foreground — the icon inherits it via currentColor."
+              "$value": "{ki.text.med-em}",
+              "$description": "color used by the icon button component for quaternary neutral hover icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
             },
             "border": {
-              "$value": "{ki.outline.primary-high-em}",
-              "$description": "color used by the icon button component for quaternary neutral hover border."
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the icon button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state)."
             }
           },
           "active": {
             "bg": {
-              "$value": "{ki.surface.primary-low-em}",
-              "$description": "color used by the icon button component for quaternary neutral active background (same semantic reference as the button matrix, 002)."
+              "$value": "{ki.surface.pressed-overlay-inverse}",
+              "$description": "color used by the icon button component for quaternary neutral active background (pressed wash one rung beyond hover: Black/5 light, White/5 dark)."
             },
             "fg": {
-              "$value": "{ki.text.primary-high-em}",
-              "$description": "color used by the icon button component for quaternary neutral active foreground — the icon inherits it via currentColor."
+              "$value": "{ki.text.med-em}",
+              "$description": "color used by the icon button component for quaternary neutral active icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
             },
             "border": {
-              "$value": "{ki.outline.primary-high-em}",
-              "$description": "color used by the icon button component for quaternary neutral active border."
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the icon button component for quaternary neutral active border (MarsUI quaternary is borderless in every state)."
             }
           },
           "disabled": {
@@ -680,8 +685,8 @@
               "$description": "color used by the icon button component for quaternary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification)."
             },
             "border": {
-              "$value": "{ki.outline.low-em}",
-              "$description": "color used by the icon button component for quaternary disabled border (Figma disabled drops the bevel)."
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the icon button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state)."
             }
           }
         },
@@ -696,8 +701,8 @@
               "$description": "color used by the icon button component for quaternary success rest foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.success-med-em}",
-              "$description": "color used by the icon button component for quaternary success rest border."
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the icon button component for quaternary success rest border (MarsUI quaternary is borderless in every state)."
             }
           },
           "hover": {
@@ -710,8 +715,8 @@
               "$description": "color used by the icon button component for quaternary success hover foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.success-high-em}",
-              "$description": "color used by the icon button component for quaternary success hover border."
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the icon button component for quaternary success hover border (MarsUI quaternary is borderless in every state)."
             }
           },
           "active": {
@@ -724,8 +729,8 @@
               "$description": "color used by the icon button component for quaternary success active foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.success-high-em}",
-              "$description": "color used by the icon button component for quaternary success active border."
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the icon button component for quaternary success active border (MarsUI quaternary is borderless in every state)."
             }
           }
         },
@@ -740,8 +745,8 @@
               "$description": "color used by the icon button component for quaternary danger rest foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.danger-med-em}",
-              "$description": "color used by the icon button component for quaternary danger rest border."
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the icon button component for quaternary danger rest border (MarsUI quaternary is borderless in every state)."
             }
           },
           "hover": {
@@ -754,8 +759,8 @@
               "$description": "color used by the icon button component for quaternary danger hover foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.danger-high-em}",
-              "$description": "color used by the icon button component for quaternary danger hover border."
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the icon button component for quaternary danger hover border (MarsUI quaternary is borderless in every state)."
             }
           },
           "active": {
@@ -768,8 +773,8 @@
               "$description": "color used by the icon button component for quaternary danger active foreground — the icon inherits it via currentColor."
             },
             "border": {
-              "$value": "{ki.outline.danger-high-em}",
-              "$description": "color used by the icon button component for quaternary danger active border."
+              "$value": "{ki.outline.none}",
+              "$description": "color used by the icon button component for quaternary danger active border (MarsUI quaternary is borderless in every state)."
             }
           }
         },

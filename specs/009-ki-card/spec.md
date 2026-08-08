@@ -245,6 +245,15 @@ Feature: Card
     Given a page forcing the dark color scheme under the onmars theme
     When the page renders
     Then the card's appearance resolves from the dark token values
+
+  # Motion is decorative by contract: end states are identical with and
+  # without animation, and reduced-motion users skip the animation entirely.
+  # S9
+  Scenario: Reduced motion renders the card's end states without animation
+    Given a user whose system prefers reduced motion
+    When a card with media enters the page
+    Then the card renders fully opaque in place without an entrance animation
+    And its hover elevation and media emphasis apply without transitions
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*

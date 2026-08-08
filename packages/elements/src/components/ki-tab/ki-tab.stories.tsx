@@ -31,12 +31,27 @@ type Story = StoryObj<JSX.KiTab>;
 export const Playground: Story = {};
 
 export const WithStartMedia: Story = {
+  // A real 14px icon (the master's media metric) instead of a text glyph; the
+  // tab does not size slotted media, so the story provides the icon box.
   render: (args) => (
     <ki-tabs label="Settings" value="email">
       <ki-tab {...args}>
-        <span slot="start" aria-hidden="true">
-          @
-        </span>
+        <svg
+          slot="start"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden="true"
+          style={{ inlineSize: '0.875rem', blockSize: '0.875rem', display: 'block' }}
+        >
+          <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2" />
+          <path
+            d="m4 7 8 6 8-6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
         Email
       </ki-tab>
       <ki-tab value="notifications">Notifications</ki-tab>

@@ -795,6 +795,10 @@
           "$description": "MarsUI hairline stroke: 1px divider/border width."
         }
       },
+      "qr": {
+        "$value": "8rem",
+        "$description": "QR symbol edge: the Figma master's 128x128 symbol frame (nodes 12019:6059 / 16158:27560), as a dedicated surface size decoupled from ki.space (DNA brief section 3). Replaces the interim 120px ki.space.24xl declaration."
+      },
       "surface": {
         "xxs": {
           "$value": "18rem",
@@ -822,6 +826,17 @@
         }
       }
     },
+    "border": {
+      "hairline-base-em": {
+        "$type": "border",
+        "$value": {
+          "color": "{ki.color.black.3}",
+          "width": "{ki.size.border.hairline}",
+          "style": "solid"
+        },
+        "$description": "1px solid Outline/base_em hairline as a composed border (Black/3 light; the dark mode overrides the color to White/3). Lives in the primitive layer because composed borders carry the style keyword, which the non-primitive-literal contract forbids elsewhere; the color mirrors ki.outline.base-em."
+      }
+    },
     "foundation": {
       "migrated": {
         "modes-material3-dark": {
@@ -845,10 +860,6 @@
             "danger-base-em-alpha": {
               "$type": "color",
               "$value": "#f2b8b529"
-            },
-            "danger-low-em": {
-              "$type": "color",
-              "$value": "#410e0b"
             },
             "danger-low-em-alpha": {
               "$type": "color",
@@ -919,10 +930,6 @@
             "danger-low-em": {
               "$type": "color",
               "$value": "#ffb4ab"
-            },
-            "primary-on-danger": {
-              "$type": "color",
-              "$value": "#601410"
             }
           }
         },
@@ -1212,47 +1219,23 @@
               "$type": "color",
               "$value": "#f3edf7"
             },
-            "danger-base-em": {
-              "$type": "color",
-              "$value": "#f9dedc"
-            },
             "danger-base-em-alpha": {
               "$type": "color",
               "$value": "#b3261e1a"
-            },
-            "danger-high-em": {
-              "$type": "color",
-              "$value": "#b3261e"
             },
             "danger-low-em-alpha": {
               "$type": "color",
               "$value": "#b3261e3d"
             },
-            "danger-med-em": {
-              "$type": "color",
-              "$value": "#dc362e"
-            },
             "low-em": {
               "$type": "color",
               "$value": "#e7e0ec"
-            },
-            "danger-low-em": {
-              "$type": "color",
-              "$value": "#f2b8b5"
             }
           },
           "surface": {
-            "danger-base-em": {
-              "$type": "color",
-              "$value": "#fffbff"
-            },
             "danger-base-em-alpha": {
               "$type": "color",
               "$value": "#b3261e14"
-            },
-            "danger-high-em": {
-              "$type": "color",
-              "$value": "#ba1a1a"
             },
             "hover-overlay": {
               "$type": "color",
@@ -1291,20 +1274,12 @@
             "s4": {
               "$type": "color",
               "$value": "#e6e0e9"
-            },
-            "danger-high-em-hover": {
-              "$type": "color",
-              "$value": "#8c1d18"
             }
           },
           "text": {
             "primary-low-em": {
               "$type": "color",
               "$value": "#7f67be"
-            },
-            "base-em": {
-              "$type": "color",
-              "$value": "#938f99"
             }
           },
           "overlay": {
@@ -1316,32 +1291,6 @@
         },
         "component-button": {
           "button": {
-            "primary": {
-              "hover": {
-                "shadow": {
-                  "$type": "shadow",
-                  "$value": {
-                    "color": "{ki.color.black.3}",
-                    "offsetX": {
-                      "value": 0,
-                      "unit": "px"
-                    },
-                    "offsetY": {
-                      "value": 1,
-                      "unit": "px"
-                    },
-                    "blur": {
-                      "value": 1,
-                      "unit": "px"
-                    },
-                    "spread": {
-                      "value": -0.5,
-                      "unit": "px"
-                    }
-                  }
-                }
-              }
-            },
             "tertiary": {
               "active": {
                 "shadow": {
@@ -1433,109 +1382,6 @@
                   ]
                 }
               }
-            }
-          }
-        },
-        "component-card": {
-          "card": {
-            "elevation": {
-              "$type": "shadow",
-              "$value": [
-                {
-                  "color": "{ki.color.black.3}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": {
-                    "value": 1,
-                    "unit": "px"
-                  },
-                  "blur": {
-                    "value": 2,
-                    "unit": "px"
-                  },
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
-                },
-                {
-                  "color": "{ki.color.black.5}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": {
-                    "value": 2,
-                    "unit": "px"
-                  },
-                  "blur": {
-                    "value": 6,
-                    "unit": "px"
-                  },
-                  "spread": {
-                    "value": 2,
-                    "unit": "px"
-                  }
-                }
-              ]
-            }
-          }
-        },
-        "component-dialog": {
-          "dialog": {
-            "border": {
-              "$type": "border",
-              "$value": {
-                "color": "{ki.color.black.5}",
-                "width": {
-                  "value": 1,
-                  "unit": "px"
-                },
-                "style": "solid"
-              }
-            },
-            "motion": {
-              "duration": {
-                "$type": "duration",
-                "$value": "0ms"
-              },
-              "easing": {
-                "$type": "cubicBezier",
-                "$value": [0, 0, 1, 1]
-              }
-            },
-            "shadow": {
-              "$type": "shadow",
-              "$value": [
-                {
-                  "color": "{ki.color.black.5}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": "{ki.space.xs}",
-                  "blur": "{ki.space.3xl}",
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
-                },
-                {
-                  "color": "{ki.color.black.3}",
-                  "offsetX": {
-                    "value": 0,
-                    "unit": "px"
-                  },
-                  "offsetY": "{ki.space.5xl}",
-                  "blur": "{ki.space.9xl}",
-                  "spread": {
-                    "value": 0,
-                    "unit": "px"
-                  }
-                }
-              ]
             }
           }
         },
@@ -2415,6 +2261,10 @@
       "slow": {
         "$value": "360ms",
         "$description": "MarsUI motion scale: 3x the 120ms base, for large or emphatic transitions."
+      },
+      "instant": {
+        "$value": "0ms",
+        "$description": "Zero-duration step: state changes that must not animate (reduced-motion fallbacks, immediate handoffs)."
       }
     },
     "easing": {
@@ -2428,6 +2278,10 @@
       "in": {
         "$value": [0.42, 0, 1, 1],
         "$description": "MarsUI accelerate curve: mirror of ki.easing.out (CSS ease-in)."
+      },
+      "spring": {
+        "$value": [0.34, 1.56, 0.64, 1],
+        "$description": "Gentle overshoot curve for glass pops and playful state transfers (completes the MarsUI single-curve family; no Figma motion variable exists)."
       }
     }
   }

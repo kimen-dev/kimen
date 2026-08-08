@@ -130,10 +130,30 @@ export class KiProgress {
   }
 
   private renderCircular() {
+    // The user grid matches the default 40px size token (ring outer edge at
+    // r = 18 fills the box at 4px stroke). non-scaling-stroke keeps the CSS
+    // stroke-width token in screen pixels, so the public size and
+    // track-width tokens stay independent: a theme or consumer resizing the
+    // ring (material3 ships 48px) never thickens the stroke. Dash geometry
+    // is already scale-free via pathLength="100".
     return (
-      <svg viewBox="0 0 48 48" aria-hidden="true">
-        <circle part="track" cx="24" cy="24" r="20" pathLength="100" />
-        <circle part="indicator" cx="24" cy="24" r="20" pathLength="100" />
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <circle
+          part="track"
+          cx="20"
+          cy="20"
+          r="18"
+          pathLength="100"
+          vector-effect="non-scaling-stroke"
+        />
+        <circle
+          part="indicator"
+          cx="20"
+          cy="20"
+          r="18"
+          pathLength="100"
+          vector-effect="non-scaling-stroke"
+        />
       </svg>
     );
   }
@@ -153,6 +173,9 @@ export class KiProgress {
         style={{
           '--_ki-progress-fraction': String(this.fraction),
           '--_ki-progress-dash': String(this.fraction * 100),
+          // Paint guard: round stroke caps paint a dot even at dash length
+          // 0, so the arc hides entirely at fraction 0.
+          '--_ki-progress-indicator-opacity': this.fraction === 0 ? '0' : '1',
         }}
       >
         {children}

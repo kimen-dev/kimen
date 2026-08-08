@@ -77,13 +77,16 @@ Events:
 Methods: none
 
 CSS custom properties:
-- `--ki-alert-border-width`: dimension used by the alert component for border width.
-- `--ki-alert-danger-bg`: color used by the alert component for danger background.
-- `--ki-alert-danger-border`: color used by the alert component for danger border.
+- `--ki-alert-border-width`: dimension used by the alert component for border width (MarsUI never strokes alert surfaces: Alert master, Info Notes and Toasts all carry width 0; tone lives in the fill and text. material3 keeps its 2px border via its override).
+- `--ki-alert-danger-bg`: color used by the alert component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs).
+- `--ki-alert-danger-border`: color used by the alert component for danger border (MarsUI draws no tone border on any alert/note/toast surface).
 - `--ki-alert-danger-fg`: color used by the alert component for danger foreground.
 - `--ki-alert-dismiss-active-fg`: color used by the alert component for dismiss active foreground.
+- `--ki-alert-dismiss-border-width`: dimension used by the alert component for the dismiss chip bevel stroke (MarsUI 24px raised circle: 1px Outline/secondary_button_top hairline).
+- `--ki-alert-dismiss-hover-bg`: color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash — the dismiss chip previously had zero visible hover change).
 - `--ki-alert-dismiss-hover-fg`: color used by the alert component for dismiss hover foreground.
-- `--ki-alert-dismiss-icon-size`: dimension used by the alert component for dismiss icon size.
+- `--ki-alert-dismiss-icon-size`: dimension used by the alert component for dismiss icon size (Figma close glyph box 16px inside the 24px raised circle; repointed from 18px per the fidelity audit).
+- `--ki-alert-dismiss-radius`: dimension used by the alert component for the dismiss chip shape (MarsUI Radius/radius_round full circle).
 - `--ki-alert-dismiss-rest-fg`: color used by the alert component for dismiss rest foreground.
 - `--ki-alert-dismiss-size`: dimension used by the alert component for dismiss size.
 - `--ki-alert-focus-ring-color`: color used by the alert component for focus ring color.
@@ -91,26 +94,36 @@ CSS custom properties:
 - `--ki-alert-focus-ring-shadow`: shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-alert-focus-ring-width`: dimension used by the alert component for focus ring width.
 - `--ki-alert-font-size`: dimension used by the alert component for font size.
-- `--ki-alert-gap`: dimension used by the alert component for gap.
+- `--ki-alert-gap`: dimension used by the alert component for gap (MarsUI Alert master card gap Space/xl 12px).
 - `--ki-alert-heading-font-size`: dimension used by the alert component for heading font size.
-- `--ki-alert-heading-font-weight`: font weight used by the alert component for heading font weight.
-- `--ki-alert-info-bg`: color used by the alert component for info background.
-- `--ki-alert-info-border`: color used by the alert component for info border.
+- `--ki-alert-heading-font-weight`: font weight used by the alert component for heading font weight (MarsUI UI/Body 2/medium: weight 600 on the master heading).
+- `--ki-alert-info-bg`: color used by the alert component for info background (MarsUI Surface/info_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs).
+- `--ki-alert-info-border`: color used by the alert component for info border (MarsUI draws no tone border on any alert/note/toast surface).
 - `--ki-alert-info-fg`: color used by the alert component for info foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 7.3:1).
 - `--ki-alert-line-height`: dimension used by the alert component for line height.
+- `--ki-alert-message-line-height`: dimension used by the alert component for message line height (MarsUI description is 13/20 line_height/para; the heading keeps 15/24).
 - `--ki-alert-neutral-bg`: color used by the alert component for neutral background.
 - `--ki-alert-neutral-border`: color used by the alert component for neutral border.
 - `--ki-alert-neutral-fg`: color used by the alert component for neutral foreground.
-- `--ki-alert-padding-block`: dimension used by the alert component for padding block.
-- `--ki-alert-padding-inline`: dimension used by the alert component for padding inline.
-- `--ki-alert-radius`: dimension used by the alert component for radius.
-- `--ki-alert-success-bg`: color used by the alert component for success background.
-- `--ki-alert-success-border`: color used by the alert component for success border.
+- `--ki-alert-padding-block`: dimension used by the alert component for padding block (MarsUI Alert master card: 12px on all four sides).
+- `--ki-alert-padding-inline`: dimension used by the alert component for padding inline (MarsUI Alert master card: 12px on all four sides).
+- `--ki-alert-radius`: dimension used by the alert component for radius (Info Notes pills measure component radius 8-10px; same 10px value, repointed to the component ramp so personality modes reach it. The card-form Alert master anchors 16px big_component/radius_xs — applies if ki-alert grows the icon-chip card form).
+- `--ki-alert-success-bg`: color used by the alert component for success background (MarsUI Surface/success_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs).
+- `--ki-alert-success-border`: color used by the alert component for success border (MarsUI draws no tone border on any alert/note/toast surface).
 - `--ki-alert-success-fg`: color used by the alert component for success foreground.
-- `--ki-alert-warning-bg`: color used by the alert component for warning background.
-- `--ki-alert-warning-border`: color used by the alert component for warning border.
+- `--ki-alert-text-gap`: dimension used by the alert component for the heading-to-message stack gap (MarsUI Text_wrap 4px, decoupled from the outer 12px card gap).
+- `--ki-alert-warning-bg`: color used by the alert component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs).
+- `--ki-alert-warning-border`: color used by the alert component for warning border (MarsUI draws no tone border on any alert/note/toast surface).
 - `--ki-alert-warning-fg`: color used by the alert component for warning foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 5.5:1).
-- `--ki-outline-none`: semantic color for outline none.
+- `--ki-effect-component-backdrop-blur`: MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate).
+- `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
+- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
+- `--ki-outline-secondary-button-top`: semantic color for outline secondary button top.
+- `--ki-surface-special-light-s0-dark-s2`: semantic color for surface special light s0 dark s2.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-avatar
@@ -172,6 +185,8 @@ CSS custom properties:
 - `--ki-avatar-xxs-font-size`: dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px).
 - `--ki-avatar-xxs-icon-size`: dimension used by the avatar component for the xxs generic-figure glyph (MarsUI Icon/User 14px, Space/2xl).
 - `--ki-avatar-xxs-size`: dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md).
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 
 ### ki-avatar-group
 
@@ -227,7 +242,7 @@ CSS custom properties:
 - `--ki-avatar-group-xs-counter-padding-inline`: dimension used by the avatar group component for the xs counter inline padding (synthesized 24px step extending the verified 8/10/12/14 ramp, declared for founder review).
 - `--ki-avatar-group-xs-overlap`: dimension used by the avatar group component for the xs member overlap: the 24px group step exists in no Figma frame (five-step set), so it inherits the -8px overlap of the neighboring 20/32px frames (synthesized step, spec 019 Assumptions).
 - `--ki-avatar-group-xxs-counter-font-size`: dimension used by the avatar group component for the xxs counter text: no counter exists on the 20px frame, so the value follows the avatar xxs initials step (synthesized, declared for founder review).
-- `--ki-avatar-group-xxs-counter-padding-inline`: dimension used by the avatar group component for the xxs counter inline padding: the 20px Figma frame ships no counter, so the step extends the verified 8/10/12/14 ramp downward (synthesized, declared for founder review).
+- `--ki-avatar-group-xxs-counter-padding-inline`: dimension used by the avatar group component for xxs counter padding inline (raised to clear the 8px member tuck so the + glyph is never occluded; the 20px Figma frame ships no counter — synthesized step, founder review pending).
 - `--ki-avatar-group-xxs-overlap`: dimension used by the avatar group component for the xxs member overlap (the -8px stack step on the 20px Avatar_group frame — named xs in Figma, the vocabulary skew recorded in spec 019 Assumptions).
 - `--ki-avatar-lg-font-size`: dimension used by the avatar component for lg initials (MarsUI UI/Body 2: 15px).
 - `--ki-avatar-lg-icon-size`: dimension used by the avatar component for the lg generic-figure glyph (MarsUI Icon/User 24px, Space/7xl).
@@ -248,6 +263,11 @@ CSS custom properties:
 - `--ki-avatar-xxs-font-size`: dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px).
 - `--ki-avatar-xxs-icon-size`: dimension used by the avatar component for the xxs generic-figure glyph (MarsUI Icon/User 14px, Space/2xl).
 - `--ki-avatar-xxs-size`: dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md).
+- `--ki-effect-component-secondary-hover-shadow`: MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 
 ### ki-badge
 
@@ -276,34 +296,40 @@ Events: none
 Methods: none
 
 CSS custom properties:
-- `--ki-badge-border-width`: dimension used by the badge component for border width.
-- `--ki-badge-danger-bg`: color used by the badge component for danger background.
+- `--ki-badge-border-width`: dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral glass type draws its 1px bevel via ki.badge.neutral.border-width. material3 keeps its border via its override).
+- `--ki-badge-danger-bg`: color used by the badge component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically).
 - `--ki-badge-danger-border`: color used by the badge component for danger border.
 - `--ki-badge-danger-fg`: color used by the badge component for danger foreground.
 - `--ki-badge-font-family`: font family used by the badge component for font family.
 - `--ki-badge-font-weight`: font weight used by the badge component for font weight.
-- `--ki-badge-info-bg`: color used by the badge component for info background.
+- `--ki-badge-info-bg`: color used by the badge component for info background (MarsUI Surface/info_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically).
 - `--ki-badge-info-border`: color used by the badge component for info border.
 - `--ki-badge-info-fg`: color used by the badge component for info foreground.
-- `--ki-badge-md-font-size`: dimension used by the badge component for md font size.
-- `--ki-badge-md-height`: dimension used by the badge component for md height.
-- `--ki-badge-md-line-height`: dimension used by the badge component for md line height.
-- `--ki-badge-md-padding-inline`: dimension used by the badge component for md padding inline.
-- `--ki-badge-md-radius`: dimension used by the badge component for md radius.
-- `--ki-badge-neutral-bg`: color used by the badge component for neutral background.
-- `--ki-badge-neutral-border`: color used by the badge component for neutral border.
+- `--ki-badge-md-font-size`: dimension used by the badge component for md font size (MarsUI UI/Caption 2: 12px at both sm and md; only xs drops to Caption 1).
+- `--ki-badge-md-height`: dimension used by the badge component for md height (MarsUI Tag md outer height 28px).
+- `--ki-badge-md-line-height`: dimension used by the badge component for md line height (MarsUI caption_2 16px).
+- `--ki-badge-md-padding-inline`: dimension used by the badge component for md padding inline (MarsUI total text inset 10px; paired with the border-width 0 + border-box change so the badge does not shrink).
+- `--ki-badge-md-radius`: dimension used by the badge component for md radius (MarsUI Tag: Radius/component/radius_sm 8px at both sm and md).
+- `--ki-badge-neutral-bg`: color used by the badge component for neutral background (MarsUI secondary glass Tag: Surface/special/secondary_alpha_base Gray-100 alpha light / Dark-700 blur base dark — the same fill as ki-button secondary; completes the glass bevel/blur/shadow the component already draws. material3 keeps the opaque s2 chip via its override).
+- `--ki-badge-neutral-border`: color used by the badge component for neutral border (MarsUI secondary Tag bevel: Outline/secondary_button_top; drawn at ki.badge.neutral.border-width).
+- `--ki-badge-neutral-border-width`: dimension used by the badge component for the neutral (secondary glass) border width: MarsUI draws the 1px bevel only on this type.
 - `--ki-badge-neutral-fg`: color used by the badge component for neutral foreground.
 - `--ki-badge-sm-font-size`: dimension used by the badge component for sm font size.
 - `--ki-badge-sm-height`: dimension used by the badge component for sm height.
 - `--ki-badge-sm-line-height`: dimension used by the badge component for sm line height.
-- `--ki-badge-sm-padding-inline`: dimension used by the badge component for sm padding inline.
-- `--ki-badge-sm-radius`: dimension used by the badge component for sm radius.
-- `--ki-badge-success-bg`: color used by the badge component for success background.
+- `--ki-badge-sm-padding-inline`: dimension used by the badge component for sm padding inline (MarsUI total text inset 8px; paired with the border-width 0 + border-box change).
+- `--ki-badge-sm-radius`: dimension used by the badge component for sm radius (MarsUI Tag silhouette is an 8px rounded rect — Radius/component/radius_sm — never a pill).
+- `--ki-badge-success-bg`: color used by the badge component for success background (MarsUI Surface/success_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically).
 - `--ki-badge-success-border`: color used by the badge component for success border.
 - `--ki-badge-success-fg`: color used by the badge component for success foreground.
-- `--ki-badge-warning-bg`: color used by the badge component for warning background.
+- `--ki-badge-warning-bg`: color used by the badge component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically).
 - `--ki-badge-warning-border`: color used by the badge component for warning border.
 - `--ki-badge-warning-fg`: color used by the badge component for warning foreground.
+- `--ki-effect-component-backdrop-blur`: MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate).
+- `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-outline-secondary-button-bottom`: semantic color for outline secondary button bottom.
 
 ### ki-button
 
@@ -399,6 +425,7 @@ CSS custom properties:
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
+- `--ki-button-label-padding-inline`: dimension used by the button component for the label Text_wrap inline padding (MarsUI 8003:300: 4px each side of the label; the flex gap subtracts the same value so icon-to-text keeps the composite distance).
 - `--ki-button-lg-font-size`: dimension used by the button component for lg font size.
 - `--ki-button-lg-gap`: dimension used by the button component for lg gap.
 - `--ki-button-lg-height`: dimension used by the button component for lg height.
@@ -444,28 +471,28 @@ CSS custom properties:
 - `--ki-button-primary-success-rest-border`: color used by the button component for primary success rest border (MarsUI bevel top/inline edge).
 - `--ki-button-primary-success-rest-fg`: color used by the button component for primary success rest foreground.
 - `--ki-button-quaternary-danger-hover-bg`: color used by the button component for quaternary danger hover background.
-- `--ki-button-quaternary-danger-hover-border`: color used by the button component for quaternary danger hover border.
+- `--ki-button-quaternary-danger-hover-border`: color used by the button component for quaternary danger hover border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-danger-hover-fg`: color used by the button component for quaternary danger hover foreground.
 - `--ki-button-quaternary-danger-rest-bg`: color used by the button component for quaternary danger rest background.
-- `--ki-button-quaternary-danger-rest-border`: color used by the button component for quaternary danger rest border.
+- `--ki-button-quaternary-danger-rest-border`: color used by the button component for quaternary danger rest border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-danger-rest-fg`: color used by the button component for quaternary danger rest foreground.
 - `--ki-button-quaternary-disabled-shadow`: value used by the button component for quaternary disabled shadow.
 - `--ki-button-quaternary-hover-shadow`: value used by the button component for quaternary hover shadow.
 - `--ki-button-quaternary-neutral-disabled-bg`: color used by the button component for quaternary neutral disabled background.
-- `--ki-button-quaternary-neutral-disabled-border`: color used by the button component for quaternary neutral disabled border.
+- `--ki-button-quaternary-neutral-disabled-border`: color used by the button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-neutral-disabled-fg`: color used by the button component for quaternary neutral disabled foreground.
-- `--ki-button-quaternary-neutral-hover-bg`: color used by the button component for quaternary neutral hover background.
-- `--ki-button-quaternary-neutral-hover-border`: color used by the button component for quaternary neutral hover border.
-- `--ki-button-quaternary-neutral-hover-fg`: color used by the button component for quaternary neutral hover foreground.
+- `--ki-button-quaternary-neutral-hover-bg`: color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill).
+- `--ki-button-quaternary-neutral-hover-border`: color used by the button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state).
+- `--ki-button-quaternary-neutral-hover-fg`: color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).
 - `--ki-button-quaternary-neutral-rest-bg`: color used by the button component for quaternary neutral rest background.
-- `--ki-button-quaternary-neutral-rest-border`: color used by the button component for quaternary neutral rest border.
-- `--ki-button-quaternary-neutral-rest-fg`: color used by the button component for quaternary neutral rest foreground.
+- `--ki-button-quaternary-neutral-rest-border`: color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state).
+- `--ki-button-quaternary-neutral-rest-fg`: color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).
 - `--ki-button-quaternary-rest-shadow`: value used by the button component for quaternary rest shadow.
 - `--ki-button-quaternary-success-hover-bg`: color used by the button component for quaternary success hover background.
-- `--ki-button-quaternary-success-hover-border`: color used by the button component for quaternary success hover border.
+- `--ki-button-quaternary-success-hover-border`: color used by the button component for quaternary success hover border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-success-hover-fg`: color used by the button component for quaternary success hover foreground.
 - `--ki-button-quaternary-success-rest-bg`: color used by the button component for quaternary success rest background.
-- `--ki-button-quaternary-success-rest-border`: color used by the button component for quaternary success rest border.
+- `--ki-button-quaternary-success-rest-border`: color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state).
 - `--ki-button-quaternary-success-rest-fg`: color used by the button component for quaternary success rest foreground.
 - `--ki-button-secondary-active-overlay`: Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
 - `--ki-button-secondary-danger-hover-bg`: color used by the button component for secondary danger hover background.
@@ -502,29 +529,30 @@ CSS custom properties:
 - `--ki-button-sm-min-target`: dimension used by the button component for sm min target.
 - `--ki-button-sm-padding-inline`: dimension used by the button component for sm padding inline.
 - `--ki-button-sm-radius`: dimension used by the button component for sm radius.
-- `--ki-button-tertiary-danger-hover-bg`: color used by the button component for tertiary danger hover background.
-- `--ki-button-tertiary-danger-hover-border`: color used by the button component for tertiary danger hover border.
+- `--ki-button-tertiary-danger-hover-bg`: color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
+- `--ki-button-tertiary-danger-hover-border`: color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-danger-hover-fg`: color used by the button component for tertiary danger hover foreground.
-- `--ki-button-tertiary-danger-rest-bg`: color used by the button component for tertiary danger rest background.
-- `--ki-button-tertiary-danger-rest-border`: color used by the button component for tertiary danger rest border.
+- `--ki-button-tertiary-danger-rest-bg`: color used by the button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).
+- `--ki-button-tertiary-danger-rest-border`: color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-danger-rest-fg`: color used by the button component for tertiary danger rest foreground.
 - `--ki-button-tertiary-disabled-shadow`: value used by the button component for tertiary disabled shadow.
-- `--ki-button-tertiary-hover-shadow`: shadow used by the button component for button tertiary hover shadow.
+- `--ki-button-tertiary-hover-shadow`: shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover).
 - `--ki-button-tertiary-neutral-disabled-bg`: color used by the button component for tertiary neutral disabled background.
 - `--ki-button-tertiary-neutral-disabled-border`: color used by the button component for tertiary neutral disabled border.
 - `--ki-button-tertiary-neutral-disabled-fg`: color used by the button component for tertiary neutral disabled foreground.
-- `--ki-button-tertiary-neutral-hover-bg`: color used by the button component for tertiary neutral hover background.
-- `--ki-button-tertiary-neutral-hover-border`: color used by the button component for tertiary neutral hover border.
-- `--ki-button-tertiary-neutral-hover-fg`: color used by the button component for tertiary neutral hover foreground.
-- `--ki-button-tertiary-neutral-rest-bg`: color used by the button component for tertiary neutral rest background.
-- `--ki-button-tertiary-neutral-rest-border`: color used by the button component for tertiary neutral rest border.
-- `--ki-button-tertiary-neutral-rest-fg`: color used by the button component for tertiary neutral rest foreground.
-- `--ki-button-tertiary-rest-shadow`: shadow used by the button component for button tertiary rest shadow.
-- `--ki-button-tertiary-success-hover-bg`: color used by the button component for tertiary success hover background.
-- `--ki-button-tertiary-success-hover-border`: color used by the button component for tertiary success hover border.
+- `--ki-button-tertiary-neutral-hover-bg`: color used by the button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
+- `--ki-button-tertiary-neutral-hover-border`: color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
+- `--ki-button-tertiary-neutral-hover-fg`: color used by the button component for tertiary neutral hover foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative).
+- `--ki-button-tertiary-neutral-rest-bg`: color used by the button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).
+- `--ki-button-tertiary-neutral-rest-border`: color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
+- `--ki-button-tertiary-neutral-rest-fg`: color used by the button component for tertiary neutral rest foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative).
+- `--ki-button-tertiary-rest-border-bottom`: color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary).
+- `--ki-button-tertiary-rest-shadow`: shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override).
+- `--ki-button-tertiary-success-hover-bg`: color used by the button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
+- `--ki-button-tertiary-success-hover-border`: color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-hover-fg`: color used by the button component for tertiary success hover foreground.
-- `--ki-button-tertiary-success-rest-bg`: color used by the button component for tertiary success rest background.
-- `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border.
+- `--ki-button-tertiary-success-rest-bg`: color used by the button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).
+- `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size.
 - `--ki-button-xl-gap`: dimension used by the button component for xl gap (MarsUI effective icon-to-text gap 8px).
@@ -542,6 +570,8 @@ CSS custom properties:
 - `--ki-button-xs-min-target`: dimension used by the button component for xs min target.
 - `--ki-button-xs-padding-inline`: dimension used by the button component for xs padding inline.
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-transparent-inverse`: semantic color for transparent inverse.
 
 ### ki-card
@@ -577,17 +607,25 @@ Events: none
 Methods: none
 
 CSS custom properties:
-- `--ki-card-bg`: color used by the card component for background.
+- `--ki-card-bg`: color used by the card component for background (MarsUI Dashboard masters bind Surface/special/light-s0_dark-s1: white light / Dark/900 dark; #f9f9fa is the nested media panel, so the old s1 value inverted the surface hierarchy).
 - `--ki-card-body-padding`: dimension used by the card component for body padding.
-- `--ki-card-border-color`: color used by the card component for border color.
+- `--ki-card-border-color`: color used by the card component for border color (MarsUI Outline/base_em hairline — painted on large Chart cards; Dashboard_info leaves width 0, which stays the default via ki.card.border-width).
 - `--ki-card-border-width`: dimension used by the card component for border width.
 - `--ki-card-elevation`: Card resting elevation: MarsUI elevation ramp level e1 (brief §5, drop 0/1/1/-0.5 in the scheme shadow color; replaces the migrated M2-era shadow).
 - `--ki-card-fg`: color used by the card component for foreground.
 - `--ki-card-footer-padding`: dimension used by the card component for footer padding.
-- `--ki-card-gap`: dimension used by the card component for gap.
+- `--ki-card-gap`: dimension used by the card component for gap (MarsUI Dashboard_info/Chart inter-region rhythm 12px; material3 keeps zero via its override).
 - `--ki-card-header-padding`: dimension used by the card component for header padding.
-- `--ki-card-media-padding`: dimension used by the card component for media padding.
-- `--ki-card-radius`: dimension used by the card component for radius.
+- `--ki-card-media-padding`: dimension used by the card component for media padding (MarsUI Dashboard masters inset media panels 8px inline; material3 keeps full-bleed zero via its override).
+- `--ki-card-media-radius`: dimension used by the card component for slotted media corner radius (MarsUI nested media panel Radius/big_component/radius_sm 20px; formalizes the fallback ki-card.css already consumes).
+- `--ki-card-padding-block`: dimension used by the card component for the surface block padding (16px carried by the card surface itself so stacked region paddings no longer double to 32px; formalizes the fallback ki-card.css already consumes).
+- `--ki-card-radius`: dimension used by the card component for radius (MarsUI card surfaces ride the big_component scale: Dashboard_info 400x128 binds radius_xs 16px; large Chart cards anchor radius_lg 28px).
+- `--ki-elevation-e2`: MarsUI Elevation/e2 (cumulative: e1 layers plus 0/3/3/-1.5).
+- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-checkbox
@@ -626,9 +664,9 @@ CSS custom properties:
 - `--ki-checkbox-checked-active-bg`: color used by the checkbox component for checked active background.
 - `--ki-checkbox-checked-active-border`: color used by the checkbox component for checked active border.
 - `--ki-checkbox-checked-active-fg`: color used by the checkbox component for checked active foreground.
-- `--ki-checkbox-checked-disabled-bg`: color used by the checkbox component for checked disabled background.
+- `--ki-checkbox-checked-disabled-bg`: color used by the checkbox component for checked disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark).
 - `--ki-checkbox-checked-disabled-border`: color used by the checkbox component for checked disabled border.
-- `--ki-checkbox-checked-disabled-fg`: color used by the checkbox component for checked disabled foreground.
+- `--ki-checkbox-checked-disabled-fg`: color used by the checkbox component for checked disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias).
 - `--ki-checkbox-checked-hover-bg`: color used by the checkbox component for checked hover background.
 - `--ki-checkbox-checked-hover-border`: color used by the checkbox component for checked hover border.
 - `--ki-checkbox-checked-hover-fg`: color used by the checkbox component for checked hover foreground.
@@ -640,41 +678,46 @@ CSS custom properties:
 - `--ki-checkbox-focus-ring-offset`: dimension used by the checkbox component for focus ring offset.
 - `--ki-checkbox-focus-ring-shadow`: shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-checkbox-focus-ring-width`: dimension used by the checkbox component for focus ring width.
-- `--ki-checkbox-gap`: dimension used by the checkbox component for gap.
-- `--ki-checkbox-indeterminate-active-bg`: color used by the checkbox component for indeterminate active background.
-- `--ki-checkbox-indeterminate-active-border`: color used by the checkbox component for indeterminate active border.
-- `--ki-checkbox-indeterminate-active-fg`: color used by the checkbox component for indeterminate active foreground.
-- `--ki-checkbox-indeterminate-disabled-bg`: color used by the checkbox component for indeterminate disabled background.
+- `--ki-checkbox-gap`: dimension used by the checkbox component for gap (MarsUI md label pairing: Space/xl 12px for the 20px box).
+- `--ki-checkbox-indeterminate-active-bg`: color used by the checkbox component for indeterminate active background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint).
+- `--ki-checkbox-indeterminate-active-border`: color used by the checkbox component for indeterminate active border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control).
+- `--ki-checkbox-indeterminate-active-fg`: color used by the checkbox component for indeterminate active dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative).
+- `--ki-checkbox-indeterminate-disabled-bg`: color used by the checkbox component for indeterminate disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark).
 - `--ki-checkbox-indeterminate-disabled-border`: color used by the checkbox component for indeterminate disabled border.
-- `--ki-checkbox-indeterminate-disabled-fg`: color used by the checkbox component for indeterminate disabled foreground.
-- `--ki-checkbox-indeterminate-hover-bg`: color used by the checkbox component for indeterminate hover background.
-- `--ki-checkbox-indeterminate-hover-border`: color used by the checkbox component for indeterminate hover border.
-- `--ki-checkbox-indeterminate-hover-fg`: color used by the checkbox component for indeterminate hover foreground.
-- `--ki-checkbox-indeterminate-rest-bg`: color used by the checkbox component for indeterminate rest background.
-- `--ki-checkbox-indeterminate-rest-border`: color used by the checkbox component for indeterminate rest border.
-- `--ki-checkbox-indeterminate-rest-fg`: color used by the checkbox component for indeterminate rest foreground.
+- `--ki-checkbox-indeterminate-disabled-fg`: color used by the checkbox component for indeterminate disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias).
+- `--ki-checkbox-indeterminate-hover-bg`: color used by the checkbox component for indeterminate hover background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint).
+- `--ki-checkbox-indeterminate-hover-border`: color used by the checkbox component for indeterminate hover border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control).
+- `--ki-checkbox-indeterminate-hover-fg`: color used by the checkbox component for indeterminate hover dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative).
+- `--ki-checkbox-indeterminate-rest-bg`: color used by the checkbox component for indeterminate rest background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint).
+- `--ki-checkbox-indeterminate-rest-border`: color used by the checkbox component for indeterminate rest border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control).
+- `--ki-checkbox-indeterminate-rest-fg`: color used by the checkbox component for indeterminate rest dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative).
 - `--ki-checkbox-invalid-bg`: color used by the checkbox component for invalid background.
 - `--ki-checkbox-invalid-border`: color used by the checkbox component for invalid border.
 - `--ki-checkbox-invalid-fg`: color used by the checkbox component for invalid foreground.
-- `--ki-checkbox-label-font-size`: dimension used by the checkbox component for label font size.
+- `--ki-checkbox-label-font-size`: dimension used by the checkbox component for label font size (MarsUI md pairing: body_2 15px for the 20px box).
 - `--ki-checkbox-label-font-weight`: font weight used by the checkbox component for label font weight.
-- `--ki-checkbox-label-line-height`: dimension used by the checkbox component for label line height.
+- `--ki-checkbox-label-line-height`: dimension used by the checkbox component for label line height (MarsUI body_2 24px).
 - `--ki-checkbox-min-target`: dimension used by the checkbox component for min target.
-- `--ki-checkbox-radius`: dimension used by the checkbox component for radius.
+- `--ki-checkbox-radius`: dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap).
 - `--ki-checkbox-unchecked-active-bg`: color used by the checkbox component for unchecked active background.
 - `--ki-checkbox-unchecked-active-border`: color used by the checkbox component for unchecked active border.
 - `--ki-checkbox-unchecked-active-fg`: color used by the checkbox component for unchecked active foreground.
-- `--ki-checkbox-unchecked-disabled-bg`: color used by the checkbox component for unchecked disabled background.
+- `--ki-checkbox-unchecked-disabled-bg`: color used by the checkbox component for unchecked disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark).
 - `--ki-checkbox-unchecked-disabled-border`: color used by the checkbox component for unchecked disabled border.
-- `--ki-checkbox-unchecked-disabled-fg`: color used by the checkbox component for unchecked disabled foreground.
+- `--ki-checkbox-unchecked-disabled-fg`: color used by the checkbox component for unchecked disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias).
 - `--ki-checkbox-unchecked-hover-bg`: color used by the checkbox component for unchecked hover background.
 - `--ki-checkbox-unchecked-hover-border`: color used by the checkbox component for unchecked hover border.
 - `--ki-checkbox-unchecked-hover-fg`: color used by the checkbox component for unchecked hover foreground.
 - `--ki-checkbox-unchecked-rest-bg`: color used by the checkbox component for unchecked rest background.
 - `--ki-checkbox-unchecked-rest-border`: color used by the checkbox component for unchecked rest border.
 - `--ki-checkbox-unchecked-rest-fg`: color used by the checkbox component for unchecked rest foreground.
+- `--ki-effect-component-primary-default-shadow`: MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-spring`: Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language).
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
+- `--ki-surface-special-dark-s0-light-s2`: semantic color for surface special dark s0 light s2.
+- `--ki-surface-special-light-s0-dark-s4`: semantic color for surface special light s0 dark s4.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
@@ -735,8 +778,11 @@ Methods:
 
 CSS custom properties:
 - `--ki-dialog-backdrop-bg`: color used by the dialog component for backdrop background.
-- `--ki-dialog-bg`: color used by the dialog component for background.
-- `--ki-dialog-border`: border used by the dialog component for border.
+- `--ki-dialog-backdrop-blur`: backdrop blur used by the dialog component glass surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; material3 resolves to blur none via the semantic override; perf-measure before enabling per DNA section 5).
+- `--ki-dialog-bg`: color used by the dialog component for background (flat fallback of the MarsUI glass gradient: Surface/Special/light-s0_dark-s2; components paint the gradient from ki.dialog.bg-start to ki.dialog.bg-end).
+- `--ki-dialog-bg-end`: color used by the dialog component for the glass gradient end (MarsUI Surface/Special/light-s0_dark-s2: white light / Dark/800 dark).
+- `--ki-dialog-bg-start`: color used by the dialog component for the glass gradient start (MarsUI Surface/Special/blur_base_light White/80; dark resolves rgba(36,36,36,0.8)). Paint background: linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end)).
+- `--ki-dialog-border`: border used by the dialog component for border (MarsUI 1px solid Outline/base_em Black/3 light / White/3 dark; retires the migrated Black/5 foundation reference).
 - `--ki-dialog-fg`: color used by the dialog component for foreground.
 - `--ki-dialog-focus-ring-color`: color used by the dialog component for focus ring color.
 - `--ki-dialog-focus-ring-offset`: dimension used by the dialog component for focus ring offset.
@@ -747,12 +793,20 @@ CSS custom properties:
 - `--ki-dialog-heading-line-height`: dimension used by the dialog component for heading line height.
 - `--ki-dialog-max-width`: dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale).
 - `--ki-dialog-min-width`: dimension used by the dialog component for min width (surface size scale; the former ki.space.25xl reference misused the spacing scale).
-- `--ki-dialog-motion-duration`: duration used by the dialog component for dialog motion duration.
-- `--ki-dialog-motion-easing`: easing curve used by the dialog component for dialog motion easing.
+- `--ki-dialog-motion-duration`: duration used by the dialog component for the enter transition (MarsUI moderate step 240ms; retires the migrated 0ms token that disabled the @starting-style fade).
+- `--ki-dialog-motion-easing`: easing used by the dialog component for the enter transition (MarsUI decelerate curve; retires the migrated linear pair).
 - `--ki-dialog-padding`: dimension used by the dialog component for padding.
-- `--ki-dialog-radius`: dimension used by the dialog component for radius.
+- `--ki-dialog-radius`: dimension used by the dialog component for radius (MarsUI compact Modal master 16414:19665: Radius/big_component/radius_sm 20px; the large variant anchors 24px big_component/radius_md).
 - `--ki-dialog-shadow`: Dialog elevation: MarsUI elevation ramp level e4 (brief §5, high modal surface; replaces the migrated approximation). material3 keeps its own e3 override (M3 dialog = level3).
+- `--ki-focus-primary`: MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha, read from the Figma master as #845abe33 = brand 500 at 20% (Kimen name: outline.primary-base-em-alpha / brand.500-alpha-2). The previous 40% (outline.primary-low-em-alpha / brand.500-alpha-4) came from specs/002-ki-button/design-extraction.md §2.5, which read the alpha off the Dark canvas mode and recorded it as the Light value; the ring shipped 2x too strong in light and 2.8x in dark across twelve components.
+- `--ki-motion-distance-md`: Motion travel distance md (8px): entrance slide offsets (e.g. dialog rise).
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-standard-accelerate`: Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
 ### ki-divider
 
@@ -786,6 +840,8 @@ CSS custom properties:
 - `--ki-divider-radius`: dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps).
 - `--ki-divider-spacing`: dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007).
 - `--ki-divider-thickness`: dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md).
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-standard-decelerate`: Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-icon-button
@@ -884,28 +940,28 @@ CSS custom properties:
 - `--ki-icon-button-primary-success-rest-border`: color used by the icon button component for primary success rest border (MarsUI bevel top/inline edge).
 - `--ki-icon-button-primary-success-rest-fg`: color used by the icon button component for primary success rest foreground — the icon inherits it via currentColor.
 - `--ki-icon-button-quaternary-danger-hover-bg`: color used by the icon button component for quaternary danger hover background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-quaternary-danger-hover-border`: color used by the icon button component for quaternary danger hover border.
+- `--ki-icon-button-quaternary-danger-hover-border`: color used by the icon button component for quaternary danger hover border (MarsUI quaternary is borderless in every state).
 - `--ki-icon-button-quaternary-danger-hover-fg`: color used by the icon button component for quaternary danger hover foreground — the icon inherits it via currentColor.
 - `--ki-icon-button-quaternary-danger-rest-bg`: color used by the icon button component for quaternary danger rest background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-quaternary-danger-rest-border`: color used by the icon button component for quaternary danger rest border.
+- `--ki-icon-button-quaternary-danger-rest-border`: color used by the icon button component for quaternary danger rest border (MarsUI quaternary is borderless in every state).
 - `--ki-icon-button-quaternary-danger-rest-fg`: color used by the icon button component for quaternary danger rest foreground — the icon inherits it via currentColor.
 - `--ki-icon-button-quaternary-disabled-shadow`: value used by the icon button component for quaternary disabled shadow (Figma disabled drops every shadow).
 - `--ki-icon-button-quaternary-hover-shadow`: value used by the icon button component for quaternary hover shadow.
 - `--ki-icon-button-quaternary-neutral-disabled-bg`: color used by the icon button component for quaternary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification).
-- `--ki-icon-button-quaternary-neutral-disabled-border`: color used by the icon button component for quaternary disabled border (Figma disabled drops the bevel).
+- `--ki-icon-button-quaternary-neutral-disabled-border`: color used by the icon button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state).
 - `--ki-icon-button-quaternary-neutral-disabled-fg`: color used by the icon button component for quaternary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification).
-- `--ki-icon-button-quaternary-neutral-hover-bg`: color used by the icon button component for quaternary neutral hover background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-quaternary-neutral-hover-border`: color used by the icon button component for quaternary neutral hover border.
-- `--ki-icon-button-quaternary-neutral-hover-fg`: color used by the icon button component for quaternary neutral hover foreground — the icon inherits it via currentColor.
+- `--ki-icon-button-quaternary-neutral-hover-bg`: color used by the icon button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill).
+- `--ki-icon-button-quaternary-neutral-hover-border`: color used by the icon button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state).
+- `--ki-icon-button-quaternary-neutral-hover-fg`: color used by the icon button component for quaternary neutral hover icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).
 - `--ki-icon-button-quaternary-neutral-rest-bg`: color used by the icon button component for quaternary neutral rest background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-quaternary-neutral-rest-border`: color used by the icon button component for quaternary neutral rest border.
-- `--ki-icon-button-quaternary-neutral-rest-fg`: color used by the icon button component for quaternary neutral rest foreground — the icon inherits it via currentColor.
+- `--ki-icon-button-quaternary-neutral-rest-border`: color used by the icon button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state).
+- `--ki-icon-button-quaternary-neutral-rest-fg`: color used by the icon button component for quaternary neutral rest icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).
 - `--ki-icon-button-quaternary-rest-shadow`: value used by the icon button component for quaternary rest shadow.
 - `--ki-icon-button-quaternary-success-hover-bg`: color used by the icon button component for quaternary success hover background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-quaternary-success-hover-border`: color used by the icon button component for quaternary success hover border.
+- `--ki-icon-button-quaternary-success-hover-border`: color used by the icon button component for quaternary success hover border (MarsUI quaternary is borderless in every state).
 - `--ki-icon-button-quaternary-success-hover-fg`: color used by the icon button component for quaternary success hover foreground — the icon inherits it via currentColor.
 - `--ki-icon-button-quaternary-success-rest-bg`: color used by the icon button component for quaternary success rest background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-quaternary-success-rest-border`: color used by the icon button component for quaternary success rest border.
+- `--ki-icon-button-quaternary-success-rest-border`: color used by the icon button component for quaternary success rest border (MarsUI quaternary is borderless in every state).
 - `--ki-icon-button-quaternary-success-rest-fg`: color used by the icon button component for quaternary success rest foreground — the icon inherits it via currentColor.
 - `--ki-icon-button-secondary-active-overlay`: Pressed state layer for the secondary icon button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
 - `--ki-icon-button-secondary-danger-hover-bg`: color used by the icon button component for secondary danger hover background (same semantic reference as the button matrix, 002).
@@ -937,29 +993,30 @@ CSS custom properties:
 - `--ki-icon-button-sm-icon-size`: dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px).
 - `--ki-icon-button-sm-radius`: dimension used by the icon button component for sm radius (8, same ramp as button).
 - `--ki-icon-button-sm-size`: dimension used by the icon button component for sm box (32px square).
-- `--ki-icon-button-tertiary-danger-hover-bg`: color used by the icon button component for tertiary danger hover background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-tertiary-danger-hover-border`: color used by the icon button component for tertiary danger hover border.
+- `--ki-icon-button-tertiary-danger-hover-bg`: color used by the icon button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
+- `--ki-icon-button-tertiary-danger-hover-border`: color used by the icon button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-icon-button-tertiary-danger-hover-fg`: color used by the icon button component for tertiary danger hover foreground — the icon inherits it via currentColor.
-- `--ki-icon-button-tertiary-danger-rest-bg`: color used by the icon button component for tertiary danger rest background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-tertiary-danger-rest-border`: color used by the icon button component for tertiary danger rest border.
+- `--ki-icon-button-tertiary-danger-rest-bg`: color used by the icon button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).
+- `--ki-icon-button-tertiary-danger-rest-border`: color used by the icon button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-icon-button-tertiary-danger-rest-fg`: color used by the icon button component for tertiary danger rest foreground — the icon inherits it via currentColor.
 - `--ki-icon-button-tertiary-disabled-shadow`: value used by the icon button component for tertiary disabled shadow (Figma disabled drops every shadow).
-- `--ki-icon-button-tertiary-hover-shadow`: shadow used by the icon button component for tertiary hover shadow (MarsUI Component_effect/migrated tertiary ramp).
+- `--ki-icon-button-tertiary-hover-shadow`: shadow used by the icon button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover).
 - `--ki-icon-button-tertiary-neutral-disabled-bg`: color used by the icon button component for tertiary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification).
 - `--ki-icon-button-tertiary-neutral-disabled-border`: color used by the icon button component for tertiary disabled border (Figma disabled drops the bevel).
 - `--ki-icon-button-tertiary-neutral-disabled-fg`: color used by the icon button component for tertiary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification).
-- `--ki-icon-button-tertiary-neutral-hover-bg`: color used by the icon button component for tertiary neutral hover background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-tertiary-neutral-hover-border`: color used by the icon button component for tertiary neutral hover border.
-- `--ki-icon-button-tertiary-neutral-hover-fg`: color used by the icon button component for tertiary neutral hover foreground — the icon inherits it via currentColor.
-- `--ki-icon-button-tertiary-neutral-rest-bg`: color used by the icon button component for tertiary neutral rest background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-tertiary-neutral-rest-border`: color used by the icon button component for tertiary neutral rest border.
-- `--ki-icon-button-tertiary-neutral-rest-fg`: color used by the icon button component for tertiary neutral rest foreground — the icon inherits it via currentColor.
-- `--ki-icon-button-tertiary-rest-shadow`: shadow used by the icon button component for tertiary rest shadow (MarsUI Component_effect/migrated tertiary ramp).
-- `--ki-icon-button-tertiary-success-hover-bg`: color used by the icon button component for tertiary success hover background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-tertiary-success-hover-border`: color used by the icon button component for tertiary success hover border.
+- `--ki-icon-button-tertiary-neutral-hover-bg`: color used by the icon button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
+- `--ki-icon-button-tertiary-neutral-hover-border`: color used by the icon button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
+- `--ki-icon-button-tertiary-neutral-hover-fg`: color used by the icon button component for tertiary neutral hover icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative).
+- `--ki-icon-button-tertiary-neutral-rest-bg`: color used by the icon button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).
+- `--ki-icon-button-tertiary-neutral-rest-border`: color used by the icon button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
+- `--ki-icon-button-tertiary-neutral-rest-fg`: color used by the icon button component for tertiary neutral rest icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative).
+- `--ki-icon-button-tertiary-rest-border-bottom`: color used by the icon button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary).
+- `--ki-icon-button-tertiary-rest-shadow`: shadow used by the icon button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override).
+- `--ki-icon-button-tertiary-success-hover-bg`: color used by the icon button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
+- `--ki-icon-button-tertiary-success-hover-border`: color used by the icon button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-icon-button-tertiary-success-hover-fg`: color used by the icon button component for tertiary success hover foreground — the icon inherits it via currentColor.
-- `--ki-icon-button-tertiary-success-rest-bg`: color used by the icon button component for tertiary success rest background (same semantic reference as the button matrix, 002).
-- `--ki-icon-button-tertiary-success-rest-border`: color used by the icon button component for tertiary success rest border.
+- `--ki-icon-button-tertiary-success-rest-bg`: color used by the icon button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).
+- `--ki-icon-button-tertiary-success-rest-border`: color used by the icon button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-icon-button-tertiary-success-rest-fg`: color used by the icon button component for tertiary success rest foreground — the icon inherits it via currentColor.
 - `--ki-icon-button-xl-icon-size`: dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px).
 - `--ki-icon-button-xl-radius`: dimension used by the icon button component for xl radius (14, same ramp as button).
@@ -967,6 +1024,8 @@ CSS custom properties:
 - `--ki-icon-button-xs-icon-size`: dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon).
 - `--ki-icon-button-xs-radius`: dimension used by the icon button component for xs radius (Figma Radius/component/radius_xs 6, same ramp as button).
 - `--ki-icon-button-xs-size`: dimension used by the icon button component for xs box (24px square, Figma Space/7xl).
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-transparent-inverse`: semantic color for transparent inverse.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
@@ -1017,6 +1076,9 @@ CSS custom properties:
 - `--ki-indicator-dot-radius`: dimension used by the indicator component for the resting dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent).
 - `--ki-indicator-gap`: dimension used by the indicator component for the space between dots: Space/sm, the exact variable bound as the 6px gap of the composed Nav_indicator row (node 14195:5866, specs/024-ki-indicator/design-extraction.md).
 - `--ki-indicator-motion-duration`: duration used by the indicator component for the highlight transfer between dots: the Figma set documents no motion, so onmars resolves the single transition to the fast semantic duration (FR-008; disabled under reduced motion by construction).
+- `--ki-indicator-motion-easing`: easing used by the indicator component for the highlight-transfer transition (MarsUI standard curve; previously the UA default ease applied).
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-standard-decelerate`: Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-input
@@ -1078,14 +1140,13 @@ CSS custom properties:
 - `--ki-input-border-inline-start-width`: dimension used by the input component for border inline start width.
 - `--ki-input-disabled-bg`: color used by the input component for disabled background.
 - `--ki-input-disabled-border`: color used by the input component for disabled border.
-- `--ki-input-disabled-fg`: color used by the input component for disabled foreground.
+- `--ki-input-disabled-fg`: color used by the input component for disabled foreground (MarsUI disabled text Text/base_em; disabled cells are exempt from the contrast sweep).
 - `--ki-input-disabled-label-fg`: color used by the input component for disabled label foreground.
 - `--ki-input-disabled-placeholder-fg`: color used by the input component for disabled placeholder foreground.
-- `--ki-input-focus-bg`: color used by the input component for focus background.
-- `--ki-input-focus-border`: color used by the input component for focus border.
+- `--ki-input-focus-bg`: color used by the input component for focus background (MarsUI active state switches the fill to Surface/Special white / dark s2 — modeled with the scheme ladder s0).
 - `--ki-input-focus-fg`: color used by the input component for focus foreground.
-- `--ki-input-focus-label-fg`: color used by the input component for focus label foreground.
-- `--ki-input-focus-placeholder-fg`: color used by the input component for focus placeholder foreground.
+- `--ki-input-focus-label-fg`: color used by the input component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).
+- `--ki-input-focus-placeholder-fg`: color used by the input component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).
 - `--ki-input-focus-ring-color`: color used by the input component for focus ring color.
 - `--ki-input-focus-ring-offset`: dimension used by the input component for focus ring offset.
 - `--ki-input-focus-ring-shadow`: shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
@@ -1093,36 +1154,40 @@ CSS custom properties:
 - `--ki-input-font-size`: dimension used by the input component for font size.
 - `--ki-input-font-weight`: font weight used by the input component for font weight.
 - `--ki-input-gap`: dimension used by the input component for gap.
-- `--ki-input-height`: dimension used by the input component for height.
-- `--ki-input-hover-bg`: color used by the input component for hover background.
+- `--ki-input-height`: dimension used by the input component for height (MarsUI Input_field md cell: min-height 40px; consume as min-block-size so the field can grow).
+- `--ki-input-hover-bg`: color used by the input component for hover background (MarsUI hover = s2 + Black/3 overlay; s3 is the nearest token).
 - `--ki-input-hover-border`: color used by the input component for hover border.
 - `--ki-input-hover-fg`: color used by the input component for hover foreground.
-- `--ki-input-hover-label-fg`: color used by the input component for hover label foreground.
-- `--ki-input-hover-placeholder-fg`: color used by the input component for hover placeholder foreground.
+- `--ki-input-hover-label-fg`: color used by the input component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).
+- `--ki-input-hover-placeholder-fg`: color used by the input component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).
 - `--ki-input-icon-size`: dimension used by the input component for icon size.
-- `--ki-input-invalid-bg`: color used by the input component for invalid background.
+- `--ki-input-invalid-bg`: color used by the input component for invalid background (MarsUI danger state keeps the white active fill; the ring and hint carry the signal).
 - `--ki-input-invalid-border`: color used by the input component for invalid border.
 - `--ki-input-invalid-fg`: color used by the input component for invalid foreground.
-- `--ki-input-invalid-label-fg`: color used by the input component for invalid label foreground.
-- `--ki-input-invalid-placeholder-fg`: color used by the input component for invalid placeholder foreground.
-- `--ki-input-label-font-size`: dimension used by the input component for label font size.
+- `--ki-input-invalid-label-fg`: color used by the input component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).
+- `--ki-input-invalid-placeholder-fg`: color used by the input component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).
+- `--ki-input-invalid-ring`: shadow used by the input component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid)).
+- `--ki-input-label-font-size`: dimension used by the input component for label font size (MarsUI UI/Para/medium: body_1 13px).
 - `--ki-input-label-font-weight`: font weight used by the input component for label font weight.
 - `--ki-input-label-gap`: dimension used by the input component for label gap.
-- `--ki-input-label-line-height`: dimension used by the input component for label line height.
+- `--ki-input-label-line-height`: dimension used by the input component for label line height (MarsUI line_height/para 20px).
+- `--ki-input-label-padding-inline`: dimension used by the input component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius).
 - `--ki-input-line-height`: dimension used by the input component for line height.
-- `--ki-input-min-target`: dimension used by the input component for min target.
 - `--ki-input-padding-inline`: dimension used by the input component for padding inline.
-- `--ki-input-radius`: dimension used by the input component for radius.
-- `--ki-input-readonly-bg`: color used by the input component for readonly background.
+- `--ki-input-radius`: dimension used by the input component for radius (MarsUI Radius/component/radius_md 10px, the md Input_cell binding; component ramp so personality modes reach it).
+- `--ki-input-readonly-bg`: color used by the input component for readonly background (retires the deprecated ki.surface.raised alias; same resolved value).
 - `--ki-input-readonly-border`: color used by the input component for readonly border.
 - `--ki-input-readonly-fg`: color used by the input component for readonly foreground.
-- `--ki-input-readonly-label-fg`: color used by the input component for readonly label foreground.
-- `--ki-input-readonly-placeholder-fg`: color used by the input component for readonly placeholder foreground.
-- `--ki-input-rest-bg`: color used by the input component for rest background.
+- `--ki-input-readonly-label-fg`: color used by the input component for readonly label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).
+- `--ki-input-readonly-placeholder-fg`: color used by the input component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).
+- `--ki-input-rest-bg`: color used by the input component for rest background (MarsUI Input_field rest fill Surface/s2: the fill identifies the field, not the outline).
 - `--ki-input-rest-border`: color used by the input component for rest border.
 - `--ki-input-rest-fg`: color used by the input component for rest foreground.
-- `--ki-input-rest-label-fg`: color used by the input component for rest label foreground.
-- `--ki-input-rest-placeholder-fg`: color used by the input component for rest placeholder foreground.
+- `--ki-input-rest-label-fg`: color used by the input component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint).
+- `--ki-input-rest-placeholder-fg`: color used by the input component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-list
@@ -1149,10 +1214,14 @@ Methods: none
 
 CSS custom properties:
 - `--ki-list-bg`: color used by the list component for background.
-- `--ki-list-gap`: dimension used by the list component for gap.
+- `--ki-list-gap`: dimension used by the list component for gap (MarsUI compositions stack rows contiguously; --ki-list-gap stays as the theme hook).
 - `--ki-list-item-divider-color`: color used by the list component for item divider color.
-- `--ki-list-item-divider-width`: dimension used by the list component for item divider width.
+- `--ki-list-item-divider-width`: dimension used by the list component for item divider width (no divider renders in any master variant; the color hook ki.list.item.divider-color stays so consumers can opt hairlines back in).
 - `--ki-list-padding`: dimension used by the list component for padding.
+- `--ki-motion-distance-xs`: Motion travel distance xs (2px): hover-lift offsets.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-list-item
@@ -1183,20 +1252,24 @@ Events: none
 Methods: none
 
 CSS custom properties:
-- `--ki-list-item-gap`: dimension used by the list component for item gap.
-- `--ki-list-item-min-height`: dimension used by the list component for item min height.
-- `--ki-list-item-min-height-multiline`: dimension used by the list component for item min height multiline.
-- `--ki-list-item-padding-block`: dimension used by the list component for item padding block.
+- `--ki-inverse-white-alpha-3`: semantic color for inverse white alpha 3.
+- `--ki-inverse-white-alpha-6`: semantic color for inverse white alpha 6.
+- `--ki-list-item-gap`: dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions).
+- `--ki-list-item-min-height`: dimension used by the list component for item min height (MarsUI md text-only row is ~40px content-sized: 20px line + 2x10 padding).
+- `--ki-list-item-min-height-multiline`: dimension used by the list component for multiline item min height (MarsUI md two-line row measures 56px).
+- `--ki-list-item-padding-block`: dimension used by the list component for item padding block (MarsUI md rows: Space/lg 10px).
 - `--ki-list-item-padding-inline`: dimension used by the list component for item padding inline.
 - `--ki-list-item-primary-fg`: color used by the list component for item primary foreground.
 - `--ki-list-item-primary-font-size`: dimension used by the list component for item primary font size.
 - `--ki-list-item-primary-font-weight`: font weight used by the list component for item primary font weight.
-- `--ki-list-item-primary-line-height`: dimension used by the list component for item primary line height.
+- `--ki-list-item-primary-line-height`: dimension used by the list component for primary line height (MarsUI primary is UI/Para/medium 13/20, not UI/Body 1 13/24).
 - `--ki-list-item-radius`: dimension used by the list component for item radius.
 - `--ki-list-item-secondary-fg`: color used by the list component for item secondary foreground.
-- `--ki-list-item-secondary-font-size`: dimension used by the list component for item secondary font size.
+- `--ki-list-item-secondary-font-size`: dimension used by the list component for secondary font size (MarsUI description line is UI/Caption 2: 12px).
 - `--ki-list-item-secondary-font-weight`: font weight used by the list component for item secondary font weight.
-- `--ki-list-item-secondary-line-height`: dimension used by the list component for item secondary line height.
+- `--ki-list-item-secondary-line-height`: dimension used by the list component for secondary line height (MarsUI caption_2 16px; same value as before with the correct provenance).
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-option
@@ -1256,6 +1329,10 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-duration-medium-2`: M3 md.sys.motion.duration.medium2 (300ms). onmars: MarsUI moderate step (240ms).
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 - `--ki-progress-circular-size`: dimension used by the progress component for circular size.
 - `--ki-progress-circular-track-width`: dimension used by the progress component for circular track width.
 - `--ki-progress-indeterminate-duration`: duration used by the progress component for progress indeterminate duration.
@@ -1298,13 +1375,17 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-standard-decelerate`: Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).
 - `--ki-qr-background`: color used by the qr component for the light tile behind the modules: the Figma symbol is transparent over the showcase card's Surface/s0 white, but a scannable code owns its tile — the scheme-stable white keeps dark-on-light module contrast in both schemes (FR-010, a documented theme obligation).
-- `--ki-qr-color`: color used by the qr component for the dark modules and finder rings: the Figma fill binds Text/high_em (#0a0c11), which flips light under the dark scheme and would invert the code, so the theme obligation (FR-010: dark modules on a light tile in both schemes) resolves the scheme-stable black ink instead (design-extraction §2, declared for founder ratification).
+- `--ki-qr-color`: color used by the qr component for module/finder ink (the master binds Text/high_em, whose light-scheme hue is Gray/950 #0a0c11; referenced as the scheme-stable primitive because FR-010 keeps QR ink from flipping in dark — 18.9:1 on white).
 - `--ki-qr-finder-radius`: dimension used by the qr component for the corner radius of the three finder rings, applied to the ring's midline in the code's internal coordinate space of 8px per module: Type=square renders square concentric finders (radius 0); the documented round value is {ki.radius.2xl} (14px midline = 18px outer edge, the 2.25-module radius measured on Type=round); the inner-edge and center radii derive by construction (stroke geometry and a 3/7 scale — design-extraction §5).
 - `--ki-qr-module-radius`: dimension used by the qr component for the corner radius of every data module, in the code's internal coordinate space of 8px per module: Type=square (the set default) renders pure squares (radius 0); the documented round value is {ki.radius.xs} (4px = half a module, the MarsUI Type=round dot carried as a token value, never an attribute — FR-007, 002 shape precedent).
 - `--ki-qr-quiet-zone`: dimension used by the qr component for the light quiet zone around the modules: the 8px band measured on both 128px variants (about two modules of the sample matrices), painted as tile padding and preserved at any token-driven size (FR-008).
 - `--ki-qr-radius`: dimension used by the qr component for the tile corners: the QR_code frames are square with no own radius (the rounded showcase card beneath is framing, not anatomy — design-extraction §1).
-- `--ki-qr-size`: dimension used by the qr component for the code's square box: the 128px QR_code frame (node 16158:27561) binds no size variable and the space scale has no 8rem step, so onmars resolves the nearest step (120px); consumers rescale through this token — the code always stays 1:1 (specs/026-ki-qr/design-extraction.md §4, declared for founder ratification).
+- `--ki-qr-size`: dimension used by the qr component for size (MarsUI 128x128 symbol frame via the dedicated ki.size.qr surface size; replaces the 120px space-scale approximation).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-radio
@@ -1332,45 +1413,51 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-effect-component-primary-default-shadow`: MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-spring`: Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language).
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 - `--ki-radio-border-width`: dimension used by the radio component for border width.
 - `--ki-radio-control-radius`: dimension used by the radio component for control radius.
 - `--ki-radio-control-size`: dimension used by the radio component for control size.
+- `--ki-radio-dot-shadow`: shadow used by the radio component for the selected dot (MarsUI Small_dark_shadow: drop 0/2/3/-1.5 Elevation/shadow_dark, the lifted-dot look of the master).
 - `--ki-radio-dot-size`: dimension used by the radio component for dot size.
 - `--ki-radio-focus-ring-color`: color used by the radio component for focus ring color.
 - `--ki-radio-focus-ring-offset`: dimension used by the radio component for focus ring offset.
 - `--ki-radio-focus-ring-shadow`: shadow used by the radio component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-radio-focus-ring-width`: dimension used by the radio component for focus ring width.
-- `--ki-radio-gap`: dimension used by the radio component for gap.
-- `--ki-radio-label-font-size`: dimension used by the radio component for label font size.
+- `--ki-radio-gap`: dimension used by the radio component for gap (MarsUI md label pairing: Space/xl 12px for the 20px circle / 24px target geometry).
+- `--ki-radio-label-font-size`: dimension used by the radio component for label font size (MarsUI md pairing: body_2 15px; line-height stays 24 and weight 500).
 - `--ki-radio-label-font-weight`: font weight used by the radio component for label font weight.
 - `--ki-radio-label-line-height`: dimension used by the radio component for label line height.
 - `--ki-radio-min-target`: dimension used by the radio component for min target.
-- `--ki-radio-selected-active-bg`: Pressed fill of the SELECTED radio. Was {ki.surface.s0}, i.e. identical to its own rest fill, so pressing an already-selected option reverted the hover step instead of deepening it — the same "pressed = un-hover" shape removed from ki-button, and legible only to a pointer user who had hovered first. Now follows the ramp its unselected sibling already follows: rest s0, hover s1, pressed s2.
-- `--ki-radio-selected-active-border`: color used by the radio component for selected active border.
+- `--ki-radio-selected-active-bg`: color used by the radio component for selected active background (MarsUI defines no pressed state; mirrors rest).
+- `--ki-radio-selected-active-border`: color used by the radio component for selected active border (same as the fill: borderless look).
 - `--ki-radio-selected-active-fg`: color used by the radio component for selected active foreground.
-- `--ki-radio-selected-disabled-bg`: color used by the radio component for selected disabled background.
-- `--ki-radio-selected-disabled-border`: color used by the radio component for selected disabled border.
-- `--ki-radio-selected-disabled-fg`: color used by the radio component for selected disabled foreground.
-- `--ki-radio-selected-hover-bg`: color used by the radio component for selected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp); the primary-tinted alpha stays in radio.material3.
-- `--ki-radio-selected-hover-border`: color used by the radio component for selected hover border.
+- `--ki-radio-selected-active-overlay`: color used by the radio component for the selected pressed wash (ki-button active/overlay precedent). MarsUI defines no pressed fill and the brand ramp has no darker rung that survives the dark scheme, so the press composites the pressed state layer over the rest fill — a keyboard hold shows a real paint delta even under reduced motion, where the transform compress is gated off (bare-page state-delta contract).
+- `--ki-radio-selected-disabled-bg`: color used by the radio component for selected disabled background (MarsUI Surface/disabled_med_em Gray/300).
+- `--ki-radio-selected-disabled-border`: color used by the radio component for selected disabled border (same as the fill: borderless look).
+- `--ki-radio-selected-disabled-fg`: color used by the radio component for selected disabled dot (MarsUI Surface/disabled_base_em Gray/100 — a light dot one quiet value step above the gray donut, not a dark dot).
+- `--ki-radio-selected-hover-bg`: color used by the radio component for selected hover background (the master has no selected-hover variant; mirrors ki-checkbox checked hover: a real delta in both schemes).
+- `--ki-radio-selected-hover-border`: color used by the radio component for selected hover border (same as the fill: borderless look).
 - `--ki-radio-selected-hover-fg`: color used by the radio component for selected hover foreground.
-- `--ki-radio-selected-rest-bg`: color used by the radio component for selected rest background.
-- `--ki-radio-selected-rest-border`: color used by the radio component for selected rest border.
-- `--ki-radio-selected-rest-fg`: color used by the radio component for selected rest foreground.
+- `--ki-radio-selected-rest-bg`: color used by the radio component for selected rest background (MarsUI active radio is a solid Surface/primary_med_em #845abe circle — the filled donut with a white dot is the signature, mirroring ki-checkbox checked).
+- `--ki-radio-selected-rest-border`: color used by the radio component for selected rest border (same as the fill: the selected circle is borderless in the master).
+- `--ki-radio-selected-rest-fg`: color used by the radio component for selected rest dot (MarsUI Text/primary_on_primary white 8px dot).
 - `--ki-radio-unselected-active-bg`: color used by the radio component for unselected active background. Brief §1: neutral surface em ramp one step above hover (s1→s2), matching ki-checkbox unchecked active; the primary-tinted alpha stays in radio.material3.
 - `--ki-radio-unselected-active-border`: color used by the radio component for unselected active border.
 - `--ki-radio-unselected-active-fg`: color used by the radio component for unselected active foreground.
-- `--ki-radio-unselected-disabled-bg`: color used by the radio component for unselected disabled background.
-- `--ki-radio-unselected-disabled-border`: color used by the radio component for unselected disabled border.
-- `--ki-radio-unselected-disabled-fg`: color used by the radio component for unselected disabled foreground.
+- `--ki-radio-unselected-disabled-bg`: color used by the radio component for unselected disabled background (MarsUI Surface/disabled_med_em Gray/300).
+- `--ki-radio-unselected-disabled-border`: color used by the radio component for unselected disabled border (same as the fill: borderless look in the master).
+- `--ki-radio-unselected-disabled-fg`: color used by the radio component for unselected disabled dot color (dot is hidden unselected; kept coherent with the disabled ladder, retiring the deprecated ki.text.muted alias).
 - `--ki-radio-unselected-hover-bg`: color used by the radio component for unselected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp), matching ki-checkbox unchecked hover (s1); the former primary-tinted alpha is the M3 state-layer pattern and stays in radio.material3.
 - `--ki-radio-unselected-hover-border`: color used by the radio component for unselected hover border.
 - `--ki-radio-unselected-hover-fg`: color used by the radio component for unselected hover foreground.
 - `--ki-radio-unselected-rest-bg`: color used by the radio component for unselected rest background.
 - `--ki-radio-unselected-rest-border`: color used by the radio component for unselected rest border.
 - `--ki-radio-unselected-rest-fg`: color used by the radio component for unselected rest foreground.
+- `--ki-surface-special-dark-s0-light-s2`: semantic color for surface special dark s0 light s2.
+- `--ki-surface-special-light-s0-dark-s4`: semantic color for surface special light s0 dark s4.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-text-med-em`: semantic color for text med em.
 - `--ki-typography-family-body`: semantic font family for typography family body.
@@ -1406,7 +1493,7 @@ CSS custom properties:
 - `--ki-radio-group-gap`: dimension used by the radio group component for gap.
 - `--ki-radio-group-label-font-size`: dimension used by the radio group component for label font size.
 - `--ki-radio-group-label-font-weight`: font weight used by the radio group component for label font weight.
-- `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height.
+- `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement).
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-text-med-em`: semantic color for text med em.
 - `--ki-typography-family-body`: semantic font family for typography family body.
@@ -1443,8 +1530,11 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-scroller-focus-ring-color`: color used by the scroller component for the viewport focus ring: the keyboard-focusable scroll region (FR-005) adopts the ki-dialog focus-ring pair verbatim.
 - `--ki-scroller-focus-ring-offset`: dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent).
+- `--ki-scroller-focus-ring-shadow`: shadow used by the scroller component for the viewport focus ring glow (MarsUI Focus/primary 3px 20%-alpha halo, the ki-button double mechanism; completes the theming hook ki-scroller.css already consumes).
 - `--ki-scroller-focus-ring-width`: dimension used by the scroller component for the viewport focus ring width (ki-dialog precedent).
 - `--ki-scroller-gutter`: dimension used by the scroller component for the clearance on each side of the thumb: the 2px padding-inline of the 8px Scroller rail (rail thickness = thumb-thickness + 2×gutter).
 - `--ki-scroller-surface`: color used by the scroller component for the viewport surface: transparent in onmars — the scroller shows the consumer's own surface; a theme may resolve a proper surface here (FR-007).
@@ -1515,17 +1605,25 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
+- `--ki-elevation-e1`: MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow.
+- `--ki-focus-danger`: MarsUI Focus/danger: persistent 3px spread ring of Outline/danger_base_em_alpha (danger-500 at 20% light / 40% dark) — the danger state signal on Input_field and Dropdown masters (measured rgb(252,220,219) over white). Pairs with a white fill and hairline border; Kimen keeps its opaque danger border on top as a declared a11y deviation.
+- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
+- `--ki-motion-distance-xs`: Motion travel distance xs (2px): hover-lift offsets.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 - `--ki-option-disabled-bg`: color used by the option component for disabled background.
 - `--ki-option-disabled-fg`: color used by the option component for disabled foreground.
 - `--ki-option-font-size`: dimension used by the option component for font size.
-- `--ki-option-highlight-bg`: color used by the option component for highlight background.
+- `--ki-option-highlight-bg`: color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; purple is reserved for the selected tint).
 - `--ki-option-highlight-fg`: color used by the option component for highlight foreground.
-- `--ki-option-hover-bg`: color used by the option component for hover background.
+- `--ki-option-hover-bg`: color used by the option component for hover background (MarsUI hover_overlay_inverse Black/3 wash over the glass panel — not a solid surface step).
 - `--ki-option-hover-fg`: color used by the option component for hover foreground.
-- `--ki-option-min-target`: dimension used by the option component for min target.
+- `--ki-option-min-target`: dimension used by the option component for min target (MarsUI Dropmenu row height Space/11xl 36px; comfortably above the 24px a11y floor).
 - `--ki-option-padding-inline`: dimension used by the option component for padding inline.
-- `--ki-option-radius`: dimension used by the option component for radius.
-- `--ki-option-rest-bg`: color used by the option component for rest background.
+- `--ki-option-radius`: dimension used by the option component for radius (MarsUI Radius/component/radius_lg 12px bound on Dropmenu rows).
+- `--ki-option-rest-bg`: color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the glass panel; only hover/selected paint).
 - `--ki-option-rest-fg`: color used by the option component for rest foreground.
 - `--ki-option-selected-bg`: color used by the option component for selected background.
 - `--ki-option-selected-fg`: color used by the option component for selected foreground.
@@ -1533,13 +1631,13 @@ CSS custom properties:
 - `--ki-select-border-block-start-width`: dimension used by the select component for border block start width.
 - `--ki-select-border-inline-end-width`: dimension used by the select component for border inline end width.
 - `--ki-select-border-inline-start-width`: dimension used by the select component for border inline start width.
-- `--ki-select-border-width`: dimension used by the select component for border width.
+- `--ki-select-border-width`: dimension used by the select component for border width (MarsUI Input_cell strokeWeight 1px; the color stays ki.outline.control per the declared a11y deviation — only the 2px width was undocumented).
 - `--ki-select-disabled-bg`: color used by the select component for disabled background.
-- `--ki-select-disabled-border`: color used by the select component for disabled border.
-- `--ki-select-disabled-fg`: color used by the select component for disabled foreground.
+- `--ki-select-disabled-border`: color used by the select component for disabled border (MarsUI Outline/base_em Black/3).
+- `--ki-select-disabled-fg`: color used by the select component for disabled foreground (MarsUI disabled text Text/base_em Gray/400; disabled cells are exempt from the contrast sweep).
 - `--ki-select-disabled-label-fg`: color used by the select component for disabled label foreground.
-- `--ki-select-focus-bg`: color used by the select component for focus background.
-- `--ki-select-focus-border`: color used by the select component for focus border.
+- `--ki-select-focus-bg`: color used by the select component for focus background (MarsUI Dropdown focus fill Surface/Special/light-s0_dark-s4).
+- `--ki-select-focus-border`: color used by the select component for focus border (MarsUI active is glow-only: the border stays the rest hairline while Focus/primary carries the emphasis — repointed from ki.outline.primary-high-em per the fidelity audit; material3 keeps the opaque primary border via its override).
 - `--ki-select-focus-fg`: color used by the select component for focus foreground.
 - `--ki-select-focus-label-fg`: color used by the select component for focus label foreground.
 - `--ki-select-focus-ring-color`: color used by the select component for focus ring color.
@@ -1547,32 +1645,39 @@ CSS custom properties:
 - `--ki-select-focus-ring-shadow`: shadow used by the select component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-select-focus-ring-width`: dimension used by the select component for focus ring width.
 - `--ki-select-font-size`: dimension used by the select component for font size.
+- `--ki-select-font-weight`: font weight used by the select component for the trigger value (MarsUI UI/Body 1/medium: weight 600).
 - `--ki-select-gap`: dimension used by the select component for gap.
 - `--ki-select-height`: dimension used by the select component for height.
-- `--ki-select-hover-bg`: color used by the select component for hover background.
 - `--ki-select-hover-border`: color used by the select component for hover border. Brief §1: hover moves along the neutral outline em ramp (Black/12), matching ki-input/ki-textarea; the primary accent outline is the focus language (Focus/primary), not hover.
 - `--ki-select-hover-fg`: color used by the select component for hover foreground.
 - `--ki-select-hover-label-fg`: color used by the select component for hover label foreground.
+- `--ki-select-indicator-glyph-size`: dimension used by the select component for the chevron glyph box inside the 18px indicator slot (MarsUI Dropdown chevron 8px border-box square drawn by [part=indicator]::before).
 - `--ki-select-indicator-size`: dimension used by the select component for indicator size.
-- `--ki-select-label-font-size`: dimension used by the select component for label font size.
+- `--ki-select-label-font-size`: dimension used by the select component for label font size (MarsUI UI/Para/medium: body_1 13px).
 - `--ki-select-label-font-weight`: font weight used by the select component for label font weight.
 - `--ki-select-label-gap`: dimension used by the select component for label gap.
-- `--ki-select-label-line-height`: dimension used by the select component for label line height.
-- `--ki-select-listbox-bg`: color used by the select component for listbox background.
+- `--ki-select-label-line-height`: dimension used by the select component for label line height (MarsUI line_height/para 20px).
+- `--ki-select-label-padding-inline`: dimension used by the select component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input/ki-textarea).
+- `--ki-select-line-height`: dimension used by the select component for the trigger value line height (MarsUI body_1 24px).
+- `--ki-select-listbox-backdrop-blur`: backdrop blur used by the select component listbox glass panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; material3 resolves to blur none via its override).
+- `--ki-select-listbox-bg`: color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with backdrop-filter blur(var(--ki-select-listbox-backdrop-blur))).
 - `--ki-select-listbox-max-block-size`: dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale).
 - `--ki-select-listbox-offset`: dimension used by the select component for listbox offset.
-- `--ki-select-listbox-padding`: dimension used by the select component for listbox padding.
-- `--ki-select-listbox-radius`: dimension used by the select component for listbox radius.
+- `--ki-select-listbox-padding`: dimension used by the select component for listbox padding (MarsUI Dropmenu content inset Space/xl 12px).
+- `--ki-select-listbox-radius`: dimension used by the select component for listbox radius (MarsUI Radius/big_component/radius_sm 20px bound on the Dropmenu panel).
 - `--ki-select-listbox-shadow`: shadow used by the select component for the listbox: MarsUI elevation ramp e3 (brief §5), the medium floating-surface level, replacing the former hand-composed offset/color shadow. Declared level: e3 (M3 analog: menu/dialog band; material3 overrides to e2 = md.sys.elevation.level2 for menus).
 - `--ki-select-min-target`: dimension used by the select component for min target.
 - `--ki-select-padding-inline`: dimension used by the select component for padding inline.
 - `--ki-select-placeholder-fg`: color used by the select component for placeholder foreground.
-- `--ki-select-radius`: dimension used by the select component for radius.
-- `--ki-select-rest-bg`: color used by the select component for rest background.
+- `--ki-select-radius`: dimension used by the select component for radius (MarsUI Radius/component/radius_md 10px; component ramp so personality modes reach it).
+- `--ki-select-rest-bg`: color used by the select component for rest background (MarsUI Dropdown rest fill Surface/Special/light-s0_dark-s2: white light, Dark/800 dark).
 - `--ki-select-rest-border`: color used by the select component for rest border.
 - `--ki-select-rest-fg`: color used by the select component for rest foreground.
 - `--ki-select-rest-label-fg`: color used by the select component for rest label foreground.
+- `--ki-surface-hover-overlay-inverse`: semantic color for surface hover overlay inverse.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
 
 ### ki-status
 
@@ -1605,6 +1710,9 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-emphasized-decelerate`: Expressive entrance curve. M3 md.sys.motion.easing.emphasized-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out).
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 - `--ki-status-danger-color`: color used by the status component for the danger tone fill: Surface/danger_med_em, the exact variable bound to the Type=danger Status variant (Danger/500).
 - `--ki-status-info-color`: color used by the status component for the info tone fill: no Figma Status variant ships an info Type, so the fill extrapolates the verified med-em 500 pattern to the Info ramp (001 contract, 010/015 precedent) — declared for founder ratification.
 - `--ki-status-neutral-color`: color used by the status component for the neutral tone fill: Surface/disabled_high_em, the exact variable bound to the Type=disabled Status variant (Gray/500 light, White/32 dark) — MarsUI's disabled gray maps to the charter neutral tone (spec Assumptions).
@@ -1646,15 +1754,17 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-effect-small-dark-shadow`: MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.
-- `--ki-switch-border-width`: dimension used by the switch component for border width.
+- `--ki-switch-border-width`: dimension used by the switch component for border width (MarsUI tracks are borderless; the 1px hairline in ki.outline.control is the declared WCAG 1.4.11 deviation at half the former weight, so the control stops reading as an outlined pill).
 - `--ki-switch-checked-active-border`: color used by the switch component for checked active border.
 - `--ki-switch-checked-active-thumb`: color used by the switch component for checked active thumb.
 - `--ki-switch-checked-active-track`: color used by the switch component for checked active track.
 - `--ki-switch-checked-disabled-border`: color used by the switch component for checked disabled border.
-- `--ki-switch-checked-disabled-thumb`: color used by the switch component for checked disabled thumb.
-- `--ki-switch-checked-disabled-track`: color used by the switch component for checked disabled track.
+- `--ki-switch-checked-disabled-thumb`: color used by the switch component for checked disabled thumb (MarsUI pointer keeps its light construction in every state including disabled).
+- `--ki-switch-checked-disabled-track`: color used by the switch component for checked disabled track (MarsUI disabled track keeps the OFF rest fill surface/disabled_med_em; the disabled signal lives in the glyph in the master).
 - `--ki-switch-checked-hover-border`: color used by the switch component for checked hover border.
 - `--ki-switch-checked-hover-thumb`: color used by the switch component for checked hover thumb.
 - `--ki-switch-checked-hover-track`: color used by the switch component for checked hover track.
@@ -1665,27 +1775,37 @@ CSS custom properties:
 - `--ki-switch-focus-ring-offset`: dimension used by the switch component for focus ring offset.
 - `--ki-switch-focus-ring-shadow`: shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-switch-focus-ring-width`: dimension used by the switch component for focus ring width.
-- `--ki-switch-gap`: dimension used by the switch component for gap.
-- `--ki-switch-min-target`: dimension used by the switch component for min target.
+- `--ki-switch-gap`: dimension used by the switch component for gap (MarsUI sm label pairing: Space/md 8px).
+- `--ki-switch-glyph-dash-height`: dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash).
+- `--ki-switch-glyph-height`: dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height).
+- `--ki-switch-glyph-width`: dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb).
+- `--ki-switch-min-target`: dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint).
 - `--ki-switch-thumb-inset`: dimension used by the switch component for thumb inset.
-- `--ki-switch-thumb-radius`: dimension used by the switch component for thumb radius.
+- `--ki-switch-thumb-radius`: dimension used by the switch component for thumb radius (MarsUI pointer corner radius is half the height with corner smoothing; radius_round clamps to the smoothed pill).
 - `--ki-switch-thumb-size`: dimension used by the switch component for thumb size.
+- `--ki-switch-thumb-width`: dimension used by the switch component for thumb inline size (MarsUI md pointer is 22x18 — wider than tall; thumb-size remains the block size).
 - `--ki-switch-track-height`: dimension used by the switch component for track height.
 - `--ki-switch-track-radius`: dimension used by the switch component for track radius.
 - `--ki-switch-track-width`: dimension used by the switch component for track width.
 - `--ki-switch-unchecked-active-border`: color used by the switch component for unchecked active border.
 - `--ki-switch-unchecked-active-thumb`: color used by the switch component for unchecked active thumb.
-- `--ki-switch-unchecked-active-track`: color used by the switch component for unchecked active track.
+- `--ki-switch-unchecked-active-track`: color used by the switch component for unchecked active track (one step beyond hover; the master defines no pressed variant).
 - `--ki-switch-unchecked-disabled-border`: color used by the switch component for unchecked disabled border.
-- `--ki-switch-unchecked-disabled-thumb`: color used by the switch component for unchecked disabled thumb.
-- `--ki-switch-unchecked-disabled-track`: color used by the switch component for unchecked disabled track.
+- `--ki-switch-unchecked-disabled-thumb`: color used by the switch component for unchecked disabled thumb (MarsUI pointer keeps its light construction in every state including disabled).
+- `--ki-switch-unchecked-disabled-track`: color used by the switch component for unchecked disabled track (MarsUI disabled track keeps the OFF rest fill surface/disabled_med_em; the disabled signal lives in the glyph in the master).
 - `--ki-switch-unchecked-hover-border`: color used by the switch component for unchecked hover border.
 - `--ki-switch-unchecked-hover-thumb`: color used by the switch component for unchecked hover thumb.
-- `--ki-switch-unchecked-hover-track`: color used by the switch component for unchecked hover track.
+- `--ki-switch-unchecked-hover-track`: color used by the switch component for unchecked hover track (Kimen-invented one-step ramp over the corrected rest fill; the master defines no hover variant).
 - `--ki-switch-unchecked-rest-border`: color used by the switch component for unchecked rest border.
 - `--ki-switch-unchecked-rest-thumb`: color used by the switch component for unchecked rest thumb.
-- `--ki-switch-unchecked-rest-track`: color used by the switch component for unchecked rest track.
+- `--ki-switch-unchecked-rest-track`: color used by the switch component for unchecked rest track (MarsUI OFF track = surface/disabled_med_em #dddfe4 light / White-18 dark — a solid soft fill, not an outlined pill).
+- `--ki-text-base-em`: semantic color for text base em.
+- `--ki-text-high-em`: semantic color for text high em.
+- `--ki-text-primary-on-primary-light`: semantic color for text primary on primary light.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
 
 ### ki-tab
 
@@ -1716,6 +1836,10 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-motion-distance-xs`: Motion travel distance xs (2px): hover-lift offsets.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 - `--ki-tab-focus-ring-color`: color used by the tab component for focus ring color.
 - `--ki-tab-focus-ring-offset`: dimension used by the tab component for focus ring offset.
 - `--ki-tab-focus-ring-shadow`: shadow used by the tab component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
@@ -1723,29 +1847,30 @@ CSS custom properties:
 - `--ki-tab-font-size`: dimension used by the tab component for font size.
 - `--ki-tab-font-weight`: font weight used by the tab component for font weight.
 - `--ki-tab-gap`: dimension used by the tab component for gap.
-- `--ki-tab-indicator-color`: color used by the tab component for indicator color.
-- `--ki-tab-indicator-radius`: dimension used by the tab component for indicator radius.
+- `--ki-tab-indicator-color`: color used by the tab component for indicator color (MarsUI active underline is Outline/inverse_white: black in light, white in dark — the inverse neutral, not primary).
+- `--ki-tab-indicator-radius`: dimension used by the tab component for indicator radius (the master underline is a square-ended 2px bottom border).
 - `--ki-tab-indicator-size`: dimension used by the tab component for indicator size.
 - `--ki-tab-line-height`: dimension used by the tab component for line height.
-- `--ki-tab-min-block-size`: dimension used by the tab component for min block size.
-- `--ki-tab-padding-inline`: dimension used by the tab component for padding inline.
+- `--ki-tab-min-block-size`: dimension used by the tab component for min block size (MarsUI Tab_nav md bar height 40px: 24px body_1 label + 8px block-end clearance + underline; retargeted from ki.space.7xl per the fidelity audit — material3 pins its own value).
+- `--ki-tab-padding-block-end`: dimension used by the tab component for padding block end (MarsUI Tab_nav_item: 8px inset keeping the 2px underline clear of the 13/24 label; formalizes the fallback ki-tab.css already consumes).
+- `--ki-tab-padding-inline`: dimension used by the tab component for padding inline (MarsUI items carry no inline padding: spacing comes from the bar gap and the underline spans the full item width).
 - `--ki-tab-radius`: dimension used by the tab component for radius.
-- `--ki-tab-selected-active-bg`: color used by the tab component for selected active background.
-- `--ki-tab-selected-active-fg`: color used by the tab component for selected active foreground.
-- `--ki-tab-selected-disabled-bg`: color used by the tab component for selected disabled background.
-- `--ki-tab-selected-disabled-fg`: color used by the tab component for selected disabled foreground.
-- `--ki-tab-selected-hover-bg`: color used by the tab component for selected hover background.
-- `--ki-tab-selected-hover-fg`: color used by the tab component for selected hover foreground.
-- `--ki-tab-selected-rest-bg`: color used by the tab component for selected rest background.
-- `--ki-tab-selected-rest-fg`: color used by the tab component for selected rest foreground.
-- `--ki-tab-unselected-active-bg`: color used by the tab component for unselected active background.
-- `--ki-tab-unselected-active-fg`: color used by the tab component for unselected active foreground.
-- `--ki-tab-unselected-disabled-bg`: color used by the tab component for unselected disabled background.
-- `--ki-tab-unselected-disabled-fg`: color used by the tab component for unselected disabled foreground.
-- `--ki-tab-unselected-hover-bg`: color used by the tab component for unselected hover background.
-- `--ki-tab-unselected-hover-fg`: color used by the tab component for unselected hover foreground.
-- `--ki-tab-unselected-rest-bg`: color used by the tab component for unselected rest background.
-- `--ki-tab-unselected-rest-fg`: color used by the tab component for unselected rest foreground.
+- `--ki-tab-selected-active-bg`: color used by the tab component for selected active background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language).
+- `--ki-tab-selected-active-fg`: color used by the tab component for selected active foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240).
+- `--ki-tab-selected-disabled-bg`: color used by the tab component for selected disabled background (no disabled variant exists in Tab_nav; disabled must be quieter than rest, not a filled pill).
+- `--ki-tab-selected-disabled-fg`: color used by the tab component for selected disabled foreground (MarsUI disabled ladder: Gray/500 light / White-32 dark, the value ki-status and ki-switch already use for disabled glyphs).
+- `--ki-tab-selected-hover-bg`: color used by the tab component for selected hover background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language).
+- `--ki-tab-selected-hover-fg`: color used by the tab component for selected hover foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240).
+- `--ki-tab-selected-rest-bg`: color used by the tab component for selected rest background (MarsUI Tab_nav is transparent_inverse in every state; background pills are Switcher language).
+- `--ki-tab-selected-rest-fg`: color used by the tab component for selected rest foreground (MarsUI active tab label is neutral Text/high_em — never purple; master 10048:1240).
+- `--ki-tab-unselected-active-bg`: color used by the tab component for unselected active background (MarsUI Tab_nav is transparent_inverse in every state).
+- `--ki-tab-unselected-active-fg`: color used by the tab component for unselected active foreground (mirrors hover; MarsUI defines no pressed variant).
+- `--ki-tab-unselected-disabled-bg`: color used by the tab component for unselected disabled background (no disabled variant exists in Tab_nav; disabled must be quieter than rest, not a filled pill).
+- `--ki-tab-unselected-disabled-fg`: color used by the tab component for unselected disabled foreground (MarsUI disabled ladder: Gray/500 light / White-32 dark, the value ki-status and ki-switch already use for disabled glyphs).
+- `--ki-tab-unselected-hover-bg`: color used by the tab component for unselected hover background (MarsUI Tab_nav is transparent_inverse in every state).
+- `--ki-tab-unselected-hover-fg`: color used by the tab component for unselected hover foreground (with rest at med_em, hover darkens one em step, preserving the master rest-to-hover direction).
+- `--ki-tab-unselected-rest-bg`: color used by the tab component for unselected rest background (MarsUI Tab_nav is transparent_inverse in every state).
+- `--ki-tab-unselected-rest-fg`: color used by the tab component for unselected rest foreground (Figma inactive is Text/low_em, which fails the 4.5:1 text gate at 13px; med_em is the gate-compliant rest value — declared deviation).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-tab-panel
@@ -1771,7 +1896,11 @@ Events: none
 Methods: none
 
 CSS custom properties:
-- `--ki-tab-panel-bg`: color used by the tab panel component for background.
+- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-tab-panel-bg`: color used by the tab panel component for background (Tab_nav masters have no panel chrome: content sits on the ambient surface; the panel never paints a surface it does not own).
+- `--ki-tab-panel-fg`: color used by the tab panel component for foreground (pairs a scheme-correct text color with whatever ground the transparent panel sits on — fixes black-on-black slotted text in dark).
 - `--ki-tab-panel-focus-ring-color`: color used by the tab panel component for focus ring color.
 - `--ki-tab-panel-focus-ring-offset`: dimension used by the tab panel component for focus ring offset.
 - `--ki-tab-panel-focus-ring-width`: dimension used by the tab panel component for focus ring width.
@@ -1830,8 +1959,8 @@ Methods: none
 
 CSS custom properties:
 - `--ki-tabs-divider-color`: color used by the tabs component for divider color.
-- `--ki-tabs-divider-width`: MarsUI hairline stroke as the tab bar divider: same 1px divider width as the verified ki-list divider pattern (marsui-design-dna.md §1 outline hairlines).
-- `--ki-tabs-gap`: dimension used by the tabs component for gap.
+- `--ki-tabs-divider-width`: dimension used by the tabs component for the tablist divider width (the Tab_nav bar has no stroke; the hook stays for consumers to opt back in — material3 keeps its hairline via its override).
+- `--ki-tabs-gap`: dimension used by the tabs component for gap (MarsUI md bar item gap Space/8xl 26px; the gap carries all spacing now that items have zero inline padding).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-textarea
@@ -1871,56 +2000,58 @@ Events: none
 Methods: none
 
 CSS custom properties:
-- `--ki-surface-s0`: semantic color for surface s0.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-textarea-border-block-end-width`: dimension used by the textarea component for border block end width.
 - `--ki-textarea-border-block-start-width`: dimension used by the textarea component for border block start width.
 - `--ki-textarea-border-inline-end-width`: dimension used by the textarea component for border inline end width.
 - `--ki-textarea-border-inline-start-width`: dimension used by the textarea component for border inline start width.
-- `--ki-textarea-disabled-bg`: color used by the textarea component for disabled background.
+- `--ki-textarea-disabled-bg`: color used by the textarea component for disabled background (MarsUI Surface/disabled_base_em Gray/100; aligned with ki-input).
 - `--ki-textarea-disabled-border`: color used by the textarea component for disabled border.
 - `--ki-textarea-disabled-fg`: color used by the textarea component for disabled foreground.
 - `--ki-textarea-disabled-label-fg`: color used by the textarea component for disabled label foreground.
 - `--ki-textarea-disabled-placeholder-fg`: color used by the textarea component for disabled placeholder foreground.
-- `--ki-textarea-focus-bg`: color used by the textarea component for focus background.
-- `--ki-textarea-focus-border`: color used by the textarea component for focus border.
+- `--ki-textarea-focus-bg`: color used by the textarea component for focus background (MarsUI active fill switches to white / dark s2 — modeled with the scheme ladder s0).
 - `--ki-textarea-focus-fg`: color used by the textarea component for focus foreground.
-- `--ki-textarea-focus-label-fg`: color used by the textarea component for focus label foreground.
-- `--ki-textarea-focus-placeholder-fg`: color used by the textarea component for focus placeholder foreground.
+- `--ki-textarea-focus-label-fg`: color used by the textarea component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
+- `--ki-textarea-focus-placeholder-fg`: color used by the textarea component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).
 - `--ki-textarea-focus-ring-color`: color used by the textarea component for focus ring color.
 - `--ki-textarea-focus-ring-offset`: dimension used by the textarea component for focus ring offset.
 - `--ki-textarea-focus-ring-shadow`: shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
 - `--ki-textarea-focus-ring-width`: dimension used by the textarea component for focus ring width.
 - `--ki-textarea-font-size`: dimension used by the textarea component for font size.
 - `--ki-textarea-font-weight`: font weight used by the textarea component for font weight.
-- `--ki-textarea-hover-bg`: color used by the textarea component for hover background.
+- `--ki-textarea-hover-bg`: color used by the textarea component for hover background (MarsUI hover = s2 + Black/3 overlay; s3 is the nearest token).
 - `--ki-textarea-hover-border`: color used by the textarea component for hover border.
 - `--ki-textarea-hover-fg`: color used by the textarea component for hover foreground.
-- `--ki-textarea-hover-label-fg`: color used by the textarea component for hover label foreground.
-- `--ki-textarea-hover-placeholder-fg`: color used by the textarea component for hover placeholder foreground.
-- `--ki-textarea-invalid-bg`: color used by the textarea component for invalid background.
+- `--ki-textarea-hover-label-fg`: color used by the textarea component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
+- `--ki-textarea-hover-placeholder-fg`: color used by the textarea component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).
+- `--ki-textarea-invalid-bg`: color used by the textarea component for invalid background (MarsUI danger keeps the white active fill — no tinted slab; ring and hint carry the signal).
 - `--ki-textarea-invalid-border`: color used by the textarea component for invalid border.
 - `--ki-textarea-invalid-fg`: color used by the textarea component for invalid foreground.
-- `--ki-textarea-invalid-label-fg`: color used by the textarea component for invalid label foreground.
-- `--ki-textarea-invalid-placeholder-fg`: color used by the textarea component for invalid placeholder foreground.
-- `--ki-textarea-label-font-size`: dimension used by the textarea component for label font size.
+- `--ki-textarea-invalid-label-fg`: color used by the textarea component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
+- `--ki-textarea-invalid-placeholder-fg`: color used by the textarea component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).
+- `--ki-textarea-invalid-ring`: shadow used by the textarea component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid)).
+- `--ki-textarea-label-font-size`: dimension used by the textarea component for label font size (MarsUI UI/Para/medium: body_1 13px).
 - `--ki-textarea-label-font-weight`: font weight used by the textarea component for label font weight.
 - `--ki-textarea-label-gap`: dimension used by the textarea component for label gap.
-- `--ki-textarea-label-line-height`: dimension used by the textarea component for label line height.
+- `--ki-textarea-label-line-height`: dimension used by the textarea component for label line height (MarsUI line_height/para 20px).
+- `--ki-textarea-label-padding-inline`: dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input).
 - `--ki-textarea-line-height`: dimension used by the textarea component for line height.
 - `--ki-textarea-min-target`: dimension used by the textarea component for min target.
-- `--ki-textarea-padding-block`: dimension used by the textarea component for padding block.
-- `--ki-textarea-padding-inline`: dimension used by the textarea component for padding inline.
-- `--ki-textarea-radius`: dimension used by the textarea component for radius.
+- `--ki-textarea-padding-block`: dimension used by the textarea component for padding block (MarsUI 96px md textarea: 12px ink inset).
+- `--ki-textarea-padding-inline`: dimension used by the textarea component for padding inline (MarsUI 96px md textarea: 12px ink inset).
+- `--ki-textarea-radius`: dimension used by the textarea component for radius (MarsUI Radius/component/radius_md 10px for the md size; component ramp so personality modes reach it).
 - `--ki-textarea-readonly-bg`: color used by the textarea component for readonly background.
 - `--ki-textarea-readonly-border`: color used by the textarea component for readonly border.
 - `--ki-textarea-readonly-fg`: color used by the textarea component for readonly foreground.
-- `--ki-textarea-readonly-label-fg`: color used by the textarea component for readonly label foreground.
-- `--ki-textarea-readonly-placeholder-fg`: color used by the textarea component for readonly placeholder foreground.
-- `--ki-textarea-rest-bg`: color used by the textarea component for rest background.
+- `--ki-textarea-readonly-label-fg`: color used by the textarea component for readonly label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
+- `--ki-textarea-readonly-placeholder-fg`: color used by the textarea component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).
+- `--ki-textarea-rest-bg`: color used by the textarea component for rest background (MarsUI textarea fill Surface/s2).
 - `--ki-textarea-rest-border`: color used by the textarea component for rest border.
 - `--ki-textarea-rest-fg`: color used by the textarea component for rest foreground.
-- `--ki-textarea-rest-label-fg`: color used by the textarea component for rest label foreground.
-- `--ki-textarea-rest-placeholder-fg`: color used by the textarea component for rest placeholder foreground.
+- `--ki-textarea-rest-label-fg`: color used by the textarea component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input).
+- `--ki-textarea-rest-placeholder-fg`: color used by the textarea component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-tooltip
@@ -1950,17 +2081,28 @@ Events: none
 Methods: none
 
 CSS custom properties:
-- `--ki-tooltip-bg`: color used by the tooltip component for background.
-- `--ki-tooltip-fg`: color used by the tooltip component for foreground.
-- `--ki-tooltip-font-size`: dimension used by the tooltip component for font size.
+- `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
+- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-duration-instant`: Zero-duration step: transitions that must complete immediately (reduced-motion fallbacks, instant handoffs).
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-standard-accelerate`: Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in).
+- `--ki-outline-secondary-button-top`: semantic color for outline secondary button top.
+- `--ki-tooltip-backdrop-blur`: backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override).
+- `--ki-tooltip-bg`: color used by the tooltip component for background (flat fallback of the MarsUI glass card gradient; the v1 inverse bubble predates the master — specs/013 correction block. material3 keeps the inverse bubble via its override).
+- `--ki-tooltip-bg-end`: color used by the tooltip component for the glass gradient end (MarsUI Surface/special/light-s0_dark-s2).
+- `--ki-tooltip-bg-start`: color used by the tooltip component for the glass gradient start (MarsUI Surface/special/blur_base_light White/80; dark Dark/700 blur base). Paint background: linear-gradient(180deg, var(--ki-tooltip-bg-start), var(--ki-tooltip-bg-end)).
+- `--ki-tooltip-border-width`: dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending).
+- `--ki-tooltip-fg`: color used by the tooltip component for foreground (MarsUI title row Text/high_em; lands together with the glass background — white-on-glass would break contrast).
+- `--ki-tooltip-font-size`: dimension used by the tooltip component for font size (MarsUI Heading_top style UI/Para/medium: body_1 13px).
 - `--ki-tooltip-font-weight`: font weight used by the tooltip component for font weight.
-- `--ki-tooltip-line-height`: dimension used by the tooltip component for line height.
-- `--ki-tooltip-max-inline-size`: dimension used by the tooltip component for max inline size (surface size scale; the former ki.space.25xl reference misused the spacing scale).
-- `--ki-tooltip-offset`: dimension used by the tooltip component for offset.
-- `--ki-tooltip-padding-block`: dimension used by the tooltip component for padding block.
-- `--ki-tooltip-padding-inline`: dimension used by the tooltip component for padding inline.
-- `--ki-tooltip-radius`: dimension used by the tooltip component for radius.
-- `--ki-tooltip-shadow`: shadow used by the tooltip component for tooltip shadow.
+- `--ki-tooltip-line-height`: dimension used by the tooltip component for line height (MarsUI line_height/para 20px).
+- `--ki-tooltip-max-inline-size`: dimension used by the tooltip component for max inline size (288px; the master card is fixed 280px wide in its rich variants — the 8px divergence is a documented text-only reduction).
+- `--ki-tooltip-offset`: dimension used by the tooltip component for offset (MarsUI caret depth 8px with zero extra gap = trigger-to-card distance).
+- `--ki-tooltip-padding-block`: dimension used by the tooltip component for padding block (MarsUI card padding Space/xl 12px on all sides).
+- `--ki-tooltip-padding-inline`: dimension used by the tooltip component for padding inline (MarsUI card padding Space/xl 12px on all sides).
+- `--ki-tooltip-radius`: dimension used by the tooltip component for radius (MarsUI Tooltip master 12089:7621 List_wrap: Radius/big_component/radius_xs 16px).
+- `--ki-tooltip-shadow`: shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 
 ### ki-video
@@ -1998,6 +2140,12 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-effect-component-primary-default-shadow`: MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow.
+- `--ki-effect-component-primary-hover-shadow`: MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-standard-accelerate`: Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 - `--ki-video-backdrop-blur`: dimension used by the video component for the glass backdrop of the scrim and the play container (MarsUI Blur/24, identical to the button glass). material3 resolves to blur none via the semantic override.
 - `--ki-video-focus-ring-color`: color used by the video component for the play control focus ring: the keyboard-reachable facade control (FR-004, S6) adopts the ki-dialog/ki-icon-button focus-ring pair verbatim.
@@ -2011,7 +2159,7 @@ CSS custom properties:
 - `--ki-video-play-fg`: color used by the video component for the play glyph: Text/inverse_black, the counterpart of the inverse container surface (white over light, black over dark) — the glyph inherits it via currentColor; the -bg/-fg pair is swept by the contrast gate (FR-008).
 - `--ki-video-play-icon-size`: dimension used by the video component for the play glyph: the 28px Icon/Placeholder_xl slot measured inside the Size=md play container (the ki-icon-button xl icon size).
 - `--ki-video-play-radius`: dimension used by the video component for the play container shape: Radius/component/radius_xl, the exact variable bound to the Size=md Icon_button instance (14px, the ki-icon-button xl radius).
-- `--ki-video-play-shadow`: shadow used by the video component for the play container effects: the exact MarsUI glass pair on the Icon_button instance — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers (ki-status/ki-icon-button precedent).
+- `--ki-video-play-shadow`: shadow used by the video component for the play control (MarsUI stacks Elevation/e6 on the button_wrap beneath the Component_effect/primary_default inner White/12 highlight — the measured master stack).
 - `--ki-video-play-size`: dimension used by the video component for the play container box: the 56px Icon_button instance of the Size=md Video (the ki-icon-button xl box; the sm variant's 40px box is the scale demo).
 - `--ki-video-scrim-color`: color used by the video component for the overlay scrim behind the play control: Inverse_white/alpha_6, the exact variable bound to the Play halo on both Video variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer.
 - `--ki-video-scrim-padding`: dimension used by the video component for the scrim clearance around the play container: Space/3xl, the exact variable bound as the Size=md Play halo padding (16px on every side).

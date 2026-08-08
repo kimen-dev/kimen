@@ -7,8 +7,8 @@
           "$description": "dimension used by the avatar group component for the xxs member overlap (the -8px stack step on the 20px Avatar_group frame — named xs in Figma, the vocabulary skew recorded in spec 019 Assumptions)."
         },
         "counter-padding-inline": {
-          "$value": "{ki.space.xs}",
-          "$description": "dimension used by the avatar group component for the xxs counter inline padding: the 20px Figma frame ships no counter, so the step extends the verified 8/10/12/14 ramp downward (synthesized, declared for founder review)."
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the avatar group component for xxs counter padding inline (raised to clear the 8px member tuck so the + glyph is never occluded; the 20px Figma frame ships no counter — synthesized step, founder review pending)."
         },
         "counter-font-size": {
           "$value": "{ki.typography.size.caption-1}",

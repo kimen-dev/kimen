@@ -61,6 +61,16 @@
         "$type": "duration",
         "$value": "{ki.foundation.migrated.component-tooltip.tooltip.hide-delay}",
         "$description": "Material 3 duration used by the tooltip component for tooltip hide delay."
+      },
+      "bg-start": {
+        "$value": "{ki.surface.inverse-white}"
+      },
+      "bg-end": {
+        "$value": "{ki.surface.inverse-white}"
+      },
+      "backdrop-blur": {
+        "$value": "{ki.blur.none}",
+        "$type": "dimension"
       }
     }
   }

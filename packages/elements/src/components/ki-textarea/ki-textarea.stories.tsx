@@ -58,6 +58,16 @@ export const Readonly: Story = {
   args: { readonly: true, value: 'No refunds after 30 days' },
 };
 
+/** The :focus-within active treatment: field ring and focus palette. */
+export const Focused: Story = {
+  play: async ({ canvasElement }) => {
+    // One frame lets the upfront-registered element finish its first render;
+    // delegated focus lands on the inner textarea and drives :focus-within.
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    canvasElement.querySelector('ki-textarea')?.focus();
+  },
+};
+
 /** Long content scrolls inside the fixed-height field. */
 export const LongContent: Story = {
   args: {

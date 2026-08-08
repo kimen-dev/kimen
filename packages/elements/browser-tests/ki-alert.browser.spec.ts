@@ -103,6 +103,24 @@ function readTokenColor(name: string): string {
   return value;
 }
 
+function readTokenLength(name: string): string {
+  const probe = document.createElement('div');
+  probe.style.blockSize = `var(${name})`;
+  document.body.append(probe);
+  const value = getComputedStyle(probe).blockSize;
+  probe.remove();
+  return value;
+}
+
+/** Axe contrast scans must wait out the one-shot opacity entrance (the
+ * alert surface animates in under no-preference motion). */
+async function motionSettled(el: Element): Promise<void> {
+  const deadline = Date.now() + 2000;
+  while (el.getAnimations({ subtree: true }).length > 0 && Date.now() < deadline) {
+    await nextFrame();
+  }
+}
+
 function liveWrapper(el: KiAlertElement): HTMLElement {
   const node = el.shadowRoot?.querySelector<HTMLElement>('.live');
   expect(node, 'missing live wrapper').toBeInstanceOf(HTMLElement);
@@ -240,6 +258,7 @@ describe('ki-alert in a real browser', () => {
       await mount(`${tone} alert`, { heading: `${tone} heading`, tone }, main);
     }
 
+    await motionSettled(main);
     await expectAccessible(main);
   });
 
@@ -432,9 +451,12 @@ describe('ki-alert in a real browser', () => {
     if (!button) {
       throw new Error('ki-alert did not render a dismiss button');
     }
-    const rect = button.getBoundingClientRect();
-    expect(rect.width).toBeGreaterThanOrEqual(24);
-    expect(rect.height).toBeGreaterThanOrEqual(24);
+    // Polled, not read once: the fidelity pass gave the chip a gated
+    // transform transition (press compress scale 0.96), and a one-shot read
+    // taken on the tail of that transition measures 24 x (1 - epsilon) —
+    // a frame, not a smaller target. The 24px floor itself is unchanged.
+    await expect.poll(() => button.getBoundingClientRect().width).toBeGreaterThanOrEqual(24);
+    await expect.poll(() => button.getBoundingClientRect().height).toBeGreaterThanOrEqual(24);
   });
 
   it('S11 exposes the default dismiss label as the button accessible name', async () => {
@@ -466,6 +488,7 @@ describe('ki-alert in a real browser', () => {
     await mount('Backup completed', { dismissible: true }, main);
     await mount('Copia completada', { dismissible: true, 'dismiss-label': 'Descartar' }, main);
 
+    await motionSettled(main);
     await expectAccessible(main);
   });
 
@@ -493,6 +516,57 @@ describe('ki-alert in a real browser', () => {
         onmars.get(tone),
       );
     }
+  });
+
+  it('S1 draws the borderless MarsUI surface with the 12px card gap and 4px text-stack gap', async () => {
+    cleanup();
+    const el = await mount('Restart soon', { heading: 'Update available', tone: 'info' });
+    const alert = part(el, 'alert');
+    const computed = getComputedStyle(alert);
+
+    // MarsUI never strokes alert surfaces: tone lives in fill and text.
+    expect(computed.borderTopWidth).toBe('0px');
+    expect(computed.columnGap).toBe(readTokenLength('--ki-alert-gap'));
+
+    // Text_wrap: heading→description stack gap is Space/xs (4px), not the
+    // outer card gap.
+    const live = liveWrapper(el);
+    expect(getComputedStyle(live).rowGap).toBe(readTokenLength('--ki-space-xs'));
+  });
+
+  it('S1 renders the message at the MarsUI 13/20 para line height', async () => {
+    cleanup();
+    const el = await mount('Something you might like to know.');
+    const message = part(el, 'message');
+
+    expect(getComputedStyle(message).lineHeight).toBe(
+      readTokenLength('--ki-alert-message-line-height'),
+    );
+  });
+
+  it('S6 raises the dismiss control as the MarsUI circular secondary chip', async () => {
+    cleanup();
+    const el = await mount('Backup completed', { dismissible: true });
+    const button = dismissButton(el);
+
+    expect(button).toBeInstanceOf(HTMLButtonElement);
+    if (!button) {
+      throw new Error('ki-alert did not render a dismiss button');
+    }
+    const computed = getComputedStyle(button);
+
+    // 24px circle: radius-round, hairline bevel, light-s0/dark-s2 fill.
+    expect(computed.borderTopLeftRadius).toBe(readTokenLength('--ki-radius-round'));
+    expect(computed.borderTopWidth).toBe(readTokenLength('--ki-size-border-hairline'));
+    expect(computed.borderTopColor).toBe(readTokenColor('--ki-outline-secondary-button-top'));
+    expect(computed.backgroundColor).toBe(readTokenColor('--ki-surface-special-light-s0-dark-s2'));
+
+    // Component_effect/secondary_default: drop shadow + inner highlight.
+    expect(computed.boxShadow).not.toBe('none');
+    expect(computed.boxShadow).toContain('inset');
+
+    // The glass backdrop blur rides the effect token.
+    expect(computed.backdropFilter).toContain('blur(');
   });
 
   it('S15 keeps the message leading and dismiss control trailing under RTL', async () => {

@@ -41,11 +41,28 @@ async function mount(hidden = false): Promise<HTMLElement> {
   return el;
 }
 
+function readTokenColor(name: string): string {
+  const probe = document.createElement('div');
+  probe.style.color = `var(${name})`;
+  document.body.append(probe);
+  const value = getComputedStyle(probe).color;
+  probe.remove();
+  return value;
+}
+
 describe('ki-tab-panel anatomy in a real browser', () => {
   it('S8 exposes the panel part around slotted content', async () => {
     const el = await mount();
 
     expect(el.shadowRoot?.querySelector('[part="panel"]')).toBeInstanceOf(HTMLElement);
+  });
+
+  it('S8 pins the scheme-correct foreground on its own surface', async () => {
+    const el = await mount();
+
+    // The panel owns the text contract for slotted copy: its foreground must
+    // resolve from the component token, not leak in from the page.
+    expect(getComputedStyle(el).color).toBe(readTokenColor('--ki-tab-panel-fg'));
   });
 
   it('S18 renders no box while hidden', async () => {

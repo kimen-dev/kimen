@@ -102,8 +102,74 @@ function labelPartOf(el: KiCheckboxElement): HTMLElement {
   return label;
 }
 
+/**
+ * Make the next computed-style read a REST read. The fidelity pass gave the
+ * control state transitions (background among them), so two hazards exist
+ * that one frame cannot absorb: the pointer may be resting over the control
+ * (its position persists across spec files) putting it in the hover state,
+ * and a state flip read mid-transition reports a colour between two tokens
+ * that matches neither. Park the pointer, then wait out every finite
+ * animation — walking shadow roots, because in this Chromium
+ * `getAnimations({subtree: true})` does not cross the shadow boundary.
+ */
 async function waitForStyles(): Promise<void> {
+  // Park the pointer on a transient probe pinned to the corner (ki-card's
+  // hover-test pattern): resetPointer's page origin can land INSIDE the
+  // tester iframe exactly where these fixtures mount, which puts the control
+  // in its hover state instead of clearing it.
+  const park = document.createElement('div');
+  park.style.cssText =
+    'position:fixed;inset-block-end:0;inset-inline-end:0;inline-size:8px;block-size:8px;';
+  document.body.append(park);
+  await userEvent.hover(park);
+  park.remove();
   await new Promise((resolve) => requestAnimationFrame(resolve));
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  const deadline = Date.now() + 4000;
+  // A calm streak of two checks two frames apart: a transition triggered by a
+  // late Stencil re-render (custom props resolving on the second pass) can
+  // START after a first clean check, and a read taken then lands mid-tween.
+  let calm = false;
+  for (;;) {
+    const found = new Set<Animation>();
+    const collect = (element: Element): void => {
+      for (const animation of element.getAnimations({ subtree: true })) {
+        found.add(animation);
+      }
+    };
+    collect(document.body);
+    const walk = (node: ParentNode): void => {
+      for (const element of node.querySelectorAll('*')) {
+        const shadow = element.shadowRoot;
+        if (shadow !== null) {
+          for (const child of shadow.children) {
+            collect(child);
+          }
+          walk(shadow);
+        }
+      }
+    };
+    walk(document.body);
+    const running = [...found].filter(
+      (animation) =>
+        animation.playState === 'running' && animation.effect?.getTiming().iterations !== Infinity,
+    );
+    if (Date.now() >= deadline) {
+      return;
+    }
+    if (running.length === 0) {
+      if (calm) {
+        return;
+      }
+      calm = true;
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      continue;
+    }
+    calm = false;
+    await Promise.allSettled(running.map((animation) => animation.finished));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
 }
 
 function readTokenColor(name: string): string {
@@ -419,19 +485,70 @@ describe('ki-checkbox in a real browser', () => {
   it('S17 forced dark resolves dark onmars token values', async () => {
     cleanup();
     ensureTokens();
-    const light = await mount('Selected', { checked: true });
+    const light = await mount('Unchecked');
     await waitForStyles();
-    const lightBg = getComputedStyle(controlOf(light)).backgroundColor;
+    const lightUncheckedBg = getComputedStyle(controlOf(light)).backgroundColor;
     light.remove();
 
     document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
     const dark = await mount('Selected', { checked: true });
+    const darkUnchecked = await mount('Unchecked');
     await waitForStyles();
 
     expect(getComputedStyle(controlOf(dark)).backgroundColor).toBe(
       readTokenColor(`--ki-checkbox-checked-${checkboxState(dark)}-bg`),
     );
-    expect(getComputedStyle(controlOf(dark)).backgroundColor).not.toBe(lightBg);
+    // The checked fill cannot witness the scheme flip anymore: the MarsUI
+    // fidelity pass keeps Surface/primary_med_em at brand-500 #845abe in
+    // BOTH schemes. The unchecked control rides the surface ramp (s0),
+    // which is what forced dark actually changes.
+    expect(getComputedStyle(controlOf(darkUnchecked)).backgroundColor).not.toBe(lightUncheckedBg);
+  });
+
+  it('S7 unchecked control carries the MarsUI glass surface and solid states drop it', async () => {
+    cleanup();
+    const el = await mount('Email notifications');
+    await waitForStyles();
+    const control = controlOf(el);
+
+    // Component_effect/primary_default rides every state (drop + inner glow).
+    const restShadow = getComputedStyle(control).boxShadow;
+    expect(restShadow).not.toBe('none');
+    expect(restShadow).toContain('inset');
+
+    // Unchecked rest: vertical Surface/Special gradient.
+    expect(getComputedStyle(control).backgroundImage).toContain('linear-gradient');
+
+    // Checked: solid Surface/primary_med_em — the gradient is gone, the
+    // effect stack stays.
+    el.checked = true;
+    await waitForStyles();
+    expect(getComputedStyle(control).backgroundImage).toBe('none');
+    expect(getComputedStyle(control).boxShadow).not.toBe('none');
+  });
+
+  it('S8 indeterminate dash is the centered 8x2 rounded mark of the master', async () => {
+    cleanup();
+    const el = await mount('Select all', { indeterminate: true });
+    const dash = el.shadowRoot?.querySelector('.mark-dash path');
+    expect(dash).toBeInstanceOf(SVGPathElement);
+
+    // 8/18 of the box, centered: x 5..13 with round caps (was M4 9h10).
+    expect((dash as SVGPathElement).getAttribute('d')).toBe('M5 9h8');
+  });
+
+  it('S7 label row is items-start with the control centered on the first line', async () => {
+    cleanup();
+    const el = await mount('Email notifications');
+    await waitForStyles();
+    const label = el.shadowRoot?.querySelector('label');
+    expect(label).toBeInstanceOf(HTMLElement);
+
+    // Checkbox_label rows are items-START: the box rides line one instead of
+    // centering against a wrapped text block.
+    expect(getComputedStyle(label as HTMLElement).alignItems).toBe('flex-start');
+    // (line-height 24 - control 20) / 2 = 2px keeps single-line geometry.
+    expect(getComputedStyle(controlOf(el)).marginBlockStart).toBe('2px');
   });
 
   it('S18 control leads and label trails under RTL', async () => {

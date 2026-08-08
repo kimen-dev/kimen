@@ -2,48 +2,65 @@
   "ki": {
     "tooltip": {
       "radius": {
-        "$value": "{ki.radius.sm}",
-        "$description": "dimension used by the tooltip component for radius."
+        "$value": "{ki.radius.big-component.xs}",
+        "$description": "dimension used by the tooltip component for radius (MarsUI Tooltip master 12089:7621 List_wrap: Radius/big_component/radius_xs 16px)."
       },
       "padding-inline": {
-        "$value": "{ki.space.md}",
-        "$description": "dimension used by the tooltip component for padding inline."
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the tooltip component for padding inline (MarsUI card padding Space/xl 12px on all sides)."
       },
       "padding-block": {
-        "$value": "{ki.space.xs}",
-        "$description": "dimension used by the tooltip component for padding block."
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the tooltip component for padding block (MarsUI card padding Space/xl 12px on all sides)."
       },
       "max-inline-size": {
         "$value": "{ki.size.surface.xxs}",
-        "$description": "dimension used by the tooltip component for max inline size (surface size scale; the former ki.space.25xl reference misused the spacing scale)."
+        "$description": "dimension used by the tooltip component for max inline size (288px; the master card is fixed 280px wide in its rich variants — the 8px divergence is a documented text-only reduction)."
       },
       "offset": {
-        "$value": "{ki.space.xs}",
-        "$description": "dimension used by the tooltip component for offset."
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the tooltip component for offset (MarsUI caret depth 8px with zero extra gap = trigger-to-card distance)."
       },
       "bg": {
-        "$value": "{ki.surface.inverse-white}",
-        "$description": "color used by the tooltip component for background."
+        "$value": "{ki.surface.special.light-s0-dark-s2}",
+        "$description": "color used by the tooltip component for background (flat fallback of the MarsUI glass card gradient; the v1 inverse bubble predates the master — specs/013 correction block. material3 keeps the inverse bubble via its override)."
+      },
+      "border-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending)."
+      },
+      "bg-start": {
+        "$value": "{ki.surface.special.blur-base-light}",
+        "$description": "color used by the tooltip component for the glass gradient start (MarsUI Surface/special/blur_base_light White/80; dark Dark/700 blur base). Paint background: linear-gradient(180deg, var(--ki-tooltip-bg-start), var(--ki-tooltip-bg-end))."
+      },
+      "bg-end": {
+        "$value": "{ki.surface.special.light-s0-dark-s2}",
+        "$description": "color used by the tooltip component for the glass gradient end (MarsUI Surface/special/light-s0_dark-s2)."
+      },
+      "backdrop-blur": {
+        "$value": "{ki.effect.component.backdrop-blur}",
+        "$type": "dimension",
+        "$description": "backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override)."
       },
       "fg": {
-        "$value": "{ki.text.inverse-black}",
-        "$description": "color used by the tooltip component for foreground."
+        "$value": "{ki.text.high-em}",
+        "$description": "color used by the tooltip component for foreground (MarsUI title row Text/high_em; lands together with the glass background — white-on-glass would break contrast)."
       },
       "font-size": {
-        "$value": "{ki.font.size.caption-2}",
-        "$description": "dimension used by the tooltip component for font size."
+        "$value": "{ki.font.size.body-1}",
+        "$description": "dimension used by the tooltip component for font size (MarsUI Heading_top style UI/Para/medium: body_1 13px)."
       },
       "font-weight": {
         "$value": "{ki.font.weight.body.medium}",
         "$description": "font weight used by the tooltip component for font weight."
       },
       "line-height": {
-        "$value": "{ki.font.line-height.caption-2}",
-        "$description": "dimension used by the tooltip component for line height."
+        "$value": "{ki.font.line-height.para}",
+        "$description": "dimension used by the tooltip component for line height (MarsUI line_height/para 20px)."
       },
       "shadow": {
-        "$value": "{ki.elevation.e2}",
-        "$description": "shadow used by the tooltip component for tooltip shadow.",
+        "$value": "{ki.elevation.e4}",
+        "$description": "shadow used by the tooltip component for shadow (MarsUI Elevation/e4 on the master wrap).",
         "$type": "shadow"
       },
       "show-delay": {

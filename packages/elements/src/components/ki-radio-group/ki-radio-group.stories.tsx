@@ -65,7 +65,7 @@ export const DisabledGroup: Story = {
 export const Required: Story = {
   args: { required: true, value: '' },
   render: (args) => (
-    <form>
+    <form style={{ display: 'grid', gap: 'var(--ki-space-3xl)', justifyItems: 'start' }}>
       <ki-radio-group {...args}>{Options()}</ki-radio-group>
       <ki-button type="submit" variant="primary">
         Submit

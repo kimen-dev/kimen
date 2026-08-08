@@ -115,6 +115,9 @@ export class KiQr {
             token surface, ki-progress precedent). */}
         <svg
           part="code"
+          // Re-keyed per value: a re-encode replaces the node, so the
+          // reduced-motion-gated encode fade re-fires (part/API unchanged).
+          key={value}
           viewBox={`0 0 ${String(units)} ${String(units)}`}
           aria-hidden="true"
           style={{ '--_ki-qr-quiet-ratio': String(4 / (matrix.size + 8)) }}

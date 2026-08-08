@@ -45,6 +45,11 @@
         "offset": {
           "$value": "{ki.space.xxs}",
           "$description": "dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent)."
+        },
+        "shadow": {
+          "$value": "{ki.focus.primary}",
+          "$type": "shadow",
+          "$description": "shadow used by the scroller component for the viewport focus ring glow (MarsUI Focus/primary 3px 20%-alpha halo, the ki-button double mechanism; completes the theming hook ki-scroller.css already consumes)."
         }
       }
     }

@@ -9,6 +9,15 @@ import '@kimen/tokens/css';
 // statically is inert until the theme toolbar sets the attribute (opt-in by
 // attribute, exactly like a consumer loading both stylesheets).
 import '@kimen/tokens/css/material3';
+// Page contract (same opt-in a consumer app loads): scheme-aware s0 canvas,
+// high-em text and the body font family — without it the dark scheme renders
+// on a white canvas and slotted story content inherits browser defaults.
+import '@kimen/tokens/css/base';
+// The workshop pins the same font fixtures the visual harness vendors, so
+// stories render real Inter/Roboto glyphs even when the fonts are not
+// installed locally (browser-tests/visual/fonts are the pinned metrics).
+import interWoff2Url from '../browser-tests/visual/fonts/InterVariable.woff2?url';
+import robotoWoff2Url from '../browser-tests/visual/fonts/RobotoVariable.woff2?url';
 // The shipped package deliberately does NOT auto-define custom elements
 // (single-export-module, side-effect free), so the workshop registers them
 // itself from the custom-elements build: statically importable, so Vite can
@@ -19,6 +28,38 @@ import * as components from '../dist/components';
 
 setCustomElementsManifest(customElements);
 
+// Same registration pattern as browser-tests/visual/harness.ts: Inter
+// resolves the onmars `--ki-font-family-body`, Roboto the material3 one.
+// Faces register up front (so document.fonts.ready tracks them) and the
+// awaited Storybook loader below is the readiness barrier: no story renders
+// with fallback glyph metrics on a cold load.
+const fixtureFontsLoaded = Promise.all(
+  (
+    [
+      ['Inter', interWoff2Url],
+      ['Roboto', robotoWoff2Url],
+    ] as const
+  ).map(async ([family, url]) => {
+    const face = new FontFace(family, `url(${url}) format('woff2')`, { weight: '100 900' });
+    document.fonts.add(face);
+    await face.load();
+  }),
+);
+
+// Body text metrics for light-DOM story content (labels, slotted spans):
+// base.css paints :root; this pins the workshop's default text to body_1 so
+// story content outside a component matches what a consumer app would set.
+// Values are tokens only (Art. VI) — no literals.
+const workshopBodyMetrics = document.createElement('style');
+workshopBodyMetrics.textContent = [
+  'body {',
+  '  margin: 0;',
+  '  font-size: var(--ki-typography-size-body-1);',
+  '  line-height: var(--ki-typography-line-height-body-1);',
+  '}',
+].join('\n');
+document.head.append(workshopBodyMetrics);
+
 for (const [exportName, exported] of Object.entries(components)) {
   if (exportName.startsWith('defineCustomElement') && exportName !== 'defineCustomElement') {
     (exported as () => void)();
@@ -26,6 +67,12 @@ for (const [exportName, exported] of Object.entries(components)) {
 }
 
 const preview: Preview = {
+  loaders: [
+    async () => {
+      await fixtureFontsLoaded;
+      return {};
+    },
+  ],
   parameters: {
     docs: {
       source: {

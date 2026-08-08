@@ -84,6 +84,15 @@ function pillOf(el: KiBadgeElement): HTMLElement {
   return pill;
 }
 
+/** Rect-based geometry must wait out the one-shot entrance pop (transform
+ * scale animates the host under no-preference motion). */
+async function motionSettled(el: Element): Promise<void> {
+  const deadline = Date.now() + 2000;
+  while (el.getAnimations({ subtree: true }).length > 0 && Date.now() < deadline) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+}
+
 function readTokenColor(name: string): string {
   const probe = document.createElement('div');
   probe.style.color = `var(${name})`;
@@ -175,6 +184,7 @@ describe('ki-badge', () => {
     for (const tone of tones) {
       await mount(tone, { tone });
     }
+    await motionSettled(landmark());
     await expectAccessible(document.body);
   });
 
@@ -204,6 +214,45 @@ describe('ki-badge', () => {
     const el = await mount('');
     expect(pillOf(el)).toBeTruthy();
     expect(el.textContent.trim()).toBe('');
+    await motionSettled(el);
     await expectAccessible(document.body);
+  });
+
+  it('S1 keeps the MarsUI outer heights exact: md 28px and sm 24px, border included', async () => {
+    cleanup();
+    const md = await mount('Beta', { tone: 'neutral' });
+    const sm = await mount('Beta', { tone: 'neutral', size: 'sm' });
+    await motionSettled(md);
+    await motionSettled(sm);
+
+    // border-box: block-size IS the outer height, the neutral 1px bevel
+    // never inflates the box (P1 regression: content-box rendered 30/26).
+    expect(getComputedStyle(pillOf(md)).boxSizing).toBe('border-box');
+    expect(pillOf(md).getBoundingClientRect().height).toBeCloseTo(28, 1);
+    expect(pillOf(sm).getBoundingClientRect().height).toBeCloseTo(24, 1);
+  });
+
+  it('S2 draws the 1px secondary bevel and glass effects only on the neutral type', async () => {
+    cleanup();
+    const neutral = await mount('Neutral');
+    const neutralStyle = getComputedStyle(pillOf(neutral));
+
+    // MarsUI secondary Tag: hairline bevel (top ladder over bottom ladder),
+    // Component_effect/secondary_default shadow pair, glass backdrop blur.
+    expect(neutralStyle.borderTopWidth).toBe('1px');
+    expect(neutralStyle.borderTopColor).toBe(readTokenColor('--ki-outline-secondary-button-top'));
+    expect(neutralStyle.borderBottomColor).toBe(
+      readTokenColor('--ki-outline-secondary-button-bottom'),
+    );
+    expect(neutralStyle.boxShadow).not.toBe('none');
+    expect(neutralStyle.boxShadow).toContain('inset');
+    expect(neutralStyle.backdropFilter).toContain('blur(');
+
+    // Tone tags carry width 0 and no effects in the default state.
+    const success = await mount('Active', { tone: 'success' });
+    const successStyle = getComputedStyle(pillOf(success));
+    expect(successStyle.borderTopWidth).toBe('0px');
+    expect(successStyle.boxShadow).toBe('none');
+    expect(successStyle.backdropFilter).toBe('none');
   });
 });

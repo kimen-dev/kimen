@@ -140,8 +140,74 @@ function readTokenColor(name: string): string {
   return value;
 }
 
+/**
+ * Make the next computed-style read a REST read. The fidelity pass gave the
+ * field hover paint and state transitions, so one frame is not enough: the
+ * pointer may be resting where the field lays out (its position persists
+ * across spec files, and the floating label shifts the field under it on
+ * focus), and a state flip read mid-transition reports a colour between two
+ * tokens that matches neither. Park the pointer, then wait out every finite
+ * animation — walking shadow roots, because in this Chromium
+ * `getAnimations({subtree: true})` does not cross the shadow boundary.
+ */
 async function waitForStyles(): Promise<void> {
+  // Park the pointer on a transient probe pinned to the corner (ki-card's
+  // hover-test pattern): resetPointer's page origin can land INSIDE the
+  // tester iframe exactly where these fixtures mount, which puts the control
+  // in its hover state instead of clearing it.
+  const park = document.createElement('div');
+  park.style.cssText =
+    'position:fixed;inset-block-end:0;inset-inline-end:0;inline-size:8px;block-size:8px;';
+  document.body.append(park);
+  await userEvent.hover(park);
+  park.remove();
   await new Promise((resolve) => requestAnimationFrame(resolve));
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  const deadline = Date.now() + 4000;
+  // A calm streak of two checks two frames apart: a transition triggered by a
+  // late Stencil re-render (custom props resolving on the second pass) can
+  // START after a first clean check, and a read taken then lands mid-tween.
+  let calm = false;
+  for (;;) {
+    const found = new Set<Animation>();
+    const collect = (element: Element): void => {
+      for (const animation of element.getAnimations({ subtree: true })) {
+        found.add(animation);
+      }
+    };
+    collect(document.body);
+    const walk = (node: ParentNode): void => {
+      for (const element of node.querySelectorAll('*')) {
+        const shadow = element.shadowRoot;
+        if (shadow !== null) {
+          for (const child of shadow.children) {
+            collect(child);
+          }
+          walk(shadow);
+        }
+      }
+    };
+    walk(document.body);
+    const running = [...found].filter(
+      (animation) =>
+        animation.playState === 'running' && animation.effect?.getTiming().iterations !== Infinity,
+    );
+    if (Date.now() >= deadline) {
+      return;
+    }
+    if (running.length === 0) {
+      if (calm) {
+        return;
+      }
+      calm = true;
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      continue;
+    }
+    calm = false;
+    await Promise.allSettled(running.map((animation) => animation.finished));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
 }
 
 describe('ki-input in a real browser', () => {
@@ -222,13 +288,19 @@ describe('ki-input in a real browser', () => {
     const el = await mount({ label: 'Email' });
     const input = requireInput(el);
     const field = requireField(el);
+    await waitForStyles();
+    const restBorder = getComputedStyle(field).borderBlockEndColor;
 
     await userEvent.keyboard('{Tab}');
     await waitForStyles();
 
     expect(el.shadowRoot?.activeElement).toBe(input);
-    const focused = getComputedStyle(field);
-    expect(`${focused.outlineStyle} ${focused.boxShadow}`).not.toBe('none none');
+    // Double mechanism (patrón V.1 §2.5): Focus/primary glow + outline ring.
+    await expect.poll(() => getComputedStyle(field).boxShadow).not.toBe('none');
+    expect(getComputedStyle(field).outlineStyle).not.toBe('none');
+    // MarsUI Input_field active (12022:7132): the border STAYS the rest
+    // hairline — focus must not swap it to an opaque brand line.
+    expect(getComputedStyle(field).borderBlockEndColor).toBe(restBorder);
   });
 
   it('S22 Tab reaches a readonly field with the same visible focus indication', async () => {
@@ -268,6 +340,14 @@ describe('ki-input in a real browser', () => {
 
     await expect.element(page.getByRole('textbox', { name: 'Email' })).toBeInTheDocument();
     expect(requireLabel(el).textContent.trim()).toBe('Email');
+
+    // Harness audit (fidelity pass): affix text renders at the cell type
+    // scale (13/24) in the muted label emphasis — never the host page's
+    // metrics (16px page-font text beside a 13px field).
+    const affixStyles = getComputedStyle(start);
+    expect(affixStyles.fontSize).toBe('13px');
+    expect(affixStyles.lineHeight).toBe('24px');
+    expect(affixStyles.color).toBe(getComputedStyle(requireLabel(el)).color);
   });
 
   // Review round 1 (Minor-7): S19's visibility observable belongs in the
@@ -280,6 +360,36 @@ describe('ki-input in a real browser', () => {
     expect(computed.display).not.toBe('none');
     expect(computed.visibility).not.toBe('hidden');
     expect(label.getBoundingClientRect().height).toBeGreaterThan(0);
+
+    // MarsUI Input_label 12021:6068: 13/20 semibold row with 2px (Space/xxs)
+    // inline padding.
+    expect(computed.fontSize).toBe('13px');
+    expect(computed.lineHeight).toBe('20px');
+    expect(computed.fontWeight).toBe('600');
+    expect(computed.paddingInlineStart).toBe('2px');
+    expect(computed.paddingInlineEnd).toBe('2px');
+  });
+
+  // Pixel-fidelity pin (MarsUI Input_field master 12022:7132, not
+  // scenario-traced): md cell is 40px min-height with 10px inline padding and
+  // a 1px hairline border; the text wrap adds 4px inline padding so the
+  // icon-to-text distance reads 8px.
+  it('pins the MarsUI Input_field md cell geometry', async () => {
+    cleanup();
+    const el = await mount({ label: 'Email' });
+    const field = requireField(el);
+    const input = requireInput(el);
+    await waitForStyles();
+
+    const fieldStyles = getComputedStyle(field);
+    expect(Math.round(field.getBoundingClientRect().height)).toBe(40);
+    expect(fieldStyles.paddingInlineStart).toBe('10px');
+    expect(fieldStyles.paddingInlineEnd).toBe('10px');
+    expect(fieldStyles.borderBlockEndWidth).toBe('1px');
+
+    const inputStyles = getComputedStyle(input);
+    expect(inputStyles.paddingInlineStart).toBe('4px');
+    expect(inputStyles.paddingInlineEnd).toBe('4px');
   });
 
   // Review round 1 (Minor-7): S20's silence contract verified in a real
@@ -507,7 +617,10 @@ describe('ki-input in a real browser', () => {
     form.requestSubmit();
     await waitForStyles();
 
-    expect(getComputedStyle(field).borderBlockEndColor).not.toBe(initialBorder);
+    await expect.poll(() => getComputedStyle(field).borderBlockEndColor).not.toBe(initialBorder);
+    // MarsUI Input_field danger: persistent Focus/danger ring while
+    // user-invalid (token-wave --ki-input-invalid-ring).
+    await expect.poll(() => getComputedStyle(field).boxShadow).not.toBe('none');
   });
 
   it('S15 disabled fieldset removes the entry from FormData', async () => {

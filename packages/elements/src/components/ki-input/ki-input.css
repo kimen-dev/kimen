@@ -22,10 +22,12 @@
   }
 }
 
+/* MarsUI Input_field active (12022:7132): fill switches to Surface s0 and the
+   glow carries the state — the border STAYS the rest hairline (measured: no
+   opaque brand line). The border swap was a pre-master synthesis. */
 :host(:focus-within:not(:disabled)) {
   --_ki-input-bg: var(--ki-input-focus-bg);
   --_ki-input-fg: var(--ki-input-focus-fg);
-  --_ki-input-border: var(--ki-input-focus-border);
   --_ki-input-label-fg: var(--ki-input-focus-label-fg);
   --_ki-input-placeholder-fg: var(--ki-input-focus-placeholder-fg);
 }
@@ -59,7 +61,10 @@
   gap: var(--ki-input-label-gap);
 }
 
+/* MarsUI Input_label 12021:6068: the label row carries 2px (Space/xxs) inline
+   padding so its ink aligns with the cell radius. */
 [part="label"] {
+  padding-inline: var(--ki-input-label-padding-inline);
   color: var(--_ki-input-label-fg);
   font-size: var(--ki-input-label-font-size);
   font-weight: var(--ki-input-label-font-weight);
@@ -71,8 +76,10 @@
   align-items: center;
   gap: var(--ki-input-gap);
   box-sizing: border-box;
-  min-block-size: var(--ki-input-min-target);
-  block-size: var(--ki-input-height);
+
+  /* MarsUI Input_field md cell measures min-height 40px — consumed as
+     min-block-size (token-wave handoff) so the field can grow, never clip. */
+  min-block-size: var(--ki-input-height);
   padding-inline: var(--ki-input-padding-inline);
   background-color: var(--_ki-input-bg);
   border-block-start-width: var(--ki-input-border-block-start-width);
@@ -85,16 +92,27 @@
 }
 
 /* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
-   Focus/primary glow (3px spread at 40%) under the opaque outline ring. */
+   Focus/primary glow (3px spread at 20%) under the opaque outline ring. */
 :host(:focus-within) [part="field"] {
   box-shadow: var(--ki-input-focus-ring-shadow);
   outline: var(--ki-input-focus-ring-width) solid var(--ki-input-focus-ring-color);
   outline-offset: var(--ki-input-focus-ring-offset);
 }
 
+/* MarsUI Input_field danger: persistent Focus/danger ring (3px danger alpha
+   spread) over the white fill. Declared AFTER the focus rule so a focused
+   invalid field keeps the danger signal (the outline ring still marks focus). */
+:host(:state(user-invalid)) [part="field"] {
+  box-shadow: var(--ki-input-invalid-ring);
+}
+
+/* MarsUI Text_wrap carries 4px (Space/xs) inline padding, giving the 8px
+   visual icon-to-text distance next to adornments (4px gap + 4px pad). */
 [part="input"] {
   min-inline-size: 0;
   flex: 1 1 auto;
+  padding-block: 0;
+  padding-inline: var(--ki-input-gap);
   color: var(--_ki-input-fg);
   background-color: transparent;
   border: 0;
@@ -109,14 +127,36 @@
   color: var(--_ki-input-placeholder-fg);
 }
 
+/* Adornments own the field's metrics, never the host page's: text affixes
+   render at the cell type scale (13/24) in muted label emphasis — the state
+   var keeps them on the disabled ladder automatically (harness audit,
+   supersedes review round 1 Important-3 "intrinsic sizing"). */
 slot::slotted(*) {
   flex: 0 0 auto;
+  color: var(--_ki-input-label-fg);
+  font-size: var(--ki-input-font-size);
+  line-height: var(--ki-input-line-height);
 }
 
-/* Icon-shaped adornments get the icon box; text affixes size intrinsically
-   (review round 1, Important-3). */
+/* Icon-shaped adornments get the 18px icon box (MarsUI Left_md/Right_md). */
 slot::slotted(svg),
 slot::slotted(img) {
   inline-size: var(--ki-input-icon-size);
   block-size: var(--ki-input-icon-size);
+}
+
+/* Micro-motion (MarsUI soft-surface language): fill/border crossfade on
+   hover, glow fade-in on focus and invalid — color/shadow only, no layout.
+   Gated exactly like ki-checkbox so the reduced-motion harness stays
+   deterministic. */
+@media (prefers-reduced-motion: no-preference) {
+  [part="field"] {
+    transition-duration: var(--ki-motion-duration-fast);
+    transition-property: background-color, border-color, box-shadow;
+    transition-timing-function: var(--ki-motion-easing-out);
+  }
+
+  [part="input"]::placeholder {
+    transition: color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+  }
 }

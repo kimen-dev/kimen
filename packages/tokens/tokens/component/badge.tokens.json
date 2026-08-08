@@ -7,12 +7,12 @@
           "$description": "dimension used by the badge component for sm height."
         },
         "padding-inline": {
-          "$value": "{ki.space.sm}",
-          "$description": "dimension used by the badge component for sm padding inline."
+          "$value": "{ki.space.md}",
+          "$description": "dimension used by the badge component for sm padding inline (MarsUI total text inset 8px; paired with the border-width 0 + border-box change)."
         },
         "radius": {
-          "$value": "{ki.radius.round}",
-          "$description": "dimension used by the badge component for sm radius."
+          "$value": "{ki.radius.component.sm}",
+          "$description": "dimension used by the badge component for sm radius (MarsUI Tag silhouette is an 8px rounded rect — Radius/component/radius_sm — never a pill)."
         },
         "font-size": {
           "$value": "{ki.typography.size.caption-2}",
@@ -25,24 +25,24 @@
       },
       "md": {
         "height": {
-          "$value": "{ki.space.8xl}",
-          "$description": "dimension used by the badge component for md height."
+          "$value": "{ki.space.9xl}",
+          "$description": "dimension used by the badge component for md height (MarsUI Tag md outer height 28px)."
         },
         "padding-inline": {
-          "$value": "{ki.space.md}",
-          "$description": "dimension used by the badge component for md padding inline."
+          "$value": "{ki.space.lg}",
+          "$description": "dimension used by the badge component for md padding inline (MarsUI total text inset 10px; paired with the border-width 0 + border-box change so the badge does not shrink)."
         },
         "radius": {
-          "$value": "{ki.radius.round}",
-          "$description": "dimension used by the badge component for md radius."
+          "$value": "{ki.radius.component.sm}",
+          "$description": "dimension used by the badge component for md radius (MarsUI Tag: Radius/component/radius_sm 8px at both sm and md)."
         },
         "font-size": {
-          "$value": "{ki.typography.size.body-1}",
-          "$description": "dimension used by the badge component for md font size."
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the badge component for md font size (MarsUI UI/Caption 2: 12px at both sm and md; only xs drops to Caption 1)."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.body-1}",
-          "$description": "dimension used by the badge component for md line height."
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the badge component for md line height (MarsUI caption_2 16px)."
         }
       },
       "font-family": {
@@ -54,27 +54,31 @@
         "$description": "font weight used by the badge component for font weight."
       },
       "border-width": {
-        "$value": "{ki.space.xxs}",
-        "$description": "dimension used by the badge component for border width."
+        "$value": "{ki.space.zero}",
+        "$description": "dimension used by the badge component for border width (MarsUI tone tags carry width 0 in default state; only the neutral glass type draws its 1px bevel via ki.badge.neutral.border-width. material3 keeps its border via its override)."
       },
       "neutral": {
         "bg": {
-          "$value": "{ki.surface.s2}",
-          "$description": "color used by the badge component for neutral background."
+          "$value": "{ki.surface.special.secondary-alpha-base}",
+          "$description": "color used by the badge component for neutral background (MarsUI secondary glass Tag: Surface/special/secondary_alpha_base Gray-100 alpha light / Dark-700 blur base dark — the same fill as ki-button secondary; completes the glass bevel/blur/shadow the component already draws. material3 keeps the opaque s2 chip via its override)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
           "$description": "color used by the badge component for neutral foreground."
         },
         "border": {
-          "$value": "{ki.outline.none}",
-          "$description": "color used by the badge component for neutral border."
+          "$value": "{ki.outline.secondary-button-top}",
+          "$description": "color used by the badge component for neutral border (MarsUI secondary Tag bevel: Outline/secondary_button_top; drawn at ki.badge.neutral.border-width)."
+        },
+        "border-width": {
+          "$value": "{ki.size.border.hairline}",
+          "$description": "dimension used by the badge component for the neutral (secondary glass) border width: MarsUI draws the 1px bevel only on this type."
         }
       },
       "success": {
         "bg": {
-          "$value": "{ki.surface.success-base-em}",
-          "$description": "color used by the badge component for success background."
+          "$value": "{ki.surface.success-base-em-alpha}",
+          "$description": "color used by the badge component for success background (MarsUI Surface/success_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
         },
         "fg": {
           "$value": "{ki.text.success-high-em}",
@@ -87,8 +91,8 @@
       },
       "danger": {
         "bg": {
-          "$value": "{ki.surface.danger-base-em}",
-          "$description": "color used by the badge component for danger background."
+          "$value": "{ki.surface.danger-base-em-alpha}",
+          "$description": "color used by the badge component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
         },
         "fg": {
           "$value": "{ki.text.danger-high-em}",
@@ -101,8 +105,8 @@
       },
       "info": {
         "bg": {
-          "$value": "{ki.surface.info-base-em}",
-          "$description": "color used by the badge component for info background."
+          "$value": "{ki.surface.info-base-em-alpha}",
+          "$description": "color used by the badge component for info background (MarsUI Surface/info_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
         },
         "fg": {
           "$value": "{ki.text.info-high-em}",
@@ -115,8 +119,8 @@
       },
       "warning": {
         "bg": {
-          "$value": "{ki.surface.warning-base-em}",
-          "$description": "color used by the badge component for warning background."
+          "$value": "{ki.surface.warning-base-em-alpha}",
+          "$description": "color used by the badge component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
         },
         "fg": {
           "$value": "{ki.text.warning-high-em}",

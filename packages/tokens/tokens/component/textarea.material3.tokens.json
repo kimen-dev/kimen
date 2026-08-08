@@ -111,7 +111,23 @@
         "placeholder-fg": {
           "$value": "{ki.text.med-em}",
           "$description": "Material 3 color used by the textarea component for invalid placeholder foreground."
+        },
+        "ring": {
+          "$value": {
+            "color": "{ki.color.transparent.black}",
+            "offsetX": 0,
+            "offsetY": 0,
+            "blur": 0,
+            "spread": 0
+          },
+          "$type": "shadow"
         }
+      },
+      "label-font-size": {
+        "$value": "{ki.typography.size.caption-2}"
+      },
+      "label-line-height": {
+        "$value": "{ki.typography.line-height.caption-2}"
       }
     }
   }

@@ -528,11 +528,17 @@ describe('bare-page state-delta contract', () => {
       `ki-switch thumb travels ${String(travel)}px between states; the MarsUI Toggle travels at least ${String(MASTER_TRAVEL_RATIO)} of the thumb's own width`,
     ).toBeGreaterThanOrEqual(off.width * MASTER_TRAVEL_RATIO);
 
-    // A thumb wider than the track's inner box overflows its own control.
+    // A thumb that overflows the track overflows its own control. Asserted
+    // as geometric containment at BOTH ends of the travel: the master's
+    // pointer is wider than half its track (22px in a 40px track), so the
+    // previous formula (width <= track - width) rejected the master itself.
     expect(
-      off.width,
-      'ki-switch thumb must fit inside the track it travels in',
-    ).toBeLessThanOrEqual(trackBox.width - off.width);
+      off.left,
+      'ki-switch thumb must start inside the track it travels in',
+    ).toBeGreaterThanOrEqual(trackBox.left);
+    expect(on.right, 'ki-switch thumb must end inside the track it travels in').toBeLessThanOrEqual(
+      trackBox.right,
+    );
   });
 
   /**

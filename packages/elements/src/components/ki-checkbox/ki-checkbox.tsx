@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control -- The shadow label wraps
- * the native input and slotted label text; static JSX analysis cannot see the
- * flattened-tree accessible name. */
 import { AttachInternals, Component, Element, h, Listen, Prop, State, Watch } from '@stencil/core';
 import { booleanFromAttributePresence, checkboxFormValue } from './ki-checkbox.form';
 
@@ -325,8 +322,10 @@ export class KiCheckbox {
           <svg class="mark mark-check" viewBox="0 0 18 18" aria-hidden="true">
             <path d="M4 9.5 7.5 13 14 5" stroke="currentColor" />
           </svg>
+          {/* Indeterminate dash: 8x2 fully-rounded rect centered in the 18px
+              box (x 5..13 with round caps), per master 10030:982. */}
           <svg class="mark mark-dash" viewBox="0 0 18 18" aria-hidden="true">
-            <path d="M4 9h10" stroke="currentColor" />
+            <path d="M5 9h8" stroke="currentColor" />
           </svg>
         </span>
         <span part="label">

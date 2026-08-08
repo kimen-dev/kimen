@@ -15,8 +15,8 @@
           "$description": "font weight used by the radio group component for label font weight."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.body-1}",
-          "$description": "dimension used by the radio group component for label line height."
+          "$value": "{ki.typography.line-height.para}",
+          "$description": "dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement)."
         }
       }
     }

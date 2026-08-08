@@ -116,6 +116,16 @@
             "$description": "Material 3 color used by the radio component for selected disabled border."
           }
         }
+      },
+      "dot-shadow": {
+        "$value": {
+          "color": "{ki.color.transparent.black}",
+          "offsetX": 0,
+          "offsetY": 0,
+          "blur": 0,
+          "spread": 0
+        },
+        "$type": "shadow"
       }
     }
   }

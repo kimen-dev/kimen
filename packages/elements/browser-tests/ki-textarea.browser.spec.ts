@@ -109,8 +109,73 @@ function requireElement(element: Element | null | undefined, message: string): E
   return element;
 }
 
+/**
+ * Make the next computed-style read a REST read. The fidelity pass gave the
+ * field hover paint and state transitions, so one frame is not enough: the
+ * pointer may be resting where the field lays out (its position persists
+ * across spec files), and a state flip read mid-transition reports a colour
+ * between two tokens that matches neither. Park the pointer, then wait out
+ * every finite animation — walking shadow roots, because in this Chromium
+ * `getAnimations({subtree: true})` does not cross the shadow boundary.
+ */
 async function waitForStyles(): Promise<void> {
+  // Park the pointer on a transient probe pinned to the corner (ki-card's
+  // hover-test pattern): resetPointer's page origin can land INSIDE the
+  // tester iframe exactly where these fixtures mount, which puts the control
+  // in its hover state instead of clearing it.
+  const park = document.createElement('div');
+  park.style.cssText =
+    'position:fixed;inset-block-end:0;inset-inline-end:0;inline-size:8px;block-size:8px;';
+  document.body.append(park);
+  await userEvent.hover(park);
+  park.remove();
   await new Promise((resolve) => requestAnimationFrame(resolve));
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  const deadline = Date.now() + 4000;
+  // A calm streak of two checks two frames apart: a transition triggered by a
+  // late Stencil re-render (custom props resolving on the second pass) can
+  // START after a first clean check, and a read taken then lands mid-tween.
+  let calm = false;
+  for (;;) {
+    const found = new Set<Animation>();
+    const collect = (element: Element): void => {
+      for (const animation of element.getAnimations({ subtree: true })) {
+        found.add(animation);
+      }
+    };
+    collect(document.body);
+    const walk = (node: ParentNode): void => {
+      for (const element of node.querySelectorAll('*')) {
+        const shadow = element.shadowRoot;
+        if (shadow !== null) {
+          for (const child of shadow.children) {
+            collect(child);
+          }
+          walk(shadow);
+        }
+      }
+    };
+    walk(document.body);
+    const running = [...found].filter(
+      (animation) =>
+        animation.playState === 'running' && animation.effect?.getTiming().iterations !== Infinity,
+    );
+    if (Date.now() >= deadline) {
+      return;
+    }
+    if (running.length === 0) {
+      if (calm) {
+        return;
+      }
+      calm = true;
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      continue;
+    }
+    calm = false;
+    await Promise.allSettled(running.map((animation) => animation.finished));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
 }
 
 function px(value: string): number {
@@ -252,17 +317,26 @@ describe('ki-textarea in a real browser', () => {
     cleanup();
     const el = await mount();
     const textarea = innerTextarea(el);
-    const field = el.shadowRoot?.querySelector('[part="field"]');
+    const field = requireElement(
+      el.shadowRoot?.querySelector('[part="field"]'),
+      'field part missing',
+    );
     await waitForStyles();
-    const before = getComputedStyle(requireElement(field, 'field part missing')).boxShadow;
+    const before = getComputedStyle(field).boxShadow;
+    const restBorder = getComputedStyle(field).borderBlockEndColor;
 
     await userEvent.keyboard('{Tab}');
     await waitForStyles();
 
     expect(el.shadowRoot?.activeElement).toBe(textarea);
-    expect(getComputedStyle(requireElement(field, 'field part missing')).boxShadow).not.toBe(
-      before,
-    );
+    await expect.poll(() => getComputedStyle(field).boxShadow).not.toBe(before);
+    // Double mechanism (patrón V.1 §2.5, matches ki-input): the gap ring is a
+    // real outline + offset now — surface-independent, unlike the retired
+    // literal-s0 shadow layer.
+    expect(getComputedStyle(field).outlineStyle).not.toBe('none');
+    expect(getComputedStyle(field).outlineOffset).toBe('2px');
+    // MarsUI active fields keep the rest hairline border — no opaque brand swap.
+    expect(getComputedStyle(field).borderBlockEndColor).toBe(restBorder);
   });
 
   it('S8 Enter inserts a newline and never submits the surrounding form', async () => {
@@ -425,9 +499,14 @@ describe('ki-textarea in a real browser', () => {
 
     expect(submitted).toBe(false);
     expect(textarea.validity.valueMissing).toBe(true);
-    expect(
-      getComputedStyle(requireElement(field, 'field part missing')).borderBlockEndColor,
-    ).not.toBe(initialBorder);
+    await expect
+      .poll(() => getComputedStyle(requireElement(field, 'field part missing')).borderBlockEndColor)
+      .not.toBe(initialBorder);
+    // MarsUI danger fields: persistent Focus/danger ring while user-invalid
+    // (token-wave --ki-textarea-invalid-ring).
+    await expect
+      .poll(() => getComputedStyle(requireElement(field, 'field part missing')).boxShadow)
+      .not.toBe('none');
   });
 
   it('S15 disabled fieldset makes the textarea inert', async () => {
@@ -552,5 +631,25 @@ describe('ki-textarea in a real browser', () => {
     expect(
       Math.round(requireElement(label, 'label part missing').getBoundingClientRect().right),
     ).toBe(Math.round(requireElement(field, 'field part missing').getBoundingClientRect().right));
+  });
+
+  // Pixel-fidelity pin (MarsUI Input_label 12021:6068, not scenario-traced):
+  // the label row is 13/20 semibold with 2px (Space/xxs) inline padding,
+  // matching ki-input so the two fields share one anatomy.
+  it('pins the MarsUI label row metrics', async () => {
+    cleanup();
+    const el = await mount();
+    await waitForStyles();
+    const label = requireElement(
+      el.shadowRoot?.querySelector('[part="label"]'),
+      'label part missing',
+    );
+
+    const styles = getComputedStyle(label);
+    expect(styles.fontSize).toBe('13px');
+    expect(styles.lineHeight).toBe('20px');
+    expect(styles.fontWeight).toBe('600');
+    expect(styles.paddingInlineStart).toBe('2px');
+    expect(styles.paddingInlineEnd).toBe('2px');
   });
 });

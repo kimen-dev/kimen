@@ -80,6 +80,15 @@
   --_ki-button-border-bottom: var(--ki-button-primary-rest-border-bottom);
 }
 
+/* Tertiary carries the SECONDARY bevel pair (Figma 8003:300: stroke 1px
+   Outline/secondary_button_top with the secondary_button_bottom edge) and
+   keeps the glass backdrop from the :host defaults — it is NOT in the
+   non-glass group below (pixel pass, figma_notes: TERTIARY fill
+   Surface/special/light-s0_dark-s2 + Blur24). */
+:host([variant="tertiary"]) {
+  --_ki-button-border-bottom: var(--ki-button-tertiary-rest-border-bottom);
+}
+
 :host([variant="primary"][tone="neutral"]) {
   --_ki-button-bg: var(--ki-button-primary-neutral-rest-bg);
   --_ki-button-fg: var(--ki-button-primary-neutral-rest-fg);
@@ -179,10 +188,12 @@
 }
 
 /* Non-glass variants: uniform border (the bottom edge follows the border
-   token through every state) and no glass backdrop — `initial` makes the
+   token through every state — quaternary resolves outline-none, so it draws
+   NO border in any state) and no glass backdrop — `initial` makes the
    private filter property guaranteed-invalid so backdrop-filter takes its
-   `none` fallback (off the glass path entirely, not blur(0)). */
-:host([variant="tertiary"]),
+   `none` fallback (off the glass path entirely, not blur(0)). Tertiary left
+   this group in the pixel pass: it is a glass variant with the secondary
+   bevel (see above). */
 :host([variant="quaternary"]),
 :host([variant="ghost"]) {
   --_ki-button-border-bottom: var(--_ki-button-border);
@@ -324,8 +335,9 @@
     --_ki-button-shadow: var(--ki-button-ghost-hover-shadow);
   }
 
-  /* Non-glass variants never take the hover overlay set by the generic
-     :host(:hover) base block above. */
+  /* Variants whose hover swaps the fill instead of compositing an overlay
+     never take the hover overlay set by the generic :host(:hover) base
+     block above. */
   :host([variant="tertiary"]:hover:not(:disabled)),
   :host([variant="quaternary"]:hover:not(:disabled)),
   :host([variant="ghost"]:hover:not(:disabled)) {
@@ -420,7 +432,12 @@ button {
   font-family: var(--ki-button-font-family);
   font-size: var(--_ki-button-font-size);
   font-weight: var(--ki-button-font-weight);
-  gap: var(--_ki-button-gap);
+
+  /* The per-size gap tokens encode the COMPOSITE icon-to-text distance
+     (Figma root gap + Text_wrap padding, e.g. 2px + 4px = 6px at md). The
+     label now carries the Text_wrap Space/xs padding itself, so the flex gap
+     compensates to keep icon-to-text exactly at the composite. */
+  gap: calc(var(--_ki-button-gap) - var(--ki-button-label-padding-inline));
   justify-content: center;
   line-height: var(--_ki-button-line-height);
   min-block-size: var(--_ki-button-height);
@@ -428,9 +445,11 @@ button {
 
   /* Figma strokes are INNER: the 4px padding-block already contains the 1px
      border, so the border width is subtracted to keep every size at exactly
-     24/32/40/48/56 (specs/002-ki-button/design-extraction.md §1). */
+     24/32/40/48/56 (specs/002-ki-button/design-extraction.md §1). The same
+     convention applies inline: the Figma padding (10px at md) contains the
+     stroke, so edge-to-label stays exactly at the token value. */
   padding-block: calc(var(--ki-button-padding-block) - var(--ki-button-border-width));
-  padding-inline: var(--_ki-button-padding-inline);
+  padding-inline: calc(var(--_ki-button-padding-inline) - var(--ki-button-border-width));
   text-align: center;
   touch-action: manipulation;
   user-select: none;
@@ -446,11 +465,13 @@ button:focus {
 }
 
 button:focus-visible {
-  /* MarsUI Focus/primary: 3px 40%-alpha spread ring
-     (specs/002-ki-button/design-extraction.md §2.5). The opaque 2px outline
-     stays as the WCAG 1.4.11-proof indicator: the soft ring alone is below
-     3:1 against adjacent surfaces. */
-  box-shadow: var(--ki-button-focus-ring-shadow), var(--_ki-button-shadow);
+  /* MarsUI Focus/primary: 3px alpha spread ring, and the Figma focus column
+     removes ALL drop shadows while focused — the ring is the whole stack
+     (figma_notes 8003:300: focus = rest fill, border kept, shadows removed).
+     The opaque 2px outline stays as the WCAG 1.4.11-proof indicator: the
+     soft ring alone is below 3:1 against adjacent surfaces (documented
+     deviation, flagged for founder ratification). */
+  box-shadow: var(--ki-button-focus-ring-shadow);
   outline-color: var(--ki-button-focus-ring-color);
 }
 
@@ -494,10 +515,32 @@ button:active:not(:disabled) {
 
 [part="label"] {
   min-inline-size: 0;
+
+  /* Figma Text_wrap carries its own Space/xs inline padding in every size
+     (8003:300): text-only edge-to-label = padding-inline + 4 (14px at md).
+     The flex gap above subtracts this so icon-to-text keeps the composite. */
+  padding-inline: var(--ki-button-label-padding-inline);
 }
 
 slot[name="start"]::slotted(*),
 slot[name="end"]::slotted(*) {
   block-size: var(--_ki-button-icon-size);
   inline-size: var(--_ki-button-icon-size);
+}
+
+/* Micro-motion (pixel pass): the e1-to-e3 hover lift, the pressed dip and
+   the focus-ring fade ease over the fast/out motion tokens. Gated exactly
+   like ki-checkbox/ki-switch so the visual harness (which emulates reduced
+   motion) stays deterministic; transform/box-shadow/background-color only —
+   no layout property ever transitions. */
+@media (prefers-reduced-motion: no-preference) {
+  button {
+    transition-duration: var(--ki-motion-duration-fast);
+    transition-property: background-color, box-shadow, transform;
+    transition-timing-function: var(--ki-motion-easing-out);
+  }
+
+  button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
 }

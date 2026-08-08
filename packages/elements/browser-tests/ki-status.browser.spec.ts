@@ -5,11 +5,15 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-status.js';
 import { expectAccessible } from './axe';
 
 type KiStatusElement = HTMLElement & { tone: string; ring: boolean; label?: string };
+
+const browserCommands = commands as unknown as {
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
+};
 
 const STYLE_ID = 'ki-status-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-status-browser-material3-token-style';
@@ -81,6 +85,69 @@ function dotOf(el: KiStatusElement): HTMLElement {
   return dot;
 }
 
+/** Rect-based geometry must wait out the one-shot mount pop (the dot
+ * transitions transform/opacity from @starting-style under no-preference
+ * motion). */
+async function motionSettled(el: Element): Promise<void> {
+  const deadline = Date.now() + 2000;
+  // Walks shadow roots explicitly: in this Chromium `getAnimations({subtree})`
+  // does not cross the shadow boundary, so the dot's @starting-style
+  // transition was invisible to the old wait and geometry reads landed mid
+  // pop-in (a half-scaled dot). A calm streak of two clean checks two frames
+  // apart covers transitions that start on a late render pass.
+  const animations = (): Animation[] => {
+    const found = new Set<Animation>();
+    const collect = (element: Element): void => {
+      for (const animation of element.getAnimations({ subtree: true })) {
+        found.add(animation);
+      }
+    };
+    collect(el);
+    const walk = (node: ParentNode): void => {
+      for (const element of node.querySelectorAll('*')) {
+        const shadow = element.shadowRoot;
+        if (shadow !== null) {
+          for (const child of shadow.children) {
+            collect(child);
+          }
+          walk(shadow);
+        }
+      }
+    };
+    const shadow = el.shadowRoot;
+    if (shadow !== null) {
+      for (const child of shadow.children) {
+        collect(child);
+      }
+      walk(shadow);
+    }
+    walk(el);
+    return [...found];
+  };
+  let calm = false;
+  for (;;) {
+    const running = animations().filter(
+      (animation) =>
+        animation.playState === 'running' && animation.effect?.getTiming().iterations !== Infinity,
+    );
+    if (Date.now() >= deadline) {
+      return;
+    }
+    if (running.length === 0) {
+      if (calm) {
+        return;
+      }
+      calm = true;
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      continue;
+    }
+    calm = false;
+    await Promise.allSettled(running.map((animation) => animation.finished));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+}
+
 function readTokenColor(name: string): string {
   const probe = document.createElement('div');
   probe.style.color = `var(${name})`;
@@ -104,6 +171,7 @@ describe('ki-status', () => {
     cleanup();
     const online = await mount(landmark(), { label: 'Online', tone: 'success' });
     const onlineDot = dotOf(online);
+    await motionSettled(online);
     expect(getComputedStyle(onlineDot).backgroundColor).toBe(
       readTokenColor('--ki-status-success-color'),
     );
@@ -148,6 +216,7 @@ describe('ki-status', () => {
     el.style.position = 'absolute';
     el.style.insetBlockEnd = '0';
     el.style.insetInlineEnd = '0';
+    await motionSettled(el);
     const ringShadow = getComputedStyle(dotOf(el)).boxShadow;
 
     // The ring is a spread box-shadow layer in the theme ring color,
@@ -218,6 +287,7 @@ describe('ki-status', () => {
     cleanup();
     ensureTokens();
     const onmars = await mount(landmark(), { label: 'Build failing', tone: 'danger' });
+    await motionSettled(onmars);
     const onmarsColor = getComputedStyle(dotOf(onmars)).backgroundColor;
     const onmarsSize = dotOf(onmars).getBoundingClientRect().width;
     const markup = onmars.outerHTML;
@@ -226,6 +296,7 @@ describe('ki-status', () => {
     ensureMaterial3Tokens();
     document.documentElement.setAttribute('data-ki-theme', 'material3');
     const el = await mount(landmark(), { label: 'Build failing', tone: 'danger' });
+    await motionSettled(el);
     const dot = dotOf(el);
 
     expect(el.outerHTML).toBe(markup);
@@ -238,5 +309,31 @@ describe('ki-status', () => {
     expect(dot.getBoundingClientRect().width).not.toBe(onmarsSize);
 
     await expectAccessible(document.body);
+  });
+
+  it('S10 crossfades tone changes with paint-only motion from the motion tokens', async () => {
+    cleanup();
+    // Explicit emulation: sibling spec files (visual galleries, motion
+    // contracts) emulate `reduce` on the same page, so relying on the runner
+    // default makes this assertion order-dependent (CI-observed flake).
+    await browserCommands.emulateReducedMotion('no-preference');
+    const el = await mount(landmark(), { label: 'Online', tone: 'success' });
+    const dot = dotOf(el);
+    const computed = getComputedStyle(dot);
+
+    // Paint-only crossfade (background-color + box-shadow) plus the mount
+    // pop (transform/opacity), all riding --ki-motion-* tokens; the
+    // properties never include layout members.
+    const properties = computed.transitionProperty.split(',').map((p) => p.trim());
+    expect(properties).toContain('background-color');
+    expect(properties).toContain('box-shadow');
+    expect(properties).toContain('transform');
+    expect(properties).toContain('opacity');
+    expect(properties).not.toContain('width');
+    expect(properties).not.toContain('inline-size');
+    for (const duration of computed.transitionDuration.split(',')) {
+      expect(Number.parseFloat(duration)).toBeCloseTo(0.12, 2);
+    }
+    await browserCommands.emulateReducedMotion(null);
   });
 });

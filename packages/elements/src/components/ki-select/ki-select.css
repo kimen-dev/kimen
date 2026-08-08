@@ -17,11 +17,14 @@
   font-size: var(--ki-select-label-font-size);
   font-weight: var(--ki-select-label-font-weight);
   line-height: var(--ki-select-label-line-height);
+
+  /* MarsUI Input_label row: 2px (Space/xxs) inline inset. */
+  padding-inline: var(--ki-select-label-padding-inline);
 }
 
 [part="trigger"] {
   align-items: center;
-  background: var(--_ki-select-bg);
+  background-color: var(--_ki-select-bg);
   border-color: var(--_ki-select-border);
   border-style: solid;
   border-block-start-width: var(--ki-select-border-block-start-width);
@@ -29,6 +32,11 @@
   border-inline-start-width: var(--ki-select-border-inline-start-width);
   border-inline-end-width: var(--ki-select-border-inline-end-width);
   border-radius: var(--ki-select-radius);
+
+  /* MarsUI Component_effect/secondary_default at rest: drop 0/2/1.5/-0.5
+     Elevation/shadow + inner White/3 0/2/3. Backdrop blur intentionally
+     omitted — avatar-group counter precedent (glass restraint, 021 d.3). */
+  box-shadow: var(--ki-effect-component-secondary-default-shadow);
   color: var(--_ki-select-fg);
   cursor: pointer;
   display: inline-flex;
@@ -39,13 +47,25 @@
   padding-inline: var(--ki-select-padding-inline);
   font: inherit;
   font-size: var(--ki-select-font-size);
+
+  /* MarsUI UI/Body 1/medium on the value: 13px / 24px / 600. */
+  font-weight: var(--ki-select-font-weight);
+  line-height: var(--ki-select-line-height);
 }
 
 @media (hover: hover) {
-  [part="trigger"]:hover {
-    --_ki-select-bg: var(--ki-select-hover-bg);
+  /* MarsUI hover: SAME fill + hover_overlay_inverse wash (Black/3 light,
+     White/3 dark), instead of a surface-step swap that went darker than the
+     rest surface in the dark scheme. Border keeps the neutral-outline hover
+     step (brief §1, matching ki-input/ki-textarea). */
+  [part="trigger"]:hover:not(:disabled) {
     --_ki-select-fg: var(--ki-select-hover-fg);
     --_ki-select-border: var(--ki-select-hover-border);
+
+    background-image: linear-gradient(
+      var(--ki-surface-hover-overlay-inverse),
+      var(--ki-surface-hover-overlay-inverse)
+    );
   }
 
   /* The label is a SIBLING of the trigger, so the interaction-state label token
@@ -65,15 +85,27 @@
 }
 
 /* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
-   Focus/primary glow (3px spread at 40%) under the opaque outline ring. */
+   Focus/primary glow (3px spread at 20%) under the opaque outline ring.
+   Figma active/open keeps the 1px border at the REST hairline — the ring
+   alone signals engagement (the former brand-500 border recolor overshot
+   the master). ki.select.focus-border resolves the
+   rest hairline, keeping the theme override surface available. */
 [part="trigger"]:focus-visible {
   --_ki-select-bg: var(--ki-select-focus-bg);
   --_ki-select-fg: var(--ki-select-focus-fg);
   --_ki-select-border: var(--ki-select-focus-border);
 
-  box-shadow: var(--ki-select-focus-ring-shadow);
+  box-shadow:
+    var(--ki-select-focus-ring-shadow), var(--ki-effect-component-secondary-default-shadow);
   outline-offset: var(--ki-select-focus-ring-offset);
   outline: var(--ki-select-focus-ring-width) solid var(--ki-select-focus-ring-color);
+}
+
+/* MarsUI Dropdown danger: rest fill and hairline stay; a persistent 3px
+   Focus/danger ring (danger-500 at 20%/40%) signals invalidity. Placed after
+   :focus-visible so a focused invalid trigger shows the danger ring. */
+[part="trigger"][aria-invalid="true"] {
+  box-shadow: var(--ki-focus-danger), var(--ki-effect-component-secondary-default-shadow);
 }
 
 [part="trigger"]:disabled {
@@ -91,14 +123,38 @@
 [part="indicator"] {
   block-size: var(--ki-select-indicator-size);
   inline-size: var(--ki-select-indicator-size);
+  display: flex;
   flex: none;
+}
+
+/* 18px icon slot with the glyph inset (Figma icon convention ~12.5%): an 8px
+   (Space/md) square whose bottom/right borders rotate into a ~11x6px chevron.
+   The slot itself no longer paints, so the glyph stops dwarfing the 13px
+   text. Figma measures ~1.5px stroke; no ki.select.indicator.stroke token
+   exists yet — the 1px hairline is the closest published width. */
+[part="indicator"]::before {
+  content: "";
+  block-size: var(--ki-select-indicator-glyph-size);
+  inline-size: var(--ki-select-indicator-glyph-size);
   border-block-end: var(--ki-select-border-width) solid currentcolor;
   border-inline-end: var(--ki-select-border-width) solid currentcolor;
+  box-sizing: border-box;
+  margin: auto;
   transform: rotate(45deg) translateY(-25%);
+}
+
+/* Open state flips the chevron. The end state lives OUTSIDE the motion gate
+   so reduced-motion users still get the flipped glyph, instantly. Same
+   optical offset as rest: R(225°)·(0,25%) ≡ R(45°)·(0,-25%). */
+[part="trigger"][aria-expanded="true"] [part="indicator"]::before {
+  transform: rotate(225deg) translateY(25%);
 }
 
 [part="listbox"] {
   background: var(--ki-select-listbox-bg);
+
+  /* MarsUI Dropmenu glass: White/80 panel + BACKGROUND_BLUR Blur/48 (24px). */
+  backdrop-filter: blur(var(--ki-select-listbox-backdrop-blur));
   border-radius: var(--ki-select-listbox-radius);
 
   /* MarsUI elevation ramp e3 (brief §5, medium floating surface) instead of
@@ -122,6 +178,10 @@
   color: var(--_ki-option-fg);
   cursor: pointer;
   font-size: var(--ki-option-font-size);
+
+  /* MarsUI Dropmenu row label UI/Para/medium: 13px / 20px / weight 600. */
+  font-weight: var(--ki-typography-weight-body-medium);
+  line-height: var(--ki-typography-line-height-para);
   min-block-size: var(--ki-option-min-target);
   padding-inline: var(--ki-option-padding-inline);
   display: flex;
@@ -138,6 +198,9 @@
 [part="option"][data-highlighted="true"] {
   --_ki-option-bg: var(--ki-option-highlight-bg);
   --_ki-option-fg: var(--ki-option-highlight-fg);
+
+  /* MarsUI active row: the Black/3 wash rides Elevation/e1 (subtle pill). */
+  box-shadow: var(--ki-elevation-e1);
 }
 
 [part="option"][aria-selected="true"] {
@@ -155,4 +218,56 @@
 .data-slot,
 .validity-donor {
   display: none;
+}
+
+/* Micro-animations (MarsUI single-speed motion language). Gated exactly like
+   ki-switch/ki-dialog so the reduced-motion visual harness stays
+   deterministic: transform/opacity/box-shadow/background-color only. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Soft elevation: hover wash, border step and the secondary_default shadow
+     glide; the focus glow fades in while the opaque outline stays instant. */
+  [part="trigger"] {
+    transition:
+      box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      border-color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+  }
+
+  /* Slight settle on press (xs distance / 4 = 0.5px). */
+  [part="trigger"]:active:not(:disabled) {
+    transform: translateY(calc(var(--ki-motion-distance-xs) / 4));
+  }
+
+  /* Chevron half-turn on open; transform-only. */
+  [part="indicator"]::before {
+    transition: transform var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  /* Listbox enter: fade + de-scale from the trigger via @starting-style
+     (display none -> block runs the transition from the starting values).
+     Exit stays instant — no discrete display transition to linger on. */
+  [part="listbox"] {
+    transition:
+      opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  @starting-style {
+    [part="listbox"]:not([hidden]) {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--ki-motion-distance-sm))) scale(0.98);
+    }
+  }
+
+  /* Row highlight glide + pressed dip (transform-only commit feedback). */
+  [part="option"] {
+    transition:
+      background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+  }
+
+  [part="option"]:active:not([aria-disabled="true"]) {
+    transform: scale(0.98);
+  }
 }

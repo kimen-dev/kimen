@@ -296,28 +296,53 @@ export class KiDialog {
     // Native showModal() focuses the dialog surface when it cannot find a
     // focusable in its flat-tree traversal — which happens for slotted actions
     // whose control lives one shadow deeper (e.g. ki-button). That native
-    // focus settles asynchronously, so the corrective focus is deferred one
-    // frame to win over it (FR-005 / S6: entry focus reaches the action).
-    const apply = (): void => {
-      if (!this.dialog?.open) {
-        return;
+    // focus settles asynchronously, so the corrective focus is deferred to
+    // win over it (FR-005 / S6: entry focus reaches the action).
+    //
+    // Deferred over a BOUNDED run of frames, not one: focus() is a silent
+    // no-op while the action is not rendered, and a dialog opened within a
+    // few frames of mounting hits exactly that window — the footer region
+    // unhides one @State re-render after the slot assignment is observed, so
+    // the target exists in the tree while its box is still display:none. One
+    // retry frame lost that race deterministically; the run keeps correcting
+    // until the target actually holds focus or the budget ends.
+    const deepActive = (): Element | null => {
+      let active: Element | null = document.activeElement;
+      while (active?.shadowRoot?.activeElement) {
+        active = active.shadowRoot.activeElement;
+      }
+      return active;
+    };
+    const apply = (): boolean => {
+      const dialog = this.dialog;
+      if (!dialog?.open) {
+        return true;
       }
       const target = resolveEntryFocusTarget(this.host);
-      if (target) {
-        if (document.activeElement !== target && !target.contains(document.activeElement)) {
-          target.focus();
+      if (!target) {
+        if (deepActive() !== dialog) {
+          dialog.focus();
         }
-        return;
+        return false;
       }
-      if (document.activeElement !== this.dialog) {
-        this.dialog.focus();
+      if (deepActive() === target) {
+        return true;
       }
+      target.focus();
+      return deepActive() === target;
     };
 
-    apply();
-    if (typeof requestAnimationFrame === 'function') {
-      requestAnimationFrame(apply);
+    if (apply() || typeof requestAnimationFrame !== 'function') {
+      return;
     }
+    let remainingFrames = 10;
+    const retry = (): void => {
+      remainingFrames -= 1;
+      if (!apply() && remainingFrames > 0) {
+        requestAnimationFrame(retry);
+      }
+    };
+    requestAnimationFrame(retry);
   }
 
   private moveHostFallbackFocusToBody(): void {

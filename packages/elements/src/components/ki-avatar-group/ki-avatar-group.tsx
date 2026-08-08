@@ -97,11 +97,16 @@ export class KiAvatarGroup {
         // decision 5). Descending per-index depth has no pure-CSS form for
         // arbitrary N, so the group coordinates it (007 composite precedent).
         member.style.zIndex = String(visibleCount - index);
+        // The same coordination hands the stylesheet the stacking index for
+        // the reduced-motion-gated entrance stagger (a private custom
+        // property, not API — the group's motion is a theme concern).
+        member.style.setProperty('--_group-enter-index', String(index));
       } else {
         // Beyond the cap: not rendered, not exposed to assistive technology;
         // the counter text is their only trace (FR-009, FR-011).
         member.setAttribute('data-ki-avatar-group-overflow', '');
         member.style.removeProperty('z-index');
+        member.style.removeProperty('--_group-enter-index');
       }
     });
 
@@ -114,7 +119,13 @@ export class KiAvatarGroup {
     return (
       <div part="group">
         <slot onSlotchange={this.handleSlotChange} />
-        {this.hiddenCount > 0 && <span part="counter">{`+${String(this.hiddenCount)}`}</span>}
+        {this.hiddenCount > 0 && (
+          // Re-keyed per count: a recount replaces the node, so the
+          // reduced-motion-gated counter pop re-fires (parts/API unchanged).
+          <span part="counter" key={`counter-${String(this.hiddenCount)}`}>
+            {`+${String(this.hiddenCount)}`}
+          </span>
+        )}
       </div>
     );
   }

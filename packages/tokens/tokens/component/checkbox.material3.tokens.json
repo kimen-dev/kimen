@@ -134,6 +134,16 @@
           "$value": "{ki.outline.danger-high-em}",
           "$description": "Material 3 color used by the checkbox component for invalid border."
         }
+      },
+      "unchecked": {
+        "disabled": {
+          "bg": {
+            "$value": "{ki.surface.disabled-low-em}"
+          },
+          "fg": {
+            "$value": "{ki.text.muted}"
+          }
+        }
       }
     }
   }

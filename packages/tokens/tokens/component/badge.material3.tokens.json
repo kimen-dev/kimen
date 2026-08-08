@@ -19,15 +19,24 @@
         "$type": "dimension"
       },
       "neutral": {
+        "bg": {
+          "$value": "{ki.surface.s2}"
+        },
         "border": {
           "$value": "{ki.outline.low-em}",
           "$description": "Material 3 color used by the badge component for neutral border."
+        },
+        "border-width": {
+          "$value": "{ki.foundation.migrated.component-badge-material3.badge.border-width}"
         }
       },
       "success": {
         "border": {
           "$value": "{ki.outline.success-low-em}",
           "$description": "Material 3 color used by the badge component for success border."
+        },
+        "bg": {
+          "$value": "{ki.surface.success-base-em}"
         }
       },
       "danger": {
@@ -42,6 +51,22 @@
         "border": {
           "$value": "{ki.outline.danger-low-em}",
           "$description": "Material 3 color used by the badge component for danger border."
+        }
+      },
+      "info": {
+        "bg": {
+          "$value": "{ki.surface.info-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.info-high-em}"
+        }
+      },
+      "warning": {
+        "bg": {
+          "$value": "{ki.surface.warning-base-em}"
+        },
+        "fg": {
+          "$value": "{ki.text.warning-high-em}"
         }
       }
     }

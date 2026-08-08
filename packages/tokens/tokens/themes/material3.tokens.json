@@ -385,32 +385,6 @@
       "migrated": {
         "component-button": {
           "button": {
-            "primary": {
-              "hover": {
-                "shadow": {
-                  "$type": "shadow",
-                  "$value": {
-                    "color": "{ki.color.black.5}",
-                    "offsetX": {
-                      "value": 0,
-                      "unit": "px"
-                    },
-                    "offsetY": {
-                      "value": 1,
-                      "unit": "px"
-                    },
-                    "blur": {
-                      "value": 1,
-                      "unit": "px"
-                    },
-                    "spread": {
-                      "value": -0.5,
-                      "unit": "px"
-                    }
-                  }
-                }
-              }
-            },
             "tertiary": {
               "active": {
                 "shadow": {

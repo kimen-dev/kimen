@@ -74,6 +74,12 @@
   align-items: center;
   justify-content: center;
   min-block-size: var(--ki-tab-min-block-size);
+
+  /* MarsUI Tab_nav_item (10048:1266): padding-top 0, padding-bottom 8
+     (Space/md) at every size, so the 2px underline clears the label block.
+     Falls back to the semantic space step until ki.tab.padding-block-end
+     lands in the token package. */
+  padding-block: 0 var(--ki-tab-padding-block-end);
   padding-inline: var(--ki-tab-padding-inline);
   gap: var(--ki-tab-gap);
 }
@@ -90,4 +96,44 @@
 
 :host([selected]) [part="indicator"] {
   display: block;
+}
+
+/* Micro-motion (Art. V): decorative only. Every transition lives behind the
+ * reduced-motion gate (ki-switch/ki-checkbox pattern), so reduced-motion
+ * environments — including the visual harness — render final frames with the
+ * base display toggle and no animation. */
+@media (prefers-reduced-motion: no-preference) {
+  :host {
+    transition:
+      color var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
+      box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  /* Sub-pixel settle on press (a quarter of the xs motion distance = 0.5px),
+     consistent with the soft-elevation press feel; transform-only. */
+  [part="tab"] {
+    transition: transform var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+  }
+
+  :host(:active:not([disabled])) [part="tab"] {
+    transform: translateY(calc(var(--ki-motion-distance-xs) / 4));
+  }
+
+  /* Underline grows from center and fades in on selection. The indicator
+     stays in flow (opacity/transform instead of the display toggle); it is
+     aria-hidden decorative, so exposure is unaffected. */
+  [part="indicator"] {
+    display: block;
+    opacity: 0;
+    transform: scaleX(0.4);
+    transform-origin: center;
+    transition:
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
+      opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  :host([selected]) [part="indicator"] {
+    opacity: 1;
+    transform: scaleX(1);
+  }
 }

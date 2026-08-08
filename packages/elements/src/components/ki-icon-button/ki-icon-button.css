@@ -58,6 +58,15 @@
   --_ki-icon-button-border-bottom: var(--ki-icon-button-primary-rest-border-bottom);
 }
 
+/* Tertiary carries the SECONDARY bevel pair (Figma 10078:2975: stroke 1px
+   Outline/secondary_button_top with the secondary_button_bottom edge) and
+   keeps the glass backdrop from the :host defaults — it is NOT in the
+   non-glass group below (pixel pass, figma_notes: TERTIARY fill
+   Surface/special/light-s0_dark-s2 + Blur24). */
+:host([variant="tertiary"]) {
+  --_ki-icon-button-border-bottom: var(--ki-icon-button-tertiary-rest-border-bottom);
+}
+
 :host([variant="primary"][tone="neutral"]) {
   --_ki-icon-button-bg: var(--ki-icon-button-primary-neutral-rest-bg);
   --_ki-icon-button-fg: var(--ki-icon-button-primary-neutral-rest-fg);
@@ -157,10 +166,12 @@
 }
 
 /* Non-glass variants: uniform border (the bottom edge follows the border
-   token through every state) and no glass backdrop — `initial` makes the
+   token through every state — quaternary resolves outline-none, so it draws
+   NO border in any state) and no glass backdrop — `initial` makes the
    private filter property guaranteed-invalid so backdrop-filter takes its
-   `none` fallback (off the glass path entirely, not blur(0)). */
-:host([variant="tertiary"]),
+   `none` fallback (off the glass path entirely, not blur(0)). Tertiary left
+   this group in the pixel pass: it is a glass variant with the secondary
+   bevel (see above). */
 :host([variant="quaternary"]),
 :host([variant="ghost"]) {
   --_ki-icon-button-border-bottom: var(--_ki-icon-button-border);
@@ -302,8 +313,9 @@
     --_ki-icon-button-shadow: var(--ki-icon-button-ghost-hover-shadow);
   }
 
-  /* Non-glass variants never take the hover overlay set by the generic
-     :host(:hover) base block above. */
+  /* Variants whose hover swaps the fill instead of compositing an overlay
+     never take the hover overlay set by the generic :host(:hover) base
+     block above. */
   :host([variant="tertiary"]:hover:not([disabled])),
   :host([variant="quaternary"]:hover:not([disabled])),
   :host([variant="ghost"]:hover:not([disabled])) {
@@ -427,10 +439,13 @@ button:focus {
 }
 
 button:focus-visible {
-  /* MarsUI Focus/primary: 3px 40%-alpha spread ring (002 §2.5). The opaque
-     2px outline stays as the WCAG 1.4.11-proof indicator: the soft ring
-     alone is below 3:1 against adjacent surfaces. */
-  box-shadow: var(--ki-icon-button-focus-ring-shadow), var(--_ki-icon-button-shadow);
+  /* MarsUI Focus/primary: 3px alpha spread ring, and the Figma focus column
+     removes ALL drop shadows while focused — the ring is the whole stack
+     (figma_notes 10078:2975, same flattening as ki-button). The opaque 2px
+     outline stays as the WCAG 1.4.11-proof indicator: the soft ring alone
+     is below 3:1 against adjacent surfaces (documented deviation, flagged
+     for founder ratification). */
+  box-shadow: var(--ki-icon-button-focus-ring-shadow);
   outline-color: var(--ki-icon-button-focus-ring-color);
 }
 
@@ -468,4 +483,31 @@ button:active:not(:disabled) {
 slot::slotted(*) {
   block-size: var(--_ki-icon-button-icon-size);
   inline-size: var(--_ki-icon-button-icon-size);
+}
+
+/* Micro-motion (pixel pass): the hover lift, the pressed dip with the icon
+   squeeze and the focus-ring fade ease over the fast/out motion tokens.
+   Gated exactly like ki-checkbox/ki-switch so the visual harness (which
+   emulates reduced motion) stays deterministic; transform/box-shadow/
+   background-color only — no layout property ever transitions. */
+@media (prefers-reduced-motion: no-preference) {
+  button {
+    transition-duration: var(--ki-motion-duration-fast);
+    transition-property: background-color, box-shadow, transform;
+    transition-timing-function: var(--ki-motion-easing-out);
+  }
+
+  [part="icon"] {
+    transition-duration: var(--ki-motion-duration-fast);
+    transition-property: transform;
+    transition-timing-function: var(--ki-motion-easing-out);
+  }
+
+  button:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+
+  button:active:not(:disabled) [part="icon"] {
+    transform: scale(0.92);
+  }
 }

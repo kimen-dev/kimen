@@ -10,37 +10,37 @@
         "$description": "dimension used by the list component for padding."
       },
       "gap": {
-        "$value": "{ki.space.xs}",
-        "$description": "dimension used by the list component for gap."
+        "$value": "{ki.space.zero}",
+        "$description": "dimension used by the list component for gap (MarsUI compositions stack rows contiguously; --ki-list-gap stays as the theme hook)."
       },
       "item": {
         "min-height": {
-          "$value": "{ki.space.14xl}",
-          "$description": "dimension used by the list component for item min height."
+          "$value": "{ki.space.12xl}",
+          "$description": "dimension used by the list component for item min height (MarsUI md text-only row is ~40px content-sized: 20px line + 2x10 padding)."
         },
         "min-height-multiline": {
-          "$value": "{ki.space.18xl}",
-          "$description": "dimension used by the list component for item min height multiline."
+          "$value": "{ki.space.16xl}",
+          "$description": "dimension used by the list component for multiline item min height (MarsUI md two-line row measures 56px)."
         },
         "padding-inline": {
           "$value": "{ki.space.md}",
           "$description": "dimension used by the list component for item padding inline."
         },
         "padding-block": {
-          "$value": "{ki.space.sm}",
-          "$description": "dimension used by the list component for item padding block."
+          "$value": "{ki.space.lg}",
+          "$description": "dimension used by the list component for item padding block (MarsUI md rows: Space/lg 10px)."
         },
         "gap": {
-          "$value": "{ki.space.md}",
-          "$description": "dimension used by the list component for item gap."
+          "$value": "{ki.space.xl}",
+          "$description": "dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions)."
         },
         "radius": {
           "$value": "{ki.radius.0}",
           "$description": "dimension used by the list component for item radius."
         },
         "divider-width": {
-          "$value": "{ki.size.border.hairline}",
-          "$description": "dimension used by the list component for item divider width."
+          "$value": "{ki.space.zero}",
+          "$description": "dimension used by the list component for item divider width (no divider renders in any master variant; the color hook ki.list.item.divider-color stays so consumers can opt hairlines back in)."
         },
         "divider-color": {
           "$value": "{ki.outline.base-em}",
@@ -51,8 +51,8 @@
           "$description": "dimension used by the list component for item primary font size."
         },
         "primary-line-height": {
-          "$value": "{ki.typography.line-height.body-1}",
-          "$description": "dimension used by the list component for item primary line height."
+          "$value": "{ki.typography.line-height.para}",
+          "$description": "dimension used by the list component for primary line height (MarsUI primary is UI/Para/medium 13/20, not UI/Body 1 13/24)."
         },
         "primary-font-weight": {
           "$value": "{ki.typography.weight.body.medium}",
@@ -63,12 +63,12 @@
           "$description": "color used by the list component for item primary foreground."
         },
         "secondary-font-size": {
-          "$value": "{ki.typography.size.caption-1}",
-          "$description": "dimension used by the list component for item secondary font size."
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the list component for secondary font size (MarsUI description line is UI/Caption 2: 12px)."
         },
         "secondary-line-height": {
-          "$value": "{ki.typography.line-height.caption-1}",
-          "$description": "dimension used by the list component for item secondary line height."
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the list component for secondary line height (MarsUI caption_2 16px; same value as before with the correct provenance)."
         },
         "secondary-font-weight": {
           "$value": "{ki.typography.weight.body.normal}",

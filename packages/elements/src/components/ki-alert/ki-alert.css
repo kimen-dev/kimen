@@ -69,6 +69,12 @@
   line-height: var(--_ki-alert-line-height);
 }
 
+/* MarsUI Alert master close button (12074:6202): a raised 24px circular chip
+ * — 1px Outline/secondary_button_top bevel, Surface/special light-s0/dark-s2
+ * fill, Component_effect/secondary_default shadow pair (drop + inner White/3
+ * highlight) and the 12px glass backdrop blur — same construction as the
+ * secondary ki-button. Stencil does not autoprefix: the -webkit- alias ships
+ * explicitly for Safari. */
 [part="dismiss"] {
   display: inline-grid;
   flex: 0 0 auto;
@@ -78,9 +84,17 @@
   min-block-size: var(--_ki-alert-dismiss-size);
   padding-block: 0;
   padding-inline: 0;
-  border: var(--_ki-alert-border-width) solid var(--ki-outline-none);
-  border-radius: var(--_ki-alert-radius);
-  background: var(--ki-outline-none);
+  border: var(--ki-alert-dismiss-border-width) solid var(--ki-outline-secondary-button-top);
+  border-radius: var(--ki-alert-dismiss-radius);
+  background-color: var(--ki-surface-special-light-s0-dark-s2);
+
+  /* MarsUI hover mechanism: the Black/3 wash composites over the rest fill
+   * as a flat gradient layer; at rest nothing paints (fallback none). */
+  background-image: var(--_ki-alert-dismiss-overlay-image, none);
+  box-shadow: var(--ki-effect-component-secondary-default-shadow);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: blur(var(--ki-effect-component-backdrop-blur));
+  backdrop-filter: blur(var(--ki-effect-component-backdrop-blur));
   color: var(--_ki-alert-dismiss-fg);
   font: inherit;
 }
@@ -88,6 +102,10 @@
 @media (hover: hover) {
   [part="dismiss"]:hover {
     --_ki-alert-dismiss-fg: var(--ki-alert-dismiss-hover-fg);
+    --_ki-alert-dismiss-overlay-image: linear-gradient(
+      var(--ki-alert-dismiss-hover-bg),
+      var(--ki-alert-dismiss-hover-bg)
+    );
   }
 }
 
@@ -99,8 +117,12 @@
   /* MarsUI Focus/primary: 3px 40%-alpha spread ring
      (specs/002-ki-button/design-extraction.md §2.5). The opaque 2px outline
      stays as the WCAG 1.4.11-proof indicator: the soft ring alone is below
-     3:1 against adjacent surfaces. */
-  box-shadow: var(--_ki-alert-focus-ring-shadow);
+     3:1 against adjacent surfaces. The chip's resting effect pair stays
+     underneath so focus never flattens the raised chrome. */
+  --_ki-alert-dismiss-focus-shadow:
+    var(--_ki-alert-focus-ring-shadow), var(--ki-effect-component-secondary-default-shadow);
+
+  box-shadow: var(--_ki-alert-dismiss-focus-shadow);
   outline: var(--_ki-alert-focus-ring-width) solid var(--_ki-alert-focus-ring-color);
   outline-offset: var(--_ki-alert-focus-ring-offset);
 }
@@ -113,7 +135,10 @@
 .live {
   display: grid;
   flex: 1 1 auto;
-  gap: var(--_ki-alert-gap);
+
+  /* MarsUI Text_wrap: heading→description stack gap is Space/xs (4px), not
+   * the outer 12px card gap. */
+  gap: var(--ki-alert-text-gap);
 }
 
 [part="heading"] {
@@ -125,4 +150,40 @@
 
 [part="message"] {
   display: block;
+
+  /* MarsUI description: 13/20 (line_height/para) while the heading keeps
+   * the body ramp. */
+  line-height: var(--ki-alert-message-line-height);
+}
+
+/* Micro-motion (Art. V): transform/opacity/box-shadow/background-color only,
+ * gated so reduced-motion environments (and the visual harness) stay static
+ * by construction — the ki-switch/ki-dialog gating shape. */
+@media (prefers-reduced-motion: no-preference) {
+  [part="alert"] {
+    animation: ki-alert-in var(--ki-motion-duration-medium-1) var(--ki-motion-easing-out);
+  }
+
+  [part="dismiss"] {
+    transition:
+      background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+  }
+
+  [part="dismiss"]:active {
+    transform: scale(0.96);
+  }
+}
+
+@keyframes ki-alert-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ki-motion-distance-sm));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }

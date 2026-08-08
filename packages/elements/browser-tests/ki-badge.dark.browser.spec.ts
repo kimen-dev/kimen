@@ -25,6 +25,12 @@ function injectStylesheet(): void {
   style.id = STYLE_ID;
   style.textContent = tokensCss;
   document.head.appendChild(style);
+  // The fidelity pass moved tone pills onto alpha surfaces
+  // (ki.surface.<tone>-base-em-alpha), which presume the scheme's page
+  // surface behind them — the same s0 every other dark spec paints. Without
+  // it the 12% wash composites over the tester's white page and axe measures
+  // a colour pair no themed page ever shows.
+  document.body.style.backgroundColor = 'var(--ki-surface-s0)';
 }
 
 function landmark(): HTMLElement {
@@ -44,6 +50,11 @@ async function mount(tone: string): Promise<HTMLElement> {
   await customElements.whenDefined('ki-badge');
   const deadline = Date.now() + 2000;
   while (!el.shadowRoot?.querySelector('[part="badge"]') && Date.now() < deadline) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  // Axe contrast scans wait out the one-shot opacity entrance.
+  const settleDeadline = Date.now() + 2000;
+  while (el.getAnimations({ subtree: true }).length > 0 && Date.now() < settleDeadline) {
     await new Promise((resolve) => requestAnimationFrame(resolve));
   }
   return el;

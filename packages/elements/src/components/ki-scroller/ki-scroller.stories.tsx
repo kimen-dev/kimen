@@ -17,9 +17,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<JSX.KiScroller>;
 
-const proseStyle = {
-  fontFamily: 'var(--ki-typography-family-body)',
-  color: 'var(--ki-text-high-em)',
+// Explicit demo frames (spacing tokens are not layout sizes) with a visible
+// boundary so the clipping bound reads even on overlay-scrollbar platforms.
+// Story text inherits body_1/high-em from the workshop canvas contract.
+const frameStyle = {
+  border: '1px solid var(--ki-outline-low-em)',
+  borderRadius: 'var(--ki-radius-md)',
 };
 
 /**
@@ -28,11 +31,8 @@ const proseStyle = {
  */
 export const Playground: Story = {
   render: (args) => (
-    <ki-scroller
-      {...args}
-      style={{ blockSize: 'var(--ki-space-24xl)', inlineSize: 'var(--ki-space-26xl)' }}
-    >
-      <div style={proseStyle}>
+    <ki-scroller {...args} style={{ ...frameStyle, blockSize: '12rem', inlineSize: '20rem' }}>
+      <div style={{ paddingInline: 'var(--ki-space-md)' }}>
         {Array.from({ length: 12 }, (_, index) => (
           <p>
             Release note {index + 1}: the indicator is the native scrollbar, restyled by tokens.
@@ -50,18 +50,17 @@ export const HorizontalTimeline: Story = {
       {...args}
       orientation="horizontal"
       label="Weekly timeline"
-      style={{ inlineSize: 'var(--ki-space-26xl)' }}
+      style={{ ...frameStyle, inlineSize: '20rem' }}
     >
       <div
         style={{
           display: 'flex',
           gap: 'var(--ki-space-md)',
           inlineSize: 'max-content',
-          ...proseStyle,
         }}
       >
         {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
-          <div style={{ inlineSize: 'var(--ki-space-22xl)' }}>{day}</div>
+          <div style={{ inlineSize: '5rem' }}>{day}</div>
         ))}
       </div>
     </ki-scroller>
