@@ -5,11 +5,15 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-status.js';
 import { expectAccessible } from './axe';
 
 type KiStatusElement = HTMLElement & { tone: string; ring: boolean; label?: string };
+
+const browserCommands = commands as unknown as {
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
+};
 
 const STYLE_ID = 'ki-status-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-status-browser-material3-token-style';
@@ -307,8 +311,12 @@ describe('ki-status', () => {
     await expectAccessible(document.body);
   });
 
-  it('S2 crossfades tone changes with paint-only motion from the motion tokens', async () => {
+  it('S10 crossfades tone changes with paint-only motion from the motion tokens', async () => {
     cleanup();
+    // Explicit emulation: sibling spec files (visual galleries, motion
+    // contracts) emulate `reduce` on the same page, so relying on the runner
+    // default makes this assertion order-dependent (CI-observed flake).
+    await browserCommands.emulateReducedMotion('no-preference');
     const el = await mount(landmark(), { label: 'Online', tone: 'success' });
     const dot = dotOf(el);
     const computed = getComputedStyle(dot);
@@ -326,5 +334,6 @@ describe('ki-status', () => {
     for (const duration of computed.transitionDuration.split(',')) {
       expect(Number.parseFloat(duration)).toBeCloseTo(0.12, 2);
     }
+    await browserCommands.emulateReducedMotion(null);
   });
 });

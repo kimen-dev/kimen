@@ -1,7 +1,7 @@
 {
   "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
   "baselineVersion": "0.0.0",
-  "candidateSha256": "785e16323b484ec3cfa56b64a9d60b338542360546faf90737a37d3e685b1c41",
+  "candidateSha256": "fbcc8c5083be6ae386458e529ca94a52bc4de11a2507afd4d3968cee355fd031",
   "packages": [
     "@kimen/elements",
     "@kimen/tokens"

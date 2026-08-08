@@ -46,7 +46,7 @@ async function mountList(): Promise<HTMLElement> {
 }
 
 describe('ki-list with reduced motion', () => {
-  it('suppresses the mount stagger and item transitions, rendering rows opaque at once', async () => {
+  it('S12 suppresses the mount stagger and item transitions, rendering rows opaque at once', async () => {
     const list = await mountList();
     const items = [...list.querySelectorAll('ki-list-item')];
     expect(items).toHaveLength(3);

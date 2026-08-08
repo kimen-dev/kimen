@@ -130,14 +130,30 @@ export class KiProgress {
   }
 
   private renderCircular() {
-    // The user grid matches the default 40px size token, so the CSS
-    // stroke-width token (4px) renders 1:1 and the ring's outer edge fills
-    // the box: r = (40 − track-width) / 2 = 18. If a theme diverges the
-    // track-width token from 4px the stroke thickens around r = 18.
+    // The user grid matches the default 40px size token (ring outer edge at
+    // r = 18 fills the box at 4px stroke). non-scaling-stroke keeps the CSS
+    // stroke-width token in screen pixels, so the public size and
+    // track-width tokens stay independent: a theme or consumer resizing the
+    // ring (material3 ships 48px) never thickens the stroke. Dash geometry
+    // is already scale-free via pathLength="100".
     return (
       <svg viewBox="0 0 40 40" aria-hidden="true">
-        <circle part="track" cx="20" cy="20" r="18" pathLength="100" />
-        <circle part="indicator" cx="20" cy="20" r="18" pathLength="100" />
+        <circle
+          part="track"
+          cx="20"
+          cy="20"
+          r="18"
+          pathLength="100"
+          vector-effect="non-scaling-stroke"
+        />
+        <circle
+          part="indicator"
+          cx="20"
+          cy="20"
+          r="18"
+          pathLength="100"
+          vector-effect="non-scaling-stroke"
+        />
       </svg>
     );
   }

@@ -70,3 +70,12 @@ Feature: Status
     Given a page forcing the dark color scheme under the onmars theme
     When the page renders
     Then the dot's appearance resolves from the dark token values
+
+  # Motion is decorative by contract; S2 stays retired, so the crossfade
+  # contract takes the next unused ID.
+  # S10
+  Scenario: Tone changes crossfade with paint-only motion
+    Given a status dot labeled "Online" with tone "success"
+    When the tone changes to "danger"
+    Then the dot's fill and ring crossfade without moving or resizing the dot
+    And a user whose system prefers reduced motion sees the new tone instantly

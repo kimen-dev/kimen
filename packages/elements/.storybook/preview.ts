@@ -30,13 +30,21 @@ setCustomElementsManifest(customElements);
 
 // Same registration pattern as browser-tests/visual/harness.ts: Inter
 // resolves the onmars `--ki-font-family-body`, Roboto the material3 one.
-for (const [family, url] of [
-  ['Inter', interWoff2Url],
-  ['Roboto', robotoWoff2Url],
-] as const) {
-  const face = new FontFace(family, `url(${url}) format('woff2')`, { weight: '100 900' });
-  void face.load().then(() => document.fonts.add(face));
-}
+// Faces register up front (so document.fonts.ready tracks them) and the
+// awaited Storybook loader below is the readiness barrier: no story renders
+// with fallback glyph metrics on a cold load.
+const fixtureFontsLoaded = Promise.all(
+  (
+    [
+      ['Inter', interWoff2Url],
+      ['Roboto', robotoWoff2Url],
+    ] as const
+  ).map(async ([family, url]) => {
+    const face = new FontFace(family, `url(${url}) format('woff2')`, { weight: '100 900' });
+    document.fonts.add(face);
+    await face.load();
+  }),
+);
 
 // Body text metrics for light-DOM story content (labels, slotted spans):
 // base.css paints :root; this pins the workshop's default text to body_1 so
@@ -59,6 +67,12 @@ for (const [exportName, exported] of Object.entries(components)) {
 }
 
 const preview: Preview = {
+  loaders: [
+    async () => {
+      await fixtureFontsLoaded;
+      return {};
+    },
+  ],
   parameters: {
     docs: {
       source: {

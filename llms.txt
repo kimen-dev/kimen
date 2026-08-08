@@ -784,6 +784,9 @@ CSS custom properties:
 - `--ki-dialog-bg-start`: color used by the dialog component for the glass gradient start (MarsUI Surface/Special/blur_base_light White/80; dark resolves rgba(36,36,36,0.8)). Paint background: linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end)).
 - `--ki-dialog-border`: border used by the dialog component for border (MarsUI 1px solid Outline/base_em Black/3 light / White/3 dark; retires the migrated Black/5 foundation reference).
 - `--ki-dialog-fg`: color used by the dialog component for foreground.
+- `--ki-dialog-focus-ring-color`: color used by the dialog component for focus ring color.
+- `--ki-dialog-focus-ring-offset`: dimension used by the dialog component for focus ring offset.
+- `--ki-dialog-focus-ring-width`: dimension used by the dialog component for focus ring width.
 - `--ki-dialog-gap`: dimension used by the dialog component for gap.
 - `--ki-dialog-heading-font-size`: dimension used by the dialog component for heading font size.
 - `--ki-dialog-heading-font-weight`: font weight used by the dialog component for heading font weight.
