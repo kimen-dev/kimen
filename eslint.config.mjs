@@ -25,6 +25,9 @@ export default tseslint.config(
       '**/storybook-static/**',
       'site-dist/**',
       'reports/**',
+      // Astro generated types for the docs site (site/docs/.astro); gitignored
+      // build artifacts, same class as **/generated/**.
+      '**/.astro/**',
     ],
   },
   js.configs.recommended,

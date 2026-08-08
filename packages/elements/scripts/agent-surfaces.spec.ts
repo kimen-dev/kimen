@@ -6,11 +6,14 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
+  buildGenUiSection,
   buildLlmsTxt,
   buildManifest,
+  buildRootLlmsTxt,
   normalizeDocs,
   serializeJson,
   validateDocs,
+  validateGenUiSurfaces,
 } from './agent-surfaces.mjs';
 import { runBuildSurfaces } from './build-surfaces.mjs';
 
@@ -173,6 +176,84 @@ const readKiDialogDocs = async () => {
 
 const guidance = (component: { docsTags?: { name: string; text: string }[] }, name: string) =>
   component.docsTags?.find((tag) => tag.name === name)?.text;
+
+interface GenUiEntryPoint {
+  name: string;
+  signature?: string;
+  summary: string;
+}
+
+interface GenUiPackage {
+  directory: string;
+  whenToUse: string;
+  whenNotToUse: string;
+  entryPoints: GenUiEntryPoint[];
+}
+
+interface GenUiSurfaces {
+  intro: string[];
+  packages: GenUiPackage[];
+}
+
+interface GenUiPackageSource {
+  directory: string;
+  packageJson: { name: string; description: string };
+  indexSource: string;
+}
+
+const genUiFixture: GenUiSurfaces = {
+  intro: ['GenUI layer intro prose.'],
+  packages: [
+    {
+      directory: 'packages/catalog',
+      whenToUse: 'Guard agent-emitted UI at the GenUI boundary.',
+      whenNotToUse: 'Hand-authored pages that never render agent output.',
+      entryPoints: [
+        {
+          name: 'validateUiSpec',
+          signature: 'validateUiSpec(input, options?) => ValidationReport',
+          summary: 'Accepts or rejects an agent-emitted UI spec.',
+        },
+        { name: 'catalogData', summary: 'The generated catalog document.' },
+      ],
+    },
+  ],
+};
+
+const genUiPackagesFixture: GenUiPackageSource[] = [
+  {
+    directory: 'packages/catalog',
+    packageJson: { name: '@kimen/catalog', description: 'Neutral catalog fixture.' },
+    indexSource: [
+      "export { validateUiSpec } from './validate.js';",
+      "export { catalogData } from './generated/catalog.js';",
+      '',
+    ].join('\n'),
+  },
+];
+
+const workspaceRoot = new URL('../../..', import.meta.url);
+const readWorkspaceGenUi = async (): Promise<{
+  genUi: GenUiSurfaces;
+  packages: GenUiPackageSource[];
+}> => {
+  const genUi = (await readJson(
+    new URL('docs/genui-surfaces.json', workspaceRoot),
+  )) as GenUiSurfaces;
+  const packages = await Promise.all(
+    genUi.packages.map(async (entry) => ({
+      directory: entry.directory,
+      packageJson: (await readJson(
+        new URL(`${entry.directory}/package.json`, workspaceRoot),
+      )) as GenUiPackageSource['packageJson'],
+      indexSource: await readFile(
+        new URL(`${entry.directory}/src/index.ts`, workspaceRoot),
+        'utf8',
+      ),
+    })),
+  );
+  return { genUi, packages };
+};
 
 describe('agent surfaces', () => {
   it('S6 normalizeDocs removes timestamps, absolute reference paths, and serializes stable bytes', async () => {
@@ -547,6 +628,130 @@ describe('agent surfaces', () => {
       expect(artifact).not.toContain('"timestamp"');
       expect(artifact).not.toMatch(/\/Users\/|\/home\/|[A-Z]:\\/);
     }
+  });
+
+  it('S2 buildGenUiSection renders each GenUI package with guidance and entry points', () => {
+    const section = buildGenUiSection(genUiFixture, genUiPackagesFixture);
+
+    expect(section.startsWith('## GenUI layer')).toBe(true);
+    expect(section).toContain('GenUI layer intro prose.');
+    expect(section).toContain('### @kimen/catalog');
+    expect(section).toContain('Neutral catalog fixture.');
+    expect(section).toContain('When to use: Guard agent-emitted UI at the GenUI boundary.');
+    expect(section).toContain(
+      'When NOT to use: Hand-authored pages that never render agent output.',
+    );
+    expect(section).toContain(
+      'Entry points:\n- `validateUiSpec(input, options?) => ValidationReport`: Accepts or rejects an agent-emitted UI spec.',
+    );
+    expect(section).toContain('- `catalogData`: The generated catalog document.');
+    expect(section.endsWith('\n')).toBe(true);
+    expect(section.endsWith('\n\n')).toBe(false);
+  });
+
+  it('S2 buildRootLlmsTxt appends the GenUI section after the elements summary', async () => {
+    const docs = normalizeDocs(await readJson(docsUrl));
+    const llmsTxt = buildLlmsTxt(docs, (await readJson(pkgUrl)) as PackageFixture, preamble);
+    const section = buildGenUiSection(genUiFixture, genUiPackagesFixture);
+    const root = buildRootLlmsTxt(llmsTxt, section);
+
+    expect(root.startsWith(llmsTxt)).toBe(true);
+    expect(root).toBe(`${llmsTxt}\n${section}`);
+  });
+
+  it('S4 validateGenUiSurfaces reports blank guidance, blank summaries and unexported entry points', () => {
+    const invalid: GenUiSurfaces = {
+      intro: ['GenUI layer intro prose.'],
+      packages: [
+        {
+          directory: 'packages/catalog',
+          whenToUse: 'Guard agent-emitted UI at the GenUI boundary.',
+          whenNotToUse: ' ',
+          entryPoints: [
+            {
+              name: 'validateUiSpec',
+              signature: 'validateUiSpec(input, options?) => ValidationReport',
+              summary: '',
+            },
+            { name: 'notAnExport', summary: 'The generated catalog document.' },
+          ],
+        },
+      ],
+    };
+
+    expect(validateGenUiSurfaces(genUiFixture, genUiPackagesFixture)).toEqual([]);
+    expect(validateGenUiSurfaces(invalid, genUiPackagesFixture)).toEqual(
+      expect.arrayContaining([
+        'packages/catalog: missing whenNotToUse guidance',
+        'packages/catalog.validateUiSpec: entry point summary is empty',
+        'packages/catalog.notAnExport: entry point is not exported from src/index.ts',
+      ]),
+    );
+  });
+
+  it('S2 shipped GenUI sources describe the catalog and both adapters from real exports', async () => {
+    const { genUi, packages } = await readWorkspaceGenUi();
+
+    expect(genUi.packages.map((entry) => entry.directory)).toEqual([
+      'packages/catalog',
+      'packages/adapter-a2ui',
+      'packages/adapter-mcp-apps',
+    ]);
+    expect(validateGenUiSurfaces(genUi, packages)).toEqual([]);
+    expect(genUi.packages.flatMap((entry) => entry.entryPoints.map(({ name }) => name))).toEqual(
+      expect.arrayContaining([
+        'validateUiSpec',
+        'renderUiSpec',
+        'createStreamingRenderer',
+        'createA2uiAdapter',
+        'createKimenSurfaceResource',
+        'declareToolSurface',
+        'surfaceToolResult',
+        'createSurfaceBridge',
+      ]),
+    );
+
+    const section = buildGenUiSection(genUi, packages);
+    expect(section).toContain('### @kimen/catalog');
+    expect(section).toContain('### @kimen/adapter-a2ui');
+    expect(section).toContain('### @kimen/adapter-mcp-apps');
+  });
+
+  it('S4 runBuildSurfaces rejects a GenUI entry point missing from its package entry module', async () => {
+    const tmp = await mkdtemp(join(tmpdir(), 'kimen-genui-'));
+    const docs = normalizeDocs(await readFixture('path-a-docs.json'));
+    await writeFile(join(tmp, 'docs.json'), serializeJson(docs));
+    await writeFile(
+      join(tmp, 'genui.json'),
+      serializeJson({
+        intro: ['Fixture intro.'],
+        packages: [
+          {
+            directory: 'packages/catalog',
+            whenToUse: 'Fixture guidance.',
+            whenNotToUse: 'Fixture guidance.',
+            entryPoints: [{ name: 'notAnExport', summary: 'Missing symbol.' }],
+          },
+        ],
+      }),
+    );
+
+    const result = await runBuildSurfaces({
+      docsPath: join(tmp, 'docs.json'),
+      packageJsonPath: new URL('../package.json', packageRoot),
+      preamblePath: new URL('./fixtures/path-a-docs.json', import.meta.url),
+      manifestPath: join(tmp, 'custom-elements.json'),
+      packageLlmsPath: join(tmp, 'llms.txt'),
+      rootLlmsPath: join(tmp, 'root-llms.txt'),
+      packageRoot: tmp,
+      genUiPath: join(tmp, 'genui.json'),
+    });
+
+    await rm(tmp, { recursive: true, force: true });
+    expect(result.ok).toBe(false);
+    expect(result.stderr).toContain(
+      'packages/catalog.notAnExport: entry point is not exported from src/index.ts',
+    );
   });
 
   it('S5 reusable core wires a surfaces-sync gate over every committed surface', async () => {

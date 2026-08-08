@@ -265,6 +265,108 @@ export function buildLlmsTxt(docs, pkg, preamble, inputs = {}) {
   return `${lines.join('\n')}\n`;
 }
 
+/**
+ * Validates the hand-written GenUI surface source (docs/genui-surfaces.json)
+ * against the real packages before anything renders into the root llms.txt
+ * (Art. I: the artifact stays generated; only its sources are hand-written).
+ * `packages` carries one loaded entry per genUi package, aligned by
+ * directory: { directory, packageJson, indexSource }.
+ */
+export function validateGenUiSurfaces(genUi, packages) {
+  const violations = [];
+  const sources = new Map(packages.map((entry) => [entry.directory, entry]));
+
+  if (!Array.isArray(genUi.packages) || genUi.packages.length === 0) {
+    return ['genui-surfaces: packages must be a non-empty array'];
+  }
+
+  for (const entry of genUi.packages) {
+    const directory = entry.directory ?? '<unknown>';
+    const source = sources.get(entry.directory);
+    if (source === undefined) {
+      violations.push(`${directory}: package sources were not loaded`);
+      continue;
+    }
+    if (isBlank(source.packageJson?.name)) {
+      violations.push(`${directory}: package.json name is empty`);
+    }
+    if (isBlank(source.packageJson?.description)) {
+      violations.push(`${directory}: package.json description is empty`);
+    }
+    for (const tagName of ['whenToUse', 'whenNotToUse']) {
+      if (isBlank(entry[tagName])) {
+        violations.push(`${directory}: missing ${tagName} guidance`);
+      }
+    }
+    if (!Array.isArray(entry.entryPoints) || entry.entryPoints.length === 0) {
+      violations.push(`${directory}: entry points are empty`);
+      continue;
+    }
+    for (const entryPoint of entry.entryPoints) {
+      if (isBlank(entryPoint.name)) {
+        violations.push(`${directory}: entry point has no name`);
+        continue;
+      }
+      if (isBlank(entryPoint.summary)) {
+        violations.push(`${directory}.${entryPoint.name}: entry point summary is empty`);
+      }
+      // Word-boundary presence in the package entry module: src/index.ts is
+      // (by repo convention) a pure re-export surface, so a documented symbol
+      // that no longer appears there was renamed or removed — fail loudly
+      // instead of shipping a stale agent surface.
+      const escapedName = entryPoint.name.replaceAll(/[$()*+.?[\\\]^{|}]/gu, String.raw`\$&`);
+      if (!new RegExp(`\\b${escapedName}\\b`, 'u').test(source.indexSource)) {
+        violations.push(
+          `${directory}.${entryPoint.name}: entry point is not exported from src/index.ts`,
+        );
+      }
+    }
+  }
+
+  return violations;
+}
+
+/**
+ * The GenUI layer section appended to the ROOT llms.txt only: the per-package
+ * llms.txt stays elements-only (it ships inside the @kimen/elements tarball
+ * and its fenced examples are executed against packed tarballs at release).
+ */
+export function buildGenUiSection(genUi, packages) {
+  const sources = new Map(packages.map((entry) => [entry.directory, entry]));
+  const lines = ['## GenUI layer', '', (genUi.intro ?? []).join('\n')];
+
+  for (const entry of genUi.packages ?? []) {
+    const { packageJson } = sources.get(entry.directory);
+    lines.push(
+      '',
+      `### ${packageJson.name}`,
+      '',
+      oneLine(packageJson.description),
+      '',
+      `When to use: ${oneLine(entry.whenToUse ?? '')}`,
+      `When NOT to use: ${oneLine(entry.whenNotToUse ?? '')}`,
+      '',
+      renderList(
+        'Entry points',
+        (entry.entryPoints ?? []).map(
+          (entryPoint) =>
+            `\`${entryPoint.signature ?? entryPoint.name}\`: ${oneLine(entryPoint.summary ?? '')}`,
+        ),
+      ),
+    );
+  }
+
+  return `${lines.join('\n')}\n`;
+}
+
+/**
+ * The root llms.txt extends the package one: the full elements summary first
+ * (unchanged bytes), then the GenUI layer section separated by a blank line.
+ */
+export function buildRootLlmsTxt(llmsTxt, genUiSection) {
+  return `${llmsTxt}\n${genUiSection}`;
+}
+
 function cssPropertiesFor(component, inputs) {
   if (inputs.cssPropertiesByTag !== undefined) {
     return (inputs.cssPropertiesByTag[component.tag] ?? []).map((style) => ({
