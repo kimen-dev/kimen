@@ -19,6 +19,10 @@ export default tseslint.config(
       // Local agent-session tooling; gitignored, but `eslint .` still walks it
       // and its timestamp droppings can carry code-like extensions (.ts).
       '.remember/**',
+      // Founder-private working area (.gitignore); CI never sees it, but
+      // `eslint .` walks it on founder machines and design-tool exports
+      // carry code-like extensions (.js) outside any tsconfig project.
+      'internal/**',
       '**/loader/**',
       '**/generated/**',
       '**/www/**',
