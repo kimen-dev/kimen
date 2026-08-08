@@ -2821,6 +2821,18 @@
               "description": "color used by the dialog component for foreground."
             },
             {
+              "name": "--ki-dialog-focus-ring-color",
+              "description": "color used by the dialog component for focus ring color."
+            },
+            {
+              "name": "--ki-dialog-focus-ring-offset",
+              "description": "dimension used by the dialog component for focus ring offset."
+            },
+            {
+              "name": "--ki-dialog-focus-ring-width",
+              "description": "dimension used by the dialog component for focus ring width."
+            },
+            {
               "name": "--ki-dialog-gap",
               "description": "dimension used by the dialog component for gap."
             },

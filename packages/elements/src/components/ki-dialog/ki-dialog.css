@@ -64,10 +64,13 @@
   outline: none;
 }
 
-/* MarsUI Focus/primary: the system 3px alpha ring composited over the resting
- * elevation, replacing the retired 2px opaque dialog-local outline pair. */
+/* Double focus mechanism (same contract as ki-button): the opaque outline is
+ * the WCAG 1.4.11 indicator — entry focus can land on this surface when the
+ * dialog has no focusable descendant, and the 3px alpha glow alone sits below
+ * 3:1 against the page — plus the MarsUI Focus/primary ring as the glow. */
 [part="dialog"]:focus-visible {
-  outline: none;
+  outline: var(--ki-dialog-focus-ring-width) solid var(--ki-dialog-focus-ring-color);
+  outline-offset: var(--ki-dialog-focus-ring-offset);
   box-shadow: var(--_ki-dialog-focus-shadow);
 }
 

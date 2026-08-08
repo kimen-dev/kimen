@@ -1,7 +1,7 @@
 :host {
   --_ki-select-bg: var(--ki-select-rest-bg);
   --_ki-select-fg: var(--ki-select-rest-fg);
-  --_ki-select-border: var(--ki-select-focus-border);
+  --_ki-select-border: var(--ki-select-rest-border);
   --_ki-select-label-fg: var(--ki-select-rest-label-fg);
   --_ki-option-bg: var(--ki-option-rest-bg);
   --_ki-option-fg: var(--ki-option-rest-fg);
@@ -93,7 +93,7 @@
 [part="trigger"]:focus-visible {
   --_ki-select-bg: var(--ki-select-focus-bg);
   --_ki-select-fg: var(--ki-select-focus-fg);
-  --_ki-select-border: var(--ki-select-rest-border);
+  --_ki-select-border: var(--ki-select-focus-border);
 
   box-shadow:
     var(--ki-select-focus-ring-shadow), var(--ki-effect-component-secondary-default-shadow);

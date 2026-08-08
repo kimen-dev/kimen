@@ -60,7 +60,7 @@ function readTokenShadow(name: string): string {
 }
 
 describe('ki-card with reduced motion', () => {
-  it('suppresses the entrance animation and elevation transition, keeping end states', async () => {
+  it('S9 suppresses the entrance animation and elevation transition, keeping end states', async () => {
     const el = await mount();
     const card = cardPart(el);
 

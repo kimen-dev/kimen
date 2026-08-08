@@ -464,6 +464,18 @@ describe('ki-progress in a real browser', () => {
     expect(getComputedStyle(svg).inlineSize).toBe(
       readToken('--ki-progress-circular-size', 'inlineSize'),
     );
+
+    // Size and track-width tokens are INDEPENDENT: non-scaling-stroke keeps
+    // the painted stroke in screen pixels, so resizing the ring (material3
+    // ships 48px; consumers may pick any size) must not thicken the track.
+    expect(indicator(el).getAttribute('vector-effect')).toBe('non-scaling-stroke');
+    el.style.setProperty('--ki-progress-circular-size', '48px');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(getComputedStyle(svg).inlineSize).toBe('48px');
+    expect(getComputedStyle(indicator(el)).strokeWidth).toBe(
+      readToken('--ki-progress-circular-track-width', 'inlineSize'),
+    );
+    el.style.removeProperty('--ki-progress-circular-size');
   });
 
   it('S2 rounds the arc caps to match the linear pill language', async () => {

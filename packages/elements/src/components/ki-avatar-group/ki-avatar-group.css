@@ -11,12 +11,17 @@
 
 :host {
   --_group-overlap: var(--ki-avatar-group-md-overlap);
+  --_enter-sign: 1;
   --_group-counter-size: var(--ki-avatar-md-size);
   --_group-counter-padding-inline: var(--ki-avatar-group-md-counter-padding-inline);
   --_group-counter-font-size: var(--ki-avatar-group-md-counter-font-size);
 
   display: inline-flex;
   font-family: var(--ki-avatar-font-family);
+}
+
+:host(:dir(rtl)) {
+  --_enter-sign: -1;
 }
 
 ::slotted(ki-avatar) {
@@ -178,7 +183,11 @@
   @keyframes ki-avatar-group-enter {
     from {
       opacity: 0;
-      transform: translateX(calc(-0.25 * var(--_group-overlap)));
+
+      /* --_enter-sign mirrors the slide so members always travel from
+       * inline-start (RTL flips the stack via margin-inline-start; a
+       * physical translateX would cross the preceding avatar). */
+      transform: translateX(calc(-0.25 * var(--_group-overlap) * var(--_enter-sign, 1)));
     }
   }
 
