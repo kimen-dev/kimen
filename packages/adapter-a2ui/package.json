@@ -25,9 +25,9 @@
     "@kimen/catalog": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^26.1.0",
+    "@types/node": "26.1.0",
     "happy-dom": "20.11.1",
-    "vitest": "^4.1.10"
+    "vitest": "4.1.10"
   },
   "nx": {
     "tags": [
