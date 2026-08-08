@@ -5,6 +5,11 @@
 
   box-sizing: border-box;
   display: block;
+
+  /* The panel pins its own scheme-correct foreground: slotted copy must stay
+     readable on whatever ground the transparent panel sits on, page contract
+     or not (fixes black-on-black panel text under the dark scheme). */
+  color: var(--ki-tab-panel-fg);
   background: var(--_ki-tab-panel-bg);
   outline: none;
   font-family: var(--ki-typography-family-body);
@@ -21,7 +26,26 @@
 
 [part="panel"] {
   box-sizing: border-box;
+
+  /* Kimen-owned value, not MarsUI-derived: the Tab_nav masters define only
+     the bar, so the 10px panel inset has no Figma reference to match. */
   padding-block: var(--ki-tab-panel-padding-block);
   padding-inline: var(--ki-tab-panel-padding-inline);
   background: var(--_ki-tab-panel-bg);
+}
+
+/* Micro-motion (Art. V): the freshly revealed panel fades in and settles up
+ * 4px. Gated behind reduced motion (ki-switch/ki-checkbox pattern) so the
+ * visual harness and reduced-motion users get the final frame instantly. */
+@media (prefers-reduced-motion: no-preference) {
+  :host(:not([hidden])) [part="panel"] {
+    animation: ki-tab-panel-enter var(--ki-motion-duration-medium-1) var(--ki-motion-easing-out);
+  }
+
+  @keyframes ki-tab-panel-enter {
+    from {
+      opacity: 0;
+      transform: translateY(var(--ki-motion-distance-sm));
+    }
+  }
 }

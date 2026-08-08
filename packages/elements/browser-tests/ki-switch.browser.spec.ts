@@ -119,6 +119,41 @@ function trackPart(el: KiSwitchElement): HTMLElement {
   return track as HTMLElement;
 }
 
+function thumbPart(el: KiSwitchElement): HTMLElement {
+  const thumb = el.shadowRoot?.querySelector('[part="thumb"]');
+  expect(thumb).toBeInstanceOf(HTMLElement);
+  return thumb as HTMLElement;
+}
+
+function labelPart(el: KiSwitchElement): HTMLElement {
+  const label = el.shadowRoot?.querySelector('[part="label"]');
+  expect(label).toBeInstanceOf(HTMLElement);
+  return label as HTMLElement;
+}
+
+function glyphOf(el: KiSwitchElement, kind: 'check' | 'dash'): SVGElement {
+  const glyph = el.shadowRoot?.querySelector(`.glyph-${kind}`);
+  expect(glyph).toBeInstanceOf(SVGElement);
+  return glyph as SVGElement;
+}
+
+/** Resolves a token to its computed value through a probe element. */
+function readToken(property: 'backgroundColor' | 'fontSize' | 'lineHeight', name: string): string {
+  const probe = document.createElement('div');
+  if (property === 'backgroundColor') {
+    probe.style.backgroundColor = `var(${name})`;
+  } else if (property === 'fontSize') {
+    probe.style.fontSize = `var(${name})`;
+  } else {
+    probe.style.fontSize = '16px';
+    probe.style.lineHeight = `var(${name})`;
+  }
+  document.body.append(probe);
+  const value = getComputedStyle(probe)[property];
+  probe.remove();
+  return value;
+}
+
 function baseOf(el: KiSwitchElement): HTMLElement {
   const base = el.shadowRoot?.querySelector('.base');
   expect(base).toBeInstanceOf(HTMLElement);
@@ -412,6 +447,76 @@ describe('ki-switch in a real browser', () => {
     );
     expect(materialStyle.getPropertyValue('--ki-switch-checked-rest-track')).not.toBe(
       onmarsOnTrack,
+    );
+  });
+
+  it('S7 keeps MarsUI md pointer geometry: 22x18 thumb in a 40x22 track with its dark shadow', async () => {
+    const el = await mount();
+    const track = trackPart(el);
+    const thumb = thumbPart(el);
+    const trackRect = track.getBoundingClientRect();
+    const thumbRect = thumb.getBoundingClientRect();
+
+    // Figma md: track 40x22, pointer 22x18 — wider than tall.
+    expect(trackRect.width).toBeCloseTo(40, 0);
+    expect(trackRect.height).toBeCloseTo(22, 0);
+    expect(thumbRect.width).toBeCloseTo(22, 0);
+    expect(thumbRect.height).toBeCloseTo(18, 0);
+
+    // Small_dark_shadow (0/2/3/-1.5 Elevation/shadow_dark) rides the thumb in
+    // every state — it is what separates the dark-scheme thumb from the track.
+    const shadow = getComputedStyle(thumb).boxShadow;
+    expect(shadow).not.toBe('none');
+    expect(shadow).toContain('0px 2px 3px -1.5px');
+  });
+
+  it('S8 places the checked thumb at the inline-end inset via transform travel', async () => {
+    const el = await mount('checked');
+    const trackRect = trackPart(el).getBoundingClientRect();
+    const thumbRect = thumbPart(el).getBoundingClientRect();
+
+    // Checked LTR: thumb rests 2px inset + 1px border from the track's right
+    // edge (tolerance for subpixel rounding).
+    expect(Math.abs(trackRect.right - thumbRect.right - 3)).toBeLessThanOrEqual(1.5);
+    expect(getComputedStyle(thumbPart(el)).translate).not.toBe('none');
+  });
+
+  it('S7 resolves Toggle_label md typography from body-2 tokens', async () => {
+    const el = await mount();
+    const label = getComputedStyle(labelPart(el));
+
+    expect(label.fontSize).toBe(readToken('fontSize', '--ki-typography-size-body-2'));
+    expect(label.lineHeight).toBe(readToken('lineHeight', '--ki-typography-line-height-body-2'));
+    expect(label.fontWeight).toBe('500');
+    expect(label.color).toBe(readToken('backgroundColor', '--ki-text-high-em'));
+  });
+
+  it('S7 S9 shows the check glyph only when on and the dash only when off and disabled', async () => {
+    const rest = await mount();
+    expect(getComputedStyle(glyphOf(rest, 'check')).opacity).toBe('0');
+    expect(getComputedStyle(glyphOf(rest, 'dash')).opacity).toBe('0');
+
+    const on = await mount('checked');
+    expect(getComputedStyle(glyphOf(on, 'check')).opacity).toBe('1');
+    expect(getComputedStyle(glyphOf(on, 'dash')).opacity).toBe('0');
+    // ON glyph ink: Text/primary_on_primary_light (Brand/600 in light).
+    expect(getComputedStyle(glyphOf(on, 'check')).color).toBe(
+      readToken('backgroundColor', '--ki-text-primary-on-primary-light'),
+    );
+
+    const offDisabled = await mount('disabled');
+    expect(getComputedStyle(glyphOf(offDisabled, 'dash')).opacity).toBe('1');
+    expect(getComputedStyle(glyphOf(offDisabled, 'check')).opacity).toBe('0');
+    // Disabled glyph ink: Text/base_em (Gray/400 in light).
+    expect(getComputedStyle(glyphOf(offDisabled, 'dash')).color).toBe(
+      readToken('backgroundColor', '--ki-text-base-em'),
+    );
+
+    const onDisabled = await mount('checked disabled');
+    expect(getComputedStyle(glyphOf(onDisabled, 'check')).opacity).toBe('1');
+    expect(getComputedStyle(glyphOf(onDisabled, 'dash')).opacity).toBe('0');
+    expect(getComputedStyle(glyphOf(onDisabled, 'check')).color).toBe(
+      readToken('backgroundColor', '--ki-text-base-em'),
     );
   });
 

@@ -6,6 +6,22 @@ import type { JSX } from '../../components';
 // and value, so every story hosts the args-driven option inside a select. The
 // meta render returns fresh vnodes per call (autodocs renders all stories on
 // one page and Stencil vnodes are mutated in place).
+
+// ki-option's entire visual surface lives inside the OPEN listbox, so every
+// story opens the owning select through its shadow trigger before capture.
+const openListbox = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const select = canvasElement.querySelector('ki-select');
+  if (!select) {
+    return;
+  }
+  const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+  for (let i = 0; i < 20 && !select.shadowRoot?.querySelector('[part="trigger"]'); i += 1) {
+    await nextFrame();
+  }
+  const trigger = select.shadowRoot?.querySelector<HTMLElement>('[part="trigger"]');
+  trigger?.click();
+};
+
 const meta = {
   title: 'Elements/ki-option',
   component: 'ki-option',
@@ -23,6 +39,7 @@ const meta = {
       <ki-option value="pt">Portugal</ki-option>
     </ki-select>
   ),
+  play: openListbox,
 } satisfies Meta<JSX.KiOption>;
 
 export default meta;

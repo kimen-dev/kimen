@@ -1,0 +1,43 @@
+---
+// Token counts computed at build time from the built onmars stylesheet, so
+// this page can state numbers without hand-maintaining them (Art. I).
+import tokensCss from '@kimen/tokens/css?raw';
+
+const names = new Set(tokensCss.match(/--ki-[a-z0-9-]+(?=\s*:)/g) ?? []);
+const total = names.size;
+const componentPrefixes = [
+  'alert',
+  'avatar',
+  'badge',
+  'button',
+  'card',
+  'checkbox',
+  'dialog',
+  'divider',
+  'icon-button',
+  'indicator',
+  'input',
+  'list',
+  'option',
+  'progress',
+  'qr',
+  'radio',
+  'scroller',
+  'select',
+  'status',
+  'switch',
+  'tab',
+  'textarea',
+  'tooltip',
+  'video',
+];
+const componentCount = [...names].filter((n) =>
+  componentPrefixes.some((p) => n.startsWith(`--ki-${p}-`)),
+).size;
+---
+
+<p>
+  The built onmars stylesheet currently defines <strong>{total}</strong>{' '}
+  unique <code>--ki-*</code> custom properties, <strong>{componentCount}</strong>{' '}
+  of them component-layer tokens.
+</p>

@@ -54,6 +54,9 @@
           "$value": "{ki.text.low-em}",
           "$description": "Material 3 color used by the option component for disabled foreground."
         }
+      },
+      "min-target": {
+        "$value": "{ki.space.7xl}"
       }
     }
   }

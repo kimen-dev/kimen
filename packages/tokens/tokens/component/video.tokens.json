@@ -51,9 +51,53 @@
         "$description": "dimension used by the video component for the play container bevel width (MarsUI hairline stroke, ki-icon-button precedent)."
       },
       "play-shadow": {
-        "$value": "{ki.effect.component.primary.default.shadow}",
+        "$value": [
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.1}",
+            "blur": "{ki.shadow.distance.1}",
+            "spread": "{ki.shadow.spread.1}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.2}",
+            "blur": "{ki.shadow.distance.2}",
+            "spread": "{ki.shadow.spread.2}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.3}",
+            "blur": "{ki.shadow.distance.3}",
+            "spread": "{ki.shadow.spread.3}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.4}",
+            "blur": "{ki.shadow.distance.4}",
+            "spread": "{ki.shadow.spread.4}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.5}",
+            "blur": "{ki.shadow.distance.5}",
+            "spread": "{ki.shadow.spread.5}"
+          },
+          {
+            "color": "{ki.elevation.shadow}",
+            "offsetX": 0,
+            "offsetY": "{ki.shadow.distance.6}",
+            "blur": "{ki.shadow.distance.6}",
+            "spread": "{ki.shadow.spread.6}"
+          },
+          "{ki.shadow.inner.primary-default}"
+        ],
         "$type": "shadow",
-        "$description": "shadow used by the video component for the play container effects: the exact MarsUI glass pair on the Icon_button instance — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers (ki-status/ki-icon-button precedent)."
+        "$description": "shadow used by the video component for the play control (MarsUI stacks Elevation/e6 on the button_wrap beneath the Component_effect/primary_default inner White/12 highlight — the measured master stack)."
       },
       "focus-ring": {
         "color": {

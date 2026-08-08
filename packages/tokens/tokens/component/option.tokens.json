@@ -2,16 +2,16 @@
   "ki": {
     "option": {
       "min-target": {
-        "$value": "{ki.space.7xl}",
-        "$description": "dimension used by the option component for min target."
+        "$value": "{ki.space.11xl}",
+        "$description": "dimension used by the option component for min target (MarsUI Dropmenu row height Space/11xl 36px; comfortably above the 24px a11y floor)."
       },
       "padding-inline": {
         "$value": "{ki.space.md}",
         "$description": "dimension used by the option component for padding inline."
       },
       "radius": {
-        "$value": "{ki.radius.xs}",
-        "$description": "dimension used by the option component for radius."
+        "$value": "{ki.radius.component.lg}",
+        "$description": "dimension used by the option component for radius (MarsUI Radius/component/radius_lg 12px bound on Dropmenu rows)."
       },
       "font-size": {
         "$value": "{ki.typography.size.body-1}",
@@ -19,8 +19,8 @@
       },
       "rest": {
         "bg": {
-          "$value": "{ki.surface.s1}",
-          "$description": "color used by the option component for rest background."
+          "$value": "{ki.transparent-inverse}",
+          "$description": "color used by the option component for rest background (MarsUI Dropmenu rows are transparent over the glass panel; only hover/selected paint)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -29,8 +29,8 @@
       },
       "hover": {
         "bg": {
-          "$value": "{ki.surface.s2}",
-          "$description": "color used by the option component for hover background."
+          "$value": "{ki.surface.hover-overlay-inverse}",
+          "$description": "color used by the option component for hover background (MarsUI hover_overlay_inverse Black/3 wash over the glass panel — not a solid surface step)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -39,8 +39,8 @@
       },
       "highlight": {
         "bg": {
-          "$value": "{ki.surface.primary-base-em}",
-          "$description": "color used by the option component for highlight background."
+          "$value": "{ki.surface.hover-overlay-inverse}",
+          "$description": "color used by the option component for keyboard-highlight background (MarsUI active row = same Black/3 wash plus Elevation/e1; purple is reserved for the selected tint)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",

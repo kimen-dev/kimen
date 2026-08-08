@@ -1,0 +1,63 @@
+---
+title: ki-card
+description: A non-interactive card surface for grouping related content.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A non-interactive card surface for grouping related media, heading,
+supporting text and actions into one scannable surface — fill any subset of
+the regions.
+
+<Demo
+  layout="block"
+  code={`<ki-card>
+  <h3 slot="header">Weekly report</h3>
+  Traffic is up 12% week over week; conversion held steady.
+  <ki-button slot="footer" variant="secondary" type="button">View details</ki-button>
+</ki-card>`}
+/>
+
+## Examples
+
+### Regions
+
+`media`, `header`, the default body and `footer` are independent slots:
+
+<Demo
+  layout="block"
+  code={`<ki-card>
+  <h3 slot="header">Just the header and body</h3>
+  Cards render only the regions you fill; empty regions collapse.
+</ki-card>`}
+/>
+
+### An interactive element inside a card
+
+For an interactive card, slot the button or link **inside** a region —
+whole-card interactivity is a future feature, not this component:
+
+<Demo
+  layout="block"
+  code={`<ki-card>
+  Ready to publish this draft?
+  <ki-button slot="footer" variant="primary" type="button">Publish</ki-button>
+  <ki-button slot="footer" variant="ghost" type="button">Discard</ki-button>
+</ki-card>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-card" />
+
+## Accessibility
+
+Supply the heading element yourself in the `header` slot — plain text
+slotted there carries no heading semantics for assistive technology. Pick
+the heading level (`h2`–`h6`) that fits the page outline. The card is not a
+landmark, fieldset or section replacement.
+
+## Workshop
+
+[Open ki-card in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-card--docs)

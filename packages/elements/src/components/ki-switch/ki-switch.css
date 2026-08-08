@@ -4,7 +4,30 @@
   --_ki-switch-track: var(--ki-switch-unchecked-rest-track);
   --_ki-switch-thumb: var(--ki-switch-unchecked-rest-thumb);
   --_ki-switch-border: var(--ki-switch-unchecked-rest-border);
-  --_ki-switch-thumb-position: var(--ki-switch-thumb-inset);
+
+  /* Thumb glyph inks (master 10023:1125): ON check = Text/primary_on_primary_light
+     (Brand/600 light, brand-300 dark); disabled marks = Text/base_em
+     (Gray/400 light, White/32 dark). */
+  --_ki-switch-glyph: var(--ki-text-primary-on-primary-light);
+
+  /* Thumb travel: the thumb is statically anchored at the unchecked inset and
+     TRANSLATED to the checked position (transform, not inset — animating
+     inset-inline-start forced layout every frame). The master (Toggle
+     10023:1125 md) insets the 22px pointer 2px from the track's OUTER edge
+     — the hairline stroke overlaps the inset, it does not add to it — so
+     travel spans the track border box minus the thumb and both visual
+     insets: 40 - 22 - 2*2 = 14. RTL negates the sign below because
+     translate is physical while the anchor inset is logical. */
+  --_ki-switch-travel-distance: calc(
+    var(--ki-switch-track-width) -
+    var(--ki-switch-thumb-width) -
+    2 *
+    var(--ki-switch-thumb-inset)
+  );
+  --_ki-switch-travel: var(--_ki-switch-travel-distance);
+
+  /* Pressed-stretch anchor: the edge the thumb is resting against. */
+  --_ki-switch-thumb-anchor: 0%;
 
   display: inline-block;
   min-block-size: var(--ki-switch-min-target);
@@ -12,15 +35,20 @@
   font-family: var(--ki-typography-family-body);
 }
 
+:host(:dir(rtl)) {
+  --_ki-switch-travel: calc(-1 * var(--_ki-switch-travel-distance));
+  --_ki-switch-thumb-anchor: 100%;
+}
+
 :host([checked]) {
   --_ki-switch-track: var(--ki-switch-checked-rest-track);
   --_ki-switch-thumb: var(--ki-switch-checked-rest-thumb);
   --_ki-switch-border: var(--ki-switch-checked-rest-border);
-  --_ki-switch-thumb-position: calc(
-    100% -
-    var(--ki-switch-thumb-size) -
-    var(--ki-switch-thumb-inset)
-  );
+  --_ki-switch-thumb-anchor: 100%;
+}
+
+:host([checked]:dir(rtl)) {
+  --_ki-switch-thumb-anchor: 0%;
 }
 
 @media (hover: hover) {
@@ -41,6 +69,7 @@
   --_ki-switch-track: var(--ki-switch-unchecked-disabled-track);
   --_ki-switch-thumb: var(--ki-switch-unchecked-disabled-thumb);
   --_ki-switch-border: var(--ki-switch-unchecked-disabled-border);
+  --_ki-switch-glyph: var(--ki-text-base-em);
 }
 
 :host([checked]:disabled) {
@@ -95,19 +124,57 @@ input {
   position: relative;
 }
 
+/* MarsUI pointer (master 10023:1125, md): 22x18 — wider than tall — and it
+   ALWAYS carries Small_dark_shadow (drop 0/2/3/-1.5 Elevation/shadow_dark:
+   Black/32 light, Black/48 dark). The shadow is what separates the dark-scheme
+   thumb from the dark track. */
 [part="thumb"] {
   background-color: var(--_ki-switch-thumb);
   block-size: var(--ki-switch-thumb-size);
   border-radius: var(--ki-switch-thumb-radius);
-  inline-size: var(--ki-switch-thumb-size);
+  box-shadow: var(--ki-effect-small-dark-shadow);
+  display: inline-grid;
+  inline-size: var(--ki-switch-thumb-width);
   inset-block-start: calc((100% - var(--ki-switch-thumb-size)) / 2);
-  inset-inline-start: var(--_ki-switch-thumb-position);
+
+  /* The containing block is the track's PADDING box (inside the hairline),
+     so the master's 2px outer-edge inset is inset minus border here. */
+  inset-inline-start: calc(var(--ki-switch-thumb-inset) - var(--ki-switch-border-width));
+  place-items: center;
   pointer-events: none;
   position: absolute;
+  transform-origin: var(--_ki-switch-thumb-anchor) 50%;
+}
+
+:host([checked]) [part="thumb"] {
+  translate: var(--_ki-switch-travel) 0;
+}
+
+/* Thumb state glyphs (master): ON shows the check, OFF+disabled shows the
+   dash, OFF rest shows nothing. Vectors adapted from the Figma pointer
+   exports (filled rounded paths, currentColor). */
+.glyph {
+  block-size: var(--ki-switch-glyph-height);
+  color: var(--_ki-switch-glyph);
+  grid-area: 1 / 1;
+  inline-size: var(--ki-switch-glyph-width);
+  opacity: 0;
+}
+
+.glyph-dash {
+  block-size: var(--ki-switch-glyph-dash-height);
+}
+
+:host([checked]) .glyph-check {
+  opacity: 1;
+}
+
+:host(:disabled:not([checked])) .glyph-dash {
+  opacity: 1;
 }
 
 /* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
-   Focus/primary glow (3px spread at 40%) under the opaque ring. */
+   Focus/primary glow (3px spread at 20%) under the opaque ring. */
 input:focus + [part="track"],
 input:focus-visible + [part="track"] {
   box-shadow:
@@ -134,12 +201,40 @@ input:active:not(:disabled) ~ [part="track"] {
   --_ki-switch-border: var(--ki-switch-checked-active-border);
 }
 
+/* Toggle_label md pairing (master 10101:3995): body_2 15/24 weight 500,
+   Text/high_em — mirrors the ki-checkbox md label precedent. */
 [part="label"] {
   min-inline-size: 0;
+  color: var(--ki-text-high-em);
+  font-size: var(--ki-typography-size-body-2);
+  font-weight: var(--ki-typography-weight-body-normal);
+  line-height: var(--ki-typography-line-height-body-2);
 }
 
+/* Micro-motion (same reduced-motion gate as the previous thumb transition, so
+   the visual harness stays deterministic): the thumb travels via translate
+   (transform-only — the old inset-inline-start transition forced layout every
+   frame); the track cross-fades color and fades the focus glow; the pressed
+   thumb stretches along the travel axis from its anchored edge, iOS-style.
+   The opaque focus outline stays untransitioned. */
 @media (prefers-reduced-motion: no-preference) {
+  [part="track"] {
+    transition:
+      background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
   [part="thumb"] {
-    transition: inset-inline-start var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+    transition:
+      translate var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      scale var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  .glyph {
+    transition: opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  input:active:not(:disabled) ~ [part="track"] [part="thumb"] {
+    scale: 1.15 1;
   }
 }

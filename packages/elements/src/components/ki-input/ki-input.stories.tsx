@@ -60,16 +60,32 @@ export const Readonly: Story = {
   args: { readonly: true, value: 'KMN-0042', label: 'Membership ID', name: 'id' },
 };
 
-/** Leading and trailing adornments through the `start` and `end` slots. */
+/**
+ * Leading and trailing adornments through the `start` and `end` slots. The
+ * start icon is a directly slotted SVG so the component's own slotted-icon
+ * box sizes it; the text affix renders at the cell type scale (13/24) in the
+ * muted label emphasis.
+ */
 export const Adornments: Story = {
   render: (args) => (
     <ki-input {...args} label="Search" type="search" placeholder="Search">
-      <span slot="start" aria-hidden="true">
-        S
-      </span>
+      <svg slot="start" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+        <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
       <span slot="end" aria-hidden="true">
         Cmd K
       </span>
     </ki-input>
   ),
+};
+
+/** The :focus-within active treatment: field ring and focus palette. */
+export const Focused: Story = {
+  play: async ({ canvasElement }) => {
+    // One frame lets the upfront-registered element finish its first render;
+    // delegated focus lands on the inner input and drives :focus-within.
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    canvasElement.querySelector('ki-input')?.focus();
+  },
 };

@@ -2,20 +2,28 @@
   "ki": {
     "textarea": {
       "padding-inline": {
-        "$value": "{ki.space.md}",
-        "$description": "dimension used by the textarea component for padding inline."
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the textarea component for padding inline (MarsUI 96px md textarea: 12px ink inset)."
       },
       "padding-block": {
-        "$value": "{ki.space.sm}",
-        "$description": "dimension used by the textarea component for padding block."
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the textarea component for padding block (MarsUI 96px md textarea: 12px ink inset)."
       },
       "label-gap": {
         "$value": "{ki.space.xs}",
         "$description": "dimension used by the textarea component for label gap."
       },
+      "label-padding-inline": {
+        "$value": "{ki.space.xxs}",
+        "$description": "dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input)."
+      },
+      "hint-fg": {
+        "$value": "{ki.text.med-em}",
+        "$description": "color used by the textarea component for the hint row foreground (MarsUI Hint_label Text/med_em; the hint row itself is pending its founder-gated API addition)."
+      },
       "radius": {
-        "$value": "{ki.radius.md}",
-        "$description": "dimension used by the textarea component for radius."
+        "$value": "{ki.radius.component.md}",
+        "$description": "dimension used by the textarea component for radius (MarsUI Radius/component/radius_md 10px for the md size; component ramp so personality modes reach it)."
       },
       "min-target": {
         "$value": "{ki.space.7xl}",
@@ -34,20 +42,20 @@
         "$description": "dimension used by the textarea component for line height."
       },
       "label-font-size": {
-        "$value": "{ki.typography.size.caption-2}",
-        "$description": "dimension used by the textarea component for label font size."
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "dimension used by the textarea component for label font size (MarsUI UI/Para/medium: body_1 13px)."
       },
       "label-font-weight": {
         "$value": "{ki.typography.weight.body.medium}",
         "$description": "font weight used by the textarea component for label font weight."
       },
       "label-line-height": {
-        "$value": "{ki.typography.line-height.caption-2}",
-        "$description": "dimension used by the textarea component for label line height."
+        "$value": "{ki.typography.line-height.para}",
+        "$description": "dimension used by the textarea component for label line height (MarsUI line_height/para 20px)."
       },
       "border-width": {
-        "$value": "{ki.space.xxs}",
-        "$description": "dimension used by the textarea component for border width."
+        "$value": "{ki.size.border.hairline}",
+        "$description": "dimension used by the textarea component for border width (MarsUI 1px hairline; the border color stays ki.outline.control per the declared a11y deviation)."
       },
       "border-block-start-width": {
         "$value": "{ki.textarea.border-width}",
@@ -67,8 +75,8 @@
       },
       "rest": {
         "bg": {
-          "$value": "{ki.surface.s1}",
-          "$description": "color used by the textarea component for rest background."
+          "$value": "{ki.surface.s2}",
+          "$description": "color used by the textarea component for rest background (MarsUI textarea fill Surface/s2)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -79,18 +87,18 @@
           "$description": "color used by the textarea component for rest border."
         },
         "label-fg": {
-          "$value": "{ki.text.high-em}",
-          "$description": "color used by the textarea component for rest label foreground."
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
-          "$description": "color used by the textarea component for rest placeholder foreground."
+          "$value": "{ki.text.low-em}",
+          "$description": "color used by the textarea component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
         }
       },
       "hover": {
         "bg": {
-          "$value": "{ki.surface.s2}",
-          "$description": "color used by the textarea component for hover background."
+          "$value": "{ki.surface.s3}",
+          "$description": "color used by the textarea component for hover background (MarsUI hover = s2 + Black/3 overlay; s3 is the nearest token)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -101,18 +109,18 @@
           "$description": "color used by the textarea component for hover border."
         },
         "label-fg": {
-          "$value": "{ki.text.high-em}",
-          "$description": "color used by the textarea component for hover label foreground."
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
-          "$description": "color used by the textarea component for hover placeholder foreground."
+          "$value": "{ki.text.low-em}",
+          "$description": "color used by the textarea component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
         }
       },
       "focus": {
         "bg": {
-          "$value": "{ki.surface.s1}",
-          "$description": "color used by the textarea component for focus background."
+          "$value": "{ki.surface.s0}",
+          "$description": "color used by the textarea component for focus background (MarsUI active fill switches to white / dark s2 — modeled with the scheme ladder s0)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -123,21 +131,21 @@
           "$description": "color used by the textarea component for focus border."
         },
         "label-fg": {
-          "$value": "{ki.text.primary-high-em}",
-          "$description": "color used by the textarea component for focus label foreground."
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
-          "$description": "color used by the textarea component for focus placeholder foreground."
+          "$value": "{ki.text.low-em}",
+          "$description": "color used by the textarea component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
         }
       },
       "disabled": {
         "bg": {
-          "$value": "{ki.surface.disabled-low-em}",
-          "$description": "color used by the textarea component for disabled background."
+          "$value": "{ki.surface.disabled-base-em}",
+          "$description": "color used by the textarea component for disabled background (MarsUI Surface/disabled_base_em Gray/100; aligned with ki-input)."
         },
         "fg": {
-          "$value": "{ki.text.muted}",
+          "$value": "{ki.text.base-em}",
           "$description": "color used by the textarea component for disabled foreground."
         },
         "border": {
@@ -145,12 +153,16 @@
           "$description": "color used by the textarea component for disabled border."
         },
         "label-fg": {
-          "$value": "{ki.text.muted}",
+          "$value": "{ki.text.base-em}",
           "$description": "color used by the textarea component for disabled label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.muted}",
+          "$value": "{ki.text.base-em}",
           "$description": "color used by the textarea component for disabled placeholder foreground."
+        },
+        "hint-fg": {
+          "$value": "{ki.text.base-em}",
+          "$description": "color used by the textarea component for the disabled hint row foreground (MarsUI disabled ladder Text/base_em; disabled cells are exempt from the contrast sweep)."
         }
       },
       "readonly": {
@@ -167,18 +179,18 @@
           "$description": "color used by the textarea component for readonly border."
         },
         "label-fg": {
-          "$value": "{ki.text.high-em}",
-          "$description": "color used by the textarea component for readonly label foreground."
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for readonly label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
-          "$description": "color used by the textarea component for readonly placeholder foreground."
+          "$value": "{ki.text.low-em}",
+          "$description": "color used by the textarea component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
         }
       },
       "invalid": {
         "bg": {
-          "$value": "{ki.surface.danger-base-em}",
-          "$description": "color used by the textarea component for invalid background."
+          "$value": "{ki.surface.s0}",
+          "$description": "color used by the textarea component for invalid background (MarsUI danger keeps the white active fill — no tinted slab; ring and hint carry the signal)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -189,12 +201,21 @@
           "$description": "color used by the textarea component for invalid border."
         },
         "label-fg": {
-          "$value": "{ki.text.danger-high-em}",
-          "$description": "color used by the textarea component for invalid label foreground."
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
-          "$description": "color used by the textarea component for invalid placeholder foreground."
+          "$value": "{ki.text.low-em}",
+          "$description": "color used by the textarea component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+        },
+        "ring": {
+          "$value": "{ki.focus.danger}",
+          "$type": "shadow",
+          "$description": "shadow used by the textarea component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid))."
+        },
+        "hint-fg": {
+          "$value": "{ki.text.danger-high-em}",
+          "$description": "color used by the textarea component for the invalid hint row foreground (MarsUI Hint_label danger: Text/danger_high_em carries the signal)."
         }
       },
       "focus-ring": {

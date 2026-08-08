@@ -1,0 +1,53 @@
+---
+title: ki-textarea
+description: A token-styled multiline text field with native form semantics.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A token-styled multiline text field with native form semantics — comments,
+descriptions, messages, delivery notes.
+
+<Demo
+  layout="block"
+  code={`<ki-textarea label="Delivery notes" name="notes" rows="3" placeholder="Gate code, preferred entrance…"></ki-textarea>`}
+/>
+
+## Examples
+
+### In a form
+
+<Demo
+  layout="block"
+  code={`<form onsubmit="event.preventDefault()">
+  <ki-textarea label="Feedback" name="feedback" required rows="4"></ki-textarea>
+  <ki-button variant="primary">Send</ki-button>
+</form>`}
+/>
+
+### Initial value
+
+Initial text is declared through the `value` attribute; element text content
+is ignored:
+
+<Demo
+  layout="block"
+  code={`<ki-textarea label="Bio" value="Design systems, gates, and coffee."></ki-textarea>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-textarea" />
+
+## Accessibility
+
+The `label` prop is the accessible name — mandatory, and `placeholder` is
+never a substitute. Enter inserts a line break and never submits the
+enclosing form — the inverse of [ki-input](/kimen/docs/components/input/).
+For single-line values use `ki-input`; rich or formatted editing is out of
+scope.
+
+## Workshop
+
+[Open ki-textarea in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-textarea--docs)

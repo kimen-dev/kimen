@@ -22,6 +22,21 @@
   background: var(--ki-divider-color);
 }
 
+/* Entrance fade (dynamic insertion in menus/toolbars): opacity-only, fully
+ * gated — reduced motion renders the rule instantly (ki-dialog
+ * @starting-style precedent). */
+@media (prefers-reduced-motion: no-preference) {
+  [part="divider"] {
+    transition: opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-standard-decelerate);
+  }
+
+  @starting-style {
+    [part="divider"] {
+      opacity: 0;
+    }
+  }
+}
+
 /* A vertical divider derives its length from the layout context (FR-003):
  * in a stretching context (flex/grid cross axis or an explicit height) the
  * rule fills it; where no height resolves it renders zero-length — a

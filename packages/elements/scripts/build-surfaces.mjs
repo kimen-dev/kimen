@@ -3,11 +3,14 @@ import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
+  buildGenUiSection,
   buildLlmsTxt,
   buildManifest,
+  buildRootLlmsTxt,
   normalizeDocs,
   serializeJson,
   validateDocs,
+  validateGenUiSurfaces,
 } from './agent-surfaces.mjs';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -26,6 +29,7 @@ export async function runBuildSurfaces(options = {}) {
       options.publicApiPath ?? resolve(selectedPackageRoot, 'generated/public-api.json'),
     packageLlmsPath: options.packageLlmsPath ?? resolve(selectedPackageRoot, 'llms.txt'),
     rootLlmsPath: options.rootLlmsPath ?? resolve(selectedWorkspaceRoot, 'llms.txt'),
+    genUiPath: options.genUiPath ?? resolve(selectedWorkspaceRoot, 'docs/genui-surfaces.json'),
     packageRoot: selectedPackageRoot,
   };
 
@@ -38,6 +42,23 @@ export async function runBuildSurfaces(options = {}) {
       ok: false,
       stderr: formatViolations(violations),
       violations,
+    };
+  }
+
+  // The root llms.txt extends the package summary with the GenUI layer
+  // (catalog + adapters). Its hand-written source is validated against the
+  // real package entry modules BEFORE any output is written, so a renamed
+  // export or blank guidance fails the build instead of shipping stale.
+  const genUiInputs = await loadGenUiSurfaces({
+    genUiPath: paths.genUiPath,
+    workspaceRoot: selectedWorkspaceRoot,
+  });
+  const genUiViolations = validateGenUiSurfaces(genUiInputs.genUi, genUiInputs.packages);
+  if (genUiViolations.length > 0) {
+    return {
+      ok: false,
+      stderr: formatViolations(genUiViolations),
+      violations: genUiViolations,
     };
   }
 
@@ -61,6 +82,10 @@ export async function runBuildSurfaces(options = {}) {
   );
   const manifest = completeCemMethodSignatures({ manifest: rawManifest, docs });
   const llmsTxt = buildLlmsTxt(docs, pkg, preamble, manifestInputs);
+  const rootLlmsTxt = buildRootLlmsTxt(
+    llmsTxt,
+    buildGenUiSection(genUiInputs.genUi, genUiInputs.packages),
+  );
   const publicApi =
     options.publicApi ??
     (await buildPublicApi({
@@ -84,7 +109,7 @@ export async function runBuildSurfaces(options = {}) {
   await writeFile(paths.manifestPath, serializeJson(manifest));
   await writeFile(paths.publicApiPath, publicApiBytes);
   await writeFile(paths.packageLlmsPath, llmsTxt);
-  await writeFile(paths.rootLlmsPath, llmsTxt);
+  await writeFile(paths.rootLlmsPath, rootLlmsTxt);
 
   return {
     ok: true,
@@ -95,9 +120,44 @@ export async function runBuildSurfaces(options = {}) {
       [paths.manifestPath, serializeJson(manifest)],
       [paths.publicApiPath, publicApiBytes],
       [paths.packageLlmsPath, llmsTxt],
-      [paths.rootLlmsPath, llmsTxt],
+      [paths.rootLlmsPath, rootLlmsTxt],
     ]),
   };
+}
+
+// The GenUI surface source is hand-written (docs/genui-surfaces.json); the
+// facts it may not invent — package names, descriptions and export names —
+// are loaded here from each package's own package.json and src/index.ts so
+// validateGenUiSurfaces can reject drift before generation.
+async function loadGenUiSurfaces({ genUiPath, workspaceRoot }) {
+  const genUi = JSON.parse(await readFile(genUiPath, 'utf8'));
+  if (!Array.isArray(genUi.packages) || genUi.packages.length === 0) {
+    throw new Error(`genui-surfaces: ${genUiPath} must declare a non-empty packages array`);
+  }
+  const packages = await Promise.all(
+    genUi.packages.map(async (entry) => {
+      const directory = entry.directory;
+      if (typeof directory !== 'string' || directory.trim() === '') {
+        throw new Error('genui-surfaces: every package entry needs a directory');
+      }
+      const genUiPackageRoot = resolve(workspaceRoot, directory);
+      const fromRoot = relative(workspaceRoot, genUiPackageRoot);
+      if (
+        fromRoot === '' ||
+        fromRoot === '..' ||
+        fromRoot.startsWith(`..${sep}`) ||
+        isAbsolute(fromRoot)
+      ) {
+        throw new Error(`genui-surfaces: ${directory} escapes the workspace root`);
+      }
+      const [packageJson, indexSource] = await Promise.all([
+        readFile(resolve(genUiPackageRoot, 'package.json'), 'utf8').then(JSON.parse),
+        readFile(resolve(genUiPackageRoot, 'src/index.ts'), 'utf8'),
+      ]);
+      return { directory, packageJson, indexSource };
+    }),
+  );
+  return { genUi, packages };
 }
 
 async function buildManifestInputs({

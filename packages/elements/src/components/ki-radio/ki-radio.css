@@ -21,6 +21,19 @@
   --_ki-radio-focus-ring-offset: var(--ki-radio-focus-ring-offset);
   --_ki-radio-focus-ring-shadow: var(--ki-radio-focus-ring-shadow);
 
+  /* MarsUI glass DNA (master 10053:1943): the unselected circle carries a
+     vertical Surface/Special gradient (dark-s0_light_s2 -> light-s0_dark-s4,
+     scheme-aware) and every state keeps Component_effect/primary_default
+     (drop 0/1/1/-0.5 + inset White/12 0/3/3). Gradient in a private custom
+     property (ki-button overlay-image precedent) so solid states reset it.
+     backdrop-filter blur is skipped: the fill is opaque, the blur invisible
+     (audited decision). */
+  --_ki-radio-bg-image: linear-gradient(
+    var(--ki-surface-special-dark-s0-light-s2),
+    var(--ki-surface-special-light-s0-dark-s4)
+  );
+  --_ki-radio-shadow: var(--ki-effect-component-primary-default-shadow);
+
   display: inline-block;
   color: var(--ki-text-high-em);
   font-family: var(--ki-typography-family-body);
@@ -51,6 +64,7 @@
   --_ki-radio-selected-bg: var(--ki-radio-selected-disabled-bg);
   --_ki-radio-selected-fg: var(--ki-radio-selected-disabled-fg);
   --_ki-radio-selected-border: var(--ki-radio-selected-disabled-border);
+  --_ki-radio-bg-image: none;
 
   color: var(--ki-text-med-em);
   cursor: default;
@@ -90,12 +104,16 @@ input {
   place-items: center;
   inline-size: var(--_ki-radio-control-size);
   block-size: var(--_ki-radio-control-size);
-  background: var(--_ki-radio-bg);
+  background-color: var(--_ki-radio-bg);
+  background-image: var(--_ki-radio-bg-image);
   border: var(--_ki-radio-border-width) solid var(--_ki-radio-border);
   border-radius: var(--_ki-radio-control-radius);
+  box-shadow: var(--_ki-radio-shadow);
   pointer-events: none;
 }
 
+/* Selected dot: MarsUI Small_dark_shadow (drop 0/2/3/-1.5 Elevation/
+   shadow_dark) lifts the light 8px dot off the saturated brand fill. */
 [part="control"]::before {
   display: block;
   inline-size: var(--_ki-radio-dot-size);
@@ -103,6 +121,7 @@ input {
   content: "";
   background: var(--_ki-radio-selected-fg);
   border-radius: var(--_ki-radio-control-radius);
+  box-shadow: var(--ki-radio-dot-shadow);
   opacity: 0;
   transform: scale(0);
 }
@@ -140,6 +159,20 @@ input:active:not([disabled], [data-ki-group-disabled]) ~ [part="control"] {
   --_ki-radio-selected-border: var(--ki-radio-selected-active-border);
 }
 
+/* Pressed fill delta for the SELECTED control (bare-page state-delta
+   contract): selected-active-bg mirrors rest — MarsUI defines no pressed
+   fill, and the brand ramp has no darker rung that survives the dark scheme
+   — so the press composites the pressed state layer over the rest fill via
+   the ki-button degenerate-gradient mechanism. Without it a keyboard user
+   holding Space on a selected radio sees nothing under reduced motion,
+   where the transform compress below is gated off. */
+input:active:checked:not([disabled], [data-ki-group-disabled]) ~ [part="control"] {
+  background-image: linear-gradient(
+    var(--ki-radio-selected-active-overlay),
+    var(--ki-radio-selected-active-overlay)
+  );
+}
+
 [part="label"] {
   font-size: var(--_ki-radio-label-font-size);
   font-weight: var(--_ki-radio-label-font-weight);
@@ -147,11 +180,25 @@ input:active:not([disabled], [data-ki-group-disabled]) ~ [part="control"] {
   pointer-events: none;
 }
 
+/* Micro-motion (same reduced-motion gate as before, so the visual harness
+   stays deterministic): the control cross-fades surface/border/focus-glow
+   with the standard curve; the dot pops in with the gentle spring overshoot;
+   the press compress is transform-only. The opaque focus outline stays
+   untransitioned so keyboard users never wait for focus indication. */
 @media (prefers-reduced-motion: no-preference) {
-  [part="control"],
-  [part="control"]::before {
+  [part="control"] {
     transition-duration: var(--ki-motion-duration-fast);
-    transition-property: background, border-color, opacity, transform;
+    transition-property: background, border-color, box-shadow, opacity, transform;
     transition-timing-function: var(--ki-motion-easing-standard);
+  }
+
+  [part="control"]::before {
+    transition:
+      opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-spring);
+  }
+
+  input:active:not([disabled], [data-ki-group-disabled]) ~ [part="control"] {
+    transform: scale(0.94);
   }
 }

@@ -1,0 +1,47 @@
+---
+title: ki-badge
+description: A static, non-interactive status pill.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A static, non-interactive status pill. The label **is** the meaning — the
+tone color only reinforces the text, it never replaces it.
+
+<Demo code={`<ki-badge tone="success">Active</ki-badge>`} />
+
+## Examples
+
+### Tones
+
+<Demo
+  code={`<ki-badge tone="neutral">Draft</ki-badge>
+<ki-badge tone="info">Beta</ki-badge>
+<ki-badge tone="success">Active</ki-badge>
+<ki-badge tone="warning">Expiring</ki-badge>
+<ki-badge tone="danger">Failed</ki-badge>`}
+/>
+
+### Sizes
+
+<Demo
+  code={`<ki-badge size="sm" tone="info">sm</ki-badge>
+<ki-badge size="md" tone="info">md</ki-badge>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-badge" />
+
+## Accessibility
+
+The badge has no live region: feedback that must be announced is
+[ki-alert](/kimen/docs/components/alert/)'s job. Never ship an empty badge —
+the slotted label carries the meaning, so color alone is never the carrier
+(WCAG 1.4.1). For a state dot with no text of its own, use
+[ki-status](/kimen/docs/components/status/).
+
+## Workshop
+
+[Open ki-badge in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-badge--docs)

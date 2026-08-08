@@ -1,0 +1,53 @@
+---
+title: Token reference
+description: Where the authoritative, generated Kimen token reference lives — and why this site never hand-copies token tables.
+---
+
+import TokenStats from '../../../components/TokenStats.astro';
+
+Kimen's token tables are **generated from the token sources, never
+hand-written** — a constitutional rule (Art. I) that exists because
+hand-copied token lists drift the moment the next token lands. This page
+tells you where the generated surfaces live; the numbers below are computed
+from the built stylesheet at every site build:
+
+<TokenStats />
+
+## Where to look
+
+- **Per-component styling contract** — every
+  [component page](/kimen/docs/components/alert/) renders its *CSS custom
+  properties* table from the generated Custom Elements Manifest: exactly the
+  tokens that component consumes, with their purpose.
+- **The full generated reference** — the
+  [Tokens reference page in Storybook](/kimen/storybook/?path=/docs/docs-tokens-reference--docs)
+  is regenerated from the DTCG token sources and lists every token with its
+  resolved value in both schemes.
+- **The stylesheets themselves** — `@kimen/tokens` ships plain CSS custom
+  properties, so the built files are their own reference:
+
+  | Export | Contents |
+  | --- | --- |
+  | `@kimen/tokens/css` | The default **onmars** theme, light and dark |
+  | `@kimen/tokens/css/material3` | The **material3** reference theme, opt-in via `data-ki-theme` |
+  | `@kimen/tokens/css/base` | The [page contract](/kimen/docs/guides/theming/#the-page-contract): `color-scheme` + page colors |
+
+- **Machine consumers** — the same token names appear in the
+  [Custom Elements Manifest](/kimen/docs/resources/working-with-ai/) per
+  component, so agents and design tooling read the styling contract without
+  scraping docs.
+
+## Reading a token name
+
+Token names encode their layer and scope:
+
+- `--ki-color-brand-500`, `--ki-space-md` — **primitive** ramps; never
+  consumed by components directly.
+- `--ki-surface-s0…s5`, `--ki-text-high-em`, `--ki-elevation-e1…e6`,
+  `--ki-motion-duration-fast` — **semantic**: meaning a theme reassigns.
+- `--ki-button-primary-neutral-rest-bg`, `--ki-dialog-backdrop-blur` —
+  **component**: the element, then its variant/tone/state path, then the
+  property.
+
+The [Design tokens guide](/kimen/docs/guides/tokens/) explains the model and
+how to customize safely.

@@ -7,6 +7,9 @@
   --_ki-dialog-min-width: var(--ki-dialog-min-width);
   --_ki-dialog-max-width: var(--ki-dialog-max-width);
   --_ki-dialog-bg: var(--ki-dialog-bg);
+  --_ki-dialog-bg-start: var(--ki-dialog-bg-start);
+  --_ki-dialog-bg-end: var(--ki-dialog-bg-end);
+  --_ki-dialog-backdrop-blur: var(--ki-dialog-backdrop-blur);
   --_ki-dialog-fg: var(--ki-dialog-fg);
   --_ki-dialog-border: var(--ki-dialog-border);
   --_ki-dialog-shadow: var(--ki-dialog-shadow);
@@ -14,11 +17,12 @@
   --_ki-dialog-heading-font-size: var(--ki-dialog-heading-font-size);
   --_ki-dialog-heading-font-weight: var(--ki-dialog-heading-font-weight);
   --_ki-dialog-heading-line-height: var(--ki-dialog-heading-line-height);
-  --_ki-dialog-focus-ring-color: var(--ki-dialog-focus-ring-color);
-  --_ki-dialog-focus-ring-width: var(--ki-dialog-focus-ring-width);
-  --_ki-dialog-focus-ring-offset: var(--ki-dialog-focus-ring-offset);
   --_ki-dialog-motion-duration: var(--ki-dialog-motion-duration);
   --_ki-dialog-motion-easing: var(--ki-dialog-motion-easing);
+
+  /* MarsUI Focus/primary: resting elevation + the system 3px alpha ring
+   * (composed here because box-shadow consumes exactly one variable). */
+  --_ki-dialog-focus-shadow: var(--_ki-dialog-shadow), var(--ki-focus-primary);
 
   display: block;
   font-family: var(--ki-typography-family-body);
@@ -34,39 +38,63 @@
   overflow: hidden;
   color: var(--_ki-dialog-fg);
   font-family: var(--ki-typography-family-body);
+
+  /* MarsUI glass surface (Modal master 16414:19665): flat fallback first,
+   * then the master's vertical gradient Surface/Special blur_base -> s0/s2
+   * with the Blur/24 backdrop. material3 resolves both stops to its opaque
+   * surface and the blur to 0, so the same paint stays theme-correct. */
   background: var(--_ki-dialog-bg);
+  background: linear-gradient(180deg, var(--_ki-dialog-bg-start), var(--_ki-dialog-bg-end));
+  backdrop-filter: blur(var(--_ki-dialog-backdrop-blur));
   border: var(--_ki-dialog-border);
   border-radius: var(--_ki-dialog-radius);
   box-shadow: var(--_ki-dialog-shadow);
+
+  /* Layout lives on the base rule so the exit fade (display held open by
+   * allow-discrete) never reflows to flex defaults mid-transition. */
+  flex-direction: column;
+  gap: var(--_ki-dialog-gap);
 }
 
 [part="dialog"][open] {
   display: flex;
-  flex-direction: column;
-  gap: var(--_ki-dialog-gap);
 }
 
 [part="dialog"]:focus {
   outline: none;
 }
 
+/* Double focus mechanism (same contract as ki-button): the opaque outline is
+ * the WCAG 1.4.11 indicator — entry focus can land on this surface when the
+ * dialog has no focusable descendant, and the 3px alpha glow alone sits below
+ * 3:1 against the page — plus the MarsUI Focus/primary ring as the glow. */
 [part="dialog"]:focus-visible {
-  outline: var(--_ki-dialog-focus-ring-width) solid var(--_ki-dialog-focus-ring-color);
-  outline-offset: var(--_ki-dialog-focus-ring-offset);
+  outline: var(--ki-dialog-focus-ring-width) solid var(--ki-dialog-focus-ring-color);
+  outline-offset: var(--ki-dialog-focus-ring-offset);
+  box-shadow: var(--_ki-dialog-focus-shadow);
 }
 
+/* Modal master composition is fully center-aligned: heading and body copy
+ * both center (Modal_header / body placeholder, node 16414:19665). */
 [part="heading"] {
   margin: 0;
   color: inherit;
   font-size: var(--_ki-dialog-heading-font-size);
   font-weight: var(--_ki-dialog-heading-font-weight);
   line-height: var(--_ki-dialog-heading-line-height);
+  text-align: center;
 }
 
+/* Modal body text = body_1: Inter 13px / 20px weight 500, inherited by
+ * slotted content (semantic typography tokens; no dialog-local pair exists). */
 [part="body"] {
   min-block-size: 0;
   overflow-block: auto;
   color: inherit;
+  font-size: var(--ki-typography-size-body-1);
+  font-weight: var(--ki-typography-weight-body-normal);
+  line-height: var(--ki-typography-line-height-para);
+  text-align: center;
 }
 
 [part="footer"] {
@@ -91,13 +119,42 @@ slot[name="footer"] {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  [part="dialog"][open],
+  /* Exit: quick accelerating fade; allow-discrete holds display and the top
+   * layer until the fade completes instead of the instant pop-out. */
+  [part="dialog"],
+  [part="dialog"]::backdrop {
+    transition:
+      opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-standard-accelerate),
+      display var(--ki-motion-duration-fast) allow-discrete,
+      overlay var(--ki-motion-duration-fast) allow-discrete;
+  }
+
+  [part="dialog"]:not([open]),
+  [part="dialog"]:not([open])::backdrop {
+    opacity: 0;
+  }
+
+  /* Enter: fade + gentle rise + settle scale at the moderate step; the focus
+   * ring eases in on box-shadow instead of snapping. */
+  [part="dialog"][open] {
+    transition:
+      opacity var(--_ki-dialog-motion-duration) var(--_ki-dialog-motion-easing),
+      translate var(--_ki-dialog-motion-duration) var(--_ki-dialog-motion-easing),
+      scale var(--_ki-dialog-motion-duration) var(--_ki-dialog-motion-easing),
+      box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
   [part="dialog"][open]::backdrop {
     transition: opacity var(--_ki-dialog-motion-duration) var(--_ki-dialog-motion-easing);
   }
 
   @starting-style {
-    [part="dialog"][open],
+    [part="dialog"][open] {
+      opacity: 0;
+      translate: 0 var(--ki-motion-distance-md);
+      scale: 0.98;
+    }
+
     [part="dialog"][open]::backdrop {
       opacity: 0;
     }

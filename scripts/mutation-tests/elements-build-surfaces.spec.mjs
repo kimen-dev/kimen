@@ -36,6 +36,24 @@ const defaultTokenExports = {
   './json': './dist/tokens.json',
 };
 
+const fixtureGenUi = {
+  intro: ['Fixture GenUI layer prose.'],
+  packages: [
+    {
+      directory: 'packages/catalog',
+      whenToUse: 'Validate fixture specs.',
+      whenNotToUse: 'Static fixture pages.',
+      entryPoints: [
+        {
+          name: 'validateUiSpec',
+          signature: 'validateUiSpec(input, options?) => ValidationReport',
+          summary: 'Validates a fixture spec.',
+        },
+      ],
+    },
+  ],
+};
+
 async function createSurfaceWorkspace({
   docs = validDocs,
   tokenExports = defaultTokenExports,
@@ -43,16 +61,28 @@ async function createSurfaceWorkspace({
   const root = await mkdtemp(join(tmpdir(), 'elements-build-surfaces-'));
   const packageRoot = resolve(root, 'packages/elements');
   const tokensRoot = resolve(root, 'packages/tokens');
+  const catalogRoot = resolve(root, 'packages/catalog');
   const generatedRoot = resolve(packageRoot, 'generated');
   await Promise.all([
+    mkdir(resolve(root, 'docs'), { recursive: true }),
     mkdir(resolve(root, 'scripts/lib'), { recursive: true }),
     mkdir(resolve(packageRoot, 'scripts'), { recursive: true }),
     mkdir(resolve(packageRoot, 'src'), { recursive: true }),
     mkdir(generatedRoot, { recursive: true }),
     mkdir(resolve(tokensRoot, 'dist'), { recursive: true }),
+    mkdir(resolve(catalogRoot, 'src'), { recursive: true }),
   ]);
   await Promise.all([
     writeFile(resolve(generatedRoot, 'docs.json'), JSON.stringify(docs)),
+    writeFile(resolve(root, 'docs/genui-surfaces.json'), JSON.stringify(fixtureGenUi)),
+    writeFile(
+      resolve(catalogRoot, 'package.json'),
+      JSON.stringify({ name: '@kimen/catalog', description: 'Fixture catalog.' }),
+    ),
+    writeFile(
+      resolve(catalogRoot, 'src/index.ts'),
+      "export { validateUiSpec } from './validate.js';\n",
+    ),
     writeFile(
       resolve(packageRoot, 'package.json'),
       JSON.stringify({
@@ -199,7 +229,19 @@ describe('build-surfaces mutation boundary', () => {
         browserBaseline: ['chromium', 'firefox', 'webkit'],
         completedMethods: 1,
       });
-      expect(packageLlms).toBe(rootLlms);
+      // The root summary extends the package one with the GenUI layer built
+      // from the hand-written docs/genui-surfaces.json source (Art. I: the
+      // artifact stays generated; only its sources are hand-maintained).
+      expect(rootLlms.startsWith(packageLlms)).toBe(true);
+      expect(packageLlms).not.toContain('## GenUI layer');
+      expect(rootLlms).toContain('## GenUI layer');
+      expect(rootLlms).toContain('Fixture GenUI layer prose.');
+      expect(rootLlms).toContain('### @kimen/catalog');
+      expect(rootLlms).toContain('Fixture catalog.');
+      expect(rootLlms).toContain('When to use: Validate fixture specs.');
+      expect(rootLlms).toContain(
+        'Entry points:\n- `validateUiSpec(input, options?) => ValidationReport`: Validates a fixture spec.',
+      );
       expect(packageLlms).toContain('CSS custom properties:\n- `--ki-demo-color`: Demo color.');
     } finally {
       await rm(root, { recursive: true, force: true });
@@ -214,6 +256,7 @@ describe('build-surfaces mutation boundary', () => {
       docsPath: resolve(custom, 'input-docs.json'),
       packageJsonPath: resolve(custom, 'input-package.json'),
       preamblePath: resolve(custom, 'input-preamble.txt'),
+      genUiPath: resolve(custom, 'input-genui.json'),
       manifestPath: resolve(custom, 'output-manifest.json'),
       publicApiPath: resolve(custom, 'output-api.json'),
       packageLlmsPath: resolve(custom, 'output-package-llms.txt'),
@@ -227,6 +270,13 @@ describe('build-surfaces mutation boundary', () => {
           JSON.stringify({ name: '@fixture/custom', description: 'Custom fixture.' }),
         ),
         writeFile(paths.preamblePath, 'Custom preamble.\n'),
+        writeFile(
+          paths.genUiPath,
+          JSON.stringify({
+            ...fixtureGenUi,
+            intro: ['Injected GenUI layer prose.'],
+          }),
+        ),
       ]);
       const result = await runBuildSurfaces({
         ...paths,
@@ -255,9 +305,38 @@ describe('build-surfaces mutation boundary', () => {
       expect(JSON.parse(await readFile(paths.manifestPath, 'utf8')).modules[0].path).toBe(
         'custom/ki-demo.js',
       );
-      expect(await readFile(paths.packageLlmsPath, 'utf8')).toBe(
-        await readFile(paths.rootLlmsPath, 'utf8'),
+      const packageLlms = await readFile(paths.packageLlmsPath, 'utf8');
+      const rootLlms = await readFile(paths.rootLlmsPath, 'utf8');
+      expect(rootLlms.startsWith(packageLlms)).toBe(true);
+      expect(rootLlms).toContain('Injected GenUI layer prose.');
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it('fails closed when a GenUI entry point is not exported by its package entry module', async () => {
+    const { root, packageRoot, surfacePaths } = await createSurfaceWorkspace();
+    try {
+      await writeFile(
+        resolve(root, 'docs/genui-surfaces.json'),
+        JSON.stringify({
+          ...fixtureGenUi,
+          packages: [
+            {
+              ...fixtureGenUi.packages[0],
+              entryPoints: [{ name: 'notAnExport', summary: 'Missing symbol.' }],
+            },
+          ],
+        }),
       );
+
+      const result = await runBuildSurfaces({ ...surfacePaths, packageRoot, workspaceRoot: root });
+
+      expect(result.ok).toBe(false);
+      expect(result.violations).toContain(
+        'packages/catalog.notAnExport: entry point is not exported from src/index.ts',
+      );
+      await expect(readFile(surfacePaths.rootLlmsPath)).rejects.toMatchObject({ code: 'ENOENT' });
     } finally {
       await rm(root, { recursive: true, force: true });
     }

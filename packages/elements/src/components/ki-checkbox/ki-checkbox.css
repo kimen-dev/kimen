@@ -5,6 +5,19 @@
   --_ki-checkbox-fg: var(--ki-checkbox-unchecked-rest-fg);
   --_ki-checkbox-border: var(--ki-checkbox-unchecked-rest-border);
 
+  /* MarsUI glass DNA (master 10030:982): the unchecked box carries a vertical
+     Surface/Special gradient (dark-s0_light_s2 -> light-s0_dark-s4, both
+     scheme-aware) and every state keeps Component_effect/primary_default
+     (drop 0/1/1/-0.5 + inset White/12 0/3/3). The gradient lives in a private
+     custom property, following the ki-button overlay-image precedent, so
+     solid-fill states can reset it to none. backdrop-filter blur is skipped:
+     the fill is opaque, the blur is invisible (audited decision). */
+  --_ki-checkbox-bg-image: linear-gradient(
+    var(--ki-surface-special-dark-s0-light-s2),
+    var(--ki-surface-special-light-s0-dark-s4)
+  );
+  --_ki-checkbox-shadow: var(--ki-effect-component-primary-default-shadow);
+
   display: inline-block;
   font-family: var(--ki-typography-family-body);
 }
@@ -13,12 +26,14 @@
   --_ki-checkbox-bg: var(--ki-checkbox-checked-rest-bg);
   --_ki-checkbox-fg: var(--ki-checkbox-checked-rest-fg);
   --_ki-checkbox-border: var(--ki-checkbox-checked-rest-border);
+  --_ki-checkbox-bg-image: none;
 }
 
 :host([indeterminate]) {
   --_ki-checkbox-bg: var(--ki-checkbox-indeterminate-rest-bg);
   --_ki-checkbox-fg: var(--ki-checkbox-indeterminate-rest-fg);
   --_ki-checkbox-border: var(--ki-checkbox-indeterminate-rest-border);
+  --_ki-checkbox-bg-image: none;
 }
 
 @media (hover: hover) {
@@ -45,12 +60,14 @@
   --_ki-checkbox-bg: var(--ki-checkbox-unchecked-disabled-bg);
   --_ki-checkbox-fg: var(--ki-checkbox-unchecked-disabled-fg);
   --_ki-checkbox-border: var(--ki-checkbox-unchecked-disabled-border);
+  --_ki-checkbox-bg-image: none;
 }
 
 :host(:state(fieldset-disabled)) {
   --_ki-checkbox-bg: var(--ki-checkbox-unchecked-disabled-bg);
   --_ki-checkbox-fg: var(--ki-checkbox-unchecked-disabled-fg);
   --_ki-checkbox-border: var(--ki-checkbox-unchecked-disabled-border);
+  --_ki-checkbox-bg-image: none;
 }
 
 :host([checked][disabled]) {
@@ -81,12 +98,14 @@
   --_ki-checkbox-bg: var(--ki-checkbox-invalid-bg);
   --_ki-checkbox-fg: var(--ki-checkbox-invalid-fg);
   --_ki-checkbox-border: var(--ki-checkbox-invalid-border);
+  --_ki-checkbox-bg-image: none;
 }
 
 :host(.ki-user-invalid) {
   --_ki-checkbox-bg: var(--ki-checkbox-invalid-bg);
   --_ki-checkbox-fg: var(--ki-checkbox-invalid-fg);
   --_ki-checkbox-border: var(--ki-checkbox-invalid-border);
+  --_ki-checkbox-bg-image: none;
 }
 
 @media (hover: hover) {
@@ -99,10 +118,14 @@
   }
 }
 
+/* Checkbox_label rows are items-start in the master (10095:3846): the box
+   rides the FIRST text line instead of centering against a wrapped block.
+   The control's margin-block-start centers it on line one — invisible for
+   single-line labels, correct for multiline ones. */
 label {
   position: relative;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--ki-checkbox-gap);
   color: var(--ki-text-high-em);
   font-size: var(--ki-checkbox-label-font-size);
@@ -131,12 +154,18 @@ input {
   flex: none;
   inline-size: var(--ki-checkbox-control-size);
   block-size: var(--ki-checkbox-control-size);
+  margin-block-start: calc(
+    (var(--ki-checkbox-label-line-height) - var(--ki-checkbox-control-size)) /
+    2
+  );
   color: var(--_ki-checkbox-fg);
   background-color: var(--_ki-checkbox-bg);
+  background-image: var(--_ki-checkbox-bg-image);
   border-color: var(--_ki-checkbox-border);
   border-style: solid;
   border-width: var(--ki-checkbox-border-width);
   border-radius: var(--ki-checkbox-radius);
+  box-shadow: var(--_ki-checkbox-shadow);
 }
 
 /* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
@@ -211,14 +240,31 @@ input:active:not([disabled], :state(fieldset-disabled)) ~ [part="control"] {
   min-inline-size: 0;
 }
 
+/* Micro-motion (gated exactly like the pre-existing mark transition so the
+   reduced-motion visual harness stays deterministic): surface/effect
+   cross-fades ease with the standard curve, the press dip releases with the
+   out curve, and the mark lands with the gentle spring overshoot. The opaque
+   focus outline stays untransitioned: keyboard users never wait for focus. */
 @media (prefers-reduced-motion: no-preference) {
+  [part="control"] {
+    transition:
+      background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
   .mark {
-    transition-duration: var(--ki-motion-duration-fast);
-    transition-property: opacity, transform;
-    transition-timing-function: var(--ki-motion-easing-out);
+    transition:
+      opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-spring);
   }
 
   :host(:not([checked], [indeterminate])) .mark {
-    transform: scale(0.75);
+    transform: scale(0.6);
+  }
+
+  /* Pressed dip: transform-only, springs back through the control transition. */
+  input:active:not([disabled]) ~ [part="control"] {
+    transform: scale(0.92);
   }
 }

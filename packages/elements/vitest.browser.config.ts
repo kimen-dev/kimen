@@ -69,9 +69,15 @@ export default defineConfig({
       provider,
       screenshotFailures: false,
       commands: {
+        // `null` restores the suite BASELINE (light — Playwright's context
+        // default every spec was written against), not the host preference:
+        // `emulateMedia({ colorScheme: null })` re-exposes the machine's
+        // system scheme, so on a dark-mode host every reset turned the page
+        // dark and whatever ran next read dark token values from a spec
+        // that never asked for them.
         emulateColorScheme: defineBrowserCommand(
           async ({ page }, scheme: 'dark' | 'light' | null) => {
-            await page.emulateMedia({ colorScheme: scheme });
+            await page.emulateMedia({ colorScheme: scheme ?? 'light' });
           },
         ),
         // Emulate a device with no hovering pointer (a touch screen), or lift
@@ -123,9 +129,15 @@ export default defineConfig({
           }
           throw new Error(`ariaSnapshot: no frame contains ${selector}`);
         }),
+        // Same baseline rule as emulateColorScheme above: `null` restores
+        // the suite baseline (no-preference — what every ungated spec was
+        // written against), never the host preference. `emulateMedia({
+        // reducedMotion: null })` re-exposes the machine's Reduce Motion
+        // setting, so on a host with it enabled every reset stripped the
+        // motion-gated rules out from under whatever spec ran next.
         emulateReducedMotion: defineBrowserCommand(
           async ({ page }, reducedMotion: 'reduce' | 'no-preference' | null) => {
-            await page.emulateMedia({ reducedMotion });
+            await page.emulateMedia({ reducedMotion: reducedMotion ?? 'no-preference' });
           },
         ),
         ariaSnapshotByRole: defineBrowserCommand(

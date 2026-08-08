@@ -61,14 +61,17 @@ export const Dismissible: Story = {
         },
         'Backup completed',
       )}
-      <button
+      <ki-button
         type="button"
+        variant="secondary"
+        size="sm"
+        style={{ justifySelf: 'start' }}
         onClick={() =>
           document.getElementById('ki-alert-story-dismissible')?.removeAttribute('dismissed')
         }
       >
         Show again
-      </button>
+      </ki-button>
     </div>
   ),
 };

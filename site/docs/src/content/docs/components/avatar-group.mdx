@@ -1,0 +1,51 @@
+---
+title: ki-avatar-group
+description: Stacks ki-avatar children as one overlapping row with a visible cap and a "+N" overflow counter.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A token-styled companion container that stacks
+[ki-avatar](/kimen/docs/components/avatar/) children as one overlapping row
+with a configurable visible cap and a static "+N" overflow counter.
+
+<Demo
+  code={`<ki-avatar-group max="3">
+  <ki-avatar initials="MG" label="Mars Gotta"></ki-avatar>
+  <ki-avatar initials="AL" label="Ada Lovelace"></ki-avatar>
+  <ki-avatar initials="GH" label="Grace Hopper"></ki-avatar>
+  <ki-avatar initials="AT" label="Alan Turing"></ki-avatar>
+  <ki-avatar initials="KJ" label="Katherine Johnson"></ki-avatar>
+</ki-avatar-group>`}
+/>
+
+## Examples
+
+### Group size
+
+`size` on the group sizes every stacked avatar consistently:
+
+<Demo
+  code={`<ki-avatar-group size="sm" max="4">
+  <ki-avatar initials="MG" label="Mars Gotta"></ki-avatar>
+  <ki-avatar initials="AL" label="Ada Lovelace"></ki-avatar>
+  <ki-avatar initials="GH" label="Grace Hopper"></ki-avatar>
+  <ki-avatar initials="AT" label="Alan Turing"></ki-avatar>
+</ki-avatar-group>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-avatar-group" />
+
+## Accessibility
+
+The "+N" counter is static text, never a button — the group is not a member
+picker or expandable overflow. Each slotted avatar keeps its own `label`;
+children other than `ki-avatar` are unsupported and not repaired.
+
+## Workshop
+
+Documented with its parent:
+[open ki-avatar in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-avatar--docs)

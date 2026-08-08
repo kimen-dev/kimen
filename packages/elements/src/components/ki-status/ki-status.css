@@ -46,3 +46,24 @@
     0 0 0 var(--ki-status-ring-width) var(--ki-status-ring-color),
     var(--ki-status-shadow);
 }
+
+/* Micro-motion (Art. V): paint-only crossfade when tone/ring flip at
+ * runtime (presence online → offline) plus a soft scale pop on mount,
+ * gated so reduced-motion environments (and the visual harness) stay
+ * static by construction — the ki-dialog @starting-style gating shape. */
+@media (prefers-reduced-motion: no-preference) {
+  [part="dot"] {
+    transition:
+      background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+      transform var(--ki-motion-duration-fast) var(--ki-motion-easing-emphasized-decelerate),
+      opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+  }
+
+  @starting-style {
+    [part="dot"] {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+  }
+}

@@ -2,12 +2,9 @@
    [data-ki-color-scheme="dark"|"light"] on :root. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-ki-color-scheme='light']) {
-    --ki-foundation-migrated-component-button-button-primary-hover-shadow: 0px 1px 1px -0.5px var(--ki-color-black-8);
+    --ki-border-hairline-base-em: var(--ki-size-border-hairline) solid var(--ki-color-white-3); /** 1px solid Outline/base_em hairline as a composed border (Black/3 light; the dark mode overrides the color to White/3). Lives in the primitive layer because composed borders carry the style keyword, which the non-primitive-literal contract forbids elsewhere; the color mirrors ki.outline.base-em. */
     --ki-foundation-migrated-component-button-button-tertiary-active-shadow: 0px 1px 2px 0px var(--ki-color-black-48), 0px 2px 6px 2px var(--ki-color-black-12);
     --ki-foundation-migrated-component-button-button-tertiary-hover-shadow: 0px 1px 3px 0px var(--ki-color-black-48), 0px 4px 8px 3px var(--ki-color-black-12);
-    --ki-foundation-migrated-component-card-card-elevation: 0px 1px 2px 0px var(--ki-color-black-8), 0px 2px 6px 2px var(--ki-color-black-12);
-    --ki-foundation-migrated-component-dialog-dialog-border: 1px solid var(--ki-color-white-5);
-    --ki-foundation-migrated-component-dialog-dialog-shadow: 0px var(--ki-space-xs) var(--ki-space-3xl) 0px var(--ki-color-black-12), 0px var(--ki-space-5xl) var(--ki-space-9xl) 0px var(--ki-color-black-8);
     --ki-surface-s0: var(--ki-color-dark-950); /** semantic color for surface s0. */
     --ki-surface-s1: var(--ki-color-dark-900); /** semantic color for surface s1. */
     --ki-surface-s2: var(--ki-color-dark-800); /** semantic color for surface s2. */
@@ -194,12 +191,9 @@
 }
 
 :root[data-ki-color-scheme='dark'] {
-  --ki-foundation-migrated-component-button-button-primary-hover-shadow: 0px 1px 1px -0.5px var(--ki-color-black-8);
+  --ki-border-hairline-base-em: var(--ki-size-border-hairline) solid var(--ki-color-white-3); /** 1px solid Outline/base_em hairline as a composed border (Black/3 light; the dark mode overrides the color to White/3). Lives in the primitive layer because composed borders carry the style keyword, which the non-primitive-literal contract forbids elsewhere; the color mirrors ki.outline.base-em. */
   --ki-foundation-migrated-component-button-button-tertiary-active-shadow: 0px 1px 2px 0px var(--ki-color-black-48), 0px 2px 6px 2px var(--ki-color-black-12);
   --ki-foundation-migrated-component-button-button-tertiary-hover-shadow: 0px 1px 3px 0px var(--ki-color-black-48), 0px 4px 8px 3px var(--ki-color-black-12);
-  --ki-foundation-migrated-component-card-card-elevation: 0px 1px 2px 0px var(--ki-color-black-8), 0px 2px 6px 2px var(--ki-color-black-12);
-  --ki-foundation-migrated-component-dialog-dialog-border: 1px solid var(--ki-color-white-5);
-  --ki-foundation-migrated-component-dialog-dialog-shadow: 0px var(--ki-space-xs) var(--ki-space-3xl) 0px var(--ki-color-black-12), 0px var(--ki-space-5xl) var(--ki-space-9xl) 0px var(--ki-color-black-8);
   --ki-surface-s0: var(--ki-color-dark-950); /** semantic color for surface s0. */
   --ki-surface-s1: var(--ki-color-dark-900); /** semantic color for surface s1. */
   --ki-surface-s2: var(--ki-color-dark-800); /** semantic color for surface s2. */

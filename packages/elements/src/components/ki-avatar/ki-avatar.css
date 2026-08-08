@@ -90,3 +90,27 @@
   inline-size: var(--_avatar-icon-size);
   block-size: var(--_avatar-icon-size);
 }
+
+/* Micro-motion (MarsUI soft glass language, ki-dialog @starting-style
+ * precedent): the incoming content of every fallback step — a portrait that
+ * resolves after first paint, or the initials/figure a silent fallback
+ * swaps in (FR-001) — fades in over the token surface instead of popping.
+ * Opacity only, so the silent-fallback contract (no layout change, no
+ * color flash beneath) is preserved; disabled entirely under reduced
+ * motion (Art. V, harness-deterministic). */
+@media (prefers-reduced-motion: no-preference) {
+  [part="image"],
+  [part="initials"],
+  [part="icon"] {
+    opacity: 1;
+    transition: opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  @starting-style {
+    [part="image"],
+    [part="initials"],
+    [part="icon"] {
+      opacity: 0;
+    }
+  }
+}

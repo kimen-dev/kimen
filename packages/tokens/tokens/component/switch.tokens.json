@@ -13,35 +13,51 @@
         "$value": "{ki.space.4xl}",
         "$description": "dimension used by the switch component for thumb size."
       },
+      "thumb-width": {
+        "$value": "{ki.space.6xl}",
+        "$description": "dimension used by the switch component for thumb inline size (MarsUI md pointer is 22x18 — wider than tall; thumb-size remains the block size)."
+      },
       "thumb-inset": {
         "$value": "{ki.space.xxs}",
         "$description": "dimension used by the switch component for thumb inset."
       },
       "gap": {
-        "$value": "{ki.space.sm}",
-        "$description": "dimension used by the switch component for gap."
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the switch component for gap (MarsUI sm label pairing: Space/md 8px)."
       },
       "track-radius": {
         "$value": "{ki.radius.md}",
         "$description": "dimension used by the switch component for track radius."
       },
       "thumb-radius": {
-        "$value": "{ki.radius.sm}",
-        "$description": "dimension used by the switch component for thumb radius."
+        "$value": "{ki.radius.round}",
+        "$description": "dimension used by the switch component for thumb radius (MarsUI pointer corner radius is half the height with corner smoothing; radius_round clamps to the smoothed pill)."
       },
       "border-width": {
-        "$value": "{ki.space.xxs}",
-        "$description": "dimension used by the switch component for border width."
+        "$value": "{ki.size.border.hairline}",
+        "$description": "dimension used by the switch component for border width (MarsUI tracks are borderless; the 1px hairline in ki.outline.control is the declared WCAG 1.4.11 deviation at half the former weight, so the control stops reading as an outlined pill)."
       },
       "min-target": {
-        "$value": "{ki.space.7xl}",
-        "$description": "dimension used by the switch component for min target."
+        "$value": "{ki.space.9xl}",
+        "$description": "dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint)."
+      },
+      "glyph-width": {
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb)."
+      },
+      "glyph-height": {
+        "$value": "{ki.space.sm}",
+        "$description": "dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height)."
+      },
+      "glyph-dash-height": {
+        "$value": "{ki.space.xxs}",
+        "$description": "dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash)."
       },
       "unchecked": {
         "rest": {
           "track": {
-            "$value": "{ki.surface.s3}",
-            "$description": "color used by the switch component for unchecked rest track."
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the switch component for unchecked rest track (MarsUI OFF track = surface/disabled_med_em #dddfe4 light / White-18 dark — a solid soft fill, not an outlined pill)."
           },
           "thumb": {
             "$value": "{ki.surface.special.light-s0-dark-s4}",
@@ -54,8 +70,8 @@
         },
         "hover": {
           "track": {
-            "$value": "{ki.surface.s4}",
-            "$description": "color used by the switch component for unchecked hover track."
+            "$value": "{ki.surface.s5}",
+            "$description": "color used by the switch component for unchecked hover track (Kimen-invented one-step ramp over the corrected rest fill; the master defines no hover variant)."
           },
           "thumb": {
             "$value": "{ki.surface.special.light-s0-dark-s4}",
@@ -68,8 +84,8 @@
         },
         "active": {
           "track": {
-            "$value": "{ki.surface.s5}",
-            "$description": "color used by the switch component for unchecked active track."
+            "$value": "{ki.surface.disabled-high-em}",
+            "$description": "color used by the switch component for unchecked active track (one step beyond hover; the master defines no pressed variant)."
           },
           "thumb": {
             "$value": "{ki.surface.special.light-s0-dark-s4}",
@@ -82,12 +98,12 @@
         },
         "disabled": {
           "track": {
-            "$value": "{ki.surface.disabled-low-em}",
-            "$description": "color used by the switch component for unchecked disabled track."
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the switch component for unchecked disabled track (MarsUI disabled track keeps the OFF rest fill surface/disabled_med_em; the disabled signal lives in the glyph in the master)."
           },
           "thumb": {
-            "$value": "{ki.surface.disabled-high-em}",
-            "$description": "color used by the switch component for unchecked disabled thumb."
+            "$value": "{ki.surface.special.light-s0-dark-s4}",
+            "$description": "color used by the switch component for unchecked disabled thumb (MarsUI pointer keeps its light construction in every state including disabled)."
           },
           "border": {
             "$value": "{ki.surface.disabled-med-em}",
@@ -140,12 +156,12 @@
         },
         "disabled": {
           "track": {
-            "$value": "{ki.surface.disabled-low-em}",
-            "$description": "color used by the switch component for checked disabled track."
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the switch component for checked disabled track (MarsUI disabled track keeps the OFF rest fill surface/disabled_med_em; the disabled signal lives in the glyph in the master)."
           },
           "thumb": {
-            "$value": "{ki.surface.disabled-high-em}",
-            "$description": "color used by the switch component for checked disabled thumb."
+            "$value": "{ki.surface.special.light-s0-dark-s4}",
+            "$description": "color used by the switch component for checked disabled thumb (MarsUI pointer keeps its light construction in every state including disabled)."
           },
           "border": {
             "$value": "{ki.surface.disabled-med-em}",

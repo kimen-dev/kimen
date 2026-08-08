@@ -125,6 +125,15 @@ function readTokenLength(name: string): number {
   return value;
 }
 
+function readTokenShadow(name: string): string {
+  const probe = document.createElement('div');
+  probe.style.boxShadow = `var(${name})`;
+  document.body.appendChild(probe);
+  const value = getComputedStyle(probe).boxShadow;
+  probe.remove();
+  return value;
+}
+
 /**
  * The native indicator convention: an `auto` scroll axis grows scrollbar
  * chrome exactly while the axis is scrollable, and only there. Asserting
@@ -269,6 +278,14 @@ describe('ki-scroller', () => {
 
     expect(document.activeElement).toBe(el);
     expect(el.shadowRoot?.activeElement).toBe(viewport);
+
+    // Keyboard focus shows the MarsUI Focus/primary pair: the opaque outline
+    // PLUS the 3px alpha halo (box-shadow fades in through the gated
+    // transition, hence the poll).
+    expect(getComputedStyle(viewport).outlineStyle).toBe('solid');
+    await expect
+      .poll(() => getComputedStyle(viewport).boxShadow)
+      .toBe(readTokenShadow('--ki-focus-primary'));
   });
 
   it('S7 Arrow Down scrolls the focused scroller natively toward the end', async () => {

@@ -79,11 +79,25 @@ export const Disabled: Story = {
   parameters: { slots: { default: 'Unavailable' } },
 };
 
-/** Leading and trailing media through the `start` and `end` slots. */
+/**
+ * Leading and trailing media through the `start` and `end` slots. The start
+ * media is a directly slotted SVG so the component's slotted-icon box (18px
+ * at md) sizes it, matching the Figma Icon/Placeholder exercise.
+ */
 export const WithSlots: Story = {
   parameters: {
     slots: {
-      start: <span aria-hidden="true">→</span>,
+      start: (
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M5 12h14m-6-6 6 6-6 6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      ),
       default: 'Continue',
     },
   },

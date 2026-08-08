@@ -1,0 +1,42 @@
+---
+title: Kimen
+description: Standards-first web components for generative UI — tokens-only theming, agent-legible contracts, a guarded GenUI catalog.
+template: splash
+hero:
+  title: The Web Components foundation for generative UI
+  tagline: 29 standards-first ki-* elements that work in any framework and under any brand. Theming is one attribute. Agent contracts are generated, never promised. Quality is a gate, not a claim.
+  actions:
+    - text: Get started
+      link: /kimen/docs/getting-started/
+      icon: right-arrow
+    - text: Browse components
+      link: /kimen/docs/components/alert/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="Any framework, no wrappers" icon="puzzle">
+    Standard custom elements with native form participation
+    (`ElementInternals`). React 19, Vue 3, Angular and plain HTML all use the
+    same two-step setup — see the
+    [framework guide](/kimen/docs/guides/frameworks/).
+  </Card>
+  <Card title="Tokens-only theming" icon="seti:css">
+    Zero hardcoded visual values, enforced by lint. Brands reassign the
+    semantic token layer; a Material&nbsp;3 reference theme re-skins every
+    component in CI on every commit —
+    [how theming works](/kimen/docs/guides/theming/).
+  </Card>
+  <Card title="Legible to agents, by contract" icon="open-book">
+    `custom-elements.json`, `llms.txt` and when-to-use metadata are generated
+    from the component sources and shipped with the package —
+    [working with AI](/kimen/docs/resources/working-with-ai/).
+  </Card>
+  <Card title="A guarded GenUI catalog" icon="approve-check">
+    Agent-emitted UI specs validate against a neutral catalog and render
+    fail-closed: no unknown components, no undeclared actions, no code path
+    from spec data — [the UI spec format](/kimen/docs/guides/ui-spec/).
+  </Card>
+</CardGrid>

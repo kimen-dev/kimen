@@ -28,12 +28,15 @@ always comes from the required `label` attribute, never from the slot:
 </ki-icon-button>
 ```
 
-Visual hierarchy comes from `variant` (default `secondary`) and semantic
-intent from `tone` (default `neutral`) — never use `variant` to signal
-success or danger:
+Visual hierarchy comes from `variant` — the same five-level emphasis ramp
+as `ki-button` (`primary` → `secondary` → `tertiary` → `quaternary` →
+`ghost`, default `secondary`) — and semantic intent from `tone` (default
+`neutral`); never use `variant` to signal success or danger:
 
 ```html
 <ki-icon-button variant="primary" label="Play">…</ki-icon-button>
+<ki-icon-button variant="tertiary" label="Copy">…</ki-icon-button>
+<ki-icon-button variant="quaternary" label="More options">…</ki-icon-button>
 <ki-icon-button variant="ghost" tone="danger" label="Delete row">…</ki-icon-button>
 ```
 
@@ -51,7 +54,7 @@ Sizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) to `xl`
 description; `label` stays the accessible name:
 
 ```html
-<ki-tooltip text="Closes the dialog">
+<ki-tooltip label="Closes the dialog">
   <ki-icon-button label="Close">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" /></svg>
   </ki-icon-button>
@@ -74,8 +77,11 @@ when-NOT-to-use — reach for `ki-button`.
 
 The full matrix follows
 `--ki-icon-button-{variant}-{tone}-{state}-{bg|border|fg}` and
-`--ki-icon-button-{size}-*`. Shadow parts: `::part(button)` (internal native
-button) and `::part(icon)` (icon wrapper).
+`--ki-icon-button-{size}-*`, plus the fidelity-pass effect tokens:
+`--ki-icon-button-{variant}-{state}-shadow` and the per-side bevel
+`--ki-icon-button-{variant}-rest-border-bottom` (raised variants only).
+Shadow parts: `::part(button)` (internal native button) and `::part(icon)`
+(icon wrapper).
 
 ## Accessibility
 

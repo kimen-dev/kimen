@@ -78,3 +78,12 @@ Feature: List
     Given a right-to-left document with a list item holding an icon in the start slot and a timestamp in the end slot
     When the page renders
     Then the icon leads and the timestamp trails the item's text
+
+  # Motion is decorative by contract: rows settle to the same end state
+  # with and without the entrance stagger.
+  # S12
+  Scenario: Reduced motion renders list rows at once
+    Given a user whose system prefers reduced motion
+    When a list of three contacts enters the page
+    Then every row renders fully opaque immediately
+    And row hover feedback applies without transitions

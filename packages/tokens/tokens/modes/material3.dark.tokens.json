@@ -545,32 +545,6 @@
       "migrated": {
         "component-button": {
           "button": {
-            "primary": {
-              "hover": {
-                "shadow": {
-                  "$type": "shadow",
-                  "$value": {
-                    "color": "{ki.foundation.migrated.semantic-material3.overlay.med-em}",
-                    "offsetX": {
-                      "value": 0,
-                      "unit": "px"
-                    },
-                    "offsetY": {
-                      "value": 1,
-                      "unit": "px"
-                    },
-                    "blur": {
-                      "value": 1,
-                      "unit": "px"
-                    },
-                    "spread": {
-                      "value": -0.5,
-                      "unit": "px"
-                    }
-                  }
-                }
-              }
-            },
             "tertiary": {
               "active": {
                 "shadow": {

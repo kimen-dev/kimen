@@ -35,14 +35,30 @@
   border-radius: var(--ki-indicator-dot-radius);
   background: var(--ki-indicator-dot-color);
 
-  /* The only motion in the component: the highlight transfer (FR-008),
-   * theme-token duration, no motion required to be functional. */
+  /* The highlight transfer (FR-008): theme-token duration AND easing (the
+   * MarsUI standard curve — previously the UA default `ease` applied), no
+   * motion required to be functional. */
   transition:
-    inline-size var(--ki-indicator-motion-duration),
-    block-size var(--ki-indicator-motion-duration),
-    border-width var(--ki-indicator-motion-duration),
-    border-color var(--ki-indicator-motion-duration),
-    background-color var(--ki-indicator-motion-duration);
+    inline-size var(--ki-indicator-motion-duration) var(--ki-indicator-motion-easing),
+    block-size var(--ki-indicator-motion-duration) var(--ki-indicator-motion-easing),
+    border-width var(--ki-indicator-motion-duration) var(--ki-indicator-motion-easing),
+    border-color var(--ki-indicator-motion-duration) var(--ki-indicator-motion-easing),
+    background-color var(--ki-indicator-motion-duration) var(--ki-indicator-motion-easing);
+}
+
+/* Row entrance (Art. V): opacity-only fade when the indicator mounts under
+ * a carousel, gated so reduced-motion environments (and the visual harness)
+ * stay static by construction — the ki-dialog @starting-style gating shape. */
+@media (prefers-reduced-motion: no-preference) {
+  [part="indicator"] {
+    transition: opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-standard-decelerate);
+  }
+
+  @starting-style {
+    [part="indicator"] {
+      opacity: 0;
+    }
+  }
 }
 
 [part~="dot-current"] {

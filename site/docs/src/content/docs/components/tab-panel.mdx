@@ -1,0 +1,37 @@
+---
+title: ki-tab-panel
+description: One content view paired with a ki-tab inside ki-tabs.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+One content view paired with a [ki-tab](/kimen/docs/components/tab/) inside
+[ki-tabs](/kimen/docs/components/tabs/), sharing its `value` — never
+standalone.
+
+<Demo
+  layout="block"
+  code={`<ki-tabs label="Billing" value="plans">
+  <ki-tab value="plans">Plans</ki-tab>
+  <ki-tab value="invoices">Invoices</ki-tab>
+  <ki-tab-panel value="plans">Plan management</ki-tab-panel>
+  <ki-tab-panel value="invoices">Invoice history</ki-tab-panel>
+</ki-tabs>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-tab-panel" />
+
+## Accessibility
+
+The parent group wires the tab/panel ARIA relationship from the shared
+`value`; orphan and duplicate panels are hidden by the group. The panel is
+not a lazy-mounting mechanism — its content exists in the DOM whether or not
+it is the visible view.
+
+## Workshop
+
+Documented with its parent:
+[open ki-tabs in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-tabs--docs)

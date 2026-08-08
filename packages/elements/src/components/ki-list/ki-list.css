@@ -22,3 +22,33 @@
 ::slotted(ki-list-item:not(:last-child)) {
   border-block-end: var(--_ki-list-item-divider-width) solid var(--_ki-list-item-divider-color);
 }
+
+/* Mount entrance (MarsUI glassy soft-elevation language): rows fade/settle
+ * in with a stagger of one third of the fast duration token, opacity+transform only.
+ * Entirely inside the gate: reduced motion renders instantly and the visual
+ * harness (which emulates reduced motion) stays deterministic. */
+@media (prefers-reduced-motion: no-preference) {
+  ::slotted(ki-list-item) {
+    animation: ki-list-enter var(--ki-motion-duration-medium-1) var(--ki-motion-easing-out)
+      backwards;
+  }
+
+  ::slotted(ki-list-item:nth-child(2)) {
+    animation-delay: calc(var(--ki-motion-duration-fast) / 3);
+  }
+
+  ::slotted(ki-list-item:nth-child(3)) {
+    animation-delay: calc(var(--ki-motion-duration-fast) * 2 / 3);
+  }
+
+  ::slotted(ki-list-item:nth-child(n + 4)) {
+    animation-delay: var(--ki-motion-duration-fast);
+  }
+}
+
+@keyframes ki-list-enter {
+  from {
+    opacity: 0;
+    translate: 0 var(--ki-motion-distance-xs);
+  }
+}

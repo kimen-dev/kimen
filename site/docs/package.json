@@ -1,0 +1,30 @@
+{
+  "name": "@kimen/docs",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Kimen documentation site (Astro + Starlight), served at /kimen/docs/ inside the GitHub Pages artifact.",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimen-dev/kimen.git",
+    "directory": "site/docs"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "nx": {
+    "tags": [
+      "scope:docs"
+    ]
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.41.0",
+    "@kimen/elements": "workspace:*",
+    "@kimen/tokens": "workspace:*",
+    "astro": "^7.0.2",
+    "sharp": "^0.35.0"
+  }
+}

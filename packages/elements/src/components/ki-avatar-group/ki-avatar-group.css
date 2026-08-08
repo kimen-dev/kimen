@@ -11,12 +11,17 @@
 
 :host {
   --_group-overlap: var(--ki-avatar-group-md-overlap);
+  --_enter-sign: 1;
   --_group-counter-size: var(--ki-avatar-md-size);
   --_group-counter-padding-inline: var(--ki-avatar-group-md-counter-padding-inline);
   --_group-counter-font-size: var(--ki-avatar-group-md-counter-font-size);
 
   display: inline-flex;
   font-family: var(--ki-avatar-font-family);
+}
+
+:host(:dir(rtl)) {
+  --_enter-sign: -1;
 }
 
 ::slotted(ki-avatar) {
@@ -120,6 +125,11 @@
   justify-content: center;
   box-sizing: border-box;
   block-size: var(--_group-counter-size);
+
+  /* The Figma counter is a member-size CIRCLE minimum (32/40/48/56 measured
+   * on 10087:2600): single-digit counts render the full circle with the
+   * text centered in it, and only longer counts stretch into a pill. */
+  min-inline-size: var(--_group-counter-size);
   margin-inline-start: calc(-1 * var(--_group-overlap));
   padding-inline: var(--_group-counter-padding-inline);
   border: var(--ki-avatar-group-counter-border-width) solid
@@ -133,4 +143,58 @@
   font-weight: var(--ki-avatar-font-weight);
   line-height: 1;
   white-space: nowrap;
+}
+
+/* Whole-group hover softly lifts the counter one elevation step
+ * (Component_effect secondary_default -> secondary_hover, box-shadow only):
+ * a preview of the future expandable overflow without pretending the static
+ * counter is a button. State styling stays outside the motion gate; only
+ * the transition below is motion. Hover paint is gated on a hovering
+ * pointer: a touch screen latches :hover on the tap (pointer-capability
+ * contract). */
+@media (hover: hover) {
+  :host(:hover) [part="counter"] {
+    box-shadow: var(--ki-effect-component-secondary-hover-shadow);
+  }
+}
+
+/* Micro-motion (MarsUI single-speed language, ki-switch/ki-dialog gating
+ * precedent): transform/opacity/box-shadow only, disabled entirely under
+ * reduced motion so the visual harness stays deterministic (Art. V). */
+@media (prefers-reduced-motion: no-preference) {
+  /* Members settle into the stack with a tiny inline slide + fade,
+   * staggered by the stacking index the group already coordinates inline
+   * (--_group-enter-index, set by syncMembers alongside z-index): the row
+   * reads as dealing cards under the leading member. The stagger step
+   * derives from the fast duration token (one third of it). */
+  ::slotted(ki-avatar) {
+    animation: ki-avatar-group-enter var(--ki-motion-duration-medium-1) var(--ki-motion-easing-out)
+      backwards;
+    animation-delay: calc(var(--_group-enter-index, 0) * var(--ki-motion-duration-fast) / 3);
+  }
+
+  /* The counter acknowledges a recount with a crossfade + micro-scale pop
+   * (the component re-keys it per count so the animation re-fires). */
+  [part="counter"] {
+    animation: ki-counter-pop var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+    transition: box-shadow var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+  }
+
+  @keyframes ki-avatar-group-enter {
+    from {
+      opacity: 0;
+
+      /* --_enter-sign mirrors the slide so members always travel from
+       * inline-start (RTL flips the stack via margin-inline-start; a
+       * physical translateX would cross the preceding avatar). */
+      transform: translateX(calc(-0.25 * var(--_group-overlap) * var(--_enter-sign, 1)));
+    }
+  }
+
+  @keyframes ki-counter-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+  }
 }

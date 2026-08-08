@@ -9,13 +9,18 @@
         "$value": "{ki.space.md}",
         "$description": "dimension used by the radio component for dot size."
       },
+      "dot-shadow": {
+        "$value": "{ki.effect.small-dark-shadow}",
+        "$type": "shadow",
+        "$description": "shadow used by the radio component for the selected dot (MarsUI Small_dark_shadow: drop 0/2/3/-1.5 Elevation/shadow_dark, the lifted-dot look of the master)."
+      },
       "min-target": {
         "$value": "{ki.space.7xl}",
         "$description": "dimension used by the radio component for min target."
       },
       "gap": {
-        "$value": "{ki.space.sm}",
-        "$description": "dimension used by the radio component for gap."
+        "$value": "{ki.space.xl}",
+        "$description": "dimension used by the radio component for gap (MarsUI md label pairing: Space/xl 12px for the 20px circle / 24px target geometry)."
       },
       "control-radius": {
         "$value": "{ki.radius.round}",
@@ -27,8 +32,8 @@
       },
       "label": {
         "font-size": {
-          "$value": "{ki.typography.size.body-1}",
-          "$description": "dimension used by the radio component for label font size."
+          "$value": "{ki.typography.size.body-2}",
+          "$description": "dimension used by the radio component for label font size (MarsUI md pairing: body_2 15px; line-height stays 24 and weight 500)."
         },
         "font-weight": {
           "$value": "{ki.typography.weight.body.normal}",
@@ -84,74 +89,78 @@
         },
         "disabled": {
           "bg": {
-            "$value": "{ki.surface.disabled-low-em}",
-            "$description": "color used by the radio component for unselected disabled background."
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the radio component for unselected disabled background (MarsUI Surface/disabled_med_em Gray/300)."
           },
           "fg": {
-            "$value": "{ki.text.muted}",
-            "$description": "color used by the radio component for unselected disabled foreground."
+            "$value": "{ki.text.base-em}",
+            "$description": "color used by the radio component for unselected disabled dot color (dot is hidden unselected; kept coherent with the disabled ladder, retiring the deprecated ki.text.muted alias)."
           },
           "border": {
-            "$value": "{ki.outline.med-em}",
-            "$description": "color used by the radio component for unselected disabled border."
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the radio component for unselected disabled border (same as the fill: borderless look in the master)."
           }
         }
       },
       "selected": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.s0}",
-            "$description": "color used by the radio component for selected rest background."
+            "$value": "{ki.surface.primary-med-em}",
+            "$description": "color used by the radio component for selected rest background (MarsUI active radio is a solid Surface/primary_med_em #845abe circle — the filled donut with a white dot is the signature, mirroring ki-checkbox checked)."
           },
           "fg": {
-            "$value": "{ki.surface.primary-high-em}",
-            "$description": "color used by the radio component for selected rest foreground."
+            "$value": "{ki.text.primary-on-primary}",
+            "$description": "color used by the radio component for selected rest dot (MarsUI Text/primary_on_primary white 8px dot)."
           },
           "border": {
-            "$value": "{ki.outline.primary-high-em}",
-            "$description": "color used by the radio component for selected rest border."
+            "$value": "{ki.surface.primary-med-em}",
+            "$description": "color used by the radio component for selected rest border (same as the fill: the selected circle is borderless in the master)."
           }
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.s1}",
-            "$description": "color used by the radio component for selected hover background. Brief §1: onmars hover is neutral (hover_overlay / surface em ramp); the primary-tinted alpha stays in radio.material3."
+            "$value": "{ki.surface.primary-med-em-hover}",
+            "$description": "color used by the radio component for selected hover background (the master has no selected-hover variant; mirrors ki-checkbox checked hover: a real delta in both schemes)."
           },
           "fg": {
-            "$value": "{ki.surface.primary-high-em}",
+            "$value": "{ki.text.primary-on-primary}",
             "$description": "color used by the radio component for selected hover foreground."
           },
           "border": {
-            "$value": "{ki.outline.primary-high-em}",
-            "$description": "color used by the radio component for selected hover border."
+            "$value": "{ki.surface.primary-med-em-hover}",
+            "$description": "color used by the radio component for selected hover border (same as the fill: borderless look)."
           }
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.s2}",
-            "$description": "Pressed fill of the SELECTED radio. Was {ki.surface.s0}, i.e. identical to its own rest fill, so pressing an already-selected option reverted the hover step instead of deepening it — the same \"pressed = un-hover\" shape removed from ki-button, and legible only to a pointer user who had hovered first. Now follows the ramp its unselected sibling already follows: rest s0, hover s1, pressed s2."
+            "$value": "{ki.surface.primary-med-em}",
+            "$description": "color used by the radio component for selected active background (MarsUI defines no pressed state; mirrors rest)."
           },
           "fg": {
-            "$value": "{ki.surface.primary-high-em}",
+            "$value": "{ki.text.primary-on-primary}",
             "$description": "color used by the radio component for selected active foreground."
           },
           "border": {
-            "$value": "{ki.outline.primary-high-em}",
-            "$description": "color used by the radio component for selected active border."
+            "$value": "{ki.surface.primary-med-em}",
+            "$description": "color used by the radio component for selected active border (same as the fill: borderless look)."
+          },
+          "overlay": {
+            "$value": "{ki.state-layer.pressed}",
+            "$description": "color used by the radio component for the selected pressed wash (ki-button active/overlay precedent). MarsUI defines no pressed fill and the brand ramp has no darker rung that survives the dark scheme, so the press composites the pressed state layer over the rest fill — a keyboard hold shows a real paint delta even under reduced motion, where the transform compress is gated off (bare-page state-delta contract)."
           }
         },
         "disabled": {
           "bg": {
-            "$value": "{ki.surface.disabled-low-em}",
-            "$description": "color used by the radio component for selected disabled background."
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the radio component for selected disabled background (MarsUI Surface/disabled_med_em Gray/300)."
           },
           "fg": {
-            "$value": "{ki.text.muted}",
-            "$description": "color used by the radio component for selected disabled foreground."
+            "$value": "{ki.surface.disabled-base-em}",
+            "$description": "color used by the radio component for selected disabled dot (MarsUI Surface/disabled_base_em Gray/100 — a light dot one quiet value step above the gray donut, not a dark dot)."
           },
           "border": {
-            "$value": "{ki.outline.med-em}",
-            "$description": "color used by the radio component for selected disabled border."
+            "$value": "{ki.surface.disabled-med-em}",
+            "$description": "color used by the radio component for selected disabled border (same as the fill: borderless look)."
           }
         }
       },

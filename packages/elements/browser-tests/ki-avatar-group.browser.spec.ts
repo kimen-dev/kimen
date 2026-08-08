@@ -3,19 +3,32 @@
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
-import { beforeAll, describe, expect, it } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiAvatar } from '../dist/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '../dist/components/ki-avatar-group.js';
 import { expectAccessible } from './axe';
 
 type KiAvatarGroupElement = HTMLElement & { max?: number; size: string };
 
+const browserCommands = commands as unknown as {
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
+};
+
 const STYLE_ID = 'ki-avatar-group-browser-token-style';
 
-beforeAll(() => {
+beforeAll(async () => {
   defineKiAvatar();
   defineKiAvatarGroup();
+  // Geometry below is measured right after mount: reduced motion disables
+  // the gated entrance stagger and counter pop (Art. V construction), so
+  // rects are the settled ones — the same determinism the visual harness
+  // relies on.
+  await browserCommands.emulateReducedMotion('reduce');
+});
+
+afterAll(async () => {
+  await browserCommands.emulateReducedMotion(null);
 });
 
 function ensureTokens(): void {
@@ -138,10 +151,30 @@ describe('ki-avatar-group', () => {
     expect(Number(getComputedStyle(first).zIndex)).toBeGreaterThan(
       Number(getComputedStyle(second).zIndex),
     );
+    // The group coordinates the entrance-stagger index inline alongside the
+    // stacking depth (consumed only by the reduced-motion-gated animation);
+    // overflow members carry neither.
+    expect(visible.map((member) => member.style.getPropertyValue('--_group-enter-index'))).toEqual([
+      '0',
+      '1',
+      '2',
+    ]);
+    for (const member of membersOf(el).slice(3)) {
+      expect(member.style.getPropertyValue('--_group-enter-index')).toBe('');
+    }
     if (!counter) {
       throw new Error('the capped stack did not render its counter');
     }
     expect(counter.getBoundingClientRect().height).toBe(readTokenLength('--ki-avatar-md-size'));
+    // The Figma counter is a member-size CIRCLE minimum (10087:2600): "+5"
+    // renders the full 40px circle at md — never a narrower content-hugging
+    // pill — and only longer counts stretch beyond it.
+    expect(getComputedStyle(counter).minInlineSize).toBe(
+      `${String(readTokenLength('--ki-avatar-md-size'))}px`,
+    );
+    expect(counter.getBoundingClientRect().width).toBeGreaterThanOrEqual(
+      readTokenLength('--ki-avatar-md-size'),
+    );
   });
 
   it('S6 renders every member at the group size, overriding member-declared sizes', async () => {

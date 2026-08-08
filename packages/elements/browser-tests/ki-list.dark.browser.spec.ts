@@ -45,6 +45,13 @@ async function mountDarkList(): Promise<HTMLElement> {
   await customElements.whenDefined('ki-list-item');
   await new Promise((resolve) => requestAnimationFrame(resolve));
   await new Promise((resolve) => requestAnimationFrame(resolve));
+  // The gated mount-entrance stagger runs here (only the color scheme is
+  // emulated): wait it out so axe reads end-state opacity for contrast.
+  await Promise.all(
+    document.body
+      .getAnimations({ subtree: true })
+      .map((animation) => animation.finished.catch(() => undefined)),
+  );
   const list = main.querySelector('ki-list');
   if (!list) {
     throw new Error('ki-list fixture missing');

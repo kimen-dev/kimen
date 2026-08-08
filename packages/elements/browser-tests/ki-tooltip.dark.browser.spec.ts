@@ -1,8 +1,8 @@
 // @spec:013-ki-tooltip
-import { commands, page, userEvent } from 'vitest/browser';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import tokensCss from '@kimen/tokens/css?raw';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
 import { expectAccessible } from './axe';
 
@@ -53,6 +53,17 @@ function readTokenColor(name: string, property: 'backgroundColor' | 'color'): st
   return value;
 }
 
+// The card paints the MarsUI glass gradient (bg-start -> bg-end); the probe
+// resolves the same declaration against the forced dark scheme.
+function readGradient(startName: string, endName: string): string {
+  const probe = document.createElement('div');
+  probe.style.backgroundImage = `linear-gradient(180deg, var(${startName}), var(${endName}))`;
+  document.body.append(probe);
+  const value = getComputedStyle(probe).backgroundImage;
+  probe.remove();
+  return value;
+}
+
 async function mount(): Promise<{
   host: KiTooltipElement;
   trigger: HTMLButtonElement;
@@ -92,14 +103,27 @@ describe('ki-tooltip in forced dark scheme', () => {
     await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
 
     const tooltip = requireTooltip(host);
+    // Let the enter fade settle so axe never scans a mid-transition frame.
+    const deadline = Date.now() + 2000;
+    while (getComputedStyle(tooltip).opacity !== '1' && Date.now() < deadline) {
+      await nextFrame();
+    }
     const style = getComputedStyle(tooltip);
-    expect(style.backgroundColor).toBe(readTokenColor('--ki-tooltip-bg', 'backgroundColor'));
+    expect(style.opacity).toBe('1');
+    // Dark glass card: gradient stops resolve the dark Surface/special aliases
+    // and the bevel hairline resolves White/3.
+    expect(style.backgroundImage).toBe(
+      readGradient('--ki-tooltip-bg-start', '--ki-tooltip-bg-end'),
+    );
     expect(style.color).toBe(readTokenColor('--ki-tooltip-fg', 'color'));
+    expect(style.borderTopColor).toBe(readTokenColor('--ki-outline-secondary-button-top', 'color'));
 
     const main = document.querySelector('main');
     if (!main) {
       throw new Error('Expected dark tooltip fixture to render in main');
     }
-    await expectAccessible(main);
+    // keepPointer: the shown state under audit is HELD OPEN by the hover —
+    // the default rest-state parking would dismiss it before the scan.
+    await expectAccessible(main, { keepPointer: true });
   });
 });

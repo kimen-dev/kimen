@@ -1,0 +1,123 @@
+---
+// Live example: renders the snippet through Expressive Code AND injects the
+// same markup live, so the demo can never drift from the code shown. The
+// shared client script below registers every ki-* element via the lazy
+// loader; Astro bundles and deduplicates it across all Demo instances.
+import { Code } from '@astrojs/starlight/components';
+
+interface Props {
+  /** The exact HTML rendered live and shown as the code block. */
+  code: string;
+  lang?: string;
+  /** Row (default) lays out inline demos; block for full-width surfaces. */
+  layout?: 'row' | 'block';
+  /** Set false for snippets that should not render live (code only). */
+  live?: boolean;
+}
+
+const { code, lang = 'html', layout = 'row', live = true } = Astro.props;
+---
+
+<figure class="ki-demo">
+  {live && <div class:list={['ki-demo-surface', `ki-demo-${layout}`]} set:html={code} />}
+  <Code code={code} lang={lang} />
+</figure>
+
+<script>
+  // Register every ki-* element from the dist-custom-elements build. The
+  // lazy loader (@kimen/elements/loader) resolves its chunks with runtime
+  // strings Vite cannot statically bundle, so the docs site uses the fully
+  // static subpath imports instead — one shared, cacheable chunk that Astro
+  // deduplicates across all Demo instances. Nested Kimen elements are
+  // defined recursively, so this list covers every published tag.
+  import { defineCustomElement as defineKiAlert } from '@kimen/elements/ki-alert';
+  import { defineCustomElement as defineKiAvatar } from '@kimen/elements/ki-avatar';
+  import { defineCustomElement as defineKiAvatarGroup } from '@kimen/elements/ki-avatar-group';
+  import { defineCustomElement as defineKiBadge } from '@kimen/elements/ki-badge';
+  import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
+  import { defineCustomElement as defineKiCard } from '@kimen/elements/ki-card';
+  import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/ki-checkbox';
+  import { defineCustomElement as defineKiDialog } from '@kimen/elements/ki-dialog';
+  import { defineCustomElement as defineKiDivider } from '@kimen/elements/ki-divider';
+  import { defineCustomElement as defineKiIconButton } from '@kimen/elements/ki-icon-button';
+  import { defineCustomElement as defineKiIndicator } from '@kimen/elements/ki-indicator';
+  import { defineCustomElement as defineKiInput } from '@kimen/elements/ki-input';
+  import { defineCustomElement as defineKiList } from '@kimen/elements/ki-list';
+  import { defineCustomElement as defineKiListItem } from '@kimen/elements/ki-list-item';
+  import { defineCustomElement as defineKiOption } from '@kimen/elements/ki-option';
+  import { defineCustomElement as defineKiProgress } from '@kimen/elements/ki-progress';
+  import { defineCustomElement as defineKiQr } from '@kimen/elements/ki-qr';
+  import { defineCustomElement as defineKiRadio } from '@kimen/elements/ki-radio';
+  import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/ki-radio-group';
+  import { defineCustomElement as defineKiScroller } from '@kimen/elements/ki-scroller';
+  import { defineCustomElement as defineKiSelect } from '@kimen/elements/ki-select';
+  import { defineCustomElement as defineKiStatus } from '@kimen/elements/ki-status';
+  import { defineCustomElement as defineKiSwitch } from '@kimen/elements/ki-switch';
+  import { defineCustomElement as defineKiTab } from '@kimen/elements/ki-tab';
+  import { defineCustomElement as defineKiTabPanel } from '@kimen/elements/ki-tab-panel';
+  import { defineCustomElement as defineKiTabs } from '@kimen/elements/ki-tabs';
+  import { defineCustomElement as defineKiTextarea } from '@kimen/elements/ki-textarea';
+  import { defineCustomElement as defineKiTooltip } from '@kimen/elements/ki-tooltip';
+  import { defineCustomElement as defineKiVideo } from '@kimen/elements/ki-video';
+
+  defineKiAlert();
+  defineKiAvatar();
+  defineKiAvatarGroup();
+  defineKiBadge();
+  defineKiButton();
+  defineKiCard();
+  defineKiCheckbox();
+  defineKiDialog();
+  defineKiDivider();
+  defineKiIconButton();
+  defineKiIndicator();
+  defineKiInput();
+  defineKiList();
+  defineKiListItem();
+  defineKiOption();
+  defineKiProgress();
+  defineKiQr();
+  defineKiRadio();
+  defineKiRadioGroup();
+  defineKiScroller();
+  defineKiSelect();
+  defineKiStatus();
+  defineKiSwitch();
+  defineKiTab();
+  defineKiTabPanel();
+  defineKiTabs();
+  defineKiTextarea();
+  defineKiTooltip();
+  defineKiVideo();
+</script>
+
+<style>
+  .ki-demo {
+    margin: 1rem 0;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .ki-demo-surface {
+    padding: 1.5rem;
+    background: var(--ki-surface-s0);
+    color: var(--ki-text-high-em);
+    font-family: var(--ki-typography-family-body, inherit);
+  }
+
+  .ki-demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .ki-demo :global(.expressive-code) {
+    margin: 0;
+  }
+
+  .ki-demo :global(.expressive-code .frame) {
+    border-radius: 0;
+  }
+</style>

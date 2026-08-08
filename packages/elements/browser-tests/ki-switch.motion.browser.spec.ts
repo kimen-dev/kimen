@@ -62,5 +62,8 @@ describe('ki-switch with reduced motion', () => {
 
     expect(el.checked).toBe(true);
     expect(getComputedStyle(thumbOf(el)).transitionDuration).toBe('0s');
+    // The travel itself is a transform (translate), so under reduced motion
+    // the thumb lands at the checked position instantly — state still applies.
+    expect(getComputedStyle(thumbOf(el)).translate).not.toBe('none');
   });
 });

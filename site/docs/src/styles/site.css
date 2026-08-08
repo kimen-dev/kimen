@@ -1,0 +1,18 @@
+/* Kimen docs site — small Starlight adjustments only. Component visuals in
+   demos come entirely from the @kimen/tokens stylesheet loaded alongside.
+
+   The --sl-* names are Starlight's public theming API, so they cannot follow
+   the ki namespace; their values still resolve from Kimen tokens (Art. VI). */
+/* stylelint-disable custom-property-pattern */
+
+:root {
+  --sl-color-accent-low: var(--ki-color-brand-900);
+  --sl-color-accent: var(--ki-color-brand-500);
+  --sl-color-accent-high: var(--ki-color-brand-200);
+}
+
+:root[data-theme="light"] {
+  --sl-color-accent-low: var(--ki-color-brand-100);
+  --sl-color-accent: var(--ki-color-brand-600);
+  --sl-color-accent-high: var(--ki-color-brand-800);
+}

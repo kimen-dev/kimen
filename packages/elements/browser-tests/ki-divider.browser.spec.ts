@@ -5,11 +5,15 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-divider.js';
 import { expectAccessible } from './axe';
 
 type KiDividerElement = HTMLElement & { orientation: string };
+
+const browserCommands = commands as unknown as {
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
+};
 
 const STYLE_ID = 'ki-divider-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-divider-browser-material3-token-style';
@@ -202,6 +206,22 @@ describe('ki-divider', () => {
     landmark().appendChild(row);
     await mount(row, { orientation: 'vertical' });
     await expectAccessible(document.body);
+  });
+
+  it('fades the rule in on insertion through the motion-gated opacity transition', async () => {
+    cleanup();
+    // Explicit emulation: sibling spec files emulate `reduce` on the same
+    // page, so relying on the runner default is order-dependent (CI flake).
+    await browserCommands.emulateReducedMotion('no-preference');
+    const el = await mount(landmark());
+    const rule = ruleOf(el);
+
+    // Reduced motion is explicitly no-preference, so the gate is active:
+    // the only transition declared is the opacity entrance fade, and the
+    // rule settles fully opaque.
+    expect(getComputedStyle(rule).transitionProperty).toBe('opacity');
+    await expect.poll(() => getComputedStyle(rule).opacity).toBe('1');
+    await browserCommands.emulateReducedMotion(null);
   });
 
   it('S6 restyles thickness, color and spacing through material3 tokens alone', async () => {

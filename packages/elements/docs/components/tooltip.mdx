@@ -27,13 +27,17 @@ description without changing its name:
 </ki-tooltip>
 ```
 
-`placement` (default `top`) is a preference — the component may flip or
-clamp it to keep the bubble inside the viewport, and unknown values fall
-back to `top`:
+`placement` (default `top`) accepts the four logical sides — `top`,
+`bottom`, `start`, `end`; `start`/`end` follow the document's writing
+direction. It is a preference — the component may flip or clamp it to keep
+the bubble inside the viewport, and unknown values fall back to `top`:
 
 ```html
 <ki-tooltip label="Downloads the report as PDF" placement="bottom">
   <ki-button size="sm">Export</ki-button>
+</ki-tooltip>
+<ki-tooltip label="Keyboard shortcut: ⌘K" placement="start">
+  <ki-button size="sm">Search</ki-button>
 </ki-tooltip>
 ```
 
@@ -48,14 +52,18 @@ description — useful for conditional hints:
 
 ## Customization
 
-| Token                          | Controls                     |
-| ------------------------------ | ---------------------------- |
-| `--ki-tooltip-bg`              | Bubble background            |
-| `--ki-tooltip-fg`              | Bubble text color            |
-| `--ki-tooltip-max-inline-size` | Maximum bubble width         |
-| `--ki-tooltip-offset`          | Distance from the trigger    |
-| `--ki-tooltip-radius`          | Bubble corner radius         |
+| Token                                          | Controls                                  |
+| ---------------------------------------------- | ----------------------------------------- |
+| `--ki-tooltip-bg-start` / `--ki-tooltip-bg-end`| Bubble glass gradient stops               |
+| `--ki-tooltip-backdrop-blur`                   | Bubble backdrop blur                      |
+| `--ki-tooltip-bg`                              | Solid fallback background                 |
+| `--ki-tooltip-fg`                              | Bubble text color                         |
+| `--ki-tooltip-max-inline-size`                 | Maximum bubble width                      |
+| `--ki-tooltip-offset`                          | Distance from the trigger                 |
+| `--ki-tooltip-radius`                          | Bubble corner radius                      |
 
+The bubble is a glass surface: a `bg-start`→`bg-end` vertical gradient over
+a backdrop blur (material3 resolves both stops to its opaque inverse bubble).
 Single shadow part: `::part(tooltip)` (the non-focusable tooltip bubble).
 
 ## Accessibility

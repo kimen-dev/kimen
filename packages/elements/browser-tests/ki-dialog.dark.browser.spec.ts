@@ -1,8 +1,8 @@
 // @spec:012-ki-dialog
-import { beforeAll, describe, expect, it } from 'vitest';
-import { commands } from 'vitest/browser';
 
 import tokensCss from '@kimen/tokens/css?raw';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { commands } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
 import { expectAccessible } from './axe';
 
@@ -75,6 +75,27 @@ function readToken(name: string): string {
   return value;
 }
 
+// The surface paints the MarsUI glass gradient (bg-start -> bg-end); the probe
+// resolves the same declaration against the forced dark scheme.
+function readGradient(startName: string, endName: string): string {
+  const probe = document.createElement('div');
+  probe.style.backgroundImage = `linear-gradient(180deg, var(${startName}), var(${endName}))`;
+  document.body.append(probe);
+  const value = getComputedStyle(probe).backgroundImage;
+  probe.remove();
+  return value;
+}
+
+// The dialog border consumes the composed hairline token (White/3 in dark).
+function readBorderColor(): string {
+  const probe = document.createElement('div');
+  probe.style.border = 'var(--ki-dialog-border)';
+  document.body.append(probe);
+  const value = getComputedStyle(probe).borderTopColor;
+  probe.remove();
+  return value;
+}
+
 describe('ki-dialog under the dark scheme', () => {
   it('S12 forced dark resolves onmars dark surface and backdrop values with zero axe violations', async () => {
     cleanup();
@@ -86,11 +107,19 @@ describe('ki-dialog under the dark scheme', () => {
     await el.show();
     await waitFor(() => el.open && internalDialog(el).open, 'dialog opened');
     const dialog = internalDialog(el);
+    // Let the enter fade settle so axe never scans a mid-transition frame.
+    await waitFor(() => getComputedStyle(dialog).opacity === '1', 'dialog enter settled');
 
-    expect(getComputedStyle(dialog).backgroundColor).toBe(readToken('--ki-dialog-bg'));
+    expect(getComputedStyle(dialog).backgroundImage).toBe(
+      readGradient('--ki-dialog-bg-start', '--ki-dialog-bg-end'),
+    );
+    expect(getComputedStyle(dialog).borderTopColor).toBe(readBorderColor());
     expect(getComputedStyle(dialog, '::backdrop').backgroundColor).toBe(
       readToken('--ki-dialog-backdrop-bg'),
     );
     await expectAccessible(main);
-  });
+    // Glass-surface budget: axe reads pixels back from a backdrop-blurred
+    // dialog, software-rastered on CI runners — measured brushing the 15s
+    // default under load even with motion settled (issue #105).
+  }, 30_000);
 });

@@ -12,8 +12,12 @@
         }
       },
       "bg": {
-        "$value": "{ki.surface.s0}",
-        "$description": "color used by the tab panel component for background."
+        "$value": "{ki.transparent-inverse}",
+        "$description": "color used by the tab panel component for background (Tab_nav masters have no panel chrome: content sits on the ambient surface; the panel never paints a surface it does not own)."
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "color used by the tab panel component for foreground (pairs a scheme-correct text color with whatever ground the transparent panel sits on — fixes black-on-black slotted text in dark)."
       },
       "focus-ring": {
         "color": {

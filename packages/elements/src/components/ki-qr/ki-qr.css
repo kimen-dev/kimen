@@ -38,7 +38,28 @@
 
 .module {
   fill: var(--ki-qr-color);
-  rx: var(--ki-qr-module-radius);
+  stroke: var(--ki-qr-color);
+
+  /* Seam closure: both masters export the symbol as ONE merged vector with
+   * solid uninterrupted ink, but per-module rects at fractional CSS sizes
+   * leave antialiased hairline seams inside dark clusters. A same-color
+   * stroke of 0.5 SVG user units (1/16 module of overlap on each shared
+   * edge — geometry in the code's own 8-units-per-module space, not a
+   * themable length) closes the gap and stays shape-safe at the documented
+   * round radius. shape-rendering crispEdges was rejected: it kills the
+   * Type=round dots. */
+  stroke-width: 0.5px;
+
+  /* Scannability clamp (S9: shaped modules must keep decoding): at the
+   * documented half-module radius (4 of the 8-units-per-module space) the
+   * dots become tangent circles and adjacent dark modules touch at a single
+   * point, which severs the contiguous scanline runs decoders locate the
+   * symbol by — measured: jsQR reads the symbol at rx 3, never at rx 3.5+.
+   * The Figma round master avoids this by exporting one merged Union with
+   * "zero seams"; a per-rect render preserves connectivity by capping the
+   * radius one unit under tangency. Geometry in the code's own module
+   * space, like the seam stroke above — not a themable length. */
+  rx: min(var(--ki-qr-module-radius), 3px);
 }
 
 .finder {
@@ -50,4 +71,37 @@
 .finder-center {
   fill: var(--ki-qr-color);
   rx: calc(var(--ki-qr-finder-radius) * 3 / 7);
+}
+
+/* Micro-motion (MarsUI single-speed fast/medium motion language, ki-switch/ki-dialog
+ * gating precedent): transform/opacity only, disabled entirely under
+ * reduced motion so scanners, tests and the visual harness always see the
+ * settled tile (Art. V). The component is non-interactive by contract —
+ * no hover/pressed/focus motion exists on purpose. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Soft settle of the tile on first paint: the glassy entrance of
+   * elevated MarsUI surfaces, moderate step + decelerate curve. */
+  :host {
+    animation: ki-qr-mount var(--ki-motion-duration-medium-1)
+      var(--ki-motion-easing-standard-decelerate) both;
+  }
+
+  /* Each (re)encoded symbol fades in — the svg is re-keyed per value so a
+   * re-encode reads as intentional instead of a one-frame matrix swap. */
+  [part="code"] {
+    animation: ki-qr-encode var(--ki-motion-duration-fast) var(--ki-motion-easing-out) both;
+  }
+
+  @keyframes ki-qr-mount {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+  }
+
+  @keyframes ki-qr-encode {
+    from {
+      opacity: 0;
+    }
+  }
 }

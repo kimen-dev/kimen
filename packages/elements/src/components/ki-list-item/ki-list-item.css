@@ -24,6 +24,7 @@
 }
 
 [part="item"] {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--_ki-list-item-gap);
@@ -32,6 +33,70 @@
   padding-inline: var(--_ki-list-item-padding-inline);
   border-radius: var(--_ki-list-item-radius);
   box-sizing: border-box;
+}
+
+/* Hover/pressed wash (MarsUI List State=hover Inverse_white/alpha_3 and
+ * State=active alpha_6): an opacity-composited overlay so the tint fades
+ * cheaply and stays inert for hit-testing. */
+[part="item"]::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline: 0;
+  border-radius: inherit;
+
+  /* No resting background: axe's color-contrast check refuses to decide
+   * ("pseudoContent") for any text under a pseudo-element that carries one,
+   * even at opacity 0. The wash colors live only in the states that paint
+   * them, and the fade runs on background-color instead of opacity. */
+  background-color: transparent;
+  pointer-events: none;
+}
+
+/* Micro-motion gate (ki-switch/ki-checkbox pattern): only transitions are
+ * gated; end states apply instantly under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  [part="item"] {
+    transition: transform var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+
+  [part="item"]::after {
+    transition: background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+}
+
+/* Hover paint is gated on a hovering pointer: a touch screen latches :hover
+ * on the tap (pointer-capability contract). :active below stays ungated —
+ * a press is real on every device. */
+@media (hover: hover) {
+  :host(:hover) [part="item"]::after {
+    background-color: var(--ki-inverse-white-alpha-3);
+  }
+}
+
+:host(:active) [part="item"] {
+  transform: scale(0.997);
+}
+
+:host(:active) [part="item"]::after {
+  background-color: var(--ki-inverse-white-alpha-6);
+}
+
+/* Leading media follows the scheme (MarsUI draws icons in the text ramp,
+ * never page-default black): slotted content inherits the primary fg. */
+[part="start"] {
+  color: var(--_ki-list-item-primary-fg);
+}
+
+/* Trailing meta (MarsUI trail group, right-aligned): trail-primary reads at
+ * the primary size ramp (body_1 13 / para 20, weight 600) in Text/med_em —
+ * the secondary-fg token — so slotted meta never renders page-default. */
+[part="end"] {
+  color: var(--_ki-list-item-secondary-fg);
+  font-size: var(--_ki-list-item-primary-font-size);
+  font-weight: var(--_ki-list-item-primary-font-weight);
+  line-height: var(--_ki-list-item-primary-line-height);
+  text-align: end;
 }
 
 [part="start"],
@@ -70,4 +135,19 @@
   font-size: var(--_ki-list-item-secondary-font-size);
   font-weight: var(--_ki-list-item-secondary-font-weight);
   line-height: var(--_ki-list-item-secondary-line-height);
+}
+
+/* Secondary line populated after load (characterData observer path in
+ * ki-list-item.tsx): fade in instead of popping. Gated so the visual
+ * harness (reduced motion) stays deterministic. */
+@media (prefers-reduced-motion: no-preference) {
+  .secondary:not([hidden]) {
+    animation: ki-secondary-in var(--ki-motion-duration-fast) var(--ki-motion-easing-out);
+  }
+}
+
+@keyframes ki-secondary-in {
+  from {
+    opacity: 0;
+  }
 }

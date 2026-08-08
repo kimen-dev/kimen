@@ -19,10 +19,12 @@
   }
 }
 
+/* MarsUI active fields (Input_field master 12022:7132, shared anatomy): fill
+   switches to Surface s0 and the glow carries the state — the border STAYS
+   the rest hairline (no opaque brand line); matches ki-input. */
 :host(:focus-within) {
   --_ki-textarea-bg: var(--ki-textarea-focus-bg);
   --_ki-textarea-fg: var(--ki-textarea-focus-fg);
-  --_ki-textarea-border: var(--ki-textarea-focus-border);
   --_ki-textarea-label-fg: var(--ki-textarea-focus-label-fg);
   --_ki-textarea-placeholder-fg: var(--ki-textarea-focus-placeholder-fg);
 }
@@ -59,7 +61,10 @@
   gap: var(--ki-textarea-label-gap);
 }
 
+/* MarsUI Input_label 12021:6068: the label row carries 2px (Space/xxs) inline
+   padding so its ink aligns with the cell radius; matches ki-input. */
 [part="label"] {
+  padding-inline: var(--ki-textarea-label-padding-inline);
   color: var(--_ki-textarea-label-fg);
   font-family: var(--ki-typography-family-body);
   font-size: var(--ki-textarea-label-font-size);
@@ -77,14 +82,21 @@
   min-block-size: var(--ki-textarea-min-target);
 }
 
-/* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
-   Focus/primary glow (3px spread at 40%) plus the opaque ring layers. */
+/* Double focus mechanism (patrón V.1 §2.5, same as ki-input): MarsUI
+   Focus/primary glow (3px spread at 20%) plus a real outline ring —
+   outline-offset is surface-independent, unlike the retired s0 shadow layer
+   that painted the wrong gap color on any non-s0 surface. */
 :host(:focus-within) [part="field"] {
-  box-shadow:
-    var(--ki-textarea-focus-ring-shadow),
-    0 0 0 var(--ki-textarea-focus-ring-offset) var(--ki-surface-s0),
-    0 0 0 calc(var(--ki-textarea-focus-ring-offset) + var(--ki-textarea-focus-ring-width))
-    var(--ki-textarea-focus-ring-color);
+  box-shadow: var(--ki-textarea-focus-ring-shadow);
+  outline: var(--ki-textarea-focus-ring-width) solid var(--ki-textarea-focus-ring-color);
+  outline-offset: var(--ki-textarea-focus-ring-offset);
+}
+
+/* MarsUI danger fields: persistent Focus/danger ring (3px danger alpha
+   spread) over the white fill. Declared AFTER the focus rule so a focused
+   invalid field keeps the danger signal (the outline ring still marks focus). */
+:host(:state(user-invalid)) [part="field"] {
+  box-shadow: var(--ki-textarea-invalid-ring);
 }
 
 [part="textarea"] {
@@ -108,4 +120,16 @@
 
 [part="textarea"]::placeholder {
   color: var(--_ki-textarea-placeholder-fg);
+}
+
+/* Micro-motion (MarsUI soft-surface language): fill/border crossfade on
+   hover, glow fade-in on focus and invalid — color/shadow only, no layout.
+   Gated exactly like ki-checkbox so the reduced-motion harness stays
+   deterministic; same curve as ki-input so the fields feel like one family. */
+@media (prefers-reduced-motion: no-preference) {
+  [part="field"] {
+    transition-duration: var(--ki-motion-duration-fast);
+    transition-property: background-color, border-color, box-shadow;
+    transition-timing-function: var(--ki-motion-easing-out);
+  }
 }

@@ -1,0 +1,51 @@
+---
+title: ki-option
+description: A declarative data option rendered by its owning ki-select.
+---
+
+import CemApi from '../../../components/CemApi.astro';
+import Demo from '../../../components/Demo.astro';
+
+A declarative data option rendered by its owning
+[ki-select](/kimen/docs/components/select/): its text is the human-facing
+label and its `value` is the submitted value. `ki-option` never renders
+standalone — the select owns painting, selection and keyboard behavior.
+
+<Demo
+  layout="block"
+  code={`<ki-select label="Country" name="country" placeholder="Choose a country">
+  <ki-option value="es">Spain</ki-option>
+  <ki-option value="fr">France</ki-option>
+  <ki-option value="pt">Portugal</ki-option>
+</ki-select>`}
+/>
+
+## Examples
+
+### Value fallback and disabled options
+
+An option without `value` submits its trimmed label text; `disabled` removes
+the option from selection while keeping it visible:
+
+<Demo
+  layout="block"
+  code={`<ki-select label="Team size" name="size">
+  <ki-option>1-10</ki-option>
+  <ki-option>11-50</ki-option>
+  <ki-option disabled>51+</ki-option>
+</ki-select>`}
+/>
+
+## API reference
+
+<CemApi tag="ki-option" />
+
+## Accessibility
+
+Selection state lives on the owning select's `value`, never authored on the
+option. The option text is the label assistive technology reads.
+
+## Workshop
+
+Documented with its parent:
+[open ki-select in Storybook](/kimen/storybook/?path=/docs/docs-components-ki-select--docs)

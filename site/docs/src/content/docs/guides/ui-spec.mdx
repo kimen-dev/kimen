@@ -1,0 +1,129 @@
+---
+title: The UI spec format
+description: The neutral, schema-validated format agents emit — and how the guarded renderer turns it into Kimen components, fail-closed.
+---
+
+`@kimen/catalog` is the GenUI boundary of Kimen: the machine-readable schema
+of what agents may emit — every published `ki-*` element with typed props,
+slots, events and when-to-use guidance — plus the validation entry point
+that accepts or rejects agent-emitted UI specs before anything renders. The
+catalog artifact is generated from the committed Custom Elements Manifest of
+`@kimen/elements` and gated against drift, so it can never disagree with the
+components.
+
+A UI spec is **data, never code**: a JSON tree of catalog components, typed
+props, slotted children and declared actions.
+
+```ts
+import { catalogData, validateUiSpec } from '@kimen/catalog';
+
+// What may an agent emit? One entry per published element:
+catalogData.components['ki-button'].props.variant;
+// { type: 'enum', values: ['ghost', 'primary', 'quaternary', 'secondary', 'tertiary'], ... }
+
+// Validate an agent-emitted UI spec before anything renders:
+const report = validateUiSpec({
+  version: 1,
+  actions: ['confirm-order'],
+  root: {
+    component: 'ki-card',
+    slots: {
+      header: ['Confirm your order'],
+      footer: [
+        {
+          component: 'ki-button',
+          props: { variant: 'primary' },
+          action: 'confirm-order',
+          slots: { '': ['Confirm'] },
+        },
+      ],
+    },
+  },
+});
+report.ok; // true — or false with issues naming each offender and location
+```
+
+## What validation rejects
+
+Validation rejects — naming the offender — unknown components, unknown
+props, wrong-typed values, undeclared slots, bindings to actions the spec's
+`actions` list never declares, prototype-pollution keys (`__proto__`,
+`constructor`, `prototype`) anywhere in the document, payloads beyond the
+size budget and nesting beyond the depth budget.
+
+Object input crosses an **iterative purity wall** before any other check:
+validation never invokes getters or `toJSON` on the input (accessor
+properties, functions and other non-JSON values are rejected as not-data),
+shared object references and cycles are rejected (a spec is a JSON tree),
+and every later check runs on a plain-data snapshot — so mutating the
+original mid-validation changes nothing.
+
+The v1 spec format exposes **no styling surface**: no CSS values, no
+per-spec token reassignment. Appearance stays at the consuming application's
+token layer.
+
+## The guarded renderer
+
+`renderUiSpec` renders an untrusted spec into a host-owned surface,
+fail-closed and atomic — full validation precedes the first attach, so a
+rejected spec never touches the DOM:
+
+```ts
+import { renderUiSpec } from '@kimen/catalog';
+
+const result = renderUiSpec(spec, {
+  surface: document.querySelector('#genui'),
+  onAction: (event) => console.log(event.action, event.data),
+  budgets: { maxDepth: 32, maxNodes: 512, maxBytes: 262_144 },
+  catalogSchemaVersion: '1.0.0',
+});
+if (!result.ok) console.warn(result.diagnostics); // machine-readable, inert
+```
+
+Over the validation layer it enforces the safe-render semantics:
+
+- **No code path from spec data.** Text is attached as inert text nodes,
+  never parsed as markup; the catalog exposes no event-handler props;
+  URL-typed props accept only `http`, `https` and relative references —
+  every other scheme is rejected naming the prop and scheme.
+- **Declared budgets.** Depth, node count and payload size — a spec exactly
+  at a budget renders, one beyond it is rejected before any node attaches.
+- **Version skew.** A spec declaring an unsupported `catalogSchemaVersion`
+  is rejected naming both versions.
+- **Declarative actions only.** A bound control dispatches its one declared
+  action, as data, on the single `onAction` channel — exactly one action
+  fires even for nested action-bound nodes; no other callback exists.
+
+A re-render on the same surface replaces the previous tree (and its action
+listeners) atomically once validation succeeds; a rejected re-render leaves
+the previous content intact. Every rejection is a `RenderDiagnostic` — node
+path, violated rule and offending value — pure data, safe to display because
+a host renders it as text.
+
+## Streaming
+
+`createStreamingRenderer` renders a streamed spec progressively: a node
+attaches only after it fully validates; an invalid node halts the stream
+fail-closed while previously validated content remains; the budgets bind the
+accumulated stream, so a stream that never closes still trips its payload
+budget; and once halted — by an invalid node, a tripped budget, version skew
+or `close()` — every further push is rejected.
+
+## What validation does not protect against
+
+URL-scheme allowlisting and markup inertness are render-path invariants
+owned by the guarded renderer: catalog validation is a schema boundary,
+never content sanitization. A host that renders outside the guarded renderer
+is outside the guardrail.
+
+## Protocol adapters
+
+The catalog and the `ki-*` elements are the durable assets; protocol
+adapters are deliberately disposable translations onto this one boundary:
+
+- [A2UI adapter](/kimen/docs/guides/a2ui/) — declarative A2UI messages.
+- [MCP Apps adapter](/kimen/docs/guides/mcp-apps/) — `ui://` surfaces for
+  MCP hosts.
+
+The canonical package documentation lives in the repository:
+[`packages/catalog`](https://github.com/kimen-dev/kimen/tree/main/packages/catalog).

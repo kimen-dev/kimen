@@ -53,6 +53,14 @@ async function mount(): Promise<HTMLElement> {
   await customElements.whenDefined('ki-card');
   await nextFrame();
   await nextFrame();
+  // The gated entrance animation runs here (only the color scheme is
+  // emulated, not reduced motion): wait it out so axe reads end-state
+  // opacity for its contrast checks.
+  await Promise.all(
+    document.body
+      .getAnimations({ subtree: true })
+      .map((animation) => animation.finished.catch(() => undefined)),
+  );
   const el = document.querySelector<HTMLElement>('ki-card');
   expect(el).toBeInstanceOf(HTMLElement);
   if (!el) {

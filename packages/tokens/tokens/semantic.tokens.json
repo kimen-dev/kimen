@@ -1138,6 +1138,17 @@
             }
           }
         }
+      },
+      "small-dark-shadow": {
+        "$type": "shadow",
+        "$value": {
+          "color": "{ki.elevation.shadow-dark}",
+          "offsetX": 0,
+          "offsetY": "{ki.shadow.effect-y}",
+          "blur": "{ki.shadow.distance.2}",
+          "spread": "{ki.shadow.spread.2}"
+        },
+        "$description": "MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters."
       }
     },
     "focus": {
@@ -1161,6 +1172,16 @@
           "spread": "{ki.shadow.ring}"
         },
         "$description": "MarsUI Focus/gray: 3px spread focus ring of Outline/med_em (scheme-aware via the outline token)."
+      },
+      "danger": {
+        "$value": {
+          "color": "{ki.outline.danger-base-em-alpha}",
+          "offsetX": 0,
+          "offsetY": 0,
+          "blur": 0,
+          "spread": "{ki.shadow.ring}"
+        },
+        "$description": "MarsUI Focus/danger: persistent 3px spread ring of Outline/danger_base_em_alpha (danger-500 at 20% light / 40% dark) — the danger state signal on Input_field and Dropdown masters (measured rgb(252,220,219) over white). Pairs with a white fill and hairline border; Kimen keeps its opaque danger border on top as a declared a11y deviation."
       }
     },
     "transparent-inverse": {
@@ -1379,6 +1400,10 @@
           "$value": "{ki.font.letter-spacing.none}",
           "$description": "semantic dimension for typography letter spacing none."
         },
+        "spaced-out": {
+          "$value": "{ki.font.letter-spacing.spaced-out}",
+          "$description": "semantic dimension for typography letter spacing spaced out (MarsUI tracking spaced_out +2%, bound to overline styles)."
+        },
         "xs": {
           "$value": "{ki.font.letter-spacing.xs}",
           "$description": "semantic dimension for typography letter spacing xs."
@@ -1469,6 +1494,10 @@
         "long-4": {
           "$value": "{ki.duration.slow}",
           "$description": "M3 md.sys.motion.duration.long4 (600ms). onmars: MarsUI slow step (360ms)."
+        },
+        "instant": {
+          "$value": "{ki.duration.instant}",
+          "$description": "Zero-duration step: transitions that must complete immediately (reduced-motion fallbacks, instant handoffs)."
         }
       },
       "easing": {
@@ -1500,6 +1529,25 @@
         "standard-accelerate": {
           "$value": "{ki.easing.in}",
           "$description": "Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in)."
+        },
+        "spring": {
+          "$value": "{ki.easing.spring}",
+          "$description": "Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language)."
+        }
+      },
+      "distance": {
+        "$type": "dimension",
+        "xs": {
+          "$value": "{ki.space.xxs}",
+          "$description": "Motion travel distance xs (2px): hover-lift offsets."
+        },
+        "sm": {
+          "$value": "{ki.space.xs}",
+          "$description": "Motion travel distance sm (4px): small slide/settle offsets."
+        },
+        "md": {
+          "$value": "{ki.space.md}",
+          "$description": "Motion travel distance md (8px): entrance slide offsets (e.g. dialog rise)."
         }
       }
     }

@@ -7,11 +7,20 @@
   --_ki-tooltip-max-inline-size: var(--ki-tooltip-max-inline-size);
   --_ki-tooltip-offset: var(--ki-tooltip-offset);
   --_ki-tooltip-bg: var(--ki-tooltip-bg);
+  --_ki-tooltip-bg-start: var(--ki-tooltip-bg-start);
+  --_ki-tooltip-bg-end: var(--ki-tooltip-bg-end);
+  --_ki-tooltip-backdrop-blur: var(--ki-tooltip-backdrop-blur);
   --_ki-tooltip-fg: var(--ki-tooltip-fg);
   --_ki-tooltip-font-size: var(--ki-tooltip-font-size);
   --_ki-tooltip-font-weight: var(--ki-tooltip-font-weight);
   --_ki-tooltip-line-height: var(--ki-tooltip-line-height);
   --_ki-tooltip-shadow: var(--ki-tooltip-shadow);
+
+  /* Elevation/e4 on the wrap plus Component_effect/secondary_default
+   * (drop 0/2/1.5/-0.5 + inner inset 0/2/3 White/3), composed here because
+   * box-shadow consumes exactly one variable. */
+  --_ki-tooltip-surface-shadow:
+    var(--_ki-tooltip-shadow), var(--ki-effect-component-secondary-default-shadow);
   --_ki-tooltip-cross-shift: 0px;
 
   display: inline-block;
@@ -27,8 +36,19 @@
   padding-block: var(--_ki-tooltip-padding-block);
   padding-inline: var(--_ki-tooltip-padding-inline);
   border-radius: var(--_ki-tooltip-radius);
+
+  /* MarsUI glass card (Tooltip master 12089:7621): flat fallback first, then
+   * the master's vertical gradient Surface/special blur_base -> s0/s2 with the
+   * Blur/24 backdrop. material3 resolves both stops to its inverse bubble and
+   * the blur to 0, so the same paint stays theme-correct. */
   background: var(--_ki-tooltip-bg);
-  box-shadow: var(--_ki-tooltip-shadow);
+  background: linear-gradient(180deg, var(--_ki-tooltip-bg-start), var(--_ki-tooltip-bg-end));
+  backdrop-filter: blur(var(--_ki-tooltip-backdrop-blur));
+
+  /* Bevel hairline: Outline/secondary_button_top on all four sides while no
+   * caret ships (suppress the caret side per placement once it exists). */
+  border: var(--ki-tooltip-border-width) solid var(--ki-outline-secondary-button-top);
+  box-shadow: var(--_ki-tooltip-surface-shadow);
   color: var(--_ki-tooltip-fg);
   font-size: var(--_ki-tooltip-font-size);
   font-weight: var(--_ki-tooltip-font-weight);
@@ -68,4 +88,38 @@
 
 .tooltip.placement-end {
   inset-inline-start: calc(100% + var(--_ki-tooltip-offset));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Enter: fade in at the fast step (decelerate); exit: fade out (accelerate).
+   * Visibility stays discrete: instant on show, delayed one fast step on hide
+   * so the exit fade is visible. JS show/hide delay tokens are untouched. */
+  .tooltip {
+    opacity: 0;
+    transition:
+      opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-standard-accelerate),
+      translate var(--ki-motion-duration-fast) var(--ki-motion-easing-standard-accelerate),
+      visibility var(--ki-motion-duration-instant) var(--ki-motion-duration-fast);
+  }
+
+  .tooltip.is-visible {
+    opacity: 1;
+    transition:
+      opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
+      translate var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
+      visibility var(--ki-motion-duration-instant);
+  }
+
+  /* Directional slide: hidden state biases the bubble one sm distance toward
+   * the trigger so it grows out of it. Block-axis placements only — the
+   * inline-axis bias cannot be expressed logically in the physical translate
+   * value, so start/end keep the plain fade. Position measurement is
+   * unaffected: the position module consumes only the rect's width/height. */
+  .tooltip.placement-top:not(.is-visible) {
+    translate: -50% var(--ki-motion-distance-sm);
+  }
+
+  .tooltip.placement-bottom:not(.is-visible) {
+    translate: -50% calc(-1 * var(--ki-motion-distance-sm));
+  }
 }

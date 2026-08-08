@@ -56,13 +56,24 @@ export const Disabled: Story = {
 /** Native form participation: name, value, and reset. */
 export const InForm: Story = {
   render: (args) => (
-    <form>
+    <form style={{ display: 'flex', gap: 'var(--ki-space-3xl)', alignItems: 'center' }}>
       <ki-switch {...args} name="newsletter" value="weekly">
         Weekly newsletter
       </ki-switch>
       <ki-button type="reset">Reset</ki-button>
     </form>
   ),
+};
+
+/** The double focus ring (glow + outline) on the focused track. */
+export const Focused: Story = {
+  play: async ({ canvasElement }) => {
+    // One frame lets the upfront-registered element finish its first render;
+    // delegated focus lands on the inner input, whose :focus styles paint the
+    // track ring.
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    canvasElement.querySelector('ki-switch')?.focus();
+  },
 };
 
 /** Logical layout mirrors under RTL. */

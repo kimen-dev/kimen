@@ -283,17 +283,19 @@ describe('ki-button in a real browser', () => {
             continue;
           }
           const style = getComputedStyle(button);
-          if (variant === 'primary' || variant === 'secondary') {
+          if (variant === 'primary' || variant === 'secondary' || variant === 'tertiary') {
             // Glass variants carry the MarsUI Blur/24 backdrop, exported as
-            // blur(12px) (specs/002-ki-button/design-extraction.md §0, §2.1-2.2).
+            // blur(12px) (specs/002-ki-button/design-extraction.md §0,
+            // §2.1-2.2); tertiary joined the glass set in the pixel pass
+            // (Figma 8003:300: TERTIARY fill light-s0_dark-s2 + Blur24).
             expect(style.backdropFilter, `${variant} glass backdrop`).toContain('blur');
           }
-          if (variant === 'ghost') {
+          if (variant === 'ghost' || variant === 'quaternary') {
             // Non-glass variants stay off the glass path entirely: computed
             // backdrop-filter is none, not blur(0)
             // (specs/002-ki-button/design-extraction.md §2: effects belong to
             // the primary/secondary Component_effect styles).
-            expect(style.backdropFilter, 'ghost has no backdrop filter').toBe('none');
+            expect(style.backdropFilter, `${variant} has no backdrop filter`).toBe('none');
           }
           if (variant === 'primary') {
             // MarsUI bevel: the block-end border edge is darker than the
@@ -303,11 +305,88 @@ describe('ki-button in a real browser', () => {
               style.borderBlockStartColor,
             );
           }
+          if (variant === 'tertiary') {
+            // Pixel pass: tertiary carries the SECONDARY bevel pair
+            // (Figma 8003:300: Outline/secondary_button_bottom block-end edge).
+            expect(style.borderBlockEndColor, 'tertiary bevel bottom (secondary pair)').toBe(
+              readTokenColor('--ki-button-tertiary-rest-border-bottom'),
+            );
+          }
+          if (variant === 'quaternary') {
+            // Pixel pass: MarsUI quaternary draws NO border in any state
+            // (every border cell resolves ki.outline.none).
+            expect(style.borderBlockStartColor, 'quaternary borderless (top)').toBe(
+              readTokenColor('--ki-outline-none'),
+            );
+            expect(style.borderBlockEndColor, 'quaternary borderless (bottom)').toBe(
+              readTokenColor('--ki-outline-none'),
+            );
+          }
         }
       }
     }
 
     await expectAccessible(document.body);
+  });
+
+  it('label Text_wrap padding: Space/xs inline padding with the composite gap preserved (Figma 8003:300 md anatomy)', async () => {
+    cleanup();
+    ensureTokens();
+    const el = await mount('Save', { size: 'md' });
+    const button = requireButton(el);
+    await waitForStyles();
+    const label = button.querySelector('[part="label"]');
+    expect(label).not.toBeNull();
+    if (!label) {
+      throw new Error('ki-button did not render a label part');
+    }
+
+    // Figma Text_wrap carries its own Space/xs (4px) inline padding in every
+    // size (pixel pass delta: text-only edge-to-label = 10 + 4 = 14 at md).
+    const labelStyle = getComputedStyle(label);
+    expect(labelStyle.paddingInlineStart, 'Text_wrap inline padding start').toBe('4px');
+    expect(labelStyle.paddingInlineEnd, 'Text_wrap inline padding end').toBe('4px');
+
+    // The per-size gap tokens encode the COMPOSITE icon-to-text distance
+    // (root gap 2px + Text_wrap padding 4px = 6px at md), so the flex gap
+    // compensates for the label padding: computed column-gap = 6 - 4 = 2.
+    expect(getComputedStyle(button).columnGap, 'md flex gap (composite minus padding)').toBe('2px');
+
+    // Rendered anatomy: the label TEXT box starts exactly 14px from the
+    // button edge on a text-only md button (10px Figma padding containing
+    // the inner stroke, plus the 4px Text_wrap padding).
+    const inset =
+      label.getBoundingClientRect().left -
+      button.getBoundingClientRect().left +
+      Number.parseFloat(labelStyle.paddingInlineStart);
+    expect(inset, 'md text-only edge-to-text inset').toBe(14);
+  });
+
+  it('focus-visible flattens the elevation to the ring-only shadow stack (Figma 8003:300 focus column)', async () => {
+    cleanup();
+    ensureTokens();
+    const el = await mount('Save', { variant: 'primary' });
+    const button = requireButton(el);
+    await waitForStyles();
+    const restShadow = getComputedStyle(button).boxShadow;
+    expect(restShadow, 'primary rest carries an elevation stack').not.toBe('none');
+
+    await userEvent.keyboard('{Tab}');
+    expect(el.shadowRoot?.activeElement).toBe(button);
+    // The box-shadow micro-transition (fast motion token, 120ms) must settle
+    // before reading the focused stack.
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const probe = document.createElement('div');
+    probe.style.boxShadow = 'var(--ki-button-focus-ring-shadow)';
+    document.body.append(probe);
+    const ringOnly = getComputedStyle(probe).boxShadow;
+    probe.remove();
+
+    const focusedShadow = getComputedStyle(button).boxShadow;
+    // Figma focus column: ALL drop shadows removed while focused, ring only.
+    expect(focusedShadow, 'focused stack is the ring alone').toBe(ringOnly);
+    expect(focusedShadow, 'variant elevation dropped while focused').not.toBe(restShadow);
   });
 
   it('S13 keeps start and end slots in logical order under RTL', async () => {

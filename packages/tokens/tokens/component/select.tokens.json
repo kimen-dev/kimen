@@ -18,20 +18,32 @@
         "$description": "dimension used by the select component for gap."
       },
       "radius": {
-        "$value": "{ki.radius.md}",
-        "$description": "dimension used by the select component for radius."
+        "$value": "{ki.radius.component.md}",
+        "$description": "dimension used by the select component for radius (MarsUI Radius/component/radius_md 10px; component ramp so personality modes reach it)."
       },
       "font-size": {
         "$value": "{ki.typography.size.body-1}",
         "$description": "dimension used by the select component for font size."
       },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.medium}",
+        "$description": "font weight used by the select component for the trigger value (MarsUI UI/Body 1/medium: weight 600)."
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}",
+        "$description": "dimension used by the select component for the trigger value line height (MarsUI body_1 24px)."
+      },
       "indicator-size": {
         "$value": "{ki.space.4xl}",
         "$description": "dimension used by the select component for indicator size."
       },
+      "indicator-glyph-size": {
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the select component for the chevron glyph box inside the 18px indicator slot (MarsUI Dropdown chevron 8px border-box square drawn by [part=indicator]::before)."
+      },
       "border-width": {
-        "$value": "{ki.space.xxs}",
-        "$description": "dimension used by the select component for border width."
+        "$value": "{ki.size.border.hairline}",
+        "$description": "dimension used by the select component for border width (MarsUI Input_cell strokeWeight 1px; the color stays ki.outline.control per the declared a11y deviation — only the 2px width was undocumented)."
       },
       "border-block-start-width": {
         "$value": "{ki.select.border-width}",
@@ -53,22 +65,26 @@
         "$value": "{ki.space.xs}",
         "$description": "dimension used by the select component for label gap."
       },
+      "label-padding-inline": {
+        "$value": "{ki.space.xxs}",
+        "$description": "dimension used by the select component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input/ki-textarea)."
+      },
       "label-font-size": {
-        "$value": "{ki.typography.size.caption-1}",
-        "$description": "dimension used by the select component for label font size."
+        "$value": "{ki.typography.size.body-1}",
+        "$description": "dimension used by the select component for label font size (MarsUI UI/Para/medium: body_1 13px)."
       },
       "label-font-weight": {
         "$value": "{ki.typography.weight.body.medium}",
         "$description": "font weight used by the select component for label font weight."
       },
       "label-line-height": {
-        "$value": "{ki.typography.line-height.caption-1}",
-        "$description": "dimension used by the select component for label line height."
+        "$value": "{ki.typography.line-height.para}",
+        "$description": "dimension used by the select component for label line height (MarsUI line_height/para 20px)."
       },
       "rest": {
         "bg": {
-          "$value": "{ki.surface.s0}",
-          "$description": "color used by the select component for rest background."
+          "$value": "{ki.surface.special.light-s0-dark-s2}",
+          "$description": "color used by the select component for rest background (MarsUI Dropdown rest fill Surface/Special/light-s0_dark-s2: white light, Dark/800 dark)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -85,8 +101,8 @@
       },
       "hover": {
         "bg": {
-          "$value": "{ki.surface.s1}",
-          "$description": "color used by the select component for hover background."
+          "$value": "{ki.surface.special.light-s2-dark-s3}",
+          "$description": "color used by the select component for hover background (MarsUI hover = rest fill + hover_overlay_inverse; nearest cross-scheme step that keeps the ramp monotonic in dark)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -103,16 +119,16 @@
       },
       "focus": {
         "bg": {
-          "$value": "{ki.surface.s0}",
-          "$description": "color used by the select component for focus background."
+          "$value": "{ki.surface.special.light-s0-dark-s4}",
+          "$description": "color used by the select component for focus background (MarsUI Dropdown focus fill Surface/Special/light-s0_dark-s4)."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
           "$description": "color used by the select component for focus foreground."
         },
         "border": {
-          "$value": "{ki.outline.primary-high-em}",
-          "$description": "color used by the select component for focus border."
+          "$value": "{ki.select.rest.border}",
+          "$description": "color used by the select component for focus border (MarsUI active is glow-only: the border stays the rest hairline while Focus/primary carries the emphasis — repointed from ki.outline.primary-high-em per the fidelity audit; material3 keeps the opaque primary border via its override)."
         },
         "label-fg": {
           "$value": "{ki.text.high-em}",
@@ -125,15 +141,15 @@
           "$description": "color used by the select component for disabled background."
         },
         "fg": {
-          "$value": "{ki.text.low-em}",
-          "$description": "color used by the select component for disabled foreground."
+          "$value": "{ki.text.base-em}",
+          "$description": "color used by the select component for disabled foreground (MarsUI disabled text Text/base_em Gray/400; disabled cells are exempt from the contrast sweep)."
         },
         "border": {
-          "$value": "{ki.outline.low-em}",
-          "$description": "color used by the select component for disabled border."
+          "$value": "{ki.outline.base-em}",
+          "$description": "color used by the select component for disabled border (MarsUI Outline/base_em Black/3)."
         },
         "label-fg": {
-          "$value": "{ki.text.low-em}",
+          "$value": "{ki.text.base-em}",
           "$description": "color used by the select component for disabled label foreground."
         }
       },
@@ -143,12 +159,17 @@
       },
       "listbox": {
         "bg": {
-          "$value": "{ki.surface.s1}",
-          "$description": "color used by the select component for listbox background."
+          "$value": "{ki.surface.special.blur-base-light}",
+          "$description": "color used by the select component for listbox background (MarsUI Dropmenu glass panel Surface/Special/blur_base_light White/80; pair with backdrop-filter blur(var(--ki-select-listbox-backdrop-blur)))."
+        },
+        "backdrop-blur": {
+          "$value": "{ki.blur.48}",
+          "$type": "dimension",
+          "$description": "backdrop blur used by the select component listbox glass panel (MarsUI BACKGROUND_BLUR Blur/48 = CSS 24px; material3 resolves to blur none via its override)."
         },
         "radius": {
-          "$value": "{ki.radius.md}",
-          "$description": "dimension used by the select component for listbox radius."
+          "$value": "{ki.radius.big-component.sm}",
+          "$description": "dimension used by the select component for listbox radius (MarsUI Radius/big_component/radius_sm 20px bound on the Dropmenu panel)."
         },
         "elevation": {
           "$value": "{ki.elevation.shadow-med}",
@@ -160,8 +181,8 @@
           "$description": "shadow used by the select component for the listbox: MarsUI elevation ramp e3 (brief §5), the medium floating-surface level, replacing the former hand-composed offset/color shadow. Declared level: e3 (M3 analog: menu/dialog band; material3 overrides to e2 = md.sys.elevation.level2 for menus)."
         },
         "padding": {
-          "$value": "{ki.space.xs}",
-          "$description": "dimension used by the select component for listbox padding."
+          "$value": "{ki.space.xl}",
+          "$description": "dimension used by the select component for listbox padding (MarsUI Dropmenu content inset Space/xl 12px)."
         },
         "max-block-size": {
           "$value": "{ki.size.surface.xs}",

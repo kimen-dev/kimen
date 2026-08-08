@@ -467,7 +467,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/010-pressed-state-reachable.json',
+      '../../changes/api/011-marsui-fidelity-pixel-pass.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -513,10 +513,23 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // position in the emphasis ramp; and --ki-surface-primary-med-em-hover, the
   // hover of the MarsUI default brand surface, which the selection family had
   // no scheme-correct step for.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1316);
+  // The MarsUI fidelity pixel pass (changes/api/011) adds 51 additive leaves:
+  // per-side tertiary bevels for button and icon-button, the field invalid
+  // rings and hint trios, label padding aliases, the dialog/tooltip glass
+  // gradient pairs and backdrop blurs, card padding/media-radius/backdrop
+  // blur, switch glyph geometry, select trigger typography and listbox blur,
+  // the alert dismiss/text-gap set, the scroller focus ring, tab bar metrics,
+  // the motion instant/spring/distance set, focus danger and the small dark
+  // shadow. The fidelity test-failure pass adds one more on top:
+  // --ki-radio-selected-active-overlay, the selected radio's pressed
+  // state layer (the ki-button active/overlay precedent), because
+  // selected-active-bg mirrors rest and a keyboard hold on a selected radio
+  // otherwise shows no paint delta under reduced motion (bare-page
+  // state-delta contract). 1316 + 52 = 1368.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1368);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1316,
+    1368,
   );
 });

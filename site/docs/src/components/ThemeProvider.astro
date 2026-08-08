@@ -1,0 +1,29 @@
+---
+// Starlight override (declared in astro.config.mjs → components.ThemeProvider).
+// Wraps the default provider and bridges Starlight's resolved theme
+// (`data-theme="dark|light"` on <html>) into Kimen's scheme attribute
+// (`data-ki-color-scheme`), so the token layer — and with it every live
+// ki-* demo — follows the docs theme toggle, including the "Auto" setting.
+import StarlightThemeProvider from '@astrojs/starlight/components/ThemeProvider.astro';
+---
+
+<StarlightThemeProvider {...Astro.props} />
+
+<script is:inline>
+  (() => {
+    const root = document.documentElement;
+    const sync = () => {
+      const theme = root.dataset.theme;
+      if (theme === 'dark' || theme === 'light') {
+        root.setAttribute('data-ki-color-scheme', theme);
+      }
+    };
+    // Starlight's inline provider script has already resolved the persisted
+    // preference by the time this runs, so the first sync happens pre-paint.
+    sync();
+    new MutationObserver(sync).observe(root, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+  })();
+</script>

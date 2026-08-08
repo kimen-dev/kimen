@@ -106,8 +106,79 @@ function requireButton(el: KiIconButtonElement): HTMLButtonElement {
   return button;
 }
 
+/**
+ * Make the next computed-style read a REST read. The fidelity pass gave the
+ * control state transitions, so one frame is not enough: the pointer may be
+ * resting over the control (its position persists across spec files) and a
+ * theme/state flip read mid-transition reports a colour between two tokens
+ * that matches neither. Park the pointer, then wait out every finite
+ * animation — walking shadow roots, because in this Chromium
+ * `getAnimations({subtree: true})` does not cross the shadow boundary.
+ */
 async function waitForStyles(): Promise<void> {
+  // Park the pointer on a transient probe pinned to the corner (ki-card's
+  // hover-test pattern): resetPointer's page origin can land INSIDE the
+  // tester iframe exactly where these fixtures mount, which puts the control
+  // in its hover state instead of clearing it.
+  const park = document.createElement('div');
+  park.style.cssText =
+    'position:fixed;inset-block-end:0;inset-inline-end:0;inline-size:8px;block-size:8px;';
+  document.body.append(park);
+  await userEvent.hover(park);
+  park.remove();
   await new Promise((resolve) => requestAnimationFrame(resolve));
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  const deadline = Date.now() + 4000;
+  // A calm streak of two checks two frames apart: a transition triggered by a
+  // late Stencil re-render (custom props resolving on the second pass) can
+  // START after a first clean check, and a read taken then lands mid-tween.
+  let calm = false;
+  for (;;) {
+    const found = new Set<Animation>();
+    const collect = (element: Element): void => {
+      for (const animation of element.getAnimations({ subtree: true })) {
+        found.add(animation);
+      }
+    };
+    collect(document.body);
+    const walk = (node: ParentNode): void => {
+      for (const element of node.querySelectorAll('*')) {
+        const shadow = element.shadowRoot;
+        if (shadow !== null) {
+          for (const child of shadow.children) {
+            collect(child);
+          }
+          walk(shadow);
+        }
+      }
+    };
+    walk(document.body);
+    const running = [...found].filter(
+      (animation) =>
+        animation.playState === 'running' && animation.effect?.getTiming().iterations !== Infinity,
+    );
+    if (Date.now() >= deadline) {
+      return;
+    }
+    if (running.length === 0) {
+      if (calm) {
+        return;
+      }
+      calm = true;
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      continue;
+    }
+    calm = false;
+    // Bounded wait: `finished` can stall forever when an animation sticks in
+    // `running` (loaded-CI observation, issue #105); an unbounded await here
+    // skips the deadline re-check. Race against the remaining budget.
+    await Promise.race([
+      Promise.allSettled(running.map((animation) => animation.finished)),
+      new Promise((resolve) => setTimeout(resolve, Math.max(0, deadline - Date.now()))),
+    ]);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
 }
 
 function readTokenColor(name: string): string {
@@ -439,15 +510,17 @@ describe('ki-icon-button in a real browser', () => {
             continue;
           }
           const style = getComputedStyle(button);
-          if (variant === 'primary' || variant === 'secondary') {
+          if (variant === 'primary' || variant === 'secondary' || variant === 'tertiary') {
             // Glass variants carry the MarsUI Blur/24 backdrop, exported as
-            // blur(12px) (002 §0; verified on the Icon_button set).
+            // blur(12px) (002 §0; verified on the Icon_button set); tertiary
+            // joined the glass set in the pixel pass (Figma 10078:2975:
+            // TERTIARY fill light-s0_dark-s2 + Blur24).
             expect(style.backdropFilter, `${variant} glass backdrop`).toContain('blur');
           }
-          if (variant === 'ghost') {
+          if (variant === 'ghost' || variant === 'quaternary') {
             // Non-glass variants stay off the glass path entirely: computed
             // backdrop-filter is none, not blur(0).
-            expect(style.backdropFilter, 'ghost has no backdrop filter').toBe('none');
+            expect(style.backdropFilter, `${variant} has no backdrop filter`).toBe('none');
           }
           if (variant === 'primary') {
             // MarsUI bevel: the block-end border edge is darker than the
@@ -456,10 +529,54 @@ describe('ki-icon-button in a real browser', () => {
               style.borderBlockStartColor,
             );
           }
+          if (variant === 'tertiary') {
+            // Pixel pass: tertiary carries the SECONDARY bevel pair
+            // (Figma 10078:2975: Outline/secondary_button_bottom block-end edge).
+            expect(style.borderBlockEndColor, 'tertiary bevel bottom (secondary pair)').toBe(
+              readTokenColor('--ki-icon-button-tertiary-rest-border-bottom'),
+            );
+          }
+          if (variant === 'quaternary') {
+            // Pixel pass: MarsUI quaternary draws NO border in any state
+            // (every border cell resolves ki.outline.none).
+            expect(style.borderBlockStartColor, 'quaternary borderless (top)').toBe(
+              readTokenColor('--ki-outline-none'),
+            );
+            expect(style.borderBlockEndColor, 'quaternary borderless (bottom)').toBe(
+              readTokenColor('--ki-outline-none'),
+            );
+          }
         }
       }
     }
 
     await expectAccessible(document.body);
+  });
+
+  it('focus-visible flattens the elevation to the ring-only shadow stack (Figma 10078:2975 focus column)', async () => {
+    cleanup();
+    ensureTokens();
+    const el = await mount('Close', { variant: 'primary' });
+    const button = requireButton(el);
+    await waitForStyles();
+    const restShadow = getComputedStyle(button).boxShadow;
+    expect(restShadow, 'primary rest carries an elevation stack').not.toBe('none');
+
+    await userEvent.keyboard('{Tab}');
+    expect(el.shadowRoot?.activeElement).toBe(button);
+    // The box-shadow micro-transition (fast motion token, 120ms) must settle
+    // before reading the focused stack.
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const probe = document.createElement('div');
+    probe.style.boxShadow = 'var(--ki-icon-button-focus-ring-shadow)';
+    document.body.append(probe);
+    const ringOnly = getComputedStyle(probe).boxShadow;
+    probe.remove();
+
+    const focusedShadow = getComputedStyle(button).boxShadow;
+    // Figma focus column: ALL drop shadows removed while focused, ring only.
+    expect(focusedShadow, 'focused stack is the ring alone').toBe(ringOnly);
+    expect(focusedShadow, 'variant elevation dropped while focused').not.toBe(restShadow);
   });
 });

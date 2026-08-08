@@ -18,12 +18,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<JSX.KiStatus>;
 
+// Adjacent text inherits body_1/high-em from the workshop canvas contract.
 const rowStyle = {
   display: 'flex',
   alignItems: 'center',
   gap: 'var(--ki-space-md)',
-  fontFamily: 'var(--ki-typography-family-body)',
-  color: 'var(--ki-text-high-em)',
 };
 
 /** Interactive playground: tone, ring and the accessible label as controls. */
@@ -55,18 +54,26 @@ export const RingOverAvatar: Story = {
     <div
       style={{
         position: 'relative',
-        inlineSize: 'var(--ki-space-14xl)',
-        blockSize: 'var(--ki-space-14xl)',
+        inlineSize: '3.5rem',
+        blockSize: '3.5rem',
         borderRadius: 'var(--ki-radius-round)',
         background: 'var(--ki-surface-primary-med-em)',
       }}
     >
+      {/* Dot centered on the circle's 315-degree point (100% - 50%/sqrt(2) of
+          the box per axis) so the ring reads as a cutout from the avatar
+          pixels beneath, exactly the MarsUI overlay composition. */}
       <ki-status
         {...args}
         tone="success"
         ring={true}
         label="Online"
-        style={{ position: 'absolute', insetBlockEnd: '0', insetInlineEnd: '0' }}
+        style={{
+          position: 'absolute',
+          insetBlockEnd: '14.6%',
+          insetInlineEnd: '14.6%',
+          translate: '50% 50%',
+        }}
       />
     </div>
   ),

@@ -82,6 +82,17 @@ function readTokenColor(name: string, property: 'backgroundColor' | 'color'): st
   return value;
 }
 
+// The card paints the MarsUI glass gradient (bg-start -> bg-end) over the flat
+// bg fallback; the probe resolves the same declaration for comparison.
+function readGradient(startName: string, endName: string): string {
+  const probe = document.createElement('div');
+  probe.style.backgroundImage = `linear-gradient(180deg, var(${startName}), var(${endName}))`;
+  document.body.append(probe);
+  const value = getComputedStyle(probe).backgroundImage;
+  probe.remove();
+  return value;
+}
+
 async function nextFrame(): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(resolve));
 }
@@ -128,12 +139,27 @@ function requireTooltip(host: KiTooltipElement): HTMLDivElement {
   return tooltip;
 }
 
-// The bubble is always in the DOM; the `is-visible` class flips its computed
-// `visibility`. Read it synchronously so fake-clock tests never depend on the
-// polling `expect.element` matcher — page.clock freezes rAF/setTimeout, and a
-// frozen poll cannot re-check, so it flakes (times out) under load.
-function isTooltipVisible(host: KiTooltipElement): boolean {
-  return getComputedStyle(requireTooltip(host)).visibility === 'visible';
+// The bubble is always in the DOM; the `is-visible` class is the component's
+// show/hide state signal. Read the CLASS synchronously, not the computed
+// visibility: fake-clock tests must never depend on the polling
+// `expect.element` matcher (page.clock freezes rAF/setTimeout, and a frozen
+// poll cannot re-check), and under no-preference the exit fade now DELAYS the
+// computed visibility flip by one fast step on the CSS clock, which the fake
+// clock does not control.
+function isTooltipShown(host: KiTooltipElement): boolean {
+  return requireTooltip(host).classList.contains('is-visible');
+}
+
+// The enter fade runs under no-preference; geometry and axe assertions must
+// observe the settled bubble (opacity 1, slide finished), never a mid-fade
+// frame.
+async function settleTooltip(host: KiTooltipElement): Promise<void> {
+  const tooltip = requireTooltip(host);
+  const deadline = Date.now() + 2000;
+  while (getComputedStyle(tooltip).opacity !== '1' && Date.now() < deadline) {
+    await nextFrame();
+  }
+  expect(getComputedStyle(tooltip).opacity).toBe('1');
 }
 
 // Under an installed fake clock, Stencil's queued render (rAF) does not run
@@ -155,6 +181,7 @@ async function hoverTrigger(host: KiTooltipElement, trigger: HTMLButtonElement):
   await userEvent.hover(trigger);
   await nextFrame();
   expect(requireTooltip(host)).toHaveTextContent('Send immediately');
+  await settleTooltip(host);
 }
 
 describe('ki-tooltip pointer path in a real browser', () => {
@@ -198,21 +225,21 @@ describe('ki-tooltip pointer path in a real browser', () => {
 
       // Just short of the 150ms show delay: still hidden (no render since mount).
       await browserCommands.fastForwardClock(149);
-      expect(isTooltipVisible(host)).toBe(false);
+      expect(isTooltipShown(host)).toBe(false);
 
       // Cross the boundary, then run the render frame so the DOM reflects show.
       await browserCommands.fastForwardClock(1);
       await runRenderFrame();
-      expect(isTooltipVisible(host)).toBe(true);
+      expect(isTooltipShown(host)).toBe(true);
 
       // Leaving the trigger starts the 75ms linger; the tooltip stays visible.
       await userEvent.unhover(trigger);
-      expect(isTooltipVisible(host)).toBe(true);
+      expect(isTooltipShown(host)).toBe(true);
 
       // The linger elapses: hidden again once the render frame runs.
       await browserCommands.fastForwardClock(75);
       await runRenderFrame();
-      expect(isTooltipVisible(host)).toBe(false);
+      expect(isTooltipShown(host)).toBe(false);
     } finally {
       await browserCommands.resumeClock();
     }
@@ -254,9 +281,58 @@ describe('ki-tooltip pointer path in a real browser', () => {
     const tooltip = requireTooltip(host);
     const style = getComputedStyle(tooltip);
 
-    expect(style.backgroundColor).toBe(readTokenColor('--ki-tooltip-bg', 'backgroundColor'));
+    // The card paints the bg-start -> bg-end gradient; material3 resolves both
+    // stops to its inverse bubble surface, so the gradient is the theme signal.
+    expect(style.backgroundImage).toBe(
+      readGradient('--ki-tooltip-bg-start', '--ki-tooltip-bg-end'),
+    );
     expect(style.color).toBe(readTokenColor('--ki-tooltip-fg', 'color'));
     expect(host.outerHTML).toContain('<button aria-description="Send immediately">Send</button>');
+  });
+
+  it('S1 renders the MarsUI glass card geometry, bevel, and typography', async () => {
+    const { host, trigger } = await mount({
+      style: { marginBlockStart: '160px', marginInlineStart: '160px' },
+    });
+    await hoverTrigger(host, trigger);
+    const tooltip = requireTooltip(host);
+    const style = getComputedStyle(tooltip);
+
+    // Tooltip master 12089:7621 card: radius 16, padding 12 all sides, max 288,
+    // title UI/Para/medium 13/20 weight 600.
+    expect(style.borderRadius).toBe('16px');
+    expect(style.paddingTop).toBe('12px');
+    expect(style.paddingRight).toBe('12px');
+    expect(style.paddingBottom).toBe('12px');
+    expect(style.paddingLeft).toBe('12px');
+    expect(style.maxWidth).toBe('288px');
+    expect(style.fontSize).toBe('13px');
+    expect(style.lineHeight).toBe('20px');
+    expect(style.fontWeight).toBe('600');
+
+    // Glass card paint: gradient over a transparent color fallback plus the
+    // Blur/24 (CSS 12px) backdrop filter.
+    expect(style.backgroundImage).toBe(
+      readGradient('--ki-tooltip-bg-start', '--ki-tooltip-bg-end'),
+    );
+    expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(style.getPropertyValue('backdrop-filter')).toBe('blur(12px)');
+
+    // Bevel hairline (Outline/secondary_button_top) on all sides while no
+    // caret ships.
+    expect(style.borderTopWidth).toBe('1px');
+    expect(style.borderTopStyle).toBe('solid');
+    expect(style.borderTopColor).toBe(readTokenColor('--ki-outline-secondary-button-top', 'color'));
+
+    // e4 wrap elevation (deepest layer 0 32 32 -16) plus the secondary_default
+    // inner highlight (inset layer).
+    expect(style.boxShadow).toContain('0px 32px 32px -16px');
+    expect(style.boxShadow).toContain('inset');
+
+    // Caret-depth offset: 8px trigger-to-card distance (top placement).
+    const triggerRect = trigger.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+    expect(Math.round(triggerRect.top - tooltipRect.bottom)).toBe(8);
   });
 
   it('S11 start placement renders on the right side under RTL', async () => {
@@ -437,11 +513,12 @@ describe('ki-tooltip pointer path in a real browser', () => {
   it('S8 has zero axe violations with the tooltip visible', async () => {
     const main = document.createElement('main');
     document.body.append(main);
-    const { trigger } = await mount({}, main);
+    const { host, trigger } = await mount({}, main);
 
     trigger.focus();
     await nextFrame();
     await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+    await settleTooltip(host);
 
     await expectAccessible(main);
   });
@@ -464,6 +541,8 @@ describe('ki-tooltip pointer path in a real browser', () => {
       await hoverTrigger(host, trigger);
     }
 
-    await expectAccessible(main);
+    // keepPointer: the shown state under audit is HELD OPEN by the hover —
+    // the default rest-state parking would dismiss it before the scan.
+    await expectAccessible(main, { keepPointer: true });
   });
 });

@@ -5,6 +5,21 @@ immutable `release-candidate-v1` archive. Validation builds the bytes once;
 browser jobs and the publisher only consume that artifact. No release job
 versions packages or writes to the repository.
 
+## v1 publication scope
+
+The current release contract covers exactly two packages: `@kimen/elements`
+and `@kimen/tokens`. The candidate archive packs those two, and every
+validation job binds to that two-package shape.
+
+`@kimen/catalog`, `@kimen/adapter-a2ui` and `@kimen/adapter-mcp-apps` are
+implemented in this repository but remain `private: true` and are not part
+of the candidate. Whether they publish at v1 — and under which versioning
+contract — is an **open founder decision**. Until that decision is made, do
+not add them to the candidate and do not weaken the two-package validation
+to accommodate them. Extending the scope requires changing the
+release-candidate contract, the release workflow tests and this document
+together.
+
 ## Modes
 
 | Mode | Entry point | Package state | Authority | Result |

@@ -110,6 +110,13 @@
           "$value": "{ki.elevation.e2}",
           "$type": "shadow",
           "$description": "M3 menu container elevation: md.sys.elevation.level2 via the shared ramp (ki.elevation.e2 resolves to level-2 in the material3 semantic layer)."
+        },
+        "padding": {
+          "$value": "{ki.space.xs}"
+        },
+        "backdrop-blur": {
+          "$value": "{ki.blur.none}",
+          "$type": "dimension"
         }
       },
       "focus-ring": {
@@ -117,6 +124,21 @@
           "$value": "{ki.outline.primary-high-em}",
           "$description": "Material 3 color used by the select component for focus ring color."
         }
+      },
+      "border-width": {
+        "$value": "{ki.space.xxs}"
+      },
+      "label-font-size": {
+        "$value": "{ki.typography.size.caption-1}"
+      },
+      "label-line-height": {
+        "$value": "{ki.typography.line-height.caption-1}"
+      },
+      "font-weight": {
+        "$value": "{ki.typography.weight.body.normal}"
+      },
+      "line-height": {
+        "$value": "{ki.typography.line-height.body-1}"
       }
     }
   }
