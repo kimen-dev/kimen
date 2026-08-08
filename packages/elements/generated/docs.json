@@ -40,7 +40,9 @@
           "text": "dismiss - Native dismiss button, rendered only when dismissible."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "`tone` sets the token-backed colors and the live-region urgency — `danger` and `warning` expose `role=\"alert\"`, every other value `role=\"status\"`:\n\n```html\n<ki-alert tone=\"success\">Your changes were saved.</ki-alert>\n<ki-alert tone=\"danger\">Payment failed. Update your billing details.</ki-alert>\n```\n\nAn optional `heading` adds emphasized text inside the live region; it is a `strong` element, never a document heading:\n\n```html\n<ki-alert tone=\"warning\" heading=\"Storage almost full\">\n  You are using 92% of your plan.\n</ki-alert>\n```\n\n`dismissible` renders the alert's only tab stop; user dismissal reflects `dismissed` and fires a composed `ki-dismiss` (programmatic `dismissed` writes stay silent, and clearing the attribute re-shows the alert):\n\n```html\n<ki-alert tone=\"danger\" heading=\"Save failed\" dismissible>\n  Your changes could not be saved. Retry or copy your work elsewhere.\n</ki-alert>\n```\n\n`dismiss-label` overrides the dismiss button's accessible name — the default `Dismiss` is the component's only built-in user-visible string, so localize it whenever the document language is not English:\n\n```html\n<ki-alert lang=\"es\" tone=\"info\" dismissible dismiss-label=\"Descartar\">\n  Mantenimiento programado el sábado desde las 02:00 UTC.\n</ki-alert>\n```\n"
+      },
       "props": [
         {
           "name": "dismissLabel",
@@ -291,7 +293,9 @@
           "text": "icon - The built-in generic person figure of the last fallback step."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "The fallback chain is content, never a mode switch: a portrait that loads wins, `initials` render verbatim otherwise, and a built-in generic figure covers the rest; `label` exposes the avatar as a named non-interactive image:\n\n```html\n<ki-avatar label=\"Ana García\" src=\"/avatars/ana.png\" initials=\"AG\"></ki-avatar>\n<ki-avatar label=\"Sam Bel\" initials=\"SB\"></ki-avatar>\n<ki-avatar label=\"Guest\"></ki-avatar>\n```\n\nBeside a visible name the avatar is decorative — omit `label` so assistive technology hears the name exactly once:\n\n```html\n<p><ki-avatar initials=\"AG\" size=\"sm\"></ki-avatar> Ana García</p>\n```\n\n`size` steps over the shared scale (`xxs` to `xl`, default `md`); an unrecognized value keeps the medium metrics:\n\n```html\n<ki-avatar label=\"Ana García\" initials=\"AG\" size=\"xs\"></ki-avatar>\n<ki-avatar label=\"Ana García\" initials=\"AG\"></ki-avatar>\n<ki-avatar label=\"Ana García\" initials=\"AG\" size=\"xl\"></ki-avatar>\n```\n"
+      },
       "props": [
         {
           "name": "initials",
@@ -498,7 +502,9 @@
           "text": "counter - The static \"+N\" overflow text trailing the stack."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "`max` caps the visible stack; members beyond the cap are neither rendered nor exposed to assistive technology, and a static \"+N\" counter accounts exactly for the hidden rest:\n\n```html\n<ki-avatar-group max=\"3\">\n  <ki-avatar label=\"Ana García\" initials=\"AG\"></ki-avatar>\n  <ki-avatar label=\"Sam Bel\" initials=\"SB\"></ki-avatar>\n  <ki-avatar label=\"Iris Toma\" initials=\"IT\"></ki-avatar>\n  <ki-avatar label=\"Leo Duarte\" initials=\"LD\"></ki-avatar>\n  <ki-avatar label=\"Mia Chen\" initials=\"MC\"></ki-avatar>\n</ki-avatar-group>\n<!-- renders Ana, Sam and Iris, then \"+2\" -->\n```\n\nWithout `max` — or with a cap that is not a positive whole number — every member renders and no counter appears (never \"+0\"):\n\n```html\n<ki-avatar-group>\n  <ki-avatar label=\"Ana García\" initials=\"AG\"></ki-avatar>\n  <ki-avatar label=\"Sam Bel\" initials=\"SB\"></ki-avatar>\n</ki-avatar-group>\n```\n\nThe group's `size` governs every visible member and the counter, overriding member-declared sizes so the stack stays uniform:\n\n```html\n<ki-avatar-group size=\"sm\" max=\"2\">\n  <ki-avatar label=\"Ana García\" initials=\"AG\" size=\"xl\"></ki-avatar>\n  <ki-avatar label=\"Sam Bel\" initials=\"SB\"></ki-avatar>\n  <ki-avatar label=\"Iris Toma\" initials=\"IT\"></ki-avatar>\n</ki-avatar-group>\n```\n"
+      },
       "props": [
         {
           "name": "max",
@@ -637,7 +643,9 @@
           "text": "badge - The pill: background, foreground, border, radius, metrics\nand typography."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "The slotted label is the sole carrier of meaning; `tone` only reinforces it with the `--ki-badge-{tone}-*` token colors, and an unrecognized value keeps the neutral appearance:\n\n```html\n<ki-badge>Draft</ki-badge>\n<ki-badge tone=\"info\">Beta</ki-badge>\n<ki-badge tone=\"success\">Active</ki-badge>\n<ki-badge tone=\"warning\">Trial ends soon</ki-badge>\n<ki-badge tone=\"danger\">Suspended</ki-badge>\n```\n\n`size` selects the metric scale (`sm` or `md`, default `md`):\n\n```html\n<ki-badge tone=\"success\" size=\"sm\">Synced</ki-badge>\n```\n\nA typical placement — trailing status on a list entry:\n\n```html\n<ki-list>\n  <ki-list-item>\n    Production deploy\n    <ki-badge slot=\"end\" tone=\"success\">Healthy</ki-badge>\n  </ki-list-item>\n</ki-list>\n```\n"
+      },
       "props": [
         {
           "name": "size",
@@ -1150,7 +1158,9 @@
           "text": "footer - Footer region wrapper."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "The four regions — `media`, `header`, default body and `footer`; supply the heading element yourself, because plain text in the `header` slot carries no heading semantics:\n\n```html\n<ki-card>\n  <img slot=\"media\" src=\"/telemetry.png\" alt=\"Orbit trajectory plot\" />\n  <h3 slot=\"header\">Mission telemetry</h3>\n  <p>Latest downlink completed at 14:02 UTC. All systems nominal.</p>\n  <ki-button slot=\"footer\" type=\"button\" variant=\"tertiary\">View details</ki-button>\n</ki-card>\n```\n\nAny subset of regions works — a text-only card is valid:\n\n```html\n<ki-card>\n  <h3 slot=\"header\">Storage almost full</h3>\n  <p>You are using 92% of your plan. Consider archiving old projects.</p>\n</ki-card>\n```\n\nActions go in the `footer` slot (no dedicated actions slot exists in v1), and interactive elements always sit inside a region — the card itself is never a click target:\n\n```html\n<ki-card>\n  <h3 slot=\"header\">Invite your team</h3>\n  <p>Collaborators can review specs and approve merges.</p>\n  <ki-button slot=\"footer\" type=\"button\" variant=\"primary\">Invite</ki-button>\n  <ki-button slot=\"footer\" type=\"button\" variant=\"ghost\">Later</ki-button>\n</ki-card>\n```\n"
+      },
       "props": [],
       "methods": [],
       "events": [],
@@ -1228,7 +1238,9 @@
           "text": "label - Label wrapper around the default slot."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "The default slot is the visible label — the accessible name and a native activation surface; when checked, `name` and `value` pair into the submitted form data:\n\n```html\n<form>\n  <ki-checkbox name=\"channels\" value=\"email\" checked>Email</ki-checkbox>\n  <ki-checkbox name=\"channels\" value=\"sms\">SMS</ki-checkbox>\n  <ki-button variant=\"primary\">Save preferences</ki-button>\n</form>\n```\n\nBoolean attributes use presence semantics — omit `checked` to express unchecked, never write `checked=\"false\"`; without `value` a checked box submits `on`, and unchecked boxes contribute no form entry:\n\n```html\n<ki-checkbox name=\"newsletter\" checked>Send me the weekly digest</ki-checkbox>\n```\n\n`required` blocks submission while unchecked (the invalid appearance appears only after a blocked attempt or an invalidating toggle, never on initial render), and `disabled` removes the checkbox from keyboard reach and form data:\n\n```html\n<form>\n  <ki-checkbox name=\"terms\" required>I accept the terms of service</ki-checkbox>\n  <ki-checkbox name=\"fax\" disabled>Notify me by fax</ki-checkbox>\n  <ki-button variant=\"primary\">Create account</ki-button>\n</form>\n```\n\n`indeterminate` presents the mixed state of a \"select all\" parent — presentation-only, exposed to assistive technology as mixed, cleared by any user toggle, and never submitted (model data stays binary through `checked`):\n\n```html\n<ki-checkbox indeterminate>Select all rows</ki-checkbox>\n```\n"
+      },
       "props": [
         {
           "name": "checked",
@@ -1680,7 +1692,9 @@
           "text": "divider - The rule itself: thickness, color and end-cap radius."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "A horizontal rule between stacked content; the divider is decorative — no role, no name, no tab stop (semantic thematic breaks belong to native `<hr>`):\n\n```html\n<section>Profile</section>\n<ki-divider></ki-divider>\n<section>Notifications</section>\n```\n\n`orientation=\"vertical\"` separates side-by-side content and stretches to the cross size its layout context provides — give the row a height or let flex stretch it:\n\n```html\n<div style=\"display: flex; align-items: stretch\">\n  <ki-button type=\"button\">Edit</ki-button>\n  <ki-divider orientation=\"vertical\"></ki-divider>\n  <ki-button type=\"button\">Share</ki-button>\n</div>\n```\n\nAn inset is a per-instance layout decision — use logical margins on the instance; thickness, color, end caps and gutter stay per-theme `--ki-divider-*` tokens, never attributes:\n\n```html\n<ki-divider style=\"margin-inline: 16px\"></ki-divider>\n```\n"
+      },
       "props": [
         {
           "name": "orientation",
@@ -1766,7 +1780,9 @@
           "text": "icon - Icon wrapper around the default slot."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "The default slot holds exactly one decorative icon; the mandatory `label` is the accessible name — the slot never contributes to it:\n\n```html\n<ki-icon-button label=\"Close\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n```\n\nVisual hierarchy comes from `variant` (default `secondary`) and semantic intent from `tone` (default `neutral`) — never use `variant` to signal success or danger:\n\n```html\n<ki-icon-button variant=\"primary\" label=\"Play\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n<ki-icon-button variant=\"ghost\" tone=\"danger\" label=\"Delete row\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 7h12M9 7V5h6v2m-8 0l1 12h8l1-12\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" /></svg>\n</ki-icon-button>\n```\n\nSizes run `xs` (24px, exactly the WCAG 2.2 pointer-target floor) through `xl`, default `md`; each pairs a square box with its own icon size:\n\n```html\n<ki-icon-button size=\"xs\" label=\"Clear\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n</ki-icon-button>\n<ki-icon-button size=\"xl\" variant=\"primary\" label=\"Record\">\n  <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"currentColor\" /></svg>\n</ki-icon-button>\n```\n\nPair with `ki-tooltip` for sighted discoverability: the tooltip's `label` becomes the accessible description while the icon button's `label` stays the accessible name:\n\n```html\n<ki-tooltip label=\"Closes the dialog\">\n  <ki-icon-button label=\"Close\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\" stroke=\"currentColor\" stroke-width=\"2\" /></svg>\n  </ki-icon-button>\n</ki-tooltip>\n```\n"
+      },
       "props": [
         {
           "name": "disabled",
@@ -2024,7 +2040,9 @@
           "text": "dot-current - Additionally on the current dot: the highlight treatment."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "Two integers determine everything — one dot per `count` position with the 1-based `current` highlighted — and `label` names the sequence (the exposed name reads \"&lt;label&gt;, &lt;current&gt; / &lt;count&gt;\"):\n\n```html\n<ki-indicator label=\"Slide position\" count=\"5\" current=\"2\"></ki-indicator>\n```\n\nMalformed declarations never break the row: `current` above `count` clamps to the last position, a non-numeric one falls back to the first, and an invalid `count` renders zero dots (an authoring mistake, not an error state):\n\n```html\n<ki-indicator label=\"Slide position\" count=\"5\" current=\"9\"></ki-indicator>\n<!-- fifth dot current -->\n```\n\nDrive it from the composing carousel by updating `current` (1-based); the highlight and exposed text follow immediately, and the indicator never announces changes (no live region) — announcements belong to the carousel:\n\n```html\n<ki-indicator id=\"gallery-position\" label=\"Photo position\" count=\"4\" current=\"1\"></ki-indicator>\n\n<script type=\"module\">\n  const indicator = document.getElementById('gallery-position');\n  indicator.current = 3;\n</script>\n```\n"
+      },
       "props": [
         {
           "name": "count",
@@ -2522,7 +2540,9 @@
           "text": "list - List surface that owns background, padding, item gap and\nbetween-item divider styling."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "The list accepts only `ki-list-item` children (other children are unsupported); each item's default slot is the primary text line:\n\n```html\n<ki-list>\n  <ki-list-item>Ada Lovelace</ki-list-item>\n  <ki-list-item>Grace Hopper</ki-list-item>\n  <ki-list-item>Margaret Hamilton</ki-list-item>\n</ki-list>\n```\n\nFull item composition — `start` for leading media (decorative beside the visible name, so the avatar carries no `label`), `secondary` for supporting text and `end` for trailing meta:\n\n```html\n<ki-list>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"AL\" size=\"sm\"></ki-avatar>\n    Ada Lovelace\n    <span slot=\"secondary\">Analytical engine programs</span>\n    <ki-badge slot=\"end\" tone=\"success\">Active</ki-badge>\n  </ki-list-item>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"GH\" size=\"sm\"></ki-avatar>\n    Grace Hopper\n    <span slot=\"secondary\">Compilers and COBOL</span>\n    <span slot=\"end\">1906–1992</span>\n  </ki-list-item>\n</ki-list>\n```\n\nRows are never click targets; interactivity lives in controls slotted into a region, which keep their own semantics and focus behavior:\n\n```html\n<ki-list>\n  <ki-list-item>\n    Two-factor authentication\n    <span slot=\"secondary\">Enabled via authenticator app</span>\n    <ki-button slot=\"end\" size=\"sm\" variant=\"tertiary\" type=\"button\">Manage</ki-button>\n  </ki-list-item>\n</ki-list>\n```\n"
+      },
       "props": [],
       "methods": [],
       "events": [],
@@ -2592,7 +2612,9 @@
           "text": "end - Trailing region wrapper."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "Valid only as a child of `ki-list`; the default slot is the primary text line:\n\n```html\n<ki-list>\n  <ki-list-item>Release 1.4 shipped</ki-list-item>\n</ki-list>\n```\n\n`secondary` adds a supporting line below the primary text; its presence selects the multi-line min-height token:\n\n```html\n<ki-list>\n  <ki-list-item>\n    Backups\n    <span slot=\"secondary\">Last run 2 hours ago</span>\n  </ki-list-item>\n</ki-list>\n```\n\n`start` leads with media and `end` trails with meta or a slotted control; media beside the visible primary text is decorative (unlabeled avatar, empty `alt`), while a slotted control needs its own accessible name:\n\n```html\n<ki-list>\n  <ki-list-item>\n    <ki-avatar slot=\"start\" initials=\"GH\" size=\"sm\"></ki-avatar>\n    Grace Hopper\n    <span slot=\"secondary\">Compilers and COBOL</span>\n    <ki-icon-button slot=\"end\" size=\"sm\" label=\"Edit Grace Hopper\">\n      <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 20l1-4L16 5l3 3L8 19l-4 1z\" fill=\"currentColor\" /></svg>\n    </ki-icon-button>\n  </ki-list-item>\n</ki-list>\n```\n"
+      },
       "props": [],
       "methods": [],
       "events": [],
@@ -2658,7 +2680,9 @@
           "text": "- Text label mirrored by the owning select."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "An option is meaningful only inside `ki-select`: it does not paint itself — the trimmed text is the visible label the select mirrors into its popup listbox, and `value` is what the form submits:\n\n```html\n<ki-select label=\"Language\" name=\"language\" placeholder=\"Choose a language\">\n  <ki-option value=\"en\">English</ki-option>\n  <ki-option value=\"es\">Spanish</ki-option>\n  <ki-option value=\"pt\">Portuguese</ki-option>\n</ki-select>\n```\n\nOmitting `value` submits the trimmed option text (native `<option>` parity); `disabled` options cannot be selected, are skipped by keyboard highlight, and are exposed unavailable by the select:\n\n```html\n<ki-select label=\"Priority\" name=\"priority\">\n  <ki-option>Low</ki-option>\n  <ki-option>Medium</ki-option>\n  <ki-option disabled>Urgent</ki-option>\n</ki-select>\n```\n\nNever author selection on the option — assign `ki-select.value` and the first matching option is selected silently:\n\n```html\n<ki-select id=\"language\" label=\"Language\" name=\"language\">\n  <ki-option value=\"en\">English</ki-option>\n  <ki-option value=\"es\">Spanish</ki-option>\n</ki-select>\n\n<script type=\"module\">\n  document.getElementById('language').value = 'es';\n</script>\n```\n"
+      },
       "props": [
         {
           "name": "disabled",
@@ -2755,7 +2779,9 @@
           "text": "indicator - The advancing fill or arc: indicator ink and indeterminate\nanimation."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "A determinate task; `label` names what is progressing (without it the progressbar exposes no accessible name) and `value` is clamped to `0..max` for both presentation and ARIA:\n\n```html\n<ki-progress label=\"Uploading report.pdf\" value=\"42\"></ki-progress>\n```\n\nWhen the total is not 100, set `max`; non-finite, zero or negative totals normalize to `100`:\n\n```html\n<ki-progress label=\"Installing dependencies\" value=\"3\" max=\"8\"></ki-progress>\n```\n\nUnknown-duration work sets `indeterminate` instead of a fabricated `value` (which is ignored while it is set); the motion is declared only when reduced motion is not requested:\n\n```html\n<ki-progress label=\"Contacting server\" indeterminate></ki-progress>\n```\n\n`shape=\"circular\"` fits compact or centered placements; unknown shape values render linear:\n\n```html\n<ki-progress label=\"Export progress\" shape=\"circular\" value=\"80\"></ki-progress>\n```\n"
+      },
       "props": [
         {
           "name": "indeterminate",
@@ -2950,7 +2976,9 @@
           "text": "code - The code tile: size, tile background and corners, quiet zone, module and finder shape/color."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "A scannable link with a purpose-stating `label` (the accessible name) and the same payload offered as a visible link next to the code — the accessible alternative is mandatory, the code never travels alone:\n\n```html\n<ki-qr value=\"https://onmars.dev\" label=\"Open onmars.dev on your phone\"></ki-qr>\n<a href=\"https://onmars.dev\">onmars.dev</a>\n```\n\n`value` is data, never behavior: it is encoded locally byte-for-byte and never interpreted, resolved, navigated to or fetched; non-ASCII text round-trips exactly:\n\n```html\n<ki-qr value=\"Reunión mañana — Zúrich\" label=\"Add the meeting to your phone\"></ki-qr>\n```\n\nMalformed declarations never break a page: with no `value` (or one beyond the ~2,331-byte capacity) nothing renders and nothing errors:\n\n```html\n<ki-qr label=\"Nothing to encode\"></ki-qr>\n```\n"
+      },
       "props": [
         {
           "name": "label",
@@ -3058,7 +3086,9 @@
           "text": "label - Wrapper around the option label."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "Each option is a `ki-radio` child of a `ki-radio-group`; the slotted text is the option's accessible name and activation surface, and `value` is what the group submits when the option is selected:\n\n```html\n<ki-radio-group label=\"Delivery speed\" name=\"delivery\">\n  <ki-radio value=\"standard\">Standard (3–5 days)</ki-radio>\n  <ki-radio value=\"express\">Express (1–2 days)</ki-radio>\n</ki-radio-group>\n```\n\nA disabled option cannot be selected or focused, and group arrow navigation skips it:\n\n```html\n<ki-radio-group label=\"Plan\" name=\"plan\" value=\"pro\">\n  <ki-radio value=\"free\">Free</ki-radio>\n  <ki-radio value=\"pro\">Pro</ki-radio>\n  <ki-radio value=\"enterprise\" disabled>Enterprise (contact sales)</ki-radio>\n</ki-radio-group>\n```\n\nSelection is never authored on the option — the parent group's `value` selects the matching option:\n\n```html\n<ki-radio-group label=\"Theme\" name=\"theme\" value=\"dark\">\n  <ki-radio value=\"light\">Light</ki-radio>\n  <ki-radio value=\"dark\">Dark</ki-radio>\n  <ki-radio value=\"system\">Match system</ki-radio>\n</ki-radio-group>\n```\n"
+      },
       "props": [
         {
           "name": "disabled",
@@ -3167,7 +3197,9 @@
           "text": "label - Visible group label and accessible-name source."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "The group owns the `label` (mandatory; the radiogroup's accessible name), the form `name` and the selected `value`; user selection dispatches a composed `change` event, while programmatic `value` writes stay silent:\n\n```html\n<ki-radio-group label=\"Delivery speed\" name=\"delivery\" value=\"standard\">\n  <ki-radio value=\"standard\">Standard (3–5 days)</ki-radio>\n  <ki-radio value=\"express\">Express (1–2 days)</ki-radio>\n  <ki-radio value=\"overnight\">Overnight</ki-radio>\n</ki-radio-group>\n```\n\nWithout an initial `value` the group renders unselected and operable; `required` blocks form submission through the platform `valueMissing` validity until an option is chosen:\n\n```html\n<form>\n  <ki-radio-group label=\"Billing cycle\" name=\"cycle\" required>\n    <ki-radio value=\"monthly\">Monthly</ki-radio>\n    <ki-radio value=\"yearly\">Yearly</ki-radio>\n  </ki-radio-group>\n  <ki-button variant=\"primary\">Continue</ki-button>\n</form>\n```\n\nA `disabled` group is skipped in Tab order and contributes no form entry; do not use it for pending or loading semantics:\n\n```html\n<ki-radio-group label=\"Region\" name=\"region\" value=\"eu\" disabled>\n  <ki-radio value=\"eu\">Europe</ki-radio>\n  <ki-radio value=\"us\">United States</ki-radio>\n</ki-radio-group>\n```\n"
+      },
       "props": [
         {
           "name": "disabled",
@@ -3350,7 +3382,9 @@
           "text": "viewport - The scroll viewport: surface, focus ring and, as native\nscrollbar chrome styled from `--ki-scroller-*` tokens, the indicator."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "A bounded vertical region; the scroller's size comes entirely from your layout and `label` (required) is the accessible name of the scroll region:\n\n```html\n<ki-scroller label=\"Release notes\" style=\"block-size: 12rem\">\n  <h3>March</h3>\n  <p>Indicator fixes and token updates.</p>\n  <h3>February</h3>\n  <p>Initial scroller release.</p>\n</ki-scroller>\n```\n\n`orientation=\"horizontal\"` scrolls the inline axis instead; one axis per instance — the cross axis clips, so wrap or size content on it:\n\n```html\n<ki-scroller label=\"Weekly timeline\" orientation=\"horizontal\">\n  <div style=\"display: flex; inline-size: max-content; gap: 1rem\">\n    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>\n  </div>\n</ki-scroller>\n```\n\nScrolling stays native (wheel, touch, arrows, Page Up/Down, Home/End); the viewport joins the Tab order only while content actually overflows, and slotted content keeps its own semantics:\n\n```html\n<ki-scroller label=\"Chat messages\" style=\"block-size: 16rem\">\n  <ul>\n    <li>Morning! Build is green.</li>\n    <li>Shipping the docs today.</li>\n  </ul>\n</ki-scroller>\n```\n"
+      },
       "props": [
         {
           "name": "label",
@@ -3730,7 +3764,9 @@
           "text": "dot - The dot itself: size, tone fill, radius, ring and effects."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "`tone` declares semantic intent and `label` exposes the dot as a named non-interactive image; an unrecognized tone keeps the neutral appearance:\n\n```html\n<ki-status tone=\"success\" label=\"Online\"></ki-status>\n<ki-status tone=\"danger\" label=\"Build failing\"></ki-status>\n```\n\nWithout a `label` the dot is decorative and contributes nothing to the accessibility tree — adjacent visible text must then carry the meaning (color is never the only carrier, WCAG 1.4.1):\n\n```html\n<p><ki-status tone=\"success\"></ki-status> Online</p>\n```\n\n`ring` keeps the dot distinguishable over media; positioning the overlay is the consumer's layout concern, and the ring never shifts layout:\n\n```html\n<div style=\"position: relative\">\n  <img src=\"avatar.png\" alt=\"\" />\n  <ki-status\n    tone=\"success\"\n    ring\n    label=\"Online\"\n    style=\"position: absolute; inset-block-end: 0; inset-inline-end: 0\"\n  ></ki-status>\n</div>\n```\n"
+      },
       "props": [
         {
           "name": "label",
@@ -3892,7 +3928,9 @@
           "text": "label - Label wrapper around the default slot."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "The slotted label is the accessible name source, and boolean presence semantics apply to `checked` — any present attribute means on, omit it for off:\n\n```html\n<ki-switch checked>Autosave</ki-switch>\n<ki-switch>Desktop notifications</ki-switch>\n```\n\nWhile on, a named switch contributes `name`/`value` to native form data (`on` when `value` is omitted, checkbox parity); while off it contributes nothing:\n\n```html\n<form>\n  <ki-switch name=\"tracking\" value=\"enabled\" checked>Usage analytics</ki-switch>\n</form>\n```\n\nUser toggles dispatch composed `input` and `change` events — apply the setting immediately, a switch never waits for a submit; `disabled` preserves the current state while removing the switch from keyboard reach and form data:\n\n```html\n<ki-switch checked disabled>Beta features (unavailable on this plan)</ki-switch>\n```\n"
+      },
       "props": [
         {
           "name": "checked",
@@ -4079,7 +4117,9 @@
           "text": "indicator - Decorative selected-tab marker."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "A tab's default slot is its label and accessible name source; `value` pairs it with the `ki-tab-panel` sharing the same value inside a `ki-tabs` group:\n\n```html\n<ki-tabs label=\"Settings\" value=\"profile\">\n  <ki-tab value=\"profile\">Profile</ki-tab>\n  <ki-tab value=\"privacy\">Privacy</ki-tab>\n  <ki-tab-panel value=\"profile\">Profile settings</ki-tab-panel>\n  <ki-tab-panel value=\"privacy\">Privacy settings</ki-tab-panel>\n</ki-tabs>\n```\n\nThe `start` and `end` slots hold leading and trailing icons or media (they follow writing direction); keep decorative media `aria-hidden`:\n\n```html\n<ki-tabs label=\"Inbox views\" value=\"all\">\n  <ki-tab value=\"all\">\n    <span slot=\"start\" aria-hidden=\"true\">✉</span>\n    All mail\n  </ki-tab>\n  <ki-tab value=\"unread\">Unread</ki-tab>\n  <ki-tab-panel value=\"all\">Every conversation.</ki-tab-panel>\n  <ki-tab-panel value=\"unread\">Unread conversations only.</ki-tab-panel>\n</ki-tabs>\n```\n\n`disabled` excludes the tab from selection by every modality, and `selected` is output-only state written by the group — set the group's `value` instead of authoring it:\n\n```html\n<ki-tabs label=\"Repository\" value=\"commits\">\n  <ki-tab value=\"commits\">Commits</ki-tab>\n  <ki-tab value=\"releases\" disabled>Releases</ki-tab>\n  <ki-tab-panel value=\"commits\">Commit history</ki-tab-panel>\n  <ki-tab-panel value=\"releases\">Published releases</ki-tab-panel>\n</ki-tabs>\n```\n"
+      },
       "props": [
         {
           "name": "disabled",
@@ -4225,7 +4265,9 @@
           "text": "panel - Panel surface."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "A panel is visible only while the `ki-tab` sharing its `value` is selected; the default slot holds the content:\n\n```html\n<ki-tabs label=\"Documentation\" value=\"guide\">\n  <ki-tab value=\"guide\">Guide</ki-tab>\n  <ki-tab value=\"reference\">Reference</ki-tab>\n  <ki-tab-panel value=\"guide\">Step-by-step instructions.</ki-tab-panel>\n  <ki-tab-panel value=\"reference\">Complete API tables.</ki-tab-panel>\n</ki-tabs>\n```\n\nPanels hold arbitrary content, form controls included; every panel mounts eagerly (no lazy mounting exists):\n\n```html\n<ki-tabs label=\"Account\" value=\"contact\">\n  <ki-tab value=\"contact\">Contact</ki-tab>\n  <ki-tab value=\"password\">Password</ki-tab>\n  <ki-tab-panel value=\"contact\">\n    <ki-input label=\"Work email\" name=\"email\" type=\"email\"></ki-input>\n  </ki-tab-panel>\n  <ki-tab-panel value=\"password\">Password change form.</ki-tab-panel>\n</ki-tabs>\n```\n\nThe first panel with a given `value` owns it — duplicate or orphan panels stay hidden without error:\n\n```html\n<ki-tabs label=\"Report\" value=\"summary\">\n  <ki-tab value=\"summary\">Summary</ki-tab>\n  <ki-tab-panel value=\"summary\">Quarterly totals.</ki-tab-panel>\n  <ki-tab-panel value=\"detail\">Never shown: no tab shares this value.</ki-tab-panel>\n</ki-tabs>\n```\n"
+      },
       "props": [
         {
           "name": "value",
@@ -4429,7 +4471,9 @@
           "text": "label - Rendered visible label and accessible-name source."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "A labeled multiline field in a form (`label` is mandatory — the visible label and accessible name); `rows` sets the stable visible line count (default `2`, no auto-grow in v1):\n\n```html\n<form>\n  <ki-textarea label=\"Comments\" name=\"comments\" rows=\"4\"></ki-textarea>\n  <ki-button variant=\"primary\">Send</ki-button>\n</form>\n```\n\nInitial text is declared through the `value` attribute — element text content is ignored — and Enter inserts a line break, never submitting the enclosing form:\n\n```html\n<ki-textarea label=\"Bio\" name=\"bio\" value=\"Web components enthusiast.\"></ki-textarea>\n```\n\n`required` blocks submission while empty, and an `autocomplete` purpose such as `street-address` exposes the entry's meaning to autofill:\n\n```html\n<ki-textarea\n  label=\"Shipping address\"\n  name=\"address\"\n  rows=\"3\"\n  autocomplete=\"street-address\"\n  required\n></ki-textarea>\n```\n\nRead-only and disabled are distinct states — `readonly` stays focusable, selectable, submitted and validation-exempt; `disabled` is none of those:\n\n```html\n<ki-textarea label=\"Accepted policy\" value=\"Version 2.1, accepted 2026-05-02.\" readonly></ki-textarea>\n<ki-textarea label=\"Legacy notes\" value=\"Migrated from v1.\" disabled></ki-textarea>\n```\n"
+      },
       "props": [
         {
           "name": "autocomplete",
@@ -4731,7 +4775,9 @@
           "text": "tooltip - The non-focusable tooltip bubble."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "`label` is the entire tooltip content, reflected to the slotted trigger's accessible description; the trigger must already carry its own accessible name:\n\n```html\n<ki-tooltip label=\"Copies a shareable link to the clipboard\">\n  <ki-button type=\"button\">Copy link</ki-button>\n</ki-tooltip>\n```\n\n`placement` (default `top`; also `bottom`, `start`, `end`) is a preference — the component flips or clamps it to keep the bubble inside the viewport:\n\n```html\n<ki-tooltip label=\"Downloads the report as PDF\" placement=\"bottom\">\n  <ki-button type=\"button\">Export</ki-button>\n</ki-tooltip>\n```\n\nAn empty or whitespace-only `label` renders no tooltip and exposes no description — useful for conditional hints; never put essential or unique information in a tooltip:\n\n```html\n<ki-tooltip label=\"\">\n  <ki-button type=\"button\">No hint here</ki-button>\n</ki-tooltip>\n```\n"
+      },
       "props": [
         {
           "name": "label",
@@ -4860,7 +4906,9 @@
           "text": "play - The play control: overlay scrim, glass container and glyph."
         }
       ],
-      "usage": {},
+      "usage": {
+        "examples": "Slot exactly one native `<video>` carrying its own poster, sources and `<track>` captions; `label` names the play control (required — never rendered visually) and the native chrome returns the moment the facade yields:\n\n```html\n<ki-video label=\"Play the product tour\">\n  <video muted playsinline width=\"1280\" height=\"720\" poster=\"tour.jpg\">\n    <source src=\"tour.webm\" type=\"video/webm\" />\n    <track kind=\"captions\" srclang=\"en\" label=\"English\" src=\"tour.en.vtt\" />\n  </video>\n</ki-video>\n```\n\nEverything on the media element passes through untouched — offer format fallbacks through multiple `<source>` children, and the native media events (`play`, `pause`, `ended`) keep firing on the element you own; ki-video emits no events of its own:\n\n```html\n<ki-video label=\"Play the setup walkthrough\">\n  <video width=\"1280\" height=\"720\" poster=\"walkthrough.jpg\">\n    <source src=\"walkthrough.webm\" type=\"video/webm\" />\n    <source src=\"walkthrough.mp4\" type=\"video/mp4\" />\n    <track kind=\"captions\" srclang=\"en\" label=\"English\" src=\"walkthrough.en.vtt\" />\n  </video>\n</ki-video>\n```\n\nThe frame fills its container's inline size and the media keeps the intrinsic aspect ratio declared by `width`/`height` (16:9 is a demonstration, not a constraint); `autoplay` and `controls` on arriving media are cleared — playback begins only from the play control:\n\n```html\n<ki-video label=\"Play the workshop recording\">\n  <video width=\"800\" height=\"600\" poster=\"workshop.jpg\">\n    <source src=\"workshop.mp4\" type=\"video/mp4\" />\n    <track kind=\"captions\" srclang=\"en\" label=\"English\" src=\"workshop.en.vtt\" />\n  </video>\n</ki-video>\n```\n"
+      },
       "props": [
         {
           "name": "label",
