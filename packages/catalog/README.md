@@ -14,6 +14,22 @@ hand-maintained — and the `catalog-sync` gate fails any drift between the
 committed artifact and a fresh regeneration. It declares its own schema
 version (`catalogSchemaVersion`) and the elements version it derives from.
 
+## When to use
+
+Use `@kimen/catalog` whenever UI structure arrives as data from outside your
+trust boundary — an agent, a protocol message, a stored spec. Call
+`validateUiSpec` when you need a verdict on a spec; call `renderUiSpec` (or
+`createStreamingRenderer` for progressive streams) when a spec should reach
+the DOM. If your host speaks a concrete protocol, use the adapter and let it
+drive this package: [`@kimen/adapter-a2ui`](../adapter-a2ui/README.md) for
+A2UI, [`@kimen/adapter-mcp-apps`](../adapter-mcp-apps/README.md) for MCP
+Apps. Hand-written application UI does not need the catalog — use
+`@kimen/elements` directly.
+
+The full spec shape, validation failure modes, budgets and streaming
+semantics are covered in
+[The UI-spec format guide](../../docs/guides/ui-spec.md).
+
 ## Usage
 
 ```ts
@@ -122,7 +138,9 @@ Every rejection is a `RenderDiagnostic` — node path, violated rule and
 offending value — pure data, safe to display because a host renders it as
 text.
 
-See phase 4 of the [roadmap](../../docs/roadmap.md).
+See [The UI-spec format guide](../../docs/guides/ui-spec.md) for the
+complete spec format, and the [roadmap](../../docs/roadmap.md) for project
+context.
 
 <!-- kimen:capabilities:catalog-readme-status:start -->
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed

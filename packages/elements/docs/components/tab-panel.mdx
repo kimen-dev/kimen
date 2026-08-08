@@ -1,0 +1,58 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-tab-panel" />
+
+# ki-tab-panel
+
+One content view paired with a `ki-tab` inside `ki-tabs`.
+
+The group contract — the value pairing, selection fallback and `ki-change`
+event — lives on the *ki-tabs* page (Docs → Components → ki-tabs). Live
+stories: *Elements → ki-tab-panel* in this Storybook.
+
+**When to use** — hold the content of one view inside `ki-tabs`, declaring
+the same `value` as the tab that reveals it. Exactly one panel is visible
+at a time.
+
+**When NOT to use** — outside a `ki-tabs` group, for content that should
+always be visible, or as a lazy-loading boundary of its own (load data from
+the group's `ki-change` event instead).
+
+## Examples
+
+A panel shows while the group's `value` matches its own; orphan panels
+(no matching tab) and duplicate values stay hidden:
+
+```html
+<ki-tabs label="Project sections" value="code">
+  <ki-tab value="code">Code</ki-tab>
+  <ki-tab value="issues">Issues</ki-tab>
+
+  <ki-tab-panel value="code">Repository files and branches.</ki-tab-panel>
+  <ki-tab-panel value="issues">Open and recently closed issues.</ki-tab-panel>
+</ki-tabs>
+```
+
+Any markup is valid panel content — forms, lists, media — and slotted
+interactive elements keep their own semantics and focus behavior:
+
+```html
+<ki-tab-panel value="settings">
+  <ki-input label="Project name" name="name"></ki-input>
+  <ki-button variant="primary">Save</ki-button>
+</ki-tab-panel>
+```
+
+## Customization
+
+Panel spacing is a token decision: `--ki-tab-panel-padding-block`. Single
+shadow part: `::part(panel)` (the panel region).
+
+## Accessibility
+
+- The panel is exposed through the APG tabs pattern: labeled by its tab and
+  reachable in the Tab order after the tablist while visible.
+- Hidden panels are fully removed from the accessibility tree and keyboard
+  reach — nothing inside them is focusable while another view is selected.
+- Keep the panel's own content structure meaningful (headings, lists); the
+  panel adds region plumbing, not document structure.

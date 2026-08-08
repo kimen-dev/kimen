@@ -5,11 +5,21 @@ Register individual components from the custom-elements bundle before using them
 ```ts
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
 import '@kimen/tokens/css';
+import '@kimen/tokens/css/base';
 
 defineKiButton();
 ```
 
-Load `@kimen/tokens/css` once for the onmars default theme.
+Load `@kimen/tokens/css` once for the onmars default theme, and
+`@kimen/tokens/css/base` — the page contract — once per page. The page
+contract declares `color-scheme` and paints the page from the semantic
+tokens, which a token-only stylesheet cannot do; without it, a page whose
+visitor prefers dark renders 14 of 29 components below 4.5:1 contrast (the
+components paint correct dark-scheme text while the browser keeps a light
+canvas). Alternative: pin `data-ki-color-scheme="light"` on the document
+root.
+
+Human-readable documentation: https://kimen-dev.github.io/kimen/docs/
 
 ## Theming
 

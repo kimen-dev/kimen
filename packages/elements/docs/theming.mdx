@@ -7,12 +7,18 @@ import { Meta } from '@storybook/addon-docs/blocks';
 Every visual value in Kimen resolves from a design token — zero hardcoded
 values, enforced by lint. Tokens are layered:
 
-1. **Primitive** — raw ramps (`--ki-color-brand-500`, `--ki-space-md`,
-   `--ki-font-size-heading-3`…). Never consumed by components directly.
-2. **Semantic** — meaning, not appearance (`--ki-surface-s0…s5`,
-   `--ki-text-high-em`, `--ki-outline-low-em`). This is the layer a brand
-   reassigns to re-theme everything.
-3. **Component** — the public styling contract of each element
+1. **Primitive** — the raw foundation: color ramps, spacing and type scales
+   (`--ki-space-md`, `--ki-font-size-heading-3`…). Never consumed by
+   components directly.
+2. **Theme** — each theme's selection from the primitives into the shared
+   ramp names (`--ki-color-brand-500` is the onmars purple by default;
+   loading the material3 stylesheet rebinds the same name to its baseline).
+   This is what makes one-step re-theming possible.
+3. **Semantic** — meaning, not appearance (`--ki-surface-s0…s5`,
+   `--ki-text-high-em`, `--ki-outline-low-em`, `--ki-elevation-e1…e6`,
+   `--ki-motion-duration-fast`). This is the layer a brand reassigns to
+   re-theme everything.
+4. **Component** — the public styling contract of each element
    (`--ki-button-primary-neutral-rest-bg`, `--ki-button-md-height`…).
 
 ## Themes
@@ -106,6 +112,73 @@ color from the live token):
     </div>
   ))}
 </div>
+
+## The fidelity families
+
+The MarsUI fidelity pass promoted four visual behaviors — motion, glass,
+bevels and elevation — from per-component styling into token families, so
+themes control all of them the same way they control color. The full token
+tables live in *Docs → Tokens reference* (generated); this is the model.
+
+### Motion
+
+Three semantic scales: **durations** (`--ki-motion-duration-instant`,
+`-fast`, `-short-1…4`, `-medium-1…4`, `-long-1…4`), **easings**
+(`--ki-motion-easing-standard`, `-out`, `-emphasized`, `-spring`, plus
+`-accelerate`/`-decelerate` variants) and **distances**
+(`--ki-motion-distance-xs/sm/md`) for travel-based transitions. Components
+consume them through their own motion tokens, for example:
+
+```css
+ki-dialog {
+  --ki-dialog-motion-duration: var(--ki-motion-duration-fast);
+  --ki-dialog-motion-easing: var(--ki-motion-easing-spring);
+}
+```
+
+The `prefers-reduced-motion` contract is part of the family: components
+declare their transitions only under
+`@media (prefers-reduced-motion: no-preference)`, so a reduced-motion user
+gets instant state changes — not shorter animation. Themes may retune
+durations and easings, never bypass that gate.
+
+### Glass
+
+Translucent surfaces are a gradient pair plus a backdrop blur. The dialog
+and tooltip bubbles paint
+`linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end))`
+(same pattern for `--ki-tooltip-bg-start/-end`) over
+`backdrop-filter: blur(var(--ki-dialog-backdrop-blur))`; backdrop-blur
+tokens also exist on the select listbox, buttons, icon buttons, card and
+video. material3 resolves both gradient stops to the same opaque surface and
+the blur to none — the glass disappears with zero component changes, which
+is exactly the point:
+
+```css
+/* a flat brand: kill the glass at the token layer */
+:root {
+  --ki-tooltip-bg-start: var(--ki-surface-s2);
+  --ki-tooltip-bg-end: var(--ki-surface-s2);
+  --ki-tooltip-backdrop-blur: 0px;
+}
+```
+
+### Bevels
+
+Raised controls carry a per-side edge: a hairline `border` for the top
+light plus a distinct `border-bottom` for the seated edge, as token pairs —
+`--ki-button-{primary|secondary|tertiary}-rest-border-bottom` (and the
+`--ki-icon-button-*` equivalents) alongside the per-state `-border` tokens.
+Flat variants (`quaternary`, `ghost`) declare no bevel. Themes that want
+flat buttons resolve the pair to the same color or to none.
+
+### Elevation
+
+One semantic ramp, `--ki-elevation-e1` through `--ki-elevation-e6`, is the
+shadow vocabulary every component draws from, plus component effect shadows
+(`--ki-effect-component-{primary|secondary}-{default|hover}-shadow`,
+`--ki-effect-small-dark-shadow`) for the raised-control treatment. Restyle
+elevation by reassigning the ramp — components never hardcode a shadow.
 
 ## Customization order
 

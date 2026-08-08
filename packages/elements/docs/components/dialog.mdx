@@ -83,13 +83,16 @@ dismissal:
 
 ## Customization
 
-| Token                      | Controls                          |
-| -------------------------- | --------------------------------- |
-| `--ki-dialog-max-width`    | Maximum dialog inline size        |
-| `--ki-dialog-bg`           | Dialog surface background         |
-| `--ki-dialog-radius`       | Dialog corner radius              |
-| `--ki-dialog-backdrop-bg`  | Backdrop scrim color              |
-| `--ki-dialog-shadow`       | Dialog elevation shadow           |
+| Token                                        | Controls                          |
+| -------------------------------------------- | --------------------------------- |
+| `--ki-dialog-max-width`                      | Maximum dialog inline size        |
+| `--ki-dialog-bg-start` / `--ki-dialog-bg-end`| Surface glass gradient stops      |
+| `--ki-dialog-backdrop-blur`                  | Surface backdrop blur             |
+| `--ki-dialog-bg`                             | Solid fallback background         |
+| `--ki-dialog-radius`                         | Dialog corner radius              |
+| `--ki-dialog-backdrop-bg`                    | Backdrop scrim color              |
+| `--ki-dialog-shadow`                         | Dialog elevation shadow           |
+| `--ki-dialog-motion-duration` / `-easing`    | Open/close transition             |
 
 Shadow parts: `::part(dialog)` (native dialog surface), `::part(heading)`
 (visible h2 title, rendered only when `heading` is non-empty),

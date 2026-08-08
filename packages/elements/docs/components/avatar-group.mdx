@@ -1,0 +1,67 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-avatar-group" />
+
+# ki-avatar-group
+
+A token-styled companion container that stacks `ki-avatar` children as one
+overlapping row with a configurable visible cap and a static "+N" overflow
+counter.
+
+The full identity-visual story — the fallback chain, sizing and labeling
+rules the members follow — lives on the *ki-avatar* page (Docs → Components
+→ ki-avatar). Live stories: *Elements → ki-avatar-group* in this Storybook.
+
+**When to use** — a compact "who is involved" stack: project members,
+meeting attendees, reviewers. Set `max` to cap the visible members and let
+the counter account for the rest, exactly and always.
+
+**When NOT to use** — as a member picker or expandable overflow (the
+counter is static text, never a button), for a single identity (use
+`ki-avatar` alone), or for arbitrary image collections (it accepts only
+`ki-avatar` children).
+
+## Examples
+
+Members beyond the cap are neither rendered nor exposed; the group's `size`
+overrides member-declared sizes so the stack stays uniform:
+
+```html
+<ki-avatar-group max="3" size="sm">
+  <ki-avatar label="Ana García" initials="AG"></ki-avatar>
+  <ki-avatar label="Sam Bel" initials="SB"></ki-avatar>
+  <ki-avatar label="Iris Toma" initials="IT"></ki-avatar>
+  <ki-avatar label="Leo Duarte" initials="LD"></ki-avatar>
+  <ki-avatar label="Mia Chen" initials="MC"></ki-avatar>
+</ki-avatar-group>
+<!-- renders Ana, Sam, Iris and a "+2" counter -->
+```
+
+A cap that is not a positive whole number shows every member with no
+counter (never "+0"), and omitting `max` never caps:
+
+```html
+<ki-avatar-group size="md">
+  <ki-avatar label="Ana García" initials="AG"></ki-avatar>
+  <ki-avatar label="Sam Bel" initials="SB"></ki-avatar>
+</ki-avatar-group>
+```
+
+## Customization
+
+Stack overlap, the separating ring and the "+N" pill are per-theme token
+decisions: `--ki-avatar-group-{size}-overlap`,
+`--ki-avatar-group-ring-width` / `-ring-color` and
+`--ki-avatar-group-counter-{bg,fg,border-width,border-color,radius,shadow}`.
+Shadow parts: `::part(group)` (the stack row) and `::part(counter)` (the
+"+N" pill).
+
+## Accessibility
+
+- Assistive technology receives each visible member's name and the overflow
+  as the static text "+N"; members hidden by the cap leave no other trace.
+- The group is never focusable: zero tab stops, no events, no pointer
+  affordance. Navigation to the full member list belongs to the composing
+  application.
+- The stack and its trailing counter follow the document's writing
+  direction (logical properties only).

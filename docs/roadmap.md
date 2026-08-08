@@ -13,38 +13,49 @@ release separation. The `@kimen` npm organization is registered.
 
 ## 2. Tokens and theming (implemented, hardening)
 
-`@kimen/tokens`: DTCG tokens compiled to CSS custom properties in three
-layers (primitive → semantic → component). onmars is the default theme,
-and a second reference theme proves in CI that any brand can re-theme by
-reassigning the semantic layer alone. Token reference and layer-integrity
-gates are still being added before publication.
+`@kimen/tokens`: DTCG tokens compiled to CSS custom properties in four
+layers (primitive → theme → semantic → component). onmars is the default
+theme, and the Material 3 reference theme proves in CI that any brand can
+re-theme by reassigning the theme and semantic layers alone. A fidelity pass
+added the motion, glass, elevation and bevel token families. Layer-integrity
+and token-reference gates are still being hardened before publication.
 
-## 3. Core components (implemented, pre-release)
+## 3. Core components (shipped)
 
-The essential `<ki-*>` set for GenUI (forms, content, feedback: button,
-input, select, checkbox, radio, switch, card, badge, alert, dialog, tooltip,
-tabs, progress, list). The source includes Gherkin contracts, real-browser
-tests, axe checks, size budgets, generated docs, a Custom Elements Manifest
-and `llms.txt`. The runtime catalog does not exist yet.
+All 29 `<ki-*>` components are implemented: forms (button, icon-button,
+input, textarea, select, option, checkbox, radio, radio-group, switch),
+content (card, list, list-item, divider, avatar, avatar-group, badge, qr,
+scroller, video), and feedback/navigation (alert, dialog, tooltip, progress,
+status, indicator, tabs, tab, tab-panel). Each ships with a Gherkin
+contract, real-browser tests, axe checks, size budgets, generated docs, a
+Custom Elements Manifest and `llms.txt`. A pixel-fidelity pass landed the
+visual language — glass surfaces, bevels, elevation and micro-motion —
+holding every component to 4.5:1 contrast in both schemes.
 
-## 4. Neutral catalog + guardrail renderer
+## 4. Neutral catalog + guardrail renderer (shipped)
 
-`@kimen/catalog`: the schema of what agents may emit (components, props,
-declared actions, when-to-use metadata) and the renderer that validates specs
-and renders only catalog components. The guardrail is tested as a security
-boundary; streaming/partial specs render progressively.
+`@kimen/catalog` is implemented: the generated schema of what agents may
+emit (components, props, declared actions, when-to-use metadata),
+`validateUiSpec` at the GenUI boundary, and the guarded renderer
+(`renderUiSpec`) that renders only catalog components, fail-closed. The
+guardrail is tested as a security boundary; streaming/partial specs render
+progressively through `createStreamingRenderer`.
 
-## 5. Protocol adapters
+## 5. Protocol adapters (shipped: A2UI, MCP Apps)
 
-`@kimen/adapter-a2ui` first, then MCP Apps. Adapters are disposable by
-design: each declares the exact protocol versions it supports and absorbs
-protocol churn without touching the core.
+`@kimen/adapter-a2ui` and `@kimen/adapter-mcp-apps` are implemented, each
+declaring the exact protocol versions it supports in its `COMPAT.md`.
+Adapters are disposable by design: protocol churn is absorbed in the adapter
+without touching the core. AG-UI and json-render adapters remain planned.
 
 ## 6. v1.0.0
 
-Published to npm with trusted publishing and signed provenance; catalog and
-llms.txt versioned alongside the public API; docs site generated from the
-single source of truth.
+Publication to npm with trusted publishing and signed provenance; catalog and
+llms.txt versioned alongside the public API. The
+[documentation site](https://kimen-dev.github.io/kimen/docs/) is generated
+from the single source of truth. The current release contract covers
+`@kimen/elements` and `@kimen/tokens`; the publication scope for the catalog
+and adapters is an open decision — see [releasing.md](./releasing.md).
 
 Follow progress through issues and pull requests.
 
