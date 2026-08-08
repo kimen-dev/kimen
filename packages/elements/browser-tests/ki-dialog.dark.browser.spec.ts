@@ -118,5 +118,8 @@ describe('ki-dialog under the dark scheme', () => {
       readToken('--ki-dialog-backdrop-bg'),
     );
     await expectAccessible(main);
-  });
+    // Glass-surface budget: axe reads pixels back from a backdrop-blurred
+    // dialog, software-rastered on CI runners — measured brushing the 15s
+    // default under load even with motion settled (issue #105).
+  }, 30_000);
 });

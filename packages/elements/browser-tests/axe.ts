@@ -20,6 +20,14 @@ import { userEvent } from 'vitest/browser';
  */
 const ENTRY_MOTION_SETTLE_DEADLINE_MS = 4000;
 
+/**
+ * How long a running animation gets to resolve `finished` before it is
+ * declared stalled and jumped to its end state. Entry micro-motion is
+ * 150–600ms by token; anything still running after this grace is not
+ * animating, it is stuck (issue #105).
+ */
+const STALLED_ANIMATION_GRACE_MS = 750;
+
 async function nextFrame(): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(resolve));
 }
@@ -63,7 +71,7 @@ function treeAnimations(): Animation[] {
  * and fails contrast on them. The resting state is the design fact under
  * test. Indeterminate loops (ki-progress) never finish and are left out.
  */
-async function settleEntryMotion(): Promise<void> {
+export async function settleEntryMotion(): Promise<void> {
   const deadline = Date.now() + ENTRY_MOTION_SETTLE_DEADLINE_MS;
   // A calm streak of two checks two frames apart: an entrance triggered by a
   // late render pass can START after a first clean check, and a scan taken
@@ -89,15 +97,32 @@ async function settleEntryMotion(): Promise<void> {
       continue;
     }
     calm = false;
-    // Bounded wait: `finished` can stall forever when an animation sticks in
-    // `running` (observed on loaded CI runners with the dialog's backdrop /
-    // focus-shadow transitions — issue #105), and an unbounded await here
-    // means the deadline above is never re-checked. Racing against the
-    // remaining budget keeps the settle loop, and the test, bounded.
+    // `finished` can stall forever when an animation sticks in `running`
+    // (observed on loaded CI runners with the dialog's backdrop /
+    // focus-shadow transitions — issue #105). Waiting out the deadline both
+    // burns the test budget and still scans mid-flight, so past the grace a
+    // stalled animation is jumped to its end state: the resting state is the
+    // design fact under test either way. `cancel()` is the fallback for the
+    // cases `finish()` rejects (playbackRate 0, infinite effect end) — for
+    // an entry transition the underlying style IS the resting state.
     await Promise.race([
       Promise.allSettled(running.map((animation) => animation.finished)),
-      new Promise((resolve) => setTimeout(resolve, Math.max(0, deadline - Date.now()))),
+      new Promise((resolve) =>
+        setTimeout(
+          resolve,
+          Math.min(STALLED_ANIMATION_GRACE_MS, Math.max(0, deadline - Date.now())),
+        ),
+      ),
     ]);
+    for (const animation of running) {
+      if (animation.playState === 'running') {
+        try {
+          animation.finish();
+        } catch {
+          animation.cancel();
+        }
+      }
+    }
     await nextFrame();
   }
 }
