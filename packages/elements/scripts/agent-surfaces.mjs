@@ -310,12 +310,13 @@ export function validateGenUiSurfaces(genUi, packages) {
       if (isBlank(entryPoint.summary)) {
         violations.push(`${directory}.${entryPoint.name}: entry point summary is empty`);
       }
-      // Word-boundary presence in the package entry module: src/index.ts is
+      // Identifier presence in the package entry module: src/index.ts is
       // (by repo convention) a pure re-export surface, so a documented symbol
       // that no longer appears there was renamed or removed — fail loudly
-      // instead of shipping a stale agent surface.
-      const escapedName = entryPoint.name.replaceAll(/[$()*+.?[\\\]^{|}]/gu, String.raw`\$&`);
-      if (!new RegExp(`\\b${escapedName}\\b`, 'u').test(source.indexSource)) {
+      // instead of shipping a stale agent surface. Exact-identifier matching
+      // via a literal tokenizer (no dynamic RegExp: semgrep ReDoS rule).
+      const exportedIdentifiers = new Set(source.indexSource.match(/[$\w]+/gu) ?? []);
+      if (!exportedIdentifiers.has(entryPoint.name)) {
         violations.push(
           `${directory}.${entryPoint.name}: entry point is not exported from src/index.ts`,
         );

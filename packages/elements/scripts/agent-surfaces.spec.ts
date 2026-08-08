@@ -626,7 +626,10 @@ describe('agent surfaces', () => {
       await readFile(new URL('./llms.txt', packageRoot), 'utf8'),
     ]) {
       expect(artifact).not.toContain('"timestamp"');
-      expect(artifact).not.toMatch(/\/Users\/|\/home\/|[A-Z]:\\/);
+      // Windows drive noise requires an ISOLATED drive letter (C:\...): a
+      // trailing capital inside prose ("… and ARIA:\n" JSON-escapes to
+      // `A:\n`) is legitimate documentation text, not a leaked path.
+      expect(artifact).not.toMatch(/\/Users\/|\/home\/|(?<![A-Za-z])[A-Z]:\\/);
     }
   });
 
