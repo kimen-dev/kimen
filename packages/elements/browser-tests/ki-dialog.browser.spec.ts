@@ -229,9 +229,6 @@ async function backdropClick(el: KiDialogElement, armInside = false): Promise<vo
 }
 
 describe('ki-dialog in a real browser', () => {
-  // Glass-surface budget: axe reads pixels back from a backdrop-blurred
-  // dialog, software-rastered on CI runners — measured brushing the 15s
-  // default under load even with motion settled (issue #105).
   it('S1 S5 has zero axe violations in closed and open states under the default theme', async () => {
     cleanup();
     const main = document.createElement('main');
@@ -242,7 +239,7 @@ describe('ki-dialog in a real browser', () => {
 
     await openDialog(el);
     await expectAccessible(main);
-  }, 30_000);
+  });
 
   it('S1 opening the dialog presents it above an inert page', async () => {
     cleanup();
@@ -534,8 +531,7 @@ describe('ki-dialog in a real browser', () => {
     await expect.element(page.getByRole('dialog', { name: 'Delete account?' })).toBeInTheDocument();
     expect(internalDialog(el).matches(':modal')).toBe(true);
     await expectAccessible(main);
-    // Same glass-surface budget as S1 S5.
-  }, 30_000);
+  });
 
   it('S10 hides background links from assistive technology while open and restores them after close', async () => {
     cleanup();
