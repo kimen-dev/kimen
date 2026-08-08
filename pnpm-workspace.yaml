@@ -22,9 +22,10 @@ minimumReleaseAge: 10080
 overrides:
   # GHSA-42h9-826w-cgv3 and nine more, 1.16.0 → 1.18.0.
   axios: 1.19.0
-  # GHSA-3jxr-9vmj-r5cp and GHSA-mh99-v99m-4gvg. The 1.x line carries no fix
-  # for the second, so both lines resolve to 5.0.8.
-  brace-expansion: 5.0.8
+  # GHSA-3jxr-9vmj-r5cp, GHSA-mh99-v99m-4gvg and GHSA-rgw5-rvv9-x895. The
+  # 1.x line carries no fix for the later ones, so both lines resolve to
+  # 5.0.9.
+  brace-expansion: 5.0.9
   # GHSA-v2hh-gcrm-f6hx.
   fast-uri: 3.1.5
   # GHSA-r28c-9q8g-f849.
@@ -51,3 +52,6 @@ trustPolicyExclude:
 minimumReleaseAgeExclude:
   # Renovate security update: fast-uri@3.1.5
   - fast-uri@3.1.5
+  # Security update: GHSA-2v37-7h3g-55p8 (High), published 2026-08-03 —
+  # inside the quarantine window, admitted explicitly like fast-uri above.
+  - nanoid@3.3.17
