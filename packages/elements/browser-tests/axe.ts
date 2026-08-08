@@ -173,16 +173,24 @@ function detailsOf(results: axe.AxeResults): IncompleteDetail[] {
  * reports as "pseudoContent"). An axe scan is a rest-state claim unless the
  * caller says otherwise.
  */
-async function parkPointer(): Promise<void> {
+export async function parkPointer(): Promise<void> {
   const park = document.createElement('div');
   park.style.cssText =
     'position:fixed;inset-block-end:0;inset-inline-end:0;inline-size:8px;block-size:8px;';
   document.body.append(park);
-  // Best-effort: an open modal covers the viewport and swallows the pointer
-  // (its backdrop is the hit target everywhere), so the hover cannot land —
-  // and the same top layer is what keeps the content below out of reach of
-  // a stray resting pointer, so there is nothing to park away from.
-  await userEvent.hover(park).catch(() => undefined);
+  // An open top layer (modal dialog, popover) covers the probe, and a hover
+  // that can never become actionable is not "best-effort": Playwright retries
+  // it for the whole action timeout, which tracks the test budget — measured
+  // eating 119s of a 120s test while the axe scan itself took 45ms (issue
+  // #105, the actual cause of the ki-dialog scan timeouts). The same top
+  // layer keeps the content below out of reach of a stray resting pointer,
+  // so when the probe is not the hit target there is nothing to park away
+  // from — skip instead of paying the timeout for a hover that cannot land.
+  const rect = park.getBoundingClientRect();
+  const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+  if (hit === park) {
+    await userEvent.hover(park).catch(() => undefined);
+  }
   park.remove();
 }
 
