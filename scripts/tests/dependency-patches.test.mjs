@@ -46,3 +46,54 @@ test('every patch is declared where pnpm reads it', async () => {
   assert.match(workspace, /^patchedDependencies:\n {2}minimatch@3\.1\.5:/mu);
   assert.equal(manifest.pnpm, undefined);
 });
+
+// A two-space-indented key block under a top-level `section:` heading, e.g.
+// the `overrides:` and `patchedDependencies:` maps of pnpm-workspace.yaml.
+function workspaceSectionKeys(workspace, section) {
+  const lines = workspace.split('\n');
+  const start = lines.indexOf(`${section}:`);
+  assert.notEqual(start, -1, `pnpm-workspace.yaml declares ${section}`);
+  const keys = [];
+  for (const line of lines.slice(start + 1)) {
+    const match = /^ {2}([^\s:]+):/u.exec(line);
+    if (match) {
+      keys.push(match[1]);
+      continue;
+    }
+    if (!line.startsWith('#') && !line.startsWith(' ')) {
+      break;
+    }
+  }
+  return keys;
+}
+
+test('renovate ignores every name that pins a patched dependency', async () => {
+  // #111: Renovate rewrote the `minimatch@3` override to v10 and orphaned the
+  // patch — ignoreDeps listed only bare `minimatch`, and a selector-keyed
+  // override is its own depName to Renovate, so the ignore never matched.
+  // The config validator only checks the schema and stays green over that
+  // gap; this invariant is what holds it closed: every patched package stays
+  // in ignoreDeps under its bare name AND under every override key that pins
+  // it, present or future.
+  const [workspace, renovate] = await Promise.all([
+    readFile(new URL('pnpm-workspace.yaml', repositoryRoot), 'utf8'),
+    readFile(new URL('renovate.json', repositoryRoot), 'utf8').then(JSON.parse),
+  ]);
+
+  const patchedNames = workspaceSectionKeys(workspace, 'patchedDependencies').map((key) =>
+    key.slice(0, key.lastIndexOf('@')),
+  );
+  assert.ok(patchedNames.length > 0, 'the patch inventory is readable');
+
+  const ignored = new Set(renovate.ignoreDeps ?? []);
+  for (const name of patchedNames) {
+    assert.ok(ignored.has(name), `renovate.json ignoreDeps must keep bare ${name}`);
+    const pinKeys = workspaceSectionKeys(workspace, 'overrides').filter(
+      (key) => key === name || key.startsWith(`${name}@`),
+    );
+    assert.ok(pinKeys.length > 0, `an override holds the ${name} patch target`);
+    for (const key of pinKeys) {
+      assert.ok(ignored.has(key), `renovate.json ignoreDeps must keep override key ${key}`);
+    }
+  }
+});
