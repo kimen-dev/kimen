@@ -31,7 +31,7 @@ overrides:
   # GHSA-5p4m-2wfm-xmqj. An override and not only a lockfile bump: a bump with
   # no range forcing it does not survive lockfile regeneration — the #104
   # rebase regenerated the lockfile and silently rolled this fix back.
-  js-yaml: 4.3.1
+  js-yaml: 5.2.3
   # GHSA-2v37-7h3g-55p8. Same regeneration story as js-yaml above.
   nanoid: 6.0.0
   # GHSA-r28c-9q8g-f849.
