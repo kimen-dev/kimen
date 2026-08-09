@@ -23,6 +23,43 @@ test('PR quality is one required job without mutation or containment', async () 
   assert.deepEqual(requiredChecks, ['quality']);
 });
 
+test('dependency-only PRs keep one required result and run affected quality', async () => {
+  const [workflow, dependencyGate, nx] = await Promise.all([
+    readRepositoryFile('.github/workflows/ci.yml'),
+    readRepositoryFile('scripts/gates/gates-dependencies.sh'),
+    readRepositoryFile('nx.json').then(JSON.parse),
+  ]);
+
+  assert.match(workflow, /fetch-depth:\s*0/u);
+  assert.match(workflow, /git merge-base/u);
+  assert.match(workflow, /classify-ci-scope\.mjs/u);
+  assert.match(workflow, /gates-dependencies\.sh/u);
+  assert.match(workflow, /steps\.scope\.outputs\.scope == 'full'/u);
+  assert.match(workflow, /steps\.scope\.outputs\.scope == 'dependencies'/u);
+  assert.match(workflow, /steps\.scope\.outputs\.scope == 'sandbox'/u);
+  assert.match(workflow, /steps\.scope\.outputs\.scope == 'workflows'/u);
+  assert.match(dependencyGate, /nx affected -t build/u);
+  assert.match(dependencyGate, /nx affected -t test/u);
+  assert.match(dependencyGate, /nx affected -t size/u);
+  assert.doesNotMatch(dependencyGate, /semgrep-scan/u);
+  assert.match(dependencyGate, /dependency-browser-impact\.mjs/u);
+  assert.match(dependencyGate, /gates-browser\.sh chromium/u);
+  assert.match(workflow, /steps\.browser-impact\.outputs\.needed == 'true'/u);
+  assert.equal(nx.pluginsConfig?.['@nx/js']?.projectsAffectedByDependencyUpdates, 'auto');
+});
+
+test('infra checks execute installed tools without re-entering pnpm', async () => {
+  const checks = await Promise.all([
+    readRepositoryFile('scripts/tests/config-typecheck.test.mjs'),
+    readRepositoryFile('scripts/tests/eslint-cache-ignore.test.mjs'),
+  ]);
+
+  for (const source of checks) {
+    assert.doesNotMatch(source, /spawnSync\(['"]pnpm['"]/u);
+    assert.match(source, /spawnSync\(\s*process\.execPath/u);
+  }
+});
+
 test('mutation runs on two dedicated cadences and never on pull requests or pushes', async () => {
   const workflow = await readRepositoryFile('.github/workflows/mutation.yml');
 

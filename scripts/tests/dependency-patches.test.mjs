@@ -97,3 +97,38 @@ test('renovate ignores every name that pins a patched dependency', async () => {
     }
   }
 });
+
+test('renovate batches coupled maintenance and defers incompatible majors', async () => {
+  const renovate = await readFile(new URL('renovate.json', repositoryRoot), 'utf8').then(
+    JSON.parse,
+  );
+  const rules = renovate.packageRules ?? [];
+
+  const sandboxGroup = rules.find(({ groupName }) => groupName === 'sandbox toolchain');
+  assert.deepEqual(sandboxGroup?.matchFileNames, ['sandbox/package.json']);
+
+  const actionsGroup = rules.find(({ groupName }) => groupName === 'github actions');
+  assert.deepEqual(actionsGroup?.matchManagers, ['github-actions']);
+
+  for (const dependency of ['js-yaml', 'typescript']) {
+    const rule = rules.find(
+      ({ enabled, matchDepNames, matchUpdateTypes }) =>
+        enabled === false &&
+        matchDepNames?.includes(dependency) &&
+        matchUpdateTypes?.includes('major'),
+    );
+    assert.ok(rule, `Renovate must defer the incompatible ${dependency} major`);
+  }
+});
+
+test('pnpm 11 permits only the reviewed native build versions', async () => {
+  const [manifest, workspace] = await Promise.all([
+    readFile(new URL('package.json', repositoryRoot), 'utf8').then(JSON.parse),
+    readFile(new URL('pnpm-workspace.yaml', repositoryRoot), 'utf8'),
+  ]);
+
+  assert.match(manifest.packageManager, /^pnpm@11\./u);
+  assert.match(workspace, /^allowBuilds:\n {2}'esbuild@0\.28\.1': true$/mu);
+  assert.match(workspace, /^ {2}'nx@23\.1\.1': true$/mu);
+  assert.doesNotMatch(workspace, /^ {2}(?:esbuild|nx): true$/gmu);
+});

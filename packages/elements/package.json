@@ -68,7 +68,7 @@
   },
   "devDependencies": {
     "@kimen/tokens": "workspace:*",
-    "@size-limit/preset-small-lib": "12.1.0",
+    "@size-limit/preset-small-lib": "13.0.3",
     "@stencil/storybook-plugin": "0.7.0",
     "@stencil/vitest": "1.14.0",
     "@storybook/addon-a11y": "10.5.5",
@@ -77,7 +77,7 @@
     "axe-core": "4.12.1",
     "jsqr": "1.4.0",
     "playwright": "1.62.1",
-    "size-limit": "12.1.0",
+    "size-limit": "13.0.3",
     "storybook": "10.5.5",
     "vitest": "4.1.10"
   },

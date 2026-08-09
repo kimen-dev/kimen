@@ -8,13 +8,18 @@ import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 const configProject = join(repositoryRoot, 'packages/elements/scripts/tsconfig.json');
+const typeScriptCli = join(repositoryRoot, 'node_modules/typescript/bin/tsc');
 
 function runTypeScript(project, extraArguments = []) {
-  return spawnSync('pnpm', ['exec', 'tsc', '-p', project, '--pretty', 'false', ...extraArguments], {
-    cwd: repositoryRoot,
-    encoding: 'utf8',
-    env: { PATH: process.env.PATH },
-  });
+  return spawnSync(
+    process.execPath,
+    [typeScriptCli, '-p', project, '--pretty', 'false', ...extraArguments],
+    {
+      cwd: repositoryRoot,
+      encoding: 'utf8',
+      env: { PATH: process.env.PATH },
+    },
+  );
 }
 
 const diagnostic = (result) => `${result.stdout}\n${result.stderr}`;

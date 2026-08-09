@@ -1,4 +1,6 @@
-# One required PR result. Heavy or low-frequency controls live in dedicated workflows.
+# One required PR result. Dependency metadata uses Nx affected; source and CI
+# implementation changes retain the complete suite. Heavy or low-frequency
+# controls live in dedicated workflows.
 name: ci
 
 on:
@@ -20,7 +22,7 @@ jobs:
       contents: read
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: block
           allowed-endpoints: >-
@@ -40,9 +42,23 @@ jobs:
             pypi.org:443
             files.pythonhosted.org:443
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
+
+      - name: Classify pull request impact
+        if: github.event_name == 'pull_request'
+        id: scope
+        env:
+          KIMEN_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          KIMEN_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          comparison_base="$(git merge-base "$KIMEN_BASE_SHA" "$KIMEN_HEAD_SHA")"
+          scope="$(node scripts/gates/classify-ci-scope.mjs --base "$comparison_base" --head "$KIMEN_HEAD_SHA")"
+          printf 'scope=%s\n' "$scope" >>"$GITHUB_OUTPUT"
+          printf 'base=%s\n' "$comparison_base" >>"$GITHUB_OUTPUT"
+          printf 'head=%s\n' "$KIMEN_HEAD_SHA" >>"$GITHUB_OUTPUT"
 
       # The scan itself is a gate inside gates-suite.sh, not a step here, so the
       # command that defines local readiness runs exactly what this job does.
@@ -56,23 +72,72 @@ jobs:
       # the live registry on its schedule: the pinned set blocks, the live set
       # explores.
       - name: Install Semgrep (pinned)
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full'
         run: pipx install semgrep==1.168.0
 
       - name: Allocate isolated writable caches
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'dependencies'
         run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
 
-      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'dependencies'
 
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
-          cache: pnpm
+          cache: ${{ (github.event_name != 'pull_request' || steps.scope.outputs.scope == 'full' || steps.scope.outputs.scope == 'dependencies') && 'pnpm' || '' }}
 
       - name: Install
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'dependencies'
         run: pnpm install --frozen-lockfile
 
+      - name: Detect browser-sensitive dependency changes
+        if: steps.scope.outputs.scope == 'dependencies'
+        id: browser-impact
+        env:
+          KIMEN_BASE_SHA: ${{ steps.scope.outputs.base }}
+          KIMEN_HEAD_SHA: ${{ steps.scope.outputs.head }}
+        run: |
+          needed="$(node scripts/gates/dependency-browser-impact.mjs --base "$KIMEN_BASE_SHA" --head "$KIMEN_HEAD_SHA")"
+          printf 'needed=%s\n' "$needed" >>"$GITHUB_OUTPUT"
+
       - name: Install Chromium
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full' ||
+          steps.browser-impact.outputs.needed == 'true'
         run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
 
       - name: Consolidated quality
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full'
         run: bash scripts/gates/gates-suite.sh
+
+      - name: Affected dependency quality
+        if: steps.scope.outputs.scope == 'dependencies'
+        run: >-
+          bash scripts/gates/gates-dependencies.sh
+          "${{ steps.scope.outputs.base }}"
+          "${{ steps.scope.outputs.head }}"
+
+      - name: Workflow maintenance quality
+        if: steps.scope.outputs.scope == 'workflows'
+        run: |
+          node scripts/gates/check-workflows.mjs
+          node --test scripts/tests/governance-80-20.test.mjs
+
+      - name: Sandbox dependency handoff quality
+        if: steps.scope.outputs.scope == 'sandbox'
+        run: node --test scripts/tests/sandbox-static-contract.test.mjs

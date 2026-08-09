@@ -10,6 +10,13 @@ blockExoticSubdeps: true
 # malicious releases are usually caught within days.
 minimumReleaseAge: 10080
 
+# pnpm 11 fails closed when dependency build scripts have not been reviewed.
+# These exact versions need their native binaries for the Nx graph and
+# esbuild-backed tooling; every future version must be approved separately.
+allowBuilds:
+  'esbuild@0.28.1': true
+  'nx@23.1.1': true
+
 # Resolution pins. These live here and not under `pnpm.overrides` in
 # package.json: pnpm 10 stopped reading that field, and a pin it does not read
 # is a defence that exists on paper and not in the tree. `qs` sat there

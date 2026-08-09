@@ -7,6 +7,7 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
+const eslintCli = join(repositoryRoot, 'node_modules/eslint/bin/eslint.js');
 
 test('S3 ESLint ignores isolated tool caches even when they contain JavaScript', async (t) => {
   const fixture = join(repositoryRoot, 'reports/cache/eslint-contract/invalid.js');
@@ -14,7 +15,7 @@ test('S3 ESLint ignores isolated tool caches even when they contain JavaScript',
   await mkdir(dirname(fixture), { recursive: true });
   await writeFile(fixture, 'const = invalid syntax;\n', 'utf8');
 
-  const result = spawnSync('pnpm', ['exec', 'eslint', '--no-warn-ignored', fixture], {
+  const result = spawnSync(process.execPath, [eslintCli, '--no-warn-ignored', fixture], {
     cwd: repositoryRoot,
     encoding: 'utf8',
     env: { PATH: process.env.PATH },
