@@ -320,7 +320,10 @@ describe('ki-radio-group in a real browser', () => {
 
     expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(sms);
     expect(sms.checked).toBe(true);
-    expect(events).toEqual(['input', 'change']);
+    // The group deliberately defers `change` to the next task so the native
+    // input event finishes first. Wait for that public ordering contract
+    // instead of assuming userEvent drains unrelated timers.
+    await expect.poll(() => events).toEqual(['input', 'change']);
   });
 
   it('S7 Arrow navigation wraps and skips disabled options', async () => {

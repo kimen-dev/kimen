@@ -206,16 +206,23 @@ export default defineConfig({
             'browser-tests/**/*.dark.browser.spec.{ts,tsx}',
             'browser-tests/**/*.motion.browser.spec.{ts,tsx}',
           ],
+          // Files in one browser setup have isolated DOMs but share the
+          // Playwright page's physical pointer, keyboard focus and CDP media
+          // emulation. Run them sequentially inside that page; the three
+          // independent setup pages still run in parallel with one another.
+          fileParallelism: false,
         },
         {
           browser,
           name: `${browser}-dark`,
           include: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
+          fileParallelism: false,
         },
         {
           browser,
           name: `${browser}-reduced-motion`,
           include: ['browser-tests/**/*.motion.browser.spec.{ts,tsx}'],
+          fileParallelism: false,
         },
       ],
     },

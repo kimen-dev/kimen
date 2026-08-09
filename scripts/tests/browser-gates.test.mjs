@@ -113,6 +113,26 @@ process.stdout.write(JSON.stringify({ cacheDir: config.cacheDir, name: config.te
   return JSON.parse(result.stdout);
 }
 
+function inspectBrowserInstances(environment = {}) {
+  const configUrl = pathToFileURL(browserConfig).href;
+  const result = spawnSync(
+    process.execPath,
+    [
+      '--input-type=module',
+      '--eval',
+      `const config = await (await import(${JSON.stringify(configUrl)})).default;
+process.stdout.write(JSON.stringify(config.test?.browser?.instances ?? []));`,
+    ],
+    {
+      cwd: repositoryRoot,
+      encoding: 'utf8',
+      env: { ...process.env, ...environment },
+    },
+  );
+  assert.equal(result.status, 0, diagnostic(result));
+  return JSON.parse(result.stdout);
+}
+
 test('S6 browser config accepts exactly one validated engine per invocation', async () => {
   const source = await readFile(browserConfig, 'utf8');
 
@@ -120,6 +140,21 @@ test('S6 browser config accepts exactly one validated engine per invocation', as
   assert.match(source, /chromium.*firefox.*webkit/s);
   assert.match(source, /launchOptions:\s*\{\s*channel:\s*'chromium'/);
   assert.doesNotMatch(source, /KIMEN_BROWSER_MATRIX/);
+});
+
+test('S6 browser setups isolate shared input while the three setups remain independent', () => {
+  const instances = inspectBrowserInstances({ KIMEN_BROWSER_ENGINE: 'chromium' });
+  assert.deepEqual(
+    instances.map(({ name }) => name),
+    ['chromium-light', 'chromium-dark', 'chromium-reduced-motion'],
+  );
+  for (const instance of instances) {
+    assert.equal(
+      instance.fileParallelism,
+      false,
+      `${instance.name} shares one Playwright page, so its files must not compete for input`,
+    );
+  }
 });
 
 test('S6 Vitest configs isolate writable caches by suite and browser engine', () => {
