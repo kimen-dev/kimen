@@ -2,6 +2,11 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "defaultBase": "main",
   "useInferencePlugins": false,
+  "pluginsConfig": {
+    "@nx/js": {
+      "projectsAffectedByDependencyUpdates": "auto"
+    }
+  },
   "targetDefaults": {
     "build": {
       "dependsOn": [

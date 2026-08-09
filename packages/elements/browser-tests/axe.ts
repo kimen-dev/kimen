@@ -188,7 +188,11 @@ export async function parkPointer(): Promise<void> {
   // from — skip instead of paying the timeout for a hover that cannot land.
   const rect = park.getBoundingClientRect();
   const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
-  if (hit === park) {
+  // Recreating the probe under an already parked pointer makes it :hover
+  // immediately. Avoid another Playwright action in that case: matrix tests
+  // call this helper dozens of times, and repeated no-op locator actions can
+  // consume the entire per-test deadline.
+  if (hit === park && !park.matches(':hover')) {
     await userEvent.hover(park).catch(() => undefined);
   }
   park.remove();

@@ -27,6 +27,28 @@
       "minimumReleaseAge": "7 days"
     },
     {
+      "description": "The three executable sandbox tools share one integrity lock and one containment contract",
+      "matchFileNames": ["sandbox/package.json"],
+      "groupName": "sandbox toolchain"
+    },
+    {
+      "description": "Action digests are reviewed and validated as one workflow-only maintenance unit",
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions"
+    },
+    {
+      "description": "TypeScript 7 replaces the compiler implementation and conflicts with the constitution's declared TypeScript 6 bet; migrate it explicitly",
+      "matchDepNames": ["typescript"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "js-yaml 5 removes the default export consumed by the current Astro toolchain; wait for compatible consumers",
+      "matchDepNames": ["js-yaml"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
       "description": "node is a floor here, not a pin, in both places it appears. `engines` says >=22 on purpose and .npmrc sets engine-strict, so an exact value locks every install out of every machine that is not on that patch — CI included. `node-version` in the workflows names a major so setup-node uses the toolchain already on the runner; an exact one makes it fetch a build from actions/node-versions, which the harden-runner egress allowlist refuses (ECONNREFUSED). Renovate proposed both in #79 and CI went red on the second.",
       "matchDepNames": ["node"],
       "matchDepTypes": ["engines", "uses-with"],

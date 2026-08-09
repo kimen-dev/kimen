@@ -7,7 +7,7 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-input.js';
-import { expectAccessible } from './axe';
+import { expectAccessible, parkPointer } from './axe';
 
 type KiInputElement = HTMLElement & {
   disabled: boolean;
@@ -151,16 +151,7 @@ function readTokenColor(name: string): string {
  * `getAnimations({subtree: true})` does not cross the shadow boundary.
  */
 async function waitForStyles(): Promise<void> {
-  // Park the pointer on a transient probe pinned to the corner (ki-card's
-  // hover-test pattern): resetPointer's page origin can land INSIDE the
-  // tester iframe exactly where these fixtures mount, which puts the control
-  // in its hover state instead of clearing it.
-  const park = document.createElement('div');
-  park.style.cssText =
-    'position:fixed;inset-block-end:0;inset-inline-end:0;inline-size:8px;block-size:8px;';
-  document.body.append(park);
-  await userEvent.hover(park);
-  park.remove();
+  await parkPointer();
   await new Promise((resolve) => requestAnimationFrame(resolve));
   await new Promise((resolve) => requestAnimationFrame(resolve));
   const deadline = Date.now() + 4000;

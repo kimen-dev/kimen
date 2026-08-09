@@ -33,11 +33,14 @@ test('sandbox image pins its base, dated Debian snapshot and direct OS packages'
 });
 
 test('sandbox executables use exact package metadata and one integrity lock', () => {
-  assert.deepEqual(packageJson.dependencies, {
-    '@anthropic-ai/claude-code': '2.1.205',
-    '@openai/codex': '0.144.0',
-    playwright: '1.61.1',
-  });
+  assert.deepEqual(Object.keys(packageJson.dependencies).toSorted(), [
+    '@anthropic-ai/claude-code',
+    '@openai/codex',
+    'playwright',
+  ]);
+  for (const version of Object.values(packageJson.dependencies)) {
+    assert.match(version, /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u);
+  }
   assert.notEqual(packageLock, null, 'sandbox/package-lock.json is mandatory');
   const parsedLock = JSON.parse(packageLock);
   assert.equal(parsedLock.lockfileVersion, 3);

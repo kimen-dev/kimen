@@ -9,7 +9,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-icon-button.js';
-import { expectAccessible } from './axe';
+import { expectAccessible, parkPointer } from './axe';
 
 type KiIconButtonElement = HTMLElement & {
   disabled: boolean;
@@ -116,16 +116,7 @@ function requireButton(el: KiIconButtonElement): HTMLButtonElement {
  * `getAnimations({subtree: true})` does not cross the shadow boundary.
  */
 async function waitForStyles(): Promise<void> {
-  // Park the pointer on a transient probe pinned to the corner (ki-card's
-  // hover-test pattern): resetPointer's page origin can land INSIDE the
-  // tester iframe exactly where these fixtures mount, which puts the control
-  // in its hover state instead of clearing it.
-  const park = document.createElement('div');
-  park.style.cssText =
-    'position:fixed;inset-block-end:0;inset-inline-end:0;inline-size:8px;block-size:8px;';
-  document.body.append(park);
-  await userEvent.hover(park);
-  park.remove();
+  await parkPointer();
   await new Promise((resolve) => requestAnimationFrame(resolve));
   await new Promise((resolve) => requestAnimationFrame(resolve));
   const deadline = Date.now() + 4000;
@@ -484,69 +475,82 @@ describe('ki-icon-button in a real browser', () => {
     // (specs/022-ki-icon-button/design-extraction.md).
     const expectedBox = { xs: 24, sm: 32, md: 40, lg: 48, xl: 56 } as const;
     const expectedIcon = { xs: 16, sm: 18, md: 20, lg: 24, xl: 28 } as const;
+    const fixtures: {
+      button: HTMLButtonElement;
+      el: KiIconButtonElement;
+      size: (typeof sizes)[number];
+      tone: (typeof tones)[number];
+      variant: (typeof variants)[number];
+    }[] = [];
+
+    // Mount the whole static matrix first, then settle styles once. Waiting
+    // four animation frames for every one of 75 fixtures spent the complete
+    // 15-second test budget even though no state changes between mounts.
     for (const variant of variants) {
       for (const tone of tones) {
         for (const size of sizes) {
           const el = await mount(`${variant} ${tone} ${size}`, { variant, tone, size });
-          const button = requireButton(el);
-          await waitForStyles();
-
-          // Border-box square must be exactly 24/32/40/48/56 per size (the
-          // 1px inner stroke never adds to the scale) — the WCAG 2.2 pointer
-          // target floor of 24px holds at xs by construction (SC-004).
-          const rect = button.getBoundingClientRect();
-          expect(rect.height, `${variant}/${tone}/${size} height`).toBe(expectedBox[size]);
-          expect(rect.width, `${variant}/${tone}/${size} width`).toBe(expectedBox[size]);
-
-          if (tone !== 'neutral') {
-            continue;
-          }
-          const icon = el.querySelector('svg');
-          const iconRect = icon?.getBoundingClientRect();
-          expect(iconRect?.height, `${variant}/${size} icon size`).toBe(expectedIcon[size]);
-          expect(iconRect?.width, `${variant}/${size} icon size`).toBe(expectedIcon[size]);
-
-          if (size !== 'md') {
-            continue;
-          }
-          const style = getComputedStyle(button);
-          if (variant === 'primary' || variant === 'secondary' || variant === 'tertiary') {
-            // Glass variants carry the MarsUI Blur/24 backdrop, exported as
-            // blur(12px) (002 §0; verified on the Icon_button set); tertiary
-            // joined the glass set in the pixel pass (Figma 10078:2975:
-            // TERTIARY fill light-s0_dark-s2 + Blur24).
-            expect(style.backdropFilter, `${variant} glass backdrop`).toContain('blur');
-          }
-          if (variant === 'ghost' || variant === 'quaternary') {
-            // Non-glass variants stay off the glass path entirely: computed
-            // backdrop-filter is none, not blur(0).
-            expect(style.backdropFilter, `${variant} has no backdrop filter`).toBe('none');
-          }
-          if (variant === 'primary') {
-            // MarsUI bevel: the block-end border edge is darker than the
-            // block-start edge (Black/18 vs Black/8, 002 §2.1).
-            expect(style.borderBlockEndColor, 'primary bevel bottom differs from top').not.toBe(
-              style.borderBlockStartColor,
-            );
-          }
-          if (variant === 'tertiary') {
-            // Pixel pass: tertiary carries the SECONDARY bevel pair
-            // (Figma 10078:2975: Outline/secondary_button_bottom block-end edge).
-            expect(style.borderBlockEndColor, 'tertiary bevel bottom (secondary pair)').toBe(
-              readTokenColor('--ki-icon-button-tertiary-rest-border-bottom'),
-            );
-          }
-          if (variant === 'quaternary') {
-            // Pixel pass: MarsUI quaternary draws NO border in any state
-            // (every border cell resolves ki.outline.none).
-            expect(style.borderBlockStartColor, 'quaternary borderless (top)').toBe(
-              readTokenColor('--ki-outline-none'),
-            );
-            expect(style.borderBlockEndColor, 'quaternary borderless (bottom)').toBe(
-              readTokenColor('--ki-outline-none'),
-            );
-          }
+          fixtures.push({ button: requireButton(el), el, size, tone, variant });
         }
+      }
+    }
+    await waitForStyles();
+
+    for (const { button, el, size, tone, variant } of fixtures) {
+      // Border-box square must be exactly 24/32/40/48/56 per size (the
+      // 1px inner stroke never adds to the scale) — the WCAG 2.2 pointer
+      // target floor of 24px holds at xs by construction (SC-004).
+      const rect = button.getBoundingClientRect();
+      expect(rect.height, `${variant}/${tone}/${size} height`).toBe(expectedBox[size]);
+      expect(rect.width, `${variant}/${tone}/${size} width`).toBe(expectedBox[size]);
+
+      if (tone !== 'neutral') {
+        continue;
+      }
+      const icon = el.querySelector('svg');
+      const iconRect = icon?.getBoundingClientRect();
+      expect(iconRect?.height, `${variant}/${size} icon size`).toBe(expectedIcon[size]);
+      expect(iconRect?.width, `${variant}/${size} icon size`).toBe(expectedIcon[size]);
+
+      if (size !== 'md') {
+        continue;
+      }
+      const style = getComputedStyle(button);
+      if (variant === 'primary' || variant === 'secondary' || variant === 'tertiary') {
+        // Glass variants carry the MarsUI Blur/24 backdrop, exported as
+        // blur(12px) (002 §0; verified on the Icon_button set); tertiary
+        // joined the glass set in the pixel pass (Figma 10078:2975:
+        // TERTIARY fill light-s0_dark-s2 + Blur24).
+        expect(style.backdropFilter, `${variant} glass backdrop`).toContain('blur');
+      }
+      if (variant === 'ghost' || variant === 'quaternary') {
+        // Non-glass variants stay off the glass path entirely: computed
+        // backdrop-filter is none, not blur(0).
+        expect(style.backdropFilter, `${variant} has no backdrop filter`).toBe('none');
+      }
+      if (variant === 'primary') {
+        // MarsUI bevel: the block-end border edge is darker than the
+        // block-start edge (Black/18 vs Black/8, 002 §2.1).
+        expect(style.borderBlockEndColor, 'primary bevel bottom differs from top').not.toBe(
+          style.borderBlockStartColor,
+        );
+      }
+      if (variant === 'tertiary') {
+        // Pixel pass: tertiary carries the SECONDARY bevel pair
+        // (Figma 10078:2975: Outline/secondary_button_bottom block-end edge).
+        expect(style.borderBlockEndColor, 'tertiary bevel bottom (secondary pair)').toBe(
+          readTokenColor('--ki-icon-button-tertiary-rest-border-bottom'),
+        );
+      }
+      if (variant === 'quaternary') {
+        // Pixel pass: MarsUI quaternary draws NO border in any state
+        // (every border cell resolves ki.outline.none).
+        expect(style.borderBlockStartColor, 'quaternary borderless (top)').toBe(
+          readTokenColor('--ki-outline-none'),
+        );
+        expect(style.borderBlockEndColor, 'quaternary borderless (bottom)').toBe(
+          readTokenColor('--ki-outline-none'),
+        );
       }
     }
 
