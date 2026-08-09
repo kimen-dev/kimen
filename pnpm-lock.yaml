@@ -15,9 +15,7 @@ overrides:
   qs: 6.15.3
 
 patchedDependencies:
-  minimatch@3.1.5:
-    hash: 3e64d536af3aaaa63bcd325ef7c0f4c9c0ba4e731cbf0986304a41c5870ac8b3
-    path: patches/minimatch@3.1.5.patch
+  minimatch@3.1.5: 3e64d536af3aaaa63bcd325ef7c0f4c9c0ba4e731cbf0986304a41c5870ac8b3
 
 importers:
 
