@@ -23,6 +23,7 @@ if (!supportedBrowsers.some((browser) => browser === configuredBrowser)) {
 }
 
 const browser = configuredBrowser as SupportedBrowser;
+const pointerCapabilitySpec = 'browser-tests/pointer-capability.browser.spec.ts';
 
 // The interaction media features (`hover`, `pointer`) are the only way to ask
 // a page "can this device hover?", and Playwright's emulateMedia() does not
@@ -205,6 +206,7 @@ export default defineConfig({
           exclude: [
             'browser-tests/**/*.dark.browser.spec.{ts,tsx}',
             'browser-tests/**/*.motion.browser.spec.{ts,tsx}',
+            pointerCapabilitySpec,
           ],
           // Files in one browser setup have isolated DOMs but share the
           // Playwright page's physical pointer, keyboard focus and CDP media
@@ -222,6 +224,16 @@ export default defineConfig({
           browser,
           name: `${browser}-reduced-motion`,
           include: ['browser-tests/**/*.motion.browser.spec.{ts,tsx}'],
+          fileParallelism: false,
+        },
+        {
+          browser,
+          name: `${browser}-pointer-capability`,
+          // This audit mutates the page-level input device through CDP. On
+          // headless Linux, disabling touch emulation does not reliably
+          // restore the page's original hover capability, so it must not
+          // share a project/page with ordinary hover behavior contracts.
+          include: [pointerCapabilitySpec],
           fileParallelism: false,
         },
       ],

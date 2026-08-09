@@ -142,11 +142,11 @@ test('S6 browser config accepts exactly one validated engine per invocation', as
   assert.doesNotMatch(source, /KIMEN_BROWSER_MATRIX/);
 });
 
-test('S6 browser setups isolate shared input while the three setups remain independent', () => {
+test('S6 browser setups isolate shared input and page-level capability emulation', () => {
   const instances = inspectBrowserInstances({ KIMEN_BROWSER_ENGINE: 'chromium' });
   assert.deepEqual(
     instances.map(({ name }) => name),
-    ['chromium-light', 'chromium-dark', 'chromium-reduced-motion'],
+    ['chromium-light', 'chromium-dark', 'chromium-reduced-motion', 'chromium-pointer-capability'],
   );
   for (const instance of instances) {
     assert.equal(
@@ -155,6 +155,16 @@ test('S6 browser setups isolate shared input while the three setups remain indep
       `${instance.name} shares one Playwright page, so its files must not compete for input`,
     );
   }
+
+  const light = instances.find(({ name }) => name === 'chromium-light');
+  const pointerCapability = instances.find(({ name }) => name === 'chromium-pointer-capability');
+  assert.ok(light, 'missing ordinary light-browser setup');
+  assert.ok(pointerCapability, 'missing isolated pointer-capability setup');
+  assert.ok(
+    light.exclude?.includes('browser-tests/pointer-capability.browser.spec.ts'),
+    'page-level pointer emulation must not contaminate ordinary hover contracts',
+  );
+  assert.deepEqual(pointerCapability.include, ['browser-tests/pointer-capability.browser.spec.ts']);
 });
 
 test('S6 Vitest configs isolate writable caches by suite and browser engine', () => {
