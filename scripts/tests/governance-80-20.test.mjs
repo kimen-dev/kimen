@@ -48,6 +48,18 @@ test('dependency-only PRs keep one required result and run affected quality', as
   assert.equal(nx.pluginsConfig?.['@nx/js']?.projectsAffectedByDependencyUpdates, 'auto');
 });
 
+test('infra checks execute installed tools without re-entering pnpm', async () => {
+  const checks = await Promise.all([
+    readRepositoryFile('scripts/tests/config-typecheck.test.mjs'),
+    readRepositoryFile('scripts/tests/eslint-cache-ignore.test.mjs'),
+  ]);
+
+  for (const source of checks) {
+    assert.doesNotMatch(source, /spawnSync\(['"]pnpm['"]/u);
+    assert.match(source, /spawnSync\(\s*process\.execPath/u);
+  }
+});
+
 test('mutation runs on two dedicated cadences and never on pull requests or pushes', async () => {
   const workflow = await readRepositoryFile('.github/workflows/mutation.yml');
 
