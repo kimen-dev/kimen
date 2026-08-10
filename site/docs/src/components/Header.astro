@@ -1,0 +1,55 @@
+---
+import config from 'virtual:starlight/user-config';
+
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import Search from 'virtual:starlight/components/Search';
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+
+// Keep Starlight's progressive search behavior: the default search control is
+// omitted only when Pagefind is disabled and no custom Search override exists.
+const shouldRenderSearch =
+  config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+
+const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+const siteBase = docsBase.replace(/docs\/?$/, '');
+const { siteTitle } = Astro.locals.starlightRoute;
+const siteLinks = [
+  { href: siteBase, label: 'Home', current: false },
+  { href: docsBase, label: 'Components', current: true },
+  { href: `${siteBase}playground/`, label: 'Playground', current: false },
+] as const;
+---
+
+<div class="kimen-docs-header">
+  <a class="kimen-docs-identity" href={siteBase}>
+    <span class="kimen-docs-brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false">
+        <path d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9"></path>
+      </svg>
+    </span>
+    <span class="kimen-docs-site-title" translate="no">{siteTitle}</span>
+  </a>
+
+  <nav class="kimen-docs-primary-nav" aria-label="Site">
+    {
+      siteLinks.map(({ href, label, current }) => (
+        <a href={href} aria-current={current ? 'page' : undefined}>
+          {label}
+        </a>
+      ))
+    }
+  </nav>
+
+  <div class="kimen-docs-search sl-flex print:hidden">
+    {shouldRenderSearch && <Search />}
+  </div>
+
+  <div class="kimen-docs-actions sl-hidden md:sl-flex print:hidden">
+    <div class="kimen-docs-social sl-flex">
+      <SocialIcons />
+    </div>
+    <ThemeSelect />
+    <LanguageSelect />
+  </div>
+</div>
