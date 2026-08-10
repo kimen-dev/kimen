@@ -6,6 +6,8 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from
 import { commands, page, userEvent } from 'vitest/browser';
 
 /* eslint-disable @nx/enforce-module-boundaries -- this integration contract intentionally consumes the hand-written site outside the elements project */
+import interWoff2Url from '../../../site/assets/fonts/InterVariable.woff2?url';
+import jetBrainsMonoWoff2Url from '../../../site/assets/fonts/JetBrainsMonoVariable.woff2?url';
 import landingCss from '../../../site/landing.css?raw';
 import landingHtml from '../../../site/index.html?raw';
 // The site entry points are JavaScript delivery artifacts. Their exported
@@ -64,6 +66,11 @@ const PAGE_STYLE_ID = 'site-experience-page-styles';
 const MATERIAL3_STYLESHEET_SELECTOR =
   '#material3-css, link[rel="stylesheet"][href*="tokens.material3.css"]';
 const DEFAULT_VIEWPORT = { width: 1024, height: 900 } as const;
+const siteFonts = [
+  { family: 'Inter', url: interWoff2Url, weight: '100 900' },
+  { family: 'JetBrains Mono', url: jetBrainsMonoWoff2Url, weight: '100 800' },
+] as const;
+let siteFontsLoaded = false;
 
 const browserCommands = commands as unknown as {
   ariaSnapshot: (selector: string) => Promise<string>;
@@ -117,10 +124,11 @@ const pageSources: Record<PageName, { css: string; html: string; initialize: Pag
 
 let disposePage: PageCleanup | undefined;
 
-beforeAll(() => {
+beforeAll(async () => {
   for (const define of defineSiteElements) {
     define();
   }
+  await ensureSiteFonts();
 });
 
 beforeEach(async () => {
@@ -138,6 +146,20 @@ afterAll(async () => {
 
 function parsedPage(html: string): Document {
   return new DOMParser().parseFromString(html, 'text/html');
+}
+
+async function ensureSiteFonts(): Promise<void> {
+  if (!siteFontsLoaded) {
+    await Promise.all(
+      siteFonts.map(async ({ family, url, weight }) => {
+        const face = new FontFace(family, `url(${url}) format('woff2')`, { weight });
+        await face.load();
+        document.fonts.add(face);
+      }),
+    );
+    siteFontsLoaded = true;
+  }
+  await document.fonts.ready;
 }
 
 function installPageMarkup(pageName: PageName): void {
@@ -629,8 +651,8 @@ describe('Kimen public site experience in a real browser', () => {
         throw new Error(`missing reference geometry for orbit card ${String(cardIndex)}`);
       }
 
-      // The browser harness does not load the site's vendored font files, so
-      // text-sized cards can differ by a sub-glyph rounding step from site-dist.
+      // Geometry is compared with the same vendored faces used by site-dist;
+      // runner-installed fonts must never change the card metrics.
       expectGeometryWithin(card, expected, 3);
     });
     expect(getComputedStyle(rtlSwitch).backgroundColor).toBe('rgb(132, 90, 190)');
