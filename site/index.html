@@ -106,9 +106,17 @@
       <section class="hero" id="top" aria-labelledby="hero-title">
         <div class="hero-layout">
           <div class="hero-orbit hero-orbit-start" aria-hidden="true">
-            <span class="signal-card signal-success"><span class="signal-dot"></span>gates · exit 0</span>
-            <span class="signal-card"><span class="switch-figure is-on"></span>RTL ready</span>
-            <span class="signal-card signal-info">custom-elements.json</span>
+            <span class="signal-card signal-status">
+              <span class="signal-dot signal-dot-ring"></span>
+              <span>gates · exit 0</span>
+            </span>
+            <span class="signal-card signal-switch">
+              <span class="switch-figure" aria-hidden="true"><span></span></span>
+              <span>RTL ready</span>
+            </span>
+            <span class="signal-card signal-badge-card">
+              <span class="signal-badge signal-badge-info">custom-elements.json</span>
+            </span>
           </div>
 
           <div class="hero-copy">
@@ -129,13 +137,22 @@
           </div>
 
           <div class="hero-orbit hero-orbit-end" aria-hidden="true">
-            <span class="signal-card avatar-figure"><span>MG</span><span>A2</span><span>UI</span><b>+9</b></span>
-            <span class="signal-card signal-budget">
-              <span>Size budget</span>
-              <span class="budget-track"><span></span></span>
-              <b>single-digit KB</b>
+            <span class="signal-card signal-avatar-card">
+              <span class="avatar-figure"><span>MG</span><span>A2</span><span>UI</span><b>+9</b></span>
             </span>
-            <span class="signal-card"><span class="check-figure"></span>axe checked</span>
+            <span class="signal-card signal-budget">
+              <span class="signal-budget-label">SIZE BUDGET</span>
+              <span class="budget-track"><span></span></span>
+              <span class="signal-budget-value">3.8 / 10 KB</span>
+            </span>
+            <span class="signal-card signal-axe">
+              <span class="checkbox-figure" aria-hidden="true">
+                <svg class="checkbox-mark" viewBox="0 0 18 18">
+                  <path d="M4 9.5 7.5 13 14 5"></path>
+                </svg>
+              </span>
+              <span>0 axe violations</span>
+            </span>
           </div>
         </div>
 
@@ -151,12 +168,17 @@
             <section class="pipeline-step" aria-labelledby="pipeline-spec-title">
               <h3 id="pipeline-spec-title"><span>01</span>An agent emits a spec</h3>
               <pre class="code-block" tabindex="0" role="region" aria-label="Generated UI specification"><code>{
-  "component": "ki-card",
-  "props": { "tone": "neutral" },
+  "surface": "form",
   "children": [
-    { "component": "ki-input", "props": {
-      "label": "Workspace name"
-    }}
+    { "component": "ki-input",
+      "props": { "label": "Workspace name" } },
+    { "component": "ki-select",
+      "props": { "label": "Region" } },
+    { "component": "ki-switch",
+      "props": { "label": "Invite via link" } },
+    { "component": "ki-button",
+      "props": { "variant": "primary" },
+      "action": "create" }
   ]
 }</code></pre>
             </section>
@@ -170,14 +192,14 @@
                   <li><span class="signal-dot"></span>only declared actions are wired</li>
                   <li><span class="signal-dot"></span>no code-execution path from spec data</li>
                 </ul>
-                <p class="microcopy">Unknown props → rejected. Fail-closed.</p>
+                <p class="microcopy">unknown props → rejected. fail-closed.</p>
               </div>
             </section>
 
             <section class="pipeline-step" aria-labelledby="pipeline-render-title">
               <h3 id="pipeline-render-title"><span>03</span>Real ki-* components mount</h3>
               <div class="pipeline-demo">
-                <ki-input label="Workspace name" value="relay" readonly></ki-input>
+                <ki-input label="Workspace name" placeholder="acme-corp" readonly></ki-input>
                 <ki-select label="Region" value="eu-west">
                   <ki-option value="eu-west">eu-west</ki-option>
                   <ki-option value="us-east">us-east</ki-option>

@@ -532,6 +532,11 @@ describe('Kimen public site experience in a real browser', () => {
   });
 
   it('S5 keeps semantic structure and canonical navigation without client JavaScript', async () => {
+    // Keep the complete multiline spec inside the viewport. axe samples
+    // painted text with elementFromPoint; a text box that straddles the
+    // viewport edge is otherwise reported as elmPartiallyObscuring even
+    // though no document element covers it.
+    await page.viewport(DEFAULT_VIEWPORT.width, 1400);
     await mountPage('landing', false);
 
     expect(document.querySelector('header')).toBeInstanceOf(HTMLElement);
@@ -577,6 +582,83 @@ describe('Kimen public site experience in a real browser', () => {
     expect(titleStyle.lineHeight).toBe('77.7px');
     expect(titleStyle.color).toBe('rgba(0, 0, 0, 0)');
     expect(titleStyle.backgroundImage).not.toBe('none');
+
+    const orbitCards = [...document.querySelectorAll<HTMLElement>('.hero-orbit .signal-card')];
+    const rtlSwitch = requireElement<HTMLElement>('.switch-figure', HTMLElement);
+    const budget = requireElement<HTMLElement>('.signal-budget', HTMLElement);
+    const axeCard = requireElement<HTMLElement>('.signal-axe', HTMLElement);
+    const axeMark = requireElement<HTMLElement>('.checkbox-figure', HTMLElement);
+    const pipeline = requireElement<HTMLElement>('.pipeline', HTMLElement);
+    const pipelineLine = requireElement<HTMLElement>('.pipeline-line', HTMLElement);
+    const pipelineGrid = requireElement<HTMLElement>('.pipeline-grid', HTMLElement);
+    const pipelineSpec = requireElement<HTMLElement>(
+      '.pipeline-step .code-block code',
+      HTMLElement,
+    );
+    const pipelineStatus = requireElement<HTMLElement>('.status-pill', HTMLElement);
+    const workspace = requireElement(
+      'ki-input[label="Workspace name"]',
+      HTMLElement,
+    ) as HTMLElement & { value?: string };
+    const expectGeometryWithin = (
+      element: HTMLElement,
+      expected: readonly [number, number, number, number],
+      tolerance: number,
+    ) => {
+      const rect = element.getBoundingClientRect();
+      const [x, y, width, height] = expected;
+
+      expect(Math.abs(rect.x - x)).toBeLessThanOrEqual(tolerance);
+      expect(Math.abs(rect.y - y)).toBeLessThanOrEqual(tolerance);
+      expect(Math.abs(rect.width - width)).toBeLessThanOrEqual(tolerance);
+      expect(Math.abs(rect.height - height)).toBeLessThanOrEqual(tolerance);
+    };
+
+    expect(orbitCards).toHaveLength(6);
+    const expectedOrbitGeometry = [
+      [206, 309, 149, 50],
+      [212, 381, 143, 56],
+      [160, 459, 195, 52],
+      [1124, 273, 141, 58],
+      [1124, 353, 164, 98],
+      [1124, 473, 156, 74],
+    ] as const;
+    orbitCards.forEach((card, cardIndex) => {
+      const expected = expectedOrbitGeometry[cardIndex];
+      if (expected === undefined) {
+        throw new Error(`missing reference geometry for orbit card ${String(cardIndex)}`);
+      }
+
+      // The browser harness does not load the site's vendored font files, so
+      // text-sized cards can differ by a sub-glyph rounding step from site-dist.
+      expectGeometryWithin(card, expected, 3);
+    });
+    expect(getComputedStyle(rtlSwitch).backgroundColor).toBe('rgb(132, 90, 190)');
+    expect(budget.textContent.replace(/\s+/gu, ' ').trim()).toBe('SIZE BUDGET 3.8 / 10 KB');
+    expect(axeCard.textContent.replace(/\s+/gu, ' ').trim()).toBe('0 axe violations');
+    expect(getComputedStyle(axeMark).backgroundColor).toBe('rgb(132, 90, 190)');
+    expect(axeMark.getBoundingClientRect().width).toBeCloseTo(20, 0);
+    expect(axeMark.getBoundingClientRect().height).toBeCloseTo(20, 0);
+    expect(getComputedStyle(pipelineLine).backgroundImage).toContain('repeating-linear-gradient');
+    const expectedPipelineGeometry = [
+      [160, 727, 1120, 599],
+      [197, 834, 1046, 455],
+    ] as const;
+    [pipeline, pipelineGrid].forEach((element, elementIndex) => {
+      const expected = expectedPipelineGeometry[elementIndex];
+      if (expected === undefined) {
+        throw new Error(`missing reference geometry for pipeline element ${String(elementIndex)}`);
+      }
+
+      expectGeometryWithin(element, expected, 2);
+    });
+    expect(Math.abs(pipelineStatus.getBoundingClientRect().width - 179)).toBeLessThanOrEqual(4);
+    expect(pipelineStatus.getBoundingClientRect().height).toBeCloseTo(24, 0);
+    expect(getComputedStyle(pipelineSpec).fontSize).toBe('12.5px');
+    expect(getComputedStyle(pipelineSpec).lineHeight).toBe('20px');
+    expect(pipelineSpec.textContent).toContain('"surface": "form"');
+    expect(workspace.getAttribute('placeholder')).toBe('acme-corp');
+    expect(workspace.value ?? '').toBe('');
 
     expect(document.querySelectorAll('.project-stats > div')).toHaveLength(6);
     expect(document.querySelectorAll('.contract-artifact')).toHaveLength(4);
