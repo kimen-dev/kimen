@@ -40,7 +40,7 @@ overrides:
   # rebase regenerated the lockfile and silently rolled this fix back.
   js-yaml: 4.3.1
   # GHSA-2v37-7h3g-55p8. Same regeneration story as js-yaml above.
-  nanoid: 6.0.0
+  nanoid: 6.0.1
   # GHSA-r28c-9q8g-f849.
   postcss: 8.5.25
   # Not an advisory: this holds the target of patches/minimatch@3.1.5.patch.
