@@ -1,18 +1,693 @@
-/* Kimen docs site — small Starlight adjustments only. Component visuals in
-   demos come entirely from the @kimen/tokens stylesheet loaded alongside.
+/* Kimen Docs shell for Starlight.
 
-   The --sl-* names are Starlight's public theming API, so they cannot follow
-   the ki namespace; their values still resolve from Kimen tokens (Art. VI). */
-/* stylelint-disable custom-property-pattern */
+   The --sl-* names below are Starlight's public theming/layout API and must
+   retain their namespace. Every value we provide resolves from Kimen's
+   semantic layer or an existing Kimen component contract; the local
+   --ki-docs-* aliases keep the shell readable without introducing a second
+   visual source of truth. */
+/* stylelint-disable custom-property-pattern, no-descending-specificity --
+   Starlight's public custom properties retain their upstream namespace, and
+   shell overrides are grouped by region instead of selector weight. */
 
 :root {
-  --sl-color-accent-low: var(--ki-color-brand-900);
-  --sl-color-accent: var(--ki-color-brand-500);
-  --sl-color-accent-high: var(--ki-color-brand-200);
+  /* Docs-shell component contract. */
+  --ki-docs-nav-height: calc(var(--ki-icon-button-xl-size) + var(--ki-card-media-padding));
+  --ki-docs-nav-pad-inline: var(--ki-card-body-padding);
+  --ki-docs-nav-pad-block: var(--ki-button-padding-block);
+  --ki-docs-sidebar-width: var(--ki-tooltip-max-inline-size);
+  --ki-docs-content-width: calc(var(--ki-dialog-max-width) + var(--ki-tooltip-max-inline-size));
+  --ki-docs-content-pad-inline: var(--ki-dialog-padding);
+  --ki-docs-content-pad-block: var(--ki-card-padding-block);
+  --ki-docs-section-gap: var(--ki-dialog-padding);
+  --ki-docs-control-gap: var(--ki-card-gap);
+  --ki-docs-compact-gap: var(--ki-button-sm-gap);
+  --ki-docs-mobile-nav-height: calc(var(--ki-input-height) + 2 * var(--ki-button-padding-block));
+  --ki-docs-mobile-sidebar-offset: calc(
+    var(--ki-docs-mobile-nav-height) +
+    var(--ki-docs-section-gap)
+  );
+  --ki-docs-header-bg: var(--ki-dialog-bg-start);
+  --ki-docs-canvas-bg: var(--ki-surface-s0);
+  --ki-docs-sidebar-bg: var(--ki-surface-s1);
+  --ki-docs-panel-bg: var(--ki-card-bg);
+  --ki-docs-subtle-bg: var(--ki-surface-s2);
+  --ki-docs-hover-bg: var(--ki-button-quaternary-neutral-hover-bg);
+  --ki-docs-active-bg: var(--ki-surface-primary-base-em-alpha);
+  --ki-docs-border-color: var(--ki-divider-color);
+  --ki-docs-control-hover-border: var(--ki-input-hover-border);
+  --ki-docs-text: var(--ki-text-high-em);
+  --ki-docs-text-muted: var(--ki-text-med-em);
+  --ki-docs-accent: var(--ki-text-primary-high-em);
+  --ki-docs-accent-surface: var(--ki-surface-primary-med-em);
+  --ki-docs-accent-surface-low: var(--ki-surface-primary-base-em);
+  --ki-docs-on-accent: var(--ki-text-primary-on-primary);
+  --ki-docs-panel-shadow: var(--ki-card-elevation);
+  --ki-docs-focus-color: var(--ki-button-focus-ring-color);
+  --ki-docs-focus-width: var(--ki-button-focus-ring-width);
+  --ki-docs-focus-offset: var(--ki-button-focus-ring-offset);
+  --ki-docs-focus-shadow: var(--ki-button-focus-ring-shadow);
+  --ki-docs-focus-outline: var(--ki-docs-focus-width) solid var(--ki-docs-focus-color);
+
+  /* Starlight color bridge. Kimen's ThemeProvider updates the matching
+     data-ki-color-scheme value before paint, so this single map serves both
+     light and dark modes without duplicating theme logic. */
+  --sl-color-white: var(--ki-docs-text);
+  --sl-color-gray-1: var(--ki-docs-text);
+  --sl-color-gray-2: var(--ki-docs-text-muted);
+  --sl-color-gray-3: var(--ki-docs-text-muted);
+  --sl-color-gray-4: var(--ki-outline-med-em);
+  --sl-color-gray-5: var(--ki-docs-border-color);
+  --sl-color-gray-6: var(--ki-docs-subtle-bg);
+  --sl-color-gray-7: var(--ki-docs-sidebar-bg);
+  --sl-color-black: var(--ki-docs-canvas-bg);
+  --sl-color-accent-low: var(--ki-docs-accent-surface-low);
+  --sl-color-accent: var(--ki-docs-accent-surface);
+  --sl-color-accent-high: var(--ki-docs-accent);
+  --sl-color-text: var(--ki-docs-text-muted);
+  --sl-color-text-accent: var(--ki-docs-accent);
+  --sl-color-text-invert: var(--ki-docs-on-accent);
+  --sl-color-bg: var(--ki-docs-canvas-bg);
+  --sl-color-bg-nav: var(--ki-docs-header-bg);
+  --sl-color-bg-sidebar: var(--ki-docs-sidebar-bg);
+  --sl-color-bg-inline-code: var(--ki-docs-active-bg);
+  --sl-color-bg-accent: var(--ki-docs-accent-surface);
+  --sl-color-hairline-light: var(--ki-outline-low-em);
+  --sl-color-hairline: var(--ki-docs-border-color);
+  --sl-color-hairline-shade: var(--ki-outline-low-em);
+  --sl-color-backdrop-overlay: var(--ki-dialog-backdrop-bg);
+  --sl-color-orange-low: var(--ki-surface-warning-base-em);
+  --sl-color-orange: var(--ki-outline-warning-high-em);
+  --sl-color-orange-high: var(--ki-text-warning-high-em);
+  --sl-color-green-low: var(--ki-surface-success-base-em);
+  --sl-color-green: var(--ki-outline-success-high-em);
+  --sl-color-green-high: var(--ki-text-success-high-em);
+  --sl-color-blue-low: var(--ki-surface-info-base-em);
+  --sl-color-blue: var(--ki-outline-info-high-em);
+  --sl-color-blue-high: var(--ki-text-info-high-em);
+  --sl-color-purple-low: var(--ki-surface-primary-base-em);
+  --sl-color-purple: var(--ki-outline-primary-high-em);
+  --sl-color-purple-high: var(--ki-text-primary-high-em);
+  --sl-color-red-low: var(--ki-surface-danger-base-em);
+  --sl-color-red: var(--ki-outline-danger-high-em);
+  --sl-color-red-high: var(--ki-text-danger-high-em);
+  --sl-shadow-sm: var(--ki-elevation-e1);
+  --sl-shadow-md: var(--ki-elevation-e2);
+  --sl-shadow-lg: var(--ki-elevation-e4);
+
+  /* Starlight typography bridge. */
+  --sl-font: var(--ki-typography-family-body);
+  --sl-font-mono: var(--ki-typography-family-mono);
+  --sl-text-2xs: var(--ki-typography-size-caption-2);
+  --sl-text-xs: var(--ki-typography-size-body-1);
+  --sl-text-sm: var(--ki-typography-size-body-1);
+  --sl-text-base: var(--ki-typography-size-body-2);
+  --sl-text-lg: var(--ki-typography-size-title-2);
+  --sl-text-xl: var(--ki-typography-size-heading-1);
+  --sl-text-2xl: var(--ki-typography-size-heading-2);
+  --sl-text-3xl: var(--ki-typography-size-heading-3);
+  --sl-text-4xl: var(--ki-typography-size-heading-4);
+  --sl-text-5xl: var(--ki-typography-size-heading-5);
+  --sl-text-6xl: var(--ki-typography-size-heading-6);
+  --sl-text-body: var(--ki-typography-size-body-2);
+  --sl-text-body-sm: var(--ki-typography-size-body-1);
+  --sl-text-code: var(--ki-typography-size-body-1);
+  --sl-text-code-sm: var(--ki-typography-size-caption-2);
+  --sl-text-h1: var(--ki-typography-size-heading-4);
+  --sl-text-h2: var(--ki-typography-size-heading-3);
+  --sl-text-h3: var(--ki-typography-size-heading-2);
+  --sl-text-h4: var(--ki-typography-size-heading-1);
+  --sl-text-h5: var(--ki-typography-size-title-2);
+  --sl-line-height: var(--ki-typography-line-height-body-2);
+  --sl-line-height-headings: var(--ki-typography-line-height-heading-2);
+
+  /* Starlight layout bridge. */
+  --sl-nav-height: var(--ki-docs-nav-height);
+  --sl-nav-pad-x: var(--ki-docs-nav-pad-inline);
+  --sl-nav-pad-y: var(--ki-docs-nav-pad-block);
+  --sl-sidebar-width: var(--ki-docs-sidebar-width);
+  --sl-sidebar-pad-x: var(--ki-docs-content-pad-inline);
+  --sl-content-width: var(--ki-docs-content-width);
+  --sl-content-pad-x: var(--ki-docs-content-pad-inline);
+  --sl-content-gap-y: var(--ki-docs-section-gap);
+  --sl-main-pad: var(--ki-spacing-inline);
+  --sl-menu-button-size: var(--ki-icon-button-sm-size);
+  --sl-nav-gap: var(--ki-docs-control-gap);
+  --sl-outline-offset-inside: var(--ki-docs-focus-offset);
 }
 
-:root[data-theme="light"] {
-  --sl-color-accent-low: var(--ki-color-brand-100);
-  --sl-color-accent: var(--ki-color-brand-600);
-  --sl-color-accent-high: var(--ki-color-brand-800);
+html,
+body {
+  background-color: var(--ki-docs-canvas-bg);
+  color: var(--ki-docs-text-muted);
+  font-family: var(--ki-typography-family-body);
+}
+
+body > .page > .header {
+  border-block-end: var(--ki-divider-thickness) solid var(--ki-docs-border-color);
+  background-color: var(--ki-docs-header-bg);
+  box-shadow: var(--ki-docs-panel-shadow);
+  backdrop-filter: blur(var(--ki-dialog-backdrop-blur));
+}
+
+.kimen-docs-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--ki-docs-control-gap);
+  align-items: center;
+  justify-content: space-between;
+  block-size: 100%;
+  min-inline-size: 0;
+}
+
+.kimen-docs-identity,
+.kimen-docs-social {
+  display: flex;
+  align-items: center;
+}
+
+.kimen-docs-identity {
+  gap: var(--ki-docs-compact-gap);
+  align-items: center;
+  min-inline-size: 0;
+  min-block-size: var(--ki-button-md-min-target);
+  color: var(--ki-docs-text);
+  text-decoration: none;
+}
+
+.kimen-docs-brand-mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--ki-icon-button-sm-size);
+  block-size: var(--ki-icon-button-sm-size);
+  border-radius: var(--ki-icon-button-sm-radius);
+  background-color: var(--ki-docs-active-bg);
+  color: var(--ki-docs-accent);
+}
+
+.kimen-docs-brand-mark svg {
+  inline-size: var(--ki-icon-button-xs-icon-size);
+  block-size: var(--ki-icon-button-xs-icon-size);
+  fill: none;
+  stroke: var(--ki-docs-accent);
+  stroke-width: var(--ki-button-focus-ring-width);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kimen-docs-site-title {
+  overflow: clip;
+  min-inline-size: 0;
+  color: var(--ki-docs-text);
+  font-family: var(--ki-typography-family-display);
+  font-size: var(--ki-dialog-heading-font-size);
+  font-weight: var(--ki-dialog-heading-font-weight);
+  line-height: var(--ki-dialog-heading-line-height);
+  letter-spacing: var(--ki-typography-letter-spacing-xs);
+}
+
+.kimen-docs-primary-nav {
+  display: none;
+  align-items: center;
+  gap: var(--ki-docs-compact-gap);
+}
+
+.kimen-docs-primary-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--ki-button-md-min-target);
+  border-radius: var(--ki-button-sm-radius);
+  padding-block: var(--ki-button-padding-block);
+  padding-inline: var(--ki-button-sm-padding-inline);
+  color: var(--ki-docs-text-muted);
+  font-family: var(--ki-button-font-family);
+  font-size: var(--ki-button-sm-font-size);
+  font-weight: var(--ki-button-font-weight);
+  line-height: var(--ki-button-sm-line-height);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.kimen-docs-primary-nav a:hover {
+  background-color: var(--ki-docs-hover-bg);
+  color: var(--ki-docs-text);
+}
+
+.kimen-docs-primary-nav a[aria-current="page"] {
+  background-color: var(--ki-docs-active-bg);
+  color: var(--ki-docs-accent);
+}
+
+body[data-mobile-menu-expanded] .kimen-docs-primary-nav {
+  position: fixed;
+  inset-block-start: var(--ki-docs-nav-height);
+  inset-inline: 0;
+  display: flex;
+  justify-content: stretch;
+  min-block-size: var(--ki-docs-mobile-nav-height);
+  border-block-end: var(--ki-divider-thickness) solid var(--ki-docs-border-color);
+  padding-block: var(--ki-button-padding-block);
+  padding-inline: var(--ki-docs-content-pad-inline);
+  background-color: var(--ki-docs-header-bg);
+  box-shadow: var(--ki-docs-panel-shadow);
+}
+
+body[data-mobile-menu-expanded] .kimen-docs-primary-nav a {
+  flex: 1;
+}
+
+body[data-mobile-menu-expanded] nav.sidebar .sidebar-content {
+  padding-block-start: var(--ki-docs-mobile-sidebar-offset);
+}
+
+.kimen-docs-search {
+  justify-content: end;
+  min-inline-size: 0;
+}
+
+.kimen-docs-search site-search button[data-open-modal] {
+  min-inline-size: var(--ki-icon-button-sm-size);
+  min-block-size: var(--ki-icon-button-sm-size);
+  color: var(--ki-docs-accent);
+}
+
+/* The platform-specific command glyph is decorative and produces an
+   undecidable contrast result in axe. The named Search control and keyboard
+   shortcut remain fully operational without rendering that glyph. */
+.kimen-docs-search site-search kbd {
+  display: none;
+}
+
+.kimen-docs-actions {
+  display: none;
+  gap: var(--ki-docs-control-gap);
+  align-items: center;
+  justify-content: end;
+}
+
+.kimen-docs-social {
+  gap: var(--ki-docs-control-gap);
+}
+
+.kimen-docs-social::after {
+  content: "";
+  align-self: stretch;
+  border-inline-end: var(--ki-divider-thickness) solid var(--ki-docs-border-color);
+}
+
+.kimen-docs-social a {
+  display: grid;
+  place-items: center;
+  min-inline-size: var(--ki-icon-button-sm-size);
+  min-block-size: var(--ki-icon-button-sm-size);
+  border-radius: var(--ki-icon-button-sm-radius);
+  color: var(--ki-docs-accent);
+}
+
+.kimen-docs-social a:hover {
+  background-color: var(--ki-docs-hover-bg);
+  color: var(--ki-docs-text);
+}
+
+.kimen-docs-actions :is(starlight-theme-select, starlight-lang-select) label {
+  color: var(--ki-docs-text-muted);
+}
+
+.kimen-docs-actions :is(starlight-theme-select, starlight-lang-select) select {
+  min-block-size: var(--ki-input-height);
+  border-width: var(--ki-input-border-width);
+  border-style: solid;
+  border-color: var(--ki-input-rest-border);
+  border-radius: var(--ki-input-radius);
+  background-color: var(--ki-input-rest-bg);
+  color: var(--ki-input-rest-fg);
+  font-size: var(--ki-input-font-size);
+  line-height: var(--ki-input-line-height);
+}
+
+.kimen-docs-actions :is(starlight-theme-select, starlight-lang-select) select:hover {
+  border-color: var(--ki-input-hover-border);
+  background-color: var(--ki-input-hover-bg);
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: var(--ki-docs-focus-outline);
+  outline-offset: var(--ki-docs-focus-offset);
+  box-shadow: var(--ki-docs-focus-shadow);
+}
+
+starlight-menu-button button {
+  border-width: var(--ki-icon-button-border-width);
+  border-style: solid;
+  border-color: var(--ki-icon-button-secondary-neutral-rest-border);
+  border-radius: var(--ki-icon-button-sm-radius);
+  background-color: var(--ki-icon-button-secondary-neutral-rest-bg);
+  color: var(--ki-icon-button-secondary-neutral-rest-fg);
+  box-shadow: var(--ki-icon-button-secondary-rest-shadow);
+}
+
+starlight-menu-button button:hover {
+  border-color: var(--ki-icon-button-secondary-neutral-hover-border);
+  background-color: var(--ki-icon-button-secondary-neutral-hover-bg);
+  color: var(--ki-icon-button-secondary-neutral-hover-fg);
+  box-shadow: var(--ki-icon-button-secondary-hover-shadow);
+}
+
+nav.sidebar .sidebar-pane {
+  border-inline-end: var(--ki-divider-thickness) solid var(--ki-docs-border-color);
+  background-color: var(--ki-docs-sidebar-bg);
+}
+
+nav.sidebar .sidebar-content {
+  gap: var(--ki-docs-section-gap);
+  padding-block: var(--ki-docs-section-gap);
+  padding-inline: var(--ki-docs-content-pad-inline);
+}
+
+nav.sidebar .top-level > li + li {
+  margin-block-start: var(--ki-docs-section-gap);
+}
+
+nav.sidebar .top-level > li > details > summary .large {
+  color: var(--ki-docs-text-muted);
+  font-family: var(--ki-typography-family-mono);
+  font-size: var(--ki-badge-sm-font-size);
+  font-weight: var(--ki-badge-font-weight);
+  line-height: var(--ki-badge-sm-line-height);
+  letter-spacing: var(--ki-typography-letter-spacing-spaced-out);
+  text-transform: uppercase;
+}
+
+nav.sidebar details > summary {
+  min-block-size: var(--ki-list-item-min-height);
+  border-radius: var(--ki-input-radius);
+  padding-block: var(--ki-button-padding-block);
+  padding-inline: var(--ki-list-item-padding-inline);
+}
+
+nav.sidebar details > summary:hover {
+  background-color: var(--ki-docs-hover-bg);
+  color: var(--ki-docs-text);
+}
+
+nav.sidebar ul ul li {
+  margin-inline-start: var(--ki-list-item-padding-inline);
+  border-inline-start: var(--ki-divider-thickness) solid var(--ki-docs-border-color);
+  padding-inline-start: var(--ki-list-item-padding-inline);
+}
+
+nav.sidebar a {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--ki-list-item-min-height);
+  border-radius: var(--ki-input-radius);
+  padding-block: var(--ki-button-padding-block);
+  padding-inline: var(--ki-list-item-padding-inline);
+  color: var(--ki-docs-text-muted);
+  font-family: var(--ki-typography-family-body);
+  font-size: var(--ki-list-item-primary-font-size);
+  font-weight: var(--ki-list-item-primary-font-weight);
+  line-height: var(--ki-list-item-primary-line-height);
+  transition:
+    background-color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard),
+    color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
+}
+
+nav.sidebar a:hover,
+nav.sidebar a:focus-visible {
+  background-color: var(--ki-docs-hover-bg);
+  color: var(--ki-docs-text);
+}
+
+nav.sidebar a[aria-current="page"],
+nav.sidebar a[aria-current="page"]:hover,
+nav.sidebar a[aria-current="page"]:focus-visible {
+  background-color: var(--ki-docs-active-bg);
+  color: var(--ki-docs-accent);
+}
+
+.main-frame,
+.main-pane {
+  background-color: var(--ki-docs-canvas-bg);
+}
+
+.content-panel {
+  padding-block: var(--ki-docs-content-pad-block);
+  padding-inline: var(--ki-docs-content-pad-inline);
+}
+
+.content-panel + .content-panel {
+  border-block-start: var(--ki-divider-thickness) solid var(--ki-docs-border-color);
+}
+
+.content-panel .sl-container > * + * {
+  margin-block-start: var(--ki-docs-section-gap);
+}
+
+.content-panel h1,
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--ki-docs-text);
+  font-family: var(--ki-typography-family-display);
+  font-weight: var(--ki-typography-weight-body-semibold);
+  letter-spacing: var(--ki-typography-letter-spacing-sm);
+}
+
+.content-panel h1 {
+  margin-block-start: var(--ki-docs-section-gap);
+  font-size: var(--ki-typography-size-heading-4);
+  line-height: var(--ki-typography-line-height-heading-4);
+}
+
+.sl-markdown-content {
+  color: var(--ki-docs-text-muted);
+  font-size: var(--ki-typography-size-body-2);
+  line-height: var(--ki-typography-line-height-body-2);
+}
+
+.sl-markdown-content a:not(:where(.not-content *)) {
+  color: var(--ki-docs-accent);
+  text-decoration-color: var(--ki-outline-primary-high-em);
+  text-underline-offset: var(--ki-button-focus-ring-offset);
+}
+
+.sl-markdown-content a:hover:not(:where(.not-content *)) {
+  color: var(--ki-docs-text);
+}
+
+.sl-markdown-content code:not(:where(.not-content *)) {
+  border-radius: var(--ki-badge-sm-radius);
+  padding-block: var(--ki-button-padding-block);
+  padding-inline: var(--ki-badge-sm-padding-inline);
+  background-color: var(--ki-docs-active-bg);
+  color: var(--ki-docs-accent);
+  font-family: var(--ki-typography-family-mono);
+  font-size: var(--ki-badge-sm-font-size);
+  line-height: var(--ki-badge-sm-line-height);
+}
+
+.sl-markdown-content pre:not(:where(.not-content *)),
+.sl-markdown-content .expressive-code .frame {
+  border-width: var(--ki-divider-thickness);
+  border-style: solid;
+  border-color: var(--ki-docs-border-color);
+  border-radius: var(--ki-card-radius);
+  box-shadow: var(--ki-docs-panel-shadow);
+}
+
+.sl-markdown-content table:not(:where(.not-content *)) {
+  inline-size: 100%;
+  border: var(--ki-divider-thickness) solid var(--ki-docs-border-color);
+  border-radius: var(--ki-card-radius);
+  background-color: var(--ki-docs-panel-bg);
+  box-shadow: var(--ki-docs-panel-shadow);
+}
+
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+  border-block-end: var(--ki-divider-thickness) solid var(--ki-docs-border-color);
+  padding-block: var(--ki-list-item-padding-block);
+  padding-inline: var(--ki-card-body-padding);
+}
+
+.sl-markdown-content th:not(:where(.not-content *)) {
+  color: var(--ki-docs-text);
+  font-size: var(--ki-list-item-primary-font-size);
+  font-weight: var(--ki-typography-weight-body-semibold);
+  line-height: var(--ki-list-item-primary-line-height);
+}
+
+.sl-markdown-content blockquote:not(:where(.not-content *)),
+.sl-markdown-content details:not(:where(.not-content *)) {
+  border-inline-start: var(--ki-divider-thickness) solid var(--ki-outline-primary-high-em);
+  padding-inline-start: var(--ki-card-body-padding);
+}
+
+.sl-markdown-content .starlight-aside {
+  border-radius: var(--ki-alert-radius);
+  padding-block: var(--ki-alert-padding-block);
+  padding-inline: var(--ki-alert-padding-inline);
+  font-size: var(--ki-alert-font-size);
+  line-height: var(--ki-alert-line-height);
+}
+
+body .sl-markdown-content .ki-demo {
+  margin-block: var(--ki-docs-section-gap);
+  margin-inline: 0;
+  border-width: var(--ki-divider-thickness);
+  border-style: solid;
+  border-color: var(--ki-docs-border-color);
+  border-radius: var(--ki-card-radius);
+  background-color: var(--ki-docs-panel-bg);
+  box-shadow: var(--ki-docs-panel-shadow);
+}
+
+body .sl-markdown-content .ki-demo-surface {
+  gap: var(--ki-docs-control-gap);
+  padding-block: var(--ki-dialog-padding);
+  padding-inline: var(--ki-dialog-padding);
+  background-color: var(--ki-docs-panel-bg);
+  color: var(--ki-docs-text);
+  font-family: var(--ki-typography-family-body);
+}
+
+.right-sidebar {
+  border-inline-start: var(--ki-divider-thickness) solid var(--ki-docs-border-color);
+  background-color: var(--ki-docs-sidebar-bg);
+}
+
+.right-sidebar-panel {
+  padding-block: var(--ki-docs-section-gap);
+  padding-inline: var(--ki-docs-content-pad-inline);
+}
+
+.right-sidebar-panel h2 {
+  color: var(--ki-docs-text);
+  font-family: var(--ki-typography-family-mono);
+  font-size: var(--ki-badge-sm-font-size);
+  font-weight: var(--ki-badge-font-weight);
+  line-height: var(--ki-badge-sm-line-height);
+  letter-spacing: var(--ki-typography-letter-spacing-spaced-out);
+  text-transform: uppercase;
+}
+
+.right-sidebar-panel a {
+  min-block-size: var(--ki-button-md-min-target);
+  padding-block: var(--ki-button-padding-block);
+  color: var(--ki-docs-text-muted);
+  font-size: var(--ki-list-item-secondary-font-size);
+  line-height: var(--ki-list-item-secondary-line-height);
+}
+
+.right-sidebar-panel a:hover,
+.right-sidebar-panel a[aria-current="true"] {
+  color: var(--ki-docs-accent);
+}
+
+mobile-starlight-toc nav {
+  border-block-start: var(--ki-divider-thickness) solid var(--ki-docs-border-color);
+  background-color: var(--ki-docs-header-bg);
+  box-shadow: var(--ki-docs-panel-shadow);
+  backdrop-filter: blur(var(--ki-dialog-backdrop-blur));
+}
+
+mobile-starlight-toc summary {
+  padding-block: var(--ki-button-padding-block);
+  padding-inline: var(--ki-docs-content-pad-inline);
+}
+
+mobile-starlight-toc .toggle {
+  border-color: var(--ki-input-rest-border);
+  border-radius: var(--ki-input-radius);
+  padding-block: var(--ki-button-padding-block);
+  padding-inline: var(--ki-input-padding-inline);
+  background-color: var(--ki-input-rest-bg);
+}
+
+.pagination-links {
+  gap: var(--ki-docs-control-gap);
+}
+
+.pagination-links a {
+  gap: var(--ki-docs-control-gap);
+  border-width: var(--ki-divider-thickness);
+  border-style: solid;
+  border-color: var(--ki-docs-border-color);
+  border-radius: var(--ki-card-radius);
+  padding-block: var(--ki-card-body-padding);
+  padding-inline: var(--ki-card-body-padding);
+  background-color: var(--ki-docs-panel-bg);
+  color: var(--ki-docs-text-muted);
+  box-shadow: var(--ki-docs-panel-shadow);
+}
+
+.pagination-links a:hover {
+  border-color: var(--ki-docs-control-hover-border);
+  background-color: var(--ki-docs-hover-bg);
+}
+
+.pagination-links .link-title {
+  color: var(--ki-docs-text);
+  font-size: var(--ki-typography-size-heading-1);
+  line-height: var(--ki-typography-line-height-heading-1);
+}
+
+@media (width >= 50rem) {
+  :root {
+    --ki-docs-nav-pad-inline: var(--ki-dialog-padding);
+  }
+
+  .kimen-docs-header {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+  }
+
+  .kimen-docs-primary-nav {
+    display: flex;
+  }
+
+  .kimen-docs-actions {
+    display: flex;
+  }
+
+  .kimen-docs-search {
+    justify-content: center;
+  }
+
+  .kimen-docs-search site-search button[data-open-modal] {
+    min-block-size: var(--ki-input-height);
+    border-width: var(--ki-input-border-width);
+    border-style: solid;
+    border-color: var(--ki-input-rest-border);
+    border-radius: var(--ki-input-radius);
+    padding-inline: var(--ki-input-padding-inline);
+    background-color: var(--ki-input-rest-bg);
+    color: var(--ki-input-rest-fg);
+    font-size: var(--ki-input-font-size);
+    line-height: var(--ki-input-line-height);
+  }
+
+  .kimen-docs-search site-search button[data-open-modal]:hover {
+    border-color: var(--ki-input-hover-border);
+    background-color: var(--ki-input-hover-bg);
+    color: var(--ki-input-hover-fg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  nav.sidebar a {
+    transition-duration: var(--ki-motion-duration-instant);
+  }
+}
+
+@media print {
+  :root {
+    --sl-color-bg: var(--ki-surface-s0);
+    --sl-color-text: var(--ki-text-high-em);
+  }
+
+  .main-frame,
+  .main-pane,
+  .content-panel {
+    background-color: var(--ki-surface-s0);
+    box-shadow: none;
+  }
 }

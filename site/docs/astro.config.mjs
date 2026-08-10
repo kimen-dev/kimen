@@ -55,6 +55,9 @@ export default defineConfig({
         },
       ],
       components: {
+        // Preserve Starlight's search, theme, language, and social controls in
+        // the Kimen glass header shell.
+        Header: './src/components/Header.astro',
         // Mirrors Starlight's resolved theme into Kimen's scheme attribute so
         // every live ki-* demo follows the docs theme toggle.
         ThemeProvider: './src/components/ThemeProvider.astro',

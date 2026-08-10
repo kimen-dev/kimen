@@ -94,7 +94,12 @@ const states = decl.cssStates ?? [];
     attributes.length > 0 && (
       <>
         <h3 id={`${tag}-properties`}>Properties &amp; attributes</h3>
-        <div class="cem-table">
+        <div
+          class="cem-table"
+          role="region"
+          aria-labelledby={`${tag}-properties`}
+          tabindex="0"
+        >
           <table>
             <thead>
               <tr>
@@ -130,7 +135,12 @@ const states = decl.cssStates ?? [];
     events.length > 0 && (
       <>
         <h3 id={`${tag}-events`}>Events</h3>
-        <div class="cem-table">
+        <div
+          class="cem-table"
+          role="region"
+          aria-labelledby={`${tag}-events`}
+          tabindex="0"
+        >
           <table>
             <thead>
               <tr>
@@ -160,7 +170,12 @@ const states = decl.cssStates ?? [];
     methods.length > 0 && (
       <>
         <h3 id={`${tag}-methods`}>Methods</h3>
-        <div class="cem-table">
+        <div
+          class="cem-table"
+          role="region"
+          aria-labelledby={`${tag}-methods`}
+          tabindex="0"
+        >
           <table>
             <thead>
               <tr>
@@ -186,7 +201,12 @@ const states = decl.cssStates ?? [];
     slots.length > 0 && (
       <>
         <h3 id={`${tag}-slots`}>Slots</h3>
-        <div class="cem-table">
+        <div
+          class="cem-table"
+          role="region"
+          aria-labelledby={`${tag}-slots`}
+          tabindex="0"
+        >
           <table>
             <thead>
               <tr>
@@ -212,7 +232,12 @@ const states = decl.cssStates ?? [];
     parts.length > 0 && (
       <>
         <h3 id={`${tag}-css-parts`}>CSS parts</h3>
-        <div class="cem-table">
+        <div
+          class="cem-table"
+          role="region"
+          aria-labelledby={`${tag}-css-parts`}
+          tabindex="0"
+        >
           <table>
             <thead>
               <tr>
@@ -245,7 +270,12 @@ const states = decl.cssStates ?? [];
           tokens at <code>:root</code> or on a subtree — never override
           internals.
         </p>
-        <div class="cem-table">
+        <div
+          class="cem-table"
+          role="region"
+          aria-labelledby={`${tag}-css-properties`}
+          tabindex="0"
+        >
           <table>
             <thead>
               <tr>
@@ -273,7 +303,12 @@ const states = decl.cssStates ?? [];
     states.length > 0 && (
       <>
         <h3 id={`${tag}-custom-states`}>Custom states</h3>
-        <div class="cem-table">
+        <div
+          class="cem-table"
+          role="region"
+          aria-labelledby={`${tag}-custom-states`}
+          tabindex="0"
+        >
           <table>
             <thead>
               <tr>
