@@ -190,6 +190,10 @@ async function mountPage(pageName: PageName, javaScript = true): Promise<void> {
 }
 
 async function resetExperience(): Promise<void> {
+  // Test actions may leave the sticky-header page in a smooth scroll. Cancel
+  // that animation before replacing the document so the next whole-page axe
+  // scan samples the canonical scroll origin instead of transient overlap.
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   disposePage?.();
   disposePage = undefined;
   document.body.replaceChildren();
@@ -208,6 +212,8 @@ async function resetExperience(): Promise<void> {
   localStorage.removeItem('kimen-scheme');
   await browserCommands.emulateReducedMotion(null);
   await page.viewport(DEFAULT_VIEWPORT.width, DEFAULT_VIEWPORT.height);
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  await nextFrame();
 }
 
 async function nextFrame(): Promise<void> {
@@ -550,6 +556,7 @@ describe('Kimen public site experience in a real browser', () => {
     expect(exposedProgress.getAttribute('aria-valuenow')).toBe('87');
     expect(exposedProgress.getAttribute('aria-valuemax')).toBe('100');
     expect(visibleProgress.textContent).toMatch(/87\s*(?:of|\/|%)\s*(?:100)?/iu);
+    expect(window.scrollY, 'whole-page axe scans start at the canonical scroll origin').toBe(0);
     await expectAccessible(document.body);
   });
 
