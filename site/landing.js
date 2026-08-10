@@ -176,6 +176,10 @@ export function renderCatalog(manifest, root = document) {
     count.textContent = String(declarations.length);
     count.setAttribute('value', String(declarations.length));
   }
+  const catalogCount = root.getElementById('catalog-count');
+  if (catalogCount && declarations.length > 0) {
+    catalogCount.textContent = String(declarations.length);
+  }
 
   grid.replaceChildren();
   for (const declaration of declarations) {
@@ -183,9 +187,11 @@ export function renderCatalog(manifest, root = document) {
     card.className = 'catalog-card panel';
     card.href = `./docs/components/${declaration.tagName.slice(3)}/`;
 
-    const title = root.createElement('h3');
+    const title = root.createElement('span');
+    title.className = 'catalog-tag';
     title.textContent = `<${declaration.tagName}>`;
-    const description = root.createElement('p');
+    const description = root.createElement('span');
+    description.className = 'catalog-description';
     description.textContent = declaration.description;
     card.append(title, description);
     grid.append(card);
@@ -355,6 +361,9 @@ export function initializeLanding(root = document) {
     root.documentElement.dataset.kiColorScheme = storedScheme;
   } else if (storedScheme === 'auto') {
     root.documentElement.removeAttribute('data-ki-color-scheme');
+  } else {
+    root.documentElement.dataset.kiColorScheme = 'dark';
+    writePreference(root, 'kimen-scheme', 'dark');
   }
 
   syncThemeControls(root);

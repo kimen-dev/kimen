@@ -40,7 +40,7 @@ Feature: Kimen public site experience
 
   # S2
   Scenario: Theme preferences follow the visitor between site pages
-    Given the landing page uses the Onmars theme and automatic color scheme
+    Given the landing page uses the Onmars theme and dark color scheme
     When the visitor chooses the Material 3 theme and dark color scheme
     Then the document uses Material 3 in dark mode
     And the playground restores both choices
@@ -95,7 +95,8 @@ Feature: Kimen public site experience
 - **FR-002**: All visual styling resolves from current semantic/component
   `--ki-*` tokens and uses logical properties.
 - **FR-003**: Theme and color-scheme choices persist across the landing and
-  playground; Material 3 loads only when requested.
+  playground; both pages start in dark Onmars when no preference exists, and
+  Material 3 loads only when requested.
 - **FR-004**: Interactive demonstrations use real `ki-*` elements or native
   HTML, never light-DOM replicas of component internals.
 - **FR-005**: The playground form participates in native submission and reports

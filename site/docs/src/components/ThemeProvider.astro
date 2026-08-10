@@ -12,6 +12,25 @@ import StarlightThemeProvider from '@astrojs/starlight/components/ThemeProvider.
 <script is:inline>
   (() => {
     const root = document.documentElement;
+    let storedTheme = null;
+    let storedScheme = null;
+    try {
+      storedTheme = localStorage.getItem('starlight-theme');
+      storedScheme = localStorage.getItem('kimen-scheme');
+    } catch {
+      // Hardened browsing contexts can disable storage.
+    }
+    const systemScheme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    const initialScheme =
+      storedScheme === 'auto'
+        ? systemScheme
+        : storedScheme === 'light' || storedScheme === 'dark'
+          ? storedScheme
+          : storedTheme === 'light' || storedTheme === 'dark'
+            ? storedTheme
+            : 'dark';
+    root.dataset.theme = initialScheme;
+    root.dataset.kiColorScheme = initialScheme;
     const sync = () => {
       const theme = root.dataset.theme;
       if (theme === 'dark' || theme === 'light') {

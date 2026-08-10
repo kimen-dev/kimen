@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-ki-color-scheme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,6 +22,7 @@
     <meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#f9f9fa" media="(prefers-color-scheme: light)" />
     <link rel="stylesheet" href="./assets/tokens/tokens.css" />
+    <link rel="stylesheet" href="./fonts.css" />
     <link rel="stylesheet" href="./landing.css" />
     <script>
       // Apply the persisted token theme before first paint. This tiny bootstrap
@@ -29,7 +30,7 @@
       (() => {
         try {
           const theme = localStorage.getItem('kimen-theme');
-          const scheme = localStorage.getItem('kimen-scheme');
+          const scheme = localStorage.getItem('kimen-scheme') ?? 'dark';
           const root = document.documentElement;
           if (theme === 'material3') {
             root.setAttribute('data-ki-theme', 'material3');
@@ -101,8 +102,8 @@
       </details>
     </header>
 
-    <main id="main">
-      <section class="hero site-shell" id="top" aria-labelledby="hero-title">
+    <main id="main" class="landing-main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
         <div class="hero-layout">
           <div class="hero-orbit hero-orbit-start" aria-hidden="true">
             <span class="signal-card signal-success"><span class="signal-dot"></span>gates · exit 0</span>
@@ -149,7 +150,7 @@
           <div class="pipeline-grid">
             <section class="pipeline-step" aria-labelledby="pipeline-spec-title">
               <h3 id="pipeline-spec-title"><span>01</span>An agent emits a spec</h3>
-              <pre class="code-block"><code>{
+              <pre class="code-block" tabindex="0" role="region" aria-label="Generated UI specification"><code>{
   "component": "ki-card",
   "props": { "tone": "neutral" },
   "children": [
@@ -162,13 +163,15 @@
 
             <section class="pipeline-step" aria-labelledby="pipeline-guardrail-title">
               <h3 id="pipeline-guardrail-title"><span>02</span>The guardrail validates it</h3>
-              <ul class="validation-list">
-                <li><span class="signal-dot"></span>every component is in the catalog</li>
-                <li><span class="signal-dot"></span>props match the machine contract</li>
-                <li><span class="signal-dot"></span>only declared actions are wired</li>
-                <li><span class="signal-dot"></span>spec data exposes no code-execution path</li>
-              </ul>
-              <p class="microcopy">Unknown props → rejected. Fail-closed.</p>
+              <div class="pipeline-validation">
+                <ul class="validation-list">
+                  <li><span class="signal-dot"></span>every component is in the catalog</li>
+                  <li><span class="signal-dot"></span>props match the machine contract</li>
+                  <li><span class="signal-dot"></span>only declared actions are wired</li>
+                  <li><span class="signal-dot"></span>no code-execution path from spec data</li>
+                </ul>
+                <p class="microcopy">Unknown props → rejected. Fail-closed.</p>
+              </div>
             </section>
 
             <section class="pipeline-step" aria-labelledby="pipeline-render-title">
@@ -189,41 +192,81 @@
 
         <dl class="project-stats" aria-label="Project snapshot">
           <div><dt>Components</dt><dd><data id="component-count" value="29">29</data></dd></div>
-          <div><dt>Token themes</dt><dd>2</dd></div>
-          <div><dt>Published runtime dependencies</dt><dd>0</dd></div>
-          <div><dt>Release browser engines</dt><dd>3</dd></div>
+          <div><dt>Themes, 1 attribute</dt><dd>2</dd></div>
+          <div><dt>Axe violations</dt><dd>0</dd></div>
+          <div><dt>Browser engines</dt><dd>3</dd></div>
+          <div><dt>Per component</dt><dd>&lt;10 KB</dd></div>
+          <div><dt>Token-styled</dt><dd>100%</dd></div>
         </dl>
       </section>
 
-      <section class="section site-shell" id="components" aria-labelledby="components-title">
+      <section class="section" id="components" aria-labelledby="components-title">
         <header class="section-heading">
-          <p class="eyebrow">The system, in the page</p>
+          <p class="eyebrow">Live from the library</p>
           <h2 id="components-title">Every component, live. Not screenshots.</h2>
           <p>
-            These examples use the same Stencil build and token layers the package ships. Focus,
-            type, select and switch themes: the public API is the demo.
+            Rendered from the same token pipeline the package ships. Hover, focus, click — every
+            state below is the real state matrix.
           </p>
         </header>
 
-        <div class="specimen panel" data-component-surface>
-          <ki-tabs label="Component families" value="actions">
-            <ki-tab value="actions">Actions</ki-tab>
+        <div class="specimen" data-component-surface>
+          <ki-tabs label="Component families" value="buttons">
+            <ki-tab value="buttons">Buttons</ki-tab>
             <ki-tab value="forms">Forms</ki-tab>
             <ki-tab value="feedback">Feedback</ki-tab>
-            <ki-tab value="content">Content</ki-tab>
             <ki-tab value="overlays">Overlays</ki-tab>
+            <ki-tab value="data">Data</ki-tab>
 
-            <ki-tab-panel value="actions">
-              <div class="specimen-stack">
-                <p class="specimen-label">Hierarchy, intent and size remain independent.</p>
-                <div class="component-row">
-                  <ki-button type="button" variant="primary">Primary</ki-button>
-                  <ki-button type="button" variant="secondary">Secondary</ki-button>
-                  <ki-button type="button" variant="tertiary">Tertiary</ki-button>
-                  <ki-button type="button" variant="ghost">Ghost</ki-button>
-                  <ki-button type="button" variant="primary" tone="success">Success</ki-button>
-                  <ki-button type="button" variant="primary" tone="danger">Danger</ki-button>
-                </div>
+            <ki-tab-panel value="buttons">
+              <div class="specimen-matrix">
+                <section class="specimen-group" aria-labelledby="specimen-emphasis-title">
+                  <h3 id="specimen-emphasis-title">Emphasis</h3>
+                  <div class="component-row">
+                    <ki-button type="button" variant="primary">Primary</ki-button>
+                    <ki-button type="button" variant="secondary">Secondary</ki-button>
+                    <ki-button type="button" variant="tertiary">Tertiary</ki-button>
+                    <ki-button type="button" variant="quaternary">Quaternary</ki-button>
+                    <ki-button type="button" variant="ghost">Ghost</ki-button>
+                  </div>
+                </section>
+                <section class="specimen-group" aria-labelledby="specimen-tone-title">
+                  <h3 id="specimen-tone-title">Tone</h3>
+                  <div class="component-row">
+                    <ki-button type="button" variant="primary">Neutral</ki-button>
+                    <ki-button type="button" variant="primary" tone="success">Success</ki-button>
+                    <ki-button type="button" variant="primary" tone="danger">Danger</ki-button>
+                    <ki-button type="button" variant="secondary" tone="success">Success</ki-button>
+                    <ki-button type="button" variant="secondary" tone="danger">Danger</ki-button>
+                  </div>
+                </section>
+                <section class="specimen-group" aria-labelledby="specimen-size-title">
+                  <h3 id="specimen-size-title">Size</h3>
+                  <div class="component-row component-row-aligned">
+                    <ki-button type="button" variant="secondary" size="xs">xs</ki-button>
+                    <ki-button type="button" variant="secondary" size="sm">sm</ki-button>
+                    <ki-button type="button" variant="secondary" size="md">md</ki-button>
+                    <ki-button type="button" variant="secondary" size="lg">lg</ki-button>
+                    <ki-button type="button" variant="secondary" size="xl">xl</ki-button>
+                  </div>
+                </section>
+                <section class="specimen-group" aria-labelledby="specimen-states-title">
+                  <h3 id="specimen-states-title">States &amp; slots</h3>
+                  <div class="component-row">
+                    <ki-button type="button" variant="primary" disabled>Disabled</ki-button>
+                    <ki-button type="button" variant="secondary">
+                      <span aria-hidden="true" slot="start">
+                        <svg class="inline-icon" viewBox="0 0 16 16" focusable="false">
+                          <path d="M2 8h10m-3-3 3 3-3 3"></path>
+                        </svg>
+                      </span>
+                      With slots
+                    </ki-button>
+                  </div>
+                </section>
+                <pre class="code-block" tabindex="0" role="region" aria-label="Button markup example"><code>&lt;ki-button variant="primary" tone="success" size="md"&gt;
+  Save changes
+&lt;/ki-button&gt;</code></pre>
               </div>
             </ki-tab-panel>
 
@@ -254,7 +297,7 @@
               </div>
             </ki-tab-panel>
 
-            <ki-tab-panel value="content">
+            <ki-tab-panel value="data">
               <div class="content-showcase">
                 <ki-card>
                   <h3 slot="header">Guarded surface</h3>
@@ -290,70 +333,72 @@
         </div>
       </section>
 
-      <section class="section section-centered site-shell" aria-labelledby="theme-title">
+      <section class="section section-centered theme-section" aria-labelledby="theme-title">
         <p class="eyebrow">Tokens, proven live</p>
         <h2 id="theme-title">This page runs on <code>@kimen/tokens</code>. Flip it.</h2>
         <div class="theme-console panel">
           <div class="theme-controls">
             <fieldset class="segmented" data-theme-control>
-              <legend>Token theme</legend>
+              <legend class="visually-hidden">Token theme</legend>
               <label><input type="radio" name="console-theme" value="onmars" /><span>Onmars</span></label>
               <label><input type="radio" name="console-theme" value="material3" /><span>Material 3</span></label>
             </fieldset>
             <fieldset class="segmented" data-scheme-control>
-              <legend>Color scheme</legend>
+              <legend class="visually-hidden">Color scheme</legend>
               <label><input type="radio" name="console-scheme" value="auto" /><span>Auto</span></label>
               <label><input type="radio" name="console-scheme" value="light" /><span>Light</span></label>
               <label><input type="radio" name="console-scheme" value="dark" /><span>Dark</span></label>
             </fieldset>
           </div>
+          <div class="theme-swatches" role="group" aria-label="Live semantic token values">
+            <span class="theme-swatch theme-swatch-s0" title="surface.s0"></span>
+            <span class="theme-swatch theme-swatch-s2" title="surface.s2"></span>
+            <span class="theme-swatch theme-swatch-primary" title="surface.primary"></span>
+            <span class="theme-swatch theme-swatch-success" title="surface.success"></span>
+            <span class="theme-swatch theme-swatch-danger" title="surface.danger"></span>
+            <span class="theme-swatch-label">← live token values</span>
+          </div>
           <p>
-            Primitive → theme → semantic → component. Reassigning the theme and semantic layers
-            restyles every real component above without changing its markup.
+            Every color, radius and type size here resolves primitive → semantic → component.
+            Reassign the semantic layer and an entire product restyles — proven in CI, not in a
+            keynote.
           </p>
-          <a class="text-link" href="./playground/">Inspect the resolved tokens in the playground →</a>
         </div>
       </section>
 
-      <section class="section site-shell" aria-labelledby="agents-title">
+      <section class="section" aria-labelledby="agents-title">
         <header class="section-heading">
-          <p class="eyebrow">One contract, every surface</p>
+          <p class="eyebrow">Built for agentic development</p>
           <h2 id="agents-title">Legible to agents, by contract.</h2>
           <p>
-            TypeScript and JSDoc are the source. Human docs, machine manifests and guarded runtime
-            schemas are generated evidence — not parallel stories that can drift.
+            The component contract is the single source of truth. Everything an agent needs ships
+            with the package — an API a capable agent cannot wire correctly from its description
+            alone is treated as a defect.
           </p>
         </header>
 
-        <div class="contract-grid">
-          <article class="panel contract-card">
-            <span class="step-number">01</span>
-            <h3>You declare the component once</h3>
-            <pre class="code-block"><code>/**
- * When to use: one primary page action.
- * When NOT to use: icon-only controls.
- */
-@Prop() variant: ButtonVariant;</code></pre>
-          </article>
-          <article class="panel contract-card">
-            <span class="step-number">02</span>
-            <h3>The build generates every reader</h3>
-            <ul class="contract-list">
-              <li><code>custom-elements.json</code></li>
-              <li><code>llms.txt</code></li>
-              <li>component documentation</li>
-              <li>neutral catalog schemas</li>
-            </ul>
-          </article>
-          <article class="panel contract-card">
-            <span class="step-number">03</span>
-            <h3>The guardrail constrains the renderer</h3>
-            <p>
-              Unknown components, props and actions fail closed before they reach a browser host.
-            </p>
-            <a class="text-link" href="./docs/guides/ui-spec/">Read the UI spec guide →</a>
-          </article>
-        </div>
+        <div class="contract-layout">
+          <div class="contract-artifacts">
+            <article class="panel contract-artifact">
+              <code>custom-elements.json</code>
+              <p>Machine-readable manifest of every prop, event, slot and part.</p>
+            </article>
+            <article class="panel contract-artifact">
+              <code>llms.txt</code>
+              <p>The whole library, summarized for language models.</p>
+            </article>
+            <article class="panel contract-artifact">
+              <code>@whenToUse / @whenNotToUse</code>
+              <p>Usage guidance on every component, in the contract itself.</p>
+            </article>
+            <article class="panel contract-artifact">
+              <code>@kimen/catalog</code>
+              <p>
+                Schema-validated UI specs at the GenUI boundary — the neutral catalog agents emit
+                against.
+              </p>
+            </article>
+          </div>
 
       <!-- kimen:capabilities:site-status:start -->
       <section class="section" aria-labelledby="capability-status-title">
@@ -369,79 +414,81 @@
         </ul>
       </section>
       <!-- kimen:capabilities:site-status:end -->
+        </div>
       </section>
 
-      <section class="section site-shell" aria-labelledby="comparison-title">
+      <section class="section" aria-labelledby="comparison-title">
         <header class="section-heading">
-          <p class="eyebrow">Why GenUI-first is different</p>
-          <h2 id="comparison-title">The durable layer is the contract.</h2>
-          <p>
-            Framework adapters and agent protocols can change. Standards, accessibility and a
-            constrained component catalog remain.
-          </p>
+          <p class="eyebrow">Where it stands</p>
+          <h2 id="comparison-title">What only a GenUI-first library does.</h2>
         </header>
         <div class="comparison-wrap panel" tabindex="0" role="region" aria-label="Library approach comparison">
           <table>
             <thead>
-              <tr><th scope="col">Capability</th><th scope="col">Kimen</th><th scope="col">Framework kit</th><th scope="col">Classic WC kit</th></tr>
+              <tr><th scope="col"><span class="visually-hidden">Capability</span></th><th scope="col" class="kimen-column">Kimen</th><th scope="col">React-only kits</th><th scope="col">Classic WC kits</th></tr>
             </thead>
             <tbody>
-              <tr><th scope="row">Framework-neutral runtime</th><td>Native custom elements</td><td>Framework-bound</td><td>Native custom elements</td></tr>
-              <tr><th scope="row">Agent-readable contract</th><td>CEM + llms.txt + catalog</td><td>Documentation only</td><td>CEM varies</td></tr>
-              <tr><th scope="row">Guarded GenUI renderer</th><td>Fail-closed catalog</td><td>Open composition</td><td>Not included</td></tr>
-              <tr><th scope="row">Protocol strategy</th><td>Disposable adapters</td><td>Product-specific</td><td>Not included</td></tr>
+              <tr><th scope="row">Runs in any framework — or none</th><td class="kimen-column">Web components, identical in every host</td><td>React hosts only</td><td>Yes</td></tr>
+              <tr><th scope="row">Re-theming</th><td class="kimen-column">DTCG token layers — one attribute swaps the theme</td><td>Varies per library</td><td>CSS custom props, ad hoc</td></tr>
+              <tr><th scope="row">Agent-legible contracts</th><td class="kimen-column">custom-elements.json + llms.txt + when-to-use, shipped</td><td>Rare</td><td>Manifest sometimes, no guidance</td></tr>
+              <tr><th scope="row">Guarded GenUI rendering</th><td class="kimen-column">Schema-validated specs, fail-closed</td><td>Not a goal</td><td>Not a goal</td></tr>
+              <tr><th scope="row">Protocol adapters</th><td class="kimen-column">A2UI + MCP Apps; AG-UI planned</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">Accessibility enforcement</th><td class="kimen-column">0 axe violations gated in CI, WCAG 2.2 AA target</td><td>Varies</td><td>Varies</td></tr>
+              <tr><th scope="row">Size discipline</th><td class="kimen-column">Single-digit-KB budget per component, gated</td><td>Varies</td><td>Varies</td></tr>
             </tbody>
           </table>
         </div>
+        <p class="comparison-note">
+          Categories, not call-outs: “React-only kits” = component libraries coupled to one
+          framework; “classic WC kits” = web-component design systems without agent contracts.
+        </p>
       </section>
 
-      <section class="section site-shell" aria-labelledby="quality-title">
+      <section class="section" aria-labelledby="quality-title">
         <header class="section-heading">
-          <p class="eyebrow">Deterministic quality</p>
+          <p class="eyebrow">Quality is a gate, not a promise</p>
           <h2 id="quality-title">Done means gates exit 0.</h2>
-          <p>Claims stay attached to executable evidence and the exact surface they describe.</p>
+          <p>
+            No self-assessment — a deterministic script proves each gate, identically on a laptop
+            and in CI: <code>bash scripts/gates/gates-suite.sh</code>
+          </p>
         </header>
         <div class="quality-grid">
-          <article class="quality-card panel"><span>real-browser</span><h3>Current and previous engines</h3><p>Chromium on every implementation change; Chromium, Firefox and WebKit before release.</p></article>
-          <article class="quality-card panel"><span>axe-core</span><h3>Accessibility is a gate</h3><p>WCAG 2.2 AA and EN 301 549, plus keyboard and APG walkthroughs where automation stops.</p></article>
-          <article class="quality-card panel"><span>single-digit KB</span><h3>Budgets per component</h3><p>Lazy custom elements, direct imports and no runtime dependency without a measured reason.</p></article>
-          <article class="quality-card panel"><span>tokens-only</span><h3>No hardcoded component visuals</h3><p>Stylelint enforces the closed primitive → theme → semantic → component chain.</p></article>
-          <article class="quality-card panel"><span>RTL</span><h3>Direction-agnostic by construction</h3><p>Logical properties make writing direction part of the baseline rather than a later variant.</p></article>
-          <article class="quality-card panel"><span>mutation</span><h3>Tests that test the tests</h3><p>Changed-core mutation feedback runs daily; the ordinary PR loop stays focused and fast.</p></article>
+          <article class="quality-card panel"><span>real-browser</span><h3>Three engines at release</h3><p>Every component ships with real-browser tests, not JSDOM approximations.</p></article>
+          <article class="quality-card panel"><span>axe-core: 0</span><h3>Accessibility as a hard gate</h3><p>Zero violations tolerated. WCAG 2.2 AA and EN 301 549 as the target.</p></article>
+          <article class="quality-card panel"><span>&lt;10 KB</span><h3>Size budgets per component</h3><p>Single-digit-KB budgets, checked on packed tarballs on every release dry run.</p></article>
+          <article class="quality-card panel"><span>tokens-only</span><h3>No hardcoded visual values</h3><p>Stylelint-enforced: every visual value resolves from a --ki-* token.</p></article>
+          <article class="quality-card panel"><span>RTL</span><h3>Direction-agnostic by construction</h3><p>Logical properties only — right-to-left support isn’t a variant, it’s the default.</p></article>
+          <article class="quality-card panel"><span>mutation</span><h3>Tests that test the tests</h3><p>Changed-core mutation gating is part of the current hardening work.</p></article>
         </div>
       </section>
 
-      <section class="section site-shell" aria-labelledby="catalog-title">
+      <section class="section" aria-labelledby="catalog-title">
         <div class="catalog-heading">
           <header class="section-heading">
-            <p class="eyebrow">Generated from the manifest</p>
+            <p class="eyebrow"><span id="catalog-count">29</span> and counting</p>
             <h2 id="catalog-title">The ki-* catalog.</h2>
-            <p>
-              The list below is read from the same Custom Elements Manifest shipped with the
-              package. Adding a component updates this surface without hand-maintained data.
-            </p>
           </header>
-          <a class="cta cta-secondary" href="./docs/components/alert/">Browse component docs</a>
+          <a class="cta cta-secondary" href="./docs/components/alert/">All docs</a>
         </div>
         <div class="catalog-grid" id="catalog-grid" aria-live="polite" aria-busy="true">
           <noscript><p><a href="./docs/components/alert/">Browse all components in the documentation.</a></p></noscript>
         </div>
       </section>
 
-      <section class="section site-shell" aria-labelledby="roadmap-title">
+      <section class="section" aria-labelledby="roadmap-title">
         <header class="section-heading">
-          <p class="eyebrow">Pre-v1, in the open</p>
-          <h2 id="roadmap-title">Built in gated layers.</h2>
-          <p>Phases overlap. Exit criteria are quality gates, not calendar promises.</p>
+          <p class="eyebrow">Where we are</p>
+          <h2 id="roadmap-title">Honest, gated, in the open.</h2>
         </header>
         <ol class="roadmap">
-          <li data-state="current"><span>Factory</span><strong>Integrity hardening</strong><p>Closing enforcement, mutation, release and sandbox-containment gaps.</p></li>
-          <li data-state="hardening"><span>Tokens</span><strong>Implemented, hardening</strong><p>Four layers, two themes and re-theming verified mechanically.</p></li>
-          <li data-state="done"><span>Components</span><strong>29 shipped in the repository</strong><p>Contracts, real-browser tests, manifests, docs and budgets.</p></li>
-          <li data-state="done"><span>GenUI</span><strong>Catalog, guardrail and adapters</strong><p>Neutral renderer with A2UI and MCP Apps adapters available.</p></li>
-          <li data-state="next"><span>v1</span><strong>Trusted publication</strong><p>npm publishing with signed provenance and a stable public contract.</p></li>
+          <li data-state="done"><span aria-hidden="true"><svg class="inline-icon" viewBox="0 0 16 16" focusable="false"><path d="m3 8 3 3 7-7"></path></svg></span><p><strong>Tokens &amp; theming</strong>four layers, two themes, re-theming proven in CI</p></li>
+          <li data-state="current"><span aria-hidden="true"><svg class="inline-icon inline-icon-filled" viewBox="0 0 16 16" focusable="false"><circle cx="8" cy="8" r="3"></circle></svg></span><p><strong>Factory hardening</strong>closing enforcement, mutation, release and sandbox gaps</p></li>
+          <li data-state="done"><span aria-hidden="true"><svg class="inline-icon" viewBox="0 0 16 16" focusable="false"><path d="m3 8 3 3 7-7"></path></svg></span><p><strong>Core components</strong>29 real ki-* components, contracts and browser tests</p></li>
+          <li data-state="done"><span aria-hidden="true"><svg class="inline-icon" viewBox="0 0 16 16" focusable="false"><path d="m3 8 3 3 7-7"></path></svg></span><p><strong>Catalog + guardrail</strong>schema-validated specs rendered fail-closed</p></li>
+          <li data-state="current"><span aria-hidden="true"><svg class="inline-icon inline-icon-filled" viewBox="0 0 16 16" focusable="false"><circle cx="8" cy="8" r="3"></circle></svg></span><p><strong>Protocol adapters</strong>A2UI and MCP Apps available; AG-UI and json-render planned</p></li>
+          <li data-state="next"><span aria-hidden="true"><svg class="inline-icon" viewBox="0 0 16 16" focusable="false"><circle cx="8" cy="8" r="3"></circle></svg></span><p><strong>v1.0.0</strong>npm with trusted publishing and signed provenance</p></li>
         </ol>
-        <a class="text-link" href="https://github.com/kimen-dev/kimen/blob/main/docs/roadmap.md">Read the canonical roadmap →</a>
       </section>
     </main>
 
@@ -449,8 +496,6 @@
       <p>Apache-2.0 · Built by agents, verified by deterministic gates, merged by a human.</p>
       <nav aria-label="Footer">
         <a href="https://github.com/kimen-dev/kimen">GitHub</a>
-        <a href="./docs/">Docs</a>
-        <a href="./playground/">Playground</a>
         <a href="./storybook/">Storybook</a>
         <a href="https://github.com/kimen-dev/kimen/blob/main/docs/roadmap.md">Roadmap</a>
       </nav>

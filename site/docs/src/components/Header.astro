@@ -1,34 +1,23 @@
 ---
-import config from 'virtual:starlight/user-config';
-
-import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
-import Search from 'virtual:starlight/components/Search';
-import SocialIcons from 'virtual:starlight/components/SocialIcons';
-import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
-
-// Keep Starlight's progressive search behavior: the default search control is
-// omitted only when Pagefind is disabled and no custom Search override exists.
-const shouldRenderSearch =
-  config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
-
 const docsBase = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 const siteBase = docsBase.replace(/docs\/?$/, '');
-const { siteTitle } = Astro.locals.starlightRoute;
+const homeLink = { href: siteBase, label: 'Home' } as const;
 const siteLinks = [
-  { href: siteBase, label: 'Home', current: false },
   { href: docsBase, label: 'Components', current: true },
   { href: `${siteBase}playground/`, label: 'Playground', current: false },
+  { href: 'https://github.com/kimen-dev/kimen', label: 'GitHub', current: false },
 ] as const;
 ---
 
 <div class="kimen-docs-header">
-  <a class="kimen-docs-identity" href={siteBase}>
+  <a class="kimen-docs-identity" href={homeLink.href} aria-label={homeLink.label}>
     <span class="kimen-docs-brand-mark" aria-hidden="true">
       <svg viewBox="0 0 24 24" focusable="false">
         <path d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9"></path>
       </svg>
     </span>
-    <span class="kimen-docs-site-title" translate="no">{siteTitle}</span>
+    <span class="kimen-docs-site-title" translate="no">Kimen</span>
+    <span class="kimen-docs-stage">pre-v1</span>
   </a>
 
   <nav class="kimen-docs-primary-nav" aria-label="Site">
@@ -41,15 +30,60 @@ const siteLinks = [
     }
   </nav>
 
-  <div class="kimen-docs-search sl-flex print:hidden">
-    {shouldRenderSearch && <Search />}
-  </div>
-
-  <div class="kimen-docs-actions sl-hidden md:sl-flex print:hidden">
-    <div class="kimen-docs-social sl-flex">
-      <SocialIcons />
-    </div>
-    <ThemeSelect />
-    <LanguageSelect />
-  </div>
+  <fieldset class="kimen-docs-scheme" data-docs-scheme-control>
+    <legend class="visually-hidden">Color scheme</legend>
+    <label><input type="radio" name="docs-scheme" value="auto" /><span>Auto</span></label>
+    <label><input type="radio" name="docs-scheme" value="light" /><span>Light</span></label>
+    <label><input type="radio" name="docs-scheme" value="dark" checked /><span>Dark</span></label>
+  </fieldset>
 </div>
+
+<script>
+  type Scheme = 'auto' | 'light' | 'dark';
+
+  const controls = document.querySelectorAll<HTMLInputElement>(
+    '[data-docs-scheme-control] input[type="radio"]',
+  );
+  const root = document.documentElement;
+  const media = window.matchMedia('(prefers-color-scheme: light)');
+
+  const storedScheme = (): Scheme => {
+    const value = localStorage.getItem('kimen-scheme');
+    if (value === 'auto' || value === 'light' || value === 'dark') return value;
+
+    const legacyValue = localStorage.getItem('starlight-theme');
+    return legacyValue === 'light' || legacyValue === 'dark' ? legacyValue : 'dark';
+  };
+
+  const syncControls = (scheme: Scheme) => {
+    for (const control of controls) control.checked = control.value === scheme;
+  };
+
+  const applyScheme = (scheme: Scheme) => {
+    const resolved = scheme === 'auto' ? (media.matches ? 'light' : 'dark') : scheme;
+    root.dataset.theme = resolved;
+    root.dataset.kiColorScheme = resolved;
+    localStorage.setItem('kimen-scheme', scheme);
+    localStorage.setItem('starlight-theme', scheme === 'auto' ? '' : scheme);
+    syncControls(scheme);
+  };
+
+  document.addEventListener('change', (event) => {
+    const target = event.target;
+    if (
+      target instanceof HTMLInputElement &&
+      target.checked &&
+      target.closest('[data-docs-scheme-control]')
+    ) {
+      applyScheme(target.value as Scheme);
+    }
+  });
+
+  media.addEventListener('change', () => {
+    if ([...controls].some((control) => control.checked && control.value === 'auto')) {
+      applyScheme('auto');
+    }
+  });
+
+  applyScheme(storedScheme());
+</script>

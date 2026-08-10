@@ -1,0 +1,31 @@
+---
+import StarlightSidebar from '@astrojs/starlight/components/Sidebar.astro';
+---
+
+<label class="kimen-sidebar-filter">
+  <span class="visually-hidden">Filter documentation</span>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="11" cy="11" r="7"></circle>
+    <path d="m20 20-3.5-3.5"></path>
+  </svg>
+  <input type="search" placeholder="Filter components…" autocomplete="off" />
+</label>
+
+<StarlightSidebar {...Astro.props} />
+
+<script>
+  const filter = document.querySelector<HTMLInputElement>('.kimen-sidebar-filter input');
+  const sidebar = document.querySelector<HTMLElement>('#starlight__sidebar');
+
+  filter?.addEventListener('input', () => {
+    const query = filter.value.trim().toLocaleLowerCase();
+    for (const item of sidebar?.querySelectorAll<HTMLElement>('.top-level li') ?? []) {
+      const ownLink = item.querySelector(':scope > a, :scope > details > summary');
+      const matches = ownLink?.textContent?.toLocaleLowerCase().includes(query) ?? false;
+      const childMatches = [...item.querySelectorAll('a')].some(
+        (link) => link.textContent?.toLocaleLowerCase().includes(query) ?? false,
+      );
+      item.hidden = query.length > 0 && !matches && !childMatches;
+    }
+  });
+</script>

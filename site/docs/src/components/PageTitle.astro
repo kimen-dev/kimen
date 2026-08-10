@@ -1,0 +1,7 @@
+---
+const { entry } = Astro.locals.starlightRoute;
+const category = entry.id.startsWith('components/') ? 'Component' : 'Guide';
+---
+
+<p class="kimen-page-eyebrow">{category}</p>
+<h1 id="_top">{entry.data.title}</h1>
