@@ -149,6 +149,10 @@ function installPageMarkup(pageName: PageName): void {
   document.head.append(style);
 
   document.documentElement.lang = parsed.documentElement.lang || 'en';
+  const colorScheme = parsed.documentElement.dataset.kiColorScheme;
+  if (colorScheme) {
+    document.documentElement.dataset.kiColorScheme = colorScheme;
+  }
   document.body.innerHTML = parsed.body.innerHTML;
 }
 
@@ -459,9 +463,9 @@ describe('Kimen public site experience in a real browser', () => {
     await mountPage('landing');
     expect(document.querySelector(MATERIAL3_STYLESHEET_SELECTOR)).toBeNull();
     expect(document.documentElement.hasAttribute('data-ki-theme')).toBe(false);
-    expect(document.documentElement.hasAttribute('data-ki-color-scheme')).toBe(false);
+    expect(document.documentElement.dataset.kiColorScheme).toBe('dark');
     expectSynchronizedControls('theme', 'onmars');
-    expectSynchronizedControls('scheme', 'auto');
+    expectSynchronizedControls('scheme', 'dark');
 
     await userEvent.click(requireRadio('theme', 'material3'));
     await finishMaterial3Load();
@@ -548,6 +552,87 @@ describe('Kimen public site experience in a real browser', () => {
     expect(runningAutomaticAnimations()).toEqual([]);
     expect(document.querySelectorAll('main > section').length).toBeGreaterThan(0);
     expect(hiddenContentSections()).toEqual([]);
+  });
+
+  it('keeps the desktop landing geometry and content density of the approved design', async () => {
+    await browserCommands.emulateReducedMotion('reduce');
+    await page.viewport(1440, 1000);
+    await mountPage('landing');
+
+    const main = requireElement<HTMLElement>('#main', HTMLElement);
+    const hero = requireElement<HTMLElement>('.hero', HTMLElement);
+    const title = requireElement<HTMLElement>('#hero-title', HTMLElement);
+    const mainRect = main.getBoundingClientRect();
+    const heroRect = hero.getBoundingClientRect();
+    const titleStyle = getComputedStyle(title);
+
+    expect(mainRect.x).toBeCloseTo(112, 0);
+    expect(mainRect.width).toBeCloseTo(1216, 0);
+    expect(heroRect.x).toBeCloseTo(160, 0);
+    expect(heroRect.width).toBeCloseTo(1120, 0);
+    expect(getComputedStyle(hero).paddingBlockStart).toBe('120px');
+    expect(getComputedStyle(hero).paddingBlockEnd).toBe('72px');
+    expect(titleStyle.fontSize).toBe('74px');
+    expect(titleStyle.fontWeight).toBe('800');
+    expect(titleStyle.lineHeight).toBe('77.7px');
+    expect(titleStyle.color).toBe('rgba(0, 0, 0, 0)');
+    expect(titleStyle.backgroundImage).not.toBe('none');
+
+    expect(document.querySelectorAll('.project-stats > div')).toHaveLength(6);
+    expect(document.querySelectorAll('.contract-artifact')).toHaveLength(4);
+    expect(document.querySelectorAll('.comparison-wrap tbody > tr')).toHaveLength(7);
+    expect(document.querySelectorAll('.quality-grid > article')).toHaveLength(6);
+    expect(document.querySelectorAll('.roadmap > li')).toHaveLength(6);
+
+    expect(
+      [
+        'hero-title',
+        'components-title',
+        'theme-title',
+        'agents-title',
+        'comparison-title',
+        'quality-title',
+        'catalog-title',
+        'roadmap-title',
+      ].map((id) => requireElement<HTMLElement>(`#${id}`, HTMLElement).textContent.trim()),
+    ).toEqual([
+      'The component foundation built for generative UI.',
+      'Every component, live. Not screenshots.',
+      'This page runs on @kimen/tokens. Flip it.',
+      'Legible to agents, by contract.',
+      'What only a GenUI-first library does.',
+      'Done means gates exit 0.',
+      'The ki-* catalog.',
+      'Honest, gated, in the open.',
+    ]);
+  });
+
+  it('keeps the desktop playground geometry and ten-token inspector of the approved design', async () => {
+    await browserCommands.emulateReducedMotion('reduce');
+    await page.viewport(1440, 1000);
+    await mountPage('playground');
+
+    const main = requireElement<HTMLElement>('.playground-main', HTMLElement);
+    const workspace = requireElement<HTMLElement>('.playground-workspace', HTMLElement);
+    const canvas = requireElement<HTMLElement>('.playground-canvas', HTMLElement);
+    const inspector = requireElement<HTMLElement>('.token-inspector', HTMLElement);
+    const mainRect = main.getBoundingClientRect();
+    const workspaceRect = workspace.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+    const inspectorRect = inspector.getBoundingClientRect();
+
+    expect(requireElement('#playground-title', HTMLElement).textContent.trim()).toBe(
+      'Theme playground',
+    );
+    expect(mainRect.x).toBeCloseTo(32, 0);
+    expect(mainRect.width).toBeCloseTo(1376, 0);
+    expect(getComputedStyle(main).paddingBlockStart).toBe('30px');
+    expect(getComputedStyle(main).paddingInlineStart).toBe('40px');
+    expect(workspaceRect.width).toBeCloseTo(1296, 0);
+    expect(getComputedStyle(workspace).columnGap).toBe('24px');
+    expect(canvasRect.width).toBeCloseTo(972, 0);
+    expect(inspectorRect.width).toBeCloseTo(300, 0);
+    expect(document.querySelectorAll('.token-list > div')).toHaveLength(10);
   });
 
   it.each([

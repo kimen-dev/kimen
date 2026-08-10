@@ -77,11 +77,12 @@ Apache-2.0 as recorded per directory.
 Third-party notices: Inter font (SIL OFL 1.1)
 ================================================================================
 
-The visual-regression harness vendors the Inter variable font as a static
-test fixture so screenshot baselines never depend on the fonts installed on
-a CI runner image:
+The visual-regression harness and public site vendor the Inter variable font
+so screenshot baselines and published typography never depend on fonts
+installed on the runner or visitor device:
 
   - packages/elements/browser-tests/visual/fonts/InterVariable.woff2
+  - site/assets/fonts/InterVariable.woff2
     Inter — https://rsms.me/inter/ (https://github.com/rsms/inter)
     Fetched from: https://rsms.me/inter/font-files/InterVariable.woff2
     Font revision: 4.66 (WOFF2 metadata)
@@ -90,8 +91,26 @@ a CI runner image:
     License: SIL Open Font License 1.1 —
     https://github.com/rsms/inter/blob/master/LICENSE.txt
 
-  The font file is used only as a test fixture; it is not part of any
-  published package.
+  The font file is not part of any published npm package.
+
+================================================================================
+Third-party notices: JetBrains Mono font (SIL OFL 1.1)
+================================================================================
+
+The public site vendors the JetBrains Mono variable webfont so code and token
+labels keep the approved design metrics on every platform:
+
+  - site/assets/fonts/JetBrainsMonoVariable.woff2
+    JetBrains Mono — https://github.com/JetBrains/JetBrainsMono
+    Fetched from: fonts/webfonts/JetBrainsMono[wght].woff2 on the upstream
+    default branch
+    Font revision: 2.19988 (WOFF2 metadata)
+    SHA-256: 31ec365b93e4bad6f202ce23352a56d01ca4462b2afc782ed2cf6fa42ca9ac0e
+    Copyright 2020 The JetBrains Mono Project Authors
+    License: SIL Open Font License 1.1 —
+    https://github.com/JetBrains/JetBrainsMono/blob/master/OFL.txt
+
+  The font file is not part of any published npm package.
 
 ================================================================================
 Third-party notices: Roboto font (Apache License 2.0)

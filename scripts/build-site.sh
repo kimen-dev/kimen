@@ -31,7 +31,7 @@ for required in \
 done
 
 rm -rf "$OUT"
-mkdir -p "$OUT/assets/tokens" "$OUT/assets/elements" "$OUT/playground" "$OUT/docs"
+mkdir -p "$OUT/assets/tokens" "$OUT/assets/elements" "$OUT/assets/fonts" "$OUT/playground" "$OUT/docs"
 
 # Landing: top-level files only — site/docs/ is the docs-site source tree
 # (node_modules, dist) and must never be copied wholesale into the artifact.
@@ -39,6 +39,7 @@ find site -maxdepth 1 -type f -exec cp {} "$OUT/" \;
 # Playground source is intentionally self-contained and shares the generated
 # token/element assets from the artifact root; never copy the design handoff.
 cp -R site/playground/. "$OUT/playground/"
+cp -R site/assets/fonts/. "$OUT/assets/fonts/"
 cp packages/tokens/dist/css/tokens.css packages/tokens/dist/css/tokens.material3.css "$OUT/assets/tokens/"
 cp -R packages/elements/dist/kimen "$OUT/assets/elements/kimen"
 # The generated manifest, for api viewers and machine consumers.

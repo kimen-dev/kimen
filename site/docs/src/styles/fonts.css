@@ -1,0 +1,18 @@
+/* Registered family names must match the public token values. */
+/* stylelint-disable scale-unlimited/declaration-strict-value */
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/kimen/assets/fonts/InterVariable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url("/kimen/assets/fonts/JetBrainsMonoVariable.woff2") format("woff2");
+}
+/* stylelint-enable scale-unlimited/declaration-strict-value */

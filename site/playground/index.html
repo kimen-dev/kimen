@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-ki-color-scheme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,6 +21,7 @@
     <meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#f9f9fa" media="(prefers-color-scheme: light)" />
     <link rel="stylesheet" href="../assets/tokens/tokens.css" />
+    <link rel="stylesheet" href="../fonts.css" />
     <link rel="stylesheet" href="../landing.css" />
     <link rel="stylesheet" href="./playground.css" />
     <script>
@@ -29,7 +30,7 @@
       (() => {
         try {
           const theme = localStorage.getItem('kimen-theme');
-          const scheme = localStorage.getItem('kimen-scheme');
+          const scheme = localStorage.getItem('kimen-scheme') ?? 'dark';
           const root = document.documentElement;
           if (theme === 'material3') {
             root.setAttribute('data-ki-theme', 'material3');
@@ -75,7 +76,7 @@
           <a href="./" aria-current="page">Playground</a>
           <a href="https://github.com/kimen-dev/kimen">GitHub</a>
         </nav>
-        <fieldset class="segmented segmented-compact" data-scheme-control>
+        <fieldset class="segmented segmented-compact playground-header-scheme" data-scheme-control>
           <legend class="visually-hidden">Color scheme</legend>
           <label><input type="radio" name="header-scheme" value="auto" /><span>Auto</span></label>
           <label><input type="radio" name="header-scheme" value="light" /><span>Light</span></label>
@@ -92,7 +93,7 @@
             <a href="https://github.com/kimen-dev/kimen">GitHub</a>
           </nav>
           <fieldset class="segmented" data-scheme-control>
-            <legend>Color scheme</legend>
+            <legend class="visually-hidden">Color scheme</legend>
             <label><input type="radio" name="mobile-scheme" value="auto" /><span>Auto</span></label>
             <label><input type="radio" name="mobile-scheme" value="light" /><span>Light</span></label>
             <label><input type="radio" name="mobile-scheme" value="dark" /><span>Dark</span></label>
@@ -104,21 +105,20 @@
     <main id="main" class="playground-main site-shell">
       <section class="playground-intro" aria-labelledby="playground-title">
         <div>
-          <p class="eyebrow">Live composition canvas</p>
-          <h1 id="playground-title">Build with the real system.</h1>
+          <h1 id="playground-title">Theme playground</h1>
           <p>
-            Change the token theme, submit the service form and inspect the resolved semantic
-            contract. Every control below is a published <code>ki-*</code> element.
+            One attribute swaps the theme. Every surface below re-resolves primitive → semantic →
+            component.
           </p>
         </div>
         <div class="playground-theme-controls" role="group" aria-label="Playground appearance">
           <fieldset class="segmented" data-theme-control>
-            <legend>Token theme</legend>
+            <legend class="visually-hidden">Token theme</legend>
             <label><input type="radio" name="playground-theme" value="onmars" /><span>Onmars</span></label>
             <label><input type="radio" name="playground-theme" value="material3" /><span>Material 3</span></label>
           </fieldset>
           <fieldset class="segmented" data-scheme-control>
-            <legend>Color scheme</legend>
+            <legend class="visually-hidden">Color scheme</legend>
             <label><input type="radio" name="playground-scheme" value="auto" /><span>Auto</span></label>
             <label><input type="radio" name="playground-scheme" value="light" /><span>Light</span></label>
             <label><input type="radio" name="playground-scheme" value="dark" /><span>Dark</span></label>
@@ -129,9 +129,12 @@
       <div class="playground-workspace">
         <section class="playground-canvas panel" aria-labelledby="canvas-title" data-component-surface>
           <header class="canvas-toolbar">
-            <div>
-              <p class="canvas-kicker">relay control plane</p>
-              <h2 id="canvas-title">Services</h2>
+            <div class="canvas-identity">
+              <ki-avatar initials="RM" label="Relay mission console" size="lg"></ki-avatar>
+              <div>
+                <h2 id="canvas-title">Relay — mission console</h2>
+                <p>A demo product wearing whatever theme you pick</p>
+              </div>
             </div>
             <div class="canvas-team" role="group" aria-label="Active operators">
               <ki-avatar-group max="3" size="sm">
@@ -140,16 +143,17 @@
                 <ki-avatar initials="QA" label="Quality agent"></ki-avatar>
                 <ki-avatar initials="OP" label="Operations agent"></ki-avatar>
               </ki-avatar-group>
-              <ki-badge tone="success">healthy</ki-badge>
+              <ki-badge tone="success">production</ki-badge>
             </div>
           </header>
 
+          <ki-divider class="canvas-divider"></ki-divider>
+
           <div class="canvas-grid">
             <form class="deployment-form" id="deployment-form">
-              <header>
-                <p class="eyebrow">New deployment</p>
-                <h3>Configure a guarded service</h3>
-                <p>Form-associated custom elements keep native validation and submission semantics.</p>
+              <header class="surface-heading">
+                <h3>New deployment</h3>
+                <ki-badge tone="info" size="sm">form-associated</ki-badge>
               </header>
 
               <div class="deployment-fields">
@@ -160,134 +164,155 @@
                   autocomplete="off"
                   required
                 ></ki-input>
-                <ki-select label="Region" name="region" value="eu-west" required>
-                  <ki-option value="eu-west">eu-west</ki-option>
+                <ki-select label="Region" name="region" value="eu-west-1" required>
+                  <ki-option value="eu-west-1">eu-west-1</ki-option>
                   <ki-option value="us-east">us-east</ki-option>
                   <ki-option value="ap-south">ap-south</ki-option>
                 </ki-select>
               </div>
 
               <fieldset class="deployment-options">
-                <legend>Release guardrails</legend>
-                <ki-checkbox name="checks" value="gates" checked>Require all gates</ki-checkbox>
+                <legend class="visually-hidden">Release guardrails</legend>
+                <ki-checkbox name="checks" value="gates" checked>Run the gate suite first</ki-checkbox>
+                <ki-checkbox name="checks" value="tokens">Pin token versions</ki-checkbox>
                 <ki-switch name="rollout" value="progressive" checked>Progressive rollout</ki-switch>
               </fieldset>
 
               <div class="deployment-actions">
-                <ki-button type="reset" variant="ghost">Reset</ki-button>
+                <ki-button type="reset" variant="ghost">Cancel</ki-button>
                 <ki-button id="deploy-button" type="submit" variant="primary">Deploy</ki-button>
               </div>
             </form>
 
             <section class="release-panel" aria-labelledby="release-title">
-              <header class="release-heading">
-                <div>
-                  <p class="eyebrow">Active rollout</p>
-                  <h3 id="release-title">relay-gateway</h3>
-                </div>
-                <ki-status tone="success" label="Service online" ring></ki-status>
-              </header>
-
-              <div class="progress-copy">
-                <span>Traffic shifted</span>
-                <output id="deployment-progress-value" for="deployment-form">62%</output>
-              </div>
-              <ki-progress
-                id="deployment-progress"
-                value="62"
-                max="100"
-                label="Rolling out relay-gateway"
-              ></ki-progress>
-
               <ki-alert
                 id="deployment-status"
                 tone="success"
-                heading="Deployment complete"
+                heading="Deployed"
                 dismissible
                 hidden
               >
                 relay-gateway is deployed to eu-west.
               </ki-alert>
 
-              <ki-tabs label="Service details" value="activity">
-                <ki-tab value="activity">Activity</ki-tab>
-                <ki-tab value="contract">Contract</ki-tab>
-                <ki-tab value="health">Health</ki-tab>
-                <ki-tab-panel value="activity">
-                  <ki-list>
-                    <ki-list-item>
-                      <ki-status slot="start" tone="success" label="Complete"></ki-status>
-                      Browser gates
-                      <span slot="secondary">Chromium · exit 0</span>
-                      <ki-badge slot="end" tone="success">passed</ki-badge>
-                    </ki-list-item>
-                    <ki-list-item>
-                      <ki-status slot="start" tone="info" label="In progress"></ki-status>
-                      Progressive rollout
-                      <span slot="secondary">62 of 100</span>
-                      <ki-badge slot="end" tone="info">active</ki-badge>
-                    </ki-list-item>
-                  </ki-list>
-                </ki-tab-panel>
-                <ki-tab-panel value="contract">
-                  <pre class="code-block"><code>{
-  "component": "ki-card",
-  "actions": ["deploy"],
-  "unknownProps": "reject"
-}</code></pre>
-                </ki-tab-panel>
-                <ki-tab-panel value="health">
-                  <ki-alert tone="info" heading="All declared checks are healthy">
-                    The renderer accepted only catalog components and declared actions.
-                  </ki-alert>
-                </ki-tab-panel>
-              </ki-tabs>
+              <article class="release-card">
+                <header class="surface-heading">
+                  <h3 id="release-title">Rollout</h3>
+                  <output id="deployment-progress-value" for="deployment-form">62%</output>
+                </header>
+                <ki-progress
+                  id="deployment-progress"
+                  value="62"
+                  max="100"
+                  label="Rolling out relay-gateway"
+                ></ki-progress>
+                <ul class="region-statuses" aria-label="Regional rollout status">
+                  <li><ki-status tone="success" label="Online"></ki-status>eu-west</li>
+                  <li><ki-status tone="success" label="Online"></ki-status>us-east</li>
+                  <li><ki-status tone="warning" label="Pending"></ki-status>ap-south</li>
+                </ul>
+              </article>
+
+              <article class="release-card checks-card">
+                <h3>Checks</h3>
+                <ki-tabs label="Checks" value="gates">
+                  <ki-tab value="gates">Gates</ki-tab>
+                  <ki-tab value="a11y">A11y</ki-tab>
+                  <ki-tab value="size">Size</ki-tab>
+                  <ki-tab-panel value="gates">
+                    <ki-list>
+                      <ki-list-item>
+                        <ki-status slot="start" tone="success" label="Complete"></ki-status>
+                        gates-suite.sh
+                        <span slot="secondary">deterministic, local = CI</span>
+                        <ki-badge slot="end" tone="success">exit 0</ki-badge>
+                      </ki-list-item>
+                      <ki-list-item>
+                        <ki-status slot="start" tone="success" label="Complete"></ki-status>
+                        consumer-contract
+                        <span slot="secondary">packed tarball smoke</span>
+                        <ki-badge slot="end" tone="success">pass</ki-badge>
+                      </ki-list-item>
+                      <ki-list-item>
+                        <ki-status slot="start" tone="warning" label="Hardening"></ki-status>
+                        mutation · changed-core
+                        <span slot="secondary">Stryker, hardening</span>
+                        <ki-badge slot="end" tone="warning">wip</ki-badge>
+                      </ki-list-item>
+                    </ki-list>
+                  </ki-tab-panel>
+                  <ki-tab-panel value="a11y">
+                    <ki-alert tone="success" heading="No accessibility violations">
+                      Keyboard, focus and axe checks pass for the public experience.
+                    </ki-alert>
+                  </ki-tab-panel>
+                  <ki-tab-panel value="size">
+                    <ki-alert tone="info" heading="Inside the component budget">
+                      Each published element stays inside its declared size gate.
+                    </ki-alert>
+                  </ki-tab-panel>
+                </ki-tabs>
+              </article>
             </section>
           </div>
         </section>
 
         <aside class="token-inspector panel" aria-labelledby="inspector-title">
           <header>
-            <p class="eyebrow">Computed contract</p>
             <h2 id="inspector-title">Token inspector</h2>
-            <p>Values come from the active stylesheet, not a copied design snapshot.</p>
+            <p>Semantic layer, resolved live from this document.</p>
           </header>
           <dl class="token-list">
-            <div>
+            <div class="token-row">
               <dt><span class="token-swatch token-swatch-surface"></span><code>--ki-surface-s0</code></dt>
               <dd><output data-token-value="--ki-surface-s0">resolved by CSS</output></dd>
             </div>
-            <div>
+            <div class="token-row">
+              <dt><span class="token-swatch token-swatch-surface-1"></span><code>--ki-surface-s1</code></dt>
+              <dd><output data-token-value="--ki-surface-s1">resolved by CSS</output></dd>
+            </div>
+            <div class="token-row">
+              <dt><span class="token-swatch token-swatch-surface-2"></span><code>--ki-surface-s2</code></dt>
+              <dd><output data-token-value="--ki-surface-s2">resolved by CSS</output></dd>
+            </div>
+            <div class="token-row">
               <dt><span class="token-swatch token-swatch-primary"></span><code>--ki-surface-primary-high-em</code></dt>
               <dd><output data-token-value="--ki-surface-primary-high-em">resolved by CSS</output></dd>
             </div>
-            <div>
+            <div class="token-row">
               <dt><span class="token-swatch token-swatch-text"></span><code>--ki-text-high-em</code></dt>
               <dd><output data-token-value="--ki-text-high-em">resolved by CSS</output></dd>
             </div>
-            <div>
-              <dt><span class="token-swatch token-swatch-outline"></span><code>--ki-outline-med-em</code></dt>
-              <dd><output data-token-value="--ki-outline-med-em">resolved by CSS</output></dd>
+            <div class="token-row">
+              <dt><span class="token-swatch token-swatch-text-med"></span><code>--ki-text-med-em</code></dt>
+              <dd><output data-token-value="--ki-text-med-em">resolved by CSS</output></dd>
             </div>
-            <div>
+            <div class="token-row">
+              <dt><span class="token-swatch token-swatch-outline"></span><code>--ki-outline-low-em</code></dt>
+              <dd><output data-token-value="--ki-outline-low-em">resolved by CSS</output></dd>
+            </div>
+            <div class="token-row">
               <dt><span class="token-swatch token-swatch-success"></span><code>--ki-surface-success-high-em</code></dt>
               <dd><output data-token-value="--ki-surface-success-high-em">resolved by CSS</output></dd>
             </div>
-            <div>
-              <dt><span class="token-swatch token-swatch-info"></span><code>--ki-surface-info-high-em</code></dt>
-              <dd><output data-token-value="--ki-surface-info-high-em">resolved by CSS</output></dd>
+            <div class="token-row">
+              <dt><span class="token-swatch token-swatch-danger"></span><code>--ki-surface-danger-high-em</code></dt>
+              <dd><output data-token-value="--ki-surface-danger-high-em">resolved by CSS</output></dd>
+            </div>
+            <div class="token-row">
+              <dt><span class="token-swatch token-swatch-radius"></span><code>--ki-radius-component-md</code></dt>
+              <dd><output data-token-value="--ki-radius-component-md">resolved by CSS</output></dd>
             </div>
           </dl>
-          <div class="inspector-note">
-            <strong>Four layers</strong>
-            <span>primitive → theme → semantic → component</span>
-          </div>
-          <a class="text-link" href="../docs/guides/tokens/">Read the token guide →</a>
+          <p class="inspector-note">
+            Flip the theme or scheme above and watch every row re-resolve — no component ships a
+            hardcoded value.
+          </p>
         </aside>
       </div>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer playground-footer">
       <p>Production components, canonical tokens and progressive enhancement.</p>
       <nav aria-label="Footer">
         <a href="../">Home</a>

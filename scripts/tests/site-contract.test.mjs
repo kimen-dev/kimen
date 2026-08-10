@@ -16,6 +16,11 @@ async function readSiteFile(path) {
 function assertSemanticShell(source, path) {
   assert.match(source, /<!doctype html>/iu, `${path} must be an HTML document`);
   assert.match(source, /<html\b[^>]*\blang=["']en["']/iu, `${path} must declare its language`);
+  assert.match(
+    source,
+    /<html\b[^>]*\bdata-ki-color-scheme=["']dark["']/iu,
+    `${path} must expose the approved dark scheme without JavaScript`,
+  );
   assert.match(source, /<header\b/iu, `${path} must expose a header without JavaScript`);
   assert.match(source, /<nav\b/iu, `${path} must expose navigation without JavaScript`);
   assert.match(source, /<main\b[^>]*\bid=["']main["']/iu, `${path} must expose its main landmark`);
@@ -29,6 +34,14 @@ function attributeValues(source, tagName, attributeName) {
     const match = tag.match(new RegExp(`\\b${attributeName}=["']([^"']+)["']`, 'iu'));
     return match?.[1] ? [match[1]] : [];
   });
+}
+
+function between(source, start, end, label) {
+  const startIndex = source.indexOf(start);
+  const endIndex = source.indexOf(end, startIndex + start.length);
+  assert.notEqual(startIndex, -1, `${label} start marker must exist`);
+  assert.notEqual(endIndex, -1, `${label} end marker must exist`);
+  return source.slice(startIndex, endIndex);
 }
 
 async function collectFiles(directory) {
@@ -87,6 +100,51 @@ test('S5 publishes the playground as a semantic no-JavaScript page', async () =>
   assert.ok(attributeValues(source, 'script', 'src').some((src) => src.endsWith('.js')));
 });
 
+test('the public pages retain the approved desktop design structure and density', async () => {
+  const landing = await readSiteFile('index.html');
+  const playground = await readSiteFile('playground/index.html');
+  const stats = between(landing, '<dl class="project-stats"', '</dl>', 'project stats');
+  const comparison = between(
+    landing,
+    '<div class="comparison-wrap',
+    '</table>',
+    'comparison table',
+  );
+  const roadmap = between(landing, '<ol class="roadmap"', '</ol>', 'roadmap');
+
+  for (const heading of [
+    'The component foundation built for generative UI.',
+    'Every component, live. Not screenshots.',
+    'This page runs on <code>@kimen/tokens</code>. Flip it.',
+    'Legible to agents, by contract.',
+    'What only a GenUI-first library does.',
+    'Done means gates exit 0.',
+    'The ki-* catalog.',
+    'Honest, gated, in the open.',
+  ]) {
+    assert.ok(landing.includes(heading), `landing must retain heading: ${heading}`);
+  }
+
+  assert.equal((stats.match(/<div>/gu) ?? []).length, 6, 'landing must retain six stats');
+  assert.equal(
+    (landing.match(/class=["'][^"']*\bcontract-artifact\b/gu) ?? []).length,
+    4,
+    'landing must retain four agent-contract artifacts',
+  );
+  assert.equal(
+    (comparison.match(/<tr>/gu) ?? []).length,
+    8,
+    'comparison must retain one header and seven comparison rows',
+  );
+  assert.equal((roadmap.match(/<li\b/gu) ?? []).length, 6, 'roadmap must retain six states');
+  assert.match(playground, /<h1[^>]+id=["']playground-title["'][^>]*>Theme playground<\/h1>/u);
+  assert.equal(
+    (playground.match(/class=["'][^"']*\btoken-row\b/gu) ?? []).length,
+    10,
+    'playground inspector must retain ten resolved token rows',
+  );
+});
+
 test('the landing retains exactly one generated capability block', async () => {
   const source = await readSiteFile('index.html');
   const start = '<!-- kimen:capabilities:site-status:start -->';
@@ -107,6 +165,7 @@ test('the landing retains exactly one generated capability block', async () => {
 test('the documentation keeps Starlight, canonical navigation and focusable API tables', async () => {
   const config = await readSiteFile('docs/astro.config.mjs');
   const header = await readSiteFile('docs/src/components/Header.astro');
+  const themeProvider = await readSiteFile('docs/src/components/ThemeProvider.astro');
   const api = await readSiteFile('docs/src/components/CemApi.astro');
 
   assert.match(config, /starlight\(\{/u);
@@ -115,6 +174,10 @@ test('the documentation keeps Starlight, canonical navigation and focusable API 
   assert.match(header, /href:\s*docsBase,\s*label:\s*['"]Components['"]/u);
   assert.match(header, /href:\s*`\$\{siteBase\}playground\/`/u);
   assert.match(header, /<nav[^>]+aria-label=['"]Site['"]/u);
+  assert.match(header, /localStorage\.getItem\(['"]kimen-scheme['"]\)/u);
+  assert.match(header, /localStorage\.setItem\(['"]kimen-scheme['"], scheme\)/u);
+  assert.match(themeProvider, /storedScheme\s*===\s*['"]auto['"]/u);
+  assert.match(themeProvider, /prefers-color-scheme:\s*light/u);
   assert.match(api, /class=['"]cem-table['"][\s\S]+role=['"]region['"]/u);
   assert.match(api, /aria-labelledby=\{`\$\{tag\}-properties`\}/u);
   assert.match(api, /tabindex=['"]0['"]/u);
@@ -140,7 +203,7 @@ test('production site sources cannot contain the design-tool runtime or inline i
     ['DC template bindings', /\{\{[^}]+\}\}/u],
     ['inline event handlers', /\son[a-z]+\s*=/iu],
     ['inline style attributes', /\sstyle\s*=/iu],
-    ['React runtime code', /\bReact(?:DOM)?\b/u],
+    ['React runtime code', /\b(?:ReactDOM|React\.(?:createElement|hydrate|render))\b/u],
     ['Babel runtime code', /\bBabel\b/u],
     ['unpkg resources', /\bunpkg(?:\.com)?\b/iu],
     ['Google Fonts resources', /fonts\.(?:googleapis|gstatic)\.com/iu],
