@@ -6,6 +6,8 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from
 import { commands, page, userEvent } from 'vitest/browser';
 
 /* eslint-disable @nx/enforce-module-boundaries -- this integration contract intentionally consumes the hand-written site outside the elements project */
+import interWoff2Url from '../../../site/assets/fonts/InterVariable.woff2?url';
+import jetBrainsMonoWoff2Url from '../../../site/assets/fonts/JetBrainsMonoVariable.woff2?url';
 import landingCss from '../../../site/landing.css?raw';
 import landingHtml from '../../../site/index.html?raw';
 // The site entry points are JavaScript delivery artifacts. Their exported
@@ -64,6 +66,11 @@ const PAGE_STYLE_ID = 'site-experience-page-styles';
 const MATERIAL3_STYLESHEET_SELECTOR =
   '#material3-css, link[rel="stylesheet"][href*="tokens.material3.css"]';
 const DEFAULT_VIEWPORT = { width: 1024, height: 900 } as const;
+const siteFonts = [
+  { family: 'Inter', url: interWoff2Url, weight: '100 900' },
+  { family: 'JetBrains Mono', url: jetBrainsMonoWoff2Url, weight: '100 800' },
+] as const;
+let siteFontsLoaded = false;
 
 const browserCommands = commands as unknown as {
   ariaSnapshot: (selector: string) => Promise<string>;
@@ -117,10 +124,11 @@ const pageSources: Record<PageName, { css: string; html: string; initialize: Pag
 
 let disposePage: PageCleanup | undefined;
 
-beforeAll(() => {
+beforeAll(async () => {
   for (const define of defineSiteElements) {
     define();
   }
+  await ensureSiteFonts();
 });
 
 beforeEach(async () => {
@@ -138,6 +146,20 @@ afterAll(async () => {
 
 function parsedPage(html: string): Document {
   return new DOMParser().parseFromString(html, 'text/html');
+}
+
+async function ensureSiteFonts(): Promise<void> {
+  if (!siteFontsLoaded) {
+    await Promise.all(
+      siteFonts.map(async ({ family, url, weight }) => {
+        const face = new FontFace(family, `url(${url}) format('woff2')`, { weight });
+        await face.load();
+        document.fonts.add(face);
+      }),
+    );
+    siteFontsLoaded = true;
+  }
+  await document.fonts.ready;
 }
 
 function installPageMarkup(pageName: PageName): void {
@@ -168,6 +190,10 @@ async function mountPage(pageName: PageName, javaScript = true): Promise<void> {
 }
 
 async function resetExperience(): Promise<void> {
+  // Test actions may leave the sticky-header page in a smooth scroll. Cancel
+  // that animation before replacing the document so the next whole-page axe
+  // scan samples the canonical scroll origin instead of transient overlap.
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   disposePage?.();
   disposePage = undefined;
   document.body.replaceChildren();
@@ -186,6 +212,8 @@ async function resetExperience(): Promise<void> {
   localStorage.removeItem('kimen-scheme');
   await browserCommands.emulateReducedMotion(null);
   await page.viewport(DEFAULT_VIEWPORT.width, DEFAULT_VIEWPORT.height);
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  await nextFrame();
 }
 
 async function nextFrame(): Promise<void> {
@@ -528,10 +556,16 @@ describe('Kimen public site experience in a real browser', () => {
     expect(exposedProgress.getAttribute('aria-valuenow')).toBe('87');
     expect(exposedProgress.getAttribute('aria-valuemax')).toBe('100');
     expect(visibleProgress.textContent).toMatch(/87\s*(?:of|\/|%)\s*(?:100)?/iu);
+    expect(window.scrollY, 'whole-page axe scans start at the canonical scroll origin').toBe(0);
     await expectAccessible(document.body);
   });
 
   it('S5 keeps semantic structure and canonical navigation without client JavaScript', async () => {
+    // Keep the complete multiline spec inside the viewport. axe samples
+    // painted text with elementFromPoint; a text box that straddles the
+    // viewport edge is otherwise reported as elmPartiallyObscuring even
+    // though no document element covers it.
+    await page.viewport(DEFAULT_VIEWPORT.width, 1400);
     await mountPage('landing', false);
 
     expect(document.querySelector('header')).toBeInstanceOf(HTMLElement);
@@ -577,6 +611,83 @@ describe('Kimen public site experience in a real browser', () => {
     expect(titleStyle.lineHeight).toBe('77.7px');
     expect(titleStyle.color).toBe('rgba(0, 0, 0, 0)');
     expect(titleStyle.backgroundImage).not.toBe('none');
+
+    const orbitCards = [...document.querySelectorAll<HTMLElement>('.hero-orbit .signal-card')];
+    const rtlSwitch = requireElement<HTMLElement>('.switch-figure', HTMLElement);
+    const budget = requireElement<HTMLElement>('.signal-budget', HTMLElement);
+    const axeCard = requireElement<HTMLElement>('.signal-axe', HTMLElement);
+    const axeMark = requireElement<HTMLElement>('.checkbox-figure', HTMLElement);
+    const pipeline = requireElement<HTMLElement>('.pipeline', HTMLElement);
+    const pipelineLine = requireElement<HTMLElement>('.pipeline-line', HTMLElement);
+    const pipelineGrid = requireElement<HTMLElement>('.pipeline-grid', HTMLElement);
+    const pipelineSpec = requireElement<HTMLElement>(
+      '.pipeline-step .code-block code',
+      HTMLElement,
+    );
+    const pipelineStatus = requireElement<HTMLElement>('.status-pill', HTMLElement);
+    const workspace = requireElement(
+      'ki-input[label="Workspace name"]',
+      HTMLElement,
+    ) as HTMLElement & { value?: string };
+    const expectGeometryWithin = (
+      element: HTMLElement,
+      expected: readonly [number, number, number, number],
+      tolerance: number,
+    ) => {
+      const rect = element.getBoundingClientRect();
+      const [x, y, width, height] = expected;
+
+      expect(Math.abs(rect.x - x)).toBeLessThanOrEqual(tolerance);
+      expect(Math.abs(rect.y - y)).toBeLessThanOrEqual(tolerance);
+      expect(Math.abs(rect.width - width)).toBeLessThanOrEqual(tolerance);
+      expect(Math.abs(rect.height - height)).toBeLessThanOrEqual(tolerance);
+    };
+
+    expect(orbitCards).toHaveLength(6);
+    const expectedOrbitGeometry = [
+      [206, 309, 149, 50],
+      [212, 381, 143, 56],
+      [160, 459, 195, 52],
+      [1124, 273, 141, 58],
+      [1124, 353, 164, 98],
+      [1124, 473, 156, 74],
+    ] as const;
+    orbitCards.forEach((card, cardIndex) => {
+      const expected = expectedOrbitGeometry[cardIndex];
+      if (expected === undefined) {
+        throw new Error(`missing reference geometry for orbit card ${String(cardIndex)}`);
+      }
+
+      // Geometry is compared with the same vendored faces used by site-dist;
+      // runner-installed fonts must never change the card metrics.
+      expectGeometryWithin(card, expected, 3);
+    });
+    expect(getComputedStyle(rtlSwitch).backgroundColor).toBe('rgb(132, 90, 190)');
+    expect(budget.textContent.replace(/\s+/gu, ' ').trim()).toBe('SIZE BUDGET 3.8 / 10 KB');
+    expect(axeCard.textContent.replace(/\s+/gu, ' ').trim()).toBe('0 axe violations');
+    expect(getComputedStyle(axeMark).backgroundColor).toBe('rgb(132, 90, 190)');
+    expect(axeMark.getBoundingClientRect().width).toBeCloseTo(20, 0);
+    expect(axeMark.getBoundingClientRect().height).toBeCloseTo(20, 0);
+    expect(getComputedStyle(pipelineLine).backgroundImage).toContain('repeating-linear-gradient');
+    const expectedPipelineGeometry = [
+      [160, 727, 1120, 599],
+      [197, 834, 1046, 455],
+    ] as const;
+    [pipeline, pipelineGrid].forEach((element, elementIndex) => {
+      const expected = expectedPipelineGeometry[elementIndex];
+      if (expected === undefined) {
+        throw new Error(`missing reference geometry for pipeline element ${String(elementIndex)}`);
+      }
+
+      expectGeometryWithin(element, expected, 2);
+    });
+    expect(Math.abs(pipelineStatus.getBoundingClientRect().width - 179)).toBeLessThanOrEqual(4);
+    expect(pipelineStatus.getBoundingClientRect().height).toBeCloseTo(24, 0);
+    expect(getComputedStyle(pipelineSpec).fontSize).toBe('12.5px');
+    expect(getComputedStyle(pipelineSpec).lineHeight).toBe('20px');
+    expect(pipelineSpec.textContent).toContain('"surface": "form"');
+    expect(workspace.getAttribute('placeholder')).toBe('acme-corp');
+    expect(workspace.value ?? '').toBe('');
 
     expect(document.querySelectorAll('.project-stats > div')).toHaveLength(6);
     expect(document.querySelectorAll('.contract-artifact')).toHaveLength(4);
