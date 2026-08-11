@@ -74,3 +74,56 @@ test('S1 the assembler publishes the privacy route', async () => {
 
   assert.match(assembler, /cp -R site\/privacy\/\. ["']\$OUT\/privacy\/["']/u);
 });
+
+test('S5 the privacy page declares every category the Umami schema actually stores', async () => {
+  // Verified against the running Umami instance's own `session` table schema
+  // (not its docs): browser, os, device, screen, language, country, region,
+  // city — and no IP address column anywhere. The declaration must name each
+  // of those categories so it cannot silently drift away from the schema.
+  const source = await readSiteFile('privacy/index.html');
+
+  assert.match(source, /\bbrowser\b/iu, 'the page must name the browser category it collects');
+  assert.match(
+    source,
+    /operating\s+system/iu,
+    'the page must name the operating system category it collects',
+  );
+  assert.match(source, /\bdevice\b/iu, 'the page must name the device category it collects');
+  assert.match(source, /\bscreen\b/iu, 'the page must name the screen size it collects');
+  assert.match(source, /\blanguage\b/iu, 'the page must name the language it collects');
+  assert.match(source, /\bcountry\b/iu, 'the page must name the country granularity it collects');
+  assert.match(source, /\bregion\b/iu, 'the page must name the region granularity it collects');
+  assert.match(source, /\bcity\b/iu, 'the page must name the city granularity it collects');
+  assert.match(
+    source,
+    /without storing the IP address/iu,
+    'the page must keep the correct no-IP claim, verified against the schema',
+  );
+});
+
+test('S1 the analytics tag is absent from the sources and gated at build time', async () => {
+  const config = JSON.parse(await readSiteFile('analytics.json'));
+  assert.equal(config.scriptUrl, 'https://umami.onmars.tech/script.js');
+  assert.equal(config.domains, 'kimen.dev');
+  assert.match(config.websiteId, /^[0-9a-f-]{36}$/u, 'the website id must be the Umami UUID');
+
+  for (const page of ['index.html', 'playground/index.html', 'privacy/index.html']) {
+    const markup = await readSiteFile(page);
+    assert.ok(
+      markup.includes('<!-- kimen:analytics -->'),
+      `${page} must carry the analytics marker`,
+    );
+    assert.ok(
+      !markup.includes(config.scriptUrl),
+      `${page} must not ship the analytics tag in source: it is injected at build time only`,
+    );
+  }
+
+  const assembler = await readFile(join(repositoryRoot, 'scripts/build-site.sh'), 'utf8');
+  assert.match(
+    assembler,
+    /KIMEN_ANALYTICS/u,
+    'the assembler must gate the tag on the explicit build marker',
+  );
+  assert.match(assembler, /data-domains/u, 'the injected tag must scope itself to the domain');
+});

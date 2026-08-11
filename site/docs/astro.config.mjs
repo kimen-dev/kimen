@@ -1,6 +1,24 @@
 // @ts-check
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
+import analytics from '../analytics.json' with { type: 'json' };
+
+// Same build gate as scripts/build-site.sh: the tag exists only when the
+// publishing workflow sets the marker.
+const analyticsHead =
+  process.env.KIMEN_ANALYTICS === '1'
+    ? [
+        {
+          tag: 'script',
+          attrs: {
+            defer: true,
+            src: analytics.scriptUrl,
+            'data-website-id': analytics.websiteId,
+            'data-domains': analytics.domains,
+          },
+        },
+      ]
+    : [];
 
 // The docs site lives inside the single Cloudflare Pages artifact assembled
 // by scripts/build-site.sh and published at the domain root: landing at /,
@@ -70,6 +88,7 @@ export default defineConfig({
         './src/styles/fonts.css',
         './src/styles/site.css',
       ],
+      head: analyticsHead,
     }),
   ],
 });

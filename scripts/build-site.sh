@@ -57,6 +57,23 @@ find "$OUT/assets/elements" -name '*.js.bak' -delete
 # Docs site (Astro build is already base-aware: /docs/).
 cp -R site/docs/dist/. "$OUT/docs/"
 
+# Analytics is a BUILD gate, not a runtime one: prerendered pages decide at
+# build time, so only an explicit marker set by the publishing workflow may
+# emit the tag. Without it no page carries analytics — identical locally, in
+# CI and in the browser tests.
+if [ "${KIMEN_ANALYTICS:-}" = "1" ]; then
+  SCRIPT_URL=$(node -p "require('./site/analytics.json').scriptUrl")
+  WEBSITE_ID=$(node -p "require('./site/analytics.json').websiteId")
+  DOMAINS=$(node -p "require('./site/analytics.json').domains")
+  TAG="<script defer src=\"$SCRIPT_URL\" data-website-id=\"$WEBSITE_ID\" data-domains=\"$DOMAINS\"></script>"
+  for page in "$OUT/index.html" "$OUT/playground/index.html" "$OUT/privacy/index.html"; do
+    node -e 'const {readFileSync,writeFileSync}=require("node:fs");const [p,tag]=process.argv.slice(1);const s=readFileSync(p,"utf8");if(!s.includes("<!-- kimen:analytics -->"))throw new Error(`missing analytics marker: ${p}`);writeFileSync(p,s.replace("<!-- kimen:analytics -->",tag))' "$page" "$TAG"
+  done
+  echo "build-site: analytics enabled for $DOMAINS"
+else
+  echo "build-site: analytics disabled (KIMEN_ANALYTICS unset)"
+fi
+
 if [ "$SKIP_STORYBOOK" != "--skip-storybook" ]; then
   if [ ! -f packages/elements/storybook-static/index.html ]; then
     echo "build-site: FAIL — storybook-static missing (run: pnpm --filter @kimen/elements build-storybook, or pass --skip-storybook)"
