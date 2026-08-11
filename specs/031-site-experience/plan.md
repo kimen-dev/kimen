@@ -35,10 +35,20 @@ mode for the site contract, Umami (self-hosted), Uptime Kuma.
   byte-identical.** `scripts/gates/check-spec-contracts.sh` compares them.
   S-IDs are stable: S1–S7 keep their numbers and meanings. **Amended
   2026-08-11:** this plan assumed the migration needed no new scenario. It
-  did — it added a public `/privacy/` route and a measurement policy that no
-  scenario described, and the tests borrowed S1 and S5 instead. S8 (measured
-  pages declare what is measured) and S9 (analytics ships only with the
-  production build) were appended by founder ruling; S1–S7 were untouched.
+  did — it added a public `/privacy/` route, a measurement policy and a set of
+  response headers that no scenario described, and the tests borrowed S1 and S5
+  instead. Three scenarios were appended by founder ruling — S8 (measured pages
+  declare what is measured), S9 (analytics ships only with the production
+  build) and S10 (the published site tells browsers how it may be treated) —
+  and S7's Examples table gained the two `privacy` rows the browser test
+  already exercised. S1–S7 keep their numbers and meanings.
+
+  The publish job's wrangler pin is the counter-case: it borrowed S1 too, but
+  it is supply-chain hygiene (Art. X) with no user-visible effect, so its test
+  now carries **no** scenario ID. The traceability gate requires every S-ID to
+  have a test; it does not require every test to claim an S-ID, and a test
+  claiming one it does not satisfy makes the gate report coverage that does not
+  exist.
 - **Art. II — traceability.** Every S-ID stays referenced by a test file
   carrying the literal marker `// @spec:031-site-experience`.
 - **Art. X — supply chain.** Every `uses:` in `.github/workflows/` is a
@@ -340,6 +350,7 @@ Create `scripts/tests/site-publication.test.mjs`:
 // @spec:031-site-experience#S1
 // @spec:031-site-experience#S8
 // @spec:031-site-experience#S9
+// @spec:031-site-experience#S10
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -353,7 +364,7 @@ async function readSiteFile(path) {
   return readFile(join(siteRoot, path), 'utf8');
 }
 
-test('S1 the published site declares its security headers', async () => {
+test('S10 the published site declares its security headers', async () => {
   const headers = await readSiteFile('_headers');
 
   assert.match(headers, /^\/\*$/mu, '_headers must declare a rule for every route');
@@ -372,7 +383,7 @@ test('S1 the published site declares its security headers', async () => {
   );
 });
 
-test('S1 the published site caches only content-addressed assets immutably', async () => {
+test('S10 the published site caches only content-addressed assets immutably', async () => {
   // Parse `_headers` into { pattern -> [header lines] } and assert per rule.
   // A substring match over the whole file proves nothing here: `immutable`
   // anywhere would satisfy it while the wrong paths carry it.

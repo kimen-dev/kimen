@@ -1,6 +1,7 @@
 // @spec:031-site-experience#S1
 // @spec:031-site-experience#S8
 // @spec:031-site-experience#S9
+// @spec:031-site-experience#S10
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
@@ -65,7 +66,7 @@ const REVALIDATED_PATTERNS = [
   '/assets/elements/custom-elements.json',
 ];
 
-test('S1 the published site declares its security headers', async () => {
+test('S10 the published site declares its security headers', async () => {
   const rules = headerRules(await readSiteFile('_headers'));
   const everyRoute = rules.get('/*');
 
@@ -84,7 +85,7 @@ test('S1 the published site declares its security headers', async () => {
   );
 });
 
-test('S1 the published site caches only content-addressed assets immutably', async () => {
+test('S10 the published site caches only content-addressed assets immutably', async () => {
   const source = await readSiteFile('_headers');
   const rules = headerRules(source);
 
@@ -117,7 +118,7 @@ test('S1 the published site caches only content-addressed assets immutably', asy
   );
 });
 
-test('S1 the report-only policy records that nothing collects its reports', async () => {
+test('S10 the report-only policy records that nothing collects its reports', async () => {
   const source = await readSiteFile('_headers');
 
   assert.doesNotMatch(
@@ -143,7 +144,14 @@ test('S1 the published site keeps the previous base reachable', async () => {
   assert.match(redirects, /^\/kimen\/\*\s+\/:splat\s+301$/mu);
 });
 
-test('S1 the publish job pins its deploy tool and scopes its credential', async () => {
+// Deliberately carries no scenario ID. This is supply-chain hygiene (Art. X),
+// already the subject of scripts/gates/check-workflows.mjs and
+// scripts/tests/workflow-policy.test.mjs, and it has no user-visible effect
+// that a behavior contract could describe. It borrowed S1 ("Primary site links
+// reach their canonical destination"), which made the traceability gate report
+// coverage of S1 that this test does not provide. An untagged test is honest;
+// a mis-tagged one corrupts the gate.
+test('the publish job pins its deploy tool and scopes its credential', async () => {
   const workflow = await readFile(join(repositoryRoot, '.github/workflows/docs.yml'), 'utf8');
 
   assert.match(

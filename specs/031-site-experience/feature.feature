@@ -62,6 +62,8 @@ Feature: Kimen public site experience
       | landing    | 1440  |
       | playground | 320   |
       | playground | 1440  |
+      | privacy    | 320   |
+      | privacy    | 1440  |
 
   # S8
   Scenario: Measured pages declare what is measured
@@ -80,3 +82,10 @@ Feature: Kimen public site experience
       | build                     | measurement                                    |
       | production publishing run | load the declared Umami endpoint for kimen.dev |
       | local or test run         | carry no analytics at all                      |
+
+  # S10
+  Scenario: The published site tells browsers how it may be treated
+    Given the site is published at kimen.dev
+    When a browser requests a published file
+    Then the response refuses content-type sniffing and framing by other origins
+    And a file whose name does not change with its contents stays revalidatable
