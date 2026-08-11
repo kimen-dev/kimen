@@ -266,17 +266,13 @@ const STALE_ROUTE_TEXT_EXTENSIONS = new Set([
 // silently exempting every extensionless file in site/.
 const STALE_ROUTE_EXTENSIONLESS_FILENAMES = new Set(['_headers', '_redirects']);
 const STALE_ROUTE_EXCLUDED_DIRECTORIES = new Set(['dist', 'node_modules', '.astro']);
-// site/docs/package.json:6 carries a known stale description, deferred to a
-// later whole-branch triage rather than fixed here (see task-2-report.md).
-// site/_redirects is the one sanctioned exception to this whole guard: its
-// entire purpose is a Cloudflare Pages rule that maps the legacy `/kimen/*`
-// GitHub Pages prefix back to the domain root, so that exact prefix belongs
-// there on purpose (see task-3-report.md). Every other file under site/
-// still fails the test on a stale /kimen/ prefix.
-const STALE_ROUTE_EXCLUDED_FILES = new Set([
-  join(siteRoot, 'docs', 'package.json'),
-  join(siteRoot, '_redirects'),
-]);
+// site/_redirects is the ONLY sanctioned exception to this guard, and it is
+// permanent: the file's entire purpose is the Cloudflare Pages rule that maps
+// the legacy `/kimen/*` GitHub Pages prefix back to the domain root, so that
+// exact prefix has to appear there. Every other file under site/ fails the
+// test on a stale /kimen/ prefix, with no exemptions — an exemption that
+// merely defers a fix institutionalizes the hole it was opened for.
+const STALE_ROUTE_EXCLUDED_FILES = new Set([join(siteRoot, '_redirects')]);
 // Matches a stale GitHub Pages route prefix that must now be served from the
 // Cloudflare Pages domain root, while ignoring unrelated `/kimen/`
 // substrings such as `github.com/kimen-dev/kimen/...` links (excluded via

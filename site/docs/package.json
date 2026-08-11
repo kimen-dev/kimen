@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "description": "Kimen documentation site (Astro + Starlight), served at /kimen/docs/ inside the GitHub Pages artifact.",
+  "description": "Kimen documentation site (Astro + Starlight), served at /docs/ inside the Cloudflare Pages artifact.",
   "type": "module",
   "repository": {
     "type": "git",
