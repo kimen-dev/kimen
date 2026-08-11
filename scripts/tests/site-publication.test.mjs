@@ -38,3 +38,29 @@ test('S1 the published site keeps the previous base reachable', async () => {
 
   assert.match(redirects, /^\/kimen\/\*\s+\/:splat\s+301$/mu);
 });
+
+test('S5 the privacy page is a semantic no-JavaScript page that declares the measurement', async () => {
+  const source = await readSiteFile('privacy/index.html');
+
+  assert.match(source, /<!doctype html>/iu);
+  assert.match(source, /<html\b[^>]*\blang=["']en["']/iu);
+  assert.match(source, /<main\b[^>]*\bid=["']main["']/iu);
+  assert.match(source, /<footer\b/iu);
+  assert.match(source, /umami/iu, 'the page must name the analytics it declares');
+  assert.match(source, /cookie/iu, 'the page must state that no cookies are set');
+
+  for (const page of ['index.html', 'playground/index.html']) {
+    const markup = await readSiteFile(page);
+    assert.match(
+      markup,
+      /href=["'](?:\.|\.\.)\/privacy\/["']/u,
+      `${page} must link to the privacy page`,
+    );
+  }
+});
+
+test('S1 the assembler publishes the privacy route', async () => {
+  const assembler = await readFile(join(repositoryRoot, 'scripts/build-site.sh'), 'utf8');
+
+  assert.match(assembler, /cp -R site\/privacy\/\. ["']\$OUT\/privacy\/["']/u);
+});

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" data-ki-color-scheme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy — Kimen</title>
+    <meta
+      name="description"
+      content="What Kimen's public site measures, what it never does, and who to contact about this page."
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <!-- SEO metadata only: a canonical link is never fetched or executed by
+         the browser, so subresource integrity does not apply.
+         nosemgrep: html.security.audit.missing-integrity.missing-integrity -->
+    <link rel="canonical" href="https://kimen.dev/privacy/" />
+    <meta property="og:title" content="Privacy — Kimen" />
+    <meta
+      property="og:description"
+      content="Kimen's public site is measured with cookieless, self-hosted analytics. No accounts, no advertising, no cross-site profile."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f9f9fa" media="(prefers-color-scheme: light)" />
+    <link rel="stylesheet" href="../assets/tokens/tokens.css" />
+    <link rel="stylesheet" href="../fonts.css" />
+    <link rel="stylesheet" href="../landing.css" />
+    <script>
+      // Apply the persisted token theme before first paint. This tiny bootstrap
+      // stays inline so a returning visitor never sees the default theme flash.
+      (() => {
+        try {
+          const theme = localStorage.getItem('kimen-theme');
+          const scheme = localStorage.getItem('kimen-scheme') ?? 'dark';
+          const root = document.documentElement;
+          if (theme === 'material3') {
+            root.setAttribute('data-ki-theme', 'material3');
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '../assets/tokens/tokens.material3.css';
+            link.id = 'material3-css';
+            document.head.appendChild(link);
+          }
+          if (scheme === 'light' || scheme === 'dark') {
+            root.setAttribute('data-ki-color-scheme', scheme);
+          }
+        } catch {
+          // Storage may be unavailable in a hardened/private browsing context.
+        }
+      })();
+    </script>
+  </head>
+  <body data-kimen-page="privacy">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="aurora" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand" href="../" aria-label="Kimen home">
+        <svg class="brand-mark" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path
+            d="M4 3v18M4 12h4l7-9h5L12.5 12 20 21h-5l-7-9"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span class="brand-name">Kimen</span>
+        <span class="brand-stage">pre-v1</span>
+      </a>
+
+      <div class="header-desktop">
+        <nav class="site-nav" aria-label="Primary">
+          <a href="../docs/components/alert/">Components</a>
+          <a href="../playground/">Playground</a>
+          <a href="https://github.com/kimen-dev/kimen">GitHub</a>
+        </nav>
+        <fieldset class="segmented segmented-compact" data-scheme-control>
+          <legend class="visually-hidden">Color scheme</legend>
+          <label><input type="radio" name="header-scheme" value="auto" /><span>Auto</span></label>
+          <label><input type="radio" name="header-scheme" value="light" /><span>Light</span></label>
+          <label><input type="radio" name="header-scheme" value="dark" /><span>Dark</span></label>
+        </fieldset>
+      </div>
+
+      <details class="mobile-menu">
+        <summary>Menu</summary>
+        <div class="mobile-menu-panel">
+          <nav aria-label="Primary mobile">
+            <a href="../docs/components/alert/">Components</a>
+            <a href="../playground/">Playground</a>
+            <a href="https://github.com/kimen-dev/kimen">GitHub</a>
+          </nav>
+          <fieldset class="segmented" data-scheme-control>
+            <legend>Color scheme</legend>
+            <label><input type="radio" name="mobile-scheme" value="auto" /><span>Auto</span></label>
+            <label><input type="radio" name="mobile-scheme" value="light" /><span>Light</span></label>
+            <label><input type="radio" name="mobile-scheme" value="dark" /><span>Dark</span></label>
+          </fieldset>
+        </div>
+      </details>
+    </header>
+
+    <main id="main" class="privacy-main">
+      <h1>Privacy</h1>
+      <p>
+        This site is documentation for an open-source project. It has no
+        accounts, no login and no advertising, and it never asks for personal
+        data.
+      </p>
+      <h2>What is measured</h2>
+      <p>
+        Page views are counted with
+        <a href="https://umami.is/">Umami</a>, self-hosted by the maintainers
+        at <code>umami.onmars.tech</code>. Umami sets no cookies and builds no
+        cross-site profile; it records the page visited, the referrer, and the
+        browser and country derived from the request, without storing the IP
+        address. Because nothing is stored on your device and no profile is
+        built, no consent banner is required.
+      </p>
+      <h2>What is not done</h2>
+      <p>
+        No advertising networks, no third-party trackers, no session
+        recording, no fingerprinting, and no data sold or shared.
+      </p>
+      <h2>Hosting</h2>
+      <p>
+        The site is served by Cloudflare Pages. Cloudflare processes requests
+        to deliver and protect the site, as any content delivery network does.
+      </p>
+      <h2>Contact</h2>
+      <p>
+        Questions about this page belong in a
+        <a href="https://github.com/kimen-dev/kimen/issues">GitHub issue</a>.
+      </p>
+    </main>
+
+    <footer class="site-footer">
+      <p>Apache-2.0 · Built by agents, verified by deterministic gates, merged by a human.</p>
+      <nav aria-label="Footer">
+        <a href="../">Home</a>
+        <a href="../docs/">Docs</a>
+        <a href="../storybook/">Storybook</a>
+        <a href="https://github.com/kimen-dev/kimen">GitHub</a>
+      </nav>
+    </footer>
+  </body>
+</html>
