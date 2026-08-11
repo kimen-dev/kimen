@@ -61,7 +61,7 @@ type KiProgressElement = HTMLElement & {
   value: number;
 };
 
-const PAGES_BASE_URL = new URL('https://kimen-dev.github.io/kimen/');
+const PAGES_BASE_URL = new URL('https://kimen.dev/');
 const PAGE_STYLE_ID = 'site-experience-page-styles';
 const MATERIAL3_STYLESHEET_SELECTOR =
   '#material3-css, link[rel="stylesheet"][href*="tokens.material3.css"]';
@@ -478,8 +478,8 @@ function overflowDiagnostics(): string {
 
 describe('Kimen public site experience in a real browser', () => {
   it.each([
-    ['Explore the components', '/kimen/docs/components/alert/'],
-    ['Open the playground', '/kimen/playground/'],
+    ['Explore the components', '/docs/components/alert/'],
+    ['Open the playground', '/playground/'],
     ['GitHub', 'https://github.com/kimen-dev/kimen'],
   ] as const)('S1 sends %s to its canonical destination', async (linkName, destination) => {
     await mountPage('landing', false);
@@ -572,8 +572,8 @@ describe('Kimen public site experience in a real browser', () => {
     expect(document.querySelector('nav')).toBeInstanceOf(HTMLElement);
     expect(document.querySelector('main')).toBeInstanceOf(HTMLElement);
     expect(document.querySelector('footer')).toBeInstanceOf(HTMLElement);
-    expect(canonicalDestination(linkNamed('Components'))).toBe('/kimen/docs/components/alert/');
-    expect(canonicalDestination(linkNamed('Playground'))).toBe('/kimen/playground/');
+    expect(canonicalDestination(linkNamed('Components'))).toBe('/docs/components/alert/');
+    expect(canonicalDestination(linkNamed('Playground'))).toBe('/playground/');
     expect(canonicalDestination(linkNamed('GitHub'))).toBe('https://github.com/kimen-dev/kimen');
     await expectAccessible(document.body);
   });

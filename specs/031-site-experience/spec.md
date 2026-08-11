@@ -34,8 +34,8 @@ Feature: Kimen public site experience
 
     Examples:
       | link                   | destination                         |
-      | Explore the components | /kimen/docs/components/alert/       |
-      | Open the playground    | /kimen/playground/                  |
+      | Explore the components | /docs/components/alert/             |
+      | Open the playground    | /playground/                        |
       | GitHub                 | https://github.com/kimen-dev/kimen |
 
   # S2
