@@ -16,7 +16,10 @@
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
-OUT=site-dist
+# The artifact directory. Overridable so a test can assemble into a scratch
+# directory instead of clobbering the checkout's site-dist/ — the publishing
+# workflow never sets it, so CI and local runs keep assembling site-dist/.
+OUT="${KIMEN_SITE_OUT:-site-dist}"
 SKIP_STORYBOOK="${1:-}"
 
 for required in \

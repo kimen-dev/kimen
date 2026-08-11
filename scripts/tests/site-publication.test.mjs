@@ -1,10 +1,15 @@
 // @spec:031-site-experience#S1
 // @spec:031-site-experience#S5
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { promisify } from 'node:util';
+
+const execFileAsync = promisify(execFile);
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 const siteRoot = join(repositoryRoot, 'site');
@@ -252,12 +257,106 @@ test('S1 the analytics tag is absent from the sources and gated at build time', 
       `${page} must not ship the analytics tag in source: it is injected at build time only`,
     );
   }
+});
 
-  const assembler = await readFile(join(repositoryRoot, 'scripts/build-site.sh'), 'utf8');
+// Run the real assembler into a scratch directory. Grepping build-site.sh for
+// "KIMEN_ANALYTICS" proves nothing: deleting the `if` would leave both the
+// string and the echo behind and keep a substring assertion green, while every
+// build started emitting production analytics. This runs it, twice, and reads
+// what it wrote. Measured at ~0.3 s per run with --skip-storybook, so the two
+// runs cost less than a second of the gate suite.
+async function assembleSite(marker) {
+  const output = await mkdtemp(join(tmpdir(), 'kimen-site-publication-'));
+  const environment = { ...process.env, KIMEN_SITE_OUT: output };
+  delete environment.KIMEN_ANALYTICS;
+  if (marker !== undefined) {
+    environment.KIMEN_ANALYTICS = marker;
+  }
+
+  try {
+    await execFileAsync('bash', ['scripts/build-site.sh', '--skip-storybook'], {
+      cwd: repositoryRoot,
+      env: environment,
+    });
+  } catch (error) {
+    // The assembler reports missing prerequisites on stdout before exiting 1.
+    assert.fail(
+      `build-site.sh failed with KIMEN_ANALYTICS=${String(marker)}: ${error.stdout ?? ''}${
+        error.stderr ?? ''
+      } (${error.message})`,
+    );
+  }
+  return output;
+}
+
+test('S1 the assembler emits the analytics tag only when the build marker is set', async (t) => {
+  const config = JSON.parse(await readSiteFile('analytics.json'));
+  const [unmeasured, measured] = await Promise.all([assembleSite(undefined), assembleSite('1')]);
+  t.after(async () => {
+    await Promise.all(
+      [unmeasured, measured].map((output) => rm(output, { force: true, recursive: true })),
+    );
+  });
+
+  for (const page of ['index.html', 'playground/index.html', 'privacy/index.html']) {
+    const withoutMarker = await readFile(join(unmeasured, page), 'utf8');
+    assert.ok(
+      !withoutMarker.includes(config.scriptUrl),
+      `${page} must ship no analytics when KIMEN_ANALYTICS is unset`,
+    );
+    assert.ok(
+      withoutMarker.includes('<!-- kimen:analytics -->'),
+      `${page} must keep the injection point intact in an unmeasured build`,
+    );
+
+    const withMarker = await readFile(join(measured, page), 'utf8');
+    assert.ok(
+      withMarker.includes(`src="${config.scriptUrl}"`),
+      `${page} must load the declared analytics endpoint when the marker is set`,
+    );
+    assert.ok(
+      withMarker.includes(`data-website-id="${config.websiteId}"`),
+      `${page} must carry the declared Umami website id`,
+    );
+    assert.ok(
+      withMarker.includes(`data-domains="${config.domains}"`),
+      `${page} must scope its measurement to the production domain`,
+    );
+    assert.ok(
+      !withMarker.includes('<!-- kimen:analytics -->'),
+      `${page} must have its injection point replaced, not duplicated`,
+    );
+  }
+});
+
+test('S1 the docs site gates its analytics tag on the same build marker', async () => {
+  // The docs site is the largest measured surface, and its tag is emitted by
+  // Astro rather than by the assembler, so the run above cannot reach it:
+  // site/docs/dist is already built by the time build-site.sh copies it, and
+  // building Starlight twice inside this suite would add minutes to every
+  // gate run. What is asserted here is the gate itself — the condition, the
+  // wiring of the gated value into Starlight's `head`, and the absence of any
+  // inlined endpoint that could bypass both.
+  const config = await readSiteFile('docs/astro.config.mjs');
+  const analytics = JSON.parse(await readSiteFile('analytics.json'));
+
   assert.match(
-    assembler,
-    /KIMEN_ANALYTICS/u,
-    'the assembler must gate the tag on the explicit build marker',
+    config,
+    /process\.env\.KIMEN_ANALYTICS\s*===\s*'1'\s*\?/u,
+    'the docs head must be produced by the explicit build marker, never unconditionally',
   );
-  assert.match(assembler, /data-domains/u, 'the injected tag must scope itself to the domain');
+  assert.match(
+    config,
+    /head:\s*analyticsHead/u,
+    'the gated value must be what Starlight actually renders into <head>',
+  );
+  assert.ok(
+    !config.includes(analytics.scriptUrl),
+    'the endpoint must be read from analytics.json, never inlined past the gate',
+  );
+  assert.match(
+    config,
+    /'data-domains':\s*analytics\.domains/u,
+    'the docs tag must scope itself to the production domain',
+  );
 });
