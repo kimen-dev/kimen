@@ -883,7 +883,8 @@ Then replace the whole `deploy` job with:
             *.blob.core.windows.net:443
             registry.npmjs.org:443
 
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      # Same pin release.yml already uses — do not introduce a second version.
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: site-dist
           path: site-dist
@@ -920,22 +921,23 @@ In the `build` job, delete the `actions/configure-pages` and
 artifact so `publish` can download it:
 
 ```yaml
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      # Same pin release.yml, mutation.yml and visual-baselines.yml already use.
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: site-dist
           path: site-dist
           retention-days: 5
 ```
 
-Verify both SHAs before committing:
+Both artifact SHAs above are the ones this repository already pins — verified
+against `.github/workflows/release.yml`. Confirm nothing drifted:
 
 ```bash
-gh api repos/actions/upload-artifact/git/ref/tags/v4.6.2 --jq '.object.sha'
-gh api repos/actions/download-artifact/git/ref/tags/v6.0.0 --jq '.object.sha'
+grep -rn "upload-artifact\|download-artifact\|wrangler-action" .github/workflows/
 ```
-If either differs from the value written above, use the resolved SHA and update
-the trailing tag comment. Alternatively write `uses: owner/repo@vX # TODO-pin-sha`
-and run `bash scripts/pin-actions.sh`, which resolves and rewrites them.
+Expected: one SHA per action across the whole directory, never two versions of
+the same action. If a new action ever needs pinning, write
+`uses: owner/repo@vX # TODO-pin-sha` and run `bash scripts/pin-actions.sh`.
 
 - [ ] **Step 5: Run the workflow gate to verify it passes**
 
