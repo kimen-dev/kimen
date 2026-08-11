@@ -9,7 +9,7 @@ overrides:
   brace-expansion: 5.0.9
   fast-uri: 4.1.2
   js-yaml: 4.3.1
-  nanoid: 6.0.0
+  nanoid: 6.0.1
   postcss: 8.5.25
   minimatch@3: 3.1.5
   qs: 6.15.3
@@ -5113,8 +5113,8 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
-  nanoid@6.0.0:
-    resolution: {integrity: sha512-mkUH+rPkwU2qPadJ0oJZOjeZ5Mxn8Q1UhevwkTRWNuUZzyia3h4rhzK39hxaHTk0o2OxB8W2SQ6A8k23ZDi1pQ==}
+  nanoid@6.0.1:
+    resolution: {integrity: sha512-3wVS3i51pE2pi1k5FFL/95BGfVS0kSsvDVuGXHOtxox/TywUmtgq+3qiTOTbs9J7KfHaXPiN171k/A6dBnaXFw==}
     engines: {node: ^22 || ^24 || >=26}
     hasBin: true
 
@@ -9008,7 +9008,7 @@ snapshots:
   '@size-limit/esbuild@13.0.3(size-limit@13.0.3)':
     dependencies:
       esbuild: 0.28.1
-      nanoid: 6.0.0
+      nanoid: 6.0.1
       size-limit: 13.0.3
 
   '@size-limit/file@13.0.3(size-limit@13.0.3)':
@@ -12148,7 +12148,7 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  nanoid@6.0.0: {}
+  nanoid@6.0.1: {}
 
   nanospinner@1.2.2:
     dependencies:
@@ -12656,7 +12656,7 @@ snapshots:
 
   postcss@8.5.25:
     dependencies:
-      nanoid: 6.0.0
+      nanoid: 6.0.1
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
