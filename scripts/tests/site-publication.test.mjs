@@ -385,27 +385,15 @@ test('S9 the assembler emits the analytics tag only when the build marker is set
   }
 });
 
-test('S9 the docs site gates its analytics tag on the same build marker', async () => {
-  // The docs site is the largest measured surface, and its tag is emitted by
-  // Astro rather than by the assembler, so the run above cannot reach it:
-  // site/docs/dist is already built by the time build-site.sh copies it, and
-  // building Starlight twice inside this suite would add minutes to every
-  // gate run. What is asserted here is the gate itself — the condition, the
-  // wiring of the gated value into Starlight's `head`, and the absence of any
-  // inlined endpoint that could bypass both.
+test('S9 the docs analytics endpoint is read from analytics.json, never inlined', async () => {
+  // A source-level companion to the executed build below, and deliberately
+  // limited to what a build cannot show: whether the endpoint reaches the page
+  // through the single declared source or through a second, divergent copy.
+  // Both spellings produce identical HTML, so only the source can tell them
+  // apart. Every behavioral claim about the gate is made by the build.
   const config = await readSiteFile('docs/astro.config.mjs');
   const analytics = JSON.parse(await readSiteFile('analytics.json'));
 
-  assert.match(
-    config,
-    /process\.env\.KIMEN_ANALYTICS\s*===\s*'1'\s*\?/u,
-    'the docs head must be produced by the explicit build marker, never unconditionally',
-  );
-  assert.match(
-    config,
-    /head:\s*analyticsHead/u,
-    'the gated value must be what Starlight actually renders into <head>',
-  );
   assert.ok(
     !config.includes(analytics.scriptUrl),
     'the endpoint must be read from analytics.json, never inlined past the gate',
@@ -414,5 +402,98 @@ test('S9 the docs site gates its analytics tag on the same build marker', async 
     config,
     /'data-domains':\s*analytics\.domains/u,
     'the docs tag must scope itself to the production domain',
+  );
+});
+
+// The docs site emits its tag through Astro, not through the assembler, so the
+// assembler runs above cannot reach it — and a source-level assertion cannot
+// stand in for it. Changing the FALSE branch of the gate to return the same tag
+// array leaves `process.env.KIMEN_ANALYTICS === '1' ?` matching, leaves
+// `head: analyticsHead` matching, and leaves the endpoint in analytics.json,
+// while docs analytics becomes unconditional on every local, test and preview
+// build. Only a build can see that, so this builds the real documentation site
+// twice and reads what Astro wrote.
+//
+// `--outDir` is what makes that affordable and safe. The pages land in a
+// scratch directory instead of site/docs/dist, which other tests in this file
+// read, and invoking astro directly records no Nx cache entry, because Nx only
+// caches the outputs of targets it runs itself. Measured at ~4 s per build.
+async function buildDocumentation(marker) {
+  const output = await mkdtemp(join(tmpdir(), 'kimen-docs-analytics-'));
+  const environment = { ...process.env };
+  delete environment.KIMEN_ANALYTICS;
+  if (marker !== undefined) {
+    environment.KIMEN_ANALYTICS = marker;
+  }
+
+  try {
+    await execFileAsync(
+      'pnpm',
+      ['--filter', '@kimen/docs', 'exec', 'astro', 'build', '--outDir', output],
+      { cwd: repositoryRoot, env: environment },
+    );
+  } catch (error) {
+    assert.fail(
+      `the documentation build failed with KIMEN_ANALYTICS=${String(marker)}: ${
+        error.stdout ?? ''
+      }${error.stderr ?? ''} (${error.message})`,
+    );
+  }
+  return output;
+}
+
+async function documentationPages(root) {
+  const entries = await readdir(root, { recursive: true, withFileTypes: true });
+  return entries
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.html'))
+    .map((entry) => relative(root, join(entry.parentPath, entry.name)))
+    .toSorted();
+}
+
+test('S9 the built documentation carries analytics only when the marker is set', async (t) => {
+  const analytics = JSON.parse(await readSiteFile('analytics.json'));
+  // Sequential: two concurrent Astro builds share site/docs/.astro and would
+  // race on the content-collection cache.
+  const unmeasured = await buildDocumentation(undefined);
+  const measured = await buildDocumentation('1');
+  t.after(async () => {
+    await Promise.all(
+      [unmeasured, measured].map((output) => rm(output, { force: true, recursive: true })),
+    );
+  });
+
+  const pages = await documentationPages(measured);
+  assert.ok(pages.length > 0, 'the documentation build must produce pages');
+  assert.deepEqual(
+    await documentationPages(unmeasured),
+    pages,
+    'both builds must publish the same pages: only the analytics tag may differ',
+  );
+
+  const leaked = [];
+  const missing = [];
+  for (const page of pages) {
+    if ((await readFile(join(unmeasured, page), 'utf8')).includes(analytics.scriptUrl)) {
+      leaked.push(page);
+    }
+    const withMarker = await readFile(join(measured, page), 'utf8');
+    if (
+      !withMarker.includes(`src="${analytics.scriptUrl}"`) ||
+      !withMarker.includes(`data-website-id="${analytics.websiteId}"`) ||
+      !withMarker.includes(`data-domains="${analytics.domains}"`)
+    ) {
+      missing.push(page);
+    }
+  }
+
+  assert.deepEqual(
+    leaked,
+    [],
+    'an unmarked documentation build must publish no analytics at all: this is what keeps local, test and preview builds out of production measurement',
+  );
+  assert.deepEqual(
+    missing,
+    [],
+    'a marked documentation build must load the declared endpoint, with the declared website id, scoped to the production domain',
   );
 });
