@@ -234,3 +234,67 @@ test('S1 publishes canonical URLs at the production origin', async () => {
   assert.match(config, /site:\s*'https:\/\/kimen\.dev'/u);
   assert.match(config, /base:\s*'\/docs'/u);
 });
+
+const STALE_ROUTE_TEXT_EXTENSIONS = new Set([
+  '.astro',
+  '.css',
+  '.html',
+  '.js',
+  '.json',
+  '.md',
+  '.mdx',
+  '.mjs',
+  '.ts',
+]);
+const STALE_ROUTE_EXCLUDED_DIRECTORIES = new Set(['dist', 'node_modules', '.astro']);
+// site/docs/package.json:6 carries a known stale description, deferred to a
+// later whole-branch triage rather than fixed here (see task-2-report.md).
+const STALE_ROUTE_EXCLUDED_FILES = new Set([join(siteRoot, 'docs', 'package.json')]);
+// Matches a stale GitHub Pages route prefix that must now be served from the
+// Cloudflare Pages domain root, while ignoring unrelated `/kimen/`
+// substrings such as `github.com/kimen-dev/kimen/...` links (excluded via
+// the lookbehind) or `kimen/kimen.esm.js` asset filenames and `ui://kimen/...`
+// example URIs (excluded because nothing routable follows the prefix).
+const STALE_KIMEN_ROUTE_PATTERN =
+  /\/kimen\/(?:docs|storybook|playground|assets)\/|(?<!kimen-dev)\/kimen\/(?![\w-])/u;
+
+async function collectStaleRouteCandidates(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = await Promise.all(
+    entries.map(async (entry) => {
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) {
+        return STALE_ROUTE_EXCLUDED_DIRECTORIES.has(entry.name)
+          ? []
+          : collectStaleRouteCandidates(path);
+      }
+      return entry.isFile() &&
+        STALE_ROUTE_TEXT_EXTENSIONS.has(extname(path)) &&
+        !STALE_ROUTE_EXCLUDED_FILES.has(path)
+        ? [path]
+        : [];
+    }),
+  );
+  return files.flat();
+}
+
+test('no file under site/ references a stale /kimen/ route prefix', async () => {
+  const files = await collectStaleRouteCandidates(siteRoot);
+  const violations = [];
+
+  for (const path of files) {
+    const source = await readFile(path, 'utf8');
+    const relativePath = relative(repositoryRoot, path);
+    source.split(/\r?\n/u).forEach((line, index) => {
+      if (STALE_KIMEN_ROUTE_PATTERN.test(line)) {
+        violations.push(`${relativePath}:${index + 1}`);
+      }
+    });
+  }
+
+  assert.deepEqual(
+    violations,
+    [],
+    `every route under site/ is served from the domain root now; found stale /kimen/ prefixes at:\n${violations.join('\n')}`,
+  );
+});
