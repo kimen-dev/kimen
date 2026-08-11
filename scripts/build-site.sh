@@ -54,7 +54,7 @@ find "$OUT/assets/elements" -name '*.js' -exec sed -i.bak 's|^//# sourceMappingU
   || find "$OUT/assets/elements" -name '*.js' -exec sed -i '' 's|^//# sourceMappingURL=.*$||' {} +
 find "$OUT/assets/elements" -name '*.js.bak' -delete
 
-# Docs site (Astro build is already base-aware: /kimen/docs/).
+# Docs site (Astro build is already base-aware: /docs/).
 cp -R site/docs/dist/. "$OUT/docs/"
 
 if [ "$SKIP_STORYBOOK" != "--skip-storybook" ]; then

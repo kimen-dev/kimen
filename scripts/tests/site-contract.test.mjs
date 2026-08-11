@@ -64,6 +64,7 @@ async function productionSources() {
     join(siteRoot, 'landing.css'),
     join(siteRoot, 'landing.js'),
     ...(await collectFiles(join(siteRoot, 'playground'))),
+    ...(await collectFiles(join(siteRoot, 'privacy'))),
   ];
   return Promise.all(
     paths
