@@ -119,6 +119,18 @@ also rejected: it is a large dependency tree entering a workspace whose
 policy (`minimumReleaseAge` 7d, `no-downgrade`, `blockExoticSubdeps`) makes
 every new package a recurring review cost, for a tool only CI ever runs.
 
+**Amended 2026-08-11.** The first implementation pinned the action by SHA and
+then passed `wranglerVersion: '4'` — a floating range — so the tool that holds
+the API token and performs the deploy was resolved fresh from npm on every run.
+That is exactly the weakness this decision rejected, reintroduced one line
+below the pin: the strongest link was protecting the weakest one. It ships as
+an exact version, chosen as the newest wrangler 4.x that has cleared the same
+7-day `minimumReleaseAge` this workspace applies to every other package, and
+bumped deliberately in a reviewed commit. Wrangler's telemetry
+(`sparrow.cloudflare.com`) is switched off rather than allowlisted, because an
+egress annotation that fires on every run teaches reviewers to ignore
+harden-runner.
+
 ## D5 — Headers and redirects live in the repository
 
 **Decision**: Cloudflare Pages reads `_headers` and `_redirects` from the
@@ -130,7 +142,49 @@ Initial content: HSTS, `X-Content-Type-Options: nosniff`,
 `Referrer-Policy: strict-origin-when-cross-origin`, a `Content-Security-Policy`
 introduced in report-only mode first (Starlight and the landing both ship
 inline scripts, so an enforcing policy is tuned, not guessed), long immutable
-caching for `/assets/*` and short caching for HTML.
+caching for content-addressed assets and short, revalidating caching for
+everything whose filename is stable.
+
+**Amended 2026-08-11, after the whole-branch review.** Three things in the
+paragraph above were wrong as first written, and the shipped `site/_headers`
+diverges from them deliberately.
+
+**Framing.** The first draft paired `X-Frame-Options: DENY` with
+`frame-ancestors 'none'`. DENY blocks *same-origin* framing too, and the
+Storybook workshop published at `/storybook/` renders every story and every
+docs preview inside a same-origin `<iframe src="./iframe.html?id=…">`. Shipping
+it would have served the manager chrome with permanently blank canvases. The
+artifact ships `SAMEORIGIN` and `frame-ancestors 'self'`: a policy the site
+itself breaks is not a security control, it is an outage.
+
+**Caching.** The first draft used one `/assets/*` rule carrying
+`max-age=31536000, immutable`. Cloudflare matches `*` greedily across `/`, so
+that single rule also covered `/assets/tokens/tokens.css` and
+`/assets/elements/kimen/kimen.esm.js` — filenames every deploy overwrites in
+place. `immutable` tells a browser not to revalidate even on an explicit
+reload, and no later deploy can recall it, so a visitor would have kept a
+year-old token bundle and element runtime with no way back. Only
+content-addressed paths (`/assets/elements/kimen/p-*`, `/assets/fonts/*`,
+`/docs/_astro/*`) are cached immutably; each stable filename carries its own
+short `must-revalidate` rule; and `/*` sets no `Cache-Control` at all, because
+Cloudflare applies every matching rule and comma-joins repeated header names.
+
+**The report-only policy is a placeholder, and says so.** No report collector
+is deployed — there is no `report-to` or `report-uri` endpoint anywhere in this
+deployment — so the only signal the policy produces is a console message for
+whoever happens to open devtools. It must not be promoted to an enforcing
+`Content-Security-Policy` until a collector exists, the policy names it, and at
+least one production deploy's worth of real reports has been reviewed.
+
+One violation is already known and is **not** fixed by the policy as written:
+Starlight's documentation search is Pagefind, which instantiates WebAssembly
+from `/docs/pagefind/wasm.en.pagefind` through
+`/docs/pagefind/pagefind-worker.js`. `script-src 'self'` without
+`'wasm-unsafe-eval'` makes Chromium reject `WebAssembly.instantiate`, so
+enforcing this policy today would break documentation search. Anyone enforcing
+it resolves that first. All of the above is recorded in the comment header of
+`site/_headers` itself, and asserted by `scripts/tests/site-publication.test.mjs`
+so the notes cannot be deleted while the placeholder is still shipping.
 
 ## D6 — Per-PR previews, with an honest limit
 
@@ -171,6 +225,17 @@ Uptime Kuma (on `marslab`) gets monitors for the landing, `/docs/` and
 so no consent banner is required, but the measurement still has to be
 declared. A minimal privacy page ships before measurement is switched on.
 
+**Amended 2026-08-11.** "Minimal" turned out to be the wrong target. The
+declaration is verified against the running instance's own `session` table
+schema — browser, operating system, device, screen size, language, country,
+region, city, and no IP address column anywhere — and it names every one of
+those categories, because a privacy page that under-reports what is stored
+fails at the only job it has. It is linked from every measured page, including
+each `/docs/*` page through a Starlight `Footer` override, since that is the
+largest measured surface. Both properties are the behavior contract's S8; the
+build gate above is S9. Neither existed as a scenario when this design was
+approved, which is the gap the founder closed on 2026-08-11.
+
 ## D9 — The old URL keeps working
 
 **Decision**: `kimen-dev.github.io/kimen/` is not deleted. It is left serving
@@ -204,6 +269,12 @@ traffic is zero.
 - `packages/elements/browser-tests/site-experience.browser.spec.ts`: the
   031 scenarios against the new base, same S-IDs.
 - A test asserting the analytics tag is absent unless the build marker is set.
+  It **runs** both builders rather than grepping them: `scripts/build-site.sh`
+  into a scratch `KIMEN_SITE_OUT`, and the docs site with
+  `pnpm --filter @kimen/docs exec astro build --outDir <mkdtemp>`, once with
+  the marker and once without. Source-level assertions stay green against a
+  gate whose false branch has been changed to return the same tag array, which
+  is precisely the mistake that would ship unconditional analytics.
 - `scripts/tests/` coverage of `check-workflows.mjs` updated for the smaller
   `ALLOWED_SCOPED_WRITES`.
 - The whole change is gated by `bash scripts/gates/gates-suite.sh`.

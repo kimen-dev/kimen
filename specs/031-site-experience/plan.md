@@ -33,7 +33,12 @@ mode for the site contract, Umami (self-hosted), Uptime Kuma.
   prose is `packages/elements/scripts/llms-preamble.txt`.
 - **Art. II — the Gherkin block inside `spec.md` and `feature.feature` must be
   byte-identical.** `scripts/gates/check-spec-contracts.sh` compares them.
-  S-IDs are stable: S1–S7 keep their numbers and meanings.
+  S-IDs are stable: S1–S7 keep their numbers and meanings. **Amended
+  2026-08-11:** this plan assumed the migration needed no new scenario. It
+  did — it added a public `/privacy/` route and a measurement policy that no
+  scenario described, and the tests borrowed S1 and S5 instead. S8 (measured
+  pages declare what is measured) and S9 (analytics ships only with the
+  production build) were appended by founder ruling; S1–S7 were untouched.
 - **Art. II — traceability.** Every S-ID stays referenced by a test file
   carrying the literal marker `// @spec:031-site-experience`.
 - **Art. X — supply chain.** Every `uses:` in `.github/workflows/` is a
@@ -286,6 +291,33 @@ git commit -m "docs(site): publish every canonical URL at kimen.dev"
 
 ### Task 3: Ship response headers and redirects as files
 
+> **Corrected 2026-08-11, after the whole-branch review.** As first written,
+> this task prescribed two defects the review classified as Critical. Both are
+> corrected in place below; the original wording is recorded here so the
+> correction is legible rather than silent.
+>
+> 1. **`X-Frame-Options: DENY` with `frame-ancestors 'none'`.** DENY blocks
+>    same-origin framing too, and the Storybook workshop published at
+>    `/storybook/` renders every story and every docs preview inside a
+>    same-origin `<iframe src="./iframe.html?id=…">`. Shipping DENY would have
+>    served the manager chrome with permanently blank canvases. The artifact
+>    ships `X-Frame-Options: SAMEORIGIN` and `frame-ancestors 'self'`.
+> 2. **A single `/assets/*` rule carrying `max-age=31536000, immutable`.**
+>    `/assets/*` matches greedily across `/`, so that one rule also covered
+>    `/assets/tokens/tokens.css` and `/assets/elements/kimen/kimen.esm.js` —
+>    filenames every deploy overwrites in place. `immutable` tells a browser
+>    not to revalidate even on an explicit reload, and no later deploy can
+>    recall it, so a visitor would have been stranded on a year-old token
+>    bundle and element runtime with no way back. Only content-addressed paths
+>    may be cached immutably; every stable filename gets a short, revalidating
+>    rule of its own, and `/*` sets no `Cache-Control` at all, because
+>    Cloudflare applies every matching rule and comma-joins repeated header
+>    names.
+>
+> A third correction belongs to the same file and is recorded in D5 of
+> `research.md`: the report-only policy sends its reports nowhere, and
+> enforcing it as written would break documentation search.
+
 Cloudflare Pages reads `_headers` and `_redirects` from the artifact root.
 `scripts/build-site.sh` already copies every top-level file of `site/` into the
 artifact (`find site -maxdepth 1 -type f -exec cp {} "$OUT/" \;`), so both files
@@ -306,7 +338,8 @@ Create `scripts/tests/site-publication.test.mjs`:
 
 ```js
 // @spec:031-site-experience#S1
-// @spec:031-site-experience#S5
+// @spec:031-site-experience#S8
+// @spec:031-site-experience#S9
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -320,7 +353,7 @@ async function readSiteFile(path) {
   return readFile(join(siteRoot, path), 'utf8');
 }
 
-test('S1 the published site declares its security headers and cache policy', async () => {
+test('S1 the published site declares its security headers', async () => {
   const headers = await readSiteFile('_headers');
 
   assert.match(headers, /^\/\*$/mu, '_headers must declare a rule for every route');
@@ -329,15 +362,44 @@ test('S1 the published site declares its security headers and cache policy', asy
   assert.match(headers, /Strict-Transport-Security: max-age=31536000; includeSubDomains/u);
   assert.match(
     headers,
-    /Content-Security-Policy-Report-Only: [^\n]*frame-ancestors 'none'/u,
-    'the policy ships in report-only mode until it is tuned against the real pages',
+    /X-Frame-Options: SAMEORIGIN/u,
+    'DENY blocks same-origin framing too, which blanks every Storybook story canvas at /storybook/',
   );
   assert.match(
     headers,
-    /^\/assets\/\*$/mu,
-    'generated assets must carry their own immutable cache rule',
+    /Content-Security-Policy-Report-Only: [^\n]*frame-ancestors 'self'/u,
+    'the policy ships report-only, and must not encode a framing rule the site itself breaks',
   );
-  assert.match(headers, /Cache-Control: public, max-age=31536000, immutable/u);
+});
+
+test('S1 the published site caches only content-addressed assets immutably', async () => {
+  // Parse `_headers` into { pattern -> [header lines] } and assert per rule.
+  // A substring match over the whole file proves nothing here: `immutable`
+  // anywhere would satisfy it while the wrong paths carry it.
+  const rules = headerRules(await readSiteFile('_headers'));
+
+  // Content-addressed: the filename changes whenever the bytes do.
+  assert.deepEqual(immutablePatterns(rules).toSorted(), [
+    '/assets/elements/kimen/p-*',
+    '/assets/fonts/*',
+    '/docs/_astro/*',
+  ]);
+  // Stable filenames every deploy overwrites in place: these must revalidate.
+  for (const pattern of [
+    '/assets/tokens/*',
+    '/assets/elements/kimen/kimen.esm.js',
+    '/assets/elements/kimen/index.esm.js',
+    '/assets/elements/custom-elements.json',
+  ]) {
+    assert.match(
+      rules.get(pattern).join('\n'),
+      /^Cache-Control: public, max-age=[1-9][0-9]{0,3}, must-revalidate$/mu,
+    );
+  }
+  assert.ok(
+    !rules.get('/*').some((header) => /^Cache-Control:/u.test(header)),
+    'a Cache-Control on /* would be comma-joined onto every rule below it',
+  );
 });
 
 test('S1 the published site keeps the previous base reachable', async () => {
@@ -354,22 +416,58 @@ Expected: FAIL — `ENOENT: no such file or directory … site/_headers`.
 
 - [ ] **Step 3: Write `site/_headers`**
 
+Cloudflare applies **every** rule whose pattern matches a request and joins
+repeated header names with a comma, and `*` matches greedily across `/`. The
+cache rules are therefore deliberately disjoint — no published path is covered
+by more than one — and `/*` sets no `Cache-Control` at all, so anything
+unmatched keeps the Pages default (`public, max-age=0, must-revalidate`).
+
 ```
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  X-Frame-Options: DENY
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://umami.onmars.tech; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://umami.onmars.tech; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://umami.onmars.tech; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://umami.onmars.tech; object-src 'none'; base-uri 'self'; frame-ancestors 'self'
 
-/assets/*
+# Content-addressed: the filename changes whenever the bytes do, so a cached
+# copy can never be stale.
+/assets/elements/kimen/p-*
   Cache-Control: public, max-age=31536000, immutable
+
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/docs/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Stable filenames every deploy overwrites in place: these must stay
+# revalidatable, or a visitor keeps last year's copy for a year.
+/assets/tokens/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+/assets/elements/kimen/kimen.esm.js
+  Cache-Control: public, max-age=300, must-revalidate
+
+/assets/elements/kimen/index.esm.js
+  Cache-Control: public, max-age=300, must-revalidate
+
+/assets/elements/custom-elements.json
+  Cache-Control: public, max-age=300, must-revalidate
 ```
+
+`SAMEORIGIN` and `frame-ancestors 'self'`, not `DENY` and `'none'`: see the
+correction note at the head of this task — `/storybook/` frames its own story
+canvases same-origin, and DENY blocks that too.
 
 The policy is report-only on purpose: the landing ships an inline theme
 bootstrap and Starlight ships inline scripts of its own, so an enforcing policy
 is tuned against real report data, never guessed. Tightening it to enforcing is
-follow-up work, not part of this migration.
+follow-up work, not part of this migration — and the shipped file carries a
+comment header saying so in full, including that **no reports are collected**
+(there is no `report-to` endpoint) and that Pagefind's WebAssembly would be
+rejected under `script-src 'self'` without `'wasm-unsafe-eval'`, which is a
+blocker anyone promoting the policy has to resolve first. See D5.
 
 - [ ] **Step 4: Write `site/_redirects`**
 
@@ -383,7 +481,7 @@ keeps the old path segment.
 - [ ] **Step 5: Run it to verify it passes**
 
 Run: `node --test scripts/tests/site-publication.test.mjs`
-Expected: PASS (2 tests).
+Expected: PASS (3 tests).
 
 - [ ] **Step 6: Verify both files reach the artifact**
 
@@ -408,6 +506,27 @@ git commit -m "feat(site): ship response headers and redirects with the artifact
 Blocking prerequisite for measurement (design D8): Umami is cookieless and
 needs no consent banner, but the measurement still has to be declared.
 
+> **Corrected 2026-08-11.** Two things in this task were incomplete as written.
+>
+> 1. **The declaration was thinner than the schema.** The copy below says only
+>    "the browser and country derived from the request". The running Umami
+>    instance's own `session` table stores browser, operating system, device,
+>    screen size, language, country, region and city. A privacy declaration
+>    that under-reports what is stored is not a small inaccuracy — it is the
+>    one thing this page exists to get right. The shipped page names every
+>    category, and a test slices the "What is measured" section and asserts
+>    each one, so the declaration cannot silently drift from the schema.
+> 2. **Only the hand-written pages were linked.** `/docs/*` is the largest
+>    measured surface — `astro.config.mjs` puts the tag on every page there —
+>    and this task linked the declaration from the landing and the playground
+>    only. The shipped site adds a Starlight `Footer` override
+>    (`site/docs/src/components/Footer.astro`), and the test asserts the link
+>    against every *built* documentation page rather than against the override,
+>    because what matters is reachability from each measured page.
+>
+> Both scenarios these tests now carry are S8, not the borrowed S5 this task
+> originally used.
+
 **Files:**
 - Create: `site/privacy/index.html`
 - Modify: `scripts/build-site.sh` (copy the new directory)
@@ -423,7 +542,7 @@ needs no consent banner, but the measurement still has to be declared.
 Append to `scripts/tests/site-publication.test.mjs`:
 
 ```js
-test('S5 the privacy page is a semantic no-JavaScript page that declares the measurement', async () => {
+test('S8 the privacy page is a semantic no-JavaScript page that declares the measurement', async () => {
   const source = await readSiteFile('privacy/index.html');
 
   assert.match(source, /<!doctype html>/iu);
@@ -443,7 +562,7 @@ test('S5 the privacy page is a semantic no-JavaScript page that declares the mea
   }
 });
 
-test('S1 the assembler publishes the privacy route', async () => {
+test('S8 the assembler publishes the privacy route', async () => {
   const assembler = await readFile(join(repositoryRoot, 'scripts/build-site.sh'), 'utf8');
 
   assert.match(assembler, /cp -R site\/privacy\/\. ["']\$OUT\/privacy\/["']/u);
@@ -646,7 +765,7 @@ file names (`kimen-cloudflare-token`, `umami-kimen-website-id`) for that task.
 Append to `scripts/tests/site-publication.test.mjs`:
 
 ```js
-test('S1 the analytics tag is absent from the sources and gated at build time', async () => {
+test('S9 the analytics tag is absent from the sources and gated at build time', async () => {
   const config = JSON.parse(await readSiteFile('analytics.json'));
   assert.equal(config.scriptUrl, 'https://umami.onmars.tech/script.js');
   assert.equal(config.domains, 'kimen.dev');
@@ -664,15 +783,22 @@ test('S1 the analytics tag is absent from the sources and gated at build time', 
     );
   }
 
-  const assembler = await readFile(join(repositoryRoot, 'scripts/build-site.sh'), 'utf8');
-  assert.match(
-    assembler,
-    /KIMEN_ANALYTICS/u,
-    'the assembler must gate the tag on the explicit build marker',
-  );
-  assert.match(assembler, /data-domains/u, 'the injected tag must scope itself to the domain');
 });
 ```
+
+**Corrected 2026-08-11.** This step originally finished by grepping
+`scripts/build-site.sh` for `KIMEN_ANALYTICS` and `data-domains`, and the docs
+gate was asserted the same way, by reading `site/docs/astro.config.mjs`. Both
+assertions are green against a broken gate: deleting the `if` leaves the string
+and the `echo` behind, and changing the false branch of the config's ternary to
+return the same tag array leaves every regex matching while analytics becomes
+unconditional. The shipped tests **run** both builders instead — the assembler
+into a scratch `KIMEN_SITE_OUT`, and the docs site with
+`pnpm --filter @kimen/docs exec astro build --outDir <mkdtemp>` — once with the
+marker and once without, and read what was written. `--outDir` keeps
+`site/docs/dist` (a shared input other tests read) untouched, and invoking
+astro directly records no Nx cache entry. Cost: ~0.3 s per assembler run, ~4 s
+per docs build.
 
 - [ ] **Step 2: Run it to verify it fails**
 
@@ -752,27 +878,40 @@ production website.
 In `site/docs/astro.config.mjs`, above `export default defineConfig({`:
 
 ```js
-import analytics from '../analytics.json' with { type: 'json' };
+import { readFileSync } from 'node:fs';
 
 // Same build gate as scripts/build-site.sh: the tag exists only when the
-// publishing workflow sets the marker.
+// publishing workflow sets the marker. site/analytics.json is read (not
+// imported as a module) so a config file consulting a sibling data file
+// stays outside the Nx project graph, and only when analytics is on — a
+// malformed analytics.json must not break the docs build when it is off.
 const analyticsHead =
   process.env.KIMEN_ANALYTICS === '1'
-    ? [
-        {
-          tag: 'script',
-          attrs: {
-            defer: true,
-            src: analytics.scriptUrl,
-            'data-website-id': analytics.websiteId,
-            'data-domains': analytics.domains,
+    ? (() => {
+        const analytics = JSON.parse(
+          readFileSync(new URL('../analytics.json', import.meta.url), 'utf8'),
+        );
+        return [
+          {
+            tag: 'script',
+            attrs: {
+              defer: true,
+              src: analytics.scriptUrl,
+              'data-website-id': analytics.websiteId,
+              'data-domains': analytics.domains,
+            },
           },
-        },
-      ]
+        ];
+      })()
     : [];
 ```
 
 and inside the `starlight({ … })` options add `head: analyticsHead,`.
+
+**Corrected 2026-08-11.** The `import … with { type: 'json' }` this step
+originally prescribed pulled `site/analytics.json` into the Nx project graph
+and evaluated it even when analytics was off, so a malformed file broke every
+unmeasured docs build. `readFileSync` inside the gated branch does neither.
 
 - [ ] **Step 7: Run the tests and prove the gate both ways**
 
@@ -796,6 +935,42 @@ git commit -m "feat(site): emit analytics only behind the build marker"
 ---
 
 ### Task 7: Publish from CI to Cloudflare Pages
+
+> **Corrected 2026-08-11, after the whole-branch review.** Four instructions in
+> this task were superseded; the job below is the shipped one.
+>
+> 1. **`wranglerVersion: '4'`** was a floating range. The action is pinned by
+>    40-character SHA precisely because a version specifier is weaker than a
+>    SHA (see D4) — and then the tool that actually holds the API token and
+>    performs the deploy was left to resolve fresh from npm on every run,
+>    leaving the strongest link protecting the weakest one. It ships pinned
+>    exactly, at the newest wrangler 4.x that has cleared the 7-day
+>    `minimumReleaseAge` this workspace applies to every other package.
+> 2. **No `environment:`.** The old GitHub Pages deploy ran only on push to
+>    main behind `environment: github-pages`. This job also runs on
+>    `pull_request`, and for that event GitHub evaluates the pull request's own
+>    copy of this file — so without an environment, any in-repo pull request
+>    editing this workflow would reach `CLOUDFLARE_API_TOKEN`. Forks are
+>    already excluded by the `if`, so the exposure was write-access
+>    collaborators, but a migration whose stated purpose is lowering privilege
+>    must not widen access here. Pull requests resolve to `site-preview`;
+>    everything else resolves to `site-production`, whose deployment branches
+>    are restricted to `main`.
+> 3. **`--branch=${{ … github.head_ref }}` interpolated into `command:`.** A
+>    git ref is attacker-influenced data — branch names admit `;`, `$` and
+>    backticks — so it must never expand into a command string verbatim. It is
+>    resolved and charset-validated in a prior step, as plain shell data read
+>    from environment variables.
+> 4. **Analytics keyed to `github.event_name == 'push'`.** The marker belongs
+>    to the deployment *target*, not the triggering event: a `workflow_dispatch`
+>    from `main` deploys to production exactly like a push and must be measured
+>    too, while a dispatch from any other branch must not be. It ships as
+>    `github.event_name != 'pull_request' && github.ref_name == 'main'`.
+>
+> `WRANGLER_SEND_METRICS: false` is added for the same reason the egress policy
+> exists: wrangler's telemetry host is outside the allowlist and must stay
+> outside it, and a blocked-request annotation that fires on every single run
+> teaches reviewers to ignore harden-runner.
 
 **Files:**
 - Modify: `.github/workflows/docs.yml`
@@ -852,8 +1027,12 @@ Set the analytics marker on the build job so only this workflow emits the tag �
 add to the existing `env:` block of `build`:
 
 ```yaml
-      # Production analytics is emitted here and nowhere else.
-      KIMEN_ANALYTICS: ${{ github.event_name == 'push' && '1' || '0' }}
+      # Production analytics is emitted here and nowhere else. Keyed to the
+      # deployment TARGET (branch), not the triggering event: a manual
+      # dispatch from main deploys to production exactly like a push does,
+      # so it must be measured too; every pull request and every dispatch
+      # from a non-main branch resolves to a preview and stays unmeasured.
+      KIMEN_ANALYTICS: ${{ github.event_name != 'pull_request' && github.ref_name == 'main' && '1' || '0' }}
 ```
 
 Then replace the whole `deploy` job with:
@@ -869,6 +1048,12 @@ Then replace the whole `deploy` job with:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: {}
+    # Without this, an in-repo pull request editing this workflow would reach
+    # CLOUDFLARE_API_TOKEN: for `pull_request` GitHub evaluates the PR's own
+    # copy of the file. site-production restricts its deployment branches to
+    # main; site-preview is unrestricted and is what every PR resolves to.
+    environment:
+      name: ${{ github.event_name == 'pull_request' && 'site-preview' || 'site-production' }}
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
@@ -889,24 +1074,60 @@ Then replace the whole `deploy` job with:
           name: site-dist
           path: site-dist
 
+      # A git ref is attacker-influenced data (branch names permit ';', '$',
+      # backticks and more), so it must never expand into a command string
+      # verbatim. Resolve and validate it here, as plain shell data read from
+      # env vars. workflow_dispatch has no head_ref, so the fallback is
+      # ref_name — otherwise every manual dispatch would dead-end on
+      # "unsafe branch name" and misattribute the cause.
+      - name: Resolve the deployment branch
+        id: target
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          REF_NAME: ${{ github.ref_name }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            candidate="$HEAD_REF"
+          else
+            candidate="$REF_NAME"
+          fi
+          case "$candidate" in
+            ''|*[!A-Za-z0-9._/-]*)
+              echo "refusing to deploy: branch name outside the safe charset" >&2
+              exit 1
+              ;;
+          esac
+          echo "branch=$candidate" >> "$GITHUB_OUTPUT"
+
       - name: Deploy to Cloudflare Pages
         id: deployment
+        env:
+          # Wrangler 4 posts telemetry to sparrow.cloudflare.com, which is not
+          # in this job's allowlist and must not be added to it. Left on, the
+          # blocked request annotates every run, and an annotation that always
+          # fires teaches reviewers to ignore harden-runner.
+          WRANGLER_SEND_METRICS: false
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: pnpm
-          wranglerVersion: '4'
+          wranglerVersion: '4.118.0'
           command: >-
             pages deploy site-dist --project-name=kimen
-            --branch=${{ github.event_name == 'push' && 'main' || github.head_ref }}
+            --branch=${{ steps.target.outputs.branch }}
 
+      # Same rule as the branch above: workflow outputs reach `run:` through
+      # env vars, never through interpolation into the script body.
       - name: Report the deployment URL
+        env:
+          DEPLOYMENT_URL: ${{ steps.deployment.outputs.deployment-url }}
         run: |
           {
             echo "### Site deployment"
             echo ""
-            echo "${{ steps.deployment.outputs.deployment-url }}"
+            echo "$DEPLOYMENT_URL"
           } >> "$GITHUB_STEP_SUMMARY"
 ```
 
