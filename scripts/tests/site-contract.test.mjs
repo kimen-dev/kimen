@@ -101,6 +101,14 @@ test('S5 publishes the playground as a semantic no-JavaScript page', async () =>
   assert.ok(attributeValues(source, 'script', 'src').some((src) => src.endsWith('.js')));
 });
 
+test('S5 publishes the privacy page as a structural sibling of the landing shell', async () => {
+  const source = await readSiteFile('privacy/index.html');
+
+  assertSemanticShell(source, 'site/privacy/index.html');
+  assert.ok(attributeValues(source, 'link', 'href').includes('../assets/tokens/tokens.css'));
+  assert.ok(attributeValues(source, 'link', 'href').includes('../landing.css'));
+});
+
 test('the public pages retain the approved desktop design structure and density', async () => {
   const landing = await readSiteFile('index.html');
   const playground = await readSiteFile('playground/index.html');
@@ -222,6 +230,7 @@ test('production site sources cannot contain the design-tool runtime or inline i
 test('S1 publishes canonical URLs at the production origin', async () => {
   const landing = await readSiteFile('index.html');
   const playground = await readSiteFile('playground/index.html');
+  const privacy = await readSiteFile('privacy/index.html');
   const config = await readSiteFile('docs/astro.config.mjs');
 
   assert.ok(
@@ -231,6 +240,10 @@ test('S1 publishes canonical URLs at the production origin', async () => {
   assert.ok(
     attributeValues(playground, 'link', 'href').includes('https://kimen.dev/playground/'),
     'the playground must declare its canonical URL at the production origin',
+  );
+  assert.ok(
+    attributeValues(privacy, 'link', 'href').includes('https://kimen.dev/privacy/'),
+    'the privacy page must declare its canonical URL at the production origin',
   );
   assert.match(config, /site:\s*'https:\/\/kimen\.dev'/u);
   assert.match(config, /base:\s*'\/docs'/u);
