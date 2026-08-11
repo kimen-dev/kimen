@@ -348,8 +348,6 @@ Create `scripts/tests/site-publication.test.mjs`:
 
 ```js
 // @spec:031-site-experience#S1
-// @spec:031-site-experience#S8
-// @spec:031-site-experience#S9
 // @spec:031-site-experience#S10
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
@@ -364,52 +362,117 @@ async function readSiteFile(path) {
   return readFile(join(siteRoot, path), 'utf8');
 }
 
-test('S10 the published site declares its security headers', async () => {
-  const headers = await readSiteFile('_headers');
+// Parse `_headers` into { pattern -> [header lines] }. Cloudflare applies
+// every rule whose pattern matches a request, so an assertion about caching
+// has to be made against the rule that owns a path, not against the file as
+// one string: a `Cache-Control` anywhere would otherwise satisfy a substring
+// match while the wrong paths carry it.
+function headerRules(source) {
+  const rules = new Map();
+  let current;
+  for (const line of source.split(/\r?\n/u)) {
+    if (line.trim() === '' || line.trimStart().startsWith('#')) continue;
+    if (/^\S/u.test(line)) {
+      current = line.trim();
+      rules.set(current, []);
+      continue;
+    }
+    assert.ok(current !== undefined, `_headers declares a header before any rule: ${line}`);
+    rules.get(current).push(line.trim());
+  }
+  return rules;
+}
 
-  assert.match(headers, /^\/\*$/mu, '_headers must declare a rule for every route');
-  assert.match(headers, /X-Content-Type-Options: nosniff/u);
-  assert.match(headers, /Referrer-Policy: strict-origin-when-cross-origin/u);
-  assert.match(headers, /Strict-Transport-Security: max-age=31536000; includeSubDomains/u);
-  assert.match(
-    headers,
-    /X-Frame-Options: SAMEORIGIN/u,
+// Content-addressed paths, and only these, may be cached immutably: the
+// filename changes whenever the bytes do, so a stale copy is unreachable.
+const IMMUTABLE_PATTERNS = new Set([
+  '/assets/elements/kimen/p-*',
+  '/assets/fonts/*',
+  '/docs/_astro/*',
+]);
+// Stable filenames that every deploy overwrites in place. `immutable` on any
+// of these would strand a visitor on an old build for a year, and no later
+// deploy could recall it.
+const REVALIDATED_PATTERNS = [
+  '/assets/tokens/*',
+  '/assets/elements/kimen/kimen.esm.js',
+  '/assets/elements/kimen/index.esm.js',
+  '/assets/elements/custom-elements.json',
+];
+
+test('S10 the published site declares its security headers', async () => {
+  const rules = headerRules(await readSiteFile('_headers'));
+  const everyRoute = rules.get('/*');
+
+  assert.ok(everyRoute !== undefined, '_headers must declare a rule for every route');
+  assert.ok(everyRoute.includes('X-Content-Type-Options: nosniff'));
+  assert.ok(everyRoute.includes('Referrer-Policy: strict-origin-when-cross-origin'));
+  assert.ok(everyRoute.includes('Strict-Transport-Security: max-age=31536000; includeSubDomains'));
+  assert.ok(
+    everyRoute.includes('X-Frame-Options: SAMEORIGIN'),
     'DENY blocks same-origin framing too, which blanks every Storybook story canvas at /storybook/',
   );
   assert.match(
-    headers,
+    everyRoute.join('\n'),
     /Content-Security-Policy-Report-Only: [^\n]*frame-ancestors 'self'/u,
     'the policy ships report-only, and must not encode a framing rule the site itself breaks',
   );
 });
 
 test('S10 the published site caches only content-addressed assets immutably', async () => {
-  // Parse `_headers` into { pattern -> [header lines] } and assert per rule.
-  // A substring match over the whole file proves nothing here: `immutable`
-  // anywhere would satisfy it while the wrong paths carry it.
-  const rules = headerRules(await readSiteFile('_headers'));
+  const source = await readSiteFile('_headers');
+  const rules = headerRules(source);
 
-  // Content-addressed: the filename changes whenever the bytes do.
-  assert.deepEqual(immutablePatterns(rules).toSorted(), [
-    '/assets/elements/kimen/p-*',
-    '/assets/fonts/*',
-    '/docs/_astro/*',
-  ]);
-  // Stable filenames every deploy overwrites in place: these must revalidate.
-  for (const pattern of [
-    '/assets/tokens/*',
-    '/assets/elements/kimen/kimen.esm.js',
-    '/assets/elements/kimen/index.esm.js',
-    '/assets/elements/custom-elements.json',
-  ]) {
+  assert.deepEqual(
+    [...rules]
+      .filter(([, headers]) => headers.some((header) => /\bimmutable\b/u.test(header)))
+      .map(([pattern]) => pattern)
+      .toSorted(),
+    [...IMMUTABLE_PATTERNS].toSorted(),
+    'immutable caching must cover exactly the content-addressed paths',
+  );
+
+  for (const pattern of REVALIDATED_PATTERNS) {
+    const headers = rules.get(pattern);
+    assert.ok(headers !== undefined, `${pattern} must declare its own cache rule`);
+    assert.ok(
+      !headers.some((header) => /\bimmutable\b/u.test(header)),
+      `${pattern} is not content-addressed: its filename is stable across deploys, so a browser must be able to revalidate it`,
+    );
     assert.match(
-      rules.get(pattern).join('\n'),
+      headers.join('\n'),
       /^Cache-Control: public, max-age=[1-9][0-9]{0,3}, must-revalidate$/mu,
+      `${pattern} must declare a short, revalidating max-age`,
     );
   }
+
   assert.ok(
     !rules.get('/*').some((header) => /^Cache-Control:/u.test(header)),
     'a Cache-Control on /* would be comma-joined onto every rule below it',
+  );
+});
+
+// The tripwire for the comment header written in Step 3. The report-only
+// policy is a placeholder that collects nothing and has one known violation;
+// without this test, the paragraphs recording that can be deleted by anyone
+// who finds them noisy, and the next reader promotes the policy blind.
+test('S10 the report-only policy records that nothing collects its reports', async () => {
+  const source = await readSiteFile('_headers');
+
+  assert.doesNotMatch(
+    source,
+    /^ +Content-Security-Policy-Report-Only:[^\n]*report-(?:to|uri)/mu,
+    'no reporting endpoint is deployed; if one is added, this test is the reminder to retire the placeholder note',
+  );
+  assert.match(
+    source,
+    /^#[^\n]*NO REPORTS ARE COLLECTED/mu,
+    '_headers must state that the report-only policy sends its reports nowhere',
+  );
+  assert.match(
+    source,
+    /^#[^\n]*wasm-unsafe-eval/mu,
+    '_headers must record the known Pagefind/WebAssembly violation before anyone enforces the policy',
   );
 });
 
@@ -419,6 +482,11 @@ test('S1 the published site keeps the previous base reachable', async () => {
   assert.match(redirects, /^\/kimen\/\*\s+\/:splat\s+301$/mu);
 });
 ```
+
+The file-level markers are `#S1` and `#S10` at this point: Task 4 adds `#S8`
+when the privacy tests arrive and Task 6 adds `#S9` with the analytics tests.
+S10 was appended to the contract on 2026-08-11 — this task originally tagged
+all four tests `S1`, which described none of them.
 
 - [ ] **Step 2: Run it to verify it fails**
 
@@ -434,6 +502,46 @@ by more than one — and `/*` sets no `Cache-Control` at all, so anything
 unmatched keeps the Pages default (`public, max-age=0, must-revalidate`).
 
 ```
+# Response headers for the Cloudflare Pages artifact assembled by
+# scripts/build-site.sh.
+#
+# Cloudflare applies EVERY rule whose pattern matches a request and joins
+# repeated header names with a comma, and `*` matches greedily across `/`.
+# The cache rules below are therefore deliberately disjoint: no published
+# path is covered by more than one of them, and `/*` sets no Cache-Control
+# at all. Anything left unmatched keeps the Pages default
+# (`public, max-age=0, must-revalidate`), which is the safe baseline.
+#
+# Comments stay unindented: the documented `_headers` syntax puts them on
+# their own top-level line, not inside a rule block.
+#
+# X-Frame-Options is SAMEORIGIN, not DENY, and frame-ancestors is 'self', not
+# 'none': the Storybook workshop published at /storybook/ renders every story
+# and every docs preview inside a same-origin <iframe src="./iframe.html?id=…">.
+# DENY blocks same-origin framing too, so the manager chrome would load with
+# permanently blank canvases.
+#
+# THE CONTENT SECURITY POLICY BELOW IS A DOCUMENTED PLACEHOLDER.
+#
+# It ships report-only and NO REPORTS ARE COLLECTED: there is no report-to or
+# report-uri endpoint in this deployment, and none is planned in this change.
+# The only signal it produces today is a console message for whoever happens
+# to open devtools. Treat it as a written starting point, not as a policy that
+# has been tuned against evidence.
+#
+# Do not promote it to an enforcing `Content-Security-Policy` until BOTH of
+# these hold:
+#   1. a report collector exists and the policy names it through a `report-to`
+#      directive (plus the matching `Reporting-Endpoints` header), and
+#   2. at least one production deploy's worth of real reports has been
+#      reviewed and the directives amended to cover what they show.
+#
+# One violation is already known and is NOT fixed by the policy as written:
+# Starlight's documentation search is Pagefind, which instantiates WebAssembly
+# from /docs/pagefind/wasm.en.pagefind through /docs/pagefind/pagefind-worker.js.
+# `script-src 'self'` without 'wasm-unsafe-eval' makes Chromium reject
+# WebAssembly.instantiate, so enforcing this policy today would break
+# documentation search. Anyone enforcing it must resolve that first.
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
@@ -441,19 +549,24 @@ unmatched keeps the Pages default (`public, max-age=0, must-revalidate`).
   X-Frame-Options: SAMEORIGIN
   Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://umami.onmars.tech; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://umami.onmars.tech; object-src 'none'; base-uri 'self'; frame-ancestors 'self'
 
-# Content-addressed: the filename changes whenever the bytes do, so a cached
-# copy can never be stale.
+# Content-addressed: Stencil hashes these chunk filenames from their contents,
+# so a changed chunk is a different URL and a cached copy can never be stale.
 /assets/elements/kimen/p-*
   Cache-Control: public, max-age=31536000, immutable
 
+# Vendored font binaries: the file is replaced only by a deliberate vendoring
+# commit, reviewed alongside the pages that reference it.
 /assets/fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Astro emits every file under _astro/ with a content hash in its name.
 /docs/_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Stable filenames every deploy overwrites in place: these must stay
-# revalidatable, or a visitor keeps last year's copy for a year.
+# Everything below keeps a STABLE filename across deploys, so it must stay
+# revalidatable. `immutable` here would tell browsers not to revalidate even
+# on an explicit reload, and no later deploy could recall the stale copy — a
+# visitor would keep last year's tokens and element bundle for a year.
 /assets/tokens/*
   Cache-Control: public, max-age=300, must-revalidate
 
@@ -471,14 +584,14 @@ unmatched keeps the Pages default (`public, max-age=0, must-revalidate`).
 correction note at the head of this task — `/storybook/` frames its own story
 canvases same-origin, and DENY blocks that too.
 
-The policy is report-only on purpose: the landing ships an inline theme
-bootstrap and Starlight ships inline scripts of its own, so an enforcing policy
-is tuned against real report data, never guessed. Tightening it to enforcing is
-follow-up work, not part of this migration — and the shipped file carries a
-comment header saying so in full, including that **no reports are collected**
-(there is no `report-to` endpoint) and that Pagefind's WebAssembly would be
-rejected under `script-src 'self'` without `'wasm-unsafe-eval'`, which is a
-blocker anyone promoting the policy has to resolve first. See D5.
+The comment header is not decoration and is not optional: the third test in
+Step 1 asserts the `NO REPORTS ARE COLLECTED` and `wasm-unsafe-eval` lines are
+present. The policy is report-only on purpose — the landing ships an inline
+theme bootstrap and Starlight ships inline scripts of its own, so an enforcing
+policy is tuned against real report data, never guessed — but a placeholder
+that does not say it is one gets promoted by the next reader, who has no way to
+know that no reports exist and that enforcing it breaks documentation search.
+Deleting those paragraphs turns the gate red, which is the point. See D5.
 
 - [ ] **Step 4: Write `site/_redirects`**
 
@@ -492,7 +605,7 @@ keeps the old path segment.
 - [ ] **Step 5: Run it to verify it passes**
 
 Run: `node --test scripts/tests/site-publication.test.mjs`
-Expected: PASS (3 tests).
+Expected: PASS (4 tests).
 
 - [ ] **Step 6: Verify both files reach the artifact**
 
