@@ -13,6 +13,14 @@ async function readSiteFile(path) {
   return readFile(join(siteRoot, path), 'utf8');
 }
 
+function between(source, start, end, label) {
+  const startIndex = source.indexOf(start);
+  const endIndex = source.indexOf(end, startIndex + start.length);
+  assert.notEqual(startIndex, -1, `${label} start marker must exist`);
+  assert.notEqual(endIndex, -1, `${label} end marker must exist`);
+  return source.slice(startIndex, endIndex);
+}
+
 test('S1 the published site declares its security headers and cache policy', async () => {
   const headers = await readSiteFile('_headers');
 
@@ -80,24 +88,60 @@ test('S5 the privacy page declares every category the Umami schema actually stor
   // (not its docs): browser, os, device, screen, language, country, region,
   // city — and no IP address column anywhere. The declaration must name each
   // of those categories so it cannot silently drift away from the schema.
+  //
+  // Scoped to the "What is measured" section, not the whole page: these are
+  // common English words ("screen", "browser", "country"…) that could appear
+  // incidentally elsewhere as the page grows (hosting notes, footer copy).
+  // Slicing to the declared sentence means gutting or corrupting it fails
+  // this test even if the words survive elsewhere on the page.
   const source = await readSiteFile('privacy/index.html');
-
-  assert.match(source, /\bbrowser\b/iu, 'the page must name the browser category it collects');
-  assert.match(
+  const declaration = between(
     source,
-    /operating\s+system/iu,
-    'the page must name the operating system category it collects',
+    '<h2>What is measured</h2>',
+    '<h2>What is not done</h2>',
+    'the "What is measured" declaration',
   );
-  assert.match(source, /\bdevice\b/iu, 'the page must name the device category it collects');
-  assert.match(source, /\bscreen\b/iu, 'the page must name the screen size it collects');
-  assert.match(source, /\blanguage\b/iu, 'the page must name the language it collects');
-  assert.match(source, /\bcountry\b/iu, 'the page must name the country granularity it collects');
-  assert.match(source, /\bregion\b/iu, 'the page must name the region granularity it collects');
-  assert.match(source, /\bcity\b/iu, 'the page must name the city granularity it collects');
+
   assert.match(
-    source,
+    declaration,
+    /\bbrowser\b/iu,
+    'the declaration must name the browser category it collects',
+  );
+  assert.match(
+    declaration,
+    /operating\s+system/iu,
+    'the declaration must name the operating system category it collects',
+  );
+  assert.match(
+    declaration,
+    /\bdevice\b/iu,
+    'the declaration must name the device category it collects',
+  );
+  assert.match(
+    declaration,
+    /\bscreen\b/iu,
+    'the declaration must name the screen size it collects',
+  );
+  assert.match(declaration, /\blanguage\b/iu, 'the declaration must name the language it collects');
+  assert.match(
+    declaration,
+    /\bcountry\b/iu,
+    'the declaration must name the country granularity it collects',
+  );
+  assert.match(
+    declaration,
+    /\bregion\b/iu,
+    'the declaration must name the region granularity it collects',
+  );
+  assert.match(
+    declaration,
+    /\bcity\b/iu,
+    'the declaration must name the city granularity it collects',
+  );
+  assert.match(
+    declaration,
     /without storing the IP address/iu,
-    'the page must keep the correct no-IP claim, verified against the schema',
+    'the declaration must keep the correct no-IP claim, verified against the schema',
   );
 });
 
