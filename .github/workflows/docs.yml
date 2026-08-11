@@ -114,6 +114,31 @@ jobs:
           name: site-dist
           path: site-dist
 
+      # A git ref is attacker-influenced data (branch names permit ';', '$',
+      # backticks and more), so it must never expand into a command string
+      # verbatim. Resolve and validate it here, as plain shell data read from
+      # env vars, so what reaches `command:` below is provably restricted to
+      # a safe charset rather than "safe because forks are blocked" — the
+      # fork guard on this job stops nothing for a hostile in-repo branch.
+      - name: Resolve the deployment branch
+        id: target
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "push" ]; then
+            branch=main
+          else
+            case "$HEAD_REF" in
+              ''|*[!A-Za-z0-9._/-]*)
+                echo "refusing to deploy: unsafe branch name" >&2
+                exit 1
+                ;;
+            esac
+            branch="$HEAD_REF"
+          fi
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
       - name: Deploy to Cloudflare Pages
         id: deployment
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
@@ -124,12 +149,14 @@ jobs:
           wranglerVersion: '4'
           command: >-
             pages deploy site-dist --project-name=kimen
-            --branch=${{ github.event_name == 'push' && 'main' || github.head_ref }}
+            --branch=${{ steps.target.outputs.branch }}
 
       - name: Report the deployment URL
+        env:
+          DEPLOYMENT_URL: ${{ steps.deployment.outputs.deployment-url }}
         run: |
           {
             echo "### Site deployment"
             echo ""
-            echo "${{ steps.deployment.outputs.deployment-url }}"
+            echo "$DEPLOYMENT_URL"
           } >> "$GITHUB_STEP_SUMMARY"
