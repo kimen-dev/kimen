@@ -77,6 +77,67 @@ test('rejects a scenario ID in a comment that trails an apostrophe-bearing regex
   assert.match(result.stdout, /S2 has no reference in code lines/);
 });
 
+test('rejects a scenario ID in a comment on a line that never returns to code state', async (t) => {
+  // A wrapped division, or any leading `/`, opens regex state that never
+  // closes. The line then ends outside code state with the quote clean, so a
+  // fallback keyed only on an open quote never fires and the trailing comment
+  // is emitted as evidence. Shell tests make this shape ordinary rather than
+  // exotic: `/` starts a path on nearly every line.
+  const fixture = await createFixtureRepo({
+    featureId,
+    scenarioIds: ['S1', 'S2', 'S3'],
+    files: {
+      'scripts/tests/wrapped.test.mjs': [
+        `// ${marker}`,
+        'const total = sum',
+        '  / count; // S1 is not evidence',
+        'const ratio = [first',
+        '  / second]; /* S2 is not evidence */',
+        '',
+      ].join('\n'),
+      'sandbox/tests/paths.test.sh': [
+        `# ${marker}`,
+        'copy_fixture \\',
+        '  /tmp # S3 is not evidence',
+        '',
+      ].join('\n'),
+    },
+  });
+  t.after(() => fixture.cleanup());
+
+  const result = await fixture.runTraceability();
+
+  assert.notEqual(result.code, 0);
+  assert.match(result.stdout, /S1 has no reference in code lines/);
+  assert.match(result.stdout, /S2 has no reference in code lines/);
+  assert.match(result.stdout, /S3 has no reference in code lines/);
+});
+
+test('rejects a scenario ID in a comment that trails a regex after a keyword', async (t) => {
+  // `return /…/` is ordinary test-file code and `doesn't` is ordinary comment
+  // English. Without keyword lookback the `/` reads as division, the
+  // apostrophe in `don't` opens a phantom string, and the apostrophe in the
+  // comment closes it — swallowing the `//` with the quote clean at end of
+  // line, so the fallback never fires either.
+  const fixture = await createFixtureRepo({
+    featureId,
+    scenarioIds: ['S1'],
+    files: {
+      'scripts/tests/keyword.test.mjs': [
+        `// ${marker}`,
+        "function contracts(x) { return /don't/u.test(x); }; // S1 doesn't count",
+        '',
+      ].join('\n'),
+    },
+  });
+  t.after(() => fixture.cleanup());
+
+  const result = await fixture.runTraceability();
+
+  assert.notEqual(result.code, 0);
+  assert.match(result.stdout, /S1 has no reference in code lines/);
+});
+
 test('reads evidence that follows a block comment containing an apostrophe', async (t) => {
   // The case that broke the first attempt at this fix: blanking string spans
   // before locating comment openers makes the apostrophe in `radio's` swallow

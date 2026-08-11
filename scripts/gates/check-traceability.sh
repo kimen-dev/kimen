@@ -58,30 +58,55 @@ fi
 #     the comment counts as evidence — which is the exact gaming vector the
 #     "comments do not count" rule exists to block (see the note further down).
 #
-# WHAT ACTUALLY HOLDS ACROSS LINES. Block-comment state carries across lines,
-# by necessity. String and regex state do not: a line that ends inside an open
-# quote is treated as unparseable, its scan result is discarded, and the raw
-# line is re-stripped conservatively (block-comment pairs, then everything from
-# the first // or #) exactly as the pre-2026-08-11 implementation did. That
-# bounds a mis-parse to its own line only for the string case.
+# WHAT ACTUALLY HOLDS, AND WHAT DOES NOT. Block-comment state carries across
+# lines, by necessity. String and regex state do not: a line that ends in
+# either one is treated as unparseable, its scan result is discarded, and the
+# raw line is re-stripped conservatively (block-comment pairs, then everything
+# from the first // or #) exactly as the pre-2026-08-11 implementation did.
+# A speculative regex that runs into an unescaped `//` is treated the same way,
+# since a regex literal cannot contain one: that combination means the opening
+# `/` was really division or a path separator, and the `//` is a comment.
 #
-# It is NOT true that one odd line can never blind the rest of a file. Block
-# state can still be entered falsely — by a `/*` inside a multi-line template
-# literal, or a regex character class such as /[/*]/u whose opening `/` was
-# read as division — and it then truncates every line up to the next `*/`.
-# That direction loses evidence rather than inventing it, so it fails the gate
-# loudly instead of passing it falsely, but it is a real limit, not a
-# guarantee. Do not restate it as one.
+# This is a heuristic lexer, not a parser, and it is applied unchanged to
+# *.test.sh as well as to JavaScript and TypeScript — shell files are scanned
+# with a JavaScript-shaped lexer, where `/` is a path separator rather than
+# division or a regex delimiter. Two known shapes defeat it, in OPPOSITE
+# directions. Neither is hypothetical; both were measured against this
+# repository and neither occurs in it today.
+#
+#   1. A `/` after `)` or `]` that really opens a regex is read as division,
+#      because telling those apart needs a real JavaScript parser. If that
+#      regex's contents hold an odd number of quote characters, the leftover
+#      quote opens a phantom string. Should a matching quote then appear
+#      inside a trailing comment (`// doesn't count`), the phantom string
+#      closes there, the comment marker is never seen, and THE COMMENT IS
+#      EMITTED AS EVIDENCE. This direction invents evidence: the gate can
+#      report PASS on an S-ID that only ever appeared in prose. It is the
+#      failure the "comments do not count" rule exists to prevent, and it
+#      remains open.
+#   2. A `/*` inside a multi-line template literal opens block state, which
+#      then truncates every line up to the next `*/`. This direction loses
+#      evidence: the gate reports FAIL for an S-ID that a test really covers.
+#      Noisy, not dangerous.
+#
+# There is no single safe direction here, and any wording that implies one is
+# wrong. A change to this function has to be argued and measured against both
+# rules at once: coverage (every S-ID has a test) wants more lines visible,
+# evidence integrity (comments never count) wants fewer.
 append_executable_lines() {
   local source_file="$1"
   local destination="$2"
   awk '
-    # A `/` opens a regex literal only where an expression may begin. After a
-    # value (identifier, literal, `)`, `]`) it is division. Getting this wrong
-    # costs evidence, never safety: a regex read as division re-enters code
-    # state at the next `/`.
-    function opens_regex(previous) {
-      return previous == "" || index("([{,;:=!&|?+-*%~^<>", previous) > 0
+    # A `/` opens a regex literal only where an expression may begin: at the
+    # start of a line, after an operator or opening bracket, or after a keyword
+    # that cannot be followed by division. After a value (identifier, literal,
+    # `)`, `]`) it is division. The keyword list exists for `return /…/`, which
+    # is ordinary test-file code; without it the `/` reads as division and an
+    # apostrophe inside the literal opens a phantom string — see failure shape
+    # 1 in the header, which this narrows but does not close.
+    function opens_regex(previous, code_so_far) {
+      if (previous == "" || index("([{,;:=!&|?+-*%~^<>", previous) > 0) { return 1 }
+      return match(code_so_far, /(^|[^A-Za-z0-9_$])(return|typeof|case|in|of|new|delete|void|do|else|yield|await|throw)[[:space:]]*$/) > 0
     }
     # The pre-2026-08-11 stripper, kept verbatim as the fallback for a line the
     # scanner could not parse. Conservative by construction: it cuts at the
@@ -130,6 +155,14 @@ append_executable_lines() {
           continue
         }
         if (in_regex) {
+          # A regex literal cannot hold an unescaped `/` outside a character
+          # class, so a candidate whose closing slash is the FIRST of a `//`
+          # pair was never a regex: the opening `/` was division (or, in a
+          # shell file, a path separator) and the `//` is a comment. Bail to
+          # the conservative stripper instead of consuming that first slash
+          # and returning to code state on the second one, which emitted
+          # `  / count; // S1 is not evidence` whole, comment included.
+          if (pair == "//" && in_class == 0) { return conservative_text(source) }
           out = out character
           if (character == "\\") {
             out = out substr(source, i + 1, 1)
@@ -156,7 +189,7 @@ append_executable_lines() {
           i += 1
           continue
         }
-        if (character == "/" && opens_regex(previous)) {
+        if (character == "/" && opens_regex(previous, out)) {
           in_regex = 1
           in_class = 0
           out = out character
@@ -167,9 +200,13 @@ append_executable_lines() {
         if (character !~ /[[:space:]]/) { previous = character }
         i += 1
       }
-      # An unterminated quote means the line was not parsed: distrust every
+      # Ending outside code state — an unterminated quote, or a regex that
+      # never closed because its opening `/` was a wrapped division or a
+      # leading path segment — means the line was not parsed. Distrust every
       # boundary it produced and fall back to the conservative stripper.
-      if (quote != "") { return conservative_text(source) }
+      # Keying this on the quote alone left the regex case emitting its own
+      # trailing comment as evidence.
+      if (quote != "" || in_regex) { return conservative_text(source) }
       return out
     }
     BEGIN { in_block = 0; SINGLE_QUOTE = sprintf("%c", 39) }
