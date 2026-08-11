@@ -50,6 +50,58 @@ test('rejects scenario IDs that appear only in line, block, or trailing comments
   assert.match(result.stdout, /S4 has no reference in code lines/);
 });
 
+test('rejects a scenario ID in a comment that trails an apostrophe-bearing regex', async (t) => {
+  // The mirror of the glob case below, and the reason the scanner has to know
+  // about regex literals: the apostrophe in `don't` is in neither a string nor
+  // a comment. Read as a string opener it swallows the `//` that follows, and
+  // the comment counts as evidence — the exact gaming vector the "comments do
+  // not count" rule exists to block.
+  const fixture = await createFixtureRepo({
+    featureId,
+    scenarioIds: ['S1', 'S2'],
+    files: {
+      'scripts/tests/regex.test.mjs': [
+        `// ${marker}`,
+        "const contraction = /don't/u;  // S1 is not evidence",
+        "const another = /don't/u; /* S2 is not evidence */",
+        '',
+      ].join('\n'),
+    },
+  });
+  t.after(() => fixture.cleanup());
+
+  const result = await fixture.runTraceability();
+
+  assert.notEqual(result.code, 0);
+  assert.match(result.stdout, /S1 has no reference in code lines/);
+  assert.match(result.stdout, /S2 has no reference in code lines/);
+});
+
+test('reads evidence that follows a block comment containing an apostrophe', async (t) => {
+  // The case that broke the first attempt at this fix: blanking string spans
+  // before locating comment openers makes the apostrophe in `radio's` swallow
+  // the comment's own `*/`, so the block never closes and every following line
+  // disappears. Strings and comments have to be recognized in one pass.
+  const fixture = await createFixtureRepo({
+    featureId,
+    scenarioIds: ['S1'],
+    files: {
+      'scripts/tests/jsdoc.test.mjs': [
+        `// ${marker}`,
+        "/** What a radio's control actually paints, disabled or not. */",
+        "test('S1 paints its control', () => {});",
+        '',
+      ].join('\n'),
+    },
+  });
+  t.after(() => fixture.cleanup());
+
+  const result = await fixture.runTraceability();
+
+  assert.equal(result.code, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /GATE traceability: PASS/);
+});
+
 test('reads evidence that follows a glob string literal shaped like a block comment', async (t) => {
   // `'/assets/fonts/*'` is a Cloudflare `_headers` pattern, not a comment
   // opener. Treating it as one silently discarded every line after it — the

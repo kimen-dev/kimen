@@ -36,27 +36,79 @@ else
 fi
 
 # Strip comments so an S-ID that appears only in prose never counts as
-# evidence. This is a single left-to-right scan with three states — code,
-# string literal, block comment — because the three cannot be recognized
-# independently. A scenario ID lives inside a string literal (a test title),
-# and string literals routinely contain the characters that open a comment
-# ('/assets/fonts/*' is a Cloudflare _headers glob, 'https://kimen.dev/' is a
-# URL, '#main' is a selector), while comments routinely contain apostrophes
-# ("a radio's control"). Scanning for comment openers without tracking strings
-# made the first such literal swallow every following line of the file, and
-# the gate then reported PASS over evidence it had never read — found
-# 2026-08-11, when the whole of scripts/tests/site-publication.test.mjs was
-# invisible to this gate. Scanning for strings without tracking comments
-# fails the mirror image. State carries across lines for block comments only:
-# an unterminated quote is reset at end of line so one odd line can never
-# blind the rest of the file.
+# evidence. This is a single left-to-right scan over four states — code,
+# string literal, regular-expression literal, block comment — because they
+# cannot be recognized independently; whichever state is entered first wins.
+#
+# Each state is here because leaving it out produced a real defect:
+#   - strings: a scenario ID lives inside a string literal (a test title), and
+#     string literals routinely contain comment openers ('/assets/fonts/*' is a
+#     Cloudflare _headers glob, 'https://kimen.dev/' is a URL, '#main' is a
+#     selector). Scanning for comment openers without tracking strings made the
+#     first such literal swallow every following line of the file, and this
+#     gate then reported PASS over evidence it had never read — found
+#     2026-08-11, when the whole of scripts/tests/site-publication.test.mjs was
+#     invisible to it.
+#   - comments: blanking strings first fails the mirror image, because comments
+#     routinely contain apostrophes ("a radio's control") and the phantom
+#     string swallows the comment's own terminator.
+#   - regex literals: `const re = /don't/u;  // S3 is not evidence` has the
+#     apostrophe in neither a string nor a comment. Without this state the
+#     apostrophe opens a phantom string, the trailing `//` is never seen, and
+#     the comment counts as evidence — which is the exact gaming vector the
+#     "comments do not count" rule exists to block (see the note further down).
+#
+# WHAT ACTUALLY HOLDS ACROSS LINES. Block-comment state carries across lines,
+# by necessity. String and regex state do not: a line that ends inside an open
+# quote is treated as unparseable, its scan result is discarded, and the raw
+# line is re-stripped conservatively (block-comment pairs, then everything from
+# the first // or #) exactly as the pre-2026-08-11 implementation did. That
+# bounds a mis-parse to its own line only for the string case.
+#
+# It is NOT true that one odd line can never blind the rest of a file. Block
+# state can still be entered falsely — by a `/*` inside a multi-line template
+# literal, or a regex character class such as /[/*]/u whose opening `/` was
+# read as division — and it then truncates every line up to the next `*/`.
+# That direction loses evidence rather than inventing it, so it fails the gate
+# loudly instead of passing it falsely, but it is a real limit, not a
+# guarantee. Do not restate it as one.
 append_executable_lines() {
   local source_file="$1"
   local destination="$2"
   awk '
-    function executable_text(source,   out, i, character, pair, length_of_source, quote) {
+    # A `/` opens a regex literal only where an expression may begin. After a
+    # value (identifier, literal, `)`, `]`) it is division. Getting this wrong
+    # costs evidence, never safety: a regex read as division re-enters code
+    # state at the next `/`.
+    function opens_regex(previous) {
+      return previous == "" || index("([{,;:=!&|?+-*%~^<>", previous) > 0
+    }
+    # The pre-2026-08-11 stripper, kept verbatim as the fallback for a line the
+    # scanner could not parse. Conservative by construction: it cuts at the
+    # FIRST // or #, even one inside a string.
+    function conservative_text(source,   text, prefix, suffix) {
+      text = source
+      while (match(text, /\/\*/)) {
+        prefix = substr(text, 1, RSTART - 1)
+        suffix = substr(text, RSTART + RLENGTH)
+        if (match(suffix, /\*\//)) {
+          text = prefix substr(suffix, RSTART + RLENGTH)
+        } else {
+          text = prefix
+          in_block = 1
+          break
+        }
+      }
+      sub(/[[:space:]]*\/\/.*/, "", text)
+      sub(/[[:space:]]*#.*/, "", text)
+      return text
+    }
+    function executable_text(source,   out, i, character, pair, length_of_source, quote, in_regex, in_class, previous) {
       out = ""
       quote = ""
+      in_regex = 0
+      in_class = 0
+      previous = ""
       length_of_source = length(source)
       i = 1
       while (i <= length_of_source) {
@@ -73,7 +125,25 @@ append_executable_lines() {
             i += 2
             continue
           }
-          if (character == quote) { quote = "" }
+          if (character == quote) { quote = ""; previous = character }
+          i += 1
+          continue
+        }
+        if (in_regex) {
+          out = out character
+          if (character == "\\") {
+            out = out substr(source, i + 1, 1)
+            i += 2
+            continue
+          }
+          if (character == "[") {
+            in_class = 1
+          } else if (character == "]") {
+            in_class = 0
+          } else if (character == "/" && in_class == 0) {
+            in_regex = 0
+            previous = character
+          }
           i += 1
           continue
         }
@@ -86,9 +156,20 @@ append_executable_lines() {
           i += 1
           continue
         }
+        if (character == "/" && opens_regex(previous)) {
+          in_regex = 1
+          in_class = 0
+          out = out character
+          i += 1
+          continue
+        }
         out = out character
+        if (character !~ /[[:space:]]/) { previous = character }
         i += 1
       }
+      # An unterminated quote means the line was not parsed: distrust every
+      # boundary it produced and fall back to the conservative stripper.
+      if (quote != "") { return conservative_text(source) }
       return out
     }
     BEGIN { in_block = 0; SINGLE_QUOTE = sprintf("%c", 39) }
