@@ -67,7 +67,7 @@ Feature: Kimen public site experience
 
   # S8
   Scenario: Measured pages declare what is measured
-    Given client JavaScript is unavailable
+    Given the site counts page views of its public pages
     When the visitor follows the "Privacy" link from a measured page
     Then the privacy declaration names Umami and the categories it records
     And it states that no cookies are set and no IP address is stored

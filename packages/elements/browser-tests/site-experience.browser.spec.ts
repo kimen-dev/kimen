@@ -590,7 +590,7 @@ describe('Kimen public site experience in a real browser', () => {
     await expectAccessible(document.body);
   });
 
-  it('S8 keeps the privacy declaration semantic and accessible without client JavaScript', async () => {
+  it('S5 keeps the privacy declaration semantic and accessible without client JavaScript', async () => {
     // Same reason as the landing scan above: keep the whole declaration inside
     // the viewport so axe samples painted text instead of reporting a
     // paragraph that straddles the viewport edge as partially obscured.

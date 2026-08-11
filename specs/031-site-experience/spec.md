@@ -91,7 +91,7 @@ Feature: Kimen public site experience
 
   # S8
   Scenario: Measured pages declare what is measured
-    Given client JavaScript is unavailable
+    Given the site counts page views of its public pages
     When the visitor follows the "Privacy" link from a measured page
     Then the privacy declaration names Umami and the categories it records
     And it states that no cookies are set and no IP address is stored
@@ -155,7 +155,7 @@ Feature: Kimen public site experience
 | --- | --- |
 | Core behavior | S1, S5, S7, S8, S9, S10 |
 | Keyboard path | S3 |
-| Assistive-tech outcome | S4, S5, S8 |
+| Assistive-tech outcome | S4, S5 |
 | Form participation | S4 |
 | Theming | S2, S3 |
 | Reduced motion | S6 |
