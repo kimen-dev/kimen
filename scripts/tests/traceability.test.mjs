@@ -78,27 +78,30 @@ test('rejects a scenario ID in a comment that trails an apostrophe-bearing regex
 });
 
 test('rejects a scenario ID in a comment on a line that never returns to code state', async (t) => {
-  // A wrapped division, or any leading `/`, opens regex state that never
-  // closes. The line then ends outside code state with the quote clean, so a
-  // fallback keyed only on an open quote never fires and the trailing comment
-  // is emitted as evidence. Shell tests make this shape ordinary rather than
-  // exotic: `/` starts a path on nearly every line.
+  // A wrapped division, or any leading `/`, opens a speculative regex. Each
+  // probe here carries something after the comment marker that an earlier
+  // version of this fixture lacked and so passed for the wrong reason: the
+  // shell comment holds a path, and the block comments are followed by
+  // `/`-bearing code or left unterminated.
   const fixture = await createFixtureRepo({
     featureId,
-    scenarioIds: ['S1', 'S2', 'S3'],
+    scenarioIds: ['S1', 'S2', 'S3', 'S4'],
     files: {
       'scripts/tests/wrapped.test.mjs': [
         `// ${marker}`,
         'const total = sum',
         '  / count; // S1 is not evidence',
         'const ratio = [first',
-        '  / second]; /* S2 is not evidence */',
+        '  / second]; /* S2 is not evidence */ report(rate / 2);',
+        'const other = sum',
+        '  / count; /* S3 is not evidence and unterminated',
+        '   still inside the comment */ report(rate / 2);',
         '',
       ].join('\n'),
       'sandbox/tests/paths.test.sh': [
         `# ${marker}`,
         'copy_fixture \\',
-        '  /tmp # S3 is not evidence',
+        '  /tmp # S4 is not evidence, see /tmp/kimen',
         '',
       ].join('\n'),
     },
@@ -108,9 +111,56 @@ test('rejects a scenario ID in a comment on a line that never returns to code st
   const result = await fixture.runTraceability();
 
   assert.notEqual(result.code, 0);
-  assert.match(result.stdout, /S1 has no reference in code lines/);
-  assert.match(result.stdout, /S2 has no reference in code lines/);
-  assert.match(result.stdout, /S3 has no reference in code lines/);
+  for (const id of ['S1', 'S2', 'S3', 'S4']) {
+    assert.match(result.stdout, new RegExp(`${id} has no reference in code lines`, 'u'));
+  }
+});
+
+test('reads evidence a JavaScript "#" would hide if it were a comment marker', async (t) => {
+  // `#` is a comment marker in shell and nowhere in JavaScript, where it is a
+  // private class field. The probe puts it outside a string on purpose: inside
+  // one, string state already protected it, so a `#main` selector in a test
+  // title would pass here without proving anything.
+  const fixture = await createFixtureRepo({
+    featureId,
+    scenarioIds: ['S1'],
+    files: {
+      'scripts/tests/private-field.test.mjs': [
+        `// ${marker}`,
+        "class Probe { #id = 'S1'; }",
+        '',
+      ].join('\n'),
+    },
+  });
+  t.after(() => fixture.cleanup());
+
+  const result = await fixture.runTraceability();
+
+  assert.equal(result.code, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /GATE traceability: PASS/);
+});
+
+test('reads evidence on a line carrying a JSX closing tag', async (t) => {
+  // `</a>` is not the start of a regex literal. Treating `<` as an opener made
+  // every JSX line fall to the conservative stripper, which cuts at the first
+  // comment marker anywhere on the line — including one inside a string.
+  const fixture = await createFixtureRepo({
+    featureId,
+    scenarioIds: ['S1', 'S2'],
+    files: {
+      'packages/example/view.spec.tsx': [
+        `// ${marker}`,
+        "it('S1 targets #main and S2', () => render(<a></a>));",
+        '',
+      ].join('\n'),
+    },
+  });
+  t.after(() => fixture.cleanup());
+
+  const result = await fixture.runTraceability();
+
+  assert.equal(result.code, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /GATE traceability: PASS/);
 });
 
 test('rejects a scenario ID in a comment that trails a regex after a keyword', async (t) => {
