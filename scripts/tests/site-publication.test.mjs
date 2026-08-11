@@ -142,6 +142,26 @@ test('S1 the published site keeps the previous base reachable', async () => {
   assert.match(redirects, /^\/kimen\/\*\s+\/:splat\s+301$/mu);
 });
 
+test('S1 the publish job pins its deploy tool and scopes its credential', async () => {
+  const workflow = await readFile(join(repositoryRoot, '.github/workflows/docs.yml'), 'utf8');
+
+  assert.match(
+    workflow,
+    /^ +wranglerVersion: '\d+\.\d+\.\d+'$/mu,
+    "the tool that holds the API token and performs the deploy must be pinned exactly; a semver range like '4' is resolved fresh from npm on every run",
+  );
+  assert.match(
+    workflow,
+    /^ +WRANGLER_SEND_METRICS: false$/mu,
+    'wrangler telemetry targets a host outside the allowlist, and a blocked-egress annotation on every run teaches reviewers to ignore harden-runner',
+  );
+  assert.match(
+    workflow,
+    /^ {4}environment:\n {6}name: \$\{\{ github\.event_name == 'pull_request' && 'site-preview' \|\| 'site-production' \}\}$/mu,
+    'the publish job must resolve pull requests to the preview environment and everything else to the branch-restricted production one',
+  );
+});
+
 test('S5 the privacy page is a semantic no-JavaScript page that declares the measurement', async () => {
   const source = await readSiteFile('privacy/index.html');
 

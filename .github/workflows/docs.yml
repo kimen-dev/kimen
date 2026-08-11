@@ -98,6 +98,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions: {}
+    # The old GitHub Pages deploy ran only on push to main behind
+    # `environment: github-pages`. This job now also runs on pull_request, and
+    # for that event GitHub evaluates the PR's own copy of this file — so
+    # without an environment, any in-repo PR touching this workflow would
+    # reach CLOUDFLARE_API_TOKEN. Forks are already excluded by the `if`
+    # above, so the exposure is write-access collaborators, but this is the
+    # one place the migration could widen access instead of narrowing it.
+    # site-production restricts its deployment branches to main; site-preview
+    # is unrestricted and is what every pull request resolves to.
+    environment:
+      name: ${{ github.event_name == 'pull_request' && 'site-preview' || 'site-production' }}
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
@@ -151,11 +162,25 @@ jobs:
 
       - name: Deploy to Cloudflare Pages
         id: deployment
+        env:
+          # Wrangler 4 posts telemetry to sparrow.cloudflare.com, which is not
+          # in this job's allowlist and must not be added to it. Left on, the
+          # blocked request would annotate every single run, and annotations
+          # that always fire teach reviewers to ignore harden-runner — which
+          # is the whole point of running it in block mode.
+          WRANGLER_SEND_METRICS: false
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          wranglerVersion: '4'
+          # An exact version, not the '4' range D4 shipped: the action is
+          # pinned by 40-character SHA, but the tool it downloads holds the
+          # API token and performs the deploy, so resolving it fresh from npm
+          # on every run left the strongest link protecting the weakest one.
+          # 4.118.0 is the newest wrangler 4.x that has cleared the 7-day
+          # minimumReleaseAge this workspace applies to every other package
+          # (pnpm-workspace.yaml). Bump it deliberately, in a reviewed commit.
+          wranglerVersion: '4.118.0'
           command: >-
             pages deploy site-dist --project-name=kimen
             --branch=${{ steps.target.outputs.branch }}
