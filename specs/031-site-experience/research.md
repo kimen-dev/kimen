@@ -178,11 +178,14 @@ a minimal redirect artifact that preserves the path and declares
 `rel="canonical"` to the new location, because the old URL is already spread
 through npm READMEs, docs and external links.
 
-Mechanically: that artifact is published to GitHub Pages once, by a manual
-`workflow_dispatch` run, and then frozen — no job in `docs.yml` keeps
-deploying to Pages on every merge, so the two Pages-scoped writes really do
-leave `ALLOWED_SCOPED_WRITES` as D4 states. GitHub Pages is switched off
-entirely only once its residual traffic is zero.
+Mechanically it uses **no workflow at all**: the GitHub Pages source switches
+from "GitHub Actions" to "deploy from a branch", pointing at a two-file
+`pages-redirect` branch (`index.html` and `404.html`, the latter doing the
+path-preserving redirect). A branch-served Pages site needs no job, no token
+and no permission, which is what lets the two Pages-scoped writes genuinely
+leave `ALLOWED_SCOPED_WRITES` as D4 states instead of merely moving to
+another workflow. GitHub Pages is switched off entirely once its residual
+traffic is zero.
 
 ## Failure modes
 
