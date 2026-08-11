@@ -35,34 +35,65 @@ else
   TEST_ROOTS=(packages scripts .github sandbox tools)
 fi
 
+# Strip comments so an S-ID that appears only in prose never counts as
+# evidence. This is a single left-to-right scan with three states — code,
+# string literal, block comment — because the three cannot be recognized
+# independently. A scenario ID lives inside a string literal (a test title),
+# and string literals routinely contain the characters that open a comment
+# ('/assets/fonts/*' is a Cloudflare _headers glob, 'https://kimen.dev/' is a
+# URL, '#main' is a selector), while comments routinely contain apostrophes
+# ("a radio's control"). Scanning for comment openers without tracking strings
+# made the first such literal swallow every following line of the file, and
+# the gate then reported PASS over evidence it had never read — found
+# 2026-08-11, when the whole of scripts/tests/site-publication.test.mjs was
+# invisible to this gate. Scanning for strings without tracking comments
+# fails the mirror image. State carries across lines for block comments only:
+# an unterminated quote is reset at end of line so one odd line can never
+# blind the rest of the file.
 append_executable_lines() {
   local source_file="$1"
   local destination="$2"
   awk '
-    BEGIN { in_block = 0 }
+    function executable_text(source,   out, i, character, pair, length_of_source, quote) {
+      out = ""
+      quote = ""
+      length_of_source = length(source)
+      i = 1
+      while (i <= length_of_source) {
+        character = substr(source, i, 1)
+        pair = substr(source, i, 2)
+        if (in_block) {
+          if (pair == "*/") { in_block = 0; i += 2 } else { i += 1 }
+          continue
+        }
+        if (quote != "") {
+          out = out character
+          if (character == "\\") {
+            out = out substr(source, i + 1, 1)
+            i += 2
+            continue
+          }
+          if (character == quote) { quote = "" }
+          i += 1
+          continue
+        }
+        if (pair == "/*") { in_block = 1; i += 2; continue }
+        if (pair == "//") { break }
+        if (character == "#") { break }
+        if (character == "\"" || character == SINGLE_QUOTE || character == "`") {
+          quote = character
+          out = out character
+          i += 1
+          continue
+        }
+        out = out character
+        i += 1
+      }
+      return out
+    }
+    BEGIN { in_block = 0; SINGLE_QUOTE = sprintf("%c", 39) }
     {
-      line = $0
-      if (in_block) {
-        if (match(line, /\*\//)) {
-          line = substr(line, RSTART + RLENGTH)
-          in_block = 0
-        } else {
-          next
-        }
-      }
-      while (match(line, /\/\*/)) {
-        prefix = substr(line, 1, RSTART - 1)
-        suffix = substr(line, RSTART + RLENGTH)
-        if (match(suffix, /\*\//)) {
-          line = prefix substr(suffix, RSTART + RLENGTH)
-        } else {
-          line = prefix
-          in_block = 1
-          break
-        }
-      }
-      sub(/[[:space:]]*\/\/.*/, "", line)
-      sub(/[[:space:]]*#.*/, "", line)
+      line = executable_text($0)
       if (line !~ /^[[:space:]]*$/) print line
     }
   ' "$source_file" >> "$destination"

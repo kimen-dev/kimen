@@ -1,5 +1,6 @@
 // @spec:031-site-experience#S1
-// @spec:031-site-experience#S5
+// @spec:031-site-experience#S8
+// @spec:031-site-experience#S9
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
@@ -162,7 +163,7 @@ test('S1 the publish job pins its deploy tool and scopes its credential', async 
   );
 });
 
-test('S5 the privacy page is a semantic no-JavaScript page that declares the measurement', async () => {
+test('S8 the privacy page is a semantic no-JavaScript page that declares the measurement', async () => {
   const source = await readSiteFile('privacy/index.html');
 
   assert.match(source, /<!doctype html>/iu);
@@ -192,13 +193,13 @@ test('S5 the privacy page is a semantic no-JavaScript page that declares the mea
   }
 });
 
-test('S1 the assembler publishes the privacy route', async () => {
+test('S8 the assembler publishes the privacy route', async () => {
   const assembler = await readFile(join(repositoryRoot, 'scripts/build-site.sh'), 'utf8');
 
   assert.match(assembler, /cp -R site\/privacy\/\. ["']\$OUT\/privacy\/["']/u);
 });
 
-test('S5 every published documentation page can reach the privacy declaration', async () => {
+test('S8 every published documentation page can reach the privacy declaration', async () => {
   // /docs/* is the largest measured surface: astro.config.mjs puts the Umami
   // tag on every page there. Asserted against the BUILT pages rather than the
   // Starlight Footer override, because what matters is that the declaration is
@@ -233,7 +234,7 @@ test('S5 every published documentation page can reach the privacy declaration', 
   );
 });
 
-test('S5 the privacy page declares every category the Umami schema actually stores', async () => {
+test('S8 the privacy page declares every category the Umami schema actually stores', async () => {
   // Verified against the running Umami instance's own `session` table schema
   // (not its docs): browser, os, device, screen, language, country, region,
   // city — and no IP address column anywhere. The declaration must name each
@@ -295,7 +296,7 @@ test('S5 the privacy page declares every category the Umami schema actually stor
   );
 });
 
-test('S1 the analytics tag is absent from the sources and gated at build time', async () => {
+test('S9 the analytics tag is absent from the sources and gated at build time', async () => {
   const config = JSON.parse(await readSiteFile('analytics.json'));
   assert.equal(config.scriptUrl, 'https://umami.onmars.tech/script.js');
   assert.equal(config.domains, 'kimen.dev');
@@ -344,7 +345,7 @@ async function assembleSite(marker) {
   return output;
 }
 
-test('S1 the assembler emits the analytics tag only when the build marker is set', async (t) => {
+test('S9 the assembler emits the analytics tag only when the build marker is set', async (t) => {
   const config = JSON.parse(await readSiteFile('analytics.json'));
   const [unmeasured, measured] = await Promise.all([assembleSite(undefined), assembleSite('1')]);
   t.after(async () => {
@@ -384,7 +385,7 @@ test('S1 the assembler emits the analytics tag only when the build marker is set
   }
 });
 
-test('S1 the docs site gates its analytics tag on the same build marker', async () => {
+test('S9 the docs site gates its analytics tag on the same build marker', async () => {
   // The docs site is the largest measured surface, and its tag is emitted by
   // Astro rather than by the assembler, so the run above cannot reach it:
   // site/docs/dist is already built by the time build-site.sh copies it, and

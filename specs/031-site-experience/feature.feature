@@ -62,3 +62,21 @@ Feature: Kimen public site experience
       | landing    | 1440  |
       | playground | 320   |
       | playground | 1440  |
+
+  # S8
+  Scenario: Measured pages declare what is measured
+    Given client JavaScript is unavailable
+    When the visitor follows the "Privacy" link from a measured page
+    Then the privacy declaration names Umami and the categories it records
+    And it states that no cookies are set and no IP address is stored
+
+  # S9
+  Scenario Outline: Analytics ships only with the production build
+    Given a <build> of the site
+    When the site is assembled
+    Then its pages <measurement>
+
+    Examples:
+      | build                     | measurement                                    |
+      | production publishing run | load the declared Umami endpoint for kimen.dev |
+      | local or test run         | carry no analytics at all                      |

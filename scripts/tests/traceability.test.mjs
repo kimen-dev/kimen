@@ -50,6 +50,31 @@ test('rejects scenario IDs that appear only in line, block, or trailing comments
   assert.match(result.stdout, /S4 has no reference in code lines/);
 });
 
+test('reads evidence that follows a glob string literal shaped like a block comment', async (t) => {
+  // `'/assets/fonts/*'` is a Cloudflare `_headers` pattern, not a comment
+  // opener. Treating it as one silently discarded every line after it — the
+  // whole of scripts/tests/site-publication.test.mjs — so the gate reported
+  // PASS on evidence it had never read.
+  const fixture = await createFixtureRepo({
+    featureId,
+    scenarioIds: ['S1'],
+    files: {
+      'scripts/tests/globs.test.mjs': [
+        `// ${marker}`,
+        "const immutable = ['/assets/fonts/*'];",
+        "test('S1 caches ' + immutable[0], () => {});",
+        '',
+      ].join('\n'),
+    },
+  });
+  t.after(() => fixture.cleanup());
+
+  const result = await fixture.runTraceability();
+
+  assert.equal(result.code, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /GATE traceability: PASS/);
+});
+
 test('ignores fixtures, generated outputs, dependencies, and undeclared roots', async (t) => {
   const executableClaim = `// ${marker}\ntest('S1 false evidence', () => {});\n`;
   const fixture = await createFixtureRepo({
