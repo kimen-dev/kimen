@@ -115,7 +115,7 @@ and attributes as usual and listen to the `ki-*` `CustomEvent`s
 (`ki-change`, `ki-close`, `ki-dismiss`) with each framework's event syntax.
 Form controls participate in native forms via `ElementInternals`. Details and
 per-framework notes live in the
-[framework documentation](https://kimen-dev.github.io/kimen/docs/).
+[framework documentation](https://kimen.dev/docs/).
 
 ## For agents
 
@@ -130,9 +130,9 @@ release validation, so they are guaranteed to run.
 ## Explore
 
 Read the guides and per-component pages on the
-[documentation site](https://kimen-dev.github.io/kimen/docs/), or browse
+[documentation site](https://kimen.dev/docs/), or browse
 every component with live theme switching in the public
-[Storybook](https://kimen-dev.github.io/kimen/storybook/).
+[Storybook](https://kimen.dev/storybook/).
 
 ## License
 

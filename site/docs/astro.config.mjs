@@ -2,12 +2,12 @@
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 
-// The docs site lives inside the single GitHub Pages artifact assembled by
-// scripts/build-site.sh: landing at /kimen/, this site at /kimen/docs/,
-// Storybook at /kimen/storybook/.
+// The docs site lives inside the single Cloudflare Pages artifact assembled
+// by scripts/build-site.sh and published at the domain root: landing at /,
+// this site at /docs/, Storybook at /storybook/.
 export default defineConfig({
-  site: 'https://kimen-dev.github.io',
-  base: '/kimen/docs',
+  site: 'https://kimen.dev',
+  base: '/docs',
   integrations: [
     starlight({
       title: 'Kimen',

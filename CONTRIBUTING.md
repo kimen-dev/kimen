@@ -61,7 +61,7 @@ the Art. I generation pipeline coherent:
   gates verify the result.
 - **Site**: the hand-written landing at `site/` and the Starlight docs app at
   `site/docs/`, published to
-  [kimen-dev.github.io/kimen/docs/](https://kimen-dev.github.io/kimen/docs/).
+  [kimen.dev/docs/](https://kimen.dev/docs/).
   Component API tables on the site render from the generated manifest at
   build time — only narrative, recipes and accessibility notes are
   hand-authored there.
