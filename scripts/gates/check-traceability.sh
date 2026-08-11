@@ -85,18 +85,41 @@ fi
 # it as the current state of knowledge and probe (method at the end) before
 # concluding that a new suspicion is or is not covered.
 #
-#   1. JavaScript. A `/` after `)` or `]` that really opens a regex is read as
-#      division, because telling those apart needs a real parser. If that
-#      regex's contents hold an odd number of quote characters, the leftover
-#      quote opens a phantom string; should a matching quote then appear inside
-#      a trailing comment (`// doesn't count`), the phantom string closes
-#      there, the comment marker is never seen, and THE COMMENT IS EMITTED AS
-#      EVIDENCE. This direction INVENTS evidence: the gate can report PASS on
-#      an S-ID that only ever appeared in prose. It remains open.
+#   1. JavaScript. A `/` after `)`, `]` or `<` that really opens a regex is
+#      read as division, because telling those apart needs a real parser. If
+#      that regex's contents hold an odd number of quote characters, the
+#      leftover quote opens a phantom string; should a matching quote then
+#      appear inside a trailing comment (`// doesn't count`), the phantom
+#      string closes there, the comment marker is never seen, and THE COMMENT
+#      IS EMITTED AS EVIDENCE. This direction INVENTS evidence: the gate can
+#      report PASS on an S-ID that only ever appeared in prose. It remains
+#      open.
+#        `<` joined this list deliberately, in the same commit that split the
+#        lexers, and is a trade rather than an oversight: it used to be an
+#        opener, so `assert(count < /don't/u.test(name)); // S1 doesn't count`
+#        was hidden and is now exposed. What removing it bought is five real
+#        truncations gone from packages/elements/src/components/ki-qr/ki-qr.spec.tsx,
+#        where every JSX closing tag `</a>` opened a regex that never closed
+#        and cut the line at `value="https:`. A regex after `<` is unreachable
+#        in this repository (grep finds none); JSX is on five lines of one
+#        spec file. Reverse the trade only with that measurement redone.
 #   2. JavaScript. A `/*` inside a multi-line template literal opens block
 #      state, which then truncates every line up to the next `*/`. This
 #      direction LOSES evidence: FAIL for an S-ID a test really covers. Noisy,
 #      not dangerous.
+#   3. Shell. An apostrophe that is not a quote — `echo it\'s fine # S3
+#      doesn't count` — opens a phantom string that a later apostrophe closes
+#      past the `#`, so THE COMMENT IS EMITTED AS EVIDENCE. Same direction as
+#      shape 1: this INVENTS evidence. Unchanged by the lexer split, which
+#      neither introduced nor fixed it; before the split it was the same
+#      mechanism under the JavaScript lexer.
+#   4. Shell. `$#` and `${#array[@]}` are ordinary shell, and the `#` in them
+#      is read as a comment marker, so `if [ $# -gt 0 ]; then run_case S4; fi`
+#      truncates at `$#`. This direction LOSES evidence.
+#
+# The shell entries exist because a reader would otherwise infer from silence
+# that the shell branch is clean. It is not: it has one shape in each
+# direction, exactly like the JavaScript branch.
 #
 # The two directions are not equivalent and there is no single safe direction.
 # Any change here has to be argued and measured against both rules at once:
@@ -118,9 +141,25 @@ fi
 append_executable_lines() {
   local source_file="$1"
   local destination="$2"
-  local lexer=javascript
+  local lexer
+  # An allowlist, not a default. Guessing a lexer for an unknown language is
+  # how `#` comments in a .bash or .zsh test would silently become evidence:
+  # anything that is not shell would get the JavaScript lexer, where `#` is
+  # not a comment marker at all. A gate that guesses is worse than one that
+  # refuses, so this stops the run instead.
+  #
+  # KEEP IN STEP WITH the -name list in discover_marked_tests() below. The two
+  # lists are the same set seen from two sides — what the gate will read, and
+  # what the gate knows how to read — and they sit ~160 lines apart.
   case "$source_file" in
     *.sh) lexer=shell ;;
+    *.mjs | *.js | *.cjs | *.ts | *.tsx) lexer=javascript ;;
+    *)
+      echo "GATE traceability: FAIL — no lexer for $source_file"
+      echo "  This gate strips comments with a language-specific lexer and refuses to guess at an unknown one."
+      echo "  Add the extension to BOTH lists: the case statement in append_executable_lines() and the -name list in discover_marked_tests()."
+      exit 1
+      ;;
   esac
   awk -v LEXER="$lexer" '
     # A `/` opens a regex literal only where an expression may begin: at the
@@ -250,6 +289,8 @@ append_executable_lines() {
         if (character !~ /[[:space:]]/) { previous = character }
         i += 1
       }
+      # Ending outside code state means the line was not parsed, so distrust
+      # every boundary it produced. See "WHEN A LINE CANNOT BE PARSED" above.
       if (quote != "" || in_regex) { return conservative_text(source) }
       return out
     }
@@ -261,6 +302,11 @@ append_executable_lines() {
   ' "$source_file" >> "$destination"
 }
 
+# KEEP IN STEP WITH the case statement in append_executable_lines() above.
+# Every extension named here must have a lexer there, or the gate stops with
+# "no lexer for <file>" the first time one is discovered. That failure is the
+# intended behavior: adding an extension here alone would hand an unknown
+# language to the JavaScript lexer.
 discover_marked_tests() {
   local feature_id="$1"
   local root candidate
