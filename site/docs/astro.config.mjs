@@ -1,23 +1,31 @@
 // @ts-check
+import { readFileSync } from 'node:fs';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
-import analytics from '../analytics.json' with { type: 'json' };
 
 // Same build gate as scripts/build-site.sh: the tag exists only when the
-// publishing workflow sets the marker.
+// publishing workflow sets the marker. site/analytics.json is read (not
+// imported as a module) so a config file consulting a sibling data file
+// stays outside the Nx project graph, and only when analytics is on — a
+// malformed analytics.json must not break the docs build when it is off.
 const analyticsHead =
   process.env.KIMEN_ANALYTICS === '1'
-    ? [
-        {
-          tag: 'script',
-          attrs: {
-            defer: true,
-            src: analytics.scriptUrl,
-            'data-website-id': analytics.websiteId,
-            'data-domains': analytics.domains,
+    ? (() => {
+        const analytics = JSON.parse(
+          readFileSync(new URL('../analytics.json', import.meta.url), 'utf8'),
+        );
+        return [
+          {
+            tag: 'script',
+            attrs: {
+              defer: true,
+              src: analytics.scriptUrl,
+              'data-website-id': analytics.websiteId,
+              'data-domains': analytics.domains,
+            },
           },
-        },
-      ]
+        ];
+      })()
     : [];
 
 // The docs site lives inside the single Cloudflare Pages artifact assembled
