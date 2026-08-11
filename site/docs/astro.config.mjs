@@ -84,6 +84,10 @@ export default defineConfig({
         // Keep Starlight's content/navigation engine while translating the
         // approved Kimen docs shell through supported component overrides.
         Header: './src/components/Header.astro',
+        // Adds the privacy link to every documentation page: /docs/* is the
+        // largest measured surface, so it must reach the declaration of what
+        // the analytics tag above does.
+        Footer: './src/components/Footer.astro',
         Sidebar: './src/components/Sidebar.astro',
         PageTitle: './src/components/PageTitle.astro',
         // Mirrors Starlight's resolved theme into Kimen's scheme attribute so

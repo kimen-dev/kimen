@@ -2,9 +2,9 @@
 // @spec:031-site-experience#S5
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
@@ -176,6 +176,41 @@ test('S1 the assembler publishes the privacy route', async () => {
   const assembler = await readFile(join(repositoryRoot, 'scripts/build-site.sh'), 'utf8');
 
   assert.match(assembler, /cp -R site\/privacy\/\. ["']\$OUT\/privacy\/["']/u);
+});
+
+test('S5 every published documentation page can reach the privacy declaration', async () => {
+  // /docs/* is the largest measured surface: astro.config.mjs puts the Umami
+  // tag on every page there. Asserted against the BUILT pages rather than the
+  // Starlight Footer override, because what matters is that the declaration is
+  // actually reachable from each measured page, not that a component exists.
+  const documentationRoot = join(siteRoot, 'docs/dist');
+  const entries = await readdir(documentationRoot, {
+    recursive: true,
+    withFileTypes: true,
+  }).catch((error) => {
+    assert.fail(
+      `site/docs/dist is missing: run \`pnpm --filter @kimen/docs build\` first (${error.message})`,
+    );
+  });
+  const pages = entries
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.html'))
+    .map((entry) => join(entry.parentPath, entry.name));
+
+  assert.ok(pages.length > 0, 'the documentation build must produce pages');
+
+  const unreachable = [];
+  for (const page of pages) {
+    const markup = await readFile(page, 'utf8');
+    if (!markup.includes('href="/privacy/"')) {
+      unreachable.push(relative(documentationRoot, page));
+    }
+  }
+
+  assert.deepEqual(
+    unreachable,
+    [],
+    'every measured documentation page must link the privacy declaration',
+  );
 });
 
 test('S5 the privacy page declares every category the Umami schema actually stores', async () => {
