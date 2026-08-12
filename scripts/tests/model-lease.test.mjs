@@ -10,6 +10,7 @@ import { setTimeout } from 'node:timers';
 import { fileURLToPath } from 'node:url';
 
 import { invokeHelper } from '../../sandbox/model-lease.mjs';
+import { atomicPidWrite, readSettledPid } from './helpers/pid-file.mjs';
 
 const leaseVerifier = fileURLToPath(new URL('../../sandbox/model-lease.sh', import.meta.url));
 const now = Math.floor(Date.now() / 1000);
@@ -615,13 +616,13 @@ test('S4 helper timeout kills a detached-fd descendant after its leader exits on
     helperPath,
     `#!/usr/bin/env bash
 set -euo pipefail
-printf '%s\n' "$$" > "$KIMEN_HELPER_LEADER_PID_FILE"
+${atomicPidWrite('"$$"', '"$KIMEN_HELPER_LEADER_PID_FILE"')}
 (
   trap '' TERM
   exec </dev/null >/dev/null 2>/dev/null
   while :; do sleep 60; done
 ) &
-printf '%s\n' "$!" > "$KIMEN_HELPER_DESCENDANT_PID_FILE"
+${atomicPidWrite('"$!"', '"$KIMEN_HELPER_DESCENDANT_PID_FILE"')}
 trap 'exit 0' TERM
 wait
 `,
@@ -644,8 +645,8 @@ wait
   );
   assert.ok(Date.now() - startedAt < 3_000, 'helper supervisor exceeded its hard deadline');
 
-  leaderPid = Number((await readFile(leaderPidPath, 'utf8')).trim());
-  const descendantPid = Number((await readFile(descendantPidPath, 'utf8')).trim());
+  leaderPid = await readSettledPid(leaderPidPath);
+  const descendantPid = await readSettledPid(descendantPidPath);
   assert.throws(
     () => process.kill(leaderPid, 0),
     (error) => error?.code === 'ESRCH',
@@ -682,13 +683,13 @@ test('S4 rejects a successful helper leader that leaves a detached-fd descendant
     helperPath,
     `#!/usr/bin/env bash
 set -euo pipefail
-printf '%s\n' "$$" > "$KIMEN_HELPER_LEADER_PID_FILE"
+${atomicPidWrite('"$$"', '"$KIMEN_HELPER_LEADER_PID_FILE"')}
 (
   trap '' HUP TERM
   exec </dev/null >/dev/null 2>/dev/null
   while :; do sleep 60; done
 ) &
-printf '%s\n' "$!" > "$KIMEN_HELPER_DESCENDANT_PID_FILE"
+${atomicPidWrite('"$!"', '"$KIMEN_HELPER_DESCENDANT_PID_FILE"')}
 printf '{}\n'
 exit 0
 `,
@@ -709,8 +710,8 @@ exit 0
     (error) => error?.reason === 'helper-failed',
   );
 
-  leaderPid = Number((await readFile(leaderPidPath, 'utf8')).trim());
-  const descendantPid = Number((await readFile(descendantPidPath, 'utf8')).trim());
+  leaderPid = await readSettledPid(leaderPidPath);
+  const descendantPid = await readSettledPid(descendantPidPath);
   assert.throws(
     () => process.kill(descendantPid, 0),
     (error) => error?.code === 'ESRCH',
@@ -721,6 +722,51 @@ exit 0
       (error) => error?.code === 'ESRCH',
     );
   }
+});
+
+test('S4 a pid file caught between truncate and write is never read as a pid', async (t) => {
+  const directory = await mkdtemp(join(tmpdir(), 'kimen-model-lease-pidfile-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const pidPath = join(directory, 'leader.pid');
+  const writerPath = join(directory, 'slow-writer.sh');
+
+  // The window every `printf ... > file` opens, held open on purpose: the
+  // shell truncates first and writes after. Under load the real helpers sit
+  // here long enough for a reader to land in the middle.
+  await writeFile(
+    writerPath,
+    `#!/usr/bin/env bash\nset -euo pipefail\n: > "$1"\nsleep 0.2\nprintf '%s\\n' "$2" >> "$1"\n`,
+    { mode: 0o700 },
+  );
+  const writer = spawn('bash', [writerPath, pidPath, '4242'], { stdio: 'ignore' });
+  t.after(() => writer.kill('SIGKILL'));
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    try {
+      await stat(pidPath);
+      break;
+    } catch {
+      await new Promise((resolveDelay) => setTimeout(resolveDelay, 2));
+    }
+  }
+
+  // What the S4 tests used to do, and why it produced `Missing expected
+  // exception` instead of a leak: the truncated read coerces to 0, 0 passes
+  // the "did the helper start?" guard, and kill(2) reads pid 0 as the
+  // caller's OWN process group — which is always alive.
+  const coerced = Number((await readFile(pidPath, 'utf8')).trim());
+  assert.equal(
+    coerced,
+    0,
+    'the truncation window must still be open for this test to mean anything',
+  );
+  assert.ok(Number.isSafeInteger(coerced), '0 slips through a safe-integer guard');
+  assert.doesNotThrow(
+    () => process.kill(coerced, 0),
+    'pid 0 is the caller process group, so an existence assertion on it can never fail',
+  );
+
+  // The reader waits for a complete, positive pid instead.
+  assert.equal(await readSettledPid(pidPath), 4242);
 });
 
 test('S4 supervisor signal cleans a TERM-ignoring helper group before exiting', async (t) => {
@@ -746,13 +792,13 @@ test('S4 supervisor signal cleans a TERM-ignoring helper group before exiting', 
     `#!/usr/bin/env bash
 set -euo pipefail
 trap '' HUP TERM
-printf '%s\n' "$$" > "$KIMEN_HELPER_LEADER_PID_FILE"
+${atomicPidWrite('"$$"', '"$KIMEN_HELPER_LEADER_PID_FILE"')}
 (
   trap '' HUP TERM
   exec </dev/null >/dev/null 2>/dev/null
   while :; do sleep 60; done
 ) &
-printf '%s\n' "$!" > "$KIMEN_HELPER_DESCENDANT_PID_FILE"
+${atomicPidWrite('"$!"', '"$KIMEN_HELPER_DESCENDANT_PID_FILE"')}
 while :; do sleep 60; done
 `,
     { mode: 0o700 },
@@ -774,18 +820,8 @@ while :; do sleep 60; done
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   const closed = new Promise((resolveClose) => supervisor.once('close', resolveClose));
-  for (let attempt = 0; attempt < 200; attempt += 1) {
-    try {
-      leaderPid = Number((await readFile(leaderPidPath, 'utf8')).trim());
-      descendantPid = Number((await readFile(descendantPidPath, 'utf8')).trim());
-      break;
-    } catch (error) {
-      if (error?.code !== 'ENOENT') throw error;
-      await new Promise((resolveDelay) => setTimeout(resolveDelay, 10));
-    }
-  }
-  assert.ok(Number.isSafeInteger(leaderPid), 'helper leader never started');
-  assert.ok(Number.isSafeInteger(descendantPid), 'helper descendant never started');
+  leaderPid = await readSettledPid(leaderPidPath);
+  descendantPid = await readSettledPid(descendantPidPath);
 
   supervisor.kill('SIGTERM');
   await closed;

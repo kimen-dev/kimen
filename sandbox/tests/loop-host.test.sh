@@ -942,7 +942,7 @@ case "$command_name" in
     printf '{"leaseId":"fixture-lease-id","token":"fixture-not-a-real-credential"}\n' > "$secret"
     chmod 600 "$secret"
     if [ "${ACQUIRE_IGNORE_TERM_AND_BLOCK_TEST:-0}" = 1 ]; then
-      printf '%s\n' "$$" > "$KIMEN_HOST_STATE/acquire-blocking-pid"
+      printf '%s\n' "$$" > "$KIMEN_HOST_STATE/acquire-blocking-pid.tmp" && mv "$KIMEN_HOST_STATE/acquire-blocking-pid.tmp" "$KIMEN_HOST_STATE/acquire-blocking-pid"
       trap '' TERM
       kill -TERM "$PPID"
       while :; do sleep 1; done
@@ -1344,7 +1344,7 @@ NODE
           while [ ! -e "$KIMEN_HOST_STATE/release-agent" ]; do sleep 0.05; done
         fi
         if [ "${AGENT_IGNORE_TERM_AND_BLOCK_TEST:-0}" = 1 ]; then
-          printf '%s\n' "$$" > "$KIMEN_HOST_STATE/agent-blocking-pid"
+          printf '%s\n' "$$" > "$KIMEN_HOST_STATE/agent-blocking-pid.tmp" && mv "$KIMEN_HOST_STATE/agent-blocking-pid.tmp" "$KIMEN_HOST_STATE/agent-blocking-pid"
           trap '' TERM
           kill -TERM "$PPID"
           while :; do sleep 1; done
@@ -1447,6 +1447,21 @@ run_host_loop_unseeded() {
 
 normalized_events() {
   sed -E 's/^finalize:.*/finalize/' "$1"
+}
+
+read_settled_pid() {
+  # `printf > file` truncates before it writes, so a reader can catch the file
+  # empty. `kill -0 ""` then FAILS, and `! kill -0` turns that into a passing
+  # assertion that checked nothing. Wait for a complete, positive pid instead.
+  local path="$1" attempt pid
+  for attempt in $(seq 1 200); do
+    if [ -s "$path" ]; then
+      pid="$(cat "$path")"
+      case "$pid" in ''|*[!0-9]*) : ;; *) printf '%s\n' "$pid"; return 0 ;; esac
+    fi
+    sleep 0.01
+  done
+  fail "pid file never settled: $path"
 }
 
 assert_events_are() {
@@ -1782,7 +1797,7 @@ test_blocking_child_that_ignores_term_is_killed_reaped_and_cleaned() {
   set -e
 
   [ "$rc" -eq 130 ] || fail "TERM-ignoring child returned $rc instead of 130"
-  child_pid=$(cat "$tmp/state/agent-blocking-pid")
+  child_pid=$(read_settled_pid "$tmp/state/agent-blocking-pid")
   ! kill -0 "$child_pid" 2>/dev/null || fail 'TERM-ignoring Docker child was not killed and reaped'
   assert_events_are "$tmp/events.log" $'docker:bootstrap\ncontainer:bootstrap-destroyed\nlease:acquire\ndocker:agent\ncontainer:agent-destroyed\nsecret:destroyed\nlease:revoke\nfinalize'
   ! grep -q '^docker:gates$' "$tmp/events.log" || fail 'gates began after an interrupted blocking child'
@@ -1803,7 +1818,7 @@ test_blocking_acquire_is_killed_and_known_envelope_is_revoked() {
   set -e
 
   [ "$rc" -eq 130 ] || fail "blocking acquisition returned $rc instead of 130"
-  child_pid=$(cat "$tmp/state/acquire-blocking-pid")
+  child_pid=$(read_settled_pid "$tmp/state/acquire-blocking-pid")
   ! kill -0 "$child_pid" 2>/dev/null || fail 'TERM-ignoring acquisition helper was not killed and reaped'
   assert_events_are "$tmp/events.log" $'docker:bootstrap\ncontainer:bootstrap-destroyed\nlease:acquire\nsecret:destroyed\nlease:revoke\nfinalize'
   ! grep -q '^docker:agent$' "$tmp/events.log" || fail 'agent began after acquisition interruption'
