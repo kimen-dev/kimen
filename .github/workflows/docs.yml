@@ -109,6 +109,7 @@ jobs:
     # is unrestricted and is what every pull request resolves to.
     environment:
       name: ${{ github.event_name == 'pull_request' && 'site-preview' || 'site-production' }}
+      url: ${{ steps.deployment.outputs.deployment-url }}
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
