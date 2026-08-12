@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Kimen has moved to kimen.dev</title>
+    <link rel="canonical" href="https://kimen.dev/" />
+    <meta name="robots" content="noindex" />
+    <script>
+      // GitHub Pages serves this file for every unmatched path, so it is the
+      // only place a path-preserving redirect can live. Strip the retired
+      // /kimen/ base and send the visitor to the same page on the new origin.
+      (() => {
+        const path = location.pathname.replace(/^\/kimen\/?/, '/');
+        location.replace(`https://kimen.dev${path}${location.search}${location.hash}`);
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Kimen now lives at <a href="https://kimen.dev/">kimen.dev</a>.</p>
+  </body>
+</html>
