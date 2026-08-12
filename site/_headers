@@ -76,9 +76,16 @@
 # in this revalidatable group, not the content-addressed one above. The file
 # is replaced only by a deliberate vendoring commit, reviewed alongside the
 # pages that reference it, but a re-vendor under the same name still has to
-# reach returning visitors. The max-age stays long, because the bytes really
-# do change only that rarely, but `immutable` is dropped: a browser revalidates
-# once the response goes stale, or on an explicit reload, and gets a cheap 304
-# when nothing changed — never a year-long, unrecallable stale copy.
+# reach returning visitors.
+#
+# Seven days, not a year. Dropping `immutable` alone was not enough: within
+# max-age a response is fresh, so `must-revalidate` never fires and a normal
+# navigation keeps serving the cached bytes without asking. Only an explicit
+# reload revalidates. So the max-age IS the staleness window for a re-vendored
+# font, and a year-long window is indistinguishable from immutable for anyone
+# who does not press reload. A week bounds it while still serving every real
+# session from cache; the revalidation that follows is a 304 costing bytes,
+# not a re-download. Content-hashing the filenames would remove this rule
+# entirely — that is the real fix, and it is not this file's to make.
 /assets/fonts/*
-  Cache-Control: public, max-age=31536000, must-revalidate
+  Cache-Control: public, max-age=604800, must-revalidate
