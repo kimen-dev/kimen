@@ -1,6 +1,6 @@
 # Kimen unattended-loop sandbox (constitution Art. XI):
 # disposable, credential-free, egress restricted by init-firewall.sh.
-FROM node:24.18.1-bookworm@sha256:19cd848a0e073d34bd8cd5545a1b6b4d28489b3e3b607366621ced442bd5f6b4
+FROM node:24.19.0-bookworm@sha256:934240a162082fd8b8a2f90cd5114446443f1eba1c5378f6687167ca405e6584
 
 ARG DEBIAN_SNAPSHOT=20260709T000000Z
 RUN rm -f /etc/apt/sources.list.d/debian.sources \
