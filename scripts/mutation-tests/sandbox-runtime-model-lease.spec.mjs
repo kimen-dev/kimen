@@ -8,6 +8,7 @@ import { setTimeout } from 'node:timers';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { invokeHelper, main as runModelLease, verifyLease } from '../../sandbox/model-lease.mjs';
+import { atomicPidWrite, readSettledPid } from '../tests/helpers/pid-file.mjs';
 
 // @spec:018-project-integrity-hardening#S4
 
@@ -555,13 +556,13 @@ describe('sandbox model-lease mutation boundary', () => {
       helperPath,
       `#!/usr/bin/env bash
 set -euo pipefail
-printf '%s\n' "$$" > "$KIMEN_HELPER_LEADER_PID_FILE"
+${atomicPidWrite('"$$"', '"$KIMEN_HELPER_LEADER_PID_FILE"')}
 (
   trap '' TERM
   exec </dev/null >/dev/null 2>/dev/null
   while :; do sleep 60; done
 ) &
-printf '%s\n' "$!" > "$KIMEN_HELPER_DESCENDANT_PID_FILE"
+${atomicPidWrite('"$!"', '"$KIMEN_HELPER_DESCENDANT_PID_FILE"')}
 trap 'exit 0' TERM
 wait
 `,
@@ -582,8 +583,8 @@ wait
         ),
       ).rejects.toThrow(/^helper-failed$/u);
 
-      leaderPid = Number((await readFile(leaderPidPath, 'utf8')).trim());
-      const descendantPid = Number((await readFile(descendantPidPath, 'utf8')).trim());
+      leaderPid = await readSettledPid(leaderPidPath);
+      const descendantPid = await readSettledPid(descendantPidPath);
       expect(() => process.kill(leaderPid, 0)).toThrow(expect.objectContaining({ code: 'ESRCH' }));
       expect(() => process.kill(descendantPid, 0)).toThrow(
         expect.objectContaining({ code: 'ESRCH' }),
@@ -615,13 +616,13 @@ wait
       helperPath,
       `#!/usr/bin/env bash
 set -euo pipefail
-printf '%s\n' "$$" > "$KIMEN_HELPER_LEADER_PID_FILE"
+${atomicPidWrite('"$$"', '"$KIMEN_HELPER_LEADER_PID_FILE"')}
 (
   trap '' HUP TERM
   exec </dev/null >/dev/null 2>/dev/null
   while :; do sleep 60; done
 ) &
-printf '%s\n' "$!" > "$KIMEN_HELPER_DESCENDANT_PID_FILE"
+${atomicPidWrite('"$!"', '"$KIMEN_HELPER_DESCENDANT_PID_FILE"')}
 printf '{}\n'
 exit 0
 `,
@@ -642,8 +643,8 @@ exit 0
         ),
       ).rejects.toThrow(/^helper-failed$/u);
 
-      leaderPid = Number((await readFile(leaderPidPath, 'utf8')).trim());
-      const descendantPid = Number((await readFile(descendantPidPath, 'utf8')).trim());
+      leaderPid = await readSettledPid(leaderPidPath);
+      const descendantPid = await readSettledPid(descendantPidPath);
       expect(() => process.kill(descendantPid, 0)).toThrow(
         expect.objectContaining({ code: 'ESRCH' }),
       );
@@ -676,13 +677,13 @@ exit 0
       `#!/usr/bin/env bash
 set -euo pipefail
 trap '' HUP TERM
-printf '%s\n' "$$" > "$KIMEN_HELPER_LEADER_PID_FILE"
+${atomicPidWrite('"$$"', '"$KIMEN_HELPER_LEADER_PID_FILE"')}
 (
   trap '' HUP TERM
   exec </dev/null >/dev/null 2>/dev/null
   while :; do sleep 60; done
 ) &
-printf '%s\n' "$!" > "$KIMEN_HELPER_DESCENDANT_PID_FILE"
+${atomicPidWrite('"$!"', '"$KIMEN_HELPER_DESCENDANT_PID_FILE"')}
 while :; do sleep 60; done
 `,
       { mode: 0o700 },
@@ -701,7 +702,7 @@ while :; do sleep 60; done
       );
       for (let attempt = 0; attempt < 200; attempt += 1) {
         try {
-          leaderPid = Number((await readFile(leaderPidPath, 'utf8')).trim());
+          leaderPid = await readSettledPid(leaderPidPath);
           break;
         } catch (error) {
           if (error?.code !== 'ENOENT') throw error;
@@ -716,7 +717,7 @@ while :; do sleep 60; done
       addedHandlers[0]();
 
       await expect(invocation).rejects.toThrow(/^helper-failed$/u);
-      const descendantPid = Number((await readFile(descendantPidPath, 'utf8')).trim());
+      const descendantPid = await readSettledPid(descendantPidPath);
       expect(() => process.kill(descendantPid, 0)).toThrow(
         expect.objectContaining({ code: 'ESRCH' }),
       );
