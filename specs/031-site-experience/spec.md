@@ -138,7 +138,16 @@ Feature: Kimen public site experience
 - **FR-009**: Motion is finite, nonessential and disabled under
   `prefers-reduced-motion`.
 - **FR-010**: The published artifact contains no `support.js`, `x-dc`, template
-  bindings, executable remote resources or copied design token bundles.
+  bindings, copied design token bundles, or third-party executable remote
+  resources. There is exactly one first-party exception: the Umami analytics
+  script (`https://umami.onmars.tech/script.js`), served from the maintainers'
+  own infrastructure. It carries no Subresource Integrity hash — SRI guards a
+  third-party CDN against a compromised or substituted host, and this origin is
+  neither; its hash also changes on every Umami server update, so a pinned hash
+  would break analytics silently on the next update. What guards it instead:
+  `data-domains` scopes the tag to the production origin, the FR-012 build
+  marker keeps it out of every non-production build, and the CSP's
+  `script-src`/`connect-src` allow that origin and no other.
 - **FR-011**: Every measured page links a privacy declaration that names the
   analytics in use, the categories it records, and the fact that no cookies are
   set and no IP address is stored.
