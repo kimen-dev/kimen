@@ -8,7 +8,7 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@anthropic-ai/claude-code": "2.1.222",
+    "@anthropic-ai/claude-code": "2.1.223",
     "@openai/codex": "0.146.1",
     "playwright": "1.62.1"
   }
