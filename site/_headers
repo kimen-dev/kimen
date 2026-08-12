@@ -1,0 +1,84 @@
+# Response headers for the Cloudflare Pages artifact assembled by
+# scripts/build-site.sh.
+#
+# Cloudflare applies EVERY rule whose pattern matches a request and joins
+# repeated header names with a comma, and `*` matches greedily across `/`.
+# The cache rules below are therefore deliberately disjoint: no published
+# path is covered by more than one of them, and `/*` sets no Cache-Control
+# at all. Anything left unmatched keeps the Pages default
+# (`public, max-age=0, must-revalidate`), which is the safe baseline.
+#
+# Comments stay unindented: the documented `_headers` syntax puts them on
+# their own top-level line, not inside a rule block.
+#
+# X-Frame-Options is SAMEORIGIN, not DENY, and frame-ancestors is 'self', not
+# 'none': the Storybook workshop published at /storybook/ renders every story
+# and every docs preview inside a same-origin <iframe src="./iframe.html?id=…">.
+# DENY blocks same-origin framing too, so the manager chrome would load with
+# permanently blank canvases.
+#
+# THE CONTENT SECURITY POLICY BELOW IS A DOCUMENTED PLACEHOLDER.
+#
+# It ships report-only and NO REPORTS ARE COLLECTED: there is no report-to or
+# report-uri endpoint in this deployment, and none is planned in this change.
+# The only signal it produces today is a console message for whoever happens
+# to open devtools. Treat it as a written starting point, not as a policy that
+# has been tuned against evidence.
+#
+# Do not promote it to an enforcing `Content-Security-Policy` until BOTH of
+# these hold:
+#   1. a report collector exists and the policy names it through a `report-to`
+#      directive (plus the matching `Reporting-Endpoints` header), and
+#   2. at least one production deploy's worth of real reports has been
+#      reviewed and the directives amended to cover what they show.
+#
+# One violation is already known and is NOT fixed by the policy as written:
+# Starlight's documentation search is Pagefind, which instantiates WebAssembly
+# from /docs/pagefind/wasm.en.pagefind through /docs/pagefind/pagefind-worker.js.
+# `script-src 'self'` without 'wasm-unsafe-eval' makes Chromium reject
+# WebAssembly.instantiate, so enforcing this policy today would break
+# documentation search. Anyone enforcing it must resolve that first.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://umami.onmars.tech; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://umami.onmars.tech; object-src 'none'; base-uri 'self'; frame-ancestors 'self'
+
+# Content-addressed: Stencil hashes these chunk filenames from their contents,
+# so a changed chunk is a different URL and a cached copy can never be stale.
+/assets/elements/kimen/p-*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Astro emits every file under _astro/ with a content hash in its name.
+/docs/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Everything below keeps a STABLE filename across deploys, so it must stay
+# revalidatable. `immutable` here would tell browsers not to revalidate even
+# on an explicit reload, and no later deploy could recall the stale copy — a
+# visitor would keep last year's tokens, element bundle or fonts for a year
+# with no way back (FR-013, S10).
+/assets/tokens/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+/assets/elements/kimen/kimen.esm.js
+  Cache-Control: public, max-age=300, must-revalidate
+
+/assets/elements/kimen/index.esm.js
+  Cache-Control: public, max-age=300, must-revalidate
+
+/assets/elements/custom-elements.json
+  Cache-Control: public, max-age=300, must-revalidate
+
+# Vendored font binaries: `InterVariable.woff2` and `JetBrainsMonoVariable.woff2`
+# are stable filenames — they do NOT change when the bytes do, so they belong
+# in this revalidatable group, not the content-addressed one above. The file
+# is replaced only by a deliberate vendoring commit, reviewed alongside the
+# pages that reference it, but a re-vendor under the same name still has to
+# reach returning visitors. The max-age stays long, because the bytes really
+# do change only that rarely, but `immutable` is dropped: a browser revalidates
+# once the response goes stale, or on an explicit reload, and gets a cheap 304
+# when nothing changed — never a year-long, unrecallable stale copy.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, must-revalidate

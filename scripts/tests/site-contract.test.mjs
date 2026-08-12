@@ -64,6 +64,7 @@ async function productionSources() {
     join(siteRoot, 'landing.css'),
     join(siteRoot, 'landing.js'),
     ...(await collectFiles(join(siteRoot, 'playground'))),
+    ...(await collectFiles(join(siteRoot, 'privacy'))),
   ];
   return Promise.all(
     paths
@@ -98,6 +99,14 @@ test('S5 publishes the playground as a semantic no-JavaScript page', async () =>
   assert.ok(attributeValues(source, 'link', 'href').includes('../assets/tokens/tokens.css'));
   assert.ok(attributeValues(source, 'link', 'href').some((href) => href.endsWith('.css')));
   assert.ok(attributeValues(source, 'script', 'src').some((src) => src.endsWith('.js')));
+});
+
+test('S5 publishes the privacy page as a structural sibling of the landing shell', async () => {
+  const source = await readSiteFile('privacy/index.html');
+
+  assertSemanticShell(source, 'site/privacy/index.html');
+  assert.ok(attributeValues(source, 'link', 'href').includes('../assets/tokens/tokens.css'));
+  assert.ok(attributeValues(source, 'link', 'href').includes('../landing.css'));
 });
 
 test('the public pages retain the approved desktop design structure and density', async () => {
@@ -216,4 +225,100 @@ test('production site sources cannot contain the design-tool runtime or inline i
   );
 
   assert.deepEqual(violations, []);
+});
+
+test('S1 publishes canonical URLs at the production origin', async () => {
+  const landing = await readSiteFile('index.html');
+  const playground = await readSiteFile('playground/index.html');
+  const privacy = await readSiteFile('privacy/index.html');
+  const config = await readSiteFile('docs/astro.config.mjs');
+
+  assert.ok(
+    attributeValues(landing, 'link', 'href').includes('https://kimen.dev/'),
+    'the landing must declare its canonical URL at the production origin',
+  );
+  assert.ok(
+    attributeValues(playground, 'link', 'href').includes('https://kimen.dev/playground/'),
+    'the playground must declare its canonical URL at the production origin',
+  );
+  assert.ok(
+    attributeValues(privacy, 'link', 'href').includes('https://kimen.dev/privacy/'),
+    'the privacy page must declare its canonical URL at the production origin',
+  );
+  assert.match(config, /site:\s*'https:\/\/kimen\.dev'/u);
+  assert.match(config, /base:\s*'\/docs'/u);
+});
+
+const STALE_ROUTE_TEXT_EXTENSIONS = new Set([
+  '.astro',
+  '.css',
+  '.html',
+  '.js',
+  '.json',
+  '.md',
+  '.mdx',
+  '.mjs',
+  '.ts',
+]);
+// Cloudflare Pages config files (`_headers`, `_redirects`) carry no file
+// extension, so they fall outside STALE_ROUTE_TEXT_EXTENSIONS by default.
+// Naming them explicitly keeps them inside the guard's coverage instead of
+// silently exempting every extensionless file in site/.
+const STALE_ROUTE_EXTENSIONLESS_FILENAMES = new Set(['_headers', '_redirects']);
+const STALE_ROUTE_EXCLUDED_DIRECTORIES = new Set(['dist', 'node_modules', '.astro']);
+// site/_redirects is the ONLY sanctioned exception to this guard, and it is
+// permanent: the file's entire purpose is the Cloudflare Pages rule that maps
+// the legacy `/kimen/*` GitHub Pages prefix back to the domain root, so that
+// exact prefix has to appear there. Every other file under site/ fails the
+// test on a stale /kimen/ prefix, with no exemptions — an exemption that
+// merely defers a fix institutionalizes the hole it was opened for.
+const STALE_ROUTE_EXCLUDED_FILES = new Set([join(siteRoot, '_redirects')]);
+// Matches a stale GitHub Pages route prefix that must now be served from the
+// Cloudflare Pages domain root, while ignoring unrelated `/kimen/`
+// substrings such as `github.com/kimen-dev/kimen/...` links (excluded via
+// the lookbehind) or `kimen/kimen.esm.js` asset filenames and `ui://kimen/...`
+// example URIs (excluded because nothing routable follows the prefix).
+const STALE_KIMEN_ROUTE_PATTERN =
+  /\/kimen\/(?:docs|storybook|playground|assets)\/|(?<!kimen-dev)\/kimen\/(?![\w-])/u;
+
+async function collectStaleRouteCandidates(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = await Promise.all(
+    entries.map(async (entry) => {
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) {
+        return STALE_ROUTE_EXCLUDED_DIRECTORIES.has(entry.name)
+          ? []
+          : collectStaleRouteCandidates(path);
+      }
+      return entry.isFile() &&
+        (STALE_ROUTE_TEXT_EXTENSIONS.has(extname(path)) ||
+          STALE_ROUTE_EXTENSIONLESS_FILENAMES.has(entry.name)) &&
+        !STALE_ROUTE_EXCLUDED_FILES.has(path)
+        ? [path]
+        : [];
+    }),
+  );
+  return files.flat();
+}
+
+test('no file under site/ references a stale /kimen/ route prefix', async () => {
+  const files = await collectStaleRouteCandidates(siteRoot);
+  const violations = [];
+
+  for (const path of files) {
+    const source = await readFile(path, 'utf8');
+    const relativePath = relative(repositoryRoot, path);
+    source.split(/\r?\n/u).forEach((line, index) => {
+      if (STALE_KIMEN_ROUTE_PATTERN.test(line)) {
+        violations.push(`${relativePath}:${index + 1}`);
+      }
+    });
+  }
+
+  assert.deepEqual(
+    violations,
+    [],
+    `every route under site/ is served from the domain root now; found stale /kimen/ prefixes at:\n${violations.join('\n')}`,
+  );
 });

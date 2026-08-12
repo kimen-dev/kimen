@@ -14,7 +14,7 @@ sources live under the [`@kimen` scope](https://www.npmjs.com/org/kimen):
 and `@kimen/adapter-mcp-apps`.
 
 Follow the build: https://github.com/kimen-dev/kimen
-Documentation: https://kimen-dev.github.io/kimen/docs/
+Documentation: https://kimen.dev/docs/
 
 Apache-2.0 · Copyright 2026 Marcela Gotta
 

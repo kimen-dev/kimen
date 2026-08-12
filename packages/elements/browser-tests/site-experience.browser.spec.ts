@@ -19,6 +19,11 @@ import playgroundCss from '../../../site/playground/playground.css?raw';
 import playgroundHtml from '../../../site/playground/index.html?raw';
 // @ts-expect-error -- the hand-written site module intentionally has no declaration artifact
 import { initializePlayground } from '../../../site/playground/playground.js';
+// The privacy page is a public shipped surface with no page script of its
+// own: it reuses landing.css and ships only the pre-paint theme bootstrap
+// that installPageMarkup never runs. It still owes the same axe and overflow
+// guarantees as the other two.
+import privacyHtml from '../../../site/privacy/index.html?raw';
 /* eslint-enable @nx/enforce-module-boundaries */
 import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
 import { defineCustomElement as defineKiAvatar } from '../dist/components/ki-avatar.js';
@@ -51,7 +56,7 @@ import { defineCustomElement as defineKiTooltip } from '../dist/components/ki-to
 import { defineCustomElement as defineKiVideo } from '../dist/components/ki-video.js';
 import { expectAccessible } from './axe.js';
 
-type PageName = 'landing' | 'playground';
+type PageName = 'landing' | 'playground' | 'privacy';
 type PageCleanup = () => void;
 type PageInitializer = (root?: Document) => PageCleanup;
 type ElementConstructor<T extends Element> = new () => T;
@@ -61,7 +66,7 @@ type KiProgressElement = HTMLElement & {
   value: number;
 };
 
-const PAGES_BASE_URL = new URL('https://kimen-dev.github.io/kimen/');
+const PAGES_BASE_URL = new URL('https://kimen.dev/');
 const PAGE_STYLE_ID = 'site-experience-page-styles';
 const MATERIAL3_STYLESHEET_SELECTOR =
   '#material3-css, link[rel="stylesheet"][href*="tokens.material3.css"]';
@@ -109,7 +114,7 @@ const defineSiteElements: readonly (() => void)[] = [
   defineKiVideo,
 ];
 
-const pageSources: Record<PageName, { css: string; html: string; initialize: PageInitializer }> = {
+const pageSources: Record<PageName, { css: string; html: string; initialize?: PageInitializer }> = {
   landing: {
     css: landingCss,
     html: landingHtml,
@@ -119,6 +124,12 @@ const pageSources: Record<PageName, { css: string; html: string; initialize: Pag
     css: `${landingCss}\n${playgroundCss}`,
     html: playgroundHtml,
     initialize: initializePlayground as PageInitializer,
+  },
+  // No initializer: the privacy page ships no page module, which the
+  // publication test also asserts. Mounting it is markup plus landing.css.
+  privacy: {
+    css: landingCss,
+    html: privacyHtml,
   },
 };
 
@@ -180,8 +191,9 @@ function installPageMarkup(pageName: PageName): void {
 
 async function mountPage(pageName: PageName, javaScript = true): Promise<void> {
   installPageMarkup(pageName);
-  if (javaScript) {
-    disposePage = pageSources[pageName].initialize(document);
+  const { initialize } = pageSources[pageName];
+  if (javaScript && initialize !== undefined) {
+    disposePage = initialize(document);
     expect(disposePage, `${pageName} initializer must return its listener cleanup`).toBeTypeOf(
       'function',
     );
@@ -478,8 +490,8 @@ function overflowDiagnostics(): string {
 
 describe('Kimen public site experience in a real browser', () => {
   it.each([
-    ['Explore the components', '/kimen/docs/components/alert/'],
-    ['Open the playground', '/kimen/playground/'],
+    ['Explore the components', '/docs/components/alert/'],
+    ['Open the playground', '/playground/'],
     ['GitHub', 'https://github.com/kimen-dev/kimen'],
   ] as const)('S1 sends %s to its canonical destination', async (linkName, destination) => {
     await mountPage('landing', false);
@@ -572,9 +584,24 @@ describe('Kimen public site experience in a real browser', () => {
     expect(document.querySelector('nav')).toBeInstanceOf(HTMLElement);
     expect(document.querySelector('main')).toBeInstanceOf(HTMLElement);
     expect(document.querySelector('footer')).toBeInstanceOf(HTMLElement);
-    expect(canonicalDestination(linkNamed('Components'))).toBe('/kimen/docs/components/alert/');
-    expect(canonicalDestination(linkNamed('Playground'))).toBe('/kimen/playground/');
+    expect(canonicalDestination(linkNamed('Components'))).toBe('/docs/components/alert/');
+    expect(canonicalDestination(linkNamed('Playground'))).toBe('/playground/');
     expect(canonicalDestination(linkNamed('GitHub'))).toBe('https://github.com/kimen-dev/kimen');
+    await expectAccessible(document.body);
+  });
+
+  it('S5 keeps the privacy declaration semantic and accessible without client JavaScript', async () => {
+    // Same reason as the landing scan above: keep the whole declaration inside
+    // the viewport so axe samples painted text instead of reporting a
+    // paragraph that straddles the viewport edge as partially obscured.
+    await page.viewport(DEFAULT_VIEWPORT.width, 1600);
+    await mountPage('privacy', false);
+
+    expect(document.querySelector('header')).toBeInstanceOf(HTMLElement);
+    expect(document.querySelector('nav')).toBeInstanceOf(HTMLElement);
+    expect(document.querySelector('main')).toBeInstanceOf(HTMLElement);
+    expect(document.querySelector('footer')).toBeInstanceOf(HTMLElement);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
     await expectAccessible(document.body);
   });
 
@@ -751,6 +778,8 @@ describe('Kimen public site experience in a real browser', () => {
     ['landing', 1440],
     ['playground', 320],
     ['playground', 1440],
+    ['privacy', 320],
+    ['privacy', 1440],
   ] as const)('S7 fits the %s at %i CSS pixels with reachable navigation', async (name, width) => {
     await page.viewport(width, DEFAULT_VIEWPORT.height);
     await mountPage(name);

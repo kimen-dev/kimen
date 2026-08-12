@@ -16,11 +16,11 @@ from the built stylesheet at every site build:
 ## Where to look
 
 - **Per-component styling contract** — every
-  [component page](/kimen/docs/components/alert/) renders its *CSS custom
+  [component page](/docs/components/alert/) renders its *CSS custom
   properties* table from the generated Custom Elements Manifest: exactly the
   tokens that component consumes, with their purpose.
 - **The full generated reference** — the
-  [Tokens reference page in Storybook](/kimen/storybook/?path=/docs/docs-tokens-reference--docs)
+  [Tokens reference page in Storybook](/storybook/?path=/docs/docs-tokens-reference--docs)
   is regenerated from the DTCG token sources and lists every token with its
   resolved value in both schemes.
 - **The stylesheets themselves** — `@kimen/tokens` ships plain CSS custom
@@ -30,10 +30,10 @@ from the built stylesheet at every site build:
   | --- | --- |
   | `@kimen/tokens/css` | The default **onmars** theme, light and dark |
   | `@kimen/tokens/css/material3` | The **material3** reference theme, opt-in via `data-ki-theme` |
-  | `@kimen/tokens/css/base` | The [page contract](/kimen/docs/guides/theming/#the-page-contract): `color-scheme` + page colors |
+  | `@kimen/tokens/css/base` | The [page contract](/docs/guides/theming/#the-page-contract): `color-scheme` + page colors |
 
 - **Machine consumers** — the same token names appear in the
-  [Custom Elements Manifest](/kimen/docs/resources/working-with-ai/) per
+  [Custom Elements Manifest](/docs/resources/working-with-ai/) per
   component, so agents and design tooling read the styling contract without
   scraping docs.
 
@@ -49,5 +49,5 @@ Token names encode their layer and scope:
   **component**: the element, then its variant/tone/state path, then the
   property.
 
-The [Design tokens guide](/kimen/docs/guides/tokens/) explains the model and
+The [Design tokens guide](/docs/guides/tokens/) explains the model and
 how to customize safely.

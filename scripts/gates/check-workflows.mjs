@@ -11,8 +11,6 @@ const HARDEN_RUNNER_REFERENCE = /^step-security\/harden-runner@[a-f0-9]{40}$/u;
 const ENDPOINT = /^(?:\*\.)?(?:[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?):[1-9][0-9]{0,4}$/u;
 const ALLOWED_SCOPED_WRITES = new Set([
   'codeql.yml:analyze:security-events',
-  'docs.yml:deploy:id-token',
-  'docs.yml:deploy:pages',
   'release.yml:publish:id-token',
   'security.yml:osv-scan:security-events',
 ]);

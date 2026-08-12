@@ -14,7 +14,7 @@ The library, summarized for language models: every component with its
 description, when-to-use / when-not-to-use guidance, typed props, events,
 slots, CSS parts and curated runnable examples.
 
-- On this site: [`/kimen/llms.txt`](https://github.com/kimen-dev/kimen/blob/main/llms.txt)
+- In the repository: [`llms.txt`](https://github.com/kimen-dev/kimen/blob/main/llms.txt)
   at the repository root.
 - In the npm package: `@kimen/elements/llms.txt` ships in the package files.
 
@@ -32,7 +32,7 @@ all consume it.
 - In the npm package: the `customElements` field of `@kimen/elements` points
   to `generated/custom-elements.json`.
 - On this site: served at
-  [`/kimen/assets/elements/custom-elements.json`](/kimen/assets/elements/custom-elements.json)
+  [`/assets/elements/custom-elements.json`](/assets/elements/custom-elements.json)
   for tools that want to fetch it.
 
 Kimen extends the standard schema with `whenToUse` / `whenNotToUse` fields
@@ -42,10 +42,10 @@ per component — the same guidance rendered on each component page.
 
 Reading about components is half the story; **emitting UI safely** is the
 other half. `@kimen/catalog` gives agents a validated output format — the
-[UI spec](/kimen/docs/guides/ui-spec/) — and gives hosts a renderer that
+[UI spec](/docs/guides/ui-spec/) — and gives hosts a renderer that
 enforces it fail-closed. For protocol-level integration, Kimen ships
-adapters for [A2UI](/kimen/docs/guides/a2ui/) and
-[MCP Apps](/kimen/docs/guides/mcp-apps/), where a Kimen surface reaches an
+adapters for [A2UI](/docs/guides/a2ui/) and
+[MCP Apps](/docs/guides/mcp-apps/), where a Kimen surface reaches an
 MCP host as a self-contained `ui://` resource.
 
 llms.txt tells a model what exists; the catalog constrains what it may

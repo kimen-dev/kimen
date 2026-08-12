@@ -1,13 +1,39 @@
 // @ts-check
+import { readFileSync } from 'node:fs';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 
-// The docs site lives inside the single GitHub Pages artifact assembled by
-// scripts/build-site.sh: landing at /kimen/, this site at /kimen/docs/,
-// Storybook at /kimen/storybook/.
+// Same build gate as scripts/build-site.sh: the tag exists only when the
+// publishing workflow sets the marker. site/analytics.json is read (not
+// imported as a module) so a config file consulting a sibling data file
+// stays outside the Nx project graph, and only when analytics is on — a
+// malformed analytics.json must not break the docs build when it is off.
+const analyticsHead =
+  process.env.KIMEN_ANALYTICS === '1'
+    ? (() => {
+        const analytics = JSON.parse(
+          readFileSync(new URL('../analytics.json', import.meta.url), 'utf8'),
+        );
+        return [
+          {
+            tag: 'script',
+            attrs: {
+              defer: true,
+              src: analytics.scriptUrl,
+              'data-website-id': analytics.websiteId,
+              'data-domains': analytics.domains,
+            },
+          },
+        ];
+      })()
+    : [];
+
+// The docs site lives inside the single Cloudflare Pages artifact assembled
+// by scripts/build-site.sh and published at the domain root: landing at /,
+// this site at /docs/, Storybook at /storybook/.
 export default defineConfig({
-  site: 'https://kimen-dev.github.io',
-  base: '/kimen/docs',
+  site: 'https://kimen.dev',
+  base: '/docs',
   integrations: [
     starlight({
       title: 'Kimen',
@@ -58,6 +84,10 @@ export default defineConfig({
         // Keep Starlight's content/navigation engine while translating the
         // approved Kimen docs shell through supported component overrides.
         Header: './src/components/Header.astro',
+        // Adds the privacy link to every documentation page: /docs/* is the
+        // largest measured surface, so it must reach the declaration of what
+        // the analytics tag above does.
+        Footer: './src/components/Footer.astro',
         Sidebar: './src/components/Sidebar.astro',
         PageTitle: './src/components/PageTitle.astro',
         // Mirrors Starlight's resolved theme into Kimen's scheme attribute so
@@ -70,6 +100,7 @@ export default defineConfig({
         './src/styles/fonts.css',
         './src/styles/site.css',
       ],
+      head: analyticsHead,
     }),
   ],
 });

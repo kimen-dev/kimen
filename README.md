@@ -20,9 +20,9 @@ nothing is published to npm yet. The commands below are the exact contract
 the first release ships with, validated against packed tarballs on every
 release dry run (`scripts/consumer-contract.mjs`).
 
-**Explore**: [documentation site](https://kimen-dev.github.io/kimen/docs/) ·
-[Storybook workshop](https://kimen-dev.github.io/kimen/storybook/) ·
-[landing with live re-theming](https://kimen-dev.github.io/kimen/)
+**Explore**: [documentation site](https://kimen.dev/docs/) ·
+[Storybook workshop](https://kimen.dev/storybook/) ·
+[landing with live re-theming](https://kimen.dev/)
 
 ## Quickstart
 
@@ -118,7 +118,7 @@ when-to-use / when-not-to-use guidance — and
 Custom Elements Manifest. Both are generated from component JSDoc and token
 sources, never hand-edited, and the `llms.txt` code examples are executed
 against packed tarballs during release validation. Human-readable docs live
-at the [documentation site](https://kimen-dev.github.io/kimen/docs/).
+at the [documentation site](https://kimen.dev/docs/).
 
 ## Quality bar
 
