@@ -52,7 +52,7 @@ without touching the core. AG-UI and json-render adapters remain planned.
 
 Publication to npm with trusted publishing and signed provenance; catalog and
 llms.txt versioned alongside the public API. The
-[documentation site](https://kimen-dev.github.io/kimen/docs/) is generated
+[documentation site](https://kimen.dev/docs/) is generated
 from the single source of truth. The current release contract covers
 `@kimen/elements` and `@kimen/tokens`; the publication scope for the catalog
 and adapters is an open decision — see [releasing.md](./releasing.md).

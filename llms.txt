@@ -23,7 +23,7 @@ components paint correct dark-scheme text while the browser keeps a light
 canvas). Alternative: pin `data-ki-color-scheme="light"` on the document
 root.
 
-Human-readable documentation: https://kimen-dev.github.io/kimen/docs/
+Human-readable documentation: https://kimen.dev/docs/
 
 ## Theming
 

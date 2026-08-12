@@ -35,39 +35,278 @@ else
   TEST_ROOTS=(packages scripts .github sandbox tools)
 fi
 
+# Strip comments so an S-ID that appears only in prose never counts as
+# evidence.
+#
+# TWO LEXERS, CHOSEN BY EXTENSION. One JavaScript-shaped lexer applied to every
+# discovered file was the root cause of three consecutive defects: it made `#`
+# a comment marker in JavaScript (where it is a private field, a selector, or
+# string content) and it gave shell files regex-literal state (where `/` is
+# nothing but a path separator and regex literals do not exist). Splitting
+# removes both classes rather than patching their symptoms.
+#
+#   .mjs .js .cjs .ts .tsx  → JavaScript: `//`, `/* */`, single and double
+#                             quotes, template literals, regex literals.
+#                             `#` is NOT a comment marker.
+#   .sh                     → shell: `#`, single and double quotes. No
+#                             regex-literal state and no `//` comments.
+#
+# Within each lexer this is a single left-to-right scan whose states cannot be
+# recognized independently — whichever is entered first wins. Each state is
+# here because leaving it out produced a real defect:
+#   - strings: a scenario ID lives inside a string literal (a test title), and
+#     string literals routinely contain comment openers ('/assets/fonts/*' is a
+#     Cloudflare _headers glob, 'https://kimen.dev/' is a URL, '#main' is a
+#     selector). Scanning for comment openers without tracking strings made the
+#     first such literal swallow every following line of the file, and this
+#     gate then reported PASS over evidence it had never read — found
+#     2026-08-11, when the whole of scripts/tests/site-publication.test.mjs was
+#     invisible to it.
+#   - comments: blanking strings first fails the mirror image, because comments
+#     routinely contain apostrophes ("a radio's control") and the phantom
+#     string swallows the terminator of the comment itself.
+#   - regex literals: `const re = /don't/u;  // S3 is not evidence` has the
+#     apostrophe in neither a string nor a comment. Without this state the
+#     apostrophe opens a phantom string, the trailing `//` is never seen, and
+#     the comment counts as evidence.
+#
+# WHEN A LINE CANNOT BE PARSED. Block-comment state carries across lines, by
+# necessity. String and regex state do not: a line that ends in either one is
+# discarded and the raw line is re-stripped conservatively (block-comment
+# pairs, then everything from the first comment marker) as the pre-2026-08-11
+# implementation did. A candidate regex that runs into an unescaped `//` or
+# `/*` outside a character class is treated the same way, because a regex
+# literal can contain neither: that combination means the opening `/` was
+# really division or a path separator, and what follows is a comment.
+#
+# WHAT IS KNOWN TO DEFEAT IT, AS OF THIS COMMIT. This is a heuristic lexer,
+# not a parser. THE LIST BELOW IS NOT PROVED EXHAUSTIVE — three consecutive
+# reviews each found shapes the previous round's list did not contain, so read
+# it as the current state of knowledge and probe (method at the end) before
+# concluding that a new suspicion is or is not covered.
+#
+#   1. JavaScript. A `/` after `)`, `]` or `<` that really opens a regex is
+#      read as division, because telling those apart needs a real parser. If
+#      that regex's contents hold an odd number of quote characters, the
+#      leftover quote opens a phantom string; should a matching quote then
+#      appear inside a trailing comment (`// doesn't count`), the phantom
+#      string closes there, the comment marker is never seen, and THE COMMENT
+#      IS EMITTED AS EVIDENCE. This direction INVENTS evidence: the gate can
+#      report PASS on an S-ID that only ever appeared in prose. It remains
+#      open.
+#        `<` joined this list deliberately, in the same commit that split the
+#        lexers, and is a trade rather than an oversight: it used to be an
+#        opener, so `assert(count < /don't/u.test(name)); // S1 doesn't count`
+#        was hidden and is now exposed. What removing it bought is five real
+#        truncations gone from packages/elements/src/components/ki-qr/ki-qr.spec.tsx,
+#        where every JSX closing tag `</a>` opened a regex that never closed
+#        and cut the line at `value="https:`. A regex after `<` is unreachable
+#        in this repository (grep finds none); JSX is on five lines of one
+#        spec file. Reverse the trade only with that measurement redone.
+#   2. JavaScript. A `/*` inside a multi-line template literal opens block
+#      state, which then truncates every line up to the next `*/`. This
+#      direction LOSES evidence: FAIL for an S-ID a test really covers. Noisy,
+#      not dangerous.
+#   3. Shell. An apostrophe that is not a quote — `echo it\'s fine # S3
+#      doesn't count` — opens a phantom string that a later apostrophe closes
+#      past the `#`, so THE COMMENT IS EMITTED AS EVIDENCE. Same direction as
+#      shape 1: this INVENTS evidence. Unchanged by the lexer split, which
+#      neither introduced nor fixed it; before the split it was the same
+#      mechanism under the JavaScript lexer.
+#   4. Shell. `$#` and `${#array[@]}` are ordinary shell, and the `#` in them
+#      is read as a comment marker, so `if [ $# -gt 0 ]; then run_case S4; fi`
+#      truncates at `$#`. This direction LOSES evidence.
+#
+# The shell entries exist because a reader would otherwise infer from silence
+# that the shell branch is clean. It is not: it has one shape in each
+# direction, exactly like the JavaScript branch.
+#
+# The two directions are not equivalent and there is no single safe direction.
+# Any change here has to be argued and measured against both rules at once:
+# coverage (every S-ID has a test) wants more lines visible, evidence
+# integrity (comments never count) wants fewer. Wording that implies one safe
+# direction has twice been wrong in this file; do not reintroduce it.
+#
+# HOW TO PROBE A NEW SUSPICION. Build the scanner standalone and feed it the
+# shape, using the real extension — the two lexers fail differently:
+#
+#   sed -n '/^append_executable_lines()/,/^}$/p' \
+#     scripts/gates/check-traceability.sh > /tmp/fn.sh && . /tmp/fn.sh
+#   printf '%s\n' '  / count; // S9 is not evidence' > /tmp/probe.mjs
+#   : > /tmp/out.txt && append_executable_lines /tmp/probe.mjs /tmp/out.txt
+#   grep -n S9 /tmp/out.txt
+#
+# A hit whose only source is a comment is a false-PASS shape: add a fixture to
+# scripts/tests/traceability.test.mjs that fails on it, then fix it.
 append_executable_lines() {
   local source_file="$1"
   local destination="$2"
-  awk '
-    BEGIN { in_block = 0 }
-    {
-      line = $0
-      if (in_block) {
-        if (match(line, /\*\//)) {
-          line = substr(line, RSTART + RLENGTH)
-          in_block = 0
-        } else {
-          next
-        }
+  local lexer
+  # An allowlist, not a default. Guessing a lexer for an unknown language is
+  # how `#` comments in a .bash or .zsh test would silently become evidence:
+  # anything that is not shell would get the JavaScript lexer, where `#` is
+  # not a comment marker at all. A gate that guesses is worse than one that
+  # refuses, so this stops the run instead.
+  #
+  # KEEP IN STEP WITH the -name list in discover_marked_tests() below. The two
+  # lists are the same set seen from two sides — what the gate will read, and
+  # what the gate knows how to read — and they sit ~160 lines apart.
+  case "$source_file" in
+    *.sh) lexer=shell ;;
+    *.mjs | *.js | *.cjs | *.ts | *.tsx) lexer=javascript ;;
+    *)
+      echo "GATE traceability: FAIL — no lexer for $source_file"
+      echo "  This gate strips comments with a language-specific lexer and refuses to guess at an unknown one."
+      echo "  Add the extension to BOTH lists: the case statement in append_executable_lines() and the -name list in discover_marked_tests()."
+      exit 1
+      ;;
+  esac
+  awk -v LEXER="$lexer" '
+    # A `/` opens a regex literal only where an expression may begin: at the
+    # start of a line, after an operator or opening bracket, or after a keyword
+    # that cannot be followed by division. After a value (identifier, literal,
+    # `)`, `]`) it is division.
+    #
+    # `<` is deliberately NOT an opener. It is legal JavaScript (`a < /re/`)
+    # and nobody writes it, while `</a>` ends every JSX closing tag in the
+    # .tsx spec files this gate reads. Treating it as an opener made those
+    # lines fall to the conservative stripper, which cut them at the first
+    # comment marker anywhere on the line — including inside a string, so
+    # `it("S5 targets #main and S6", …)` silently lost S6.
+    #
+    # The keyword list exists for `return /…/`, ordinary test-file code:
+    # without it the `/` reads as division and an apostrophe inside the literal
+    # opens a phantom string.
+    function opens_regex(previous, code_so_far) {
+      if (previous == "" || index("([{,;:=!&|?+-*%~^>", previous) > 0) { return 1 }
+      return match(code_so_far, /(^|[^A-Za-z0-9_$])(return|typeof|case|in|of|new|delete|void|do|else|yield|await|throw)[[:space:]]*$/) > 0
+    }
+    # The pre-2026-08-11 stripper, kept as the fallback for a line the scanner
+    # could not parse. Conservative by construction: it cuts at the FIRST
+    # comment marker, even one inside a string.
+    function conservative_text(source,   text, prefix, suffix) {
+      text = source
+      if (LEXER == "shell") {
+        sub(/[[:space:]]*#.*/, "", text)
+        return text
       }
-      while (match(line, /\/\*/)) {
-        prefix = substr(line, 1, RSTART - 1)
-        suffix = substr(line, RSTART + RLENGTH)
+      while (match(text, /\/\*/)) {
+        prefix = substr(text, 1, RSTART - 1)
+        suffix = substr(text, RSTART + RLENGTH)
         if (match(suffix, /\*\//)) {
-          line = prefix substr(suffix, RSTART + RLENGTH)
+          text = prefix substr(suffix, RSTART + RLENGTH)
         } else {
-          line = prefix
+          text = prefix
           in_block = 1
           break
         }
       }
-      sub(/[[:space:]]*\/\/.*/, "", line)
-      sub(/[[:space:]]*#.*/, "", line)
+      sub(/[[:space:]]*\/\/.*/, "", text)
+      return text
+    }
+    function executable_text(source,   out, i, character, pair, length_of_source, quote, in_regex, in_class, previous) {
+      out = ""
+      quote = ""
+      in_regex = 0
+      in_class = 0
+      previous = ""
+      length_of_source = length(source)
+      i = 1
+      while (i <= length_of_source) {
+        character = substr(source, i, 1)
+        pair = substr(source, i, 2)
+        if (in_block) {
+          if (pair == "*/") { in_block = 0; i += 2 } else { i += 1 }
+          continue
+        }
+        if (quote != "") {
+          out = out character
+          if (character == "\\") {
+            out = out substr(source, i + 1, 1)
+            i += 2
+            continue
+          }
+          if (character == quote) { quote = ""; previous = character }
+          i += 1
+          continue
+        }
+        if (LEXER == "shell") {
+          if (character == "#") { break }
+          if (character == "\"" || character == SINGLE_QUOTE) {
+            quote = character
+            out = out character
+            i += 1
+            continue
+          }
+          out = out character
+          i += 1
+          continue
+        }
+        if (in_regex) {
+          # A regex literal can hold neither an unescaped `//` nor an
+          # unescaped `/*` outside a character class, so a candidate that runs
+          # into one was never a regex: the opening `/` was division (or a
+          # path separator) and what follows is a comment. Bail to the
+          # conservative stripper instead of consuming the first slash of the
+          # comment as the terminator of the regex and returning to code state
+          # on the second, which emitted the comment as evidence.
+          if (in_class == 0 && (pair == "//" || pair == "/*")) {
+            return conservative_text(source)
+          }
+          out = out character
+          if (character == "\\") {
+            out = out substr(source, i + 1, 1)
+            i += 2
+            continue
+          }
+          if (character == "[") {
+            in_class = 1
+          } else if (character == "]") {
+            in_class = 0
+          } else if (character == "/" && in_class == 0) {
+            in_regex = 0
+            previous = character
+          }
+          i += 1
+          continue
+        }
+        if (pair == "/*") { in_block = 1; i += 2; continue }
+        if (pair == "//") { break }
+        if (character == "\"" || character == SINGLE_QUOTE || character == "`") {
+          quote = character
+          out = out character
+          i += 1
+          continue
+        }
+        if (character == "/" && opens_regex(previous, out)) {
+          in_regex = 1
+          in_class = 0
+          out = out character
+          i += 1
+          continue
+        }
+        out = out character
+        if (character !~ /[[:space:]]/) { previous = character }
+        i += 1
+      }
+      # Ending outside code state means the line was not parsed, so distrust
+      # every boundary it produced. See "WHEN A LINE CANNOT BE PARSED" above.
+      if (quote != "" || in_regex) { return conservative_text(source) }
+      return out
+    }
+    BEGIN { in_block = 0; SINGLE_QUOTE = sprintf("%c", 39) }
+    {
+      line = executable_text($0)
       if (line !~ /^[[:space:]]*$/) print line
     }
   ' "$source_file" >> "$destination"
 }
 
+# KEEP IN STEP WITH the case statement in append_executable_lines() above.
+# Every extension named here must have a lexer there, or the gate stops with
+# "no lexer for <file>" the first time one is discovered. That failure is the
+# intended behavior: adding an extension here alone would hand an unknown
+# language to the JavaScript lexer.
 discover_marked_tests() {
   local feature_id="$1"
   local root candidate

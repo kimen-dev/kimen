@@ -34,8 +34,8 @@ Feature: Kimen public site experience
 
     Examples:
       | link                   | destination                         |
-      | Explore the components | /kimen/docs/components/alert/       |
-      | Open the playground    | /kimen/playground/                  |
+      | Explore the components | /docs/components/alert/             |
+      | Open the playground    | /playground/                        |
       | GitHub                 | https://github.com/kimen-dev/kimen |
 
   # S2
@@ -86,6 +86,33 @@ Feature: Kimen public site experience
       | landing    | 1440  |
       | playground | 320   |
       | playground | 1440  |
+      | privacy    | 320   |
+      | privacy    | 1440  |
+
+  # S8
+  Scenario: Measured pages declare what is measured
+    Given the site counts page views of its public pages
+    When the visitor follows the "Privacy" link from a measured page
+    Then the privacy declaration names Umami and the categories it records
+    And it states that no cookies are set and no IP address is stored
+
+  # S9
+  Scenario Outline: Analytics ships only with the production build
+    Given a <build> of the site
+    When the site is assembled
+    Then its pages <measurement>
+
+    Examples:
+      | build                     | measurement                                    |
+      | production publishing run | load the declared Umami endpoint for kimen.dev |
+      | local or test run         | carry no analytics at all                      |
+
+  # S10
+  Scenario: The published site tells browsers how it may be treated
+    Given the site is published at kimen.dev
+    When a browser requests a published file
+    Then the response refuses content-type sniffing and framing by other origins
+    And a file whose name does not change with its contents stays revalidatable
 ```
 
 ## Requirements
@@ -111,13 +138,31 @@ Feature: Kimen public site experience
 - **FR-009**: Motion is finite, nonessential and disabled under
   `prefers-reduced-motion`.
 - **FR-010**: The published artifact contains no `support.js`, `x-dc`, template
-  bindings, executable remote resources or copied design token bundles.
+  bindings, copied design token bundles, or third-party executable remote
+  resources. There is exactly one first-party exception: the Umami analytics
+  script (`https://umami.onmars.tech/script.js`), served from the maintainers'
+  own infrastructure. It carries no Subresource Integrity hash — SRI guards a
+  third-party CDN against a compromised or substituted host, and this origin is
+  neither; its hash also changes on every Umami server update, so a pinned hash
+  would break analytics silently on the next update. What guards it instead:
+  `data-domains` scopes the tag to the production origin, the FR-012 build
+  marker keeps it out of every non-production build, and the CSP's
+  `script-src`/`connect-src` allow that origin and no other.
+- **FR-011**: Every measured page links a privacy declaration that names the
+  analytics in use, the categories it records, and the fact that no cookies are
+  set and no IP address is stored.
+- **FR-012**: The analytics tag is emitted only by the production publishing
+  build; a local, test or preview build publishes the same pages with no
+  analytics at all.
+- **FR-013**: Published responses refuse content-type sniffing and framing by
+  other origins, and freeze a file in a browser's cache only when its name
+  changes with its contents.
 
 ## Scenario family coverage
 
 | Family | Coverage |
 | --- | --- |
-| Core behavior | S1, S5, S7 |
+| Core behavior | S1, S5, S7, S8, S9, S10 |
 | Keyboard path | S3 |
 | Assistive-tech outcome | S4, S5 |
 | Form participation | S4 |

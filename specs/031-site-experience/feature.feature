@@ -10,8 +10,8 @@ Feature: Kimen public site experience
 
     Examples:
       | link                   | destination                         |
-      | Explore the components | /kimen/docs/components/alert/       |
-      | Open the playground    | /kimen/playground/                  |
+      | Explore the components | /docs/components/alert/             |
+      | Open the playground    | /playground/                        |
       | GitHub                 | https://github.com/kimen-dev/kimen |
 
   # S2
@@ -62,3 +62,30 @@ Feature: Kimen public site experience
       | landing    | 1440  |
       | playground | 320   |
       | playground | 1440  |
+      | privacy    | 320   |
+      | privacy    | 1440  |
+
+  # S8
+  Scenario: Measured pages declare what is measured
+    Given the site counts page views of its public pages
+    When the visitor follows the "Privacy" link from a measured page
+    Then the privacy declaration names Umami and the categories it records
+    And it states that no cookies are set and no IP address is stored
+
+  # S9
+  Scenario Outline: Analytics ships only with the production build
+    Given a <build> of the site
+    When the site is assembled
+    Then its pages <measurement>
+
+    Examples:
+      | build                     | measurement                                    |
+      | production publishing run | load the declared Umami endpoint for kimen.dev |
+      | local or test run         | carry no analytics at all                      |
+
+  # S10
+  Scenario: The published site tells browsers how it may be treated
+    Given the site is published at kimen.dev
+    When a browser requests a published file
+    Then the response refuses content-type sniffing and framing by other origins
+    And a file whose name does not change with its contents stays revalidatable

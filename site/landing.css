@@ -1631,6 +1631,56 @@ html.theme-anim .cta {
     box-shadow var(--ki-motion-duration-medium-2) var(--ki-motion-easing-standard);
 }
 
+/* Privacy ----------------------------------------------------------------- */
+
+.privacy-main {
+  position: relative;
+  z-index: 1;
+  max-inline-size: 42rem;
+  min-inline-size: 0;
+  margin-inline: auto;
+  padding-block: clamp(var(--ki-space-18xl), 8vw, var(--ki-site-section-space)) var(--ki-space-20xl);
+  padding-inline: clamp(var(--ki-space-3xl), 4vi, var(--ki-space-14xl));
+}
+
+.privacy-main h1 {
+  margin: 0;
+  margin-block-end: var(--ki-space-8xl);
+  color: var(--ki-text-high-em);
+  font-family: var(--ki-typography-family-display);
+  font-size: clamp(var(--ki-typography-size-heading-3), 3.4vw, var(--ki-typography-size-heading-4));
+  font-weight: var(--ki-typography-weight-display-bold);
+  letter-spacing: var(--ki-site-heading-letter-spacing);
+  line-height: var(--ki-site-heading-line-height);
+}
+
+.privacy-main h2 {
+  margin: 0;
+  margin-block: var(--ki-space-10xl) var(--ki-space-2xl);
+  color: var(--ki-text-high-em);
+  font-family: var(--ki-typography-family-display);
+  font-size: var(--ki-typography-size-heading-6);
+  font-weight: var(--ki-typography-weight-display-bold);
+  letter-spacing: var(--ki-site-heading-letter-spacing);
+  line-height: var(--ki-typography-line-height-heading-6);
+}
+
+.privacy-main p {
+  margin: 0;
+  margin-block-end: var(--ki-space-5xl);
+  color: var(--ki-text-med-em);
+  font-size: var(--ki-site-copy-size);
+  line-height: var(--ki-site-line-height-copy);
+}
+
+.privacy-main p:last-child {
+  margin-block-end: 0;
+}
+
+.privacy-main a {
+  font-weight: var(--ki-typography-weight-body-medium);
+}
+
 @media (width < 67.5rem) {
   .hero-layout {
     display: block;

@@ -1,4 +1,4 @@
-# Kimen docs: build the Storybook workshop and publish it to GitHub Pages.
+# Kimen docs: build the Storybook workshop and publish it to Cloudflare Pages.
 #
 # Actions are pinned to commit SHAs (Art. X supply-chain determinism); the
 # trailing comment records the tag each SHA was resolved from. To re-pin
@@ -8,12 +8,19 @@ name: docs
 on:
   push:
     branches: [main]
+  pull_request:
+    paths:
+      - 'site/**'
+      - 'scripts/build-site.sh'
+      - 'packages/tokens/**'
+      - 'packages/elements/**'
+      - '.github/workflows/docs.yml'
   workflow_dispatch:
 
 permissions: {}
 
 concurrency:
-  group: docs-pages
+  group: docs-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -27,6 +34,12 @@ jobs:
       # off, no remote fonts, Pagefind bundled — nothing beyond the npm
       # registry egress already allowed for install.
       ASTRO_TELEMETRY_DISABLED: "1"
+      # Production analytics is emitted here and nowhere else. Keyed to the
+      # deployment TARGET (branch), not the triggering event: a manual
+      # dispatch from main deploys to production exactly like a push does,
+      # so it must be measured too; every pull request and every dispatch
+      # from a non-main branch resolves to a preview and stays unmeasured.
+      KIMEN_ANALYTICS: ${{ github.event_name != 'pull_request' && github.ref_name == 'main' && '1' || '0' }}
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
@@ -68,31 +81,117 @@ jobs:
       - name: Assemble site (landing at /, docs under /docs/, Storybook under /storybook/)
         run: bash scripts/build-site.sh
 
-      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-
-      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+      # Same pin release.yml, mutation.yml and visual-baselines.yml already use.
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
+          name: site-dist
           path: site-dist
+          retention-days: 5
 
-  deploy:
+  publish:
     needs: build
+    # Pull requests from forks receive no secrets, by design: a fork preview
+    # would mean handing a deploy credential to arbitrary contributors.
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    permissions:
-      pages: write
-      id-token: write
+    permissions: {}
+    # The old GitHub Pages deploy ran only on push to main behind
+    # `environment: github-pages`. This job now also runs on pull_request, and
+    # for that event GitHub evaluates the PR's own copy of this file — so
+    # without an environment, any in-repo PR touching this workflow would
+    # reach CLOUDFLARE_API_TOKEN. Forks are already excluded by the `if`
+    # above, so the exposure is write-access collaborators, but this is the
+    # one place the migration could widen access instead of narrowing it.
+    # site-production restricts its deployment branches to main; site-preview
+    # is unrestricted and is what every pull request resolves to.
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: ${{ github.event_name == 'pull_request' && 'site-preview' || 'site-production' }}
+      url: ${{ steps.deployment.outputs.deployment-url }}
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
         with:
           egress-policy: block
           allowed-endpoints: >-
+            api.cloudflare.com:443
+            github.com:443
             api.github.com:443
-            uploads.github.com:443
+            objects.githubusercontent.com:443
+            *.actions.githubusercontent.com:443
+            *.blob.core.windows.net:443
+            registry.npmjs.org:443
 
-      - name: Deploy to GitHub Pages
+      # Same pin release.yml already uses — do not introduce a second version.
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: site-dist
+          path: site-dist
+
+      # A git ref is attacker-influenced data (branch names permit ';', '$',
+      # backticks and more), so it must never expand into a command string
+      # verbatim. Resolve and validate it here, as plain shell data read from
+      # env vars, so what reaches `command:` below is provably restricted to
+      # a safe charset rather than "safe because forks are blocked" — the
+      # fork guard on this job stops nothing for a hostile in-repo branch.
+      # Branch on whether this is a pull request, not on whether it is a
+      # push: workflow_dispatch has no head_ref, so it must fall back to
+      # ref_name (the branch the run was dispatched from/for) or every
+      # manual dispatch would dead-end on "unsafe branch name" — a message
+      # that would misattribute the cause when nothing unsafe happened.
+      - name: Resolve the deployment branch
+        id: target
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          REF_NAME: ${{ github.ref_name }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            candidate="$HEAD_REF"
+          else
+            candidate="$REF_NAME"
+          fi
+          case "$candidate" in
+            ''|*[!A-Za-z0-9._/-]*)
+              echo "refusing to deploy: branch name outside the safe charset" >&2
+              exit 1
+              ;;
+          esac
+          echo "branch=$candidate" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to Cloudflare Pages
         id: deployment
-        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
+        env:
+          # Wrangler 4 posts telemetry to sparrow.cloudflare.com, which is not
+          # in this job's allowlist and must not be added to it. Left on, the
+          # blocked request would annotate every single run, and annotations
+          # that always fire teach reviewers to ignore harden-runner — which
+          # is the whole point of running it in block mode.
+          WRANGLER_SEND_METRICS: false
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          # An exact version, not the '4' range D4 shipped: the action is
+          # pinned by 40-character SHA, but the tool it downloads holds the
+          # API token and performs the deploy, so resolving it fresh from npm
+          # on every run left the strongest link protecting the weakest one.
+          # 4.118.0 is the newest wrangler 4.x that has cleared the 7-day
+          # minimumReleaseAge this workspace applies to every other package
+          # (pnpm-workspace.yaml). Bump it deliberately, in a reviewed commit.
+          wranglerVersion: '4.118.0'
+          command: >-
+            pages deploy site-dist --project-name=kimen
+            --branch=${{ steps.target.outputs.branch }}
+
+      - name: Report the deployment URL
+        env:
+          DEPLOYMENT_URL: ${{ steps.deployment.outputs.deployment-url }}
+        run: |
+          {
+            echo "### Site deployment"
+            echo ""
+            echo "$DEPLOYMENT_URL"
+          } >> "$GITHUB_STEP_SUMMARY"
