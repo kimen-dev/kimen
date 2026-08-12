@@ -57,6 +57,10 @@ const IMMUTABLE_PATTERNS = new Set(['/assets/elements/kimen/p-*', '/docs/_astro/
 // the manifest) or only via a rare, deliberate vendoring commit (the fonts).
 // `immutable` on any of these would strand a visitor on stale bytes with no
 // way back, so all of them must stay revalidatable; only the max-age differs.
+// Seven days. Nothing in this group is content-addressed, so its max-age is
+// the window during which a changed file stays invisible to a returning
+// visitor who never presses reload.
+const MAX_STALENESS_WINDOW_SECONDS = 604_800;
 const REVALIDATED_PATTERNS = [
   '/assets/tokens/*',
   '/assets/elements/kimen/kimen.esm.js',
@@ -104,10 +108,20 @@ test('S10 the published site caches only content-addressed assets immutably', as
       !headers.some((header) => /\bimmutable\b/u.test(header)),
       `${pattern} is not content-addressed: its filename is stable across deploys, so a browser must be able to revalidate it`,
     );
+    const cacheControl = headers.join('\n');
     assert.match(
-      headers.join('\n'),
+      cacheControl,
       /^Cache-Control: public, max-age=[1-9][0-9]{0,7}, must-revalidate$/mu,
-      `${pattern} must declare a revalidating max-age (short for build-generated paths, long for the rarely-changed fonts)`,
+      `${pattern} must declare a revalidating max-age (short for build-generated paths, longer for the rarely-changed fonts)`,
+    );
+    // The max-age IS the staleness window: within it a response is fresh, so
+    // `must-revalidate` never fires and a normal navigation never asks. A
+    // year here would be indistinguishable from `immutable` for anyone who
+    // does not press reload, which is the defect this group exists to avoid.
+    const maxAge = Number(/max-age=(\d+)/u.exec(cacheControl)[1]);
+    assert.ok(
+      maxAge <= MAX_STALENESS_WINDOW_SECONDS,
+      `${pattern} may go stale for at most ${MAX_STALENESS_WINDOW_SECONDS}s; ${maxAge}s lets a changed file stay invisible to returning visitors for longer than anyone would look for it`,
     );
   }
 
