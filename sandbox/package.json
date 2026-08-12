@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@anthropic-ai/claude-code": "2.1.222",
-    "@openai/codex": "0.146.0",
+    "@openai/codex": "0.146.1",
     "playwright": "1.62.1"
   }
 }
