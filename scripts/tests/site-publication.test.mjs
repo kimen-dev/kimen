@@ -51,19 +51,18 @@ function headerRules(source) {
 
 // Content-addressed paths, and only these, may be cached immutably: the
 // filename changes whenever the bytes do, so a stale copy is unreachable.
-const IMMUTABLE_PATTERNS = new Set([
-  '/assets/elements/kimen/p-*',
-  '/assets/fonts/*',
-  '/docs/_astro/*',
-]);
-// Stable filenames that every deploy overwrites in place. `immutable` on any
-// of these would strand a visitor on an old build for a year, and no later
-// deploy could recall it.
+const IMMUTABLE_PATTERNS = new Set(['/assets/elements/kimen/p-*', '/docs/_astro/*']);
+// Stable filenames — every one of them keeps the same name when its bytes
+// change, whether that happens on every deploy (tokens, the element bundle,
+// the manifest) or only via a rare, deliberate vendoring commit (the fonts).
+// `immutable` on any of these would strand a visitor on stale bytes with no
+// way back, so all of them must stay revalidatable; only the max-age differs.
 const REVALIDATED_PATTERNS = [
   '/assets/tokens/*',
   '/assets/elements/kimen/kimen.esm.js',
   '/assets/elements/kimen/index.esm.js',
   '/assets/elements/custom-elements.json',
+  '/assets/fonts/*',
 ];
 
 test('S10 the published site declares its security headers', async () => {
@@ -107,8 +106,8 @@ test('S10 the published site caches only content-addressed assets immutably', as
     );
     assert.match(
       headers.join('\n'),
-      /^Cache-Control: public, max-age=[1-9][0-9]{0,3}, must-revalidate$/mu,
-      `${pattern} must declare a short, revalidating max-age`,
+      /^Cache-Control: public, max-age=[1-9][0-9]{0,7}, must-revalidate$/mu,
+      `${pattern} must declare a revalidating max-age (short for build-generated paths, long for the rarely-changed fonts)`,
     );
   }
 

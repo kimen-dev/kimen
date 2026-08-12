@@ -50,11 +50,6 @@
 /assets/elements/kimen/p-*
   Cache-Control: public, max-age=31536000, immutable
 
-# Vendored font binaries: the file is replaced only by a deliberate vendoring
-# commit, reviewed alongside the pages that reference it.
-/assets/fonts/*
-  Cache-Control: public, max-age=31536000, immutable
-
 # Astro emits every file under _astro/ with a content hash in its name.
 /docs/_astro/*
   Cache-Control: public, max-age=31536000, immutable
@@ -62,7 +57,8 @@
 # Everything below keeps a STABLE filename across deploys, so it must stay
 # revalidatable. `immutable` here would tell browsers not to revalidate even
 # on an explicit reload, and no later deploy could recall the stale copy — a
-# visitor would keep last year's tokens and element bundle for a year.
+# visitor would keep last year's tokens, element bundle or fonts for a year
+# with no way back (FR-013, S10).
 /assets/tokens/*
   Cache-Control: public, max-age=300, must-revalidate
 
@@ -74,3 +70,15 @@
 
 /assets/elements/custom-elements.json
   Cache-Control: public, max-age=300, must-revalidate
+
+# Vendored font binaries: `InterVariable.woff2` and `JetBrainsMonoVariable.woff2`
+# are stable filenames — they do NOT change when the bytes do, so they belong
+# in this revalidatable group, not the content-addressed one above. The file
+# is replaced only by a deliberate vendoring commit, reviewed alongside the
+# pages that reference it, but a re-vendor under the same name still has to
+# reach returning visitors. The max-age stays long, because the bytes really
+# do change only that rarely, but `immutable` is dropped: a browser revalidates
+# once the response goes stale, or on an explicit reload, and gets a cheap 304
+# when nothing changed — never a year-long, unrecallable stale copy.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, must-revalidate
