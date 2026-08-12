@@ -21,7 +21,7 @@
     ]
   },
   "dependencies": {
-    "@astrojs/starlight": "0.41.6",
+    "@astrojs/starlight": "0.41.7",
     "@kimen/elements": "workspace:*",
     "@kimen/tokens": "workspace:*",
     "astro": "7.1.6",
