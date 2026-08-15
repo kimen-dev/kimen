@@ -355,8 +355,25 @@ test('real legacy root remains frozen at 20 values and 12 explicitly deprecated 
 
   assert.equal(characterization.values.length, 20);
   assert.equal(characterization.typeStars.length, 0);
-  assert.equal(characterization.namedTypes.length, 12);
-  assert.deepEqual(characterization, frozenDeprecatedRoot);
+  // 12 frozen deprecated types + the three enumerated wrapper-contract
+  // event types (spec 034), which live outside the frozen facade and are
+  // validated as their own category by validateLegacyRootContract.
+  assert.equal(characterization.namedTypes.length, 15);
+  const contractTypes = characterization.namedTypes.filter(
+    (entry) => entry.from === './components.js',
+  );
+  assert.deepEqual(contractTypes.map((entry) => entry.name).sort(), [
+    'KiAlertCustomEvent',
+    'KiDialogCustomEvent',
+    'KiTabsCustomEvent',
+  ]);
+  assert.deepEqual(
+    {
+      ...characterization,
+      namedTypes: characterization.namedTypes.filter((entry) => entry.from !== './components.js'),
+    },
+    frozenDeprecatedRoot,
+  );
   assert.deepEqual(validateLegacyRootContract(rootSource), FROZEN_LEGACY_ROOT);
 
   const grown = characterizeLegacyRootExports(

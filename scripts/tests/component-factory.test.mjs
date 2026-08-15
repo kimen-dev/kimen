@@ -132,13 +132,23 @@ test('complete inventory fails on missing token source, unknown group member, or
   });
 });
 
-test('safe package contract permits only root, loader, and exact ki-* wildcard targets', () => {
+test('safe package contract permits only root, loader, ki-* wildcard and wrapper-resolution targets', () => {
   const valid = {
     '.': { types: './dist/types/index.d.ts', import: './dist/index.js' },
     './loader': { types: './loader/index.d.ts', import: './loader/index.js' },
     './ki-*': {
       types: './dist/components/ki-*.d.ts',
       import: './dist/components/ki-*.js',
+    },
+    // Wrapper-resolution subpaths (spec 034): required members of the
+    // frozen exports contract, same dist/components surface.
+    './components': {
+      types: './dist/types/components.d.ts',
+      import: './dist/components/index.js',
+    },
+    './components/*.js': {
+      types: './dist/components/*.d.ts',
+      import: './dist/components/*.js',
     },
   };
 
