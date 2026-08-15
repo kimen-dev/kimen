@@ -116,6 +116,60 @@ owned by the guarded renderer: catalog validation is a schema boundary,
 never content sanitization. A host that renders outside the guarded renderer
 is outside the guardrail.
 
+## Registering your own components
+
+The catalog a spec validates against does not have to be the built-in one.
+`createCatalog` accepts a data-only definition of **your** components — the
+exact entry shape the generated catalog uses (tag, usage guidance, typed
+prop constraints, slots, events) — and returns an immutable catalog value
+that `validateUiSpec`, `renderUiSpec` and `createStreamingRenderer` take
+through their `catalog` option:
+
+```ts
+import { catalogData, createCatalog, renderUiSpec } from '@kimen/catalog';
+
+const created = createCatalog(
+  {
+    components: {
+      'acme-kpi-card': {
+        tag: 'acme-kpi-card',
+        description: 'A KPI card for Acme dashboards.',
+        whenToUse: 'Show one operational metric with its trend.',
+        whenNotToUse: 'Tabular breakdowns of many metrics.',
+        props: {
+          tone: {
+            type: 'enum',
+            values: ['ok', 'warn', 'critical'],
+            description: 'Semantic severity of the metric.',
+          },
+        },
+        slots: { '': 'The metric label.' },
+        events: {},
+      },
+    },
+  },
+  { extend: catalogData }, // omit to build a standalone catalog
+);
+if (created.ok) {
+  renderUiSpec(spec, { surface, catalog: created.catalog });
+}
+```
+
+"Outside the catalog" then means outside the catalog in use; nothing else
+about validation or rendering changes, and when the option is absent the
+built-in catalog remains the boundary. The definition itself is treated as
+hostile input — it crosses the same purity wall as UI specs, plus tag,
+collision and guidance rules, and every rejection is a coded
+`RegistrationIssue` naming its offender. The returned catalog is deeply
+frozen: mutating it later can never alter validation or render outcomes.
+The catalog carries contracts, never implementations — your bundle keeps
+`customElements.define` ownership, and your components' accessibility
+remains your contract.
+
+The full registration surface, acceptance rules and security model live in
+the
+[`@kimen/catalog` README](https://github.com/kimen-dev/kimen/tree/main/packages/catalog#registering-your-own-components).
+
 ## Protocol adapters
 
 The catalog and the `ki-*` elements are the durable assets; protocol
