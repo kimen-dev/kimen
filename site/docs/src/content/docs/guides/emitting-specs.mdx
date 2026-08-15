@@ -1,0 +1,82 @@
+---
+title: Emitting specs with any LLM
+description: Configure any model — any provider, any mode — to emit valid Kimen UI specs with @kimen/emitter, and close the reliability loop fail-closed.
+---
+
+`@kimen/emitter` derives everything an LLM integration needs from the same
+catalog value your runtime validates and renders against — the built-in
+catalog or one extended with
+[your own registered components](/docs/guides/ui-spec/#registering-your-own-components).
+One catalog in; a system prompt, a catalog-specialized JSON Schema and a
+provider-neutral tool definition out, plus the two helpers that close the
+reliability loop.
+
+**Security model, up front**: everything the emitter produces is ADVISORY.
+A derived schema or prompt improves a model's first-try validity; it
+authorizes nothing. Budgets, the URL scheme allowlist, the purity wall and
+catalog membership are enforced only by `validateUiSpec` and the guarded
+renderer — always run emissions through them, whatever your provider's
+"guaranteed" mode promises.
+
+## Pick your integration mode
+
+| Your provider supports | Use | Notes |
+| --- | --- | --- |
+| Nothing special (any chat model) | `catalogPrompt(catalog)` as a system-prompt block | The universal fallback; guidance verbatim + a validated example |
+| Structured outputs / response schemas | `uiSpecJsonSchema(catalog, { target })` | `openai-strict` for all-required closed-object modes; `draft-2020-12` elsewhere |
+| Tool / function calling | `uiSpecTool(catalog, { target })` | `{ name, description, inputSchema }`, provider-neutral |
+| No recursive schemas (grammar-compiled) | `target: 'anthropic-strict'` | Node tree unrolled to `maxDepth` (default 6) — a schema bound only |
+
+```ts
+import { catalogData, createCatalog } from '@kimen/catalog';
+import { catalogPrompt, uiSpecJsonSchema, uiSpecTool } from '@kimen/emitter';
+
+const registered = createCatalog(myDefinition, { extend: catalogData });
+if (!registered.ok) throw new Error(registered.issues[0].message);
+const catalog = registered.catalog;
+
+catalogPrompt(catalog);                                  // → { ok, artifact: string }
+uiSpecJsonSchema(catalog, { target: 'openai-strict' });  // → { ok, artifact: JSON Schema }
+uiSpecTool(catalog, { target: 'openai-strict' });        // → { ok, artifact: { name, description, inputSchema } }
+```
+
+Combine prompt + schema for best results: the schema constrains **shape**,
+the prompt carries **judgment** (when to use which component). Both derive
+from the same entries, so they cannot drift.
+
+Every derivation accepts `{ components: [...] }` to subset large catalogs
+and returns `{ ok: false, issues }` — never a throw — on version skew,
+unknown subset members, malformed catalog values or exceeded provider
+limits, always naming the offender. Identical inputs yield byte-identical,
+version-stamped artifacts.
+
+## Always validate — the loop
+
+```ts
+import { renderUiSpec, validateUiSpec } from '@kimen/catalog';
+import { normalizeEmission, repairPrompt } from '@kimen/emitter';
+
+let spec = normalizeEmission(JSON.parse(modelOutput));
+let report = validateUiSpec(spec, { catalog });
+if (!report.ok) {
+  const repair = repairPrompt(report);                    // ONE corrective message…
+  spec = normalizeEmission(JSON.parse(await askModel(repair)));
+  report = validateUiSpec(spec, { catalog });
+  if (!report.ok) throw new Error('emission rejected');   // …then fail closed
+}
+renderUiSpec(spec, { surface, catalog });                 // renders the ACCEPTED emission
+```
+
+`normalizeEmission` strips exactly the placeholders strict-mode
+all-required schemas force a model to emit (null-valued props, null action
+bindings) and touches nothing else — a value the model got wrong stays
+wrong so validation reports it. `repairPrompt` formats every issue (code,
+path, named offender) into a single corrective message; the
+one-round-then-fail-closed policy is deliberate and fixed.
+
+Provider "guaranteed JSON" modes do not replace validation: cross-field
+rules (declared actions), budgets, the URL scheme allowlist and the purity
+wall are boundary-only, and constrained decoding degrades on hard schemas.
+
+The canonical package documentation lives in the repository:
+[`packages/emitter`](https://github.com/kimen-dev/kimen/tree/main/packages/emitter).
