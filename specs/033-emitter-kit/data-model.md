@@ -16,7 +16,7 @@ non-empty when present (else `empty-subset`); `maxDepth` applies to
 
 ### EmitterIssue (public, NEW)
 
-`{ code, path, message, value? }`; codes: `empty-subset |
+`{ code, path, message, value? }`; codes: `empty-subset | invalid-option |
 malformed-catalog | provider-limit | unknown-component |
 unsupported-version`.
 

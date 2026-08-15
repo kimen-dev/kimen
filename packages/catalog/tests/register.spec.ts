@@ -208,6 +208,37 @@ describe('createCatalog', () => {
     }
   });
 
+  it('S4 refuses an extend base with a mismatched catalog schema version (review regression)', () => {
+    const created = createCatalog(acmeDefinition, {
+      extend: { catalogSchemaVersion: '99.0.0', components: {} },
+    });
+    expect(created.ok).toBe(false);
+    if (!created.ok) {
+      const issue = created.issues[0];
+      expect(issue?.code).toBe('unsupported-version');
+      expect(issue?.message).toContain('99.0.0');
+      expect(issue?.message).toContain(catalogData.catalogSchemaVersion);
+    }
+  });
+
+  it('S9 rejects a hostile extend base with issues instead of throwing (review regression)', () => {
+    const hostileBase = {
+      catalogSchemaVersion: catalogData.catalogSchemaVersion,
+      components: {
+        'x-y': { ...acmeKpiCard, tag: 'x-y', hostile: () => 'code' },
+      },
+    } as unknown as typeof catalogData;
+    const created = createCatalog(acmeDefinition, { extend: hostileBase });
+    expect(created.ok).toBe(false);
+    expect(!created.ok && created.issues[0]?.path).toContain('options.extend');
+
+    const nullBase = createCatalog(acmeDefinition, {
+      extend: null as unknown as typeof catalogData,
+    });
+    expect(nullBase.ok).toBe(false);
+    expect(!nullBase.ok && nullBase.issues[0]?.code).toBe('malformed-definition');
+  });
+
   it('S11 rejects an unknown prop on a registered component', () => {
     const created = createCatalog(acmeDefinition);
     expect(created.ok).toBe(true);

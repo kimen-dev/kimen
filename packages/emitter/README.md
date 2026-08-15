@@ -56,15 +56,15 @@ yield byte-identical artifacts.
 import { validateUiSpec, renderUiSpec } from '@kimen/catalog';
 import { normalizeEmission, repairPrompt } from '@kimen/emitter';
 
-const spec = normalizeEmission(JSON.parse(modelOutput));
+let spec = normalizeEmission(JSON.parse(modelOutput));
 let report = validateUiSpec(spec, { catalog });
 if (!report.ok) {
   const repair = repairPrompt(report);      // ONE corrective message…
-  const second = normalizeEmission(JSON.parse(await askModel(repair)));
-  report = validateUiSpec(second, { catalog });
+  spec = normalizeEmission(JSON.parse(await askModel(repair)));
+  report = validateUiSpec(spec, { catalog });
   if (!report.ok) throw new Error('emission rejected'); // …then fail closed
 }
-renderUiSpec(spec, { surface, catalog });
+renderUiSpec(spec, { surface, catalog });   // renders the ACCEPTED emission
 ```
 
 `normalizeEmission` strips exactly the placeholders strict-mode

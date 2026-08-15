@@ -62,6 +62,18 @@ describe('normalizeEmission', () => {
     expect(root.props).toBeUndefined();
   });
 
+  it('S13 normalizes hostile nesting depths without overflowing (review regression)', () => {
+    let node: Record<string, unknown> = { component: 'ki-badge', props: { tone: null } };
+    for (let level = 0; level < 3000; level += 1) {
+      node = { component: 'ki-card', props: { tone: null }, slots: { '': [node] } };
+    }
+    const emission = { root: node, version: 1 };
+    const normalized = normalizeEmission(emission);
+    const report = validateUiSpec(normalized);
+    expect(report.ok).toBe(false);
+    expect(report.issues[0]?.code).toBe('depth-budget');
+  });
+
   it('S13 leaves non-placeholder values untouched', () => {
     const emission: unknown = {
       root: {

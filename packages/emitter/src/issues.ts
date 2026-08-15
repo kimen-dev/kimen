@@ -10,6 +10,7 @@ import { CATALOG_SCHEMA_VERSION } from '@kimen/catalog';
 /** Machine-readable derivation rejection classes (spec 033 FR-007/FR-009). */
 export type EmitterIssueCode =
   | 'empty-subset'
+  | 'invalid-option'
   | 'malformed-catalog'
   | 'provider-limit'
   | 'unknown-component'
@@ -50,17 +51,67 @@ export interface ResolvedEntries {
  * returned entries are sorted by tag so every artifact is deterministic
  * (S11).
  */
+const CONSTRAINT_TYPES: ReadonlySet<string> = new Set(['boolean', 'enum', 'number', 'string']);
+
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function isStringRecord(value: unknown): boolean {
+  return isPlainRecord(value) && Object.values(value).every((entry) => typeof entry === 'string');
+}
+
+function isStringArray(value: unknown): boolean {
+  return Array.isArray(value) && value.every((entry) => typeof entry === 'string');
+}
+
+function isConstraintShaped(value: unknown): boolean {
+  if (!isPlainRecord(value)) {
+    return false;
+  }
+  const scalarDefault =
+    value['default'] === undefined ||
+    ['boolean', 'number', 'string'].includes(typeof value['default']);
+  return (
+    typeof value['type'] === 'string' &&
+    CONSTRAINT_TYPES.has(value['type']) &&
+    typeof value['description'] === 'string' &&
+    (value['values'] === undefined || isStringArray(value['values'])) &&
+    (value['documentedValues'] === undefined || isStringArray(value['documentedValues'])) &&
+    scalarDefault
+  );
+}
+
+/**
+ * Structural check to exactly the depth the derivations dereference: a
+ * hand-built "catalog" with garbage entries must yield a coded issue,
+ * never a downstream TypeError (the Derivation no-throw contract).
+ */
+function isEntryShaped(value: unknown): value is CatalogEntry {
+  if (!isPlainRecord(value)) {
+    return false;
+  }
+  return (
+    typeof value['tag'] === 'string' &&
+    typeof value['description'] === 'string' &&
+    typeof value['whenToUse'] === 'string' &&
+    typeof value['whenNotToUse'] === 'string' &&
+    isPlainRecord(value['props']) &&
+    Object.values(value['props']).every(isConstraintShaped) &&
+    isStringRecord(value['slots']) &&
+    isStringRecord(value['events'])
+  );
+}
+
 export function resolveEntries(catalog: Catalog, components?: readonly string[]): ResolvedEntries {
   const issues: EmitterIssue[] = [];
   // JS callers can hand over anything despite the Catalog type; the guard
   // inspects the value as unknown so the check is real, not tautological.
   const candidate: unknown = catalog;
   const shaped =
-    typeof candidate === 'object' &&
-    candidate !== null &&
-    typeof (candidate as { catalogSchemaVersion?: unknown }).catalogSchemaVersion === 'string' &&
-    typeof (candidate as { components?: unknown }).components === 'object' &&
-    (candidate as { components?: unknown }).components !== null;
+    isPlainRecord(candidate) &&
+    typeof candidate['catalogSchemaVersion'] === 'string' &&
+    isPlainRecord(candidate['components']);
   if (!shaped) {
     return {
       entries: [],
@@ -73,6 +124,7 @@ export function resolveEntries(catalog: Catalog, components?: readonly string[])
       ],
     };
   }
+  const componentsRecord = candidate['components'] as Record<string, unknown>;
   if (catalog.catalogSchemaVersion !== CATALOG_SCHEMA_VERSION) {
     issues.push({
       code: 'unsupported-version',
@@ -83,7 +135,7 @@ export function resolveEntries(catalog: Catalog, components?: readonly string[])
   }
   let tags: readonly string[];
   if (components === undefined) {
-    tags = Object.keys(catalog.components);
+    tags = Object.keys(componentsRecord);
     if (tags.length === 0) {
       issues.push({
         code: 'malformed-catalog',
@@ -100,7 +152,7 @@ export function resolveEntries(catalog: Catalog, components?: readonly string[])
       });
     }
     for (const tag of components) {
-      if (!Object.hasOwn(catalog.components, tag)) {
+      if (!Object.hasOwn(componentsRecord, tag)) {
         issues.push({
           code: 'unknown-component',
           message: `subset component "${tag}" is outside the catalog`,
@@ -114,13 +166,25 @@ export function resolveEntries(catalog: Catalog, components?: readonly string[])
   if (issues.length > 0) {
     return { entries: [], issues };
   }
-  const sorted = [...tags].sort();
+  // A subset is a selection SET: repeats collapse instead of duplicating
+  // guidance blocks, anyOf branches and limit tallies (review finding).
+  const sorted = [...new Set(tags)].sort();
   const entries: ResolvedEntry[] = [];
   for (const tag of sorted) {
-    const entry = catalog.components[tag];
-    if (entry !== undefined) {
-      entries.push([tag, entry] as const);
+    const entry = componentsRecord[tag];
+    if (!isEntryShaped(entry)) {
+      issues.push({
+        code: 'malformed-catalog',
+        message: `catalog entry "${tag}" does not satisfy the catalog entry contract`,
+        path: `catalog.components.${tag}`,
+        value: tag,
+      });
+      continue;
     }
+    entries.push([tag, entry] as const);
+  }
+  if (issues.length > 0) {
+    return { entries: [], issues };
   }
   return { entries, issues: [] };
 }

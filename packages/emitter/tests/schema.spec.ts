@@ -236,6 +236,66 @@ describe('uiSpecJsonSchema', () => {
     }
   });
 
+  it('S4 collapses duplicate subset tags instead of duplicating branches (review regression)', () => {
+    const artifact = deriveOrThrow(catalogData, { components: ['ki-badge', 'ki-badge'] });
+    const defs = artifact['$defs'] as Record<string, { anyOf?: readonly unknown[] }>;
+    expect(defs['node']?.anyOf).toHaveLength(1);
+  });
+
+  it('S12 rejects malformed catalog entries with a coded issue instead of throwing (review regression)', () => {
+    const withNullEntry: Catalog = {
+      catalogSchemaVersion: catalogData.catalogSchemaVersion,
+      components: { 'ki-x': null } as unknown as Catalog['components'],
+    };
+    const nullEntry = uiSpecJsonSchema(withNullEntry);
+    expect(nullEntry.ok).toBe(false);
+    expect(!nullEntry.ok && nullEntry.issues[0]?.code).toBe('malformed-catalog');
+    expect(!nullEntry.ok && nullEntry.issues[0]?.value).toBe('ki-x');
+
+    const arrayComponents = uiSpecJsonSchema({
+      catalogSchemaVersion: catalogData.catalogSchemaVersion,
+      components: ['fake'] as unknown as Catalog['components'],
+    });
+    expect(arrayComponents.ok).toBe(false);
+    expect(!arrayComponents.ok && arrayComponents.issues[0]?.code).toBe('malformed-catalog');
+  });
+
+  it('S6 refuses a degenerate anthropic-strict maxDepth with a named issue (review regression)', () => {
+    for (const maxDepth of [0, -1, 2.5]) {
+      const derivation = uiSpecJsonSchema(catalogData, { maxDepth, target: 'anthropic-strict' });
+      expect(derivation.ok).toBe(false);
+      if (!derivation.ok) {
+        expect(derivation.issues[0]?.code).toBe('invalid-option');
+        expect(derivation.issues[0]?.path).toBe('options.maxDepth');
+      }
+    }
+  });
+
+  it('S15 counts container and top-level properties against the strict limit (review regression)', () => {
+    const components: Record<string, unknown> = {};
+    for (let index = 0; index < 1000; index += 1) {
+      const tag = `acme-w${String(index)}`;
+      components[tag] = {
+        description: 'Synthetic tally probe.',
+        events: {},
+        props: { mode: { description: 'One prop.', type: 'string' } },
+        slots: { '': 'One slot.' },
+        tag,
+        whenNotToUse: 'Never in production.',
+        whenToUse: 'Only in this test.',
+      };
+    }
+    const synthetic = {
+      catalogSchemaVersion: catalogData.catalogSchemaVersion,
+      components,
+    } as unknown as Catalog;
+    const derivation = uiSpecJsonSchema(synthetic, { target: 'openai-strict' });
+    expect(derivation.ok).toBe(false);
+    if (!derivation.ok) {
+      expect(derivation.issues.some((issue) => issue.message.includes('properties'))).toBe(true);
+    }
+  });
+
   it('S12 refuses a version-skewed catalog naming both versions', () => {
     const skewed: Catalog = { ...catalogData, catalogSchemaVersion: '0.9.9' };
     const derivation = uiSpecJsonSchema(skewed);

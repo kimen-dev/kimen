@@ -13,42 +13,83 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
-function normalizeNode(node: unknown): unknown {
-  if (!isRecord(node)) {
-    return node;
-  }
-  const clean: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(node)) {
-    if (key === 'props' && isRecord(value)) {
-      const props: Record<string, unknown> = {};
-      for (const [name, propValue] of Object.entries(value)) {
-        if (propValue !== null) {
-          props[name] = propValue;
+/**
+ * Iterative node-tree cleanup (review finding: recursion overflowed on
+ * hostile depths the boundary rejects gracefully). Matches the boundary's
+ * iterative-wall discipline: unbounded depth degrades into a validation
+ * report downstream, never a RangeError here. Cyclic inputs (impossible
+ * from JSON.parse, possible from hand-built objects) pass through
+ * untouched — the boundary rejects them as non-data.
+ */
+function normalizeTree(root: unknown): unknown {
+  const seen = new WeakSet();
+  const holder: { value?: unknown } = {};
+  const stack: { source: unknown; assign: (clone: unknown) => void }[] = [
+    {
+      assign: (clone) => {
+        holder.value = clone;
+      },
+      source: root,
+    },
+  ];
+  while (stack.length > 0) {
+    const item = stack.pop();
+    if (item === undefined) {
+      break;
+    }
+    const { source, assign } = item;
+    if (!isRecord(source)) {
+      assign(source);
+      continue;
+    }
+    if (seen.has(source)) {
+      assign(source);
+      continue;
+    }
+    seen.add(source);
+    const clean: Record<string, unknown> = {};
+    assign(clean);
+    for (const [key, value] of Object.entries(source)) {
+      if (key === 'props' && isRecord(value)) {
+        const props: Record<string, unknown> = {};
+        for (const [name, propValue] of Object.entries(value)) {
+          if (propValue !== null) {
+            props[name] = propValue;
+          }
         }
-      }
-      if (Object.keys(props).length > 0) {
-        clean['props'] = props;
-      }
-      continue;
-    }
-    if (key === 'action' && value === null) {
-      continue;
-    }
-    if (key === 'slots' && isRecord(value)) {
-      const slots: Record<string, unknown> = {};
-      for (const [name, children] of Object.entries(value)) {
-        if (Array.isArray(children)) {
-          slots[name] = children.map((child) => normalizeNode(child));
-        } else {
-          slots[name] = children;
+        if (Object.keys(props).length > 0) {
+          clean['props'] = props;
         }
+        continue;
       }
-      clean['slots'] = slots;
-      continue;
+      if (key === 'action' && value === null) {
+        continue;
+      }
+      if (key === 'slots' && isRecord(value)) {
+        const slots: Record<string, unknown> = {};
+        clean['slots'] = slots;
+        for (const [name, children] of Object.entries(value)) {
+          if (Array.isArray(children)) {
+            const cloned: unknown[] = new Array(children.length);
+            slots[name] = cloned;
+            children.forEach((child, index) => {
+              stack.push({
+                assign: (childClone) => {
+                  cloned[index] = childClone;
+                },
+                source: child,
+              });
+            });
+          } else {
+            slots[name] = children;
+          }
+        }
+        continue;
+      }
+      clean[key] = value;
     }
-    clean[key] = value;
   }
-  return clean;
+  return holder.value;
 }
 
 /**
@@ -65,7 +106,7 @@ export function normalizeEmission(value: unknown): unknown {
   }
   const clean: Record<string, unknown> = {};
   for (const [key, entry] of Object.entries(value)) {
-    clean[key] = key === 'root' ? normalizeNode(entry) : entry;
+    clean[key] = key === 'root' ? normalizeTree(entry) : entry;
   }
   return clean;
 }

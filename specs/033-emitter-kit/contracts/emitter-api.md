@@ -20,6 +20,7 @@ export interface DerivationOptions {
 
 export type EmitterIssueCode =
   | 'empty-subset'
+  | 'invalid-option'
   | 'malformed-catalog'
   | 'provider-limit'
   | 'unknown-component'

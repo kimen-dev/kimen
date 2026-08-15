@@ -129,60 +129,91 @@ interface LimitTally {
   enumValues: number;
   nameAndEnumChars: number;
   properties: number;
-  worstTag: string;
-  worstWeight: number;
 }
 
-function tallyLimits(entries: readonly ResolvedEntry[]): LimitTally {
-  const tally: LimitTally = {
-    enumValues: 0,
-    nameAndEnumChars: 0,
-    properties: 0,
-    worstTag: '',
-    worstWeight: -1,
-  };
-  for (const [tag, entry] of entries) {
-    let weight = 0;
-    // The branch itself: component/action plus props/slots containers.
-    tally.properties += 2;
-    for (const [name, constraint] of Object.entries(entry.props)) {
-      tally.properties += 1;
-      tally.nameAndEnumChars += name.length;
-      weight += 1;
-      for (const value of constraint.values ?? []) {
-        tally.enumValues += 1;
-        tally.nameAndEnumChars += value.length;
-        weight += 1;
+/**
+ * Exact tallies over the BUILT document, so the check can never drift from
+ * what actually ships (review finding: a hand-derived estimate undercounted
+ * container and top-level properties). Counts every key of every
+ * `properties` object, every `$defs` name, every `enum` value and every
+ * string `const` — the name/enum surface providers meter.
+ */
+function tallyDocument(artifact: unknown): LimitTally {
+  const tally: LimitTally = { enumValues: 0, nameAndEnumChars: 0, properties: 0 };
+  const stack: unknown[] = [artifact];
+  while (stack.length > 0) {
+    const value = stack.pop();
+    if (Array.isArray(value)) {
+      for (const child of value) {
+        stack.push(child);
       }
+      continue;
     }
-    for (const name of Object.keys(entry.slots)) {
-      tally.properties += 1;
-      tally.nameAndEnumChars += name.length;
-      weight += 1;
+    if (value === null || typeof value !== 'object') {
+      continue;
     }
-    if (weight > tally.worstWeight) {
-      tally.worstWeight = weight;
-      tally.worstTag = tag;
+    const record = value as Record<string, unknown>;
+    for (const [key, child] of Object.entries(record)) {
+      if (
+        (key === 'properties' || key === '$defs') &&
+        child !== null &&
+        typeof child === 'object'
+      ) {
+        for (const name of Object.keys(child)) {
+          tally.properties += key === 'properties' ? 1 : 0;
+          tally.nameAndEnumChars += name.length;
+        }
+      }
+      if (key === 'enum' && Array.isArray(child)) {
+        for (const entry of child) {
+          tally.enumValues += 1;
+          tally.nameAndEnumChars += typeof entry === 'string' ? entry.length : 0;
+        }
+      }
+      if (key === 'const' && typeof child === 'string') {
+        tally.nameAndEnumChars += child.length;
+      }
+      stack.push(child);
     }
   }
   return tally;
 }
 
-function openAiLimitIssues(entries: readonly ResolvedEntry[]): readonly EmitterIssue[] {
-  const tally = tallyLimits(entries);
+function worstContributor(entries: readonly ResolvedEntry[]): string {
+  let worstTag = '';
+  let worstWeight = -1;
+  for (const [tag, entry] of entries) {
+    let weight = Object.keys(entry.slots).length;
+    for (const [name, constraint] of Object.entries(entry.props)) {
+      weight += 1 + name.length / 8 + (constraint.values?.length ?? 0);
+    }
+    if (weight > worstWeight) {
+      worstWeight = weight;
+      worstTag = tag;
+    }
+  }
+  return worstTag;
+}
+
+function openAiLimitIssues(
+  artifact: unknown,
+  entries: readonly ResolvedEntry[],
+): readonly EmitterIssue[] {
+  const tally = tallyDocument(artifact);
+  const worstTag = worstContributor(entries);
   const issues: EmitterIssue[] = [];
-  const exceeded: readonly (readonly [keyof typeof OPENAI_LIMITS, number])[] = [
+  const totals: readonly (readonly [keyof typeof OPENAI_LIMITS, number])[] = [
     ['enumValues', tally.enumValues],
     ['nameAndEnumChars', tally.nameAndEnumChars],
     ['properties', tally.properties],
   ];
-  for (const [limit, total] of exceeded) {
+  for (const [limit, total] of totals) {
     if (total > OPENAI_LIMITS[limit]) {
       issues.push({
         code: 'provider-limit',
-        message: `openai-strict ${limit} limit of ${String(OPENAI_LIMITS[limit])} exceeded (${String(total)}); largest contributor is "${tally.worstTag}" — derive a component subset instead`,
+        message: `openai-strict ${limit} limit of ${String(OPENAI_LIMITS[limit])} exceeded (${String(total)}); largest contributor is "${worstTag}" — derive a component subset instead`,
         path: 'options.target',
-        value: tally.worstTag,
+        value: worstTag,
       });
     }
   }
@@ -265,15 +296,24 @@ export function uiSpecJsonSchema(
   }
   const target = options.target ?? 'draft-2020-12';
   const strict = target !== 'draft-2020-12';
-  if (target === 'openai-strict') {
-    const limitIssues = openAiLimitIssues(resolved.entries);
-    if (limitIssues.length > 0) {
-      return { issues: limitIssues, ok: false };
-    }
-  }
   const document = baseDocument(catalog, strict);
   if (target === 'anthropic-strict') {
     const depth = options.maxDepth ?? DEFAULT_ANTHROPIC_DEPTH;
+    // A degenerate depth would ship a dangling $ref as ok:true (review
+    // finding): fail closed naming the option instead.
+    if (!Number.isInteger(depth) || depth < 1) {
+      return {
+        issues: [
+          {
+            code: 'invalid-option',
+            message: `anthropic-strict maxDepth must be an integer >= 1 (received ${String(options.maxDepth)})`,
+            path: 'options.maxDepth',
+            value: String(options.maxDepth),
+          },
+        ],
+        ok: false,
+      };
+    }
     document['$comment'] =
       `composition depth bound: ${String(depth)} (schema bound only; the validation boundary accepts deeper specs)`;
     document['description'] =
@@ -284,5 +324,12 @@ export function uiSpecJsonSchema(
   } else {
     document['$defs'] = recursiveDefinitions(resolved.entries, strict);
   }
-  return { artifact: pruneUndefined(document) as Record<string, unknown>, issues: [], ok: true };
+  const artifact = pruneUndefined(document) as Record<string, unknown>;
+  if (target === 'openai-strict') {
+    const limitIssues = openAiLimitIssues(artifact, resolved.entries);
+    if (limitIssues.length > 0) {
+      return { issues: limitIssues, ok: false };
+    }
+  }
+  return { artifact, issues: [], ok: true };
 }
