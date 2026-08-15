@@ -1,0 +1,66 @@
+{
+  "name": "@kimen/react",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Generated React bindings for the Kimen ki-* web components (spec 034): typed props from the component contract, ki-* custom events as callback props, tree-shakable per-component imports. Client-side rendering; generated from the same source of truth as every other Kimen artifact and never hand-edited.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimen-dev/kimen.git",
+    "directory": "packages/react"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "test": "vitest run --project react-wrapper-node",
+    "test-browser-wrapper": "vitest run --project react-wrapper-browser"
+  },
+  "dependencies": {
+    "@kimen/elements": "workspace:*",
+    "@stencil/react-output-target": "1.6.1"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.2",
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.7",
+    "@vitest/browser-playwright": "4.1.10",
+    "playwright": "1.62.1",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "vitest": "4.1.10"
+  },
+  "nx": {
+    "tags": [
+      "scope:wrapper"
+    ],
+    "targets": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [
+          "{projectRoot}/**/*"
+        ],
+        "outputs": [
+          "{projectRoot}/dist"
+        ]
+      }
+    }
+  }
+}

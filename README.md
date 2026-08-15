@@ -101,7 +101,9 @@ the catalog and components are the durable assets.
 | [`@kimen/catalog`](./packages/catalog) | Implemented, unpublished | Neutral catalog schema + guarded renderer (`validateUiSpec`, `renderUiSpec`, streaming) |
 | [`@kimen/adapter-a2ui`](./packages/adapter-a2ui) | Implemented, unpublished | A2UI protocol adapter over the guarded renderer |
 | [`@kimen/adapter-mcp-apps`](./packages/adapter-mcp-apps) | Implemented, unpublished | MCP Apps adapter: Kimen surfaces as self-contained `ui://` resources |
-| `@kimen/react`, ... | Planned | Generated framework wrappers |
+| [`@kimen/react`](./packages/react) | Implemented, unpublished | Generated React bindings: typed props, event callbacks, controlled forms |
+| [`@kimen/vue`](./packages/vue) | Implemented, unpublished | Generated Vue 3 bindings with v-model on the form components |
+| [`@kimen/angular`](./packages/angular) | Implemented, unpublished | Generated Angular standalone components + ControlValueAccessors (APF, Angular ^22) |
 | [`kimen`](./packages/kimen) | Placeholder | Future CLI / meta package |
 
 The current v1 publication contract covers exactly `@kimen/elements` and
@@ -152,6 +154,7 @@ everything else: see [`CONTRIBUTING.md`](./CONTRIBUTING.md). Security reports:
 [Apache-2.0](./LICENSE) · Copyright 2026 Marcela Gotta
 
 <!-- kimen:capabilities:root-readme-status:start -->
+- **available** — Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
 - **hardening** — Changed-core mutation quality gate in hardening
 - **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer

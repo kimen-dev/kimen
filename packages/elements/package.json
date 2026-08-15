@@ -69,8 +69,11 @@
   "devDependencies": {
     "@kimen/tokens": "workspace:*",
     "@size-limit/preset-small-lib": "13.0.3",
+    "@stencil/angular-output-target": "1.4.1",
+    "@stencil/react-output-target": "1.6.1",
     "@stencil/storybook-plugin": "0.7.0",
     "@stencil/vitest": "1.14.0",
+    "@stencil/vue-output-target": "0.14.1",
     "@storybook/addon-a11y": "10.5.6",
     "@storybook/addon-docs": "10.5.6",
     "@vitest/browser-playwright": "4.1.10",
@@ -100,6 +103,14 @@
     "./ki-*": {
       "types": "./dist/components/ki-*.d.ts",
       "import": "./dist/components/ki-*.js"
+    },
+    "./components": {
+      "types": "./dist/types/components.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./components/*.js": {
+      "types": "./dist/components/*.d.ts",
+      "import": "./dist/components/*.js"
     }
   }
 }

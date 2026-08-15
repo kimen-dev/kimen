@@ -1,0 +1,63 @@
+{
+  "name": "@kimen/vue",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Generated Vue 3 bindings for the Kimen ki-* web components (spec 034): typed props, native event bindings and v-model on the form components over their re-dispatched native events, tree-shakable per-component imports. Client-side rendering; generated from the same source of truth as every other Kimen artifact and never hand-edited.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimen-dev/kimen.git",
+    "directory": "packages/vue"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "test": "vitest run --project vue-wrapper-node",
+    "test-browser-wrapper": "vitest run --project vue-wrapper-browser"
+  },
+  "dependencies": {
+    "@kimen/elements": "workspace:*",
+    "@stencil/vue-output-target": "0.14.1"
+  },
+  "peerDependencies": {
+    "vue": ">=3.4.38"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.2",
+    "@vitest/browser-playwright": "4.1.10",
+    "playwright": "1.62.1",
+    "vitest": "4.1.10",
+    "vue": "3.5.18",
+    "vue-router": "4.5.1"
+  },
+  "nx": {
+    "tags": [
+      "scope:wrapper"
+    ],
+    "targets": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [
+          "{projectRoot}/**/*"
+        ],
+        "outputs": [
+          "{projectRoot}/dist"
+        ]
+      }
+    }
+  }
+}

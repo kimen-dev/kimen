@@ -1,0 +1,13 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": false,
+    "noEmit": true,
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "module": "esnext"
+  },
+  "include": ["."]
+}

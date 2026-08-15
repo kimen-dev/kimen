@@ -1,4 +1,5 @@
 {
+  "timestamp": "2026-08-15T14:41:36",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.43.5",
@@ -368,7 +369,7 @@
             "references": {
               "KiAvatarSize": {
                 "location": "local",
-                "path": "src/components/ki-avatar/ki-avatar.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-avatar/ki-avatar.tsx",
                 "id": "src/components/ki-avatar/ki-avatar.tsx::KiAvatarSize"
               }
             }
@@ -656,7 +657,7 @@
             "references": {
               "KiBadgeSize": {
                 "location": "local",
-                "path": "src/components/ki-badge/ki-badge.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-badge/ki-badge.tsx",
                 "id": "src/components/ki-badge/ki-badge.tsx::KiBadgeSize"
               }
             }
@@ -696,7 +697,7 @@
             "references": {
               "KiBadgeTone": {
                 "location": "local",
-                "path": "src/components/ki-badge/ki-badge.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-badge/ki-badge.tsx",
                 "id": "src/components/ki-badge/ki-badge.tsx::KiBadgeTone"
               }
             }
@@ -864,7 +865,7 @@
             "references": {
               "KiButtonSize": {
                 "location": "local",
-                "path": "src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonSize"
               }
             }
@@ -916,7 +917,7 @@
             "references": {
               "KiButtonTone": {
                 "location": "local",
-                "path": "src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonTone"
               }
             }
@@ -960,7 +961,7 @@
             "references": {
               "KiButtonType": {
                 "location": "local",
-                "path": "src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonType"
               }
             }
@@ -1030,7 +1031,7 @@
             "references": {
               "KiButtonVariant": {
                 "location": "local",
-                "path": "src/components/ki-button/ki-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-button/ki-button.tsx",
                 "id": "src/components/ki-button/ki-button.tsx::KiButtonVariant"
               }
             }
@@ -1627,7 +1628,7 @@
             "references": {
               "KiDialogCloseDetail": {
                 "location": "local",
-                "path": "src/components/ki-dialog/ki-dialog.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-dialog/ki-dialog.tsx",
                 "id": "src/components/ki-dialog/ki-dialog.tsx::KiDialogCloseDetail"
               }
             }
@@ -1705,7 +1706,7 @@
             "references": {
               "KiDividerOrientation": {
                 "location": "local",
-                "path": "src/components/ki-divider/ki-divider.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-divider/ki-divider.tsx",
                 "id": "src/components/ki-divider/ki-divider.tsx::KiDividerOrientation"
               }
             }
@@ -1848,7 +1849,7 @@
             "references": {
               "KiIconButtonSize": {
                 "location": "local",
-                "path": "src/components/ki-icon-button/ki-icon-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-icon-button/ki-icon-button.tsx",
                 "id": "src/components/ki-icon-button/ki-icon-button.tsx::KiIconButtonSize"
               }
             }
@@ -1900,7 +1901,7 @@
             "references": {
               "KiIconButtonTone": {
                 "location": "local",
-                "path": "src/components/ki-icon-button/ki-icon-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-icon-button/ki-icon-button.tsx",
                 "id": "src/components/ki-icon-button/ki-icon-button.tsx::KiIconButtonTone"
               }
             }
@@ -1944,7 +1945,7 @@
             "references": {
               "KiIconButtonVariant": {
                 "location": "local",
-                "path": "src/components/ki-icon-button/ki-icon-button.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-icon-button/ki-icon-button.tsx",
                 "id": "src/components/ki-icon-button/ki-icon-button.tsx::KiIconButtonVariant"
               }
             }
@@ -2401,7 +2402,7 @@
             "references": {
               "KiInputType": {
                 "location": "local",
-                "path": "src/components/ki-input/ki-input.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-input/ki-input.tsx",
                 "id": "src/components/ki-input/ki-input.tsx::KiInputType"
               }
             }
@@ -2876,7 +2877,7 @@
             "references": {
               "KiProgressShape": {
                 "location": "local",
-                "path": "src/components/ki-progress/ki-progress.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-progress/ki-progress.tsx",
                 "id": "src/components/ki-progress/ki-progress.tsx::KiProgressShape"
               }
             }
@@ -3426,7 +3427,7 @@
             "references": {
               "KiScrollerOrientation": {
                 "location": "local",
-                "path": "src/components/ki-scroller/ki-scroller.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-scroller/ki-scroller.tsx",
                 "id": "src/components/ki-scroller/ki-scroller.tsx::KiScrollerOrientation"
               }
             }
@@ -3837,7 +3838,7 @@
             "references": {
               "KiStatusTone": {
                 "location": "local",
-                "path": "src/components/ki-status/ki-status.tsx",
+                "path": "/Users/marsgotta/Projects/kimen/packages/elements/src/components/ki-status/ki-status.tsx",
                 "id": "src/components/ki-status/ki-status.tsx::KiStatusTone"
               }
             }

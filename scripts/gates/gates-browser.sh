@@ -106,4 +106,10 @@ record_browser_evidence "browser-executable:$ENGINE" green
 # input and independent prerelease jobs must execute rather than reuse another
 # engine's Nx result.
 run_browser_gate "test-browser:$ENGINE" pnpm exec nx run @kimen/elements:test-browser --skipNxCache
+# Wrapper behavioral suites (spec 034) are Chromium-scoped: the wrapped
+# components already carry the three-engine matrix; the wrapper glue runs
+# on the ordinary PR engine.
+if [ "$ENGINE" = 'chromium' ]; then
+  run_browser_gate "test-browser-wrappers:$ENGINE" pnpm exec nx run-many -t test-browser-wrapper --skipNxCache
+fi
 echo "BROWSER GATE GREEN — engine=$ENGINE executable=$BROWSER_EXECUTABLE"

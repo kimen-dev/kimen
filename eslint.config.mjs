@@ -25,6 +25,14 @@ export default tseslint.config(
       'internal/**',
       '**/loader/**',
       '**/generated/**',
+      // Generated framework wrappers (spec 034, Art. I): produced by the
+      // Stencil output targets, drift-gated by wrappers-sync, never
+      // hand-edited — the hand-written entry shells stay linted.
+      'packages/react/src/components.ts',
+      'packages/react/src/ki-*.ts',
+      'packages/vue/src/index.ts',
+      'packages/vue/src/ki-*.ts',
+      'packages/angular/src/directives/**',
       '**/www/**',
       '**/storybook-static/**',
       'site-dist/**',
@@ -92,6 +100,10 @@ export default tseslint.config(
             {
               sourceTag: 'scope:adapter',
               onlyDependOnLibsWithTags: ['scope:catalog', 'scope:elements'],
+            },
+            {
+              sourceTag: 'scope:wrapper',
+              onlyDependOnLibsWithTags: ['scope:elements'],
             },
           ],
         },

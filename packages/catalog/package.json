@@ -65,6 +65,11 @@
     },
     "claims": [
       {
+        "id": "framework-wrappers",
+        "state": "available",
+        "text": "Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated"
+      },
+      {
         "id": "guarded-renderer",
         "state": "available",
         "text": "Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed"

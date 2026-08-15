@@ -36,6 +36,23 @@
   ],
   "capabilities": [
     {
+      "id": "framework-wrappers",
+      "state": "available",
+      "evidence": ["build", "test", "wrappers-sync"],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated",
+      "plannedText": ""
+    },
+    {
       "id": "guarded-renderer",
       "state": "available",
       "evidence": ["build", "test"],

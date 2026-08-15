@@ -42,6 +42,11 @@
       "!packages/elements/src/components.d.ts",
       "!packages/elements/generated/**",
       "!packages/catalog/src/generated/**",
+      "!packages/react/src/components.ts",
+      "!packages/react/src/ki-*.ts",
+      "!packages/vue/src/index.ts",
+      "!packages/vue/src/ki-*.ts",
+      "!packages/angular/src/directives/**",
       "!packages/tokens/dist/**",
       "!changes/api/**/*.json",
       "!nx.json"
