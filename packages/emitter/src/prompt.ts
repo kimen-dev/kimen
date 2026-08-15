@@ -7,7 +7,7 @@
 import type { Catalog, CatalogEntry, CatalogPropConstraint, UiSpecNode } from '@kimen/catalog';
 
 import type { DerivationOptions } from './schema.js';
-import type { Derivation } from './issues.js';
+import type { Derivation, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
 
 function propLine(name: string, constraint: CatalogPropConstraint): string {
@@ -54,7 +54,7 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
  * default slot, one text child. Tests assert it validates against the same
  * catalog (S8) — the example can never drift from the boundary.
  */
-function exampleSpec(entries: readonly (readonly [string, CatalogEntry])[]): {
+function exampleSpec(entries: readonly ResolvedEntry[]): {
   readonly root: UiSpecNode;
   readonly version: 1;
 } {

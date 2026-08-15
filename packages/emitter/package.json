@@ -4,6 +4,11 @@
   "private": true,
   "license": "Apache-2.0",
   "description": "Kimen emitter kit: model-agnostic guidance artifacts (prompt, catalog-specialized JSON Schema with provider lowerings, tool definition) plus emission ingest helpers, derived deterministically from the neutral catalog. Advisory reliability tooling — validation and the guarded renderer remain the only enforcement points (spec 033).",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimen-dev/kimen.git",
+    "directory": "packages/emitter"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

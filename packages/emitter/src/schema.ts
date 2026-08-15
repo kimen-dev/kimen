@@ -9,7 +9,7 @@
  */
 import type { Catalog, CatalogEntry, CatalogPropConstraint } from '@kimen/catalog';
 
-import type { Derivation, EmitterIssue } from './issues.js';
+import type { Derivation, EmitterIssue, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
 
 /**
@@ -133,7 +133,7 @@ interface LimitTally {
   worstWeight: number;
 }
 
-function tallyLimits(entries: readonly (readonly [string, CatalogEntry])[]): LimitTally {
+function tallyLimits(entries: readonly ResolvedEntry[]): LimitTally {
   const tally: LimitTally = {
     enumValues: 0,
     nameAndEnumChars: 0,
@@ -168,9 +168,7 @@ function tallyLimits(entries: readonly (readonly [string, CatalogEntry])[]): Lim
   return tally;
 }
 
-function openAiLimitIssues(
-  entries: readonly (readonly [string, CatalogEntry])[],
-): readonly EmitterIssue[] {
+function openAiLimitIssues(entries: readonly ResolvedEntry[]): readonly EmitterIssue[] {
   const tally = tallyLimits(entries);
   const issues: EmitterIssue[] = [];
   const exceeded: readonly (readonly [keyof typeof OPENAI_LIMITS, number])[] = [
@@ -209,7 +207,7 @@ function baseDocument(catalog: Catalog, strict: boolean): Record<string, unknown
 }
 
 function recursiveDefinitions(
-  entries: readonly (readonly [string, CatalogEntry])[],
+  entries: readonly ResolvedEntry[],
   strict: boolean,
 ): Record<string, unknown> {
   const defs: Record<string, unknown> = {
@@ -229,7 +227,7 @@ function recursiveDefinitions(
  * the format (edge case in spec.md).
  */
 function unrolledDefinitions(
-  entries: readonly (readonly [string, CatalogEntry])[],
+  entries: readonly ResolvedEntry[],
   depth: number,
 ): Record<string, unknown> {
   const defs: Record<string, unknown> = {};
