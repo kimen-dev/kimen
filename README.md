@@ -152,6 +152,7 @@ everything else: see [`CONTRIBUTING.md`](./CONTRIBUTING.md). Security reports:
 [Apache-2.0](./LICENSE) · Copyright 2026 Marcela Gotta
 
 <!-- kimen:capabilities:root-readme-status:start -->
+- **available** — Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
 - **hardening** — Changed-core mutation quality gate in hardening
 - **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer

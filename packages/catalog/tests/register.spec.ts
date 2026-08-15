@@ -208,6 +208,39 @@ describe('createCatalog', () => {
     }
   });
 
+  it('S11 rejects an unknown prop on a registered component', () => {
+    const created = createCatalog(acmeDefinition);
+    expect(created.ok).toBe(true);
+    if (!created.ok) {
+      return;
+    }
+    const report = validateUiSpec(
+      { root: { component: 'acme-kpi-card', props: { onclick: 'steal()' } }, version: 1 },
+      { catalog: created.catalog },
+    );
+    expect(report.ok).toBe(false);
+    const issue = report.issues[0];
+    expect(issue?.code).toBe('unknown-prop');
+    expect(issue?.message).toContain('acme-kpi-card');
+    expect(issue?.message).toContain('onclick');
+  });
+
+  it('S12 rejects a component outside the registered catalog', () => {
+    const created = createCatalog(acmeDefinition);
+    expect(created.ok).toBe(true);
+    if (!created.ok) {
+      return;
+    }
+    const report = validateUiSpec(
+      { root: { component: 'acme-invoice-table' }, version: 1 },
+      { catalog: created.catalog },
+    );
+    expect(report.ok).toBe(false);
+    const issue = report.issues[0];
+    expect(issue?.code).toBe('unknown-component');
+    expect(issue?.message).toContain('acme-invoice-table');
+  });
+
   it('S10 keeps a created catalog immutable after creation', () => {
     const created = createCatalog(acmeDefinition);
     expect(created.ok).toBe(true);

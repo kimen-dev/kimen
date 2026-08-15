@@ -363,7 +363,7 @@ export function createCatalog(
   }
 
   const components: Record<string, CatalogEntry> =
-    base === undefined ? {} : (structuredClone(base.components));
+    base === undefined ? {} : structuredClone(base.components);
   for (const [key, entry] of Object.entries(parsed.data.components)) {
     components[key] = normalizeEntry(entry);
   }

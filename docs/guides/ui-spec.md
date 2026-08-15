@@ -261,6 +261,25 @@ The streaming contract:
   `close()` — every further push is rejected. An untrusted stream never
   mutates the surface again after it has been rejected or completed.
 
+## Registering your own components
+
+The catalog a spec validates against does not have to be the built-in one.
+`createCatalog` accepts a data-only definition of YOUR components — the
+exact entry shape of the generated catalog (tag, usage guidance, typed prop
+constraints, slots, events) — and returns an immutable catalog value that
+`validateUiSpec`, `renderUiSpec` and `createStreamingRenderer` take through
+their `catalog` option, standalone or extending the built-in components
+(`{ extend: catalogData }`). "Outside the catalog" then means outside the
+catalog in use; nothing else about validation or rendering changes, and
+when the option is absent the built-in catalog remains the boundary.
+
+The definition itself is validated as hostile input (same purity wall as
+specs, plus tag, collision and guidance rules, every rejection a coded
+`RegistrationIssue`), and the returned catalog is deeply frozen. The
+registration surface, its acceptance rules and its security model are
+documented in the
+[@kimen/catalog README](../../packages/catalog/README.md#registering-your-own-components).
+
 ## Two things a spec cannot say
 
 - **Styling.** The v1 format exposes no CSS values and no per-spec token

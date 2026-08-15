@@ -14,7 +14,7 @@ in a marked file (`scripts/gates/check-traceability.sh`).
 
 ## Phase 1: Setup
 
-- [ ] T001 Verify baseline: `pnpm --filter @kimen/catalog test` and `pnpm exec nx run @kimen/catalog:build` green on the branch before any change (records the SC-003 reference state)
+- [X] T001 Verify baseline: `pnpm --filter @kimen/catalog test` and `pnpm exec nx run @kimen/catalog:build` green on the branch before any change (records the SC-003 reference state)
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
@@ -32,13 +32,13 @@ explicitly; standalone + extend modes; default path unchanged.
 
 ### RED: failing tests first (MANDATORY, Art. III)
 
-- [ ] T002 [US1] Create packages/catalog/tests/register.spec.ts with marker `// @spec:032-catalog-registration` and failing tests for S1 (standalone catalog validates acme-kpi-card spec), S2 (extend catalogData, ki-card + acme-kpi-card composition accepted), S3 (no catalog option → "acme-kpi-card" rejected as outside the catalog). Verify each fails for the right reason (createCatalog does not exist; catalog option unknown).
+- [X] T002 [US1] Create packages/catalog/tests/register.spec.ts with marker `// @spec:032-catalog-registration` and failing tests for S1 (standalone catalog validates acme-kpi-card spec), S2 (extend catalogData, ki-card + acme-kpi-card composition accepted), S3 (no catalog option → "acme-kpi-card" rejected as outside the catalog). Verify each fails for the right reason (createCatalog does not exist; catalog option unknown).
 
 ### GREEN: implementation
 
-- [ ] T003 [US1] Extract public `Catalog` type and add `createCatalog` happy path (standalone + `extend` option, collision-free merge, snapshot + deep freeze, `CatalogCreationResult`) in packages/catalog/src/register.ts per contracts/registration-api.md
-- [ ] T004 [US1] Thread catalog-in-use through validation: `validateUiSpec(input, { maxBytes?, catalog? })`, `validatePlainData(data, catalog?)`, `checkNode` entry lookup from parameter in packages/catalog/src/validate.ts (default = built-in `catalogData`; no behavior change without the option)
-- [ ] T005 [US1] Export new surface from packages/catalog/src/index.ts with complete JSDoc on every member (Art. I: undocumented member = build failure)
+- [X] T003 [US1] Extract public `Catalog` type and add `createCatalog` happy path (standalone + `extend` option, collision-free merge, snapshot + deep freeze, `CatalogCreationResult`) in packages/catalog/src/register.ts per contracts/registration-api.md
+- [X] T004 [US1] Thread catalog-in-use through validation: `validateUiSpec(input, { maxBytes?, catalog? })`, `validatePlainData(data, catalog?)`, `checkNode` entry lookup from parameter in packages/catalog/src/validate.ts (default = built-in `catalogData`; no behavior change without the option)
+- [X] T005 [US1] Export new surface from packages/catalog/src/index.ts with complete JSDoc on every member (Art. I: undocumented member = build failure)
 
 **Checkpoint**: S1–S3 green; existing validate.spec.ts untouched and green.
 
@@ -54,12 +54,12 @@ property test P1.
 
 ### RED: failing tests first (MANDATORY, Art. III)
 
-- [ ] T006 [P] [US2] Failing tests in packages/catalog/tests/register.spec.ts for S4 (ki-button collision), S5 ("AcmeCard" invalid tag; plus reserved-name and no-hyphen cases), S6 (missing whenToUse), S7 (enum without values), S8 outline (`__proto__`/`constructor`/`prototype` + pollution-free assertion), S9 (function value in constraint), S10 (post-creation mutation attempt does not change validation outcomes)
-- [ ] T007 [P] [US2] fast-check property test in packages/catalog/tests/register.spec.ts: ∀ arbitrary JSON-like payloads, `createCatalog` either rejects with ≥1 coded issue or returns a deeply frozen catalog whose entries satisfy the entry contract (never throws, never partially registers)
+- [X] T006 [P] [US2] Failing tests in packages/catalog/tests/register.spec.ts for S4 (ki-button collision), S5 ("AcmeCard" invalid tag; plus reserved-name and no-hyphen cases), S6 (missing whenToUse), S7 (enum without values), S8 outline (`__proto__`/`constructor`/`prototype` + pollution-free assertion), S9 (function value in constraint), S10 (post-creation mutation attempt does not change validation outcomes)
+- [X] T007 [P] [US2] fast-check property test in packages/catalog/tests/register.spec.ts: ∀ arbitrary JSON-like payloads, `createCatalog` either rejects with ≥1 coded issue or returns a deeply frozen catalog whose entries satisfy the entry contract (never throws, never partially registers)
 
 ### GREEN: implementation
 
-- [ ] T008 [US2] Full definition validation in packages/catalog/src/register.ts: purity-wall crossing via existing `toPlainData` (byte/depth budgets, forbidden keys, non-data), strict entry schema (guidance required, constraint grammar, key≡tag, empty definition), tag rule (conservative custom-element pattern + SVG/MathML reserved names), collision detection (definition-internal shadow + extend base), `RegistrationIssue` codes per data-model.md
+- [X] T008 [US2] Full definition validation in packages/catalog/src/register.ts: purity-wall crossing via existing `toPlainData` (byte/depth budgets, forbidden keys, non-data), strict entry schema (guidance required, constraint grammar, key≡tag, empty definition), tag rule (conservative custom-element pattern + SVG/MathML reserved names), collision detection (definition-internal shadow + extend base), `RegistrationIssue` codes per data-model.md
 
 **Checkpoint**: S4–S10 + property P1 green; no `Object.freeze` gaps
 (mutation test in S10 passes in strict mode).
@@ -76,13 +76,13 @@ classes parameterized over a registered catalog.
 
 ### RED: failing tests first (MANDATORY, Art. III)
 
-- [ ] T009 [P] [US3] Failing tests in packages/catalog/tests/register.spec.ts for S11 (unknown prop on acme-kpi-card named) and S12 (acme-invoice-table outside a standalone catalog named)
-- [ ] T010 [P] [US3] Create packages/catalog/tests/render-registered.spec.ts with marker `// @spec:032-catalog-registration` and failing tests for S13 (happy-dom surface contains acme-kpi-card with projected attributes), S14 (javascript: URL on registered component rejected, surface untouched), S15 (unsupported catalogSchemaVersion fails closed with registered catalog), S16 (streaming push of registered component attaches after validation; invalid chunk halts)
-- [ ] T011 [P] [US3] fast-check property test in packages/catalog/tests/render-registered.spec.ts: ∀ generated valid specs over an extended catalog, rendered output contains only catalog-member tags and dispatches only declared actions
+- [X] T009 [P] [US3] Failing tests in packages/catalog/tests/register.spec.ts for S11 (unknown prop on acme-kpi-card named) and S12 (acme-invoice-table outside a standalone catalog named)
+- [X] T010 [P] [US3] Create packages/catalog/tests/render-registered.spec.ts with marker `// @spec:032-catalog-registration` and failing tests for S13 (happy-dom surface contains acme-kpi-card with projected attributes), S14 (javascript: URL on registered component rejected, surface untouched), S15 (unsupported catalogSchemaVersion fails closed with registered catalog), S16 (streaming push of registered component attaches after validation; invalid chunk halts)
+- [X] T011 [P] [US3] fast-check property test in packages/catalog/tests/render-registered.spec.ts: ∀ generated valid specs over an extended catalog, rendered output contains only catalog-member tags and dispatches only declared actions
 
 ### GREEN: implementation
 
-- [ ] T012 [US3] Thread catalog-in-use through render in packages/catalog/src/render.ts: `RenderOptions.catalog`, `prepare`/`versionDiagnostic` compare against catalog-in-use version, `buildNode` type-pinning reads catalog-in-use, `createStreamingRenderer` captures the catalog at creation (FR-011: never half-applied)
+- [X] T012 [US3] Thread catalog-in-use through render in packages/catalog/src/render.ts: `RenderOptions.catalog`, `prepare`/`versionDiagnostic` compare against catalog-in-use version, `buildNode` type-pinning reads catalog-in-use, `createStreamingRenderer` captures the catalog at creation (FR-011: never half-applied)
 
 **Checkpoint**: S11–S16 + property P2 green; existing render.spec.ts
 untouched and green.
@@ -91,10 +91,10 @@ untouched and green.
 
 ## Phase 6: Polish & Cross-Cutting
 
-- [ ] T013 [P] Timing sanity check in packages/catalog/tests/render-registered.spec.ts: validation over an extended catalog is not measurably slower than built-in (guards D6's no-cache decision with data)
-- [ ] T014 [P] Add `consumer-catalog-registration` capability claim (state `available`, evidence: register + render-registered suites) to docs/capabilities.json and regenerate status blocks (018 S13 contract; run the capabilities check gate)
-- [ ] T015 [P] Document the definition format and registration flow: packages/catalog/README.md section "Registering your own components" (JSON facade example, security model, collision rules, immutability), sync docs/guides/ui-spec.md
-- [ ] T016 Regenerate machine surfaces (llms.txt via `packages/elements/scripts/build-surfaces.mjs` pipeline) if the catalog README/docs feed them; verify surfaces-sync gate
+- [X] T013 [P] Timing sanity check in packages/catalog/tests/render-registered.spec.ts: validation over an extended catalog is not measurably slower than built-in (guards D6's no-cache decision with data)
+- [X] T014 [P] Add `consumer-catalog-registration` capability claim (state `available`, evidence: register + render-registered suites) to docs/capabilities.json and regenerate status blocks (018 S13 contract; run the capabilities check gate)
+- [X] T015 [P] Document the definition format and registration flow: packages/catalog/README.md section "Registering your own components" (JSON facade example, security model, collision rules, immutability), sync docs/guides/ui-spec.md
+- [X] T016 Regenerate machine surfaces (llms.txt via `packages/elements/scripts/build-surfaces.mjs` pipeline) if the catalog README/docs feed them; verify surfaces-sync gate
 - [ ] T017 Full suite: `bash scripts/gates/gates-suite.sh` EXIT 0 (definition of done, Art. III); confirm check-traceability green for S1–S16 and pre-existing suites unmodified (SC-003)
 
 ## Dependencies & Execution Order

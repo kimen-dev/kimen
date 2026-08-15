@@ -31,6 +31,11 @@
     },
     "claims": [
       {
+        "id": "consumer-catalog-registration",
+        "state": "available",
+        "text": "Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail"
+      },
+      {
         "id": "guarded-renderer",
         "state": "available",
         "text": "Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed"
