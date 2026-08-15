@@ -39,7 +39,13 @@ emit (components, props, declared actions, when-to-use metadata),
 `validateUiSpec` at the GenUI boundary, and the guarded renderer
 (`renderUiSpec`) that renders only catalog components, fail-closed. The
 guardrail is tested as a security boundary; streaming/partial specs render
-progressively through `createStreamingRenderer`.
+progressively through `createStreamingRenderer`. Consumer catalog
+registration is implemented on the same boundary: `createCatalog` accepts a
+data-only definition of an application's own components — validated as
+hostile input through the same purity wall, deep-frozen, collision-checked
+against the built-ins — and every validation and render entry point takes
+the resulting catalog explicitly, with the built-in catalog as the
+unchanged default.
 
 ## 5. Protocol adapters (shipped: A2UI, MCP Apps)
 
