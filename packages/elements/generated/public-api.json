@@ -11556,6 +11556,16 @@
             "replacement": null,
             "target": "./dist/index.js"
           },
+          "./components": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./dist/components/index.js"
+          },
+          "./components/*.js": {
+            "deprecatedSince": null,
+            "replacement": null,
+            "target": "./dist/components/*.js"
+          },
           "./ki-alert": {
             "deprecatedSince": null,
             "replacement": null,
@@ -11718,6 +11728,12 @@
                 ],
                 "signature": "export declare class KiAlert {\n    tone: KiAlertTone | (string & {});\n    heading?: string;\n    dismissible: boolean;\n    dismissLabel: string;\n    dismissed: boolean;\n    render(): any;\n}"
               },
+              "KiAlertCustomEvent": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiAlertCustomEvent<T> extends CustomEvent<T> {\n    detail: T;\n    target: HTMLKiAlertElement;\n}"
+              },
               "KiAlertTone": {
                 "kinds": [
                   "type"
@@ -11806,6 +11822,12 @@
                   "type"
                 ],
                 "signature": "export type KiDialogCloseReason = 'method' | 'escape' | 'backdrop';"
+              },
+              "KiDialogCustomEvent": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiDialogCustomEvent<T> extends CustomEvent<T> {\n    detail: T;\n    target: HTMLKiDialogElement;\n}"
               },
               "KiInput": {
                 "kinds": [
@@ -11903,6 +11925,12 @@
                 ],
                 "signature": "export declare class KiTabs {\n    value: string;\n    label?: string;\n    kiChange: EventEmitter<{\n        value: string;\n    }>;\n    protected valueChanged(): void;\n    connectedCallback(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    render(): any;\n}"
               },
+              "KiTabsCustomEvent": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiTabsCustomEvent<T> extends CustomEvent<T> {\n    detail: T;\n    target: HTMLKiTabsElement;\n}"
+              },
               "KiTextarea": {
                 "kinds": [
                   "type",
@@ -11925,6 +11953,16 @@
               }
             },
             "target": "./dist/index.js"
+          },
+          "./components": {
+            "declaration": null,
+            "symbols": {},
+            "target": "./dist/components/index.js"
+          },
+          "./components/*.js": {
+            "declaration": null,
+            "symbols": {},
+            "target": "./dist/components/*.js"
           },
           "./ki-alert": {
             "declaration": "./dist/components/ki-alert.d.ts",
@@ -30540,5 +30578,5 @@
       }
     }
   },
-  "surfaceSha256": "fbcc8c5083be6ae386458e529ca94a52bc4de11a2507afd4d3968cee355fd031"
+  "surfaceSha256": "ef9701baf8276bdb8870a4a0d80c2c4501568abe68a85e1cbc9b40fb8fc285a3"
 }

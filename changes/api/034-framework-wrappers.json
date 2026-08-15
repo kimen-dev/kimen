@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "ef9701baf8276bdb8870a4a0d80c2c4501568abe68a85e1cbc9b40fb8fc285a3",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Framework wrappers (spec 034), cumulative since baseline 0.0.0 and superseding declaration 011 (its fidelity-pass deltas remain as declared there). New deltas are purely additive on @kimen/elements: two wrapper-resolution export subpaths (./components -> dist/types/components.d.ts types with the dist/components runtime barrel, and ./components/*.js aliasing the same per-component dist files the ki-* wildcard already exposes; aliases are export-recorded, never symbol-expanded) plus three type-only wrapper-contract event re-exports on the package root (KiAlertCustomEvent, KiDialogCustomEvent, KiTabsCustomEvent), enumerated as their own category in the component-inventory gate so the deprecated legacy facade stays frozen. Zero removals; zero value changes; the generated wrapper packages themselves (@kimen/react, @kimen/vue, @kimen/angular) are new private packages outside this snapshot. Founder-reviewed in the spec 034 PR.",
+  "release": "major",
+  "schemaVersion": 1
+}

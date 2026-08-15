@@ -183,10 +183,26 @@ const packageExports = ({ pkg, components = null }) => {
   return sortedObject(entries, `${pkg.name} export`);
 };
 
+// Wrapper-resolution subpaths (spec 034): aliases over the SAME
+// dist/components files the ki-* expansion already symbol-snapshots — the
+// export is recorded, the alias is never symbol-expanded (one surface, one
+// snapshot, Art. I).
+const WRAPPER_RESOLUTION_SUBPATHS = new Set(['./components', './components/*.js']);
+
 const moduleDefinitions = ({ pkg, components = null }) => {
   const entries = [];
   for (const [subpath, entry] of Object.entries(pkg.exports)) {
     if (components !== null && (subpath === './ki-*' || subpath.startsWith('./ki-'))) continue;
+    if (components !== null && WRAPPER_RESOLUTION_SUBPATHS.has(subpath)) {
+      entries.push([
+        subpath,
+        {
+          target: runtimeExportTarget(entry, `${pkg.name} export ${subpath}`),
+          declaration: null,
+        },
+      ]);
+      continue;
+    }
     entries.push([
       subpath,
       {
