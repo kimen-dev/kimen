@@ -92,6 +92,20 @@ const definitionSchema = z.strictObject({
   components: z.record(z.string(), entrySchema),
 });
 
+// A base catalog can legitimately exceed the definition budget (dozens of
+// entries with rich guidance); this ceiling still bounds the snapshot walk.
+const EXTEND_MAX_BYTES = 8 * 1_024 * 1_024;
+
+const baseSchema = z.record(z.string(), entrySchema);
+
+function baseSchemaIssues(error: z.ZodError): readonly RegistrationIssue[] {
+  return error.issues.map((issue) => ({
+    code: 'malformed-definition' as const,
+    message: issue.message,
+    path: ['options.extend.components', ...issue.path.map(String)].join('.'),
+  }));
+}
+
 type ParsedEntry = z.output<typeof entrySchema>;
 
 /**
@@ -337,8 +351,21 @@ export function createCatalog(
   }
 
   const base = options.extend;
+  let baseComponents: Record<string, CatalogEntry> | undefined;
+  let baseElementsVersion: string | undefined;
   if (base !== undefined) {
-    if (base.catalogSchemaVersion !== catalogData.catalogSchemaVersion) {
+    const baseCandidate: unknown = base;
+    if (
+      typeof baseCandidate !== 'object' ||
+      baseCandidate === null ||
+      Array.isArray(baseCandidate)
+    ) {
+      issues.push({
+        code: 'malformed-definition',
+        message: 'options.extend is not a catalog value',
+        path: 'options.extend',
+      });
+    } else if (base.catalogSchemaVersion !== catalogData.catalogSchemaVersion) {
       issues.push({
         code: 'unsupported-version',
         message: `extended catalog declares schema version "${base.catalogSchemaVersion}"; this registration supports "${catalogData.catalogSchemaVersion}"`,
@@ -346,14 +373,39 @@ export function createCatalog(
         value: base.catalogSchemaVersion,
       });
     } else {
-      for (const [key] of entries) {
-        if (Object.hasOwn(base.components, key)) {
-          issues.push({
-            code: 'collision',
-            message: `tag "${key}" collides with an entry of the extended catalog`,
-            path: `definition.components.${key}`,
-            value: key,
-          });
+      // The extend base is as untrusted as the definition (review finding:
+      // structuredClone threw DOMException on non-cloneable values and
+      // invoked accessor getters): its entries cross the SAME purity wall
+      // and entry schema before they can flow into the result.
+      const baseWall = toPlainData(base.components, EXTEND_MAX_BYTES, {
+        root: 'options.extend.components',
+        surface: 'an extended catalog',
+      });
+      if (baseWall.issues.length > 0) {
+        issues.push(...baseWall.issues.map(toRegistrationIssue));
+      } else {
+        const parsedBase = baseSchema.safeParse(baseWall.data);
+        if (!parsedBase.success) {
+          issues.push(...baseSchemaIssues(parsedBase.error));
+        } else {
+          baseComponents = {};
+          for (const [key, entry] of Object.entries(parsedBase.data)) {
+            baseComponents[key] = normalizeEntry(entry);
+          }
+          for (const [key] of entries) {
+            if (Object.hasOwn(baseComponents, key)) {
+              issues.push({
+                code: 'collision',
+                message: `tag "${key}" collides with an entry of the extended catalog`,
+                path: `definition.components.${key}`,
+                value: key,
+              });
+            }
+          }
+          const versionCandidate = (baseCandidate as { elementsVersion?: unknown }).elementsVersion;
+          if (typeof versionCandidate === 'string') {
+            baseElementsVersion = versionCandidate;
+          }
         }
       }
     }
@@ -362,14 +414,13 @@ export function createCatalog(
     return { issues, ok: false };
   }
 
-  const components: Record<string, CatalogEntry> =
-    base === undefined ? {} : structuredClone(base.components);
+  const components: Record<string, CatalogEntry> = baseComponents ?? {};
   for (const [key, entry] of Object.entries(parsed.data.components)) {
     components[key] = normalizeEntry(entry);
   }
 
   const catalog: Catalog =
-    base?.elementsVersion === undefined
+    baseElementsVersion === undefined
       ? {
           catalogSchemaVersion: catalogData.catalogSchemaVersion,
           components: sortedRecord(Object.entries(components)),
@@ -377,7 +428,7 @@ export function createCatalog(
       : {
           catalogSchemaVersion: catalogData.catalogSchemaVersion,
           components: sortedRecord(Object.entries(components)),
-          elementsVersion: base.elementsVersion,
+          elementsVersion: baseElementsVersion,
         };
   return { catalog: deepFreeze(catalog), issues: [], ok: true };
 }

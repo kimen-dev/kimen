@@ -23,8 +23,12 @@ export interface CatalogCreationOptions {
   /**
    * Base catalog to extend (e.g. the built-in `catalogData`). Registered
    * tags colliding with base tags are rejected fail-closed; base entries
-   * are re-snapshotted and frozen into the result. When absent the result
-   * is a standalone catalog of exactly the definition's entries.
+   * are treated as untrusted input like the definition (purity wall +
+   * entry schema) and re-snapshotted and frozen into the result. A base
+   * whose `catalogSchemaVersion` differs from the supported one is
+   * refused with `unsupported-version` naming both versions. When absent
+   * the result is a standalone catalog of exactly the definition's
+   * entries.
    */
   readonly extend?: Catalog;
 }
@@ -38,7 +42,8 @@ export type RegistrationIssueCode =
   | 'malformed-constraint'
   | 'malformed-definition'
   | 'missing-guidance'
-  | 'size-budget';
+  | 'size-budget'
+  | 'unsupported-version';
 
 export interface RegistrationIssue {
   readonly code: RegistrationIssueCode;
