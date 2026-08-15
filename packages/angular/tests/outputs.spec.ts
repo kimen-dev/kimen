@@ -17,7 +17,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 // The ngc-compiled library output (partial-Ivy + JIT fallback): esbuild's
 // test transform emits no DI metadata for the raw sources, so the runtime
 // scenario exercises exactly what ships. `nx test` depends on `build`.
- 
+
 const { KiAlert } = (await import(
   // @ts-expect-error -- built artifact, no bundled types at this path
   '../dist/fesm2022/kimen-angular.mjs'
