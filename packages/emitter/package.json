@@ -1,0 +1,51 @@
+{
+  "name": "@kimen/emitter",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Kimen emitter kit: model-agnostic guidance artifacts (prompt, catalog-specialized JSON Schema with provider lowerings, tool definition) plus emission ingest helpers, derived deterministically from the neutral catalog. Advisory reliability tooling — validation and the guarded renderer remain the only enforcement points (spec 033).",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@kimen/catalog": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.2",
+    "ajv": "8.20.0",
+    "fast-check": "4.9.0",
+    "vitest": "4.1.10"
+  },
+  "nx": {
+    "tags": [
+      "scope:emitter"
+    ],
+    "targets": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [
+          "{projectRoot}/**/*"
+        ],
+        "outputs": [
+          "{projectRoot}/dist"
+        ]
+      }
+    }
+  }
+}

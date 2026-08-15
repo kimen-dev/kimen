@@ -61,6 +61,7 @@ Follow progress through issues and pull requests.
 
 <!-- kimen:capabilities:roadmap-status:start -->
 - **available** — Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail
+- **available** — Emitter kit: model-agnostic prompt, catalog-specialized JSON Schema and tool definition so any LLM emits valid specs, with a single-round repair loop
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
 - **hardening** — Changed-core mutation quality gate in hardening
 - **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer

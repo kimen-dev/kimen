@@ -1,0 +1,95 @@
+/**
+ * Emission ingest helpers (spec 033, FR-005/FR-006): the reliability loop
+ * after a model answers. `normalizeEmission` strips the placeholders
+ * strict-mode all-required schemas force a model to emit; `repairPrompt`
+ * turns a failed validation into ONE corrective message. Both are total
+ * functions; their output is untrusted until `validateUiSpec` passes —
+ * the loop is normalize → validate → (repair once) → validate → fail
+ * closed.
+ */
+import type { ValidationReport } from '@kimen/catalog';
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function normalizeNode(node: unknown): unknown {
+  if (!isRecord(node)) {
+    return node;
+  }
+  const clean: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(node)) {
+    if (key === 'props' && isRecord(value)) {
+      const props: Record<string, unknown> = {};
+      for (const [name, propValue] of Object.entries(value)) {
+        if (propValue !== null) {
+          props[name] = propValue;
+        }
+      }
+      if (Object.keys(props).length > 0) {
+        clean['props'] = props;
+      }
+      continue;
+    }
+    if (key === 'action' && value === null) {
+      continue;
+    }
+    if (key === 'slots' && isRecord(value)) {
+      const slots: Record<string, unknown> = {};
+      for (const [name, children] of Object.entries(value)) {
+        if (Array.isArray(children)) {
+          slots[name] = children.map((child) => normalizeNode(child));
+        } else {
+          slots[name] = children;
+        }
+      }
+      clean['slots'] = slots;
+      continue;
+    }
+    clean[key] = value;
+  }
+  return clean;
+}
+
+/**
+ * Strips strict-mode placeholders from an emission (S13): null-valued
+ * props and null action bindings disappear, empty props containers are
+ * dropped, and everything else — including values a model got WRONG — is
+ * preserved untouched, so validation still sees the real mistake.
+ * Pure data cleanup over a fresh clone; the input is never mutated and
+ * the output is untrusted until `validateUiSpec` passes.
+ */
+export function normalizeEmission(value: unknown): unknown {
+  if (!isRecord(value)) {
+    return value;
+  }
+  const clean: Record<string, unknown> = {};
+  for (const [key, entry] of Object.entries(value)) {
+    clean[key] = key === 'root' ? normalizeNode(entry) : entry;
+  }
+  return clean;
+}
+
+/**
+ * Formats a failed validation report into ONE corrective message naming
+ * every issue's code, path and offender (S14), or null when the report is
+ * ok. The single-round policy is fixed (Art. VII): the message itself
+ * tells the model this is the only repair opportunity; a host that
+ * receives a second invalid emission fails closed.
+ */
+export function repairPrompt(report: ValidationReport): string | null {
+  if (report.ok) {
+    return null;
+  }
+  const lines: string[] = [
+    'Your previous UI spec was rejected by the catalog validator.',
+    'Fix EVERY issue below and reply with exactly one corrected JSON document — no prose.',
+    'This is the only repair round: a second invalid emission will be discarded.',
+    '',
+    'Issues:',
+  ];
+  report.issues.forEach((issue, index) => {
+    lines.push(`${String(index + 1)}. [${issue.code}] at ${issue.path}: ${issue.message}`);
+  });
+  return lines.join('\n');
+}
