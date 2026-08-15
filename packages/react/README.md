@@ -4,8 +4,9 @@ Generated React bindings for the Kimen `ki-*` web components (spec 034):
 every published component as an idiomatic, fully typed React component —
 props typed from the component contract (enum unions preserved), `ki-*`
 custom events as typed callback props, `ref` reaching the underlying
-element, and lazy per-component registration (a component defines its
-custom element on first render, so unused components tree-shake away).
+element, and per-component registration at module import (importing a
+component's module registers exactly that element; modules you never
+import tree-shake away).
 
 ```tsx
 import { KiButton, KiInput } from '@kimen/react';

@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* auto-generated angular directive proxies */
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Output, NgZone } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZone } from '@angular/core';
 
 import { ProxyCmp } from './angular-component-lib/utils';
 
@@ -45,11 +45,9 @@ import { defineCustomElement as defineKiVideo } from '@kimen/elements/components
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['dismissLabel', 'dismissed', 'dismissible', 'heading', 'tone'],
-  outputs: ['ki-dismiss'],
 })
 export class KiAlert {
   protected el: HTMLKiAlertElement;
-  @Output() kiDismiss = new EventEmitter<KiAlertCustomEvent<null>>();
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -69,7 +67,6 @@ user closes the alert.
 When NOT to use: do not treat it as a veto point, and do not expect it for
 programmatic `dismissed` changes — it fires only for user activation.
    */
-  'ki-dismiss': EventEmitter<KiAlertCustomEvent<null>>;
 }
 
 
@@ -221,11 +218,9 @@ export declare interface KiCheckbox extends Components.KiCheckbox {}
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['closeOnBackdrop', 'heading', 'open'],
-  outputs: ['ki-close'],
 })
 export class KiDialog {
   protected el: HTMLKiDialogElement;
-  @Output() kiClose = new EventEmitter<KiDialogCustomEvent<IKiDialogKiDialogCloseDetail>>();
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -246,7 +241,6 @@ and focus has returned through the native mechanism.
 When NOT to use: do not expect this event to veto closing; it is not
 cancelable in v1.
    */
-  'ki-close': EventEmitter<KiDialogCustomEvent<IKiDialogKiDialogCloseDetail>>;
 }
 
 
@@ -649,11 +643,9 @@ export declare interface KiTabPanel extends Components.KiTabPanel {}
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['label', 'value'],
-  outputs: ['ki-change'],
 })
 export class KiTabs {
   protected el: HTMLKiTabsElement;
-  @Output() kiChange = new EventEmitter<KiTabsCustomEvent<{ value: string }>>();
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
@@ -670,7 +662,6 @@ navigation. `detail.value` is the resolved selected value and `value` is
 already current when listeners run. Programmatic `value` writes and
 first-render fallback are silent.
    */
-  'ki-change': EventEmitter<KiTabsCustomEvent<{ value: string }>>;
 }
 
 

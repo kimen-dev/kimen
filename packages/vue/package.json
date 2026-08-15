@@ -32,7 +32,8 @@
     "@stencil/vue-output-target": "0.14.1"
   },
   "peerDependencies": {
-    "vue": ">=3.4.38"
+    "vue": ">=3.4.38",
+    "vue-router": ">=4.5.0"
   },
   "devDependencies": {
     "@types/node": "26.1.2",
@@ -58,6 +59,11 @@
           "{projectRoot}/dist"
         ]
       }
+    }
+  },
+  "peerDependenciesMeta": {
+    "vue-router": {
+      "optional": true
     }
   }
 }

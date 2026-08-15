@@ -20,9 +20,23 @@ function publint(packageDirectory: string): string {
 }
 
 describe('wrapper packaging', () => {
-  it('S12 passes publint for the React and Vue wrappers', () => {
+  it('S12 passes publint for the React and Vue wrappers with their peer ranges', () => {
     expect(publint('packages/react')).toContain('All good');
     expect(publint('packages/vue')).toContain('All good');
+
+    const react = JSON.parse(
+      readFileSync(join(repoRoot, 'packages/react/package.json'), 'utf8'),
+    ) as { peerDependencies?: Record<string, string> };
+    expect(react.peerDependencies?.['react']).toBe('^18 || ^19');
+    expect(react.peerDependencies?.['react-dom']).toBe('^18 || ^19');
+
+    const vue = JSON.parse(readFileSync(join(repoRoot, 'packages/vue/package.json'), 'utf8')) as {
+      peerDependencies?: Record<string, string>;
+      peerDependenciesMeta?: Record<string, { optional?: boolean }>;
+    };
+    expect(vue.peerDependencies?.['vue']).toBe('>=3.4.38');
+    expect(vue.peerDependencies?.['vue-router']).toBe('>=4.5.0');
+    expect(vue.peerDependenciesMeta?.['vue-router']?.optional).toBe(true);
   });
 
   it('S12 ships the Angular wrapper in Angular Package Format with its peer ranges', () => {

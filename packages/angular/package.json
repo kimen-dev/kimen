@@ -20,7 +20,8 @@
   },
   "peerDependencies": {
     "@angular/core": "^22.0.0",
-    "@angular/forms": "^22.0.0"
+    "@angular/forms": "^22.0.0",
+    "rxjs": "^7.8.0"
   },
   "devDependencies": {
     "@angular/common": "^22.0.0",
@@ -50,6 +51,11 @@
         ],
         "outputs": [
           "{projectRoot}/dist"
+        ]
+      },
+      "test": {
+        "dependsOn": [
+          "build"
         ]
       }
     }

@@ -17,7 +17,7 @@
     "llms.txt"
   ],
   "scripts": {
-    "build": "stencil build && node scripts/sync-components.mjs && node scripts/build-surfaces.mjs",
+    "build": "stencil build && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/build-surfaces.mjs",
     "test": "vitest run && vitest run --config vitest.node.config.ts",
     "test-browser": "vitest run --config vitest.browser.config.ts",
     "test:coverage": "vitest run --coverage && vitest run --coverage --config vitest.browser.config.ts",
@@ -46,7 +46,10 @@
           "{projectRoot}/generated",
           "{projectRoot}/loader",
           "{projectRoot}/llms.txt",
-          "{workspaceRoot}/llms.txt"
+          "{workspaceRoot}/llms.txt",
+          "{workspaceRoot}/packages/react/src",
+          "{workspaceRoot}/packages/vue/src",
+          "{workspaceRoot}/packages/angular/src/directives"
         ]
       },
       "storybook": {

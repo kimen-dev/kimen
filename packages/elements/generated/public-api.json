@@ -11955,8 +11955,153 @@
             "target": "./dist/index.js"
           },
           "./components": {
-            "declaration": null,
-            "symbols": {},
+            "declaration": "./dist/types/components.d.ts",
+            "symbols": {
+              "Components": {
+                "kinds": [
+                  "namespace"
+                ],
+                "signature": "export namespace Components {\n    interface KiAlert {\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n        \"dismissible\": boolean;\n        \"heading\"?: string;\n        \"tone\": KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\": KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\": KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\": KiBadgeSize;\n        \"tone\": KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\": boolean;\n        \"name\"?: string;\n        \"size\": KiButtonSize;\n        \"tone\": KiButtonTone;\n        \"type\": KiButtonType;\n        \"value\"?: string;\n        \"variant\": KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"indeterminate\": boolean;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"close\": () => Promise<void>;\n        \"closeOnBackdrop\": boolean;\n        \"heading\"?: string;\n        \"open\": boolean;\n        \"show\": () => Promise<void>;\n    }\n    interface KiDivider {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\": boolean;\n        \"label\"?: string;\n        \"size\": KiIconButtonSize;\n        \"tone\": KiIconButtonTone;\n        \"variant\": KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\"?: string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"label\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"type\": KiInputType;\n        \"value\": string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\": boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\": boolean;\n        \"label\"?: string;\n        \"max\": number;\n        \"shape\": KiProgressShape;\n        \"value\": number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\": boolean;\n        \"value\": string;\n    }\n    interface KiRadioGroup {\n        \"disabled\": boolean;\n        \"label\": string;\n        \"name\"?: string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiScroller {\n        \"label\"?: string;\n        \"orientation\": KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\": boolean;\n        \"label\": string;\n        \"name\"?: string;\n        \"placeholder\": string;\n        \"required\": boolean;\n        \"value\": string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\": boolean;\n        \"tone\": KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\": boolean;\n        \"selected\": boolean;\n        \"value\": string;\n    }\n    interface KiTabPanel {\n        \"value\": string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"value\": string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\": boolean;\n        \"label\": string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\": boolean;\n        \"required\": boolean;\n        \"rows\": number;\n        \"value\": string;\n    }\n    interface KiTooltip {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\"?: string;\n    }\n}"
+              },
+              "JSX": {
+                "kinds": [
+                  "namespace"
+                ],
+                "signature": "declare namespace LocalJSX {\n    type OneOf<K extends string, PropT, AttrT = PropT> = {\n        [P in K]: PropT;\n    } & {\n        [P in `attr:${K}` | `prop:${K}`]?: never;\n    } | {\n        [P in `attr:${K}`]: AttrT;\n    } & {\n        [P in K | `prop:${K}`]?: never;\n    } | {\n        [P in `prop:${K}`]: PropT;\n    } & {\n        [P in K | `attr:${K}`]?: never;\n    };\n    interface KiAlert {\n        \"dismissLabel\"?: string;\n        \"dismissed\"?: boolean;\n        \"dismissible\"?: boolean;\n        \"heading\"?: string;\n        \"onKi-dismiss\"?: (event: KiAlertCustomEvent<null>) => void;\n        \"tone\"?: KiAlertTone | (string & {});\n    }\n    interface KiAvatar {\n        \"initials\"?: string;\n        \"label\"?: string;\n        \"size\"?: KiAvatarSize;\n        \"src\"?: string;\n    }\n    interface KiAvatarGroup {\n        \"max\"?: number;\n        \"size\"?: KiAvatarSize1;\n    }\n    interface KiBadge {\n        \"size\"?: KiBadgeSize;\n        \"tone\"?: KiBadgeTone;\n    }\n    interface KiButton {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"name\"?: string;\n        \"size\"?: KiButtonSize;\n        \"tone\"?: KiButtonTone;\n        \"type\"?: KiButtonType;\n        \"value\"?: string;\n        \"variant\"?: KiButtonVariant;\n    }\n    interface KiCard {\n    }\n    interface KiCheckbox {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"indeterminate\"?: boolean;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiDialog {\n        \"closeOnBackdrop\"?: boolean;\n        \"heading\"?: string;\n        \"onKi-close\"?: (event: KiDialogCustomEvent<KiDialogCloseDetail>) => void;\n        \"open\"?: boolean;\n    }\n    interface KiDivider {\n        \"orientation\"?: KiDividerOrientation;\n    }\n    interface KiIconButton {\n        \"disabled\"?: boolean;\n        \"label\"?: string;\n        \"size\"?: KiIconButtonSize;\n        \"tone\"?: KiIconButtonTone;\n        \"variant\"?: KiIconButtonVariant;\n    }\n    interface KiIndicator {\n        \"count\"?: number;\n        \"current\"?: number;\n        \"label\"?: string;\n    }\n    interface KiInput {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"type\"?: KiInputType;\n        \"value\"?: string;\n    }\n    interface KiList {\n    }\n    interface KiListItem {\n    }\n    interface KiOption {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiProgress {\n        \"indeterminate\"?: boolean;\n        \"label\"?: string;\n        \"max\"?: number;\n        \"shape\"?: KiProgressShape;\n        \"value\"?: number;\n    }\n    interface KiQr {\n        \"label\"?: string;\n        \"value\"?: string;\n    }\n    interface KiRadio {\n        \"disabled\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiRadioGroup {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\": string;\n        \"name\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiScroller {\n        \"label\"?: string;\n        \"orientation\"?: KiScrollerOrientation;\n    }\n    interface KiSelect {\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\"?: string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"required\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiStatus {\n        \"label\"?: string;\n        \"ring\"?: boolean;\n        \"tone\"?: KiStatusTone;\n    }\n    interface KiSwitch {\n        \"checked\"?: boolean;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"name\"?: string;\n        \"value\"?: string;\n    }\n    interface KiTab {\n        \"disabled\"?: boolean;\n        \"selected\"?: boolean;\n        \"value\"?: string;\n    }\n    interface KiTabPanel {\n        \"value\"?: string;\n    }\n    interface KiTabs {\n        \"label\"?: string;\n        \"onKi-change\"?: (event: KiTabsCustomEvent<{\n            value: string;\n        }>) => void;\n        \"value\"?: string;\n    }\n    interface KiTextarea {\n        \"autocomplete\"?: string;\n        \"disabled\"?: boolean;\n        \"form\"?: string;\n        \"label\": string;\n        \"name\"?: string;\n        \"placeholder\"?: string;\n        \"readonly\"?: boolean;\n        \"required\"?: boolean;\n        \"rows\"?: number;\n        \"value\"?: string;\n    }\n    interface KiTooltip {\n        \"label\"?: string;\n        \"placement\"?: KiTooltipPlacement;\n    }\n    interface KiVideo {\n        \"label\"?: string;\n    }\n    interface KiAlertAttributes {\n        \"tone\": KiAlertTone | (string & {});\n        \"heading\": string;\n        \"dismissible\": boolean;\n        \"dismissLabel\": string;\n        \"dismissed\": boolean;\n    }\n    interface KiAvatarAttributes {\n        \"label\": string;\n        \"src\": string;\n        \"initials\": string;\n        \"size\": KiAvatarSize;\n    }\n    interface KiAvatarGroupAttributes {\n        \"max\": number;\n        \"size\": KiAvatarSize;\n    }\n    interface KiBadgeAttributes {\n        \"tone\": KiBadgeTone;\n        \"size\": KiBadgeSize;\n    }\n    interface KiButtonAttributes {\n        \"variant\": KiButtonVariant;\n        \"tone\": KiButtonTone;\n        \"size\": KiButtonSize;\n        \"type\": KiButtonType;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiCheckboxAttributes {\n        \"checked\": boolean;\n        \"indeterminate\": boolean;\n        \"disabled\": boolean;\n        \"required\": boolean;\n        \"name\": string;\n        \"value\": string;\n    }\n    interface KiDialogAttributes {\n        \"open\": boolean;\n        \"heading\": string;\n        \"closeOnBackdrop\": boolean;\n    }\n    interface KiDividerAttributes {\n        \"orientation\": KiDividerOrientation;\n    }\n    interface KiIconButtonAttributes {\n        \"variant\": KiIconButtonVariant;\n        \"tone\": KiIconButtonTone;\n        \"size\": KiIconButtonSize;\n        \"label\": string;\n        \"disabled\": boolean;\n    }\n    interface KiIndicatorAttributes {\n        \"count\": number;\n        \"current\": number;\n        \"label\": string;\n    }\n    interface KiInputAttributes {\n        \"type\": KiInputType;\n        \"label\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n    }\n    interface KiOptionAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiProgressAttributes {\n        \"value\": number;\n        \"max\": number;\n        \"indeterminate\": boolean;\n        \"shape\": KiProgressShape;\n        \"label\": string;\n    }\n    interface KiQrAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiRadioAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n    }\n    interface KiRadioGroupAttributes {\n        \"name\": string;\n        \"value\": string;\n        \"label\": string;\n        \"required\": boolean;\n        \"disabled\": boolean;\n    }\n    interface KiScrollerAttributes {\n        \"orientation\": KiScrollerOrientation;\n        \"label\": string;\n    }\n    interface KiSelectAttributes {\n        \"label\": string;\n        \"placeholder\": string;\n        \"name\": string;\n        \"value\": string;\n        \"disabled\": boolean;\n        \"required\": boolean;\n    }\n    interface KiStatusAttributes {\n        \"tone\": KiStatusTone;\n        \"ring\": boolean;\n        \"label\": string;\n    }\n    interface KiSwitchAttributes {\n        \"checked\": boolean;\n        \"disabled\": boolean;\n        \"name\": string;\n        \"value\": string;\n    }\n    interface KiTabAttributes {\n        \"value\": string;\n        \"disabled\": boolean;\n        \"selected\": boolean;\n    }\n    interface KiTabPanelAttributes {\n        \"value\": string;\n    }\n    interface KiTabsAttributes {\n        \"value\": string;\n        \"label\": string;\n    }\n    interface KiTextareaAttributes {\n        \"label\": string;\n        \"placeholder\": string;\n        \"value\": string;\n        \"name\": string;\n        \"rows\": number;\n        \"required\": boolean;\n        \"readonly\": boolean;\n        \"disabled\": boolean;\n        \"autocomplete\": string;\n    }\n    interface KiTooltipAttributes {\n        \"label\": string;\n        \"placement\": KiTooltipPlacement;\n    }\n    interface KiVideoAttributes {\n        \"label\": string;\n    }\n    interface IntrinsicElements {\n        \"ki-alert\": Omit<KiAlert, keyof KiAlertAttributes> & {\n            [K in keyof KiAlert & keyof KiAlertAttributes]?: KiAlert[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `attr:${K}`]?: KiAlertAttributes[K];\n        } & {\n            [K in keyof KiAlert & keyof KiAlertAttributes as `prop:${K}`]?: KiAlert[K];\n        };\n        \"ki-avatar\": Omit<KiAvatar, keyof KiAvatarAttributes> & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes]?: KiAvatar[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `attr:${K}`]?: KiAvatarAttributes[K];\n        } & {\n            [K in keyof KiAvatar & keyof KiAvatarAttributes as `prop:${K}`]?: KiAvatar[K];\n        };\n        \"ki-avatar-group\": Omit<KiAvatarGroup, keyof KiAvatarGroupAttributes> & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes]?: KiAvatarGroup[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `attr:${K}`]?: KiAvatarGroupAttributes[K];\n        } & {\n            [K in keyof KiAvatarGroup & keyof KiAvatarGroupAttributes as `prop:${K}`]?: KiAvatarGroup[K];\n        };\n        \"ki-badge\": Omit<KiBadge, keyof KiBadgeAttributes> & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes]?: KiBadge[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `attr:${K}`]?: KiBadgeAttributes[K];\n        } & {\n            [K in keyof KiBadge & keyof KiBadgeAttributes as `prop:${K}`]?: KiBadge[K];\n        };\n        \"ki-button\": Omit<KiButton, keyof KiButtonAttributes> & {\n            [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K];\n        } & {\n            [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K];\n        };\n        \"ki-card\": KiCard;\n        \"ki-checkbox\": Omit<KiCheckbox, keyof KiCheckboxAttributes> & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K];\n        } & {\n            [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K];\n        };\n        \"ki-dialog\": Omit<KiDialog, keyof KiDialogAttributes> & {\n            [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K];\n        } & {\n            [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K];\n        };\n        \"ki-divider\": Omit<KiDivider, keyof KiDividerAttributes> & {\n            [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K];\n        } & {\n            [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K];\n        };\n        \"ki-icon-button\": Omit<KiIconButton, keyof KiIconButtonAttributes> & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K];\n        } & {\n            [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K];\n        };\n        \"ki-indicator\": Omit<KiIndicator, keyof KiIndicatorAttributes> & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K];\n        } & {\n            [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K];\n        };\n        \"ki-input\": Omit<KiInput, keyof KiInputAttributes> & {\n            [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K];\n        } & {\n            [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K];\n        };\n        \"ki-list\": KiList;\n        \"ki-list-item\": KiListItem;\n        \"ki-option\": Omit<KiOption, keyof KiOptionAttributes> & {\n            [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K];\n        } & {\n            [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K];\n        };\n        \"ki-progress\": Omit<KiProgress, keyof KiProgressAttributes> & {\n            [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K];\n        } & {\n            [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K];\n        };\n        \"ki-qr\": Omit<KiQr, keyof KiQrAttributes> & {\n            [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K];\n        } & {\n            [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K];\n        };\n        \"ki-radio\": Omit<KiRadio, keyof KiRadioAttributes> & {\n            [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K];\n        } & {\n            [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K];\n        };\n        \"ki-radio-group\": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K];\n        } & {\n            [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K];\n        } & OneOf<\"label\", KiRadioGroup[\"label\"], KiRadioGroupAttributes[\"label\"]>;\n        \"ki-scroller\": Omit<KiScroller, keyof KiScrollerAttributes> & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K];\n        } & {\n            [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K];\n        };\n        \"ki-select\": Omit<KiSelect, keyof KiSelectAttributes> & {\n            [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K];\n        } & {\n            [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K];\n        };\n        \"ki-status\": Omit<KiStatus, keyof KiStatusAttributes> & {\n            [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K];\n        } & {\n            [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K];\n        };\n        \"ki-switch\": Omit<KiSwitch, keyof KiSwitchAttributes> & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K];\n        } & {\n            [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K];\n        };\n        \"ki-tab\": Omit<KiTab, keyof KiTabAttributes> & {\n            [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K];\n        } & {\n            [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K];\n        };\n        \"ki-tab-panel\": Omit<KiTabPanel, keyof KiTabPanelAttributes> & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes]?: KiTabPanel[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `attr:${K}`]?: KiTabPanelAttributes[K];\n        } & {\n            [K in keyof KiTabPanel & keyof KiTabPanelAttributes as `prop:${K}`]?: KiTabPanel[K];\n        };\n        \"ki-tabs\": Omit<KiTabs, keyof KiTabsAttributes> & {\n            [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K];\n        } & {\n            [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K];\n        };\n        \"ki-textarea\": Omit<KiTextarea, keyof KiTextareaAttributes> & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K];\n        } & {\n            [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K];\n        } & OneOf<\"label\", KiTextarea[\"label\"], KiTextareaAttributes[\"label\"]>;\n        \"ki-tooltip\": Omit<KiTooltip, keyof KiTooltipAttributes> & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K];\n        } & {\n            [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K];\n        };\n        \"ki-video\": Omit<KiVideo, keyof KiVideoAttributes> & {\n            [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K];\n        } & {\n            [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K];\n        };\n    }\n}"
+              },
+              "KiAlertCustomEvent": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiAlertCustomEvent<T> extends CustomEvent<T> {\n    detail: T;\n    target: HTMLKiAlertElement;\n}"
+              },
+              "KiAlertTone": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiAlertTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';"
+              },
+              "KiAvatarSize": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiAvatarSize = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';"
+              },
+              "KiAvatarSize1": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiAvatarSize = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';"
+              },
+              "KiBadgeSize": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiBadgeSize = 'sm' | 'md';"
+              },
+              "KiBadgeTone": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiBadgeTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';"
+              },
+              "KiButtonSize": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';"
+              },
+              "KiButtonTone": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiButtonTone = 'neutral' | 'success' | 'danger';"
+              },
+              "KiButtonType": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiButtonType = 'submit' | 'reset' | 'button';"
+              },
+              "KiButtonVariant": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';"
+              },
+              "KiDialogCloseDetail": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiDialogCloseDetail {\n    reason: KiDialogCloseReason;\n}"
+              },
+              "KiDialogCustomEvent": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiDialogCustomEvent<T> extends CustomEvent<T> {\n    detail: T;\n    target: HTMLKiDialogElement;\n}"
+              },
+              "KiDividerOrientation": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiDividerOrientation = 'horizontal' | 'vertical';"
+              },
+              "KiIconButtonSize": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';"
+              },
+              "KiIconButtonTone": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiIconButtonTone = 'neutral' | 'success' | 'danger';"
+              },
+              "KiIconButtonVariant": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiIconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';"
+              },
+              "KiInputType": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';"
+              },
+              "KiProgressShape": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiProgressShape = 'linear' | 'circular';"
+              },
+              "KiScrollerOrientation": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiScrollerOrientation = 'vertical' | 'horizontal';"
+              },
+              "KiStatusTone": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiStatusTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';"
+              },
+              "KiTabsCustomEvent": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "interface KiTabsCustomEvent<T> extends CustomEvent<T> {\n    detail: T;\n    target: HTMLKiTabsElement;\n}"
+              },
+              "KiTooltipPlacement": {
+                "kinds": [
+                  "type"
+                ],
+                "signature": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';"
+              }
+            },
             "target": "./dist/components/index.js"
           },
           "./components/*.js": {
@@ -30578,5 +30723,5 @@
       }
     }
   },
-  "surfaceSha256": "ef9701baf8276bdb8870a4a0d80c2c4501568abe68a85e1cbc9b40fb8fc285a3"
+  "surfaceSha256": "e12333728b846f61e60f90f8720ca660a6f1f9c3cc390c4c44b870b899aaa193"
 }

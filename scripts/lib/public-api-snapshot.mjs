@@ -183,11 +183,13 @@ const packageExports = ({ pkg, components = null }) => {
   return sortedObject(entries, `${pkg.name} export`);
 };
 
-// Wrapper-resolution subpaths (spec 034): aliases over the SAME
+// The per-component wildcard alias (spec 034) resolves the SAME
 // dist/components files the ki-* expansion already symbol-snapshots — the
-// export is recorded, the alias is never symbol-expanded (one surface, one
-// snapshot, Art. I).
-const WRAPPER_RESOLUTION_SUBPATHS = new Set(['./components', './components/*.js']);
+// export is recorded, the alias is never symbol-expanded. `./components`
+// is NOT an alias: its types target (dist/types/components.d.ts) exposes
+// the full Components/JSX namespaces, so it is symbol-snapshotted like
+// any surface and the semver gate sees it (adversarial-review fix).
+const WRAPPER_RESOLUTION_SUBPATHS = new Set(['./components/*.js']);
 
 const moduleDefinitions = ({ pkg, components = null }) => {
   const entries = [];

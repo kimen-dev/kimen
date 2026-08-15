@@ -32,8 +32,9 @@ const notify = ref(false);
   repository.
 - Generated from the same source of truth as every other Kimen artifact
   and drift-gated in CI — never hand-edited (constitution Art. I).
-  Per-component modules keep bundles minimal (a component registers its
-  custom element on first render).
+  Per-component modules keep bundles minimal: importing a component's
+  module registers exactly that element at import time; modules you never
+  import tree-shake away.
 
 Theming stays at the token layer: see the
 [`@kimen/tokens` README](../tokens/README.md).

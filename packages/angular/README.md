@@ -1,8 +1,9 @@
 # @kimen/angular
 
 Generated Angular bindings for the Kimen `ki-*` web components (spec 034):
-every published component as a standalone, typed Angular component with
-outputs for `ki-*` events, plus **ControlValueAccessor directives** wiring
+every published component as a standalone, typed Angular component —
+`ki-*` custom events bind natively by their DOM name
+(`(ki-dismiss)="..."`), exactly once, with no output machinery — plus **ControlValueAccessor directives** wiring
 the form components into template-driven and reactive forms over their
 re-dispatched native `input`/`change` events.
 
@@ -41,7 +42,8 @@ export class SettingsComponent {
   repository.
 - Generated from the same source of truth as every other Kimen artifact
   and drift-gated in CI — never hand-edited (constitution Art. I).
-  Components register their custom element on first render.
+  Importing a component's module registers exactly that element at
+  import time; modules you never import tree-shake away.
 
 Theming stays at the token layer: see the
 [`@kimen/tokens` README](../tokens/README.md).
