@@ -95,7 +95,7 @@ untouched and green.
 - [X] T014 [P] Add `consumer-catalog-registration` capability claim (state `available`, evidence: register + render-registered suites) to docs/capabilities.json and regenerate status blocks (018 S13 contract; run the capabilities check gate)
 - [X] T015 [P] Document the definition format and registration flow: packages/catalog/README.md section "Registering your own components" (JSON facade example, security model, collision rules, immutability), sync docs/guides/ui-spec.md
 - [X] T016 Regenerate machine surfaces (llms.txt via `packages/elements/scripts/build-surfaces.mjs` pipeline) if the catalog README/docs feed them; verify surfaces-sync gate
-- [ ] T017 Full suite: `bash scripts/gates/gates-suite.sh` EXIT 0 (definition of done, Art. III); confirm check-traceability green for S1–S16 and pre-existing suites unmodified (SC-003)
+- [X] T017 Full suite: `bash scripts/gates/gates-suite.sh` EXIT 0 (definition of done, Art. III); confirm check-traceability green for S1–S16 and pre-existing suites unmodified (SC-003)
 
 ## Dependencies & Execution Order
 
