@@ -108,6 +108,19 @@ const URL_PROP_NAMES = new Set([
 
 const SUPPORTED_SCHEMES = new Set(['http', 'https']);
 
+// HTML inline event-handler content attributes: setting one via setAttribute
+// installs executable code, so the renderer rejects the whole on* namespace
+// (case-insensitive) — the last line of defence for a hand-built `Catalog`
+// value that never crossed `createCatalog`'s registration guard.
+const EVENT_HANDLER_PROP = /^on/iu;
+
+// A conservative DOM attribute name, kept in sync with @kimen/catalog's
+// registration guard (register.ts SAFE_PROP_NAME): rejecting empty/exotic
+// names keeps an InvalidCharacterError from throwing out of setAttribute
+// (fail-closed diagnostic instead). Every built-in catalog prop name satisfies
+// it, so normal rendering is unaffected.
+const SAFE_PROP_NAME = /^[a-z][a-z0-9_-]*$/u;
+
 /**
  * The scheme of a URL value that is NOT on the allowlist, or null when the
  * value is a relative reference or an http(s) URL (FR-004). Control
@@ -166,6 +179,29 @@ function guardNode(node: UiSpecNode, path: string, depth: number, state: GuardSt
     return;
   }
   for (const [name, value] of Object.entries(node.props ?? {})) {
+    // Renderer-native name guard (defence in depth for hand-built catalogs that
+    // never crossed createCatalog): an on* name would compile into a live
+    // inline handler, and an exotic name would throw InvalidCharacterError out
+    // of setAttribute — reject both fail-closed before buildNode touches the
+    // DOM. Kept in sync with register.ts's registration-time check.
+    if (EVENT_HANDLER_PROP.test(name)) {
+      state.diagnostics.push({
+        message: `${node.component} prop "${name}" uses a forbidden event-handler attribute name`,
+        path: `${path}.props.${name}`,
+        rule: 'forbidden-prop-name',
+        value: name,
+      });
+      continue;
+    }
+    if (!SAFE_PROP_NAME.test(name)) {
+      state.diagnostics.push({
+        message: `${node.component} prop "${name}" is not a valid attribute name`,
+        path: `${path}.props.${name}`,
+        rule: 'malformed-prop-name',
+        value: name,
+      });
+      continue;
+    }
     if (typeof value === 'string' && URL_PROP_NAMES.has(name.toLowerCase())) {
       const scheme = offendingScheme(value);
       if (scheme !== null) {

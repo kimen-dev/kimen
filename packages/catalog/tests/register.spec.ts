@@ -293,6 +293,89 @@ describe('createCatalog', () => {
     expect(report.ok).toBe(false);
     expect(report.issues[0]?.code).toBe('invalid-prop-type');
   });
+
+  it('rejects a definition declaring an event-handler prop name (no-code-execution boundary)', () => {
+    const created = createCatalog({
+      components: {
+        'acme-kpi-card': {
+          ...acmeKpiCard,
+          props: { onclick: { description: 'hostile', type: 'string' } },
+        },
+      },
+    });
+    expect(created.ok).toBe(false);
+    expect(
+      !created.ok &&
+        created.issues.some((i) => i.code === 'forbidden-key' && i.value === 'onclick'),
+    ).toBe(true);
+    // setAttribute lowercases attribute names, so a mixed-case handler name
+    // installs a live handler just the same — the rejection is case-insensitive.
+    const mixed = createCatalog({
+      components: {
+        'acme-kpi-card': {
+          ...acmeKpiCard,
+          props: { onClick: { description: 'hostile', type: 'string' } },
+        },
+      },
+    });
+    expect(mixed.ok).toBe(false);
+    expect(!mixed.ok && mixed.issues.some((i) => i.code === 'forbidden-key')).toBe(true);
+  });
+
+  it('rejects a definition declaring an empty or invalid attribute name', () => {
+    const empty = createCatalog({
+      components: {
+        'acme-kpi-card': { ...acmeKpiCard, props: { '': { description: 'x', type: 'string' } } },
+      },
+    });
+    expect(empty.ok).toBe(false);
+    expect(!empty.ok && empty.issues.some((i) => i.code === 'malformed-constraint')).toBe(true);
+
+    const spaced = createCatalog({
+      components: {
+        'acme-kpi-card': { ...acmeKpiCard, props: { 'a b': { description: 'x', type: 'string' } } },
+      },
+    });
+    expect(spaced.ok).toBe(false);
+    expect(!spaced.ok && spaced.issues.some((i) => i.code === 'malformed-constraint')).toBe(true);
+  });
+
+  it('snapshots the extend base before reading it, so a top-level accessor cannot run or throw (review regression)', () => {
+    let getterRan = false;
+    const hostileBase: Record<string, unknown> = {
+      catalogSchemaVersion: catalogData.catalogSchemaVersion,
+    };
+    Object.defineProperty(hostileBase, 'components', {
+      enumerable: true,
+      get() {
+        getterRan = true;
+        throw new Error('accessor side effect');
+      },
+    });
+    let created: ReturnType<typeof createCatalog> | undefined;
+    expect(() => {
+      created = createCatalog(acmeDefinition, {
+        extend: hostileBase as unknown as typeof catalogData,
+      });
+    }).not.toThrow();
+    expect(getterRan).toBe(false);
+    expect(created?.ok).toBe(false);
+    expect(created && !created.ok && created.issues[0]?.path).toContain('options.extend');
+  });
+
+  it('runs custom-element validation over the extend base entries (review regression)', () => {
+    const base = {
+      catalogSchemaVersion: catalogData.catalogSchemaVersion,
+      components: { iframe: { ...acmeKpiCard, tag: 'iframe' } },
+    } as unknown as typeof catalogData;
+    const created = createCatalog(acmeDefinition, { extend: base });
+    expect(created.ok).toBe(false);
+    if (!created.ok) {
+      const issue = created.issues.find((i) => i.code === 'invalid-tag');
+      expect(issue?.value).toBe('iframe');
+      expect(issue?.path).toContain('options.extend');
+    }
+  });
 });
 
 describe('createCatalog properties', () => {
