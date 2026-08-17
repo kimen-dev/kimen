@@ -25,7 +25,9 @@ unsupported-version`.
 Draft 2020-12 document: root object `{version: const 1, actions?: string[],
 root: node}`, `$defs` with per-component branches (`component` const,
 closed `props`, declared `slots` as child containers, `action?: string`),
-`child = anyOf[string, node]`; `$id` carries the catalog schema version.
+`child = anyOf[string, node]`; `$id` is
+`.../ui-spec/<schema-version>/<target>/<defs-content-hash>`, unique per
+catalog, subset and target so two derivations never collide in one registry.
 Targets transform per research D2 (strict: all-required + null unions;
 anthropic: depth-unrolled `node1..nodeN`, leaf accepts text only, bound in
 `description`/`$comment`).

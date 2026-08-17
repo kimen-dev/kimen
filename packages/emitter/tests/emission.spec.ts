@@ -4,10 +4,11 @@
 // closes in exactly one repair round, strict-mode placeholders normalize
 // away, and nothing the schema accepts surprises the validator for
 // schema-expressible rules.
+
+import { catalogData, validateUiSpec } from '@kimen/catalog';
 import Ajv2020 from 'ajv/dist/2020.js';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { catalogData, validateUiSpec } from '@kimen/catalog';
 import { normalizeEmission, repairPrompt, uiSpecJsonSchema, uiSpecTool } from '../src/index.js';
 
 describe('uiSpecTool', () => {
@@ -85,6 +86,19 @@ describe('normalizeEmission', () => {
     };
     expect(JSON.parse(JSON.stringify(normalizeEmission(emission)))).toEqual(emission);
   });
+
+  it('S13 preserves a forbidden __proto__ key so the normalized emission is still rejected (review regression)', () => {
+    // JSON.parse creates a real own `__proto__` data property; a plain-object
+    // clone would silently swallow it via the legacy prototype setter and
+    // launder a forbidden-key emission into an accepted document.
+    const raw: unknown = JSON.parse(
+      '{"version":1,"root":{"component":"ki-badge","props":{"__proto__":{"polluted":true}}}}',
+    );
+    expect(validateUiSpec(raw).ok).toBe(false);
+    const report = validateUiSpec(normalizeEmission(raw));
+    expect(report.ok).toBe(false);
+    expect(report.issues.some((issue) => issue.code === 'forbidden-key')).toBe(true);
+  });
 });
 
 describe('repairPrompt', () => {
@@ -110,6 +124,9 @@ describe('repairPrompt', () => {
     }
     expect(message).toContain('acme-unknown');
     expect(message).toContain('disabled');
+    // The offender for invalid-prop-type lives in issue.value, not the
+    // message — the repair prompt must surface the exact rejected value.
+    expect(message).toContain('yes');
     expect(message?.toLowerCase()).toContain('exactly one corrected');
   });
 
@@ -134,7 +151,10 @@ describe('schema and boundary agreement', () => {
     const accepts = ajv.compile(derivation.artifact);
 
     const toneArb = fc.constantFrom('info', 'success', 'warning', 'sparkly');
-    const actionArb = fc.option(fc.constantFrom('confirm', 'undeclared-intent'), {
+    // '' exercises the non-empty-string agreement (149-3): the schema now
+    // rejects empty action names, so they never reach the validator as a
+    // schema-accepted/validator-rejected divergence.
+    const actionArb = fc.option(fc.constantFrom('confirm', 'undeclared-intent', ''), {
       nil: undefined,
     });
     const nodeArb = fc.letrec<{ node: Record<string, unknown> }>((tie) => ({
@@ -159,18 +179,22 @@ describe('schema and boundary agreement', () => {
     })).node;
 
     fc.assert(
-      fc.property(nodeArb, fc.constantFrom(undefined, ['confirm'] as const), (root, actions) => {
-        const spec = actions === undefined ? { root, version: 1 } : { actions, root, version: 1 };
-        if (!accepts(spec)) {
-          return;
-        }
-        const report = validateUiSpec(spec);
-        if (!report.ok) {
-          for (const issue of report.issues) {
-            expect(issue.code).toBe('undeclared-action');
+      fc.property(
+        nodeArb,
+        fc.constantFrom(undefined, ['confirm'] as const, [''] as const),
+        (root, actions) => {
+          const spec = actions === undefined ? { root, version: 1 } : { actions, root, version: 1 };
+          if (!accepts(spec)) {
+            return;
           }
-        }
-      }),
+          const report = validateUiSpec(spec);
+          if (!report.ok) {
+            for (const issue of report.issues) {
+              expect(issue.code).toBe('undeclared-action');
+            }
+          }
+        },
+      ),
       { numRuns: 300, seed: 33_033 },
     );
   });

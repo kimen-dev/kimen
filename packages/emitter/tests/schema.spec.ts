@@ -3,11 +3,12 @@
 // Schema behaves under an independent oracle (ajv, draft 2020-12) exactly
 // as the contract promises, deterministically, with provider lowerings
 // structurally verified and never silently truncated.
-import Ajv2020 from 'ajv/dist/2020.js';
-import { describe, expect, it } from 'vitest';
+
 import type { Catalog } from '@kimen/catalog';
 import { catalogData } from '@kimen/catalog';
-import { uiSpecJsonSchema } from '../src/index.js';
+import Ajv2020 from 'ajv/dist/2020.js';
+import { describe, expect, it } from 'vitest';
+import { type EmitterTarget, uiSpecJsonSchema } from '../src/index.js';
 
 function compile(artifact: Record<string, unknown>) {
   const ajv = new Ajv2020({ allErrors: false, strict: false });
@@ -260,14 +261,78 @@ describe('uiSpecJsonSchema', () => {
     expect(!arrayComponents.ok && arrayComponents.issues[0]?.code).toBe('malformed-catalog');
   });
 
-  it('S6 refuses a degenerate anthropic-strict maxDepth with a named issue (review regression)', () => {
-    for (const maxDepth of [0, -1, 2.5]) {
+  it('S6 refuses a degenerate or over-budget anthropic-strict maxDepth with a named issue (review regression)', () => {
+    // 0/-1/2.5 are below the floor; 100000 is above the documented ceiling —
+    // an unbounded depth would allocate a copy of every branch per level and
+    // exhaust memory instead of returning a fail-closed Derivation.
+    for (const maxDepth of [0, -1, 2.5, 100_000]) {
       const derivation = uiSpecJsonSchema(catalogData, { maxDepth, target: 'anthropic-strict' });
       expect(derivation.ok).toBe(false);
       if (!derivation.ok) {
         expect(derivation.issues[0]?.code).toBe('invalid-option');
         expect(derivation.issues[0]?.path).toBe('options.maxDepth');
       }
+    }
+  });
+
+  it('constrains action names to non-empty strings, matching the validator (review regression)', () => {
+    // The authoritative Zod uses z.string().min(1); an empty action string is
+    // schema-expressible, so the derived schema must reject it too.
+    const validate = compile(deriveOrThrow(catalogData));
+    expect(validate({ actions: [''], root: { component: 'ki-badge' }, version: 1 })).toBe(false);
+  });
+
+  it('derives a distinct $id per target and per component subset (review regression)', () => {
+    const draft = deriveOrThrow(catalogData);
+    const openai = deriveOrThrow(catalogData, { target: 'openai-strict' });
+    const subset = deriveOrThrow(catalogData, { components: ['ki-badge'] });
+    expect(draft['$id']).not.toBe(openai['$id']);
+    expect(draft['$id']).not.toBe(subset['$id']);
+    expect(openai['$id']).not.toBe(subset['$id']);
+    // still carries the catalog schema version (S10 contract).
+    expect(String(draft['$id'])).toContain(catalogData.catalogSchemaVersion);
+  });
+
+  it('rejects an unrecognized schema target with a named invalid-option issue (review regression)', () => {
+    const derivation = uiSpecJsonSchema(catalogData, {
+      target: 'openai_strict' as unknown as EmitterTarget,
+    });
+    expect(derivation.ok).toBe(false);
+    if (!derivation.ok) {
+      expect(derivation.issues[0]?.code).toBe('invalid-option');
+      expect(derivation.issues[0]?.path).toBe('options.target');
+    }
+  });
+
+  it('names the true worst contributor per limit, not by enum count (review regression)', () => {
+    const probe = (tag: string, values: readonly string[]) => ({
+      description: 'Synthetic probe.',
+      events: {},
+      props: { mode: { description: '', type: 'enum' as const, values: [...values] } },
+      slots: {},
+      tag,
+      whenNotToUse: 'Never.',
+      whenToUse: 'Only in this test.',
+    });
+    // acme-short: many short enum values (high enum COUNT, low char total).
+    // acme-long: one enormous enum value (low count, dominates char total).
+    // The nameAndEnumChars overflow is caused by acme-long; the old enum-count
+    // heuristic would misname acme-short.
+    const synthetic: Catalog = {
+      catalogSchemaVersion: catalogData.catalogSchemaVersion,
+      components: {
+        'acme-long': probe('acme-long', ['x'.repeat(200_000)]),
+        'acme-short': probe(
+          'acme-short',
+          Array.from({ length: 400 }, (_, index) => `v${String(index)}`),
+        ),
+      },
+    };
+    const derivation = uiSpecJsonSchema(synthetic, { target: 'openai-strict' });
+    expect(derivation.ok).toBe(false);
+    if (!derivation.ok) {
+      const chars = derivation.issues.find((issue) => issue.message.includes('nameAndEnumChars'));
+      expect(chars?.value).toBe('acme-long');
     }
   });
 
@@ -293,6 +358,18 @@ describe('uiSpecJsonSchema', () => {
     expect(derivation.ok).toBe(false);
     if (!derivation.ok) {
       expect(derivation.issues.some((issue) => issue.message.includes('properties'))).toBe(true);
+    }
+  });
+
+  it('returns a fail-closed invalid-option issue for a non-array components subset, never throwing (review regression)', () => {
+    for (const bad of [null, 42, 'ki-button', {}]) {
+      const derivation = uiSpecJsonSchema(catalogData, {
+        components: bad as unknown as readonly string[],
+      });
+      expect(derivation.ok).toBe(false);
+      expect(!derivation.ok && derivation.issues.some((i) => i.code === 'invalid-option')).toBe(
+        true,
+      );
     }
   });
 

@@ -14,6 +14,19 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 /**
+ * A null-prototype clone record. Assigning an own `__proto__` (or other
+ * legacy accessor) key creates a real data property instead of invoking the
+ * prototype setter, so a forbidden key survives into the normalized document
+ * and `validateUiSpec` still rejects it (review finding: a plain `{}` clone
+ * silently swallowed `__proto__`, laundering a forbidden-key emission into an
+ * accepted one — the sanitize-instead-of-reject antipattern the wall forbids).
+ * `snapshotPlainData` accepts null-prototype records.
+ */
+function cloneRecord(): Record<string, unknown> {
+  return Object.create(null) as Record<string, unknown>;
+}
+
+/**
  * Iterative node-tree cleanup (review finding: recursion overflowed on
  * hostile depths the boundary rejects gracefully). Matches the boundary's
  * iterative-wall discipline: unbounded depth degrades into a validation
@@ -47,11 +60,11 @@ function normalizeTree(root: unknown): unknown {
       continue;
     }
     seen.add(source);
-    const clean: Record<string, unknown> = {};
+    const clean: Record<string, unknown> = cloneRecord();
     assign(clean);
     for (const [key, value] of Object.entries(source)) {
       if (key === 'props' && isRecord(value)) {
-        const props: Record<string, unknown> = {};
+        const props: Record<string, unknown> = cloneRecord();
         for (const [name, propValue] of Object.entries(value)) {
           if (propValue !== null) {
             props[name] = propValue;
@@ -66,7 +79,7 @@ function normalizeTree(root: unknown): unknown {
         continue;
       }
       if (key === 'slots' && isRecord(value)) {
-        const slots: Record<string, unknown> = {};
+        const slots: Record<string, unknown> = cloneRecord();
         clean['slots'] = slots;
         for (const [name, children] of Object.entries(value)) {
           if (Array.isArray(children)) {
@@ -104,7 +117,7 @@ export function normalizeEmission(value: unknown): unknown {
   if (!isRecord(value)) {
     return value;
   }
-  const clean: Record<string, unknown> = {};
+  const clean: Record<string, unknown> = cloneRecord();
   for (const [key, entry] of Object.entries(value)) {
     clean[key] = key === 'root' ? normalizeTree(entry) : entry;
   }
@@ -130,7 +143,17 @@ export function repairPrompt(report: ValidationReport): string | null {
     'Issues:',
   ];
   report.issues.forEach((issue, index) => {
-    lines.push(`${String(index + 1)}. [${issue.code}] at ${issue.path}: ${issue.message}`);
+    // Some issue classes (invalid-prop-type) carry the offending value only in
+    // issue.value, not the message; the repair contract (S14) names the
+    // offender, so surface it — skipping the append when the message already
+    // embeds it (unknown-component, unknown-prop, …) to avoid duplication.
+    const offender =
+      issue.value !== undefined && !issue.message.includes(issue.value)
+        ? ` (received "${issue.value}")`
+        : '';
+    lines.push(
+      `${String(index + 1)}. [${issue.code}] at ${issue.path}: ${issue.message}${offender}`,
+    );
   });
   return lines.join('\n');
 }

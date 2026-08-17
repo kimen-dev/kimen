@@ -124,6 +124,22 @@ export function resolveEntries(catalog: Catalog, components?: readonly string[])
       ],
     };
   }
+  // The subset option arrives from untyped/JSON callers too: a non-array (or
+  // non-string-array) must fail closed with a named issue, not throw a
+  // TypeError when the branch below reads `.length` or iterates it (the
+  // Derivation no-throw contract).
+  if (components !== undefined && !isStringArray(components)) {
+    return {
+      entries: [],
+      issues: [
+        {
+          code: 'invalid-option',
+          message: 'options.components must be an array of component tag strings when provided',
+          path: 'options.components',
+        },
+      ],
+    };
+  }
   const componentsRecord = candidate['components'] as Record<string, unknown>;
   if (catalog.catalogSchemaVersion !== CATALOG_SCHEMA_VERSION) {
     issues.push({

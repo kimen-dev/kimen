@@ -27,14 +27,32 @@ export interface DerivationOptions {
   /** Schema lowering target; default `draft-2020-12`. */
   readonly target?: EmitterTarget;
   /**
-   * `anthropic-strict` only: the unrolled composition depth bound
-   * (default 6). The bound constrains the SCHEMA, not the format — deeper
-   * compositions still validate at the boundary.
+   * `anthropic-strict` only: the unrolled composition depth bound (default 6,
+   * an integer in [1, 32]). The bound constrains the SCHEMA, not the format —
+   * deeper compositions still validate at the boundary; an out-of-range value
+   * fails the derivation closed rather than unrolling unboundedly.
    */
   readonly maxDepth?: number;
 }
 
 const DEFAULT_ANTHROPIC_DEPTH = 6;
+
+// The unrolled anthropic-strict lowering materializes one copy of every
+// component branch PER level, so an unbounded depth exhausts memory instead
+// of returning a fail-closed Derivation (review finding). 32 is far beyond any
+// real composition yet keeps the artifact bounded; the default is 6.
+const MAX_ANTHROPIC_DEPTH = 32;
+
+// The runtime target allowlist: a JS/config caller can pass a typo'd string
+// despite the EmitterTarget type; an unknown value must fail closed, not slip
+// into the strict-recursive fallback branch as ok:true (review finding).
+const KNOWN_TARGETS: ReadonlySet<string> = new Set([
+  'anthropic-strict',
+  'draft-2020-12',
+  'openai-strict',
+]);
+
+const SCHEMA_ID_BASE = 'https://kimen.dev/schemas/ui-spec';
 
 // OpenAI strict-mode limits (research-pinned 2026-08, data-model.md table).
 const OPENAI_LIMITS = {
@@ -42,6 +60,22 @@ const OPENAI_LIMITS = {
   nameAndEnumChars: 120_000,
   properties: 5000,
 } as const;
+
+/**
+ * A deterministic 32-bit content hash (FNV-1a) that discriminates the schema
+ * `$id` per derivation (review finding: every catalog, subset and target
+ * shared one version-only `$id`, so two materially different schemas collided
+ * in a single JSON Schema registry). No runtime dependency; determinism (S11)
+ * holds because the hashed `$defs` are built in sorted order.
+ */
+function fnv1a(input: string): string {
+  let hash = 0x81_1c_9d_c5;
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= input.charCodeAt(index);
+    hash = Math.imul(hash, 0x01_00_01_93);
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0');
+}
 
 function propSchema(constraint: CatalogPropConstraint, strict: boolean): Record<string, unknown> {
   const base: Record<string, unknown> =
@@ -80,8 +114,8 @@ function componentBranch(
     }
   }
   properties['action'] = strict
-    ? { anyOf: [{ type: 'string' }, { type: 'null' }] }
-    : { type: 'string' };
+    ? { anyOf: [{ minLength: 1, type: 'string' }, { type: 'null' }] }
+    : { minLength: 1, type: 'string' };
   if (strict) {
     required.push('action');
   }
@@ -179,16 +213,27 @@ function tallyDocument(artifact: unknown): LimitTally {
   return tally;
 }
 
-function worstContributor(entries: readonly ResolvedEntry[]): string {
-  let worstTag = '';
-  let worstWeight = -1;
+/**
+ * Per-component tallies over each component's own built branch, using the
+ * SAME metric as the document tally (review finding: a single enum-count
+ * heuristic named one "largest contributor" for every limit, so a
+ * many-short-enums component could be blamed for a nameAndEnumChars overflow
+ * actually caused by another component's single very long value).
+ */
+function limitContributors(entries: readonly ResolvedEntry[]): ReadonlyMap<string, LimitTally> {
+  const perEntry = new Map<string, LimitTally>();
   for (const [tag, entry] of entries) {
-    let weight = Object.keys(entry.slots).length;
-    for (const [name, constraint] of Object.entries(entry.props)) {
-      weight += 1 + name.length / 8 + (constraint.values?.length ?? 0);
-    }
-    if (weight > worstWeight) {
-      worstWeight = weight;
+    perEntry.set(tag, tallyDocument(componentBranch(tag, entry, true, '#/$defs/child')));
+  }
+  return perEntry;
+}
+
+function worstFor(limit: keyof LimitTally, perEntry: ReadonlyMap<string, LimitTally>): string {
+  let worstTag = '';
+  let worstValue = -1;
+  for (const [tag, tally] of perEntry) {
+    if (tally[limit] > worstValue) {
+      worstValue = tally[limit];
       worstTag = tag;
     }
   }
@@ -200,7 +245,7 @@ function openAiLimitIssues(
   entries: readonly ResolvedEntry[],
 ): readonly EmitterIssue[] {
   const tally = tallyDocument(artifact);
-  const worstTag = worstContributor(entries);
+  const perEntry = limitContributors(entries);
   const issues: EmitterIssue[] = [];
   const totals: readonly (readonly [keyof typeof OPENAI_LIMITS, number])[] = [
     ['enumValues', tally.enumValues],
@@ -209,6 +254,8 @@ function openAiLimitIssues(
   ];
   for (const [limit, total] of totals) {
     if (total > OPENAI_LIMITS[limit]) {
+      // The real largest contributor to THIS metric, not a shared heuristic.
+      const worstTag = worstFor(limit, perEntry);
       issues.push({
         code: 'provider-limit',
         message: `openai-strict ${limit} limit of ${String(OPENAI_LIMITS[limit])} exceeded (${String(total)}); largest contributor is "${worstTag}" — derive a component subset instead`,
@@ -220,14 +267,19 @@ function openAiLimitIssues(
   return issues;
 }
 
-function baseDocument(catalog: Catalog, strict: boolean): Record<string, unknown> {
+function baseDocument(catalog: Catalog, target: EmitterTarget): Record<string, unknown> {
+  const strict = target !== 'draft-2020-12';
   return {
     $schema: 'https://json-schema.org/draft/2020-12/schema',
-    $id: `https://kimen.dev/schemas/ui-spec/${catalog.catalogSchemaVersion}`,
+    // Version + target here; uiSpecJsonSchema appends a content hash of the
+    // built $defs so the $id is unique per catalog, subset and target.
+    $id: `${SCHEMA_ID_BASE}/${catalog.catalogSchemaVersion}/${target}`,
     additionalProperties: false,
     description: `UI-spec format for the Kimen catalog (${versionStamp(catalog)}). Advisory shape: the validation boundary and the guarded renderer remain authoritative.`,
     properties: {
-      actions: { items: { type: 'string' }, type: 'array' },
+      // The authoritative Zod is z.array(z.string().min(1)); mirror the
+      // non-empty constraint so a schema-accepted spec is boundary-accepted.
+      actions: { items: { minLength: 1, type: 'string' }, type: 'array' },
       root: { $ref: '#/$defs/node' },
       version: { const: 1 },
     },
@@ -295,18 +347,34 @@ export function uiSpecJsonSchema(
     return { issues: resolved.issues, ok: false };
   }
   const target = options.target ?? 'draft-2020-12';
+  // A JS/config caller can pass a typo'd target despite the type; an unknown
+  // value must fail closed, not fall through to the strict-recursive branch
+  // and return an unchecked artifact as ok:true (review finding).
+  if (!KNOWN_TARGETS.has(target)) {
+    return {
+      issues: [
+        {
+          code: 'invalid-option',
+          message: `unknown schema target "${target}" (expected draft-2020-12, openai-strict or anthropic-strict)`,
+          path: 'options.target',
+          value: target,
+        },
+      ],
+      ok: false,
+    };
+  }
   const strict = target !== 'draft-2020-12';
-  const document = baseDocument(catalog, strict);
+  const document = baseDocument(catalog, target);
   if (target === 'anthropic-strict') {
     const depth = options.maxDepth ?? DEFAULT_ANTHROPIC_DEPTH;
-    // A degenerate depth would ship a dangling $ref as ok:true (review
-    // finding): fail closed naming the option instead.
-    if (!Number.isInteger(depth) || depth < 1) {
+    // A degenerate or unbounded depth would ship a dangling $ref as ok:true or
+    // exhaust memory unrolling (review finding): fail closed naming the option.
+    if (!Number.isInteger(depth) || depth < 1 || depth > MAX_ANTHROPIC_DEPTH) {
       return {
         issues: [
           {
             code: 'invalid-option',
-            message: `anthropic-strict maxDepth must be an integer >= 1 (received ${String(options.maxDepth)})`,
+            message: `anthropic-strict maxDepth must be an integer in [1, ${String(MAX_ANTHROPIC_DEPTH)}] (received ${String(options.maxDepth)})`,
             path: 'options.maxDepth',
             value: String(options.maxDepth),
           },
@@ -325,6 +393,11 @@ export function uiSpecJsonSchema(
     document['$defs'] = recursiveDefinitions(resolved.entries, strict);
   }
   const artifact = pruneUndefined(document) as Record<string, unknown>;
+  // Finalize the $id with a content hash of the built $defs, so two materially
+  // different derivations (different catalogs, subsets or depths) never share
+  // an identifier in a JSON Schema registry. Deterministic: the $defs are
+  // built in sorted order.
+  artifact['$id'] = `${String(artifact['$id'])}/${fnv1a(JSON.stringify(artifact['$defs']))}`;
   if (target === 'openai-strict') {
     const limitIssues = openAiLimitIssues(artifact, resolved.entries);
     if (limitIssues.length > 0) {

@@ -5,10 +5,9 @@
  * (research D3). Deterministic text (S11), version-stamped (S10).
  */
 import type { Catalog, CatalogEntry, CatalogPropConstraint, UiSpecNode } from '@kimen/catalog';
-
-import type { DerivationOptions } from './schema.js';
 import type { Derivation, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
+import type { DerivationOptions } from './schema.js';
 
 function propLine(name: string, constraint: CatalogPropConstraint): string {
   const kind =
@@ -40,7 +39,9 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
   }
   const eventNames = Object.keys(entry.events);
   if (eventNames.length > 0) {
-    lines.push('- Events (bind via "action"; dispatched as data, never code):');
+    lines.push(
+      '- Events (host-side notifications for the embedding app; a spec cannot bind them — "action" fires on click activation only):',
+    );
     for (const name of eventNames) {
       lines.push(`  - \`${name}\` — ${entry.events[name] ?? ''}`);
     }

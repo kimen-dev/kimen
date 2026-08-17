@@ -33,7 +33,7 @@ test('packaging invokes publint once per publishable package and derives one ATT
     },
   });
 
-  assert.equal(calls.filter(({ args }) => args[1] === 'publint').length, 4);
+  assert.equal(calls.filter(({ args }) => args[1] === 'publint').length, 7);
   const componentAttw = calls.find(
     ({ args }) => args[1] === 'attw' && args.includes('./ki-tooltip'),
   );

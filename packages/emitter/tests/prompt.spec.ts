@@ -3,9 +3,10 @@
 // built-in AND registered components, the embedded example is
 // self-consistent with the validation boundary, and output is
 // deterministic and version-stamped.
-import { describe, expect, it } from 'vitest';
+
 import type { Catalog } from '@kimen/catalog';
 import { catalogData, createCatalog, validateUiSpec } from '@kimen/catalog';
+import { describe, expect, it } from 'vitest';
 import { catalogPrompt } from '../src/index.js';
 
 const acmeDefinition = {
@@ -73,5 +74,14 @@ describe('catalogPrompt', () => {
 
   it('S11 derives byte-identical prompts for the same catalog', () => {
     expect(promptOrThrow(catalogData)).toBe(promptOrThrow(catalogData));
+  });
+
+  it('presents catalog events as host-side, never action-bindable (review regression)', () => {
+    // The UiSpec format has no event selector and the renderer wires actions to
+    // click activation only — so the prompt must not tell the model that
+    // custom events (e.g. ki-alert's ki-dismiss) can be bound via "action".
+    const prompt = promptOrThrow(catalogData);
+    expect(prompt).toContain('ki-dismiss');
+    expect(prompt).not.toContain('bind via "action"');
   });
 });
