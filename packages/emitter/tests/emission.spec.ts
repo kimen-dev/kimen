@@ -99,6 +99,19 @@ describe('normalizeEmission', () => {
     expect(report.ok).toBe(false);
     expect(report.issues.some((issue) => issue.code === 'forbidden-key')).toBe(true);
   });
+
+  it('S13 preserves a forbidden __proto__ key under a NESTED slot child too (review regression)', () => {
+    // The clone walk is a work-stack over the whole tree, so the null-prototype
+    // guarantee must hold at depth, not only at the root — the adversarial risk
+    // lives in a nested child's props.
+    const raw: unknown = JSON.parse(
+      '{"version":1,"root":{"component":"ki-card","slots":{"":[{"component":"ki-badge","props":{"__proto__":{"polluted":true}}}]}}}',
+    );
+    expect(validateUiSpec(raw).ok).toBe(false);
+    const report = validateUiSpec(normalizeEmission(raw));
+    expect(report.ok).toBe(false);
+    expect(report.issues.some((issue) => issue.code === 'forbidden-key')).toBe(true);
+  });
 });
 
 describe('repairPrompt', () => {
