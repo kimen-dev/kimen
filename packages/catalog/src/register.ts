@@ -129,6 +129,21 @@ const RESERVED_TAGS = new Set([
   'missing-glyph',
 ]);
 
+// HTML inline event-handler content attributes (onclick, onerror, …) install
+// EXECUTABLE code the moment they are set via setAttribute — the one prop-name
+// class the no-code-execution guardrail (Art. VIII) must reject at the
+// registration boundary. The whole on* namespace, case-insensitive because
+// setAttribute lowercases the name, so no handler slips through.
+const EVENT_HANDLER_PROP = /^on/iu;
+
+// A conservative DOM attribute name (kept in sync with render.ts's renderer
+// guard): a lowercase ASCII start then letters, digits, hyphen or underscore.
+// An empty or exotic name would throw InvalidCharacterError from setAttribute
+// at render time; the boundary rejects it up front, fail-closed. Every prop
+// name the built-in catalog declares (kebab-case) satisfies it, so extending
+// the built-in catalog stays valid.
+const SAFE_PROP_NAME = /^[a-z][a-z0-9_-]*$/u;
+
 const GUIDANCE_FIELDS = ['description', 'whenNotToUse', 'whenToUse'] as const;
 const GUIDANCE_FIELD_SET: ReadonlySet<string> = new Set(GUIDANCE_FIELDS);
 
@@ -223,8 +238,13 @@ function checkConstraint(
   }
 }
 
-function checkEntry(key: string, entry: ParsedEntry, issues: RegistrationIssue[]): void {
-  const path = `definition.components.${key}`;
+function checkEntry(
+  key: string,
+  entry: ParsedEntry,
+  issues: RegistrationIssue[],
+  pathRoot = 'definition.components',
+): void {
+  const path = `${pathRoot}.${key}`;
   if (entry.tag !== key) {
     issues.push({
       code: 'malformed-definition',
@@ -259,7 +279,26 @@ function checkEntry(key: string, entry: ParsedEntry, issues: RegistrationIssue[]
     }
   }
   for (const [name, constraint] of Object.entries(entry.props)) {
-    checkConstraint(entry.tag, name, constraint, `${path}.props.${name}`, issues);
+    const propPath = `${path}.props.${name}`;
+    if (EVENT_HANDLER_PROP.test(name)) {
+      issues.push({
+        code: 'forbidden-key',
+        message: `${entry.tag} prop "${name}" uses a forbidden event-handler attribute name; such a name would install executable inline handler code`,
+        path: propPath,
+        value: name,
+      });
+      continue;
+    }
+    if (!SAFE_PROP_NAME.test(name)) {
+      issues.push({
+        code: 'malformed-constraint',
+        message: `${entry.tag} prop "${name}" is not a valid attribute name`,
+        path: propPath,
+        value: name,
+      });
+      continue;
+    }
+    checkConstraint(entry.tag, name, constraint, propPath, issues);
   }
 }
 
@@ -354,42 +393,49 @@ export function createCatalog(
   let baseComponents: Record<string, CatalogEntry> | undefined;
   let baseElementsVersion: string | undefined;
   if (base !== undefined) {
-    const baseCandidate: unknown = base;
-    if (
-      typeof baseCandidate !== 'object' ||
-      baseCandidate === null ||
-      Array.isArray(baseCandidate)
+    // The extend base is as untrusted as the definition. Snapshot the WHOLE
+    // base through the purity wall FIRST (review finding: reading
+    // `base.components` or `base.catalogSchemaVersion` directly would invoke a
+    // top-level accessor — arbitrary code or a throw — before the wall could
+    // reject it). Every subsequent read is off the plain-data clone, and every
+    // base entry then runs the SAME semantic checks the definition path runs
+    // (tag grammar, reserved names, key/tag, guidance, constraints, prop-name
+    // safety), so an untrusted base cannot smuggle in a native tag such as
+    // `iframe` that the definition boundary would reject.
+    const baseWall = toPlainData(base, EXTEND_MAX_BYTES, {
+      root: 'options.extend',
+      surface: 'an extended catalog',
+    });
+    if (baseWall.issues.length > 0) {
+      issues.push(...baseWall.issues.map(toRegistrationIssue));
+    } else if (
+      typeof baseWall.data !== 'object' ||
+      baseWall.data === null ||
+      Array.isArray(baseWall.data)
     ) {
       issues.push({
         code: 'malformed-definition',
         message: 'options.extend is not a catalog value',
         path: 'options.extend',
       });
-    } else if (base.catalogSchemaVersion !== catalogData.catalogSchemaVersion) {
-      issues.push({
-        code: 'unsupported-version',
-        message: `extended catalog declares schema version "${base.catalogSchemaVersion}"; this registration supports "${catalogData.catalogSchemaVersion}"`,
-        path: 'options.extend.catalogSchemaVersion',
-        value: base.catalogSchemaVersion,
-      });
     } else {
-      // The extend base is as untrusted as the definition (review finding:
-      // structuredClone threw DOMException on non-cloneable values and
-      // invoked accessor getters): its entries cross the SAME purity wall
-      // and entry schema before they can flow into the result.
-      const baseWall = toPlainData(base.components, EXTEND_MAX_BYTES, {
-        root: 'options.extend.components',
-        surface: 'an extended catalog',
-      });
-      if (baseWall.issues.length > 0) {
-        issues.push(...baseWall.issues.map(toRegistrationIssue));
+      const baseRecord = baseWall.data as Record<string, unknown>;
+      const baseVersion = baseRecord['catalogSchemaVersion'];
+      if (baseVersion !== catalogData.catalogSchemaVersion) {
+        issues.push({
+          code: 'unsupported-version',
+          message: `extended catalog declares schema version "${String(baseVersion)}"; this registration supports "${catalogData.catalogSchemaVersion}"`,
+          path: 'options.extend.catalogSchemaVersion',
+          value: typeof baseVersion === 'string' ? baseVersion : undefined,
+        });
       } else {
-        const parsedBase = baseSchema.safeParse(baseWall.data);
+        const parsedBase = baseSchema.safeParse(baseRecord['components']);
         if (!parsedBase.success) {
           issues.push(...baseSchemaIssues(parsedBase.error));
         } else {
           baseComponents = {};
           for (const [key, entry] of Object.entries(parsedBase.data)) {
+            checkEntry(key, entry, issues, 'options.extend.components');
             baseComponents[key] = normalizeEntry(entry);
           }
           for (const [key] of entries) {
@@ -402,7 +448,7 @@ export function createCatalog(
               });
             }
           }
-          const versionCandidate = (baseCandidate as { elementsVersion?: unknown }).elementsVersion;
+          const versionCandidate = baseRecord['elementsVersion'];
           if (typeof versionCandidate === 'string') {
             baseElementsVersion = versionCandidate;
           }
