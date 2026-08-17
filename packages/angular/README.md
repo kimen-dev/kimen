@@ -28,6 +28,15 @@ export class SettingsComponent {
 }
 ```
 
+- **Typed events, no `@Output`**: `ki-*` events bind by native DOM name
+  (`(ki-dismiss)="onDismiss($event)"`). Under `strictTemplates`, `$event`
+  is fully typed (e.g. `KiAlertCustomEvent<null>`) with **no cast** — the
+  type comes from the elements' `HTMLElementTagNameMap` and
+  `addEventListener` overloads, not from an Angular output. The upstream
+  `@stencil/angular-output-target` output shape for kebab-case events is
+  broken (it throws at view creation, and a wired output double-fires under
+  Ivy), so the generation pipeline removes the output machinery and the
+  native path is the single, once-only event channel.
 - **Value accessors**: `TextValueAccessor` (`ki-input`, `ki-textarea` —
   `value` on `input`), `BooleanValueAccessor` (`ki-checkbox`, `ki-switch`
   — `checked` on `change`), `SelectValueAccessor` (`ki-select`,

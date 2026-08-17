@@ -11,14 +11,27 @@ The current release contract covers exactly two packages: `@kimen/elements`
 and `@kimen/tokens`. The candidate archive packs those two, and every
 validation job binds to that two-package shape.
 
-`@kimen/catalog`, `@kimen/adapter-a2ui` and `@kimen/adapter-mcp-apps` are
-implemented in this repository but remain `private: true` and are not part
-of the candidate. Whether they publish at v1 — and under which versioning
-contract — is an **open founder decision**. Until that decision is made, do
-not add them to the candidate and do not weaken the two-package validation
-to accommodate them. Extending the scope requires changing the
-release-candidate contract, the release workflow tests and this document
-together.
+`@kimen/catalog`, `@kimen/emitter`, `@kimen/adapter-a2ui`,
+`@kimen/adapter-mcp-apps` and the framework wrappers `@kimen/react`,
+`@kimen/vue` and `@kimen/angular` are implemented in this repository but
+remain `private: true` and are not part of the candidate. Whether they
+publish — and under which versioning contract — is an **open founder
+decision**. Until that decision is made, do not add them to the candidate and
+do not weaken the two-package validation to accommodate them. Extending the
+scope requires changing the release-candidate contract, the release workflow
+tests and this document together.
+
+**Internal-dependency rewrite (wrappers/adapters).** These packages depend on
+`@kimen/elements` or `@kimen/catalog` through the `workspace:*` protocol. The
+current pack path is `npm pack`, which — unlike `pnpm publish` — does **not**
+rewrite `workspace:` ranges, so a naive publish would ship `workspace:*`
+verbatim and fail the consumer install with `EUNSUPPORTEDPROTOCOL` (Angular's
+`ng-packagr` `dist/package.json` already carries the range). Before any of
+these publish, `build-candidate` must rewrite each `workspace:` range to the
+exact candidate version at pack time and the clean-consumer install smoke test
+(`scripts/tests/consumer-contract*`) must be extended to the new tarballs. The
+`publishable-workspace-protocol` infra test fails closed if a non-`private`
+package still carries a `workspace:` runtime range.
 
 ## Modes
 

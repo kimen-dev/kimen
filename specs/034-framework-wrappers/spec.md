@@ -133,9 +133,9 @@ packaging validators on the three packed packages.
 ### Edge Cases
 
 - Event names: `ki-*` events use dash-cased names; each wrapper maps them
-  to its idiom (React callback props, Vue `@` bindings, Angular outputs)
-  mechanically from the manifest — a mapping gap for any published event
-  is a generation failure, not a silent omission.
+  to its idiom (React callback props, Vue `@` bindings, Angular native
+  `(ki-*)` event bindings) mechanically from the manifest — a mapping gap for
+  any published event is a generation failure, not a silent omission.
 - Sub-components that only compose inside a parent (option, radio, tab,
   tab-panel, list-item) are wrapped like any component; their containment
   rules remain the components' own contracts.
@@ -270,9 +270,17 @@ specs (002–026) and are unchanged by wrapping.
 - **FR-003**: The Vue wrapper MUST expose idiomatic typed components with
   native event binding, and the form components MUST support `v-model`
   bound to their value/checked property through their own change events.
-- **FR-004**: The Angular wrapper MUST expose typed components with
-  outputs for `ki-*` events, and the form components MUST integrate with
-  template-driven and reactive forms through value accessors.
+- **FR-004**: The Angular wrapper MUST expose typed components whose `ki-*`
+  events bind natively by DOM event name (`(ki-dismiss)="..."`), typed under
+  strict template checking through the elements' `HTMLElementTagNameMap` and
+  `addEventListener` overloads, and the form components MUST integrate with
+  template-driven and reactive forms through value accessors. It MUST NOT ship
+  Angular `@Output` machinery for these events: the upstream output shape for
+  kebab-case event names is broken — it throws at view creation
+  un-normalized, and a wired output double-fires under modern Ivy (native
+  listener plus output subscription) — so the generation pipeline strips it
+  and the native, once-only event path is the single event channel
+  (`scripts/normalize-angular-proxies.mjs`, with a runtime regression test).
 - **FR-005**: Wrapper imports MUST be tree-shakable per component:
   importing one component registers only that component and its internal
   dependencies, never the whole library.

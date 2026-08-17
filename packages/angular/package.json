@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "description": "Generated Angular bindings for the Kimen ki-* web components (spec 034): standalone typed components with outputs for ki-* events and ControlValueAccessors wiring the form components to template-driven and reactive forms over their re-dispatched native events. Built as an Angular Package Format library; client-side rendering; generated from the same source of truth as every other Kimen artifact and never hand-edited.",
+  "description": "Generated Angular bindings for the Kimen ki-* web components (spec 034): standalone typed components whose ki-* events bind natively by DOM event name ((ki-dismiss)=\"...\", typed under strict templates) and ControlValueAccessors wiring the form components to template-driven and reactive forms over their re-dispatched native events. Built as an Angular Package Format library; client-side rendering; generated from the same source of truth as every other Kimen artifact and never hand-edited.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kimen-dev/kimen.git",

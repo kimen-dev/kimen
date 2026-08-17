@@ -20,6 +20,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./ki-*": {
+      "types": "./dist/ki-*.d.ts",
+      "import": "./dist/ki-*.js"
     }
   },
   "scripts": {

@@ -55,7 +55,6 @@ export class KiAlert {
 }
 
 
-import type { KiAlertCustomEvent } from '@kimen/elements/components';
 
 export declare interface KiAlert extends Components.KiAlert {
   /**
@@ -228,8 +227,6 @@ export class KiDialog {
 }
 
 
-import type { KiDialogCustomEvent } from '@kimen/elements/components';
-import type { KiDialogCloseDetail as IKiDialogKiDialogCloseDetail } from '@kimen/elements/components';
 
 export declare interface KiDialog extends Components.KiDialog {
   /**
@@ -653,7 +650,6 @@ export class KiTabs {
 }
 
 
-import type { KiTabsCustomEvent } from '@kimen/elements/components';
 
 export declare interface KiTabs extends Components.KiTabs {
   /**

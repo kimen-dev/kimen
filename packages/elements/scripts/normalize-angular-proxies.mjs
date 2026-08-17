@@ -61,11 +61,26 @@ source = source.replace(/import \{ ([^}]*)\} from '@angular\/core';/u, (_match, 
   return `import { ${kept.join(', ')} } from '@angular/core';`;
 });
 
+// The removed outputs were the ONLY consumers of the per-event custom-event
+// type imports (`KiAlertCustomEvent`, each event's detail alias, …); with the
+// machinery gone they are dangling. Strip every `@kimen/elements/components`
+// type import except the `Components` namespace the input interfaces extend.
+// `$event` on a native `(ki-*)` binding is still fully typed under strict
+// templates via the elements' HTMLElementTagNameMap/addEventListener overloads
+// (README + FR-004) — that typing does not flow through these proxy imports.
+const componentsTypeImport = /^import type \{ ([^}]+) \} from '@kimen\/elements\/components';\n/gmu;
+const strippedTypeImports = [...source.matchAll(componentsTypeImport)].filter(
+  ([, names]) => names.trim() !== 'Components',
+).length;
+source = source.replace(componentsTypeImport, (match, names) =>
+  names.trim() === 'Components' ? match : '',
+);
+
 if (/@Output|EventEmitter|outputs: \[/u.test(source)) {
   throw new Error('angular proxies: normalization left output machinery behind');
 }
 
 writeFileSync(proxiesPath, source, 'utf8');
 process.stdout.write(
-  `angular proxies: removed ${String(orphanCount)} broken output surfaces — kebab-case ki-* events bind natively\n`,
+  `angular proxies: removed ${String(orphanCount)} broken output surfaces and ${String(strippedTypeImports)} dangling event-type imports — kebab-case ki-* events bind natively\n`,
 );
