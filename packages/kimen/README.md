@@ -19,6 +19,7 @@ Documentation: https://kimen.dev/docs/
 Apache-2.0 · Copyright 2026 Marcela Gotta
 
 <!-- kimen:capabilities:kimen-readme-status:start -->
+- **available** — Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
 - **hardening** — Changed-core mutation quality gate in hardening
 - **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer

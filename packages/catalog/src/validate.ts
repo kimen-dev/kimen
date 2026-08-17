@@ -41,9 +41,26 @@ export interface CatalogEntry {
   readonly events: Readonly<Record<string, string>>;
 }
 
+/**
+ * The immutable catalog value every boundary resolves (spec 032): the
+ * built-in generated catalog satisfies it structurally, and
+ * `createCatalog` produces deep-frozen instances of it. Validation and
+ * rendering accept one explicitly; when absent they use the built-in
+ * catalog, so the pre-032 behavior is the default path unchanged.
+ */
+export interface Catalog {
+  /** The catalog document format version the catalog was built under. */
+  readonly catalogSchemaVersion: string;
+  /** One entry per component, keyed by tag (key ≡ `entry.tag`). */
+  readonly components: Readonly<Record<string, CatalogEntry>>;
+  /** The elements version a generated catalog derives from; absent on standalone consumer catalogs. */
+  readonly elementsVersion?: string | undefined;
+}
+
 // One structural compile-time check: the generated artifact must satisfy the
-// published entry contract, so a generator regression fails the build here.
-const componentEntries: Readonly<Record<string, CatalogEntry>> = catalogData.components;
+// Catalog value shape (and, through it, the published entry contract), so a
+// generator regression fails the build here.
+const builtInCatalog: Catalog = catalogData;
 
 /** A node of the neutral UI-spec tree: one cataloged component instance. */
 export interface UiSpecNode {
@@ -112,6 +129,21 @@ interface Snapshot {
 }
 
 /**
+ * Labels naming the surface a purity-wall crossing reports (spec 032): UI
+ * specs by default; catalog definitions cross the SAME wall under their own
+ * name so one wall serves both boundaries (Art. I) without ambiguous
+ * diagnostics.
+ */
+interface WallLabels {
+  /** Root path segment and message subject (e.g. `spec`, `definition`). */
+  readonly root: string;
+  /** Human noun for the forbidden-key message (e.g. `a UI spec`). */
+  readonly surface: string;
+}
+
+const SPEC_LABELS: WallLabels = { root: 'spec', surface: 'a UI spec' };
+
+/**
  * The purity wall of the boundary (FR-004/FR-013/FR-014): an ITERATIVE walk
  * over the input that builds a plain-data clone without ever invoking
  * foreign code — no `JSON.stringify` on the untrusted value (it would call
@@ -127,7 +159,11 @@ interface Snapshot {
  * object references — a UI spec is a JSON tree, and shared references or
  * cycles would let a small payload expand into an unbounded serialized form.
  */
-function snapshotPlainData(input: unknown, maxBytes: number): Snapshot {
+function snapshotPlainData(
+  input: unknown,
+  maxBytes: number,
+  labels: WallLabels = SPEC_LABELS,
+): Snapshot {
   const issues: ValidationIssue[] = [];
   const seen = new WeakSet();
   let approxBytes = 0;
@@ -143,7 +179,7 @@ function snapshotPlainData(input: unknown, maxBytes: number): Snapshot {
         rootHolder.data = clone;
       },
       depth: 0,
-      path: 'spec',
+      path: labels.root,
       value: input,
     },
   ];
@@ -157,7 +193,7 @@ function snapshotPlainData(input: unknown, maxBytes: number): Snapshot {
     if (approxBytes > maxBytes) {
       issues.push({
         code: 'size-budget',
-        message: `spec payload exceeds the ${String(maxBytes)}-byte validation budget`,
+        message: `${labels.root} payload exceeds the ${String(maxBytes)}-byte validation budget`,
         path,
       });
       break;
@@ -165,7 +201,7 @@ function snapshotPlainData(input: unknown, maxBytes: number): Snapshot {
     if (depth > VALIDATION_MAX_DEPTH) {
       issues.push({
         code: 'depth-budget',
-        message: `spec nesting exceeds the ${String(VALIDATION_MAX_DEPTH)}-level validation depth budget`,
+        message: `${labels.root} nesting exceeds the ${String(VALIDATION_MAX_DEPTH)}-level validation depth budget`,
         path,
       });
       break;
@@ -266,7 +302,7 @@ function snapshotPlainData(input: unknown, maxBytes: number): Snapshot {
         if (FORBIDDEN_KEYS.has(key)) {
           issues.push({
             code: 'forbidden-key',
-            message: `forbidden key "${key}" is not allowed in a UI spec`,
+            message: `forbidden key "${key}" is not allowed in ${labels.surface}`,
             path: `${path}.${key}`,
             value: key,
           });
@@ -296,8 +332,8 @@ function snapshotPlainData(input: unknown, maxBytes: number): Snapshot {
   if (issues.length === 0 && approxBytes > maxBytes) {
     issues.push({
       code: 'size-budget',
-      message: `spec payload exceeds the ${String(maxBytes)}-byte validation budget`,
-      path: 'spec',
+      message: `${labels.root} payload exceeds the ${String(maxBytes)}-byte validation budget`,
+      path: labels.root,
     });
   }
 
@@ -363,8 +399,9 @@ function checkNode(
   path: string,
   declaredActions: ReadonlySet<string>,
   issues: ValidationIssue[],
+  entries: Readonly<Record<string, CatalogEntry>>,
 ): void {
-  const entry = componentEntries[node.component];
+  const entry = entries[node.component];
   if (entry === undefined) {
     issues.push({
       code: 'unknown-component',
@@ -407,7 +444,13 @@ function checkNode(
     }
     children.forEach((child, index) => {
       if (typeof child !== 'string') {
-        checkNode(child, `${path}.slots.${slotName}[${String(index)}]`, declaredActions, issues);
+        checkNode(
+          child,
+          `${path}.slots.${slotName}[${String(index)}]`,
+          declaredActions,
+          issues,
+          entries,
+        );
       }
     });
   }
@@ -423,6 +466,7 @@ function checkNode(
 export function toPlainData(
   input: unknown,
   maxBytes: number = VALIDATION_MAX_BYTES,
+  labels: WallLabels = SPEC_LABELS,
 ): { data: unknown; issues: readonly ValidationIssue[] } {
   if (typeof input === 'string') {
     const byteLength = new TextEncoder().encode(input).length;
@@ -432,7 +476,7 @@ export function toPlainData(
         issues: [
           {
             code: 'size-budget',
-            message: `spec payload of ${String(byteLength)} bytes exceeds the ${String(maxBytes)}-byte validation budget`,
+            message: `${labels.root} payload of ${String(byteLength)} bytes exceeds the ${String(maxBytes)}-byte validation budget`,
             path: '',
           },
         ],
@@ -444,21 +488,28 @@ export function toPlainData(
     } catch {
       return {
         data: undefined,
-        issues: [{ code: 'malformed-spec', message: 'the spec is not valid JSON', path: '' }],
+        issues: [
+          { code: 'malformed-spec', message: `the ${labels.root} is not valid JSON`, path: '' },
+        ],
       };
     }
-    return snapshotPlainData(parsed, maxBytes);
+    return snapshotPlainData(parsed, maxBytes, labels);
   }
-  return snapshotPlainData(input, maxBytes);
+  return snapshotPlainData(input, maxBytes, labels);
 }
 
 /**
- * Validates already-plain data (a `toPlainData` clone) against the catalog:
- * neutral-format shape, catalog membership, prop types, declared actions and
- * slots. Returns the typed spec alongside the report so a caller that will
- * render (spec 028) never re-parses. Never touches untrusted input directly.
+ * Validates already-plain data (a `toPlainData` clone) against the catalog
+ * in use: neutral-format shape, catalog membership, prop types, declared
+ * actions and slots. Returns the typed spec alongside the report so a caller
+ * that will render (spec 028) never re-parses. Never touches untrusted input
+ * directly. `catalog` selects the catalog in use (spec 032); absent, the
+ * built-in generated catalog applies.
  */
-export function validatePlainData(data: unknown): ValidationReport & { spec?: UiSpec } {
+export function validatePlainData(
+  data: unknown,
+  catalog?: Catalog,
+): ValidationReport & { spec?: UiSpec } {
   const parsed = uiSpecSchema.safeParse(data);
   if (!parsed.success) {
     return {
@@ -473,7 +524,13 @@ export function validatePlainData(data: unknown): ValidationReport & { spec?: Ui
 
   const issues: ValidationIssue[] = [];
   const declaredActions = new Set(parsed.data.actions ?? []);
-  checkNode(parsed.data.root, 'root', declaredActions, issues);
+  checkNode(
+    parsed.data.root,
+    'root',
+    declaredActions,
+    issues,
+    (catalog ?? builtInCatalog).components,
+  );
   return { issues, ok: issues.length === 0, spec: parsed.data };
 }
 
@@ -488,12 +545,12 @@ export function validatePlainData(data: unknown): ValidationReport & { spec?: Ui
  */
 export function validateUiSpec(
   input: unknown,
-  options: { readonly maxBytes?: number } = {},
+  options: { readonly maxBytes?: number; readonly catalog?: Catalog } = {},
 ): ValidationReport {
   const { data, issues } = toPlainData(input, options.maxBytes ?? VALIDATION_MAX_BYTES);
   if (issues.length > 0) {
     return { issues, ok: false };
   }
-  const report = validatePlainData(data);
+  const report = validatePlainData(data, options.catalog);
   return { issues: report.issues, ok: report.ok };
 }

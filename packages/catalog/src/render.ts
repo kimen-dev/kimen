@@ -13,10 +13,10 @@
  * SSR/DSD is a deferred bet.
  */
 import { catalogData } from './generated/catalog.js';
-import type { CatalogEntry, UiSpec, UiSpecNode } from './validate.js';
+import type { Catalog, CatalogEntry, UiSpec, UiSpecNode } from './validate.js';
 import { toPlainData, validatePlainData } from './validate.js';
 
-const componentEntries: Readonly<Record<string, CatalogEntry>> = catalogData.components;
+const builtInCatalog: Catalog = catalogData;
 
 /**
  * A machine-readable rejection record (FR-007): the node path, the violated
@@ -76,6 +76,14 @@ export interface RenderOptions {
    * absent the render proceeds under the renderer's own catalog.
    */
   readonly catalogSchemaVersion?: string;
+  /**
+   * The catalog to validate and render against (spec 032): a value from
+   * `createCatalog`, or absent for the built-in generated catalog — the
+   * default path, byte-for-byte the pre-032 behavior. Membership, prop
+   * constraints, `type`-prop pinning and the version-skew gate all read
+   * this catalog in use; it is never half-applied (032 FR-011).
+   */
+  readonly catalog?: Catalog;
 }
 
 /**
@@ -213,6 +221,7 @@ function buildNode(
   path: string,
   doc: Document,
   onAction: ((event: ActionEvent) => void) | undefined,
+  entries: Readonly<Record<string, CatalogEntry>>,
 ): Element {
   const element = doc.createElement(node.component);
   const props = node.props ?? {};
@@ -239,7 +248,7 @@ function buildNode(
     // Declaratively neutralize a form-submitting default when the catalog
     // types this component's `type` prop and the spec left it unset: pin it
     // to "button" so no native submit path runs alongside the action.
-    const typeConstraint = componentEntries[node.component]?.props['type'];
+    const typeConstraint = entries[node.component]?.props['type'];
     if (
       typeConstraint?.type === 'enum' &&
       typeConstraint.values?.includes('button') === true &&
@@ -258,6 +267,7 @@ function buildNode(
           `${path}.slots.${slotName}[${String(index)}]`,
           doc,
           onAction,
+          entries,
         );
         if (slotName !== '') {
           childElement.setAttribute('slot', slotName);
@@ -281,12 +291,15 @@ interface PreparedSpec {
 }
 
 /** The fail-closed version-skew diagnostic (FR-012/S13), or null when supported. */
-function versionDiagnostic(declared: string | undefined): RenderDiagnostic | null {
-  if (declared === undefined || declared === catalogData.catalogSchemaVersion) {
+function versionDiagnostic(
+  declared: string | undefined,
+  supported: string,
+): RenderDiagnostic | null {
+  if (declared === undefined || declared === supported) {
     return null;
   }
   return {
-    message: `spec declares catalog schema version "${declared}"; this renderer supports "${catalogData.catalogSchemaVersion}"`,
+    message: `spec declares catalog schema version "${declared}"; this renderer supports "${supported}"`,
     path: 'spec.catalogSchemaVersion',
     rule: 'unsupported-version',
     value: declared,
@@ -303,6 +316,7 @@ function prepare(
   input: unknown,
   budgets: RenderBudgets,
   optionsVersion: string | undefined,
+  catalog: Catalog,
 ): PreparedSpec {
   const { data, issues } = toPlainData(input, ABSOLUTE_MAX_BYTES);
   if (issues.length > 0) {
@@ -324,7 +338,7 @@ function prepare(
       delete record['catalogSchemaVersion'];
     }
   }
-  const skew = versionDiagnostic(declaredVersion);
+  const skew = versionDiagnostic(declaredVersion, catalog.catalogSchemaVersion);
   if (skew !== null) {
     return { diagnostics: [skew], spec: undefined as unknown as UiSpec };
   }
@@ -342,7 +356,7 @@ function prepare(
       spec: undefined as unknown as UiSpec,
     };
   }
-  const report = validatePlainData(data);
+  const report = validatePlainData(data, catalog);
   if (!report.ok || report.spec === undefined) {
     return {
       diagnostics: report.issues.map(toDiagnostic),
@@ -377,12 +391,15 @@ function toDiagnostic(issue: {
  */
 export function renderUiSpec(input: unknown, options: RenderOptions): RenderResult {
   const budgets: RenderBudgets = { ...DEFAULT_RENDER_BUDGETS, ...options.budgets };
-  const prepared = prepare(input, budgets, options.catalogSchemaVersion);
+  const catalog = options.catalog ?? builtInCatalog;
+  const prepared = prepare(input, budgets, options.catalogSchemaVersion, catalog);
   if (prepared.diagnostics.length > 0) {
     return { diagnostics: prepared.diagnostics, ok: false };
   }
   const doc = ownerDocument(options.surface);
-  options.surface.replaceChildren(buildNode(prepared.spec.root, 'root', doc, options.onAction));
+  options.surface.replaceChildren(
+    buildNode(prepared.spec.root, 'root', doc, options.onAction, catalog.components),
+  );
   return { diagnostics: [], ok: true };
 }
 
@@ -411,6 +428,9 @@ export function createStreamingRenderer(
   options: RenderOptions & { readonly actions?: readonly string[] },
 ): StreamingRenderer {
   const budgets: RenderBudgets = { ...DEFAULT_RENDER_BUDGETS, ...options.budgets };
+  // The catalog in use is fixed at creation (032 S16): every pushed chunk
+  // validates and renders against the same catalog for the stream's life.
+  const catalog = options.catalog ?? builtInCatalog;
   const doc = ownerDocument(options.surface);
   const declaredActions = options.actions ?? [];
   let accumulatedBytes = 0;
@@ -418,7 +438,10 @@ export function createStreamingRenderer(
   // The version-skew gate (FR-012/S13) applies to a stream up front: an
   // unsupported catalog schema version halts every push before any chunk
   // attaches, so future or laxer chunks can never render.
-  let halted: RenderDiagnostic | null = versionDiagnostic(options.catalogSchemaVersion);
+  let halted: RenderDiagnostic | null = versionDiagnostic(
+    options.catalogSchemaVersion,
+    catalog.catalogSchemaVersion,
+  );
 
   return {
     close(): void {
@@ -451,7 +474,7 @@ export function createStreamingRenderer(
         };
         return { diagnostics: [halted], ok: false };
       }
-      const report = validatePlainData(data);
+      const report = validatePlainData(data, catalog);
       if (!report.ok || report.spec === undefined) {
         // FR-008: an invalid chunk halts the stream fail-closed; its subtree
         // never attaches and previously validated content remains.
@@ -475,7 +498,9 @@ export function createStreamingRenderer(
       }
       accumulatedBytes += chunkBytes;
       accumulatedNodes += state.nodes;
-      options.surface.appendChild(buildNode(report.spec.root, 'root', doc, options.onAction));
+      options.surface.appendChild(
+        buildNode(report.spec.root, 'root', doc, options.onAction, catalog.components),
+      );
       return { diagnostics: [], ok: true };
     },
   };
