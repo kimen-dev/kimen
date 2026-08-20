@@ -48,5 +48,13 @@ adapters for [A2UI](/docs/guides/a2ui/) and
 [MCP Apps](/docs/guides/mcp-apps/), where a Kimen surface reaches an
 MCP host as a self-contained `ui://` resource.
 
+To configure the model itself, `@kimen/emitter` derives the guidance
+artifacts from the catalog in use: a system prompt carrying each
+component's usage guidance verbatim, a catalog-specialized JSON Schema
+with provider-strict lowerings, and a provider-neutral tool definition —
+plus the normalize-and-repair helpers that close the reliability loop. See
+[Emitting specs with any LLM](/docs/guides/emitting-specs/).
+
 llms.txt tells a model what exists; the catalog constrains what it may
-build. Shipping both is the point.
+build; the emitter teaches any model to build it. Shipping all three is
+the point.

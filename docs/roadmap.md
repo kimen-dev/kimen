@@ -54,7 +54,19 @@ declaring the exact protocol versions it supports in its `COMPAT.md`.
 Adapters are disposable by design: protocol churn is absorbed in the adapter
 without touching the core. AG-UI and json-render adapters remain planned.
 
-## 6. v1.0.0
+## 6. Emitter kit (shipped)
+
+`@kimen/emitter` closes the loop from the model side: from any catalog —
+built-in or registered — it derives a deterministic system prompt (usage
+guidance verbatim plus a validated example), a catalog-specialized JSON
+Schema with provider-strict lowerings (`draft-2020-12`, `openai-strict`
+with enforced provider limits, recursion-free `anthropic-strict`), and a
+provider-neutral tool definition; `normalizeEmission` and `repairPrompt`
+close the validate-once-repair-once reliability loop. Everything it
+produces is advisory: the validation boundary and the guarded renderer
+remain the only enforcement points.
+
+## 7. v1.0.0
 
 Publication to npm with trusted publishing and signed provenance; catalog and
 llms.txt versioned alongside the public API. The
@@ -67,6 +79,7 @@ Follow progress through issues and pull requests.
 
 <!-- kimen:capabilities:roadmap-status:start -->
 - **available** — Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail
+- **available** — Emitter kit: model-agnostic prompt, catalog-specialized JSON Schema and tool definition so any LLM emits valid specs, with a single-round repair loop
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
 - **hardening** — Changed-core mutation quality gate in hardening
 - **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer

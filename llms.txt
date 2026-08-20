@@ -2964,6 +2964,20 @@ Entry points:
 - `DEFAULT_RENDER_BUDGETS`: The declared render budgets (maxDepth 32, maxNodes 512, maxBytes 262144). A spec exactly at a budget passes; one beyond it is rejected before any node attaches. Hosts may tighten them via options.budgets; the renderer never renders past them. Standalone validation has its own ceilings, VALIDATION_MAX_BYTES (262144 UTF-8 bytes, overridable per call with maxBytes) and VALIDATION_MAX_DEPTH (256).
 - `catalogData`: The generated catalog document itself: one entry per published ki-* element with typed props, events, slots and when-to-use guidance, plus the elements version it derives from. Its schema version is exported as CATALOG_SCHEMA_VERSION.
 
+### @kimen/emitter
+
+Kimen emitter kit: model-agnostic guidance artifacts (prompt, catalog-specialized JSON Schema with provider lowerings, tool definition) plus emission ingest helpers, derived deterministically from the neutral catalog. Advisory reliability tooling — validation and the guarded renderer remain the only enforcement points (spec 033).
+
+When to use: Configure ANY LLM to emit valid Kimen UI specs: derive a system prompt, a catalog-specialized JSON Schema (with provider-strict lowerings) or a tool definition from the catalog in use — built-in or registered — and close the reliability loop with normalization and a single-round repair message.
+When NOT to use: Enforcement: the artifacts are advisory. Validation and rendering stay in @kimen/catalog; hosts that already emit valid specs need nothing from this package.
+
+Entry points:
+- `catalogPrompt(catalog, options?) => Derivation<string>`: Model-facing prompt: format rules, every component's when-to-use and when-NOT-to-use guidance verbatim, props with enums inline, and one example spec that validates against the same catalog. The universal fallback — works with any model, no structured-output support required.
+- `uiSpecJsonSchema(catalog, options?) => Derivation<JsonSchema>`: The neutral UI-spec format specialized to the catalog as a JSON Schema document: one branch per component, closed props and enums, closed objects everywhere. Targets: draft-2020-12 (default), openai-strict (all-required closed objects, recursion via $ref, documented provider limits enforced with named offenders), anthropic-strict (recursion-free, node tree unrolled to a bounded depth). Deterministic and version-stamped; fail-closed on skew, bad subsets and exceeded limits — never a silent truncation.
+- `uiSpecTool(catalog, options?) => Derivation<UiSpecTool>`: Provider-neutral tool definition { name: 'emit_ui', description, inputSchema } wrapping exactly the lowered schema for the same options; maps mechanically onto any provider's tool or function surface.
+- `normalizeEmission(value) => unknown`: Strips the placeholders strict-mode all-required schemas force a model to emit (null-valued props, null action bindings, empty props containers) and touches nothing else. Pure cleanup over a fresh clone; output is untrusted until validateUiSpec passes.
+- `repairPrompt(report) => string | null`: Formats a failed ValidationReport into ONE corrective message naming every issue's code, path and offender, or null when the report is ok. The single-round-then-fail-closed policy is fixed.
+
 ### @kimen/adapter-a2ui
 
 Kimen adapter for A2UI: disposable by design (constitution Art. VIII). Translates declarative A2UI messages into the neutral catalog and renders them only through the guarded renderer. Supported protocol versions live in COMPAT.md, versioned with the adapter.
