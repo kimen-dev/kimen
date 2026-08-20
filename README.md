@@ -92,6 +92,16 @@ executes from spec data — and the protocol adapters translate A2UI messages
 and MCP Apps surfaces into that same path. Adapters are disposable by design;
 the catalog and components are the durable assets.
 
+The boundary is open on both sides: `createCatalog` registers an
+application's own components behind a data-only JSON facade (validated as
+hostile input, deep-frozen, composable with the built-ins), and
+`@kimen/emitter` derives from any catalog the guidance an LLM integration
+needs — a system prompt with the usage guidance verbatim, a
+catalog-specialized JSON Schema with provider-strict lowerings, and a
+provider-neutral tool definition — plus the normalize-and-repair helpers
+that close the reliability loop. Emitter artifacts are advisory; validation
+and the guarded renderer stay the only enforcement points.
+
 ## Packages
 
 | Package | Status | What it is |
@@ -101,6 +111,7 @@ the catalog and components are the durable assets.
 | [`@kimen/catalog`](./packages/catalog) | Implemented, unpublished | Neutral catalog schema + guarded renderer (`validateUiSpec`, `renderUiSpec`, streaming) |
 | [`@kimen/adapter-a2ui`](./packages/adapter-a2ui) | Implemented, unpublished | A2UI protocol adapter over the guarded renderer |
 | [`@kimen/adapter-mcp-apps`](./packages/adapter-mcp-apps) | Implemented, unpublished | MCP Apps adapter: Kimen surfaces as self-contained `ui://` resources |
+| [`@kimen/emitter`](./packages/emitter) | Implemented, unpublished | Emitter kit: prompt, provider-lowered JSON Schema and tool definition from any catalog, plus normalize + single-round repair |
 | [`@kimen/react`](./packages/react) | Implemented, unpublished | Generated React bindings: typed props, event callbacks, controlled forms |
 | [`@kimen/vue`](./packages/vue) | Implemented, unpublished | Generated Vue 3 bindings with v-model on the form components |
 | [`@kimen/angular`](./packages/angular) | Implemented, unpublished | Generated Angular standalone components + ControlValueAccessors (APF, Angular ^22) |
@@ -155,6 +166,7 @@ everything else: see [`CONTRIBUTING.md`](./CONTRIBUTING.md). Security reports:
 
 <!-- kimen:capabilities:root-readme-status:start -->
 - **available** — Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail
+- **available** — Emitter kit: model-agnostic prompt, catalog-specialized JSON Schema and tool definition so any LLM emits valid specs, with a single-round repair loop
 - **available** — Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
 - **hardening** — Changed-core mutation quality gate in hardening

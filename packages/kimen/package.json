@@ -36,6 +36,11 @@
         "text": "Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail"
       },
       {
+        "id": "emitter-kit",
+        "state": "available",
+        "text": "Emitter kit: model-agnostic prompt, catalog-specialized JSON Schema and tool definition so any LLM emits valid specs, with a single-round repair loop"
+      },
+      {
         "id": "framework-wrappers",
         "state": "available",
         "text": "Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated"

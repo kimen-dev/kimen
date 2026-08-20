@@ -46,6 +46,38 @@
       ]
     },
     {
+      "directory": "packages/emitter",
+      "whenToUse": "Configure ANY LLM to emit valid Kimen UI specs: derive a system prompt, a catalog-specialized JSON Schema (with provider-strict lowerings) or a tool definition from the catalog in use — built-in or registered — and close the reliability loop with normalization and a single-round repair message.",
+      "whenNotToUse": "Enforcement: the artifacts are advisory. Validation and rendering stay in @kimen/catalog; hosts that already emit valid specs need nothing from this package.",
+      "entryPoints": [
+        {
+          "name": "catalogPrompt",
+          "signature": "catalogPrompt(catalog, options?) => Derivation<string>",
+          "summary": "Model-facing prompt: format rules, every component's when-to-use and when-NOT-to-use guidance verbatim, props with enums inline, and one example spec that validates against the same catalog. The universal fallback — works with any model, no structured-output support required."
+        },
+        {
+          "name": "uiSpecJsonSchema",
+          "signature": "uiSpecJsonSchema(catalog, options?) => Derivation<JsonSchema>",
+          "summary": "The neutral UI-spec format specialized to the catalog as a JSON Schema document: one branch per component, closed props and enums, closed objects everywhere. Targets: draft-2020-12 (default), openai-strict (all-required closed objects, recursion via $ref, documented provider limits enforced with named offenders), anthropic-strict (recursion-free, node tree unrolled to a bounded depth). Deterministic and version-stamped; fail-closed on skew, bad subsets and exceeded limits — never a silent truncation."
+        },
+        {
+          "name": "uiSpecTool",
+          "signature": "uiSpecTool(catalog, options?) => Derivation<UiSpecTool>",
+          "summary": "Provider-neutral tool definition { name: 'emit_ui', description, inputSchema } wrapping exactly the lowered schema for the same options; maps mechanically onto any provider's tool or function surface."
+        },
+        {
+          "name": "normalizeEmission",
+          "signature": "normalizeEmission(value) => unknown",
+          "summary": "Strips the placeholders strict-mode all-required schemas force a model to emit (null-valued props, null action bindings, empty props containers) and touches nothing else. Pure cleanup over a fresh clone; output is untrusted until validateUiSpec passes."
+        },
+        {
+          "name": "repairPrompt",
+          "signature": "repairPrompt(report) => string | null",
+          "summary": "Formats a failed ValidationReport into ONE corrective message naming every issue's code, path and offender, or null when the report is ok. The single-round-then-fail-closed policy is fixed."
+        }
+      ]
+    },
+    {
       "directory": "packages/adapter-a2ui",
       "whenToUse": "Your agent runtime speaks the A2UI protocol and its surfaces should render as Kimen components with the guardrail enforced.",
       "whenNotToUse": "The agent can emit neutral Kimen UI specs directly (use @kimen/catalog alone), or the host is an MCP Apps client (use @kimen/adapter-mcp-apps).",

@@ -98,6 +98,10 @@ export default tseslint.config(
               onlyDependOnLibsWithTags: ['scope:tokens'],
             },
             {
+              sourceTag: 'scope:emitter',
+              onlyDependOnLibsWithTags: ['scope:catalog'],
+            },
+            {
               sourceTag: 'scope:adapter',
               onlyDependOnLibsWithTags: ['scope:catalog', 'scope:elements'],
             },

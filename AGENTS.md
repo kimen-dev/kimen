@@ -51,7 +51,7 @@ merges.
 - `/sandbox/`: Art. XI unattended-loop sandbox (credential-free, egress
   allowlist); see `sandbox/README.md`
 - `/scripts/gates/`: the deterministic gate suite (Art. X)
-- `packages/`: `tokens`, `elements`, `catalog`, `adapter-a2ui`,
+- `packages/`: `tokens`, `elements`, `catalog`, `emitter`, `adapter-a2ui`,
   `adapter-mcp-apps`, `kimen` (placeholder)
 - `/docs/`: public documentation — `roadmap.md`, `releasing.md`, `guides/`
   (end-to-end GenUI guides), `migrations/`, `capabilities.json` (the
