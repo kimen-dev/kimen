@@ -53,6 +53,23 @@
       "plannedText": ""
     },
     {
+      "id": "consumer-catalog-registration",
+      "state": "available",
+      "evidence": ["build", "test"],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail",
+      "plannedText": ""
+    },
+    {
       "id": "guarded-renderer",
       "state": "available",
       "evidence": ["build", "test"],

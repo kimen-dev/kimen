@@ -138,11 +138,79 @@ Every rejection is a `RenderDiagnostic` — node path, violated rule and
 offending value — pure data, safe to display because a host renders it as
 text.
 
+## Registering your own components
+
+`createCatalog` opens the same guardrail to your components (spec 032): you
+describe them behind a data-only JSON facade — the exact entry shape the
+generated catalog uses — and receive an immutable catalog that
+`validateUiSpec`, `renderUiSpec` and `createStreamingRenderer` accept
+through their `catalog` option. The catalog carries contracts, never
+implementations: your bundle keeps `customElements.define` ownership.
+
+```ts
+import { catalogData, createCatalog, renderUiSpec } from '@kimen/catalog';
+
+const created = createCatalog(
+  {
+    components: {
+      'acme-kpi-card': {
+        tag: 'acme-kpi-card',
+        description: 'A KPI card for Acme dashboards.',
+        whenToUse: 'Show one operational metric with its trend.',
+        whenNotToUse: 'Tabular breakdowns of many metrics.',
+        props: {
+          tone: {
+            type: 'enum',
+            values: ['ok', 'warn', 'critical'],
+            description: 'Semantic severity of the metric.',
+          },
+        },
+        slots: { '': 'The metric label.' },
+        events: {},
+      },
+    },
+  },
+  { extend: catalogData }, // omit to build a standalone catalog
+);
+if (created.ok) {
+  renderUiSpec(spec, { surface, catalog: created.catalog });
+}
+```
+
+The definition is untrusted input and crosses the same purity wall as UI
+specs: unknown keys, prototype-pollution keys, non-data values, accessor
+properties, cycles and over-budget payloads are rejected naming the
+offender (a `RegistrationIssue`: code, path, value). On top of the wall,
+registration enforces its own rules — tags must be conservative
+custom-element names (lowercase ASCII, hyphen required, SVG/MathML reserved
+names excluded), collisions with the extended catalog are hard errors
+(built-ins are never overridden or shadowed), usage guidance
+(`description`, `whenToUse`, `whenNotToUse`) is mandatory because it is
+what an agent selects components by, and enum constraints need non-empty
+values. `createCatalog` never throws on hostile input: it returns
+`{ ok: false, issues }`, and no partial catalog escapes.
+
+The returned catalog is deeply frozen — later mutation attempts throw in
+strict mode and can never alter validation or render outcomes. Every
+guardrail invariant applies to registered components identically: unknown
+components and props are rejected relative to the catalog in use, URL-named
+props obey the scheme allowlist, budgets and the version-skew gate fail
+closed on the complete and streaming paths alike, and the spec format still
+exposes no styling surface — your identity lives in your components and
+your token layer. Accessibility of registered components remains their
+author's contract: the catalog transports your guidance; it cannot audit
+your semantics.
+
+When no `catalog` option is supplied everything behaves exactly as before:
+the built-in generated catalog is the boundary and unknown tags — including
+your `acme-*` ones — are rejected.
+
 See [The UI-spec format guide](../../docs/guides/ui-spec.md) for the
 complete spec format, and the [roadmap](../../docs/roadmap.md) for project
 context.
 
 <!-- kimen:capabilities:catalog-readme-status:start -->
+- **available** — Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail
 - **available** — Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
 - **hardening** — Changed-core mutation quality gate in hardening

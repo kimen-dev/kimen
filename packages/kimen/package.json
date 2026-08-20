@@ -31,6 +31,11 @@
     },
     "claims": [
       {
+        "id": "consumer-catalog-registration",
+        "state": "available",
+        "text": "Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail"
+      },
+      {
         "id": "framework-wrappers",
         "state": "available",
         "text": "Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated"

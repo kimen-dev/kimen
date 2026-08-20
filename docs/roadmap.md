@@ -39,7 +39,13 @@ emit (components, props, declared actions, when-to-use metadata),
 `validateUiSpec` at the GenUI boundary, and the guarded renderer
 (`renderUiSpec`) that renders only catalog components, fail-closed. The
 guardrail is tested as a security boundary; streaming/partial specs render
-progressively through `createStreamingRenderer`.
+progressively through `createStreamingRenderer`. Consumer catalog
+registration is implemented on the same boundary: `createCatalog` accepts a
+data-only definition of an application's own components — validated as
+hostile input through the same purity wall, deep-frozen, collision-checked
+against the built-ins — and every validation and render entry point takes
+the resulting catalog explicitly, with the built-in catalog as the
+unchanged default.
 
 ## 5. Protocol adapters (shipped: A2UI, MCP Apps)
 
@@ -71,6 +77,7 @@ and adapters is an open decision — see [releasing.md](./releasing.md).
 Follow progress through issues and pull requests.
 
 <!-- kimen:capabilities:roadmap-status:start -->
+- **available** — Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail
 - **available** — Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
 - **hardening** — Changed-core mutation quality gate in hardening

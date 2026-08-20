@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@types/node": "26.1.2",
+    "fast-check": "4.9.0",
     "happy-dom": "20.11.1",
     "vitest": "4.1.10"
   },
@@ -64,6 +65,11 @@
       "end": "kimen:capabilities:catalog-package-status:end"
     },
     "claims": [
+      {
+        "id": "consumer-catalog-registration",
+        "state": "available",
+        "text": "Consumer catalog registration: your own components behind a JSON facade, validated and rendered through the same fail-closed guardrail"
+      },
       {
         "id": "framework-wrappers",
         "state": "available",

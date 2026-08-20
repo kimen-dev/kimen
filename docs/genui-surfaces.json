@@ -18,17 +18,22 @@
         {
           "name": "validateUiSpec",
           "signature": "validateUiSpec(input, options?) => ValidationReport",
-          "summary": "Accepts or rejects an agent-emitted UI spec against the generated catalog before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, unknown-slot, undeclared-action, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value."
+          "summary": "Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, unknown-slot, undeclared-action, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value."
         },
         {
           "name": "renderUiSpec",
           "signature": "renderUiSpec(input, options) => RenderResult",
-          "summary": "Validates and renders a spec into options.surface through the guarded renderer: only catalog components render, only actions declared in the spec dispatch (delivered as data to options.onAction), unknown props are rejected and no code path executes from spec data. Failures come back as diagnostics naming rule, path and value; nothing attaches on failure."
+          "summary": "Validates and renders a spec into options.surface through the guarded renderer: only components of the catalog in use render (options.catalog selects it; absent, the built-in catalog applies), only actions declared in the spec dispatch (delivered as data to options.onAction), unknown props are rejected and no code path executes from spec data. Failures come back as diagnostics naming rule, path and value; nothing attaches on failure."
         },
         {
           "name": "createStreamingRenderer",
           "signature": "createStreamingRenderer(options) => StreamingRenderer",
-          "summary": "Progressive rendering over a streamed spec: each push(node) validates one top-level subtree and attaches it only when fully valid; an invalid node fails closed while previously attached content remains, and the render budgets bind the accumulated stream."
+          "summary": "Progressive rendering over a streamed spec: each push(node) validates one top-level subtree and attaches it only when fully valid; an invalid node fails closed while previously attached content remains, and the render budgets bind the accumulated stream. The catalog in use is fixed at creation via options.catalog."
+        },
+        {
+          "name": "createCatalog",
+          "signature": "createCatalog(definition, options?) => CatalogCreationResult",
+          "summary": "Registers your own components behind a data-only JSON facade — the exact entry shape of the generated catalog (tag, usage guidance, typed prop constraints, slots, events) — and returns a deeply frozen catalog that validateUiSpec and both renderers accept via options.catalog. The definition is untrusted input: it crosses the same purity wall as UI specs, tags must be conservative custom-element names, collisions with the extended catalog fail closed, usage guidance is mandatory, and every rejection is a RegistrationIssue naming code, path and offender. Pass { extend: catalogData } to compose with the built-in components, or omit it for a standalone catalog."
         },
         {
           "name": "DEFAULT_RENDER_BUDGETS",
