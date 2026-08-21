@@ -36,8 +36,8 @@
     "@stencil/react-output-target": "1.6.1"
   },
   "peerDependencies": {
-    "react": "^18 || ^19",
-    "react-dom": "^18 || ^19"
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@types/node": "26.1.2",
