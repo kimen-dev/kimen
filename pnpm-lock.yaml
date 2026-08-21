@@ -288,8 +288,8 @@ importers:
         specifier: workspace:*
         version: link:../elements
       '@stencil/react-output-target':
-        specifier: 1.6.1
-        version: 1.6.1(@stencil/core@4.43.5)(@types/react@19.1.10)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: 1.6.2
+        version: 1.6.2(@stencil/core@4.43.5)(@types/react@19.1.10)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
     devDependencies:
       '@types/node':
         specifier: 26.1.2
@@ -3312,6 +3312,13 @@ packages:
 
   '@stencil/react-output-target@1.6.1':
     resolution: {integrity: sha512-QcIZ7tKC9ZsZ+tZiyMljIRCTDOxMi2XfyPOk8ae4VLJKmBxqcoh2paKYiqCx8n0QNlPaPrtWmVrvalN3+aihhg==}
+    peerDependencies:
+      '@stencil/core': '>=3 || >=4.0.0 || ^5.0.0 || >=5.0.0-alpha.17 <5.0.0-next.0'
+      react: ^18 || ^19
+      react-dom: ^18 || ^19
+
+  '@stencil/react-output-target@1.6.2':
+    resolution: {integrity: sha512-hnN0EkF/aWIqIUZhJ4rUszqKzzS8TSThSXNxkK9xLtlKIUef/sep8ekRlHOelq7RiUBPP4eTBv6d5N3X4T35KQ==}
     peerDependencies:
       '@stencil/core': '>=3 || >=4.0.0 || ^5.0.0 || >=5.0.0-alpha.17 <5.0.0-next.0'
       react: ^18 || ^19
@@ -10457,18 +10464,6 @@ snapshots:
       '@rollup/rollup-win32-arm64-msvc': 4.44.0
       '@rollup/rollup-win32-x64-msvc': 4.44.0
 
-  '@stencil/react-output-target@1.6.1(@stencil/core@4.43.5)(@types/react@19.1.10)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
-    dependencies:
-      '@lit/react': 1.0.8(@types/react@19.1.10)
-      '@stencil/core': 4.43.5
-      html-react-parser: 5.2.17(@types/react@19.1.10)(react@19.1.1)
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
-      react-style-stringify: 1.2.0
-      ts-morph: 28.0.0
-    transitivePeerDependencies:
-      - '@types/react'
-
   '@stencil/react-output-target@1.6.1(@stencil/core@4.43.5)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@lit/react': 1.0.8(@types/react@19.2.18)
@@ -10476,6 +10471,18 @@ snapshots:
       html-react-parser: 5.2.17(@types/react@19.2.18)(react@19.2.8)
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
+      react-style-stringify: 1.2.0
+      ts-morph: 28.0.0
+    transitivePeerDependencies:
+      - '@types/react'
+
+  '@stencil/react-output-target@1.6.2(@stencil/core@4.43.5)(@types/react@19.1.10)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+    dependencies:
+      '@lit/react': 1.0.8(@types/react@19.1.10)
+      '@stencil/core': 4.43.5
+      html-react-parser: 5.2.17(@types/react@19.1.10)(react@19.1.1)
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
       react-style-stringify: 1.2.0
       ts-morph: 28.0.0
     transitivePeerDependencies:
