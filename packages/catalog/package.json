@@ -30,9 +30,9 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@types/node": "26.1.2",
+    "@types/node": "26.2.0",
     "fast-check": "4.9.0",
-    "happy-dom": "20.11.1",
+    "happy-dom": "20.11.2",
     "vitest": "4.1.10"
   },
   "nx": {
