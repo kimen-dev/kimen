@@ -55,11 +55,16 @@ export async function checkPackaging({
   const inventory = await discoverInventory({ workspaceRoot: root });
   const plan = createAttwPlan(inventory);
 
+  // Every publishable workspace package (the release workflow claims full
+  // coverage — review finding: emitter and the two adapters were unlinted).
   for (const packageDirectory of [
     'packages/tokens',
     'packages/elements',
     'packages/catalog',
     'packages/kimen',
+    'packages/emitter',
+    'packages/adapter-a2ui',
+    'packages/adapter-mcp-apps',
   ]) {
     execute('pnpm', ['exec', 'publint', packageDirectory], root);
   }
@@ -94,6 +99,15 @@ export async function checkPackaging({
     root,
   );
   execute('pnpm', ['exec', 'attw', '--pack', 'packages/catalog', '--profile', 'esm-only'], root);
+  // Single-entrypoint ESM packages: type-resolution correctness for the
+  // emitter kit and both protocol adapters (review finding).
+  for (const packageDirectory of [
+    'packages/emitter',
+    'packages/adapter-a2ui',
+    'packages/adapter-mcp-apps',
+  ]) {
+    execute('pnpm', ['exec', 'attw', '--pack', packageDirectory, '--profile', 'esm-only'], root);
+  }
   execute(
     'pnpm',
     [

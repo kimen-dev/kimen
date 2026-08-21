@@ -5,9 +5,12 @@ description: Using Kimen components in React 19, Vue 3, Angular and plain HTML �
 
 Kimen components are standard custom elements, so they work in React, Vue,
 Angular — and no framework at all — **without wrappers**. Generated
-framework wrappers (`@kimen/react`, …) are planned but not published yet;
-the patterns on this page are the supported integration path today, and they
-keep working unchanged after wrappers ship.
+framework wrappers now exist for the three major frameworks —
+`@kimen/react`, `@kimen/vue` and `@kimen/angular` (typed props, native
+event bindings, and the framework form idiom: controlled props / `v-model`
+/ value accessors) — implemented and gate-verified, unpublished like every
+pre-v1 package. The no-wrapper patterns on this page remain fully
+supported; wrappers add typing and idiom, never a requirement.
 
 Every setup is the same two steps, regardless of framework:
 

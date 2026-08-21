@@ -1,0 +1,63 @@
+{
+  "name": "@kimen/angular",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Generated Angular bindings for the Kimen ki-* web components (spec 034): standalone typed components whose ki-* events bind natively by DOM event name ((ki-dismiss)=\"...\", typed under strict templates) and ControlValueAccessors wiring the form components to template-driven and reactive forms over their re-dispatched native events. Built as an Angular Package Format library; client-side rendering; generated from the same source of truth as every other Kimen artifact and never hand-edited.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimen-dev/kimen.git",
+    "directory": "packages/angular"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "ng-packagr -p ng-package.json -c tsconfig.lib.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@kimen/elements": "workspace:*",
+    "tslib": "^2.8.1"
+  },
+  "peerDependencies": {
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "rxjs": "^7.8.0"
+  },
+  "devDependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@types/node": "26.1.2",
+    "@vitest/browser-playwright": "4.1.10",
+    "ng-packagr": "22.1.1",
+    "playwright": "1.62.1",
+    "rxjs": "7.8.2",
+    "vitest": "4.1.10"
+  },
+  "nx": {
+    "tags": [
+      "scope:wrapper"
+    ],
+    "targets": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [
+          "{projectRoot}/**/*"
+        ],
+        "outputs": [
+          "{projectRoot}/dist"
+        ]
+      },
+      "test": {
+        "dependsOn": [
+          "build"
+        ]
+      }
+    }
+  }
+}

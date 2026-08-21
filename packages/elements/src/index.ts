@@ -67,3 +67,12 @@ export { KiTabPanel } from './components/ki-tab-panel/ki-tab-panel.js';
 export { KiSelect } from './components/ki-select/ki-select.js';
 /** @deprecated Use `@kimen/elements/ki-option` instead. */
 export { KiOption } from './components/ki-option/ki-option.js';
+
+// Wrapper-contract event types (spec 034): the generated framework wrappers
+// import these `Ki*CustomEvent` generics from the package root. Type-only
+// re-exports of the Stencil-generated interfaces — current API, not part of
+// the deprecated facade above, and never a component-registry path (the
+// component-inventory gate enumerates exactly this set).
+export type { KiAlertCustomEvent } from './components.js';
+export type { KiDialogCustomEvent } from './components.js';
+export type { KiTabsCustomEvent } from './components.js';

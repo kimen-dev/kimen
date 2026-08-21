@@ -128,7 +128,10 @@ test('pnpm 11 permits only the reviewed native build versions', async () => {
   ]);
 
   assert.match(manifest.packageManager, /^pnpm@11\./u);
-  assert.match(workspace, /^allowBuilds:\n {2}'esbuild@0\.28\.1': true$/mu);
+  // Reviewed-and-DECLINED entries (false) are decisions too: @parcel/watcher
+  // (ng-packagr transitive, spec 034) never runs its native build script.
+  assert.match(workspace, /^ {2}'@parcel\/watcher@2\.6\.0': false$/mu);
+  assert.match(workspace, /^ {2}'esbuild@0\.28\.1': true$/mu);
   assert.match(workspace, /^ {2}'nx@23\.1\.1': true$/mu);
-  assert.doesNotMatch(workspace, /^ {2}(?:esbuild|nx): true$/gmu);
+  assert.doesNotMatch(workspace, /^ {2}(?:@parcel\/watcher|esbuild|nx): (?:true|false)$/gmu);
 });

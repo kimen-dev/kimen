@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -23,6 +24,50 @@ const surfaces = Object.freeze([
 
 const catalog = Object.freeze(['packages/catalog/src/generated/catalog.ts']);
 
+/**
+ * The wrapper file lists derive from the committed Custom Elements Manifest
+ * (spec 034, Art. I: one derivation source) — per-component modules for the
+ * React and Vue wrappers, the proxies/accessors set for Angular, plus the
+ * hand-written entry shells (tracked and clean like everything else under
+ * the scopes; regeneration never touches them).
+ */
+const wrapperTags = (() => {
+  const manifest = JSON.parse(
+    readFileSync(
+      new URL('../../packages/elements/generated/custom-elements.json', import.meta.url),
+      'utf8',
+    ),
+  );
+  const tags = [];
+  for (const module of manifest.modules ?? []) {
+    for (const declaration of module.declarations ?? []) {
+      if (declaration.customElement === true && typeof declaration.tagName === 'string') {
+        tags.push(declaration.tagName);
+      }
+    }
+  }
+  if (tags.length === 0) {
+    throw new Error('wrappers sync group: the custom-elements manifest lists no components');
+  }
+  return tags.sort();
+})();
+
+const wrappers = Object.freeze([
+  ...wrapperTags.map((tag) => `packages/react/src/${tag}.ts`),
+  'packages/react/src/components.ts',
+  'packages/react/src/index.ts',
+  ...wrapperTags.map((tag) => `packages/vue/src/${tag}.ts`),
+  'packages/vue/src/index.ts',
+  'packages/angular/src/directives/angular-component-lib/utils.ts',
+  'packages/angular/src/directives/boolean-value-accessor.ts',
+  'packages/angular/src/directives/index.ts',
+  'packages/angular/src/directives/proxies.ts',
+  'packages/angular/src/directives/select-value-accessor.ts',
+  'packages/angular/src/directives/text-value-accessor.ts',
+  'packages/angular/src/directives/value-accessor.ts',
+  'packages/angular/src/index.ts',
+]);
+
 export const generatedGroups = Object.freeze({
   tokens: Object.freeze({
     required: tokens,
@@ -39,6 +84,10 @@ export const generatedGroups = Object.freeze({
   catalog: Object.freeze({
     required: catalog,
     scopes: Object.freeze(['packages/catalog/src/generated']),
+  }),
+  wrappers: Object.freeze({
+    required: wrappers,
+    scopes: Object.freeze(['packages/react/src', 'packages/vue/src', 'packages/angular/src']),
   }),
 });
 
@@ -62,7 +111,7 @@ export function validateGeneratedSync({ root, group, executeGit = git }) {
   const contract = generatedGroups[group];
   if (contract === undefined) {
     throw new Error(
-      `generated sync group must be tokens, surfaces or catalog; received ${String(group)}`,
+      `generated sync group must be tokens, surfaces, catalog or wrappers; received ${String(group)}`,
     );
   }
   const required = new Set(contract.required);
@@ -104,7 +153,7 @@ export function runGeneratedSyncCli({
   executeGit = git,
 } = {}) {
   if (arguments_.length !== 1) {
-    throw new Error('usage: check-generated-sync.mjs <tokens|surfaces|catalog>');
+    throw new Error('usage: check-generated-sync.mjs <tokens|surfaces|catalog|wrappers>');
   }
   const result = validateGeneratedSync({ root, group: arguments_[0], executeGit });
   stdout.write(`PASS generated-sync ${result.group}: ${String(result.files)} tracked files\n`);

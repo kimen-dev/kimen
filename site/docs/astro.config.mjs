@@ -63,7 +63,7 @@ export default defineConfig({
             'guides/frameworks',
             {
               label: 'Generative UI',
-              items: ['guides/ui-spec', 'guides/a2ui', 'guides/mcp-apps'],
+              items: ['guides/ui-spec', 'guides/emitting-specs', 'guides/a2ui', 'guides/mcp-apps'],
             },
           ],
         },

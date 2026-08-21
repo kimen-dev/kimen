@@ -1,6 +1,17 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "ignore": ["**/dist/**", "**/generated/**", ".specify/**", ".claude/**"],
+  "ignore": [
+    "**/dist/**",
+    "**/generated/**",
+    ".specify/**",
+    ".claude/**",
+    "packages/react/src/components.ts",
+    "packages/react/src/ki-*.ts",
+    "packages/react/tests/fixtures/**",
+    "packages/vue/src/index.ts",
+    "packages/vue/src/ki-*.ts",
+    "packages/angular/src/directives/**"
+  ],
   "ignoreDependencies": ["husky", "nx", "@kimen/nx-plugin"],
   "workspaces": {
     ".": {

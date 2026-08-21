@@ -24,6 +24,21 @@ const frozenValue = (name, tag) => ({
   from: `./components/${tag}/${tag}.js`,
   replacement: `@kimen/elements/${tag}`,
 });
+/**
+ * Wrapper-contract event types (spec 034): the three `Ki*CustomEvent`
+ * generics the generated framework wrappers import from the package root.
+ * Type-only re-exports of Stencil-generated interfaces — NOT part of the
+ * deprecated legacy facade and never a component-registry path. Exactly
+ * this set is permitted from exactly this module; everything else on the
+ * root stays frozen.
+ */
+export const WRAPPER_CONTRACT_EVENT_TYPES = Object.freeze([
+  'KiAlertCustomEvent',
+  'KiDialogCustomEvent',
+  'KiTabsCustomEvent',
+]);
+const WRAPPER_CONTRACT_MODULE = './components.js';
+
 const frozenType = (name, tag, module = tag) => ({
   name,
   from: `./components/${tag}/${module}.js`,
@@ -540,13 +555,23 @@ export function resolveComponentSubpaths(packageExports, components) {
   return expectedEntries;
 }
 
-/** Only the frozen facade, loader and safe component wildcard are public. */
+/**
+ * Only the frozen facade, loader, safe component wildcard and the two
+ * generated-wrapper resolution subpaths are public. `./components` (the
+ * single-export module) and `./components/*.js` (per-component custom
+ * elements) exist for the spec 034 framework wrappers, whose generated
+ * sources import `@kimen/elements/components/<tag>.js` — they expose the
+ * same dist/components files the `./ki-*` wildcard already made public,
+ * under the path shape the Stencil output targets emit.
+ */
 export function validatePackageExportContract(packageExports) {
   if (!isPlainRecord(packageExports)) {
     throw new TypeError('Package exports must be an object');
   }
   const keys = Object.keys(packageExports).sort(compareText);
-  const expectedKeys = ['.', './ki-*', './loader'].sort(compareText);
+  const expectedKeys = ['.', './components', './components/*.js', './ki-*', './loader'].sort(
+    compareText,
+  );
   const unexpected = keys.filter((key) => !expectedKeys.includes(key));
   const missing = expectedKeys.filter((key) => !keys.includes(key));
   if (unexpected.length > 0) {
@@ -667,6 +692,7 @@ export function validateLegacyRootContract(sourceText) {
   }
 
   const replacements = new Map();
+  const wrapperContractTypes = [];
   for (const statement of sourceFile.statements) {
     if (
       !ts.isExportDeclaration(statement) ||
@@ -680,9 +706,28 @@ export function validateLegacyRootContract(sourceText) {
     }
     const specifier = statement.exportClause.elements[0];
     const name = exportName(specifier);
+    if (statement.moduleSpecifier.text === WRAPPER_CONTRACT_MODULE) {
+      // The wrapper-contract category (spec 034): type-only, from the
+      // Stencil-generated components module, enumerated — never deprecated
+      // (it is current API, not facade), never a value export.
+      if (!statement.isTypeOnly || !WRAPPER_CONTRACT_EVENT_TYPES.includes(name)) {
+        throw new Error(
+          `Legacy root exports an unapproved symbol from ${WRAPPER_CONTRACT_MODULE}: ${name}`,
+        );
+      }
+      wrapperContractTypes.push(name);
+      continue;
+    }
     const replacement = replacementFromModule(statement.moduleSpecifier.text);
     deprecatedReplacement(statement, replacement);
     replacements.set(name, replacement);
+  }
+  const expectedContractTypes = [...WRAPPER_CONTRACT_EVENT_TYPES].sort(compareText);
+  const foundContractTypes = [...wrapperContractTypes].sort(compareText);
+  if (JSON.stringify(foundContractTypes) !== JSON.stringify(expectedContractTypes)) {
+    throw new Error(
+      `Wrapper-contract event types must be exactly ${expectedContractTypes.join(', ')}; found ${foundContractTypes.join(', ') || 'none'}`,
+    );
   }
 
   const contract = {
@@ -690,10 +735,15 @@ export function validateLegacyRootContract(sourceText) {
       ...entry,
       replacement: replacements.get(entry.name),
     })),
-    namedTypes: characterization.namedTypes.map((entry) => ({
-      ...entry,
-      replacement: replacements.get(entry.name),
-    })),
+    namedTypes: characterization.namedTypes
+      // The wrapper-contract types are validated above as their own
+      // enumerated category; the frozen-facade comparison covers only the
+      // deprecated legacy set.
+      .filter((entry) => entry.from !== WRAPPER_CONTRACT_MODULE)
+      .map((entry) => ({
+        ...entry,
+        replacement: replacements.get(entry.name),
+      })),
     typeStars: [],
   };
   if (JSON.stringify(contract) !== JSON.stringify(FROZEN_LEGACY_ROOT)) {

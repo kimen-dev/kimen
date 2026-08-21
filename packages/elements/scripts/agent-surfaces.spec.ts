@@ -692,11 +692,12 @@ describe('agent surfaces', () => {
     );
   });
 
-  it('S2 shipped GenUI sources describe the catalog and both adapters from real exports', async () => {
+  it('S2 shipped GenUI sources describe the catalog, the emitter and both adapters from real exports', async () => {
     const { genUi, packages } = await readWorkspaceGenUi();
 
     expect(genUi.packages.map((entry) => entry.directory)).toEqual([
       'packages/catalog',
+      'packages/emitter',
       'packages/adapter-a2ui',
       'packages/adapter-mcp-apps',
     ]);
@@ -706,6 +707,11 @@ describe('agent surfaces', () => {
         'validateUiSpec',
         'renderUiSpec',
         'createStreamingRenderer',
+        'catalogPrompt',
+        'uiSpecJsonSchema',
+        'uiSpecTool',
+        'normalizeEmission',
+        'repairPrompt',
         'createA2uiAdapter',
         'createKimenSurfaceResource',
         'declareToolSurface',
@@ -716,6 +722,7 @@ describe('agent surfaces', () => {
 
     const section = buildGenUiSection(genUi, packages);
     expect(section).toContain('### @kimen/catalog');
+    expect(section).toContain('### @kimen/emitter');
     expect(section).toContain('### @kimen/adapter-a2ui');
     expect(section).toContain('### @kimen/adapter-mcp-apps');
   });

@@ -14,6 +14,9 @@ minimumReleaseAge: 10080
 # These exact versions need their native binaries for the Nx graph and
 # esbuild-backed tooling; every future version must be approved separately.
 allowBuilds:
+  # ng-packagr transitive; native binding serves watch mode only, which the
+  # one-shot library builds never use — reviewed and DECLINED (spec 034).
+  '@parcel/watcher@2.6.0': false
   'esbuild@0.28.1': true
   'nx@23.1.1': true
 

@@ -8,6 +8,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   type ActionEvent,
+  type Catalog,
+  catalogData,
   createStreamingRenderer,
   DEFAULT_RENDER_BUDGETS,
   renderUiSpec,
@@ -76,6 +78,44 @@ describe('renderUiSpec — only declared props and actions pass', () => {
     const diagnostic = result.diagnostics[0];
     expect(diagnostic?.rule).toBe('unknown-prop');
     expect(diagnostic?.message).toContain('onclick');
+  });
+
+  it('S3 fails closed on an event-handler prop declared by a hand-built catalog, never executing it', () => {
+    // `Catalog` is a structural interface: a catalog that never crossed
+    // createCatalog (e.g. hand-built) could declare an on* prop. The renderer
+    // guard is the last line of defence — the prop must be rejected before any
+    // setAttribute call can compile it into a live inline handler.
+    const hostileCatalog = {
+      catalogSchemaVersion: catalogData.catalogSchemaVersion,
+      components: {
+        'x-evil': {
+          description: 'hostile',
+          events: {},
+          props: { onclick: { description: 'hostile', type: 'string' } },
+          slots: {},
+          tag: 'x-evil',
+          whenNotToUse: 'never',
+          whenToUse: 'never',
+        },
+      },
+    } as unknown as Catalog;
+    let executed = false;
+    (globalThis as unknown as Record<string, unknown>)['__kiPwn'] = () => {
+      executed = true;
+    };
+    try {
+      const result = renderUiSpec(
+        { root: { component: 'x-evil', props: { onclick: 'globalThis.__kiPwn()' } }, version: 1 },
+        { catalog: hostileCatalog, surface },
+      );
+      expect(result.ok).toBe(false);
+      expect(surface.childNodes).toHaveLength(0);
+      expect(result.diagnostics.some((d) => d.rule === 'forbidden-prop-name')).toBe(true);
+      surface.querySelector('x-evil')?.dispatchEvent(new Event('click'));
+      expect(executed).toBe(false);
+    } finally {
+      delete (globalThis as unknown as Record<string, unknown>)['__kiPwn'];
+    }
   });
 
   it('S4 dispatches only the declared action, once, with the data payload', () => {

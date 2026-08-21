@@ -10,6 +10,10 @@
       "path": "packages/catalog/README.md"
     },
     {
+      "id": "emitter-readme-status",
+      "path": "packages/emitter/README.md"
+    },
+    {
       "id": "elements-workshop-status",
       "path": "packages/elements/docs/introduction.mdx"
     },
@@ -36,12 +40,31 @@
   ],
   "capabilities": [
     {
+      "id": "framework-wrappers",
+      "state": "available",
+      "evidence": ["build", "test", "wrappers-sync"],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "emitter-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated",
+      "plannedText": ""
+    },
+    {
       "id": "consumer-catalog-registration",
       "state": "available",
       "evidence": ["build", "test"],
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",
+        "emitter-readme-status",
         "elements-workshop-status",
         "kimen-package-status",
         "kimen-readme-status",
@@ -53,12 +76,31 @@
       "plannedText": ""
     },
     {
+      "id": "emitter-kit",
+      "state": "available",
+      "evidence": ["build", "test"],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "emitter-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "Emitter kit: model-agnostic prompt, catalog-specialized JSON Schema and tool definition so any LLM emits valid specs, with a single-round repair loop",
+      "plannedText": ""
+    },
+    {
       "id": "guarded-renderer",
       "state": "available",
       "evidence": ["build", "test"],
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",
+        "emitter-readme-status",
         "elements-workshop-status",
         "kimen-package-status",
         "kimen-readme-status",
@@ -76,6 +118,7 @@
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",
+        "emitter-readme-status",
         "elements-workshop-status",
         "kimen-package-status",
         "kimen-readme-status",
@@ -93,6 +136,7 @@
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",
+        "emitter-readme-status",
         "elements-workshop-status",
         "kimen-package-status",
         "kimen-readme-status",
@@ -110,6 +154,7 @@
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",
+        "emitter-readme-status",
         "elements-workshop-status",
         "kimen-package-status",
         "kimen-readme-status",
@@ -127,6 +172,7 @@
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",
+        "emitter-readme-status",
         "elements-workshop-status",
         "kimen-package-status",
         "kimen-readme-status",
@@ -144,6 +190,7 @@
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",
+        "emitter-readme-status",
         "elements-workshop-status",
         "kimen-package-status",
         "kimen-readme-status",
@@ -161,6 +208,7 @@
       "destinations": [
         "catalog-package-status",
         "catalog-readme-status",
+        "emitter-readme-status",
         "elements-workshop-status",
         "kimen-package-status",
         "kimen-readme-status",
