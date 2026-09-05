@@ -40,14 +40,14 @@
     "react-dom": "^18 || ^19"
   },
   "devDependencies": {
-    "@types/node": "26.1.2",
-    "@types/react": "19.1.10",
-    "@types/react-dom": "19.1.7",
-    "@vitest/browser-playwright": "4.1.10",
+    "@types/node": "26.4.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "@vitest/browser-playwright": "4.1.11",
     "playwright": "1.62.1",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
-    "vitest": "4.1.10"
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "vitest": "4.1.11"
   },
   "nx": {
     "tags": [

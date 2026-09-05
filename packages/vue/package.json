@@ -40,12 +40,12 @@
     "vue-router": ">=4.5.0"
   },
   "devDependencies": {
-    "@types/node": "26.1.2",
-    "@vitest/browser-playwright": "4.1.10",
+    "@types/node": "26.4.0",
+    "@vitest/browser-playwright": "4.1.11",
     "playwright": "1.62.1",
-    "vitest": "4.1.10",
-    "vue": "3.5.18",
-    "vue-router": "4.5.1"
+    "vitest": "4.1.11",
+    "vue": "3.5.42",
+    "vue-router": "4.6.4"
   },
   "nx": {
     "tags": [
