@@ -74,3 +74,5 @@ minimumReleaseAgeExclude:
   # Security update: GHSA-2v37-7h3g-55p8 (High), published 2026-08-03 —
   # inside the quarantine window, admitted explicitly like fast-uri above.
   - nanoid@3.3.17
+  # Renovate security update: astro@7.2.8
+  - astro@7.2.8
