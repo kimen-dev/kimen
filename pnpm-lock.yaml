@@ -147,26 +147,26 @@ importers:
         specifier: workspace:*
         version: link:../elements
       tslib:
-        specifier: ^2.8.1
+        specifier: 2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/common':
-        specifier: ^22.0.0
+        specifier: 22.1.1
         version: 22.1.1(@angular/core@22.1.1(@angular/compiler@22.1.1)(rxjs@7.8.2))(rxjs@7.8.2)
       '@angular/compiler':
-        specifier: ^22.0.0
+        specifier: 22.1.1
         version: 22.1.1
       '@angular/compiler-cli':
-        specifier: ^22.0.0
+        specifier: 22.1.1
         version: 22.1.1(@angular/compiler@22.1.1)(typescript@6.0.3)
       '@angular/core':
-        specifier: ^22.0.0
+        specifier: 22.1.1
         version: 22.1.1(@angular/compiler@22.1.1)(rxjs@7.8.2)
       '@angular/forms':
-        specifier: ^22.0.0
+        specifier: 22.1.1
         version: 22.1.1(@angular/common@22.1.1(@angular/core@22.1.1(@angular/compiler@22.1.1)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.1(@angular/compiler@22.1.1)(rxjs@7.8.2))(@angular/platform-browser@22.1.1(@angular/common@22.1.1(@angular/core@22.1.1(@angular/compiler@22.1.1)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.1(@angular/compiler@22.1.1)(rxjs@7.8.2)))(rxjs@7.8.2)
       '@angular/platform-browser':
-        specifier: ^22.0.0
+        specifier: 22.1.1
         version: 22.1.1(@angular/common@22.1.1(@angular/core@22.1.1(@angular/compiler@22.1.1)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.1(@angular/compiler@22.1.1)(rxjs@7.8.2))
       '@types/node':
         specifier: 26.1.2
