@@ -51,10 +51,14 @@ const result = surfaceToolResult(
 
 ## Inside the surface
 
-`createSurfaceBridge` connects the host channel to the guarded renderer: it
-renders a `ui/toolResult`, ignores non-protocol traffic, and lets only
-declared actions leave as `ui/action`. A host announcing a protocol version
-outside `COMPAT.md` is refused at negotiation.
+`createSurfaceBridge` speaks the MCP Apps `2026-01-26` lifecycle: it opens
+with the `ui/initialize` request, confirms with `ui/notifications/initialized`,
+renders `ui/notifications/tool-result` (the spec in
+`structuredContent.kimenSurface`) through the guarded renderer, ignores
+non-protocol traffic, and lets only declared actions leave as a `tools/call`
+to the app-only `kimen_surface_action` tool (`declareActionTool`). A host
+negotiating a protocol version outside `COMPAT.md` is refused at the
+handshake, and nothing renders before it completes.
 
 The canonical package documentation, including the compatibility policy,
 lives in the repository:

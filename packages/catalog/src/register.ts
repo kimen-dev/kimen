@@ -12,6 +12,7 @@ import { z } from 'zod';
 
 import { catalogData } from './generated/catalog.js';
 import type { Catalog, CatalogEntry, CatalogPropConstraint, ValidationIssue } from './validate.js';
+import { tagGrammarViolation } from './tag-grammar.js';
 import { toPlainData, VALIDATION_MAX_BYTES } from './validate.js';
 
 /** Machine-readable registration rejection classes (spec 032 FR-002/FR-004). */
@@ -107,27 +108,6 @@ function baseSchemaIssues(error: z.ZodError): readonly RegistrationIssue[] {
 }
 
 type ParsedEntry = z.output<typeof entrySchema>;
-
-/**
- * A conservative custom-element name: lowercase ASCII, digit-friendly, a
- * hyphen mandatory. Deliberately NARROWER than the HTML PCENChar grammar
- * (no Unicode ranges): a registration boundary prefers rejecting exotic
- * names over accepting a spoofable one (Art. VIII).
- */
-const CUSTOM_ELEMENT_TAG = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)+$/u;
-
-// The SVG/MathML names the custom-elements spec forbids even though they
-// contain a hyphen.
-const RESERVED_TAGS = new Set([
-  'annotation-xml',
-  'color-profile',
-  'font-face',
-  'font-face-format',
-  'font-face-name',
-  'font-face-src',
-  'font-face-uri',
-  'missing-glyph',
-]);
 
 // HTML inline event-handler content attributes (onclick, onerror, …) install
 // EXECUTABLE code the moment they are set via setAttribute — the one prop-name
@@ -253,17 +233,11 @@ function checkEntry(
       value: entry.tag,
     });
   }
-  if (RESERVED_TAGS.has(entry.tag)) {
+  const tagViolation = tagGrammarViolation(entry.tag);
+  if (tagViolation !== null) {
     issues.push({
       code: 'invalid-tag',
-      message: `tag "${entry.tag}" is a reserved SVG/MathML name and cannot be a custom element`,
-      path: `${path}.tag`,
-      value: entry.tag,
-    });
-  } else if (!CUSTOM_ELEMENT_TAG.test(entry.tag)) {
-    issues.push({
-      code: 'invalid-tag',
-      message: `tag "${entry.tag}" is not a valid custom-element name (lowercase ASCII with a hyphen required)`,
+      message: `tag "${entry.tag}" ${tagViolation}`,
       path: `${path}.tag`,
       value: entry.tag,
     });

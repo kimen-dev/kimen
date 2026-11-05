@@ -1,9 +1,10 @@
 # Ship an MCP App with Kimen
 
 [MCP Apps](https://modelcontextprotocol.io/seps/1865-mcp-apps-interactive-user-interfaces-for-mcp)
-(SEP-1865) lets an MCP tool ship an interactive UI: the tool predeclares a
-`ui://` resource, the host resolves and audits it, embeds it, and delivers
-tool results to it over JSON-RPC. `@kimen/adapter-mcp-apps` packages a Kimen
+(SEP-1865, stable revision `2026-01-26`) lets an MCP tool ship an
+interactive UI: the tool predeclares a `ui://` resource, the host resolves
+and audits it, embeds it, and delivers tool results to it over JSON-RPC 2.0
+on `postMessage`. `@kimen/adapter-mcp-apps` packages a Kimen
 surface as exactly that resource — one self-contained HTML document whose only
 render path is the guarded renderer over the neutral
 [UI spec](./ui-spec.md). The catalog and the `ki-*` elements are the durable
@@ -21,12 +22,14 @@ surface, and the surface document that renders results and returns actions.
 tool call ──▶ host resolves the tool's declared ui:// resource
                 │  audits the self-contained document, caches it
                 ▼
-        embedded surface document ──▶ posts ui/ready to its host
+        embedded surface document ──▶ ui/initialize (request) ──▶ host
+                                  ◀── McpUiInitializeResult (version, hostContext)
+                                  ──▶ ui/notifications/initialized
                                           │
-host delivers the tool result ──▶ ui/toolResult ──▶ guarded renderer ──▶ ki-* tree
+host delivers the tool result ──▶ ui/notifications/tool-result ──▶ guarded renderer ──▶ ki-* tree
                                           │
 user activates a declared action ◀────────┘
-        └──▶ ui/action ──▶ host audit path ──▶ server
+        └──▶ tools/call kimen_surface_action ──▶ host audit path ──▶ server
 ```
 
 Every message crosses MCP's JSON-RPC base protocol; the host mediates both
@@ -34,11 +37,12 @@ directions.
 
 ## Server side: declare, serve, return
 
-Three functions cover the whole server obligation:
+Four functions cover the whole server obligation:
 
 ```ts
 import {
   createKimenSurfaceResource,
+  declareActionTool,
   declareToolSurface,
   surfaceToolResult,
 } from '@kimen/adapter-mcp-apps';
@@ -68,6 +72,21 @@ resource._meta;    // { ui: { csp: { connectDomains: [], resourceDomains: [] } }
 
 The call is deterministic — the same packaged document every time — so a
 host's audit of a cached resource stays valid.
+
+**Register the action tool.** Declared actions reach your server as a
+standard `tools/call` to one app-only tool, `kimen_surface_action`, with
+arguments `{ action, data }`. `declareActionTool(name)` returns its
+definition with `_meta.ui.visibility: ["app"]`, so the host keeps it out of
+the agent's tool list and accepts calls to it only from the app:
+
+```ts
+const actionTool = declareActionTool('inventory');
+// { name: 'kimen_surface_action', inputSchema: {...}, _meta: { ui: { resourceUri, visibility: ['app'] } } }
+```
+
+Validate `action` in its handler: the surface never sends an undeclared
+action, but your server is the authority. The handler may return another
+`surfaceToolResult`; the surface renders it through the same guarded path.
 
 **Return tool results through the surface.** `surfaceToolResult` wraps a
 neutral UI spec together with a text fallback:
@@ -118,8 +137,9 @@ const result = surfaceToolResult(
 );
 ```
 
-The returned object carries the spec under `_meta.ui.surface.spec` and the
-fallback as ordinary `content` text. A host **without** interactive surfaces
+The returned `CallToolResult` carries the spec under
+`structuredContent.kimenSurface.spec` — structured data for the UI, not for
+the model — and the fallback as ordinary `content` text. A host **without** interactive surfaces
 still gets a usable answer from the text; the fallback is data, never an
 alternate render path. Compose the spec from the generated catalog —
 components, props and slots are queryable at runtime via `catalogData` from
@@ -141,12 +161,15 @@ will reach before you ship a spec shape (see
   SEP-1865 content policy (`_meta.ui.csp`) has empty allowlists. This is
   defense in depth: the document stays safe by construction even if the host
   does not enforce the policy.
-- **Origin-checked channel.** The document renders only messages whose
-  `source` is the embedding frame — a well-formed `ui/toolResult` posted by a
-  sibling frame or an embedded third party is ignored. Replies are addressed
-  to the origin the host spoke from, once it has one.
-- **Announces readiness.** On load it posts `ui/ready`, telling the host it
-  may deliver the first result.
+- **Origin-checked channel.** The document accepts only messages whose
+  `source` is the embedding frame — a well-formed tool result (or a forged
+  handshake answer) posted by a sibling frame or an embedded third party is
+  ignored. Replies are addressed to the origin the host spoke from, once it
+  has one.
+- **Opens the handshake.** On load it sends the `ui/initialize` request and
+  renders nothing until the host's result negotiates a supported version;
+  then it sends `ui/notifications/initialized` and reports its size with
+  `ui/notifications/size-changed`.
 
 One declared v1 boundary matters to integrators: the bundled document embeds
 the guarded **render path**, not the `ki-*` element definitions — registration
@@ -174,19 +197,28 @@ window.addEventListener('message', (event) => {
   if (event.source !== window.parent) return; // only the embedding host may drive
   bridge.receive(event.data);
 });
+
+bridge.start(); // sends ui/initialize
 ```
 
 `receive` handles one inbound message:
 
-- A `ui/toolResult` envelope renders `params.surface.spec` through the
-  guarded renderer. A refused spec — unknown component, undeclared prop,
-  executable URL scheme, tripped budget, version skew — produces
-  machine-readable refusals and leaves the previously rendered state intact.
-- A message **without** the JSON-RPC envelope (a raw string, a null, anything
-  malformed) is not protocol traffic: it is ignored with no state change,
-  `{ handled: false }`.
-- A tool result declaring an unsupported `protocolVersion` is refused naming
-  the supported set.
+- The host's answer to `ui/initialize` completes the handshake when it
+  negotiates a supported `protocolVersion` (`bridge.state` becomes
+  `'ready'`); any other version, or an error answer, refuses the connection
+  naming the supported set, and nothing renders afterwards.
+- Before `'ready'`, host notifications are refused (`not-initialized`) and
+  never become state.
+- A `ui/notifications/tool-result` renders
+  `params.structuredContent.kimenSurface.spec` through the guarded renderer.
+  A refused spec — unknown component, undeclared prop, executable URL scheme,
+  tripped budget, version skew — produces machine-readable refusals and
+  leaves the previously rendered state intact.
+- `ui/resource-teardown` and `ping` are answered with `{}`; any other host
+  request gets JSON-RPC error `-32601`.
+- A message **without** the JSON-RPC 2.0 envelope (a raw string, a null, a
+  batch, anything malformed) is not protocol traffic: it is ignored with no
+  state change, `{ handled: false }`.
 
 `dispatch` sends one action to the host — and only a **declared** one. The
 accepted spec's `actions` list becomes the outbound allowlist, so a surface
@@ -194,21 +226,24 @@ whose spec declares only `refresh-inventory` can never emit
 `transfer-funds`:
 
 ```ts
-bridge.dispatch('refresh-inventory');            // { sent: true } → ui/action to the host
+bridge.dispatch('refresh-inventory');            // { sent: true } → tools/call to the host
 bridge.dispatch('transfer-funds');               // { sent: false, refusal: { reason: 'undeclared-action', ... } }
 ```
 
 User activation of a rendered, action-bound control dispatches through the
 same path automatically; the host receives
-`{ jsonrpc: '2.0', method: 'ui/action', params: { action, data } }` and
-mediates its own audit/consent step before anything reaches the server.
+`{ jsonrpc: '2.0', id, method: 'tools/call', params: { name: 'kimen_surface_action', arguments: { action, data } } }`
+and mediates its own audit/consent step before anything reaches the server.
+The tool name is a constant of the adapter: a spec can choose which declared
+action fires, never which tool is called.
 
 ## Host negotiation
 
 The adapter pins the exact MCP Apps revision(s) it supports —
 `MCP_APPS_PROTOCOL_VERSIONS`, human-readable in
 [`COMPAT.md`](../../packages/adapter-mcp-apps/COMPAT.md). A host announcing
-anything else is refused at negotiation, never guessed at:
+anything else is refused at the `ui/initialize` handshake, never guessed at.
+The same check is available directly:
 
 ```ts
 import { negotiateProtocolVersion } from '@kimen/adapter-mcp-apps';
@@ -221,11 +256,13 @@ if (!outcome.ok) {
 ```
 
 The protocol constants are exported for hosts and tests that speak the wire
-format directly: `JSONRPC_VERSION` (`'2.0'`), `METHOD_TOOL_RESULT`
-(`'ui/toolResult'`), `METHOD_ACTION` (`'ui/action'`), `UI_SCHEME` (`'ui://'`),
-`SURFACE_MIME_TYPE` (`'text/html;profile=mcp-app'`), plus
-`surfaceResourceUri(name)`, `isSupportedProtocolVersion(version)` and
-`parseEnvelope(message)`.
+format directly: `JSONRPC_VERSION` (`'2.0'`), the `METHOD_*` names
+(`METHOD_INITIALIZE` = `'ui/initialize'`, `METHOD_TOOL_RESULT` =
+`'ui/notifications/tool-result'`, `METHOD_TOOLS_CALL` = `'tools/call'`, ...),
+`KIMEN_ACTION_TOOL` (`'kimen_surface_action'`), `KIMEN_SURFACE_KEY`
+(`'kimenSurface'`), `UI_SCHEME` (`'ui://'`), `SURFACE_MIME_TYPE`
+(`'text/html;profile=mcp-app'`), plus `surfaceResourceUri(name)`,
+`isSupportedProtocolVersion(version)` and `parseJsonRpcMessage(message)`.
 
 ## Why this is safe
 

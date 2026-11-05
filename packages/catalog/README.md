@@ -131,8 +131,10 @@ nodes or a button inside a form; no other callback exists).
 attaches only after it fully validates; an invalid node halts the stream
 fail-closed while previously validated content remains; the budgets bind the
 accumulated stream so a stream that never closes still trips its payload
-budget; and once halted — by an invalid node, a tripped budget, version skew
-or `close()` — every further push is rejected.
+budget; once halted — by an invalid node, a tripped budget, version skew
+or `close()` — every further push is rejected; and each attached node
+dispatches its actions at its own path, `stream[<n>]` in attach order
+(descendants follow the `renderUiSpec` path grammar below it).
 
 Every rejection is a `RenderDiagnostic` — node path, violated rule and
 offending value — pure data, safe to display because a host renders it as
@@ -189,6 +191,14 @@ names excluded), collisions with the extended catalog are hard errors
 what an agent selects components by, and enum constraints need non-empty
 values. `createCatalog` never throws on hostile input: it returns
 `{ ok: false, issues }`, and no partial catalog escapes.
+
+`Catalog` is a structural type, so nothing stops a host from handing the
+renderers a catalog value it built by hand. Both renderers therefore re-apply
+the same tag grammar to every node before creating any element: a hand-built
+entry for `script`, `iframe` or a reserved name is rejected fail-closed with
+an `invalid-tag` diagnostic and the surface stays untouched (032 FR-013/S17).
+Always build catalogs with `createCatalog`; the re-check is defence in
+depth, not a substitute for registration.
 
 The returned catalog is deeply frozen — later mutation attempts throw in
 strict mode and can never alter validation or render outcomes. Every
