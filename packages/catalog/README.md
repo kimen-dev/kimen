@@ -119,9 +119,11 @@ markup; the catalog exposes no event-handler props; URL-typed props accept
 only `http`, `https` and relative references, every other scheme rejected
 naming the prop and scheme), **declared budgets** (depth, node count, payload
 size — a spec exactly at a budget renders, one beyond it is rejected before
-any node attaches), **version skew** (a spec declaring an unsupported
+any node attaches), **version skew** (a spec declaring an incompatible
 `catalogSchemaVersion` — as a top-level field of the spec document, or via
-the render option — is rejected naming both versions), and **declarative
+the render option — is rejected naming both versions; compatible means plain
+SemVer with the catalog's major and a minor not newer than its own, so a
+`1.1.0` catalog accepts `1.0.0`), and **declarative
 actions only** (a bound control dispatches its one declared action, as data,
 on the single `onAction` channel, on the one event its catalog entry declares
 — `change` on the form controls, `ki-change` on `ki-tabs` — or on `click`
@@ -144,6 +146,22 @@ dispatches its actions at its own path, `stream[<n>]` in attach order
 Every rejection is a `RenderDiagnostic` — node path, violated rule and
 offending value — pure data, safe to display because a host renders it as
 text.
+
+## Live surface
+
+`createLiveSurface` keeps a long-lived surface current through atomic
+batches of `insert`, `set`, `text`, `remove` and `replace` operations
+addressed by the optional node `id` (spec 035). Each batch is validated
+against the state it would produce — purity wall, per-batch budgets,
+optional `ifRevision`, then the same catalog, guard and budget checks as a
+spec — before any DOM write; a rejected batch changes nothing and the
+surface keeps accepting batches. Applied batches touch only what they name,
+so focus, caret, typed text and scroll survive. A `set` never overwrites a
+`checked`/`value`/`open` the user changed unless the op says `force: true`
+and the host allowed it (`allowUserStateOverride`). Action events carry the
+node `id`, its current `path`, the `revision` and live `data`; `snapshot()`
+returns the content as deep-frozen plain data. See the
+[UI-spec guide](../../docs/guides/ui-spec.md#live-surface).
 
 ## Registering your own components
 
