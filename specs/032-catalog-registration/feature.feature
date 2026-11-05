@@ -109,3 +109,16 @@ Feature: Consumer catalog registration
     Given a streaming renderer created with a registered catalog containing "acme-kpi-card"
     When a valid node using acme-kpi-card is pushed to the stream
     Then the node's subtree attaches to the surface after validation
+
+  # S17
+  Scenario Outline: A hand-built catalog value cannot render a non-custom element
+    Given a catalog value built by hand, never registered, declaring the tag "<tag>"
+    When a UI spec using "<tag>" is rendered with that catalog, complete or streamed
+    Then the render is rejected naming "<tag>" as an invalid custom-element name
+    And the surface stays untouched
+
+    Examples:
+      | tag       |
+      | script    |
+      | iframe    |
+      | font-face |
