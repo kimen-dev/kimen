@@ -77,6 +77,20 @@ jobs:
           steps.scope.outputs.scope == 'full'
         run: pipx install semgrep==1.168.0
 
+      # The cross-device regressions (cache-env-reentry, site-publication)
+      # require the caller to designate TMPDIR on a filesystem other than the
+      # checkout's; the hosted runner sets none, so the job mounts a private
+      # tmpfs and designates it, exactly as a local tmpfs /tmp would.
+      - name: Designate a temporary directory on its own filesystem
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full' ||
+          steps.scope.outputs.scope == 'dependencies'
+        run: |
+          sudo mkdir -p /mnt/kimen-tmp
+          sudo mount -t tmpfs -o size=4g,mode=1777 tmpfs /mnt/kimen-tmp
+          printf 'TMPDIR=%s\n' /mnt/kimen-tmp >>"$GITHUB_ENV"
+
       - name: Allocate isolated writable caches
         if: >-
           github.event_name != 'pull_request' ||

@@ -260,6 +260,10 @@ The streaming contract:
 - Once halted — by an invalid node, a tripped budget, version skew, or
   `close()` — every further push is rejected. An untrusted stream never
   mutates the surface again after it has been rejected or completed.
+- Each attached node is addressed by its attach order: an action from the
+  first pushed node reports `path: 'stream[0]'`, one from a button in the
+  second node's footer slot `path: 'stream[1].slots.footer[0]'`, so the host
+  always knows which streamed node dispatched it.
 
 ## Registering your own components
 

@@ -1161,6 +1161,8 @@ export async function installTarballs(options, installationExamples, overrides =
     NPM_CONFIG_IGNORE_SCRIPTS: 'true',
     NPM_CONFIG_OFFLINE: 'true',
     NPM_CONFIG_STORE_DIR: pnpmStore,
+    PNPM_CONFIG_STORE_DIR: pnpmStore,
+    pnpm_config_store_dir: pnpmStore,
     PNPM_HOME: process.env.PNPM_HOME ?? join(options['cache-dir'], 'pnpm-home'),
     XDG_CACHE_HOME: xdgCache,
     npm_config_audit: 'false',

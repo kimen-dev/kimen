@@ -22,7 +22,9 @@ const preparedCacheEnvironmentVariables = new Set([
   'NX_NATIVE_FILE_CACHE_DIRECTORY',
   'NX_WORKSPACE_DATA_DIRECTORY',
   'PLAYWRIGHT_BROWSERS_PATH',
+  'PNPM_CONFIG_STORE_DIR',
   'XDG_CACHE_HOME',
+  'pnpm_config_store_dir',
 ]);
 
 function isolateFixtureEnvironment(environment) {
