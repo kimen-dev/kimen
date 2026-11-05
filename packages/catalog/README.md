@@ -192,6 +192,14 @@ what an agent selects components by, and enum constraints need non-empty
 values. `createCatalog` never throws on hostile input: it returns
 `{ ok: false, issues }`, and no partial catalog escapes.
 
+`Catalog` is a structural type, so nothing stops a host from handing the
+renderers a catalog value it built by hand. Both renderers therefore re-apply
+the same tag grammar to every node before creating any element: a hand-built
+entry for `script`, `iframe` or a reserved name is rejected fail-closed with
+an `invalid-tag` diagnostic and the surface stays untouched (032 FR-013/S17).
+Always build catalogs with `createCatalog`; the re-check is defence in
+depth, not a substitute for registration.
+
 The returned catalog is deeply frozen — later mutation attempts throw in
 strict mode and can never alter validation or render outcomes. Every
 guardrail invariant applies to registered components identically: unknown
