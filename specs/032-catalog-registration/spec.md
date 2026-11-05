@@ -281,6 +281,19 @@ Feature: Consumer catalog registration
     Given a streaming renderer created with a registered catalog containing "acme-kpi-card"
     When a valid node using acme-kpi-card is pushed to the stream
     Then the node's subtree attaches to the surface after validation
+
+  # S17
+  Scenario Outline: A hand-built catalog value cannot render a non-custom element
+    Given a catalog value built by hand, never registered, declaring the tag "<tag>"
+    When a UI spec using "<tag>" is rendered with that catalog, complete or streamed
+    Then the render is rejected naming "<tag>" as an invalid custom-element name
+    And the surface stays untouched
+
+    Examples:
+      | tag       |
+      | script    |
+      | iframe    |
+      | font-face |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -294,7 +307,7 @@ own specs.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17 | |
 | Keyboard path | | N/A — no interactive surface; registration is data consumed by machines |
 | Assistive-tech outcome | | N/A — nothing new renders; registered components' accessibility contracts belong to their authors (documented limitation) |
 | Form participation | | N/A — no form control is introduced |
@@ -367,6 +380,14 @@ own specs.
   be added to `docs/capabilities.json` and flip to `available` only in the
   change that lands green evidence for it (018 S13 / check-capabilities
   contract).
+- **FR-013**: `Catalog` is a structural type, so a host can hand the
+  renderers a catalog value that never crossed registration. Both renderers
+  MUST therefore re-apply the registration tag grammar (a lowercase ASCII
+  custom-element name with a hyphen, not a reserved SVG/MathML name) to every
+  node before any element is created, rejecting a violation fail-closed with
+  an inert diagnostic naming the tag (S17). Registration stays the primary
+  boundary; this is defence in depth, mirroring the renderer's existing
+  re-check of event-handler prop names.
 
 ### Key Entities
 
@@ -403,7 +424,7 @@ own specs.
   the "an agent can author it from the docs alone" bar (FR-010).
 - **Guardrail/security boundary** (Art. VIII): the entire spec IS a
   guardrail change: registration opens the catalog without weakening any
-  invariant (FR-002, FR-007, FR-008). All sixteen scenarios require explicit
+  invariant (FR-002, FR-007, FR-008). All seventeen scenarios require explicit
   founder confirmation at gate 1; S4–S10 are the new adversarial surface,
   S11–S16 are the parity proof.
 

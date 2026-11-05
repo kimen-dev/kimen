@@ -13,6 +13,7 @@
  * SSR/DSD is a deferred bet.
  */
 import { catalogData } from './generated/catalog.js';
+import { tagGrammarViolation } from './tag-grammar.js';
 import type { Catalog, CatalogEntry, UiSpec, UiSpecNode } from './validate.js';
 import { toPlainData, validatePlainData } from './validate.js';
 
@@ -177,6 +178,19 @@ function guardNode(node: UiSpecNode, path: string, depth: number, state: GuardSt
       value: String(state.nodes),
     });
     return;
+  }
+  // Renderer-native tag guard (032 FR-013/S17, defence in depth): `Catalog`
+  // is structural, so a hand-built value that never crossed createCatalog
+  // could declare a native tag such as `script` or `iframe`. Re-apply the
+  // registration tag grammar before buildNode ever calls createElement.
+  const tagViolation = tagGrammarViolation(node.component);
+  if (tagViolation !== null) {
+    state.diagnostics.push({
+      message: `component "${node.component}" ${tagViolation}`,
+      path: `${path}.component`,
+      rule: 'invalid-tag',
+      value: node.component,
+    });
   }
   for (const [name, value] of Object.entries(node.props ?? {})) {
     // Renderer-native name guard (defence in depth for hand-built catalogs that

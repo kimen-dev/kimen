@@ -130,6 +130,68 @@ describe('renderUiSpec with a registered catalog', () => {
   });
 });
 
+describe('hand-built catalog values', () => {
+  // `Catalog` is structural: a host may pass a value that never crossed
+  // createCatalog. The renderers re-apply the registration tag grammar, so a
+  // hand-built entry for a native tag can never place that element.
+  function handBuilt(tag: string): Catalog {
+    return {
+      catalogSchemaVersion: catalogData.catalogSchemaVersion,
+      components: {
+        [tag]: {
+          description: 'hand-built',
+          events: {},
+          props: { srcdoc: { description: 'hand-built', type: 'string' } },
+          slots: { '': 'content' },
+          tag,
+          whenNotToUse: 'never',
+          whenToUse: 'never',
+        },
+      },
+    };
+  }
+
+  const node = (tag: string) => ({
+    component: tag,
+    props: { srcdoc: '<script>globalThis.__kiPwn = 1</script>' },
+    slots: { '': ['globalThis.__kiPwn = 1'] },
+  });
+
+  for (const tag of ['script', 'iframe', 'font-face']) {
+    it(`S17 rejects the non-custom tag "${tag}" from a hand-built catalog, complete render`, () => {
+      const surface = document.createElement('div');
+      const result = renderUiSpec(
+        { root: node(tag), version: 1 },
+        { catalog: handBuilt(tag), surface },
+      );
+      expect(result.ok).toBe(false);
+      expect(result.diagnostics).toContainEqual(
+        expect.objectContaining({ path: 'root.component', rule: 'invalid-tag', value: tag }),
+      );
+      expect(surface.childNodes).toHaveLength(0);
+    });
+
+    it(`S17 rejects the non-custom tag "${tag}" from a hand-built catalog, streamed`, () => {
+      const surface = document.createElement('div');
+      const stream = createStreamingRenderer({ catalog: handBuilt(tag), surface });
+      const result = stream.push(node(tag));
+      expect(result.ok).toBe(false);
+      expect(result.diagnostics[0]).toMatchObject({ rule: 'invalid-tag', value: tag });
+      expect(surface.childNodes).toHaveLength(0);
+    });
+  }
+
+  it('S17 still renders a valid custom-element tag from a hand-built catalog', () => {
+    const surface = document.createElement('div');
+    const result = renderUiSpec(
+      { root: { component: 'acme-frame', slots: { '': ['ok'] } }, version: 1 },
+      { catalog: handBuilt('acme-frame'), surface },
+    );
+    expect(result.diagnostics).toEqual([]);
+    expect(surface.querySelector('acme-frame')?.textContent).toBe('ok');
+  });
+});
+
 describe('registered-catalog render properties', () => {
   it('S13 S16 arbitrary valid specs place only catalog-member tags on the surface', () => {
     const catalog = registeredCatalog();
