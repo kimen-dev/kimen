@@ -52,7 +52,7 @@ with no live agent, assert the rendered surface contains only catalog
 components, apply an incremental-update fixture, then activate the declared
 action and assert the emitted interaction event.
 
-**Acceptance Scenarios**: S1, S2 and S3.
+**Acceptance Scenarios**: S1, S2, S3, S13, S14, S15 and S16.
 
 ---
 
@@ -77,7 +77,7 @@ by an instrumented double, and assert every fixture is rejected or inert
 with a structured reason, zero payloads render or execute, and all render
 calls arrive at the double.
 
-**Acceptance Scenarios**: S7, S8, S9, S10, S11 and S12.
+**Acceptance Scenarios**: S7, S8, S9, S10, S11, S12, S17 and S19.
 
 ---
 
@@ -98,7 +98,7 @@ unmapped-component-type fixture and an out-of-matrix-version fixture and
 assert declared fallback and named rejection; verify no protocol type is
 importable from the core packages.
 
-**Acceptance Scenarios**: S4, S5 and S6.
+**Acceptance Scenarios**: S4, S5, S6 and S18.
 
 ### Edge Cases
 
@@ -108,9 +108,11 @@ importable from the core packages.
   renders; the whole surface is never discarded for a partial gap. Types the
   matrix declares `forbidden` are the opposite case: the whole message is
   rejected (S7) — the soft path never applies to them.
-- An incremental update referencing a surface or node the adapter never
-  created: rejected as out-of-contract with a structured reason; nothing
-  renders from it.
+- An update referencing a surface no `createSurface` created: rejected as
+  out-of-contract with a structured reason; nothing renders from it. A child
+  id that no update has delivered yet renders nothing in its place until it
+  arrives (A2UI v0.9.1 progressive rendering, `a2ui_protocol.md`: components
+  are buffered until `root` exists and invalid references are skipped).
 - A data binding referencing a data-model path that does not exist: the bound
   component shows the declared empty state and the gap is reported; content
   is never invented.
@@ -224,6 +226,56 @@ Feature: A2UI protocol adapter
       When the agent sends a message containing a non-catalog component type
       Then every rendering call the adapter makes arrives at the guarded renderer double
       And nothing reaches the surface outside those calls
+
+    # S17
+    Scenario: A client function that reaches a browser capability is refused
+      Given the client-function allowlist of the adapter is empty
+      When the agent sends a message binding a button to the client function "openUrl" with the URL "https://attacker.example/"
+      Then the whole message is rejected naming the function "openUrl"
+      And nothing from the rejected message renders
+
+  Rule: The adapter speaks A2UI v0.9.1 exactly
+
+    # S13
+    Scenario: A surface exists only between its creation and its deletion
+      Given an agent that has not created the surface "checkout"
+      When the agent sends components for the surface "checkout"
+      Then the adapter rejects the message naming the unknown surface
+      And creating "checkout" twice without deleting it is rejected
+      And creating a surface on a catalog other than the A2UI basic catalog is rejected
+
+    # S14
+    Scenario: Data-model updates revise bound values inside the adapter
+      Given a rendered surface whose text is bound to the data-model path "/user/firstName"
+      When the agent sets that path to "Ada" and later removes it
+      Then the text first shows "Ada" and then shows the empty state
+
+    # S15
+    Scenario: A list template renders one instance per data-model item
+      Given a surface whose list children are a template over the data-model list "/items"
+      When the data model holds three items with names "Apple", "Banana" and "Cherry"
+      Then the list renders three items in that order
+      And paths inside the template resolve relative to their own item
+
+    # S16
+    Scenario: The action event carries the source, a timestamp and the resolved context
+      Given a template button whose action context binds the relative path "title"
+      When the user activates the button of the second item
+      Then the agent receives an A2UI v0.9.1 action event naming the template component as its source
+      And the event carries an ISO 8601 timestamp and the second item's title as context
+
+    # S18
+    Scenario: A value needing an unevaluated client function degrades its component
+      Given a text whose value calls the client function "formatDate"
+      When the agent sends that component
+      Then the declared fallback renders in its place and the gap is reported naming "formatDate"
+      And the rest of the surface renders normally
+
+    # S19
+    Scenario: A rejected message is reported to the agent for correction
+      Given a created surface "s"
+      When the agent sends a card carrying the undeclared property "style"
+      Then the agent receives an A2UI validation error naming the surface and the offending property
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -234,7 +286,7 @@ component that carries its own five-family contract.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19 | |
 | Keyboard path | | N/A — no new interaction pattern; rendered catalog components keep their own keyboard contracts |
 | Assistive-tech outcome | | N/A — no new rendered pattern; the accessibility tree is owned by the catalog components' own contracts |
 | Form participation | | N/A — no new form control is introduced; form behavior belongs to the rendered catalog components |
@@ -380,15 +432,22 @@ component that carries its own five-family contract.
 
 ## Assumptions
 
-- **Protocol facts are limited to A2UI's public design intent** (declarative
-  component tree, separate data model with bindings, incremental updates,
-  interaction events, no agent code execution). The exact spec version
-  (early 0.x preview), message names, surface lifecycle, client-side
-  component catalog format, canonical repository and reference renderers are
-  UNVERIFIED at spec time — a declared spec risk. They MUST be verified at
-  plan phase, and `COMPAT.md` pins exact versions only after that
-  verification. The scenarios deliberately avoid protocol message names so
-  the contract survives that verification.
+- **Protocol facts are verified against the primary specification.** The
+  adapter implements A2UI v0.9.1 as published in `specification/v0_9_1/` of
+  github.com/google/A2UI (also served as github.com/a2ui-project/a2ui),
+  verified at commit 85120b91e2fe94cb20c8ddef0b545d3da2ae161f: messages
+  `createSurface`, `updateComponents`, `updateDataModel`, `deleteSurface`
+  with a mandatory `version` (`v0.9.1` or `v0.9`), the basic catalog
+  (`catalogs/basic/catalog.json`), and the client messages `action` and
+  `error`. The first implementation (2026-08) spoke a v0.8 dialect under the
+  0.9.1 label; this revision replaces it. Scenarios S1–S12 still avoid
+  message names so the contract survives a protocol revision; S13–S19 name
+  only v0.9.1 concepts (surface creation, data model, templates, action
+  event, client functions, validation error).
+- The data model and client functions are resolved inside the adapter
+  (FR-007): the catalog never learns about data models. Pure formatting
+  functions are evaluated; functions that reach a browser capability are
+  refused by an empty allowlist (S17); the rest degrade (S18).
 - This feature depends on the planned `027-runtime-catalog` (catalog schemas)
   and `028-guarded-renderer` specs and consumes their public contracts; it
   adds no validation or rendering of its own. The Gherkin asserts outcomes,

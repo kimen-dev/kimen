@@ -95,3 +95,53 @@ Feature: A2UI protocol adapter
       When the agent sends a message containing a non-catalog component type
       Then every rendering call the adapter makes arrives at the guarded renderer double
       And nothing reaches the surface outside those calls
+
+    # S17
+    Scenario: A client function that reaches a browser capability is refused
+      Given the client-function allowlist of the adapter is empty
+      When the agent sends a message binding a button to the client function "openUrl" with the URL "https://attacker.example/"
+      Then the whole message is rejected naming the function "openUrl"
+      And nothing from the rejected message renders
+
+  Rule: The adapter speaks A2UI v0.9.1 exactly
+
+    # S13
+    Scenario: A surface exists only between its creation and its deletion
+      Given an agent that has not created the surface "checkout"
+      When the agent sends components for the surface "checkout"
+      Then the adapter rejects the message naming the unknown surface
+      And creating "checkout" twice without deleting it is rejected
+      And creating a surface on a catalog other than the A2UI basic catalog is rejected
+
+    # S14
+    Scenario: Data-model updates revise bound values inside the adapter
+      Given a rendered surface whose text is bound to the data-model path "/user/firstName"
+      When the agent sets that path to "Ada" and later removes it
+      Then the text first shows "Ada" and then shows the empty state
+
+    # S15
+    Scenario: A list template renders one instance per data-model item
+      Given a surface whose list children are a template over the data-model list "/items"
+      When the data model holds three items with names "Apple", "Banana" and "Cherry"
+      Then the list renders three items in that order
+      And paths inside the template resolve relative to their own item
+
+    # S16
+    Scenario: The action event carries the source, a timestamp and the resolved context
+      Given a template button whose action context binds the relative path "title"
+      When the user activates the button of the second item
+      Then the agent receives an A2UI v0.9.1 action event naming the template component as its source
+      And the event carries an ISO 8601 timestamp and the second item's title as context
+
+    # S18
+    Scenario: A value needing an unevaluated client function degrades its component
+      Given a text whose value calls the client function "formatDate"
+      When the agent sends that component
+      Then the declared fallback renders in its place and the gap is reported naming "formatDate"
+      And the rest of the surface renders normally
+
+    # S19
+    Scenario: A rejected message is reported to the agent for correction
+      Given a created surface "s"
+      When the agent sends a card carrying the undeclared property "style"
+      Then the agent receives an A2UI validation error naming the surface and the offending property

