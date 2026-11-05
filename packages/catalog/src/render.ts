@@ -26,6 +26,9 @@ import { toPlainData, validatePlainData } from './validate.js';
 
 const builtInCatalog: Catalog = catalogData;
 
+/** One scalar prop value of the neutral format. */
+type Scalar = boolean | number | string;
+
 /**
  * A machine-readable rejection record (FR-007): the node path, the violated
  * rule and the offending value. Pure data — safe to display anywhere because
@@ -72,7 +75,7 @@ export const DEFAULT_RENDER_BUDGETS: RenderBudgets = {
 // payload budget: the host's `maxBytes` is the EXACT at-budget-passes bound,
 // checked over the serialized clone; this ceiling only stops the snapshot
 // itself from unbounded work on a hostile input the host budget would reject.
-const ABSOLUTE_MAX_BYTES = 8 * 1_024 * 1_024;
+export const ABSOLUTE_MAX_BYTES = 8 * 1_024 * 1_024;
 
 export interface RenderOptions {
   readonly surface: Element;
@@ -155,7 +158,7 @@ function offendingScheme(value: string): string | null {
   return SUPPORTED_SCHEMES.has(scheme) ? null : scheme;
 }
 
-interface GuardState {
+export interface GuardState {
   nodes: number;
   readonly diagnostics: RenderDiagnostic[];
   readonly budgets: RenderBudgets;
@@ -175,7 +178,7 @@ const DEFAULT_ACTIVATION_EVENT = 'click';
  * on the platform click; more than one is ambiguous and the guard rejects
  * the binding before any listener exists (S19).
  */
-function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
+export function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
   return Object.keys(entry?.events ?? {});
 }
 
@@ -184,7 +187,7 @@ function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
  * safe data): node-count and depth budgets and the URL allowlist. Catalog
  * membership, prop types, actions and slots were already enforced upstream.
  */
-function guardNode(node: UiSpecNode, path: string, depth: number, state: GuardState): void {
+export function guardNode(node: UiSpecNode, path: string, depth: number, state: GuardState): void {
   state.nodes += 1;
   if (depth > state.budgets.maxDepth) {
     state.diagnostics.push({
@@ -281,7 +284,7 @@ function guardNode(node: UiSpecNode, path: string, depth: number, state: GuardSt
  * The clone carries no getters or `toJSON`, so `JSON.stringify` here invokes
  * no foreign code — the purity wall was crossed upstream.
  */
-function payloadBytes(data: unknown): number {
+export function payloadBytes(data: unknown): number {
   return new TextEncoder().encode(JSON.stringify(data)).length;
 }
 
@@ -294,7 +297,7 @@ function payloadBytes(data: unknown): number {
  */
 const LIVE_STATE_PROPS = ['checked', 'value'] as const;
 
-function matchesConstraint(
+export function matchesConstraint(
   value: unknown,
   constraint: CatalogPropConstraint,
 ): value is boolean | number | string {
@@ -312,7 +315,7 @@ function matchesConstraint(
 
 function liveData(
   element: Element,
-  props: Readonly<Record<string, boolean | number | string>>,
+  props: Readonly<Record<string, Scalar>>,
   entry: CatalogEntry | undefined,
 ): Record<string, boolean | number | string> {
   const data: Record<string, boolean | number | string> = { ...props };
@@ -346,17 +349,105 @@ function claim(event: Event): boolean {
   return true;
 }
 
-function attachText(parent: Node, text: string, slotName: string, doc: Document): void {
+/**
+ * Attaches one text child (FR-004): a text node in the default slot, or a
+ * `<span slot>` holder carrying a text node in a named slot. Returns the DOM
+ * node that represents the child, so the live surface (spec 035) can later
+ * update or detach exactly that node.
+ */
+export function attachText(
+  parent: Node,
+  text: string,
+  slotName: string,
+  doc: Document,
+  before: Node | null = null,
+): Node {
   if (slotName === '') {
-    parent.appendChild(doc.createTextNode(text));
-    return;
+    return parent.insertBefore(doc.createTextNode(text), before);
   }
   // Slotted text needs an element to carry the slot assignment; the text
   // itself stays a text node (inert), never parsed as markup.
   const holder = doc.createElement('span');
   holder.setAttribute('slot', slotName);
   holder.appendChild(doc.createTextNode(text));
-  parent.appendChild(holder);
+  return parent.insertBefore(holder, before);
+}
+
+/** Writes one validated prop as an attribute: booleans by presence. */
+export function writeProp(element: Element, name: string, value: Scalar | undefined): void {
+  if (value === undefined || value === false) {
+    element.removeAttribute(name);
+  } else if (value === true) {
+    element.setAttribute(name, '');
+  } else {
+    element.setAttribute(name, String(value));
+  }
+}
+
+/**
+ * Declaratively neutralizes a form-submitting default when the catalog
+ * types this component's `type` prop and the spec left it unset: pins it to
+ * "button" so no native submit path runs alongside a click-bound action.
+ */
+export function pinButtonType(
+  element: Element,
+  entry: CatalogEntry | undefined,
+  props: Readonly<Record<string, Scalar>>,
+): void {
+  const typeConstraint = entry?.props['type'];
+  if (
+    typeConstraint?.type === 'enum' &&
+    typeConstraint.values?.includes('button') === true &&
+    props['type'] === undefined
+  ) {
+    element.setAttribute('type', 'button');
+  }
+}
+
+/**
+ * Wires the ONE activation listener of a bound node (FR-003) onto a
+ * dispatch callback. `currentProps` is read at activation time, so a caller
+ * whose props change after build (the live surface) reports the current
+ * ones; `renderUiSpec` passes the props it built with.
+ */
+export function wireActivation(
+  element: Element,
+  entry: CatalogEntry | undefined,
+  currentProps: () => Readonly<Record<string, Scalar>>,
+  dispatch: (data: Readonly<Record<string, Scalar>>) => void,
+): void {
+  // The guard admitted at most one declared event (S19).
+  const activation = declaredEvents(entry)[0] ?? DEFAULT_ACTIVATION_EVENT;
+  if (activation === DEFAULT_ACTIVATION_EVENT) {
+    // A click-activated node (S4) dispatches the spec's data payload and
+    // suppresses the native default (a submit button's form submission)
+    // and the bubbling, so no other callback or code path runs.
+    element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
+      if (!claim(event)) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      dispatch({ ...currentProps() });
+    });
+    pinButtonType(element, entry, currentProps());
+    return;
+  }
+  // A declared-event node (S17) dispatches on the event its catalog entry
+  // declares, emitted by the component itself — a same-named event bubbling
+  // up from a descendant is not this control's activation (S18). Nothing is
+  // cancelled: the control must be able to change, and the payload carries
+  // its live state. The click that operates the control is claimed, never
+  // cancelled, so an enclosing click-bound node does not dispatch for it (S4).
+  element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
+    claim(event);
+  });
+  element.addEventListener(activation, (event: Event) => {
+    if (event.target !== element || !claim(event)) {
+      return;
+    }
+    dispatch(liveData(element, currentProps(), entry));
+  });
 }
 
 /**
@@ -376,60 +467,18 @@ function buildNode(
   const element = doc.createElement(node.component);
   const props = node.props ?? {};
   for (const [name, value] of Object.entries(props)) {
-    if (typeof value === 'boolean') {
-      if (value) {
-        element.setAttribute(name, '');
-      }
-    } else {
-      element.setAttribute(name, String(value));
-    }
+    writeProp(element, name, value);
   }
   if (node.action !== undefined && onAction !== undefined) {
     const action = node.action;
-    const entry = entries[node.component];
-    // The guard admitted at most one declared event (S19).
-    const activation = declaredEvents(entry)[0] ?? DEFAULT_ACTIVATION_EVENT;
-    if (activation === DEFAULT_ACTIVATION_EVENT) {
-      // A click-activated node (S4) dispatches the spec's data payload and
-      // suppresses the native default (a submit button's form submission)
-      // and the bubbling, so no other callback or code path runs.
-      element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
-        if (!claim(event)) {
-          return;
-        }
-        event.preventDefault();
-        event.stopPropagation();
-        onAction({ action, data: { ...props }, path });
-      });
-      // Declaratively neutralize a form-submitting default when the catalog
-      // types this component's `type` prop and the spec left it unset: pin it
-      // to "button" so no native submit path runs alongside the action.
-      const typeConstraint = entry?.props['type'];
-      if (
-        typeConstraint?.type === 'enum' &&
-        typeConstraint.values?.includes('button') === true &&
-        props['type'] === undefined
-      ) {
-        element.setAttribute('type', 'button');
-      }
-    } else {
-      // A declared-event node (S17) dispatches on the event its catalog
-      // entry declares, emitted by the component itself — a same-named
-      // event bubbling up from a descendant is not this control's
-      // activation (S18). Nothing is cancelled: the control must be able to
-      // change, and the payload carries its live state. The click that
-      // operates the control is claimed, never cancelled, so an enclosing
-      // click-bound node does not dispatch for it (S4).
-      element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
-        claim(event);
-      });
-      element.addEventListener(activation, (event: Event) => {
-        if (event.target !== element || !claim(event)) {
-          return;
-        }
-        onAction({ action, data: liveData(element, props, entry), path });
-      });
-    }
+    wireActivation(
+      element,
+      entries[node.component],
+      () => props,
+      (data) => {
+        onAction({ action, data, path });
+      },
+    );
   }
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     children.forEach((child, index) => {
@@ -554,7 +603,7 @@ function prepare(
   return { diagnostics: [], spec: report.spec };
 }
 
-function toDiagnostic(issue: {
+export function toDiagnostic(issue: {
   code: string;
   message: string;
   path: string;
