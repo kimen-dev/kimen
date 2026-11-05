@@ -69,6 +69,23 @@ export function validateDocs(docs) {
       }
     }
 
+    const declaredEvents = new Set(
+      (component.events ?? []).map((event) => event.event ?? event.name),
+    );
+    for (const docsTag of component.docsTags ?? []) {
+      if (docsTag.name !== 'event' || isBlank(docsTag.text)) {
+        continue;
+      }
+      const nativeEvent = parseNativeEventTag(docsTag.text);
+      if (nativeEvent === null) {
+        violations.push(`${tag}.@event: expected "<event-name> - <description>"`);
+      } else if (declaredEvents.has(nativeEvent.name)) {
+        violations.push(`${tag}.@event ${nativeEvent.name}: event is declared more than once`);
+      } else {
+        declaredEvents.add(nativeEvent.name);
+      }
+    }
+
     for (const method of component.methods ?? []) {
       if (isBlank(method.docs)) {
         violations.push(`${tag}.${method.name}: method has no documentation`);
@@ -160,15 +177,22 @@ export function buildManifest(docs, inputs = {}) {
             }),
           ),
         ],
-        events: (component.events ?? []).map((event) => ({
-          name: event.event ?? event.name,
-          type: {
-            text: event.complexType?.original
-              ? `CustomEvent<${event.complexType.original}>`
-              : 'CustomEvent',
-          },
-          description: event.docs ?? '',
-        })),
+        events: [
+          ...(component.events ?? []).map((event) => ({
+            name: event.event ?? event.name,
+            type: {
+              text: event.complexType?.original
+                ? `CustomEvent<${event.complexType.original}>`
+                : 'CustomEvent',
+            },
+            description: event.docs ?? '',
+          })),
+          ...nativeEventsFor(component).map((event) => ({
+            name: event.name,
+            type: { text: 'Event' },
+            description: event.description,
+          })),
+        ],
         slots: (component.slots ?? []).map((slot) => ({
           name: slot.name ?? '',
           description: slot.docs ?? '',
@@ -249,7 +273,12 @@ export function buildLlmsTxt(docs, pkg, preamble, inputs = {}) {
         (component.parts ?? []).map((part) => `\`${part.name}\`: ${oneLine(part.docs ?? '')}`),
       ),
       '',
-      renderList('Events', (component.events ?? []).map(renderEvent)),
+      renderList('Events', [
+        ...(component.events ?? []).map(renderEvent),
+        ...nativeEventsFor(component).map(
+          (event) => `\`${event.name}\` (Event): ${oneLine(event.description)}`,
+        ),
+      ]),
       '',
       renderList('Methods', (component.methods ?? []).map(renderMethod)),
       '',
@@ -476,6 +505,25 @@ function normalizePath(value, packageRoot) {
 
 function isBlank(value) {
   return typeof value !== 'string' || value.trim().length === 0;
+}
+
+// A component that re-dispatches a native DOM event from its host (the form
+// controls' composed `change`) declares it with an `@event <name> - <text>`
+// JSDoc tag on the component class: Stencil's docs-json records only
+// `@Event()` emitters, so the tag is the contract's single source for the
+// native event, and the manifest, llms.txt and catalog derive from it (Art. I).
+const NATIVE_EVENT_TAG = /^([a-z][a-z0-9-]*)\s+-\s+(\S[\s\S]*)$/u;
+
+function parseNativeEventTag(text) {
+  const match = NATIVE_EVENT_TAG.exec(text.trim());
+  return match === null ? null : { name: match[1], description: match[2] };
+}
+
+function nativeEventsFor(component) {
+  return (component.docsTags ?? [])
+    .filter((docsTag) => docsTag.name === 'event' && !isBlank(docsTag.text))
+    .map((docsTag) => parseNativeEventTag(docsTag.text))
+    .filter((event) => event !== null);
 }
 
 function getDocsTag(component, name) {

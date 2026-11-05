@@ -17,6 +17,11 @@ import { normalizeKiTextareaRows } from './ki-textarea.form';
  * @part field - The enclosure wrapper.
  * @part textarea - Internal native multiline control.
  * @part label - Rendered visible label and accessible-name source.
+ * @event change - Fired when the user commits an edited value (on blur, with native
+ * textarea timing), composed across the shadow boundary; `value` is already
+ * current when listeners run. When to use: react to a committed value. When
+ * NOT to use: do not use it for per-keystroke updates; the native `input`
+ * event carries those.
  */
 @Component({
   tag: 'ki-textarea',

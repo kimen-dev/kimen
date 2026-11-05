@@ -23,7 +23,7 @@ is the sibling spec `027-runtime-catalog`; protocol adapters are specs 029
 **Constitution check**: this spec is not approvable until the Gherkin section
 below is approved verbatim. Behavior enters the system exactly once, here
 (Art. II). This feature IS the Art. VIII guardrail: the adversarial scenarios
-S2, S3, S5, S6, S7, S8, S9, S12, S13, S15 and S16 are security-boundary
+S2, S3, S5, S6, S7, S8, S9, S12, S13, S15, S16 and S19 are security-boundary
 scenarios and require explicit standalone founder confirmation at human
 gate 1.
 
@@ -53,7 +53,7 @@ to guard.
 to a declared action), then assert the rendered surface against the catalog
 declarations and assert the dispatched action name and payload.
 
-**Acceptance Scenarios**: S1 and S4.
+**Acceptance Scenarios**: S1, S4, S17 and S18.
 
 ---
 
@@ -75,7 +75,7 @@ concrete malicious spec); every fixture must produce zero rendered spec
 nodes, zero executed code paths, zero network requests, and a diagnostic
 naming the violation.
 
-**Acceptance Scenarios**: S2, S3, S5, S6, S7, S8 and S13.
+**Acceptance Scenarios**: S2, S3, S5, S6, S7, S8, S13 and S19.
 
 ---
 
@@ -300,6 +300,35 @@ Feature: Guarded renderer
       When the host displays the diagnostic containing that value
       Then the offending value appears as inert text
       And no image request occurs and no script executes
+
+  Rule: A bound action fires on the component's own activation event
+
+    # S17
+    Scenario Outline: An action-bound control stays operable and reports its live state
+      Given a rendered spec binding the declared action "pick" to a <component> the catalog declares with the "<event>" event
+      When the user <interaction>
+      Then the control shows <state>
+      And the host receives one "pick" action event whose data carries the live <field> alongside the spec's props
+
+      Examples:
+        | component   | event     | interaction            | state                  | field   |
+        | ki-checkbox | change    | activates the checkbox | the checkbox checked   | checked |
+        | ki-switch   | change    | activates the switch   | the switch on          | checked |
+        | ki-tabs     | ki-change | selects the second tab | the second tab panel   | value   |
+
+    # S18
+    Scenario: An interaction that is not the bound activation event dispatches nothing
+      Given a rendered spec binding the declared action "pick" to a ki-tabs the catalog declares with the "ki-change" event
+      When the user clicks inside the selected panel without changing the selection
+      Then the host receives no action event
+
+    # S19
+    Scenario: A binding whose activation event is ambiguous never wires
+      Given a catalog component that declares more than one event
+      And a spec binding the declared action "pick" to that component
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names the component and its declared events
 ```
 
 ### Scenario Family Coverage
@@ -311,7 +340,7 @@ governed by its own approved contract (specs `002`–`016`).
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1–S16 | |
+| Core behavior | S1–S19 | |
 | Keyboard path | | N/A — the renderer adds no interaction; keyboard behavior is owned by each rendered component's own contract |
 | Assistive-tech outcome | | N/A — the accessibility tree is produced by the rendered catalog components under their own contracts |
 | Form participation | | N/A — form behavior is owned by the rendered form components; the renderer only passes validated declared props |
@@ -336,6 +365,19 @@ governed by its own approved contract (specs `002`–`016`).
   single action channel. An interaction without a validated binding
   dispatches nothing; a binding to an event the catalog does not declare
   rejects the spec. No other callback mechanism from spec data exists.
+  The activation event of a bound node derives from its catalog entry: the
+  one event the entry declares (`change` on the form controls, `ki-change`
+  on `ki-tabs`, `ki-dismiss`/`ki-close` on `ki-alert`/`ki-dialog`), or the
+  platform `click` when the entry declares none (buttons, cards). A binding
+  on an entry declaring more than one event is ambiguous and rejects the
+  spec (S19). Only a `click` activation suppresses the native default (a
+  submit button's form submission); a declared-event activation never
+  cancels the control's own state change (S17). A declared-event payload
+  overlays the spec's props with the control's live `checked`/`value`, read
+  only where the catalog declares that prop and only when the live value has
+  the declared type, so nothing undeclared crosses the channel. Exactly one
+  action dispatches per activation: the innermost bound node claims the
+  interaction and no enclosing bound node dispatches for it (S4).
 - **FR-004**: No code-execution path from spec data: spec strings are never
   parsed as markup; the catalog surface exposes no event-handler or
   code-valued props; URL-typed values accept only an allowlist (`https`,
@@ -364,8 +406,8 @@ governed by its own approved contract (specs `002`–`016`).
   exceeding any budget halts fail-closed with the budget named, whether or
   not the document ever completes (S15).
 - **FR-009**: The guardrail MUST be tested as a security boundary: the
-  adversarial suite covering S2, S3, S5, S6, S7, S8, S9, S12, S13, S15 and
-  S16 runs inside the deterministic gates, and its green result is the
+  adversarial suite covering S2, S3, S5, S6, S7, S8, S9, S12, S13, S15, S16
+  and S19 runs inside the deterministic gates, and its green result is the
   evidence that flips the `guarded-renderer` capability from planned to
   available (`docs/capabilities.json`, per the 018 capability-truth regime).
 - **FR-010**: The renderer's public surface MUST accept only the neutral
@@ -455,7 +497,7 @@ governed by its own approved contract (specs `002`–`016`).
   stream closes; the invalid-chunk fixture attaches zero nodes at and below
   the violation and reports it.
 - **SC-007**: the `guarded-renderer` capability leaves `planned` only when
-  the S1–S16 traced tests run green inside the deterministic gates; the
+  the S1–S19 traced tests run green inside the deterministic gates; the
   capability gate enforces the linkage.
 - **SC-008**: module-boundary analysis reports zero protocol-specific
   imports or types in `@kimen/catalog`.

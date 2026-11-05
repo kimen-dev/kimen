@@ -17,6 +17,11 @@ export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'searc
  * @part field - Enclosure wrapper for background, border, radius and focus ring.
  * @part input - Internal native input that owns entry text, caret and selection.
  * @part label - Visible label that provides the accessible name.
+ * @event change - Fired when the user commits an edited value (native text-field
+ * timing, such as on blur), composed across the shadow boundary; `value` is
+ * already current when listeners run. When to use: react to a committed
+ * value. When NOT to use: do not use it for per-keystroke updates; the native
+ * `input` event carries those.
  */
 @Component({
   tag: 'ki-input',

@@ -16,6 +16,10 @@ import { booleanFromAttributePresence, checkboxFormValue } from './ki-checkbox.f
  * native activation surface.
  * @part control - Visual checkbox box, border, focus ring and currentColor marks.
  * @part label - Label wrapper around the default slot.
+ * @event change - Fired once after a user toggle (pointer, slotted label or Space)
+ * commits, composed across the shadow boundary; `checked` is already current
+ * when listeners run. When to use: react to the committed selection. When NOT
+ * to use: do not expect it for programmatic `checked` writes, which are silent.
  */
 @Component({
   tag: 'ki-checkbox',

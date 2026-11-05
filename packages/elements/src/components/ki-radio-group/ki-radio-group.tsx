@@ -23,6 +23,10 @@ interface MaybeFormValueInternals {
  *
  * @slot - `ki-radio` options. Document order is navigation order.
  * @part label - Visible group label and accessible-name source.
+ * @event change - Fired once after the user selects a different radio, composed
+ * across the shadow boundary; `value` is already current when listeners run.
+ * When to use: react to the committed choice. When NOT to use: do not expect
+ * it for programmatic `value` writes, which are silent.
  */
 @Component({
   tag: 'ki-radio-group',

@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "636d5118ce8b582469950877cc3cd455554114839904b8511ecd92252e3320ec",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Guarded-renderer activation events (spec 028 S17-S19), cumulative since baseline 0.0.0 and superseding declaration 034 (its deltas remain as declared there). New deltas are purely additive on @kimen/elements: the six form controls (ki-checkbox, ki-switch, ki-radio-group, ki-select, ki-input, ki-textarea) now declare in their component contract the composed native change event they already re-dispatched from the host, through an @event JSDoc tag the agent-surfaces build carries into the Custom Elements Manifest, llms.txt and the catalog. Zero removals; zero value changes; no runtime behavior of any component changes and the generated wrappers are byte-identical.",
+  "release": "major",
+  "schemaVersion": 1
+}

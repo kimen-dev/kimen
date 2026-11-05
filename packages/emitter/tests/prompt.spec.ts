@@ -76,12 +76,15 @@ describe('catalogPrompt', () => {
     expect(promptOrThrow(catalogData)).toBe(promptOrThrow(catalogData));
   });
 
-  it('presents catalog events as host-side, never action-bindable (review regression)', () => {
-    // The UiSpec format has no event selector and the renderer wires actions to
-    // click activation only — so the prompt must not tell the model that
-    // custom events (e.g. ki-alert's ki-dismiss) can be bound via "action".
+  it('presents catalog events as the activation event, never as a nameable binding (review regression)', () => {
+    // The UiSpec format has no event selector: the renderer wires an action to
+    // the component's one declared event (spec 028 FR-003), or click when it
+    // declares none — so the prompt must not tell the model it can bind a
+    // named event via "action", and must state what "action" fires on.
     const prompt = promptOrThrow(catalogData);
     expect(prompt).toContain('ki-dismiss');
     expect(prompt).not.toContain('bind via "action"');
+    expect(prompt).not.toContain('click activation only');
+    expect(prompt).toContain('an "action" on this component fires on its one listed event');
   });
 });

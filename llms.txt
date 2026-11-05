@@ -852,7 +852,8 @@ Parts:
 - `control`: Visual checkbox box, border, focus ring and currentColor marks.
 - `label`: Label wrapper around the default slot.
 
-Events: none
+Events:
+- `change` (Event): Fired once after a user toggle (pointer, slotted label or Space) commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: react to the committed selection. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
 
 Methods: none
 
@@ -1420,7 +1421,8 @@ Parts:
 - `input`: Internal native input that owns entry text, caret and selection.
 - `label`: Visible label that provides the accessible name.
 
-Events: none
+Events:
+- `change` (Event): Fired when the user commits an edited value (native text-field timing, such as on blur), composed across the shadow boundary; `value` is already current when listeners run. When to use: react to a committed value. When NOT to use: do not use it for per-keystroke updates; the native `input` event carries those.
 
 Methods: none
 
@@ -2001,7 +2003,8 @@ Slots:
 Parts:
 - `label`: Visible group label and accessible-name source.
 
-Events: none
+Events:
+- `change` (Event): Fired once after the user selects a different radio, composed across the shadow boundary; `value` is already current when listeners run. When to use: react to the committed choice. When NOT to use: do not expect it for programmatic `value` writes, which are silent.
 
 Methods: none
 
@@ -2150,7 +2153,8 @@ Parts:
 - `trigger`: Native button carrying the combobox role.
 - `value`: Displayed selection or placeholder.
 
-Events: none
+Events:
+- `change` (Event): Fired once after the user commits a different option, composed across the shadow boundary and preceded by `input`; `value` is already current when listeners run. When to use: react to the committed choice. When NOT to use: do not expect it for programmatic `value` writes, which are silent.
 
 Methods: none
 
@@ -2351,7 +2355,8 @@ Parts:
 - `thumb`: Traveling handle.
 - `track`: On/off channel.
 
-Events: none
+Events:
+- `change` (Event): Fired once after a user toggle commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: apply the on/off effect. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
 
 Methods: none
 
@@ -2707,7 +2712,8 @@ Parts:
 - `label`: Rendered visible label and accessible-name source.
 - `textarea`: Internal native multiline control.
 
-Events: none
+Events:
+- `change` (Event): Fired when the user commits an edited value (on blur, with native textarea timing), composed across the shadow boundary; `value` is already current when listeners run. When to use: react to a committed value. When NOT to use: do not use it for per-keystroke updates; the native `input` event carries those.
 
 Methods: none
 
