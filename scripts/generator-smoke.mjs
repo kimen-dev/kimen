@@ -39,6 +39,8 @@ export function createGeneratorSmokeEnvironment({ temporaryRoot, baseEnvironment
     NPM_CONFIG_CACHE: join(cacheRoot, 'npm'),
     npm_config_cache: join(cacheRoot, 'npm'),
     NPM_CONFIG_STORE_DIR: join(cacheRoot, 'pnpm-store'),
+    PNPM_CONFIG_STORE_DIR: join(cacheRoot, 'pnpm-store'),
+    pnpm_config_store_dir: join(cacheRoot, 'pnpm-store'),
     NPM_CONFIG_USERCONFIG: join(configRoot, 'npmrc'),
     NPM_CONFIG_GLOBALCONFIG: join(configRoot, 'npmrc-global'),
     COREPACK_HOME: join(cacheRoot, 'corepack'),

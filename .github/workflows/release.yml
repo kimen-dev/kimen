@@ -55,6 +55,14 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      # Same designation as ci.yml quality: the cross-device regressions need
+      # TMPDIR on a filesystem other than the checkout's.
+      - name: Designate a temporary directory on its own filesystem
+        run: |
+          sudo mkdir -p /mnt/kimen-tmp
+          sudo mount -t tmpfs -o size=4g,mode=1777 tmpfs /mnt/kimen-tmp
+          printf 'TMPDIR=%s\n' /mnt/kimen-tmp >>"$GITHUB_ENV"
+
       - name: Allocate isolated writable caches
         run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
 
