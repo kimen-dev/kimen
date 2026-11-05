@@ -3,6 +3,23 @@ import { readFileSync } from 'node:fs';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 
+const preserveBuildServerDirAdapter = {
+  name: 'kimen-docs-preserve-build-server-dir',
+  hooks: {
+    'astro:config:done'({ setAdapter }) {
+      setAdapter({
+        name: 'kimen-docs-preserve-build-server-dir',
+        hooks: {},
+        adapterFeatures: {
+          buildOutput: 'static',
+          preserveBuildServerDir: true,
+        },
+        supportedAstroFeatures: {},
+      });
+    },
+  },
+};
+
 // Same build gate as scripts/build-site.sh: the tag exists only when the
 // publishing workflow sets the marker. site/analytics.json is read (not
 // imported as a module) so a config file consulting a sibling data file
@@ -35,6 +52,7 @@ export default defineConfig({
   site: 'https://kimen.dev',
   base: '/docs',
   integrations: [
+    preserveBuildServerDirAdapter,
     starlight({
       title: 'Kimen',
       description:

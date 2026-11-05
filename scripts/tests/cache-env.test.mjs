@@ -27,6 +27,8 @@ const selectedEnvironmentScript = `
 const environment = {
   NPM_CONFIG_CACHE: process.env.NPM_CONFIG_CACHE,
   NPM_CONFIG_STORE_DIR: process.env.NPM_CONFIG_STORE_DIR,
+  PNPM_CONFIG_STORE_DIR: process.env.PNPM_CONFIG_STORE_DIR,
+  pnpm_config_store_dir: process.env.pnpm_config_store_dir,
   NPM_CONFIG_USERCONFIG: process.env.NPM_CONFIG_USERCONFIG,
   NPM_CONFIG_GLOBALCONFIG: process.env.NPM_CONFIG_GLOBALCONFIG,
   COREPACK_HOME: process.env.COREPACK_HOME,
@@ -45,8 +47,12 @@ const environment = {
 process.stdout.write(JSON.stringify(environment));
 `;
 
+// pnpm 11 reads its own settings only as PNPM_CONFIG_* / pnpm_config_* and
+// ignores NPM_CONFIG_STORE_DIR, so the validated store must also reach the
+// manager under both of its spellings. When the two disagree pnpm takes
+// whichever comes first in the environment, so both are pinned to one value.
 function expectedEnvironment(cacheRoot, overrides = {}) {
-  return {
+  const environment = {
     NPM_CONFIG_CACHE: join(cacheRoot, 'npm/cache'),
     NPM_CONFIG_STORE_DIR: join(cacheRoot, 'pnpm/store'),
     NPM_CONFIG_USERCONFIG: join(cacheRoot, 'npm/userconfig'),
@@ -63,6 +69,11 @@ function expectedEnvironment(cacheRoot, overrides = {}) {
     NX_DAEMON: 'false',
     KIMEN_CACHE_ENV_READY: '1',
     ...overrides,
+  };
+  return {
+    ...environment,
+    PNPM_CONFIG_STORE_DIR: environment.NPM_CONFIG_STORE_DIR,
+    pnpm_config_store_dir: environment.NPM_CONFIG_STORE_DIR,
   };
 }
 
@@ -178,6 +189,56 @@ test('re-enters with the validated prepared environment when the repository cach
         stderr: '',
         environment: expectedEnvironment(fixture.cacheRoot, { PNPM_HOME: null }),
       },
+    );
+  } finally {
+    await fixture.cleanup();
+  }
+});
+
+// NPM_CONFIG_STORE_DIR is the only store override the wrapper validates. A pnpm
+// spelling inherited from the caller has passed none of those checks, and pnpm
+// would obey it ahead of the validated store, so it must not survive the wrapper
+// either on the first entry or on a re-entry that inherits it.
+test('replaces an inherited pnpm store setting with the validated store on entry and re-entry', async () => {
+  const fixture = await createFixture();
+
+  try {
+    const foreign = join(fixture.sandbox, 'foreign-store');
+    await mkdir(foreign, { recursive: true });
+    const inherited = { PNPM_CONFIG_STORE_DIR: foreign, pnpm_config_store_dir: foreign };
+    const first = await runCacheEnv(
+      fixture,
+      ['--', process.execPath, '-e', selectedEnvironmentScript],
+      inherited,
+    );
+    const reentry = await runCacheEnv(
+      fixture,
+      [
+        '--',
+        'env',
+        `PNPM_CONFIG_STORE_DIR=${foreign}`,
+        `pnpm_config_store_dir=${foreign}`,
+        'bash',
+        fixture.script,
+        '--',
+        process.execPath,
+        '-e',
+        selectedEnvironmentScript,
+      ],
+      inherited,
+    );
+    const expected = expectedEnvironment(fixture.cacheRoot, { PNPM_HOME: null });
+
+    assert.deepEqual(
+      [first, reentry].map((result) => ({
+        code: result.code,
+        stderr: result.stderr,
+        environment: result.code === 0 ? JSON.parse(result.stdout) : null,
+      })),
+      [
+        { code: 0, stderr: '', environment: expected },
+        { code: 0, stderr: '', environment: expected },
+      ],
     );
   } finally {
     await fixture.cleanup();

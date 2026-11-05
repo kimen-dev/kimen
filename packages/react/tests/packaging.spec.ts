@@ -11,6 +11,13 @@ import { describe, expect, it } from 'vitest';
 
 const repoRoot = join(__dirname, '../../..');
 
+// Spawns two real `pnpm exec publint` processes in series. That takes ~2 s on
+// an idle workstation but more than Vitest's 5 s default on a shared 4-vCPU CI
+// runner while Nx runs other test targets in parallel (it timed out there at
+// ~5.4 s). An explicit budget keeps the real tool check instead of raising
+// the default for every test.
+const PUBLINT_TIMEOUT_MS = 30_000;
+
 function publint(packageDirectory: string): string {
   return execFileSync('pnpm', ['exec', 'publint', '--strict', packageDirectory], {
     cwd: repoRoot,
@@ -20,7 +27,9 @@ function publint(packageDirectory: string): string {
 }
 
 describe('wrapper packaging', () => {
-  it('S12 passes publint for the React and Vue wrappers with their peer ranges', () => {
+  it('S12 passes publint for the React and Vue wrappers with their peer ranges', {
+    timeout: PUBLINT_TIMEOUT_MS,
+  }, () => {
     expect(publint('packages/react')).toContain('All good');
     expect(publint('packages/vue')).toContain('All good');
 
