@@ -8,7 +8,12 @@
  * renderer over the neutral catalog.
  */
 import { SURFACE_DOCUMENT } from './generated/surface-document.js';
-import { SURFACE_MIME_TYPE, surfaceResourceUri } from './protocol.js';
+import {
+  KIMEN_ACTION_TOOL,
+  KIMEN_SURFACE_KEY,
+  SURFACE_MIME_TYPE,
+  surfaceResourceUri,
+} from './protocol.js';
 
 /**
  * The surface's declared content policy (SEP-1865 `_meta.ui.csp`): empty
@@ -20,7 +25,10 @@ export interface SurfaceContentPolicy {
   readonly resourceDomains: readonly string[];
 }
 
-const NO_NETWORK_POLICY: SurfaceContentPolicy = { connectDomains: [], resourceDomains: [] };
+const NO_NETWORK_POLICY: SurfaceContentPolicy = {
+  connectDomains: [],
+  resourceDomains: [],
+};
 
 /** The predeclared `ui://` resource a host resolves, audits, caches and renders. */
 export interface KimenSurfaceResource {
@@ -57,21 +65,83 @@ export function declareToolSurface(name = 'surface'): {
   return { ui: { resourceUri: surfaceResourceUri(name) } };
 }
 
-/** A tool result carrying both the renderable surface payload and its text fallback. */
-export interface SurfaceToolResult {
-  readonly content: readonly { readonly type: 'text'; readonly text: string }[];
-  readonly _meta: { readonly ui: { readonly surface: { readonly spec: unknown } } };
+/**
+ * The app-only tool that receives every declared action of a Kimen surface
+ * (spec 030 S6). Register it on the same MCP server as the surface tool and
+ * validate `action` server-side: the surface only sends actions its rendered
+ * spec declared, but the server is the authority.
+ */
+export interface KimenActionTool {
+  readonly name: typeof KIMEN_ACTION_TOOL;
+  readonly description: string;
+  readonly inputSchema: {
+    readonly type: 'object';
+    readonly properties: {
+      readonly action: { readonly type: 'string' };
+      readonly data: {
+        readonly type: 'object';
+        readonly additionalProperties: { readonly type: readonly string[] };
+      };
+    };
+    readonly required: readonly ['action'];
+    readonly additionalProperties: false;
+  };
+  readonly _meta: {
+    readonly ui: {
+      readonly resourceUri: string;
+      readonly visibility: readonly ['app'];
+    };
+  };
 }
 
 /**
- * Wraps a neutral UI spec as a tool result (FR-005): the surface payload is
- * rendered by hosts with interactive surfaces, while `content` carries the
- * same outcome as text for hosts without them. The text fallback is data — it
+ * Declares the action tool for a surface. `visibility: ["app"]` keeps it out
+ * of the agent's tool list and limits callers to the app on this server
+ * connection (SEP-1865 2026-01-26, apps.mdx:395-402); the surface reaches it
+ * with a standard `tools/call` (apps.mdx:1490).
+ */
+export function declareActionTool(name = 'surface'): KimenActionTool {
+  return {
+    _meta: {
+      ui: { resourceUri: surfaceResourceUri(name), visibility: ['app'] },
+    },
+    description: 'Receives a declared action from a Kimen surface. App-only; not for the model.',
+    inputSchema: {
+      additionalProperties: false,
+      properties: {
+        action: { type: 'string' },
+        data: {
+          additionalProperties: { type: ['boolean', 'number', 'string'] },
+          type: 'object',
+        },
+      },
+      required: ['action'],
+      type: 'object',
+    },
+    name: KIMEN_ACTION_TOOL,
+  };
+}
+
+/** A `CallToolResult` carrying both the renderable surface payload and its text fallback. */
+export interface SurfaceToolResult {
+  readonly content: readonly { readonly type: 'text'; readonly text: string }[];
+  readonly structuredContent: {
+    readonly kimenSurface: { readonly spec: unknown };
+  };
+}
+
+/**
+ * Wraps a neutral UI spec as a tool result (FR-005). The spec travels in
+ * `structuredContent` — "structured data optimized for UI rendering (not
+ * added to model context)" (apps.mdx:1474) — and is what the surface renders
+ * when the host forwards it as `ui/notifications/tool-result`; `content`
+ * carries the same outcome as text for the model and for hosts without
+ * interactive surfaces (apps.mdx:1473, 1559). The text fallback is data — it
  * is never an alternate render path.
  */
 export function surfaceToolResult(spec: unknown, textFallback: string): SurfaceToolResult {
   return {
-    _meta: { ui: { surface: { spec } } },
     content: [{ text: textFallback, type: 'text' }],
+    structuredContent: { [KIMEN_SURFACE_KEY]: { spec } },
   };
 }

@@ -98,9 +98,10 @@ module boundaries for protocol-type leakage.
 
 ### Edge Cases
 
-- Partial or streaming tool input renders progressively through the same
-  guarded path — never a second parser or a relaxed "fast path" for
-  incomplete specs.
+- Partial or streaming tool input (`ui/notifications/tool-input-partial`) is
+  acknowledged and never rendered in v1: the spec renders only from the tool
+  result, through the same guarded path — never a second parser or a relaxed
+  "fast path" for incomplete specs.
 - The text fallback is derived from the same tool result and never becomes an
   alternate render path: markup inside text content is data, not UI.
 - A host caches the audited resource: the packaged surface document must be
@@ -171,6 +172,7 @@ Feature: MCP Apps adapter
       When the surface attempts to dispatch the action "transfer-funds"
       Then no message for "transfer-funds" reaches the host
       And the attempt is reported as refused
+      And dispatching "refresh-inventory" sends one tools/call request naming the adapter's app-only action tool
 
     # S7
     Scenario: A message without the protocol envelope never becomes state
@@ -182,9 +184,10 @@ Feature: MCP Apps adapter
 
     # S8
     Scenario: An undeclared protocol version is refused, never guessed
-      Given a host announcing an MCP Apps protocol version absent from the adapter's compatibility matrix
+      Given a host whose ui/initialize result negotiates an MCP Apps protocol version absent from the adapter's compatibility matrix
       When the host and the surface negotiate their connection
       Then the adapter refuses the connection naming the versions it supports
+      And the surface never sends ui/notifications/initialized
       And no surface renders under the undeclared version
 
     # S9
@@ -199,6 +202,42 @@ Feature: MCP Apps adapter
       Given the workspace with the adapter package present
       When module boundaries are evaluated
       Then no MCP Apps protocol type is importable from the elements or catalog packages
+
+  Rule: The surface speaks the MCP Apps 2026-01-26 lifecycle
+
+    # S11
+    Scenario: The surface opens the connection with the ui/initialize handshake
+      Given the surface document embedded by an MCP Apps host
+      When the surface starts
+      Then its only message before the host answers is one ui/initialize request carrying its app info, its capabilities and protocol version "2026-01-26"
+      And after the host's successful result it sends ui/notifications/initialized
+
+    # S12
+    Scenario: Host traffic before the handshake completes never becomes state
+      Given a surface whose ui/initialize request has not been answered
+      When the host sends a ui/notifications/tool-result carrying a valid surface spec
+      Then nothing renders and the message is reported as refused
+      And no action can leave the surface
+
+    # S13
+    Scenario: A tool result notification renders through the guarded renderer
+      Given a surface whose handshake has completed
+      When the host sends ui/notifications/tool-result whose structured content carries a catalog spec
+      Then the spec renders through the guarded renderer
+      And a tool result without a Kimen surface is refused and leaves the rendered state unchanged
+
+    # S14
+    Scenario: The host's teardown request is answered and closes the surface
+      Given a rendered surface whose handshake has completed
+      When the host sends a ui/resource-teardown request
+      Then the surface answers that request with an empty result
+      And no action leaves the surface afterwards
+
+    # S15
+    Scenario: A host request the surface does not implement gets a JSON-RPC error
+      Given a surface whose handshake has completed
+      When the host sends a request for a method the surface does not implement
+      Then the surface answers with a JSON-RPC "method not found" error for that request id
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -210,7 +249,7 @@ renderer contract, which this adapter consumes and never re-implements.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15 | |
 | Keyboard path | | N/A — the adapter adds no interaction pattern; keyboard behavior is each catalog component's own contract |
 | Assistive-tech outcome | | N/A — the accessibility tree is produced by catalog components under their own contracts; the adapter adds no rendered semantics |
 | Form participation | | N/A — form behavior is the components' contract; the adapter transports declared actions, not form controls |
@@ -241,7 +280,11 @@ renderer contract, which this adapter consumes and never re-implements.
   boundary before it affects rendering; a message that does not conform to
   the declared protocol envelope is ignored without state change. Outbound
   traffic MUST be limited to declared actions plus the protocol's required
-  lifecycle messages, mediated by the host.
+  lifecycle messages, mediated by the host. Before the `ui/initialize`
+  handshake completes the surface sends nothing but that request, and host
+  traffic does not affect rendering. A declared action leaves as a standard
+  `tools/call` to one app-only tool whose name is fixed by the adapter, never
+  taken from spec data.
 - **FR-005**: Every surfaced tool result MUST also carry text content usable
   by hosts without interactive-surface support. The text fallback is data,
   never a second render path.
@@ -273,8 +316,12 @@ renderer contract, which this adapter consumes and never re-implements.
   results; the only input the renderer accepts.
 - **Declared action**: a named interaction declared in the surface spec; the
   only application traffic allowed to leave the surface.
-- **Protocol envelope**: the message shape host and surface exchange; traffic
-  outside it is ignored.
+- **Protocol envelope**: the JSON-RPC 2.0 message shape (request,
+  notification, result, error) host and surface exchange over `postMessage`
+  (MCP Apps 2026-01-26); traffic outside it is ignored.
+- **Lifecycle**: the View-initiated `ui/initialize` →
+  `ui/notifications/initialized` handshake that gates every other message,
+  ending with the host's `ui/resource-teardown` request.
 - **Compatibility matrix**: `COMPAT.md` rows pairing each adapter version
   with the exact protocol version(s) it supports.
 
@@ -330,6 +377,15 @@ renderer contract, which this adapter consumes and never re-implements.
   contract; scenarios assert observable outcomes only. `COMPAT.md` pins the
   exact protocol version(s) after that verification — until then the
   placeholder row blocks release (S9).
+- **Amendment — conformance to the stable revision (2026-11-05)**: verified
+  against MCP Apps `2026-01-26` (`specification/2026-01-26/apps.mdx` in
+  github.com/modelcontextprotocol/ext-apps at commit
+  `19256f52cad5517ba8272581ed2e11d6a81273d5`). The first implementation
+  used a bridge vocabulary the stable revision does not define (`ui/ready`,
+  `ui/toolResult`, `ui/action`) and skipped the `ui/initialize` handshake, so
+  a conforming host would never deliver a result. Through the Art. II
+  amendment path S6 and S8 were tightened to the real lifecycle (no IDs
+  retired) and S11–S15 appended; the security invariants are unchanged.
 - The `ui://` addressing and the self-contained text/html resource shape
   come from the SEP as proposed. Unlike 029 — which deliberately excludes
   all protocol vocabulary from its Gherkin — this contract fixes both facts

@@ -10,7 +10,10 @@ import { describe, expect, it } from 'vitest';
 
 import {
   createKimenSurfaceResource,
+  declareActionTool,
   declareToolSurface,
+  KIMEN_ACTION_TOOL,
+  KIMEN_APP_INFO,
   MCP_APPS_PROTOCOL_VERSIONS,
   SURFACE_DOCUMENT,
   SURFACE_MIME_TYPE,
@@ -19,6 +22,11 @@ import {
 } from '../src/index.js';
 
 const compat = readFileSync(join(process.cwd(), 'COMPAT.md'), 'utf8');
+const packageVersion = (
+  JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as {
+    version: string;
+  }
+).version;
 
 describe('surfaces are predeclared, self-contained and auditable', () => {
   it('S1 declares a tool surface the host resolves to a ui:// resource document', () => {
@@ -57,13 +65,35 @@ describe('surfaces are predeclared, self-contained and auditable', () => {
   });
 
   it('S3 carries a text fallback usable without the interactive surface', () => {
-    const spec = { root: { component: 'ki-card', slots: { '': ['12 items'] } }, version: 1 };
+    const spec = {
+      root: { component: 'ki-card', slots: { '': ['12 items'] } },
+      version: 1,
+    };
     const result = surfaceToolResult(spec, '12 items in stock');
 
     expect(result.content).toHaveLength(1);
-    expect(result.content[0]).toEqual({ text: '12 items in stock', type: 'text' });
-    // The renderable payload travels alongside the text, never instead of it.
-    expect(result._meta.ui.surface.spec).toBe(spec);
+    expect(result.content[0]).toEqual({
+      text: '12 items in stock',
+      type: 'text',
+    });
+    // The renderable payload travels alongside the text, never instead of it,
+    // in `structuredContent` — data for the UI, not for the model
+    // (SEP-1865 2026-01-26, apps.mdx:1473-1475).
+    expect(result.structuredContent.kimenSurface.spec).toBe(spec);
+  });
+
+  it('S6 declares the app-only tool that receives the surface actions', () => {
+    const tool = declareActionTool('inventory');
+
+    expect(tool.name).toBe(KIMEN_ACTION_TOOL);
+    // Hidden from the agent, callable only by the app on this server
+    // (apps.mdx:370-384 example, :395-402 visibility rules).
+    expect(tool._meta.ui).toEqual({
+      resourceUri: declareToolSurface('inventory').ui.resourceUri,
+      visibility: ['app'],
+    });
+    expect(tool.inputSchema.required).toEqual(['action']);
+    expect(tool.inputSchema.additionalProperties).toBe(false);
   });
 
   it('S9 pairs each adapter version with an exact protocol version, no placeholder', () => {
@@ -78,5 +108,9 @@ describe('surfaces are predeclared, self-contained and auditable', () => {
     // No generator placeholder row survives to release.
     expect(section).not.toMatch(/TODO|placeholder/i);
     expect(section).toContain('2026-01-26');
+    // The row's adapter version is the package version the surface announces
+    // as `appInfo.version` in `ui/initialize`.
+    expect(section).toContain(`| ${packageVersion} | 2026-01-26 |`);
+    expect(KIMEN_APP_INFO.version).toBe(packageVersion);
   });
 });
