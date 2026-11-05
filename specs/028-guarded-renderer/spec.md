@@ -422,7 +422,9 @@ governed by its own approved contract (specs `002`–`016`).
   version metadata of `027-runtime-catalog` FR-010/S12), with a diagnostic
   naming the spec's declared version and the supported versions. No partial
   render and no best-effort downgrade occurs: a spec fabricated against a
-  laxer schema version must never be validated under it.
+  laxer schema version must never be validated under it. "Supported" is the
+  SemVer-compatible range of `035-live-surface` FR-002: the catalog's major
+  with a minor not newer than its own.
 
 ### Key Entities
 
