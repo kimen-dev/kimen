@@ -335,6 +335,8 @@ write_github_environment() {
     printf 'KIMEN_CACHE_ROOT=%s\n' "$KIMEN_CACHE_ROOT"
     printf 'NPM_CONFIG_CACHE=%s\n' "$NPM_CONFIG_CACHE"
     printf 'NPM_CONFIG_STORE_DIR=%s\n' "$NPM_CONFIG_STORE_DIR"
+    printf 'PNPM_CONFIG_STORE_DIR=%s\n' "$PNPM_CONFIG_STORE_DIR"
+    printf 'pnpm_config_store_dir=%s\n' "$pnpm_config_store_dir"
     printf 'NPM_CONFIG_USERCONFIG=%s\n' "$NPM_CONFIG_USERCONFIG"
     printf 'NPM_CONFIG_GLOBALCONFIG=%s\n' "$NPM_CONFIG_GLOBALCONFIG"
     printf 'COREPACK_HOME=%s\n' "$COREPACK_HOME"
@@ -475,6 +477,8 @@ fi
 
 if [ "$MODE" = '--' ] && [ "${KIMEN_CACHE_ENV_READY:-}" = '1' ]; then
   validate_prepared_environment
+  export PNPM_CONFIG_STORE_DIR="$NPM_CONFIG_STORE_DIR"
+  export pnpm_config_store_dir="$NPM_CONFIG_STORE_DIR"
   exec "$@"
 fi
 
@@ -494,6 +498,9 @@ export KIMEN_CACHE_ROOT
 
 select_directory NPM_CONFIG_CACHE "$KIMEN_CACHE_ROOT/npm/cache"
 select_directory NPM_CONFIG_STORE_DIR "$KIMEN_CACHE_ROOT/pnpm/store"
+# pnpm 11 reads its own configuration names; replace both inherited spellings.
+export PNPM_CONFIG_STORE_DIR="$NPM_CONFIG_STORE_DIR"
+export pnpm_config_store_dir="$NPM_CONFIG_STORE_DIR"
 select_empty_file NPM_CONFIG_USERCONFIG "$KIMEN_CACHE_ROOT/npm/userconfig"
 select_empty_file NPM_CONFIG_GLOBALCONFIG "$KIMEN_CACHE_ROOT/npm/globalconfig"
 select_directory COREPACK_HOME "$KIMEN_CACHE_ROOT/corepack"
