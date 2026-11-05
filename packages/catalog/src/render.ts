@@ -13,7 +13,14 @@
  * SSR/DSD is a deferred bet.
  */
 import { catalogData } from './generated/catalog.js';
-import type { Catalog, CatalogEntry, UiSpec, UiSpecNode } from './validate.js';
+import { tagGrammarViolation } from './tag-grammar.js';
+import type {
+  Catalog,
+  CatalogEntry,
+  CatalogPropConstraint,
+  UiSpec,
+  UiSpecNode,
+} from './validate.js';
 import { toPlainData, validatePlainData } from './validate.js';
 
 const builtInCatalog: Catalog = catalogData;
@@ -151,6 +158,24 @@ interface GuardState {
   nodes: number;
   readonly diagnostics: RenderDiagnostic[];
   readonly budgets: RenderBudgets;
+  readonly components: Readonly<Record<string, CatalogEntry>>;
+}
+
+/**
+ * The platform activation event of a bound node whose catalog entry declares
+ * no event of its own (buttons, cards): the click a pointer, Enter or Space
+ * produces on an activatable element.
+ */
+const DEFAULT_ACTIVATION_EVENT = 'click';
+
+/**
+ * The declared events of a catalog entry, in the entry's (sorted) order. A
+ * bound node activates on the only one (FR-003, S17) or, when there is none,
+ * on the platform click; more than one is ambiguous and the guard rejects
+ * the binding before any listener exists (S19).
+ */
+function declaredEvents(entry: CatalogEntry | undefined): readonly string[] {
+  return Object.keys(entry?.events ?? {});
 }
 
 /**
@@ -177,6 +202,33 @@ function guardNode(node: UiSpecNode, path: string, depth: number, state: GuardSt
       value: String(state.nodes),
     });
     return;
+  }
+  // Renderer-native tag guard (032 FR-013/S17, defence in depth): `Catalog`
+  // is structural, so a hand-built value that never crossed createCatalog
+  // could declare a native tag such as `script` or `iframe`. Re-apply the
+  // registration tag grammar before buildNode ever calls createElement.
+  const tagViolation = tagGrammarViolation(node.component);
+  if (tagViolation !== null) {
+    state.diagnostics.push({
+      message: `component "${node.component}" ${tagViolation}`,
+      path: `${path}.component`,
+      rule: 'invalid-tag',
+      value: node.component,
+    });
+  }
+  // Renderer-native activation guard (FR-003, S19): a bound action needs ONE
+  // activation event. An entry declaring several gives the spec no way to
+  // say which, so the binding is rejected fail-closed instead of guessing.
+  if (node.action !== undefined) {
+    const events = declaredEvents(state.components[node.component]);
+    if (events.length > 1) {
+      state.diagnostics.push({
+        message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
+        path: `${path}.action`,
+        rule: 'ambiguous-activation-event',
+        value: node.action,
+      });
+    }
   }
   for (const [name, value] of Object.entries(node.props ?? {})) {
     // Renderer-native name guard (defence in depth for hand-built catalogs that
@@ -232,6 +284,67 @@ function payloadBytes(data: unknown): number {
   return new TextEncoder().encode(JSON.stringify(data)).length;
 }
 
+/**
+ * The live-state props a declared-event activation reports (FR-003, S17): the
+ * control's own value channel, which the user changes in place. A renderer-
+ * wide policy like the URL prop names, applied only where the entry declares
+ * the prop and only when the live value has the declared type, so nothing
+ * undeclared or mistyped ever crosses the action channel.
+ */
+const LIVE_STATE_PROPS = ['checked', 'value'] as const;
+
+function matchesConstraint(
+  value: unknown,
+  constraint: CatalogPropConstraint,
+): value is boolean | number | string {
+  switch (constraint.type) {
+    case 'boolean':
+      return typeof value === 'boolean';
+    case 'number':
+      return typeof value === 'number' && Number.isFinite(value);
+    case 'enum':
+      return typeof value === 'string' && constraint.values?.includes(value) === true;
+    default:
+      return typeof value === 'string';
+  }
+}
+
+function liveData(
+  element: Element,
+  props: Readonly<Record<string, boolean | number | string>>,
+  entry: CatalogEntry | undefined,
+): Record<string, boolean | number | string> {
+  const data: Record<string, boolean | number | string> = { ...props };
+  for (const name of LIVE_STATE_PROPS) {
+    const constraint = entry?.props[name];
+    if (constraint === undefined) {
+      continue;
+    }
+    // Reads the rendered component's own property (its code, never spec data).
+    const live: unknown = Reflect.get(element, name);
+    if (matchesConstraint(live, constraint)) {
+      data[name] = live;
+    }
+  }
+  return data;
+}
+
+/**
+ * Interactions already owned by a bound node. Listeners run innermost-first
+ * while an event bubbles, so the innermost bound node claims the event and
+ * no enclosing bound node dispatches for the same activation (S4) — without
+ * cancelling it or hiding it from the host page.
+ */
+const claimedEvents = new WeakSet<Event>();
+
+function claim(event: Event): boolean {
+  if (claimedEvents.has(event)) {
+    return false;
+  }
+  claimedEvents.add(event);
+  return true;
+}
+
 function attachText(parent: Node, text: string, slotName: string, doc: Document): void {
   if (slotName === '') {
     parent.appendChild(doc.createTextNode(text));
@@ -248,9 +361,9 @@ function attachText(parent: Node, text: string, slotName: string, doc: Document)
 /**
  * Builds one validated node into a detached element (FR-004): props become
  * attributes (booleans as presence), text children become inert text nodes
- * (never `innerHTML`), and a bound action wires exactly one native
- * activation listener onto the renderer's single channel. No spec string is
- * ever evaluated.
+ * (never `innerHTML`), and a bound action wires exactly one activation
+ * listener — derived from the catalog entry (FR-003) — onto the renderer's
+ * single channel. No spec string is ever evaluated.
  */
 function buildNode(
   node: UiSpecNode,
@@ -272,25 +385,49 @@ function buildNode(
   }
   if (node.action !== undefined && onAction !== undefined) {
     const action = node.action;
-    // A guarded action is the ONLY interaction channel (S4): suppress the
-    // native default (a submit button's form submission) and stop the event
-    // bubbling to an ancestor action listener, so exactly one declared action
-    // dispatches per activation and no other callback or code path runs.
-    element.addEventListener('click', (event: Event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      onAction({ action, data: { ...props }, path });
-    });
-    // Declaratively neutralize a form-submitting default when the catalog
-    // types this component's `type` prop and the spec left it unset: pin it
-    // to "button" so no native submit path runs alongside the action.
-    const typeConstraint = entries[node.component]?.props['type'];
-    if (
-      typeConstraint?.type === 'enum' &&
-      typeConstraint.values?.includes('button') === true &&
-      props['type'] === undefined
-    ) {
-      element.setAttribute('type', 'button');
+    const entry = entries[node.component];
+    // The guard admitted at most one declared event (S19).
+    const activation = declaredEvents(entry)[0] ?? DEFAULT_ACTIVATION_EVENT;
+    if (activation === DEFAULT_ACTIVATION_EVENT) {
+      // A click-activated node (S4) dispatches the spec's data payload and
+      // suppresses the native default (a submit button's form submission)
+      // and the bubbling, so no other callback or code path runs.
+      element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
+        if (!claim(event)) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        onAction({ action, data: { ...props }, path });
+      });
+      // Declaratively neutralize a form-submitting default when the catalog
+      // types this component's `type` prop and the spec left it unset: pin it
+      // to "button" so no native submit path runs alongside the action.
+      const typeConstraint = entry?.props['type'];
+      if (
+        typeConstraint?.type === 'enum' &&
+        typeConstraint.values?.includes('button') === true &&
+        props['type'] === undefined
+      ) {
+        element.setAttribute('type', 'button');
+      }
+    } else {
+      // A declared-event node (S17) dispatches on the event its catalog
+      // entry declares, emitted by the component itself — a same-named
+      // event bubbling up from a descendant is not this control's
+      // activation (S18). Nothing is cancelled: the control must be able to
+      // change, and the payload carries its live state. The click that
+      // operates the control is claimed, never cancelled, so an enclosing
+      // click-bound node does not dispatch for it (S4).
+      element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
+        claim(event);
+      });
+      element.addEventListener(activation, (event: Event) => {
+        if (event.target !== element || !claim(event)) {
+          return;
+        }
+        onAction({ action, data: liveData(element, props, entry), path });
+      });
     }
   }
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
@@ -399,7 +536,12 @@ function prepare(
       spec: undefined as unknown as UiSpec,
     };
   }
-  const state: GuardState = { budgets, diagnostics: [], nodes: 0 };
+  const state: GuardState = {
+    budgets,
+    components: catalog.components,
+    diagnostics: [],
+    nodes: 0,
+  };
   guardNode(report.spec.root, 'root', 1, state);
   if (state.diagnostics.length > 0) {
     return { diagnostics: state.diagnostics, spec: undefined as unknown as UiSpec };
@@ -471,6 +613,9 @@ export function createStreamingRenderer(
   const declaredActions = options.actions ?? [];
   let accumulatedBytes = 0;
   let accumulatedNodes = 0;
+  // Attach order of the next chunk: each top-level chunk is addressed as
+  // `stream[<n>]`, so action paths stay unique across pushes.
+  let attachedChunks = 0;
   // The version-skew gate (FR-012/S13) applies to a stream up front: an
   // unsupported catalog schema version halts every push before any chunk
   // attaches, so future or laxer chunks can never render.
@@ -526,7 +671,12 @@ export function createStreamingRenderer(
         ...budgets,
         maxNodes: budgets.maxNodes - accumulatedNodes,
       };
-      const state: GuardState = { budgets: remainingNodeBudget, diagnostics: [], nodes: 0 };
+      const state: GuardState = {
+        budgets: remainingNodeBudget,
+        components: catalog.components,
+        diagnostics: [],
+        nodes: 0,
+      };
       guardNode(report.spec.root, 'root', 1, state);
       if (state.diagnostics.length > 0) {
         halted = state.diagnostics[0] ?? null;
@@ -534,8 +684,13 @@ export function createStreamingRenderer(
       }
       accumulatedBytes += chunkBytes;
       accumulatedNodes += state.nodes;
+      // Each chunk is its own top-level subtree on the surface: it dispatches
+      // actions at `stream[<n>]` (descendants keep renderUiSpec's path
+      // grammar below it), never a `root` shared by every pushed chunk.
+      const chunkPath = `stream[${String(attachedChunks)}]`;
+      attachedChunks += 1;
       options.surface.appendChild(
-        buildNode(report.spec.root, 'root', doc, options.onAction, catalog.components),
+        buildNode(report.spec.root, chunkPath, doc, options.onAction, catalog.components),
       );
       return { diagnostics: [], ok: true };
     },

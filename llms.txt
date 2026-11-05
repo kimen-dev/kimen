@@ -852,7 +852,8 @@ Parts:
 - `control`: Visual checkbox box, border, focus ring and currentColor marks.
 - `label`: Label wrapper around the default slot.
 
-Events: none
+Events:
+- `change` (Event): Fired once after a user toggle (pointer, slotted label or Space) commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: react to the committed selection. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
 
 Methods: none
 
@@ -1420,7 +1421,8 @@ Parts:
 - `input`: Internal native input that owns entry text, caret and selection.
 - `label`: Visible label that provides the accessible name.
 
-Events: none
+Events:
+- `change` (Event): Fired when the user commits an edited value (native text-field timing, such as on blur), composed across the shadow boundary; `value` is already current when listeners run. When to use: react to a committed value. When NOT to use: do not use it for per-keystroke updates; the native `input` event carries those.
 
 Methods: none
 
@@ -2001,7 +2003,8 @@ Slots:
 Parts:
 - `label`: Visible group label and accessible-name source.
 
-Events: none
+Events:
+- `change` (Event): Fired once after the user selects a different radio, composed across the shadow boundary; `value` is already current when listeners run. When to use: react to the committed choice. When NOT to use: do not expect it for programmatic `value` writes, which are silent.
 
 Methods: none
 
@@ -2150,7 +2153,8 @@ Parts:
 - `trigger`: Native button carrying the combobox role.
 - `value`: Displayed selection or placeholder.
 
-Events: none
+Events:
+- `change` (Event): Fired once after the user commits a different option, composed across the shadow boundary and preceded by `input`; `value` is already current when listeners run. When to use: react to the committed choice. When NOT to use: do not expect it for programmatic `value` writes, which are silent.
 
 Methods: none
 
@@ -2351,7 +2355,8 @@ Parts:
 - `thumb`: Traveling handle.
 - `track`: On/off channel.
 
-Events: none
+Events:
+- `change` (Event): Fired once after a user toggle commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: apply the on/off effect. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
 
 Methods: none
 
@@ -2707,7 +2712,8 @@ Parts:
 - `label`: Rendered visible label and accessible-name source.
 - `textarea`: Internal native multiline control.
 
-Events: none
+Events:
+- `change` (Event): Fired when the user commits an edited value (on blur, with native textarea timing), composed across the shadow boundary; `value` is already current when listeners run. When to use: react to a committed value. When NOT to use: do not use it for per-keystroke updates; the native `input` event carries those.
 
 Methods: none
 
@@ -3000,6 +3006,7 @@ When NOT to use: The host is not an MCP Apps client, or you control the renderin
 Entry points:
 - `declareToolSurface(name?) => { ui: { resourceUri } }`: Declares in an MCP tool's _meta that its results render in a predeclared ui:// surface.
 - `createKimenSurfaceResource(name?) => KimenSurfaceResource`: The self-contained ui:// resource the server serves: one HTML document with every script and style inline, a no-network content policy, and the guarded renderer as its only render path.
-- `surfaceToolResult(spec, textFallback) => SurfaceToolResult`: Wraps a neutral UI spec plus a plain-text fallback as an MCP tool result, so hosts without interactive surfaces still get text.
-- `createSurfaceBridge(options) => SurfaceBridge`: Runs inside the surface document: validates inbound JSON-RPC envelopes, renders ui/toolResult specs through the guarded renderer and dispatches only the surface's declared actions back to the host; non-protocol messages are ignored with no state change.
+- `surfaceToolResult(spec, textFallback) => SurfaceToolResult`: Wraps a neutral UI spec plus a plain-text fallback as an MCP CallToolResult (spec in structuredContent.kimenSurface, text in content), so hosts without interactive surfaces still get text.
+- `declareActionTool(name?) => KimenActionTool`: The app-only MCP tool (kimen_surface_action, _meta.ui.visibility ["app"]) that receives the surface's declared actions as tools/call { action, data }; register it on the same server and validate the action.
+- `createSurfaceBridge(options) => SurfaceBridge`: Runs inside the surface document and speaks the MCP Apps 2026-01-26 lifecycle: sends ui/initialize, refuses an undeclared negotiated version, renders ui/notifications/tool-result specs through the guarded renderer only after the handshake, answers ui/resource-teardown and ping, and dispatches only declared actions as tools/call; non-protocol messages are ignored with no state change.
 - `MCP_APPS_PROTOCOL_VERSIONS`: The exact MCP Apps protocol revisions this adapter supports, versioned with the adapter in COMPAT.md.

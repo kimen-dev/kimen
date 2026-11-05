@@ -115,12 +115,17 @@
         {
           "name": "surfaceToolResult",
           "signature": "surfaceToolResult(spec, textFallback) => SurfaceToolResult",
-          "summary": "Wraps a neutral UI spec plus a plain-text fallback as an MCP tool result, so hosts without interactive surfaces still get text."
+          "summary": "Wraps a neutral UI spec plus a plain-text fallback as an MCP CallToolResult (spec in structuredContent.kimenSurface, text in content), so hosts without interactive surfaces still get text."
+        },
+        {
+          "name": "declareActionTool",
+          "signature": "declareActionTool(name?) => KimenActionTool",
+          "summary": "The app-only MCP tool (kimen_surface_action, _meta.ui.visibility [\"app\"]) that receives the surface's declared actions as tools/call { action, data }; register it on the same server and validate the action."
         },
         {
           "name": "createSurfaceBridge",
           "signature": "createSurfaceBridge(options) => SurfaceBridge",
-          "summary": "Runs inside the surface document: validates inbound JSON-RPC envelopes, renders ui/toolResult specs through the guarded renderer and dispatches only the surface's declared actions back to the host; non-protocol messages are ignored with no state change."
+          "summary": "Runs inside the surface document and speaks the MCP Apps 2026-01-26 lifecycle: sends ui/initialize, refuses an undeclared negotiated version, renders ui/notifications/tool-result specs through the guarded renderer only after the handshake, answers ui/resource-teardown and ping, and dispatches only declared actions as tools/call; non-protocol messages are ignored with no state change."
         },
         {
           "name": "MCP_APPS_PROTOCOL_VERSIONS",

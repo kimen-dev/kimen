@@ -12,8 +12,9 @@ const rootRequire = createRequire(import.meta.url);
 const LEGACY_MINIMATCH_CONSUMER = 'eslint-plugin-jsx-a11y';
 
 test('the legacy minimatch still expands braces on brace-expansion 5', () => {
-  // `brace-expansion` is pinned to 5.0.9 workspace-wide: GHSA-mh99-v99m-4gvg
-  // fixed at 5.0.8, then GHSA-rgw5-rvv9-x895 moved the floor to 5.0.9.
+  // `brace-expansion` is pinned to 5.0.12 workspace-wide: GHSA-mh99-v99m-4gvg
+  // fixed at 5.0.8, GHSA-rgw5-rvv9-x895 moved the floor to 5.0.9, and
+  // GHSA-6j4f-fj2g-mc7p, GHSA-qhr7-859c-m2p7 and GHSA-q2hr-2g5m-vwhr to 5.0.12.
   // That pin crosses a major for this consumer: minimatch 3 does
   // `require('brace-expansion')` and calls the result, while v5 exports an
   // object carrying a named `expand`. Unpatched, every pattern containing
@@ -31,7 +32,7 @@ test('the legacy minimatch still expands braces on brace-expansion 5', () => {
   // ...and the patch must not have been "fixed" by dropping back to a
   // vulnerable brace-expansion instead.
   const { version } = consumerRequire('brace-expansion/package.json');
-  assert.equal(version, '5.0.9');
+  assert.equal(version, '5.0.12');
 });
 
 test('every patch is declared where pnpm reads it', async () => {
@@ -132,6 +133,6 @@ test('pnpm 11 permits only the reviewed native build versions', async () => {
   // (ng-packagr transitive, spec 034) never runs its native build script.
   assert.match(workspace, /^ {2}'@parcel\/watcher@2\.6\.0': false$/mu);
   assert.match(workspace, /^ {2}'esbuild@0\.28\.1': true$/mu);
-  assert.match(workspace, /^ {2}'nx@23\.1\.1': true$/mu);
+  assert.match(workspace, /^ {2}'nx@23\.2\.1': true$/mu);
   assert.doesNotMatch(workspace, /^ {2}(?:@parcel\/watcher|esbuild|nx): (?:true|false)$/gmu);
 });

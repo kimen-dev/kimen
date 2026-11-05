@@ -40,7 +40,7 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
   const eventNames = Object.keys(entry.events);
   if (eventNames.length > 0) {
     lines.push(
-      '- Events (host-side notifications for the embedding app; a spec cannot bind them — "action" fires on click activation only):',
+      '- Events (a spec never names an event: an "action" on this component fires on its one listed event, and a binding is rejected when more than one is listed):',
     );
     for (const name of eventNames) {
       lines.push(`  - \`${name}\` — ${entry.events[name] ?? ''}`);

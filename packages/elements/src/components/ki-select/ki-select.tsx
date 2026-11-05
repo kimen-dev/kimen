@@ -48,6 +48,11 @@ type RosterOption = SelectOptionRecord & {
  * @part indicator - Decorative dropdown indicator.
  * @part listbox - Popup listbox surface.
  * @part option - Mirrored option row rendered in this shadow root.
+ * @event change - Fired once after the user commits a different option, composed
+ * across the shadow boundary and preceded by `input`; `value` is already
+ * current when listeners run. When to use: react to the committed choice.
+ * When NOT to use: do not expect it for programmatic `value` writes, which
+ * are silent.
  */
 @Component({
   tag: 'ki-select',
