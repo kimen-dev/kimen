@@ -350,3 +350,54 @@ describe("live surface — the user's ticked box in Chromium", () => {
     expect(allowed.toggle.checked).toBe(false);
   });
 });
+
+describe('live surface — review regressions in Chromium', () => {
+  it('S20 a batch cannot plant a live inline handler through an inherited slot name', async () => {
+    const live = mountLive();
+    const win = window as unknown as Record<string, unknown>;
+    win['__pwned'] = undefined;
+    // An empty light-DOM container: nothing else in its slots to trip over.
+    expect(
+      live.apply({ ops: [{ node: { component: 'acme-panel', id: 'box' }, op: 'insert' }] }).ok,
+    ).toBe(true);
+    for (const slot of ['__proto__', 'constructor', 'toString']) {
+      const hide = live.apply({
+        ops: [{ node: { component: 'acme-row', id: 'hidden' }, op: 'insert', parent: 'box', slot }],
+      });
+      expect(hide.ok).toBe(false);
+    }
+    const set = live.apply({
+      ops: [
+        {
+          id: 'hidden',
+          op: 'set',
+          props: {
+            onclick: 'window.__pwned = "agent code ran"',
+            style: 'position:fixed;inset:0;z-index:2147483647;display:block;opacity:0',
+          },
+        },
+      ],
+    });
+    expect(set.diagnostics.map((diagnostic) => diagnostic.rule)).toEqual(['unknown-id']);
+    await userEvent.click(document.body, { position: { x: 5, y: 5 } });
+    expect(win['__pwned']).toBeUndefined();
+    expect(surface.querySelector('[onclick], [style]')).toBeNull();
+    expect(live.revision).toBe(2);
+  });
+
+  it('S21 replacing or removing the container of a field the user typed into is rejected', async () => {
+    const live = mountLive();
+    const { field } = await userWorks();
+    const replaced = live.apply({ ops: [{ id: 'panel', node: board(), op: 'replace' }] });
+    expect(replaced.diagnostics[0]).toMatchObject({
+      path: 'ops[0].id',
+      rule: 'user-state-conflict',
+      value: 'hola',
+    });
+    const removed = live.apply({ ops: [{ id: 'panel', op: 'remove' }] });
+    expect(removed.diagnostics[0]?.rule).toBe('user-state-conflict');
+    expect(surface.querySelector('acme-field')).toBe(field);
+    expect(field.value).toBe('hola');
+    expect(document.activeElement).toBe(field);
+  });
+});

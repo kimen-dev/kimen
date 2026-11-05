@@ -38,7 +38,7 @@ import {
   writeProp,
 } from './render.js';
 import type { Catalog, CatalogEntry, UiSpecNode, ValidationIssue } from './validate.js';
-import { toPlainData, validatePlainData } from './validate.js';
+import { FORBIDDEN_KEYS, ownEntry, toPlainData, validatePlainData } from './validate.js';
 
 type Scalar = boolean | number | string;
 
@@ -169,8 +169,13 @@ const opSchema = z.discriminatedUnion('op', [
     slot: z.string().optional(),
     text: z.string(),
   }),
-  z.strictObject({ op: z.literal('remove'), id: idRef }),
-  z.strictObject({ op: z.literal('replace'), id: idRef, node: z.unknown() }),
+  z.strictObject({ op: z.literal('remove'), id: idRef, force: z.boolean().optional() }),
+  z.strictObject({
+    op: z.literal('replace'),
+    id: idRef,
+    node: z.unknown(),
+    force: z.boolean().optional(),
+  }),
 ]);
 const batchSchema = z.strictObject({
   ifRevision: z.number().int().nonnegative().optional(),
@@ -252,12 +257,28 @@ function cloneState(state: MState): MState {
   return { ids, roots: state.roots.map((root) => cloneNode(root, null, ids)) };
 }
 
+/**
+ * Writes an OWN data property whatever the name: a plain assignment of
+ * `__proto__` would set the prototype instead and silently drop the value
+ * from everything that reads the plain view (validation, budgets, snapshot).
+ */
+function defineOwn<T>(record: Record<string, T>, name: string, value: T): void {
+  Object.defineProperty(record, name, {
+    configurable: true,
+    enumerable: true,
+    value,
+    writable: true,
+  });
+}
+
 function toPlain(node: MNode): UiSpecNode {
   const slots: Record<string, (UiSpecNode | string)[]> = {};
   for (const [slotName, entries] of node.slots) {
     if (entries.length > 0) {
-      slots[slotName] = entries.map((entry) =>
-        entry.kind === 'text' ? entry.text : toPlain(entry),
+      defineOwn(
+        slots,
+        slotName,
+        entries.map((entry) => (entry.kind === 'text' ? entry.text : toPlain(entry))),
       );
     }
   }
@@ -278,6 +299,27 @@ function deepFreeze<T>(value: T): T {
     Object.freeze(value);
   }
   return value;
+}
+
+/** Node count and depth of the MODEL itself, never of a derived view. */
+function measure(roots: readonly MNode[]): { nodes: number; depth: number } {
+  let nodes = 0;
+  let depth = 0;
+  const walk = (node: MNode, level: number): void => {
+    nodes += 1;
+    depth = Math.max(depth, level);
+    for (const entries of node.slots.values()) {
+      for (const entry of entries) {
+        if (entry.kind === 'node') {
+          walk(entry, level + 1);
+        }
+      }
+    }
+  };
+  for (const root of roots) {
+    walk(root, 1);
+  }
+  return { depth, nodes };
 }
 
 function* subtree(node: MNode): Generator<MNode> {
@@ -328,6 +370,81 @@ interface ApplyContext {
   readonly dom: { readonly surface: Element; readonly doc: Document } | null;
   readonly components: Readonly<Record<string, CatalogEntry>>;
   readonly allowUserStateOverride: boolean;
+}
+
+/**
+ * A slot name arrives as an op VALUE, never as an object key, so the purity
+ * wall's forbidden-key check never sees it. It must be one the node's catalog
+ * entry declares as an OWN property (an inherited `toString` or
+ * `constructor` is not declared), and never a prototype-bearing name, even
+ * when a hand-built catalog declares one (035 S20).
+ */
+function undeclaredSlot(
+  ctx: ApplyContext,
+  node: MNode,
+  slot: string,
+  at: string,
+): RenderDiagnostic | null {
+  if (FORBIDDEN_KEYS.has(slot)) {
+    return fail(`${at}.slot`, 'forbidden-key', `the slot name "${slot}" is not allowed`, slot);
+  }
+  const entry = ownEntry(ctx.components, node.component);
+  if (entry === undefined || !Object.hasOwn(entry.slots, slot)) {
+    return fail(`${at}.slot`, 'unknown-slot', `${node.component} declares no slot "${slot}"`, slot);
+  }
+  return null;
+}
+
+/**
+ * What the user changed inside `node`'s subtree (the node itself included)
+ * that a `replace` or `remove` would discard (035 S21, D5): a touched
+ * element whose live user-state value differs from what the agent last
+ * wrote. Discarding it needs `force` AND the host's permission.
+ */
+function heldUserState(
+  node: MNode,
+  force: boolean,
+  at: string,
+  ctx: ApplyContext,
+): RenderDiagnostic | null {
+  for (const member of subtree(node)) {
+    const origin = member.origin;
+    if (origin?.dom === undefined || !origin.touched) {
+      continue;
+    }
+    const entry = ownEntry(ctx.components, member.component);
+    for (const name of USER_STATE_PROPS) {
+      const constraint = ownEntry(entry?.props, name);
+      if (constraint === undefined) {
+        continue;
+      }
+      // Reads the rendered component's own property (its code, never spec data).
+      const live: unknown = Reflect.get(origin.dom, name);
+      if (
+        !matchesConstraint(live, constraint) ||
+        live === (ownEntry(origin.props, name) ?? constraint.default)
+      ) {
+        continue;
+      }
+      if (!force) {
+        return fail(
+          `${at}.id`,
+          'user-state-conflict',
+          `the user changed "${name}" of node "${String(member.id)}"; this op would discard it without force`,
+          String(live),
+        );
+      }
+      if (!ctx.allowUserStateOverride) {
+        return fail(
+          `${at}.id`,
+          'user-state-override-denied',
+          `the host does not allow discarding the user's "${name}" of node "${String(member.id)}"`,
+          String(live),
+        );
+      }
+    }
+  }
+  return null;
 }
 
 function registerIds(state: MState, node: MNode, path: string): RenderDiagnostic | null {
@@ -390,6 +507,12 @@ function applyInsert(
     return fail(`${at}.slot`, 'invalid-position', 'a top-level insert takes no slot', op.slot);
   }
   const slot = op.slot ?? '';
+  if (parent !== null) {
+    const undeclared = undeclaredSlot(ctx, parent, slot, at);
+    if (undeclared !== null) {
+      return undeclared;
+    }
+  }
   const list: MEntry[] = parent === null ? state.roots : (parent.slots.get(slot) ?? []);
   let position = list.length;
   if (op.before !== undefined) {
@@ -437,7 +560,7 @@ function userStateConflict(
   ctx: ApplyContext,
 ): RenderDiagnostic | null {
   const origin = node.origin;
-  const constraint = ctx.components[node.component]?.props[name];
+  const constraint = ownEntry(ownEntry(ctx.components, node.component)?.props, name);
   if (
     !USER_STATE_PROPS.has(name) ||
     origin?.dom === undefined ||
@@ -451,7 +574,7 @@ function userStateConflict(
   if (!matchesConstraint(live, constraint)) {
     return null;
   }
-  const written = origin.props[name] ?? constraint.default;
+  const written = ownEntry(origin.props, name) ?? constraint.default;
   const wanted = next ?? constraint.default;
   if (live === written || live === wanted) {
     return null;
@@ -486,30 +609,43 @@ function applySet(
     return node;
   }
   const force = op.force === true;
+  const entry = ownEntry(ctx.components, node.component);
+  // Every prop name is checked against the OWN declared props here, before
+  // any write, instead of trusting a later view of the state (035 S20).
+  for (const name of Object.keys(op.props)) {
+    if (ownEntry(entry?.props, name) === undefined) {
+      return fail(
+        `${at}.props.${name}`,
+        'unknown-prop',
+        `${node.component} declares no prop "${name}"`,
+        name,
+      );
+    }
+  }
   for (const [name, value] of Object.entries(op.props)) {
     const conflict = userStateConflict(node, name, value, force, at, ctx);
     if (conflict !== null) {
       return conflict;
     }
   }
-  const entry = ctx.components[node.component];
   for (const [name, value] of Object.entries(op.props)) {
-    const previous = node.props[name];
+    const previous = ownEntry(node.props, name);
     if (value === null) {
       node.props = Object.fromEntries(Object.entries(node.props).filter(([key]) => key !== name));
     } else {
-      node.props[name] = value;
+      defineOwn(node.props, name, value);
     }
     const element = ctx.dom === null ? undefined : node.dom;
     if (element === undefined) {
       continue;
     }
     const overriding = force && ctx.allowUserStateOverride && USER_STATE_PROPS.has(name);
-    if (previous !== node.props[name]) {
-      writeProp(element, name, node.props[name]);
+    const current = ownEntry(node.props, name);
+    if (previous !== current) {
+      writeProp(element, name, current);
     }
     if (overriding) {
-      const live = node.props[name] ?? entry?.props[name]?.default;
+      const live = current ?? ownEntry(entry?.props, name)?.default;
       if (live !== undefined) {
         // The component's own setter, with a validated scalar of the declared type.
         Reflect.set(element, name, live);
@@ -523,7 +659,7 @@ function applySet(
     ctx.dom !== null &&
     node.dom !== undefined &&
     node.action !== undefined &&
-    'type' in op.props &&
+    Object.hasOwn(op.props, 'type') &&
     declaredEvents(entry).length === 0
   ) {
     pinButtonType(node.dom, entry, node.props);
@@ -542,6 +678,10 @@ function applyText(
     return node;
   }
   const slot = op.slot ?? '';
+  const undeclared = undeclaredSlot(ctx, node, slot, at);
+  if (undeclared !== null) {
+    return undeclared;
+  }
   const list = node.slots.get(slot) ?? [];
   if (list.some((entry) => entry.kind === 'node')) {
     return fail(
@@ -587,6 +727,10 @@ function applyRemove(
   if (!('kind' in node)) {
     return node;
   }
+  const held = heldUserState(node, op.force === true, at, ctx);
+  if (held !== null) {
+    return held;
+  }
   const list = siblings(state, node);
   list.splice(list.indexOf(node), 1);
   unregisterIds(state, node);
@@ -606,6 +750,10 @@ function applyReplace(
   const old = lookup(state, op.id, `${at}.id`);
   if (!('kind' in old)) {
     return old;
+  }
+  const held = heldUserState(old, op.force === true, at, ctx);
+  if (held !== null) {
+    return held;
   }
   const list = siblings(state, old);
   const position = list.indexOf(old);
@@ -681,6 +829,10 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   const live: MState = { ids: new Map(), roots: [] };
   let revision = 0;
   let cached: LiveSnapshot | null = null;
+  // True while a batch is being applied: a component reacting to its own
+  // connection (or the host's onAction) must not interleave a second batch
+  // with a commit validated against the state before it (035 S22).
+  let applying = false;
 
   const result = (diagnostics: readonly RenderDiagnostic[]): LiveBatchResult => ({
     diagnostics,
@@ -705,7 +857,10 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   };
 
   const trackUserState = (element: Element, entry: CatalogEntry | undefined, model: MNode) => {
-    if (entry === undefined || ![...USER_STATE_PROPS].some((name) => name in entry.props)) {
+    if (
+      entry === undefined ||
+      ![...USER_STATE_PROPS].some((name) => Object.hasOwn(entry.props, name))
+    ) {
       return;
     }
     for (const type of new Set<string>([...USER_EVENTS, ...declaredEvents(entry)])) {
@@ -735,7 +890,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     for (const [name, value] of Object.entries(model.props)) {
       writeProp(element, name, value);
     }
-    const entry = components[node.component];
+    const entry = ownEntry(components, node.component);
     if (node.action !== undefined && onAction !== undefined) {
       const action = node.action;
       wireActivation(
@@ -820,6 +975,40 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     if (diagnostics.length > 0) {
       return diagnostics;
     }
+    // The state budgets bind the live MODEL (035 S20): the plain view is
+    // only what the validators read, so a view that ever lost a node would
+    // under-count. Any disagreement between the two fails closed.
+    const shape = measure(state.roots);
+    if (shape.depth > budgets.maxDepth) {
+      return [
+        fail(
+          'surface',
+          'depth-budget',
+          `surface nesting depth exceeds the ${String(budgets.maxDepth)}-level budget`,
+          String(shape.depth),
+        ),
+      ];
+    }
+    if (shape.nodes > budgets.maxNodes) {
+      return [
+        fail(
+          'surface',
+          'node-count-budget',
+          `surface node count exceeds the ${String(budgets.maxNodes)}-node budget`,
+          String(shape.nodes),
+        ),
+      ];
+    }
+    if (shape.nodes !== guard.nodes) {
+      return [
+        fail(
+          'surface',
+          'state-mismatch',
+          `the validated view holds ${String(guard.nodes)} of the ${String(shape.nodes)} live nodes`,
+          String(shape.nodes),
+        ),
+      ];
+    }
     const bytes = payloadBytes(plain);
     if (bytes > budgets.maxBytes) {
       return [
@@ -835,6 +1024,24 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   };
 
   const apply = (input: unknown): LiveBatchResult => {
+    if (applying) {
+      return result([
+        fail(
+          'batch',
+          'reentrant-batch',
+          'a batch is being applied; submit this one after apply returns',
+        ),
+      ]);
+    }
+    applying = true;
+    try {
+      return applyOnce(input);
+    } finally {
+      applying = false;
+    }
+  };
+
+  const applyOnce = (input: unknown): LiveBatchResult => {
     if (skew !== null) {
       return result([skew]);
     }

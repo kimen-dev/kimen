@@ -120,7 +120,11 @@ export interface ValidationReport {
  */
 export const VALIDATION_MAX_BYTES = 262_144;
 
-const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+export const FORBIDDEN_KEYS: ReadonlySet<string> = new Set([
+  '__proto__',
+  'constructor',
+  'prototype',
+]);
 
 /**
  * The node id grammar (spec 035 FR-001): lowercase ASCII letters and digits,
