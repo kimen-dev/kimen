@@ -123,7 +123,7 @@ any node attaches), **version skew** (a spec declaring an incompatible
 `catalogSchemaVersion` — as a top-level field of the spec document, or via
 the render option — is rejected naming both versions; compatible means plain
 SemVer with the catalog's major and a minor not newer than its own, so a
-`1.1.0` catalog accepts `1.0.0`), and **declarative
+`1.1.0` catalog accepts `1.0.0`; under major `0` only the same minor), and **declarative
 actions only** (a bound control dispatches its one declared action, as data,
 on the single `onAction` channel, on the one event its catalog entry declares
 — `change` on the form controls, `ki-change` on `ki-tabs` — or on `click`
@@ -156,9 +156,12 @@ against the state it would produce — purity wall, per-batch budgets,
 optional `ifRevision`, then the same catalog, guard and budget checks as a
 spec — before any DOM write; a rejected batch changes nothing and the
 surface keeps accepting batches. Applied batches touch only what they name,
-so focus, caret, typed text and scroll survive. A `set` never overwrites a
-`checked`/`value`/`open` the user changed unless the op says `force: true`
-and the host allowed it (`allowUserStateOverride`). Action events carry the
+so focus, caret, typed text and scroll survive. No `set`, `replace` or
+`remove` overwrites or discards a `checked`/`value`/`open` the user changed
+(in the node or, for `replace`/`remove`, anywhere in its subtree) unless the
+op says `force: true` and the host allowed it (`allowUserStateOverride`).
+A batch applied while another is being applied (from `onAction`) is
+rejected as `reentrant-batch`. Action events carry the
 node `id`, its current `path`, the `revision` and live `data`; `snapshot()`
 returns the content as deep-frozen plain data. See the
 [UI-spec guide](../../docs/guides/ui-spec.md#live-surface).

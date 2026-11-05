@@ -221,7 +221,8 @@ On top of catalog validation the renderer enforces the safe-render semantics:
   renderer reads and strips it), or the host may pass it as the
   `catalogSchemaVersion` render option. A compatible version — plain
   `MAJOR.MINOR.PATCH` with the catalog's major and a minor not newer than its
-  minor (a `1.1.0` catalog accepts `1.0.0` and `1.1.x`) — renders; any other
+  minor (a `1.1.0` catalog accepts `1.0.0` and `1.1.x`; under major `0`
+  only the same minor: a `0.3.0` catalog accepts `0.3.x`) — renders; any other
   is rejected naming both versions (rule `unsupported-version`).
   Note that the standalone `validateUiSpec` checks the three-field neutral
   document — the version gate is the renderer's.
@@ -327,9 +328,17 @@ live.snapshot(); // { revision, actions, nodes } — deep-frozen plain data
   `replace` touch only the named subtree. Nothing else is recreated or
   reordered; there is no move op.
 - **The user's state wins.** Once the user changed a control's own `checked`,
-  `value` or `open`, a `set` that would change it is rejected
+  `value` or `open`, a `set` that would change it, and a `replace` or
+  `remove` of that node or of any ancestor, is rejected
   (`user-state-conflict`) unless the op says `force: true` **and** the host
   created the surface with `allowUserStateOverride: true`.
+- **Only declared names.** A slot or prop name must be one the node's
+  catalog entry declares as its own: inherited names such as `toString` are
+  `unknown-slot`/`unknown-prop`, and `__proto__`, `constructor` and
+  `prototype` are never slot names (`forbidden-key`).
+- **One batch at a time.** `apply` called while a batch is being applied
+  (for instance from `onAction`) returns `reentrant-batch` and changes
+  nothing; submit it after `apply` returns.
 - **Actions name their node.** The event carries the node's `id`, its current
   `path` (`surface[0].slots.footer[1]`), the `revision` and the same live
   `data` as `renderUiSpec`, computed from the node's current props.

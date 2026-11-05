@@ -33,7 +33,7 @@
         {
           "name": "createLiveSurface",
           "signature": "createLiveSurface(options) => LiveSurface",
-          "summary": "A long-lived surface changed through atomic batches of insert, set, text, remove and replace ops addressed by stable node ids: apply(batch) validates the whole batch and the state it would produce (purity wall, per-batch budgets, optional ifRevision, catalog, guards, state budgets) before any DOM write, rejects it whole with diagnostics while the surface stays live, and otherwise touches only the attributes, text and subtrees it names so focus, typed values and scroll survive. A set never overwrites checked/value/open the user changed unless forced and allowed by the host. Action events carry id, current path, revision and live data; snapshot() returns deep-frozen plain data."
+          "summary": "A long-lived surface changed through atomic batches of insert, set, text, remove and replace ops addressed by stable node ids: apply(batch) validates the whole batch and the state it would produce (purity wall, per-batch budgets, optional ifRevision, catalog, guards, state budgets) before any DOM write, rejects it whole with diagnostics while the surface stays live, and otherwise touches only the attributes, text and subtrees it names so focus, typed values and scroll survive. No set, replace or remove overwrites or discards checked/value/open the user changed unless forced and allowed by the host. Action events carry id, current path, revision and live data; snapshot() returns deep-frozen plain data."
         },
         {
           "name": "createCatalog",
