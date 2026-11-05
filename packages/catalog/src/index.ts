@@ -14,6 +14,16 @@ import { catalogData } from './generated/catalog.js';
 
 export { catalogData } from './generated/catalog.js';
 export {
+  createLiveSurface,
+  DEFAULT_LIVE_BATCH_BUDGETS,
+  type LiveActionEvent,
+  type LiveBatchBudgets,
+  type LiveBatchResult,
+  type LiveSnapshot,
+  type LiveSurface,
+  type LiveSurfaceOptions,
+} from './live.js';
+export {
   type CatalogCreationOptions,
   type CatalogCreationResult,
   type CatalogDefinition,
@@ -36,6 +46,7 @@ export {
   type Catalog,
   type CatalogEntry,
   type CatalogPropConstraint,
+  NODE_ID_GRAMMAR,
   type UiSpec,
   type UiSpecNode,
   VALIDATION_MAX_BYTES,
