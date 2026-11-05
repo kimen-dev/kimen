@@ -12,7 +12,7 @@ overrides:
   nanoid: 6.0.1
   postcss: 8.5.26
   minimatch@3: 3.1.5
-  qs: 6.15.3
+  qs: 6.16.1
 
 patchedDependencies:
   minimatch@3.1.5: 3e64d536af3aaaa63bcd325ef7c0f4c9c0ba4e731cbf0986304a41c5870ac8b3
@@ -6455,8 +6455,8 @@ packages:
     resolution: {integrity: sha512-+Owyggi9IxT1ePKGafcI87ubSmxol6smwJ+RAHDQlx9+9cPwFWDiKFFCPuWhr9ignlGpZ9vDQLw67N4dcTVFEA==}
     engines: {node: '>=20'}
 
-  qs@6.15.3:
-    resolution: {integrity: sha512-O9gl3zCl5h5blw1KGUzQKhA5oUXSl8rwUIM5o0S3nCXMliSvy5Dzx7/DJcI+SwgICv+IneSZwhBh1oSyEHA71A==}
+  qs@6.16.1:
+    resolution: {integrity: sha512-5Px6J7rfHBAGUhNQ3es4YzcOdBBw0SDcVtThJml4RdnKw4tKs2epA0kPZ+K8X+WiHktT93RHVcQ/3ym5aTCgtg==}
     engines: {node: '>=0.6'}
 
   quansync@0.2.11:
@@ -14679,7 +14679,7 @@ snapshots:
     dependencies:
       hookified: 2.2.0
 
-  qs@6.15.3:
+  qs@6.16.1:
     dependencies:
       es-define-property: 1.0.1
       side-channel: 1.1.1
@@ -15651,7 +15651,7 @@ snapshots:
     dependencies:
       des.js: 1.1.0
       js-md4: 0.3.2
-      qs: 6.15.3
+      qs: 6.16.1
       tunnel: 0.0.6
       underscore: 1.13.8
 
@@ -15805,7 +15805,7 @@ snapshots:
   url@0.11.4:
     dependencies:
       punycode: 1.4.1
-      qs: 6.15.3
+      qs: 6.16.1
 
   use-sync-external-store@1.6.0(react@19.2.8):
     dependencies:
