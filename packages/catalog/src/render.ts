@@ -22,7 +22,7 @@ import type {
   UiSpec,
   UiSpecNode,
 } from './validate.js';
-import { toPlainData, validatePlainData } from './validate.js';
+import { ownEntry, toPlainData, validatePlainData } from './validate.js';
 
 const builtInCatalog: Catalog = catalogData;
 
@@ -224,7 +224,7 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
   // activation event. An entry declaring several gives the spec no way to
   // say which, so the binding is rejected fail-closed instead of guessing.
   if (node.action !== undefined) {
-    const events = declaredEvents(state.components[node.component]);
+    const events = declaredEvents(ownEntry(state.components, node.component));
     if (events.length > 1) {
       state.diagnostics.push({
         message: `${node.component} declares more than one event (${events.join(', ')}); a bound action needs exactly one activation event`,
@@ -320,7 +320,7 @@ function liveData(
 ): Record<string, boolean | number | string> {
   const data: Record<string, boolean | number | string> = { ...props };
   for (const name of LIVE_STATE_PROPS) {
-    const constraint = entry?.props[name];
+    const constraint = ownEntry(entry?.props, name);
     if (constraint === undefined) {
       continue;
     }
@@ -394,7 +394,7 @@ export function pinButtonType(
   entry: CatalogEntry | undefined,
   props: Readonly<Record<string, Scalar>>,
 ): void {
-  const typeConstraint = entry?.props['type'];
+  const typeConstraint = ownEntry(entry?.props, 'type');
   if (
     typeConstraint?.type === 'enum' &&
     typeConstraint.values?.includes('button') === true &&
@@ -473,7 +473,7 @@ function buildNode(
     const action = node.action;
     wireActivation(
       element,
-      entries[node.component],
+      ownEntry(entries, node.component),
       () => props,
       (data) => {
         onAction({ action, data, path });

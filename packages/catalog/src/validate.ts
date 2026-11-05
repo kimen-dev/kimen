@@ -444,6 +444,20 @@ function checkId(
   ids.add(node.id);
 }
 
+/**
+ * The value an untrusted name resolves to in a catalog record, by OWN
+ * property only. Catalogs are plain objects: `in` or bare indexing would
+ * resolve `toString`, `constructor` or `hasOwnProperty` through the
+ * prototype chain and accept an undeclared component, prop or slot (028 S20).
+ * Internal: shared with the renderers, not part of the package's surface.
+ */
+export function ownEntry<T>(
+  record: Readonly<Record<string, T>> | undefined,
+  name: string,
+): T | undefined {
+  return record !== undefined && Object.hasOwn(record, name) ? record[name] : undefined;
+}
+
 function checkNode(
   node: UiSpecNode,
   path: string,
@@ -453,7 +467,7 @@ function checkNode(
   ids = new Set<string>(),
 ): void {
   checkId(node, path, ids, issues);
-  const entry = entries[node.component];
+  const entry = ownEntry(entries, node.component);
   if (entry === undefined) {
     issues.push({
       code: 'unknown-component',
@@ -463,7 +477,7 @@ function checkNode(
     });
   }
   for (const [name, value] of Object.entries(node.props ?? {})) {
-    const constraint = entry?.props[name];
+    const constraint = ownEntry(entry?.props, name);
     if (entry !== undefined && constraint === undefined) {
       issues.push({
         code: 'unknown-prop',
@@ -486,7 +500,7 @@ function checkNode(
     });
   }
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
-    if (entry !== undefined && !(slotName in entry.slots)) {
+    if (entry !== undefined && !Object.hasOwn(entry.slots, slotName)) {
       issues.push({
         code: 'unknown-slot',
         message: `${node.component} declares no slot "${slotName}"`,
