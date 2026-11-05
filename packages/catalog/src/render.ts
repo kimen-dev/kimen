@@ -13,6 +13,7 @@
  * SSR/DSD is a deferred bet.
  */
 import { catalogData } from './generated/catalog.js';
+import { compatibleRange, isCompatibleSchemaVersion } from './schema-version.js';
 import { tagGrammarViolation } from './tag-grammar.js';
 import type {
   Catalog,
@@ -463,16 +464,20 @@ interface PreparedSpec {
   readonly diagnostics: readonly RenderDiagnostic[];
 }
 
-/** The fail-closed version-skew diagnostic (FR-012/S13), or null when supported. */
-function versionDiagnostic(
+/**
+ * The fail-closed version-skew diagnostic (FR-012/S13), or null when the
+ * declared version is compatible with the catalog in use (035 FR-002: same
+ * major, minor not newer).
+ */
+export function versionDiagnostic(
   declared: string | undefined,
   supported: string,
 ): RenderDiagnostic | null {
-  if (declared === undefined || declared === supported) {
+  if (declared === undefined || isCompatibleSchemaVersion(declared, supported)) {
     return null;
   }
   return {
-    message: `spec declares catalog schema version "${declared}"; this renderer supports "${supported}"`,
+    message: `spec declares catalog schema version "${declared}"; this renderer supports ${compatibleRange(supported)}`,
     path: 'spec.catalogSchemaVersion',
     rule: 'unsupported-version',
     value: declared,

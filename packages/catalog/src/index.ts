@@ -14,6 +14,14 @@ import { catalogData } from './generated/catalog.js';
 
 export { catalogData } from './generated/catalog.js';
 export {
+  type CatalogCreationOptions,
+  type CatalogCreationResult,
+  type CatalogDefinition,
+  createCatalog,
+  type RegistrationIssue,
+  type RegistrationIssueCode,
+} from './register.js';
+export {
   type ActionEvent,
   createStreamingRenderer,
   DEFAULT_RENDER_BUDGETS,
@@ -24,14 +32,6 @@ export {
   renderUiSpec,
   type StreamingRenderer,
 } from './render.js';
-export {
-  type CatalogCreationOptions,
-  type CatalogCreationResult,
-  type CatalogDefinition,
-  createCatalog,
-  type RegistrationIssue,
-  type RegistrationIssueCode,
-} from './register.js';
 export {
   type Catalog,
   type CatalogEntry,

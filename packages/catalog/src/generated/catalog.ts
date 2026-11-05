@@ -3,7 +3,7 @@
 // packages/catalog/scripts/generate-catalog.mjs; the catalog-sync gate
 // fails any drift between this artifact and a fresh regeneration.
 export const catalogData = {
-  "catalogSchemaVersion": "1.0.0",
+  "catalogSchemaVersion": "1.1.0",
   "components": {
     "ki-alert": {
       "description": "A persistent inline status message with token-backed tone semantics.",
