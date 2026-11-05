@@ -218,9 +218,18 @@ On top of catalog validation the renderer enforces the safe-render semantics:
   Note that the standalone `validateUiSpec` checks the three-field neutral
   document — the version gate is the renderer's.
 - **Declarative actions only.** Activating a bound control dispatches exactly
-  one declared action on the single `onAction` channel. Activation suppresses
-  the native default and stops bubbling, so a button inside a form submits
-  nothing and nested action-bound nodes dispatch once. When the catalog types
+  one declared action on the single `onAction` channel. The activation event
+  comes from the component's catalog entry: the one event it declares
+  (`change` on `ki-checkbox`, `ki-switch`, `ki-radio-group`, `ki-select`,
+  `ki-input` and `ki-textarea`; `ki-change` on `ki-tabs`), or `click` when it
+  declares none. A declared-event activation never cancels the control's own
+  change, and its `data` adds the control's live `checked`/`value` (only where
+  the catalog declares that prop) to the spec's props. A binding on a
+  component that declares more than one event is rejected
+  (`ambiguous-activation-event`). A click activation suppresses the native
+  default and stops bubbling, so a button inside a form submits nothing; the
+  innermost bound node claims each interaction, so nested action-bound nodes
+  dispatch once. When the catalog types
   a component's `type` prop with a `button` value and the spec leaves it
   unset, the renderer pins `type="button"` so no native submit path runs
   alongside the action.
