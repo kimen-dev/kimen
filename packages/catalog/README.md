@@ -131,8 +131,10 @@ nodes or a button inside a form; no other callback exists).
 attaches only after it fully validates; an invalid node halts the stream
 fail-closed while previously validated content remains; the budgets bind the
 accumulated stream so a stream that never closes still trips its payload
-budget; and once halted — by an invalid node, a tripped budget, version skew
-or `close()` — every further push is rejected.
+budget; once halted — by an invalid node, a tripped budget, version skew
+or `close()` — every further push is rejected; and each attached node
+dispatches its actions at its own path, `stream[<n>]` in attach order
+(descendants follow the `renderUiSpec` path grammar below it).
 
 Every rejection is a `RenderDiagnostic` — node path, violated rule and
 offending value — pure data, safe to display because a host renders it as

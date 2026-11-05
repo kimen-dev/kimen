@@ -418,6 +418,38 @@ describe('createStreamingRenderer — progressive rendering without weakening th
     expect(surface.querySelectorAll('ki-card')).toHaveLength(1);
   });
 
+  it('S4 S11 reports each streamed node at its own path, not a shared "root"', () => {
+    // Regression: every pushed chunk was built at path "root", so a host could
+    // not tell which streamed node dispatched an action. Each chunk now sits
+    // at "stream[<n>]" (its attach order) and descendants keep the
+    // renderUiSpec path grammar below it.
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    const stream = createStreamingRenderer({ surface, onAction, actions: ['pick'] });
+    expect(stream.push({ component: 'ki-button', action: 'pick', slots: { '': ['one'] } }).ok).toBe(
+      true,
+    );
+    expect(
+      stream.push({
+        component: 'ki-card',
+        slots: {
+          '': ['text', { component: 'ki-button', action: 'pick', slots: { '': ['two'] } }],
+          footer: [{ component: 'ki-button', action: 'pick', slots: { '': ['three'] } }],
+        },
+      }).ok,
+    ).toBe(true);
+    const pathOf = (label: string): string | undefined => {
+      onAction.mockClear();
+      [...surface.querySelectorAll('ki-button')]
+        .find((button) => button.textContent === label)
+        ?.dispatchEvent(new Event('click', { bubbles: true, cancelable: true }));
+      expect(onAction).toHaveBeenCalledTimes(1);
+      return onAction.mock.calls[0]?.[0]?.path;
+    };
+    expect(pathOf('one')).toBe('stream[0]');
+    expect(pathOf('two')).toBe('stream[1].slots.[1]');
+    expect(pathOf('three')).toBe('stream[1].slots.footer[0]');
+  });
+
   it('S15 halts fail-closed when the accumulated stream trips the payload budget', () => {
     const chunk = { component: 'ki-card', slots: { '': ['padding text for the chunk'] } };
     const bytes = new TextEncoder().encode(JSON.stringify(chunk)).length;

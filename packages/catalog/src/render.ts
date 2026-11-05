@@ -471,6 +471,9 @@ export function createStreamingRenderer(
   const declaredActions = options.actions ?? [];
   let accumulatedBytes = 0;
   let accumulatedNodes = 0;
+  // Attach order of the next chunk: each top-level chunk is addressed as
+  // `stream[<n>]`, so action paths stay unique across pushes.
+  let attachedChunks = 0;
   // The version-skew gate (FR-012/S13) applies to a stream up front: an
   // unsupported catalog schema version halts every push before any chunk
   // attaches, so future or laxer chunks can never render.
@@ -534,8 +537,13 @@ export function createStreamingRenderer(
       }
       accumulatedBytes += chunkBytes;
       accumulatedNodes += state.nodes;
+      // Each chunk is its own top-level subtree on the surface: it dispatches
+      // actions at `stream[<n>]` (descendants keep renderUiSpec's path
+      // grammar below it), never a `root` shared by every pushed chunk.
+      const chunkPath = `stream[${String(attachedChunks)}]`;
+      attachedChunks += 1;
       options.surface.appendChild(
-        buildNode(report.spec.root, 'root', doc, options.onAction, catalog.components),
+        buildNode(report.spec.root, chunkPath, doc, options.onAction, catalog.components),
       );
       return { diagnostics: [], ok: true };
     },
