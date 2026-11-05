@@ -18,7 +18,7 @@ allowBuilds:
   # one-shot library builds never use — reviewed and DECLINED (spec 034).
   '@parcel/watcher@2.6.0': false
   'esbuild@0.28.1': true
-  'nx@23.1.1': true
+  'nx@23.2.1': true
 
 # Resolution pins. These live here and not under `pnpm.overrides` in
 # package.json: pnpm 10 stopped reading that field, and a pin it does not read
@@ -30,22 +30,62 @@ allowBuilds:
 # workspace declares directly, so an override is the only lever. Every pinned
 # version cleared minimumReleaseAge before being added.
 overrides:
-  # GHSA-42h9-826w-cgv3 and nine more, 1.16.0 → 1.18.0.
-  axios: 1.19.0
+  # GHSA-42h9-826w-cgv3 and nine more, 1.16.0 → 1.18.0; then
+  # GHSA-3pq3-5fj3-cg6v, GHSA-542g-h47m-68v8, GHSA-c29m-xwm3-cm6r,
+  # GHSA-mghh-pgcx-3jjj, GHSA-x97p-jq2g-jp4f and seven more, 1.19.0 → 1.20.0.
+  axios: 1.20.0
   # GHSA-3jxr-9vmj-r5cp, GHSA-mh99-v99m-4gvg and GHSA-rgw5-rvv9-x895. The
   # 1.x line carries no fix for the later ones, so both lines resolve to
-  # 5.0.9.
-  brace-expansion: 5.0.9
-  # GHSA-v2hh-gcrm-f6hx.
-  fast-uri: 4.1.2
+  # 5.0.9. Then GHSA-6j4f-fj2g-mc7p, GHSA-qhr7-859c-m2p7 (High) and
+  # GHSA-q2hr-2g5m-vwhr, 5.0.9 → 5.0.12.
+  brace-expansion: 5.0.12
+  # GHSA-v2hh-gcrm-f6hx; then GHSA-5jgf-p345-68v8, GHSA-f65p-4m7j-42xc,
+  # GHSA-fph4-wmhf-6fwf, GHSA-jqff-g426-hqxp, GHSA-qw65-cvwx-89v3 (High)
+  # and five Medium/Low, 4.1.2 → 4.2.3.
+  fast-uri: 4.2.3
   # GHSA-5p4m-2wfm-xmqj. An override and not only a lockfile bump: a bump with
   # no range forcing it does not survive lockfile regeneration — the #104
   # rebase regenerated the lockfile and silently rolled this fix back.
-  js-yaml: 4.3.1
+  # GHSA-2883-xcg3-v3hh, 4.3.1 → 4.3.2.
+  js-yaml: 4.3.2
   # GHSA-2v37-7h3g-55p8. Same regeneration story as js-yaml above.
   nanoid: 6.0.1
   # GHSA-r28c-9q8g-f849.
   postcss: 8.5.26
+  # Transitive advisories closed in the security batch of 2026-11. Each pin is
+  # inside the range its dependents declare (checked with `npm view`), so
+  # these move a patch/minor within the same major; none changes a public
+  # surface of a Kimen package.
+  # GHSA-67c8-pqhq-4rmx (Critical), via ng-packagr (^5.0.0), 5.3.0 → 5.3.2.
+  piscina: 5.3.2
+  # GHSA-mcm9-63f2-9j32, GHSA-r9w8-h9r3-54w4, GHSA-x5rw-q4pp-hg5g,
+  # GHSA-j22f-vq7h-c4qm (High) and four Medium/Low, via astro (^5.8.1),
+  # 5.9.0 → 5.9.3.
+  devalue: 5.9.3
+  # GHSA-8r9p-f939-6h3c, GHSA-mrwp-f3q8-3g9p, GHSA-q3jh-wrc6-jgq8, via axios
+  # and nx (^1.16.0), 1.16.0 → 1.16.2.
+  follow-redirects: 1.16.2
+  # GHSA-gjj5-9665-rwrc, via less (^7.2.3), 7.3.0 → 7.4.0.
+  probe-image-size: 7.4.0
+  # GHSA-7w5x-hrqm-74c2 (High) and GHSA-r4xh-jqrq-34v2, via astro, knip and
+  # @astrojs/internal-helpers (^1.6.0 / ^1.7.1) and nx, which pins 1.6.1
+  # exactly — same 1.x line, like the axios pin above crosses nx's 1.18.1.
+  smol-toml: 1.9.0
+  # GHSA-68fv-2mgg-jv7q, via postcss, @vue/compiler-* and sass (^1.2.1),
+  # 1.2.1 → 1.2.2.
+  source-map-js: 1.2.2
+  # GHSA-w27v-7q3p-w38r (High) and GHSA-4vpr-x523-8j87, via astro (^4.0.2),
+  # 4.0.2 → 4.1.0.
+  svgo: 4.1.0
+  # GHSA-587h-7wmj-h5pm (High) and five Medium/Low, via astro (^8.0.13),
+  # vitest, storybook and unplugin-stencil (all accept 8.x), 8.2.0 → 8.2.4.
+  vite: 8.2.4
+  # GHSA-2wm5-q62r-hmrv, via stylelint (^2.9.3), 2.9.3 → 2.9.4.
+  colord: 2.9.4
+  # GHSA-rj75-hqrm-r3gf on both majors in the tree: postcss-nested wants
+  # ^6.1.1, stylelint and @csstools want ^7.1.4.
+  postcss-selector-parser@6: 6.1.5
+  postcss-selector-parser@7: 7.1.6
   # Not an advisory: this holds the target of patches/minimatch@3.1.5.patch.
   # `patchedDependencies` names an exact version, and Renovate does not read
   # that field — but it does read these overrides, and lockFileMaintenance
@@ -53,7 +93,8 @@ overrides:
   # would move the lockfile out from under the patch and break installs.
   # Unpin only together with regenerating the patch.
   minimatch@3: 3.1.5
-  qs: 6.15.3
+  # GHSA-4mjr-xmp4-gh2g, GHSA-6pq8-jhm2-2vcw, GHSA-x5fp-wj9c-mxmx, 6.15.3 → 6.16.1.
+  qs: 6.16.1
 patchedDependencies:
   minimatch@3.1.5: patches/minimatch@3.1.5.patch
 # A dependency update may never silently downgrade security settings.
