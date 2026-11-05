@@ -156,3 +156,32 @@ Feature: Guarded renderer
       When the host displays the diagnostic containing that value
       Then the offending value appears as inert text
       And no image request occurs and no script executes
+
+  Rule: A bound action fires on the component's own activation event
+
+    # S17
+    Scenario Outline: An action-bound control stays operable and reports its live state
+      Given a rendered spec binding the declared action "pick" to a <component> the catalog declares with the "<event>" event
+      When the user <interaction>
+      Then the control shows <state>
+      And the host receives one "pick" action event whose data carries the live <field> alongside the spec's props
+
+      Examples:
+        | component   | event     | interaction            | state                  | field   |
+        | ki-checkbox | change    | activates the checkbox | the checkbox checked   | checked |
+        | ki-switch   | change    | activates the switch   | the switch on          | checked |
+        | ki-tabs     | ki-change | selects the second tab | the second tab panel   | value   |
+
+    # S18
+    Scenario: An interaction that is not the bound activation event dispatches nothing
+      Given a rendered spec binding the declared action "pick" to a ki-tabs the catalog declares with the "ki-change" event
+      When the user clicks inside the selected panel without changing the selection
+      Then the host receives no action event
+
+    # S19
+    Scenario: A binding whose activation event is ambiguous never wires
+      Given a catalog component that declares more than one event
+      And a spec binding the declared action "pick" to that component
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names the component and its declared events
