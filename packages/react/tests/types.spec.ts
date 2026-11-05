@@ -10,6 +10,13 @@ import { describe, expect, it } from 'vitest';
 
 const packageRoot = join(__dirname, '..');
 
+// Spawns two real `pnpm exec tsc` runs in series. That takes ~2 s on an idle
+// workstation but more than Vitest's 5 s default on a shared 4-vCPU CI runner
+// while Nx runs other test targets in parallel (it timed out there at ~6.1 s).
+// An explicit budget keeps the real compiler check instead of raising the
+// default for every test.
+const TYPECHECK_TIMEOUT_MS = 30_000;
+
 function typecheck(project: string): { ok: boolean; output: string } {
   try {
     execFileSync('pnpm', ['exec', 'tsc', '--noEmit', '--pretty', 'false', '-p', project], {
@@ -25,7 +32,9 @@ function typecheck(project: string): { ok: boolean; output: string } {
 }
 
 describe('react wrapper types', () => {
-  it('S4 fails the type-check on an out-of-union enum prop, naming the prop', () => {
+  it('S4 fails the type-check on an out-of-union enum prop, naming the prop', {
+    timeout: TYPECHECK_TIMEOUT_MS,
+  }, () => {
     const good = typecheck('tests/fixtures/tsconfig.good.json');
     expect(good.output).toBe('');
     expect(good.ok).toBe(true);
