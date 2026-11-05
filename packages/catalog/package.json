@@ -24,15 +24,18 @@
   },
   "scripts": {
     "build": "node scripts/generate-catalog.mjs && tsc -b --pretty false",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test-browser": "vitest run --config vitest.browser.config.ts"
   },
   "dependencies": {
     "zod": "4.6.6"
   },
   "devDependencies": {
     "@types/node": "26.1.2",
+    "@vitest/browser-playwright": "4.1.12",
     "fast-check": "4.9.0",
     "happy-dom": "21.0.4",
+    "playwright": "1.62.1",
     "vitest": "4.1.12"
   },
   "nx": {

@@ -111,5 +111,9 @@ run_browser_gate "test-browser:$ENGINE" pnpm exec nx run @kimen/elements:test-br
 # on the ordinary PR engine.
 if [ "$ENGINE" = 'chromium' ]; then
   run_browser_gate "test-browser-wrappers:$ENGINE" pnpm exec nx run-many -t test-browser-wrapper --skipNxCache
+  # The guarded renderer's interaction contract (spec 028 S17) needs real
+  # native-control activation; like the wrapper glue it runs on the ordinary
+  # PR engine — the controls themselves carry the three-engine matrix.
+  run_browser_gate "test-browser-catalog:$ENGINE" pnpm exec nx run @kimen/catalog:test-browser --skipNxCache
 fi
 echo "BROWSER GATE GREEN — engine=$ENGINE executable=$BROWSER_EXECUTABLE"
