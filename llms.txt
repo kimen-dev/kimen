@@ -2992,9 +2992,9 @@ When to use: Your agent runtime speaks the A2UI protocol and its surfaces should
 When NOT to use: The agent can emit neutral Kimen UI specs directly (use @kimen/catalog alone), or the host is an MCP Apps client (use @kimen/adapter-mcp-apps).
 
 Entry points:
-- `createA2uiAdapter(options) => A2uiAdapter`: Creates the translation boundary: adapter.apply(message) turns declarative A2UI messages (surfaceUpdate, dataModelUpdate, beginRendering, deleteSurface) into neutral UI specs rendered only through the guarded renderer. User interactions return through options.onUserAction as A2UI userAction payloads; unmapped protocol constructs degrade to data reported through options.onDegradation.
-- `SUPPORTED_A2UI_VERSIONS`: The exact A2UI protocol versions this adapter supports, versioned with the adapter in COMPAT.md.
-- `A2UI_COVERAGE`: Machine-readable coverage table declaring how each A2UI component type is handled: mapped to a catalog component, rendered inline, or forbidden.
+- `createA2uiAdapter(options) => A2uiAdapter`: Creates the translation boundary: adapter.apply(message) turns A2UI v0.9.1 messages (createSurface, updateComponents, updateDataModel, deleteSurface) into neutral UI specs rendered only through the guarded renderer, resolving the surface data model inside the adapter. User interactions return through options.onAction as A2UI action events, rejected messages through options.onError as VALIDATION_FAILED errors; unmapped basic-catalog types degrade to a fixed fallback reported through options.onDegradation.
+- `SUPPORTED_A2UI_VERSIONS`: The exact A2UI envelope versions this adapter accepts (v0.9.1 and v0.9, per the A2UI v0.9.1 schema), versioned with the adapter in COMPAT.md.
+- `A2UI_COVERAGE`: Machine-readable coverage table declaring how each A2UI basic-catalog component type is handled: mapped to catalog components, rendered inline, flattened as layout, degraded as unmapped, or forbidden.
 
 ### @kimen/adapter-mcp-apps
 
