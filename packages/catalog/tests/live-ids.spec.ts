@@ -9,6 +9,7 @@ import {
   type Catalog,
   catalogData,
   createCatalog,
+  createLiveSurface,
   createStreamingRenderer,
   renderUiSpec,
   validateUiSpec,
@@ -143,4 +144,48 @@ describe('035 — compatible catalog schema versions are accepted', () => {
     expect(newer.ok).toBe(false);
     expect(newer.ok ? undefined : newer.issues[0]?.code).toBe('unsupported-version');
   });
+});
+
+describe('035 S23 — a 0.x catalog schema accepts only its own minor', () => {
+  const zeroCatalog = (version: string) =>
+    ({
+      catalogSchemaVersion: version,
+      components: { 'ki-badge': { description: '', events: {}, props: {}, slots: { '': '' } } },
+    }) as unknown as Catalog;
+
+  it.each([
+    ['0.3.0', '0.3.0', true],
+    ['0.3.4', '0.3.0', true],
+    ['0.3.0', '0.3.9', true],
+    ['0.3.0', '0.1.0', false],
+    ['0.3.0', '0.2.9', false],
+    ['0.3.0', '0.4.0', false],
+    ['0.3.0', '1.3.0', false],
+  ] as const)(
+    'S23 a %s catalog with a spec declaring %s accepts: %s',
+    (supported, declared, ok) => {
+      const live = createLiveSurface({
+        catalog: zeroCatalog(supported),
+        catalogSchemaVersion: declared,
+        surface,
+      });
+      const result = live.apply({ ops: [{ node: { component: 'ki-badge' }, op: 'insert' }] });
+      expect(result.ok).toBe(ok);
+      if (!ok) {
+        expect(result.diagnostics.map((diagnostic) => diagnostic.rule)).toEqual([
+          'unsupported-version',
+        ]);
+      }
+      const rendered = renderUiSpec(
+        {
+          actions: [],
+          catalogSchemaVersion: declared,
+          root: { component: 'ki-badge' },
+          version: 1,
+        },
+        { catalog: zeroCatalog(supported), surface: document.createElement('div') },
+      );
+      expect(rendered.ok).toBe(ok);
+    },
+  );
 });

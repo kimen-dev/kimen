@@ -10,6 +10,8 @@
  * validates what an older spec may say), while a spec written against a
  * newer minor may use fields this renderer does not know and is rejected
  * fail-closed — it must never be validated under a laxer schema (028 FR-012).
+ * Under major 0 every minor may break (SemVer §4), so a 0.x supported
+ * version accepts only its own minor (035 S23).
  * Anything that is not plain SemVer (pre-release tags, a `v` prefix, missing
  * parts, leading zeros) is rejected.
  */
@@ -29,13 +31,19 @@ export function isCompatibleSchemaVersion(declared: string, supported: string): 
   if (wanted === null || own === null) {
     return false;
   }
-  return wanted[0] === own[0] && wanted[1] <= own[1];
+  if (wanted[0] !== own[0]) {
+    return false;
+  }
+  return own[0] === 0 ? wanted[1] === own[1] : wanted[1] <= own[1];
 }
 
 /** The human description of what a gate supporting `supported` accepts. */
 export function compatibleRange(supported: string): string {
   const own = parse(supported);
-  return own === null
-    ? `"${supported}"`
+  if (own === null) {
+    return `"${supported}"`;
+  }
+  return own[0] === 0
+    ? `"${supported}" (major 0, minor ${String(own[1])} only)`
     : `"${supported}" (major ${String(own[0])}, minor up to ${String(own[1])})`;
 }
