@@ -219,6 +219,10 @@ export namespace Components {
      * effect, triggering an action, unlabeled/icon-only usage, or
      * `checked="false"` to mean unchecked. Boolean attributes use presence
      * semantics; omit `checked` to express unchecked.
+     * @event change - Fired once after a user toggle (pointer, slotted label or Space)
+     * commits, composed across the shadow boundary; `checked` is already current
+     * when listeners run. When to use: react to the committed selection. When NOT
+     * to use: do not expect it for programmatic `checked` writes, which are silent.
      */
     interface KiCheckbox {
         /**
@@ -385,6 +389,11 @@ export namespace Components {
      * purpose.
      * @whenNotToUse multiline text, predefined choices, boolean state, numeric
      * stepper entry, or placeholder-only labeling.
+     * @event change - Fired when the user commits an edited value (native text-field
+     * timing, such as on blur), composed across the shadow boundary; `value` is
+     * already current when listeners run. When to use: react to a committed
+     * value. When NOT to use: do not use it for per-keystroke updates; the native
+     * `input` event carries those.
      */
     interface KiInput {
         /**
@@ -566,6 +575,10 @@ export namespace Components {
      * @whenNotToUse many options or tight space (use `ki-select`), independent
      * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
      * authored selection on options; set this group's `value` instead.
+     * @event change - Fired once after the user selects a different radio, composed
+     * across the shadow boundary; `value` is already current when listeners run.
+     * When to use: react to the committed choice. When NOT to use: do not expect
+     * it for programmatic `value` writes, which are silent.
      */
     interface KiRadioGroup {
         /**
@@ -628,6 +641,11 @@ export namespace Components {
      * @whenNotToUse `ki-radio-group` for a few always-visible choices,
      * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
      * binary decisions, or multiselect and command menus.
+     * @event change - Fired once after the user commits a different option, composed
+     * across the shadow boundary and preceded by `input`; `value` is already
+     * current when listeners run. When to use: react to the committed choice.
+     * When NOT to use: do not expect it for programmatic `value` writes, which
+     * are silent.
      */
     interface KiSelect {
         /**
@@ -698,6 +716,10 @@ export namespace Components {
      * @whenNotToUse selections collected for later form submission; use
      * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
      * choices, and ki-button for actions.
+     * @event change - Fired once after a user toggle commits, composed across the shadow
+     * boundary; `checked` is already current when listeners run. When to use:
+     * apply the on/off effect. When NOT to use: do not expect it for programmatic
+     * `checked` writes, which are silent.
      */
     interface KiSwitch {
         /**
@@ -790,6 +812,11 @@ export namespace Components {
      * Agent note: initial text is declared through the `value` attribute; element
      * text content is ignored. Enter inserts a line break and never submits the
      * enclosing form, the inverse of `ki-input`.
+     * @event change - Fired when the user commits an edited value (on blur, with native
+     * textarea timing), composed across the shadow boundary; `value` is already
+     * current when listeners run. When to use: react to a committed value. When
+     * NOT to use: do not use it for per-keystroke updates; the native `input`
+     * event carries those.
      */
     interface KiTextarea {
         /**
@@ -1023,6 +1050,10 @@ declare global {
      * effect, triggering an action, unlabeled/icon-only usage, or
      * `checked="false"` to mean unchecked. Boolean attributes use presence
      * semantics; omit `checked` to express unchecked.
+     * @event change - Fired once after a user toggle (pointer, slotted label or Space)
+     * commits, composed across the shadow boundary; `checked` is already current
+     * when listeners run. When to use: react to the committed selection. When NOT
+     * to use: do not expect it for programmatic `checked` writes, which are silent.
      */
     interface HTMLKiCheckboxElement extends Components.KiCheckbox, HTMLStencilElement {
     }
@@ -1126,6 +1157,11 @@ declare global {
      * purpose.
      * @whenNotToUse multiline text, predefined choices, boolean state, numeric
      * stepper entry, or placeholder-only labeling.
+     * @event change - Fired when the user commits an edited value (native text-field
+     * timing, such as on blur), composed across the shadow boundary; `value` is
+     * already current when listeners run. When to use: react to a committed
+     * value. When NOT to use: do not use it for per-keystroke updates; the native
+     * `input` event carries those.
      */
     interface HTMLKiInputElement extends Components.KiInput, HTMLStencilElement {
     }
@@ -1241,6 +1277,10 @@ declare global {
      * @whenNotToUse many options or tight space (use `ki-select`), independent
      * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
      * authored selection on options; set this group's `value` instead.
+     * @event change - Fired once after the user selects a different radio, composed
+     * across the shadow boundary; `value` is already current when listeners run.
+     * When to use: react to the committed choice. When NOT to use: do not expect
+     * it for programmatic `value` writes, which are silent.
      */
     interface HTMLKiRadioGroupElement extends Components.KiRadioGroup, HTMLStencilElement {
     }
@@ -1278,6 +1318,11 @@ declare global {
      * @whenNotToUse `ki-radio-group` for a few always-visible choices,
      * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
      * binary decisions, or multiselect and command menus.
+     * @event change - Fired once after the user commits a different option, composed
+     * across the shadow boundary and preceded by `input`; `value` is already
+     * current when listeners run. When to use: react to the committed choice.
+     * When NOT to use: do not expect it for programmatic `value` writes, which
+     * are silent.
      */
     interface HTMLKiSelectElement extends Components.KiSelect, HTMLStencilElement {
     }
@@ -1312,6 +1357,10 @@ declare global {
      * @whenNotToUse selections collected for later form submission; use
      * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
      * choices, and ki-button for actions.
+     * @event change - Fired once after a user toggle commits, composed across the shadow
+     * boundary; `checked` is already current when listeners run. When to use:
+     * apply the on/off effect. When NOT to use: do not expect it for programmatic
+     * `checked` writes, which are silent.
      */
     interface HTMLKiSwitchElement extends Components.KiSwitch, HTMLStencilElement {
     }
@@ -1381,6 +1430,11 @@ declare global {
      * Agent note: initial text is declared through the `value` attribute; element
      * text content is ignored. Enter inserts a line break and never submits the
      * enclosing form, the inverse of `ki-input`.
+     * @event change - Fired when the user commits an edited value (on blur, with native
+     * textarea timing), composed across the shadow boundary; `value` is already
+     * current when listeners run. When to use: react to a committed value. When
+     * NOT to use: do not use it for per-keystroke updates; the native `input`
+     * event carries those.
      */
     interface HTMLKiTextareaElement extends Components.KiTextarea, HTMLStencilElement {
     }
@@ -1661,6 +1715,10 @@ declare namespace LocalJSX {
      * effect, triggering an action, unlabeled/icon-only usage, or
      * `checked="false"` to mean unchecked. Boolean attributes use presence
      * semantics; omit `checked` to express unchecked.
+     * @event change - Fired once after a user toggle (pointer, slotted label or Space)
+     * commits, composed across the shadow boundary; `checked` is already current
+     * when listeners run. When to use: react to the committed selection. When NOT
+     * to use: do not expect it for programmatic `checked` writes, which are silent.
      */
     interface KiCheckbox {
         /**
@@ -1827,6 +1885,11 @@ declare namespace LocalJSX {
      * purpose.
      * @whenNotToUse multiline text, predefined choices, boolean state, numeric
      * stepper entry, or placeholder-only labeling.
+     * @event change - Fired when the user commits an edited value (native text-field
+     * timing, such as on blur), composed across the shadow boundary; `value` is
+     * already current when listeners run. When to use: react to a committed
+     * value. When NOT to use: do not use it for per-keystroke updates; the native
+     * `input` event carries those.
      */
     interface KiInput {
         /**
@@ -2012,6 +2075,10 @@ declare namespace LocalJSX {
      * @whenNotToUse many options or tight space (use `ki-select`), independent
      * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
      * authored selection on options; set this group's `value` instead.
+     * @event change - Fired once after the user selects a different radio, composed
+     * across the shadow boundary; `value` is already current when listeners run.
+     * When to use: react to the committed choice. When NOT to use: do not expect
+     * it for programmatic `value` writes, which are silent.
      */
     interface KiRadioGroup {
         /**
@@ -2078,6 +2145,11 @@ declare namespace LocalJSX {
      * @whenNotToUse `ki-radio-group` for a few always-visible choices,
      * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
      * binary decisions, or multiselect and command menus.
+     * @event change - Fired once after the user commits a different option, composed
+     * across the shadow boundary and preceded by `input`; `value` is already
+     * current when listeners run. When to use: react to the committed choice.
+     * When NOT to use: do not expect it for programmatic `value` writes, which
+     * are silent.
      */
     interface KiSelect {
         /**
@@ -2152,6 +2224,10 @@ declare namespace LocalJSX {
      * @whenNotToUse selections collected for later form submission; use
      * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
      * choices, and ki-button for actions.
+     * @event change - Fired once after a user toggle commits, composed across the shadow
+     * boundary; `checked` is already current when listeners run. When to use:
+     * apply the on/off effect. When NOT to use: do not expect it for programmatic
+     * `checked` writes, which are silent.
      */
     interface KiSwitch {
         /**
@@ -2252,6 +2328,11 @@ declare namespace LocalJSX {
      * Agent note: initial text is declared through the `value` attribute; element
      * text content is ignored. Enter inserts a line break and never submits the
      * enclosing form, the inverse of `ki-input`.
+     * @event change - Fired when the user commits an edited value (on blur, with native
+     * textarea timing), composed across the shadow boundary; `value` is already
+     * current when listeners run. When to use: react to a committed value. When
+     * NOT to use: do not use it for per-keystroke updates; the native `input`
+     * event carries those.
      */
     interface KiTextarea {
         /**
@@ -2620,6 +2701,10 @@ declare module "@stencil/core" {
              * effect, triggering an action, unlabeled/icon-only usage, or
              * `checked="false"` to mean unchecked. Boolean attributes use presence
              * semantics; omit `checked` to express unchecked.
+             * @event change - Fired once after a user toggle (pointer, slotted label or Space)
+             * commits, composed across the shadow boundary; `checked` is already current
+             * when listeners run. When to use: react to the committed selection. When NOT
+             * to use: do not expect it for programmatic `checked` writes, which are silent.
              */
             "ki-checkbox": LocalJSX.IntrinsicElements["ki-checkbox"] & JSXBase.HTMLAttributes<HTMLKiCheckboxElement>;
             /**
@@ -2687,6 +2772,11 @@ declare module "@stencil/core" {
              * purpose.
              * @whenNotToUse multiline text, predefined choices, boolean state, numeric
              * stepper entry, or placeholder-only labeling.
+             * @event change - Fired when the user commits an edited value (native text-field
+             * timing, such as on blur), composed across the shadow boundary; `value` is
+             * already current when listeners run. When to use: react to a committed
+             * value. When NOT to use: do not use it for per-keystroke updates; the native
+             * `input` event carries those.
              */
             "ki-input": LocalJSX.IntrinsicElements["ki-input"] & JSXBase.HTMLAttributes<HTMLKiInputElement>;
             /**
@@ -2767,6 +2857,10 @@ declare module "@stencil/core" {
              * @whenNotToUse many options or tight space (use `ki-select`), independent
              * on/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or
              * authored selection on options; set this group's `value` instead.
+             * @event change - Fired once after the user selects a different radio, composed
+             * across the shadow boundary; `value` is already current when listeners run.
+             * When to use: react to the committed choice. When NOT to use: do not expect
+             * it for programmatic `value` writes, which are silent.
              */
             "ki-radio-group": LocalJSX.IntrinsicElements["ki-radio-group"] & JSXBase.HTMLAttributes<HTMLKiRadioGroupElement>;
             /**
@@ -2794,6 +2888,11 @@ declare module "@stencil/core" {
              * @whenNotToUse `ki-radio-group` for a few always-visible choices,
              * `ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for
              * binary decisions, or multiselect and command menus.
+             * @event change - Fired once after the user commits a different option, composed
+             * across the shadow boundary and preceded by `input`; `value` is already
+             * current when listeners run. When to use: react to the committed choice.
+             * When NOT to use: do not expect it for programmatic `value` writes, which
+             * are silent.
              */
             "ki-select": LocalJSX.IntrinsicElements["ki-select"] & JSXBase.HTMLAttributes<HTMLKiSelectElement>;
             /**
@@ -2818,6 +2917,10 @@ declare module "@stencil/core" {
              * @whenNotToUse selections collected for later form submission; use
              * ki-checkbox for recorded choices, ki-radio-group for mutually exclusive
              * choices, and ki-button for actions.
+             * @event change - Fired once after a user toggle commits, composed across the shadow
+             * boundary; `checked` is already current when listeners run. When to use:
+             * apply the on/off effect. When NOT to use: do not expect it for programmatic
+             * `checked` writes, which are silent.
              */
             "ki-switch": LocalJSX.IntrinsicElements["ki-switch"] & JSXBase.HTMLAttributes<HTMLKiSwitchElement>;
             /**
@@ -2856,6 +2959,11 @@ declare module "@stencil/core" {
              * Agent note: initial text is declared through the `value` attribute; element
              * text content is ignored. Enter inserts a line break and never submits the
              * enclosing form, the inverse of `ki-input`.
+             * @event change - Fired when the user commits an edited value (on blur, with native
+             * textarea timing), composed across the shadow boundary; `value` is already
+             * current when listeners run. When to use: react to a committed value. When
+             * NOT to use: do not use it for per-keystroke updates; the native `input`
+             * event carries those.
              */
             "ki-textarea": LocalJSX.IntrinsicElements["ki-textarea"] & JSXBase.HTMLAttributes<HTMLKiTextareaElement>;
             /**

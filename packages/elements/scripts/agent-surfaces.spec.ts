@@ -492,6 +492,46 @@ describe('agent surfaces', () => {
     );
   });
 
+  it('S1 S2 render a native event declared with an @event tag in the manifest and llms.txt', async () => {
+    const docs = normalizeDocs(await readFixture('path-a-docs.json'));
+    const component = docs.components[0];
+    component.docsTags = [
+      ...(component.docsTags ?? []),
+      { name: 'event', text: 'change - Fired after a committed user change.' },
+    ];
+
+    // Stencil's docs-json records only @Event() emitters; the @event tag is
+    // the contract's source for a natively re-dispatched event.
+    const events = buildManifest(docs).modules[0].declarations[0].events;
+    expect(events).toContainEqual({
+      name: 'change',
+      type: { text: 'Event' },
+      description: 'Fired after a committed user change.',
+    });
+    const summary = buildLlmsTxt(docs, (await readJson(pkgUrl)) as PackageFixture, preamble);
+    expect(summary).toContain('- `change` (Event): Fired after a committed user change.');
+  });
+
+  it('S4 validateDocs rejects a malformed or duplicated @event tag', async () => {
+    const docs = normalizeDocs(await readFixture('path-a-docs.json'));
+    const component = docs.components[0];
+    component.events = [
+      { event: 'change', docs: 'Custom change.', complexType: { original: 'void' } },
+    ];
+    component.docsTags = [
+      ...(component.docsTags ?? []),
+      { name: 'event', text: 'no description here' },
+      { name: 'event', text: 'change - Native change.' },
+    ];
+
+    expect(validateDocs(docs)).toEqual(
+      expect.arrayContaining([
+        'ki-button.@event: expected "<event-name> - <description>"',
+        'ki-button.@event change: event is declared more than once',
+      ]),
+    );
+  });
+
   it('S2 buildLlmsTxt renders usage examples between guidance and attributes, sorted by file name', async () => {
     const docs = normalizeDocs(await readJson(docsUrl));
     const component = docs.components[0];

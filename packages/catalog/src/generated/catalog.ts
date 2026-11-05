@@ -234,7 +234,9 @@ export const catalogData = {
     },
     "ki-checkbox": {
       "description": "A form-associated checkbox for selecting independent options.",
-      "events": {},
+      "events": {
+        "change": "Fired once after a user toggle (pointer, slotted label or Space)\ncommits, composed across the shadow boundary; `checked` is already current\nwhen listeners run. When to use: react to the committed selection. When NOT\nto use: do not expect it for programmatic `checked` writes, which are silent."
+      },
       "props": {
         "checked": {
           "type": "boolean",
@@ -399,7 +401,9 @@ export const catalogData = {
     },
     "ki-input": {
       "description": "A token-styled single-line text field with native input semantics.",
-      "events": {},
+      "events": {
+        "change": "Fired when the user commits an edited value (native text-field\ntiming, such as on blur), composed across the shadow boundary; `value` is\nalready current when listeners run. When to use: react to a committed\nvalue. When NOT to use: do not use it for per-keystroke updates; the native\n`input` event carries those."
+      },
       "props": {
         "autocomplete": {
           "type": "string",
@@ -585,7 +589,9 @@ export const catalogData = {
     },
     "ki-radio-group": {
       "description": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.",
-      "events": {},
+      "events": {
+        "change": "Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent."
+      },
       "props": {
         "disabled": {
           "type": "boolean",
@@ -645,7 +651,9 @@ export const catalogData = {
     },
     "ki-select": {
       "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.",
-      "events": {},
+      "events": {
+        "change": "Fired once after the user commits a different option, composed\nacross the shadow boundary and preceded by `input`; `value` is already\ncurrent when listeners run. When to use: react to the committed choice.\nWhen NOT to use: do not expect it for programmatic `value` writes, which\nare silent."
+      },
       "props": {
         "disabled": {
           "type": "boolean",
@@ -717,7 +725,9 @@ export const catalogData = {
     },
     "ki-switch": {
       "description": "A token-styled switch for immediate on/off settings.",
-      "events": {},
+      "events": {
+        "change": "Fired once after a user toggle commits, composed across the shadow\nboundary; `checked` is already current when listeners run. When to use:\napply the on/off effect. When NOT to use: do not expect it for programmatic\n`checked` writes, which are silent."
+      },
       "props": {
         "checked": {
           "type": "boolean",
@@ -816,7 +826,9 @@ export const catalogData = {
     },
     "ki-textarea": {
       "description": "A token-styled multiline text field with native form semantics.",
-      "events": {},
+      "events": {
+        "change": "Fired when the user commits an edited value (on blur, with native\ntextarea timing), composed across the shadow boundary; `value` is already\ncurrent when listeners run. When to use: react to a committed value. When\nNOT to use: do not use it for per-keystroke updates; the native `input`\nevent carries those."
+      },
       "props": {
         "autocomplete": {
           "type": "string",
