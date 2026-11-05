@@ -29,45 +29,61 @@ import { createA2uiAdapter } from '@kimen/adapter-a2ui';
 
 const adapter = createA2uiAdapter({
   surface: document.querySelector('#genui'),
-  protocolVersion: '0.9.1',
-  onUserAction: (event) => channelToAgent.send(event), // A2UI userAction round-trip
-  onDegradation: (report) => log(report),              // unmapped-type gaps, as data
+  onAction: (event) => channelToAgent.send(event), // A2UI `action` round-trip
+  onError: (error) => channelToAgent.send(error),  // VALIDATION_FAILED reports
+  onDegradation: (report) => log(report),          // fallback gaps, as data
 });
 
-// A supported A2UI surface update renders as catalog components:
-const result = adapter.apply({
-  surfaceUpdate: {
+// A2UI v0.9.1 messages render as catalog components:
+adapter.apply({
+  version: 'v0.9.1',
+  createSurface: {
     surfaceId: 'checkout',
-    root: 'card',
+    catalogId: 'https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json',
+  },
+});
+const result = adapter.apply({
+  version: 'v0.9.1',
+  updateComponents: {
+    surfaceId: 'checkout',
     components: [
-      { id: 'card', component: { Card: { children: { explicitList: ['confirm'] } } } },
+      { id: 'root', component: 'Card', child: 'confirm' },
       {
         id: 'confirm',
-        component: {
-          Button: { label: { literalString: 'Confirm order' }, action: { name: 'confirm-order' } },
-        },
+        component: 'Button',
+        child: 'confirm-label',
+        action: { event: { name: 'confirm-order' } },
       },
+      { id: 'confirm-label', component: 'Text', text: 'Confirm order' },
     ],
   },
 });
 result.ok; // true — or false with inert diagnostics naming each offender
 ```
 
+The adapter implements A2UI **v0.9.1** over its basic catalog. The surface's
+data model (bindings, `updateDataModel`, list templates) is resolved inside
+the adapter; the catalog never learns about it.
+
 ## Degradation rules
 
 An A2UI message is data, never code:
 
-- **Unmapped component types degrade per node** to a fixed fallback that
-  never carries agent content.
+- **Basic-catalog types without a catalog counterpart degrade per node**
+  (Image, Icon, Modal and others) to a fixed fallback that never carries agent
+  content.
 - **Forbidden types reject the whole message** — a type the compatibility
-  matrix declares `forbidden` (e.g. raw `html`) is never partially rendered.
-- **Unsupported protocol versions are rejected** naming the supported set.
-- **The action set is frozen at first render**: incremental `surfaceUpdate`
-  / `dataModelUpdate` messages revise the surface without discarding it, but
-  no later update can bind an undeclared action.
+  matrix declares `forbidden` (e.g. raw `html`) is never partially rendered;
+  so do undeclared properties and client functions that reach a browser
+  capability (`openUrl`).
+- **Unsupported protocol versions are rejected** naming the supported set
+  (`v0.9.1`, `v0.9`).
+- **The action set is fixed**: incremental `updateComponents` /
+  `updateDataModel` messages revise the surface without discarding it, but no
+  later update can bind an undeclared action.
 
 Transport is caller-owned: the adapter consumes already-delivered A2UI
-messages and emits `userAction` events to the supplied channel.
+messages and emits `action` and `error` messages to the supplied callbacks.
 `deleteSurface` drops adapter state; the host owns teardown of its surface
 element.
 
