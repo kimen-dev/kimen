@@ -14,6 +14,10 @@ import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
  * @part track - On/off channel.
  * @part thumb - Traveling handle.
  * @part label - Label wrapper around the default slot.
+ * @event change - Fired once after a user toggle commits, composed across the shadow
+ * boundary; `checked` is already current when listeners run. When to use:
+ * apply the on/off effect. When NOT to use: do not expect it for programmatic
+ * `checked` writes, which are silent.
  */
 @Component({
   tag: 'ki-switch',

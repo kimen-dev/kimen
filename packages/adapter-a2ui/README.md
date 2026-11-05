@@ -24,14 +24,14 @@ guarded renderer — verified by substituting an instrumented double (S12).
 
 Use this adapter when your host receives declarative A2UI messages and should
 render them as Kimen components: it owns the A2UI-to-catalog translation, the
-`userAction` round-trip and per-node degradation, so you never touch the
+data model, the `action` round-trip and per-node degradation, so you never touch the
 protocol shape yourself. If you control the spec format, skip the adapter and
 use [`@kimen/catalog`](../catalog/README.md) directly; if your host speaks
 MCP Apps, use [`@kimen/adapter-mcp-apps`](../adapter-mcp-apps/README.md).
 Transport is caller-owned either way — this package consumes
 already-delivered messages.
 
-The end-to-end walkthrough — transport wiring, the `userAction` round-trip,
+The end-to-end walkthrough — transport wiring, the `action` round-trip,
 degradation handling and the COMPAT policy — is
 [Build an A2UI host with Kimen](../../docs/guides/a2ui-host.md).
 
@@ -41,41 +41,63 @@ degradation handling and the COMPAT policy — is
 import { createA2uiAdapter } from '@kimen/adapter-a2ui';
 
 const adapter = createA2uiAdapter({
-  surface: document.querySelector('#genui'),
-  protocolVersion: '0.9.1',
-  onUserAction: (event) => channelToAgent.send(event), // A2UI userAction round-trip
-  onDegradation: (report) => log(report),              // unmapped-type gaps, as data
+  surface: document.querySelector('#genui'),        // or (surfaceId) => element
+  onAction: (event, metadata) => channelToAgent.send(event, metadata), // A2UI `action`
+  onError: (error) => channelToAgent.send(error),   // A2UI `error` (VALIDATION_FAILED)
+  onDegradation: (report) => log(report),           // fallback gaps, as data
 });
 
-// A supported A2UI surface update renders as catalog components:
-const result = adapter.apply({
-  surfaceUpdate: {
+// A2UI v0.9.1 messages, as delivered by your transport:
+adapter.apply({
+  version: 'v0.9.1',
+  createSurface: {
     surfaceId: 'checkout',
-    root: 'card',
+    catalogId: 'https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json',
+  },
+});
+const result = adapter.apply({
+  version: 'v0.9.1',
+  updateComponents: {
+    surfaceId: 'checkout',
     components: [
-      { id: 'card', component: { Card: { children: { explicitList: ['confirm'] } } } },
+      { id: 'root', component: 'Card', child: 'confirm' },
       {
         id: 'confirm',
-        component: {
-          Button: { label: { literalString: 'Confirm order' }, action: { name: 'confirm-order' } },
-        },
+        component: 'Button',
+        child: 'confirm-label',
+        action: { event: { name: 'confirm-order', context: { total: { path: '/order/total' } } } },
       },
+      { id: 'confirm-label', component: 'Text', text: 'Confirm order' },
     ],
   },
 });
 result.ok; // true — or false with inert diagnostics naming each offender
 ```
 
-An A2UI message is data, never code. Unmapped component types degrade per node
-to a fixed fallback (never carrying agent content); a type the matrix declares
-`forbidden` (e.g. raw `html`) rejects the whole message; a message tagged with
-an unsupported protocol version is rejected naming the supported set. Incremental
-`surfaceUpdate` / `dataModelUpdate` messages revise the surface without
-discarding it, and the surface's declared action set is frozen at first render
-so no later update can bind an undeclared action.
+The adapter implements A2UI **v0.9.1** (`createSurface`, `updateComponents`,
+`updateDataModel`, `deleteSurface`; envelope `version` `v0.9.1` or `v0.9`) over
+the basic catalog. The surface's data model lives inside the adapter: `{ path }`
+bindings, `updateDataModel` upserts and removals, `ChildList` templates with
+relative paths and the pure formatting functions resolve here, so the catalog
+never learns about data models. A user activation returns as an A2UI `action`
+event (`name`, `surfaceId`, `sourceComponentId`, `timestamp`, resolved
+`context`), with the `a2uiClientDataModel` metadata when the surface asked for
+`sendDataModel`.
+
+An A2UI message is data, never code. Basic-catalog types without a catalog
+counterpart (Image, Icon, Modal…) degrade per node to a fixed fallback that
+never carries agent content; a type the matrix declares `forbidden` (e.g. raw
+`html`), a property the catalog does not declare, or a client function that
+reaches a browser capability (`openUrl`) rejects the whole message; a message
+with an unsupported `version` is rejected naming the supported set. The
+surface's declared action set is fixed (pass `actions`, or it freezes at the
+first render that binds one) so no later update can bind an undeclared action.
+[`COMPAT.md`](./COMPAT.md) lists every mapping, the lossy ones and the declared
+gaps (user input does not yet flow back into the data model; every update
+re-renders the whole surface).
 
 Transport is caller-owned: the adapter consumes already-delivered A2UI
-messages and emits `userAction` events to the supplied channel. `deleteSurface`
+messages and emits client messages to the supplied callbacks. `deleteSurface`
 drops adapter state; the host owns teardown of its surface element.
 
 See [Build an A2UI host with Kimen](../../docs/guides/a2ui-host.md) for the

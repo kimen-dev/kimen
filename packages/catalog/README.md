@@ -123,9 +123,14 @@ any node attaches), **version skew** (a spec declaring an unsupported
 `catalogSchemaVersion` — as a top-level field of the spec document, or via
 the render option — is rejected naming both versions), and **declarative
 actions only** (a bound control dispatches its one declared action, as data,
-on the single `onAction` channel — activation suppresses the native default
-and stops bubbling, so exactly one action fires even for nested action-bound
-nodes or a button inside a form; no other callback exists).
+on the single `onAction` channel, on the one event its catalog entry declares
+— `change` on the form controls, `ki-change` on `ki-tabs` — or on `click`
+when it declares none; a click activation suppresses the native default and
+stops bubbling, a declared-event activation cancels nothing and reports the
+control's live `checked`/`value`; the innermost bound node claims an
+interaction, so exactly one action fires even for nested action-bound nodes
+or a button inside a form; a binding on a component declaring several events
+is rejected; no other callback exists).
 
 `createStreamingRenderer` renders a streamed spec progressively: a node
 attaches only after it fully validates; an invalid node halts the stream
