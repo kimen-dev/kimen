@@ -935,8 +935,10 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
         fail('batch', 'build-failed', 'a component failed to construct; nothing was applied'),
       ]);
     }
-    // 8. Commit: the same ops, now with minimal DOM writes.
-    applyOps(live, batch.ops, {
+    // 8. Commit: the same ops, now with minimal DOM writes. They replay
+    // exactly what step 6 validated on an identical copy, so they cannot
+    // fail; a divergence would be a defect, never a partial apply to hide.
+    const diverged = applyOps(live, batch.ops, {
       allowUserStateOverride,
       components,
       dom: { doc, surface },
@@ -948,6 +950,9 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
         return node;
       },
     });
+    if (diverged !== null) {
+      throw new Error(`live surface: commit diverged from validation at ${diverged.path}`);
+    }
     revision += 1;
     cached = null;
     return result([]);
