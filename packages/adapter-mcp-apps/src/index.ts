@@ -10,15 +10,21 @@
  */
 export {
   createKimenSurfaceResource,
+  declareActionTool,
   declareToolSurface,
   surfaceToolResult,
 } from './resource.js';
 export type {
+  KimenActionTool,
   KimenSurfaceResource,
   SurfaceContentPolicy,
   SurfaceToolResult,
 } from './resource.js';
-export { createSurfaceBridge, negotiateProtocolVersion } from './bridge.js';
+export {
+  createSurfaceBridge,
+  KIMEN_APP_INFO,
+  negotiateProtocolVersion,
+} from './bridge.js';
 export type {
   BridgeRefusal,
   DispatchResult,
@@ -26,22 +32,41 @@ export type {
   ReceiveResult,
   SurfaceBridge,
   SurfaceBridgeOptions,
+  SurfaceState,
 } from './bridge.js';
 export {
   isSupportedProtocolVersion,
+  JSONRPC_METHOD_NOT_FOUND,
   JSONRPC_VERSION,
+  KIMEN_ACTION_TOOL,
+  KIMEN_SURFACE_KEY,
   MCP_APPS_PROTOCOL_VERSIONS,
-  METHOD_ACTION,
+  METHOD_HOST_CONTEXT_CHANGED,
+  METHOD_INITIALIZE,
+  METHOD_INITIALIZED,
+  METHOD_PING,
+  METHOD_RESOURCE_TEARDOWN,
+  METHOD_SIZE_CHANGED,
+  METHOD_TOOL_CANCELLED,
+  METHOD_TOOL_INPUT,
+  METHOD_TOOL_INPUT_PARTIAL,
   METHOD_TOOL_RESULT,
-  parseEnvelope,
+  METHOD_TOOLS_CALL,
+  parseJsonRpcMessage,
   SURFACE_MIME_TYPE,
   surfaceResourceUri,
   UI_SCHEME,
 } from './protocol.js';
 export type {
-  ActionMessage,
-  ProtocolEnvelope,
+  ActionCallRequest,
+  Implementation,
+  InitializedNotification,
+  InitializeRequest,
+  JsonRpcMessage,
+  RequestId,
+  SizeChangedNotification,
+  SurfaceOutboundMessage,
   SurfacePayload,
-  ToolResultMessage,
+  ViewResponse,
 } from './protocol.js';
 export { SURFACE_DOCUMENT } from './generated/surface-document.js';
