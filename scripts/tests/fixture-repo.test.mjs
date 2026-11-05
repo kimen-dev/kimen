@@ -45,7 +45,9 @@ const names = [
   'NX_NATIVE_FILE_CACHE_DIRECTORY',
   'NX_WORKSPACE_DATA_DIRECTORY',
   'PLAYWRIGHT_BROWSERS_PATH',
+  'PNPM_CONFIG_STORE_DIR',
   'XDG_CACHE_HOME',
+  'pnpm_config_store_dir',
 ];
 const prepared = Object.fromEntries(names.map((name) => [name, process.env[name] ?? null]));
 process.stdout.write(JSON.stringify({
@@ -86,7 +88,9 @@ const preparedParentEnvironment = {
   NX_NATIVE_FILE_CACHE_DIRECTORY: '/parent/nx/native',
   NX_WORKSPACE_DATA_DIRECTORY: '/parent/nx/workspace-data',
   PLAYWRIGHT_BROWSERS_PATH: '/parent/playwright',
+  PNPM_CONFIG_STORE_DIR: '/parent/pnpm/store',
   XDG_CACHE_HOME: '/parent/xdg',
+  pnpm_config_store_dir: '/parent/pnpm/store',
 };
 
 const clearedPreparedEnvironment = {
@@ -121,7 +125,9 @@ const clearedPreparedEnvironment = {
   NX_NATIVE_FILE_CACHE_DIRECTORY: null,
   NX_WORKSPACE_DATA_DIRECTORY: null,
   PLAYWRIGHT_BROWSERS_PATH: null,
+  PNPM_CONFIG_STORE_DIR: null,
   XDG_CACHE_HOME: null,
+  pnpm_config_store_dir: null,
 };
 
 test('fixture commands clear prepared parent caches and Git state without clearing unrelated environment', async (t) => {

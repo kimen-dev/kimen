@@ -166,7 +166,14 @@ it.each([
 it('isolates every mutable tool cache while preserving an explicit browser installation', () => {
   const environment = createGeneratorSmokeEnvironment({
     temporaryRoot: '/temporary',
-    baseEnvironment: { PATH: '/bin', PLAYWRIGHT_BROWSERS_PATH: '/trusted/browsers' },
+    baseEnvironment: {
+      PATH: '/bin',
+      PLAYWRIGHT_BROWSERS_PATH: '/trusted/browsers',
+      // A prepared parent exports the pnpm 11 store spellings, which pnpm obeys
+      // ahead of NPM_CONFIG_STORE_DIR; the smoke must replace them too.
+      PNPM_CONFIG_STORE_DIR: '/parent/pnpm/store',
+      pnpm_config_store_dir: '/parent/pnpm/store',
+    },
   });
 
   expect(environment).toMatchObject({
@@ -174,6 +181,8 @@ it('isolates every mutable tool cache while preserving an explicit browser insta
     NPM_CONFIG_CACHE: '/temporary/cache/npm',
     npm_config_cache: '/temporary/cache/npm',
     NPM_CONFIG_STORE_DIR: '/temporary/cache/pnpm-store',
+    PNPM_CONFIG_STORE_DIR: '/temporary/cache/pnpm-store',
+    pnpm_config_store_dir: '/temporary/cache/pnpm-store',
     NPM_CONFIG_USERCONFIG: '/temporary/config/npmrc',
     NPM_CONFIG_GLOBALCONFIG: '/temporary/config/npmrc-global',
     COREPACK_HOME: '/temporary/cache/corepack',

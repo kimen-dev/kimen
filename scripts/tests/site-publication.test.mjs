@@ -4,7 +4,8 @@
 // @spec:031-site-experience#S10
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
+import { accessSync, constants, statSync } from 'node:fs';
+import { mkdir, mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import test from 'node:test';
@@ -517,4 +518,142 @@ test('S9 the built documentation carries analytics only when the marker is set',
     [],
     'a marked documentation build must load the declared endpoint, with the declared website id, scoped to the production domain',
   );
+});
+
+// A documentation build must be able to publish where it is told to. The S9
+// case above measures the built HTML, and to do that it points `--outDir` at a
+// scratch directory under TMPDIR — a directory the caller chooses and Astro
+// never gets to relocate. Whether that directory shares a filesystem with the
+// repository is not part of any contract: a container mounts /tmp as tmpfs, CI
+// mounts the workspace on a separate volume, and a developer machine may do
+// either. So the build has to survive an output directory on another device,
+// and today it does not: `ssrMoveAssets` renames from `site/docs/.astro` into
+// `--outDir` and a rename cannot cross a filesystem boundary (EXDEV).
+//
+// This helper deliberately does not reuse `buildDocumentation` above. That one
+// is the code under repair — it hard-codes TMPDIR through `tmpdir()` — and a
+// red that ran through it could not tell a fault in the build from a fault in
+// the helper.
+async function buildDocumentationInto(output) {
+  const environment = { ...process.env };
+  delete environment.KIMEN_ANALYTICS;
+  try {
+    await execFileAsync(
+      'pnpm',
+      ['--filter', '@kimen/docs', 'exec', 'astro', 'build', '--outDir', output],
+      { cwd: repositoryRoot, env: environment },
+    );
+    return null;
+  } catch (error) {
+    return `${error.stdout ?? ''}${error.stderr ?? ''}(${error.message})`;
+  }
+}
+
+function describeDevice(label, path) {
+  return `${label}: ${path} (st_dev ${statSync(path).dev})`;
+}
+
+// The temporary directory is not this test's to choose. The caller — the
+// harness that runs the gates — designates exactly one authorised location
+// through TMPDIR, and this case uses that one or none: probing /tmp or
+// /dev/shm behind the caller's back would reproduce the boundary on a mount
+// nobody granted, and picking a directory by st_dev alone says nothing about
+// whether a build may write there. So every precondition is settled before the
+// build starts, and a missing one is reported as a blocked prerequisite — the
+// case did not run — never as a fallback to another mount, a skip, or the
+// same-device control below.
+function authorisedCrossDeviceRoot() {
+  const repositoryDevice = statSync(repositoryRoot).dev;
+  const blocked = (reason) => ({ root: null, repositoryDevice, reason });
+  const root = process.env.TMPDIR;
+
+  if (root === undefined || root === '') {
+    return blocked('the caller designated no temporary directory: TMPDIR is unset');
+  }
+
+  let stats;
+  try {
+    stats = statSync(root);
+  } catch (error) {
+    return blocked(`the designated temporary directory ${root} could not be read: ${error.code}`);
+  }
+  if (!stats.isDirectory()) {
+    return blocked(`the designated temporary directory ${root} is not a directory`);
+  }
+  try {
+    accessSync(root, constants.W_OK | constants.X_OK);
+  } catch (error) {
+    return blocked(`the designated temporary directory ${root} is not writable: ${error.code}`);
+  }
+  if (stats.dev === repositoryDevice) {
+    return blocked(
+      `the designated temporary directory ${root} shares st_dev ${stats.dev} with the repository, so no filesystem boundary would be crossed`,
+    );
+  }
+
+  return { root, repositoryDevice, device: stats.dev, reason: null };
+}
+
+test('the documentation build publishes into an output directory on another filesystem', async (t) => {
+  const { root, repositoryDevice, device, reason } = authorisedCrossDeviceRoot();
+  assert.ok(
+    root,
+    `blocked prerequisite, not a result: this case needs an authorised temporary directory on another filesystem and ${reason} (repository st_dev ${repositoryDevice})`,
+  );
+
+  let output;
+  try {
+    output = await mkdtemp(join(root, 'kimen-docs-portability-'));
+  } catch (error) {
+    assert.fail(
+      `blocked prerequisite, not a result: the authorised temporary directory ${root} (st_dev ${device}) refused a scratch directory: ${error.code}`,
+    );
+  }
+  t.after(() => rm(output, { force: true, recursive: true }));
+
+  // The boundary is confirmed on the directory the build is actually handed,
+  // so the failure below can only be read one way.
+  assert.notEqual(
+    statSync(output).dev,
+    repositoryDevice,
+    `blocked prerequisite, not a result: ${output} landed on the repository's own filesystem (st_dev ${repositoryDevice})`,
+  );
+
+  const failure = await buildDocumentationInto(output);
+
+  assert.equal(
+    failure,
+    null,
+    [
+      'the documentation build must publish to an output directory on any writable filesystem.',
+      describeDevice('repository', repositoryRoot),
+      describeDevice('output    ', output),
+      failure ?? '',
+    ].join('\n'),
+  );
+  assert.ok(
+    (await documentationPages(output)).length > 0,
+    'a cross-device documentation build must publish pages, not an empty directory',
+  );
+});
+
+// Control, not the regression: the same build with an output directory on the
+// repository's own filesystem. It passes today, which is what makes the failure
+// above attributable to the device boundary and not to the build at large.
+test('control: the documentation build publishes into an output directory on its own filesystem', async (t) => {
+  const controlRoot = join(repositoryRoot, 'reports/tmp');
+  await mkdir(controlRoot, { recursive: true });
+  const output = await mkdtemp(join(controlRoot, 'kimen-docs-same-device-'));
+  t.after(() => rm(output, { force: true, recursive: true }));
+
+  assert.equal(
+    statSync(output).dev,
+    statSync(repositoryRoot).dev,
+    'the control must run on the repository filesystem, otherwise it controls for nothing',
+  );
+
+  const failure = await buildDocumentationInto(output);
+
+  assert.equal(failure, null, `the same-device control build failed: ${failure}`);
+  assert.ok((await documentationPages(output)).length > 0, 'the control build must publish pages');
 });
