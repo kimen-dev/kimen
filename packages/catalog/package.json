@@ -33,7 +33,7 @@
     "@types/node": "26.1.2",
     "fast-check": "4.9.0",
     "happy-dom": "20.11.1",
-    "vitest": "4.1.10"
+    "vitest": "4.1.11"
   },
   "nx": {
     "tags": [
