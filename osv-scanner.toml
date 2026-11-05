@@ -1,0 +1,22 @@
+# OSV-Scanner configuration (read by `osv-scanner scan --recursive ./` in
+# .github/workflows/security.yml for the lockfiles in this directory).
+#
+# Each entry is a Medium advisory with no fix reachable inside the declared
+# ranges of the packages that pull it in. They are ignored with a reason and an
+# expiry: when `ignoreUntil` passes the scan reports them again, so the decision
+# is revisited instead of becoming permanent.
+
+[[IgnoredVulns]]
+id = "GHSA-g3hv-75wg-m249"
+ignoreUntil = 2027-01-05T00:00:00Z
+reason = "minimatch 10.2.x (DoS via globparts amplification, dev/build tooling only). Fixed only in 11.0.1, a major that eslint, typescript-eslint, @nx/devkit, Stryker and glob do not accept yet."
+
+[[IgnoredVulns]]
+id = "GHSA-3g3m-2fjr-6pw4"
+ignoreUntil = 2027-01-05T00:00:00Z
+reason = "glob 13.0.6 (AbortSignal cancellation bypass), bundled by @bundled-es-modules/glob inside style-dictionary (token build only). Fixed in 14.0.2; style-dictionary 5.8.0, the latest, still bundles 13.x."
+
+[[IgnoredVulns]]
+id = "GHSA-gcqx-w48m-w2h4"
+ignoreUntil = 2027-01-05T00:00:00Z
+reason = "deepmerge 4.3.1 (prototype poisoning of returned objects), reached through style-dictionary at token build time on trusted DTCG sources. No fixed version is published."
