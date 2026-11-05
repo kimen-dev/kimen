@@ -116,6 +116,22 @@ Feature: Live surface
         | inserts before a node that sits in another parent           | invalid-position  |
         | sets text on a slot that holds nodes                        | slot-has-nodes    |
 
+    # S20
+    Scenario Outline: A name inherited from the object prototype never resolves as a declared one
+      Given a live surface showing the empty list "p" and the badge "b"
+      When the agent applies a batch that <op> named "<name>"
+      Then the surface, its revision and its snapshot are unchanged
+      And the diagnostic names the rule "<rule>"
+      And no later op can address a node through that name
+
+      Examples:
+        | op                                   | name           | rule          |
+        | inserts a badge under "p" in a slot  | __proto__      | forbidden-key |
+        | inserts a badge under "p" in a slot  | constructor    | forbidden-key |
+        | inserts a badge under "p" in a slot  | toString       | unknown-slot  |
+        | sets the text of a slot of "p"       | hasOwnProperty | unknown-slot  |
+        | sets on "b" the prop                 | valueOf        | unknown-prop  |
+
     # S11
     Scenario Outline: State budgets bind the resulting state on both sides
       Given a live surface whose resulting state would hold <state>
@@ -161,6 +177,22 @@ Feature: Live surface
         | allows      | the checkbox is unticked                                             |
         | does not allow | the checkbox stays ticked and the batch is rejected as "user-state-override-denied" |
 
+    # S21
+    Scenario Outline: Replacing or removing what holds the user's state needs an allowed override
+      Given a live surface whose host <policy> user-state overrides
+      And the card "card" holding the field "note" the user has typed into
+      When the agent applies a batch that <op>
+      Then <outcome>
+
+      Examples:
+        | policy         | op                                      | outcome                                                                                  |
+        | does not allow | replaces "card"                         | the field keeps the typed text and the batch is rejected as "user-state-conflict"        |
+        | does not allow | removes "card"                          | the field keeps the typed text and the batch is rejected as "user-state-conflict"        |
+        | does not allow | replaces "note"                         | the field keeps the typed text and the batch is rejected as "user-state-conflict"        |
+        | does not allow | removes "note" and inserts a new "note" | the field keeps the typed text and the batch is rejected as "user-state-conflict"        |
+        | does not allow | replaces "card" with force              | the field keeps the typed text and the batch is rejected as "user-state-override-denied" |
+        | allows         | replaces "card" with force              | the card is replaced and the typed text is discarded                                     |
+
   Rule: Revision, optimistic concurrency and snapshot keep host and agent in sync
 
     # S15
@@ -192,6 +224,33 @@ Feature: Live surface
       When the user activates "pay"
       Then the host receives one "submit" event with the id "pay", its current path and the current revision
       And its data carries the props set by the latest batch
+
+  Rule: One batch at a time
+
+    # S22
+    Scenario: A batch submitted while another is being applied is rejected
+      Given a live surface whose host applies a new batch from onAction
+      And a component that emits its declared event as soon as it is connected
+      When the agent applies a batch inserting that component and then a badge
+      Then the inner batch is rejected as "reentrant-batch" and changes nothing
+      And the outer batch applies whole, the revision advances once and the DOM matches the snapshot
+
+  Rule: A 0.x catalog schema is compatible only within its minor
+
+    # S23
+    Scenario Outline: Under major 0 the version gate accepts only the supported minor
+      Given a renderer whose catalog schema version is "0.3.0"
+      And a spec declaring the catalog schema version "<declared>"
+      When the renderer validates the spec
+      Then the spec is <outcome>
+
+      Examples:
+        | declared | outcome                          |
+        | 0.3.0    | accepted                         |
+        | 0.3.9    | accepted                         |
+        | 0.2.9    | rejected as unsupported-version  |
+        | 0.1.0    | rejected as unsupported-version  |
+        | 0.4.0    | rejected as unsupported-version  |
 
   Rule: No code path exists from batch data
 

@@ -23,8 +23,9 @@ that name their node."
 
 **Constitution check**: behavior enters the system exactly once, here
 (Art. II). This feature is a NEW guardrail surface (Art. VIII): S2, S9, S10,
-S11, S12, S13, S14, S16 and S19 are security-boundary scenarios and require
-explicit standalone founder confirmation at human gate 1.
+S11, S12, S13, S14, S16, S19, S20, S21, S22 and S23 are security-boundary
+scenarios and require explicit standalone founder confirmation at human
+gate 1.
 
 ## Design-source analysis
 
@@ -62,9 +63,14 @@ here:
   recreated; nothing outside the batch is reordered. Focus, selection,
   scroll and typed values survive (proven in a real browser).
 - **D5** User-owned state (`checked`, `value`, `open` — a control's own
-  value channel) that the user has changed is never overwritten by an
-  agent `set` unless the op says `force: true` AND the host enabled
-  `allowUserStateOverride` (default off).
+  value channel) that the user has changed is never overwritten nor
+  discarded by the agent unless the op says `force: true` AND the host
+  enabled `allowUserStateOverride` (default off). This binds `set` on the
+  node, and `replace` and `remove` of the node or of ANY of its ancestors
+  (a `remove` plus an `insert` of the same id in one batch included).
+  *Revised by the founder after the adversarial review of PR #191: the
+  first draft let `replace`/`remove` of a node discard its user state by
+  design; that decision is withdrawn.*
 - **D6** A monotonic `revision` per surface; an optional `ifRevision` on
   the batch for optimistic concurrency (a mismatch rejects with a
   diagnostic); `snapshot()` returns the current content as frozen plain
@@ -75,7 +81,8 @@ here:
 - **D8** The catalog schema version gate accepts compatible versions by
   SemVer (same major, minor not newer than supported) instead of exact
   equality, so the additive `id` lands as catalog schema `1.1.0` without
-  rejecting specs that declare `1.0.0`.
+  rejecting specs that declare `1.0.0`. Under major `0` every minor may
+  break (SemVer), so a `0.x` supported version accepts only its own minor.
 - **D9** No protocol data binding (JSON pointers, data models) and no domain
   components in the core. The emitter is unchanged: operations for LLMs
   are the product's job (Art. VIII, Art. VII).
@@ -113,7 +120,7 @@ and the surface keeps accepting later batches.
 valid ones; every batch leaves the DOM, the revision and the snapshot
 unchanged and reports the rule; a following valid batch applies.
 
-**Acceptance Scenarios**: S2, S9, S10, S11, S12, S19.
+**Acceptance Scenarios**: S2, S9, S10, S11, S12, S19, S20.
 
 ---
 
@@ -123,7 +130,7 @@ What the user changed (a ticked box, a typed value, an expanded panel) is
 never silently reverted by the agent; overriding it is an explicit op the
 host has to allow.
 
-**Acceptance Scenarios**: S13, S14.
+**Acceptance Scenarios**: S13, S14, S21.
 
 ---
 
@@ -133,7 +140,7 @@ The host can tell the agent which revision the user acted on, reject
 answers computed against an older revision, summarize the current content
 for the agent, and correlate every action with a stable node id.
 
-**Acceptance Scenarios**: S15, S16, S17, S18.
+**Acceptance Scenarios**: S15, S16, S17, S18, S22.
 
 ---
 
@@ -143,7 +150,7 @@ Specs and hosts that declare catalog schema `1.0.0` keep working with a
 renderer whose catalog is `1.1.0`; a newer minor or another major is still
 rejected fail-closed.
 
-**Acceptance Scenarios**: S3.
+**Acceptance Scenarios**: S3, S23.
 
 ### Edge Cases
 
@@ -159,7 +166,15 @@ rejected fail-closed.
   holds nodes it is rejected (removing addressable nodes implicitly would
   bypass `remove`). An empty text empties the slot.
 - `replace` may reuse the replaced node's id; it recreates that node's
-  element (and its subtree) only.
+  element (and its subtree) only. It is rejected, like `remove`, while that
+  subtree holds user state the agent did not write (S21).
+- A slot name, unlike an object key, reaches the surface as a VALUE: it is
+  accepted only when the node's catalog entry declares it as an own
+  property, and `__proto__`, `constructor` and `prototype` are never slot
+  names (S20).
+- `apply` called while a batch is being applied (from `onAction` or a
+  component reacting to its own connection) is rejected whole as
+  `reentrant-batch`; the host submits it after `apply` returns (S22).
 - Ops inside one batch see the effects of the previous ops of the same batch
   (an insert may target a parent inserted earlier in the batch).
 - The state budgets bind the resulting state and go DOWN when content is
@@ -288,6 +303,22 @@ Feature: Live surface
         | inserts before a node that sits in another parent           | invalid-position  |
         | sets text on a slot that holds nodes                        | slot-has-nodes    |
 
+    # S20
+    Scenario Outline: A name inherited from the object prototype never resolves as a declared one
+      Given a live surface showing the empty list "p" and the badge "b"
+      When the agent applies a batch that <op> named "<name>"
+      Then the surface, its revision and its snapshot are unchanged
+      And the diagnostic names the rule "<rule>"
+      And no later op can address a node through that name
+
+      Examples:
+        | op                                   | name           | rule          |
+        | inserts a badge under "p" in a slot  | __proto__      | forbidden-key |
+        | inserts a badge under "p" in a slot  | constructor    | forbidden-key |
+        | inserts a badge under "p" in a slot  | toString       | unknown-slot  |
+        | sets the text of a slot of "p"       | hasOwnProperty | unknown-slot  |
+        | sets on "b" the prop                 | valueOf        | unknown-prop  |
+
     # S11
     Scenario Outline: State budgets bind the resulting state on both sides
       Given a live surface whose resulting state would hold <state>
@@ -333,6 +364,22 @@ Feature: Live surface
         | allows      | the checkbox is unticked                                             |
         | does not allow | the checkbox stays ticked and the batch is rejected as "user-state-override-denied" |
 
+    # S21
+    Scenario Outline: Replacing or removing what holds the user's state needs an allowed override
+      Given a live surface whose host <policy> user-state overrides
+      And the card "card" holding the field "note" the user has typed into
+      When the agent applies a batch that <op>
+      Then <outcome>
+
+      Examples:
+        | policy         | op                                      | outcome                                                                                  |
+        | does not allow | replaces "card"                         | the field keeps the typed text and the batch is rejected as "user-state-conflict"        |
+        | does not allow | removes "card"                          | the field keeps the typed text and the batch is rejected as "user-state-conflict"        |
+        | does not allow | replaces "note"                         | the field keeps the typed text and the batch is rejected as "user-state-conflict"        |
+        | does not allow | removes "note" and inserts a new "note" | the field keeps the typed text and the batch is rejected as "user-state-conflict"        |
+        | does not allow | replaces "card" with force              | the field keeps the typed text and the batch is rejected as "user-state-override-denied" |
+        | allows         | replaces "card" with force              | the card is replaced and the typed text is discarded                                     |
+
   Rule: Revision, optimistic concurrency and snapshot keep host and agent in sync
 
     # S15
@@ -365,6 +412,33 @@ Feature: Live surface
       Then the host receives one "submit" event with the id "pay", its current path and the current revision
       And its data carries the props set by the latest batch
 
+  Rule: One batch at a time
+
+    # S22
+    Scenario: A batch submitted while another is being applied is rejected
+      Given a live surface whose host applies a new batch from onAction
+      And a component that emits its declared event as soon as it is connected
+      When the agent applies a batch inserting that component and then a badge
+      Then the inner batch is rejected as "reentrant-batch" and changes nothing
+      And the outer batch applies whole, the revision advances once and the DOM matches the snapshot
+
+  Rule: A 0.x catalog schema is compatible only within its minor
+
+    # S23
+    Scenario Outline: Under major 0 the version gate accepts only the supported minor
+      Given a renderer whose catalog schema version is "0.3.0"
+      And a spec declaring the catalog schema version "<declared>"
+      When the renderer validates the spec
+      Then the spec is <outcome>
+
+      Examples:
+        | declared | outcome                          |
+        | 0.3.0    | accepted                         |
+        | 0.3.9    | accepted                         |
+        | 0.2.9    | rejected as unsupported-version  |
+        | 0.1.0    | rejected as unsupported-version  |
+        | 0.4.0    | rejected as unsupported-version  |
+
   Rule: No code path exists from batch data
 
     # S19
@@ -384,7 +458,7 @@ guarantees is that it does not destroy them (S4–S6, S13).
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1–S19 | |
+| Core behavior | S1–S23 | |
 | Keyboard path | | N/A — no new interaction; focus preservation across updates is core behavior (S4, S5, S6) |
 | Assistive-tech outcome | | N/A — the accessibility tree is produced by the rendered catalog components under their own contracts |
 | Form participation | | N/A — form behavior is owned by the rendered form components; the surface only refuses to overwrite user state (S13, S14) |
@@ -402,8 +476,9 @@ guarantees is that it does not destroy them (S4–S6, S13).
 - **FR-002** (D8): the catalog schema version gate (renderer, stream, live
   surface and `createCatalog`'s `extend`) accepts a declared `MAJOR.MINOR.PATCH`
   version with the supported major and a minor not newer than the
-  supported minor; anything else, including a non-SemVer string, is
-  rejected fail-closed with `unsupported-version`. The catalog schema
+  supported minor (under major `0`: exactly the supported minor, S23);
+  anything else, including a non-SemVer string, is rejected fail-closed
+  with `unsupported-version`. The catalog schema
   version becomes `1.1.0` (generated, Art. I).
 - **FR-003** (D1, D3): `createLiveSurface(options)` returns `{ apply,
   snapshot, revision }`. Options: `surface`, `catalog`, `actions` (the
@@ -423,7 +498,11 @@ guarantees is that it does not destroy them (S4–S6, S13).
   batch; the result is `{ ok, revision, diagnostics }` with `028`-shaped
   inert diagnostics naming op or state path, rule and offending value.
   A rejected batch changes neither DOM, revision nor snapshot, and never
-  halts the surface.
+  halts the surface. Every name an op carries (slot, prop) and every
+  catalog lookup resolves by OWN property only, and the state budgets are
+  counted on the live model itself, not on a derived view (S20). A call
+  to `apply` while a batch is being applied is rejected as
+  `reentrant-batch` without touching anything (S22).
 - **FR-005** (D4): DOM writes are minimal: `set` changes only the
   attributes whose value changes on the existing element (booleans by
   presence, `null` unsets); `text` updates the text node of a slot in place
@@ -440,7 +519,10 @@ guarantees is that it does not destroy them (S4–S6, S13).
   live value is rejected as `user-state-conflict` unless the op carries
   `force: true`; a forced op is rejected as `user-state-override-denied`
   unless the host set `allowUserStateOverride: true`, in which case the
-  attribute and the component's own property are written.
+  attribute and the component's own property are written. The same holds
+  for `replace` and `remove` (both accept `force`): they are rejected while
+  the node or any descendant holds a user-owned value that differs from
+  what the agent last wrote (S21).
 - **FR-007** (D6): `revision` starts at 0 and advances by exactly one per
   applied non-empty batch. `ifRevision` different from the current revision
   rejects the batch as `stale-revision` with the current revision as value.
@@ -464,8 +546,8 @@ guarantees is that it does not destroy them (S4–S6, S13).
 - **Batch**: untrusted plain data `{ ifRevision?, ops }`; the unit of
   atomicity, validation and revision.
 - **Op**: `insert { parent?, slot?, before?, node }`, `set { id, props,
-  force? }`, `text { id, slot?, text }`, `remove { id }`,
-  `replace { id, node }`.
+  force? }`, `text { id, slot?, text }`, `remove { id, force? }`,
+  `replace { id, node, force? }`.
 - **Resulting state**: the surface content as it would be after the batch;
   the only state budgets and validation are evaluated against.
 - **Revision**: monotonic per-surface counter of applied batches.
@@ -502,7 +584,7 @@ guarantees is that it does not destroy them (S4–S6, S13).
 - **SC-003**: a property-based run of random valid and invalid batches never
   leaves an element outside the catalog on the surface and the DOM always
   equals a fresh build of `snapshot()`.
-- **SC-004**: the S1–S19 traced tests run green inside the deterministic
+- **SC-004**: the S1–S23 traced tests run green inside the deterministic
   gates; the existing 028/032 suites stay green unchanged except for the
   version-gate scenario they share with S3.
 
@@ -514,5 +596,6 @@ guarantees is that it does not destroy them (S4–S6, S13).
   events and its live property, read as a scalar of the declared type (the
   same channel `028` FR-003 reads); a component that changes those props
   without emitting `input`/`change`/a declared event is not protected.
-- `replace` and `remove` of a node discard its user state by design: they
-  are explicit ops on that node.
+- `replace` and `remove` never discard user state implicitly (D5 as
+  revised): the agent removes or rebuilds what the user changed only with
+  `force` and the host's permission.
