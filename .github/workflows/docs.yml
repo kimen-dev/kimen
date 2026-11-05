@@ -39,7 +39,14 @@ jobs:
       # dispatch from main deploys to production exactly like a push does,
       # so it must be measured too; every pull request and every dispatch
       # from a non-main branch resolves to a preview and stays unmeasured.
-      KIMEN_ANALYTICS: ${{ github.event_name != 'pull_request' && github.ref_name == 'main' && '1' || '0' }}
+      #
+      # Production measurement is additionally held behind the repository
+      # variable KIMEN_ANALYTICS_ENABLED: unset (the default) ships no
+      # analytics. It stays off until the Umami instance meets the exemption
+      # conditions (country only, no stored IP, retention, no Cloudflare
+      # proxy); setting the variable to 'true' turns it back on without a
+      # code change.
+      KIMEN_ANALYTICS: ${{ github.event_name != 'pull_request' && github.ref_name == 'main' && vars.KIMEN_ANALYTICS_ENABLED == 'true' && '1' || '0' }}
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
