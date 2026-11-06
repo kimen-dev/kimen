@@ -4,7 +4,57 @@
 // [data-ki-color-scheme] attribute override. Run via ./build.mjs.
 import { readdirSync } from 'node:fs';
 
+import StyleDictionary from 'style-dictionary';
+import { transformGroups, transforms } from 'style-dictionary/enums';
 import { formattedVariables } from 'style-dictionary/utils';
+
+// Kimen owns the value format of its CSS sheets instead of inheriting it from
+// Style Dictionary's predefined `css` transform group: every emitted value is
+// part of the published token surface (public-api.json), and Style Dictionary
+// 5.7 changed two of that group's transforms without a major version.
+//   - `color/css` started printing the raw alpha channel
+//     (`rgba(58, 58, 58, 0.10196078431372549)` for `#3a3a3a1a`). Kimen keeps
+//     the two-decimal alpha (`0.1`), the percentage those 8-bit hex sources
+//     approximate (0x1a ≈ 10%); every alpha the sources use today rounds back
+//     to the same 8-bit value either way. Opaque colours stay lowercase hex.
+//   - `time/seconds` started converting DTCG `duration` tokens too
+//     (`150ms` → `0.15s`). Kimen keeps durations in their authored unit; the
+//     transform still applies to legacy `time` tokens (there are none today).
+// Both are pinned by scripts/style-dictionary-config.test.mjs.
+const KIMEN_CSS_GROUP = 'kimen/css';
+const KIMEN_COLOR_CSS = 'kimen/color/css';
+const KIMEN_TIME_SECONDS = 'kimen/time/seconds';
+const predefined = StyleDictionary.hooks.transforms;
+const colorCss = predefined[transforms.colorCss];
+const colorRgb = predefined[transforms.colorRgb];
+const colorHex = predefined[transforms.colorHex];
+const timeSeconds = predefined[transforms.timeSeconds];
+
+const kimenCssHooks = {
+  transforms: {
+    [KIMEN_COLOR_CSS]: {
+      type: colorCss.type,
+      filter: colorCss.filter,
+      // color/rgb is rgba() with a two-decimal alpha unless the colour is
+      // fully opaque, which is exactly when color/hex yields #rrggbb.
+      transform: (token, platform, options) => {
+        const rgb = colorRgb.transform(token, platform, options);
+        return rgb.startsWith('rgba(') ? rgb : colorHex.transform(token, platform, options);
+      },
+    },
+    [KIMEN_TIME_SECONDS]: {
+      ...timeSeconds,
+      filter: (token, options) => (options.usesDtcg ? token.$type : token.type) === 'time',
+    },
+  },
+  transformGroups: {
+    [KIMEN_CSS_GROUP]: StyleDictionary.hooks.transformGroups[transformGroups.css].map((name) => {
+      if (name === transforms.colorCss) return KIMEN_COLOR_CSS;
+      if (name === transforms.timeSeconds) return KIMEN_TIME_SECONDS;
+      return name;
+    }),
+  },
+};
 
 const comparePath = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
 const componentDirectory = new URL('./tokens/component/', import.meta.url);
@@ -82,9 +132,10 @@ function material3DarkFormat({ dictionary, options }) {
 
 export const lightConfig = {
   source: LAYERS,
+  hooks: kimenCssHooks,
   platforms: {
     css: {
-      transformGroup: 'css',
+      transformGroup: KIMEN_CSS_GROUP,
       prefix: '',
       buildPath: 'dist/css/',
       files: [
@@ -102,6 +153,7 @@ export const material3LightConfig = {
   include: LAYERS,
   source: MATERIAL3_OVERRIDES,
   hooks: {
+    ...kimenCssHooks,
     formats: {
       'kimen/css-material3-light': ({ dictionary, options }) =>
         [
@@ -118,7 +170,7 @@ export const material3LightConfig = {
   },
   platforms: {
     css: {
-      transformGroup: 'css',
+      transformGroup: KIMEN_CSS_GROUP,
       prefix: '',
       buildPath: 'dist/css/',
       files: [
@@ -136,6 +188,7 @@ export const darkConfig = {
   include: LAYERS,
   source: ['tokens/modes/dark.tokens.json'],
   hooks: {
+    ...kimenCssHooks,
     formats: {
       'kimen/css-dark': ({ dictionary, options }) => {
         const usesDtcg = options.usesDtcg ?? true;
@@ -173,7 +226,7 @@ export const darkConfig = {
   },
   platforms: {
     css: {
-      transformGroup: 'css',
+      transformGroup: KIMEN_CSS_GROUP,
       prefix: '',
       buildPath: 'dist/css/',
       // Combining the modes/dark filter with outputReferences makes Style
@@ -208,13 +261,14 @@ export const material3DarkConfig = {
   include: [...LAYERS, ...MATERIAL3_OVERRIDES],
   source: ['tokens/modes/material3.dark.tokens.json'],
   hooks: {
+    ...kimenCssHooks,
     formats: {
       'kimen/css-material3-dark': material3DarkFormat,
     },
   },
   platforms: {
     css: {
-      transformGroup: 'css',
+      transformGroup: KIMEN_CSS_GROUP,
       prefix: '',
       buildPath: 'dist/css/',
       files: [
