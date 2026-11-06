@@ -64,6 +64,12 @@ const builtInCatalog: Catalog = catalogData;
 
 /** A node of the neutral UI-spec tree: one cataloged component instance. */
 export interface UiSpecNode {
+  /**
+   * Optional stable identity (spec 035, D2): matches `NODE_ID_GRAMMAR`, is
+   * unique within its document (and within a live surface), and is the only
+   * address a live-surface operation can target. Never written to the DOM.
+   */
+  readonly id?: string | undefined;
   readonly component: string;
   readonly props?: Readonly<Record<string, boolean | number | string>> | undefined;
   /** Binding to one of the spec's declared actions (dispatch is 028's job). */
@@ -83,7 +89,9 @@ export interface UiSpec {
 export interface ValidationIssue {
   readonly code:
     | 'depth-budget'
+    | 'duplicate-id'
     | 'forbidden-key'
+    | 'invalid-id'
     | 'invalid-prop-type'
     | 'malformed-spec'
     | 'size-budget'
@@ -112,7 +120,18 @@ export interface ValidationReport {
  */
 export const VALIDATION_MAX_BYTES = 262_144;
 
-const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+export const FORBIDDEN_KEYS: ReadonlySet<string> = new Set([
+  '__proto__',
+  'constructor',
+  'prototype',
+]);
+
+/**
+ * The node id grammar (spec 035 FR-001): lowercase ASCII letters and digits,
+ * then up to 63 of those, `-` or `_`. Narrow on purpose — ids are agent
+ * data used only as map keys, never as DOM ids or selectors.
+ */
+export const NODE_ID_GRAMMAR = /^[a-z0-9][a-z0-9_-]{0,63}$/u;
 
 /**
  * The declared validation depth budget (FR-014 hardening): a byte budget
@@ -342,6 +361,7 @@ function snapshotPlainData(
 
 const uiSpecNodeSchema: z.ZodType<UiSpecNode> = z.lazy(() =>
   z.strictObject({
+    id: z.string().optional(),
     component: z.string(),
     props: z.record(z.string(), z.union([z.boolean(), z.number(), z.string()])).optional(),
     action: z.string().optional(),
@@ -394,14 +414,64 @@ function checkProp(
   }
 }
 
+/**
+ * The id checks of one node (spec 035 FR-001): grammar, then uniqueness
+ * against every id already seen in the same document.
+ */
+function checkId(
+  node: UiSpecNode,
+  path: string,
+  ids: Set<string>,
+  issues: ValidationIssue[],
+): void {
+  if (node.id === undefined) {
+    return;
+  }
+  if (!NODE_ID_GRAMMAR.test(node.id)) {
+    issues.push({
+      code: 'invalid-id',
+      message: `node id "${node.id}" does not match ${NODE_ID_GRAMMAR.source}`,
+      path: `${path}.id`,
+      value: node.id,
+    });
+    return;
+  }
+  if (ids.has(node.id)) {
+    issues.push({
+      code: 'duplicate-id',
+      message: `node id "${node.id}" is already used by another node`,
+      path: `${path}.id`,
+      value: node.id,
+    });
+    return;
+  }
+  ids.add(node.id);
+}
+
+/**
+ * The value an untrusted name resolves to in a catalog record, by OWN
+ * property only. Catalogs are plain objects: `in` or bare indexing would
+ * resolve `toString`, `constructor` or `hasOwnProperty` through the
+ * prototype chain and accept an undeclared component, prop or slot (028 S20).
+ * Internal: shared with the renderers, not part of the package's surface.
+ */
+export function ownEntry<T>(
+  record: Readonly<Record<string, T>> | undefined,
+  name: string,
+): T | undefined {
+  return record !== undefined && Object.hasOwn(record, name) ? record[name] : undefined;
+}
+
 function checkNode(
   node: UiSpecNode,
   path: string,
   declaredActions: ReadonlySet<string>,
   issues: ValidationIssue[],
   entries: Readonly<Record<string, CatalogEntry>>,
+  ids = new Set<string>(),
 ): void {
-  const entry = entries[node.component];
+  checkId(node, path, ids, issues);
+  const entry = ownEntry(entries, node.component);
   if (entry === undefined) {
     issues.push({
       code: 'unknown-component',
@@ -411,7 +481,7 @@ function checkNode(
     });
   }
   for (const [name, value] of Object.entries(node.props ?? {})) {
-    const constraint = entry?.props[name];
+    const constraint = ownEntry(entry?.props, name);
     if (entry !== undefined && constraint === undefined) {
       issues.push({
         code: 'unknown-prop',
@@ -434,7 +504,7 @@ function checkNode(
     });
   }
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
-    if (entry !== undefined && !(slotName in entry.slots)) {
+    if (entry !== undefined && !Object.hasOwn(entry.slots, slotName)) {
       issues.push({
         code: 'unknown-slot',
         message: `${node.component} declares no slot "${slotName}"`,
@@ -450,6 +520,7 @@ function checkNode(
           declaredActions,
           issues,
           entries,
+          ids,
         );
       }
     });
@@ -509,6 +580,7 @@ export function toPlainData(
 export function validatePlainData(
   data: unknown,
   catalog?: Catalog,
+  ids = new Set<string>(),
 ): ValidationReport & { spec?: UiSpec } {
   const parsed = uiSpecSchema.safeParse(data);
   if (!parsed.success) {
@@ -530,6 +602,7 @@ export function validatePlainData(
     declaredActions,
     issues,
     (catalog ?? builtInCatalog).components,
+    ids,
   );
   return { issues, ok: issues.length === 0, spec: parsed.data };
 }

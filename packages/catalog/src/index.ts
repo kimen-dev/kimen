@@ -14,6 +14,24 @@ import { catalogData } from './generated/catalog.js';
 
 export { catalogData } from './generated/catalog.js';
 export {
+  createLiveSurface,
+  DEFAULT_LIVE_BATCH_BUDGETS,
+  type LiveActionEvent,
+  type LiveBatchBudgets,
+  type LiveBatchResult,
+  type LiveSnapshot,
+  type LiveSurface,
+  type LiveSurfaceOptions,
+} from './live.js';
+export {
+  type CatalogCreationOptions,
+  type CatalogCreationResult,
+  type CatalogDefinition,
+  createCatalog,
+  type RegistrationIssue,
+  type RegistrationIssueCode,
+} from './register.js';
+export {
   type ActionEvent,
   createStreamingRenderer,
   DEFAULT_RENDER_BUDGETS,
@@ -25,17 +43,10 @@ export {
   type StreamingRenderer,
 } from './render.js';
 export {
-  type CatalogCreationOptions,
-  type CatalogCreationResult,
-  type CatalogDefinition,
-  createCatalog,
-  type RegistrationIssue,
-  type RegistrationIssueCode,
-} from './register.js';
-export {
   type Catalog,
   type CatalogEntry,
   type CatalogPropConstraint,
+  NODE_ID_GRAMMAR,
   type UiSpec,
   type UiSpecNode,
   VALIDATION_MAX_BYTES,

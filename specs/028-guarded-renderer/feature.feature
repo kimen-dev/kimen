@@ -185,3 +185,19 @@ Feature: Guarded renderer
       When the renderer validates the spec
       Then no part of the spec renders
       And the diagnostic names the component and its declared events
+
+  Rule: Only names the catalog itself declares are declared
+
+    # S20
+    Scenario Outline: A name inherited from the object prototype is never a declared one
+      Given a spec that uses "<name>" as a <kind> the catalog does not declare
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names the rule "<rule>"
+
+      Examples:
+        | name           | kind                  | rule              |
+        | toString       | slot of a ki-card     | unknown-slot      |
+        | hasOwnProperty | slot of a ki-card     | unknown-slot      |
+        | valueOf        | component             | unknown-component |
+        | isPrototypeOf  | prop of a ki-badge    | unknown-prop      |

@@ -11,8 +11,9 @@
 import { z } from 'zod';
 
 import { catalogData } from './generated/catalog.js';
-import type { Catalog, CatalogEntry, CatalogPropConstraint, ValidationIssue } from './validate.js';
+import { isCompatibleSchemaVersion } from './schema-version.js';
 import { tagGrammarViolation } from './tag-grammar.js';
+import type { Catalog, CatalogEntry, CatalogPropConstraint, ValidationIssue } from './validate.js';
 import { toPlainData, VALIDATION_MAX_BYTES } from './validate.js';
 
 /** Machine-readable registration rejection classes (spec 032 FR-002/FR-004). */
@@ -395,7 +396,10 @@ export function createCatalog(
     } else {
       const baseRecord = baseWall.data as Record<string, unknown>;
       const baseVersion = baseRecord['catalogSchemaVersion'];
-      if (baseVersion !== catalogData.catalogSchemaVersion) {
+      if (
+        typeof baseVersion !== 'string' ||
+        !isCompatibleSchemaVersion(baseVersion, catalogData.catalogSchemaVersion)
+      ) {
         issues.push({
           code: 'unsupported-version',
           message: `extended catalog declares schema version "${String(baseVersion)}"; this registration supports "${catalogData.catalogSchemaVersion}"`,
