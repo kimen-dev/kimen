@@ -51,7 +51,7 @@ overrides:
   # GHSA-2v37-7h3g-55p8. Same regeneration story as js-yaml above.
   nanoid: 6.0.2
   # GHSA-r28c-9q8g-f849.
-  postcss: 8.5.26
+  postcss: 8.5.32
   # Transitive advisories closed in the security batch of 2026-11. Each pin is
   # inside the range its dependents declare (checked with `npm view`), so
   # these move a patch/minor within the same major; none changes a public
@@ -70,7 +70,7 @@ overrides:
   # GHSA-7w5x-hrqm-74c2 (High) and GHSA-r4xh-jqrq-34v2, via astro, knip and
   # @astrojs/internal-helpers (^1.6.0 / ^1.7.1) and nx, which pins 1.6.1
   # exactly — same 1.x line, like the axios pin above crosses nx's 1.18.1.
-  smol-toml: 1.9.0
+  smol-toml: 1.9.1
   # GHSA-68fv-2mgg-jv7q, via postcss, @vue/compiler-* and sass (^1.2.1),
   # 1.2.1 → 1.2.2.
   source-map-js: 1.2.2
