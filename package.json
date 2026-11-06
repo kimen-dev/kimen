@@ -56,7 +56,7 @@
     "lint-staged": "17.3.0",
     "nx": "23.2.1",
     "publint": "0.3.23",
-    "style-dictionary": "5.5.0",
+    "style-dictionary": "5.7.1",
     "stylelint": "17.14.1",
     "stylelint-config-standard": "40.0.0",
     "stylelint-declaration-strict-value": "1.11.1",
