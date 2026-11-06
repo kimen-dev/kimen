@@ -19,11 +19,12 @@ overrides:
   source-map-js: 1.2.2
   svgo: 4.1.0
   vite: 8.2.4
-  colord: 2.9.4
+  colord: 2.10.0
   postcss-selector-parser@6: 6.1.5
   postcss-selector-parser@7: 7.1.7
   minimatch@3: 3.1.5
   qs: 6.16.1
+  undici@7: 7.30.1
 
 patchedDependencies:
   minimatch@3.1.5: 3e64d536af3aaaa63bcd325ef7c0f4c9c0ba4e731cbf0986304a41c5870ac8b3
@@ -201,8 +202,8 @@ importers:
   packages/catalog:
     dependencies:
       zod:
-        specifier: 4.6.6
-        version: 4.6.6
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@types/node':
         specifier: 26.1.2
@@ -348,8 +349,8 @@ importers:
         specifier: workspace:*
         version: link:../elements
       '@stencil/vue-output-target':
-        specifier: 0.14.1
-        version: 0.14.1(@stencil/core@4.43.5)(vue-router@4.5.1(vue@3.5.42(typescript@6.0.3)))(vue@3.5.42(typescript@6.0.3))
+        specifier: 0.14.7
+        version: 0.14.7(@stencil/core@4.43.5)(vue-router@4.5.1(vue@3.5.42(typescript@6.0.3)))(vue@3.5.42(typescript@6.0.3))
     devDependencies:
       '@types/node':
         specifier: 26.1.2
@@ -3528,6 +3529,18 @@ packages:
       vue-router:
         optional: true
 
+  '@stencil/vue-output-target@0.14.7':
+    resolution: {integrity: sha512-otE09Jzgd7+eRAApsvCsIIv+Yv+GakJrofd9gXA5dXbgIfK+nqWIMoYD4HlrXVKjI8KbUvPBuFdAQ8J3tqTVjg==}
+    peerDependencies:
+      '@stencil/core': '>=2.0.0 || >=3 || >=4.0.0 || ^5.0.0 || >=5.0.0-beta.18'
+      vue: ^3.4.38
+      vue-router: ^4.5.0 || ^5.0.0
+    peerDependenciesMeta:
+      '@stencil/core':
+        optional: true
+      vue-router:
+        optional: true
+
   '@storybook/addon-a11y@10.6.2':
     resolution: {integrity: sha512-zleS+btwrTRcUf3opbZntKsEt6PTqAtxsek08tx5jh5fRvd6wWmtnwW3uaBcypfIKnheTB3KGljJwFX+Mc+Umg==}
     peerDependencies:
@@ -4318,8 +4331,8 @@ packages:
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
-  colord@2.9.4:
-    resolution: {integrity: sha512-z0nTt5300AIviCn9FTEL4G2DzPkfEDfghx6Do0ZfM3u0rOINBtfw2H8lD4VXyZF/o8HTzzyiCztaG2X/+IMeZA==}
+  colord@2.10.0:
+    resolution: {integrity: sha512-AidJptpBJmjTclAp9BkLwJi0T93fo5epJnbaZslpg6QVzpHjAiveF55mE9AcUJiGMqRHgMDY8soMsQtuNYMHfw==}
 
   colorjs.io@0.5.2:
     resolution: {integrity: sha512-twmVoizEW7ylZSN32OgKdXRmo1qg+wT5/6C3xu5b9QsWzSFAhHLn2xd8ro0diCsKfCj1RdaTP/nrcW+vAoQPIw==}
@@ -7510,8 +7523,8 @@ packages:
     resolution: {integrity: sha512-xYqdZFUK/VYazNl/oCDYN+3WloWQwMfZxBoiNt6qNyk+xfOdi598muWE42rNZFp1kNOiqW936q5RhUdnpqElSg==}
     engines: {node: '>=18'}
 
-  zod@4.6.6:
-    resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -7566,7 +7579,7 @@ snapshots:
       '@standard-schema/spec': 1.1.0
       rxjs: 7.8.2
       tslib: 2.8.1
-      zod: 4.6.6
+      zod: 4.6.7
 
   '@angular/platform-browser@22.2.4(@angular/common@22.2.4(@angular/core@22.2.4(@angular/compiler@22.2.4)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.4(@angular/compiler@22.2.4)(rxjs@7.8.2))':
     dependencies:
@@ -7707,7 +7720,7 @@ snapshots:
   '@astrojs/sitemap@3.7.4':
     dependencies:
       sitemap: 9.0.1
-      zod: 4.6.6
+      zod: 4.6.7
 
   '@astrojs/starlight@0.42.7(astro@7.3.3(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass@1.107.0)(yaml@2.9.1))(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
@@ -10414,18 +10427,18 @@ snapshots:
       happy-dom: 21.0.4
       playwright: 1.62.1
 
-  '@stencil/vue-output-target@0.14.1(@stencil/core@4.43.5)(vue-router@4.5.1(vue@3.5.42(typescript@6.0.3)))(vue@3.5.42(typescript@6.0.3))':
-    dependencies:
-      vue: 3.5.42(typescript@6.0.3)
-    optionalDependencies:
-      '@stencil/core': 4.43.5
-      vue-router: 4.5.1(vue@3.5.42(typescript@6.0.3))
-
   '@stencil/vue-output-target@0.14.1(@stencil/core@4.45.2)(vue-router@4.5.1(vue@3.5.42(typescript@6.0.3)))(vue@3.5.42(typescript@6.0.3))':
     dependencies:
       vue: 3.5.42(typescript@6.0.3)
     optionalDependencies:
       '@stencil/core': 4.45.2
+      vue-router: 4.5.1(vue@3.5.42(typescript@6.0.3))
+
+  '@stencil/vue-output-target@0.14.7(@stencil/core@4.43.5)(vue-router@4.5.1(vue@3.5.42(typescript@6.0.3)))(vue@3.5.42(typescript@6.0.3))':
+    dependencies:
+      vue: 3.5.42(typescript@6.0.3)
+    optionalDependencies:
+      '@stencil/core': 4.43.5
       vue-router: 4.5.1(vue@3.5.42(typescript@6.0.3))
 
   '@storybook/addon-a11y@10.6.2(storybook@10.6.2(@types/react@19.1.10)(prettier@3.9.10)(react@19.1.1))':
@@ -11234,7 +11247,7 @@ snapshots:
       vitefu: 1.1.3(vite@8.2.4(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.9.1(supports-color@10.2.2))(sass@1.107.0)(yaml@2.9.1))
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
-      zod: 4.6.6
+      zod: 4.6.7
     optionalDependencies:
       sharp: 0.35.5(@types/node@26.1.2)
     transitivePeerDependencies:
@@ -11544,7 +11557,7 @@ snapshots:
 
   color-name@1.1.4: {}
 
-  colord@2.9.4: {}
+  colord@2.10.0: {}
 
   colorjs.io@0.5.2: {}
 
@@ -12927,7 +12940,7 @@ snapshots:
       tinyglobby: 0.2.17
       unbash: 4.0.12
       yaml: 2.9.1
-      zod: 4.6.6
+      zod: 4.6.7
 
   language-subtag-registry@0.3.23: {}
 
@@ -13410,7 +13423,7 @@ snapshots:
 
   mutation-server-protocol@0.4.1:
     dependencies:
-      zod: 4.6.6
+      zod: 4.6.7
 
   mutation-testing-elements@3.7.3: {}
 
@@ -14736,7 +14749,7 @@ snapshots:
       '@csstools/media-query-list-parser': 5.0.2(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
       '@csstools/selector-resolve-nested': 4.0.2(postcss-selector-parser@7.1.7)
       '@csstools/selector-specificity': 6.0.1(postcss-selector-parser@7.1.7)
-      colord: 2.9.4
+      colord: 2.10.0
       cosmiconfig: 9.0.2(typescript@6.0.3)
       css-functions-list: 3.3.3
       css-tree: 3.2.1
@@ -15391,6 +15404,6 @@ snapshots:
 
   yoctocolors@2.2.0: {}
 
-  zod@4.6.6: {}
+  zod@4.6.7: {}
 
   zwitch@2.0.4: {}
