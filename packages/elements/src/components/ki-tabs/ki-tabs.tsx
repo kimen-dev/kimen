@@ -37,6 +37,8 @@ let nextId = 0;
  *
  * @slot - `ki-tab` and `ki-tab-panel` children. Tabs are auto-assigned to an
  * internal named slot as managed output.
+ * @managedSlot tab - The group stamps `slot="tab"` on its `ki-tab` children so
+ * the tablist owns them; coordination, not authoring surface (spec 014).
  * @part tablist - Internal strip carrying the `tablist` role.
  */
 @Component({

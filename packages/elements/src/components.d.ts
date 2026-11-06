@@ -789,6 +789,8 @@ export namespace Components {
      * @whenNotToUse selecting form values
      * (use `ki-radio-group`), page navigation (use links), step flows, or
      * standalone `ki-tab` / `ki-tab-panel` children outside this group.
+     * @managedSlot tab - The group stamps `slot="tab"` on its `ki-tab` children so
+     * the tablist owns them; coordination, not authoring surface (spec 014).
      */
     interface KiTabs {
         /**
@@ -1405,6 +1407,8 @@ declare global {
      * @whenNotToUse selecting form values
      * (use `ki-radio-group`), page navigation (use links), step flows, or
      * standalone `ki-tab` / `ki-tab-panel` children outside this group.
+     * @managedSlot tab - The group stamps `slot="tab"` on its `ki-tab` children so
+     * the tablist owns them; coordination, not authoring surface (spec 014).
      */
     interface HTMLKiTabsElement extends Components.KiTabs, HTMLStencilElement {
         addEventListener<K extends keyof HTMLKiTabsElementEventMap>(type: K, listener: (this: HTMLKiTabsElement, ev: KiTabsCustomEvent<HTMLKiTabsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -2301,6 +2305,8 @@ declare namespace LocalJSX {
      * @whenNotToUse selecting form values
      * (use `ki-radio-group`), page navigation (use links), step flows, or
      * standalone `ki-tab` / `ki-tab-panel` children outside this group.
+     * @managedSlot tab - The group stamps `slot="tab"` on its `ki-tab` children so
+     * the tablist owns them; coordination, not authoring surface (spec 014).
      */
     interface KiTabs {
         /**
@@ -2947,6 +2953,8 @@ declare module "@stencil/core" {
              * @whenNotToUse selecting form values
              * (use `ki-radio-group`), page navigation (use links), step flows, or
              * standalone `ki-tab` / `ki-tab-panel` children outside this group.
+             * @managedSlot tab - The group stamps `slot="tab"` on its `ki-tab` children so
+             * the tablist owns them; coordination, not authoring surface (spec 014).
              */
             "ki-tabs": LocalJSX.IntrinsicElements["ki-tabs"] & JSXBase.HTMLAttributes<HTMLKiTabsElement>;
             /**

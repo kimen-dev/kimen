@@ -4359,6 +4359,10 @@
           "text": "- `ki-tab` and `ki-tab-panel` children. Tabs are auto-assigned to an\ninternal named slot as managed output."
         },
         {
+          "name": "managedSlot",
+          "text": "tab - The group stamps `slot=\"tab\"` on its `ki-tab` children so\nthe tablist owns them; coordination, not authoring surface (spec 014)."
+        },
+        {
           "name": "part",
           "text": "tablist - Internal strip carrying the `tablist` role."
         }
