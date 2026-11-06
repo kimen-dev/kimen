@@ -207,3 +207,18 @@ test('@spec:018-project-integrity-hardening S6 enforces the workflow policy over
 
   assert.equal(result.status, 0, diagnostic(result));
 });
+
+test('blocked-egress jobs that may download a tool allow the GitHub release-assets host', async () => {
+  // GitHub serves release downloads (actions/node-versions, used by setup-node
+  // for any Node not in the runner tool cache) from release-assets, not from
+  // objects.githubusercontent.com. #216 (Node 26) failed with ECONNREFUSED in
+  // every job until the allowlists named it.
+  const directory = new URL('../../.github/workflows/', import.meta.url);
+  const { readdir, readFile: read } = await import('node:fs/promises');
+  for (const name of (await readdir(directory)).filter((file) => file.endsWith('.yml'))) {
+    const text = await read(new URL(name, directory), 'utf8');
+    const objects = text.match(/^\s+objects\.githubusercontent\.com:443$/gmu) ?? [];
+    const assets = text.match(/^\s+release-assets\.githubusercontent\.com:443$/gmu) ?? [];
+    assert.equal(assets.length, objects.length, `${name} allowlists without release-assets`);
+  }
+});

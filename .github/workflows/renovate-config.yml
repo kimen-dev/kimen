@@ -42,6 +42,7 @@ jobs:
           allowed-endpoints: >-
             github.com:443
             objects.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
             registry.npmjs.org:443
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -53,7 +54,7 @@ jobs:
           # Renovate declares engines.node ^24.11.0 and .npmrc sets
           # engine-strict, so this pins the major the validator supports —
           # not the one the rest of CI runs on.
-          node-version: 24
+          node-version: 26
           # This job never installs workspace dependencies; the validator
           # arrives through npx. Left on, the cache step reads `packageManager`
           # from package.json and fails looking for a pnpm this job has no
