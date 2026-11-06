@@ -27,6 +27,28 @@
       "minimumReleaseAge": "7 days"
     },
     {
+      "description": "style-dictionary minors change emitted token values (alpha, ms to s) and the onmars stylesheet budget: review each bump on its own instead of inside the dev group (#135)",
+      "matchPackageNames": ["style-dictionary"],
+      "groupName": "style-dictionary",
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Biome minors can widen what the formatter touches (2.6 started formatting YAML): review each bump on its own instead of inside the dev group (#135)",
+      "matchPackageNames": ["@biomejs/biome"],
+      "groupName": "biome",
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Stencil output targets regenerate the framework wrappers, which the wrappers-sync gate checks: move them together, apart from the dev group (#135)",
+      "matchPackageNames": [
+        "@stencil/angular-output-target",
+        "@stencil/react-output-target",
+        "@stencil/vue-output-target"
+      ],
+      "groupName": "stencil output targets",
+      "minimumReleaseAge": "7 days"
+    },
+    {
       "description": "Keep the pinned pnpm packageManager field current",
       "matchDepTypes": ["packageManager"],
       "enabled": true,

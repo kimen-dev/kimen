@@ -125,7 +125,7 @@ test('renovate batches coupled maintenance and defers incompatible majors', asyn
 // The subset of Renovate's packageRules matchers this repository uses. A rule
 // that sets `rangeStrategy` through any other matcher (or a glob/regex/negated
 // name) makes the test fail loudly instead of guessing how Renovate reads it.
-function ruleMatchesNpmDependency(rule, { depName, depType, packageFile }) {
+function ruleMatchesNpmDependency(rule, { depName, depType, packageFile, updateType }) {
   const matchers = Object.keys(rule).filter((key) => key.startsWith('match'));
   return matchers.every((key) => {
     const values = rule[key];
@@ -149,11 +149,57 @@ function ruleMatchesNpmDependency(rule, { depName, depType, packageFile }) {
         });
       case 'matchManagers':
         return values.includes('npm');
+      case 'matchUpdateTypes':
+        return updateType !== undefined && values.includes(updateType);
       default:
         assert.fail(`teach this test the Renovate matcher ${key} (rule: ${rule.description})`);
     }
   });
 }
+
+function effectiveGroupName(renovate, dependency) {
+  // Same ordering rule as rangeStrategy: the last matching groupName wins.
+  let group;
+  for (const rule of renovate.packageRules ?? []) {
+    if (rule.groupName !== undefined && ruleMatchesNpmDependency(rule, dependency)) {
+      group = rule.groupName;
+    }
+  }
+  return group;
+}
+
+test('renovate keeps behaviour-changing dev tools out of the non-major dev group', async () => {
+  // #135 bundled style-dictionary (changed token values and the onmars budget),
+  // Biome (started formatting YAML) and the Stencil output targets (regenerate
+  // the wrappers) with harmless bumps, so one red check held all of them back.
+  // Each of these must land in its own PR; ordinary dev tools stay grouped.
+  const renovate = await readFile(new URL('renovate.json', repositoryRoot), 'utf8').then(
+    JSON.parse,
+  );
+  const devMinor = (depName) => ({
+    depName,
+    depType: 'devDependencies',
+    packageFile: 'package.json',
+    updateType: 'minor',
+  });
+  const separate = {
+    'style-dictionary': 'style-dictionary',
+    '@biomejs/biome': 'biome',
+    '@stencil/angular-output-target': 'stencil output targets',
+    '@stencil/react-output-target': 'stencil output targets',
+    '@stencil/vue-output-target': 'stencil output targets',
+  };
+  for (const [depName, group] of Object.entries(separate)) {
+    assert.equal(effectiveGroupName(renovate, devMinor(depName)), group, depName);
+  }
+  for (const depName of ['eslint', 'nx', 'knip']) {
+    assert.equal(
+      effectiveGroupName(renovate, devMinor(depName)),
+      'dev dependencies (non-major)',
+      depName,
+    );
+  }
+});
 
 function effectiveRangeStrategy(renovate, dependency) {
   // packageRules apply in order and a later match overrides an earlier one.
