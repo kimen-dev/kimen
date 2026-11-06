@@ -12,13 +12,13 @@
   "packages": [
     {
       "directory": "packages/catalog",
-      "whenToUse": "Any boundary where agent-emitted JSON must become Kimen UI: validate specs standalone, render them with the guardrail enforced, or stream them progressively. Both protocol adapters and any custom transport build on it.",
+      "whenToUse": "Any boundary where agent-emitted JSON must become Kimen UI: validate specs standalone, render them with the guardrail enforced, stream them progressively, or keep a long-lived surface current with id-addressed batches. Both protocol adapters and any custom transport build on it.",
       "whenNotToUse": "Hand-authored pages that never render agent output — use @kimen/elements directly.",
       "entryPoints": [
         {
           "name": "validateUiSpec",
           "signature": "validateUiSpec(input, options?) => ValidationReport",
-          "summary": "Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, unknown-slot, undeclared-action, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value."
+          "summary": "Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, unknown-slot, undeclared-action, invalid-id, duplicate-id, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value."
         },
         {
           "name": "renderUiSpec",
@@ -29,6 +29,11 @@
           "name": "createStreamingRenderer",
           "signature": "createStreamingRenderer(options) => StreamingRenderer",
           "summary": "Progressive rendering over a streamed spec: each push(node) validates one top-level subtree and attaches it only when fully valid; an invalid node fails closed while previously attached content remains, and the render budgets bind the accumulated stream. The catalog in use is fixed at creation via options.catalog."
+        },
+        {
+          "name": "createLiveSurface",
+          "signature": "createLiveSurface(options) => LiveSurface",
+          "summary": "A long-lived surface changed through atomic batches of insert, set, text, remove and replace ops addressed by stable node ids: apply(batch) validates the whole batch and the state it would produce (purity wall, per-batch budgets, optional ifRevision, catalog, guards, state budgets) before any DOM write, rejects it whole with diagnostics while the surface stays live, and otherwise touches only the attributes, text and subtrees it names so focus, typed values and scroll survive. No set, replace or remove overwrites or discards checked/value/open the user changed unless forced and allowed by the host. Action events carry id, current path, revision and live data; snapshot() returns deep-frozen plain data."
         },
         {
           "name": "createCatalog",
