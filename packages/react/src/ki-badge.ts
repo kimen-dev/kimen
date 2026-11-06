@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
-import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
-
-import type { Components } from "@kimen/elements/components";
-import { KiBadge as KiBadgeElement, defineCustomElement as defineKiBadge } from "@kimen/elements/components/ki-badge.js";
+import { createComponent } from '@stencil/react-output-target/runtime';
+import type { Components } from '@kimen/elements/components';
+import { KiBadge as KiBadgeElement, defineCustomElement as defineKiBadge } from '@kimen/elements/components/ki-badge.js';
+import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
 
 export type KiBadgeEvents = NonNullable<unknown>;
 
@@ -22,5 +21,5 @@ export const KiBadge: StencilReactComponent<KiBadgeElement, KiBadgeEvents, Compo
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
     events: {} as KiBadgeEvents,
-    defineCustomElement: defineKiBadge
+    defineCustomElement: defineKiBadge,
 });

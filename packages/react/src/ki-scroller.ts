@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
-import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
-
-import type { Components } from "@kimen/elements/components";
-import { KiScroller as KiScrollerElement, defineCustomElement as defineKiScroller } from "@kimen/elements/components/ki-scroller.js";
+import { createComponent } from '@stencil/react-output-target/runtime';
+import type { Components } from '@kimen/elements/components';
+import { KiScroller as KiScrollerElement, defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
+import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
 
 export type KiScrollerEvents = NonNullable<unknown>;
 
@@ -22,5 +21,5 @@ export const KiScroller: StencilReactComponent<KiScrollerElement, KiScrollerEven
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
     events: {} as KiScrollerEvents,
-    defineCustomElement: defineKiScroller
+    defineCustomElement: defineKiScroller,
 });
