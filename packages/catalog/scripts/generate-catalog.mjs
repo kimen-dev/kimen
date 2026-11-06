@@ -14,8 +14,12 @@ import { mkdirSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-/** The version of the catalog document format itself (FR-010, Art. IX). */
-export const CATALOG_SCHEMA_VERSION = '1.0.0';
+/**
+ * The version of the catalog document format itself (FR-010, Art. IX).
+ * 1.1.0 (spec 035): UI-spec nodes gain the optional stable `id` — an
+ * additive minor the SemVer-compatible version gates accept alongside 1.0.0.
+ */
+export const CATALOG_SCHEMA_VERSION = '1.1.0';
 
 const isBlank = (text) => typeof text !== 'string' || text.trim() === '';
 

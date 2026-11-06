@@ -49,8 +49,14 @@ Three top-level fields:
   interaction contract of the surface.
 - **`root`** — the single root node of the component tree.
 
-Each **node** has up to four fields:
+Each **node** has up to five fields:
 
+- **`id`** — optional. A stable identity for the node: lowercase ASCII
+  letters and digits, then up to 63 of those, `-` or `_`
+  (`^[a-z0-9][a-z0-9_-]{0,63}$`), unique in the document. A malformed id is
+  rejected (`invalid-id`), a repeated one too (`duplicate-id`). Renderers
+  never write it to the DOM; it is the address a live surface's operations
+  target (see [Live surface](#live-surface)). Catalog schema `1.1.0`.
 - **`component`** — a catalog tag (`ki-button`, `ki-card`, …). A tag outside
   the catalog is rejected (`unknown-component`); there is no escape hatch to
   arbitrary elements.
@@ -213,8 +219,11 @@ On top of catalog validation the renderer enforces the safe-render semantics:
 - **Version skew fails closed.** A spec may declare the catalog schema version
   it was authored against as a top-level `catalogSchemaVersion` field (the
   renderer reads and strips it), or the host may pass it as the
-  `catalogSchemaVersion` render option. A version the renderer's catalog does
-  not support is rejected naming both versions (rule `unsupported-version`).
+  `catalogSchemaVersion` render option. A compatible version — plain
+  `MAJOR.MINOR.PATCH` with the catalog's major and a minor not newer than its
+  minor (a `1.1.0` catalog accepts `1.0.0` and `1.1.x`; under major `0`
+  only the same minor: a `0.3.0` catalog accepts `0.3.x`) — renders; any other
+  is rejected naming both versions (rule `unsupported-version`).
   Note that the standalone `validateUiSpec` checks the three-field neutral
   document — the version gate is the renderer's.
 - **Declarative actions only.** Activating a bound control dispatches exactly
@@ -273,6 +282,68 @@ The streaming contract:
   first pushed node reports `path: 'stream[0]'`, one from a button in the
   second node's footer slot `path: 'stream[1].slots.footer[0]'`, so the host
   always knows which streamed node dispatched it.
+
+## Live surface
+
+A surface that lives for hours — a board the agent keeps current while the
+user works in it — must change in place. `renderUiSpec` replaces the whole
+tree, which resets focus, typed text and scroll; `createLiveSurface` instead
+applies small **batches of operations addressed by node `id`**:
+
+```ts
+import { createLiveSurface } from '@kimen/catalog';
+
+const live = createLiveSurface({
+  surface: document.querySelector('#board'),
+  actions: ['decide'], // the declared action set, fixed at creation
+  onAction: (event) => handle(event), // { action, id, path, revision, data }
+});
+
+live.apply({ ops: [{ op: 'insert', node: { id: 'decisions', component: 'ki-list' } }] });
+const result = live.apply({
+  ifRevision: live.revision, // optional optimistic concurrency
+  ops: [
+    { op: 'insert', parent: 'decisions', node: { id: 'dec-8', component: 'ki-list-item', slots: { '': ['Use Postgres'] } } },
+    { op: 'set', id: 'note', props: { label: 'Why?' } },
+    { op: 'text', id: 'dec-3', slot: '', text: 'Decided' },
+    { op: 'remove', id: 'q-2' },
+    { op: 'replace', id: 'cmp-1', node: { id: 'cmp-1', component: 'ki-card' } },
+  ],
+}); // { ok, revision, diagnostics }
+live.snapshot(); // { revision, actions, nodes } — deep-frozen plain data
+```
+
+- **Atomic and fail-closed per batch.** The batch crosses the purity wall,
+  per-batch budgets (`batchBudgets: { maxOps, maxBytes }`, default 64 ops and
+  64 KiB) and the `ifRevision` check; every op is applied to a copy of the
+  state and the **resulting** state is validated exactly like a spec (catalog,
+  props, declared actions, slots, unique ids, tag grammar, URL allowlist,
+  `budgets` on depth, node count and payload). Any failure rejects the whole
+  batch with diagnostics naming the op (`ops[3].node.component`) or state
+  path, and nothing changes. Unlike a stream, the surface stays live: the
+  next valid batch applies. Removing content frees budget.
+- **Minimal DOM change.** `set` writes only the attributes whose value changes
+  (`null` unsets); `text` updates a slot's text node in place; `insert` places
+  one new subtree before its `before` sibling (or last); `remove` and
+  `replace` touch only the named subtree. Nothing else is recreated or
+  reordered; there is no move op.
+- **The user's state wins.** Once the user changed a control's own `checked`,
+  `value` or `open`, a `set` that would change it, and a `replace` or
+  `remove` of that node or of any ancestor, is rejected
+  (`user-state-conflict`) unless the op says `force: true` **and** the host
+  created the surface with `allowUserStateOverride: true`.
+- **Only declared names.** A slot or prop name must be one the node's
+  catalog entry declares as its own: inherited names such as `toString` are
+  `unknown-slot`/`unknown-prop`, and `__proto__`, `constructor` and
+  `prototype` are never slot names (`forbidden-key`).
+- **One batch at a time.** `apply` called while a batch is being applied
+  (for instance from `onAction`) returns `reentrant-batch` and changes
+  nothing; submit it after `apply` returns.
+- **Actions name their node.** The event carries the node's `id`, its current
+  `path` (`surface[0].slots.footer[1]`), the `revision` and the same live
+  `data` as `renderUiSpec`, computed from the node's current props.
+
+The contract is [spec 035](../../specs/035-live-surface/spec.md).
 
 ## Registering your own components
 

@@ -23,7 +23,7 @@ is the sibling spec `027-runtime-catalog`; protocol adapters are specs 029
 **Constitution check**: this spec is not approvable until the Gherkin section
 below is approved verbatim. Behavior enters the system exactly once, here
 (Art. II). This feature IS the Art. VIII guardrail: the adversarial scenarios
-S2, S3, S5, S6, S7, S8, S9, S12, S13, S15, S16 and S19 are security-boundary
+S2, S3, S5, S6, S7, S8, S9, S12, S13, S15, S16, S19 and S20 are security-boundary
 scenarios and require explicit standalone founder confirmation at human
 gate 1.
 
@@ -75,7 +75,7 @@ concrete malicious spec); every fixture must produce zero rendered spec
 nodes, zero executed code paths, zero network requests, and a diagnostic
 naming the violation.
 
-**Acceptance Scenarios**: S2, S3, S5, S6, S7, S8, S13 and S19.
+**Acceptance Scenarios**: S2, S3, S5, S6, S7, S8, S13, S19 and S20.
 
 ---
 
@@ -329,6 +329,22 @@ Feature: Guarded renderer
       When the renderer validates the spec
       Then no part of the spec renders
       And the diagnostic names the component and its declared events
+
+  Rule: Only names the catalog itself declares are declared
+
+    # S20
+    Scenario Outline: A name inherited from the object prototype is never a declared one
+      Given a spec that uses "<name>" as a <kind> the catalog does not declare
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names the rule "<rule>"
+
+      Examples:
+        | name           | kind                  | rule              |
+        | toString       | slot of a ki-card     | unknown-slot      |
+        | hasOwnProperty | slot of a ki-card     | unknown-slot      |
+        | valueOf        | component             | unknown-component |
+        | isPrototypeOf  | prop of a ki-badge    | unknown-prop      |
 ```
 
 ### Scenario Family Coverage
@@ -340,7 +356,7 @@ governed by its own approved contract (specs `002`–`016`).
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1–S19 | |
+| Core behavior | S1–S20 | |
 | Keyboard path | | N/A — the renderer adds no interaction; keyboard behavior is owned by each rendered component's own contract |
 | Assistive-tech outcome | | N/A — the accessibility tree is produced by the rendered catalog components under their own contracts |
 | Form participation | | N/A — form behavior is owned by the rendered form components; the renderer only passes validated declared props |
@@ -422,7 +438,9 @@ governed by its own approved contract (specs `002`–`016`).
   version metadata of `027-runtime-catalog` FR-010/S12), with a diagnostic
   naming the spec's declared version and the supported versions. No partial
   render and no best-effort downgrade occurs: a spec fabricated against a
-  laxer schema version must never be validated under it.
+  laxer schema version must never be validated under it. "Supported" is the
+  SemVer-compatible range of `035-live-surface` FR-002: the catalog's major
+  with a minor not newer than its own.
 
 ### Key Entities
 
@@ -497,7 +515,7 @@ governed by its own approved contract (specs `002`–`016`).
   stream closes; the invalid-chunk fixture attaches zero nodes at and below
   the violation and reports it.
 - **SC-007**: the `guarded-renderer` capability leaves `planned` only when
-  the S1–S19 traced tests run green inside the deterministic gates; the
+  the S1–S20 traced tests run green inside the deterministic gates; the
   capability gate enforces the linkage.
 - **SC-008**: module-boundary analysis reports zero protocol-specific
   imports or types in `@kimen/catalog`.
