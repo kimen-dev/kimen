@@ -72,7 +72,7 @@ overrides:
   # and nx (^1.16.0), 1.16.0 → 1.16.2.
   follow-redirects: 1.16.2
   # GHSA-gjj5-9665-rwrc, via less (^7.2.3), 7.3.0 → 7.4.0.
-  probe-image-size: 7.4.0
+  probe-image-size: 7.5.0
   # GHSA-7w5x-hrqm-74c2 (High) and GHSA-r4xh-jqrq-34v2, via astro, knip and
   # @astrojs/internal-helpers (^1.6.0 / ^1.7.1) and nx, which pins 1.6.1
   # exactly — same 1.x line, like the axios pin above crosses nx's 1.18.1.
