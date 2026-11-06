@@ -1,4 +1,5 @@
-import { Component, Element, Event, Method, Prop, State, Watch, h } from '@stencil/core';
+import { Component, Element, Event, h, Method, Prop, State, Watch } from '@stencil/core';
+import { booleanFromAttributePresence } from '../../utils/boolean-presence';
 import { isOutsideRect } from './ki-dialog.backdrop';
 import { resolveEntryFocusTarget, resolveFocusableTargets } from './ki-dialog.focus';
 
@@ -104,7 +105,13 @@ export class KiDialog {
     // (including `close-on-backdrop="false"` or malformed agent output) opts in;
     // omit the attribute to opt out. Stencil parses "false" to `false`, so apply
     // presence here (the observer keeps it true for post-hydration writes).
-    this.closeOnBackdrop = this.closeOnBackdrop || this.host.hasAttribute('close-on-backdrop');
+    this.closeOnBackdrop = booleanFromAttributePresence(
+      this.closeOnBackdrop,
+      this.host.hasAttribute('close-on-backdrop'),
+    );
+    // Same for `open`: since Stencil 4.45 reflecting the parsed `false` would
+    // remove an authored `open="false"` before the observer below exists.
+    this.open = booleanFromAttributePresence(this.open, this.host.hasAttribute('open'));
   }
 
   componentDidLoad(): void {

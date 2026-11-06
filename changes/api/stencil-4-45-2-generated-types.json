@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "7c8ae8f5c1f7cbc2d0421a26a546a29b8efc4321687cc4c4ce608d2297696aaf",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Stencil compiler 4.43.5 -> 4.45.2 (toolchain bump replacing Renovate PR #155) plus the boolean presence fix it requires, cumulative since baseline 0.0.0 and superseding declaration 028-guarded-renderer-activation-events (its deltas, and those of every declaration it supersedes, remain as declared there). Compiler deltas, only in the declaration types that Stencil itself generates for @kimen/elements: (1) ./loader defineCustomElements(win?, opts?) now returns Promise<void> instead of void: callers that ignore the result are unaffected, callers may now await registration. (2) The generated LocalJSX namespace (./loader and ./components JSX) narrows the OneOf helper used for required props (ki-radio-group and ki-textarea label): a required prop is satisfied by the bare name or attr:<name> only, no longer by prop:<name> alone; the optional prop:<name> mapped keys stay. Presence fix: Stencil 4.45 removes a host attribute when it reflects a parsed false, so ki-tab, ki-option, ki-select, ki-radio, ki-radio-group, ki-switch, ki-checkbox and ki-dialog now apply boolean presence semantics in componentWillLoad and through an attribute observer. (3) The component class signatures of KiOption, KiTab (connectedCallback, componentWillLoad, disconnectedCallback), KiRadio and KiRadioGroup (connectedCallback, disconnectedCallback) and KiSelect (componentWillLoad) gain lifecycle methods; no member is removed. (4) Observable host state: a present boolean attribute authored as \"false\" (disabled, required, open) keeps meaning true, as before, and is now normalized to an empty value on the host (disabled=\"false\" reads back as disabled=\"\"), specified by new scenarios in specs 005, 006, 007, 008, 012 and 014. The gate classifies every module symbol signature change as MAJOR and (2) is a narrowed type under the snapshot contract, so this candidate is declared major; the cumulative delta since 0.0.0 was already MAJOR. Zero removals, no root growth, no CSS or token change; CEM, llms.txt, catalog and framework wrappers regenerate byte-identical. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}

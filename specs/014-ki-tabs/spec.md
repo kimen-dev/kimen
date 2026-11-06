@@ -219,6 +219,18 @@ Feature: Tabs
     When the page renders
     Then no tab is selected and no panel is visible
 
+  # S19
+  Scenario Outline: A disabled attribute written as "false" keeps a tab unselectable
+    Given tabs "Settings" with "Email" selected and a "Billing" tab
+    When the attribute disabled="false" is written on the "Billing" tab <moment>
+    Then neither pointer nor keyboard selects "Billing" and it is exposed unavailable
+    And the attribute stays present on the "Billing" tab with an empty value
+
+    Examples:
+      | moment                 |
+      | in the initial markup  |
+      | after the first render |
+
   # Family: keyboard path
   # S4
   Scenario: The arrow key moves selection to the next tab
@@ -310,7 +322,7 @@ Feature: Tabs
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S12, S18 | |
+| Core behavior | S1, S2, S3, S12, S18, S19 | |
 | Keyboard path | S4, S5, S6, S13, S14, S15, S16 | |
 | Assistive-tech outcome | S7, S8 | |
 | Form participation | | Tabs switch content views and never contribute form data; ki-tabs is not form-associated (the charter's form-associated set is input, textarea, select, checkbox, radio-group, switch) |

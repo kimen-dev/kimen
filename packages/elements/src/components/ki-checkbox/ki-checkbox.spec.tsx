@@ -1,6 +1,7 @@
 import { h } from '@stencil/core';
 import { afterEach, describe, expect, it, render, vi } from '@stencil/vitest';
-import { booleanFromAttributePresence, checkboxFormValue } from './ki-checkbox.form';
+import { booleanFromAttributePresence } from '../../utils/boolean-presence';
+import { checkboxFormValue } from './ki-checkbox.form';
 
 interface KiCheckboxHarness {
   checked: boolean;
@@ -198,7 +199,7 @@ describe('ki-checkbox', () => {
     expect(observe).toHaveBeenCalledOnce();
     expect(observe.mock.calls[0]?.[0]).toBe(page.root);
     expect(observe.mock.calls[0]?.[1]).toEqual({
-      attributeFilter: ['checked', 'indeterminate'],
+      attributeFilter: ['checked', 'indeterminate', 'disabled', 'required'],
     });
 
     callback([], {} as MutationObserver);

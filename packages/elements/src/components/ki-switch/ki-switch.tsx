@@ -1,4 +1,8 @@
 import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
+import {
+  booleanFromAttributePresence,
+  observeAttributePresence,
+} from '../../utils/boolean-presence';
 import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
 
 /**
@@ -77,7 +81,7 @@ export class KiSwitch {
 
   private input: HTMLInputElement | undefined;
   private resetChecked = false;
-  private presenceObserver?: MutationObserver;
+  private presenceObserver: MutationObserver | undefined;
 
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
@@ -85,6 +89,7 @@ export class KiSwitch {
 
   componentWillLoad(): void {
     this.checked = checkedFromMarkup(this.host.hasAttribute('checked'), this.checked);
+    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
   }
 
   componentDidLoad(): void {
@@ -93,10 +98,11 @@ export class KiSwitch {
     // Boolean presence semantics must survive hydration. Stencil natively adopts
     // `checked=""`/removal, but parses a present-but-falsy `checked="false"` set
     // after load to `false`; restore presence semantics for that case.
-    if (typeof MutationObserver !== 'undefined') {
-      this.presenceObserver = new MutationObserver(this.handlePresenceMutation);
-      this.presenceObserver.observe(this.host, { attributeFilter: ['checked'] });
-    }
+    this.presenceObserver = observeAttributePresence(
+      this.host,
+      ['checked', 'disabled'],
+      this.handlePresentAttribute,
+    );
   }
 
   disconnectedCallback(): void {
@@ -106,9 +112,11 @@ export class KiSwitch {
   // Correct ONLY the case Stencil gets wrong: a present-but-falsy attribute set
   // after hydration. Absence and Stencil's own reflect writes already agree with
   // the prop, so skipping them avoids fighting the reflection on every toggle.
-  private readonly handlePresenceMutation = (): void => {
-    if (this.host.hasAttribute('checked') && !this.checked) {
+  private readonly handlePresentAttribute = (attribute: string): void => {
+    if (attribute === 'checked' && !this.checked) {
       this.checked = true;
+    } else if (attribute === 'disabled' && !this.disabled) {
+      this.disabled = true;
     }
   };
 

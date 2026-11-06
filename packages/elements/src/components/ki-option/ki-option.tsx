@@ -1,4 +1,8 @@
-import { Component, Element, Prop, h } from '@stencil/core';
+import { Component, Element, h, Prop } from '@stencil/core';
+import {
+  booleanFromAttributePresence,
+  observeAttributePresence,
+} from '../../utils/boolean-presence';
 import {
   normalizeBooleanPresence,
   optionLabelText,
@@ -37,6 +41,28 @@ export class KiOption {
    * @default false
    */
   @Prop({ reflect: true }) disabled = false;
+
+  private presenceObserver: MutationObserver | undefined;
+
+  connectedCallback(): void {
+    // The owning `ki-select` reads `disabled` from the host attribute, so
+    // presence must survive Stencil's reflection of a parsed `disabled="false"`.
+    this.presenceObserver?.disconnect();
+    this.presenceObserver = observeAttributePresence(this.host, ['disabled'], () => {
+      if (!this.disabled) {
+        this.disabled = true;
+      }
+    });
+  }
+
+  componentWillLoad(): void {
+    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
+  }
+
+  disconnectedCallback(): void {
+    this.presenceObserver?.disconnect();
+    this.presenceObserver = undefined;
+  }
 
   // Deliberately NO componentWillLoad materialization of `value`: writing the
   // label fallback into the reflected `value` prop would turn an implicit value

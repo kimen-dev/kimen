@@ -1,4 +1,5 @@
 import { Component, Element, h, Prop, Watch } from '@stencil/core';
+import { observeAttributePresence } from '../../utils/boolean-presence';
 import { normalizeBooleanPresence } from '../ki-radio-group/ki-radio-group.form';
 
 /* eslint-disable jsx-a11y/label-has-associated-control -- The slotted option label is the accessible text for the native input inside the shadow label. */
@@ -54,8 +55,24 @@ export class KiRadio {
     }
   }
 
+  private presenceObserver: MutationObserver | undefined;
+
+  connectedCallback(): void {
+    // The @Watch above misses `disabled="false"` written while the prop is
+    // already `false` (no prop change, so no watch); the observer covers it.
+    this.presenceObserver?.disconnect();
+    this.presenceObserver = observeAttributePresence(this.host, ['disabled'], () => {
+      this.normalizeDisabled();
+    });
+  }
+
   componentWillLoad(): void {
     this.normalizeDisabled();
+  }
+
+  disconnectedCallback(): void {
+    this.presenceObserver?.disconnect();
+    this.presenceObserver = undefined;
   }
 
   render() {
