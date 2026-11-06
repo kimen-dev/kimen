@@ -348,8 +348,8 @@ importers:
         specifier: workspace:*
         version: link:../elements
       '@stencil/vue-output-target':
-        specifier: 0.14.1
-        version: 0.14.1(@stencil/core@4.43.5)(vue-router@4.5.1(vue@3.5.42(typescript@6.0.3)))(vue@3.5.42(typescript@6.0.3))
+        specifier: 0.14.7
+        version: 0.14.7(@stencil/core@4.43.5)(vue-router@4.5.1(vue@3.5.42(typescript@6.0.3)))(vue@3.5.42(typescript@6.0.3))
     devDependencies:
       '@types/node':
         specifier: 26.1.2
@@ -3515,6 +3515,18 @@ packages:
     resolution: {integrity: sha512-mtqpYVsdopTbMK0eAmyNa2+MuuhiZgJcrBt1hihEERyG0vtDqcaYkqNz+sYSvA0iK3tTGs5vOUPOd1HU1w9D7w==}
     peerDependencies:
       '@stencil/core': '>=2.0.0 || >=3 || >=4.0.0 || ^5.0.0 || >=5.0.0-alpha.17 <5.0.0-next.0'
+      vue: ^3.4.38
+      vue-router: ^4.5.0 || ^5.0.0
+    peerDependenciesMeta:
+      '@stencil/core':
+        optional: true
+      vue-router:
+        optional: true
+
+  '@stencil/vue-output-target@0.14.7':
+    resolution: {integrity: sha512-otE09Jzgd7+eRAApsvCsIIv+Yv+GakJrofd9gXA5dXbgIfK+nqWIMoYD4HlrXVKjI8KbUvPBuFdAQ8J3tqTVjg==}
+    peerDependencies:
+      '@stencil/core': '>=2.0.0 || >=3 || >=4.0.0 || ^5.0.0 || >=5.0.0-beta.18'
       vue: ^3.4.38
       vue-router: ^4.5.0 || ^5.0.0
     peerDependenciesMeta:
@@ -10387,6 +10399,13 @@ snapshots:
       playwright: 1.62.1
 
   '@stencil/vue-output-target@0.14.1(@stencil/core@4.43.5)(vue-router@4.5.1(vue@3.5.42(typescript@6.0.3)))(vue@3.5.42(typescript@6.0.3))':
+    dependencies:
+      vue: 3.5.42(typescript@6.0.3)
+    optionalDependencies:
+      '@stencil/core': 4.43.5
+      vue-router: 4.5.1(vue@3.5.42(typescript@6.0.3))
+
+  '@stencil/vue-output-target@0.14.7(@stencil/core@4.43.5)(vue-router@4.5.1(vue@3.5.42(typescript@6.0.3)))(vue@3.5.42(typescript@6.0.3))':
     dependencies:
       vue: 3.5.42(typescript@6.0.3)
     optionalDependencies:
