@@ -82,6 +82,13 @@
       "matchDepTypes": ["engines", "uses-with"],
       "rangeStrategy": "replace",
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Overrides keyed to one major line (`undici@7`, `postcss-selector-parser@6`, `minimatch@3`) hold that line on a patched version; Renovate reads each key as its own depName and proposes the next major, which would force every consumer of the old line onto a major it never declared (#218, #219). Bump inside the line only; drop the key by hand when nothing needs the old line any more.",
+      "matchPackageNames": ["/^(@[^/]+/)?[^@/]+@\\d+$/"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false,
+      "minimumReleaseAge": "7 days"
     }
   ],
   "ignoreDeps": ["minimatch", "minimatch@3"],
