@@ -34,6 +34,14 @@ interface PackageFixture {
   description: string;
 }
 
+interface DocsFixture {
+  components: {
+    tag: string;
+    slots?: { name: string; docs: string }[];
+    docsTags?: { name: string; text: string }[];
+  }[];
+}
+
 interface ManifestMember {
   name: string;
 }
@@ -611,6 +619,71 @@ describe('agent surfaces', () => {
         'ki-button.part[button]: part has no documentation',
       ]),
     );
+  });
+
+  it('S7 a slot declared @managedSlot stays out of every surface and needs no @slot', async () => {
+    // Stencil 4.45 adds every named <slot> its render() returns to docs-json,
+    // documented or not. A group-managed slot is not authoring surface: its
+    // declaration keeps it out of the manifest and llms.txt instead of failing.
+    const raw = structuredClone(await readFixture('path-a-docs.json')) as DocsFixture;
+    const [component] = raw.components;
+    if (component === undefined) throw new Error('the fixture declares ki-button');
+    component.slots = [...(component.slots ?? []), { name: 'managed', docs: '' }];
+    component.docsTags = [
+      ...(component.docsTags ?? []),
+      { name: 'managedSlot', text: 'managed - Filled by the component itself.' },
+    ];
+    const docs = normalizeDocs(raw);
+
+    expect(validateDocs(docs)).toEqual([]);
+    const slots = buildManifest(docs).modules[0].declarations[0].slots ?? [];
+    expect(slots.map((slot: { name: string }) => slot.name)).toEqual(['']);
+    const summary = buildLlmsTxt(docs, await readJson(pkgUrl), preamble);
+    expect(summary).not.toContain('`managed`');
+  });
+
+  it('S7 an undeclared rendered slot still fails and a managed slot cannot also be public', async () => {
+    const raw = structuredClone(await readFixture('path-a-docs.json')) as DocsFixture;
+    const [component] = raw.components;
+    if (component === undefined) throw new Error('the fixture declares ki-button');
+    component.slots = [...(component.slots ?? []), { name: 'tab', docs: '' }];
+    component.docsTags = [
+      ...(component.docsTags ?? []),
+      { name: 'managedSlot', text: 'nameless' },
+      { name: 'managedSlot', text: 'footer - Filled by the component itself.' },
+      { name: 'slot', text: 'footer - Public footer.' },
+    ];
+
+    expect(validateDocs(normalizeDocs(raw))).toEqual(
+      expect.arrayContaining([
+        'ki-button.slot[tab]: slot has no documentation',
+        'ki-button.@managedSlot: expected "<slot-name> - <reason>"',
+        'ki-button.@managedSlot footer: slot is also documented as public with @slot',
+      ]),
+    );
+  });
+
+  it('S7 ki-tabs keeps its auto-assigned tab slot out of the surfaces (#155 regression)', async () => {
+    // What @stencil/core 4.45.2 emits for ki-tabs: the internal <slot name="tab">
+    // with no docs. Before the declaration the build failed with
+    // `ki-tabs.slot[tab]: slot has no documentation` (spec 014: non-API).
+    const raw = structuredClone(await readJson(docsUrl)) as DocsFixture;
+    const tabs = raw.components.find((candidate) => candidate.tag === 'ki-tabs');
+    expect(tabs).toBeDefined();
+    if (tabs === undefined) return;
+    if (!(tabs.slots ?? []).some((slot) => slot.name === 'tab')) {
+      tabs.slots = [...(tabs.slots ?? []), { name: 'tab', docs: '' }];
+    }
+    const docs = normalizeDocs(raw);
+
+    expect(validateDocs(docs)).toEqual([]);
+    const declaration = buildManifest(docs)
+      .modules.flatMap(
+        (module: { declarations: { tagName?: string; slots?: { name: string }[] }[] }) =>
+          module.declarations,
+      )
+      .find((candidate: { tagName?: string }) => candidate.tagName === 'ki-tabs');
+    expect(declaration?.slots?.map((slot: { name: string }) => slot.name)).toEqual(['']);
   });
 
   it('S4 runBuildSurfaces exits non-zero and prints every validation violation', async () => {
