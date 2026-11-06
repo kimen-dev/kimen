@@ -77,8 +77,7 @@ describe('wrapper generation', () => {
   it('S9 fails the sync gate naming the drifted artifact', () => {
     const wrappers = generatedGroups.wrappers;
     expect(wrappers).toBeDefined();
-    const gitDrift: GitExecution = (root, args) => {
-      void root;
+    const gitDrift: GitExecution = (_root, args) => {
       if (args[0] === 'ls-files' && args[1] === '--error-unmatch') {
         return { status: 0, stdout: '', stderr: '' };
       }
