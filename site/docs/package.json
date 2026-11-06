@@ -24,7 +24,7 @@
     "@astrojs/starlight": "0.42.7",
     "@kimen/elements": "workspace:*",
     "@kimen/tokens": "workspace:*",
-    "astro": "7.3.3",
+    "astro": "7.4.4",
     "sharp": "0.35.5"
   }
 }
