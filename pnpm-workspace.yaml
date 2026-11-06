@@ -90,7 +90,7 @@ overrides:
   colord: 2.10.0
   # GHSA-rj75-hqrm-r3gf on both majors in the tree: postcss-nested wants
   # ^6.1.1, stylelint and @csstools want ^7.1.4.
-  postcss-selector-parser@6: 6.1.5
+  postcss-selector-parser@6: 7.1.7
   postcss-selector-parser@7: 7.1.7
   # Not an advisory: this holds the target of patches/minimatch@3.1.5.patch.
   # `patchedDependencies` names an exact version, and Renovate does not read
