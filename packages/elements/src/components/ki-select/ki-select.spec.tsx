@@ -213,7 +213,8 @@ describe('ki-select', () => {
 
     const button = trigger(root);
 
-    expect(root.getAttribute('disabled')).toBe('false');
+    // Presence semantics: the authored "false" normalizes to an empty value.
+    expect(root.getAttribute('disabled')).toBe('');
     expect(button.hasAttribute('disabled')).toBe(true);
     expect(button.tabIndex).toBe(-1);
     expect(button.getAttribute('aria-expanded')).toBe('false');
@@ -623,9 +624,14 @@ describe('ki-select', () => {
       throw new Error('missing selected option');
     }
 
-    expect(observe).toHaveBeenCalledTimes(3);
-    expect(observe.mock.calls[1]?.[0]).toBe(selected);
-    expect(observe.mock.calls[1]?.[1]).toEqual({
+    // Only the roster observer watches option subtrees; the boolean presence
+    // observers of the select and its options watch host attributes alone.
+    const rosterCalls = observe.mock.calls.filter(
+      (call) => (call[1] as MutationObserverInit | undefined)?.subtree === true,
+    );
+    expect(rosterCalls).toHaveLength(3);
+    expect(rosterCalls[1]?.[0]).toBe(selected);
+    expect(rosterCalls[1]?.[1]).toEqual({
       attributeFilter: ['value', 'disabled'],
       attributes: true,
       characterData: true,

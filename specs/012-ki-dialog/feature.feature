@@ -39,6 +39,18 @@ Feature: Dialog
     When the application closes it programmatically
     Then the dialog closes and exactly one ki-close event reports a programmatic dismissal
 
+  # S16
+  Scenario Outline: An open attribute written as "false" opens the dialog
+    Given a dialog headed "Delete account?"
+    When the attribute open="false" is written on the dialog <moment>
+    Then the dialog is presented modally above an inert page
+    And the attribute stays present on the dialog with an empty value
+
+    Examples:
+      | moment                 |
+      | in the initial markup  |
+      | after the first render |
+
   # Family: keyboard path
   # S6
   Scenario: Opening the dialog moves focus into it

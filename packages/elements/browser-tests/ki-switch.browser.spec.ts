@@ -543,3 +543,36 @@ describe('ki-switch in a real browser', () => {
     expect(Math.abs(thumbRect.left - trackRect.left)).toBeLessThanOrEqual(8);
   });
 });
+
+// Boolean presence semantics (native HTML parity): a present attribute means
+// true whatever its value. Stencil >= 4.45 removes a host attribute when it
+// reflects a parsed `false`, so these run against the built output.
+describe('ki-switch boolean presence in a real browser', () => {
+  it('S22 disabled="false" in the markup keeps the switch disabled', async () => {
+    const el = await mount('disabled="false"');
+    const counts = eventCounts(el);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(internalInput(el).disabled).toBe(true);
+    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
+    expect(el.checked).toBe(false);
+    expect(counts.change()).toBe(0);
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(el.getAttribute('disabled')).toBe('');
+  });
+
+  it('S22 disabled="false" written after the first render disables the switch', async () => {
+    const el = await mount();
+    const counts = eventCounts(el);
+    el.setAttribute('disabled', 'false');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(internalInput(el).disabled).toBe(true);
+    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
+    expect(el.checked).toBe(false);
+    expect(counts.change()).toBe(0);
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(el.getAttribute('disabled')).toBe('');
+  });
+});

@@ -573,3 +573,33 @@ describe('ki-checkbox in a real browser', () => {
     await expectAccessible(document.body);
   });
 });
+
+// Boolean presence semantics (native HTML parity): a present attribute means
+// true whatever its value. Stencil >= 4.45 removes a host attribute when it
+// reflects a parsed `false`, so these run against the built output.
+describe('ki-checkbox boolean presence in a real browser', () => {
+  it('S22 disabled="false" and required="false" written after the first render keep presence', async () => {
+    cleanup();
+    const el = await mount();
+    el.setAttribute('disabled', 'false');
+    el.setAttribute('required', 'false');
+    await waitForStyles();
+
+    expect(inputOf(el).disabled).toBe(true);
+    expect(inputOf(el).required).toBe(true);
+    await userEvent.click(el, { force: true }).catch(() => undefined);
+    expect(el.checked).toBe(false);
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(el.getAttribute('disabled')).toBe('');
+    expect(el.getAttribute('required')).toBe('');
+  });
+
+  it('S22 disabled="false" in the markup keeps the checkbox disabled', async () => {
+    cleanup();
+    const el = await mount('Email notifications', { disabled: 'false' });
+
+    expect(inputOf(el).disabled).toBe(true);
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(el.getAttribute('disabled')).toBe('');
+  });
+});

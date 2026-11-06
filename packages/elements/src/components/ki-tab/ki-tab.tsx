@@ -1,4 +1,8 @@
-import { Component, Element, Host, Prop, h } from '@stencil/core';
+import { Component, Element, Host, h, Prop } from '@stencil/core';
+import {
+  booleanFromAttributePresence,
+  observeAttributePresence,
+} from '../../utils/boolean-presence';
 
 /**
  * One selectable tab inside a `ki-tabs` view switcher.
@@ -47,12 +51,34 @@ export class KiTab {
    */
   @Prop({ reflect: true }) selected = false;
 
+  private presenceObserver: MutationObserver | undefined;
+
+  connectedCallback(): void {
+    // `ki-tabs` reads `disabled` from the host attribute, so presence must
+    // survive Stencil's reflection of a parsed `disabled="false"`.
+    this.presenceObserver?.disconnect();
+    this.presenceObserver = observeAttributePresence(this.host, ['disabled'], () => {
+      if (!this.disabled) {
+        this.disabled = true;
+      }
+    });
+  }
+
+  componentWillLoad(): void {
+    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
+  }
+
+  disconnectedCallback(): void {
+    this.presenceObserver?.disconnect();
+    this.presenceObserver = undefined;
+  }
+
   render() {
     return (
       <Host
         role="tab"
         aria-selected={this.selected ? 'true' : 'false'}
-        aria-disabled={this.disabled || this.host.hasAttribute('disabled') ? 'true' : 'false'}
+        aria-disabled={this.disabled ? 'true' : 'false'}
       >
         <span part="tab">
           <slot name="start" />

@@ -10,6 +10,10 @@ import {
   Watch,
 } from '@stencil/core';
 import {
+  booleanFromAttributePresence,
+  observeAttributePresence,
+} from '../../utils/boolean-presence';
+import {
   normalizeBooleanPresence,
   optionLabelText,
   optionValue,
@@ -118,6 +122,7 @@ export class KiSelect {
   private readonly triggerId = 'trigger';
   private readonly listboxId = 'listbox';
   private mutationObserver: MutationObserver | undefined;
+  private presenceObserver: MutationObserver | undefined;
   private triggerElement?: HTMLButtonElement;
   private donorElement?: HTMLSelectElement;
   // Distinguishes "options never slotted yet" (retain a pending value for the
@@ -143,6 +148,19 @@ export class KiSelect {
 
   connectedCallback(): void {
     this.host.addEventListener('focusout', this.handleFocusOut);
+    // Presence semantics for attributes written after hydration: Stencil parses
+    // `disabled="false"` to `false` and would remove the attribute on reflect.
+    this.presenceObserver?.disconnect();
+    this.presenceObserver = observeAttributePresence(
+      this.host,
+      ['disabled', 'required'],
+      this.handlePresentAttribute,
+    );
+  }
+
+  componentWillLoad(): void {
+    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
+    this.required = booleanFromAttributePresence(this.required, this.host.hasAttribute('required'));
   }
 
   componentDidLoad(): void {
@@ -154,7 +172,17 @@ export class KiSelect {
     this.host.removeEventListener('focusout', this.handleFocusOut);
     this.detachOutsideListener();
     this.mutationObserver?.disconnect();
+    this.presenceObserver?.disconnect();
+    this.presenceObserver = undefined;
   }
+
+  private readonly handlePresentAttribute = (attribute: string): void => {
+    if (attribute === 'disabled' && !this.disabled) {
+      this.disabled = true;
+    } else if (attribute === 'required' && !this.required) {
+      this.required = true;
+    }
+  };
 
   @Watch('value')
   protected valueChanged(nextValue: string): void {

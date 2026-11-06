@@ -262,6 +262,21 @@ Feature: Radio group
     When the user attempts to select "SMS"
     Then no selection change is observed and the group is exposed as unavailable
 
+  # S26
+  Scenario Outline: A boolean attribute written as "false" keeps presence semantics
+    Given a radio group "Contact preference" offering "Email", "SMS" and "Phone"
+    When the attribute <attribute>="false" is written on <target> <moment>
+    Then <target> behaves as <state>
+    And the attribute stays present on <target> with an empty value
+
+    Examples:
+      | attribute | target           | moment                 | state       |
+      | disabled  | the group        | in the initial markup  | disabled    |
+      | disabled  | the group        | after the first render | disabled    |
+      | required  | the group        | in the initial markup  | required    |
+      | disabled  | the option "SMS" | in the initial markup  | unavailable |
+      | disabled  | the option "SMS" | after the first render | unavailable |
+
   # Family: keyboard path
   # S5
   Scenario: Tab reaches the group as a single stop on the selected option
@@ -393,7 +408,7 @@ Feature: Radio group
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S19 | |
+| Core behavior | S1, S2, S3, S4, S19, S26 | |
 | Keyboard path | S5, S6, S7, S8, S9, S20, S21, S25 | |
 | Assistive-tech outcome | S10, S11, S22, S23 | |
 | Form participation | S12, S13, S14, S15, S24 | |

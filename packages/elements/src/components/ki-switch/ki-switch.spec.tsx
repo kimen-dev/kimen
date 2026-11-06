@@ -152,7 +152,7 @@ describe('ki-switch', () => {
 
     expect(observe).toHaveBeenCalledOnce();
     expect(observe.mock.calls[0]?.[0]).toBe(root);
-    expect(observe.mock.calls[0]?.[1]).toEqual({ attributeFilter: ['checked'] });
+    expect(observe.mock.calls[0]?.[1]).toEqual({ attributeFilter: ['checked', 'disabled'] });
 
     root.setAttribute('checked', 'false');
     presenceCallback?.([], {} as MutationObserver);

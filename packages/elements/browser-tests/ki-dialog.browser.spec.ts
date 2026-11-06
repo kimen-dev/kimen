@@ -685,3 +685,33 @@ describe('ki-dialog in a real browser', () => {
     expect(actions).toEqual(['Cancel', 'Delete']);
   });
 });
+
+// Boolean presence semantics (native HTML parity): a present attribute means
+// true whatever its value. Stencil >= 4.45 removes a host attribute when it
+// reflects a parsed `false`, so these run against the built output.
+describe('ki-dialog boolean presence in a real browser', () => {
+  it('S16 open="false" in the markup opens the dialog modally', async () => {
+    cleanup();
+    const el = await mountDialog({ open: 'false' });
+    await waitFor(() => internalDialog(el).open, 'dialog opened from open="false"');
+
+    expect(el.open).toBe(true);
+    expect(internalDialog(el).matches(':modal')).toBe(true);
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(el.getAttribute('open')).toBe('');
+    await el.close();
+  });
+
+  it('S16 open="false" written after the first render opens the dialog modally', async () => {
+    cleanup();
+    const el = await mountDialog();
+    el.setAttribute('open', 'false');
+    await waitFor(() => internalDialog(el).open, 'dialog opened from a later open="false"');
+
+    expect(el.open).toBe(true);
+    expect(internalDialog(el).matches(':modal')).toBe(true);
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(el.getAttribute('open')).toBe('');
+    await el.close();
+  });
+});

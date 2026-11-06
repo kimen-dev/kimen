@@ -11915,7 +11915,7 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiOption {\n    value?: string;\n    disabled: boolean;\n    get optionValue(): string;\n    get optionDisabled(): boolean;\n    render(): any;\n}"
+                "signature": "export declare class KiOption {\n    value?: string;\n    disabled: boolean;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    disconnectedCallback(): void;\n    get optionValue(): string;\n    get optionDisabled(): boolean;\n    render(): any;\n}"
               },
               "KiProgress": {
                 "kinds": [
@@ -11935,21 +11935,21 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiRadio {\n    value: string;\n    disabled: boolean;\n    protected normalizeDisabled(): void;\n    componentWillLoad(): void;\n    render(): any;\n}"
+                "signature": "export declare class KiRadio {\n    value: string;\n    disabled: boolean;\n    protected normalizeDisabled(): void;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    disconnectedCallback(): void;\n    render(): any;\n}"
               },
               "KiRadioGroup": {
                 "kinds": [
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiRadioGroup {\n    name?: string;\n    value: string;\n    label: string;\n    required: boolean;\n    disabled: boolean;\n    get validationMessage(): string;\n    protected handleValueChange(): void;\n    protected normalizeBooleanProps(): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    formAssociatedCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    formResetCallback(): void;\n    render(): any;\n}"
+                "signature": "export declare class KiRadioGroup {\n    name?: string;\n    value: string;\n    label: string;\n    required: boolean;\n    disabled: boolean;\n    get validationMessage(): string;\n    protected handleValueChange(): void;\n    protected normalizeBooleanProps(): void;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    formAssociatedCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    formResetCallback(): void;\n    render(): any;\n}"
               },
               "KiSelect": {
                 "kinds": [
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiSelect {\n    label: string;\n    placeholder: string;\n    name?: string;\n    value: string;\n    disabled: boolean;\n    required: boolean;\n    connectedCallback(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected valueChanged(nextValue: string): void;\n    protected stateAttributeChanged(): void;\n    protected handleInvalid(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    render(): any;\n}"
+                "signature": "export declare class KiSelect {\n    label: string;\n    placeholder: string;\n    name?: string;\n    value: string;\n    disabled: boolean;\n    required: boolean;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected valueChanged(nextValue: string): void;\n    protected stateAttributeChanged(): void;\n    protected handleInvalid(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    render(): any;\n}"
               },
               "KiSwitch": {
                 "kinds": [
@@ -11963,7 +11963,7 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiTab {\n    value: string;\n    disabled: boolean;\n    selected: boolean;\n    render(): any;\n}"
+                "signature": "export declare class KiTab {\n    value: string;\n    disabled: boolean;\n    selected: boolean;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    disconnectedCallback(): void;\n    render(): any;\n}"
               },
               "KiTabPanel": {
                 "kinds": [
@@ -30777,5 +30777,5 @@
       }
     }
   },
-  "surfaceSha256": "7677920510dfa6e62a13b8cf4b8abde8cf82cffdaaf86415aaf8b8106c883a82"
+  "surfaceSha256": "7c8ae8f5c1f7cbc2d0421a26a546a29b8efc4321687cc4c4ce608d2297696aaf"
 }

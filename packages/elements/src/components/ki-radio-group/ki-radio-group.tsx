@@ -1,4 +1,5 @@
-import { AttachInternals, Component, Element, Prop, State, Watch, h } from '@stencil/core';
+import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
+import { observeAttributePresence } from '../../utils/boolean-presence';
 import { normalizeBooleanPresence, radioGroupFormValue } from './ki-radio-group.form';
 import { arrowDirection, nextEnabledIndex } from './ki-radio-group.keyboard';
 
@@ -47,6 +48,7 @@ export class KiRadioGroup {
   // (review 007 minor; matches the 003 call).
   private readonly labelId = 'group-label';
   private disabledObserver?: MutationObserver;
+  private presenceObserver: MutationObserver | undefined;
   private resetValue = '';
   private suppressValueWatch = false;
 
@@ -133,6 +135,16 @@ export class KiRadioGroup {
     return this.disabled || this.formDisabled;
   }
 
+  connectedCallback(): void {
+    // The @Watch misses `disabled="false"`/`required="false"` written while the
+    // prop is already `false` (no prop change, so no watch); the observer
+    // covers it before Stencil's reflection would remove the attribute.
+    this.presenceObserver?.disconnect();
+    this.presenceObserver = observeAttributePresence(this.host, ['disabled', 'required'], () => {
+      this.normalizeBooleanProps();
+    });
+  }
+
   componentWillLoad(): void {
     this.normalizeBooleanProps();
   }
@@ -151,6 +163,8 @@ export class KiRadioGroup {
     this.host.removeEventListener('focusin', this.handleFocusIn);
     this.host.removeEventListener('invalid', this.handleInvalid);
     this.disabledObserver?.disconnect();
+    this.presenceObserver?.disconnect();
+    this.presenceObserver = undefined;
   }
 
   formAssociatedCallback(): void {

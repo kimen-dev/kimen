@@ -1,5 +1,9 @@
 import { AttachInternals, Component, Element, h, Listen, Prop, State, Watch } from '@stencil/core';
-import { booleanFromAttributePresence, checkboxFormValue } from './ki-checkbox.form';
+import {
+  booleanFromAttributePresence,
+  observeAttributePresence,
+} from '../../utils/boolean-presence';
+import { checkboxFormValue } from './ki-checkbox.form';
 
 /**
  * A form-associated checkbox for selecting independent options.
@@ -96,7 +100,7 @@ export class KiCheckbox {
 
   private input: HTMLInputElement | undefined;
   private resetBaseline = false;
-  private presenceObserver?: MutationObserver;
+  private presenceObserver: MutationObserver | undefined;
 
   private get effectiveDisabled(): boolean {
     return this.disabled || this.formDisabled;
@@ -120,12 +124,11 @@ export class KiCheckbox {
     // componentWillLoad. Stencil natively adopts `checked=""`/removal via its
     // own attribute observation, but parses a present-but-falsy `checked="false"`
     // to `false`; watch for that and restore presence semantics.
-    if (typeof MutationObserver !== 'undefined') {
-      this.presenceObserver = new MutationObserver(this.handlePresenceMutation);
-      this.presenceObserver.observe(this.host, {
-        attributeFilter: ['checked', 'indeterminate'],
-      });
-    }
+    this.presenceObserver = observeAttributePresence(
+      this.host,
+      ['checked', 'indeterminate', 'disabled', 'required'],
+      this.handlePresentAttribute,
+    );
   }
 
   disconnectedCallback(): void {
@@ -136,12 +139,15 @@ export class KiCheckbox {
   // author set after hydration. Absence and Stencil's own reflect writes already
   // agree with the prop, so skipping them avoids fighting the reflection that
   // fires on every normal toggle (a naive `prop = hasAttribute` would).
-  private readonly handlePresenceMutation = (): void => {
-    if (this.host.hasAttribute('checked') && !this.checked) {
+  private readonly handlePresentAttribute = (attribute: string): void => {
+    if (attribute === 'checked' && !this.checked) {
       this.checked = true;
-    }
-    if (this.host.hasAttribute('indeterminate') && !this.indeterminate) {
+    } else if (attribute === 'indeterminate' && !this.indeterminate) {
       this.indeterminate = true;
+    } else if (attribute === 'disabled' && !this.disabled) {
+      this.disabled = true;
+    } else if (attribute === 'required' && !this.required) {
+      this.required = true;
     }
   };
 

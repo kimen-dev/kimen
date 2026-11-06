@@ -38,6 +38,18 @@ Feature: Switch
     Then the switch is on
     And the page observes exactly one change event
 
+  # S22
+  Scenario Outline: A disabled attribute written as "false" keeps the switch disabled
+    Given a switch labeled "Email notifications" that is off
+    When the attribute disabled="false" is written on the switch <moment>
+    Then the user cannot toggle the switch and no change event is observed
+    And the attribute stays present on the switch with an empty value
+
+    Examples:
+      | moment                 |
+      | in the initial markup  |
+      | after the first render |
+
   # Family: keyboard path
   # S5
   Scenario: The keyboard reaches the switch with visible focus

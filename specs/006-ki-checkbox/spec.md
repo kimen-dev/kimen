@@ -272,6 +272,19 @@ Feature: Checkbox
     When the page renders
     Then the checkbox renders checked
 
+  # S22
+  Scenario Outline: A boolean attribute written as "false" keeps presence semantics
+    Given a checkbox labeled "Email notifications"
+    When the attribute <attribute>="false" is written on the checkbox <moment>
+    Then the checkbox behaves as <state>
+    And the attribute stays present on the checkbox with an empty value
+
+    Examples:
+      | attribute | moment                 | state    |
+      | disabled  | in the initial markup  | disabled |
+      | disabled  | after the first render | disabled |
+      | required  | after the first render | required |
+
   # Family: keyboard path
   # S5
   Scenario: The keyboard reaches the checkbox with visible focus
@@ -372,7 +385,7 @@ Feature: Checkbox
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S19, S20, S4 | |
+| Core behavior | S1, S2, S3, S19, S20, S4, S22 | |
 | Keyboard path | S5, S6 | |
 | Assistive-tech outcome | S7, S8, S9 | |
 | Form participation | S10, S11, S12, S13, S14, S15 | |

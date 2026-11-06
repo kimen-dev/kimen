@@ -616,3 +616,68 @@ describe('ki-radio-group in a real browser', () => {
     );
   });
 });
+
+// Boolean presence semantics (native HTML parity): a present attribute means
+// true whatever its value. Stencil >= 4.45 removes a host attribute when it
+// reflects a parsed `false`, so these run against the built output.
+describe('ki-radio-group boolean presence in a real browser', () => {
+  async function expectNoSelection(el: KiRadioGroupElement, index: number): Promise<void> {
+    await userEvent.click(radioAt(el, index), { force: true }).catch(() => undefined);
+    await settleFrames();
+    expect(el.value).toBe('');
+    expect(radioAt(el, index).checked).toBe(false);
+  }
+
+  it('S26 disabled="false" and required="false" in the markup keep the group disabled and required', async () => {
+    cleanup();
+    const el = await mount({ disabled: 'false', required: 'false' });
+    await settleFrames();
+
+    expect(radioAt(el, 1).disabled).toBe(true);
+    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.getAttribute('aria-required')).toBe(
+      'true',
+    );
+    await expectNoSelection(el, 1);
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(el.getAttribute('disabled')).toBe('');
+    expect(el.getAttribute('required')).toBe('');
+  });
+
+  it('S26 disabled="false" written after the first render disables the group', async () => {
+    cleanup();
+    const el = await mount();
+    el.setAttribute('disabled', 'false');
+    await settleFrames();
+
+    expect(radioAt(el, 1).disabled).toBe(true);
+    await expectNoSelection(el, 1);
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(el.getAttribute('disabled')).toBe('');
+  });
+
+  it('S26 disabled="false" keeps an option unavailable in the markup and after the first render', async () => {
+    cleanup();
+    const el = document.createElement('ki-radio-group') as unknown as KiRadioGroupElement;
+    el.setAttribute('label', 'Contact preference');
+    el.innerHTML = `
+      <ki-radio value="email">Email</ki-radio>
+      <ki-radio value="sms" disabled="false">SMS</ki-radio>
+      <ki-radio value="phone">Phone</ki-radio>
+    `;
+    document.body.append(el);
+    await customElements.whenDefined('ki-radio-group');
+    await customElements.whenDefined('ki-radio');
+    await settleFrames(4);
+    const options = [...el.querySelectorAll('ki-radio')];
+    options[2]?.setAttribute('disabled', 'false');
+    await settleFrames();
+
+    expect(radioAt(el, 1).disabled).toBe(true);
+    expect(radioAt(el, 2).disabled).toBe(true);
+    await expectNoSelection(el, 1);
+    await expectNoSelection(el, 2);
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(options[1]?.getAttribute('disabled')).toBe('');
+    expect(options[2]?.getAttribute('disabled')).toBe('');
+  });
+});

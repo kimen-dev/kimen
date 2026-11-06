@@ -548,3 +548,66 @@ describe('ki-select in a real browser', () => {
     expect(getComputedStyle(trigger(el)).backgroundColor).toBe(restBg);
   });
 });
+
+// Boolean presence semantics (native HTML parity): a present attribute means
+// true whatever its value. Stencil >= 4.45 removes a host attribute when it
+// reflects a parsed `false`, so these run against the built output.
+describe('ki-select boolean presence in a real browser', () => {
+  async function frames(count = 2): Promise<void> {
+    for (let index = 0; index < count; index += 1) {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+  }
+
+  it('S26 disabled="false" and required="false" in the markup keep the select disabled and required', async () => {
+    const el = await mountSelect('disabled="false" required="false"');
+
+    expect(trigger(el).disabled).toBe(true);
+    expect(trigger(el).getAttribute('aria-required')).toBe('true');
+    trigger(el).click();
+    await frames();
+    expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(el.getAttribute('disabled')).toBe('');
+    expect(el.getAttribute('required')).toBe('');
+  });
+
+  it('S26 disabled="false" written after the first render disables the select', async () => {
+    const el = await mountSelect();
+    expect(trigger(el).disabled).toBe(false);
+
+    el.setAttribute('disabled', 'false');
+    await frames();
+
+    expect(trigger(el).disabled).toBe(true);
+    trigger(el).click();
+    await frames();
+    expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(el.getAttribute('disabled')).toBe('');
+  });
+
+  it('S26 disabled="false" keeps an option unavailable in the markup and after the first render', async () => {
+    const el = await mountSelect(
+      '',
+      `<ki-option value="es">Spain</ki-option><ki-option value="fr" disabled="false">France</ki-option><ki-option value="pt">Portugal</ki-option>`,
+    );
+    const options = [...el.querySelectorAll('ki-option')];
+
+    options[2]?.setAttribute('disabled', 'false');
+    await frames();
+
+    trigger(el).click();
+    await frames();
+    expect(rowAt(el, 1).getAttribute('aria-disabled')).toBe('true');
+    expect(rowAt(el, 2).getAttribute('aria-disabled')).toBe('true');
+    rowAt(el, 1).click();
+    rowAt(el, 2).click();
+    await frames();
+    expect(el.value).toBe('');
+    expect(valueText(el)).toBe('Choose a country');
+    // Presence is normalized: the host attribute stays, with an empty value.
+    expect(options[1]?.getAttribute('disabled')).toBe('');
+    expect(options[2]?.getAttribute('disabled')).toBe('');
+  });
+});

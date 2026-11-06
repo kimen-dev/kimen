@@ -48,6 +48,21 @@ Feature: Select
     Then no option is selected and the trigger shows the placeholder
     And no change event is observed
 
+  # S26
+  Scenario Outline: A boolean attribute written as "false" keeps presence semantics
+    Given a select labeled "Country" offering "Spain", "France" and "Portugal"
+    When the attribute <attribute>="false" is written on <target> <moment>
+    Then <target> behaves as <state>
+    And the attribute stays present on <target> with an empty value
+
+    Examples:
+      | attribute | target              | moment                 | state       |
+      | disabled  | the select          | in the initial markup  | disabled    |
+      | disabled  | the select          | after the first render | disabled    |
+      | required  | the select          | in the initial markup  | required    |
+      | disabled  | the option "France" | in the initial markup  | unavailable |
+      | disabled  | the option "France" | after the first render | unavailable |
+
   # Family: keyboard path
   # S6
   Scenario: The keyboard reaches the select with visible focus

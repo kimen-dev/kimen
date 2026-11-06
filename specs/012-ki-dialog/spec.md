@@ -229,6 +229,18 @@ Feature: Dialog
     When the application closes it programmatically
     Then the dialog closes and exactly one ki-close event reports a programmatic dismissal
 
+  # S16
+  Scenario Outline: An open attribute written as "false" opens the dialog
+    Given a dialog headed "Delete account?"
+    When the attribute open="false" is written on the dialog <moment>
+    Then the dialog is presented modally above an inert page
+    And the attribute stays present on the dialog with an empty value
+
+    Examples:
+      | moment                 |
+      | in the initial markup  |
+      | after the first render |
+
   # Family: keyboard path
   # S6
   Scenario: Opening the dialog moves focus into it
@@ -291,7 +303,7 @@ Feature: Dialog
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S15 | |
+| Core behavior | S1, S2, S3, S4, S5, S15, S16 | |
 | Keyboard path | S6, S7, S8 | |
 | Assistive-tech outcome | S9, S10 | |
 | Form participation | | N/A — ki-dialog is not a form control and carries no name/value; the charter's form-associated set for this batch is input, textarea, select, checkbox, radio-group and switch. Forms compose inside the dialog's slots and keep their native behavior untouched. |
