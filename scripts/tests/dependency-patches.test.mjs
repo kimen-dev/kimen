@@ -135,6 +135,8 @@ function ruleMatchesNpmDependency(rule, { depName, depType, packageFile, updateT
       case 'matchDepNames':
       case 'matchPackageNames':
         return values.some((pattern) => {
+          const regex = /^\/(.+)\/$/u.exec(pattern);
+          if (regex) return new RegExp(regex[1], 'u').test(depName);
           assert.match(
             pattern,
             /^(\*|[@\w./-]+)$/u,
@@ -199,6 +201,36 @@ test('renovate keeps behaviour-changing dev tools out of the non-major dev group
       depName,
     );
   }
+});
+
+function effectiveEnabled(renovate, dependency) {
+  let enabled = true;
+  for (const rule of renovate.packageRules ?? []) {
+    if (rule.enabled !== undefined && ruleMatchesNpmDependency(rule, dependency)) {
+      enabled = rule.enabled;
+    }
+  }
+  return enabled;
+}
+
+test('renovate never proposes a major for an override held to one major line', async () => {
+  // #218 and #219 proposed `postcss-selector-parser@6: 7.x` and `undici@7: 8.x`:
+  // the key selects consumers of the old line, so a major there forces them onto
+  // a major they never declared. Bumps inside the line, and bare keys, still flow.
+  const renovate = await readFile(new URL('renovate.json', repositoryRoot), 'utf8').then(
+    JSON.parse,
+  );
+  const override = (depName, updateType) => ({
+    depName,
+    depType: 'overrides',
+    packageFile: 'pnpm-workspace.yaml',
+    updateType,
+  });
+  for (const depName of ['undici@7', 'postcss-selector-parser@6', 'minimatch@3', '@scope/pkg@2']) {
+    assert.equal(effectiveEnabled(renovate, override(depName, 'major')), false, depName);
+    assert.equal(effectiveEnabled(renovate, override(depName, 'patch')), true, depName);
+  }
+  assert.equal(effectiveEnabled(renovate, override('axios', 'major')), true, 'axios');
 });
 
 function effectiveRangeStrategy(renovate, dependency) {
