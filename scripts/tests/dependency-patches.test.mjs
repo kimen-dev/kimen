@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import test from 'node:test';
 
@@ -119,6 +119,84 @@ test('renovate batches coupled maintenance and defers incompatible majors', asyn
         matchUpdateTypes?.includes('major'),
     );
     assert.ok(rule, `Renovate must defer the incompatible ${dependency} major`);
+  }
+});
+
+// The subset of Renovate's packageRules matchers this repository uses. A rule
+// that sets `rangeStrategy` through any other matcher (or a glob/regex/negated
+// name) makes the test fail loudly instead of guessing how Renovate reads it.
+function ruleMatchesNpmDependency(rule, { depName, depType, packageFile }) {
+  const matchers = Object.keys(rule).filter((key) => key.startsWith('match'));
+  return matchers.every((key) => {
+    const values = rule[key];
+    switch (key) {
+      case 'matchDepTypes':
+        return values.includes(depType);
+      case 'matchDepNames':
+      case 'matchPackageNames':
+        return values.some((pattern) => {
+          assert.match(
+            pattern,
+            /^(\*|[@\w./-]+)$/u,
+            `teach this test the ${key} pattern ${pattern}`,
+          );
+          return pattern === '*' || pattern === depName;
+        });
+      case 'matchFileNames':
+        return values.some((pattern) => {
+          assert.doesNotMatch(pattern, /[*?{}!]/u, `teach this test the glob ${pattern}`);
+          return pattern === packageFile;
+        });
+      case 'matchManagers':
+        return values.includes('npm');
+      default:
+        assert.fail(`teach this test the Renovate matcher ${key} (rule: ${rule.description})`);
+    }
+  });
+}
+
+function effectiveRangeStrategy(renovate, dependency) {
+  // packageRules apply in order and a later match overrides an earlier one.
+  let strategy = renovate.rangeStrategy ?? 'auto';
+  for (const rule of renovate.packageRules ?? []) {
+    if (rule.rangeStrategy !== undefined && ruleMatchesNpmDependency(rule, dependency)) {
+      strategy = rule.rangeStrategy;
+    }
+  }
+  return strategy;
+}
+
+test('renovate widens the wrappers peer ranges instead of pinning them', async () => {
+  // #157: the repository-wide `rangeStrategy: pin` also rewrote the framework
+  // wrappers' peerDependencies to one exact version (react `^18 || ^19` ->
+  // `19.3.1`, vue `>=3.4.38` -> `3.5.45`). A peer range is the set of host
+  // versions a consumer may bring; pinning it shuts out every other one. The
+  // validator accepts that config, so the invariant lives here: every declared
+  // peer resolves to `widen` (Renovate's own `:widenPeerDependencies`), which
+  // appends a new major (`^18 || ^19 || ^20`) and leaves in-range releases alone.
+  const renovate = await readFile(new URL('renovate.json', repositoryRoot), 'utf8').then(
+    JSON.parse,
+  );
+  const packagesDirectory = new URL('packages/', repositoryRoot);
+  const peers = [];
+  for (const entry of await readdir(packagesDirectory, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const packageFile = `packages/${entry.name}/package.json`;
+    const manifest = await readFile(new URL(packageFile, repositoryRoot), 'utf8')
+      .then(JSON.parse)
+      .catch(() => ({}));
+    for (const depName of Object.keys(manifest.peerDependencies ?? {})) {
+      peers.push({ depName, depType: 'peerDependencies', packageFile });
+    }
+  }
+  assert.ok(peers.length > 0, 'the wrappers declare peer ranges');
+
+  for (const peer of peers) {
+    assert.equal(
+      effectiveRangeStrategy(renovate, peer),
+      'widen',
+      `${peer.packageFile} peer ${peer.depName} must not be pinned by Renovate`,
+    );
   }
 });
 
