@@ -87,7 +87,7 @@ overrides:
   # vitest, storybook and unplugin-stencil (all accept 8.x), 8.2.0 → 8.2.4.
   vite: 8.2.4
   # GHSA-2wm5-q62r-hmrv, via stylelint (^2.9.3), 2.9.3 → 2.9.4.
-  colord: 2.9.4
+  colord: 2.10.0
   # GHSA-rj75-hqrm-r3gf on both majors in the tree: postcss-nested wants
   # ^6.1.1, stylelint and @csstools want ^7.1.4.
   postcss-selector-parser@6: 6.1.5
