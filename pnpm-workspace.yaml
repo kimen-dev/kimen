@@ -100,7 +100,7 @@ overrides:
   # Unpin only together with regenerating the patch.
   minimatch@3: 3.1.5
   # GHSA-4mjr-xmp4-gh2g, GHSA-6pq8-jhm2-2vcw, GHSA-x5fp-wj9c-mxmx, 6.15.3 → 6.16.1.
-  qs: 6.16.1
+  qs: 6.17.1
   # nx 23.3.1 pins undici 7.29.0 exactly. GHSA-4w7w-5xrc-9h26,
   # GHSA-2m5v-pch6-74hx, GHSA-qrxm-fqhp-jwvm, GHSA-w293-vg96-wgc3,
   # GHSA-xjj6-f33q-929c, GHSA-rfgv-xxqx-mfg5 (High) and seven Medium, all fixed
