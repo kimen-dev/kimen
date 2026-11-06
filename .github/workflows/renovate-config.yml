@@ -53,7 +53,7 @@ jobs:
           # Renovate declares engines.node ^24.11.0 and .npmrc sets
           # engine-strict, so this pins the major the validator supports —
           # not the one the rest of CI runs on.
-          node-version: 24
+          node-version: 26
           # This job never installs workspace dependencies; the validator
           # arrives through npx. Left on, the cache step reads `packageManager`
           # from package.json and fails looking for a pnpm this job has no
