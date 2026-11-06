@@ -85,7 +85,7 @@ overrides:
   svgo: 4.1.0
   # GHSA-587h-7wmj-h5pm (High) and five Medium/Low, via astro (^8.0.13),
   # vitest, storybook and unplugin-stencil (all accept 8.x), 8.2.0 → 8.2.4.
-  vite: 8.2.4
+  vite: 8.3.5
   # GHSA-2wm5-q62r-hmrv, via stylelint (^2.9.3), 2.9.3 → 2.9.4.
   colord: 2.10.0
   # GHSA-rj75-hqrm-r3gf on both majors in the tree: postcss-nested wants
