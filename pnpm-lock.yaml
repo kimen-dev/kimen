@@ -24,7 +24,7 @@ overrides:
   postcss-selector-parser@7: 7.1.7
   minimatch@3: 3.1.5
   qs: 6.17.1
-  undici@7: 7.30.1
+  undici@7: 8.12.3
 
 patchedDependencies:
   minimatch@3.1.5: 3e64d536af3aaaa63bcd325ef7c0f4c9c0ba4e731cbf0986304a41c5870ac8b3
