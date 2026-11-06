@@ -10,6 +10,11 @@ import { readPackedLlmsFromTarball } from '../consumer-contract.mjs';
 
 const repositoryRoot = resolve(fileURLToPath(new URL('../../', import.meta.url)));
 const consumerContract = join(repositoryRoot, 'scripts/consumer-contract.mjs');
+// The packed @kimen/elements depends on exactly this compiler runtime; the
+// offline installer stores are primed with it before the consumer runs.
+const elementsStencil = JSON.parse(
+  await readFile(join(repositoryRoot, 'packages/elements/package.json'), 'utf8'),
+).dependencies['@stencil/core'];
 
 function run(command, arguments_, options) {
   const result = spawnSync(command, arguments_, {
@@ -107,7 +112,7 @@ async function main() {
       ['exec', 'nx', 'run-many', '--target=build', '--projects=@kimen/tokens,@kimen/elements'],
       { cwd: repositoryRoot, env: isolatedEnvironment },
     );
-    run('npm', ['cache', 'add', '@stencil/core@4.43.5'], {
+    run('npm', ['cache', 'add', `@stencil/core@${elementsStencil}`], {
       cwd: repositoryRoot,
       env: { ...isolatedEnvironment, npm_config_offline: 'false' },
     });
@@ -121,7 +126,7 @@ async function main() {
         'add',
         '--ignore-scripts',
         '--save-exact',
-        '@stencil/core@4.43.5',
+        `@stencil/core@${elementsStencil}`,
       ],
       {
         cwd: repositoryRoot,

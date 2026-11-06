@@ -7,6 +7,12 @@ const releaseWorkflow = await readFile(
   new URL('../../.github/workflows/release.yml', import.meta.url),
   'utf8',
 );
+// The offline consumer installs the packed @kimen/elements, whose only runtime
+// dependency is the exact @stencil/core it declares: the primed stores must
+// hold that version, or a compiler bump breaks the prerelease install.
+const elementsStencil = JSON.parse(
+  await readFile(new URL('../../packages/elements/package.json', import.meta.url), 'utf8'),
+).dependencies['@stencil/core'];
 
 function readJob(source, jobName) {
   const heading = new RegExp(`^  ${jobName}:\\s*$`, 'm').exec(source);
@@ -150,9 +156,8 @@ test('@spec:018-project-integrity-hardening S6 publication needs the complete pr
 
 test('@spec:018-project-integrity-hardening S8 prerelease primes both documented offline installer stores before the consumer runs', () => {
   const browserJob = readJob(releaseWorkflow, 'browser');
-  const npmPrime = 'npm cache add --cache "$consumer_cache/npm" @stencil/core@4.43.5';
-  const pnpmPrime =
-    'XDG_CACHE_HOME="$consumer_cache/xdg" pnpm --dir "$consumer_cache/pnpm-prime" --store-dir "$consumer_cache/pnpm-store" add --ignore-scripts --save-exact @stencil/core@4.43.5';
+  const npmPrime = `npm cache add --cache "$consumer_cache/npm" @stencil/core@${elementsStencil}`;
+  const pnpmPrime = `XDG_CACHE_HOME="$consumer_cache/xdg" pnpm --dir "$consumer_cache/pnpm-prime" --store-dir "$consumer_cache/pnpm-store" add --ignore-scripts --save-exact @stencil/core@${elementsStencil}`;
   const consumer = 'node scripts/consumer-contract.mjs';
 
   assert.match(

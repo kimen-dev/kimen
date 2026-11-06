@@ -222,10 +222,10 @@ jobs:
           mkdir -p "$content" "$metadata" "$consumer_cache/npm" "$consumer_cache/pnpm-store" "$consumer_cache/pnpm-prime" "$consumer_cache/xdg"
           tar -xf "$archive" -C "$content"
           tar -xzf "$content/kimen-elements-$version.tgz" -C "$metadata" package/llms.txt
-          npm cache add --cache "$consumer_cache/npm" @stencil/core@4.43.5
+          npm cache add --cache "$consumer_cache/npm" @stencil/core@4.45.2
           node -e "require('node:fs').writeFileSync(process.argv[1], '{\"name\":\"kimen-pnpm-prime\",\"private\":true}\n')" \
             "$consumer_cache/pnpm-prime/package.json"
-          XDG_CACHE_HOME="$consumer_cache/xdg" pnpm --dir "$consumer_cache/pnpm-prime" --store-dir "$consumer_cache/pnpm-store" add --ignore-scripts --save-exact @stencil/core@4.43.5
+          XDG_CACHE_HOME="$consumer_cache/xdg" pnpm --dir "$consumer_cache/pnpm-prime" --store-dir "$consumer_cache/pnpm-store" add --ignore-scripts --save-exact @stencil/core@4.45.2
           NPM_CONFIG_OFFLINE=true npm_config_offline=true node scripts/consumer-contract.mjs \
             --elements-tarball "$content/kimen-elements-$version.tgz" \
             --tokens-tarball "$content/kimen-tokens-$version.tgz" \
