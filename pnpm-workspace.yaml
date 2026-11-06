@@ -1,7 +1,7 @@
 packages:
-  - "packages/*"
-  - "tools/*"
-  - "site/docs"
+  - 'packages/*'
+  - 'tools/*'
+  - 'site/docs'
 # Transitive dependencies may not be installed from exotic/untrusted sources.
 blockExoticSubdeps: true
 
@@ -117,7 +117,7 @@ trustPolicy: no-downgrade
 # semver@6.3.1: legacy babel/nx transitive, published (2023) after provenance
 # began on the 7.x line, so no-downgrade can never pass for it.
 trustPolicyExclude:
-  - "semver@6.3.1"
+  - 'semver@6.3.1'
 minimumReleaseAgeExclude:
   # Renovate security update: fast-uri@3.1.5
   - fast-uri@3.1.5

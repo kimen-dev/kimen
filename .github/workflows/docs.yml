@@ -33,7 +33,7 @@ jobs:
       # The docs site (@kimen/docs, Astro) builds fully offline: telemetry
       # off, no remote fonts, Pagefind bundled — nothing beyond the npm
       # registry egress already allowed for install.
-      ASTRO_TELEMETRY_DISABLED: "1"
+      ASTRO_TELEMETRY_DISABLED: '1'
       # Production analytics is emitted here and nowhere else. Keyed to the
       # deployment TARGET (branch), not the triggering event: a manual
       # dispatch from main deploys to production exactly like a push does,
@@ -56,6 +56,7 @@ jobs:
             github.com:443
             api.github.com:443
             objects.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
             *.actions.githubusercontent.com:443
             *.blob.core.windows.net:443
             registry.npmjs.org:443
@@ -68,7 +69,7 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version: 26
           cache: pnpm
 
       - name: Install (frozen lockfile)
@@ -77,7 +78,7 @@ jobs:
       - name: Build packages (tokens before elements via Nx graph)
         run: pnpm exec nx run-many -t build
         env:
-          NX_TUI: "false"
+          NX_TUI: 'false'
 
       - name: Build Storybook
         run: pnpm --filter @kimen/elements build-storybook
@@ -127,6 +128,7 @@ jobs:
             github.com:443
             api.github.com:443
             objects.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
             *.actions.githubusercontent.com:443
             *.blob.core.windows.net:443
             registry.npmjs.org:443

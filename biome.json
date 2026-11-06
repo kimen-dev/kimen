@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.4/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -37,6 +37,7 @@
       "!**/.nx/**",
       "!**/*.md",
       "!pnpm-lock.yaml",
+      "!.semgrep/*.vendored.yml",
       "!.specify/**",
       "!.claude/**",
       "!packages/elements/src/components.d.ts",
@@ -51,5 +52,10 @@
       "!changes/api/**/*.json",
       "!nx.json"
     ]
+  },
+  "yaml": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
   }
 }
