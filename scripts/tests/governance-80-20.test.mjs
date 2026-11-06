@@ -38,7 +38,7 @@ test('dependency-only PRs keep one required result and run affected quality', as
   assert.match(workflow, /steps\.scope\.outputs\.scope == 'dependencies'/u);
   assert.match(workflow, /steps\.scope\.outputs\.scope == 'sandbox'/u);
   assert.match(workflow, /steps\.scope\.outputs\.scope == 'workflows'/u);
-  assert.match(dependencyGate, /nx affected -t build/u);
+  assert.match(dependencyGate, /nx run-many -t build/u);
   assert.match(dependencyGate, /nx affected -t test/u);
   assert.match(dependencyGate, /nx affected -t size/u);
   assert.doesNotMatch(dependencyGate, /semgrep-scan/u);
