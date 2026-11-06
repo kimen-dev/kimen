@@ -9,10 +9,10 @@ overrides:
   brace-expansion: 5.0.12
   fast-uri: 4.2.3
   js-yaml: 4.3.2
-  nanoid: 6.0.1
+  nanoid: 6.0.2
   postcss: 8.5.26
   piscina: 5.3.2
-  devalue: 5.9.3
+  devalue: 5.9.4
   follow-redirects: 1.16.2
   probe-image-size: 7.4.0
   smol-toml: 1.9.0
@@ -4576,8 +4576,8 @@ packages:
     engines: {node: '>= 16.0.0'}
     hasBin: true
 
-  devalue@5.9.3:
-    resolution: {integrity: sha512-xRumYOCUZN/EesqHEU3WOXanOZNvfZFZ/o1AHVFDX1yI0UAkZkOgDXt341CzKoBVIkgQba55/+DjGBKrIoKcHw==}
+  devalue@5.9.4:
+    resolution: {integrity: sha512-sPAT4pztbu6586/hrhOnMKS17IJrvg12mXiSPSS3W5qDeN2RGgvZ0diZCm31dBbnevfVmujNO3IM2wrS4Y2Rhg==}
 
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
@@ -5966,8 +5966,8 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
-  nanoid@6.0.1:
-    resolution: {integrity: sha512-3wVS3i51pE2pi1k5FFL/95BGfVS0kSsvDVuGXHOtxox/TywUmtgq+3qiTOTbs9J7KfHaXPiN171k/A6dBnaXFw==}
+  nanoid@6.0.2:
+    resolution: {integrity: sha512-hIvVOb9Qr1p/9CNNLOe0OlWvgx/ziTsVwKN/GDSsuArN2K0wDiafP3s0SWmsm7o2BdnyS8Z9Z64NFBUbn6ziBg==}
     engines: {node: ^22 || ^24 || >=26}
     hasBin: true
 
@@ -10290,7 +10290,7 @@ snapshots:
   '@size-limit/esbuild@13.0.3(size-limit@13.0.3)':
     dependencies:
       esbuild: 0.28.1
-      nanoid: 6.0.1
+      nanoid: 6.0.2
       size-limit: 13.0.3
 
   '@size-limit/file@13.0.3(size-limit@13.0.3)':
@@ -11161,7 +11161,7 @@ snapshots:
       clsx: 2.1.1
       common-ancestor-path: 2.0.0
       cookie: 2.0.1
-      devalue: 5.9.3
+      devalue: 5.9.4
       diff: 9.0.0
       dset: 3.1.4
       es-module-lexer: 2.3.2
@@ -11759,7 +11759,7 @@ snapshots:
     dependencies:
       address: 2.0.3
 
-  devalue@5.9.3: {}
+  devalue@5.9.4: {}
 
   devlop@1.1.0:
     dependencies:
@@ -13393,7 +13393,7 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  nanoid@6.0.1: {}
+  nanoid@6.0.2: {}
 
   nanospinner@1.2.2:
     dependencies:
@@ -13995,7 +13995,7 @@ snapshots:
 
   postcss@8.5.26:
     dependencies:
-      nanoid: 6.0.1
+      nanoid: 6.0.2
       picocolors: 1.1.1
       source-map-js: 1.2.2
 
