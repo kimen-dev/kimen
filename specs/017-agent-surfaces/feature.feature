@@ -40,3 +40,11 @@ Feature: Agent surfaces
     Given machine surfaces freshly generated from the current contract
     When the surfaces are regenerated from a checkout at a different filesystem path
     Then both generated outputs are byte-identical
+
+  # S7
+  Scenario: A slot the component fills itself stays out of the agent surfaces
+    Given a component that renders a named slot it fills with its own children
+    And the slot is declared as managed output with a reason instead of documented as public
+    When the machine surfaces are generated
+    Then the generation passes and neither the manifest nor the summary lists that slot
+    And a rendered named slot that is neither documented nor declared still fails the generation

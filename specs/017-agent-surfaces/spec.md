@@ -159,13 +159,21 @@ Feature: Agent surfaces
     Given machine surfaces freshly generated from the current contract
     When the surfaces are regenerated from a checkout at a different filesystem path
     Then both generated outputs are byte-identical
+
+  # S7
+  Scenario: A slot the component fills itself stays out of the agent surfaces
+    Given a component that renders a named slot it fills with its own children
+    And the slot is declared as managed output with a reason instead of documented as public
+    When the machine surfaces are generated
+    Then the generation passes and neither the manifest nor the summary lists that slot
+    And a rendered named slot that is neither documented nor declared still fails the generation
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7 | |
 | Keyboard path | | N/A — generated artifacts; no interactive surface exists |
 | Assistive-tech outcome | | N/A — no rendered UI; the artifacts serve machine consumers |
 | Form participation | | N/A — no form surface; nothing is form-associated |
@@ -217,6 +225,13 @@ Feature: Agent surfaces
   custom-elements manifest → llms.txt, with the Zod catalog explicitly
   annotated as Fase 3 — so the 003–016 stories inherit a satisfiable
   obligation.
+- **FR-010**: A named slot that the component fills itself (group-managed
+  output such as `ki-tabs`' auto-assigned `tab` slot, non-API per spec 014)
+  MUST be declared with a `@managedSlot <name> - <reason>` JSDoc tag and is
+  then excluded from every generated surface. A malformed declaration, or one
+  naming a slot also documented with `@slot`, MUST fail the generation; any
+  other listed slot without documentation still fails it (Stencil ≥ 4.45 lists
+  every named `<slot>` that `render()` returns).
 - **FR-007**: New components scaffolded by the Nx generator MUST inherit
   the surfaces with zero per-component wiring.
 

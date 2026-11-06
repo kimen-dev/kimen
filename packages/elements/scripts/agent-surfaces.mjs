@@ -29,6 +29,14 @@ export function normalizeDocs(docs, options = {}) {
         }
       }
     }
+
+    // Stencil 4.45 lists every named <slot> render() returns, documented or
+    // not. A slot the component fills itself (`@managedSlot`) is not authoring
+    // surface, so it never reaches the manifest, llms.txt or the catalog.
+    const managed = new Set(managedSlotsFor(component).map((slot) => slot.name));
+    if (managed.size > 0 && Array.isArray(component.slots)) {
+      component.slots = component.slots.filter((slot) => !managed.has(slot.name));
+    }
   }
 
   return normalized;
@@ -89,6 +97,26 @@ export function validateDocs(docs) {
     for (const method of component.methods ?? []) {
       if (isBlank(method.docs)) {
         violations.push(`${tag}.${method.name}: method has no documentation`);
+      }
+    }
+
+    const publicSlots = new Set(
+      (component.docsTags ?? [])
+        .filter((docsTag) => docsTag.name === 'slot' && !isBlank(docsTag.text))
+        .map((docsTag) => /^(\S+)\s+-/u.exec(docsTag.text.trim())?.[1])
+        .filter((name) => name !== undefined && name !== '-'),
+    );
+    for (const docsTag of component.docsTags ?? []) {
+      if (docsTag.name !== 'managedSlot' || isBlank(docsTag.text)) {
+        continue;
+      }
+      const managedSlot = parseManagedSlotTag(docsTag.text);
+      if (managedSlot === null) {
+        violations.push(`${tag}.@managedSlot: expected "<slot-name> - <reason>"`);
+      } else if (publicSlots.has(managedSlot.name)) {
+        violations.push(
+          `${tag}.@managedSlot ${managedSlot.name}: slot is also documented as public with @slot`,
+        );
       }
     }
 
@@ -524,6 +552,24 @@ function nativeEventsFor(component) {
     .filter((docsTag) => docsTag.name === 'event' && !isBlank(docsTag.text))
     .map((docsTag) => parseNativeEventTag(docsTag.text))
     .filter((event) => event !== null);
+}
+
+// A named slot the component fills itself (ki-tabs stamps `slot="tab"` on
+// its ki-tab children) is coordination, not API (spec 014). It is declared
+// with `@managedSlot <name> - <reason>` so it is excluded on purpose: an
+// undeclared slot without `@slot` documentation still fails the build.
+const MANAGED_SLOT_TAG = /^([a-z][a-z0-9-]*)\s+-\s+(\S[\s\S]*)$/u;
+
+function parseManagedSlotTag(text) {
+  const match = MANAGED_SLOT_TAG.exec(text.trim());
+  return match === null ? null : { name: match[1], reason: match[2] };
+}
+
+function managedSlotsFor(component) {
+  return (component.docsTags ?? [])
+    .filter((docsTag) => docsTag.name === 'managedSlot' && !isBlank(docsTag.text))
+    .map((docsTag) => parseManagedSlotTag(docsTag.text))
+    .filter((slot) => slot !== null);
 }
 
 function getDocsTag(component, name) {
