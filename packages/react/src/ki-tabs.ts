@@ -7,21 +7,24 @@
 
 /* eslint-disable */
 
-import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
-import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
+import { createComponent } from '@stencil/react-output-target/runtime';
+import type { Components } from '@kimen/elements/components';
+import { KiTabs as KiTabsElement, defineCustomElement as defineKiTabs } from '@kimen/elements/components/ki-tabs.js';
+import type { KiTabsCustomEvent } from '@kimen/elements';
+import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
 
-import { type KiTabsCustomEvent } from "@kimen/elements";
-import type { Components } from "@kimen/elements/components";
-import { KiTabs as KiTabsElement, defineCustomElement as defineKiTabs } from "@kimen/elements/components/ki-tabs.js";
-
-export type KiTabsEvents = { onKiChange: EventName<KiTabsCustomEvent<{ value: string }>> };
+export type KiTabsEvents = {
+  onKiChange: EventName<KiTabsCustomEvent<{ value: string }>>
+};
 
 export const KiTabs: StencilReactComponent<KiTabsElement, KiTabsEvents, Components.KiTabs> = /*@__PURE__*/ createComponent<KiTabsElement, KiTabsEvents, Components.KiTabs>({
     tagName: 'ki-tabs',
     elementClass: KiTabsElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: { onKiChange: 'ki-change' } as KiTabsEvents,
-    defineCustomElement: defineKiTabs
+    events: {
+      onKiChange: 'ki-change'
+    } as KiTabsEvents,
+    defineCustomElement: defineKiTabs,
 });

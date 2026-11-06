@@ -7,21 +7,24 @@
 
 /* eslint-disable */
 
-import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
-import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
+import { createComponent } from '@stencil/react-output-target/runtime';
+import type { Components } from '@kimen/elements/components';
+import { KiAlert as KiAlertElement, defineCustomElement as defineKiAlert } from '@kimen/elements/components/ki-alert.js';
+import type { KiAlertCustomEvent } from '@kimen/elements';
+import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
 
-import { type KiAlertCustomEvent } from "@kimen/elements";
-import type { Components } from "@kimen/elements/components";
-import { KiAlert as KiAlertElement, defineCustomElement as defineKiAlert } from "@kimen/elements/components/ki-alert.js";
-
-export type KiAlertEvents = { onKiDismiss: EventName<KiAlertCustomEvent<null>> };
+export type KiAlertEvents = {
+  onKiDismiss: EventName<KiAlertCustomEvent<null>>
+};
 
 export const KiAlert: StencilReactComponent<KiAlertElement, KiAlertEvents, Components.KiAlert> = /*@__PURE__*/ createComponent<KiAlertElement, KiAlertEvents, Components.KiAlert>({
     tagName: 'ki-alert',
     elementClass: KiAlertElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: { onKiDismiss: 'ki-dismiss' } as KiAlertEvents,
-    defineCustomElement: defineKiAlert
+    events: {
+      onKiDismiss: 'ki-dismiss'
+    } as KiAlertEvents,
+    defineCustomElement: defineKiAlert,
 });

@@ -7,12 +7,11 @@
 
 /* eslint-disable */
 
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
-import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
-
-import type { Components } from "@kimen/elements/components";
-import { KiOption as KiOptionElement, defineCustomElement as defineKiOption } from "@kimen/elements/components/ki-option.js";
+import { createComponent } from '@stencil/react-output-target/runtime';
+import type { Components } from '@kimen/elements/components';
+import { KiOption as KiOptionElement, defineCustomElement as defineKiOption } from '@kimen/elements/components/ki-option.js';
+import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
 
 export type KiOptionEvents = NonNullable<unknown>;
 
@@ -22,5 +21,5 @@ export const KiOption: StencilReactComponent<KiOptionElement, KiOptionEvents, Co
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
     events: {} as KiOptionEvents,
-    defineCustomElement: defineKiOption
+    defineCustomElement: defineKiOption,
 });

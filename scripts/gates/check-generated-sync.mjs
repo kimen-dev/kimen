@@ -58,6 +58,7 @@ const wrappers = Object.freeze([
   'packages/react/src/index.ts',
   ...wrapperTags.map((tag) => `packages/vue/src/${tag}.ts`),
   'packages/vue/src/index.ts',
+  'packages/angular/src/directives/angular-component-lib/boolean-attribute.ts',
   'packages/angular/src/directives/angular-component-lib/utils.ts',
   'packages/angular/src/directives/boolean-value-accessor.ts',
   'packages/angular/src/directives/index.ts',
