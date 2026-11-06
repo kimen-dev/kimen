@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@kimen/elements": "workspace:*",
-    "@stencil/vue-output-target": "0.14.1"
+    "@stencil/vue-output-target": "0.14.7"
   },
   "peerDependencies": {
     "vue": ">=3.4.38",
