@@ -49,7 +49,12 @@ nx_graph() {
 run_dependency_gate workflows pnpm run check:workflows
 run_dependency_gate format pnpm run format:check
 run_dependency_gate nx-graph nx_graph
-run_dependency_gate build pnpm exec nx affected -t build --base="$BASE_SHA" --head="$HEAD_SHA" --nxBail=true
+# Build every project, not only the affected ones: the repository-wide gates
+# below (generated sync, public API, type-aware lint, typecheck, deadcode) read
+# each workspace package through its dist types, so a dependency update that
+# does not touch @kimen/catalog would otherwise lint its importers against a
+# missing dist. Affected tests and budgets reuse these builds through Nx.
+run_dependency_gate build pnpm exec nx run-many -t build
 run_dependency_gate tokens-sync node scripts/gates/check-generated-sync.mjs tokens
 run_dependency_gate surfaces-sync node scripts/gates/check-generated-sync.mjs surfaces
 run_dependency_gate catalog-sync node scripts/gates/check-generated-sync.mjs catalog
