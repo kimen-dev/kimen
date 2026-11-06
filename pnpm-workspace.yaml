@@ -67,7 +67,7 @@ overrides:
   # GHSA-mcm9-63f2-9j32, GHSA-r9w8-h9r3-54w4, GHSA-x5rw-q4pp-hg5g,
   # GHSA-j22f-vq7h-c4qm (High) and four Medium/Low, via astro (^5.8.1),
   # 5.9.0 → 5.9.3.
-  devalue: 5.9.4
+  devalue: 6.0.3
   # GHSA-8r9p-f939-6h3c, GHSA-mrwp-f3q8-3g9p, GHSA-q3jh-wrc6-jgq8, via axios
   # and nx (^1.16.0), 1.16.0 → 1.16.2.
   follow-redirects: 1.16.2
