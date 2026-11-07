@@ -48,7 +48,8 @@
     ]
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "13.1.1",
-    "size-limit": "13.1.1"
+    "@size-limit/esbuild": "14.3.0",
+    "@size-limit/file": "14.3.0",
+    "size-limit": "14.3.0"
   }
 }
