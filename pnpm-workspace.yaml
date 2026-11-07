@@ -10,7 +10,7 @@ blockExoticSubdeps: true
 # malicious releases are usually caught within days.
 minimumReleaseAge: 10080
 
-# pnpm 11 fails closed when dependency build scripts have not been reviewed.
+# pnpm (since 11) fails closed when dependency build scripts have not been reviewed.
 # These exact versions need their native binaries for the Nx graph and
 # esbuild-backed tooling; every future version must be approved separately.
 allowBuilds:

@@ -498,7 +498,7 @@ export KIMEN_CACHE_ROOT
 
 select_directory NPM_CONFIG_CACHE "$KIMEN_CACHE_ROOT/npm/cache"
 select_directory NPM_CONFIG_STORE_DIR "$KIMEN_CACHE_ROOT/pnpm/store"
-# pnpm 11 reads its own configuration names; replace both inherited spellings.
+# pnpm (since 11) reads its own configuration names; replace both inherited spellings.
 export PNPM_CONFIG_STORE_DIR="$NPM_CONFIG_STORE_DIR"
 export pnpm_config_store_dir="$NPM_CONFIG_STORE_DIR"
 select_empty_file NPM_CONFIG_USERCONFIG "$KIMEN_CACHE_ROOT/npm/userconfig"

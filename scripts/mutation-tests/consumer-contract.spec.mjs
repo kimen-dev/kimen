@@ -810,7 +810,7 @@ describe('packed consumer mutation boundary', () => {
         ({ env }) =>
           env.NPM_CONFIG_STORE_DIR === join(options['cache-dir'], 'pnpm-store') &&
           env.npm_config_store_dir === join(options['cache-dir'], 'pnpm-store') &&
-          // pnpm 11 reads only its own spellings, and an inherited one wins.
+          // pnpm (since 11) reads only its own spellings, and an inherited one wins.
           env.PNPM_CONFIG_STORE_DIR === join(options['cache-dir'], 'pnpm-store') &&
           env.pnpm_config_store_dir === join(options['cache-dir'], 'pnpm-store'),
       ),
