@@ -356,8 +356,19 @@ describe('capability file and evidence mutation boundary', () => {
     });
 
     expect(output).toHaveLength(4);
-    expect(output.join('')).toMatch(/claims, 8 synchronized destinations/iu);
-    expect(output.join('')).toMatch(/PASS \(web-components-foundation\)/u);
+    // Counted from the manifest the gate reads, never a copy: a literal 8 here
+    // went stale when #150 added the emitter-readme-status destination.
+    expect(output.join('')).toContain(
+      `${String(manifest.capabilities.length)} claims, ${String(manifest.destinations.length)} synchronized destinations`,
+    );
+    // Every available claim in the manifest, in the gate's id order: the
+    // literal it replaces named only web-components-foundation and went stale
+    // when #57 made runtime-catalog available.
+    const available = manifest.capabilities
+      .filter((capability) => capability.state === 'available')
+      .map((capability) => capability.id)
+      .sort((left, right) => left.localeCompare(right));
+    expect(output.join('')).toContain(`capability claims: PASS (${available.join(', ')})`);
   });
 
   it('S13 filters current-run TSV to mandatory gates and rejects malformed or conflicting rows', () => {

@@ -170,6 +170,12 @@ it('writes the complete component inventory as JSON when requested', async () =>
 
 const git = (root, ...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8' });
 
+// Counts and group names come from the gate's own contract, never a copy of
+// it: a literal here drifted twice (#63 added base.css to the tokens group,
+// #150 added the wrappers group) while the gate stayed correct.
+const tokenOutputs = generatedGroups.tokens.required.length;
+const groupNames = Object.keys(generatedGroups);
+
 async function generatedRepository(group = 'tokens') {
   const root = await temporaryDirectory('kimen-gate-cli-generated-');
   git(root, 'init', '--quiet');
@@ -183,12 +189,15 @@ async function generatedRepository(group = 'tokens') {
 
 it('accepts exactly the tracked, declared, byte-clean generated group', async () => {
   const root = await generatedRepository('tokens');
-  expect(validateGeneratedSync({ root, group: 'tokens' })).toEqual({ group: 'tokens', files: 6 });
+  expect(validateGeneratedSync({ root, group: 'tokens' })).toEqual({
+    group: 'tokens',
+    files: tokenOutputs,
+  });
 });
 
 it('rejects an unknown generated group', () => {
   expect(() => validateGeneratedSync({ root: '/workspace', group: 'unknown' })).toThrowError(
-    'generated sync group must be tokens, surfaces or catalog; received unknown',
+    `generated sync group must be ${groupNames.slice(0, -1).join(', ')} or ${String(groupNames.at(-1))}; received unknown`,
   );
 });
 
@@ -256,15 +265,15 @@ it('writes the generated sync CLI summary', () => {
       stdout: { write: (value) => output.push(value) },
       executeGit,
     }),
-  ).toEqual({ group: 'tokens', files: 6 });
-  expect(output).toEqual(['PASS generated-sync tokens: 6 tracked files\n']);
+  ).toEqual({ group: 'tokens', files: tokenOutputs });
+  expect(output).toEqual([`PASS generated-sync tokens: ${String(tokenOutputs)} tracked files\n`]);
 });
 
 it.each([[], ['tokens', 'surfaces']])(
   'rejects invalid generated sync CLI arity %#',
   (arguments_) => {
     expect(() => runGeneratedSyncCli({ arguments_ })).toThrowError(
-      'usage: check-generated-sync.mjs <tokens|surfaces|catalog>',
+      `usage: check-generated-sync.mjs <${groupNames.join('|')}>`,
     );
   },
 );
@@ -307,6 +316,9 @@ it('runs package lint and every exact ATTW surface from the source inventory', a
     ['pnpm', ['exec', 'publint', 'packages/elements'], '/workspace'],
     ['pnpm', ['exec', 'publint', 'packages/catalog'], '/workspace'],
     ['pnpm', ['exec', 'publint', 'packages/kimen'], '/workspace'],
+    ['pnpm', ['exec', 'publint', 'packages/emitter'], '/workspace'],
+    ['pnpm', ['exec', 'publint', 'packages/adapter-a2ui'], '/workspace'],
+    ['pnpm', ['exec', 'publint', 'packages/adapter-mcp-apps'], '/workspace'],
     [
       'pnpm',
       [
@@ -338,6 +350,17 @@ it('runs package lint and every exact ATTW surface from the source inventory', a
       '/workspace',
     ],
     ['pnpm', ['exec', 'attw', '--pack', 'packages/catalog', '--profile', 'esm-only'], '/workspace'],
+    ['pnpm', ['exec', 'attw', '--pack', 'packages/emitter', '--profile', 'esm-only'], '/workspace'],
+    [
+      'pnpm',
+      ['exec', 'attw', '--pack', 'packages/adapter-a2ui', '--profile', 'esm-only'],
+      '/workspace',
+    ],
+    [
+      'pnpm',
+      ['exec', 'attw', '--pack', 'packages/adapter-mcp-apps', '--profile', 'esm-only'],
+      '/workspace',
+    ],
     [
       'pnpm',
       [

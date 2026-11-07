@@ -14,6 +14,7 @@ import {
   resolveComponentSubpaths,
   validateLegacyRootContract,
   validatePackageExportContract,
+  WRAPPER_CONTRACT_EVENT_TYPES,
 } from '../lib/component-inventory.mjs';
 
 // @spec:018-project-integrity-hardening
@@ -331,7 +332,10 @@ describe('component inventory mutation boundary', () => {
 
     expect(characterization.values).toHaveLength(20);
     expect(characterization.typeStars).toHaveLength(0);
-    expect(characterization.namedTypes).toHaveLength(12);
+    // The frozen facade keeps its 12 named types; spec 034 (#150) added the
+    // wrapper-contract event types beside them as a category of their own,
+    // counted from the same list the validator enforces.
+    expect(characterization.namedTypes).toHaveLength(12 + WRAPPER_CONTRACT_EVENT_TYPES.length);
     expect(validateLegacyRootContract(rootSource)).toEqual(FROZEN_LEGACY_ROOT);
     // The root stays frozen at 20 while the direct-subpath inventory grows:
     // Fase N wave 1 adds ki-divider, ki-status, ki-icon-button and the
@@ -381,6 +385,15 @@ describe('component inventory mutation boundary', () => {
       './ki-*': {
         types: './dist/components/ki-*.d.ts',
         import: './dist/components/ki-*.js',
+      },
+      // The two generated-wrapper resolution subpaths (spec 034, #150).
+      './components': {
+        types: './dist/types/components.d.ts',
+        import: './dist/components/index.js',
+      },
+      './components/*.js': {
+        types: './dist/components/*.d.ts',
+        import: './dist/components/*.js',
       },
     };
 
