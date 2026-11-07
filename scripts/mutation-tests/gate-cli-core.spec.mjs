@@ -14,6 +14,7 @@ import {
 } from '../gates/check-component-inventory.mjs';
 import {
   generatedGroups,
+  generatedOutputs,
   runGeneratedSyncCli,
   validateGeneratedSync,
 } from '../gates/check-generated-sync.mjs';
@@ -193,6 +194,38 @@ it('accepts exactly the tracked, declared, byte-clean generated group', async ()
     group: 'tokens',
     files: tokenOutputs,
   });
+});
+
+it('declares every hand-written entry as a required output of its own group', () => {
+  for (const [group, contract] of Object.entries(generatedGroups)) {
+    for (const path of contract.handWritten) {
+      expect(contract.required, `${group} hand-written ${path}`).toContain(path);
+    }
+  }
+  expect(generatedGroups.wrappers.handWritten).toEqual([
+    'packages/angular/src/index.ts',
+    'packages/react/src/index.ts',
+  ]);
+});
+
+it('derives generated outputs from every group minus its hand-written shells', () => {
+  const declared = Object.values(generatedGroups).flatMap(({ required }) => required);
+
+  expect(generatedOutputs).toHaveLength(
+    declared.length - generatedGroups.wrappers.handWritten.length,
+  );
+  expect(generatedOutputs).toEqual(
+    expect.arrayContaining([
+      generatedGroups.tokens.required[0],
+      'llms.txt',
+      'packages/catalog/src/generated/catalog.ts',
+      'packages/react/src/components.ts',
+      'packages/angular/src/directives/proxies.ts',
+    ]),
+  );
+  expect(generatedOutputs).not.toContain('packages/react/src/index.ts');
+  expect(generatedOutputs).not.toContain('packages/angular/src/index.ts');
+  expect(Object.isFrozen(generatedOutputs)).toBe(true);
 });
 
 it('rejects an unknown generated group', () => {

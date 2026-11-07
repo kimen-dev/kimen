@@ -29,7 +29,8 @@ const catalog = Object.freeze(['packages/catalog/src/generated/catalog.ts']);
  * (spec 034, Art. I: one derivation source) — per-component modules for the
  * React and Vue wrappers, the proxies/accessors set for Angular, plus the
  * hand-written entry shells (tracked and clean like everything else under
- * the scopes; regeneration never touches them).
+ * the scopes; regeneration never touches them, so each group names them in
+ * `handWritten` and `generatedOutputs` leaves them out).
  */
 const wrapperTags = (() => {
   const manifest = JSON.parse(
@@ -52,10 +53,14 @@ const wrapperTags = (() => {
   return tags.sort();
 })();
 
+const wrapperShells = Object.freeze([
+  'packages/angular/src/index.ts',
+  'packages/react/src/index.ts',
+]);
+
 const wrappers = Object.freeze([
   ...wrapperTags.map((tag) => `packages/react/src/${tag}.ts`),
   'packages/react/src/components.ts',
-  'packages/react/src/index.ts',
   ...wrapperTags.map((tag) => `packages/vue/src/${tag}.ts`),
   'packages/vue/src/index.ts',
   'packages/angular/src/directives/angular-component-lib/boolean-attribute.ts',
@@ -66,16 +71,18 @@ const wrappers = Object.freeze([
   'packages/angular/src/directives/select-value-accessor.ts',
   'packages/angular/src/directives/text-value-accessor.ts',
   'packages/angular/src/directives/value-accessor.ts',
-  'packages/angular/src/index.ts',
+  ...wrapperShells,
 ]);
 
 export const generatedGroups = Object.freeze({
   tokens: Object.freeze({
     required: tokens,
+    handWritten: Object.freeze([]),
     scopes: Object.freeze(['packages/tokens/dist/css']),
   }),
   surfaces: Object.freeze({
     required: surfaces,
+    handWritten: Object.freeze([]),
     scopes: Object.freeze([
       'llms.txt',
       'packages/elements/generated',
@@ -84,13 +91,27 @@ export const generatedGroups = Object.freeze({
   }),
   catalog: Object.freeze({
     required: catalog,
+    handWritten: Object.freeze([]),
     scopes: Object.freeze(['packages/catalog/src/generated']),
   }),
   wrappers: Object.freeze({
     required: wrappers,
+    handWritten: wrapperShells,
     scopes: Object.freeze(['packages/react/src', 'packages/vue/src', 'packages/angular/src']),
   }),
 });
+
+/**
+ * Every tracked file the generation pipeline writes: each group's required
+ * outputs minus its hand-written entries. Anything that must treat generated
+ * code differently (the mutation scope) derives from this list rather than a
+ * copy, so an output declared here is covered the day it is declared.
+ */
+export const generatedOutputs = Object.freeze(
+  Object.values(generatedGroups).flatMap(({ required, handWritten }) =>
+    required.filter((path) => !handWritten.includes(path)),
+  ),
+);
 
 function git(root, args, { allowFailure = false } = {}) {
   const result = spawnSync('git', args, {
