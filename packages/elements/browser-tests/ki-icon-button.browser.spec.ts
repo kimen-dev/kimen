@@ -1,5 +1,5 @@
 import axe from 'axe-core';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:022-ki-icon-button
@@ -10,6 +10,10 @@ import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-icon-button.js';
 import { expectAccessible, parkPointer } from './axe';
+
+const browserCommands = commands as unknown as {
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
+};
 
 type KiIconButtonElement = HTMLElement & {
   disabled: boolean;
@@ -190,6 +194,80 @@ function readTokenColor(name: string): string {
  */
 function paintedState(el: Element): 'hover' | 'rest' {
   return el.matches(':hover') && matchMedia('(hover: hover)').matches ? 'hover' : 'rest';
+}
+
+const PRESS_HOLD_MS = 500;
+
+interface PressedGround {
+  readonly ground: Readonly<Record<string, string>>;
+  readonly shadow: string;
+  readonly state: { focusRing: boolean; hovered: boolean; pressed: boolean };
+}
+
+function readPressedGround(el: KiIconButtonElement, button: HTMLButtonElement): PressedGround {
+  const style = getComputedStyle(button);
+  return {
+    ground: {
+      background: style.backgroundColor,
+      overlay: style.backgroundImage,
+      color: style.color,
+      borderBlockStart: style.borderBlockStartColor,
+      borderBlockEnd: style.borderBlockEndColor,
+      borderInlineStart: style.borderInlineStartColor,
+      borderInlineEnd: style.borderInlineEndColor,
+    },
+    shadow: style.boxShadow,
+    state: {
+      focusRing: button.matches(':focus-visible'),
+      hovered: el.matches(':hover'),
+      pressed: button.matches(':active'),
+    },
+  };
+}
+
+async function nextFrames(count: number): Promise<void> {
+  for (let index = 0; index < count; index += 1) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+}
+
+/** Read the icon button while a real mouse button is held down over it. */
+async function holdWithPointer(
+  el: KiIconButtonElement,
+  button: HTMLButtonElement,
+): Promise<PressedGround> {
+  const down = new Promise<void>((resolve) => {
+    button.addEventListener(
+      'pointerdown',
+      () => {
+        resolve();
+      },
+      { once: true },
+    );
+  });
+  // Vitest starts a userEvent action only once it is awaited or chained;
+  // chaining starts the press without waiting for its release, so the state
+  // can be read while the mouse button is still down.
+  const release = userEvent.click(button, { delay: PRESS_HOLD_MS }).then(() => undefined);
+  await Promise.race([down, release]);
+  await nextFrames(2);
+  const held = readPressedGround(el, button);
+  await release;
+  return held;
+}
+
+/** Read the icon button while Space is held on it. */
+async function holdWithKeyboard(
+  el: KiIconButtonElement,
+  button: HTMLButtonElement,
+): Promise<PressedGround> {
+  button.focus();
+  // `{ >}` holds the key down; the matching `{/ }` releases it.
+  await userEvent.keyboard('{ >}');
+  await nextFrames(2);
+  const held = readPressedGround(el, button);
+  await userEvent.keyboard('{/ }');
+  return held;
 }
 
 describe('ki-icon-button in a real browser', () => {
@@ -583,4 +661,59 @@ describe('ki-icon-button in a real browser', () => {
     expect(focusedShadow, 'focused stack is the ring alone').toBe(ringOnly);
     expect(focusedShadow, 'variant elevation dropped while focused').not.toBe(restShadow);
   });
+
+  /**
+   * Issue #71, same contract as ki-button: pressed paints over the RESTING
+   * appearance whatever the input (Material 3: one state layer at a time,
+   * pressed replaces hover). The keyboard path always wears the focus ring,
+   * which replaces the whole box-shadow, so the shadow is held against the
+   * resting one — the elevation a keyboard press keeps under its ring.
+   * Discriminating only where hover paint exists (`@media (hover: hover)`);
+   * on an engine with no hovering pointer both paths already paint from rest.
+   */
+  it.each(variants.flatMap((variant) => tones.map((tone) => [variant, tone] as const)))(
+    'a pointer press and a keyboard press paint the same resting ground: %s %s (#71)',
+    async (variant, tone) => {
+      cleanup();
+      // No transitions: every read below is a final frame, not a tween.
+      await browserCommands.emulateReducedMotion('reduce');
+      try {
+        const el = await mount('Close', { variant, tone });
+        const button = requireButton(el);
+        await waitForStyles();
+        const rest = readPressedGround(el, button);
+
+        const pointer = await holdWithPointer(el, button);
+        await parkPointer();
+        const keyboard = await holdWithKeyboard(el, button);
+
+        const cell = `${variant} ${tone}`;
+        expect(rest.state, `${cell}: the resting read was not at rest`).toEqual({
+          focusRing: false,
+          hovered: false,
+          pressed: false,
+        });
+        expect(pointer.state, `${cell}: the pointer read was not a held, hovered press`).toEqual({
+          focusRing: false,
+          hovered: true,
+          pressed: true,
+        });
+        expect(keyboard.state, `${cell}: the keyboard read was not a held press`).toEqual({
+          focusRing: true,
+          hovered: false,
+          pressed: true,
+        });
+        expect(
+          pointer.ground,
+          `${cell}: a pointer press composes over the hover appearance, a keyboard press over rest`,
+        ).toEqual(keyboard.ground);
+        expect(
+          pointer.shadow,
+          `${cell}: a pointer press keeps the hover elevation instead of the resting one`,
+        ).toBe(rest.shadow);
+      } finally {
+        await browserCommands.emulateReducedMotion(null);
+      }
+    },
+  );
 });

@@ -1,4 +1,4 @@
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 // @spec:002-ki-button
@@ -8,7 +8,11 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-button.js';
-import { expectAccessible } from './axe';
+import { expectAccessible, parkPointer } from './axe';
+
+const browserCommands = commands as unknown as {
+  emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
+};
 
 type KiButtonElement = HTMLElement & {
   disabled: boolean;
@@ -122,6 +126,80 @@ function readTokenColor(name: string): string {
  */
 function paintedState(el: Element): 'hover' | 'rest' {
   return el.matches(':hover') && matchMedia('(hover: hover)').matches ? 'hover' : 'rest';
+}
+
+const PRESS_HOLD_MS = 500;
+
+interface PressedGround {
+  readonly ground: Readonly<Record<string, string>>;
+  readonly shadow: string;
+  readonly state: { focusRing: boolean; hovered: boolean; pressed: boolean };
+}
+
+function readPressedGround(el: KiButtonElement, button: HTMLButtonElement): PressedGround {
+  const style = getComputedStyle(button);
+  return {
+    ground: {
+      background: style.backgroundColor,
+      overlay: style.backgroundImage,
+      color: style.color,
+      borderBlockStart: style.borderBlockStartColor,
+      borderBlockEnd: style.borderBlockEndColor,
+      borderInlineStart: style.borderInlineStartColor,
+      borderInlineEnd: style.borderInlineEndColor,
+    },
+    shadow: style.boxShadow,
+    state: {
+      focusRing: button.matches(':focus-visible'),
+      hovered: el.matches(':hover'),
+      pressed: button.matches(':active'),
+    },
+  };
+}
+
+async function nextFrames(count: number): Promise<void> {
+  for (let index = 0; index < count; index += 1) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+}
+
+/** Read the button while a real mouse button is held down over it. */
+async function holdWithPointer(
+  el: KiButtonElement,
+  button: HTMLButtonElement,
+): Promise<PressedGround> {
+  const down = new Promise<void>((resolve) => {
+    button.addEventListener(
+      'pointerdown',
+      () => {
+        resolve();
+      },
+      { once: true },
+    );
+  });
+  // Vitest starts a userEvent action only once it is awaited or chained;
+  // chaining starts the press without waiting for its release, so the state
+  // can be read while the mouse button is still down.
+  const release = userEvent.click(button, { delay: PRESS_HOLD_MS }).then(() => undefined);
+  await Promise.race([down, release]);
+  await nextFrames(2);
+  const held = readPressedGround(el, button);
+  await release;
+  return held;
+}
+
+/** Read the button while Space is held on it. */
+async function holdWithKeyboard(
+  el: KiButtonElement,
+  button: HTMLButtonElement,
+): Promise<PressedGround> {
+  button.focus();
+  // `{ >}` holds the key down; the matching `{/ }` releases it.
+  await userEvent.keyboard('{ >}');
+  await nextFrames(2);
+  const held = readPressedGround(el, button);
+  await userEvent.keyboard('{/ }');
+  return held;
 }
 
 describe('ki-button in a real browser', () => {
@@ -598,4 +676,68 @@ describe('ki-button in a real browser', () => {
       );
     }
   });
+
+  /**
+   * Issue #71: pressed paints over the RESTING appearance whatever the input,
+   * the Material 3 rule of one state layer at a time — pressed replaces hover,
+   * it does not stack on it. A pointer press used to keep the hover fill,
+   * text, border and shadow underneath the pressed overlay, while the same
+   * press from the keyboard (or a touch screen) composed over rest, so one
+   * button looked two ways while held.
+   *
+   * The keyboard path always wears the focus ring, and the ring replaces the
+   * whole box-shadow (Figma focus column), so the shadow is held against the
+   * resting one instead: that is the elevation a keyboard press keeps under
+   * its ring.
+   *
+   * Discriminating only where hover paint exists: hover lives behind
+   * `@media (hover: hover)`, and on an engine that reports no hovering pointer
+   * (headless CI) both paths already paint from rest.
+   */
+  it.each(variants.flatMap((variant) => tones.map((tone) => [variant, tone] as const)))(
+    'a pointer press and a keyboard press paint the same resting ground: %s %s (#71)',
+    async (variant, tone) => {
+      cleanup();
+      // No transitions: every read below is a final frame, not a tween.
+      await browserCommands.emulateReducedMotion('reduce');
+      try {
+        const el = await mount('Save', { variant, tone, type: 'button' });
+        const button = requireButton(el);
+        await parkPointer();
+        await waitForStyles();
+        const rest = readPressedGround(el, button);
+
+        const pointer = await holdWithPointer(el, button);
+        await parkPointer();
+        const keyboard = await holdWithKeyboard(el, button);
+
+        const cell = `${variant} ${tone}`;
+        expect(rest.state, `${cell}: the resting read was not at rest`).toEqual({
+          focusRing: false,
+          hovered: false,
+          pressed: false,
+        });
+        expect(pointer.state, `${cell}: the pointer read was not a held, hovered press`).toEqual({
+          focusRing: false,
+          hovered: true,
+          pressed: true,
+        });
+        expect(keyboard.state, `${cell}: the keyboard read was not a held press`).toEqual({
+          focusRing: true,
+          hovered: false,
+          pressed: true,
+        });
+        expect(
+          pointer.ground,
+          `${cell}: a pointer press composes over the hover appearance, a keyboard press over rest`,
+        ).toEqual(keyboard.ground);
+        expect(
+          pointer.shadow,
+          `${cell}: a pointer press keeps the hover elevation instead of the resting one`,
+        ).toBe(rest.shadow);
+      } finally {
+        await browserCommands.emulateReducedMotion(null);
+      }
+    },
+  );
 });
