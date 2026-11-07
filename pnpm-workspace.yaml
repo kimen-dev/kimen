@@ -25,6 +25,11 @@ allowBuilds:
   # post-install require), and both cleared minimumReleaseAge.
   'esbuild@0.28.2': true
   'nx@23.3.1': true
+  # Nx 24 major, reviewed for its Renovate PR: the postinstall command is
+  # byte-for-byte the approved one; dist/bin/post-install.js only changes how
+  # it detects the workspace's own nx copy (Nx Cloud steps stay off here,
+  # nx.json has no cloud config), and 24.0.3 cleared minimumReleaseAge.
+  'nx@24.0.3': true
 
 # Resolution pins. These live here and not under `pnpm.overrides` in
 # package.json: pnpm 10 stopped reading that field, and a pin it does not read
