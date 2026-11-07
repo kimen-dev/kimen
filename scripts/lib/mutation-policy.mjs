@@ -1,6 +1,13 @@
 import { posix } from 'node:path';
 
+import { generatedOutputs } from '../gates/check-generated-sync.mjs';
 import { canonicalJsonSha256 } from './canonical-json.mjs';
+
+// The generated-sync contract is the one declaration of generated code: the
+// wrappers live under packages/*/src beside hand-written sources, so no path
+// pattern can tell them apart, and a copied list would drift on the next
+// component.
+const GENERATED_OUTPUTS = new Set(generatedOutputs);
 
 export const MUTATION_THRESHOLD = 70;
 export const MUTATION_SCOPE_SCHEMA_VERSION = 1;
@@ -86,6 +93,12 @@ const classifyKnownPath = (path) => {
     /(?:^|\/)\.cache(?:\/|$)/.test(path)
   ) {
     return excluded(path, 'generated or vendored output is regenerated and verified separately');
+  }
+  if (GENERATED_OUTPUTS.has(path)) {
+    return excluded(
+      path,
+      'generated output declared by the generated-sync contract is regenerated and drift-gated, not hand-written logic',
+    );
   }
   if (
     /(?:^|\/)(?:tests?|__tests__|fixtures|browser-tests|size-limit)(?:\/|$)/.test(path) ||
@@ -336,6 +349,14 @@ const incrementStatus = (counts, status) => {
  * CompileError, RuntimeError and Ignored are surfaced as invalid rather than
  * scored: they cannot improve the result and cannot make an otherwise empty
  * group valid. Pending or unknown statuses reject the entire report.
+ *
+ * The configured mutate set must equal the exact files, but the report map
+ * need not: Stryker adds a file to `files` only when it produced a mutant for
+ * it, so an exact file missing from the map had nothing to mutate (a
+ * re-export-only barrel, for instance). Such files are listed in
+ * `filesWithoutMutants`, never demanded; a file outside the exact set still
+ * rejects the report, and a group in which no file produced a valid mutant
+ * still fails.
  */
 export function evaluateMutationReport(report, expectedFiles) {
   const expected = normalizePathList(expectedFiles, 'Expected mutation files');
@@ -362,12 +383,14 @@ export function evaluateMutationReport(report, expectedFiles) {
   if (!isPlainRecord(report.files)) {
     throw new Error('Mutation report files must be an object');
   }
-  const observed = normalizePathList(Object.keys(report.files), 'Mutation report files');
-  if (observed.join('\0') !== expected.join('\0')) {
-    throw new Error(
-      `Mutation report does not contain the exact files: expected ${expected.join(', ')}; observed ${observed.join(', ')}`,
-    );
+  const observed = normalizePathList(Object.keys(report.files), 'Mutation report files', {
+    allowEmpty: true,
+  });
+  const outside = observed.filter((path) => !expected.includes(path));
+  if (outside.length > 0) {
+    throw new Error(`Mutation report lists files outside the exact files: ${outside.join(', ')}`);
   }
+  const filesWithoutMutants = expected.filter((path) => !observed.includes(path));
 
   const counts = {
     detected: 0,
@@ -406,6 +429,7 @@ export function evaluateMutationReport(report, expectedFiles) {
   return {
     counts,
     decision: passes ? 'pass' : 'fail',
+    filesWithoutMutants,
     score: (counts.detected * 100) / counts.valid,
     threshold: MUTATION_THRESHOLD,
   };

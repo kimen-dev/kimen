@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 
 const mutationPolicyUrl = new URL('../lib/mutation-policy.mjs', import.meta.url);
 const mutationCliPath = fileURLToPath(new URL('../gates/mutation-changed.mjs', import.meta.url));
+const generatedSyncUrl = new URL('../gates/check-generated-sync.mjs', import.meta.url);
 
 const loadMutationPolicy = () => import(mutationPolicyUrl.href);
 
@@ -126,6 +127,50 @@ test('@spec:018 S3 an unclassified executable file fails before mutation starts'
     () => classifyChangedFiles(['experimental/new-core.ts']),
     /unclassified.*experimental\/new-core\.ts|experimental\/new-core\.ts.*unclassified/i,
   );
+});
+
+// The daily run of 07-11-2026 mutated the regenerated React and Angular
+// wrappers as hand-written core and scored 60%. The exclusion comes from the
+// generated-sync contract itself, so an output declared there tomorrow is
+// excluded without a second list to update.
+test('@spec:018 S3 outputs the generated-sync contract declares are excluded, hand-written shells stay core', async () => {
+  const { classifyChangedFiles } = await loadMutationPolicy();
+  const { generatedGroups, generatedOutputs } = await import(generatedSyncUrl.href);
+  const wrapperOutputs = generatedOutputs.filter((path) =>
+    generatedGroups.wrappers.required.includes(path),
+  );
+
+  assert.ok(wrapperOutputs.includes('packages/react/src/components.ts'));
+  assert.ok(wrapperOutputs.includes('packages/angular/src/directives/proxies.ts'));
+  for (const file of classifyChangedFiles(generatedOutputs)) {
+    assert.equal(file.classification, 'excluded', `${file.path} is generated output`);
+  }
+  for (const file of classifyChangedFiles(wrapperOutputs)) {
+    assert.match(file.reason, /generated-sync contract/i, file.path);
+  }
+  assert.deepEqual(classifyChangedFiles(generatedGroups.wrappers.handWritten), [
+    { path: 'packages/angular/src/index.ts', classification: 'core', runner: 'node' },
+    { path: 'packages/react/src/index.ts', classification: 'core', runner: 'node' },
+  ]);
+});
+
+test('@spec:018 S3 CLI keeps the generated wrappers of a changed set out of every runner group', async (t) => {
+  const workspaceRoot = await createCliFixture(t);
+  const result = runMutationCli({
+    workspaceRoot,
+    paths: [
+      'packages/angular/src/directives/angular-component-lib/boolean-attribute.ts',
+      'packages/react/src/components.ts',
+      'packages/react/src/ki-alert.ts',
+      'scripts/gates/check-generated-sync.mjs',
+    ],
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(JSON.parse(result.stdout).groups, {
+    elements: [],
+    node: ['scripts/gates/check-generated-sync.mjs'],
+  });
 });
 
 test('@spec:018 S3 mutation score 69 fails and exactly 70 passes', async () => {

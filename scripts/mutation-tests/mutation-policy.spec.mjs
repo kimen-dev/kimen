@@ -11,6 +11,7 @@ import {
   MUTATION_SCOPE_SCHEMA_VERSION,
   MUTATION_THRESHOLD,
 } from '../lib/mutation-policy.mjs';
+import { generatedGroups, generatedOutputs } from '../gates/check-generated-sync.mjs';
 
 // @spec:018-project-integrity-hardening
 
@@ -113,6 +114,38 @@ describe('mutation policy classification', () => {
     ['packages/elements/src/components/ki-a/ki-a.tsx', 'elements'],
   ])('@spec:018 S3 classifies %s for %s', (path, runner) => {
     expect(classifyChangedFiles([path])).toEqual([{ path, classification: 'core', runner }]);
+  });
+
+  it('@spec:018 S3 excludes every output the generated-sync contract declares', () => {
+    expect(generatedOutputs.length).toBeGreaterThan(0);
+    for (const file of classifyChangedFiles(generatedOutputs)) {
+      expect(file, file.path).toMatchObject({ classification: 'excluded' });
+    }
+  });
+
+  it.each([
+    'packages/react/src/components.ts',
+    'packages/react/src/ki-button.ts',
+    'packages/vue/src/index.ts',
+    'packages/angular/src/directives/proxies.ts',
+    'packages/angular/src/directives/angular-component-lib/boolean-attribute.ts',
+  ])('@spec:018 S3 excludes the generated wrapper %s by its contract reason', (path) => {
+    expect(generatedOutputs).toContain(path);
+    expect(classifyChangedFiles([path])).toEqual([
+      {
+        path,
+        classification: 'excluded',
+        reason:
+          'generated output declared by the generated-sync contract is regenerated and drift-gated, not hand-written logic',
+      },
+    ]);
+  });
+
+  it('@spec:018 S3 keeps the hand-written wrapper shells in the node runner', () => {
+    expect(classifyChangedFiles(generatedGroups.wrappers.handWritten)).toEqual([
+      { path: 'packages/angular/src/index.ts', classification: 'core', runner: 'node' },
+      { path: 'packages/react/src/index.ts', classification: 'core', runner: 'node' },
+    ]);
   });
 
   it('@spec:018 S3 normalizes dot and Windows separators before duplicate detection', () => {
@@ -270,6 +303,7 @@ describe('mutation policy report evaluation', () => {
         valid: 10,
       },
       decision: 'pass',
+      filesWithoutMutants: [],
       score: 80,
       threshold: 70,
     });
@@ -318,6 +352,7 @@ describe('mutation policy report evaluation', () => {
         valid: 1,
       },
       decision: 'pass',
+      filesWithoutMutants: [],
       score: 100,
       threshold: 70,
     });
@@ -347,17 +382,43 @@ describe('mutation policy report evaluation', () => {
     expect(() => evaluateMutationReport(report, ['a.mjs'])).toThrow(expected);
   });
 
-  it('@spec:018 S3 requires exact configured and observed file sets', () => {
+  it('@spec:018 S3 requires the exact configured set and no file outside it', () => {
     const wrongConfig = mutationReport({ files: ['scripts/lib/a.mjs'] });
     wrongConfig.config.mutate = ['scripts/lib/b.mjs'];
     const wrongObserved = mutationReport({ files: ['scripts/lib/a.mjs'] });
-    wrongObserved.files = { 'scripts/lib/b.mjs': { mutants: [{ status: 'Killed' }] } };
+    wrongObserved.files = {
+      'scripts/lib/b.mjs': { mutants: [{ status: 'Killed' }] },
+      'scripts/lib/c.mjs': { mutants: [{ status: 'Killed' }] },
+    };
 
     expect(() => evaluateMutationReport(wrongConfig, ['scripts/lib/a.mjs'])).toThrow(
       /configured files differ from exact files/i,
     );
-    expect(() => evaluateMutationReport(wrongObserved, ['scripts/lib/a.mjs'])).toThrow(
-      /does not contain the exact files/i,
+    expect(() => evaluateMutationReport(wrongObserved, ['scripts/lib/a.mjs'])).toThrowError(
+      'Mutation report lists files outside the exact files: scripts/lib/b.mjs, scripts/lib/c.mjs',
+    );
+  });
+
+  it('@spec:018 S3 lists exact files with nothing to mutate instead of demanding them', () => {
+    const files = ['scripts/lib/a.mjs', 'scripts/lib/b.mjs', 'scripts/lib/c.mjs'];
+    const report = mutationReport({ files });
+    delete report.files['scripts/lib/a.mjs'];
+    delete report.files['scripts/lib/c.mjs'];
+
+    expect(evaluateMutationReport(report, files)).toMatchObject({
+      counts: { detected: 8, valid: 10 },
+      decision: 'pass',
+      filesWithoutMutants: ['scripts/lib/a.mjs', 'scripts/lib/c.mjs'],
+      score: 80,
+    });
+  });
+
+  it('@spec:018 S3 still fails a report in which no exact file produced a mutant', () => {
+    const report = mutationReport({ files: ['scripts/lib/a.mjs'] });
+    report.files = {};
+
+    expect(() => evaluateMutationReport(report, ['scripts/lib/a.mjs'])).toThrowError(
+      'Mutation report contains zero valid mutants',
     );
   });
 

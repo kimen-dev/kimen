@@ -388,6 +388,40 @@ describe('mutation group execution', () => {
     ).toBeUndefined();
   });
 
+  it('@spec:018 S3 passes a group whose hand-written shell had nothing to mutate', async () => {
+    const cacheRoot = await createCache();
+    const report = await buildReport({
+      paths: [
+        'packages/react/src/components.ts',
+        'packages/react/src/index.ts',
+        'scripts/lib/component-inventory.mjs',
+      ],
+      workspaceRoot: repositoryRoot,
+    });
+
+    const results = await runMutationGroups({
+      report,
+      workspaceRoot: repositoryRoot,
+      cacheRoot,
+      force: true,
+      executeStryker: async (options) => {
+        const written = mutationReport({ files: options.mutate });
+        delete written.files['packages/react/src/index.ts'];
+        await writeFile(options.jsonReporter.fileName, JSON.stringify(written));
+      },
+    });
+
+    expect(report.groups.node).toEqual([
+      'packages/react/src/index.ts',
+      'scripts/lib/component-inventory.mjs',
+    ]);
+    expect(results.node).toMatchObject({
+      decision: 'pass',
+      filesWithoutMutants: ['packages/react/src/index.ts'],
+      score: 80,
+    });
+  });
+
   it('@spec:018 S3 cleans temp even when an evaluated group fails below 70', async () => {
     const cacheRoot = await createCache();
     const report = await buildReport({

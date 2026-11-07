@@ -135,6 +135,7 @@ test('@spec:018 S3 report parser uses rational per-group scoring and exact file 
       valid: 10,
     },
     decision: 'pass',
+    filesWithoutMutants: [],
     score: 80,
     threshold: 70,
   });
@@ -198,6 +199,34 @@ test('@spec:018 S3 report parser fails closed on threshold drift, pending, unkno
       valid: 1,
     },
   );
+});
+
+// Stryker lists a file under report.files only when it produced a mutant for
+// it, so a re-export-only file such as packages/react/src/components.ts never
+// appears. The configured set stays exact; only presence in the report map is
+// relaxed, and only for files the run was asked to mutate.
+test('@spec:018 S3 report parser does not demand an exact file that had nothing to mutate', async () => {
+  const { evaluateMutationReport } = await loadPolicy();
+  const files = ['scripts/lib/canonical-json.mjs', 'scripts/lib/re-exports.mjs'];
+  const report = mutationReport({ files });
+  delete report.files['scripts/lib/re-exports.mjs'];
+
+  const result = evaluateMutationReport(report, files);
+
+  assert.equal(result.decision, 'pass');
+  assert.equal(result.counts.valid, 10);
+  assert.deepEqual(result.filesWithoutMutants, ['scripts/lib/re-exports.mjs']);
+
+  const outsider = mutationReport({ files });
+  outsider.files['scripts/lib/outsider.mjs'] = outsider.files['scripts/lib/canonical-json.mjs'];
+  assert.throws(
+    () => evaluateMutationReport(outsider, files),
+    /outside the exact files.*scripts\/lib\/outsider\.mjs/i,
+  );
+
+  const nothingMutated = mutationReport({ files });
+  nothingMutated.files = {};
+  assert.throws(() => evaluateMutationReport(nothingMutated, files), /zero valid mutants/i);
 });
 
 test('@spec:018 S3 Git discovery includes committed, staged, unstaged and untracked paths', async (t) => {
