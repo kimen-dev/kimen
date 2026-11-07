@@ -169,7 +169,7 @@ it('isolates every mutable tool cache while preserving an explicit browser insta
     baseEnvironment: {
       PATH: '/bin',
       PLAYWRIGHT_BROWSERS_PATH: '/trusted/browsers',
-      // A prepared parent exports the pnpm 11 store spellings, which pnpm obeys
+      // A prepared parent exports pnpm's own store spellings, which pnpm obeys
       // ahead of NPM_CONFIG_STORE_DIR; the smoke must replace them too.
       PNPM_CONFIG_STORE_DIR: '/parent/pnpm/store',
       pnpm_config_store_dir: '/parent/pnpm/store',

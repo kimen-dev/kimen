@@ -5,7 +5,7 @@
 // `pnpm-store-effective.test.mjs` owns the store the pinned manager uses when
 // the wrapper starts it directly. Gates do not run that way: they enter the
 // wrapper as `bash scripts/gates/<gate>.sh`, and pnpm is a grandchild started by
-// a shell, or by another gate that re-enters the wrapper. pnpm 11 reads its
+// a shell, or by another gate that re-enters the wrapper. pnpm (since 11) reads its
 // store only from its own PNPM_CONFIG_* / pnpm_config_* spellings, so a store
 // that is right for the direct call can still be wrong one level down. These
 // cases hold the contract at that depth:

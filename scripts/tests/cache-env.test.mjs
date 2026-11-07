@@ -47,7 +47,7 @@ const environment = {
 process.stdout.write(JSON.stringify(environment));
 `;
 
-// pnpm 11 reads its own settings only as PNPM_CONFIG_* / pnpm_config_* and
+// pnpm (since 11) reads its own settings only as PNPM_CONFIG_* / pnpm_config_* and
 // ignores NPM_CONFIG_STORE_DIR, so the validated store must also reach the
 // manager under both of its spellings. When the two disagree pnpm takes
 // whichever comes first in the environment, so both are pinned to one value.

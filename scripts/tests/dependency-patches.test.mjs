@@ -278,13 +278,13 @@ test('renovate widens the wrappers peer ranges instead of pinning them', async (
   }
 });
 
-test('pnpm 11 permits only the reviewed native build versions', async () => {
+test('pnpm 12 permits only the reviewed native build versions', async () => {
   const [manifest, workspace] = await Promise.all([
     readFile(new URL('package.json', repositoryRoot), 'utf8').then(JSON.parse),
     readFile(new URL('pnpm-workspace.yaml', repositoryRoot), 'utf8'),
   ]);
 
-  assert.match(manifest.packageManager, /^pnpm@11\./u);
+  assert.match(manifest.packageManager, /^pnpm@12\./u);
   // Reviewed-and-DECLINED entries (false) are decisions too: @parcel/watcher
   // (ng-packagr transitive, spec 034) never runs its native build script.
   assert.match(workspace, /^ {2}'@parcel\/watcher@2\.6\.0': false$/mu);
