@@ -11,6 +11,9 @@ const packageLock = await readFile(
   new URL('../../sandbox/package-lock.json', import.meta.url),
   'utf8',
 ).catch(() => null);
+const rootPackageJson = JSON.parse(
+  await readFile(new URL('../../package.json', import.meta.url), 'utf8'),
+);
 
 // @spec:018-project-integrity-hardening#S5
 test('sandbox image pins its base, dated Debian snapshot and direct OS packages', () => {
@@ -36,6 +39,7 @@ test('sandbox executables use exact package metadata and one integrity lock', ()
   assert.deepEqual(Object.keys(packageJson.dependencies).toSorted(), [
     '@anthropic-ai/claude-code',
     '@openai/codex',
+    'corepack',
     'playwright',
   ]);
   for (const version of Object.values(packageJson.dependencies)) {
@@ -52,6 +56,17 @@ test('sandbox executables use exact package metadata and one integrity lock', ()
   }
   assert.match(dockerfile, /npm ci --omit=dev --ignore-scripts/);
   assert.doesNotMatch(dockerfile, /npm install -g|npx -y/);
+});
+
+// The gates phase runs with --network none: corepack can only serve the pnpm
+// the image pre-fetched. The pin lagged behind the pnpm 11 and 12 bumps.
+test('sandbox image pre-fetches the pnpm the repository declares', () => {
+  const prepared = dockerfile.match(/corepack prepare (pnpm@\S+) --activate/u)?.[1];
+  assert.equal(
+    prepared,
+    rootPackageJson.packageManager,
+    'update `corepack prepare` in sandbox/Dockerfile to the root packageManager field',
+  );
 });
 
 test('durable device login is retired from unattended use', () => {
