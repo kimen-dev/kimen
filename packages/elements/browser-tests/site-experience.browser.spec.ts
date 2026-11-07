@@ -2,6 +2,7 @@
 // The public-site contract is exercised in the real browser runner against the
 // hand-written HTML/CSS and the built custom elements that ship to consumers.
 import tokensCss from '@kimen/tokens/css?raw';
+import axe from 'axe-core';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 
@@ -603,6 +604,28 @@ describe('Kimen public site experience in a real browser', () => {
     expect(document.querySelector('footer')).toBeInstanceOf(HTMLElement);
     expect(document.querySelectorAll('main h1')).toHaveLength(1);
     await expectAccessible(document.body);
+  });
+
+  it('S5 names the brand link with the text it shows on every public page', async () => {
+    // WCAG 2.5.3 (Label in Name): a speech-input visitor activates the brand
+    // link by saying what it shows, so its accessible name must contain that
+    // visible text. axe-core 4.14 enforces label-content-name-mismatch by
+    // default; earlier versions tag it experimental and skip it, so the rule is
+    // requested explicitly to hold under every pinned axe-core version.
+    for (const pageName of ['landing', 'playground', 'privacy'] as const) {
+      await mountPage(pageName, false);
+      const brand = requireElement<HTMLAnchorElement>('header .brand', HTMLAnchorElement);
+      const visibleText = [...brand.querySelectorAll<HTMLElement>('.brand-name, .brand-stage')]
+        .filter((part) => part.checkVisibility())
+        .map((part) => part.textContent.trim())
+        .join(' ');
+      expect(visibleText, `${pageName} brand link shows the product name`).toMatch(/^Kimen\b/u);
+      expect(await browserCommands.ariaSnapshot('header .brand')).toContain(`link "${visibleText}`);
+      const results = await axe.run(document.body, {
+        runOnly: { type: 'rule', values: ['label-content-name-mismatch'] },
+      });
+      expect(results.violations, `${pageName} label-in-name violations`).toEqual([]);
+    }
   });
 
   it('S6 disables automatic motion without hiding landing content', async () => {
