@@ -71,7 +71,7 @@
   },
   "devDependencies": {
     "@kimen/tokens": "workspace:*",
-    "@size-limit/preset-small-lib": "13.1.1",
+    "@size-limit/preset-small-lib": "14.3.0",
     "@stencil/angular-output-target": "1.5.3",
     "@stencil/react-output-target": "1.7.0",
     "@stencil/storybook-plugin": "0.7.1",
@@ -83,7 +83,7 @@
     "axe-core": "4.14.0",
     "jsqr": "1.4.0",
     "playwright": "1.64.1",
-    "size-limit": "13.1.1",
+    "size-limit": "14.3.0",
     "storybook": "10.6.5",
     "vitest": "4.1.12"
   },
