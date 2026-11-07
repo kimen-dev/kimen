@@ -331,7 +331,8 @@ founder decision it batches.
   values. Shape/radius and M3's width axis are tokens, never attributes.
 - **FR-010**: Interaction states (hover, focus-visible, active, disabled)
   MUST be styled exclusively through tokens and CSS states; states are never
-  attributes/props.
+  attributes/props. Pressed (`:active`) MUST paint over the resting
+  appearance whatever the input modality, as in 002 FR-009 (issue #71).
 - **FR-011**: Unrecognized `variant`, `tone` or `size` values MUST fall back
   to their documented defaults without breaking rendering.
 - **FR-012**: Focus MUST be clearly visible in every theme; the pointer

@@ -9,10 +9,18 @@
   --_ki-button-line-height: var(--ki-button-md-line-height);
   --_ki-button-icon-size: var(--ki-button-md-icon-size);
   --_ki-button-min-target: var(--ki-button-md-min-target);
-  --_ki-button-bg: var(--ki-button-secondary-neutral-rest-bg);
-  --_ki-button-fg: var(--ki-button-secondary-neutral-rest-fg);
-  --_ki-button-border: var(--ki-button-secondary-neutral-rest-border);
-  --_ki-button-shadow: var(--ki-button-secondary-rest-shadow);
+
+  /* The resting ground lives apart from the painted one: hover overwrites
+     --_ki-button-bg/fg/border/shadow, never --_ki-button-rest-*, so the pressed
+     rule below can restore rest whatever the pointer did (#71). */
+  --_ki-button-rest-bg: var(--ki-button-secondary-neutral-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-secondary-neutral-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-secondary-neutral-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-secondary-rest-shadow);
+  --_ki-button-bg: var(--_ki-button-rest-bg);
+  --_ki-button-fg: var(--_ki-button-rest-fg);
+  --_ki-button-border: var(--_ki-button-rest-border);
+  --_ki-button-shadow: var(--_ki-button-rest-shadow);
   --_ki-button-border-bottom: var(--ki-button-secondary-rest-border-bottom);
   --_ki-button-overlay: var(--ki-transparent-inverse);
   --_ki-button-backdrop-blur: var(--ki-button-backdrop-blur);
@@ -90,101 +98,101 @@
 }
 
 :host([variant="primary"][tone="neutral"]) {
-  --_ki-button-bg: var(--ki-button-primary-neutral-rest-bg);
-  --_ki-button-fg: var(--ki-button-primary-neutral-rest-fg);
-  --_ki-button-border: var(--ki-button-primary-neutral-rest-border);
-  --_ki-button-shadow: var(--ki-button-primary-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-primary-neutral-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-primary-neutral-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-primary-neutral-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-primary-rest-shadow);
 }
 
 :host([variant="primary"][tone="success"]) {
-  --_ki-button-bg: var(--ki-button-primary-success-rest-bg);
-  --_ki-button-fg: var(--ki-button-primary-success-rest-fg);
-  --_ki-button-border: var(--ki-button-primary-success-rest-border);
-  --_ki-button-shadow: var(--ki-button-primary-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-primary-success-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-primary-success-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-primary-success-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-primary-rest-shadow);
 }
 
 :host([variant="primary"][tone="danger"]) {
-  --_ki-button-bg: var(--ki-button-primary-danger-rest-bg);
-  --_ki-button-fg: var(--ki-button-primary-danger-rest-fg);
-  --_ki-button-border: var(--ki-button-primary-danger-rest-border);
-  --_ki-button-shadow: var(--ki-button-primary-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-primary-danger-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-primary-danger-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-primary-danger-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-primary-rest-shadow);
 }
 
 :host([variant="secondary"][tone="success"]) {
-  --_ki-button-bg: var(--ki-button-secondary-success-rest-bg);
-  --_ki-button-fg: var(--ki-button-secondary-success-rest-fg);
-  --_ki-button-border: var(--ki-button-secondary-success-rest-border);
-  --_ki-button-shadow: var(--ki-button-secondary-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-secondary-success-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-secondary-success-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-secondary-success-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-secondary-rest-shadow);
 }
 
 :host([variant="secondary"][tone="danger"]) {
-  --_ki-button-bg: var(--ki-button-secondary-danger-rest-bg);
-  --_ki-button-fg: var(--ki-button-secondary-danger-rest-fg);
-  --_ki-button-border: var(--ki-button-secondary-danger-rest-border);
-  --_ki-button-shadow: var(--ki-button-secondary-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-secondary-danger-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-secondary-danger-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-secondary-danger-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-secondary-rest-shadow);
 }
 
 :host([variant="tertiary"][tone="neutral"]) {
-  --_ki-button-bg: var(--ki-button-tertiary-neutral-rest-bg);
-  --_ki-button-fg: var(--ki-button-tertiary-neutral-rest-fg);
-  --_ki-button-border: var(--ki-button-tertiary-neutral-rest-border);
-  --_ki-button-shadow: var(--ki-button-tertiary-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-tertiary-neutral-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-tertiary-neutral-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-tertiary-neutral-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-tertiary-rest-shadow);
 }
 
 :host([variant="tertiary"][tone="success"]) {
-  --_ki-button-bg: var(--ki-button-tertiary-success-rest-bg);
-  --_ki-button-fg: var(--ki-button-tertiary-success-rest-fg);
-  --_ki-button-border: var(--ki-button-tertiary-success-rest-border);
-  --_ki-button-shadow: var(--ki-button-tertiary-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-tertiary-success-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-tertiary-success-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-tertiary-success-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-tertiary-rest-shadow);
 }
 
 :host([variant="tertiary"][tone="danger"]) {
-  --_ki-button-bg: var(--ki-button-tertiary-danger-rest-bg);
-  --_ki-button-fg: var(--ki-button-tertiary-danger-rest-fg);
-  --_ki-button-border: var(--ki-button-tertiary-danger-rest-border);
-  --_ki-button-shadow: var(--ki-button-tertiary-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-tertiary-danger-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-tertiary-danger-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-tertiary-danger-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-tertiary-rest-shadow);
 }
 
 :host([variant="quaternary"][tone="neutral"]) {
-  --_ki-button-bg: var(--ki-button-quaternary-neutral-rest-bg);
-  --_ki-button-fg: var(--ki-button-quaternary-neutral-rest-fg);
-  --_ki-button-border: var(--ki-button-quaternary-neutral-rest-border);
-  --_ki-button-shadow: var(--ki-button-quaternary-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-quaternary-neutral-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-quaternary-neutral-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-quaternary-neutral-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-quaternary-rest-shadow);
 }
 
 :host([variant="quaternary"][tone="success"]) {
-  --_ki-button-bg: var(--ki-button-quaternary-success-rest-bg);
-  --_ki-button-fg: var(--ki-button-quaternary-success-rest-fg);
-  --_ki-button-border: var(--ki-button-quaternary-success-rest-border);
-  --_ki-button-shadow: var(--ki-button-quaternary-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-quaternary-success-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-quaternary-success-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-quaternary-success-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-quaternary-rest-shadow);
 }
 
 :host([variant="quaternary"][tone="danger"]) {
-  --_ki-button-bg: var(--ki-button-quaternary-danger-rest-bg);
-  --_ki-button-fg: var(--ki-button-quaternary-danger-rest-fg);
-  --_ki-button-border: var(--ki-button-quaternary-danger-rest-border);
-  --_ki-button-shadow: var(--ki-button-quaternary-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-quaternary-danger-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-quaternary-danger-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-quaternary-danger-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-quaternary-rest-shadow);
 }
 
 :host([variant="ghost"][tone="neutral"]) {
-  --_ki-button-bg: var(--ki-button-ghost-neutral-rest-bg);
-  --_ki-button-fg: var(--ki-button-ghost-neutral-rest-fg);
-  --_ki-button-border: var(--ki-button-ghost-neutral-rest-border);
-  --_ki-button-shadow: var(--ki-button-ghost-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-ghost-neutral-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-ghost-neutral-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-ghost-neutral-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-ghost-rest-shadow);
 }
 
 :host([variant="ghost"][tone="success"]) {
-  --_ki-button-bg: var(--ki-button-ghost-success-rest-bg);
-  --_ki-button-fg: var(--ki-button-ghost-success-rest-fg);
-  --_ki-button-border: var(--ki-button-ghost-success-rest-border);
-  --_ki-button-shadow: var(--ki-button-ghost-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-ghost-success-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-ghost-success-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-ghost-success-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-ghost-rest-shadow);
 }
 
 :host([variant="ghost"][tone="danger"]) {
-  --_ki-button-bg: var(--ki-button-ghost-danger-rest-bg);
-  --_ki-button-fg: var(--ki-button-ghost-danger-rest-fg);
-  --_ki-button-border: var(--ki-button-ghost-danger-rest-border);
-  --_ki-button-shadow: var(--ki-button-ghost-rest-shadow);
+  --_ki-button-rest-bg: var(--ki-button-ghost-danger-rest-bg);
+  --_ki-button-rest-fg: var(--ki-button-ghost-danger-rest-fg);
+  --_ki-button-rest-border: var(--ki-button-ghost-danger-rest-border);
+  --_ki-button-rest-shadow: var(--ki-button-ghost-rest-shadow);
 }
 
 /* Non-glass variants: uniform border (the bottom edge follows the border
@@ -490,16 +498,26 @@ button:focus-visible {
  * tokens that are documented mirrors of rest, and then WITHDREW the hover
  * overlay — so the pressed appearance was legible only as the removal of a
  * hover that a keyboard or touch user never had. Pressed is now the overlay
- * one step deeper instead, which reads from any starting state and is
- * variant-independent by construction, the same reason Material 3 state
- * layers are. `ki.state-layer.pressed` already carried the written MarsUI
- * derivation ("overlay one step above hover_overlay") and was consumed by
- * nothing; this binds it.
+ * one step deeper instead, variant-independent by construction, the same
+ * reason Material 3 state layers are. `ki.state-layer.pressed` already
+ * carried the written MarsUI derivation ("overlay one step above
+ * hover_overlay") and was consumed by nothing; this binds it.
+ *
+ * Pressed starts from REST whatever the input (#71). M3 shows one state
+ * layer at a time: pressed replaces hover, it does not stack on it. So the
+ * rule restores the resting fill, text, border and shadow under its overlay;
+ * otherwise a pointer press (the host is also hovered) composed over the
+ * hover paint while the same press from the keyboard or a touch screen
+ * composed over rest, and one button looked two ways while held.
  *
  * Placed after the structural rules it now shares a target with, so
  * specificity still descends down the file (stylelint no-descending-
  * specificity). */
 button:active:not(:disabled) {
+  --_ki-button-bg: var(--_ki-button-rest-bg);
+  --_ki-button-fg: var(--_ki-button-rest-fg);
+  --_ki-button-border: var(--_ki-button-rest-border);
+  --_ki-button-shadow: var(--_ki-button-rest-shadow);
   --_ki-button-overlay: var(--ki-button-secondary-active-overlay);
   --_ki-button-overlay-image: linear-gradient(var(--_ki-button-overlay), var(--_ki-button-overlay));
 }
@@ -511,6 +529,13 @@ button:active:not(:disabled) {
    more. */
 :host([variant="primary"]) button:active:not(:disabled) {
   --_ki-button-overlay: var(--ki-button-primary-active-overlay);
+}
+
+/* The non-glass bottom edge follows the border, but the host resolved that
+   from the HOVER border; re-derive it here from the restored one. */
+:host([variant="quaternary"]) button:active:not(:disabled),
+:host([variant="ghost"]) button:active:not(:disabled) {
+  --_ki-button-border-bottom: var(--_ki-button-border);
 }
 
 [part="label"] {

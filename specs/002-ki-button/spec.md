@@ -283,7 +283,10 @@ Feature: Button
   values. Shape/radius is a token, never an attribute.
 - **FR-009**: Interaction states (hover, focus-visible, active, disabled)
   MUST be styled exclusively through tokens and CSS states; states are never
-  attributes/props.
+  attributes/props. Pressed (`:active`) MUST paint over the resting
+  appearance whatever the input modality (pointer, keyboard, touch): its
+  state layer replaces hover instead of stacking on it, one state layer at a
+  time as in Material 3 (issue #71).
 - **FR-010**: Unrecognized `variant`, `tone`, `size` or `type` values MUST
   fall back to their documented defaults without breaking rendering.
 - **FR-011**: Focus MUST be clearly visible in every theme; the pointer

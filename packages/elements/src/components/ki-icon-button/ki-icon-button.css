@@ -8,10 +8,19 @@
   --_ki-icon-button-size: var(--ki-icon-button-md-size);
   --_ki-icon-button-icon-size: var(--ki-icon-button-md-icon-size);
   --_ki-icon-button-radius: var(--ki-icon-button-md-radius);
-  --_ki-icon-button-bg: var(--ki-icon-button-secondary-neutral-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-secondary-neutral-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-secondary-neutral-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-secondary-rest-shadow);
+
+  /* The resting ground lives apart from the painted one: hover overwrites
+     --_ki-icon-button-bg/fg/border/shadow, never --_ki-icon-button-rest-*,
+     so the pressed rule below can restore rest whatever the pointer did
+     (#71). */
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-secondary-neutral-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-secondary-neutral-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-secondary-neutral-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-secondary-rest-shadow);
+  --_ki-icon-button-bg: var(--_ki-icon-button-rest-bg);
+  --_ki-icon-button-fg: var(--_ki-icon-button-rest-fg);
+  --_ki-icon-button-border: var(--_ki-icon-button-rest-border);
+  --_ki-icon-button-shadow: var(--_ki-icon-button-rest-shadow);
   --_ki-icon-button-border-bottom: var(--ki-icon-button-secondary-rest-border-bottom);
   --_ki-icon-button-overlay: var(--ki-transparent-inverse);
   --_ki-icon-button-backdrop-blur: var(--ki-icon-button-backdrop-blur);
@@ -68,101 +77,101 @@
 }
 
 :host([variant="primary"][tone="neutral"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-primary-neutral-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-primary-neutral-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-primary-neutral-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-primary-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-primary-neutral-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-primary-neutral-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-primary-neutral-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-primary-rest-shadow);
 }
 
 :host([variant="primary"][tone="success"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-primary-success-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-primary-success-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-primary-success-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-primary-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-primary-success-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-primary-success-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-primary-success-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-primary-rest-shadow);
 }
 
 :host([variant="primary"][tone="danger"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-primary-danger-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-primary-danger-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-primary-danger-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-primary-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-primary-danger-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-primary-danger-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-primary-danger-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-primary-rest-shadow);
 }
 
 :host([variant="secondary"][tone="success"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-secondary-success-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-secondary-success-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-secondary-success-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-secondary-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-secondary-success-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-secondary-success-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-secondary-success-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-secondary-rest-shadow);
 }
 
 :host([variant="secondary"][tone="danger"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-secondary-danger-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-secondary-danger-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-secondary-danger-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-secondary-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-secondary-danger-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-secondary-danger-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-secondary-danger-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-secondary-rest-shadow);
 }
 
 :host([variant="tertiary"][tone="neutral"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-tertiary-neutral-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-tertiary-neutral-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-tertiary-neutral-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-tertiary-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-tertiary-neutral-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-tertiary-neutral-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-tertiary-neutral-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-tertiary-rest-shadow);
 }
 
 :host([variant="tertiary"][tone="success"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-tertiary-success-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-tertiary-success-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-tertiary-success-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-tertiary-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-tertiary-success-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-tertiary-success-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-tertiary-success-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-tertiary-rest-shadow);
 }
 
 :host([variant="tertiary"][tone="danger"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-tertiary-danger-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-tertiary-danger-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-tertiary-danger-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-tertiary-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-tertiary-danger-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-tertiary-danger-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-tertiary-danger-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-tertiary-rest-shadow);
 }
 
 :host([variant="quaternary"][tone="neutral"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-quaternary-neutral-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-quaternary-neutral-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-quaternary-neutral-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-quaternary-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-quaternary-neutral-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-quaternary-neutral-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-quaternary-neutral-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-quaternary-rest-shadow);
 }
 
 :host([variant="quaternary"][tone="success"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-quaternary-success-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-quaternary-success-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-quaternary-success-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-quaternary-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-quaternary-success-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-quaternary-success-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-quaternary-success-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-quaternary-rest-shadow);
 }
 
 :host([variant="quaternary"][tone="danger"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-quaternary-danger-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-quaternary-danger-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-quaternary-danger-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-quaternary-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-quaternary-danger-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-quaternary-danger-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-quaternary-danger-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-quaternary-rest-shadow);
 }
 
 :host([variant="ghost"][tone="neutral"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-ghost-neutral-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-ghost-neutral-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-ghost-neutral-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-ghost-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-ghost-neutral-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-ghost-neutral-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-ghost-neutral-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-ghost-rest-shadow);
 }
 
 :host([variant="ghost"][tone="success"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-ghost-success-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-ghost-success-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-ghost-success-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-ghost-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-ghost-success-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-ghost-success-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-ghost-success-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-ghost-rest-shadow);
 }
 
 :host([variant="ghost"][tone="danger"]) {
-  --_ki-icon-button-bg: var(--ki-icon-button-ghost-danger-rest-bg);
-  --_ki-icon-button-fg: var(--ki-icon-button-ghost-danger-rest-fg);
-  --_ki-icon-button-border: var(--ki-icon-button-ghost-danger-rest-border);
-  --_ki-icon-button-shadow: var(--ki-icon-button-ghost-rest-shadow);
+  --_ki-icon-button-rest-bg: var(--ki-icon-button-ghost-danger-rest-bg);
+  --_ki-icon-button-rest-fg: var(--ki-icon-button-ghost-danger-rest-fg);
+  --_ki-icon-button-rest-border: var(--ki-icon-button-ghost-danger-rest-border);
+  --_ki-icon-button-rest-shadow: var(--ki-icon-button-ghost-rest-shadow);
 }
 
 /* Non-glass variants: uniform border (the bottom edge follows the border
@@ -457,8 +466,16 @@ button:focus-visible {
    specificity still descends down the file.
    Two rules because this component carries two overlay conventions already:
    primary paints on a dark brand fill and its wash lightens, every other
-   variant paints on a light one and darkens. */
+   variant paints on a light one and darkens.
+   Pressed starts from REST whatever the input (#71), the ki-button rule: one
+   state layer at a time, so the resting fill, icon colour, border and shadow
+   come back under the pressed overlay instead of the hover ones a pointer
+   press would otherwise keep. */
 button:active:not(:disabled) {
+  --_ki-icon-button-bg: var(--_ki-icon-button-rest-bg);
+  --_ki-icon-button-fg: var(--_ki-icon-button-rest-fg);
+  --_ki-icon-button-border: var(--_ki-icon-button-rest-border);
+  --_ki-icon-button-shadow: var(--_ki-icon-button-rest-shadow);
   --_ki-icon-button-overlay: var(--ki-icon-button-secondary-active-overlay);
   --_ki-icon-button-overlay-image: linear-gradient(
     var(--_ki-icon-button-overlay),
@@ -468,6 +485,13 @@ button:active:not(:disabled) {
 
 :host([variant="primary"]) button:active:not(:disabled) {
   --_ki-icon-button-overlay: var(--ki-icon-button-primary-active-overlay);
+}
+
+/* The non-glass bottom edge follows the border, but the host resolved that
+   from the HOVER border; re-derive it here from the restored one. */
+:host([variant="quaternary"]) button:active:not(:disabled),
+:host([variant="ghost"]) button:active:not(:disabled) {
+  --_ki-icon-button-border-bottom: var(--_ki-icon-button-border);
 }
 
 /* The single decorative icon: sized by the per-size icon token, centered by
