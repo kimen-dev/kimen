@@ -79,13 +79,13 @@
     "@stencil/vue-output-target": "0.14.7",
     "@storybook/addon-a11y": "10.6.5",
     "@storybook/addon-docs": "10.6.5",
-    "@vitest/browser-playwright": "4.1.12",
+    "@vitest/browser-playwright": "5.0.5",
     "axe-core": "4.14.0",
     "jsqr": "1.4.0",
     "playwright": "1.64.1",
     "size-limit": "14.3.0",
     "storybook": "10.6.5",
-    "vitest": "4.1.12"
+    "vitest": "5.0.5"
   },
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
