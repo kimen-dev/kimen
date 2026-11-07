@@ -28,14 +28,16 @@ RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund \
     && npm cache clean --force
 ENV PATH=/opt/kimen-agent-clis/node_modules/.bin:$PATH
 
-# pnpm via corepack, enabled at BUILD time (the node user cannot symlink into
-# /usr/local/bin at runtime). The pinned version (keep in sync with the root
-# package.json packageManager field) is pre-fetched into COREPACK_HOME, which
-# stays node-writable for future packageManager bumps.
+# pnpm via corepack. Node 25+ no longer bundles corepack, so it comes from the
+# integrity lock above, whose `pnpm` bin is corepack's shim and is already on
+# PATH. The pinned version must equal the root package.json packageManager
+# field (sandbox-static-contract checks it): the gates phase runs with
+# --network none, so pnpm must already be in COREPACK_HOME. COREPACK_HOME stays
+# node-writable for packageManager bumps fetched in the bootstrap phase.
 ENV COREPACK_HOME=/opt/corepack \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-RUN corepack enable pnpm \
-    && corepack prepare pnpm@10.34.4 --activate \
+RUN corepack prepare pnpm@12.17.0 --activate \
+    && pnpm --version \
     && chown -R node:node /opt/corepack
 
 # --chmod: the build-context files may be mode 0600 (COPY preserves it and
