@@ -6,7 +6,7 @@ import test from 'node:test';
 
 const loadConfig = async (relativePath) => {
   const module = await import(new URL(`../../${relativePath}`, import.meta.url));
-  return await module.default;
+  return typeof module.default === 'function' ? await module.default() : await module.default;
 };
 
 const assertCommonMutationPolicy = (config, configFile) => {
@@ -72,7 +72,7 @@ test('@spec:018 S3 elements mutation config rebuilds Stencil and never relies on
     '.',
     'the standalone config owns its root-relative include; narrowing --dir duplicates the package prefix in Stryker sandboxes',
   );
-  assert.equal(config.buildCommand, 'pnpm --filter @kimen/elements exec stencil build');
+  assert.equal(config.buildCommand, 'bash scripts/gates/build-mutation-elements.sh');
 });
 
 test('@spec:018 S3 mutation Vitest config keeps node and Stencil suites separate', async () => {
@@ -98,7 +98,7 @@ test('@spec:018 S3 mutation Vitest config keeps node and Stencil suites separate
   assert.equal(elementsProject?.test?.browser?.enabled ?? false, false);
 });
 
-test('@spec:018 S3 each Stryker runner has one exact Vitest project', async () => {
+test('@spec:018 S3 each Stryker runner has an independently scoped Vitest configuration', async () => {
   const nodeConfig = await loadConfig('vitest.mutation.node.config.ts');
   const elementsConfig = await loadConfig('vitest.mutation.elements.config.ts');
 
@@ -115,8 +115,15 @@ test('@spec:018 S3 each Stryker runner has one exact Vitest project', async () =
   assert.deepEqual(nodeConfig.test?.include, ['scripts/mutation-tests/**/*.spec.mjs']);
   assert.equal(nodeConfig.test?.environment, 'node');
 
-  assert.equal(elementsConfig.test?.name, 'elements-mutation');
-  assert.deepEqual(elementsConfig.test?.include, ['packages/elements/src/**/*.spec.{ts,tsx}']);
-  assert.match(elementsConfig.test?.environment ?? '', /@stencil[/+]vitest/);
-  assert.deepEqual(elementsConfig.test?.setupFiles, ['./packages/elements/vitest.setup.mjs']);
+  const [unit, browser] = elementsConfig.test.projects;
+  assert.equal(unit.cacheDir, '../../reports/cache/vite/mutation-elements-unit');
+  assert.equal(browser.cacheDir, '../../reports/cache/vite/mutation-elements-browser');
+  assert.equal(elementsConfig.test.projects.length, 2);
+  assert.equal(unit.test.name, 'elements-unit');
+  assert.deepEqual(unit.test.include, ['src/**/*.spec.{ts,tsx}']);
+  assert.match(unit.test.environment, /@stencil[/+]vitest/);
+  assert.deepEqual(unit.test.setupFiles, ['./vitest.setup.mjs']);
+  assert.deepEqual(browser.test.include, ['browser-tests/ki-+([a-z-]).browser.spec.ts']);
+  assert.equal(browser.test.browser.enabled, true);
+  assert.ok(browser.test.browser.instances.every((instance) => instance.browser === 'chromium'));
 });

@@ -403,6 +403,56 @@ test('@spec:018 S3 runner isolates one cache scope, deletes stale JSON and repor
   );
 });
 
+test('@spec:018 S3 summary prints official and killed-only scores without changing timeout detection', async (t) => {
+  const { buildReport, runMutationGroups } = await loadRunner();
+  const cacheRoot = await mkdtemp(join(tmpdir(), 'kimen-mutation-summary-'));
+  t.after(() => rm(cacheRoot, { recursive: true, force: true }));
+  const summaryFile = join(cacheRoot, 'summary.md');
+  await writeFile(summaryFile, 'Existing summary\n');
+  const log = t.mock.method(console, 'log', () => undefined);
+  const report = await buildReport({
+    paths: ['scripts/lib/canonical-json.mjs'],
+    workspaceRoot: repositoryRoot,
+  });
+
+  const results = await runMutationGroups({
+    report,
+    workspaceRoot: repositoryRoot,
+    cacheRoot,
+    force: false,
+    summaryFile,
+    executeStryker: async (options) => {
+      await writeFile(
+        options.jsonReporter.fileName,
+        JSON.stringify(
+          mutationReport({
+            files: options.mutate,
+            statuses: [
+              ...Array(6).fill('Killed'),
+              'Timeout',
+              ...Array(3).fill('Survived'),
+              'CompileError',
+              'RuntimeError',
+              'Ignored',
+            ],
+          }),
+        ),
+      );
+    },
+  });
+
+  const line =
+    'node mutation score (official, killed + timeouts / valid mutants): 7/10 (70.00%); killed-only score (killed / valid mutants): 6/10 (60.00%)';
+  assert.deepEqual(
+    log.mock.calls.map(({ arguments: args }) => args),
+    [[line]],
+  );
+  assert.equal(await readFile(summaryFile, 'utf8'), `Existing summary\n${line}\n`);
+  assert.equal(results.node.score, 70);
+  assert.equal(results.node.killedOnlyScore, 60);
+  assert.equal(results.node.decision, 'pass');
+});
+
 test('@spec:018 S3 missing runner report fails even when Stryker returns successfully', async (t) => {
   const { buildReport, runMutationGroups } = await loadRunner();
   const cacheRoot = await mkdtemp(join(tmpdir(), 'kimen-mutation-cache-'));

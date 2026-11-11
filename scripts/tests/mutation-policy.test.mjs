@@ -20,6 +20,12 @@ const aHash = (character) => character.repeat(64);
 // implementation files, one co-located core .ts helper, plus spec and css
 // files the classifier must keep out of the mutate set.
 const componentFixtureFiles = {
+  'packages/elements/stencil.config.ts': 'export default {};\n',
+  'packages/elements/vitest.browser.config.ts': 'export default {};\n',
+  'packages/elements/vitest.config.ts': 'export default {};\n',
+  'packages/elements/vitest.coverage.config.ts': 'export default {};\n',
+  'packages/elements/vitest.setup.mjs': 'export {};\n',
+  'scripts/gates/build-mutation-elements.sh': '#!/usr/bin/env bash\n',
   'packages/elements/src/components/ki-button/ki-button.css': ':host { display: block; }\n',
   'packages/elements/src/components/ki-button/ki-button.spec.tsx': 'export const spec = 1;\n',
   'packages/elements/src/components/ki-button/ki-button.tsx': 'export const button = 1;\n',
@@ -258,6 +264,12 @@ test('@spec:018 S3 CLI classifies every argument and groups core files determini
   assert.match(report.policyHash, /^[0-9a-f]{64}$/);
   assert.deepEqual(Object.keys(report.configHashes), [
     'elements',
+    'elements-browser',
+    'elements-build',
+    'elements-coverage',
+    'elements-setup',
+    'elements-stencil',
+    'elements-unit',
     'node',
     'vitest',
     'vitest-elements',
@@ -290,6 +302,30 @@ test('@spec:018 S3 CLI JSON stdin is canonical and rejects unclassified executab
   assert.equal(unclassified.stdout, '');
   assert.match(unclassified.stderr, /unclassified.*experimental\/new-core\.ts/i);
 });
+
+for (const configPath of [
+  'packages/elements/vitest.browser.config.ts',
+  'packages/elements/stencil.config.ts',
+  'packages/elements/vitest.setup.mjs',
+]) {
+  test(`editing ${configPath} invalidates the elements mutation cache`, async (t) => {
+    const workspaceRoot = await createCliFixture(t);
+    const paths = ['packages/elements/src/components/ki-button/ki-button.tsx'];
+    const before = runMutationCli({ workspaceRoot, paths });
+    assert.equal(before.status, 0, before.stderr);
+
+    await writeFile(
+      join(workspaceRoot, configPath),
+      'export default { test: { browser: { enabled: true } } };\n',
+    );
+    const after = runMutationCli({ workspaceRoot, paths });
+    assert.equal(after.status, 0, after.stderr);
+    assert.notEqual(
+      JSON.parse(before.stdout).runnerScopes.elements,
+      JSON.parse(after.stdout).runnerScopes.elements,
+    );
+  });
+}
 
 test('@spec:018 S3 CLI full-elements scope mutates every component implementation through the classifier', async (t) => {
   const workspaceRoot = await createCliFixture(t);
