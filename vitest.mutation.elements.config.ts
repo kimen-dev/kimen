@@ -25,9 +25,10 @@ export default defineConfig(async () => ({
         cacheDir: '../../reports/cache/vite/mutation-elements-browser',
         test: {
           ...browserTest,
-          // Add the component behavior contracts to mutation. Their events,
-          // keyboard, ARIA and form assertions detect behavioral regressions;
-          // screenshot galleries continue to run in the ordinary quality gate.
+          // Include the base component behavior contracts. This glob leaves out
+          // screenshot galleries (.visual/.dark), *.motion behavior contracts,
+          // pointer-capability, flows, axe-settle and tokens-theming.
+          // Adding those suites to mutation is a follow-up.
           include: ['browser-tests/ki-+([a-z-]).browser.spec.ts'],
           browser: {
             ...browserTest.browser,

@@ -231,7 +231,7 @@ describe('ki-dialog live content and interaction boundaries', () => {
     await expect.element(page.getByRole('heading', { name: 'Keep the account?' })).toBeVisible();
 
     el.heading = '   ';
-    await expect.poll(() => internalDialog(el).hasAttribute('aria-labelledby')).toBe(false);
+    await expect.element(page.getByRole('dialog')).toHaveAccessibleName('');
     expect(el.shadowRoot?.querySelector('[part="heading"]')).toBeNull();
     expect(el.open).toBe(true);
     await el.close();

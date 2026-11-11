@@ -83,8 +83,10 @@ jobs:
   full-mutation:
     if: github.event.schedule == '41 2 * * 0'
     runs-on: ubuntu-latest
-    # Includes Chromium behavior specs as well as mock-doc diagnostics.
-    timeout-minutes: 120
+    # Local run: ~23 min at 12 workers on a 32-core host (~276 worker-minutes).
+    # At concurrency 4 on a 4-vCPU runner, expect ~105-170 min.
+    # Record the first real CI runtime here once measured.
+    timeout-minutes: 240
     permissions:
       contents: read
     steps:

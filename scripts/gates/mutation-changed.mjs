@@ -2,7 +2,7 @@
 
 import { execFile } from 'node:child_process';
 import { constants as fsConstants } from 'node:fs';
-import { access, lstat, mkdir, open, readdir, realpath, rm } from 'node:fs/promises';
+import { access, appendFile, lstat, mkdir, open, readdir, realpath, rm } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
@@ -26,6 +26,8 @@ const CONFIG_PATHS = Object.freeze({
   'elements-browser': 'packages/elements/vitest.browser.config.ts',
   'elements-build': 'scripts/gates/build-mutation-elements.sh',
   'elements-coverage': 'packages/elements/vitest.coverage.config.ts',
+  'elements-setup': 'packages/elements/vitest.setup.mjs',
+  'elements-stencil': 'packages/elements/stencil.config.ts',
   'elements-unit': 'packages/elements/vitest.config.ts',
   node: 'stryker.node.config.mjs',
   vitest: 'vitest.mutation.config.ts',
@@ -519,6 +521,7 @@ export const runMutationGroups = async ({
   workspaceRoot,
   cacheRoot,
   force,
+  summaryFile,
   executeStryker = defaultExecuteStryker,
 }) => {
   if (!isPlainRecord(report) || !isPlainRecord(report.groups)) {
@@ -577,6 +580,13 @@ export const runMutationGroups = async ({
       await executeStryker(options);
       const parsedReport = await readMutationJson(mutationFile, runner);
       const evaluation = evaluateMutationReport(parsedReport, files);
+      const { counts } = evaluation;
+      const killedOnlyScore = (counts.killed * 100) / counts.valid;
+      const summary = `${runner} mutation score (official, killed + timeouts / valid mutants): ${counts.detected}/${counts.valid} (${evaluation.score.toFixed(2)}%); killed-only score (killed / valid mutants): ${counts.killed}/${counts.valid} (${killedOnlyScore.toFixed(2)}%)`;
+      console.log(summary);
+      if (summaryFile) {
+        await appendFile(summaryFile, `${summary}\n`);
+      }
       if (evaluation.decision !== 'pass') {
         throw new Error(
           `${runner} mutation score ${evaluation.counts.detected}/${evaluation.counts.valid} (${evaluation.score.toFixed(2)}%) is below ${MUTATION_THRESHOLD}%`,
@@ -584,6 +594,7 @@ export const runMutationGroups = async ({
       }
       results[runner] = {
         ...evaluation,
+        killedOnlyScore,
         files,
         runnerScopeHash,
         incrementalFile,
@@ -674,6 +685,7 @@ export const main = async ({
     workspaceRoot,
     cacheRoot: environment.KIMEN_MUTATION_CACHE_DIR,
     force: options.force,
+    summaryFile: environment.GITHUB_STEP_SUMMARY,
   });
   process.stdout.write(
     canonicalJson({

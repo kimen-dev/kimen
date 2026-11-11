@@ -115,6 +115,8 @@ describe('mutation scope report', () => {
       'elements-browser',
       'elements-build',
       'elements-coverage',
+      'elements-setup',
+      'elements-stencil',
       'elements-unit',
       'node',
       'vitest',
@@ -141,9 +143,11 @@ describe('mutation scope report', () => {
     await Promise.all(
       [
         'stryker.elements.config.mjs',
+        'packages/elements/stencil.config.ts',
         'packages/elements/vitest.browser.config.ts',
         'packages/elements/vitest.config.ts',
         'packages/elements/vitest.coverage.config.ts',
+        'packages/elements/vitest.setup.mjs',
         'scripts/gates/build-mutation-elements.sh',
         'stryker.node.config.mjs',
         'vitest.mutation.config.ts',
