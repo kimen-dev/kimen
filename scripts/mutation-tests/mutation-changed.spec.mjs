@@ -10,7 +10,7 @@ import {
   writeFile,
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
@@ -112,6 +112,10 @@ describe('mutation scope report', () => {
     expect(report.policyHash).toMatch(/^[0-9a-f]{64}$/);
     expect(Object.keys(report.configHashes)).toEqual([
       'elements',
+      'elements-browser',
+      'elements-build',
+      'elements-coverage',
+      'elements-unit',
       'node',
       'vitest',
       'vitest-elements',
@@ -137,11 +141,18 @@ describe('mutation scope report', () => {
     await Promise.all(
       [
         'stryker.elements.config.mjs',
+        'packages/elements/vitest.browser.config.ts',
+        'packages/elements/vitest.config.ts',
+        'packages/elements/vitest.coverage.config.ts',
+        'scripts/gates/build-mutation-elements.sh',
         'stryker.node.config.mjs',
         'vitest.mutation.config.ts',
         'vitest.mutation.elements.config.ts',
         'vitest.mutation.node.config.ts',
-      ].map((name) => writeFile(join(root, name), 'export default {};\n')),
+      ].map(async (name) => {
+        await mkdir(dirname(join(root, name)), { recursive: true });
+        await writeFile(join(root, name), 'export default {};\n');
+      }),
     );
     await expect(buildReport({ paths: ['README.md'], workspaceRoot: root })).rejects.toThrow(
       /cannot hash mutation lockfile/i,

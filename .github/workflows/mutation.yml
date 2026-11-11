@@ -36,6 +36,15 @@ jobs:
             objects.githubusercontent.com:443
             release-assets.githubusercontent.com:443
             registry.npmjs.org:443
+            cdn.playwright.dev:443
+            playwright.azureedge.net:443
+            playwright.download.prss.microsoft.com:443
+            packages.microsoft.com:443
+            dl.google.com:443
+            azure.archive.ubuntu.com:80
+            storage.googleapis.com:443
+            archive.ubuntu.com:443
+            security.ubuntu.com:443
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -55,6 +64,9 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      - name: Install Chromium
+        run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
+
       - name: Select the preceding 24-hour window
         shell: bash
         run: |
@@ -71,10 +83,7 @@ jobs:
   full-mutation:
     if: github.event.schedule == '41 2 * * 0'
     runs-on: ubuntu-latest
-    # A filtered 3-component validation run measured 67 mutants in ~11 s
-    # locally (perTest coverage, mock-doc suite); the ~1300-mutant full scope
-    # extrapolates to well under an hour on a 4-vCPU runner. 120 covers
-    # several times that for suite growth.
+    # Includes Chromium behavior specs as well as mock-doc diagnostics.
     timeout-minutes: 120
     permissions:
       contents: read
@@ -91,6 +100,15 @@ jobs:
             objects.githubusercontent.com:443
             release-assets.githubusercontent.com:443
             registry.npmjs.org:443
+            cdn.playwright.dev:443
+            playwright.azureedge.net:443
+            playwright.download.prss.microsoft.com:443
+            packages.microsoft.com:443
+            dl.google.com:443
+            azure.archive.ubuntu.com:80
+            storage.googleapis.com:443
+            archive.ubuntu.com:443
+            security.ubuntu.com:443
             results-receiver.actions.githubusercontent.com:443
             *.blob.core.windows.net:443
 
@@ -110,6 +128,9 @@ jobs:
 
       - name: Install
         run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
 
       # tee preserves the Stryker log plus the final canonical scope report in
       # the artifact; the machine-readable result is the Stryker mutation.json

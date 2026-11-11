@@ -201,6 +201,95 @@ function nextClose(el: KiDialogElement): Promise<KiCloseEvent> {
   });
 }
 
+describe('ki-dialog live content and interaction boundaries', () => {
+  it('S1 updates footer visibility when actions are added and removed while open', async () => {
+    cleanup();
+    const el = await mountDialog({}, document.body, '<p>Review the decision.</p>');
+    await openDialog(el);
+    const footer = requireEl(internalDialog(el), '[part="footer"]');
+    expect(footer.hidden).toBe(true);
+
+    const action = document.createElement('button');
+    action.slot = 'footer';
+    action.textContent = 'Confirm';
+    el.append(action);
+    await expect.poll(() => footer.hidden).toBe(false);
+    await expect.element(action).toBeVisible();
+
+    action.remove();
+    await expect.poll(() => footer.hidden).toBe(true);
+    expect(el.open).toBe(true);
+    await el.close();
+  });
+
+  it('S9 updates the visible title and accessible name, and removes a blank title', async () => {
+    cleanup();
+    const el = await mountDialog();
+    await openDialog(el);
+    el.heading = 'Keep the account?';
+    await expect.element(page.getByRole('dialog', { name: 'Keep the account?' })).toBeVisible();
+    await expect.element(page.getByRole('heading', { name: 'Keep the account?' })).toBeVisible();
+
+    el.heading = '   ';
+    await expect.poll(() => internalDialog(el).hasAttribute('aria-labelledby')).toBe(false);
+    expect(el.shadowRoot?.querySelector('[part="heading"]')).toBeNull();
+    expect(el.open).toBe(true);
+    await el.close();
+  });
+
+  it('S7 preserves forward and reverse tab order and ignores unrelated keys', async () => {
+    cleanup();
+    const el = await mountDialog(
+      {},
+      document.body,
+      `
+      <button slot="footer">First</button>
+      <button slot="footer">Middle</button>
+      <button slot="footer">Last</button>
+    `,
+    );
+    await openDialog(el);
+    const first = footerButton(el, 'First');
+    const middle = footerButton(el, 'Middle');
+    const last = footerButton(el, 'Last');
+    first.focus();
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    await expect.poll(() => document.activeElement).toBe(last);
+    await userEvent.keyboard('{ArrowDown}');
+    expect(document.activeElement).toBe(last);
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    await expect.poll(() => document.activeElement).toBe(middle);
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => document.activeElement).toBe(last);
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => document.activeElement).toBe(first);
+    await el.close();
+  });
+
+  it('S4 a press on the backdrop released inside does not dismiss or arm a later click', async () => {
+    cleanup();
+    const el = await mountDialog({ 'close-on-backdrop': true });
+    await openDialog(el);
+    const dialog = internalDialog(el);
+    const rect = dialog.getBoundingClientRect();
+    const outside = { clientX: rect.left - 4, clientY: rect.top + rect.height / 2 };
+    dialog.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, ...outside }));
+    dialog.dispatchEvent(
+      new MouseEvent('click', {
+        bubbles: true,
+        clientX: rect.left + rect.width / 2,
+        clientY: rect.top + rect.height / 2,
+      }),
+    );
+    expect(dialog.open).toBe(true);
+
+    dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, ...outside }));
+    expect(dialog.open).toBe(true);
+    expect(el.open).toBe(true);
+    await el.close();
+  });
+});
+
 async function backdropClick(el: KiDialogElement, armInside = false): Promise<void> {
   const dialog = internalDialog(el);
   const rect = dialog.getBoundingClientRect();

@@ -1,6 +1,12 @@
+const concurrency = Number(process.env['KIMEN_MUTATION_CONCURRENCY'] ?? 4);
+if (!Number.isSafeInteger(concurrency) || concurrency < 1) {
+  throw new Error('KIMEN_MUTATION_CONCURRENCY must be a positive integer');
+}
+
 /**
- * Stable Stencil mutation policy. Component specs consume the built lazy
- * loader, so every sandbox rebuilds from the instrumented source before tests.
+ * Stable Stencil mutation policy. Unit specs consume the built lazy loader;
+ * browser specs consume dist/components. Rebuild both from instrumented source
+ * and build the tokens used by browser fixtures in every sandbox.
  * T026 supplies all scope-specific paths and flags programmatically.
  *
  * @satisfies {import('@stryker-mutator/api/core').PartialStrykerOptions & {
@@ -28,7 +34,10 @@ const config = {
     related: false,
     dir: '.',
   },
-  buildCommand: 'pnpm --filter @kimen/elements exec stencil build',
+  buildCommand: 'bash scripts/gates/build-mutation-elements.sh',
+  // Each worker owns Chromium and Vitest. CI uses four; larger local machines
+  // can explicitly budget more workers without changing the mutation policy.
+  concurrency,
   coverageAnalysis: 'perTest',
   thresholds: {
     high: 70,
