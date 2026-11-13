@@ -16,6 +16,6 @@
     }
   },
   "dependencies": {
-    "@nx/devkit": "24.0.3"
+    "@nx/devkit": "24.0.5"
   }
 }

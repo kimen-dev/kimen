@@ -553,8 +553,8 @@ importers:
   tools/kimen-plugin:
     dependencies:
       '@nx/devkit':
-        specifier: 24.0.3
-        version: 24.0.3(nx@24.0.3)
+        specifier: 24.0.5
+        version: 24.0.5(nx@24.0.3)
 
 packages:
 
@@ -2542,6 +2542,11 @@ packages:
 
   '@nx/devkit@24.0.3':
     resolution: {integrity: sha512-Q4yrx/wVIWzug9bDggiEBVNSfTo3Em/E9i1pCcsiV+H4mtWVeorbFR/ri7jngygmYnPIF2X1fAxgldXwuCVLRg==}
+    peerDependencies:
+      nx: '>= 23 <= 25 || ^24.0.0-0'
+
+  '@nx/devkit@24.0.5':
+    resolution: {integrity: sha512-mXDYdlPQi3f3OukZsqqmwKO0Gkv9k+r1I6jctF5QXaYB7o5JT7n9wYO30CKQ938k9t8WPfaWRU4kioaoWX3uDw==}
     peerDependencies:
       nx: '>= 23 <= 25 || ^24.0.0-0'
 
@@ -9993,6 +9998,15 @@ snapshots:
       fastq: 1.20.3
 
   '@nx/devkit@24.0.3(nx@24.0.3)':
+    dependencies:
+      ejs: 5.0.1
+      minimatch: 10.2.5
+      nx: 24.0.3
+      semver: 7.8.5
+      tslib: 2.9.1
+      yargs-parser: 21.1.1
+
+  '@nx/devkit@24.0.5(nx@24.0.3)':
     dependencies:
       ejs: 5.0.1
       minimatch: 10.2.5
