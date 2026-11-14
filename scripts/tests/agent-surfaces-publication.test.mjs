@@ -108,3 +108,67 @@ test('S11 every link of the packaged llms.txt is a relative path to a file insid
     'every generated document must be both shipped and linked',
   );
 });
+
+// Deliberately carries no scenario ID: build caching is tooling, not behavior
+// an agent can observe. It is the regression test for a cache that replayed a
+// stale llms.txt after docs/genui-surfaces.json changed, because the elements
+// build read that file (and the packages it is validated against) without
+// declaring them as inputs.
+test('the elements build cache is invalidated by every source of the agent surfaces and restores every surface', async () => {
+  const manifest = await readRepositoryJson('packages/elements/package.json');
+  const { inputs, outputs } = manifest.nx.targets.build;
+  const declares = (path) =>
+    inputs.some((input) => {
+      const pattern = input.replace('{workspaceRoot}/', '');
+      return pattern.endsWith('/**/*')
+        ? path.startsWith(pattern.slice(0, -'**/*'.length))
+        : pattern === path;
+    });
+  // Workspace-level scripts the build scripts load or spawn by path.
+  const buildScripts = (await readdir(join(elementsRoot, 'scripts'))).filter((file) =>
+    file.endsWith('.mjs'),
+  );
+  const referenced = new Set();
+  for (const file of buildScripts) {
+    const source = await readFile(join(elementsRoot, 'scripts', file), 'utf8');
+    for (const match of source.matchAll(/'(scripts\/(?:lib|gates)\/[\w./-]+\.mjs)'/gu)) {
+      referenced.add(match[1]);
+    }
+  }
+  const sources = [
+    'docs/genui-surfaces.json',
+    ...(await genUiDirectories()).flatMap((directory) => [
+      `${directory}/package.json`,
+      `${directory}/src/index.ts`,
+    ]),
+    ...referenced,
+  ];
+
+  assert.ok(
+    referenced.has('scripts/lib/token-inventory.mjs'),
+    'the scan must find the build libraries',
+  );
+  assert.deepEqual(
+    sources.filter((path) => !declares(path)),
+    [],
+    'a source the build reads without declaring it lets Nx replay stale surfaces',
+  );
+  for (const output of [
+    '{projectRoot}/llms.txt',
+    '{projectRoot}/llms-full.txt',
+    '{projectRoot}/llms',
+    '{workspaceRoot}/llms.txt',
+    '{workspaceRoot}/llms-full.txt',
+    '{workspaceRoot}/llms',
+  ]) {
+    assert.ok(outputs.includes(output), `${output} must be restored by an Nx build cache hit`);
+  }
+  // The build's own outputs must never feed its cache key.
+  for (const excluded of [
+    '!{projectRoot}/llms.txt',
+    '!{projectRoot}/llms-full.txt',
+    '!{projectRoot}/llms/**',
+  ]) {
+    assert.ok(inputs.includes(excluded), `${excluded} must be excluded from the build inputs`);
+  }
+});
