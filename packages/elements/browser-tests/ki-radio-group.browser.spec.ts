@@ -862,3 +862,64 @@ describe('ki-radio-group boolean presence in a real browser', () => {
     expect(el.value).toBe('sms');
   });
 });
+
+describe('ki-radio-group with options hidden by the hidden attribute', () => {
+  async function tabInto(el: KiRadioGroupElement): Promise<void> {
+    const before = document.createElement('button');
+    before.textContent = 'Before';
+    el.before(before);
+    before.focus();
+    await userEvent.keyboard('{Tab}');
+  }
+
+  it('S25 Tab enters an unselected group on the first visible option when the first one is hidden', async () => {
+    cleanup();
+    const el = await mount();
+    el.querySelectorAll('ki-radio')[0]?.setAttribute('hidden', '');
+    await settleFrames();
+
+    await tabInto(el);
+
+    expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(radioAt(el, 1));
+    expect(radios(el).some((input) => input.checked)).toBe(false);
+  });
+
+  it('S5 Tab still reaches the group when its selected option is hidden, and the value is kept', async () => {
+    cleanup();
+    const el = await mount({ value: 'email' });
+    el.querySelectorAll('ki-radio')[0]?.setAttribute('hidden', '');
+    await settleFrames();
+
+    await tabInto(el);
+
+    expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(radioAt(el, 1));
+    expect(el.value).toBe('email');
+  });
+
+  it('S7 Arrow navigation skips a hidden option', async () => {
+    cleanup();
+    const el = await mount({ value: 'email' });
+    el.querySelectorAll('ki-radio')[1]?.setAttribute('hidden', '');
+    await settleFrames();
+    radioAt(el, 0).focus();
+
+    await userEvent.keyboard('{ArrowDown}');
+
+    expect(el.querySelectorAll('ki-radio')[2]?.shadowRoot?.activeElement).toBe(radioAt(el, 2));
+    expect(radioAt(el, 2).checked).toBe(true);
+  });
+
+  it('S25 an option revealed again becomes reachable in its place', async () => {
+    cleanup();
+    const el = await mount();
+    const first = el.querySelectorAll('ki-radio')[0];
+    first?.setAttribute('hidden', '');
+    await settleFrames();
+    first?.removeAttribute('hidden');
+    await settleFrames();
+
+    await tabInto(el);
+
+    expect(first?.shadowRoot?.activeElement).toBe(radioAt(el, 0));
+  });
+});
