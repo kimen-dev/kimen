@@ -378,6 +378,11 @@ export class KiSelect {
   }
 
   private commit(index: number): void {
+    // Select-only combobox: DOM focus belongs on the trigger. A pointer press
+    // moves it onto the pressed row, which is then hidden with the popup (focus
+    // falls to the body) or, for a disabled row, stays open with the keyboard
+    // handlers out of reach. Keyboard commits are already there: a no-op.
+    this.triggerElement?.focus();
     const option = this.roster[index];
     // Activating a disabled (or missing) option does nothing and leaves the
     // popup open — closing first would change interaction state and force a

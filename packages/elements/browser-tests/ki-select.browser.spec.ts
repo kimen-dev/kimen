@@ -145,6 +145,40 @@ describe('ki-select in a real browser', () => {
     expect(valueText(el)).toBe('Choose a country');
   });
 
+  // Select-only combobox (APG): DOM focus stays on the combobox while the
+  // options are pointed at through aria-activedescendant. A real pointer press
+  // moves focus onto the pressed row, and the row is then hidden with the
+  // popup — so these use real clicks, not element.click().
+  it('S1 choosing an option with the pointer returns focus to the trigger', async () => {
+    const el = await mountSelect();
+
+    await userEvent.click(trigger(el));
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.click(rowAt(el, 1));
+
+    expect(el.value).toBe('fr');
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'false');
+    expect(document.activeElement).toBe(el);
+    expect(el.shadowRoot?.activeElement).toBe(trigger(el));
+  });
+
+  it('S4 pressing a disabled option keeps the open select operable from the keyboard', async () => {
+    const el = await mountSelect(
+      '',
+      `<ki-option value="es">Spain</ki-option><ki-option value="fr" disabled>France</ki-option>`,
+    );
+
+    await userEvent.click(trigger(el));
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'true');
+    // force: the row is exposed unavailable, so the driver would wait for it.
+    await userEvent.click(rowAt(el, 1), { force: true });
+
+    expect(trigger(el).getAttribute('aria-expanded')).toBe('true');
+    expect(el.shadowRoot?.activeElement).toBe(trigger(el));
+    await userEvent.keyboard('{Escape}');
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'false');
+  });
+
   it('S5 S25 falls back to placeholder for dangling values and removed selections silently', async () => {
     const dangling = await mountSelect('value="atlantis"');
     expect(dangling.value).toBe('');
