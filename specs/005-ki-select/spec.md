@@ -328,6 +328,20 @@ Feature: Select
     When the user opens it from the keyboard
     Then the options open with "Spain" highlighted
 
+  # S27
+  Scenario Outline: Typing characters highlights the next option that starts with them
+    Given a focused <popup> select "Country" listing "Spain", "France", "Portugal" and "Poland" with no selection
+    When the user types <typing>
+    Then the options are open with <option> highlighted
+
+    Examples:
+      | popup  | typing                        | option   |
+      | closed | "f"                           | "France" |
+      | open   | "f"                           | "France" |
+      | open   | "pol" in quick succession     | "Poland" |
+      | open   | "p" twice in quick succession | "Poland" |
+      | open   | "p" and, after a pause, "f"   | "France" |
+
   # Family: assistive-tech outcome
   # S11
   Scenario: The select is exposed as a named combobox with its value
@@ -398,7 +412,7 @@ Feature: Select
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
 | Core behavior | S1, S2, S3, S4, S5, S20, S25, S26 | |
-| Keyboard path | S6, S7, S8, S9, S10, S21, S22, S23 | |
+| Keyboard path | S6, S7, S8, S9, S10, S21, S22, S23, S27 | |
 | Assistive-tech outcome | S11, S12 | |
 | Form participation | S13, S14, S15, S16, S24 | |
 | Theming | S17, S18, S19 | |
@@ -436,10 +450,13 @@ Feature: Select
   outside the open popup closes it without changing the selection (light
   dismiss).
 - **FR-007**: Keyboard path MUST follow the APG select-only combobox
-  pattern, EXCEPT printable-character type-ahead, which v1 excludes under
-  the charter's typeahead exclusion (open question for the founder at
-  gate 1; if type-ahead is included, a new appended scenario ID lands in
-  the Gherkin before implementation). Concretely: Enter, Space, Arrow Down
+  pattern, INCLUDING printable-character type-ahead (the founder closed the
+  gate-1 open question by including it; contracted as S27): typing
+  printable characters moves the highlight to the next enabled option whose
+  label starts with what was typed, opening the popup first when it is
+  closed; characters typed in quick succession match as one string, a pause
+  starts a new one, and repeating a character walks the options that start
+  with it. Typing never commits. Concretely: Enter, Space, Arrow Down
   and Arrow Up open the popup; Home and End on the closed select open the
   popup with the first/last enabled option highlighted (APG); on opening,
   the highlight lands on the selected option or, with no selection, on the
@@ -551,7 +568,8 @@ Feature: Select
   options are too many to show at once (roughly five or more) or space is
   limited. When NOT to use — two to four always-visible choices (use
   ki-radio-group), on/off decisions (ki-switch or ki-checkbox), free or
-  searchable text entry (ki-input; this select has no typeahead in v1),
+  searchable text entry (ki-input; this select's type-ahead only moves the
+  highlight, it never filters the list),
   multiple selection (out of v1), command menus or navigation (not a menu
   component).
 - **Guardrail/security boundary** (Art. VIII): none — no spec rendering,
@@ -601,12 +619,12 @@ Feature: Select
 - Popup placement in v1 is below the trigger with CSS-only positioning;
   viewport collision handling (flipping) is a post-v1 concern, keeping the
   bundle free of positioning dependencies.
-- Printable-character type-ahead (first-letter jump to an option) is read as
-  part of the charter's "NO typeahead" exclusion and left out of v1, even
-  though the APG lists it for the pattern — FR-007 states this exception
-  explicitly; flagged as an open question for the founder at gate 1. If the
-  founder includes it, the decision folds back into FR-007 and a new
-  appended scenario ID lands in the Gherkin before implementation.
+- Printable-character type-ahead (jump to the option that starts with what
+  was typed) was first read as part of the charter's "NO typeahead"
+  exclusion and left out; the founder later included it, as the APG lists it
+  for the pattern. The decision is folded into FR-007 and contracted as S27.
+  The charter's exclusion still stands for what it names: a typeahead SEARCH
+  BOX that filters the list (FR-001).
 - While the popup is open, Tab closes it and discards an uncommitted
   highlight (Escape parity, contracted as S21); the APG also admits a
   commit-on-Tab model — the discard model is the default reading stated in

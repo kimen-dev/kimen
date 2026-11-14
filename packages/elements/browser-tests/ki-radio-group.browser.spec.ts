@@ -6,6 +6,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
+import { defineCustomElement as defineInput } from '../dist/components/ki-input.js';
 import { defineCustomElement as defineRadio } from '../dist/components/ki-radio.js';
 import { defineCustomElement as defineRadioGroup } from '../dist/components/ki-radio-group.js';
 import { expectAccessible } from './axe';
@@ -13,9 +14,11 @@ import { expectAccessible } from './axe';
 type KiRadioGroupElement = HTMLElement & {
   disabled: boolean;
   label: string;
+  required: boolean;
   value: string;
   validationMessage: string;
 };
+type KiRadioElement = HTMLElement & { disabled: boolean };
 
 const STYLE_ID = 'ki-radio-group-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-radio-group-browser-material3-token-style';
@@ -23,6 +26,7 @@ const MATERIAL3_STYLE_ID = 'ki-radio-group-browser-material3-token-style';
 beforeAll(() => {
   defineRadioGroup();
   defineRadio();
+  defineInput();
 });
 
 function ensureTokens(): void {
@@ -617,6 +621,109 @@ describe('ki-radio-group in a real browser', () => {
   });
 });
 
+// The group listens for `input` in the capture phase to learn of a selection
+// before any application listener. Whatever else is composed inside it — the
+// text field next to an "Other" option is the common case — owns its events:
+// silencing them at the group would stop that control hearing its own input.
+describe('ki-radio-group with another control composed inside it', () => {
+  it('a text field inside the group still receives and publishes what the user types', async () => {
+    cleanup();
+    const el = await mount({ value: 'email' });
+    const other = document.createElement('ki-input') as HTMLElement & { value: string };
+    other.setAttribute('label', 'Other');
+    el.append(other);
+    await customElements.whenDefined('ki-input');
+    await settleFrames(4);
+    const field = other.shadowRoot?.querySelector('input');
+    if (!field) {
+      throw new Error('ki-input did not render an input');
+    }
+    const heard: (EventTarget | null)[] = [];
+    const listen = (event: Event): void => {
+      heard.push(event.target);
+    };
+    document.addEventListener('input', listen);
+
+    await userEvent.type(field, 'Fax');
+    document.removeEventListener('input', listen);
+
+    expect(other.value).toBe('Fax');
+    expect(heard).toEqual([other, other, other]);
+    // The group's own selection is none of the text field's business either.
+    expect(el.value).toBe('email');
+    expect(radioAt(el, 0).checked).toBe(true);
+  });
+});
+
+// Generated UI streams: the group can be in the document, already loaded,
+// before any of its options exist. Selection re-derives from the declared
+// value as options arrive (spec 007 edge case "Options inserted at runtime").
+describe('ki-radio-group with options that arrive after the group', () => {
+  async function mountEmpty(value: string): Promise<KiRadioGroupElement> {
+    ensureTokens();
+    const el = document.createElement('ki-radio-group') as unknown as KiRadioGroupElement;
+    el.setAttribute('label', 'Plan');
+    el.setAttribute('value', value);
+    document.body.append(el);
+    await customElements.whenDefined('ki-radio-group');
+    await settleFrames(4);
+    return el;
+  }
+
+  function appendOption(el: KiRadioGroupElement, value: string): HTMLElement {
+    const option = document.createElement('ki-radio');
+    option.setAttribute('value', value);
+    option.textContent = `Plan ${value.toUpperCase()}`;
+    el.append(option);
+    return option;
+  }
+
+  function pageButton(label: string): HTMLButtonElement {
+    const button = document.createElement('button');
+    button.textContent = label;
+    document.body.append(button);
+    return button;
+  }
+
+  it('S5 options appended after load select the pending value and form a single tab stop', async () => {
+    cleanup();
+    const before = pageButton('Before');
+    const el = await mountEmpty('b');
+    const after = pageButton('After');
+
+    appendOption(el, 'a');
+    const pending = appendOption(el, 'b');
+    appendOption(el, 'c');
+    await settleFrames(4);
+
+    expect(el.value).toBe('b');
+    expect(radios(el).map((input) => input.checked)).toEqual([false, true, false]);
+    before.focus();
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(pending);
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(after);
+  });
+
+  it('S4 the pending value waits for its option while the others arrive one at a time', async () => {
+    cleanup();
+    const el = await mountEmpty('b');
+
+    appendOption(el, 'a');
+    await settleFrames(4);
+    expect(radios(el).map((input) => input.checked)).toEqual([false]);
+
+    appendOption(el, 'b');
+    await settleFrames(4);
+    appendOption(el, 'c');
+    await settleFrames(4);
+
+    expect(el.value).toBe('b');
+    expect(radios(el).map((input) => input.checked)).toEqual([false, true, false]);
+    expect(radios(el).map((input) => input.tabIndex)).toEqual([-1, 0, -1]);
+  });
+});
+
 // Boolean presence semantics (native HTML parity): a present attribute means
 // true whatever its value. Stencil >= 4.45 removes a host attribute when it
 // reflects a parsed `false`, so these run against the built output.
@@ -679,5 +786,115 @@ describe('ki-radio-group boolean presence in a real browser', () => {
     // Presence is normalized: the host attribute stays, with an empty value.
     expect(options[1]?.getAttribute('disabled')).toBe('');
     expect(options[2]?.getAttribute('disabled')).toBe('');
+  });
+
+  // Presence semantics are about ATTRIBUTES. Framework wrappers (React, Vue,
+  // Angular) assign PROPERTIES, so a group disabled while its data loads must
+  // come back when the property is cleared: re-reading the attribute Stencil
+  // has not un-reflected yet would pin the group disabled and required forever.
+  it('S19 S13 clearing the disabled and required properties re-enables the group and lifts the requirement', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount({ name: 'contact', disabled: true, required: true }, form);
+
+    el.disabled = false;
+    el.required = false;
+    await settleFrames();
+
+    const group = el.shadowRoot?.querySelector('[role="radiogroup"]');
+    expect(el.disabled).toBe(false);
+    expect(el.required).toBe(false);
+    expect(el.hasAttribute('disabled')).toBe(false);
+    expect(group?.hasAttribute('aria-disabled')).toBe(false);
+    expect(group?.hasAttribute('aria-required')).toBe(false);
+    // No longer required: an unanswered group does not block the form.
+    expect(form.checkValidity()).toBe(true);
+
+    await userEvent.click(radioAt(el, 1));
+
+    expect(el.value).toBe('sms');
+    expect(new FormData(form).get('contact')).toBe('sms');
+  });
+
+  it('S3 clearing the disabled property makes a disabled option selectable again', async () => {
+    cleanup();
+    const el = await mount();
+    const sms = el.querySelectorAll<KiRadioElement>('ki-radio')[1];
+    if (!sms) {
+      throw new Error('Missing the SMS option');
+    }
+    sms.setAttribute('disabled', '');
+    await settleFrames();
+    expect(radioAt(el, 1).disabled).toBe(true);
+
+    sms.disabled = false;
+    await settleFrames();
+
+    expect(sms.disabled).toBe(false);
+    expect(sms.hasAttribute('disabled')).toBe(false);
+    await userEvent.click(radioAt(el, 1));
+    expect(el.value).toBe('sms');
+  });
+});
+
+describe('ki-radio-group with options hidden by the hidden attribute', () => {
+  async function tabInto(el: KiRadioGroupElement): Promise<void> {
+    const before = document.createElement('button');
+    before.textContent = 'Before';
+    el.before(before);
+    before.focus();
+    await userEvent.keyboard('{Tab}');
+  }
+
+  it('S25 Tab enters an unselected group on the first visible option when the first one is hidden', async () => {
+    cleanup();
+    const el = await mount();
+    el.querySelectorAll('ki-radio')[0]?.setAttribute('hidden', '');
+    await settleFrames();
+
+    await tabInto(el);
+
+    expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(radioAt(el, 1));
+    expect(radios(el).some((input) => input.checked)).toBe(false);
+  });
+
+  it('S5 Tab still reaches the group when its selected option is hidden, and the value is kept', async () => {
+    cleanup();
+    const el = await mount({ value: 'email' });
+    el.querySelectorAll('ki-radio')[0]?.setAttribute('hidden', '');
+    await settleFrames();
+
+    await tabInto(el);
+
+    expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(radioAt(el, 1));
+    expect(el.value).toBe('email');
+  });
+
+  it('S7 Arrow navigation skips a hidden option', async () => {
+    cleanup();
+    const el = await mount({ value: 'email' });
+    el.querySelectorAll('ki-radio')[1]?.setAttribute('hidden', '');
+    await settleFrames();
+    radioAt(el, 0).focus();
+
+    await userEvent.keyboard('{ArrowDown}');
+
+    expect(el.querySelectorAll('ki-radio')[2]?.shadowRoot?.activeElement).toBe(radioAt(el, 2));
+    expect(radioAt(el, 2).checked).toBe(true);
+  });
+
+  it('S25 an option revealed again becomes reachable in its place', async () => {
+    cleanup();
+    const el = await mount();
+    const first = el.querySelectorAll('ki-radio')[0];
+    first?.setAttribute('hidden', '');
+    await settleFrames();
+    first?.removeAttribute('hidden');
+    await settleFrames();
+
+    await tabInto(el);
+
+    expect(first?.shadowRoot?.activeElement).toBe(radioAt(el, 0));
   });
 });

@@ -91,8 +91,8 @@
           "$description": "color used by the textarea component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.low-em}",
-          "$description": "color used by the textarea component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
         }
       },
       "hover": {
@@ -113,8 +113,8 @@
           "$description": "color used by the textarea component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.low-em}",
-          "$description": "color used by the textarea component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
         }
       },
       "focus": {
@@ -135,8 +135,8 @@
           "$description": "color used by the textarea component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.low-em}",
-          "$description": "color used by the textarea component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
         }
       },
       "disabled": {
@@ -183,8 +183,8 @@
           "$description": "color used by the textarea component for readonly label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.low-em}",
-          "$description": "color used by the textarea component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
         }
       },
       "invalid": {
@@ -205,8 +205,8 @@
           "$description": "color used by the textarea component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input)."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.low-em}",
-          "$description": "color used by the textarea component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+          "$value": "{ki.text.med-em}",
+          "$description": "color used by the textarea component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
         },
         "ring": {
           "$value": "{ki.focus.danger}",

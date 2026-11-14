@@ -127,6 +127,15 @@ export class KiVideo {
     // everything else on the media element passes through untouched
     // (sources, poster, tracks, events — FR-005).
     media.controls = true;
+    // The facade button leaves the Tab order as it yields, and focus left on
+    // it would fall to the document. The play button is this shadow root's
+    // only focusable, so an active element here means the person activated
+    // it with focus on it: hand that focus to the native player, focusable
+    // now that it carries controls. Activation from anywhere else (a script)
+    // leaves focus where it is.
+    if (this.host.shadowRoot?.activeElement) {
+      media.focus();
+    }
     if (typeof media.play === 'function') {
       // The play() promise's outcome (source availability, platform policy)
       // belongs to the consumer's element, observable through the native

@@ -187,3 +187,22 @@
     transform: none;
   }
 }
+
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
+/* Forced colors (Windows Contrast themes): the user's palette replaces the
+ * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
+ * are dropped, and only system colours — that palette — can be named.
+ *
+ * The alert is told from the page by its tone fill alone, and a forced
+ * palette removes it. It gets an edge.
+ * `thin` is the browser's own hairline: a theme may set a border token to
+ * zero, never this. */
+@media (forced-colors: active) {
+  [part="alert"] {
+    border: thin solid CanvasText;
+  }
+}

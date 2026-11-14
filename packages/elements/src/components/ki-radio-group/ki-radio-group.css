@@ -32,3 +32,8 @@
   flex-direction: column;
   gap: var(--_ki-radio-group-gap);
 }
+
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}

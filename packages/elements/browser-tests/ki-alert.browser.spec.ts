@@ -442,6 +442,27 @@ describe('ki-alert in a real browser', () => {
     expect(document.activeElement).toBe(delegating);
   });
 
+  // The next alert's dismiss button is the following focus stop, but ki-alert
+  // does not delegate focus: focusing its host is a no-op and the handoff
+  // dropped focus on the body instead.
+  it('S16 keyboard dismissal hands focus to the dismiss control of the next alert', async () => {
+    cleanup();
+    const first = await mount('Backup completed', { dismissible: true });
+    const second = await mount('Sync completed', { dismissible: true });
+    const save = document.createElement('button');
+    save.textContent = 'Save';
+    document.body.append(save);
+
+    await userEvent.keyboard('{Tab}');
+    expect(first.shadowRoot?.activeElement).toBe(dismissButton(first));
+    await userEvent.keyboard('{Enter}');
+    await nextFrame();
+
+    expect(first.dismissed).toBe(true);
+    expect(document.activeElement).toBe(second);
+    expect(second.shadowRoot?.activeElement).toBe(dismissButton(second));
+  });
+
   it('S6 keeps the dismiss target at least 24 by 24 CSS pixels', async () => {
     cleanup();
     const el = await mount('Backup completed', { dismissible: true });

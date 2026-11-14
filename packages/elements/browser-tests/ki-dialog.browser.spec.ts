@@ -6,6 +6,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
+import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
 import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
 import { expectAccessible } from './axe';
@@ -24,6 +25,7 @@ const STYLE_ID = 'ki-dialog-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-dialog-browser-material3-token-style';
 beforeAll(() => {
   defineCustomElement();
+  defineKiAlert();
   defineKiButton();
 });
 
@@ -472,6 +474,105 @@ describe('ki-dialog in a real browser', () => {
     expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
   });
 
+  // WCAG 2.1.1 at 400% zoom (320x256): the body is the only way to read the
+  // overflowing copy, so it has to be a Tab stop that the native scroll keys
+  // operate — and stop being one as soon as the content fits again.
+  it('S7 S15 an overflowing body is a Tab stop that scrolls from the keyboard', async () => {
+    cleanup();
+    await page.viewport(320, 256);
+    try {
+      const main = document.createElement('main');
+      document.body.append(main);
+      const el = await mountDialog(
+        {},
+        main,
+        `${'<p>Line of the details.</p>'.repeat(14)}
+         <ki-button slot="footer" id="cancel">Cancel</ki-button>
+         <ki-button slot="footer" id="delete">Delete</ki-button>`,
+      );
+      const cancel = requireEl(el, '#cancel');
+      const remove = requireEl(el, '#delete');
+      await waitFor(
+        () => Boolean(remove.shadowRoot?.querySelector('button')),
+        'ki-button actions hydrated',
+      );
+      await openDialog(el);
+      const body = bodyPart(el);
+      expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+      await expect.poll(() => cancel.shadowRoot?.contains(activeElementDeep())).toBe(true);
+
+      // The body precedes the footer actions, so Shift+Tab from the first
+      // action reaches it, with a visible focus indicator.
+      await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+      await expect.poll(() => activeElementDeep()).toBe(body);
+      expect(getComputedStyle(body).outlineStyle).not.toBe('none');
+      await expectAccessible(main);
+
+      expect(body.scrollTop).toBe(0);
+      await userEvent.keyboard('{ArrowDown}');
+      await expect.poll(() => body.scrollTop).toBeGreaterThan(0);
+      await userEvent.keyboard('{End}');
+      await expect
+        .poll(() => Math.ceil(body.scrollTop + body.clientHeight))
+        .toBeGreaterThanOrEqual(body.scrollHeight);
+
+      // The cycle is body -> Cancel -> Delete -> body, in both directions.
+      await userEvent.keyboard('{Tab}');
+      await expect.poll(() => cancel.shadowRoot?.contains(activeElementDeep())).toBe(true);
+      await userEvent.keyboard('{Tab}');
+      await expect.poll(() => remove.shadowRoot?.contains(activeElementDeep())).toBe(true);
+      await userEvent.keyboard('{Tab}');
+      await expect.poll(() => activeElementDeep()).toBe(body);
+      await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+      await expect.poll(() => remove.shadowRoot?.contains(activeElementDeep())).toBe(true);
+
+      // Room for the whole copy: the body leaves the cycle again.
+      await page.viewport(414, 896);
+      await expect.poll(() => body.scrollHeight <= body.clientHeight).toBe(true);
+      await expect.poll(() => body.tabIndex).toBe(-1);
+      await userEvent.keyboard('{Tab}');
+      await expect.poll(() => cancel.shadowRoot?.contains(activeElementDeep())).toBe(true);
+
+      await el.close();
+    } finally {
+      await page.viewport(414, 896);
+    }
+  });
+
+  // The stop is there on open, before any key is pressed (what a scan of the
+  // open dialog sees), and a dialog moved in the document keeps getting it.
+  it('S15 an overflowing body is a Tab stop as soon as the dialog opens, also after it is moved', async () => {
+    cleanup();
+    await page.viewport(320, 256);
+    try {
+      const el = await mountDialog(
+        {},
+        document.body,
+        `${'<p>Line of the details.</p>'.repeat(14)}
+         <button slot="footer" type="button">Close</button>`,
+      );
+      await openDialog(el);
+      await expect.poll(() => bodyPart(el).tabIndex).toBe(0);
+      await el.close();
+      // The exit fade finishes and the body, without a box, drops its stop.
+      await waitFor(
+        () => getComputedStyle(internalDialog(el)).display === 'none',
+        'dialog exit settled before the move',
+      );
+      await expect.poll(() => bodyPart(el).tabIndex).toBe(-1);
+
+      const section = document.createElement('section');
+      document.body.append(section);
+      section.append(el);
+      await openDialog(el);
+
+      await expect.poll(() => bodyPart(el).tabIndex).toBe(0);
+      await el.close();
+    } finally {
+      await page.viewport(414, 896);
+    }
+  });
+
   it('S6 opening from the keyboard follows focus-entry priority with visible focus', async () => {
     cleanup();
     const opener = document.createElement('button');
@@ -560,6 +661,37 @@ describe('ki-dialog in a real browser', () => {
     await userEvent.keyboard('{Tab}');
     expect(activeElementDeep()).not.toBe(internalDialog(el));
     expect(inAction(activeElementDeep())).toBe(true);
+
+    await el.close();
+  });
+
+  // ki-alert renders its dismiss button in a shadow root that does NOT
+  // delegate focus, so focusing the host is a no-op: the wrap has to land on
+  // the control itself or the dismiss button is unreachable after leaving it.
+  it('S7 Tab wraps back to a slotted control whose host does not delegate focus', async () => {
+    cleanup();
+    const el = await mountDialog(
+      {},
+      document.body,
+      `<ki-alert dismissible heading="Heads up">Note</ki-alert>
+       <button slot="footer" type="button">Cancel</button>
+       <button slot="footer" type="button">Delete</button>`,
+    );
+    const alert = requireEl(el, 'ki-alert');
+    await waitFor(
+      () => Boolean(alert.shadowRoot?.querySelector('[part="dismiss"]')),
+      'ki-alert hydrated its dismiss control',
+    );
+    await openDialog(el);
+    const dismiss = alert.shadowRoot?.querySelector('[part="dismiss"]');
+    await expect.poll(() => activeElementDeep()).toBe(dismiss);
+
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => activeElementDeep()).toBe(footerButton(el, 'Cancel'));
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => activeElementDeep()).toBe(footerButton(el, 'Delete'));
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => activeElementDeep()).toBe(dismiss);
 
     await el.close();
   });

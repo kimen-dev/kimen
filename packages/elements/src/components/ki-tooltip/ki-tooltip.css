@@ -23,12 +23,24 @@
     var(--_ki-tooltip-shadow), var(--ki-effect-component-secondary-default-shadow);
   --_ki-tooltip-cross-shift: 0px;
 
+  /* Inline direction as a sign. `translate` and the measured cross shift are
+   * physical (positive = right) while the inset they pair with is logical, so
+   * both are multiplied by it to stay centered in either direction. */
+  --_ki-tooltip-inline-sign: 1;
+
   display: inline-block;
   position: relative;
   font-family: var(--ki-typography-family-body);
 }
 
+:host(:dir(rtl)) {
+  --_ki-tooltip-inline-sign: -1;
+}
+
 .tooltip {
+  /* Closed, the bubble generates no box: hidden but laid out it still counts
+   * as scrollable overflow and widens a narrow page (WCAG 1.4.10). */
+  display: none;
   position: absolute;
   box-sizing: border-box;
   inline-size: max-content;
@@ -58,14 +70,21 @@
   visibility: hidden;
 }
 
+/* is-measuring lays the closed bubble out, still invisible, for the one
+ * synchronous size read that positions it before it is shown. */
+.tooltip.is-visible,
+.tooltip.is-measuring {
+  display: block;
+}
+
 .tooltip.is-visible {
   visibility: visible;
 }
 
 .tooltip.placement-top,
 .tooltip.placement-bottom {
-  inset-inline-start: calc(50% + var(--_ki-tooltip-cross-shift));
-  translate: -50% 0;
+  inset-inline-start: calc(50% + var(--_ki-tooltip-cross-shift) * var(--_ki-tooltip-inline-sign));
+  translate: calc(-50% * var(--_ki-tooltip-inline-sign)) 0;
 }
 
 .tooltip.placement-top {
@@ -92,14 +111,16 @@
 
 @media (prefers-reduced-motion: no-preference) {
   /* Enter: fade in at the fast step (decelerate); exit: fade out (accelerate).
-   * Visibility stays discrete: instant on show, delayed one fast step on hide
-   * so the exit fade is visible. JS show/hide delay tokens are untouched. */
+   * Visibility and display stay discrete: instant on show, held one fast step
+   * on hide so the exit fade is visible before the box goes away. JS show/hide
+   * delay tokens are untouched. */
   .tooltip {
     opacity: 0;
     transition:
       opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-standard-accelerate),
       translate var(--ki-motion-duration-fast) var(--ki-motion-easing-standard-accelerate),
-      visibility var(--ki-motion-duration-instant) var(--ki-motion-duration-fast);
+      visibility var(--ki-motion-duration-instant) var(--ki-motion-duration-fast),
+      display var(--ki-motion-duration-fast) allow-discrete;
   }
 
   .tooltip.is-visible {
@@ -110,16 +131,44 @@
       visibility var(--ki-motion-duration-instant);
   }
 
+  /* A bubble with no box in the previous frame has no style to fade from. */
+  @starting-style {
+    .tooltip.is-visible {
+      opacity: 0;
+    }
+  }
+
   /* Directional slide: hidden state biases the bubble one sm distance toward
    * the trigger so it grows out of it. Block-axis placements only — the
    * inline-axis bias cannot be expressed logically in the physical translate
    * value, so start/end keep the plain fade. Position measurement is
    * unaffected: the position module consumes only the rect's width/height. */
   .tooltip.placement-top:not(.is-visible) {
-    translate: -50% var(--ki-motion-distance-sm);
+    translate: calc(-50% * var(--_ki-tooltip-inline-sign)) var(--ki-motion-distance-sm);
   }
 
   .tooltip.placement-bottom:not(.is-visible) {
-    translate: -50% calc(-1 * var(--ki-motion-distance-sm));
+    translate: calc(-50% * var(--_ki-tooltip-inline-sign)) calc(-1 * var(--ki-motion-distance-sm));
+  }
+}
+
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
+/* Forced colors (Windows Contrast themes): the user's palette replaces the
+ * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
+ * are dropped, and only system colours — that palette — can be named.
+ *
+ * The surface is a gradient over a fallback fill: the gradient is dropped
+ * and takes the fallback with it, so the page shows through the tooltip.
+ * It becomes an opaque Canvas surface with an edge of its own.
+ * `thin` is the browser's own hairline: a theme may set a border token to
+ * zero, never this. */
+@media (forced-colors: active) {
+  .tooltip {
+    background: Canvas;
+    border: thin solid CanvasText;
   }
 }

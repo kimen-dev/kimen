@@ -9,11 +9,22 @@ export type KeyIntent =
   | 'commit'
   | 'close'
   | 'tab'
+  | 'type'
   | null;
 
 export interface KeyboardOption {
   disabled: boolean;
 }
+
+export interface TypeaheadOption extends KeyboardOption {
+  label: string;
+}
+
+/**
+ * Characters typed within this window extend one search string; a longer
+ * pause starts a new one (the interval the APG select-only example uses).
+ */
+export const TYPEAHEAD_RESET_MS = 500;
 
 export function firstEnabled(options: readonly KeyboardOption[]): number {
   return options.findIndex((option) => !option.disabled);
@@ -56,6 +67,42 @@ export function openHighlight(options: readonly KeyboardOption[], selectedIndex:
     : firstEnabled(options);
 }
 
+/**
+ * APG select-only typeahead: the index of the enabled option whose label
+ * starts with `typed` (case-insensitive), or -1. A single character searches
+ * from the option AFTER `currentIndex`, so repeating a letter walks its
+ * matches; a longer string searches from `currentIndex` itself, so typing on
+ * refines the match in place. A repeated letter that no label starts with
+ * ("pp") keeps walking the options that start with that letter.
+ */
+export function typeaheadIndex(
+  options: readonly TypeaheadOption[],
+  typed: string,
+  currentIndex: number,
+): number {
+  const needle = typed.toLowerCase();
+  const matchFrom = (start: number, prefix: string): number => {
+    for (let step = 0; step < options.length; step += 1) {
+      const index = (start + step) % options.length;
+      const option = options[index];
+      if (option && !option.disabled && option.label.toLowerCase().startsWith(prefix)) {
+        return index;
+      }
+    }
+    return -1;
+  };
+
+  const next = currentIndex + 1;
+  const match = matchFrom(needle.length > 1 ? Math.max(currentIndex, 0) : next, needle);
+  const repeated = needle.length > 1 && needle === needle.charAt(0).repeat(needle.length);
+  return match < 0 && repeated ? matchFrom(next, needle.charAt(0)) : match;
+}
+
+/** Space is excluded: it opens the closed select and commits in the open one. */
+function isPrintable(key: string): boolean {
+  return key.length === 1 && key !== ' ';
+}
+
 export function keyIntent(key: string, open: boolean): KeyIntent {
   if (!open) {
     if (key === 'Enter' || key === ' ') {
@@ -70,7 +117,7 @@ export function keyIntent(key: string, open: boolean): KeyIntent {
     if (key === 'End') {
       return 'open-last';
     }
-    return null;
+    return isPrintable(key) ? 'type' : null;
   }
 
   if (key === 'ArrowDown') {
@@ -94,5 +141,5 @@ export function keyIntent(key: string, open: boolean): KeyIntent {
   if (key === 'Tab') {
     return 'tab';
   }
-  return null;
+  return isPrintable(key) ? 'type' : null;
 }

@@ -2,8 +2,8 @@
   "ki": {
     "scroller": {
       "thumb-color": {
-        "$value": "{ki.outline.med-em}",
-        "$description": "Material 3 color used by the scroller component for the indicator thumb: M3 publishes no scrollbar guidance (defers to platform scrollbars), so the theme-author decision maps the thumb to md.sys.color.outline-variant (ki.outline.med-em, divider/tabs precedent)."
+        "$value": "{ki.outline.control}",
+        "$description": "Material 3 color used by the scroller component for the indicator thumb: M3 publishes no scrollbar guidance (defers to platform scrollbars), so the theme-author decision maps the thumb to md.sys.color.outline (ki.outline.control). The previous mapping, outline-variant (ki.outline.med-em), reads 1.62:1 light and 1.99:1 dark against the page — below the 3:1 WCAG 1.4.11 asks of the only mark that shows the scroll position."
       },
       "thumb-thickness": {
         "$value": "{ki.space.md}",

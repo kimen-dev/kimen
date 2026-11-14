@@ -145,6 +145,31 @@ describe('ki-divider', () => {
     expect(el.getBoundingClientRect().width).toBe(readTokenLength('--ki-divider-spacing'));
   });
 
+  it('S2 spans the height of a toolbar that centers its items', async () => {
+    cleanup();
+    // The toolbar every design system writes: a centered flex row with no
+    // height of its own. Centering collapses an auto-height item to its
+    // content, and the divider has none — it must claim the row's cross size
+    // itself instead of inheriting the alignment that erases it.
+    const toolbar = document.createElement('div');
+    toolbar.style.display = 'flex';
+    toolbar.style.alignItems = 'center';
+    toolbar.style.gap = '8px';
+    const edit = document.createElement('button');
+    edit.textContent = 'Edit';
+    toolbar.appendChild(edit);
+    landmark().appendChild(toolbar);
+    const el = await mount(toolbar, { orientation: 'vertical' });
+    const share = document.createElement('button');
+    share.textContent = 'Share';
+    toolbar.appendChild(share);
+
+    const toolbarHeight = toolbar.getBoundingClientRect().height;
+    expect(toolbarHeight).toBeGreaterThan(0);
+    expect(el.getBoundingClientRect().height).toBe(toolbarHeight);
+    expect(ruleOf(el).getBoundingClientRect().height).toBe(toolbarHeight);
+  });
+
   it('S3 renders an unrecognized orientation as the default horizontal rule', async () => {
     cleanup();
     const page = document.createElement('div');

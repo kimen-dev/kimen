@@ -4,6 +4,11 @@
   display: block;
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 .label {
   color: var(--ki-<%= tokenName %>-text-color);
   font-family: var(--ki-typography-family-base);

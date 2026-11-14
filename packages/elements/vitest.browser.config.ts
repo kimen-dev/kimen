@@ -141,6 +141,18 @@ export default defineConfig({
             await page.emulateMedia({ reducedMotion: reducedMotion ?? 'no-preference' });
           },
         ),
+        // A forced palette (Windows Contrast themes) as a media emulation.
+        // Same baseline rule as emulateColorScheme above: `null` restores
+        // the suite BASELINE (`none` — Playwright's context default, what
+        // every other spec was written against), never the host preference.
+        // `emulateMedia({ forcedColors: null })` re-exposes the machine's
+        // own setting, so on a host with a contrast theme enabled every
+        // reset would leave the specs that follow under the user's palette.
+        emulateForcedColors: defineBrowserCommand(
+          async ({ page }, forcedColors: 'active' | 'none' | null) => {
+            await page.emulateMedia({ forcedColors: forcedColors ?? 'none' });
+          },
+        ),
         ariaSnapshotByRole: defineBrowserCommand(
           async ({ page }, role: Parameters<typeof page.getByRole>[0], name?: string) =>
             page

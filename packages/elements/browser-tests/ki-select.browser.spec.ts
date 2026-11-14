@@ -4,7 +4,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III).
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
 import { expectAccessible } from './axe';
@@ -12,6 +12,14 @@ import { expectAccessible } from './axe';
 type KiSelectElement = HTMLElement & {
   value: string;
   disabled: boolean;
+  required: boolean;
+};
+
+const browserCommands = commands as unknown as {
+  installClock: () => Promise<void>;
+  pauseClock: () => Promise<void>;
+  fastForwardClock: (milliseconds: number) => Promise<void>;
+  resumeClock: () => Promise<void>;
 };
 
 beforeAll(() => {
@@ -142,6 +150,40 @@ describe('ki-select in a real browser', () => {
     rows(el)[1]?.click();
     expect(el.value).toBe('');
     expect(valueText(el)).toBe('Choose a country');
+  });
+
+  // Select-only combobox (APG): DOM focus stays on the combobox while the
+  // options are pointed at through aria-activedescendant. A real pointer press
+  // moves focus onto the pressed row, and the row is then hidden with the
+  // popup — so these use real clicks, not element.click().
+  it('S1 choosing an option with the pointer returns focus to the trigger', async () => {
+    const el = await mountSelect();
+
+    await userEvent.click(trigger(el));
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.click(rowAt(el, 1));
+
+    expect(el.value).toBe('fr');
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'false');
+    expect(document.activeElement).toBe(el);
+    expect(el.shadowRoot?.activeElement).toBe(trigger(el));
+  });
+
+  it('S4 pressing a disabled option keeps the open select operable from the keyboard', async () => {
+    const el = await mountSelect(
+      '',
+      `<ki-option value="es">Spain</ki-option><ki-option value="fr" disabled>France</ki-option>`,
+    );
+
+    await userEvent.click(trigger(el));
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'true');
+    // force: the row is exposed unavailable, so the driver would wait for it.
+    await userEvent.click(rowAt(el, 1), { force: true });
+
+    expect(trigger(el).getAttribute('aria-expanded')).toBe('true');
+    expect(el.shadowRoot?.activeElement).toBe(trigger(el));
+    await userEvent.keyboard('{Escape}');
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('S5 S25 falls back to placeholder for dangling values and removed selections silently', async () => {
@@ -549,6 +591,267 @@ describe('ki-select in a real browser', () => {
   });
 });
 
+// APG select-only combobox: printable characters move the active option to
+// the next one that starts with what was typed. Characters typed in quick
+// succession build one string; a pause starts a new one.
+describe('ki-select typeahead', () => {
+  const countries = `
+    <ki-option value="es">Spain</ki-option>
+    <ki-option value="fr">France</ki-option>
+    <ki-option value="pt">Portugal</ki-option>
+    <ki-option value="pl">Poland</ki-option>
+  `;
+
+  function activeOption(el: KiSelectElement): string {
+    const id = trigger(el).getAttribute('aria-activedescendant') ?? '';
+    return el.shadowRoot?.getElementById(id)?.textContent ?? '';
+  }
+
+  /** Open from the keyboard with no selection: "Spain" is the active option. */
+  async function openCountries(): Promise<KiSelectElement> {
+    const el = await mountSelect('', countries);
+    trigger(el).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.poll(() => activeOption(el)).toBe('Spain');
+    return el;
+  }
+
+  it('S27 typing a character on the closed select opens it on the matching option', async () => {
+    const el = await mountSelect('', countries);
+    trigger(el).focus();
+
+    await userEvent.keyboard('f');
+
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'true');
+    await expect.poll(() => activeOption(el)).toBe('France');
+    // Typing moves the active option; it never commits.
+    expect(el.value).toBe('');
+  });
+
+  it('S27 typing a character moves the active option of the open select', async () => {
+    const el = await openCountries();
+
+    await userEvent.keyboard('f');
+
+    await expect.poll(() => activeOption(el)).toBe('France');
+    expect(el.value).toBe('');
+  });
+
+  it('S27 characters typed in quick succession match as one string', async () => {
+    const el = await openCountries();
+
+    await userEvent.keyboard('pol');
+
+    await expect.poll(() => activeOption(el)).toBe('Poland');
+  });
+
+  it('S27 repeating a character walks the options that start with it', async () => {
+    const el = await openCountries();
+
+    await userEvent.keyboard('p');
+    await expect.poll(() => activeOption(el)).toBe('Portugal');
+    await userEvent.keyboard('p');
+    await expect.poll(() => activeOption(el)).toBe('Poland');
+    await userEvent.keyboard('p');
+    await expect.poll(() => activeOption(el)).toBe('Portugal');
+  });
+
+  it('S27 a pause starts a new string instead of extending the previous one', async () => {
+    await browserCommands.installClock();
+    try {
+      const el = await openCountries();
+      await browserCommands.pauseClock();
+
+      await userEvent.keyboard('p');
+      // Under the paused clock Stencil renders only once a frame elapses.
+      await browserCommands.fastForwardClock(20);
+      expect(activeOption(el)).toBe('Portugal');
+
+      // Typed straight after "p", the "f" would read "pf" and match nothing.
+      await browserCommands.fastForwardClock(600);
+      await userEvent.keyboard('f');
+      await browserCommands.fastForwardClock(20);
+
+      expect(activeOption(el)).toBe('France');
+    } finally {
+      await browserCommands.resumeClock();
+    }
+  });
+
+  it('S27 a string no option starts with leaves the active option where it was', async () => {
+    const el = await openCountries();
+
+    await userEvent.keyboard('pf');
+
+    await expect.poll(() => activeOption(el)).toBe('Portugal');
+  });
+
+  it('S27 S22 typeahead skips a disabled option', async () => {
+    const el = await mountSelect(
+      '',
+      `<ki-option value="es">Spain</ki-option><ki-option value="pt" disabled>Portugal</ki-option><ki-option value="pl">Poland</ki-option>`,
+    );
+    trigger(el).focus();
+
+    await userEvent.keyboard('p');
+
+    await expect.poll(() => activeOption(el)).toBe('Poland');
+  });
+
+  it('S27 the matching option is brought into view in a list longer than the panel', async () => {
+    const letters = [
+      'Alpha',
+      'Beta',
+      'Gamma',
+      'Delta',
+      'Epsilon',
+      'Zeta',
+      'Eta',
+      'Theta',
+      'Iota',
+      'Kappa',
+      'Lambda',
+      'Mu',
+    ];
+    const el = await mountSelect(
+      '',
+      letters.map((letter) => `<ki-option>${letter}</ki-option>`).join(''),
+    );
+    trigger(el).focus();
+
+    await userEvent.keyboard('k');
+
+    await expect.poll(() => activeOption(el)).toBe('Kappa');
+    const listbox = el.shadowRoot?.querySelector('[part="listbox"]');
+    if (!listbox) {
+      throw new Error('missing listbox');
+    }
+    // Both boxes are read together on every attempt: the panel is still
+    // easing in when the highlight lands, so a box read once goes stale.
+    await expect
+      .poll(() => {
+        const panel = listbox.getBoundingClientRect();
+        const row = rowAt(el, 9).getBoundingClientRect();
+        return row.top >= panel.top && row.bottom <= panel.bottom;
+      })
+      .toBe(true);
+  });
+});
+
+// WCAG 2.4.7 / 1.4.11 / 1.4.1: whoever moves through the list with the arrow
+// keys must be able to see where they are, and the committed choice must not
+// rest on a tint alone. Measured on the rendered result, in every theme and
+// scheme the tokens ship, against the panel the rows actually sit on.
+describe('ki-select active and selected options can be told apart', () => {
+  const contexts = [
+    { theme: 'onmars', scheme: 'light' },
+    { theme: 'onmars', scheme: 'dark' },
+    { theme: 'material3', scheme: 'light' },
+    { theme: 'material3', scheme: 'dark' },
+  ] as const;
+
+  type Rgba = [red: number, green: number, blue: number, alpha: number];
+
+  function parseColor(color: string): Rgba {
+    const channels =
+      /rgba?\(([^)]+)\)/
+        .exec(color)?.[1]
+        ?.split(/[\s,/]+/)
+        .map(Number) ?? [];
+    const [red, green, blue, alpha = 1] = channels;
+    if (red === undefined || green === undefined || blue === undefined) {
+      throw new Error(`Unparseable color: ${color}`);
+    }
+    return [red, green, blue, alpha];
+  }
+
+  function over([red, green, blue, alpha]: Rgba, [backRed, backGreen, backBlue]: Rgba): Rgba {
+    const mix = (front: number, back: number): number => front * alpha + back * (1 - alpha);
+    return [mix(red, backRed), mix(green, backGreen), mix(blue, backBlue), 1];
+  }
+
+  /** WCAG relative luminance. */
+  function luminance([red, green, blue]: Rgba): number {
+    const channel = (value: number): number => {
+      const normalized = value / 255;
+      return normalized <= 0.040_45 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+    };
+    return 0.2126 * channel(red) + 0.7152 * channel(green) + 0.0722 * channel(blue);
+  }
+
+  function contrast(first: Rgba, second: Rgba): number {
+    const lighter = Math.max(luminance(first), luminance(second));
+    const darker = Math.min(luminance(first), luminance(second));
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  /** The panel as painted: its (possibly translucent) fill over the page. */
+  function panel(el: KiSelectElement): Rgba {
+    const listbox = el.shadowRoot?.querySelector('[part="listbox"]');
+    if (!listbox) {
+      throw new Error('missing listbox');
+    }
+    return over(
+      parseColor(getComputedStyle(listbox).backgroundColor),
+      parseColor(getComputedStyle(document.body).backgroundColor),
+    );
+  }
+
+  /** France is selected; the keyboard has moved the active option to Portugal. */
+  async function openWithPortugalActive(
+    theme: (typeof contexts)[number]['theme'],
+    scheme: (typeof contexts)[number]['scheme'],
+  ): Promise<KiSelectElement> {
+    const el = await mountSelect('value="fr"');
+    const page = document.createElement('style');
+    // The page contract (@kimen/tokens/css/base): the page sits on surface s0.
+    page.textContent = `${material3Css} body { background-color: var(--ki-surface-s0); }`;
+    document.body.append(page);
+    document.documentElement.setAttribute('data-ki-theme', theme);
+    document.documentElement.setAttribute('data-ki-color-scheme', scheme);
+
+    trigger(el).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.element(trigger(el)).toHaveAttribute('aria-activedescendant', rowAt(el, 2).id);
+    return el;
+  }
+
+  it.each(contexts)(
+    'S7 the keyboard-active option shows an indicator at 3:1 or more against the panel ($theme $scheme)',
+    async ({ theme, scheme }) => {
+      const el = await openWithPortugalActive(theme, scheme);
+      const active = getComputedStyle(rowAt(el, 2));
+
+      expect(active.outlineStyle).toBe('solid');
+      expect(Number.parseFloat(active.outlineWidth)).toBeGreaterThanOrEqual(2);
+      expect(contrast(parseColor(active.outlineColor), panel(el))).toBeGreaterThanOrEqual(3);
+      // The indicator says where the keyboard is: no other row carries it.
+      expect(getComputedStyle(rowAt(el, 0)).outlineStyle).toBe('none');
+      expect(getComputedStyle(rowAt(el, 1)).outlineStyle).toBe('none');
+    },
+  );
+
+  it.each(contexts)(
+    'S12 the selected option carries a mark that does not rely on colour ($theme $scheme)',
+    async ({ theme, scheme }) => {
+      const el = await openWithPortugalActive(theme, scheme);
+      const mark = getComputedStyle(rowAt(el, 1), '::after');
+
+      // A drawn glyph in the label ink, not text and not a tint.
+      expect(mark.content).toBe('""');
+      expect(Number.parseFloat(mark.inlineSize)).toBeGreaterThan(0);
+      expect(Number.parseFloat(mark.blockSize)).toBeGreaterThan(0);
+      expect(Number.parseFloat(mark.borderBlockEndWidth)).toBeGreaterThan(0);
+      expect(mark.borderBlockEndColor).toBe(getComputedStyle(rowAt(el, 1)).color);
+      expect(contrast(parseColor(mark.borderBlockEndColor), panel(el))).toBeGreaterThanOrEqual(3);
+      // Unselected rows, the active one included, carry no mark.
+      expect(getComputedStyle(rowAt(el, 0), '::after').content).toBe('none');
+      expect(getComputedStyle(rowAt(el, 2), '::after').content).toBe('none');
+    },
+  );
+});
+
 // Boolean presence semantics (native HTML parity): a present attribute means
 // true whatever its value. Stencil >= 4.45 removes a host attribute when it
 // reflects a parsed `false`, so these run against the built output.
@@ -609,5 +912,20 @@ describe('ki-select boolean presence in a real browser', () => {
     // Presence is normalized: the host attribute stays, with an empty value.
     expect(options[1]?.getAttribute('disabled')).toBe('');
     expect(options[2]?.getAttribute('disabled')).toBe('');
+  });
+
+  // Presence semantics are about ATTRIBUTES. Framework wrappers assign
+  // PROPERTIES, and Stencil un-reflects a cleared property only at the next
+  // render: state derived from the still-present attribute goes stale.
+  it('S14 clearing the required property lifts the requirement from the form', async () => {
+    const { form, el } = await mountForm('required');
+    expect(form.checkValidity()).toBe(false);
+
+    el.required = false;
+    await frames();
+
+    expect(form.checkValidity()).toBe(true);
+    expect(el.matches(':invalid')).toBe(false);
+    expect(trigger(el).hasAttribute('aria-required')).toBe(false);
   });
 });

@@ -97,6 +97,15 @@
   text-align: center;
 }
 
+/* The body is a Tab stop only while its content overflows (WCAG 2.1.1): the
+ * same double indicator as the surface — the opaque outline plus the MarsUI
+ * Focus/primary ring — drawn inside the dialog padding, never clipped. */
+[part="body"]:focus-visible {
+  outline: var(--ki-dialog-focus-ring-width) solid var(--ki-dialog-focus-ring-color);
+  outline-offset: var(--ki-dialog-focus-ring-offset);
+  box-shadow: var(--ki-focus-primary);
+}
+
 [part="footer"] {
   display: block;
   text-align: end;
@@ -158,5 +167,26 @@ slot[name="footer"] {
     [part="dialog"][open]::backdrop {
       opacity: 0;
     }
+  }
+}
+
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
+/* Forced colors (Windows Contrast themes): the user's palette replaces the
+ * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
+ * are dropped, and only system colours — that palette — can be named.
+ *
+ * The surface is a gradient over a fallback fill: the gradient is dropped
+ * and takes the fallback with it, so the page shows through the dialog.
+ * It becomes an opaque Canvas surface with an edge of its own.
+ * `thin` is the browser's own hairline: a theme may set a border token to
+ * zero, never this. */
+@media (forced-colors: active) {
+  [part="dialog"] {
+    background: Canvas;
+    border: thin solid CanvasText;
   }
 }

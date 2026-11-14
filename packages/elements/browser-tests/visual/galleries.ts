@@ -60,6 +60,12 @@ const avatarPortrait =
 const videoPoster =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAASCAYAAAA6yNxSAAAAM0lEQVR42mNILtzwnxLsGtpKEWYYdcCoA0YdMOqA3llH/lOCjR2TKcKjDhh1wKgDRh0AAAhDRtyaKKpFAAAAAElFTkSuQmCC';
 
+// A captions track is part of correct video authoring (WCAG 1.2.2): without
+// one the accessibility audit cannot decide, and rightly refuses to pass. An
+// empty inline WebVTT keeps the fixture network-free and paints nothing.
+const videoCaptions =
+  '<track kind="captions" srclang="en" label="English" src="data:text/vtt,WEBVTT">';
+
 const avatarSizeRow = (attributes: string): string =>
   avatarSizes.map((size) => `<ki-avatar size="${size}"${attributes}></ki-avatar>`).join('');
 
@@ -473,8 +479,8 @@ const galleries = {
       // deterministic quadrant PNG stands in for the consumer's poster and
       // the width/height attributes carry the 16:9 intrinsic ratio. No
       // source is ever declared, so nothing can load or play (Art. X).
-      `<ki-video label="Play the product tour"><video muted playsinline width="1280" height="720" poster="${videoPoster}"></video></ki-video>`,
-      `<div style="inline-size:240px;"><ki-video label="Play the teaser"><video muted playsinline width="1280" height="720" poster="${videoPoster}"></video></ki-video></div>`,
+      `<ki-video label="Play the product tour"><video muted playsinline width="1280" height="720" poster="${videoPoster}">${videoCaptions}</video></ki-video>`,
+      `<div style="inline-size:240px;"><ki-video label="Play the teaser"><video muted playsinline width="1280" height="720" poster="${videoPoster}">${videoCaptions}</video></ki-video></div>`,
     ].join(''),
   },
 } as const satisfies Record<string, VisualGallery>;

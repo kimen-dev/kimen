@@ -1,6 +1,9 @@
 import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
-import { observeAttributePresence } from '../../utils/boolean-presence';
-import { normalizeBooleanPresence, radioGroupFormValue } from './ki-radio-group.form';
+import {
+  booleanFromAttributePresence,
+  observeAttributePresence,
+} from '../../utils/boolean-presence';
+import { radioGroupFormValue } from './ki-radio-group.form';
 import { arrowDirection, nextEnabledIndex } from './ki-radio-group.keyboard';
 
 type KiRadioElement = HTMLElement & {
@@ -47,10 +50,15 @@ export class KiRadioGroup {
   // Scoped to this group's shadow root, so a static id is unambiguous
   // (review 007 minor; matches the 003 call).
   private readonly labelId = 'group-label';
-  private disabledObserver?: MutationObserver;
+  private rosterObserver?: MutationObserver;
   private presenceObserver: MutationObserver | undefined;
   private resetValue = '';
   private suppressValueWatch = false;
+  // A value requested by attribute, property or reset that no option matches
+  // yet. `value` stays a projection of the selection (FR-002), so the request
+  // is remembered here and honoured when a matching option arrives — streamed
+  // generated UI and frameworks set the value before the options exist.
+  private pendingValue = '';
 
   /**
    * Form-data key for the selected option's value. Omit when the group should
@@ -112,23 +120,24 @@ export class KiRadioGroup {
     this.selectByValue(this.value);
   }
 
+  // Never re-read the host attribute here: Stencil un-reflects a cleared
+  // property only at the next render, so the attribute is still present while
+  // this watch runs and reading it would undo `disabled = false` /
+  // `required = false` assigned by a framework wrapper. Presence is applied in
+  // componentWillLoad and by the attribute observer instead; the method keeps
+  // its name because the class signature is part of the sealed API snapshot.
   @Watch('disabled')
   @Watch('required')
   protected normalizeBooleanProps(): void {
-    const normalizedDisabled = normalizeBooleanPresence(
-      this.host.hasAttribute('disabled') ? this.host.getAttribute('disabled') : this.disabled,
-    );
-    const normalizedRequired = normalizeBooleanPresence(
-      this.host.hasAttribute('required') ? this.host.getAttribute('required') : this.required,
-    );
-
-    if (this.disabled !== normalizedDisabled) {
-      this.disabled = normalizedDisabled;
-    }
-    if (this.required !== normalizedRequired) {
-      this.required = normalizedRequired;
-    }
     this.syncInputs();
+  }
+
+  // Presence semantics: a present attribute means `true` whatever its value
+  // (`disabled="false"` still disables). Runs before the first render and on
+  // attribute mutations alone, so it never fights a property assignment.
+  private applyAttributePresence(): void {
+    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
+    this.required = booleanFromAttributePresence(this.required, this.host.hasAttribute('required'));
   }
 
   private get effectiveDisabled(): boolean {
@@ -136,17 +145,19 @@ export class KiRadioGroup {
   }
 
   connectedCallback(): void {
-    // The @Watch misses `disabled="false"`/`required="false"` written while the
-    // prop is already `false` (no prop change, so no watch); the observer
-    // covers it before Stencil's reflection would remove the attribute.
+    // Presence semantics for attributes written after hydration: Stencil parses
+    // `disabled="false"`/`required="false"` to `false` and would remove the
+    // attribute on reflect.
     this.presenceObserver?.disconnect();
     this.presenceObserver = observeAttributePresence(this.host, ['disabled', 'required'], () => {
-      this.normalizeBooleanProps();
+      this.applyAttributePresence();
     });
   }
 
   componentWillLoad(): void {
-    this.normalizeBooleanProps();
+    this.applyAttributePresence();
+    this.pendingValue = this.value;
+    this.syncInputs();
   }
 
   componentDidLoad(): void {
@@ -162,7 +173,7 @@ export class KiRadioGroup {
     this.host.removeEventListener('keydown', this.handleKeyDown);
     this.host.removeEventListener('focusin', this.handleFocusIn);
     this.host.removeEventListener('invalid', this.handleInvalid);
-    this.disabledObserver?.disconnect();
+    this.rosterObserver?.disconnect();
     this.presenceObserver?.disconnect();
     this.presenceObserver = undefined;
   }
@@ -201,7 +212,15 @@ export class KiRadioGroup {
       .composedPath()
       .find((target): target is KiRadioElement => this.isKiRadio(target));
 
-    if (!radio || !this.roster.includes(radio) || this.effectiveDisabled || radio.disabled) {
+    // Only this group's own options are its business. Anything else composed
+    // inside it (the text field beside an "Other" option) keeps its events:
+    // stopping them here, in the capture phase, silences that control before
+    // it has heard its own input.
+    if (!radio || !this.roster.includes(radio)) {
+      return;
+    }
+
+    if (this.effectiveDisabled || radio.disabled) {
       event.preventDefault();
       event.stopImmediatePropagation();
       return;
@@ -211,6 +230,7 @@ export class KiRadioGroup {
       return;
     }
 
+    this.pendingValue = '';
     this.setSelectedRadio(radio);
     setTimeout(() => {
       this.host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
@@ -232,7 +252,7 @@ export class KiRadioGroup {
     }
 
     const nextIndex = nextEnabledIndex(
-      this.roster.map((radio) => radio.disabled),
+      this.roster.map((radio) => this.isOutOfReach(radio)),
       currentIndex,
       direction,
     );
@@ -270,16 +290,26 @@ export class KiRadioGroup {
       radio.removeAttribute('data-ki-group-disabled');
     }
     this.roster = assigned ?? [];
-    this.disabledObserver?.disconnect();
+    this.rosterObserver?.disconnect();
     if (typeof MutationObserver !== 'function') {
       this.reconcileSelection();
       return;
     }
-    this.disabledObserver = new MutationObserver(() => {
+    this.rosterObserver = new MutationObserver(() => {
       this.reconcileSelection();
     });
     for (const radio of this.roster) {
-      this.disabledObserver.observe(radio, { attributes: true, attributeFilter: ['disabled'] });
+      this.rosterObserver.observe(radio, {
+        attributes: true,
+        attributeFilter: ['disabled', 'hidden'],
+      });
+      // An option appended after the group loaded is rostered before its first
+      // render, so there is no input yet to check or to take out of the tab
+      // order — and its own render then makes it a tab stop. Reconcile again
+      // when that render lands in its shadow root.
+      if (radio.shadowRoot && !this.inputFor(radio)) {
+        this.rosterObserver.observe(radio.shadowRoot, { childList: true });
+      }
     }
     this.reconcileSelection();
   }
@@ -301,8 +331,8 @@ export class KiRadioGroup {
 
     if (this.selectedRadio && !this.roster.includes(this.selectedRadio)) {
       this.setSelectedRadio(null);
-    } else if (!this.selectedRadio && this.value) {
-      this.selectByValue(this.value);
+    } else if (!this.selectedRadio && this.pendingValue) {
+      this.selectByValue(this.pendingValue);
     } else {
       this.syncInputs();
     }
@@ -323,6 +353,7 @@ export class KiRadioGroup {
 
   private selectByValue(value: string): void {
     const radio = this.roster.find((candidate) => this.optionValue(candidate) === value) ?? null;
+    this.pendingValue = radio ? '' : value;
     this.setSelectedRadio(radio);
   }
 
@@ -433,11 +464,21 @@ export class KiRadioGroup {
       return null;
     }
 
-    if (this.selectedRadio && !this.selectedRadio.disabled) {
+    if (this.selectedRadio && !this.isOutOfReach(this.selectedRadio)) {
       return this.selectedRadio;
     }
 
-    return this.roster.find((radio) => !radio.disabled) ?? null;
+    return this.roster.find((radio) => !this.isOutOfReach(radio)) ?? null;
+  }
+
+  /**
+   * An option the keyboard must not land on: disabled, or taken out of the
+   * page with the `hidden` attribute. A hidden option keeps its place in the
+   * roster and, when selected, its value — it only stops being a focus stop,
+   * so the visible options stay reachable.
+   */
+  private isOutOfReach(radio: KiRadioElement): boolean {
+    return radio.disabled || radio.hasAttribute('hidden');
   }
 
   private optionValue(radio: KiRadioElement): string {

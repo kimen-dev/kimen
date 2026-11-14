@@ -1,5 +1,6 @@
 import { Component, Element, Event, h, Method, Prop, State, Watch } from '@stencil/core';
 import { booleanFromAttributePresence } from '../../utils/boolean-presence';
+import { focusThroughShadow } from '../../utils/shadow-focus';
 import { isOutsideRect } from './ki-dialog.backdrop';
 import { resolveEntryFocusTarget, resolveFocusableTargets } from './ki-dialog.focus';
 
@@ -91,6 +92,8 @@ export class KiDialog {
   @State() private footerHasContent = false;
 
   private dialog: HTMLDialogElement | undefined;
+  private body: HTMLDivElement | undefined;
+  private bodyObserver?: ResizeObserver;
   private backdropArmed = false;
   private openObserver?: MutationObserver;
   private pendingReason: KiDialogCloseReason = 'method';
@@ -127,6 +130,7 @@ export class KiDialog {
   disconnectedCallback(): void {
     this.backdropArmed = false;
     this.openObserver?.disconnect();
+    this.bodyObserver?.disconnect();
     document.removeEventListener('keydown', this.handleKeyDown, { capture: true });
   }
 
@@ -170,6 +174,10 @@ export class KiDialog {
 
   private readonly setDialogRef = (dialog?: HTMLDialogElement): void => {
     this.dialog = dialog;
+  };
+
+  private readonly setBodyRef = (body?: HTMLDivElement): void => {
+    this.body = body;
   };
 
   private readonly handleCancel = (): void => {
@@ -226,19 +234,53 @@ export class KiDialog {
     this.updateFooterState();
   };
 
+  private readonly handleBodySlotChange = (): void => {
+    this.observeBody();
+  };
+
+  /**
+   * While the body content outgrows the body region, the body is a Tab stop
+   * so the native scroll keys (arrows, Page Up/Down, Space, Home/End) reach
+   * the clipped content; while everything fits it adds no stop (WCAG 2.1.1,
+   * ki-scroller precedent). Written straight to the element, not through a
+   * render: the Tab handler re-measures and the stop has to exist before the
+   * browser runs that same keystroke's focus navigation. Returns whether the
+   * body is a stop right now.
+   */
+  private readonly syncBodyTabStop = (): boolean => {
+    const body = this.body;
+    if (!body) {
+      return false;
+    }
+    const overflowing = body.scrollHeight > body.clientHeight;
+    if (overflowing) {
+      body.tabIndex = 0;
+    } else {
+      body.removeAttribute('tabindex');
+    }
+    return overflowing;
+  };
+
   private readonly handleKeyDown = (event: KeyboardEvent): void => {
     if (event.key !== 'Tab' || !this.dialog?.open) {
       return;
     }
 
     const targets = resolveFocusableTargets(this.host);
+    // Measured on the keystroke itself: the observer below sees size changes
+    // only, so a finished entrance animation or a text edit can leave its
+    // last answer stale. The body precedes every slotted action.
+    if (this.body && this.syncBodyTabStop()) {
+      targets.unshift(this.body);
+    }
     if (targets.length === 0) {
       event.preventDefault();
       this.dialog.focus();
       return;
     }
 
-    const active = document.activeElement;
+    // Slotted actions are light DOM; the body is focused inside this shadow.
+    const active = this.host.shadowRoot?.activeElement ?? document.activeElement;
     const first = targets[0];
     const last = targets[targets.length - 1];
     if (!first || !last) {
@@ -247,13 +289,13 @@ export class KiDialog {
 
     if (event.shiftKey && active === first) {
       event.preventDefault();
-      last.focus();
+      focusThroughShadow(last);
       return;
     }
 
     if (!event.shiftKey && active === last) {
       event.preventDefault();
-      first.focus();
+      focusThroughShadow(first);
     }
   };
 
@@ -279,6 +321,28 @@ export class KiDialog {
     this.footerHasContent = Boolean(this.host.querySelector('[slot="footer"]'));
   }
 
+  /**
+   * Overflow observation only (the ki-scroller mechanism): while the dialog
+   * is open, the body box and the slotted elements report every size change,
+   * so the stop is already there for whoever reaches the dialog without
+   * pressing Tab. Armed on every open (disconnectedCallback releases it, and
+   * a dialog can be moved in the document) and on slot changes. Scrolling
+   * stays native.
+   */
+  private observeBody(): void {
+    const body = this.body;
+    if (!body || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+    this.bodyObserver ??= new ResizeObserver(this.syncBodyTabStop);
+    this.bodyObserver.disconnect();
+    this.bodyObserver.observe(body);
+    for (const element of body.querySelector('slot')?.assignedElements({ flatten: true }) ?? []) {
+      this.bodyObserver.observe(element);
+    }
+    this.syncBodyTabStop();
+  }
+
   private syncDialogToHost(): void {
     if (!this.dialog || !this.host.isConnected) {
       return;
@@ -286,6 +350,7 @@ export class KiDialog {
 
     if (this.open && !this.dialog.open) {
       this.dialog.showModal();
+      this.observeBody();
       this.assistFocusEntry();
       return;
     }
@@ -388,8 +453,8 @@ export class KiDialog {
             {this.heading}
           </h2>
         ) : null}
-        <div part="body">
-          <slot />
+        <div part="body" ref={this.setBodyRef}>
+          <slot onSlotchange={this.handleBodySlotChange} />
         </div>
         <div part="footer" hidden={!this.footerHasContent}>
           <slot name="footer" onSlotchange={this.handleFooterSlotChange} />

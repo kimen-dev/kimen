@@ -71,3 +71,6 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Vitest 5 browser attachments (failure screenshots, visual diffs)
+packages/*/.vitest/

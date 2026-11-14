@@ -117,7 +117,8 @@ Invariants:
 | open | Enter / Space | commit + close (S8); keydown `preventDefault()` suppresses native button re-toggle |
 | open | Escape | close, discard (S9) |
 | open | Tab | close, discard, focus moves on (S21 — spec default reading, gate-1 pending) |
-| any | printable characters | NOTHING — typeahead excluded in v1 (charter; FR-007 exception, gate-1 open question) |
+| open | printable characters | move highlight to the next ENABLED option whose label starts with the typed string (S27): a single character searches from the option after the highlight, so repeating it walks its matches; characters within 500 ms extend one string and refine in place; no match leaves the highlight and drops the string. Never commits |
+| closed | printable characters | open, then the same search starting after the selected option (S27); no match opens on the selected option, else the first enabled |
 | any | Alt+Arrows, PageUp/PageDown | NOTHING — APG-optional, not in the approved contract (Art. II) |
 
 Pointer: trigger click toggles; enabled-option click commits + closes;

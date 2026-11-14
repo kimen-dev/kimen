@@ -6,8 +6,11 @@ import {
   compositeOver,
   contrastRatio,
   controlBoundaryCells,
+  currentMarkPairs,
   overlayRamps,
+  pageGraphicMarks,
   parseColor,
+  placeholderCells,
   ratioReadoutPairs,
   relativeLuminance,
   resolveContrastPairs,
@@ -217,4 +220,116 @@ test('a component whose name extends an empty-box name is not pooled into it', (
   ]);
 
   assert.deepEqual(controlBoundaryCells(declarations), []);
+});
+
+test('placeholder sweep reads each placeholder against the fills its field can show', () => {
+  const declarations = new Map([
+    // a state-scoped placeholder is painted on its own cell, and only there
+    ['--ki-input-rest-bg', '#f2f2f4'],
+    ['--ki-input-rest-fg', '#0a0c11'],
+    ['--ki-input-rest-placeholder-fg', '#8c929c'],
+    ['--ki-input-focus-bg', '#ffffff'],
+    ['--ki-input-focus-fg', '#0a0c11'],
+    ['--ki-input-focus-placeholder-fg', '#8c929c'],
+    // a component-wide placeholder (ki-select) stands in for the value text,
+    // so it is read against every cell that text is painted on
+    ['--ki-select-rest-bg', '#f2f2f4'],
+    ['--ki-select-rest-fg', '#0a0c11'],
+    ['--ki-select-hover-bg', '#ececf0'],
+    ['--ki-select-hover-fg', '#0a0c11'],
+    ['--ki-select-placeholder-fg', '#5b616d'],
+    // a floating surface carries no value text, so no placeholder either
+    ['--ki-select-listbox-bg', '#f9f9fa'],
+    // disabled → exempt, exactly like the text sweep
+    ['--ki-input-disabled-bg', '#fafafa'],
+    ['--ki-input-disabled-fg', '#cccccc'],
+    ['--ki-input-disabled-placeholder-fg', '#cccccc'],
+    ['--ki-select-disabled-bg', '#fafafa'],
+    ['--ki-select-disabled-fg', '#cccccc'],
+  ]);
+
+  assert.deepEqual(
+    placeholderCells(declarations).map((cell) => [cell.placeholder, cell.fills]),
+    [
+      ['--ki-input-rest-placeholder-fg', ['--ki-input-rest-bg']],
+      ['--ki-input-focus-placeholder-fg', ['--ki-input-focus-bg']],
+      ['--ki-select-placeholder-fg', ['--ki-select-rest-bg', '--ki-select-hover-bg']],
+    ],
+  );
+});
+
+test('a placeholder with no field fill under its stem is reported, not dropped', () => {
+  // A renamed `-bg` must surface as a named failure. Dropping the pair in
+  // silence is how the placeholder stayed outside every sweep to begin with.
+  const declarations = new Map([['--ki-input-rest-placeholder-fg', '#8c929c']]);
+
+  assert.deepEqual(placeholderCells(declarations), [
+    { placeholder: '--ki-input-rest-placeholder-fg', fills: [] },
+  ]);
+});
+
+test('page-graphic sweep derives every painted mark and leaves the grounds out', () => {
+  const declarations = new Map([
+    // every tone of the status dot is a mark, including ones added later
+    ['--ki-status-neutral-color', '#afb3bb'],
+    ['--ki-status-warning-color', '#f8ac3a'],
+    // the ring is a separator that takes the page's own colour on purpose
+    ['--ki-status-ring-color', '#ffffff'],
+    // not a colour at all
+    ['--ki-status-size', '0.25rem'],
+    ['--ki-indicator-dot-color', 'rgba(0, 0, 0, 0.18)'],
+    ['--ki-indicator-dot-current-color', 'rgba(0, 0, 0, 0.18)'],
+    ['--ki-scroller-thumb-color', 'rgba(0, 0, 0, 0.05)'],
+    // the ground a thumb moves over, and a focus ring measured elsewhere
+    ['--ki-scroller-track-color', 'rgba(0, 0, 0, 0)'],
+    ['--ki-scroller-focus-ring-color', '#845abe'],
+    // a component that carries its own label is out of scope entirely
+    ['--ki-progress-indicator-color', '#845abe'],
+  ]);
+
+  assert.deepEqual(pageGraphicMarks(declarations), [
+    '--ki-status-neutral-color',
+    '--ki-status-warning-color',
+    '--ki-indicator-dot-color',
+    '--ki-indicator-dot-current-color',
+    '--ki-scroller-thumb-color',
+  ]);
+});
+
+test('a current mark is paired with its resting mark, and knows when colour is all that tells them apart', () => {
+  const elongated = new Map([
+    // onmars: the current dot is a 32x16 pill among 8x8 dots — shape speaks
+    ['--ki-indicator-dot-color', 'rgba(0, 0, 0, 0.48)'],
+    ['--ki-indicator-dot-inline-size', '0.5rem'],
+    ['--ki-indicator-dot-block-size', '0.5rem'],
+    ['--ki-indicator-dot-current-color', 'rgba(0, 0, 0, 0.48)'],
+    ['--ki-indicator-dot-current-inline-size', '2rem'],
+    ['--ki-indicator-dot-current-block-size', '1rem'],
+  ]);
+  const uniform = new Map([
+    // material3: uniform circles — nothing but colour marks the current one
+    ['--ki-indicator-dot-color', '#79747e'],
+    ['--ki-indicator-dot-inline-size', '0.5rem'],
+    ['--ki-indicator-dot-block-size', '0.5rem'],
+    ['--ki-indicator-dot-current-color', '#000000'],
+    ['--ki-indicator-dot-current-inline-size', '0.5rem'],
+    ['--ki-indicator-dot-current-block-size', '0.5rem'],
+    // a tone is not a "current" state and has no resting sibling to pair with
+    ['--ki-status-neutral-color', '#79747e'],
+  ]);
+
+  assert.deepEqual(currentMarkPairs(elongated), [
+    {
+      current: '--ki-indicator-dot-current-color',
+      resting: '--ki-indicator-dot-color',
+      colourAlone: false,
+    },
+  ]);
+  assert.deepEqual(currentMarkPairs(uniform), [
+    {
+      current: '--ki-indicator-dot-current-color',
+      resting: '--ki-indicator-dot-color',
+      colourAlone: true,
+    },
+  ]);
 });

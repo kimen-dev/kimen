@@ -186,6 +186,10 @@
   padding-inline: var(--ki-option-padding-inline);
   display: flex;
   align-items: center;
+
+  /* The label leads and the selected mark trails, in either direction. */
+  gap: var(--ki-select-gap);
+  justify-content: space-between;
 }
 
 @media (hover: hover) {
@@ -201,11 +205,38 @@
 
   /* MarsUI active row: the Black/3 wash rides Elevation/e1 (subtle pill). */
   box-shadow: var(--ki-elevation-e1);
+
+  /* The wash alone sits ~1.07:1 off the panel, so whoever walks the list with
+     the arrow keys could not see where they were (WCAG 2.4.7, 1.4.11). The
+     active option carries the trigger's own focus ring, drawn inside the row
+     so the scrolling panel never clips it. */
+  outline: var(--ki-select-focus-ring-width) solid var(--ki-select-focus-ring-color);
+  outline-offset: calc(-1 * var(--ki-select-focus-ring-width));
 }
 
 [part="option"][aria-selected="true"] {
   --_ki-option-bg: var(--ki-option-selected-bg);
   --_ki-option-fg: var(--ki-option-selected-fg);
+}
+
+/* Selected mark: a check drawn from two strokes in the label ink, so the
+   committed choice never rests on the tint alone (WCAG 1.4.1). Decorative —
+   aria-selected carries the state. Same glyph recipe and tokens as the
+   trigger chevron: a half-width box whose trailing strokes rotate into the
+   check. `direction: ltr` pins the strokes to the same sides in RTL, where a
+   mirrored check would stop reading as one. The inline margin reserves the
+   room the rotation takes, and the lift centres the glyph (not its box) on
+   the label: R(45°) leaves the vertex (h - w) / 2√2 ≈ 18% of h too low. */
+[part="option"][aria-selected="true"]::after {
+  content: "";
+  block-size: var(--ki-select-indicator-glyph-size);
+  inline-size: calc(var(--ki-select-indicator-glyph-size) / 2);
+  border-block-end: var(--ki-select-border-width) solid currentcolor;
+  border-inline-end: var(--ki-select-border-width) solid currentcolor;
+  direction: ltr;
+  flex: none;
+  margin-inline: calc(var(--ki-select-indicator-glyph-size) / 4);
+  transform: translateY(-18%) rotate(45deg);
 }
 
 [part="option"][aria-disabled="true"] {
@@ -269,5 +300,45 @@
 
   [part="option"]:active:not([aria-disabled="true"]) {
     transform: scale(0.98);
+  }
+}
+
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
+/* Forced colors (Windows Contrast themes): the user's palette replaces the
+ * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
+ * are dropped, and only system colours — that palette — can be named.
+ *
+ * The panel is a translucent fill lifted by a shadow, and the selected
+ * and the active option are told apart by fills alone: all of it lands
+ * on Canvas. The panel becomes an opaque bordered surface, the active
+ * option takes the selection pair, and the selected one a ring.
+ * `thin` is the browser's own hairline: a theme may set a border token to
+ * zero, never this.
+ *
+ * `forced-color-adjust: none` on the active option is the one opt-out in
+ * the library, and it is required: the palette draws a Canvas backplate
+ * behind every run of text, so a HighlightText label on a Highlight row is
+ * painted on Canvas and reads as an empty box. Opting the row out removes
+ * the backplate; both of its colours are system colours, so it still
+ * follows the user's palette, and the shadow it would bring back is reset. */
+@media (forced-colors: active) {
+  [part="listbox"] {
+    background: Canvas;
+    border: thin solid CanvasText;
+  }
+
+  [part="option"][aria-selected="true"] {
+    outline: thin solid CanvasText;
+  }
+
+  [part="option"][data-highlighted="true"] {
+    forced-color-adjust: none;
+    background: Highlight;
+    box-shadow: none;
+    color: HighlightText;
   }
 }

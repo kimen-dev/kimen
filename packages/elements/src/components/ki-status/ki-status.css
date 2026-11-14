@@ -16,6 +16,11 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 [part="dot"] {
   display: block;
   inline-size: var(--ki-status-size);
@@ -65,5 +70,19 @@
       opacity: 0;
       transform: scale(0.5);
     }
+  }
+}
+
+/* Forced colors (Windows Contrast themes): the user's palette replaces the
+ * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
+ * are dropped, and only system colours — that palette — can be named.
+ *
+ * The dot is nothing but a tone fill. The tone cannot survive a forced
+ * palette — it never carried the meaning alone (FR-008) — but the dot
+ * must: it takes the ink colour whatever its tone. */
+@media (forced-colors: active) {
+  [part="dot"],
+  :host([tone]) [part="dot"] {
+    background: CanvasText;
   }
 }

@@ -1,6 +1,8 @@
-import { Component, Element, h, Prop, Watch } from '@stencil/core';
-import { observeAttributePresence } from '../../utils/boolean-presence';
-import { normalizeBooleanPresence } from '../ki-radio-group/ki-radio-group.form';
+import { Component, Element, h, Prop } from '@stencil/core';
+import {
+  booleanFromAttributePresence,
+  observeAttributePresence,
+} from '../../utils/boolean-presence';
 
 /* eslint-disable jsx-a11y/label-has-associated-control -- The slotted option label is the accessible text for the native input inside the shadow label. */
 
@@ -44,22 +46,20 @@ export class KiRadio {
    */
   @Prop({ reflect: true, mutable: true }) disabled = false;
 
-  @Watch('disabled')
+  // Presence semantics: a present `disabled` attribute disables whatever its
+  // value. Deliberately NOT a @Watch: Stencil un-reflects a cleared property
+  // only at the next render, so a watch re-reading the attribute would undo
+  // `disabled = false` assigned by a framework wrapper.
   protected normalizeDisabled(): void {
-    const normalized = normalizeBooleanPresence(
-      this.host.hasAttribute('disabled') ? this.host.getAttribute('disabled') : this.disabled,
-    );
-
-    if (this.disabled !== normalized) {
-      this.disabled = normalized;
-    }
+    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
   }
 
   private presenceObserver: MutationObserver | undefined;
 
   connectedCallback(): void {
-    // The @Watch above misses `disabled="false"` written while the prop is
-    // already `false` (no prop change, so no watch); the observer covers it.
+    // `disabled="false"` written after hydration: Stencil parses it to `false`
+    // and would remove the attribute on reflect. The observer runs on attribute
+    // mutations alone and reports the attribute only while it is present.
     this.presenceObserver?.disconnect();
     this.presenceObserver = observeAttributePresence(this.host, ['disabled'], () => {
       this.normalizeDisabled();

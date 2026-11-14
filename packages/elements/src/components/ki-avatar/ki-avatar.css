@@ -18,6 +18,11 @@
   font-family: var(--ki-avatar-font-family);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 :host([size="xxs"]) {
   --_avatar-size: var(--ki-avatar-xxs-size);
   --_avatar-font-size: var(--ki-avatar-xxs-font-size);

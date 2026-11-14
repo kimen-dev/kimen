@@ -28,6 +28,8 @@ import {
   lastEnabled,
   moveHighlight,
   openHighlight,
+  TYPEAHEAD_RESET_MS,
+  typeaheadIndex,
 } from './ki-select.keyboard';
 
 type RosterOption = SelectOptionRecord & {
@@ -130,16 +132,16 @@ export class KiSelect {
   // then emptied" (clear the value, per FR-004: the value reads '' once the
   // selected option disappears).
   private sawOptions = false;
+  // Typeahead (APG select-only): the string being typed and when its last
+  // character arrived; a pause longer than TYPEAHEAD_RESET_MS starts a new one.
+  private typed = '';
+  private typedAt = 0;
 
   private get effectiveDisabled(): boolean {
     return (
       normalizeBooleanPresence(this.host.getAttribute('disabled') ?? this.disabled) ||
       this.formDisabled
     );
-  }
-
-  private get normalizedRequired(): boolean {
-    return normalizeBooleanPresence(this.host.getAttribute('required') ?? this.required);
   }
 
   private get selectedOption(): RosterOption | null {
@@ -274,6 +276,8 @@ export class KiSelect {
       this.highlight(lastEnabled(this.roster));
     } else if (intent === 'commit') {
       this.commit(this.highlightedIndex);
+    } else if (intent === 'type') {
+      this.typeahead(event.key);
     } else {
       this.close();
     }
@@ -382,6 +386,11 @@ export class KiSelect {
   }
 
   private commit(index: number): void {
+    // Select-only combobox: DOM focus belongs on the trigger. A pointer press
+    // moves it onto the pressed row, which is then hidden with the popup (focus
+    // falls to the body) or, for a disabled row, stays open with the keyboard
+    // handlers out of reach. Keyboard commits are already there: a no-op.
+    this.triggerElement?.focus();
     const option = this.roster[index];
     // Activating a disabled (or missing) option does nothing and leaves the
     // popup open — closing first would change interaction state and force a
@@ -399,6 +408,26 @@ export class KiSelect {
     this.syncValidity();
     this.host.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
     this.host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+  }
+
+  private typeahead(character: string): void {
+    const now = performance.now();
+    this.typed = now - this.typedAt > TYPEAHEAD_RESET_MS ? character : this.typed + character;
+    this.typedAt = now;
+
+    // Closed, the search starts from the selection the popup would open on.
+    const from = this.open ? this.highlightedIndex : this.selectedIndex;
+    const match = typeaheadIndex(this.roster, this.typed, from);
+    if (match < 0) {
+      // Nothing starts with the string: drop it so the next key starts afresh.
+      this.typed = '';
+    }
+
+    if (!this.open) {
+      this.openWithHighlight(match < 0 ? openHighlight(this.roster, this.selectedIndex) : match);
+    } else if (match >= 0) {
+      this.highlight(match);
+    }
   }
 
   private openWithHighlight(index: number): void {
@@ -458,7 +487,13 @@ export class KiSelect {
       this.internals.setFormValue(submittedValue);
     }
 
-    if (selectValueMissing(this.normalizedRequired, submittedValue)) {
+    // `required` is read from the property, never from the host attribute:
+    // Stencil un-reflects a cleared property only at the next render, so the
+    // attribute is still present when the watch calls this and would keep a
+    // select whose `required` was just set to `false` blocking its form.
+    // Presence semantics already reached the property (componentWillLoad and
+    // the attribute observer).
+    if (selectValueMissing(this.required, submittedValue)) {
       this.donorElement?.setAttribute('required', '');
       if (typeof this.internals.setValidity === 'function') {
         this.internals.setValidity(
@@ -520,7 +555,7 @@ export class KiSelect {
           aria-expanded={this.open ? 'true' : 'false'}
           aria-controls={this.listboxId}
           aria-activedescendant={activeId}
-          aria-required={this.normalizedRequired ? 'true' : null}
+          aria-required={this.required ? 'true' : null}
           aria-invalid={this.userInvalid ? 'true' : null}
           disabled={this.effectiveDisabled}
           onClick={this.handleTriggerClick}

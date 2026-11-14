@@ -35,6 +35,11 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 :host(:dir(rtl)) {
   --_ki-switch-travel: calc(-1 * var(--_ki-switch-travel-distance));
   --_ki-switch-thumb-anchor: 100%;
@@ -236,5 +241,35 @@ input:active:not(:disabled) ~ [part="track"] {
 
   input:active:not(:disabled) ~ [part="track"] [part="thumb"] {
     scale: 1.15 1;
+  }
+}
+
+/* Forced colors (Windows Contrast themes): the user's palette replaces the
+ * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
+ * are dropped, and only system colours — that palette — can be named.
+ *
+ * The thumb is a background: Canvas on the Canvas track, leaving only the
+ * check glyph. It takes the ink colour and the glyph is cut out of it.
+ *
+ * The track also parks its focus ring as a transparent outline so the
+ * colour can transition in. A forced palette repaints that outline too,
+ * so every switch looked focused: here the ring exists only on focus. */
+@media (forced-colors: active) {
+  [part="track"] {
+    outline-style: none;
+  }
+
+  input:focus + [part="track"],
+  input:focus-visible + [part="track"] {
+    outline-color: Highlight;
+    outline-style: solid;
+  }
+
+  [part="thumb"] {
+    background: CanvasText;
+  }
+
+  .glyph {
+    color: Canvas;
   }
 }

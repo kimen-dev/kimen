@@ -1,6 +1,6 @@
 import { h } from '@stencil/core';
 import { describe, expect, it, render } from '@stencil/vitest';
-import { normalizeBooleanPresence } from './ki-radio-group.form';
+import { booleanFromAttributePresence } from '../../utils/boolean-presence';
 import { radioGroupFormValue } from './ki-radio-group.form';
 import { arrowDirection, nextEnabledIndex } from './ki-radio-group.keyboard';
 
@@ -55,11 +55,10 @@ describe('ki-radio-group', () => {
     expect(radioGroupFormValue({ value: 'email', disabled: true })).toBeNull();
   });
 
-  it('S13 normalizes boolean presence values', () => {
-    expect(normalizeBooleanPresence(true)).toBe(true);
-    expect(normalizeBooleanPresence(false)).toBe(false);
-    expect(normalizeBooleanPresence('')).toBe(true);
-    expect(normalizeBooleanPresence('false')).toBe(true);
-    expect(normalizeBooleanPresence(undefined)).toBe(false);
+  it('S13 normalizes booleans from attribute presence', () => {
+    expect(booleanFromAttributePresence(false, false)).toBe(false);
+    expect(booleanFromAttributePresence(false, true)).toBe(true);
+    expect(booleanFromAttributePresence(true, false)).toBe(true);
+    expect(booleanFromAttributePresence(true, true)).toBe(true);
   });
 });

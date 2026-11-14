@@ -16,6 +16,11 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 [part="divider"] {
   block-size: var(--ki-divider-thickness);
   border-radius: var(--ki-divider-radius);
@@ -38,10 +43,14 @@
 }
 
 /* A vertical divider derives its length from the layout context (FR-003):
- * in a stretching context (flex/grid cross axis or an explicit height) the
- * rule fills it; where no height resolves it renders zero-length — a
- * consumer layout concern the component does not repair (spec edge case). */
+ * in a flex/grid row or under an explicit height the rule fills the cross
+ * size. The host claims that cross size itself (`align-self: stretch`):
+ * a toolbar that centers its items would otherwise collapse the divider to
+ * its content, and it has none. Only where the context offers no height at
+ * all (plain block flow) does it still render zero-length — a consumer
+ * layout concern the component does not repair (spec edge case). */
 :host([orientation="vertical"]) {
+  align-self: stretch;
   inline-size: fit-content;
   padding-block: 0;
   padding-inline: calc(max(var(--ki-divider-spacing) - var(--ki-divider-thickness), 0px) / 2);
@@ -50,4 +59,16 @@
 :host([orientation="vertical"]) [part="divider"] {
   inline-size: var(--ki-divider-thickness);
   block-size: 100%;
+}
+
+/* Forced colors (Windows Contrast themes): the user's palette replaces the
+ * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
+ * are dropped, and only system colours — that palette — can be named.
+ *
+ * The rule is a background, so the divider disappears. It takes the ink
+ * colour. */
+@media (forced-colors: active) {
+  [part="divider"] {
+    background: CanvasText;
+  }
 }

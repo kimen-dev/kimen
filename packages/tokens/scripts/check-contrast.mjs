@@ -236,6 +236,72 @@ export function componentPairs(declarations) {
   return pairs;
 }
 
+// WCAG 1.4.3 — the placeholder sweep.
+//
+// A placeholder is text. It is not the accessible name, and that is the one
+// thing it is excused from: the example it shows ("name@example.com") still
+// has to be readable by the person it was written for. It sat outside every
+// sweep because its token is neither a `-bg` nor the `-fg` sibling of one, and
+// shipped at 2.66-3.13:1 on the onmars light fills for exactly that reason.
+//
+// DERIVED, like every sweep here. A placeholder stands in for the value text,
+// so it is read against the fills that text is painted on: the cells of
+// componentPairs() under the placeholder's own stem. A state-scoped token
+// (`--ki-input-rest-placeholder-fg`) resolves to its one cell; a component-wide
+// one (`--ki-select-placeholder-fg`) to every state of the trigger. Disabled
+// cells stay exempt, exactly as they are for the value text.
+const PLACEHOLDER_ROLE = '-placeholder-fg';
+
+export function placeholderCells(declarations) {
+  const textFills = componentPairs(declarations).map((pair) => pair.surface);
+
+  return [...declarations.keys()]
+    .filter((name) => name.endsWith(PLACEHOLDER_ROLE) && !/-disabled-/u.test(name))
+    .map((name) => {
+      const stem = name.slice(0, name.length - PLACEHOLDER_ROLE.length);
+      return { placeholder: name, fills: textFills.filter((fill) => fill.startsWith(`${stem}-`)) };
+    });
+}
+
+function sweepPlaceholders(theme, scheme, declarations) {
+  const failures = [];
+  const page = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+  const cells = placeholderCells(declarations);
+
+  // The canary: ki-input is always present and always has a placeholder, so a
+  // zero-length derivation means the naming convention drifted.
+  if (cells.length === 0) {
+    failures.push(
+      `${theme}/${scheme}: no placeholder cells derived — the token naming convention drifted`,
+    );
+  }
+
+  for (const cell of cells) {
+    if (cell.fills.length === 0) {
+      failures.push(
+        `${theme}/${scheme} ${cell.placeholder}: a placeholder with no field fill to be read against`,
+      );
+      continue;
+    }
+
+    const text = parseColor(resolveCustomProperty(cell.placeholder, declarations));
+
+    for (const fillName of cell.fills) {
+      const rawFill = parseColor(resolveCustomProperty(fillName, declarations));
+      const fill = rawFill.a < 1 ? compositeOver(rawFill, page) : rawFill;
+      const ratio = contrastRatio(text, fill);
+
+      if (ratio < MIN_RATIO) {
+        failures.push(
+          `${theme}/${scheme} ${cell.placeholder} on ${fillName}: ${ratio} (min ${MIN_RATIO})`,
+        );
+      }
+    }
+  }
+
+  return failures;
+}
+
 // WCAG 1.4.11 — the control-boundary sweep.
 //
 // A control that can be EMPTY carries no label inside its own box, so the box
@@ -389,6 +455,108 @@ function sweepRatioReadouts(theme, scheme, declarations) {
   return failures;
 }
 
+// WCAG 1.4.11 — the page-graphic sweep.
+//
+// Some components ARE a single non-text mark painted straight onto the page:
+// a status dot, a pager dot, a scroll thumb. Nothing is written inside them and
+// nothing is drawn around them, so neither the text sweep nor the
+// control-boundary sweep ever looked at them, and literal transcriptions
+// shipped at 1.1-2.3:1 — the scroll thumb at black 5%, the pager dots at black
+// 18%, the info and warning dots at their 500 step on white. Each mark must
+// clear 3:1 against the page it is painted on.
+//
+// The component set is listed — it states what a component IS, exactly like
+// EMPTY_BOX_COMPONENTS — but the marks inside it are derived: every colour the
+// component publishes, minus the roles that are ground rather than mark. A
+// tone added to ki-status tomorrow is swept the day it appears.
+const PAGE_GRAPHIC_COMPONENTS = new Set(['indicator', 'scroller', 'status']);
+// A ring is either the status cutout, which takes the page's own colour on
+// purpose, or a focus ring; a track is the ground a thumb moves over. None of
+// them is the mark.
+const GROUND_ROLE = /-(?:ring|track)-color$/u;
+const MARK_ROLE = '-color';
+
+export function pageGraphicMarks(declarations) {
+  return [...declarations.keys()].filter((name) => {
+    const component = name.match(/^--ki-([a-z][a-z0-9]*)-/u);
+    return (
+      component !== null &&
+      PAGE_GRAPHIC_COMPONENTS.has(component[1]) &&
+      name.endsWith(MARK_ROLE) &&
+      !GROUND_ROLE.test(name)
+    );
+  });
+}
+
+// A mark with a "current" state — the pager dot of the slide on screen — must
+// stay distinguishable from its resting siblings. Where a theme changes its
+// shape (the onmars elongated pill) the shape carries the state. Where a theme
+// draws it in the resting mark's own box (material3's uniform circles) colour
+// is all that is left, and two colours tell a state apart only when they are
+// 3:1 from each other (WCAG 1.4.1; spec 024 FR-012 names this gate for it).
+const CURRENT_ROLE = '-current-color';
+const BOX_AXES = ['inline-size', 'block-size'];
+
+export function currentMarkPairs(declarations) {
+  return pageGraphicMarks(declarations)
+    .filter((name) => name.endsWith(CURRENT_ROLE))
+    .map((current) => {
+      const stem = current.slice(0, current.length - CURRENT_ROLE.length);
+      return {
+        current,
+        resting: `${stem}${MARK_ROLE}`,
+        colourAlone: BOX_AXES.every(
+          (axis) =>
+            resolveCustomProperty(`${stem}-current-${axis}`, declarations) ===
+            resolveCustomProperty(`${stem}-${axis}`, declarations),
+        ),
+      };
+    });
+}
+
+function sweepPageGraphics(theme, scheme, declarations) {
+  const failures = [];
+  const page = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+  const painted = (name) => {
+    const raw = parseColor(resolveCustomProperty(name, declarations));
+    return raw.a < 1 ? compositeOver(raw, page) : raw;
+  };
+  const marks = pageGraphicMarks(declarations);
+
+  // The canary: ki-status is always present, so a zero-length derivation means
+  // the naming convention drifted, not that the library stopped having marks.
+  if (marks.length === 0) {
+    failures.push(
+      `${theme}/${scheme}: no page-graphic marks derived — the token naming convention drifted`,
+    );
+  }
+
+  for (const mark of marks) {
+    const ratio = contrastRatio(painted(mark), page);
+
+    if (ratio < NON_TEXT_MIN_RATIO) {
+      failures.push(
+        `${theme}/${scheme} ${mark} on --ki-surface-s0: ${ratio} (min ${NON_TEXT_MIN_RATIO})`,
+      );
+    }
+  }
+
+  for (const pair of currentMarkPairs(declarations)) {
+    if (!pair.colourAlone) {
+      continue;
+    }
+    const ratio = contrastRatio(painted(pair.current), painted(pair.resting));
+
+    if (ratio < NON_TEXT_MIN_RATIO) {
+      failures.push(
+        `${theme}/${scheme} ${pair.current} against ${pair.resting}: ${ratio} (min ${NON_TEXT_MIN_RATIO}; colour is all that marks the current one)`,
+      );
+    }
+  }
+
+  return failures;
+}
+
 // The interaction ramp.
 //
 // Pressed has one job: to read as MORE engaged than hover. A pressed wash
@@ -533,6 +701,8 @@ function evaluateStylesheet(theme, stylesheet) {
     failures.push(...sweepControlBoundaries(theme, scheme, declarations));
     failures.push(...sweepRatioReadouts(theme, scheme, declarations));
     failures.push(...sweepOverlayRamps(theme, scheme, declarations));
+    failures.push(...sweepPlaceholders(theme, scheme, declarations));
+    failures.push(...sweepPageGraphics(theme, scheme, declarations));
 
     if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
       failures.push(

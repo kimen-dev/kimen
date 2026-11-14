@@ -85,7 +85,7 @@ describe('ki-scroller under the dark scheme', () => {
     expect(viewport.hasAttribute('tabindex')).toBe(true);
     const darkThumbColor = readTokenColor('--ki-scroller-thumb-color');
 
-    // Inverse_white/alpha_6 flips Black/5 → White/5 with the scheme: the
+    // Inverse_white/alpha_48 flips Black/48 → White/48 with the scheme: the
     // indicator's paint source resolves from the dark token values (S11).
     expect(darkThumbColor).not.toBe(lightThumbColor);
     expect(viewport.scrollHeight).toBeGreaterThan(viewport.clientHeight);

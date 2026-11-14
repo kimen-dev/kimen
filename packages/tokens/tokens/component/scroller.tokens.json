@@ -2,8 +2,8 @@
   "ki": {
     "scroller": {
       "thumb-color": {
-        "$value": "{ki.inverse-white.alpha-6}",
-        "$description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_6, the exact variable bound to the scroll pill on both Scroller variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md)."
+        "$value": "{ki.inverse-white.alpha-48}",
+        "$description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_6 (Black/5 light, White/5 dark), which reads 1.12:1 and 1.09:1 against the content surface. The thumb is the only mark that shows the scroll position, so it takes the first step of the same ramp that clears WCAG 1.4.11's 3:1. The scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md)."
       },
       "thumb-thickness": {
         "$value": "{ki.space.xs}",

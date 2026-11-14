@@ -22,6 +22,11 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 [part="indicator"] {
   display: flex;
   align-items: center;
@@ -83,5 +88,28 @@
 @media (prefers-reduced-motion: reduce) {
   [part~="dot"] {
     transition: none;
+  }
+}
+
+/* Forced colors (Windows Contrast themes): the user's palette replaces the
+ * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
+ * are dropped, and only system colours — that palette — can be named.
+ *
+ * Resting dots are a fill and disappear, taking the number of positions
+ * with them; the current one survives only where a theme draws it as a
+ * ring. Told apart by shape rather than by two system colours that need
+ * not contrast with each other: resting dots are hollow, the current one
+ * is solid. `[part="dot"]` matches the resting dots alone — the current
+ * one carries a second part name.
+ * `thin` is the browser's own hairline: a theme may set a border token to
+ * zero, never this. */
+@media (forced-colors: active) {
+  [part="dot"] {
+    border: thin solid CanvasText;
+  }
+
+  [part~="dot-current"] {
+    background: CanvasText;
+    border-color: CanvasText;
   }
 }

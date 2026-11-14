@@ -3,6 +3,50 @@
  * - declaration-strict-value: every visual value resolves from a token (CSS var).
  * - plugin-use-logical: physical direction properties fail (RTL by construction).
  */
+
+/**
+ * The CSS system colours (CSS Color 4, section 6.2), accepted wherever a token
+ * is otherwise required.
+ *
+ * They are not hardcoded values and they are not an escape from Art. VI: a
+ * system colour resolves to the palette the USER chose — in practice a Windows
+ * Contrast theme — which is the one palette a component may not replace with
+ * its own. Under `forced-colors: active` the browser repaints every author
+ * background as Canvas and drops every gradient and shadow, so a state drawn
+ * only with a fill (the dot of a checked radio, the filled part of a progress
+ * bar) vanishes unless the stylesheet names the system colour that should
+ * carry it. No design token can stand in: a token is a brand value, and the
+ * forced palette discards brand values by definition.
+ *
+ * Their place is inside `@media (forced-colors: active)`. Stylelint cannot
+ * scope an allowlist to an at-rule, so that part is convention: outside that
+ * block a system colour would freeze a value no theme could restyle.
+ *
+ * Matched case-insensitively — CSS keywords are — so both the CamelCase the
+ * specification writes and a lowercased form pass.
+ */
+const systemColors = [
+  'AccentColor',
+  'AccentColorText',
+  'ActiveText',
+  'ButtonBorder',
+  'ButtonFace',
+  'ButtonText',
+  'Canvas',
+  'CanvasText',
+  'Field',
+  'FieldText',
+  'GrayText',
+  'Highlight',
+  'HighlightText',
+  'LinkText',
+  'Mark',
+  'MarkText',
+  'SelectedItem',
+  'SelectedItemText',
+  'VisitedText',
+];
+
 export default {
   ignoreFiles: ['**/dist/**', '**/node_modules/**', '**/storybook-static/**'],
   extends: ['stylelint-config-standard'],
@@ -42,6 +86,7 @@ export default {
           '100%',
           '1',
           '/^var\\(--ki-/',
+          `/^(?:${systemColors.join('|')})$/i`,
         ],
         disableFix: true,
       },

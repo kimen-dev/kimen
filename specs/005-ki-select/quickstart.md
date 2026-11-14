@@ -73,7 +73,10 @@ bash scripts/gates/check-traceability.sh specs/005-ki-select
    Enter or Space commits the highlight and closes (S8); Escape closes
    without committing (S9); Tab closes DISCARDING the highlight and moves
    focus on (S21 — the spec's default discard reading, gate-1 pending).
-   Typing letters does nothing — no typeahead in v1 (charter).
+   Typing letters moves the highlight to the next option that starts with
+   them, opening the popup first when it is closed; letters typed in quick
+   succession match as one string and a pause starts a new one (S27).
+   Typing never commits.
 3. **Forms (US3)** — wrap the select in a form with a submit button:
    submit with "France" (value `fr`) selected and inspect FormData —
    `country=fr` (S13); submit with NO selection — no `country` entry at
