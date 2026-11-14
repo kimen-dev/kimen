@@ -405,6 +405,40 @@ describe('ki-video', () => {
     expect(media.controls).toBe(true);
   });
 
+  // The facade button leaves the Tab order as it yields; a keyboard user who
+  // just pressed it must land on the native player that replaced it, not be
+  // dropped on the document body.
+  it('S7 keyboard activation moves focus to the native player that takes over', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Play the tour' });
+    const media = mediaOf(el);
+
+    (document.activeElement as HTMLElement | null)?.blur();
+    await userEvent.keyboard('{Tab}');
+    expect(el.shadowRoot?.activeElement).toBe(playControlOf(el));
+    await userEvent.keyboard('{Enter}');
+
+    await waitUntil(
+      () => getComputedStyle(playControlOf(el)).visibility === 'hidden',
+      'the facade did not yield the surface',
+    );
+    expect(document.activeElement).toBe(media);
+  });
+
+  it('S2 activation from elsewhere leaves focus where the person put it', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Play the tour' });
+    const elsewhere = document.createElement('button');
+    elsewhere.textContent = 'Elsewhere';
+    landmark().append(elsewhere);
+    elsewhere.focus();
+
+    playControlOf(el).click();
+
+    await waitUntil(() => mediaOf(el).controls, 'activation did not enable the native player');
+    expect(document.activeElement).toBe(elsewhere);
+  });
+
   it('S8 exposes exactly one button named from label while the frame contributes nothing, and passes axe', async () => {
     cleanup();
     const el = await mount(landmark(), { label: 'Play the product tour' });
