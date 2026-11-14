@@ -15,11 +15,14 @@ const STABLE_VERSION = '2026-01-26';
 /**
  * Host → View `McpUiInitializeResult`, after the example at apps.mdx:593-619
  * (result fields: spec.types.ts:570-584). The `styles` block is elided — the
- * adapter does not map host theming in v1.
+ * adapter applies the host's `theme` (apps.mdx:544-545) and does not map host
+ * style variables. `hostContext` overrides the example's context fields; pass
+ * `{ theme: undefined }` for a host that announces no theme.
  */
 export const initializeResult = (
   id: number | string,
   protocolVersion = STABLE_VERSION,
+  hostContext: Readonly<Record<string, unknown>> = {},
 ): Fixture => ({
   id,
   jsonrpc: '2.0',
@@ -29,6 +32,7 @@ export const initializeResult = (
       containerDimensions: { maxHeight: 600, width: 400 },
       displayMode: 'inline',
       theme: 'dark',
+      ...hostContext,
     },
     hostInfo: { name: 'claude-desktop', version: '1.0.0' },
     protocolVersion,
@@ -78,11 +82,16 @@ export const toolCancelled = (): Fixture => ({
   params: { reason: 'user action' },
 });
 
-/** Host → View `ui/notifications/host-context-changed`, after apps.mdx:1221-1226. */
-export const hostContextChanged = (): Fixture => ({
+/**
+ * Host → View `ui/notifications/host-context-changed`, after apps.mdx:1221-1226:
+ * a partial context update, by default the spec's own example (a theme toggle).
+ */
+export const hostContextChanged = (
+  params: Readonly<Record<string, unknown>> = { theme: 'light' },
+): Fixture => ({
   jsonrpc: '2.0',
   method: 'ui/notifications/host-context-changed',
-  params: { theme: 'light' },
+  params,
 });
 
 /** Host → View `ui/resource-teardown` request, after apps.mdx:1173-1181. */

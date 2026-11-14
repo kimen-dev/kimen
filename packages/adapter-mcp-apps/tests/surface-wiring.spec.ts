@@ -8,9 +8,15 @@
 // whatever the parent has since become. Fixtures: ./spec-messages.ts.
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import type { SurfaceColorScheme } from '../src/index.js';
 import type { SurfaceMessageEvent, SurfaceWindow } from '../src/surface-wiring.js';
 import { wireSurface } from '../src/surface-wiring.js';
-import { confirmSurface, initializeResult, toolResult } from './spec-messages.js';
+import {
+  confirmSurface,
+  hostContextChanged,
+  initializeResult,
+  toolResult,
+} from './spec-messages.js';
 
 let surface: HTMLElement;
 
@@ -37,10 +43,13 @@ interface Harness {
   readonly bridge: ReturnType<typeof wireSurface>;
   /** Pushes a measured size through the window's size source. */
   readonly resize: (width: number, height: number) => void;
+  /** Every color scheme the surface applied to its document, in order. */
+  readonly schemes: SurfaceColorScheme[];
 }
 
 const harness = (): Harness => {
   const posted: Posted[] = [];
+  const schemes: SurfaceColorScheme[] = [];
   const listeners: ((event: SurfaceMessageEvent) => void)[] = [];
   let sizeListener: ((width: number, height: number) => void) | undefined;
   const host: SurfaceWindow['parent'] = {
@@ -51,6 +60,9 @@ const harness = (): Harness => {
   const win: SurfaceWindow = {
     addEventListener: (_type, listener): void => {
       listeners.push(listener);
+    },
+    applyColorScheme: (scheme): void => {
+      schemes.push(scheme);
     },
     observeSize: (listener): void => {
       sizeListener = listener;
@@ -74,6 +86,7 @@ const harness = (): Harness => {
     },
     posted,
     resize: (width, height) => sizeListener?.(width, height),
+    schemes,
   };
 };
 
@@ -215,5 +228,38 @@ describe('the surface replies to the host that spoke to it', () => {
       },
       targetOrigin: HOST_ORIGIN,
     });
+  });
+});
+
+describe('the document follows the color scheme of the host that embeds it', () => {
+  it('S19 applies the theme of the host that answered the handshake', () => {
+    // The fixture is the specification's own example: `theme: "dark"`.
+    const { schemes } = connected();
+
+    expect(schemes).toEqual(['dark']);
+  });
+
+  it('S19 applies a theme change the host sends afterwards', () => {
+    const { deliver, schemes } = connected();
+
+    deliver({ data: hostContextChanged({ theme: 'light' }) });
+
+    expect(schemes).toEqual(['dark', 'light']);
+  });
+
+  it('S20 stays in the announced scheme when the host sends a theme the protocol does not define', () => {
+    const { deliver, schemes } = connected();
+
+    deliver({ data: hostContextChanged({ theme: 'sepia' }) });
+
+    expect(schemes).toEqual(['dark']);
+  });
+
+  it('never takes a theme from a frame that is not the host', () => {
+    const { deliver, schemes } = connected();
+
+    deliver({ data: hostContextChanged({ theme: 'light' }), source: IMPOSTOR });
+
+    expect(schemes).toEqual(['dark']);
   });
 });

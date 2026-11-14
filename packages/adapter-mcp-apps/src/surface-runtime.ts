@@ -1,23 +1,37 @@
 /**
- * The in-document surface runtime (spec 030): the browser entry esbuild bundles
+ * The in-document surface runtime (spec 030): the browser side esbuild bundles
  * into the self-contained `ui://` resource. It resolves the surface element and
  * hands the real window to `wireSurface`, which owns the host channel. No code
  * path here parses markup or evaluates data; the only render path is
  * `renderUiSpec` via the bridge.
  *
- * This module is never part of the adapter's importable API (it targets the
- * document, not Node); it exists only to be bundled into the surface document.
+ * `scripts/generate-surface.mjs` composes the document's entry: it registers
+ * every catalog component definition, then calls `startSurface`. This module
+ * is never part of the adapter's importable API (it targets the document, not
+ * Node); it exists only to be bundled into the surface document.
  */
 import type { SurfaceWindow } from './surface-wiring.js';
 import { wireSurface } from './surface-wiring.js';
 
-function bootstrap(): void {
+/**
+ * The token contract's scheme selector (@kimen/tokens, "Theme and scheme
+ * selection"): on the root element it forces the light or dark values of
+ * every `--ki-*` token and, through the page contract, the user agent's own
+ * `color-scheme`. Without it the stylesheets follow the viewer's preference.
+ */
+const COLOR_SCHEME_ATTRIBUTE = 'data-ki-color-scheme';
+
+/** Wires the document to its host and opens the MCP Apps handshake. */
+export function startSurface(): void {
   const surface = document.getElementById('kimen-surface') ?? document.body;
   const win: SurfaceWindow = {
     addEventListener: (type, listener): void => {
       window.addEventListener(type, (event: MessageEvent): void => {
         listener(event);
       });
+    },
+    applyColorScheme: (scheme): void => {
+      document.documentElement.setAttribute(COLOR_SCHEME_ATTRIBUTE, scheme);
     },
     // Content size for `ui/notifications/size-changed` (apps.mdx:1204-1217):
     // the document height at max-content (so a host with a flexible container
@@ -46,5 +60,3 @@ function bootstrap(): void {
 
   wireSurface(win, surface);
 }
-
-bootstrap();
