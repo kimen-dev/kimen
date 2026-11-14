@@ -63,6 +63,8 @@ The evidence for TDD-always is mixed; its reliable value is **design pressure** 
 
 - **[Always]** S-ID traceability (Art. II): when a behavior contract exists, every scenario ID (S1..Sn) appears in at least one test at the right level. `scripts/gates/check-traceability.sh` checks this, and the test must assert the observable outcome — not merely name-drop the ID.
 - **[Always]** Query like a user: by role/label/text first, `data-testid` as fallback, CSS/XPath only when nothing else fits. Role-based queries double as a continuous accessibility probe (Art. V: the accessibility tree is also how agents read our components).
+- **[Always]** Assert what the browser painted, never the token that painted it. `expect(computed).toBe(readToken('--ki-x'))` reads one declaration twice: it breaks on every rename and passes on a wrong value. Assert the outcome a person perceives — a state distinguishable from its neighbour, a contrast ratio, a target size, a value that follows a consumer's token override, a part that repaints when the scheme flips (`repaintedUnderForcedDark` in `browser-tests/color-scheme.ts`).
+- **[Default]** Cross-cutting guarantees are asserted once, for every component, by the transversal suites: `contracts.browser.spec.ts` (axe + target size, AA contrast of every text run, live theme/scheme switch, reflow, text spacing — per theme × scheme), `hidden-attribute` and `forced-colors`. A component spec does not repeat them, and there is no per-component `*.dark.` functional file: a behavior specific to a scheme is one test in the component's own spec. Pixel fidelity per theme and scheme belongs to the `*.visual[.dark]` galleries.
 - **[Always]** Web-first/auto-retrying assertions; never `waitForTimeout`/sleep — fixed waits are the #1 flake source and slow the suite even when green.
 - **[Always]** Full isolation: fresh state per test, no execution-order dependence, parallel-safe (own data per worker). Mock external/third-party network in component tests and most E2E.
 - **[Default]** E2E budget: a thin set of money-path journeys (form submits, generation flow renders, theme switches). Every E2E must justify why a component test can't catch the same failure.
@@ -96,6 +98,8 @@ LLM output is non-deterministic; exact-match assertions are the wrong tool. Read
 | E2E for every feature | Slow, flaky, duplicate coverage | Trophy: push down to component level |
 | Asserting internal state/private methods | Couples tests to implementation | Public API + observable outcomes |
 | A mock-doc/jsdom twin of a browser test | Same scenario asserted twice, the weaker copy needs platform mocks and production guards | One browser test; node `*.spec.ts` only for pure helpers |
+| `expect(style).toBe(readToken('--ki-x'))` | The stylesheet compared with itself: red on a rename, green on a wrong value | Assert the perceivable outcome (distinguishable state, contrast, size, repaint) |
+| Re-running axe/contrast per component × scheme | The transversal contracts already do it for all components | One scheme-specific behavior test, only where the behavior is the component's own |
 | Writing tests after, "to bump coverage" | Tests inherit the code's assumptions and bugs | TDD for logic; tests-from-spec (Gherkin) otherwise |
 
 ## 9. Rationalizations and red flags — the excuse table

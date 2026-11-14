@@ -15,6 +15,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-indicator.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiIndicatorElement = HTMLElement & { count?: number; current?: number; label?: string };
 
@@ -351,6 +352,15 @@ describe('ki-indicator', () => {
     expect(dotsOf(el)).toHaveLength(0);
     expect(await browserCommands.ariaSnapshot('#s8-empty-landmark')).not.toContain('img');
     await expectAccessible(document.body);
+  });
+
+  it('S10 honors a forced dark scheme: the resting dots and the current one repaint', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Slide position', count: '5', current: '2' });
+
+    expect(await repaintedUnderForcedDark(el)).toEqual(
+      expect.arrayContaining(['dot', 'dot-current']),
+    );
   });
 
   it('S9 restyles size, shape, spacing and colors through material3 tokens alone', async () => {

@@ -18,6 +18,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-video.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiVideoElement = HTMLElement & { label?: string };
 
@@ -471,6 +472,13 @@ describe('ki-video', () => {
     expect(media.textTracks).toHaveLength(1);
     expect(media.textTracks[0]?.kind).toBe('captions');
     expect(media.textTracks[0]?.language).toBe('es');
+  });
+
+  it('S11 honors a forced dark scheme: the play control repaints', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Play the product tour' });
+
+    expect(await repaintedUnderForcedDark(el)).toContain('play');
   });
 
   it('S10 material3 restyles frame and play control through tokens alone with unchanged markup', async () => {

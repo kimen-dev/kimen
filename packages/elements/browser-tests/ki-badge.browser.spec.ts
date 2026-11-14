@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-badge.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiBadgeElement = HTMLElement & { tone: string; size: string };
 
@@ -186,6 +187,13 @@ describe('ki-badge', () => {
     }
     await motionSettled(landmark());
     await expectAccessible(document.body);
+  });
+
+  it('S7 honors a forced dark scheme: the pill surface repaints', async () => {
+    cleanup();
+    const el = await mount('Synced', { tone: 'success' });
+
+    expect(await repaintedUnderForcedDark(el)).toContain('badge');
   });
 
   it('S6 restyles through material3 tokens alone without markup changes', async () => {

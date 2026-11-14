@@ -10,6 +10,7 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement as defineButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-card.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 const STYLE_ID = 'ki-card-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-card-browser-material3-token-style';
@@ -475,6 +476,18 @@ describe('ki-card in a real browser', () => {
     await userEvent.click(page.getByRole('button', { name: 'Download' }));
 
     expect(activations).toBe(1);
+  });
+
+  it('S7 honors a forced dark scheme: the card surface repaints', async () => {
+    cleanup();
+    const el = await mount(`
+      <ki-card>
+        <h2 slot="header">Monthly report</h2>
+        <p>Revenue increased.</p>
+      </ki-card>
+    `);
+
+    expect(await repaintedUnderForcedDark(el)).toContain('card');
   });
 
   it('S6 resolves material3 surface border and elevation from tokens without markup changes', async () => {

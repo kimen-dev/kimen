@@ -9,6 +9,7 @@ import { page, userEvent } from 'vitest/browser';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import { defineCustomElement } from '../dist/components/ki-switch.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiSwitchElement = HTMLElement & {
   checked: boolean;
@@ -448,6 +449,12 @@ describe('ki-switch in a real browser', () => {
     el.value = 'weekly';
 
     await expect.poll(() => formValue(form, 'newsletter')).toBe('weekly');
+  });
+
+  it('S15 honors a forced dark scheme: the off track and its thumb repaint', async () => {
+    const el = await mount();
+
+    expect(await repaintedUnderForcedDark(el)).toEqual(expect.arrayContaining(['track', 'thumb']));
   });
 
   it('S14 material3 restyles checked and unchecked switch token values without markup changes', async () => {

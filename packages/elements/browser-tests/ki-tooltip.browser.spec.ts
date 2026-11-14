@@ -8,6 +8,7 @@ import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-tooltip.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiTooltipElement = HTMLElement & {
   label: string;
@@ -309,6 +310,16 @@ describe('ki-tooltip pointer path in a real browser', () => {
     } finally {
       await page.viewport(414, 896);
     }
+  });
+
+  it('S10 honors a forced dark scheme: the shown tooltip repaints', async () => {
+    const { host, trigger } = await mount();
+    trigger.tabIndex = 0;
+    await userEvent.keyboard('{Tab}');
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
+
+    expect(await repaintedUnderForcedDark(host)).toContain('tooltip');
+    await expect.element(page.getByRole('tooltip', { name: 'Send immediately' })).toBeVisible();
   });
 
   it('S9 material3 restyles the visible tooltip with unchanged markup', async () => {

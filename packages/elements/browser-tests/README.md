@@ -2,8 +2,27 @@
 
 Real-browser component suites (Vitest browser mode, Playwright provider).
 Functional specs follow the conventions described in
-`.agents/skills/frontend-qa/SKILL.md`. This README documents the
-visual-regression layer.
+`.agents/skills/frontend-qa/SKILL.md`. This README documents how the suite is
+laid out and the visual-regression layer.
+
+## What lives where
+
+- `ki-<name>.browser.spec.ts`: every behavior of one component, asserted
+  through its public API on the built custom elements. This is the only place
+  a component renders in a test; pure helpers have node `*.spec.ts` files
+  beside their source.
+- `ki-<name>.motion.browser.spec.ts`: behavior under reduced motion (its own
+  browser instance, which emulates the preference).
+- `contracts.browser.spec.ts`, `hidden-attribute.browser.spec.ts`,
+  `forced-colors.browser.spec.ts`: what every component owes a user, asserted
+  once over the whole set — the accessibility audit with target size, AA
+  contrast of every text run, live theme and scheme switching, reflow and text
+  spacing, in each theme × scheme. Component specs do not repeat them.
+- There is no `ki-<name>.dark.browser.spec.ts`. A behavior that belongs to
+  the dark scheme is one test in the component's own spec;
+  `color-scheme.ts` names the parts a component repaints when the page forces
+  dark, without reading a token.
+- `*.visual[.dark].browser.spec.ts`: pixel fidelity, below.
 
 ## Visual regression (`*.visual[.dark].browser.spec.ts`)
 

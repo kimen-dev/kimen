@@ -8,6 +8,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiSelectElement = HTMLElement & {
   value: string;
@@ -546,6 +547,16 @@ describe('ki-select in a real browser', () => {
     expect(trigger(el).disabled).toBe(true);
     expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
     expect(new FormData(form).has('country')).toBe(false);
+  });
+
+  it('S18 honors a forced dark scheme: the trigger and the open options panel repaint', async () => {
+    const el = await mountSelect('value="fr"');
+    trigger(el).click();
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'true');
+
+    expect(await repaintedUnderForcedDark(el)).toEqual(
+      expect.arrayContaining(['trigger', 'listbox', 'option']),
+    );
   });
 
   it('S17 S19 rethemes with material3 and keeps RTL logical ordering', async () => {

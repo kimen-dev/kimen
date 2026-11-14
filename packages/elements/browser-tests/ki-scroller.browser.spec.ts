@@ -17,6 +17,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-scroller.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiScrollerElement = HTMLElement & { orientation: string; label?: string };
 
@@ -346,6 +347,20 @@ describe('ki-scroller', () => {
     expect(snapshot).toMatch(/- listitem/);
 
     await expectAccessible(document.body);
+  });
+
+  it('S11 honors a forced dark scheme: the scroll indicator repaints and the overflow stays reachable', async () => {
+    cleanup();
+    ensureTokens();
+    const el = await mount(landmark(), { label: 'Release notes' }, [tallContent('600px')]);
+    el.style.blockSize = '120px';
+    const viewport = viewportOf(el);
+    await waitUntil(() => viewport.hasAttribute('tabindex'), 'overflow state was not observed');
+
+    // The indicator is the viewport's own scrollbar.
+    expect(await repaintedUnderForcedDark(el)).toContain('viewport::scrollbar');
+    expect(viewport.hasAttribute('tabindex')).toBe(true);
+    expect(viewport.scrollHeight).toBeGreaterThan(viewport.clientHeight);
   });
 
   it('S10 material3 restyles the indicator through tokens alone with unchanged markup', async () => {

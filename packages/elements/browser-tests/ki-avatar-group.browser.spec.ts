@@ -8,6 +8,7 @@ import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiAvatar } from '../dist/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '../dist/components/ki-avatar-group.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiAvatarGroupElement = HTMLElement & { max?: number; size: string };
 
@@ -230,6 +231,13 @@ describe('ki-avatar-group', () => {
     expect(counterOf(el)?.textContent).toBe('+5');
 
     await expectAccessible(document.body);
+  });
+
+  it('S12 honors a forced dark scheme: the overflow counter repaints', async () => {
+    cleanup();
+    const group = await mountGroup(landmark(), 8, { max: '3' });
+
+    expect(await repaintedUnderForcedDark(group)).toContain('counter');
   });
 
   it('S13 follows a right-to-left document: the stack leads right, the counter trails left', async () => {

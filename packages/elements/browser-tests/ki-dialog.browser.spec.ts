@@ -10,6 +10,7 @@ import { defineCustomElement as defineKiAlert } from '../dist/components/ki-aler
 import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type CloseReason = 'method' | 'escape' | 'backdrop';
 type KiCloseEvent = CustomEvent<{ reason: CloseReason }>;
@@ -829,6 +830,17 @@ describe('ki-dialog in a real browser', () => {
     expect(document.activeElement).toBe(document.body);
 
     initialOpen.remove();
+  });
+
+  it('S12 honors a forced dark scheme: the open surface and its backdrop repaint', async () => {
+    cleanup();
+    const el = await mountDialog();
+    await openDialog(el);
+
+    expect(await repaintedUnderForcedDark(el)).toEqual(
+      expect.arrayContaining(['dialog', 'dialog::backdrop']),
+    );
+    await el.close();
   });
 
   it('S11 material3 restyles the dialog surface and backdrop through tokens alone', async () => {

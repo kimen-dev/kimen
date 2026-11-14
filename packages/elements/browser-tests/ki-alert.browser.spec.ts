@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-alert.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiAlertElement = HTMLElement & {
   dismissed: boolean;
@@ -565,6 +566,18 @@ describe('ki-alert in a real browser', () => {
 
     await motionSettled(main);
     await expectAccessible(main);
+  });
+
+  it('S14 honors a forced dark scheme: the surface, the heading and the message repaint', async () => {
+    cleanup();
+    const el = await mount('We could not save your changes', {
+      heading: 'Save failed',
+      tone: 'danger',
+    });
+
+    expect(await repaintedUnderForcedDark(el)).toEqual(
+      expect.arrayContaining(['alert', 'heading', 'message']),
+    );
   });
 
   it('S13 material3 restyles all five alert tones through tokens alone', async () => {

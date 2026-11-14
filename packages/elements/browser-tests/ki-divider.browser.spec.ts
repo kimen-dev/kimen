@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-divider.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiDividerElement = HTMLElement & { orientation: string };
 
@@ -247,6 +248,13 @@ describe('ki-divider', () => {
     expect(getComputedStyle(rule).transitionProperty).toBe('opacity');
     await expect.poll(() => getComputedStyle(rule).opacity).toBe('1');
     await browserCommands.emulateReducedMotion(null);
+  });
+
+  it('S7 honors a forced dark scheme: the rule repaints', async () => {
+    cleanup();
+    const el = await mount(landmark());
+
+    expect(await repaintedUnderForcedDark(el)).toContain('divider');
   });
 
   it('S6 restyles thickness, color and spacing through material3 tokens alone', async () => {

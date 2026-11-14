@@ -9,6 +9,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import { defineCustomElement } from '../dist/components/ki-progress.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiProgressElement = HTMLElement & {
   indeterminate: boolean;
@@ -365,6 +366,15 @@ describe('ki-progress in a real browser', () => {
     }
 
     await expectAccessible(requireMain());
+  });
+
+  it('S11 honors a forced dark scheme: the track repaints in both shapes', async () => {
+    cleanup();
+    const linear = await mount({ label: 'Uploading report.pdf', value: '40' });
+    const circular = await mount({ label: 'Uploading logo.png', shape: 'circular', value: '40' });
+
+    expect(await repaintedUnderForcedDark(linear)).toContain('track');
+    expect(await repaintedUnderForcedDark(circular)).toContain('track');
   });
 
   it('S10 restyles the shape mode matrix from material3 progress tokens without markup changes', async () => {

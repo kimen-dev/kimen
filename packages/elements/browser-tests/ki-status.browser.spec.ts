@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-status.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiStatusElement = HTMLElement & { tone: string; ring: boolean; label?: string };
 
@@ -289,6 +290,13 @@ describe('ki-status', () => {
     expect(row.textContent).toBe('Online');
 
     await expectAccessible(document.body);
+  });
+
+  it('S9 honors a forced dark scheme: the neutral dot repaints', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Offline', tone: 'neutral' });
+
+    expect(await repaintedUnderForcedDark(el)).toContain('dot');
   });
 
   it('S8 restyles size, fill and effects through material3 tokens alone', async () => {

@@ -11,6 +11,7 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '../dist/components/ki-list-item.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 const STYLE_ID = 'ki-list-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-list-browser-material3-token-style';
@@ -399,6 +400,19 @@ describe('ki-list in a real browser', () => {
 
     expect(control.checked).toBe(true);
     expect(changes).toBe(1);
+  });
+
+  it('S8 honors a forced dark scheme: the list and its items repaint', async () => {
+    const list = await mountList(`
+      <ki-list>
+        <ki-list-item>Email<span slot="secondary">ana@onmars.dev</span></ki-list-item>
+        <ki-list-item>Storage</ki-list-item>
+      </ki-list>
+    `);
+
+    expect(await repaintedUnderForcedDark(list)).toEqual(
+      expect.arrayContaining(['list', 'ki-list-item']),
+    );
   });
 
   it('S7 restyles spacing, separation and text through material3 tokens only', async () => {

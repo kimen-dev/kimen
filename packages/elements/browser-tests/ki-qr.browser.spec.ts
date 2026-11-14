@@ -454,6 +454,28 @@ describe('ki-qr', () => {
     expect(await decodeRendered(el)).toBe('https://onmars.dev');
   });
 
+  it('S10 stays scannable under a forced dark scheme: dark modules on a light tile that still decode', async () => {
+    cleanup();
+    document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
+    const el = await mount(landmark(), {
+      value: 'https://onmars.dev',
+      label: 'Open on your phone',
+    });
+    const code = codeOf(el);
+    const module = code.querySelector('.module');
+    if (!module) {
+      throw new Error('ki-qr rendered no modules');
+    }
+
+    // The theme keeps the code scheme-stable on purpose (FR-010): a scanner
+    // needs dark modules on a light tile whatever the page around it does.
+    const moduleColor = getComputedStyle(module).fill;
+    const tileColor = getComputedStyle(code).backgroundColor;
+    expect(luminanceOf(tileColor)).toBeGreaterThan(luminanceOf(moduleColor));
+    expect(contrastRatio(moduleColor, tileColor)).toBeGreaterThanOrEqual(3);
+    expect(await decodeRendered(el)).toBe('https://onmars.dev');
+  });
+
   it('S11 never mirrors in a right-to-left document and still decodes', async () => {
     cleanup();
     document.documentElement.setAttribute('dir', 'rtl');

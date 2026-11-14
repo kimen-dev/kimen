@@ -10,6 +10,7 @@ import { defineCustomElement as defineInput } from '../dist/components/ki-input.
 import { defineCustomElement as defineRadio } from '../dist/components/ki-radio.js';
 import { defineCustomElement as defineRadioGroup } from '../dist/components/ki-radio-group.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiRadioGroupElement = HTMLElement & {
   disabled: boolean;
@@ -587,6 +588,13 @@ describe('ki-radio-group in a real browser', () => {
       })
       .toBe(anchorHost);
     expect(document.activeElement).not.toBe(document.body);
+  });
+
+  it('S17 honors a forced dark scheme: the option controls repaint', async () => {
+    cleanup();
+    const el = await mount({ label: 'Contact preference', value: 'email' });
+
+    expect(await repaintedUnderForcedDark(el)).toContain('control');
   });
 
   it('S16 material3 restyles the group through token values alone', async () => {
