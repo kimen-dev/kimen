@@ -26,10 +26,27 @@ function resetDocument(): void {
   document.getElementById(MATERIAL3_STYLE_ID)?.remove();
 }
 
+/** The computed value of the custom property itself, exactly as declared. */
 function readToken(name: string): string {
   const probe = document.createElement('div');
   document.body.appendChild(probe);
   const value = getComputedStyle(probe).getPropertyValue(name).trim();
+  probe.remove();
+  return value;
+}
+
+/**
+ * The colour a token paints. A scheme-dependent token is a `light-dark()`
+ * value, and a custom property keeps that function unresolved: it only becomes
+ * a colour where it is used, against the colour scheme of the element using
+ * it. So the token is read the way a component consumes it — through a real
+ * colour property.
+ */
+function readTokenColor(name: string): string {
+  const probe = document.createElement('div');
+  probe.style.color = `var(${name})`;
+  document.body.appendChild(probe);
+  const value = getComputedStyle(probe).color;
   probe.remove();
   return value;
 }
@@ -48,48 +65,22 @@ function rgbToHex(value: string): string {
 }
 
 function expectTokenColor(name: string, hex: string): void {
-  expect(rgbToHex(readToken(name))).toBe(hex);
+  expect(rgbToHex(readTokenColor(name))).toBe(hex);
 }
 
 function extractTokenNames(css: string): string[] {
   return [...new Set([...css.matchAll(/--ki-[\w-]+(?=\s*:)/gu)].map((match) => match[0]))].sort();
 }
 
-function extractSchemeTokenNames(css: string): { light: string[]; dark: string[] } {
-  const light = new Set<string>();
-  const dark = new Set<string>();
-  const blockPattern = /([^{}]+)\{([^{}]*)\}/gu;
-
-  for (const match of css.replace(/\/\*[\s\S]*?\*\//gu, '').matchAll(blockPattern)) {
-    const selector = match[1]?.trim() ?? '';
-    const names = [...(match[2] ?? '').matchAll(/--ki-[\w-]+(?=\s*:)/gu)].map(
-      (nameMatch) => nameMatch[0],
-    );
-
-    if (selector.includes("data-ki-color-scheme='dark'")) {
-      for (const name of names) {
-        dark.add(name);
-      }
-    } else if (selector.includes(':root')) {
-      for (const name of names) {
-        light.add(name);
-      }
-    }
+/** Every published name must resolve: declared, and with no dangling reference. */
+function expectEveryTokenResolved(names: readonly string[]): void {
+  for (const name of names) {
+    const value = readToken(name);
+    expect(value, name).not.toBe('');
+    // An unresolved reference would surface as a literal var() string —
+    // a concrete value never contains one (clean-context review, round 1).
+    expect(value, name).not.toMatch(/var\(/u);
   }
-
-  const mediaPattern =
-    /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{\s*([^{}]+)\{([^{}]*)\}\s*\}/gu;
-
-  for (const match of css.replace(/\/\*[\s\S]*?\*\//gu, '').matchAll(mediaPattern)) {
-    for (const nameMatch of (match[2] ?? '').matchAll(/--ki-[\w-]+(?=\s*:)/gu)) {
-      dark.add(nameMatch[0]);
-    }
-  }
-
-  return {
-    light: [...light].sort(),
-    dark: [...new Set([...light, ...dark])].sort(),
-  };
 }
 
 beforeAll(() => {
@@ -135,13 +126,7 @@ describe('S1 onmars light default tokens', () => {
   it('S1 resolves every published token name to a concrete value', () => {
     injectStylesheet(onmarsCss);
 
-    for (const name of extractTokenNames(onmarsCss)) {
-      const value = readToken(name);
-      expect(value, name).not.toBe('');
-      // An unresolved reference would surface as a literal var() string —
-      // a concrete value never contains one (clean-context review, round 1).
-      expect(value, name).not.toMatch(/var\(/u);
-    }
+    expectEveryTokenResolved(extractTokenNames(onmarsCss));
   });
 });
 
@@ -163,8 +148,23 @@ describe('material3 theme and fallback', () => {
     expectTokenColor('--ki-color-brand-500', '#6750a4');
   });
 
-  it('S6 exposes the identical token contract as onmars', () => {
-    expect(extractSchemeTokenNames(material3Css)).toEqual(extractSchemeTokenNames(onmarsCss));
+  it('S6 resolves every token name of the onmars contract under material3', () => {
+    injectStylesheet(onmarsCss);
+    injectStylesheet(material3Css, MATERIAL3_STYLE_ID);
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    const contract = extractTokenNames(onmarsCss);
+
+    expect(contract.length).toBeGreaterThan(0);
+    expectEveryTokenResolved(contract);
+  });
+
+  it('S6 reassigns no token name outside the onmars contract', () => {
+    const contract = new Set(extractTokenNames(onmarsCss));
+    const reassigned = extractTokenNames(material3Css);
+
+    // A theme stylesheet carries its overrides only: some names, never new ones.
+    expect(reassigned.length).toBeGreaterThan(0);
+    expect(reassigned.filter((name) => !contract.has(name))).toEqual([]);
   });
 
   it('S7 leaves unknown theme declarations on onmars', () => {

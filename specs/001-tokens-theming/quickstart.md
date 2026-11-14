@@ -14,15 +14,15 @@ pnpm --filter @kimen/tokens build
 ## Run the scenario suite (S1-S7)
 
 ```bash
-pnpm --filter @kimen/elements test:browser -- tokens-theming
-# expect: S1-S7 green in Chromium (light and dark projects)
+pnpm --filter @kimen/elements test-browser tokens-theming bare-page
+# expect: S1-S13 green in Chromium (light and dark projects)
 ```
 
 ## Run the feature gates
 
 ```bash
 pnpm --filter @kimen/tokens contrast   # FR-009: pairs ≥ 4.5:1 per theme × scheme
-pnpm --filter @kimen/tokens size       # ≤ 9 KB gz per stylesheet
+pnpm --filter @kimen/tokens size       # gzip budget per stylesheet
 bash scripts/gates/gates-suite.sh      # the full definition of done (Art. III)
 ```
 
@@ -36,7 +36,14 @@ Serve any page that loads both stylesheets from
 <html data-ki-color-scheme="dark">          <!-- onmars dark forced (S3) -->
 <html data-ki-theme="material3">            <!-- material3, follows system (S5) -->
 <html data-ki-theme="acme">                 <!-- unknown → onmars (S7) -->
+<section data-ki-theme="material3">         <!-- material3 subtree (S8) -->
+<section data-ki-theme="onmars">            <!-- default-theme subtree (S9) -->
+<section data-ki-color-scheme="dark">       <!-- dark subtree (S10) -->
 ```
+
+A subtree paints nothing by itself: give it
+`background-color: var(--ki-surface-s0); color: var(--ki-text-high-em)` to
+see its surface change.
 
 Expected anchors: onmars brand `#845abe`, onmars dark surface `#0a0a0a`,
 material3 primary `#6750a4` (see

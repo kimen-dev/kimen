@@ -1,3 +1,4 @@
+// @spec:001-tokens-theming
 // Bare-page contract (Art. III: the reproduction IS a failing test).
 //
 // Every other rendering surface in this repository paints the environment the
@@ -198,10 +199,24 @@ function backdropOf(element: Element): Rgba {
     }
     node = flatParent(node);
   }
-  // Nothing opaque anywhere: the user agent canvas. A bare page that has not
-  // opted into the page contract leaves this white in both schemes, which is
-  // precisely the mismatch this suite exists to measure.
-  return { r: 255, g: 255, b: 255, a: 1 };
+  // Nothing opaque anywhere: the user agent canvas, in whichever scheme the
+  // user agent is actually painting it.
+  return canvasColor();
+}
+
+/**
+ * The colour the user agent paints the page canvas with. It is not readable
+ * from the root's computed `background-color` (transparent on a bare page), so
+ * it is read through the `Canvas` system colour, which resolves against the
+ * root's used colour scheme exactly as the canvas itself does.
+ */
+function canvasColor(): Rgba {
+  const probe = document.createElement('div');
+  probe.style.backgroundColor = 'Canvas';
+  document.documentElement.append(probe);
+  const color = parseRgb(getComputedStyle(probe).backgroundColor);
+  probe.remove();
+  return color;
 }
 
 /**
@@ -368,6 +383,43 @@ describe('bare-page typography contract', () => {
   );
 });
 
+/**
+ * The token stylesheet declares the colour scheme itself, because the tokens
+ * resolve from it: a scheme-dependent token is `light-dark()`, and the
+ * declaration that picks its branch is the same one that tells the user agent
+ * which canvas, scrollbars, native controls and autofill to paint. One
+ * declaration, so the two cannot disagree — which is what they did while
+ * `color-scheme` lived only in the opt-in page contract and the tokens followed
+ * `prefers-color-scheme` on their own.
+ */
+describe('token stylesheet colour-scheme contract', () => {
+  afterAll(() => {
+    document.documentElement.removeAttribute('data-ki-color-scheme');
+  });
+
+  it('S13 opts the user agent into the scheme the tokens follow, with no page contract', async () => {
+    await mountBare('ki-card');
+
+    expect(
+      getComputedStyle(document.documentElement).colorScheme,
+      'the token stylesheet alone must declare color-scheme on the root',
+    ).toBe('light dark');
+  });
+
+  it('lets a single-scheme page pin the user agent alongside the tokens', async () => {
+    await mountBare('ki-card');
+
+    for (const scheme of ['light', 'dark'] as const) {
+      document.documentElement.setAttribute('data-ki-color-scheme', scheme);
+      expect(
+        getComputedStyle(document.documentElement).colorScheme,
+        `data-ki-color-scheme="${scheme}" must pin the user agent too, not just the tokens`,
+      ).toBe(scheme);
+    }
+    document.documentElement.removeAttribute('data-ki-color-scheme');
+  });
+});
+
 describe('page contract', () => {
   const PAGE_CONTRACT_STYLE_ID = 'bare-page-contract';
 
@@ -383,36 +435,18 @@ describe('page contract', () => {
 
   afterAll(() => {
     document.getElementById(PAGE_CONTRACT_STYLE_ID)?.remove();
-    document.documentElement.removeAttribute('data-ki-color-scheme');
   });
 
-  // Without this the token sheet still flips to its dark values on
-  // prefers-color-scheme: dark, but the user agent keeps painting a light
-  // canvas, light scrollbars and light autofill — the founder's black alert on
-  // a white Storybook page, and an ki-input label that vanishes entirely.
-  it('opts the user agent into the same scheme the tokens follow', async () => {
+  it('leaves the colour scheme to the token stylesheet', async () => {
     await mountBare('ki-card');
-    expect(
-      getComputedStyle(document.documentElement).colorScheme,
-      'the token sheet alone cannot declare color-scheme; that is what @kimen/tokens/css/base is for',
-    ).toBe('normal');
+    const before = getComputedStyle(document.documentElement).colorScheme;
 
     loadPageContract();
-    expect(getComputedStyle(document.documentElement).colorScheme).toBe('light dark');
-  });
 
-  it('lets a single-scheme page pin the user agent alongside the tokens', async () => {
-    await mountBare('ki-card');
-    loadPageContract();
-
-    for (const scheme of ['light', 'dark'] as const) {
-      document.documentElement.setAttribute('data-ki-color-scheme', scheme);
-      expect(
-        getComputedStyle(document.documentElement).colorScheme,
-        `data-ki-color-scheme="${scheme}" must pin the user agent too, not just the tokens`,
-      ).toBe(scheme);
-    }
-    document.documentElement.removeAttribute('data-ki-color-scheme');
+    expect(pageContractCss, 'the page contract must not declare color-scheme').not.toMatch(
+      /color-scheme/u,
+    );
+    expect(getComputedStyle(document.documentElement).colorScheme).toBe(before);
   });
 
   it('paints the page from tokens instead of leaving the user agent canvas', async () => {
@@ -440,15 +474,32 @@ describe('page contract', () => {
  * which resolve to a transparent token anyway. Reading pixels has no such
  * false positives.
  *
- * NOTE, and it is a real limitation: WITHOUT the page contract in the dark
- * scheme this measures 14 of 29 components rendering white-on-white — the token
- * sheet flips to its dark values, every component correctly paints its
- * dark-scheme foreground, and the user agent keeps a white canvas because
- * `color-scheme` is still `normal`. That is not 14 broken components; it is the
- * documented cost of leaving the page contract opt-in, and whether to keep it
- * optional is a founder decision, not something this suite should decide by
- * asserting a contract the package does not make.
+ * The page contract is optional for legibility: the last block below measures
+ * the same thing with the token stylesheet ALONE under a dark system
+ * preference (S13). That combination used to render 14 of 29 components
+ * white-on-white — the tokens flipped to dark, every component correctly
+ * painted its dark-scheme foreground, and the user agent kept a white canvas
+ * because `color-scheme` was declared only by the page contract.
  */
+function illegibleStrings(wrapper: HTMLElement): string[] {
+  return (
+    textBearing(wrapper)
+      .map((element) => {
+        const fg = parseRgb(getComputedStyle(element).color);
+        const bg = backdropOf(element);
+        return {
+          ratio: ratio(over(fg, bg), bg),
+          text: element.textContent.trim().slice(0, 30),
+          part: element.getAttribute('part') ?? element.localName,
+        };
+      })
+      // Disabled text is exempt (WCAG 1.4.3), the same exemption the token
+      // contrast sweep grants.
+      .filter((entry) => entry.ratio < TEXT_MIN_RATIO)
+      .map((entry) => `${entry.part} "${entry.text}" at ${entry.ratio.toFixed(2)}:1`)
+  );
+}
+
 describe.each(['light', 'dark'] as const)('bare-page legibility [%s]', (scheme) => {
   const CONTRACT_STYLE_ID = `legibility-contract-${scheme}`;
 
@@ -467,25 +518,81 @@ describe.each(['light', 'dark'] as const)('bare-page legibility [%s]', (scheme) 
 
   it.each(components)('%s renders every string legibly', async (component) => {
     const wrapper = await mountBare(component);
-    const illegible = textBearing(wrapper)
-      .map((element) => {
-        const fg = parseRgb(getComputedStyle(element).color);
-        const bg = backdropOf(element);
-        return {
-          ratio: ratio(over(fg, bg), bg),
-          text: element.textContent.trim().slice(0, 30),
-          part: element.getAttribute('part') ?? element.localName,
-        };
-      })
-      // Disabled text is exempt (WCAG 1.4.3), the same exemption the token
-      // contrast sweep grants.
-      .filter((entry) => entry.ratio < TEXT_MIN_RATIO);
 
     expect(
-      illegible,
-      `${component} renders text below ${String(TEXT_MIN_RATIO)}:1 against the surface behind it: ${illegible
-        .map((entry) => `${entry.part} "${entry.text}" at ${entry.ratio.toFixed(2)}:1`)
-        .join('; ')}`,
+      illegibleStrings(wrapper),
+      `${component} renders text below ${String(TEXT_MIN_RATIO)}:1 against the surface behind it`,
+    ).toEqual([]);
+  });
+});
+
+describe('bare-page coherence without the page contract [dark system preference]', () => {
+  beforeAll(async () => {
+    await browserCommands.emulateColorScheme('dark');
+  });
+
+  afterAll(async () => {
+    await browserCommands.emulateColorScheme(null);
+  });
+
+  /**
+   * What the user agent paints in one colour scheme: the canvas, and a native
+   * control. Read from a probe whose scheme is given explicitly — or, with no
+   * scheme, inherited from the page, which is the case under test. Compared
+   * against each other rather than against literals, because every engine has
+   * its own dark canvas and its own native button.
+   */
+  function userAgentPaint(scheme?: 'dark' | 'light'): string {
+    const host = document.createElement('div');
+    if (scheme !== undefined) {
+      host.style.colorScheme = scheme;
+    }
+    const canvas = document.createElement('div');
+    canvas.style.backgroundColor = 'Canvas';
+    canvas.style.color = 'CanvasText';
+    const button = document.createElement('button');
+    button.textContent = 'Native';
+    host.append(canvas, button);
+    document.body.append(host);
+    const canvasStyle = getComputedStyle(canvas);
+    const buttonStyle = getComputedStyle(button);
+    const paint = [
+      canvasStyle.backgroundColor,
+      canvasStyle.color,
+      buttonStyle.backgroundColor,
+      buttonStyle.color,
+    ].join(' | ');
+    host.remove();
+    return paint;
+  }
+
+  it('S13 paints the page canvas and a native control dark, as the tokens do', async () => {
+    const wrapper = await mountBare('ki-card');
+    const card = wrapper.querySelector('ki-card')?.shadowRoot?.querySelector('[part="card"]');
+    if (card === null || card === undefined) {
+      throw new Error('ki-card must expose its card part');
+    }
+    const light = userAgentPaint('light');
+    const dark = userAgentPaint('dark');
+
+    expect(dark, 'the engine paints the two schemes differently').not.toBe(light);
+    expect(
+      luminance(parseRgb(getComputedStyle(card).backgroundColor)),
+      'the tokens follow the dark system preference',
+    ).toBeLessThan(0.2);
+    expect(luminance(canvasColor()), 'the page canvas is the dark one').toBeLessThan(0.2);
+    expect(
+      userAgentPaint(),
+      'the page itself — canvas and native controls — is painted in the dark scheme too',
+    ).toBe(dark);
+  });
+
+  it.each(components)('S13 %s renders every string legibly', async (component) => {
+    const wrapper = await mountBare(component);
+
+    expect(
+      illegibleStrings(wrapper),
+      `${component} renders text below ${String(TEXT_MIN_RATIO)}:1 on a page that loads only the token stylesheet`,
     ).toEqual([]);
   });
 });

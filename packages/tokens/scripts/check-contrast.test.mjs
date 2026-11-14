@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  collectSchemeDeclarations,
   componentPairs,
   compositeOver,
   contrastRatio,
@@ -332,4 +333,46 @@ test('a current mark is paired with its resting mark, and knows when colour is a
       colourAlone: true,
     },
   ]);
+});
+
+test('each scheme reads its own branch of every light-dark() declaration', () => {
+  const { light, dark } = collectSchemeDeclarations(`
+    :root { color-scheme: light dark; }
+    :root,
+    :where([data-ki-theme]) {
+      --ki-color-white: #ffffff;
+      --ki-surface-s0: light-dark(var(--ki-color-white), var(--ki-color-dark));
+      --ki-shadow: 0px 1px 2px 0px light-dark(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), 0px 2px 6px 2px light-dark(var(--ki-a), var(--ki-b));
+    }
+  `);
+
+  assert.equal(light.get('--ki-color-white'), '#ffffff');
+  assert.equal(dark.get('--ki-color-white'), '#ffffff');
+  assert.equal(light.get('--ki-surface-s0'), 'var(--ki-color-white)');
+  assert.equal(dark.get('--ki-surface-s0'), 'var(--ki-color-dark)');
+  assert.equal(
+    light.get('--ki-shadow'),
+    '0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px var(--ki-a)',
+  );
+  assert.equal(
+    dark.get('--ki-shadow'),
+    '0px 1px 2px 0px rgba(0, 0, 0, 0.5), 0px 2px 6px 2px var(--ki-b)',
+  );
+  assert.equal(light.has('color-scheme'), false);
+});
+
+test('a theme stylesheet overrides the default one it is loaded after', () => {
+  const { light, dark } = collectSchemeDeclarations(`
+    :root, :where([data-ki-theme]) {
+      --ki-brand: #845abe;
+      --ki-surface-s0: light-dark(#ffffff, #0a0a0a);
+    }
+    :root[data-ki-theme='material3'], [data-ki-theme='material3'] {
+      --ki-brand: light-dark(#6750a4, #d0bcff);
+    }
+  `);
+
+  assert.equal(light.get('--ki-brand'), '#6750a4');
+  assert.equal(dark.get('--ki-brand'), '#d0bcff');
+  assert.equal(dark.get('--ki-surface-s0'), '#0a0a0a');
 });

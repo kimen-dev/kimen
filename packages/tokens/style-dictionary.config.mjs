@@ -1,12 +1,13 @@
 // Kimen tokens: DTCG sources → CSS custom properties (constitution Art. VI).
-// Layers: primitive → theme (onmars is the default theme) → semantic.
-// Dark mode is a semantic-layer mode compiled to prefers-color-scheme with a
-// [data-ki-color-scheme] attribute override. Run via ./build.mjs.
+// Layers: primitive → theme (onmars is the default theme) → semantic →
+// component. This file declares the four token COMPOSITIONS (theme × scheme)
+// and how their values are transformed; ./build.mjs merges them into the
+// published stylesheets (see ./scripts/theme-stylesheet.mjs for the emitted
+// shape). Run via ./build.mjs.
 import { readdirSync } from 'node:fs';
 
 import StyleDictionary from 'style-dictionary';
 import { transformGroups, transforms } from 'style-dictionary/enums';
-import { formattedVariables } from 'style-dictionary/utils';
 
 // Kimen owns the value format of its CSS sheets instead of inheriting it from
 // Style Dictionary's predefined `css` transform group: every emitted value is
@@ -95,189 +96,43 @@ const LAYERS = [...ONMARS_FOUNDATION, ...ONMARS_SEMANTIC, ...componentBaseLayers
 // split: overriding an `include` token from `source` is silent by design,
 // while two `source` files colliding still emits a "Token collisions
 // detected" warning. Each layer stays collision-checked as `source` in
-// exactly one build (base layers in lightConfig, material3 overrides in
+// exactly one composition (base layers in lightConfig, material3 overrides in
 // material3LightConfig, each dark-mode file as the sole source of its own
 // config), so intentional overrides are quiet and a genuine duplicate —
 // e.g. two component files defining the same token — still warns.
-
-function variables({ dictionary, options, indentation = '  ' }) {
-  return formattedVariables({
-    format: 'css',
-    dictionary,
-    outputReferences: options.outputReferences,
-    usesDtcg: options.usesDtcg ?? true,
-    formatting: { indentation },
-  });
-}
-
-function material3DarkFormat({ dictionary, options }) {
-  const media = variables({ dictionary, options, indentation: '    ' });
-  const attr = variables({ dictionary, options });
-
-  return [
-    '/* material3 dark mode: follows the OS by default; force with',
-    '   [data-ki-color-scheme="dark"|"light"] on :root. */',
-    '@media (prefers-color-scheme: dark) {',
-    "  :root[data-ki-theme='material3']:not([data-ki-color-scheme='light']) {",
-    media,
-    '  }',
-    '}',
-    '',
-    ":root[data-ki-theme='material3'][data-ki-color-scheme='dark'] {",
-    attr,
-    '}',
-    '',
-  ].join('\n');
-}
+//
+// A composition carries no `files`: no composition is a stylesheet on its own.
+// The scheme pair of each theme is merged into one declaration per token and
+// a theme is emitted as its difference from the default theme, which takes
+// all four dictionaries at once (./build.mjs).
+const cssPlatform = { transformGroup: KIMEN_CSS_GROUP, prefix: '' };
 
 export const lightConfig = {
   source: LAYERS,
   hooks: kimenCssHooks,
-  platforms: {
-    css: {
-      transformGroup: KIMEN_CSS_GROUP,
-      prefix: '',
-      buildPath: 'dist/css/',
-      files: [
-        {
-          destination: 'tokens.light.css',
-          format: 'css/variables',
-          options: { outputReferences: true },
-        },
-      ],
-    },
-  },
-};
-
-export const material3LightConfig = {
-  include: LAYERS,
-  source: MATERIAL3_OVERRIDES,
-  hooks: {
-    ...kimenCssHooks,
-    formats: {
-      'kimen/css-material3-light': ({ dictionary, options }) =>
-        [
-          '/**',
-          ' * Do not edit directly, this file was auto-generated.',
-          ' */',
-          '',
-          ":root[data-ki-theme='material3'] {",
-          variables({ dictionary, options }),
-          '}',
-          '',
-        ].join('\n'),
-    },
-  },
-  platforms: {
-    css: {
-      transformGroup: KIMEN_CSS_GROUP,
-      prefix: '',
-      buildPath: 'dist/css/',
-      files: [
-        {
-          destination: 'tokens.material3.light.css',
-          format: 'kimen/css-material3-light',
-          options: { outputReferences: true },
-        },
-      ],
-    },
-  },
+  platforms: { css: cssPlatform },
 };
 
 export const darkConfig = {
   include: LAYERS,
   source: ['tokens/modes/dark.tokens.json'],
-  hooks: {
-    ...kimenCssHooks,
-    formats: {
-      'kimen/css-dark': ({ dictionary, options }) => {
-        const usesDtcg = options.usesDtcg ?? true;
-        const outputReferences = options.outputReferences;
-        const media = formattedVariables({
-          format: 'css',
-          dictionary,
-          outputReferences,
-          usesDtcg,
-          formatting: { indentation: '    ' },
-        });
-        const attr = formattedVariables({
-          format: 'css',
-          dictionary,
-          outputReferences,
-          usesDtcg,
-          formatting: { indentation: '  ' },
-        });
-        return [
-          '/* onmars dark mode: follows the OS by default; force with',
-          '   [data-ki-color-scheme="dark"|"light"] on :root. */',
-          '@media (prefers-color-scheme: dark) {',
-          "  :root:not([data-ki-color-scheme='light']) {",
-          media,
-          '  }',
-          '}',
-          '',
-          ":root[data-ki-color-scheme='dark'] {",
-          attr,
-          '}',
-          '',
-        ].join('\n');
-      },
-    },
-  },
-  platforms: {
-    css: {
-      transformGroup: KIMEN_CSS_GROUP,
-      prefix: '',
-      buildPath: 'dist/css/',
-      // Combining the modes/dark filter with outputReferences makes Style
-      // Dictionary warn about "filtered out token references": the dark file
-      // emits var(--ki-*) references to tokens it does not define. That is
-      // the intent — those custom properties are defined on :root by
-      // tokens.light.css and both files ship concatenated in tokens.css, but
-      // Style Dictionary cannot see across output files and offers no
-      // per-warning switch, so file-level warnings are disabled for this
-      // platform only. Genuinely broken references still fail the build
-      // (log.errors.brokenReferences defaults to 'throw'), and token
-      // collisions are reported at config level, which this does not touch.
-      // Trade-off of the platform-wide switch: output-NAME collision warnings
-      // (two token paths transforming to the same --ki-*) and per-platform
-      // transform warnings are also silenced for tokens.dark.css alone; the
-      // other five sheets keep reporting both classes, so a systemic mistake
-      // still surfaces on the light/material3 builds of the same sources.
-      log: { warnings: 'disabled' },
-      files: [
-        {
-          destination: 'tokens.dark.css',
-          format: 'kimen/css-dark',
-          filter: (token) => token.filePath.includes('modes/dark'),
-          options: { outputReferences: true },
-        },
-      ],
-    },
-  },
+  hooks: kimenCssHooks,
+  platforms: { css: cssPlatform },
 };
 
+export const material3LightConfig = {
+  include: LAYERS,
+  source: MATERIAL3_OVERRIDES,
+  hooks: kimenCssHooks,
+  platforms: { css: cssPlatform },
+};
+
+// material3's dark scheme deliberately does NOT include the onmars dark file:
+// a theme's dark values are its own decision, never inherited from another
+// theme's mode file.
 export const material3DarkConfig = {
   include: [...LAYERS, ...MATERIAL3_OVERRIDES],
   source: ['tokens/modes/material3.dark.tokens.json'],
-  hooks: {
-    ...kimenCssHooks,
-    formats: {
-      'kimen/css-material3-dark': material3DarkFormat,
-    },
-  },
-  platforms: {
-    css: {
-      transformGroup: KIMEN_CSS_GROUP,
-      prefix: '',
-      buildPath: 'dist/css/',
-      files: [
-        {
-          destination: 'tokens.material3.dark.css',
-          format: 'kimen/css-material3-dark',
-          options: { outputReferences: true },
-        },
-      ],
-    },
-  },
+  hooks: kimenCssHooks,
+  platforms: { css: cssPlatform },
 };

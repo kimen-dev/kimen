@@ -21,48 +21,102 @@ The package exports three stylesheets and nothing else:
 
 | Export | What it is |
 | --- | --- |
-| `@kimen/tokens/css` | The onmars default theme: every `--ki-*` token, light and dark schemes |
-| `@kimen/tokens/css/base` | The page contract: `color-scheme`, page background/foreground, body font |
-| `@kimen/tokens/css/material3` | The Material 3 reference theme, opt-in via `data-ki-theme` |
+| `@kimen/tokens/css` | The onmars default theme: every `--ki-*` token, both schemes, plus the `color-scheme` contract they resolve from |
+| `@kimen/tokens/css/base` | The page contract: page background/foreground and body font, painted from tokens |
+| `@kimen/tokens/css/material3` | The Material 3 reference theme: its overrides of the default theme, opt-in via `data-ki-theme` |
 
-Load the theme and the page contract once per page:
+Load the default theme once per page. It is the only requirement; the other
+two are additions loaded alongside it:
 
 ```ts
 import '@kimen/tokens/css';
-import '@kimen/tokens/css/base';
+import '@kimen/tokens/css/base'; // optional: paint the page from tokens
+import '@kimen/tokens/css/material3'; // optional: a second theme
 ```
+
+A theme stylesheet declares only the tokens it changes, so it does nothing on
+its own: `@kimen/tokens/css` must be loaded too.
 
 ### The page contract
 
-A token stylesheet can only carry custom properties, so it cannot declare
-`color-scheme`. Without that declaration the tokens flip to their dark values
-for a visitor who prefers dark while the browser keeps painting a light
-canvas, light scrollbars and light autofill. `@kimen/tokens/css/base` closes
-that gap: it declares `color-scheme`, paints the page from `--ki-surface-s0`
-/ `--ki-text-high-em`, and sets the body family. It publishes no tokens of
-its own — it only consumes them, so it never widens the token surface.
+Tokens are custom properties: loading them paints nothing. `@kimen/tokens/css/base`
+paints the page from them — background from `--ki-surface-s0`, text from
+`--ki-text-high-em`, body family from `--ki-typography-family-body`. It
+publishes no tokens of its own — it only consumes them, so it never widens the
+token surface — and it declares no colour scheme: the token stylesheet owns
+that.
 
-Skipping it is supported in the light scheme. In the dark scheme the cost is
-measured, not estimated: on a page loading only the token stylesheet, with
-the visitor's OS set to dark, **14 of 29 components render text below 4.5:1
-contrast** — the components correctly paint their dark-scheme foreground;
-the user agent simply keeps a light canvas. Load the page contract, or pin
-the page with `data-ki-color-scheme="light"`. Doing neither is the one
-combination the library cannot render legibly.
+Skipping it is supported in both schemes: the page keeps the browser's own
+canvas and text colour for the active scheme, and every component stays
+legible on it (measured over all 29 components under a dark system preference
+by `bare-page.browser.spec.ts`).
 
 ## Theme and scheme selection
 
-Two attributes on the document root drive everything:
+Two attributes drive everything, on the document root or on any element:
 
 ```html
 <html data-ki-theme="material3" data-ki-color-scheme="dark">
 ```
 
 - `data-ki-color-scheme`: `light` or `dark` forces a scheme for any theme.
-  Without it, stylesheets follow `prefers-color-scheme`.
+  Without it the page follows the system preference: the token stylesheet
+  declares `color-scheme: light dark` on `:root`, and the attribute pins it.
 - `data-ki-theme`: opts into a non-default theme. Unknown theme names and
   missing theme stylesheets fall back to onmars through the cascade. No
   runtime code is involved anywhere.
+
+### How the scheme works
+
+The scheme is a single declaration, `color-scheme`, and every
+scheme-dependent token is a single `light-dark()` value that resolves from it:
+
+```css
+:root {
+  color-scheme: light dark;
+}
+
+[data-ki-color-scheme='dark'] {
+  color-scheme: dark;
+}
+
+:root,
+:where([data-ki-theme]) {
+  --ki-surface-s0: light-dark(var(--ki-color-white-100), var(--ki-color-dark-950));
+}
+```
+
+The same declaration tells the browser which canvas, scrollbars, native
+controls and autofill to paint, so the two cannot disagree. Two consequences:
+
+- Kimen follows the page's `color-scheme`, not `prefers-color-scheme`
+  directly. Pin the page in your own CSS and the tokens follow.
+- Reassign a scheme-dependent token with both values
+  (`light-dark(#fff, #111)`); a single value applies to both schemes.
+- A scheme-dependent token only becomes a colour where it is used. Script
+  reading one with `getPropertyValue()` gets the `light-dark()` pair; read
+  the computed `color` of an element that uses the token instead.
+
+`light-dark()` is Baseline (Chrome 123, Firefox 120, Safari 17.5), inside the
+library's browser baseline.
+
+### Subtrees
+
+Both attributes work on any element — an island of generated UI embedded in a
+page it does not own can carry its own theme and scheme:
+
+```html
+<section data-ki-theme="material3" data-ki-color-scheme="dark">…</section>
+<section data-ki-theme="onmars">…</section> <!-- back to the default theme -->
+```
+
+A scheme subtree redeclares nothing (`light-dark()` resolves where a token is
+used). A themed subtree redeclares every token on its own root so that every
+alias is recomputed there; that is also the element to reassign tokens on —
+`[data-ki-theme='acme'] { --ki-color-brand-500: … }` — because a reassignment
+on a plain element does not reach the tokens that alias it. Neither attribute
+paints the element that carries it: give a region its surface with
+`background-color: var(--ki-surface-s0); color: var(--ki-text-high-em)`.
 
 ## Layer model
 
@@ -133,7 +187,10 @@ page uses the mono/serif token families.
 
 A complete theme reassigns theme-layer tokens and semantic-layer tokens while
 sharing primitives. The public contract is the `--ki-*` custom-property name
-set; every theme must expose the same names in light and dark schemes.
+set: a theme reassigns names of that set and never adds one, and its
+stylesheet ships only the tokens whose value differs from the default theme.
+Only colours may depend on the colour scheme — a token whose light and dark
+values differ in anything else fails the build.
 
 The approved public contract for this feature is documented in the
 [theming contract](https://github.com/kimen-dev/kimen/blob/main/specs/001-tokens-theming/contracts/theming-contract.md).

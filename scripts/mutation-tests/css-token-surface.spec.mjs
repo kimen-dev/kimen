@@ -18,42 +18,63 @@ const publicTokenNames = [
   '--ki-space-zero',
 ];
 
-const stylesheet = ({ theme, light, dark }) => {
-  const root = theme === undefined ? ':root' : `:root[data-ki-theme='${theme}']`;
-  return `
+const rootScheme = ':root { color-scheme: light dark; }';
+const lightScheme = "[data-ki-color-scheme='light'] { color-scheme: light; }";
+// Double quotes on purpose: selectors are compared after quote normalization.
+const darkScheme = '[data-ki-color-scheme="dark"] { color-scheme: dark; }';
+const tokenSelector = ':root, :where([data-ki-theme]) {';
+
+const onmars = `
     /* Generated token contract. */
-    ${root} {
-      --ki-palette-base: ${light};
+    ${rootScheme}
+    ${lightScheme}
+    ${darkScheme}
+    ${tokenSelector}
+      --ki-palette-base: light-dark(rgb(1, 2, 3), rgb(250, 251, 252));
       --ki-color-base: var(--ki-palette-base);
       --ki-fallback-size: var(--ki-not-shipped, calc(1rem + 0px));
       --ki-card-shadow: 0px 1px 2px var(--ki-color-base);
       --ki-motion-easing: linear;
       --ki-space-zero: 0rem;
     }
+  `;
 
-    @media (prefers-color-scheme: dark) {
-      ${root}:not([data-ki-color-scheme='light']) {
-        --ki-palette-base: ${dark};
-      }
-    }
-
-    ${root}[data-ki-color-scheme='dark'] {
-      --ki-palette-base: ${dark};
+const material3Selector = `:root[data-ki-theme='material3'], [data-ki-theme="material3"] {`;
+const material3 = `
+    ${material3Selector}
+      --ki-palette-base: light-dark(rgb(10, 20, 30), rgb(220, 230, 240));
     }
   `;
-};
-
-const onmars = stylesheet({ light: 'rgb(1, 2, 3)', dark: 'rgb(250, 251, 252)' });
-const material3 = stylesheet({
-  theme: 'material3',
-  light: 'rgb(10, 20, 30)',
-  dark: 'rgb(220, 230, 240)',
-});
 
 const oneExportInput = (css = onmars) => ({
   packageExports: { './css': publicExport('./dist/css/tokens.css') },
   publicTokenNames,
   stylesheetSources: { './css': css },
+});
+
+const themedInput = ({ base = onmars, theme = material3 } = {}) => ({
+  packageExports: {
+    './css/material3': publicExport('./dist/css/tokens.material3.css'),
+    './css': publicExport('./dist/css/tokens.css'),
+  },
+  publicTokenNames,
+  stylesheetSources: { './css/material3': theme, './css': base },
+});
+
+const pageContract = `
+    :root {
+      background-color: var(--ki-color-base);
+      font-family: var(--ki-motion-easing);
+    }
+  `;
+
+const pageContractInput = (css = pageContract) => ({
+  packageExports: {
+    './css': publicExport('./dist/css/tokens.css'),
+    './css/base': publicExport('./dist/css/base.css'),
+  },
+  publicTokenNames,
+  stylesheetSources: { './css': onmars, './css/base': css },
 });
 
 describe('public stylesheet mutation boundary', () => {
@@ -134,35 +155,75 @@ describe('public stylesheet mutation boundary', () => {
     );
   });
 
-  it('S10 requires automatic and forced dark contexts to resolve identically', () => {
-    const divergent = onmars.replace(
-      ":root[data-ki-color-scheme='dark'] {\n      --ki-palette-base: rgb(250, 251, 252);",
-      ":root[data-ki-color-scheme='dark'] {\n      --ki-palette-base: rgb(7, 8, 9);",
+  it('S10 picks the scheme branch of every light-dark(), nested and inside a composite', () => {
+    const composite = onmars.replace(
+      '--ki-card-shadow: 0px 1px 2px var(--ki-color-base);',
+      '--ki-card-shadow: 0px 1px 2px light-dark(var(--ki-color-base), light-dark(rgb(7, 7, 7), rgb(8, 8, 8))), 0px 2px 4px LIGHT-DARK (rgb(5, 5, 5), var(--ki-color-base));',
     );
+    const { light, dark } = buildPublicStylesheetSurface(oneExportInput(composite))['./css']
+      .contexts;
 
-    expect(() => buildPublicStylesheetSurface(oneExportInput(divergent))).toThrow(
-      /automatic and forced dark contexts diverge/iu,
+    expect(light['--ki-card-shadow']).toBe('0 1px 2px 0 rgb(1,2,3),0 2px 4px 0 rgb(5,5,5)');
+    expect(dark['--ki-card-shadow']).toBe('0 1px 2px 0 rgb(8,8,8),0 2px 4px 0 rgb(250,251,252)');
+  });
+
+  it.each([
+    ['one value', 'light-dark(rgb(1, 2, 3))'],
+    ['three values', 'light-dark(rgb(1, 2, 3), rgb(4, 5, 6), rgb(7, 8, 9))'],
+    ['an empty value', 'light-dark(rgb(1, 2, 3), )'],
+  ])('S10 rejects a light-dark() with %s', (_label, value) => {
+    const malformed = onmars.replace('light-dark(rgb(1, 2, 3), rgb(250, 251, 252))', value);
+
+    expect(() => buildPublicStylesheetSurface(oneExportInput(malformed))).toThrow(
+      /--ki-palette-base contains a light-dark\(\) that does not take exactly two values/u,
     );
   });
 
   it.each([
     [
-      'a different light selector',
-      onmars.replace(':root {', ':host {'),
-      /exactly one :root rule in light context/iu,
+      'a different token selector',
+      onmars.replace(tokenSelector, ':host {'),
+      /must declare its tokens in one :root,:where\(\[data-ki-theme\]\) rule/u,
     ],
     [
-      'a missing automatic-dark rule',
-      onmars.replace('@media (prefers-color-scheme: dark)', '@media (prefers-contrast: more)'),
-      /unsupported conditional rule/iu,
+      'a token rule that does not reach themed subtrees',
+      onmars.replace(tokenSelector, ':root {'),
+      /must declare its tokens in one :root,:where\(\[data-ki-theme\]\) rule/u,
     ],
     [
-      'a nested dark conditional',
-      onmars.replace(
-        ":root:not([data-ki-color-scheme='light']) {",
-        "@media (prefers-color-scheme: dark) { :root:not([data-ki-color-scheme='light']) {",
-      ),
-      /unsupported conditional rule|unclosed CSS block/iu,
+      'a missing token rule',
+      `${rootScheme}\n${lightScheme}\n${darkScheme}`,
+      /must declare its tokens in one/u,
+    ],
+    [
+      'a missing colour-scheme rule',
+      onmars.replace(darkScheme, ''),
+      /must declare, in order, :root, \[data-ki-color-scheme='light'\], \[data-ki-color-scheme='dark'\] before its tokens/u,
+    ],
+    [
+      'colour-scheme rules out of order',
+      onmars.replace(rootScheme, '').replace(lightScheme, `${lightScheme}\n${rootScheme}`),
+      /must declare, in order/u,
+    ],
+    [
+      'a wrong colour-scheme value',
+      onmars.replace('color-scheme: dark;', 'color-scheme: light;'),
+      /\[data-ki-color-scheme='dark'\] must declare exactly color-scheme: dark/u,
+    ],
+    [
+      'a colour-scheme rule that declares something else',
+      onmars.replace('color-scheme: light dark;', 'color: red;'),
+      /:root must declare exactly color-scheme: light dark/u,
+    ],
+    [
+      'a colour-scheme rule with an extra declaration',
+      onmars.replace('color-scheme: light dark;', 'color-scheme: light dark; color: red;'),
+      /:root must declare exactly color-scheme: light dark/u,
+    ],
+    [
+      'a conditional rule',
+      `${onmars}\n@media (prefers-color-scheme: dark) { :root { --ki-palette-base: red; } }`,
+      /unsupported conditional rule @media \(prefers-color-scheme: dark\)/u,
     ],
     [
       'an additional public selector',
@@ -175,14 +236,145 @@ describe('public stylesheet mutation boundary', () => {
       /unsupported declaration color/iu,
     ],
     [
+      'an empty custom property',
+      onmars.replace('--ki-space-zero: 0rem;', '--ki-space-zero: ;'),
+      /unsupported declaration --ki-space-zero/iu,
+    ],
+    [
+      'a declaration without a property',
+      onmars.replace('--ki-space-zero: 0rem;', ': 0rem;'),
+      /invalid declaration/iu,
+    ],
+    [
+      'a nested rule',
+      onmars.replace('--ki-space-zero: 0rem;', '--ki-space-zero: 0rem; & { --ki-nested: 1px; }'),
+      /unexpected nested rule/iu,
+    ],
+    [
       'a duplicate custom property',
       onmars.replace('--ki-space-zero: 0rem;', '--ki-space-zero: 0rem; --ki-space-zero: 1rem;'),
       /declares --ki-space-zero more than once/iu,
     ],
     ['trailing CSS outside a block', `${onmars}\ninvalid`, /trailing CSS outside a block/iu],
+    ['a block without a prelude', `${onmars}\n{ --ki-a: 1px; }`, /block without a prelude/iu],
     ['an unterminated comment', `${onmars}\n/* broken`, /unterminated CSS comment/iu],
   ])('S10 fails closed for %s', (_label, css, error) => {
     expect(() => buildPublicStylesheetSurface(oneExportInput(css))).toThrow(error);
+  });
+
+  it('S10 requires a token rule that declares at least one Kimen custom property', () => {
+    const empty = `${rootScheme}\n${lightScheme}\n${darkScheme}\n${tokenSelector} }`;
+
+    expect(() => buildPublicStylesheetSurface(oneExportInput(empty))).toThrow(
+      /contains no Kimen custom properties/u,
+    );
+  });
+
+  it.each([
+    [
+      'a theme scoped to another name',
+      themedInput({ theme: material3.replaceAll('material3', 'other') }),
+      /\.\/css\/material3 stylesheet must contain exactly the rule :root\[data-ki-theme='material3'\],\[data-ki-theme='material3'\]/u,
+    ],
+    [
+      'a theme that does not reach themed subtrees',
+      themedInput({
+        theme: material3.replace(material3Selector, ":root[data-ki-theme='material3'] {"),
+      }),
+      /must contain exactly the rule/u,
+    ],
+    [
+      'a theme with a second rule',
+      themedInput({ theme: `${material3}\n${material3}` }),
+      /must contain exactly the rule/u,
+    ],
+    [
+      'a theme with no rule',
+      themedInput({ theme: '/* nothing */' }),
+      /must contain exactly the rule/u,
+    ],
+    [
+      'a theme that adds a token name',
+      themedInput({ theme: material3.replace('--ki-palette-base:', '--ki-brand-new:') }),
+      /\.\/css\/material3 stylesheet declares --ki-brand-new, which the \.\/css stylesheet does not/u,
+    ],
+    [
+      'a theme with a conditional rule',
+      themedInput({ theme: `@media (prefers-color-scheme: dark) { ${material3} }` }),
+      /unsupported conditional rule/u,
+    ],
+    [
+      'a theme without the default stylesheet it overrides',
+      {
+        packageExports: { './css/material3': publicExport('./dist/css/tokens.material3.css') },
+        publicTokenNames,
+        stylesheetSources: { './css/material3': material3 },
+      },
+      /\.\/css\/material3 stylesheet overrides the \.\/css stylesheet, which is not exported/u,
+    ],
+    [
+      'a theme over an invalid default stylesheet',
+      themedInput({ base: onmars.replace(darkScheme, '') }),
+      /\.\/css stylesheet must declare, in order/u,
+    ],
+  ])('S10 fails closed for %s', (_label, input, error) => {
+    expect(() => buildPublicStylesheetSurface(input)).toThrow(error);
+  });
+
+  it('S10 resolves a theme from the default declarations it does not override', () => {
+    const surface = buildPublicStylesheetSurface(themedInput());
+
+    // The theme overrides one primitive; the alias and the composite that read
+    // it are declared by the default stylesheet only and still follow it.
+    expect(surface['./css/material3'].contexts.dark['--ki-card-shadow']).toBe(
+      '0 1px 2px 0 rgb(220,230,240)',
+    );
+    expect(surface['./css/material3'].contexts.light['--ki-space-zero']).toBe('0');
+    // …and the default stylesheet's own contexts are untouched by the theme.
+    expect(surface['./css'].contexts.dark['--ki-card-shadow']).toBe('0 1px 2px 0 rgb(250,251,252)');
+  });
+
+  it('S10 publishes the page contract as a token-free stylesheet', () => {
+    expect(buildPublicStylesheetSurface(pageContractInput())['./css/base']).toEqual({
+      target: './dist/css/base.css',
+      pageContract: true,
+    });
+  });
+
+  it.each([
+    [
+      'a published token',
+      pageContract.replace('font-family: var(--ki-motion-easing);', '--ki-new: 1px;'),
+      /\.\/css\/base stylesheet must not publish token --ki-new/u,
+    ],
+    [
+      'a hardcoded value',
+      pageContract.replace('var(--ki-color-base);', '#ffffff;'),
+      /declares the hardcoded value background-color: #ffffff/u,
+    ],
+    [
+      'a colour-scheme declaration',
+      pageContract.replace('font-family: var(--ki-motion-easing);', 'color-scheme: light dark;'),
+      /declares the hardcoded value color-scheme: light dark/u,
+    ],
+    [
+      'a non-public custom property',
+      pageContract.replace('var(--ki-color-base);', 'var(--private);'),
+      /references non-public custom property --private/u,
+    ],
+    [
+      'an empty declaration value',
+      pageContract.replace('var(--ki-color-base);', ';'),
+      /contains unsupported declaration background-color/u,
+    ],
+    [
+      'a conditional rule',
+      `@media (prefers-color-scheme: dark) { ${pageContract} }`,
+      /unsupported conditional rule/u,
+    ],
+    ['no rule at all', '/* empty */', /declares no page contract/u],
+  ])('S10 rejects a page contract with %s', (_label, css, error) => {
+    expect(() => buildPublicStylesheetSurface(pageContractInput(css))).toThrow(error);
   });
 
   it.each([

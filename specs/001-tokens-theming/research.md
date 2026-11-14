@@ -12,6 +12,10 @@ Phase 0 output. All decisions verified against the two design sources on
 
 ## D1 — Theme delivery: one stylesheet per theme, attribute selection
 
+> **Superseded in part by D8-D11 (2026-11-14).** One stylesheet per theme and
+> attribute selection stand. The selectors, the `prefers-color-scheme` media
+> blocks and "material3 emits the full contract" do not: see below.
+
 **Decision**: `tokens.css` carries onmars (`:root` light + dark blocks) and
 stays the default export. material3 compiles to a separate
 `tokens.material3.css` whose selectors are scoped to
@@ -142,3 +146,114 @@ sandbox; commits in this environment use `--no-verify` and CI remains the
 enforcement layer (Art. X gates all run on push/PR). The unattended
 implement loop, if used, runs in the Art. XI sandbox where the full
 toolchain is installed.
+
+## D8 — Scheme: one `light-dark()` declaration, driven by `color-scheme`
+
+**Decision**: every scheme-dependent token is emitted once, as
+`light-dark(<light>, <dark>)`, aliases included
+(`light-dark(var(--ki-color-white-100), var(--ki-color-dark-950))`). The
+token stylesheet itself declares the switch: `:root { color-scheme: light
+dark }`, and `[data-ki-color-scheme='light'|'dark'] { color-scheme: … }` on
+any element. The `@media (prefers-color-scheme: dark)` blocks and the
+duplicated attribute blocks are gone; `@kimen/tokens/css/base` no longer
+declares `color-scheme`.
+
+**Rationale**: measured on the previous emission — 185 dark overrides were
+emitted twice (media + attribute), and `color-scheme` lived only in the
+opt-in page contract, so a page loading the tokens alone under a dark system
+preference got dark tokens on a light browser canvas (15 of 29 components
+with text below 4.5:1 on this HEAD). With `light-dark()` the declaration
+that selects a token's branch is the same one the browser paints the canvas,
+scrollbars and native controls from: they cannot disagree. It also resolves
+where a token is USED, so a scheme subtree needs to redeclare nothing.
+
+**Browser baseline (Art. IV)**: `light-dark()` is Baseline — Chrome 123
+(March 2024), Firefox 120 (November 2023), Safari 17.5 (May 2024) — well
+inside "current + previous stable" for the three engines the release matrix
+verifies. No fallback is emitted: a browser without `light-dark()` is outside
+the declared baseline.
+
+**Verified premise — every scheme-dependent token is a colour**: across the
+four compositions, 176 onmars tokens and 155 material3 tokens have an
+expression that differs by scheme. All are `$type: color` except three
+composites: one border (`--ki-border-hairline-base-em`,
+`<width> solid <colour>`) and two shadows
+(`--ki-foundation-migrated-component-button-button-tertiary-{hover,active}-shadow`).
+In the three composites only the colours differ; the geometry is identical
+between schemes, so `light-dark()` wraps each colour component and nothing
+else. No token needed another mechanism. The build enforces the premise from
+now on (FR-015): a token whose schemes differ in a non-colour component
+fails the build by name.
+
+**Alternatives considered**: (a) keep the media + attribute blocks and add
+subtree selectors — rejected: triples the dark blocks again and still leaves
+the canvas mismatch. (b) `@container style()` queries — not Baseline.
+(c) registering tokens with `@property` so custom properties compute to
+colours — rejected: 1,946 registrations, and it would freeze alias
+substitution at the declaring element, the opposite of what subtrees need.
+
+## D9 — Theme by subtree: redeclare on `:root, :where([data-ki-theme])`
+
+**Decision**: the default theme's tokens are declared in one rule,
+`:root, :where([data-ki-theme])`. A theme stylesheet is scoped to
+`:root[data-ki-theme='x'], [data-ki-theme='x']`.
+
+**Rationale**: relaxing the old `:root[...]` selectors is not enough. A
+custom property that aliases another (`--a: var(--b)`) substitutes on the
+element that declares it, and descendants inherit the result — a subtree
+that reassigned `--b` would keep the page's `--a`. Redeclaring every token on
+the subtree root recomputes every alias with the subtree's values.
+`:where()` keeps that redeclaration at zero specificity, so a theme rule
+(0,1,0) always wins over it regardless of stylesheet order; on the root the
+theme rule is (0,2,0) against the base rule's (0,1,0). Fallbacks fall out of
+the cascade: `data-ki-theme="onmars"`, an unknown name, or a theme whose
+stylesheet is not loaded all match only the base rule, which is how a
+subtree returns to the default theme inside a page themed otherwise.
+
+**Cost, accepted**: a themed subtree resets every token, so `:root`
+reassignments by the consumer do not flow into it. Documented in the
+contract; the themed element is where a consumer reassigns tokens for a
+subtree.
+
+**Not done**: `color-scheme: light dark` is declared on `:root` only, never
+on the themed-subtree selector — a themed subtree inside a forced-scheme
+ancestor must inherit that scheme, not reset to the system preference.
+
+## D10 — A theme stylesheet emits only its overrides
+
+**Decision**: `tokens.material3.css` carries the tokens whose merged
+expression differs from the default theme's (659 of 1,946) and nothing else.
+It is loaded alongside `tokens.css`, never instead of it.
+
+**Rationale**: the previous sheet was three full copies of the contract
+(light, dark in media, dark by attribute): 5,838 declarations, 4,938 of them
+redundant. With D9 every token is already declared on the same element by
+the base rule, so a theme only needs to say what it changes. S6 still holds
+as the effective contract: under material3 every name resolves, and the
+theme sheet reassigns names of the default contract only — enforced by the
+public-API surface gate (`scripts/lib/css-token-surface.mjs`) and by the
+browser suite.
+
+**Subtlety kept on purpose**: material3's dark scheme does not include the
+onmars dark file. A token onmars flips by scheme and material3 does not is
+therefore emitted by material3 as a plain value — otherwise the theme would
+inherit a flip its own sources never declared.
+
+## D11 — No comments in `dist`; no intermediate files
+
+**Decision**: the emitted stylesheets carry no comments (token descriptions
+were 55 % of the bytes of `tokens.css`) and the four per-scheme intermediate
+files are no longer written.
+
+**Rationale**: the token reference is generated from the DTCG sources
+(`packages/tokens/scripts/generate-reference.mjs`), not from the CSS, and
+nothing reads the comments — checked: the contrast gate and the public-API
+surface strip them, the docs token counter matches declarations only. The
+intermediate files were never exported by the package.
+
+**Equivalence evidence** (the emission changed, the values did not):
+`packages/elements/generated/public-api.json` is byte-identical before and
+after (1,368 public tokens × 2 schemes × 2 themes resolved through the
+rewritten surface parser); a unit test resolves all 1,946 tokens of the
+emitted sheets in the four theme × scheme contexts against Style
+Dictionary's own values; the contrast gate reads byte-identical inputs.

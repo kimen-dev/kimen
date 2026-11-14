@@ -1,91 +1,88 @@
-// Builds @kimen/tokens: light (:root) + dark (prefers-color-scheme/attribute)
-// into a single dist/css/tokens.css. Intermediate per-mode files are kept in
-// dist/css/ for split loading and debugging.
+// Builds @kimen/tokens: the four token compositions (theme × scheme) merged
+// into the stylesheets the package exports.
+//
+//   dist/css/tokens.css            the onmars default theme, both schemes
+//   dist/css/tokens.material3.css  what material3 changes over the default
+//   dist/css/base.css              the opt-in page contract
+//
+// The emitted shape — one `light-dark()` declaration per scheme-dependent
+// token, a colour-scheme contract on the token sheet itself, themed subtrees,
+// themes as overrides — is documented where it is produced:
+// ./scripts/theme-stylesheet.mjs.
 //
 // A warning-free build is the expected outcome. Layer overrides (primitive →
 // theme → semantic → component, material3 over onmars, dark over light) are
-// declared intentional via each config's include/source split, and the dark
-// file's cross-file var() references via a scoped platform log — see
+// declared intentional via each config's include/source split — see
 // style-dictionary.config.mjs. Any warning this build prints is therefore a
-// real problem (duplicate token in the same layer, unexpected filtered
-// reference), not noise to ignore.
+// real problem (a duplicate token in the same layer), not noise to ignore, and
+// anything the stylesheet cannot express (a token that is not a colour and
+// still depends on the scheme, two tokens compiling to one custom property)
+// fails the build outright.
+import { mkdir, writeFile } from 'node:fs/promises';
+
 import StyleDictionary from 'style-dictionary';
-import { readFile, writeFile } from 'node:fs/promises';
+
 import {
-  lightConfig,
+  combineSchemes,
+  compositionDeclarations,
+  renderBaseStylesheet,
+  renderThemeStylesheet,
+  themeOverrides,
+} from './scripts/theme-stylesheet.mjs';
+import {
   darkConfig,
-  material3LightConfig,
+  lightConfig,
   material3DarkConfig,
+  material3LightConfig,
 } from './style-dictionary.config.mjs';
 
-const light = new StyleDictionary(lightConfig);
-await light.buildAllPlatforms();
+const dist = new URL('./dist/css/', import.meta.url);
 
-const dark = new StyleDictionary(darkConfig);
-await dark.buildAllPlatforms();
+async function composition(config) {
+  const dictionary = await new StyleDictionary(config).getPlatformTokens('css');
+  return compositionDeclarations(dictionary);
+}
 
-const lightCss = await readFile(new URL('./dist/css/tokens.light.css', import.meta.url), 'utf8');
-const darkCss = await readFile(new URL('./dist/css/tokens.dark.css', import.meta.url), 'utf8');
-await writeFile(new URL('./dist/css/tokens.css', import.meta.url), `${lightCss}\n${darkCss}`);
+await mkdir(dist, { recursive: true });
 
-console.log('✔ dist/css/tokens.css (theme: onmars — light + dark)');
+const onmars = combineSchemes({
+  light: await composition(lightConfig),
+  dark: await composition(darkConfig),
+});
+await writeFile(new URL('tokens.css', dist), renderBaseStylesheet(onmars));
 
-const material3Light = new StyleDictionary(material3LightConfig);
-await material3Light.buildAllPlatforms();
+console.log(`✔ dist/css/tokens.css (theme: onmars — ${onmars.size} tokens, light + dark)`);
 
-const material3Dark = new StyleDictionary(material3DarkConfig);
-await material3Dark.buildAllPlatforms();
-
-const material3LightCss = await readFile(
-  new URL('./dist/css/tokens.material3.light.css', import.meta.url),
-  'utf8',
-);
-const material3DarkCss = await readFile(
-  new URL('./dist/css/tokens.material3.dark.css', import.meta.url),
-  'utf8',
-);
+const material3 = themeOverrides({
+  base: onmars,
+  theme: combineSchemes({
+    light: await composition(material3LightConfig),
+    dark: await composition(material3DarkConfig),
+  }),
+});
 await writeFile(
-  new URL('./dist/css/tokens.material3.css', import.meta.url),
-  `${material3LightCss}\n${material3DarkCss}`,
+  new URL('tokens.material3.css', dist),
+  renderThemeStylesheet('material3', material3),
 );
 
-console.log('✔ dist/css/tokens.material3.css (theme: material3 — light + dark)');
+console.log(
+  `✔ dist/css/tokens.material3.css (theme: material3 — ${material3.size} overrides of onmars)`,
+);
 
-// The page contract (opt-in): the three declarations a consumer page needs and
-// that a token sheet cannot carry. `color-scheme` is the load-bearing one —
-// without it a light-only page whose visitor prefers dark gets Kimen's dark
-// component surfaces on a user-agent white canvas, with light scrollbars,
-// light autofill and, in the worst case, an invisible field label.
+// The page contract (opt-in): what a consumer page needs beyond tokens to
+// read as a Kimen page — the page background, the page text colour and the
+// body typeface. The colour scheme is NOT here: it is declared by the token
+// stylesheet, because the tokens themselves resolve from it.
 //
 // This sheet publishes NO tokens: it only consumes them. That is what keeps it
 // outside the public token surface (scripts/lib/css-token-surface.mjs).
-const pageContractCss = `/**
- * Do not edit directly, this file was auto-generated.
- *
- * Kimen page contract — opt-in, import after a theme stylesheet:
- *   import '@kimen/tokens/css';
- *   import '@kimen/tokens/css/base';
- *
- * A page that is deliberately light-only or dark-only sets
- * data-ki-color-scheme on <html> instead of relying on the visitor's
- * preference; both the tokens and the user agent then follow that choice.
- */
-:root {
-  color-scheme: light dark;
+const pageContractCss = `:root {
   background-color: var(--ki-surface-s0);
   color: var(--ki-text-high-em);
   font-family: var(--ki-typography-family-body);
 }
-
-:root[data-ki-color-scheme="light"] {
-  color-scheme: light;
-}
-
-:root[data-ki-color-scheme="dark"] {
-  color-scheme: dark;
-}
 `;
 
-await writeFile(new URL('./dist/css/base.css', import.meta.url), pageContractCss);
+await writeFile(new URL('base.css', dist), pageContractCss);
 
 console.log('✔ dist/css/base.css (page contract — opt-in)');

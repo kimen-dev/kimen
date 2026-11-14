@@ -220,11 +220,10 @@ const defaultTokenComposition = {
 
 const stylesheetSources = {
   './css': `
-    :root { --ki-button-bg: #ffffff; }
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-ki-color-scheme='light']) { --ki-button-bg: #111111; }
-    }
-    :root[data-ki-color-scheme='dark'] { --ki-button-bg: #111111; }
+    :root { color-scheme: light dark; }
+    [data-ki-color-scheme='light'] { color-scheme: light; }
+    [data-ki-color-scheme='dark'] { color-scheme: dark; }
+    :root, :where([data-ki-theme]) { --ki-button-bg: light-dark(#ffffff, #111111); }
   `,
 };
 

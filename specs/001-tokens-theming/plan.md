@@ -13,6 +13,12 @@
 
 ## Summary
 
+> **Addendum (2026-11-14)**: the emission described below — `:root` blocks,
+> `prefers-color-scheme` media queries, a material3 stylesheet carrying the
+> full contract — was replaced without changing any token name or value. See
+> research.md D8-D11, data-model.md and tasks.md Phase 7. The rest of this
+> plan is kept as the record of the original feature.
+
 Ship the Kimen theming system as pure compiled CSS: onmars as the default
 theme (`:root`, light + dark via `prefers-color-scheme` with a
 `data-ki-color-scheme` override) and material3 as the reference second theme

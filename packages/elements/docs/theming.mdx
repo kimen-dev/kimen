@@ -35,8 +35,10 @@ component:
 <html data-ki-theme="material3">
 ```
 
-An unknown `data-ki-theme` value simply matches no selector: the document
-stays on the default theme. No runtime code involved anywhere.
+A theme stylesheet carries only what it changes over the default theme, so
+it is always loaded **alongside** `@kimen/tokens/css`, never instead of it.
+An unknown `data-ki-theme` value — or a theme whose stylesheet was not loaded
+— simply lands on the default theme. No runtime code involved anywhere.
 
 ## Color scheme
 
@@ -45,21 +47,94 @@ Both themes follow the OS by default and can be forced either way:
 ```html
 <html data-ki-color-scheme="dark">   <!-- force dark -->
 <html data-ki-color-scheme="light">  <!-- force light -->
-<!-- no attribute: follows prefers-color-scheme -->
+<!-- no attribute: follows the system preference -->
 ```
 
 The **Scheme** toolbar above drives exactly this attribute.
 
-### The page contract
+The scheme is one declaration, and the token stylesheet makes it: `:root`
+gets `color-scheme: light dark`, and `data-ki-color-scheme` pins it to one
+side. Every scheme-dependent token is a single `light-dark()` value that
+resolves from that declaration, so the tokens and the browser — page canvas,
+scrollbars, native controls, autofill — always agree. A page that loads only
+`@kimen/tokens/css` is coherent in both schemes.
 
-A token stylesheet can only carry custom properties, so it cannot declare
-`color-scheme`. Without that declaration the tokens flip to their dark values
-for a visitor who prefers dark while the browser keeps painting a light canvas,
-light scrollbars and light autofill — dark Kimen surfaces on a white page.
+Two consequences worth knowing:
 
-Load the opt-in page contract alongside a theme to close that gap. It declares
-`color-scheme`, paints the page from `--ki-surface-s0` / `--ki-text-high-em`,
-and sets the body family:
+- Kimen follows the page's `color-scheme`, not `prefers-color-scheme`
+  directly. If your own CSS pins the page (`:root { color-scheme: light }`
+  after the token stylesheet), the tokens stay light with it.
+- To reassign a scheme-dependent token, give both values:
+  `--ki-surface-s0: light-dark(#fff, #111)`. A single value applies to both
+  schemes.
+- A scheme-dependent token only becomes a colour where it is used. Script
+  that reads one with `getPropertyValue('--ki-surface-s0')` gets the
+  `light-dark()` pair; read the computed `color` or `background-color` of an
+  element that uses the token instead.
+
+## Theming a subtree
+
+Both attributes work on any element, not only on `<html>`. This is what an
+island of generated UI embedded in someone else's page needs:
+
+```html
+<html>                                     <!-- onmars, follows the system -->
+  <section data-ki-theme="material3">      <!-- material3 inside it -->
+    <aside data-ki-color-scheme="dark">    <!-- material3, forced dark -->
+      <div data-ki-theme="onmars">…</div>  <!-- back to the default theme -->
+    </aside>
+  </section>
+</html>
+```
+
+- `data-ki-color-scheme` on an element forces the scheme for its subtree.
+  It redeclares nothing: `light-dark()` resolves where a token is used.
+- `data-ki-theme` on an element re-themes its subtree. `onmars` — or any
+  name without a loaded stylesheet — returns the subtree to the default
+  theme, which is how you opt a region out of the page's theme.
+- The nearest declaration wins, independently for theme and for scheme.
+
+A declaration restyles what **consumes** tokens; it does not paint the
+element that carries it. Give a region its own surface the same way the page
+contract gives the page one:
+
+```css
+.region {
+  background-color: var(--ki-surface-s0);
+  color: var(--ki-text-high-em);
+}
+```
+
+### Reassigning tokens in a subtree
+
+A custom property that aliases another one is resolved on the element that
+**declares** it, and descendants inherit the result. The primary button fill
+is `--ki-button-primary-neutral-rest-bg` → `--ki-surface-primary-med-em` →
+`--ki-color-brand-500`: reassigning `--ki-color-brand-500` on a plain `<div>`
+changes what reads that token directly and neither alias, so the button keeps
+the page's colour. A themed subtree redeclares every token on its own root,
+which recomputes every alias — name the subtree and reassign there:
+
+```html
+<section data-ki-theme="acme">…</section>
+```
+
+```css
+[data-ki-theme='acme'] {
+  --ki-color-brand-500: #0b57d0;  /* every component in the section follows */
+}
+```
+
+The same redeclaration means page-level reassignments made on `:root` do not
+flow into a themed subtree: it starts from its theme's own values. Repeat
+them for the subtree if you want both
+(`:root, [data-ki-theme='acme'] { … }`).
+
+## The page contract
+
+Tokens are custom properties: loading them paints nothing. The opt-in page
+contract paints the page from them — background from `--ki-surface-s0`, text
+from `--ki-text-high-em`, and the body typeface:
 
 ```html
 <link rel="stylesheet" href="@kimen/tokens/css" />
@@ -67,24 +142,16 @@ and sets the body family:
 ```
 
 It publishes no tokens of its own — it only consumes them, so it never widens
-the token surface. If your page is deliberately single-scheme, set
-`data-ki-color-scheme` and both the tokens **and** the browser follow that
-choice.
+the token surface — and it declares no colour scheme: the token stylesheet
+owns that.
 
-Skipping it is supported in the light scheme. In the dark scheme it costs more
-than the page around them, and the number is measured rather than estimated: on
-a page loading only the token stylesheet, with the visitor's OS set to dark,
-**14 of 29 components render text that falls below 4.5:1** — most of it at
-1.00:1, white on white. Nothing is broken in the components; they correctly
-paint their dark-scheme foreground. The user agent simply keeps a light canvas,
-because `color-scheme` is still `normal` and only the page contract declares it.
-
-So: load it, or pin the page with `data-ki-color-scheme="light"`. Doing neither
-is the one combination the library cannot render legibly.
-
-The measurement lives in `bare-page.browser.spec.ts` — it walks the flat tree
-through shadow boundaries, composites the real backdrop behind every rendered
-string, and holds all 29 components to 4.5:1 in both schemes.
+Skipping it is supported in both schemes. Without it the page keeps the
+browser's own canvas and text colour for the active scheme, and every
+component stays legible on it. That is measured, not assumed:
+`bare-page.browser.spec.ts` loads the token stylesheet alone, walks the flat
+tree through shadow boundaries, composites the real backdrop behind every
+rendered string — down to the browser canvas — and holds all 29 components to
+4.5:1 under a dark system preference.
 
 ## Surfaces
 
@@ -185,6 +252,7 @@ elevation by reassigning the ramp — components never hardcode a shadow.
 When you need to customize a component, reach for surfaces in this order —
 if a consumer would ever need `!important`, that is an API bug to report:
 
-1. **Tokens** — reassign at `:root` (theme-wide) or on a subtree.
+1. **Tokens** — reassign at `:root` (theme-wide) or on a themed subtree
+   (see *Theming a subtree*).
 2. **`::part()`** — style exposed parts for one-off structural tweaks.
 3. **Slots** — replace content entirely.

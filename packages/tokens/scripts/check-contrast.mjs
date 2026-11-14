@@ -17,9 +17,15 @@ const NON_TEXT_MIN_RATIO = 3;
 // because the fill happened to be dark enough, and that accident is what hid
 // the checked fill sitting at 2.35:1 against a dark page.
 const NON_TEXT_COMPONENTS = new Set(['checkbox', 'radio']);
+// A theme is the default stylesheet plus, for an opt-in theme, the stylesheet of
+// its overrides loaded after it — exactly what a consumer page loads.
+const DEFAULT_STYLESHEET = new URL('../dist/css/tokens.css', import.meta.url);
 const THEMES = [
-  { name: 'onmars', stylesheet: new URL('../dist/css/tokens.css', import.meta.url) },
-  { name: 'material3', stylesheet: new URL('../dist/css/tokens.material3.css', import.meta.url) },
+  { name: 'onmars', stylesheets: [DEFAULT_STYLESHEET] },
+  {
+    name: 'material3',
+    stylesheets: [DEFAULT_STYLESHEET, new URL('../dist/css/tokens.material3.css', import.meta.url)],
+  },
 ];
 const CONTRAST_PAIRS = [
   { text: '--ki-text-high-em', surface: '--ki-surface-s0' },
@@ -120,37 +126,65 @@ function declarationsFromBlock(block) {
   return declarations;
 }
 
-function collectSchemeDeclarations(css) {
-  const cleanCss = stripComments(css);
-  const light = new Map();
-  const dark = new Map();
-  const mediaPattern =
-    /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{\s*([^{}]+)\{([^{}]*)\}\s*\}/gu;
-  const cssWithoutMedia = cleanCss.replace(mediaPattern, '');
+// Replace every `light-dark(a, b)` in a value with the branch of one scheme
+// (0 = light, 1 = dark). Parenthesis-aware: the branches are themselves
+// `var()` and `rgba()` calls, and a composite value can carry several.
+function selectScheme(value, branch) {
+  const opener = 'light-dark(';
+  const start = value.indexOf(opener);
+
+  if (start === -1) {
+    return value;
+  }
+
+  let depth = 1;
+  let comma = -1;
+  let end = start + opener.length;
+
+  for (; end < value.length; end += 1) {
+    if (value[end] === '(') {
+      depth += 1;
+    } else if (value[end] === ')') {
+      depth -= 1;
+      if (depth === 0) {
+        break;
+      }
+    } else if (value[end] === ',' && depth === 1 && comma === -1) {
+      comma = end;
+    }
+  }
+
+  if (depth !== 0 || comma === -1) {
+    throw new Error(`Malformed light-dark() in: ${value}`);
+  }
+
+  const selected =
+    branch === 0 ? value.slice(start + opener.length, comma) : value.slice(comma + 1, end);
+
+  return (
+    value.slice(0, start) +
+    selectScheme(selected.trim(), branch) +
+    selectScheme(value.slice(end + 1), branch)
+  );
+}
+
+// Every token is declared once and a scheme-dependent one carries both values
+// in `light-dark()`. Rules merge in source order, so a theme stylesheet
+// concatenated after the default one overrides it, as it does in the cascade.
+export function collectSchemeDeclarations(css) {
+  const declarations = new Map();
   const blockPattern = /([^{}]+)\{([^{}]*)\}/gu;
 
-  for (const match of cssWithoutMedia.matchAll(blockPattern)) {
-    const selector = match[1].trim();
-    const declarations = declarationsFromBlock(match[2]);
-
-    if (declarations.size === 0) {
-      continue;
-    }
-
-    if (selector.includes("data-ki-color-scheme='dark'")) {
-      mergeDeclarations(dark, declarations);
-    } else if (selector.includes(':root')) {
-      mergeDeclarations(light, declarations);
-    }
+  for (const match of stripComments(css).matchAll(blockPattern)) {
+    mergeDeclarations(declarations, declarationsFromBlock(match[2]));
   }
 
-  for (const match of cleanCss.matchAll(mediaPattern)) {
-    mergeDeclarations(dark, declarationsFromBlock(match[2]));
-  }
+  const forScheme = (branch) =>
+    new Map([...declarations].map(([name, value]) => [name, selectScheme(value, branch)]));
 
   return {
-    light,
-    dark: new Map([...light, ...dark]),
+    light: forScheme(0),
+    dark: forScheme(1),
   };
 }
 
@@ -691,8 +725,8 @@ function sweepControlBoundaries(theme, scheme, declarations) {
   return failures;
 }
 
-function evaluateStylesheet(theme, stylesheet) {
-  const css = readFileSync(stylesheet, 'utf8');
+function evaluateStylesheet(theme, stylesheets) {
+  const css = stylesheets.map((stylesheet) => readFileSync(stylesheet, 'utf8')).join('\n');
   const schemes = collectSchemeDeclarations(css);
   const failures = [];
 
@@ -734,16 +768,16 @@ export function checkContrast() {
   const failures = [];
 
   for (const theme of THEMES) {
-    if (!existsSync(theme.stylesheet)) {
+    const missing = theme.stylesheets.find((stylesheet) => !existsSync(stylesheet));
+
+    if (missing !== undefined) {
       // A missing stylesheet is a failure, never a skip: FR-009 requires
       // every theme × scheme to be verified (clean-context review, round 1).
-      failures.push(
-        `${theme.name}: stylesheet missing at ${theme.stylesheet} — run the build first`,
-      );
+      failures.push(`${theme.name}: stylesheet missing at ${missing} — run the build first`);
       continue;
     }
 
-    failures.push(...evaluateStylesheet(theme.name, theme.stylesheet));
+    failures.push(...evaluateStylesheet(theme.name, theme.stylesheets));
   }
 
   return failures;

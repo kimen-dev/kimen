@@ -22,10 +22,16 @@ function resetDocument(): void {
   document.getElementById(STYLE_ID)?.remove();
 }
 
-function readToken(name: string): string {
+/**
+ * The colour a token paints. A scheme-dependent token is a `light-dark()`
+ * value that only becomes a colour where it is used, so it is read the way a
+ * component consumes it: through a real colour property.
+ */
+function readTokenColor(name: string): string {
   const probe = document.createElement('div');
+  probe.style.color = `var(${name})`;
   document.body.appendChild(probe);
-  const value = getComputedStyle(probe).getPropertyValue(name).trim();
+  const value = getComputedStyle(probe).color;
   probe.remove();
   return value;
 }
@@ -44,7 +50,7 @@ function rgbToHex(value: string): string {
 }
 
 function expectTokenColor(name: string, hex: string): void {
-  expect(rgbToHex(readToken(name))).toBe(hex);
+  expect(rgbToHex(readTokenColor(name))).toBe(hex);
 }
 
 beforeEach(async () => {
