@@ -32,7 +32,7 @@ const renderDialog = (
   const openDialog = () => void getDialog()?.show();
   const closeDialog = () => void getDialog()?.close();
   const mainProps = options.dir ? { dir: options.dir } : {};
-  const heading = args.heading ?? 'Delete account?';
+  const heading = args.heading;
   const open = Boolean(args.open);
   const closeOnBackdrop = Boolean(args.closeOnBackdrop);
   // Figma Modal_actions renders two equal-width (flex 1 0 0) actions; the

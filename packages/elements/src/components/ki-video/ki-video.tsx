@@ -40,9 +40,8 @@ export class KiVideo {
    * FR-005). Documented as required: no default human-language string is
    * baked in, and an unlabeled control renders but fails the accessibility
    * audit (015-ki-progress precedent). The label is never rendered visually.
-   * @default undefined
    */
-  @Prop() label?: string;
+  @Prop() label!: string;
 
   /**
    * Facade state (FR-002): flips exactly once, on the first activation of

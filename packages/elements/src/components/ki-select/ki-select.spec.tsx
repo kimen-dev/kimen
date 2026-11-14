@@ -153,7 +153,7 @@ describe('ki-select', () => {
   });
 
   it('S2 exposes exact defaults, ids, and placeholder state', async () => {
-    const result = await render<KiSelectHost>(<ki-select />);
+    const result = await render<KiSelectHost>(<ki-select label="Country" />);
     await result.waitForChanges();
 
     const root = result.root;
@@ -162,7 +162,8 @@ describe('ki-select', () => {
     const listbox = root.shadowRoot?.querySelector('[part="listbox"]');
     const value = button.querySelector('[part="value"]');
 
-    expect(root.label).toBe('');
+    // `label` is required by contract, so it has no default to assert.
+    expect(root.label).toBe('Country');
     expect(root.placeholder).toBe('');
     expect(root.name).toBeUndefined();
     expect(root.value).toBe('');
