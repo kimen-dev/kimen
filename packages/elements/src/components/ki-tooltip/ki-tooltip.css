@@ -29,6 +29,9 @@
 }
 
 .tooltip {
+  /* Closed, the bubble generates no box: hidden but laid out it still counts
+   * as scrollable overflow and widens a narrow page (WCAG 1.4.10). */
+  display: none;
   position: absolute;
   box-sizing: border-box;
   inline-size: max-content;
@@ -56,6 +59,13 @@
   overflow-wrap: break-word;
   pointer-events: auto;
   visibility: hidden;
+}
+
+/* is-measuring lays the closed bubble out, still invisible, for the one
+ * synchronous size read that positions it before it is shown. */
+.tooltip.is-visible,
+.tooltip.is-measuring {
+  display: block;
 }
 
 .tooltip.is-visible {
@@ -92,14 +102,16 @@
 
 @media (prefers-reduced-motion: no-preference) {
   /* Enter: fade in at the fast step (decelerate); exit: fade out (accelerate).
-   * Visibility stays discrete: instant on show, delayed one fast step on hide
-   * so the exit fade is visible. JS show/hide delay tokens are untouched. */
+   * Visibility and display stay discrete: instant on show, held one fast step
+   * on hide so the exit fade is visible before the box goes away. JS show/hide
+   * delay tokens are untouched. */
   .tooltip {
     opacity: 0;
     transition:
       opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-standard-accelerate),
       translate var(--ki-motion-duration-fast) var(--ki-motion-easing-standard-accelerate),
-      visibility var(--ki-motion-duration-instant) var(--ki-motion-duration-fast);
+      visibility var(--ki-motion-duration-instant) var(--ki-motion-duration-fast),
+      display var(--ki-motion-duration-fast) allow-discrete;
   }
 
   .tooltip.is-visible {
@@ -108,6 +120,13 @@
       opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
       translate var(--ki-motion-duration-fast) var(--ki-motion-easing-out),
       visibility var(--ki-motion-duration-instant);
+  }
+
+  /* A bubble with no box in the previous frame has no style to fade from. */
+  @starting-style {
+    .tooltip.is-visible {
+      opacity: 0;
+    }
   }
 
   /* Directional slide: hidden state biases the bubble one sm distance toward

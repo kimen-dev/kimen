@@ -273,6 +273,44 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(tooltipRect.top).toBeGreaterThanOrEqual(triggerRect.bottom);
   });
 
+  // WCAG 1.4.10 (reflow at 320 CSS px): a bubble that is not shown must not
+  // count as page content. Hidden but laid out, it overflowed the inline-end
+  // edge and gave the whole page a horizontal scrollbar.
+  it('S14 a closed tooltip at the inline-end edge does not widen a 320px page', async () => {
+    await page.viewport(320, 640);
+    try {
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.justifyContent = 'flex-end';
+      document.body.append(row);
+      const { host, trigger } = await mount(
+        { label: 'Fairly long helper text to measure the hidden bubble' },
+        row,
+      );
+      await nextFrame();
+
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+
+      // It still opens fully inside the viewport, measured from its real size.
+      trigger.focus();
+      await nextFrame();
+      await settleTooltip(host);
+      const tooltipRect = requireTooltip(host).getBoundingClientRect();
+      expect(tooltipRect.width).toBeGreaterThan(trigger.getBoundingClientRect().width);
+      expect(tooltipRect.left).toBeGreaterThanOrEqual(0);
+      expect(tooltipRect.right).toBeLessThanOrEqual(window.innerWidth);
+
+      // Closed again, the page is back to its own width.
+      trigger.blur();
+      await expect.element(requireTooltip(host)).not.toBeVisible();
+      await expect
+        .poll(() => document.documentElement.scrollWidth)
+        .toBeLessThanOrEqual(window.innerWidth);
+    } finally {
+      await page.viewport(414, 896);
+    }
+  });
+
   it('S9 material3 restyles the visible tooltip with unchanged markup', async () => {
     ensureMaterial3Tokens();
     document.documentElement.setAttribute('data-ki-theme', 'material3');

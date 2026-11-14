@@ -314,13 +314,23 @@ export class KiTooltip {
       placement: this.placement,
       dir,
       triggerRect: this.host.getBoundingClientRect(),
-      tooltipRect: tooltip.getBoundingClientRect(),
+      tooltipRect: this.measureTooltip(tooltip),
       viewport: { width: window.innerWidth, height: window.innerHeight },
       offset: this.measureOffset(),
     });
 
     this.effectivePlacement = position.effectivePlacement;
     this.crossAxisShift = position.crossAxisShift;
+  }
+
+  // The closed bubble generates no box (it must not widen the page), so it is
+  // laid out, still invisible, for this one synchronous read. A no-op while
+  // the bubble is already shown.
+  private measureTooltip(tooltip: HTMLElement): DOMRect {
+    tooltip.classList.add('is-measuring');
+    const rect = tooltip.getBoundingClientRect();
+    tooltip.classList.remove('is-measuring');
+    return rect;
   }
 
   // Resolve `--ki-tooltip-offset` to px by laying it out on a hidden probe in
