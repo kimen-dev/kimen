@@ -160,8 +160,9 @@ never transcribed by hand.
   (`--ki-motion-distance-xs/sm/md`).
 - **Glass** — translucent surfaces built from gradient pairs plus a backdrop
   blur: `--ki-dialog-bg-start`/`--ki-dialog-bg-end` with
-  `--ki-dialog-backdrop-blur`, and the same pattern for tooltip, card and
-  other overlay surfaces.
+  `--ki-dialog-backdrop-blur`, the same pattern for tooltip, and a backdrop
+  blur token for the other glass surfaces (the select listbox, the video
+  controls, the glass button variants).
 - **Elevation** — the `--ki-elevation-e1`…`--ki-elevation-e6` shadow scale,
   plus effect shadows (`--ki-effect-*`) for component-specific depth.
 - **Bevels** — edge tokens such as `--ki-button-tertiary-rest-border-bottom`

@@ -17,10 +17,6 @@
         "$value": "{ki.space.xxs}",
         "$description": "dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input)."
       },
-      "hint-fg": {
-        "$value": "{ki.text.med-em}",
-        "$description": "color used by the textarea component for the hint row foreground (MarsUI Hint_label Text/med_em; the hint row itself is pending its founder-gated API addition)."
-      },
       "radius": {
         "$value": "{ki.radius.component.md}",
         "$description": "dimension used by the textarea component for radius (MarsUI Radius/component/radius_md 10px for the md size; component ramp so personality modes reach it)."
@@ -159,10 +155,6 @@
         "placeholder-fg": {
           "$value": "{ki.text.base-em}",
           "$description": "color used by the textarea component for disabled placeholder foreground."
-        },
-        "hint-fg": {
-          "$value": "{ki.text.base-em}",
-          "$description": "color used by the textarea component for the disabled hint row foreground (MarsUI disabled ladder Text/base_em; disabled cells are exempt from the contrast sweep)."
         }
       },
       "readonly": {
@@ -212,10 +204,6 @@
           "$value": "{ki.focus.danger}",
           "$type": "shadow",
           "$description": "shadow used by the textarea component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid))."
-        },
-        "hint-fg": {
-          "$value": "{ki.text.danger-high-em}",
-          "$description": "color used by the textarea component for the invalid hint row foreground (MarsUI Hint_label danger: Text/danger_high_em carries the signal)."
         }
       },
       "focus-ring": {
