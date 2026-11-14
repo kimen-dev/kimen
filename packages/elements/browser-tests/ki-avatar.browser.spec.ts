@@ -152,6 +152,19 @@ describe('ki-avatar', () => {
     expect(el.shadowRoot?.querySelector('[part="icon"]')).toBeNull();
   });
 
+  // A portrait is decoration next to a name: it must never compete with the
+  // page for the network or the main thread. Lazy fetching is also what keeps
+  // an avatar nobody can see (a member behind an avatar group's cap) from
+  // downloading its image at all — asserted in the group suite.
+  it('fetches the portrait lazily and decodes it off the main thread', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Ana García', src: portraitDataUri() });
+    const image = el.shadowRoot?.querySelector<HTMLImageElement>('[part="image"]');
+
+    expect(image?.getAttribute('loading')).toBe('lazy');
+    expect(image?.getAttribute('decoding')).toBe('async');
+  });
+
   it('S2 falls back to the initials on a failing portrait with no broken-image artifact', async () => {
     cleanup();
     const el = await mount(landmark(), {

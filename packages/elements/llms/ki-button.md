@@ -252,4 +252,3 @@ None.
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
-- `--ki-transparent-inverse`: semantic color for transparent inverse.

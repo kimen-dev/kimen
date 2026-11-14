@@ -326,9 +326,16 @@ founder decision it batches.
   form MUST NOT submit or reset that form. Icon-only submit/reset controls
   are documented as when-NOT-to-use (use ki-button).
 - **FR-009**: Every visual property (dimension, icon size, color, radius,
-  elevation, state styling) MUST resolve from `--ki-icon-button-*` component
-  tokens layered over the semantic token layer; zero hardcoded visual
-  values. Shape/radius and M3's width axis are tokens, never attributes.
+  elevation, state styling) MUST resolve from component tokens layered over
+  the semantic token layer; zero hardcoded visual values. The square
+  dimension and the icon size are the icon button's own
+  (`--ki-icon-button-{size}-size`, `--ki-icon-button-{size}-icon-size`);
+  color, radius, elevation and state styling are the button visual system
+  and resolve from the `--ki-button-*` tokens 002 publishes, defined once
+  and shared by both elements. (Amended by the elements cleanup: the
+  original twin `--ki-icon-button-*` matrix repeated every button value in
+  all four theme x scheme compositions.) Shape/radius and M3's width axis
+  are tokens, never attributes.
 - **FR-010**: Interaction states (hover, focus-visible, active, disabled)
   MUST be styled exclusively through tokens and CSS states; states are never
   attributes/props. Pressed (`:active`) MUST paint over the resting
@@ -354,7 +361,9 @@ founder decision it batches.
 - **Public API delta** (Art. IX): new element `ki-icon-button` (attributes:
   `variant`, `tone`, `size`, `label`, `disabled`; events: none of its own —
   activation is a standard click; slots: default (single decorative icon);
-  parts: `button`, `icon`; component tokens: `--ki-icon-button-*`). Additive
+  parts: `button`, `icon`; component tokens: `--ki-icon-button-{size}-size`
+  and `--ki-icon-button-{size}-icon-size`, the rest of its appearance
+  resolving from `--ki-button-*`). Additive
   MINOR; catalog and llms.txt regenerate with the new entry, and
   002-ki-button's when-NOT-to-use pointer ("icon-only actions → future
   icon-button") now resolves to this element.
@@ -369,10 +378,11 @@ founder decision it batches.
   violations across variant × tone × size × state under both themes, both
   schemes.
 - **Tokens** (Art. VI): new component token family `--ki-icon-button-*`
-  (square dimension and icon size per size step, radius per size, per
-  variant × tone color and state styling, focus ring, border width)
-  resolving from the semantic layer; expected to reuse the emphasis and
-  intent semantic tokens 002 declared — no semantic-layer deltas expected.
+  (square dimension and icon size per size step) resolving from the
+  semantic layer. Radius per size, per variant × tone color and state
+  styling, focus ring and border width are the `--ki-button-*` tokens of
+  002, consumed directly (amended by the elements cleanup; see FR-009) —
+  no semantic-layer deltas.
   Both shipped themes (onmars, material3) get component token files; MarsUI
   glass treatment and M3 shape/width live in those theme values.
 - **Catalog/agent legibility** (Art. I): when-to-use — a compact, widely

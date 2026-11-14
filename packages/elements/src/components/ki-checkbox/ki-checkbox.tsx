@@ -309,7 +309,6 @@ export class KiCheckbox {
           value={this.value ?? 'on'}
           onInput={this.handleInput}
           onChange={this.handleChange}
-          onInvalid={this.handleInvalid}
         />
         <span part="control" aria-hidden="true">
           <svg class="mark mark-check" viewBox="0 0 18 18" aria-hidden="true">

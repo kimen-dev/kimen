@@ -104,11 +104,18 @@ button; se descartan, igual que en 021.)
 
 ## Traducción a tokens de componente
 
-La matriz variante × tono × estado de `--ki-icon-button-*` referencia
-exactamente los MISMOS tokens semánticos que `--ki-button-*` (002): mismos
+La matriz variante × tono × estado es la de `--ki-button-*` (002): mismos
 fondos, biseles top/bottom, overlays de hover, sombras
 `ki.effect.component.*`, blur de vidrio y anillo de focus. Los deltas propios
-del componente son solo dimensionales:
+del componente son solo dimensionales.
+
+> Enmienda (limpieza de elements): la primera implementación publicó una
+> familia gemela `--ki-icon-button-*` para cada fila de la tabla. Sus valores
+> eran idénticos a los de `--ki-button-*` en las cuatro composiciones tema ×
+> esquema (188 de 198 tokens), así que hoy el componente consume los tokens
+> de button directamente y solo conserva como propios `{size}-size` y
+> `{size}-icon-size`. La tabla documenta la correspondencia medida en Figma;
+> salvo las dos primeras filas, léase `--ki-button-*`.
 
 | Propiedad | Token `--ki-icon-button-*` | onmars | material3 |
 |---|---|---|---|

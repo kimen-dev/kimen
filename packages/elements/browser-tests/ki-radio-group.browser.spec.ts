@@ -825,6 +825,23 @@ describe('ki-radio-group boolean presence in a real browser', () => {
     expect(new FormData(form).get('contact')).toBe('sms');
   });
 
+  // The same race with a second attribute in play: `disabled` is still on the
+  // host when `required` is written, and only the attribute that was written
+  // may be read as present.
+  it('S19 clearing the disabled property survives the required attribute written in the same tick', async () => {
+    cleanup();
+    const el = await mount({ disabled: true });
+
+    el.disabled = false;
+    el.setAttribute('required', '');
+    await settleFrames();
+
+    expect(el.disabled).toBe(false);
+    expect(el.hasAttribute('disabled')).toBe(false);
+    expect(radioAt(el, 1).disabled).toBe(false);
+    expect(el.required).toBe(true);
+  });
+
   it('S3 clearing the disabled property makes a disabled option selectable again', async () => {
     cleanup();
     const el = await mount();

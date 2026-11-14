@@ -129,8 +129,8 @@ export class KiRadioGroup {
   }
 
   // Presence semantics: a present attribute means `true` whatever its value
-  // (`disabled="false"` still disables). Runs before the first render and on
-  // attribute mutations alone, so it never fights a property assignment.
+  // (`disabled="false"` still disables). Runs before the first render, while
+  // the authored attributes are the only state there is.
   private applyAttributePresence(): void {
     this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
     this.required = booleanFromAttributePresence(this.required, this.host.hasAttribute('required'));
@@ -143,11 +143,16 @@ export class KiRadioGroup {
   connectedCallback(): void {
     // Presence semantics for attributes written after hydration: Stencil parses
     // `disabled="false"`/`required="false"` to `false` and would remove the
-    // attribute on reflect.
+    // attribute on reflect. Only the attribute that was written is set: the
+    // other one may still be on the host after its property was cleared.
     this.presenceObserver?.disconnect();
-    this.presenceObserver = observeAttributePresence(this.host, ['disabled', 'required'], () => {
-      this.applyAttributePresence();
-    });
+    this.presenceObserver = observeAttributePresence(
+      this.host,
+      ['disabled', 'required'],
+      (attribute) => {
+        this[attribute] = true;
+      },
+    );
   }
 
   componentWillLoad(): void {

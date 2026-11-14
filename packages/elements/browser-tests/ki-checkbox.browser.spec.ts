@@ -611,4 +611,25 @@ describe('ki-checkbox boolean presence in a real browser', () => {
     // Presence is normalized: the host attribute stays, with an empty value.
     expect(el.getAttribute('disabled')).toBe('');
   });
+
+  // Stencil reflects a prop on its next render, so right after `checked =
+  // false` the `checked` attribute is still on the host. Presence must be
+  // re-read only for the attribute that was actually written: re-reading
+  // every observed one turned an unrelated write into "checked is present".
+  it('unchecking by property survives another attribute written in the same tick', async () => {
+    cleanup();
+    const el = await mount('Email notifications', { checked: true, indeterminate: true });
+    expect(el.checked).toBe(true);
+
+    el.checked = false;
+    el.indeterminate = false;
+    el.setAttribute('required', '');
+    await waitForStyles();
+
+    expect(el.checked).toBe(false);
+    expect(el.indeterminate).toBe(false);
+    expect(inputOf(el).checked).toBe(false);
+    expect(el.hasAttribute('checked')).toBe(false);
+    expect(el.required).toBe(true);
+  });
 });

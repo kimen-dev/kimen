@@ -253,11 +253,10 @@ body > .page > .header {
 }
 
 starlight-menu-button button {
-  border: var(--ki-icon-button-border-width) solid
-    var(--ki-icon-button-secondary-neutral-rest-border);
-  border-radius: var(--ki-icon-button-sm-radius);
-  background-color: var(--ki-icon-button-secondary-neutral-rest-bg);
-  color: var(--ki-icon-button-secondary-neutral-rest-fg);
+  border: var(--ki-button-border-width) solid var(--ki-button-secondary-neutral-rest-border);
+  border-radius: var(--ki-button-sm-radius);
+  background-color: var(--ki-button-secondary-neutral-rest-bg);
+  color: var(--ki-button-secondary-neutral-rest-fg);
 }
 
 .kimen-sidebar-filter {

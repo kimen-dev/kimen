@@ -113,6 +113,12 @@ export class KiVideo {
       return;
     }
     this.playing = true;
+    // The facade button leaves the Tab order with this activation, ahead of
+    // the render the line above schedules: until that render it would still
+    // be this element's focus stop, and whoever asks for it on the next
+    // keystroke (a ki-dialog wrapping Tab) would send focus to a control
+    // that is about to hide — and lose it to the document.
+    this.frame?.querySelector('button')?.setAttribute('tabindex', '-1');
     // The native player controls MUST be available from now on (FR-002);
     // everything else on the media element passes through untouched
     // (sources, poster, tracks, events — FR-005).
@@ -137,10 +143,19 @@ export class KiVideo {
     // The facade button stays mounted and yields through a token-driven
     // fade (visibility flips after it, instantly under reduced motion —
     // FR-013): a removed node could never honor a theme's dismissal motion.
+    // It leaves the Tab order the moment it yields (handleActivate writes
+    // that ahead of this render), not when the fade ends: until then it
+    // could still take focus and lose it as it hid.
     return (
       <div part="frame" class={{ playing: this.playing }} ref={this.setFrameRef}>
         <slot onSlotchange={this.neutralizeSlottedMedia}></slot>
-        <button part="play" type="button" aria-label={this.label} onClick={this.handleActivate}>
+        <button
+          part="play"
+          type="button"
+          aria-label={this.label}
+          tabIndex={this.playing ? -1 : 0}
+          onClick={this.handleActivate}
+        >
           <span class="control" aria-hidden="true">
             {/* The MarsUI Placeholder_xl play vector (12089:6573): inset
                 20.83% / 12.5% / 16.67% / 12.5% of the icon slot, so the ink

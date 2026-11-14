@@ -466,7 +466,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/001-tokens-theming-followups.json',
+      '../../changes/api/elements-cleanup.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -480,7 +480,9 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // (spec 021-ki-status): 10 --ki-status-* component token leaves — the
   // additive ki-icon-button element (spec 022-ki-icon-button): 195
   // --ki-icon-button-* component token leaves (the button variant × tone ×
-  // state matrix applied to the icon-only control) — and the additive
+  // state matrix applied to the icon-only control; cut back to the ten of
+  // its own size and icon ramps by the elements cleanup, see the token
+  // count below) — and the additive
   // ki-avatar + ki-avatar-group companion pair (spec 019-ki-avatar): 25
   // --ki-avatar-* and 26 --ki-avatar-group-* component token leaves (the
   // six-step size/font/glyph ramps plus group overlap/ring/counter).
@@ -532,11 +534,17 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // stylesheet ever consumed. None is in the 0.0.0 baseline, so the removals
   // list below stays empty: against the baseline they were never published.
   // 1368 - 7 = 1361.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1361);
+  // The elements cleanup (changes/api/elements-cleanup) takes 188 back out:
+  // every --ki-icon-button-* leaf except the ten of its own size and icon
+  // ramps repeated a --ki-button-* value in all four compositions, and
+  // ki-icon-button now consumes the button tokens directly. None of the 188
+  // was in the 0.0.0 baseline, so they leave the candidate without being
+  // removals. 1361 - 188 = 1173.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1173);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1361,
+    1173,
   );
   const published = candidate.surface.packages['@kimen/tokens'].tokens;
   for (const name of [

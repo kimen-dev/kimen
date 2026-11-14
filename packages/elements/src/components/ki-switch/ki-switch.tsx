@@ -177,22 +177,12 @@ export class KiSwitch {
   // sees the previous state (S1, codex review). Update on input; keep the
   // composed `change` dispatch below.
   private readonly handleInput = (event: Event): void => {
-    const input = event.currentTarget as HTMLInputElement;
-    if (this.effectiveDisabled) {
-      input.checked = this.checked;
-      return;
-    }
-    this.checked = input.checked;
+    this.checked = (event.currentTarget as HTMLInputElement).checked;
     this.syncFormValue();
   };
 
   private readonly handleChange = (event: Event): void => {
-    const input = event.currentTarget as HTMLInputElement;
-    if (this.effectiveDisabled) {
-      input.checked = this.checked;
-      return;
-    }
-    this.checked = input.checked;
+    this.checked = (event.currentTarget as HTMLInputElement).checked;
     this.host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   };
 

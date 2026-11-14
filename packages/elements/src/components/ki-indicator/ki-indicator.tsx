@@ -1,6 +1,15 @@
 import { Component, Host, h, Prop } from '@stencil/core';
 
 /**
+ * The most positions an indicator renders: the bound the catalog declares
+ * through `@maximum` on `count` and `current`. Markup and scripts reach the
+ * element without the catalog, and one dot renders per position, so the
+ * component holds the same line itself (a browser test reads the bound from
+ * the generated manifest, so the two cannot drift).
+ */
+const MAX_POSITIONS = 20;
+
+/**
  * A non-interactive page-position indicator: one dot per position of a
  * bounded sequence, exactly one highlighted as current.
  *
@@ -34,11 +43,11 @@ export class KiIndicator {
    * position, in position order. A missing, non-numeric or negative value
    * renders zero dots — an authoring mistake by catalog guidance, never an
    * error state or a rendering failure (FR-002; empty ki-list precedent).
-   * The catalog accepts at most 20 positions: the indicator serves a short
-   * sequence of peer views, 20 dots are the longest row that fits a 320 CSS
-   * px viewport (the WCAG reflow width) in both shipped themes, and one dot
-   * renders per position, so the bound also caps the work a single node can
-   * demand.
+   * At most 20 positions render, and the catalog accepts no more: the
+   * indicator serves a short sequence of peer views, 20 dots are the longest
+   * row that fits a 320 CSS px viewport (the WCAG reflow width) in both
+   * shipped themes, and one dot renders per position, so the bound also caps
+   * the work a single node can demand. A larger value renders 20.
    * @default undefined
    * @minimum 0
    * @maximum 20
@@ -69,10 +78,10 @@ export class KiIndicator {
    */
   @Prop() label!: string;
 
-  /** FR-002: non-negative integer, or zero dots — never a failure. */
+  /** FR-002: non-negative integer up to the bound, or zero dots — never a failure. */
   private normalizedCount(): number {
     const count = Math.floor(Number(this.count));
-    return Number.isFinite(count) && count > 0 ? count : 0;
+    return Number.isFinite(count) && count > 0 ? Math.min(count, MAX_POSITIONS) : 0;
   }
 
   /** FR-003: clamp into [1, count]; non-numeric falls back to 1. */

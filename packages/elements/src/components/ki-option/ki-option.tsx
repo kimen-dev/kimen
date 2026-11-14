@@ -3,11 +3,6 @@ import {
   booleanFromAttributePresence,
   observeAttributePresence,
 } from '../../utils/boolean-presence';
-import {
-  normalizeBooleanPresence,
-  optionLabelText,
-  optionValue,
-} from '../ki-select/ki-select.form';
 
 /**
  * A declarative data option rendered by its owning `ki-select`.
@@ -32,7 +27,7 @@ export class KiOption {
    * falls back to the trimmed option text, matching native `<option>` parity.
    * When NOT to use: do not use this as selection state; set `ki-select.value`.
    */
-  @Prop({ reflect: true, mutable: true }) value?: string;
+  @Prop({ reflect: true }) value?: string;
 
   /**
    * Makes this option unavailable. Disabled options cannot be selected, are
@@ -67,14 +62,7 @@ export class KiOption {
   // Deliberately NO componentWillLoad materialization of `value`: writing the
   // label fallback into the reflected `value` prop would turn an implicit value
   // into an explicit attribute that goes stale if the label text later changes.
-  // The effective value is always derived on read (codex review).
-  get optionValue(): string {
-    return optionValue(this.value, optionLabelText(this.host));
-  }
-
-  get optionDisabled(): boolean {
-    return normalizeBooleanPresence(this.host.getAttribute('disabled') ?? this.disabled);
-  }
+  // The owning ki-select derives the effective value when it reads the option.
 
   render() {
     return <slot />;

@@ -34,6 +34,18 @@ export function resolveFocusableTargets(host: HTMLElement): HTMLElement[] {
   return targets;
 }
 
+/**
+ * A native media player: one focus stop for the page, yet it holds further
+ * Tab stops of its own (its controls) that the page cannot see —
+ * `document.activeElement` stays the media element across all of them.
+ */
+export function isNativePlayer(element: Element): boolean {
+  return (
+    (element.localName === 'video' || element.localName === 'audio') &&
+    element.hasAttribute('controls')
+  );
+}
+
 function hasAutofocus(element: HTMLElement): boolean {
   const autofocus = (element as { autofocus?: unknown }).autofocus;
   return element.hasAttribute('autofocus') || autofocus === true;
@@ -63,5 +75,5 @@ function isNativeFocusable(element: HTMLElement): boolean {
   if (name === 'a' || name === 'area') {
     return element.hasAttribute('href');
   }
-  return element.hasAttribute('tabindex');
+  return isNativePlayer(element) || element.hasAttribute('tabindex');
 }

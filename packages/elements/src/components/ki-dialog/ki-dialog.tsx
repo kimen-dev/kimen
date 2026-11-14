@@ -2,7 +2,11 @@ import { Component, Element, Event, h, Method, Prop, State, Watch } from '@stenc
 import { booleanFromAttributePresence } from '../../utils/boolean-presence';
 import { focusThroughShadow } from '../../utils/shadow-focus';
 import { isOutsideRect } from './ki-dialog.backdrop';
-import { resolveEntryFocusTarget, resolveFocusableTargets } from './ki-dialog.focus';
+import {
+  isNativePlayer,
+  resolveEntryFocusTarget,
+  resolveFocusableTargets,
+} from './ki-dialog.focus';
 
 /** Close reason reported by `ki-close`. */
 export type KiDialogCloseReason = 'method' | 'escape' | 'backdrop';
@@ -282,6 +286,13 @@ export class KiDialog {
     const first = targets[0];
     const last = targets[targets.length - 1];
     if (!first || !last) {
+      return;
+    }
+
+    // Focus on a native player may be on any of its own controls: wrapping
+    // from it would skip them, so leaving it is the browser's modal trap's
+    // call. The player is still a destination of the wraps below.
+    if (active && isNativePlayer(active)) {
       return;
     }
 

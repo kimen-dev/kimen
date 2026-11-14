@@ -76,9 +76,7 @@
   min-block-size: var(--ki-tab-min-block-size);
 
   /* MarsUI Tab_nav_item (10048:1266): padding-top 0, padding-bottom 8
-     (Space/md) at every size, so the 2px underline clears the label block.
-     Falls back to the semantic space step until ki.tab.padding-block-end
-     lands in the token package. */
+     (Space/md) at every size, so the 2px underline clears the label block. */
   padding-block: 0 var(--ki-tab-padding-block-end);
   padding-inline: var(--ki-tab-padding-inline);
   gap: var(--ki-tab-gap);

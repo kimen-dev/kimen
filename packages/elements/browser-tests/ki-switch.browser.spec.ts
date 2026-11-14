@@ -601,4 +601,23 @@ describe('ki-switch boolean presence in a real browser', () => {
     // Presence is normalized: the host attribute stays, with an empty value.
     expect(el.getAttribute('disabled')).toBe('');
   });
+
+  // Stencil reflects a prop on its next render, so right after `checked =
+  // false` the `checked` attribute is still on the host. Presence must be
+  // re-read only for the attribute that was actually written: re-reading
+  // every observed one turned an unrelated write into "checked is present".
+  it('turning the switch off by property survives another attribute written in the same tick', async () => {
+    const el = await mount('checked');
+    expect(el.checked).toBe(true);
+
+    el.checked = false;
+    el.setAttribute('disabled', '');
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    expect(el.checked).toBe(false);
+    expect(internalInput(el).checked).toBe(false);
+    expect(el.hasAttribute('checked')).toBe(false);
+    expect(el.disabled).toBe(true);
+  });
 });

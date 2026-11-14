@@ -368,7 +368,7 @@ export namespace Components {
      */
     interface KiIndicator {
         /**
-          * Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent). The catalog accepts at most 20 positions: the indicator serves a short sequence of peer views, 20 dots are the longest row that fits a 320 CSS px viewport (the WCAG reflow width) in both shipped themes, and one dot renders per position, so the bound also caps the work a single node can demand.
+          * Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent). At most 20 positions render, and the catalog accepts no more: the indicator serves a short sequence of peer views, 20 dots are the longest row that fits a 320 CSS px viewport (the WCAG reflow width) in both shipped themes, and one dot renders per position, so the bound also caps the work a single node can demand. A larger value renders 20.
           * @default undefined
           * @minimum 0
           * @maximum 20
@@ -1869,7 +1869,7 @@ declare namespace LocalJSX {
      */
     interface KiIndicator {
         /**
-          * Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent). The catalog accepts at most 20 positions: the indicator serves a short sequence of peer views, 20 dots are the longest row that fits a 320 CSS px viewport (the WCAG reflow width) in both shipped themes, and one dot renders per position, so the bound also caps the work a single node can demand.
+          * Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent). At most 20 positions render, and the catalog accepts no more: the indicator serves a short sequence of peer views, 20 dots are the longest row that fits a 320 CSS px viewport (the WCAG reflow width) in both shipped themes, and one dot renders per position, so the bound also caps the work a single node can demand. A larger value renders 20.
           * @default undefined
           * @minimum 0
           * @maximum 20

@@ -4,9 +4,7 @@
  * MarsUI region spacing (Dashboard_info 16189:4286 / Chart 16187:3670): the
  * SURFACE carries one block padding (space/3xl 16px) and the regions carry
  * only their inline padding; rows are separated by the card flex gap, never
- * by stacked region paddings. --ki-card-padding-block is the forward token
- * hook (pending in tokens); until it lands the space/3xl semantic fallback
- * keeps the measured 16px. */
+ * by stacked region paddings. */
 :host {
   --_ki-card-bg: var(--ki-card-bg);
   --_ki-card-fg: var(--ki-card-fg);
@@ -54,8 +52,7 @@
 }
 
 /* MarsUI media inset (Chart master): the media region insets inline only
- * (space/md once the token value lands); block rhythm comes from the card
- * gap and surface padding. */
+ * (space/md); block rhythm comes from the card gap and surface padding. */
 [part="media"] {
   padding-inline: var(--_ki-card-media-padding);
 }
