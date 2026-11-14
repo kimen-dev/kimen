@@ -243,6 +243,38 @@
       },
       "success-base-em-alpha": {
         "$value": "{ki.foundation.migrated.modes-material3-dark.surface.success-base-em-alpha}"
+      },
+      "info-high-em": {
+        "$value": "{ki.color.info.300}",
+        "$description": "Dark info fill and mark (info step 300). M3 defines no info role: the theme extends the shared ramp with the steps its dark success family uses."
+      },
+      "info-med-em": {
+        "$value": "{ki.color.info.300}",
+        "$description": "Dark info fill (info step 300), as the dark success family."
+      },
+      "info-low-em": {
+        "$value": "{ki.color.info.800}",
+        "$description": "Dark info container, low emphasis (info step 800), as the dark success family."
+      },
+      "info-base-em": {
+        "$value": "{ki.color.info.950}",
+        "$description": "Dark info container (info step 950): the dark counterpart of success-base-em, so an info chip is a dark surface on a dark page."
+      },
+      "warning-high-em": {
+        "$value": "{ki.color.warning.300}",
+        "$description": "Dark warning fill and mark (warning step 300). M3 defines no warning role: the theme extends the shared ramp with the steps its dark success family uses."
+      },
+      "warning-med-em": {
+        "$value": "{ki.color.warning.300}",
+        "$description": "Dark warning fill (warning step 300), as the dark success family."
+      },
+      "warning-low-em": {
+        "$value": "{ki.color.warning.800}",
+        "$description": "Dark warning container, low emphasis (warning step 800), as the dark success family."
+      },
+      "warning-base-em": {
+        "$value": "{ki.color.warning.950}",
+        "$description": "Dark warning container (warning step 950): the dark counterpart of success-base-em, so a warning chip is a dark surface on a dark page."
       }
     },
     "text": {
@@ -353,6 +385,38 @@
       },
       "primary-on-success": {
         "$value": "{ki.color.success.950}"
+      },
+      "info-high-em": {
+        "$value": "{ki.color.info.300}",
+        "$description": "Dark info ink (info step 300), as success-high-em: readable on the dark page and on the dark info container."
+      },
+      "info-med-em": {
+        "$value": "{ki.color.info.400}",
+        "$description": "Dark info ink, mid emphasis (info step 400), as the dark success family."
+      },
+      "info-low-em": {
+        "$value": "{ki.color.info.500}",
+        "$description": "Dark info ink, low emphasis (info step 500), as the dark success family."
+      },
+      "info-base-em": {
+        "$value": "{ki.color.info.700}",
+        "$description": "Faintest dark info ink (info step 700), as the dark success family."
+      },
+      "warning-high-em": {
+        "$value": "{ki.color.warning.300}",
+        "$description": "Dark warning ink (warning step 300), as success-high-em: readable on the dark page and on the dark warning container. Also the ki-status warning mark."
+      },
+      "warning-med-em": {
+        "$value": "{ki.color.warning.400}",
+        "$description": "Dark warning ink, mid emphasis (warning step 400), as the dark success family."
+      },
+      "warning-low-em": {
+        "$value": "{ki.color.warning.500}",
+        "$description": "Dark warning ink, low emphasis (warning step 500), as the dark success family."
+      },
+      "warning-base-em": {
+        "$value": "{ki.color.warning.700}",
+        "$description": "Faintest dark warning ink (warning step 700), as the dark success family."
       }
     },
     "inverse-white": {
