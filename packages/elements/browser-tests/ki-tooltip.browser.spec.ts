@@ -393,6 +393,49 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(tooltipRect.left).toBeGreaterThanOrEqual(triggerRect.right);
   });
 
+  // Block-axis placements center the bubble on the trigger. The centering
+  // paired a logical inset with a physical translate, so under RTL the bubble
+  // sat a whole bubble-width away from its trigger.
+  it('S11 top placement stays centered on its trigger under RTL', async () => {
+    const wrapper = document.createElement('div');
+    wrapper.dir = 'rtl';
+    wrapper.style.padding = '160px';
+    document.body.append(wrapper);
+    const { host, trigger } = await mount(
+      { label: 'Helper text that is relatively long' },
+      wrapper,
+    );
+
+    trigger.focus();
+    await nextFrame();
+    await settleTooltip(host);
+
+    const hostRect = host.getBoundingClientRect();
+    const tooltipRect = requireTooltip(host).getBoundingClientRect();
+    const offCenter =
+      tooltipRect.left + tooltipRect.width / 2 - (hostRect.left + hostRect.width / 2);
+    expect(Math.abs(offCenter)).toBeLessThanOrEqual(1);
+    expect(tooltipRect.bottom).toBeLessThanOrEqual(hostRect.top);
+  });
+
+  it('S11 S14 a tooltip at the inline-start edge is pulled back inside the viewport under RTL', async () => {
+    document.documentElement.setAttribute('dir', 'rtl');
+    const { host, trigger } = await mount({ label: 'Helper text that is relatively long' });
+
+    trigger.focus();
+    await nextFrame();
+    await settleTooltip(host);
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const tooltipRect = requireTooltip(host).getBoundingClientRect();
+    // The trigger hugs the right edge, so a centered bubble would not fit.
+    expect(triggerRect.right + tooltipRect.width / 2).toBeGreaterThan(window.innerWidth);
+    expect(tooltipRect.left).toBeGreaterThanOrEqual(0);
+    // Pulled in by exactly its overflow: it ends at the viewport edge
+    // (sub-pixel layout rounding aside).
+    expect(Math.abs(window.innerWidth - tooltipRect.right)).toBeLessThan(0.5);
+  });
+
   it('S5 Escape hides the focused tooltip without moving focus or activating the trigger', async () => {
     const { host, trigger } = await mount();
     let activations = 0;

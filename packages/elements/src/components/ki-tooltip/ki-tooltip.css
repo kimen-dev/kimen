@@ -23,9 +23,18 @@
     var(--_ki-tooltip-shadow), var(--ki-effect-component-secondary-default-shadow);
   --_ki-tooltip-cross-shift: 0px;
 
+  /* Inline direction as a sign. `translate` and the measured cross shift are
+   * physical (positive = right) while the inset they pair with is logical, so
+   * both are multiplied by it to stay centered in either direction. */
+  --_ki-tooltip-inline-sign: 1;
+
   display: inline-block;
   position: relative;
   font-family: var(--ki-typography-family-body);
+}
+
+:host(:dir(rtl)) {
+  --_ki-tooltip-inline-sign: -1;
 }
 
 .tooltip {
@@ -74,8 +83,8 @@
 
 .tooltip.placement-top,
 .tooltip.placement-bottom {
-  inset-inline-start: calc(50% + var(--_ki-tooltip-cross-shift));
-  translate: -50% 0;
+  inset-inline-start: calc(50% + var(--_ki-tooltip-cross-shift) * var(--_ki-tooltip-inline-sign));
+  translate: calc(-50% * var(--_ki-tooltip-inline-sign)) 0;
 }
 
 .tooltip.placement-top {
@@ -135,10 +144,10 @@
    * value, so start/end keep the plain fade. Position measurement is
    * unaffected: the position module consumes only the rect's width/height. */
   .tooltip.placement-top:not(.is-visible) {
-    translate: -50% var(--ki-motion-distance-sm);
+    translate: calc(-50% * var(--_ki-tooltip-inline-sign)) var(--ki-motion-distance-sm);
   }
 
   .tooltip.placement-bottom:not(.is-visible) {
-    translate: -50% calc(-1 * var(--ki-motion-distance-sm));
+    translate: calc(-50% * var(--_ki-tooltip-inline-sign)) calc(-1 * var(--ki-motion-distance-sm));
   }
 }
