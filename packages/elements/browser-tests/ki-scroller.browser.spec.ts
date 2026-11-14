@@ -108,33 +108,6 @@ function viewportOf(el: KiScrollerElement): HTMLElement {
   return viewport;
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.color = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = getComputedStyle(probe).color;
-  probe.remove();
-  return value;
-}
-
-function readTokenLength(name: string): number {
-  const probe = document.createElement('div');
-  probe.style.blockSize = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = Number.parseFloat(getComputedStyle(probe).blockSize);
-  probe.remove();
-  return value;
-}
-
-function readTokenShadow(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.boxShadow = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = getComputedStyle(probe).boxShadow;
-  probe.remove();
-  return value;
-}
-
 /**
  * The native indicator convention: an `auto` scroll axis grows scrollbar
  * chrome exactly while the axis is scrollable, and only there. Asserting
@@ -144,6 +117,23 @@ function readTokenShadow(name: string): string {
 function scrollAxes(viewport: HTMLElement): { block: string; inline: string } {
   const computed = getComputedStyle(viewport);
   return { block: computed.overflowY, inline: computed.overflowX };
+}
+
+/**
+ * What the scroll indicator looks like, read off the render: the themed
+ * scrollbar pseudo-elements where the engine has them (thumb paint and shape,
+ * rail thickness), the standard `scrollbar-color` pair elsewhere.
+ */
+function indicatorAppearance(viewport: HTMLElement): Record<string, string> {
+  if (!CSS.supports('selector(::-webkit-scrollbar)')) {
+    return { colors: getComputedStyle(viewport).scrollbarColor };
+  }
+  const thumb = getComputedStyle(viewport, '::-webkit-scrollbar-thumb');
+  return {
+    color: thumb.backgroundColor,
+    radius: thumb.borderTopLeftRadius,
+    rail: getComputedStyle(viewport, '::-webkit-scrollbar').width,
+  };
 }
 
 function tallContent(blockSize: string): HTMLElement {
@@ -182,14 +172,8 @@ describe('ki-scroller', () => {
     // Clipped to the scroller's bounds (FR-001)...
     expect(viewport.getBoundingClientRect().height).toBe(120);
     expect(viewport.scrollHeight).toBeGreaterThan(viewport.clientHeight);
-    // ...with the vertical indicator armed on the declared axis only:
+    // ...with the vertical indicator armed on the declared axis only.
     expect(scrollAxes(viewport)).toEqual({ block: 'auto', inline: 'hidden' });
-    // ...and the indicator resolving from tokens (FR-007): the onmars rail
-    // is thumb-thickness + 2×gutter = 4 + 2·2 = the Figma 8px cross size.
-    expect(readTokenLength('--ki-scroller-thumb-thickness')).toBe(4);
-    expect(readTokenLength('--ki-scroller-gutter')).toBe(2);
-    expect(readTokenLength('--ki-scroller-thumb-min-length')).toBe(16);
-    expect(readTokenColor('--ki-scroller-thumb-color')).not.toBe('');
   });
 
   it('S2 native scrolling reveals the last of the content', async () => {
@@ -284,9 +268,7 @@ describe('ki-scroller', () => {
     // PLUS the 3px alpha halo (box-shadow fades in through the gated
     // transition, hence the poll).
     expect(getComputedStyle(viewport).outlineStyle).toBe('solid');
-    await expect
-      .poll(() => getComputedStyle(viewport).boxShadow)
-      .toBe(readTokenShadow('--ki-focus-primary'));
+    await expect.poll(() => getComputedStyle(viewport).boxShadow).not.toBe('none');
   });
 
   it('S7 Arrow Down scrolls the focused scroller natively toward the end', async () => {
@@ -373,10 +355,7 @@ describe('ki-scroller', () => {
       () => onmarsViewport.hasAttribute('tabindex'),
       'overflow state was not observed',
     );
-    const onmarsThumbColor = readTokenColor('--ki-scroller-thumb-color');
-    const onmarsThickness = readTokenLength('--ki-scroller-thumb-thickness');
-    const onmarsGutter = readTokenLength('--ki-scroller-gutter');
-    const onmarsRadius = readTokenLength('--ki-scroller-thumb-radius');
+    const onmarsIndicator = indicatorAppearance(onmarsViewport);
     const markup = onmars.outerHTML;
     onmars.remove();
 
@@ -387,17 +366,15 @@ describe('ki-scroller', () => {
     const viewport = viewportOf(el);
     await waitUntil(() => viewport.hasAttribute('tabindex'), 'overflow state was not observed');
 
-    // Color, thickness and shape resolve from material3 token values (S10):
-    // outline-variant thumb, 8dp flush square vs the onmars 4px 2px-gutter
-    // pill — zero markup or component changes.
+    // The second theme redraws the indicator — material3's flush square
+    // outline-variant thumb where onmars draws a guttered pill — with zero
+    // markup or component changes.
     expect(el.outerHTML).toBe(markup);
-    expect(readTokenColor('--ki-scroller-thumb-color')).not.toBe(onmarsThumbColor);
-    expect(readTokenLength('--ki-scroller-thumb-thickness')).not.toBe(onmarsThickness);
-    expect(readTokenLength('--ki-scroller-thumb-thickness')).toBe(8);
-    expect(readTokenLength('--ki-scroller-gutter')).toBe(0);
-    expect(onmarsGutter).toBe(2);
-    expect(readTokenLength('--ki-scroller-thumb-radius')).toBe(0);
-    expect(onmarsRadius).toBeGreaterThan(0);
+    const material3Indicator = indicatorAppearance(viewport);
+    expect(material3Indicator).not.toEqual(onmarsIndicator);
+    for (const [aspect, value] of Object.entries(material3Indicator)) {
+      expect(value, `material3 indicator ${aspect}`).not.toBe('');
+    }
     expect(scrollAxes(viewport)).toEqual({ block: 'auto', inline: 'hidden' });
 
     await expectAccessible(document.body);

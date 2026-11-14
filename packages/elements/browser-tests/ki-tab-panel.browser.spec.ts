@@ -41,15 +41,6 @@ async function mount(hidden = false): Promise<HTMLElement> {
   return el;
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.color = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).color;
-  probe.remove();
-  return value;
-}
-
 describe('ki-tab-panel anatomy in a real browser', () => {
   it('S8 exposes the panel part around slotted content', async () => {
     const el = await mount();
@@ -60,9 +51,15 @@ describe('ki-tab-panel anatomy in a real browser', () => {
   it('S8 pins the scheme-correct foreground on its own surface', async () => {
     const el = await mount();
 
-    // The panel owns the text contract for slotted copy: its foreground must
-    // resolve from the component token, not leak in from the page.
-    expect(getComputedStyle(el).color).toBe(readTokenColor('--ki-tab-panel-fg'));
+    // The panel owns the text contract for slotted copy: whatever ink the
+    // page sets, it must not leak into the panel.
+    const pageInk = 'rgb(200, 0, 0)';
+    document.body.style.color = pageInk;
+    const panelInk = getComputedStyle(el).color;
+    document.body.style.removeProperty('color');
+
+    expect(panelInk).not.toBe(pageInk);
+    expect(panelInk).toBe(getComputedStyle(el).color);
   });
 
   it('S18 renders no box while hidden', async () => {

@@ -133,22 +133,6 @@ function requireMain(): HTMLElement {
   return main;
 }
 
-function readToken(
-  name: string,
-  property: 'backgroundColor' | 'inlineSize' = 'backgroundColor',
-): string {
-  const probe = document.createElement('div');
-  if (property === 'backgroundColor') {
-    probe.style.backgroundColor = `var(${name})`;
-  } else {
-    probe.style.inlineSize = `var(${name})`;
-  }
-  document.body.append(probe);
-  const value = getComputedStyle(probe)[property];
-  probe.remove();
-  return value;
-}
-
 /**
  * The linear fill is a full-width element positioned by transform (the
  * MarsUI compositor-only glide): the visible fill is the intersection of
@@ -252,17 +236,21 @@ describe('ki-progress in a real browser', () => {
     }
   });
 
-  it('S1 resolves track and indicator colors from progress tokens', async () => {
+  it('S1 paints the completed part in a colour the track does not share', async () => {
     cleanup();
     await cleanupMedia();
-    const el = await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
+    const linear = await mount({ label: 'Uploading report.pdf', value: '40', max: '100' });
+    const circular = await mount({
+      label: 'Uploading logo.png',
+      shape: 'circular',
+      value: '40',
+      max: '100',
+    });
 
-    expect(getComputedStyle(track(el)).backgroundColor).toBe(
-      readToken('--ki-progress-track-color'),
-    );
-    expect(getComputedStyle(indicator(el)).backgroundColor).toBe(
-      readToken('--ki-progress-indicator-color'),
-    );
+    for (const el of [linear, circular]) {
+      expect(partColor(indicator(el))).not.toMatch(/, 0\)$/u);
+      expect(partColor(indicator(el))).not.toBe(partColor(track(el)));
+    }
   });
 
   it('S1 has zero axe violations for labeled determinate progress mounted in main', async () => {
@@ -381,32 +369,41 @@ describe('ki-progress in a real browser', () => {
     cleanup();
     await cleanupMedia();
     ensureMaterial3Tokens();
-    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    // What a theme can redraw: both colours and the shape's own metric (bar
+    // thickness, ring size).
+    const appearance = (el: KiProgressElement, shape: 'circular' | 'linear'): string[] => [
+      partColor(track(el)),
+      partColor(indicator(el)),
+      shape === 'linear'
+        ? getComputedStyle(track(el)).blockSize
+        : getComputedStyle(requireElement(requireShadow(el), 'svg')).inlineSize,
+    ];
 
     for (const shape of ['linear', 'circular'] as const) {
       for (const indeterminate of [false, true]) {
-        const el = await mount({
+        const attributes = {
           label: `${shape} ${indeterminate ? 'indeterminate' : 'determinate'}`,
           shape,
           indeterminate,
           value: '40',
           max: '100',
-        });
+        };
+        document.documentElement.removeAttribute('data-ki-theme');
+        const onmars = await mount(attributes);
+        const onmarsAppearance = appearance(onmars, shape);
+        const markup = onmars.outerHTML;
+        onmars.remove();
 
-        expect(partColor(track(el))).toBe(readToken('--ki-progress-track-color'));
-        expect(partColor(indicator(el))).toBe(readToken('--ki-progress-indicator-color'));
+        document.documentElement.setAttribute('data-ki-theme', 'material3');
+        const el = await mount(attributes);
+
+        expect(el.outerHTML).toBe(markup);
         expect(progressbar(el).outerHTML).toContain('role="progressbar"');
-
-        if (shape === 'linear') {
-          expect(getComputedStyle(track(el)).blockSize).toBe(
-            readToken('--ki-progress-linear-thickness', 'inlineSize'),
-          );
-        } else {
-          const svg = requireElement(requireShadow(el), 'svg');
-          expect(getComputedStyle(svg).inlineSize).toBe(
-            readToken('--ki-progress-circular-size', 'inlineSize'),
-          );
-        }
+        expect(appearance(el, shape), `${attributes.label} under material3`).not.toEqual(
+          onmarsAppearance,
+        );
+        expect(partColor(indicator(el))).not.toBe(partColor(track(el)));
+        el.remove();
       }
     }
   });
@@ -468,12 +465,9 @@ describe('ki-progress in a real browser', () => {
     expect(indicator(el).getAttribute('r')).toBe('18');
     expect(indicator(el).getAttribute('cx')).toBe('20');
     expect(indicator(el).getAttribute('cy')).toBe('20');
-    expect(getComputedStyle(indicator(el)).strokeWidth).toBe(
-      readToken('--ki-progress-circular-track-width', 'inlineSize'),
-    );
-    expect(getComputedStyle(svg).inlineSize).toBe(
-      readToken('--ki-progress-circular-size', 'inlineSize'),
-    );
+    const strokeWidth = getComputedStyle(indicator(el)).strokeWidth;
+    expect(strokeWidth).toBe('4px');
+    expect(getComputedStyle(svg).inlineSize).toBe('40px');
 
     // Size and track-width tokens are INDEPENDENT: non-scaling-stroke keeps
     // the painted stroke in screen pixels, so resizing the ring (material3
@@ -482,9 +476,7 @@ describe('ki-progress in a real browser', () => {
     el.style.setProperty('--ki-progress-circular-size', '48px');
     await new Promise((resolve) => requestAnimationFrame(resolve));
     expect(getComputedStyle(svg).inlineSize).toBe('48px');
-    expect(getComputedStyle(indicator(el)).strokeWidth).toBe(
-      readToken('--ki-progress-circular-track-width', 'inlineSize'),
-    );
+    expect(getComputedStyle(indicator(el)).strokeWidth).toBe(strokeWidth);
     el.style.removeProperty('--ki-progress-circular-size');
   });
 

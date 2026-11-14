@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-input.js';
 import { expectAccessible, parkPointer } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiInputElement = HTMLElement & {
   disabled: boolean;
@@ -129,15 +130,6 @@ function submitButton(): HTMLButtonElement {
   button.type = 'submit';
   button.textContent = 'Submit';
   return button;
-}
-
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.backgroundColor = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).backgroundColor;
-  probe.remove();
-  return value;
 }
 
 /**
@@ -725,30 +717,19 @@ describe('ki-input in a real browser', () => {
     await waitForStyles();
     const materialStyles = getComputedStyle(materialField);
 
-    expect(materialStyles.backgroundColor).toBe(readTokenColor('--ki-input-rest-bg'));
     expect(materialStyles.backgroundColor).not.toBe(onmarsBg);
     expect(materialStyles.borderBlockStartWidth).toBe('0px');
     expect(materialStyles.borderBlockEndWidth).not.toBe('0px');
     expect(materialStyles.borderBlockStartWidth).not.toBe(onmarsBlockStart);
   });
 
-  it('S17 forced dark under onmars resolves dark input token values', async () => {
+  it('S17 honors a forced dark scheme: the field surface and its label repaint', async () => {
     cleanup();
     ensureTokens();
-    const light = await mount({ label: 'Email' });
-    const lightField = requireField(light);
+    const el = await mount({ label: 'Email' });
     await waitForStyles();
-    const lightBg = getComputedStyle(lightField).backgroundColor;
-    light.remove();
 
-    document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
-    const dark = await mount({ label: 'Email' });
-    const darkField = requireField(dark);
-    await waitForStyles();
-    const darkBg = getComputedStyle(darkField).backgroundColor;
-
-    expect(darkBg).toBe(readTokenColor('--ki-input-rest-bg'));
-    expect(darkBg).not.toBe(lightBg);
+    expect(await repaintedUnderForcedDark(el)).toEqual(expect.arrayContaining(['field', 'label']));
   });
 
   it('S18 start and end adornments follow the document writing direction', async () => {

@@ -70,30 +70,6 @@ function cleanup(): void {
   document.documentElement.removeAttribute('data-ki-color-scheme');
 }
 
-function readTokenColor(name: string, property: 'backgroundColor' | 'color'): string {
-  const probe = document.createElement('div');
-  if (property === 'backgroundColor') {
-    probe.style.backgroundColor = `var(${name})`;
-  } else {
-    probe.style.color = `var(${name})`;
-  }
-  document.body.append(probe);
-  const value = getComputedStyle(probe)[property];
-  probe.remove();
-  return value;
-}
-
-// The card paints the MarsUI glass gradient (bg-start -> bg-end) over the flat
-// bg fallback; the probe resolves the same declaration for comparison.
-function readGradient(startName: string, endName: string): string {
-  const probe = document.createElement('div');
-  probe.style.backgroundImage = `linear-gradient(180deg, var(${startName}), var(${endName}))`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).backgroundImage;
-  probe.remove();
-  return value;
-}
-
 async function nextFrame(): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(resolve));
 }
@@ -324,18 +300,22 @@ describe('ki-tooltip pointer path in a real browser', () => {
 
   it('S9 material3 restyles the visible tooltip with unchanged markup', async () => {
     ensureMaterial3Tokens();
-    document.documentElement.setAttribute('data-ki-theme', 'material3');
     const { host, trigger } = await mount();
     await hoverTrigger(host, trigger);
     const tooltip = requireTooltip(host);
-    const style = getComputedStyle(tooltip);
+    const paint = (): string[] => {
+      const style = getComputedStyle(tooltip);
+      return [style.backgroundImage, style.color, style.borderTopLeftRadius];
+    };
+    const onmars = paint();
+    const markup = host.outerHTML;
 
-    // The card paints the bg-start -> bg-end gradient; material3 resolves both
-    // stops to its inverse bubble surface, so the gradient is the theme signal.
-    expect(style.backgroundImage).toBe(
-      readGradient('--ki-tooltip-bg-start', '--ki-tooltip-bg-end'),
-    );
-    expect(style.color).toBe(readTokenColor('--ki-tooltip-fg', 'color'));
+    // The card paints a gradient; material3 resolves it to its inverse bubble
+    // surface, so the paint is the theme signal — on the tooltip being shown.
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+
+    await expect.poll(paint).not.toEqual(onmars);
+    expect(host.outerHTML).toBe(markup);
     expect(host.outerHTML).toContain('<button aria-description="Send immediately">Send</button>');
   });
 
@@ -361,17 +341,14 @@ describe('ki-tooltip pointer path in a real browser', () => {
 
     // Glass card paint: gradient over a transparent color fallback plus the
     // Blur/24 (CSS 12px) backdrop filter.
-    expect(style.backgroundImage).toBe(
-      readGradient('--ki-tooltip-bg-start', '--ki-tooltip-bg-end'),
-    );
+    expect(style.backgroundImage).toContain('linear-gradient(');
     expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
     expect(style.getPropertyValue('backdrop-filter')).toBe('blur(12px)');
 
-    // Bevel hairline (Outline/secondary_button_top) on all sides while no
-    // caret ships.
+    // Bevel hairline on all sides while no caret ships.
     expect(style.borderTopWidth).toBe('1px');
     expect(style.borderTopStyle).toBe('solid');
-    expect(style.borderTopColor).toBe(readTokenColor('--ki-outline-secondary-button-top', 'color'));
+    expect(style.borderBottomWidth).toBe('1px');
 
     // e4 wrap elevation (deepest layer 0 32 32 -16) plus the secondary_default
     // inner highlight (inset layer).

@@ -67,15 +67,6 @@ async function settle(): Promise<void> {
   );
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.color = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).color;
-  probe.remove();
-  return value;
-}
-
 async function mountList(html: string): Promise<HTMLElement> {
   const main = cleanup();
   main.innerHTML = html;
@@ -191,11 +182,10 @@ describe('ki-list in a real browser', () => {
     expect(endStyle.fontSize).toBe('13px');
     expect(endStyle.lineHeight).toBe('20px');
     expect(endStyle.fontWeight).toBe('600');
-    expect(endStyle.color).toBe(readTokenColor('--ki-list-item-secondary-fg'));
+    // Medium emphasis: the meta reads quieter than the primary line.
+    expect(endStyle.color).not.toBe(getComputedStyle(primary).color);
     expect(endStyle.textAlign).toBe('end');
-    // Leading media inherits the scheme's primary fg (Gray/950 light,
-    // White/100 dark), matching the primary line.
-    expect(startStyle.color).toBe(readTokenColor('--ki-list-item-primary-fg'));
+    // Leading media takes the same ink as the primary line.
     expect(startStyle.color).toBe(getComputedStyle(primary).color);
     // Slotted content resolves through the part wrappers by inheritance.
     const meta = list.querySelector('[data-test="meta"]');

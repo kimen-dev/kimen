@@ -117,15 +117,6 @@ function counterOf(el: KiAvatarGroupElement): HTMLElement | null {
   return el.shadowRoot?.querySelector<HTMLElement>('[part="counter"]') ?? null;
 }
 
-function readTokenLength(name: string): number {
-  const probe = document.createElement('div');
-  probe.style.blockSize = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = Number.parseFloat(getComputedStyle(probe).blockSize);
-  probe.remove();
-  return value;
-}
-
 describe('ki-avatar-group', () => {
   it('S5 stacks the capped members with the token overlap and trails a "+5" counter', async () => {
     cleanup();
@@ -139,13 +130,16 @@ describe('ki-avatar-group', () => {
     expect(counter?.textContent).toBe('+5');
 
     // One overlapping stack: each member tucks under its predecessor by the
-    // md overlap token, the leading member paints on top (reversed z-order).
-    const [first, second] = visible;
-    if (!first || !second) {
-      throw new Error('the capped stack did not render two members');
+    // same amount, less than a whole member, and the leading member paints on
+    // top (reversed z-order).
+    const [first, second, third] = visible;
+    if (!first || !second || !third) {
+      throw new Error('the capped stack did not render three members');
     }
-    const overlap = readTokenLength('--ki-avatar-group-md-overlap');
-    expect(first.getBoundingClientRect().right - second.getBoundingClientRect().left).toBeCloseTo(
+    const overlap = first.getBoundingClientRect().right - second.getBoundingClientRect().left;
+    expect(overlap).toBeGreaterThan(0);
+    expect(overlap).toBeLessThan(first.getBoundingClientRect().width);
+    expect(second.getBoundingClientRect().right - third.getBoundingClientRect().left).toBeCloseTo(
       overlap,
       1,
     );
@@ -166,30 +160,37 @@ describe('ki-avatar-group', () => {
     if (!counter) {
       throw new Error('the capped stack did not render its counter');
     }
-    expect(counter.getBoundingClientRect().height).toBe(readTokenLength('--ki-avatar-md-size'));
-    // The Figma counter is a member-size CIRCLE minimum (10087:2600): "+5"
-    // renders the full 40px circle at md — never a narrower content-hugging
-    // pill — and only longer counts stretch beyond it.
-    expect(getComputedStyle(counter).minInlineSize).toBe(
-      `${String(readTokenLength('--ki-avatar-md-size'))}px`,
-    );
-    expect(counter.getBoundingClientRect().width).toBeGreaterThanOrEqual(
-      readTokenLength('--ki-avatar-md-size'),
-    );
+    // The counter is a member-size CIRCLE minimum (Figma 10087:2600): "+5"
+    // fills the same box as a member — never a narrower content-hugging pill
+    // — and only longer counts stretch beyond it.
+    const memberSize = first.getBoundingClientRect().height;
+    expect(counter.getBoundingClientRect().height).toBe(memberSize);
+    expect(getComputedStyle(counter).minInlineSize).toBe(`${String(memberSize)}px`);
+    expect(counter.getBoundingClientRect().width).toBeGreaterThanOrEqual(memberSize);
   });
 
   it('S6 renders every member at the group size, overriding member-declared sizes', async () => {
     cleanup();
+    const memberWidths = (group: KiAvatarGroupElement): number[] =>
+      visibleMembersOf(group).map((member) => {
+        const box = member.shadowRoot?.querySelector('[part="avatar"]');
+        if (!box) {
+          throw new Error('a member did not render its box');
+        }
+        return box.getBoundingClientRect().width;
+      });
+    const medium = await mountGroup(landmark(), 3);
+    const [mediumWidth] = memberWidths(medium);
+    medium.remove();
+
     const el = await mountGroup(landmark(), 3, { size: 'sm' }, ['lg', 'xl']);
 
-    const smSize = readTokenLength('--ki-avatar-sm-size');
-    for (const member of visibleMembersOf(el)) {
-      const box = member.shadowRoot?.querySelector('[part="avatar"]');
-      if (!box) {
-        throw new Error('a member did not render its box');
-      }
-      expect(box.getBoundingClientRect().width).toBe(smSize);
-    }
+    // One size for the whole stack — the group's, smaller than the default —
+    // whatever each member declared for itself.
+    const widths = memberWidths(el);
+    expect(widths).toHaveLength(3);
+    expect(new Set(widths).size).toBe(1);
+    expect(widths[0]).toBeLessThan(mediumWidth ?? 0);
   });
 
   it('S7 adds no keyboard stop between two buttons', async () => {
