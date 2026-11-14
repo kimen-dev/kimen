@@ -2050,10 +2050,6 @@
             {
               "name": "--ki-motion-easing-out",
               "description": "Decelerating interaction transition easing curve."
-            },
-            {
-              "name": "--ki-transparent-inverse",
-              "description": "semantic color for transparent inverse."
             }
           ]
         }
@@ -3182,132 +3178,560 @@
           ],
           "cssProperties": [
             {
-              "name": "--ki-icon-button-backdrop-blur",
-              "description": "dimension used by the icon button component for the glass variants (primary/secondary) backdrop blur, identical to the button glass. material3 resolves to blur none via the semantic override."
+              "name": "--ki-button-backdrop-blur",
+              "description": "backdrop blur used by the button component glass variants (primary/secondary). material3 resolves to blur none via the semantic override."
             },
             {
-              "name": "--ki-icon-button-border-width",
-              "description": "dimension used by the icon button component for border width (MarsUI bevel/outline stroke: 1px, INNER — the square box already contains it)."
+              "name": "--ki-button-border-width",
+              "description": "dimension used by the button component for border width (MarsUI bevel/outline stroke: 1px)."
             },
             {
-              "name": "--ki-icon-button-focus-ring-color",
-              "description": "color used by the icon button component for focus ring color (the opaque WCAG 1.4.11 indicator)."
+              "name": "--ki-button-focus-ring-color",
+              "description": "color used by the button component for focus ring color."
             },
             {
-              "name": "--ki-icon-button-focus-ring-offset",
-              "description": "dimension used by the icon button component for focus ring offset."
+              "name": "--ki-button-focus-ring-offset",
+              "description": "dimension used by the button component for focus ring offset."
             },
             {
-              "name": "--ki-icon-button-focus-ring-shadow",
-              "description": "shadow used by the icon button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring, V.1 double mechanism)."
+              "name": "--ki-button-focus-ring-shadow",
+              "description": "shadow used by the button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring)."
             },
             {
-              "name": "--ki-icon-button-focus-ring-width",
-              "description": "dimension used by the icon button component for focus ring width."
+              "name": "--ki-button-focus-ring-width",
+              "description": "dimension used by the button component for focus ring width."
             },
             {
-              "name": "--ki-icon-button-ghost-danger-hover-bg",
-              "description": "color used by the icon button component for ghost danger hover background (same semantic reference as the button matrix, 002)."
+              "name": "--ki-button-ghost-danger-hover-bg",
+              "description": "color used by the button component for ghost danger hover background."
             },
             {
-              "name": "--ki-icon-button-ghost-danger-hover-border",
-              "description": "color used by the icon button component for ghost danger hover border."
+              "name": "--ki-button-ghost-danger-hover-border",
+              "description": "color used by the button component for ghost danger hover border."
             },
             {
-              "name": "--ki-icon-button-ghost-danger-hover-fg",
-              "description": "color used by the icon button component for ghost danger hover foreground — the icon inherits it via currentColor."
+              "name": "--ki-button-ghost-danger-hover-fg",
+              "description": "color used by the button component for ghost danger hover foreground."
             },
             {
-              "name": "--ki-icon-button-ghost-danger-rest-bg",
-              "description": "color used by the icon button component for ghost danger rest background (same semantic reference as the button matrix, 002)."
+              "name": "--ki-button-ghost-danger-rest-bg",
+              "description": "color used by the button component for ghost danger rest background."
             },
             {
-              "name": "--ki-icon-button-ghost-danger-rest-border",
-              "description": "color used by the icon button component for ghost danger rest border."
+              "name": "--ki-button-ghost-danger-rest-border",
+              "description": "color used by the button component for ghost danger rest border."
             },
             {
-              "name": "--ki-icon-button-ghost-danger-rest-fg",
-              "description": "color used by the icon button component for ghost danger rest foreground — the icon inherits it via currentColor."
+              "name": "--ki-button-ghost-danger-rest-fg",
+              "description": "color used by the button component for ghost danger rest foreground."
             },
             {
-              "name": "--ki-icon-button-ghost-disabled-shadow",
-              "description": "value used by the icon button component for ghost disabled shadow (Figma disabled drops every shadow)."
+              "name": "--ki-button-ghost-disabled-shadow",
+              "description": "value used by the button component for ghost disabled shadow."
             },
             {
-              "name": "--ki-icon-button-ghost-hover-shadow",
-              "description": "value used by the icon button component for ghost hover shadow."
+              "name": "--ki-button-ghost-hover-shadow",
+              "description": "value used by the button component for ghost hover shadow."
             },
             {
-              "name": "--ki-icon-button-ghost-neutral-disabled-bg",
-              "description": "color used by the icon button component for ghost disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification)."
+              "name": "--ki-button-ghost-neutral-disabled-bg",
+              "description": "color used by the button component for ghost neutral disabled background."
             },
             {
-              "name": "--ki-icon-button-ghost-neutral-disabled-border",
-              "description": "color used by the icon button component for ghost disabled border (Figma disabled drops the bevel)."
+              "name": "--ki-button-ghost-neutral-disabled-border",
+              "description": "color used by the button component for ghost neutral disabled border."
             },
             {
-              "name": "--ki-icon-button-ghost-neutral-disabled-fg",
-              "description": "color used by the icon button component for ghost disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification)."
+              "name": "--ki-button-ghost-neutral-disabled-fg",
+              "description": "color used by the button component for ghost neutral disabled foreground."
             },
             {
-              "name": "--ki-icon-button-ghost-neutral-hover-bg",
-              "description": "color used by the icon button component for ghost neutral hover background (same semantic reference as the button matrix, 002)."
+              "name": "--ki-button-ghost-neutral-hover-bg",
+              "description": "color used by the button component for ghost neutral hover background."
             },
             {
-              "name": "--ki-icon-button-ghost-neutral-hover-border",
-              "description": "color used by the icon button component for ghost neutral hover border."
+              "name": "--ki-button-ghost-neutral-hover-border",
+              "description": "color used by the button component for ghost neutral hover border."
             },
             {
-              "name": "--ki-icon-button-ghost-neutral-hover-fg",
-              "description": "color used by the icon button component for ghost neutral hover foreground — the icon inherits it via currentColor."
+              "name": "--ki-button-ghost-neutral-hover-fg",
+              "description": "color used by the button component for ghost neutral hover foreground."
             },
             {
-              "name": "--ki-icon-button-ghost-neutral-rest-bg",
-              "description": "color used by the icon button component for ghost neutral rest background (same semantic reference as the button matrix, 002)."
+              "name": "--ki-button-ghost-neutral-rest-bg",
+              "description": "color used by the button component for ghost neutral rest background."
             },
             {
-              "name": "--ki-icon-button-ghost-neutral-rest-border",
-              "description": "color used by the icon button component for ghost neutral rest border."
+              "name": "--ki-button-ghost-neutral-rest-border",
+              "description": "color used by the button component for ghost neutral rest border."
             },
             {
-              "name": "--ki-icon-button-ghost-neutral-rest-fg",
-              "description": "color used by the icon button component for ghost neutral rest foreground — the icon inherits it via currentColor."
+              "name": "--ki-button-ghost-neutral-rest-fg",
+              "description": "color used by the button component for ghost neutral rest foreground."
             },
             {
-              "name": "--ki-icon-button-ghost-rest-shadow",
-              "description": "value used by the icon button component for ghost rest shadow."
+              "name": "--ki-button-ghost-rest-shadow",
+              "description": "value used by the button component for ghost rest shadow."
             },
             {
-              "name": "--ki-icon-button-ghost-success-hover-bg",
-              "description": "color used by the icon button component for ghost success hover background (same semantic reference as the button matrix, 002)."
+              "name": "--ki-button-ghost-success-hover-bg",
+              "description": "color used by the button component for ghost success hover background."
             },
             {
-              "name": "--ki-icon-button-ghost-success-hover-border",
-              "description": "color used by the icon button component for ghost success hover border."
+              "name": "--ki-button-ghost-success-hover-border",
+              "description": "color used by the button component for ghost success hover border."
             },
             {
-              "name": "--ki-icon-button-ghost-success-hover-fg",
-              "description": "color used by the icon button component for ghost success hover foreground — the icon inherits it via currentColor."
+              "name": "--ki-button-ghost-success-hover-fg",
+              "description": "color used by the button component for ghost success hover foreground."
             },
             {
-              "name": "--ki-icon-button-ghost-success-rest-bg",
-              "description": "color used by the icon button component for ghost success rest background (same semantic reference as the button matrix, 002)."
+              "name": "--ki-button-ghost-success-rest-bg",
+              "description": "color used by the button component for ghost success rest background."
             },
             {
-              "name": "--ki-icon-button-ghost-success-rest-border",
-              "description": "color used by the icon button component for ghost success rest border."
+              "name": "--ki-button-ghost-success-rest-border",
+              "description": "color used by the button component for ghost success rest border."
             },
             {
-              "name": "--ki-icon-button-ghost-success-rest-fg",
-              "description": "color used by the icon button component for ghost success rest foreground — the icon inherits it via currentColor."
+              "name": "--ki-button-ghost-success-rest-fg",
+              "description": "color used by the button component for ghost success rest foreground."
+            },
+            {
+              "name": "--ki-button-lg-radius",
+              "description": "dimension used by the button component for lg radius."
+            },
+            {
+              "name": "--ki-button-md-radius",
+              "description": "dimension used by the button component for md radius."
+            },
+            {
+              "name": "--ki-button-primary-active-overlay",
+              "description": "Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-bg",
+              "description": "color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-border",
+              "description": "color used by the button component for primary danger hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-danger-hover-fg",
+              "description": "color used by the button component for primary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-bg",
+              "description": "color used by the button component for primary danger rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/danger_med_em #f05149) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-border",
+              "description": "color used by the button component for primary danger rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-danger-rest-fg",
+              "description": "color used by the button component for primary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-primary-disabled-shadow",
+              "description": "value used by the button component for primary disabled shadow."
+            },
+            {
+              "name": "--ki-button-primary-hover-overlay",
+              "description": "color used by the button component for the primary hover overlay layer (MarsUI hover_overlay, White/5)."
+            },
+            {
+              "name": "--ki-button-primary-hover-shadow",
+              "description": "shadow used by the button component for button primary hover shadow (MarsUI Component_effect/primary_hover)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-bg",
+              "description": "color used by the button component for primary neutral disabled background. Deliberate deviation: Figma disabled is Surface/disabled_base_em gray.100 with gray.400 text (≈1.4:1); Kimen keeps gray.200 for contrast (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-border",
+              "description": "color used by the button component for primary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-primary-neutral-disabled-fg",
+              "description": "color used by the button component for primary neutral disabled foreground. Deliberate deviation: Figma disabled text is text/base_em gray.400 (≈1.4:1 on gray.100); Kimen keeps text.muted gray.700 for readable disabled text (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-bg",
+              "description": "color used by the button component for primary neutral hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-border",
+              "description": "color used by the button component for primary neutral hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-hover-fg",
+              "description": "color used by the button component for primary neutral hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-bg",
+              "description": "color used by the button component for primary neutral rest background (MarsUI Surface/primary_med_em, brand 500)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-border",
+              "description": "color used by the button component for primary neutral rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-neutral-rest-fg",
+              "description": "color used by the button component for primary neutral rest foreground."
+            },
+            {
+              "name": "--ki-button-primary-rest-border-bottom",
+              "description": "color used by the button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom)."
+            },
+            {
+              "name": "--ki-button-primary-rest-shadow",
+              "description": "shadow used by the button component for button primary rest shadow (MarsUI Component_effect/primary_default)."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-bg",
+              "description": "color used by the button component for primary success hover background (MarsUI: rest fill; hover lightening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-border",
+              "description": "color used by the button component for primary success hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-success-hover-fg",
+              "description": "color used by the button component for primary success hover foreground."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-bg",
+              "description": "color used by the button component for primary success rest background. Deliberate deviation: Figma specifies the 500 ramp (Surface/success_med_em #409b3f) but white on 500 is ≈3.5:1 < AA 4.5:1; Kimen keeps the 700 ramp (precedent 010 D2, pending founder ratification)."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-border",
+              "description": "color used by the button component for primary success rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-primary-success-rest-fg",
+              "description": "color used by the button component for primary success rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-bg",
+              "description": "color used by the button component for quaternary danger hover background."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-border",
+              "description": "color used by the button component for quaternary danger hover border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-hover-fg",
+              "description": "color used by the button component for quaternary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-bg",
+              "description": "color used by the button component for quaternary danger rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-border",
+              "description": "color used by the button component for quaternary danger rest border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-danger-rest-fg",
+              "description": "color used by the button component for quaternary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-disabled-shadow",
+              "description": "value used by the button component for quaternary disabled shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-hover-shadow",
+              "description": "value used by the button component for quaternary hover shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-bg",
+              "description": "color used by the button component for quaternary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-border",
+              "description": "color used by the button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-disabled-fg",
+              "description": "color used by the button component for quaternary neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-bg",
+              "description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-border",
+              "description": "color used by the button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-hover-fg",
+              "description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-bg",
+              "description": "color used by the button component for quaternary neutral rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-border",
+              "description": "color used by the button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-neutral-rest-fg",
+              "description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+            },
+            {
+              "name": "--ki-button-quaternary-rest-shadow",
+              "description": "value used by the button component for quaternary rest shadow."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-bg",
+              "description": "color used by the button component for quaternary success hover background."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-border",
+              "description": "color used by the button component for quaternary success hover border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-success-hover-fg",
+              "description": "color used by the button component for quaternary success hover foreground."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-bg",
+              "description": "color used by the button component for quaternary success rest background."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-border",
+              "description": "color used by the button component for quaternary success rest border (MarsUI quaternary is borderless in every state)."
+            },
+            {
+              "name": "--ki-button-quaternary-success-rest-fg",
+              "description": "color used by the button component for quaternary success rest foreground."
+            },
+            {
+              "name": "--ki-button-secondary-active-overlay",
+              "description": "Pressed state layer for the secondary button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-bg",
+              "description": "color used by the button component for secondary danger hover background."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-border",
+              "description": "color used by the button component for secondary danger hover border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-danger-hover-fg",
+              "description": "color used by the button component for secondary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-bg",
+              "description": "color used by the button component for secondary danger rest background."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-border",
+              "description": "color used by the button component for secondary danger rest border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-danger-rest-fg",
+              "description": "color used by the button component for secondary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-secondary-disabled-shadow",
+              "description": "value used by the button component for secondary disabled shadow."
+            },
+            {
+              "name": "--ki-button-secondary-hover-overlay",
+              "description": "color used by the button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, Black/3)."
+            },
+            {
+              "name": "--ki-button-secondary-hover-shadow",
+              "description": "shadow used by the button component for secondary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-bg",
+              "description": "color used by the button component for secondary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-border",
+              "description": "color used by the button component for secondary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-disabled-fg",
+              "description": "color used by the button component for secondary neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-bg",
+              "description": "color used by the button component for secondary neutral hover background (MarsUI: rest fill; hover darkening comes from the hover overlay)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-border",
+              "description": "color used by the button component for secondary neutral hover border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-hover-fg",
+              "description": "color used by the button component for secondary neutral hover foreground (MarsUI text/high_em)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-bg",
+              "description": "color used by the button component for secondary neutral rest background (MarsUI Surface/special/secondary_alpha_base: gray glass, not a brand tint)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-border",
+              "description": "color used by the button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
+            },
+            {
+              "name": "--ki-button-secondary-neutral-rest-fg",
+              "description": "color used by the button component for secondary neutral rest foreground (MarsUI text/high_em)."
+            },
+            {
+              "name": "--ki-button-secondary-rest-border-bottom",
+              "description": "color used by the button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom)."
+            },
+            {
+              "name": "--ki-button-secondary-rest-shadow",
+              "description": "shadow used by the button component for secondary rest shadow (MarsUI Component_effect/secondary_default)."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-bg",
+              "description": "color used by the button component for secondary success hover background."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-border",
+              "description": "color used by the button component for secondary success hover border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-success-hover-fg",
+              "description": "color used by the button component for secondary success hover foreground."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-bg",
+              "description": "color used by the button component for secondary success rest background."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-border",
+              "description": "color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait)."
+            },
+            {
+              "name": "--ki-button-secondary-success-rest-fg",
+              "description": "color used by the button component for secondary success rest foreground."
+            },
+            {
+              "name": "--ki-button-sm-radius",
+              "description": "dimension used by the button component for sm radius."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-bg",
+              "description": "color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-border",
+              "description": "color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-hover-fg",
+              "description": "color used by the button component for tertiary danger hover foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-bg",
+              "description": "color used by the button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-border",
+              "description": "color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-danger-rest-fg",
+              "description": "color used by the button component for tertiary danger rest foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-disabled-shadow",
+              "description": "value used by the button component for tertiary disabled shadow."
+            },
+            {
+              "name": "--ki-button-tertiary-hover-shadow",
+              "description": "shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-bg",
+              "description": "color used by the button component for tertiary neutral disabled background."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-border",
+              "description": "color used by the button component for tertiary neutral disabled border."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-disabled-fg",
+              "description": "color used by the button component for tertiary neutral disabled foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-bg",
+              "description": "color used by the button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-border",
+              "description": "color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-hover-fg",
+              "description": "color used by the button component for tertiary neutral hover foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-bg",
+              "description": "color used by the button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-border",
+              "description": "color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-neutral-rest-fg",
+              "description": "color used by the button component for tertiary neutral rest foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
+            },
+            {
+              "name": "--ki-button-tertiary-rest-border-bottom",
+              "description": "color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
+            },
+            {
+              "name": "--ki-button-tertiary-rest-shadow",
+              "description": "shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-bg",
+              "description": "color used by the button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-border",
+              "description": "color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-hover-fg",
+              "description": "color used by the button component for tertiary success hover foreground."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-bg",
+              "description": "color used by the button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-border",
+              "description": "color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+            },
+            {
+              "name": "--ki-button-tertiary-success-rest-fg",
+              "description": "color used by the button component for tertiary success rest foreground."
+            },
+            {
+              "name": "--ki-button-xl-radius",
+              "description": "dimension used by the button component for xl radius."
+            },
+            {
+              "name": "--ki-button-xs-radius",
+              "description": "dimension used by the button component for xs radius."
             },
             {
               "name": "--ki-icon-button-lg-icon-size",
               "description": "dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px)."
-            },
-            {
-              "name": "--ki-icon-button-lg-radius",
-              "description": "dimension used by the icon button component for lg radius (12, same ramp as button)."
             },
             {
               "name": "--ki-icon-button-lg-size",
@@ -3318,444 +3742,20 @@
               "description": "dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3)."
             },
             {
-              "name": "--ki-icon-button-md-radius",
-              "description": "dimension used by the icon button component for md radius (10, same ramp as button)."
-            },
-            {
               "name": "--ki-icon-button-md-size",
               "description": "dimension used by the icon button component for md box (40px square, Figma node 10078:3129)."
-            },
-            {
-              "name": "--ki-icon-button-primary-active-overlay",
-              "description": "Pressed state layer for the primary icon button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
-            },
-            {
-              "name": "--ki-icon-button-primary-danger-hover-bg",
-              "description": "color used by the icon button component for primary danger hover background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-primary-danger-hover-border",
-              "description": "color used by the icon button component for primary danger hover border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-primary-danger-hover-fg",
-              "description": "color used by the icon button component for primary danger hover foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-primary-danger-rest-bg",
-              "description": "color used by the icon button component for primary danger rest background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-primary-danger-rest-border",
-              "description": "color used by the icon button component for primary danger rest border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-primary-danger-rest-fg",
-              "description": "color used by the icon button component for primary danger rest foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-primary-disabled-shadow",
-              "description": "value used by the icon button component for primary disabled shadow (Figma disabled drops every shadow)."
-            },
-            {
-              "name": "--ki-icon-button-primary-hover-overlay",
-              "description": "color used by the icon button component for the primary hover overlay layer (MarsUI hover_overlay, identical to the button overlay)."
-            },
-            {
-              "name": "--ki-icon-button-primary-hover-shadow",
-              "description": "shadow used by the icon button component for primary hover shadow (MarsUI Component_effect/primary_hover)."
-            },
-            {
-              "name": "--ki-icon-button-primary-neutral-disabled-bg",
-              "description": "color used by the icon button component for primary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification)."
-            },
-            {
-              "name": "--ki-icon-button-primary-neutral-disabled-border",
-              "description": "color used by the icon button component for primary disabled border (Figma disabled drops the bevel)."
-            },
-            {
-              "name": "--ki-icon-button-primary-neutral-disabled-fg",
-              "description": "color used by the icon button component for primary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification)."
-            },
-            {
-              "name": "--ki-icon-button-primary-neutral-hover-bg",
-              "description": "color used by the icon button component for primary neutral hover background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-primary-neutral-hover-border",
-              "description": "color used by the icon button component for primary neutral hover border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-primary-neutral-hover-fg",
-              "description": "color used by the icon button component for primary neutral hover foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-primary-neutral-rest-bg",
-              "description": "color used by the icon button component for primary neutral rest background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-primary-neutral-rest-border",
-              "description": "color used by the icon button component for primary neutral rest border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-primary-neutral-rest-fg",
-              "description": "color used by the icon button component for primary neutral rest foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-primary-rest-border-bottom",
-              "description": "color used by the icon button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom, identical to the button bevel)."
-            },
-            {
-              "name": "--ki-icon-button-primary-rest-shadow",
-              "description": "shadow used by the icon button component for primary rest shadow (MarsUI Component_effect/primary_default)."
-            },
-            {
-              "name": "--ki-icon-button-primary-success-hover-bg",
-              "description": "color used by the icon button component for primary success hover background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-primary-success-hover-border",
-              "description": "color used by the icon button component for primary success hover border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-primary-success-hover-fg",
-              "description": "color used by the icon button component for primary success hover foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-primary-success-rest-bg",
-              "description": "color used by the icon button component for primary success rest background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-primary-success-rest-border",
-              "description": "color used by the icon button component for primary success rest border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-primary-success-rest-fg",
-              "description": "color used by the icon button component for primary success rest foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-danger-hover-bg",
-              "description": "color used by the icon button component for quaternary danger hover background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-danger-hover-border",
-              "description": "color used by the icon button component for quaternary danger hover border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-danger-hover-fg",
-              "description": "color used by the icon button component for quaternary danger hover foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-danger-rest-bg",
-              "description": "color used by the icon button component for quaternary danger rest background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-danger-rest-border",
-              "description": "color used by the icon button component for quaternary danger rest border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-danger-rest-fg",
-              "description": "color used by the icon button component for quaternary danger rest foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-disabled-shadow",
-              "description": "value used by the icon button component for quaternary disabled shadow (Figma disabled drops every shadow)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-hover-shadow",
-              "description": "value used by the icon button component for quaternary hover shadow."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-neutral-disabled-bg",
-              "description": "color used by the icon button component for quaternary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-neutral-disabled-border",
-              "description": "color used by the icon button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-neutral-disabled-fg",
-              "description": "color used by the icon button component for quaternary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-neutral-hover-bg",
-              "description": "color used by the icon button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-neutral-hover-border",
-              "description": "color used by the icon button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-neutral-hover-fg",
-              "description": "color used by the icon button component for quaternary neutral hover icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-neutral-rest-bg",
-              "description": "color used by the icon button component for quaternary neutral rest background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-neutral-rest-border",
-              "description": "color used by the icon button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-neutral-rest-fg",
-              "description": "color used by the icon button component for quaternary neutral rest icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-rest-shadow",
-              "description": "value used by the icon button component for quaternary rest shadow."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-success-hover-bg",
-              "description": "color used by the icon button component for quaternary success hover background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-success-hover-border",
-              "description": "color used by the icon button component for quaternary success hover border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-success-hover-fg",
-              "description": "color used by the icon button component for quaternary success hover foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-success-rest-bg",
-              "description": "color used by the icon button component for quaternary success rest background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-success-rest-border",
-              "description": "color used by the icon button component for quaternary success rest border (MarsUI quaternary is borderless in every state)."
-            },
-            {
-              "name": "--ki-icon-button-quaternary-success-rest-fg",
-              "description": "color used by the icon button component for quaternary success rest foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-secondary-active-overlay",
-              "description": "Pressed state layer for the secondary icon button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first."
-            },
-            {
-              "name": "--ki-icon-button-secondary-danger-hover-bg",
-              "description": "color used by the icon button component for secondary danger hover background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-danger-hover-border",
-              "description": "color used by the icon button component for secondary danger hover border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-danger-hover-fg",
-              "description": "color used by the icon button component for secondary danger hover foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-secondary-danger-rest-bg",
-              "description": "color used by the icon button component for secondary danger rest background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-danger-rest-border",
-              "description": "color used by the icon button component for secondary danger rest border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-danger-rest-fg",
-              "description": "color used by the icon button component for secondary danger rest foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-secondary-disabled-shadow",
-              "description": "value used by the icon button component for secondary disabled shadow (Figma disabled drops every shadow)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-hover-overlay",
-              "description": "color used by the icon button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, identical to the button overlay)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-hover-shadow",
-              "description": "shadow used by the icon button component for secondary hover shadow (MarsUI Component_effect/secondary_hover)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-neutral-disabled-bg",
-              "description": "color used by the icon button component for secondary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-neutral-disabled-border",
-              "description": "color used by the icon button component for secondary disabled border (Figma disabled drops the bevel)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-neutral-disabled-fg",
-              "description": "color used by the icon button component for secondary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-neutral-hover-bg",
-              "description": "color used by the icon button component for secondary neutral hover background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-neutral-hover-border",
-              "description": "color used by the icon button component for secondary neutral hover border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-neutral-hover-fg",
-              "description": "color used by the icon button component for secondary neutral hover foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-secondary-neutral-rest-bg",
-              "description": "color used by the icon button component for secondary neutral rest background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-neutral-rest-border",
-              "description": "color used by the icon button component for secondary neutral rest border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-neutral-rest-fg",
-              "description": "color used by the icon button component for secondary neutral rest foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-secondary-rest-border-bottom",
-              "description": "color used by the icon button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom, identical to the button bevel)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-rest-shadow",
-              "description": "shadow used by the icon button component for secondary rest shadow (MarsUI Component_effect/secondary_default)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-success-hover-bg",
-              "description": "color used by the icon button component for secondary success hover background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-success-hover-border",
-              "description": "color used by the icon button component for secondary success hover border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-success-hover-fg",
-              "description": "color used by the icon button component for secondary success hover foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-secondary-success-rest-bg",
-              "description": "color used by the icon button component for secondary success rest background (same semantic reference as the button matrix, 002)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-success-rest-border",
-              "description": "color used by the icon button component for secondary success rest border (MarsUI bevel top/inline edge)."
-            },
-            {
-              "name": "--ki-icon-button-secondary-success-rest-fg",
-              "description": "color used by the icon button component for secondary success rest foreground — the icon inherits it via currentColor."
             },
             {
               "name": "--ki-icon-button-sm-icon-size",
               "description": "dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px)."
             },
             {
-              "name": "--ki-icon-button-sm-radius",
-              "description": "dimension used by the icon button component for sm radius (8, same ramp as button)."
-            },
-            {
               "name": "--ki-icon-button-sm-size",
               "description": "dimension used by the icon button component for sm box (32px square)."
             },
             {
-              "name": "--ki-icon-button-tertiary-danger-hover-bg",
-              "description": "color used by the icon button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-danger-hover-border",
-              "description": "color used by the icon button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-danger-hover-fg",
-              "description": "color used by the icon button component for tertiary danger hover foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-danger-rest-bg",
-              "description": "color used by the icon button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-danger-rest-border",
-              "description": "color used by the icon button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-danger-rest-fg",
-              "description": "color used by the icon button component for tertiary danger rest foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-disabled-shadow",
-              "description": "value used by the icon button component for tertiary disabled shadow (Figma disabled drops every shadow)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-hover-shadow",
-              "description": "shadow used by the icon button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-neutral-disabled-bg",
-              "description": "color used by the icon button component for tertiary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-neutral-disabled-border",
-              "description": "color used by the icon button component for tertiary disabled border (Figma disabled drops the bevel)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-neutral-disabled-fg",
-              "description": "color used by the icon button component for tertiary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-neutral-hover-bg",
-              "description": "color used by the icon button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-neutral-hover-border",
-              "description": "color used by the icon button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-neutral-hover-fg",
-              "description": "color used by the icon button component for tertiary neutral hover icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-neutral-rest-bg",
-              "description": "color used by the icon button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-neutral-rest-border",
-              "description": "color used by the icon button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-neutral-rest-fg",
-              "description": "color used by the icon button component for tertiary neutral rest icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-rest-border-bottom",
-              "description": "color used by the icon button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-rest-shadow",
-              "description": "shadow used by the icon button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-success-hover-bg",
-              "description": "color used by the icon button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-success-hover-border",
-              "description": "color used by the icon button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-success-hover-fg",
-              "description": "color used by the icon button component for tertiary success hover foreground — the icon inherits it via currentColor."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-success-rest-bg",
-              "description": "color used by the icon button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-success-rest-border",
-              "description": "color used by the icon button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
-            },
-            {
-              "name": "--ki-icon-button-tertiary-success-rest-fg",
-              "description": "color used by the icon button component for tertiary success rest foreground — the icon inherits it via currentColor."
-            },
-            {
               "name": "--ki-icon-button-xl-icon-size",
               "description": "dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px)."
-            },
-            {
-              "name": "--ki-icon-button-xl-radius",
-              "description": "dimension used by the icon button component for xl radius (14, same ramp as button)."
             },
             {
               "name": "--ki-icon-button-xl-size",
@@ -3764,10 +3764,6 @@
             {
               "name": "--ki-icon-button-xs-icon-size",
               "description": "dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon)."
-            },
-            {
-              "name": "--ki-icon-button-xs-radius",
-              "description": "dimension used by the icon button component for xs radius (Figma Radius/component/radius_xs 6, same ramp as button)."
             },
             {
               "name": "--ki-icon-button-xs-size",
@@ -3780,10 +3776,6 @@
             {
               "name": "--ki-motion-easing-out",
               "description": "Decelerating interaction transition easing curve."
-            },
-            {
-              "name": "--ki-transparent-inverse",
-              "description": "semantic color for transparent inverse."
             },
             {
               "name": "--ki-typography-family-body",
@@ -3830,7 +3822,7 @@
               "type": {
                 "text": "number | undefined"
               },
-              "description": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).\nThe catalog accepts at most 20 positions: the indicator serves a short\nsequence of peer views, 20 dots are the longest row that fits a 320 CSS\npx viewport (the WCAG reflow width) in both shipped themes, and one dot\nrenders per position, so the bound also caps the work a single node can\ndemand.",
+              "description": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).\nAt most 20 positions render, and the catalog accepts no more: the\nindicator serves a short sequence of peer views, 20 dots are the longest\nrow that fits a 320 CSS px viewport (the WCAG reflow width) in both\nshipped themes, and one dot renders per position, so the bound also caps\nthe work a single node can demand. A larger value renders 20.",
               "minimum": 0,
               "maximum": 20
             },
@@ -3862,7 +3854,7 @@
               "type": {
                 "text": "number | undefined"
               },
-              "description": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).\nThe catalog accepts at most 20 positions: the indicator serves a short\nsequence of peer views, 20 dots are the longest row that fits a 320 CSS\npx viewport (the WCAG reflow width) in both shipped themes, and one dot\nrenders per position, so the bound also caps the work a single node can\ndemand.",
+              "description": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).\nAt most 20 positions render, and the catalog accepts no more: the\nindicator serves a short sequence of peer views, 20 dots are the longest\nrow that fits a 320 CSS px viewport (the WCAG reflow width) in both\nshipped themes, and one dot renders per position, so the bound also caps\nthe work a single node can demand. A larger value renders 20.",
               "attribute": "count",
               "reflects": false,
               "minimum": 0,

@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 304 semantic
-and 1057 component tokens. Values are the resolved **onmars light**
+and 869 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -926,203 +926,15 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-icon-button-backdrop-blur` | `12px` | dimension used by the icon button component for the glass variants (primary/secondary) backdrop blur, identical to the button glass. material3 resolves to blur none via the semantic override. |
-| `--ki-icon-button-border-width` | `1px` | dimension used by the icon button component for border width (MarsUI bevel/outline stroke: 1px, INNER — the square box already contains it). |
-| `--ki-icon-button-focus-ring-color` | `#845abe` | color used by the icon button component for focus ring color (the opaque WCAG 1.4.11 indicator). |
-| `--ki-icon-button-focus-ring-offset` | `0.125rem` | dimension used by the icon button component for focus ring offset. |
-| `--ki-icon-button-focus-ring-shadow` | `0 0 0 3px rgba(132, 90, 190, 0.2)` | shadow used by the icon button component for the focus ring glow (MarsUI Focus/primary: 3px spread ring, V.1 double mechanism). |
-| `--ki-icon-button-focus-ring-width` | `0.125rem` | dimension used by the icon button component for focus ring width. |
-| `--ki-icon-button-ghost-active-shadow` | `none` | value used by the icon button component for ghost active shadow. |
-| `--ki-icon-button-ghost-danger-active-bg` | `#ffebed` | color used by the icon button component for ghost danger active background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-ghost-danger-active-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost danger active border. |
-| `--ki-icon-button-ghost-danger-active-fg` | `#cd2118` | color used by the icon button component for ghost danger active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-ghost-danger-hover-bg` | `rgba(240, 81, 73, 0.12)` | color used by the icon button component for ghost danger hover background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-ghost-danger-hover-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost danger hover border. |
-| `--ki-icon-button-ghost-danger-hover-fg` | `#cd2118` | color used by the icon button component for ghost danger hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-ghost-danger-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost danger rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-ghost-danger-rest-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost danger rest border. |
-| `--ki-icon-button-ghost-danger-rest-fg` | `#cd2118` | color used by the icon button component for ghost danger rest foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-ghost-disabled-shadow` | `none` | value used by the icon button component for ghost disabled shadow (Figma disabled drops every shadow). |
-| `--ki-icon-button-ghost-hover-shadow` | `none` | value used by the icon button component for ghost hover shadow. |
-| `--ki-icon-button-ghost-neutral-active-bg` | `#ece4f5` | color used by the icon button component for ghost neutral active background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-ghost-neutral-active-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost neutral active border. |
-| `--ki-icon-button-ghost-neutral-active-fg` | `#5f3993` | color used by the icon button component for ghost neutral active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-ghost-neutral-disabled-bg` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification). |
-| `--ki-icon-button-ghost-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost disabled border (Figma disabled drops the bevel). |
-| `--ki-icon-button-ghost-neutral-disabled-fg` | `#5b616d` | color used by the icon button component for ghost disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification). |
-| `--ki-icon-button-ghost-neutral-hover-bg` | `rgba(132, 90, 190, 0.12)` | color used by the icon button component for ghost neutral hover background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-ghost-neutral-hover-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost neutral hover border. |
-| `--ki-icon-button-ghost-neutral-hover-fg` | `#5f3993` | color used by the icon button component for ghost neutral hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-ghost-neutral-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost neutral rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-ghost-neutral-rest-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost neutral rest border. |
-| `--ki-icon-button-ghost-neutral-rest-fg` | `#5f3993` | color used by the icon button component for ghost neutral rest foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-ghost-rest-shadow` | `none` | value used by the icon button component for ghost rest shadow. |
-| `--ki-icon-button-ghost-success-active-bg` | `#e3f6e2` | color used by the icon button component for ghost success active background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-ghost-success-active-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost success active border. |
-| `--ki-icon-button-ghost-success-active-fg` | `#2c6a2b` | color used by the icon button component for ghost success active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-ghost-success-hover-bg` | `rgba(64, 155, 63, 0.12)` | color used by the icon button component for ghost success hover background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-ghost-success-hover-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost success hover border. |
-| `--ki-icon-button-ghost-success-hover-fg` | `#2c6a2b` | color used by the icon button component for ghost success hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-ghost-success-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost success rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-ghost-success-rest-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for ghost success rest border. |
-| `--ki-icon-button-ghost-success-rest-fg` | `#2c6a2b` | color used by the icon button component for ghost success rest foreground — the icon inherits it via currentColor. |
 | `--ki-icon-button-lg-icon-size` | `1.5rem` | dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px). |
-| `--ki-icon-button-lg-radius` | `12px` | dimension used by the icon button component for lg radius (12, same ramp as button). |
 | `--ki-icon-button-lg-size` | `3rem` | dimension used by the icon button component for lg box (48px square). |
 | `--ki-icon-button-md-icon-size` | `1.25rem` | dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3). |
-| `--ki-icon-button-md-radius` | `10px` | dimension used by the icon button component for md radius (10, same ramp as button). |
 | `--ki-icon-button-md-size` | `2.5rem` | dimension used by the icon button component for md box (40px square, Figma node 10078:3129). |
-| `--ki-icon-button-primary-active-overlay` | `rgba(255, 255, 255, 0.08)` | Pressed state layer for the primary icon button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
-| `--ki-icon-button-primary-active-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), inset 0px 3px 3px 0px rgba(255, 255, 255, 0.12)` | shadow used by the icon button component for primary active shadow (MarsUI Component_effect/primary_default; MarsUI defines no pressed state, mirrors rest). |
-| `--ki-icon-button-primary-danger-active-bg` | `#cd2118` | color used by the icon button component for primary danger active background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-primary-danger-active-border` | `rgba(0, 0, 0, 0.08)` | color used by the icon button component for primary danger active border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-primary-danger-active-fg` | `#ffffff` | color used by the icon button component for primary danger active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-primary-danger-hover-bg` | `#cd2118` | color used by the icon button component for primary danger hover background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-primary-danger-hover-border` | `rgba(0, 0, 0, 0.08)` | color used by the icon button component for primary danger hover border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-primary-danger-hover-fg` | `#ffffff` | color used by the icon button component for primary danger hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-primary-danger-rest-bg` | `#cd2118` | color used by the icon button component for primary danger rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-primary-danger-rest-border` | `rgba(0, 0, 0, 0.08)` | color used by the icon button component for primary danger rest border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-primary-danger-rest-fg` | `#ffffff` | color used by the icon button component for primary danger rest foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-primary-disabled-shadow` | `none` | value used by the icon button component for primary disabled shadow (Figma disabled drops every shadow). |
-| `--ki-icon-button-primary-hover-overlay` | `rgba(255, 255, 255, 0.05)` | color used by the icon button component for the primary hover overlay layer (MarsUI hover_overlay, identical to the button overlay). |
-| `--ki-icon-button-primary-hover-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), 0 3px 3px -1.5px rgba(0, 0, 0, 0.03), 0 20px 20px -12px rgba(0, 0, 0, 0.03), inset 0px 3px 3px 0px rgba(255, 255, 255, 0.18)` | shadow used by the icon button component for primary hover shadow (MarsUI Component_effect/primary_hover). |
-| `--ki-icon-button-primary-neutral-active-bg` | `#845abe` | color used by the icon button component for primary neutral active background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-primary-neutral-active-border` | `rgba(0, 0, 0, 0.08)` | color used by the icon button component for primary neutral active border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-primary-neutral-active-fg` | `#ffffff` | color used by the icon button component for primary neutral active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-primary-neutral-disabled-bg` | `#ececf0` | color used by the icon button component for primary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification). |
-| `--ki-icon-button-primary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for primary disabled border (Figma disabled drops the bevel). |
-| `--ki-icon-button-primary-neutral-disabled-fg` | `#5b616d` | color used by the icon button component for primary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification). |
-| `--ki-icon-button-primary-neutral-hover-bg` | `#845abe` | color used by the icon button component for primary neutral hover background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-primary-neutral-hover-border` | `rgba(0, 0, 0, 0.08)` | color used by the icon button component for primary neutral hover border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-primary-neutral-hover-fg` | `#ffffff` | color used by the icon button component for primary neutral hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-primary-neutral-rest-bg` | `#845abe` | color used by the icon button component for primary neutral rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-primary-neutral-rest-border` | `rgba(0, 0, 0, 0.08)` | color used by the icon button component for primary neutral rest border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-primary-neutral-rest-fg` | `#ffffff` | color used by the icon button component for primary neutral rest foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-primary-rest-border-bottom` | `rgba(0, 0, 0, 0.18)` | color used by the icon button component for the primary bevel bottom edge (MarsUI Outline/primary_button_bottom, identical to the button bevel). |
-| `--ki-icon-button-primary-rest-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), inset 0px 3px 3px 0px rgba(255, 255, 255, 0.12)` | shadow used by the icon button component for primary rest shadow (MarsUI Component_effect/primary_default). |
-| `--ki-icon-button-primary-success-active-bg` | `#2c6a2b` | color used by the icon button component for primary success active background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-primary-success-active-border` | `rgba(0, 0, 0, 0.08)` | color used by the icon button component for primary success active border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-primary-success-active-fg` | `#ffffff` | color used by the icon button component for primary success active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-primary-success-hover-bg` | `#2c6a2b` | color used by the icon button component for primary success hover background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-primary-success-hover-border` | `rgba(0, 0, 0, 0.08)` | color used by the icon button component for primary success hover border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-primary-success-hover-fg` | `#ffffff` | color used by the icon button component for primary success hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-primary-success-rest-bg` | `#2c6a2b` | color used by the icon button component for primary success rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-primary-success-rest-border` | `rgba(0, 0, 0, 0.08)` | color used by the icon button component for primary success rest border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-primary-success-rest-fg` | `#ffffff` | color used by the icon button component for primary success rest foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-quaternary-active-shadow` | `none` | value used by the icon button component for quaternary active shadow. |
-| `--ki-icon-button-quaternary-danger-active-bg` | `#ffebed` | color used by the icon button component for quaternary danger active background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-quaternary-danger-active-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary danger active border (MarsUI quaternary is borderless in every state). |
-| `--ki-icon-button-quaternary-danger-active-fg` | `#cd2118` | color used by the icon button component for quaternary danger active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-quaternary-danger-hover-bg` | `rgba(240, 81, 73, 0.12)` | color used by the icon button component for quaternary danger hover background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-quaternary-danger-hover-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary danger hover border (MarsUI quaternary is borderless in every state). |
-| `--ki-icon-button-quaternary-danger-hover-fg` | `#cd2118` | color used by the icon button component for quaternary danger hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-quaternary-danger-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary danger rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-quaternary-danger-rest-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary danger rest border (MarsUI quaternary is borderless in every state). |
-| `--ki-icon-button-quaternary-danger-rest-fg` | `#cd2118` | color used by the icon button component for quaternary danger rest foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-quaternary-disabled-shadow` | `none` | value used by the icon button component for quaternary disabled shadow (Figma disabled drops every shadow). |
-| `--ki-icon-button-quaternary-hover-shadow` | `none` | value used by the icon button component for quaternary hover shadow. |
-| `--ki-icon-button-quaternary-neutral-active-bg` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for quaternary neutral active background (pressed wash one rung beyond hover: Black/5 light, White/5 dark). |
-| `--ki-icon-button-quaternary-neutral-active-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary neutral active border (MarsUI quaternary is borderless in every state). |
-| `--ki-icon-button-quaternary-neutral-active-fg` | `#5b616d` | color used by the icon button component for quaternary neutral active icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis). |
-| `--ki-icon-button-quaternary-neutral-disabled-bg` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification). |
-| `--ki-icon-button-quaternary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary neutral disabled border (MarsUI quaternary is borderless in every state). |
-| `--ki-icon-button-quaternary-neutral-disabled-fg` | `#5b616d` | color used by the icon button component for quaternary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification). |
-| `--ki-icon-button-quaternary-neutral-hover-bg` | `rgba(0, 0, 0, 0.03)` | color used by the icon button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill). |
-| `--ki-icon-button-quaternary-neutral-hover-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary neutral hover border (MarsUI quaternary is borderless in every state). |
-| `--ki-icon-button-quaternary-neutral-hover-fg` | `#5b616d` | color used by the icon button component for quaternary neutral hover icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis). |
-| `--ki-icon-button-quaternary-neutral-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary neutral rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-quaternary-neutral-rest-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary neutral rest border (MarsUI quaternary is borderless in every state). |
-| `--ki-icon-button-quaternary-neutral-rest-fg` | `#5b616d` | color used by the icon button component for quaternary neutral rest icon color (MarsUI quaternary glyph text/med_em gray; the outlined-purple rest identity was a pre-master synthesis). |
-| `--ki-icon-button-quaternary-rest-shadow` | `none` | value used by the icon button component for quaternary rest shadow. |
-| `--ki-icon-button-quaternary-success-active-bg` | `#e3f6e2` | color used by the icon button component for quaternary success active background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-quaternary-success-active-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary success active border (MarsUI quaternary is borderless in every state). |
-| `--ki-icon-button-quaternary-success-active-fg` | `#2c6a2b` | color used by the icon button component for quaternary success active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-quaternary-success-hover-bg` | `rgba(64, 155, 63, 0.12)` | color used by the icon button component for quaternary success hover background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-quaternary-success-hover-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary success hover border (MarsUI quaternary is borderless in every state). |
-| `--ki-icon-button-quaternary-success-hover-fg` | `#2c6a2b` | color used by the icon button component for quaternary success hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-quaternary-success-rest-bg` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary success rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-quaternary-success-rest-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for quaternary success rest border (MarsUI quaternary is borderless in every state). |
-| `--ki-icon-button-quaternary-success-rest-fg` | `#2c6a2b` | color used by the icon button component for quaternary success rest foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-secondary-active-overlay` | `rgba(0, 0, 0, 0.05)` | Pressed state layer for the secondary icon button: secondary paints on a light fill, so its wash darkens: the next rung above ki.surface.hover-overlay-inverse (Black/3 -> Black/5 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
-| `--ki-icon-button-secondary-active-shadow` | `0 2px 1.5px -0.5px rgba(0, 0, 0, 0.03), inset 0px 2px 3px 0px rgba(255, 255, 255, 0.03)` | shadow used by the icon button component for secondary active shadow (MarsUI Component_effect/secondary_default; MarsUI defines no pressed state, mirrors rest). |
-| `--ki-icon-button-secondary-danger-active-bg` | `#ffebed` | color used by the icon button component for secondary danger active background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-secondary-danger-active-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for secondary danger active border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-secondary-danger-active-fg` | `#cd2118` | color used by the icon button component for secondary danger active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-secondary-danger-hover-bg` | `#ffebed` | color used by the icon button component for secondary danger hover background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-secondary-danger-hover-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for secondary danger hover border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-secondary-danger-hover-fg` | `#cd2118` | color used by the icon button component for secondary danger hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-secondary-danger-rest-bg` | `#fff3f2` | color used by the icon button component for secondary danger rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-secondary-danger-rest-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for secondary danger rest border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-secondary-danger-rest-fg` | `#cd2118` | color used by the icon button component for secondary danger rest foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-secondary-disabled-shadow` | `none` | value used by the icon button component for secondary disabled shadow (Figma disabled drops every shadow). |
-| `--ki-icon-button-secondary-hover-overlay` | `rgba(0, 0, 0, 0.03)` | color used by the icon button component for the secondary hover overlay layer (MarsUI hover_overlay_inverse, identical to the button overlay). |
-| `--ki-icon-button-secondary-hover-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), 0 3px 3px -1.5px rgba(0, 0, 0, 0.03), 0 20px 20px -12px rgba(0, 0, 0, 0.03), inset 0px 2px 3px 0px rgba(255, 255, 255, 0.08)` | shadow used by the icon button component for secondary hover shadow (MarsUI Component_effect/secondary_hover). |
-| `--ki-icon-button-secondary-neutral-active-bg` | `rgba(242, 242, 244, 0.8)` | color used by the icon button component for secondary neutral active background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-secondary-neutral-active-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for secondary neutral active border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-secondary-neutral-active-fg` | `#0a0c11` | color used by the icon button component for secondary neutral active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-secondary-neutral-disabled-bg` | `#ececf0` | color used by the icon button component for secondary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification). |
-| `--ki-icon-button-secondary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for secondary disabled border (Figma disabled drops the bevel). |
-| `--ki-icon-button-secondary-neutral-disabled-fg` | `#5b616d` | color used by the icon button component for secondary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification). |
-| `--ki-icon-button-secondary-neutral-hover-bg` | `rgba(242, 242, 244, 0.8)` | color used by the icon button component for secondary neutral hover background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-secondary-neutral-hover-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for secondary neutral hover border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-secondary-neutral-hover-fg` | `#0a0c11` | color used by the icon button component for secondary neutral hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-secondary-neutral-rest-bg` | `rgba(242, 242, 244, 0.8)` | color used by the icon button component for secondary neutral rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-secondary-neutral-rest-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for secondary neutral rest border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-secondary-neutral-rest-fg` | `#0a0c11` | color used by the icon button component for secondary neutral rest foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-secondary-rest-border-bottom` | `rgba(0, 0, 0, 0.12)` | color used by the icon button component for the secondary bevel bottom edge (MarsUI Outline/secondary_button_bottom, identical to the button bevel). |
-| `--ki-icon-button-secondary-rest-shadow` | `0 2px 1.5px -0.5px rgba(0, 0, 0, 0.03), inset 0px 2px 3px 0px rgba(255, 255, 255, 0.03)` | shadow used by the icon button component for secondary rest shadow (MarsUI Component_effect/secondary_default). |
-| `--ki-icon-button-secondary-success-active-bg` | `#e3f6e2` | color used by the icon button component for secondary success active background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-secondary-success-active-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for secondary success active border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-secondary-success-active-fg` | `#2c6a2b` | color used by the icon button component for secondary success active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-secondary-success-hover-bg` | `#e3f6e2` | color used by the icon button component for secondary success hover background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-secondary-success-hover-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for secondary success hover border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-secondary-success-hover-fg` | `#2c6a2b` | color used by the icon button component for secondary success hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-secondary-success-rest-bg` | `#f4faf3` | color used by the icon button component for secondary success rest background (same semantic reference as the button matrix, 002). |
-| `--ki-icon-button-secondary-success-rest-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for secondary success rest border (MarsUI bevel top/inline edge). |
-| `--ki-icon-button-secondary-success-rest-fg` | `#2c6a2b` | color used by the icon button component for secondary success rest foreground — the icon inherits it via currentColor. |
 | `--ki-icon-button-sm-icon-size` | `1.125rem` | dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px). |
-| `--ki-icon-button-sm-radius` | `8px` | dimension used by the icon button component for sm radius (8, same ramp as button). |
 | `--ki-icon-button-sm-size` | `2rem` | dimension used by the icon button component for sm box (32px square). |
-| `--ki-icon-button-tertiary-active-shadow` | `0 2px 1.5px -0.5px rgba(0, 0, 0, 0.03), inset 0px 2px 3px 0px rgba(255, 255, 255, 0.03)` | shadow used by the icon button component for tertiary active shadow (MarsUI defines no pressed state; mirrors rest). |
-| `--ki-icon-button-tertiary-danger-active-bg` | `#f2f2f4` | color used by the icon button component for tertiary danger active background (MarsUI defines no pressed state; one step beyond hover in both schemes). |
-| `--ki-icon-button-tertiary-danger-active-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for tertiary danger active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-icon-button-tertiary-danger-active-fg` | `#cd2118` | color used by the icon button component for tertiary danger active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-tertiary-danger-hover-bg` | `#f9f9fa` | color used by the icon button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover). |
-| `--ki-icon-button-tertiary-danger-hover-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-icon-button-tertiary-danger-hover-fg` | `#cd2118` | color used by the icon button component for tertiary danger hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-tertiary-danger-rest-bg` | `#ffffff` | color used by the icon button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark). |
-| `--ki-icon-button-tertiary-danger-rest-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-icon-button-tertiary-danger-rest-fg` | `#cd2118` | color used by the icon button component for tertiary danger rest foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-tertiary-disabled-shadow` | `none` | value used by the icon button component for tertiary disabled shadow (Figma disabled drops every shadow). |
-| `--ki-icon-button-tertiary-hover-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), 0 3px 3px -1.5px rgba(0, 0, 0, 0.03), 0 20px 20px -12px rgba(0, 0, 0, 0.03), inset 0px 2px 3px 0px rgba(255, 255, 255, 0.08)` | shadow used by the icon button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover). |
-| `--ki-icon-button-tertiary-neutral-active-bg` | `#f2f2f4` | color used by the icon button component for tertiary neutral active background (MarsUI defines no pressed state; one step beyond hover in both schemes). |
-| `--ki-icon-button-tertiary-neutral-active-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for tertiary neutral active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-icon-button-tertiary-neutral-active-fg` | `#5b616d` | color used by the icon button component for tertiary neutral active icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative). |
-| `--ki-icon-button-tertiary-neutral-disabled-bg` | `#ececf0` | color used by the icon button component for tertiary disabled background (tone-independent, like the button disabled cells; deliberate 010 D2 deviation from Figma gray.100 for contrast, pending founder ratification). |
-| `--ki-icon-button-tertiary-neutral-disabled-border` | `rgba(255, 255, 255, 0)` | color used by the icon button component for tertiary disabled border (Figma disabled drops the bevel). |
-| `--ki-icon-button-tertiary-neutral-disabled-fg` | `#5b616d` | color used by the icon button component for tertiary disabled foreground (tone-independent; 010 D2 deviation from Figma text/base_em, pending founder ratification). |
-| `--ki-icon-button-tertiary-neutral-hover-bg` | `#f9f9fa` | color used by the icon button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover). |
-| `--ki-icon-button-tertiary-neutral-hover-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-icon-button-tertiary-neutral-hover-fg` | `#5b616d` | color used by the icon button component for tertiary neutral hover icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative). |
-| `--ki-icon-button-tertiary-neutral-rest-bg` | `#ffffff` | color used by the icon button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark). |
-| `--ki-icon-button-tertiary-neutral-rest-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-icon-button-tertiary-neutral-rest-fg` | `#5b616d` | color used by the icon button component for tertiary neutral rest icon color (MarsUI tertiary glyph text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-glyph row is primary_flat, documented alternative). |
-| `--ki-icon-button-tertiary-rest-border-bottom` | `rgba(0, 0, 0, 0.12)` | color used by the icon button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary). |
-| `--ki-icon-button-tertiary-rest-shadow` | `0 2px 1.5px -0.5px rgba(0, 0, 0, 0.03), inset 0px 2px 3px 0px rgba(255, 255, 255, 0.03)` | shadow used by the icon button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override). |
-| `--ki-icon-button-tertiary-success-active-bg` | `#f2f2f4` | color used by the icon button component for tertiary success active background (MarsUI defines no pressed state; one step beyond hover in both schemes). |
-| `--ki-icon-button-tertiary-success-active-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for tertiary success active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-icon-button-tertiary-success-active-fg` | `#2c6a2b` | color used by the icon button component for tertiary success active foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-tertiary-success-hover-bg` | `#f9f9fa` | color used by the icon button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover). |
-| `--ki-icon-button-tertiary-success-hover-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-icon-button-tertiary-success-hover-fg` | `#2c6a2b` | color used by the icon button component for tertiary success hover foreground — the icon inherits it via currentColor. |
-| `--ki-icon-button-tertiary-success-rest-bg` | `#ffffff` | color used by the icon button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark). |
-| `--ki-icon-button-tertiary-success-rest-border` | `rgba(0, 0, 0, 0.05)` | color used by the icon button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
-| `--ki-icon-button-tertiary-success-rest-fg` | `#2c6a2b` | color used by the icon button component for tertiary success rest foreground — the icon inherits it via currentColor. |
 | `--ki-icon-button-xl-icon-size` | `1.75rem` | dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px). |
-| `--ki-icon-button-xl-radius` | `14px` | dimension used by the icon button component for xl radius (14, same ramp as button). |
 | `--ki-icon-button-xl-size` | `3.5rem` | dimension used by the icon button component for xl box (56px square). |
 | `--ki-icon-button-xs-icon-size` | `1rem` | dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon). |
-| `--ki-icon-button-xs-radius` | `6px` | dimension used by the icon button component for xs radius (Figma Radius/component/radius_xs 6, same ramp as button). |
 | `--ki-icon-button-xs-size` | `1.5rem` | dimension used by the icon button component for xs box (24px square, Figma Space/7xl). |
 
 ### `ki-indicator`
