@@ -6010,7 +6010,7 @@
               "--ki-indicator-dot-color": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_18, the exact variable bound to every Indicator variant fill (Black/18 light, White/18 dark) — the scheme flip rides the semantic layer.",
+                "description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_18, which reads 1.53:1 light and 1.64:1 dark against the page; alpha_48 is the first step of the same ramp that clears the 3:1 FR-012 and WCAG 1.4.11 ask. The scheme flip rides the semantic layer.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -6026,7 +6026,7 @@
               "--ki-indicator-dot-current-color": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_18, the exact fill of the State=active ring vector (Black/18 light, White/18 dark) — painted as the pill ring in onmars, as the solid dot in themes that zero the hole.",
+                "description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_48, the same step as the resting dots — the MarsUI State=active ring vector binds the variable of the resting fill, and its alpha_18 reads 1.53-1.64:1 against the page (declared a11y deviation, FR-012). Painted as the pill ring in onmars, where elongation carries the state; as the solid dot in themes that zero the hole.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -6352,7 +6352,7 @@
               "--ki-input-focus-placeholder-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the input component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+                "description": "color used by the input component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -6456,7 +6456,7 @@
               "--ki-input-hover-placeholder-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the input component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+                "description": "color used by the input component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -6504,7 +6504,7 @@
               "--ki-input-invalid-placeholder-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the input component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+                "description": "color used by the input component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -6616,7 +6616,7 @@
               "--ki-input-readonly-placeholder-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the input component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+                "description": "color used by the input component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -6656,7 +6656,7 @@
               "--ki-input-rest-placeholder-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the input component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+                "description": "color used by the input component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -8290,7 +8290,7 @@
               "--ki-scroller-thumb-color": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_6, the exact variable bound to the scroll pill on both Scroller variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md).",
+                "description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_6 (Black/5 light, White/5 dark), which reads 1.12:1 and 1.09:1 against the content surface. The thumb is the only mark that shows the scroll position, so it takes the first step of the same ramp that clears WCAG 1.4.11's 3:1. The scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -9209,7 +9209,7 @@
               "--ki-status-info-color": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the status component for the info tone fill: no Figma Status variant ships an info Type, so the fill extrapolates the verified med-em 500 pattern to the Info ramp (001 contract, 010/015 precedent) — declared for founder ratification.",
+                "description": "color used by the status component for the info tone fill: Surface/info_high_em (Info/600 light, Info/400 dark) — one step above the med-em 500 pattern the success and danger tones follow, because Info/500 reads 2.29:1 on the light page and WCAG 1.4.11 asks 3:1 of the dot (FR-008). No Figma Status variant ships an info Type, so the fill remains an extrapolation onto the Info ramp (001 contract, 010/015 precedent) declared for founder ratification.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -9217,7 +9217,7 @@
               "--ki-status-neutral-color": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the status component for the neutral tone fill: Surface/disabled_high_em, the exact variable bound to the Type=disabled Status variant (Gray/500 light, White/32 dark) — MarsUI's disabled gray maps to the charter neutral tone (spec Assumptions).",
+                "description": "color used by the status component for the neutral tone fill: ki.outline.control, the semantic 3:1 non-text floor (Black/48 light, White/48 dark; md.sys.color.outline in material3) — a declared a11y deviation from the MarsUI binding Surface/disabled_high_em (Gray/500 light, White/32 dark), which reads 2.10:1 and 2.78:1 against the page where WCAG 1.4.11 asks 3:1 of the dot (FR-008). MarsUI's disabled gray still maps to the charter neutral tone (spec Assumptions).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -9273,7 +9273,7 @@
               "--ki-status-warning-color": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the status component for the warning tone fill: Surface/warning_med_em, the exact variable bound to the Type=warning Status variant (Warning/500).",
+                "description": "color used by the status component for the warning tone fill: Text/warning_high_em (Warning/800 light, Warning/300 dark) — a declared a11y deviation from the MarsUI binding Surface/warning_med_em (Warning/500), which reads 1.92:1 on the light page. No warning surface step clears the 3:1 WCAG 1.4.11 asks of the dot (Warning/600 reads 2.33:1), so the fill takes the warning ink that is legible on the page (FR-008).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -10685,7 +10685,7 @@
               "--ki-textarea-focus-placeholder-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the textarea component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+                "description": "color used by the textarea component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -10773,7 +10773,7 @@
               "--ki-textarea-hover-placeholder-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the textarea component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+                "description": "color used by the textarea component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -10813,7 +10813,7 @@
               "--ki-textarea-invalid-placeholder-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the textarea component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+                "description": "color used by the textarea component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -10941,7 +10941,7 @@
               "--ki-textarea-readonly-placeholder-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the textarea component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+                "description": "color used by the textarea component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -10981,7 +10981,7 @@
               "--ki-textarea-rest-placeholder-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the textarea component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+                "description": "color used by the textarea component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -13890,9 +13890,9 @@
                 "--ki-icon-button-xs-radius": "6px",
                 "--ki-icon-button-xs-size": "1.5rem",
                 "--ki-indicator-dot-block-size": "0.5rem",
-                "--ki-indicator-dot-color": "rgba(255,255,255,0.18)",
+                "--ki-indicator-dot-color": "rgba(255,255,255,0.48)",
                 "--ki-indicator-dot-current-block-size": "1rem",
-                "--ki-indicator-dot-current-color": "rgba(255,255,255,0.18)",
+                "--ki-indicator-dot-current-color": "rgba(255,255,255,0.48)",
                 "--ki-indicator-dot-current-hole-block-size": "0.375rem",
                 "--ki-indicator-dot-current-inline-size": "2rem",
                 "--ki-indicator-dot-current-radius": "1000px",
@@ -13916,7 +13916,7 @@
                 "--ki-input-focus-border": "#b59cd8",
                 "--ki-input-focus-fg": "#ffffff",
                 "--ki-input-focus-label-fg": "rgba(255,255,255,0.72)",
-                "--ki-input-focus-placeholder-fg": "rgba(255,255,255,0.48)",
+                "--ki-input-focus-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-input-focus-ring-color": "#b59cd8",
                 "--ki-input-focus-ring-offset": "0.125rem",
                 "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
@@ -13930,14 +13930,14 @@
                 "--ki-input-hover-border": "rgba(255,255,255,0.56)",
                 "--ki-input-hover-fg": "#ffffff",
                 "--ki-input-hover-label-fg": "rgba(255,255,255,0.72)",
-                "--ki-input-hover-placeholder-fg": "rgba(255,255,255,0.48)",
+                "--ki-input-hover-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-input-icon-size": "1.125rem",
                 "--ki-input-invalid-bg": "#0a0a0a",
                 "--ki-input-invalid-border": "#f19997",
                 "--ki-input-invalid-fg": "#ffffff",
                 "--ki-input-invalid-hint-fg": "#f19997",
                 "--ki-input-invalid-label-fg": "rgba(255,255,255,0.72)",
-                "--ki-input-invalid-placeholder-fg": "rgba(255,255,255,0.48)",
+                "--ki-input-invalid-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-input-invalid-ring": "0 0 0 3px rgba(240,81,73,0.4)",
                 "--ki-input-label-font-size": "0.8125rem",
                 "--ki-input-label-font-weight": "600",
@@ -13952,12 +13952,12 @@
                 "--ki-input-readonly-border": "rgba(255,255,255,0.48)",
                 "--ki-input-readonly-fg": "#ffffff",
                 "--ki-input-readonly-label-fg": "rgba(255,255,255,0.72)",
-                "--ki-input-readonly-placeholder-fg": "rgba(255,255,255,0.48)",
+                "--ki-input-readonly-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-input-rest-bg": "#1a1a1a",
                 "--ki-input-rest-border": "rgba(255,255,255,0.48)",
                 "--ki-input-rest-fg": "#ffffff",
                 "--ki-input-rest-label-fg": "rgba(255,255,255,0.72)",
-                "--ki-input-rest-placeholder-fg": "rgba(255,255,255,0.48)",
+                "--ki-input-rest-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-inverse-black-alpha-12": "rgba(0,0,0,0.12)",
                 "--ki-inverse-black-alpha-18": "rgba(0,0,0,0.18)",
                 "--ki-inverse-black-alpha-24": "rgba(0,0,0,0.24)",
@@ -14159,7 +14159,7 @@
                 "--ki-scroller-focus-ring-width": "0.125rem",
                 "--ki-scroller-gutter": "0.125rem",
                 "--ki-scroller-surface": "rgba(0,0,0,0)",
-                "--ki-scroller-thumb-color": "rgba(255,255,255,0.05)",
+                "--ki-scroller-thumb-color": "rgba(255,255,255,0.48)",
                 "--ki-scroller-thumb-min-length": "1rem",
                 "--ki-scroller-thumb-radius": "1000px",
                 "--ki-scroller-thumb-thickness": "0.25rem",
@@ -14221,15 +14221,15 @@
                 "--ki-state-layer-hover": "rgba(0,0,0,0.05)",
                 "--ki-state-layer-pressed": "rgba(0,0,0,0.08)",
                 "--ki-status-danger-color": "#f05149",
-                "--ki-status-info-color": "#13b9ec",
-                "--ki-status-neutral-color": "rgba(255,255,255,0.32)",
+                "--ki-status-info-color": "#42c7f0",
+                "--ki-status-neutral-color": "rgba(255,255,255,0.48)",
                 "--ki-status-radius": "1000px",
                 "--ki-status-ring-color": "#000000",
                 "--ki-status-ring-width": "0.125rem",
                 "--ki-status-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.08),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-status-size": "0.25rem",
                 "--ki-status-success-color": "#409b3f",
-                "--ki-status-warning-color": "#f8ac3a",
+                "--ki-status-warning-color": "#fbcb84",
                 "--ki-surface-base": "#0a0a0a",
                 "--ki-surface-black": "#000000",
                 "--ki-surface-danger-base-em": "#440b08",
@@ -14447,7 +14447,7 @@
                 "--ki-textarea-focus-border": "#b59cd8",
                 "--ki-textarea-focus-fg": "#ffffff",
                 "--ki-textarea-focus-label-fg": "rgba(255,255,255,0.72)",
-                "--ki-textarea-focus-placeholder-fg": "rgba(255,255,255,0.48)",
+                "--ki-textarea-focus-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-focus-ring-color": "#b59cd8",
                 "--ki-textarea-focus-ring-offset": "0.125rem",
                 "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.4)",
@@ -14459,13 +14459,13 @@
                 "--ki-textarea-hover-border": "rgba(255,255,255,0.56)",
                 "--ki-textarea-hover-fg": "#ffffff",
                 "--ki-textarea-hover-label-fg": "rgba(255,255,255,0.72)",
-                "--ki-textarea-hover-placeholder-fg": "rgba(255,255,255,0.48)",
+                "--ki-textarea-hover-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-invalid-bg": "#0a0a0a",
                 "--ki-textarea-invalid-border": "#f19997",
                 "--ki-textarea-invalid-fg": "#ffffff",
                 "--ki-textarea-invalid-hint-fg": "#f19997",
                 "--ki-textarea-invalid-label-fg": "rgba(255,255,255,0.72)",
-                "--ki-textarea-invalid-placeholder-fg": "rgba(255,255,255,0.48)",
+                "--ki-textarea-invalid-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-invalid-ring": "0 0 0 3px rgba(240,81,73,0.4)",
                 "--ki-textarea-label-font-size": "0.8125rem",
                 "--ki-textarea-label-font-weight": "600",
@@ -14481,12 +14481,12 @@
                 "--ki-textarea-readonly-border": "rgba(255,255,255,0.48)",
                 "--ki-textarea-readonly-fg": "#ffffff",
                 "--ki-textarea-readonly-label-fg": "rgba(255,255,255,0.72)",
-                "--ki-textarea-readonly-placeholder-fg": "rgba(255,255,255,0.48)",
+                "--ki-textarea-readonly-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-textarea-rest-bg": "#1a1a1a",
                 "--ki-textarea-rest-border": "rgba(255,255,255,0.48)",
                 "--ki-textarea-rest-fg": "#ffffff",
                 "--ki-textarea-rest-label-fg": "rgba(255,255,255,0.72)",
-                "--ki-textarea-rest-placeholder-fg": "rgba(255,255,255,0.48)",
+                "--ki-textarea-rest-placeholder-fg": "rgba(255,255,255,0.72)",
                 "--ki-tooltip-backdrop-blur": "12px",
                 "--ki-tooltip-bg": "#1a1a1a",
                 "--ki-tooltip-bg-end": "#1a1a1a",
@@ -15260,9 +15260,9 @@
                 "--ki-icon-button-xs-radius": "6px",
                 "--ki-icon-button-xs-size": "1.5rem",
                 "--ki-indicator-dot-block-size": "0.5rem",
-                "--ki-indicator-dot-color": "rgba(0,0,0,0.18)",
+                "--ki-indicator-dot-color": "rgba(0,0,0,0.48)",
                 "--ki-indicator-dot-current-block-size": "1rem",
-                "--ki-indicator-dot-current-color": "rgba(0,0,0,0.18)",
+                "--ki-indicator-dot-current-color": "rgba(0,0,0,0.48)",
                 "--ki-indicator-dot-current-hole-block-size": "0.375rem",
                 "--ki-indicator-dot-current-inline-size": "2rem",
                 "--ki-indicator-dot-current-radius": "1000px",
@@ -15286,7 +15286,7 @@
                 "--ki-input-focus-border": "#845abe",
                 "--ki-input-focus-fg": "#0a0c11",
                 "--ki-input-focus-label-fg": "#5b616d",
-                "--ki-input-focus-placeholder-fg": "#8c929c",
+                "--ki-input-focus-placeholder-fg": "#5b616d",
                 "--ki-input-focus-ring-color": "#845abe",
                 "--ki-input-focus-ring-offset": "0.125rem",
                 "--ki-input-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
@@ -15300,14 +15300,14 @@
                 "--ki-input-hover-border": "rgba(0,0,0,0.56)",
                 "--ki-input-hover-fg": "#0a0c11",
                 "--ki-input-hover-label-fg": "#5b616d",
-                "--ki-input-hover-placeholder-fg": "#8c929c",
+                "--ki-input-hover-placeholder-fg": "#5b616d",
                 "--ki-input-icon-size": "1.125rem",
                 "--ki-input-invalid-bg": "#ffffff",
                 "--ki-input-invalid-border": "#f05149",
                 "--ki-input-invalid-fg": "#0a0c11",
                 "--ki-input-invalid-hint-fg": "#cd2118",
                 "--ki-input-invalid-label-fg": "#5b616d",
-                "--ki-input-invalid-placeholder-fg": "#8c929c",
+                "--ki-input-invalid-placeholder-fg": "#5b616d",
                 "--ki-input-invalid-ring": "0 0 0 3px rgba(240,81,73,0.2)",
                 "--ki-input-label-font-size": "0.8125rem",
                 "--ki-input-label-font-weight": "600",
@@ -15322,12 +15322,12 @@
                 "--ki-input-readonly-border": "rgba(0,0,0,0.48)",
                 "--ki-input-readonly-fg": "#0a0c11",
                 "--ki-input-readonly-label-fg": "#5b616d",
-                "--ki-input-readonly-placeholder-fg": "#8c929c",
+                "--ki-input-readonly-placeholder-fg": "#5b616d",
                 "--ki-input-rest-bg": "#f2f2f4",
                 "--ki-input-rest-border": "rgba(0,0,0,0.48)",
                 "--ki-input-rest-fg": "#0a0c11",
                 "--ki-input-rest-label-fg": "#5b616d",
-                "--ki-input-rest-placeholder-fg": "#8c929c",
+                "--ki-input-rest-placeholder-fg": "#5b616d",
                 "--ki-inverse-black-alpha-12": "rgba(255,255,255,0.12)",
                 "--ki-inverse-black-alpha-18": "rgba(255,255,255,0.18)",
                 "--ki-inverse-black-alpha-24": "rgba(255,255,255,0.24)",
@@ -15529,7 +15529,7 @@
                 "--ki-scroller-focus-ring-width": "0.125rem",
                 "--ki-scroller-gutter": "0.125rem",
                 "--ki-scroller-surface": "rgba(255,255,255,0)",
-                "--ki-scroller-thumb-color": "rgba(0,0,0,0.05)",
+                "--ki-scroller-thumb-color": "rgba(0,0,0,0.48)",
                 "--ki-scroller-thumb-min-length": "1rem",
                 "--ki-scroller-thumb-radius": "1000px",
                 "--ki-scroller-thumb-thickness": "0.25rem",
@@ -15591,15 +15591,15 @@
                 "--ki-state-layer-hover": "rgba(255,255,255,0.05)",
                 "--ki-state-layer-pressed": "rgba(255,255,255,0.08)",
                 "--ki-status-danger-color": "#f05149",
-                "--ki-status-info-color": "#13b9ec",
-                "--ki-status-neutral-color": "#afb3bb",
+                "--ki-status-info-color": "#0f94bd",
+                "--ki-status-neutral-color": "rgba(0,0,0,0.48)",
                 "--ki-status-radius": "1000px",
                 "--ki-status-ring-color": "#ffffff",
                 "--ki-status-ring-width": "0.125rem",
                 "--ki-status-shadow": "0 1px 1px -0.5px rgba(0,0,0,0.03),inset 0 3px 3px 0 rgba(255,255,255,0.12)",
                 "--ki-status-size": "0.25rem",
                 "--ki-status-success-color": "#409b3f",
-                "--ki-status-warning-color": "#f8ac3a",
+                "--ki-status-warning-color": "#945b05",
                 "--ki-surface-base": "#ffffff",
                 "--ki-surface-black": "#000000",
                 "--ki-surface-danger-base-em": "#fff3f2",
@@ -15817,7 +15817,7 @@
                 "--ki-textarea-focus-border": "#845abe",
                 "--ki-textarea-focus-fg": "#0a0c11",
                 "--ki-textarea-focus-label-fg": "#5b616d",
-                "--ki-textarea-focus-placeholder-fg": "#8c929c",
+                "--ki-textarea-focus-placeholder-fg": "#5b616d",
                 "--ki-textarea-focus-ring-color": "#845abe",
                 "--ki-textarea-focus-ring-offset": "0.125rem",
                 "--ki-textarea-focus-ring-shadow": "0 0 0 3px rgba(132,90,190,0.2)",
@@ -15829,13 +15829,13 @@
                 "--ki-textarea-hover-border": "rgba(0,0,0,0.56)",
                 "--ki-textarea-hover-fg": "#0a0c11",
                 "--ki-textarea-hover-label-fg": "#5b616d",
-                "--ki-textarea-hover-placeholder-fg": "#8c929c",
+                "--ki-textarea-hover-placeholder-fg": "#5b616d",
                 "--ki-textarea-invalid-bg": "#ffffff",
                 "--ki-textarea-invalid-border": "#f05149",
                 "--ki-textarea-invalid-fg": "#0a0c11",
                 "--ki-textarea-invalid-hint-fg": "#cd2118",
                 "--ki-textarea-invalid-label-fg": "#5b616d",
-                "--ki-textarea-invalid-placeholder-fg": "#8c929c",
+                "--ki-textarea-invalid-placeholder-fg": "#5b616d",
                 "--ki-textarea-invalid-ring": "0 0 0 3px rgba(240,81,73,0.2)",
                 "--ki-textarea-label-font-size": "0.8125rem",
                 "--ki-textarea-label-font-weight": "600",
@@ -15851,12 +15851,12 @@
                 "--ki-textarea-readonly-border": "rgba(0,0,0,0.48)",
                 "--ki-textarea-readonly-fg": "#0a0c11",
                 "--ki-textarea-readonly-label-fg": "#5b616d",
-                "--ki-textarea-readonly-placeholder-fg": "#8c929c",
+                "--ki-textarea-readonly-placeholder-fg": "#5b616d",
                 "--ki-textarea-rest-bg": "#f2f2f4",
                 "--ki-textarea-rest-border": "rgba(0,0,0,0.48)",
                 "--ki-textarea-rest-fg": "#0a0c11",
                 "--ki-textarea-rest-label-fg": "#5b616d",
-                "--ki-textarea-rest-placeholder-fg": "#8c929c",
+                "--ki-textarea-rest-placeholder-fg": "#5b616d",
                 "--ki-tooltip-backdrop-blur": "12px",
                 "--ki-tooltip-bg": "#ffffff",
                 "--ki-tooltip-bg-end": "#ffffff",
@@ -16639,9 +16639,9 @@
                 "--ki-icon-button-xs-radius": "9999px",
                 "--ki-icon-button-xs-size": "1.5rem",
                 "--ki-indicator-dot-block-size": "0.5rem",
-                "--ki-indicator-dot-color": "rgba(255,255,255,0.32)",
+                "--ki-indicator-dot-color": "#938f99",
                 "--ki-indicator-dot-current-block-size": "0.5rem",
-                "--ki-indicator-dot-current-color": "#eaddff",
+                "--ki-indicator-dot-current-color": "#ffffff",
                 "--ki-indicator-dot-current-hole-block-size": "0",
                 "--ki-indicator-dot-current-inline-size": "0.5rem",
                 "--ki-indicator-dot-current-radius": "9999px",
@@ -16908,7 +16908,7 @@
                 "--ki-scroller-focus-ring-width": "0.125rem",
                 "--ki-scroller-gutter": "0",
                 "--ki-scroller-surface": "rgba(0,0,0,0)",
-                "--ki-scroller-thumb-color": "#49454f",
+                "--ki-scroller-thumb-color": "#938f99",
                 "--ki-scroller-thumb-min-length": "1rem",
                 "--ki-scroller-thumb-radius": "0",
                 "--ki-scroller-thumb-thickness": "0.5rem",
@@ -16970,15 +16970,15 @@
                 "--ki-state-layer-hover": "rgba(230,224,233,0.08)",
                 "--ki-state-layer-pressed": "rgba(230,224,233,0.12)",
                 "--ki-status-danger-color": "#f2b8b5",
-                "--ki-status-info-color": "#13b9ec",
-                "--ki-status-neutral-color": "rgba(255,255,255,0.32)",
+                "--ki-status-info-color": "#0f94bd",
+                "--ki-status-neutral-color": "#938f99",
                 "--ki-status-radius": "9999px",
                 "--ki-status-ring-color": "#000000",
                 "--ki-status-ring-width": "0.125rem",
                 "--ki-status-shadow": "0 0 0 0 rgba(0,0,0,0)",
                 "--ki-status-size": "0.375rem",
                 "--ki-status-success-color": "#9cda9b",
-                "--ki-status-warning-color": "#f8ac3a",
+                "--ki-status-warning-color": "#945b05",
                 "--ki-surface-base": "#141218",
                 "--ki-surface-black": "#000000",
                 "--ki-surface-danger-base-em": "#410e0b",
@@ -17230,7 +17230,7 @@
                 "--ki-textarea-readonly-border": "#938f99",
                 "--ki-textarea-readonly-fg": "#e6e0e9",
                 "--ki-textarea-readonly-label-fg": "#cac4d0",
-                "--ki-textarea-readonly-placeholder-fg": "#938f99",
+                "--ki-textarea-readonly-placeholder-fg": "#cac4d0",
                 "--ki-textarea-rest-bg": "#1d1b20",
                 "--ki-textarea-rest-border": "#938f99",
                 "--ki-textarea-rest-fg": "#e6e0e9",
@@ -18009,9 +18009,9 @@
                 "--ki-icon-button-xs-radius": "9999px",
                 "--ki-icon-button-xs-size": "1.5rem",
                 "--ki-indicator-dot-block-size": "0.5rem",
-                "--ki-indicator-dot-color": "rgba(0,0,0,0.32)",
+                "--ki-indicator-dot-color": "#79747e",
                 "--ki-indicator-dot-current-block-size": "0.5rem",
-                "--ki-indicator-dot-current-color": "#4f378b",
+                "--ki-indicator-dot-current-color": "#000000",
                 "--ki-indicator-dot-current-hole-block-size": "0",
                 "--ki-indicator-dot-current-inline-size": "0.5rem",
                 "--ki-indicator-dot-current-radius": "9999px",
@@ -18278,7 +18278,7 @@
                 "--ki-scroller-focus-ring-width": "0.125rem",
                 "--ki-scroller-gutter": "0",
                 "--ki-scroller-surface": "rgba(255,255,255,0)",
-                "--ki-scroller-thumb-color": "#cac4d0",
+                "--ki-scroller-thumb-color": "#79747e",
                 "--ki-scroller-thumb-min-length": "1rem",
                 "--ki-scroller-thumb-radius": "0",
                 "--ki-scroller-thumb-thickness": "0.5rem",
@@ -18340,7 +18340,7 @@
                 "--ki-state-layer-hover": "rgba(29,27,32,0.08)",
                 "--ki-state-layer-pressed": "rgba(29,27,32,0.12)",
                 "--ki-status-danger-color": "#dc362e",
-                "--ki-status-info-color": "#13b9ec",
+                "--ki-status-info-color": "#0f94bd",
                 "--ki-status-neutral-color": "#79747e",
                 "--ki-status-radius": "9999px",
                 "--ki-status-ring-color": "#ffffff",
@@ -18348,7 +18348,7 @@
                 "--ki-status-shadow": "0 0 0 0 rgba(0,0,0,0)",
                 "--ki-status-size": "0.375rem",
                 "--ki-status-success-color": "#409b3f",
-                "--ki-status-warning-color": "#f8ac3a",
+                "--ki-status-warning-color": "#945b05",
                 "--ki-surface-base": "#fef7ff",
                 "--ki-surface-black": "#000000",
                 "--ki-surface-danger-base-em": "#fceeee",
@@ -18600,7 +18600,7 @@
                 "--ki-textarea-readonly-border": "#79747e",
                 "--ki-textarea-readonly-fg": "#1d1b20",
                 "--ki-textarea-readonly-label-fg": "#49454f",
-                "--ki-textarea-readonly-placeholder-fg": "#79747e",
+                "--ki-textarea-readonly-placeholder-fg": "#49454f",
                 "--ki-textarea-rest-bg": "#f7f2fa",
                 "--ki-textarea-rest-border": "#79747e",
                 "--ki-textarea-rest-fg": "#1d1b20",
@@ -25038,9 +25038,9 @@
             "type": null
           },
           "--ki-indicator-dot-color": {
-            "default": "#0000002e",
+            "default": "#0000007a",
             "deprecatedSince": null,
-            "description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_18, the exact variable bound to every Indicator variant fill (Black/18 light, White/18 dark) — the scheme flip rides the semantic layer.",
+            "description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_18, which reads 1.53:1 light and 1.64:1 dark against the page; alpha_48 is the first step of the same ramp that clears the 3:1 FR-012 and WCAG 1.4.11 ask. The scheme flip rides the semantic layer.",
             "replacement": null,
             "required": false,
             "type": null
@@ -25054,9 +25054,9 @@
             "type": null
           },
           "--ki-indicator-dot-current-color": {
-            "default": "#0000002e",
+            "default": "#0000007a",
             "deprecatedSince": null,
-            "description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_18, the exact fill of the State=active ring vector (Black/18 light, White/18 dark) — painted as the pill ring in onmars, as the solid dot in themes that zero the hole.",
+            "description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_48, the same step as the resting dots — the MarsUI State=active ring vector binds the variable of the resting fill, and its alpha_18 reads 1.53-1.64:1 against the page (declared a11y deviation, FR-012). Painted as the pill ring in onmars, where elongation carries the state; as the solid dot in themes that zero the hole.",
             "replacement": null,
             "required": false,
             "type": null
@@ -25251,9 +25251,9 @@
             "type": null
           },
           "--ki-input-focus-placeholder-fg": {
-            "default": "#8c929c",
+            "default": "#5b616d",
             "deprecatedSince": null,
-            "description": "color used by the input component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+            "description": "color used by the input component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
             "replacement": null,
             "required": false,
             "type": null
@@ -25369,9 +25369,9 @@
             "type": null
           },
           "--ki-input-hover-placeholder-fg": {
-            "default": "#8c929c",
+            "default": "#5b616d",
             "deprecatedSince": null,
-            "description": "color used by the input component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+            "description": "color used by the input component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
             "replacement": null,
             "required": false,
             "type": null
@@ -25425,9 +25425,9 @@
             "type": null
           },
           "--ki-input-invalid-placeholder-fg": {
-            "default": "#8c929c",
+            "default": "#5b616d",
             "deprecatedSince": null,
-            "description": "color used by the input component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+            "description": "color used by the input component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
             "replacement": null,
             "required": false,
             "type": null
@@ -25551,9 +25551,9 @@
             "type": null
           },
           "--ki-input-readonly-placeholder-fg": {
-            "default": "#8c929c",
+            "default": "#5b616d",
             "deprecatedSince": null,
-            "description": "color used by the input component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+            "description": "color used by the input component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
             "replacement": null,
             "required": false,
             "type": null
@@ -25591,9 +25591,9 @@
             "type": null
           },
           "--ki-input-rest-placeholder-fg": {
-            "default": "#8c929c",
+            "default": "#5b616d",
             "deprecatedSince": null,
-            "description": "color used by the input component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+            "description": "color used by the input component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
             "replacement": null,
             "required": false,
             "type": null
@@ -27265,9 +27265,9 @@
             "type": null
           },
           "--ki-scroller-thumb-color": {
-            "default": "#0000000d",
+            "default": "#0000007a",
             "deprecatedSince": null,
-            "description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_6, the exact variable bound to the scroll pill on both Scroller variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md).",
+            "description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_6 (Black/5 light, White/5 dark), which reads 1.12:1 and 1.09:1 against the content surface. The thumb is the only mark that shows the scroll position, so it takes the first step of the same ramp that clears WCAG 1.4.11's 3:1. The scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md).",
             "replacement": null,
             "required": false,
             "type": null
@@ -27789,17 +27789,17 @@
             "type": null
           },
           "--ki-status-info-color": {
-            "default": "#13b9ec",
+            "default": "#0f94bd",
             "deprecatedSince": null,
-            "description": "color used by the status component for the info tone fill: no Figma Status variant ships an info Type, so the fill extrapolates the verified med-em 500 pattern to the Info ramp (001 contract, 010/015 precedent) — declared for founder ratification.",
+            "description": "color used by the status component for the info tone fill: Surface/info_high_em (Info/600 light, Info/400 dark) — one step above the med-em 500 pattern the success and danger tones follow, because Info/500 reads 2.29:1 on the light page and WCAG 1.4.11 asks 3:1 of the dot (FR-008). No Figma Status variant ships an info Type, so the fill remains an extrapolation onto the Info ramp (001 contract, 010/015 precedent) declared for founder ratification.",
             "replacement": null,
             "required": false,
             "type": null
           },
           "--ki-status-neutral-color": {
-            "default": "#afb3bb",
+            "default": "#0000007a",
             "deprecatedSince": null,
-            "description": "color used by the status component for the neutral tone fill: Surface/disabled_high_em, the exact variable bound to the Type=disabled Status variant (Gray/500 light, White/32 dark) — MarsUI's disabled gray maps to the charter neutral tone (spec Assumptions).",
+            "description": "color used by the status component for the neutral tone fill: ki.outline.control, the semantic 3:1 non-text floor (Black/48 light, White/48 dark; md.sys.color.outline in material3) — a declared a11y deviation from the MarsUI binding Surface/disabled_high_em (Gray/500 light, White/32 dark), which reads 2.10:1 and 2.78:1 against the page where WCAG 1.4.11 asks 3:1 of the dot (FR-008). MarsUI's disabled gray still maps to the charter neutral tone (spec Assumptions).",
             "replacement": null,
             "required": false,
             "type": null
@@ -27875,9 +27875,9 @@
             "type": null
           },
           "--ki-status-warning-color": {
-            "default": "#f8ac3a",
+            "default": "#945b05",
             "deprecatedSince": null,
-            "description": "color used by the status component for the warning tone fill: Surface/warning_med_em, the exact variable bound to the Type=warning Status variant (Warning/500).",
+            "description": "color used by the status component for the warning tone fill: Text/warning_high_em (Warning/800 light, Warning/300 dark) — a declared a11y deviation from the MarsUI binding Surface/warning_med_em (Warning/500), which reads 1.92:1 on the light page. No warning surface step clears the 3:1 WCAG 1.4.11 asks of the dot (Warning/600 reads 2.33:1), so the fill takes the warning ink that is legible on the page (FR-008).",
             "replacement": null,
             "required": false,
             "type": null
@@ -29631,9 +29631,9 @@
             "type": null
           },
           "--ki-textarea-focus-placeholder-fg": {
-            "default": "#8c929c",
+            "default": "#5b616d",
             "deprecatedSince": null,
-            "description": "color used by the textarea component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+            "description": "color used by the textarea component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
             "replacement": null,
             "required": false,
             "type": null
@@ -29733,9 +29733,9 @@
             "type": null
           },
           "--ki-textarea-hover-placeholder-fg": {
-            "default": "#8c929c",
+            "default": "#5b616d",
             "deprecatedSince": null,
-            "description": "color used by the textarea component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+            "description": "color used by the textarea component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
             "replacement": null,
             "required": false,
             "type": null
@@ -29781,9 +29781,9 @@
             "type": null
           },
           "--ki-textarea-invalid-placeholder-fg": {
-            "default": "#8c929c",
+            "default": "#5b616d",
             "deprecatedSince": null,
-            "description": "color used by the textarea component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+            "description": "color used by the textarea component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
             "replacement": null,
             "required": false,
             "type": null
@@ -29915,9 +29915,9 @@
             "type": null
           },
           "--ki-textarea-readonly-placeholder-fg": {
-            "default": "#8c929c",
+            "default": "#5b616d",
             "deprecatedSince": null,
-            "description": "color used by the textarea component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+            "description": "color used by the textarea component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
             "replacement": null,
             "required": false,
             "type": null
@@ -29955,9 +29955,9 @@
             "type": null
           },
           "--ki-textarea-rest-placeholder-fg": {
-            "default": "#8c929c",
+            "default": "#5b616d",
             "deprecatedSince": null,
-            "description": "color used by the textarea component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep).",
+            "description": "color used by the textarea component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1).",
             "replacement": null,
             "required": false,
             "type": null
@@ -30777,5 +30777,5 @@
       }
     }
   },
-  "surfaceSha256": "7c8ae8f5c1f7cbc2d0421a26a546a29b8efc4321687cc4c4ce608d2297696aaf"
+  "surfaceSha256": "15dbba14603ca4b05886b0873a68a50ca9152f7e6100cc3309d9c978929b934f"
 }

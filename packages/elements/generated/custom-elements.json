@@ -3901,7 +3901,7 @@
             },
             {
               "name": "--ki-indicator-dot-color",
-              "description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_18, the exact variable bound to every Indicator variant fill (Black/18 light, White/18 dark) — the scheme flip rides the semantic layer."
+              "description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_18, which reads 1.53:1 light and 1.64:1 dark against the page; alpha_48 is the first step of the same ramp that clears the 3:1 FR-012 and WCAG 1.4.11 ask. The scheme flip rides the semantic layer."
             },
             {
               "name": "--ki-indicator-dot-current-block-size",
@@ -3909,7 +3909,7 @@
             },
             {
               "name": "--ki-indicator-dot-current-color",
-              "description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_18, the exact fill of the State=active ring vector (Black/18 light, White/18 dark) — painted as the pill ring in onmars, as the solid dot in themes that zero the hole."
+              "description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_48, the same step as the resting dots — the MarsUI State=active ring vector binds the variable of the resting fill, and its alpha_18 reads 1.53-1.64:1 against the page (declared a11y deviation, FR-012). Painted as the pill ring in onmars, where elongation carries the state; as the solid dot in themes that zero the hole."
             },
             {
               "name": "--ki-indicator-dot-current-hole-block-size",
@@ -4258,7 +4258,7 @@
             },
             {
               "name": "--ki-input-focus-placeholder-fg",
-              "description": "color used by the input component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+              "description": "color used by the input component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
             },
             {
               "name": "--ki-input-focus-ring-color",
@@ -4310,7 +4310,7 @@
             },
             {
               "name": "--ki-input-hover-placeholder-fg",
-              "description": "color used by the input component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+              "description": "color used by the input component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
             },
             {
               "name": "--ki-input-icon-size",
@@ -4334,7 +4334,7 @@
             },
             {
               "name": "--ki-input-invalid-placeholder-fg",
-              "description": "color used by the input component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+              "description": "color used by the input component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
             },
             {
               "name": "--ki-input-invalid-ring",
@@ -4390,7 +4390,7 @@
             },
             {
               "name": "--ki-input-readonly-placeholder-fg",
-              "description": "color used by the input component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+              "description": "color used by the input component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
             },
             {
               "name": "--ki-input-rest-bg",
@@ -4410,7 +4410,7 @@
             },
             {
               "name": "--ki-input-rest-placeholder-fg",
-              "description": "color used by the input component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+              "description": "color used by the input component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
             },
             {
               "name": "--ki-motion-duration-fast",
@@ -5694,7 +5694,7 @@
             },
             {
               "name": "--ki-scroller-thumb-color",
-              "description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_6, the exact variable bound to the scroll pill on both Scroller variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md)."
+              "description": "color used by the scroller component for the indicator thumb: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_6 (Black/5 light, White/5 dark), which reads 1.12:1 and 1.09:1 against the content surface. The thumb is the only mark that shows the scroll position, so it takes the first step of the same ramp that clears WCAG 1.4.11's 3:1. The scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md)."
             },
             {
               "name": "--ki-scroller-thumb-min-length",
@@ -6342,11 +6342,11 @@
             },
             {
               "name": "--ki-status-info-color",
-              "description": "color used by the status component for the info tone fill: no Figma Status variant ships an info Type, so the fill extrapolates the verified med-em 500 pattern to the Info ramp (001 contract, 010/015 precedent) — declared for founder ratification."
+              "description": "color used by the status component for the info tone fill: Surface/info_high_em (Info/600 light, Info/400 dark) — one step above the med-em 500 pattern the success and danger tones follow, because Info/500 reads 2.29:1 on the light page and WCAG 1.4.11 asks 3:1 of the dot (FR-008). No Figma Status variant ships an info Type, so the fill remains an extrapolation onto the Info ramp (001 contract, 010/015 precedent) declared for founder ratification."
             },
             {
               "name": "--ki-status-neutral-color",
-              "description": "color used by the status component for the neutral tone fill: Surface/disabled_high_em, the exact variable bound to the Type=disabled Status variant (Gray/500 light, White/32 dark) — MarsUI's disabled gray maps to the charter neutral tone (spec Assumptions)."
+              "description": "color used by the status component for the neutral tone fill: ki.outline.control, the semantic 3:1 non-text floor (Black/48 light, White/48 dark; md.sys.color.outline in material3) — a declared a11y deviation from the MarsUI binding Surface/disabled_high_em (Gray/500 light, White/32 dark), which reads 2.10:1 and 2.78:1 against the page where WCAG 1.4.11 asks 3:1 of the dot (FR-008). MarsUI's disabled gray still maps to the charter neutral tone (spec Assumptions)."
             },
             {
               "name": "--ki-status-radius",
@@ -6374,7 +6374,7 @@
             },
             {
               "name": "--ki-status-warning-color",
-              "description": "color used by the status component for the warning tone fill: Surface/warning_med_em, the exact variable bound to the Type=warning Status variant (Warning/500)."
+              "description": "color used by the status component for the warning tone fill: Text/warning_high_em (Warning/800 light, Warning/300 dark) — a declared a11y deviation from the MarsUI binding Surface/warning_med_em (Warning/500), which reads 1.92:1 on the light page. No warning surface step clears the 3:1 WCAG 1.4.11 asks of the dot (Warning/600 reads 2.33:1), so the fill takes the warning ink that is legible on the page (FR-008)."
             },
             {
               "name": "--ki-typography-family-body",
@@ -7542,7 +7542,7 @@
             },
             {
               "name": "--ki-textarea-focus-placeholder-fg",
-              "description": "color used by the textarea component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+              "description": "color used by the textarea component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
             },
             {
               "name": "--ki-textarea-focus-ring-color",
@@ -7586,7 +7586,7 @@
             },
             {
               "name": "--ki-textarea-hover-placeholder-fg",
-              "description": "color used by the textarea component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+              "description": "color used by the textarea component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
             },
             {
               "name": "--ki-textarea-invalid-bg",
@@ -7606,7 +7606,7 @@
             },
             {
               "name": "--ki-textarea-invalid-placeholder-fg",
-              "description": "color used by the textarea component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+              "description": "color used by the textarea component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
             },
             {
               "name": "--ki-textarea-invalid-ring",
@@ -7670,7 +7670,7 @@
             },
             {
               "name": "--ki-textarea-readonly-placeholder-fg",
-              "description": "color used by the textarea component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+              "description": "color used by the textarea component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
             },
             {
               "name": "--ki-textarea-rest-bg",
@@ -7690,7 +7690,7 @@
             },
             {
               "name": "--ki-textarea-rest-placeholder-fg",
-              "description": "color used by the textarea component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep)."
+              "description": "color used by the textarea component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1)."
             },
             {
               "name": "--ki-typography-family-body",
