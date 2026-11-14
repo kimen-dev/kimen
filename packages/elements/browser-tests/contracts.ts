@@ -17,7 +17,7 @@ const COLOR_PATTERN = /rgba?\([^)]*\)/gu;
 const OPAQUE = 0.995;
 
 /** Every element under `root`, descending into open shadow roots. */
-export function deepElements(root: Element): HTMLElement[] {
+function deepElements(root: Element): HTMLElement[] {
   const found: HTMLElement[] = [];
   const walk = (node: Element): void => {
     found.push(node as HTMLElement);
@@ -33,7 +33,7 @@ export function deepElements(root: Element): HTMLElement[] {
 }
 
 /** The element that paints behind `node`: its slot, its parent or its host. */
-export function flatParent(node: Element): Element | null {
+function flatParent(node: Element): Element | null {
   const slot = (node as HTMLElement).assignedSlot;
   if (slot !== null) {
     return slot;
