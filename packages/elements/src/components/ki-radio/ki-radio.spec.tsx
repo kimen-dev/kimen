@@ -1,6 +1,9 @@
 import { h } from '@stencil/core';
-import { describe, expect, it, render } from '@stencil/vitest';
-import { normalizeBooleanPresence } from '../ki-radio-group/ki-radio-group.form';
+import { afterEach, describe, expect, it, render, vi } from '@stencil/vitest';
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 // @spec:007-ki-radio-group
 // Option-anatomy tests only; every behavior S-ID lives in the group suite.
@@ -49,13 +52,25 @@ describe('ki-radio', () => {
     const { root } = await render('<ki-radio disabled="false">Email</ki-radio>');
     const input = root.shadowRoot?.querySelector('input');
 
-    expect(normalizeBooleanPresence('false')).toBe(true);
     expect((root as KiRadioTestElement).disabled).toBe(true);
     expect(input?.disabled).toBe(true);
     expect(input?.tabIndex).toBe(-1);
   });
 
-  it('S3 S11 normalizes a watched falsy disabled attribute and restores on removal', async () => {
+  // mock-doc ships no MutationObserver, so the presence observer is driven by
+  // hand here; the real-browser group suite asserts it end to end (S26).
+  it('S3 S11 normalizes an observed falsy disabled attribute and restores on removal', async () => {
+    let presenceCallback: MutationCallback | undefined;
+    class TestMutationObserver {
+      constructor(callback: MutationCallback) {
+        presenceCallback = callback;
+      }
+
+      observe = vi.fn();
+      disconnect = vi.fn();
+      takeRecords = (): MutationRecord[] => [];
+    }
+    vi.stubGlobal('MutationObserver', TestMutationObserver);
     const { root, waitForChanges } = await render(<ki-radio>Email</ki-radio>);
     const radio = root as KiRadioTestElement;
     const input = root.shadowRoot?.querySelector('input');
@@ -63,6 +78,7 @@ describe('ki-radio', () => {
     radio.disabled = true;
     await waitForChanges();
     root.setAttribute('disabled', 'false');
+    presenceCallback?.([], {} as MutationObserver);
     await waitForChanges();
 
     expect(radio.disabled).toBe(true);
@@ -71,6 +87,7 @@ describe('ki-radio', () => {
     expect(input?.tabIndex).toBe(-1);
 
     root.removeAttribute('disabled');
+    presenceCallback?.([], {} as MutationObserver);
     await waitForChanges();
 
     expect(radio.disabled).toBe(false);

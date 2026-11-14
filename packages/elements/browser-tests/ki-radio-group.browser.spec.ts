@@ -13,9 +13,11 @@ import { expectAccessible } from './axe';
 type KiRadioGroupElement = HTMLElement & {
   disabled: boolean;
   label: string;
+  required: boolean;
   value: string;
   validationMessage: string;
 };
+type KiRadioElement = HTMLElement & { disabled: boolean };
 
 const STYLE_ID = 'ki-radio-group-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-radio-group-browser-material3-token-style';
@@ -679,5 +681,54 @@ describe('ki-radio-group boolean presence in a real browser', () => {
     // Presence is normalized: the host attribute stays, with an empty value.
     expect(options[1]?.getAttribute('disabled')).toBe('');
     expect(options[2]?.getAttribute('disabled')).toBe('');
+  });
+
+  // Presence semantics are about ATTRIBUTES. Framework wrappers (React, Vue,
+  // Angular) assign PROPERTIES, so a group disabled while its data loads must
+  // come back when the property is cleared: re-reading the attribute Stencil
+  // has not un-reflected yet would pin the group disabled and required forever.
+  it('S19 S13 clearing the disabled and required properties re-enables the group and lifts the requirement', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount({ name: 'contact', disabled: true, required: true }, form);
+
+    el.disabled = false;
+    el.required = false;
+    await settleFrames();
+
+    const group = el.shadowRoot?.querySelector('[role="radiogroup"]');
+    expect(el.disabled).toBe(false);
+    expect(el.required).toBe(false);
+    expect(el.hasAttribute('disabled')).toBe(false);
+    expect(group?.hasAttribute('aria-disabled')).toBe(false);
+    expect(group?.hasAttribute('aria-required')).toBe(false);
+    // No longer required: an unanswered group does not block the form.
+    expect(form.checkValidity()).toBe(true);
+
+    await userEvent.click(radioAt(el, 1));
+
+    expect(el.value).toBe('sms');
+    expect(new FormData(form).get('contact')).toBe('sms');
+  });
+
+  it('S3 clearing the disabled property makes a disabled option selectable again', async () => {
+    cleanup();
+    const el = await mount();
+    const sms = el.querySelectorAll<KiRadioElement>('ki-radio')[1];
+    if (!sms) {
+      throw new Error('Missing the SMS option');
+    }
+    sms.setAttribute('disabled', '');
+    await settleFrames();
+    expect(radioAt(el, 1).disabled).toBe(true);
+
+    sms.disabled = false;
+    await settleFrames();
+
+    expect(sms.disabled).toBe(false);
+    expect(sms.hasAttribute('disabled')).toBe(false);
+    await userEvent.click(radioAt(el, 1));
+    expect(el.value).toBe('sms');
   });
 });

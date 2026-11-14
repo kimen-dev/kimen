@@ -1,6 +1,9 @@
 import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
-import { observeAttributePresence } from '../../utils/boolean-presence';
-import { normalizeBooleanPresence, radioGroupFormValue } from './ki-radio-group.form';
+import {
+  booleanFromAttributePresence,
+  observeAttributePresence,
+} from '../../utils/boolean-presence';
+import { radioGroupFormValue } from './ki-radio-group.form';
 import { arrowDirection, nextEnabledIndex } from './ki-radio-group.keyboard';
 
 type KiRadioElement = HTMLElement & {
@@ -112,23 +115,24 @@ export class KiRadioGroup {
     this.selectByValue(this.value);
   }
 
+  // Never re-read the host attribute here: Stencil un-reflects a cleared
+  // property only at the next render, so the attribute is still present while
+  // this watch runs and reading it would undo `disabled = false` /
+  // `required = false` assigned by a framework wrapper. Presence is applied in
+  // componentWillLoad and by the attribute observer instead; the method keeps
+  // its name because the class signature is part of the sealed API snapshot.
   @Watch('disabled')
   @Watch('required')
   protected normalizeBooleanProps(): void {
-    const normalizedDisabled = normalizeBooleanPresence(
-      this.host.hasAttribute('disabled') ? this.host.getAttribute('disabled') : this.disabled,
-    );
-    const normalizedRequired = normalizeBooleanPresence(
-      this.host.hasAttribute('required') ? this.host.getAttribute('required') : this.required,
-    );
-
-    if (this.disabled !== normalizedDisabled) {
-      this.disabled = normalizedDisabled;
-    }
-    if (this.required !== normalizedRequired) {
-      this.required = normalizedRequired;
-    }
     this.syncInputs();
+  }
+
+  // Presence semantics: a present attribute means `true` whatever its value
+  // (`disabled="false"` still disables). Runs before the first render and on
+  // attribute mutations alone, so it never fights a property assignment.
+  private applyAttributePresence(): void {
+    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
+    this.required = booleanFromAttributePresence(this.required, this.host.hasAttribute('required'));
   }
 
   private get effectiveDisabled(): boolean {
@@ -136,17 +140,18 @@ export class KiRadioGroup {
   }
 
   connectedCallback(): void {
-    // The @Watch misses `disabled="false"`/`required="false"` written while the
-    // prop is already `false` (no prop change, so no watch); the observer
-    // covers it before Stencil's reflection would remove the attribute.
+    // Presence semantics for attributes written after hydration: Stencil parses
+    // `disabled="false"`/`required="false"` to `false` and would remove the
+    // attribute on reflect.
     this.presenceObserver?.disconnect();
     this.presenceObserver = observeAttributePresence(this.host, ['disabled', 'required'], () => {
-      this.normalizeBooleanProps();
+      this.applyAttributePresence();
     });
   }
 
   componentWillLoad(): void {
-    this.normalizeBooleanProps();
+    this.applyAttributePresence();
+    this.syncInputs();
   }
 
   componentDidLoad(): void {
