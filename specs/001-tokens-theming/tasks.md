@@ -6,7 +6,7 @@
 
 **Input**: Design documents from `/specs/001-tokens-theming/`
 
-**Prerequisites**: plan.md, spec.md + feature.feature (S1-S7, approved), research.md (D1-D7), data-model.md, contracts/theming-contract.md
+**Prerequisites**: plan.md, spec.md + feature.feature (S1-S7 approved; S8-S13 added 2026-11-14, Phase 7), research.md (D1-D11), data-model.md, contracts/theming-contract.md
 
 **Tests**: MANDATORY, never optional (Art. II/III). Tests first, verified
 failing for the right reason. Traceability: the browser spec files carry the
@@ -111,6 +111,36 @@ strict RED: nothing of it exists yet.
 - [x] T019 [P] Write `packages/tokens/README.md`: when-to-use/when-NOT-to-use for agents (Art. I), the two document attributes, theme-authoring guide (reassign theme+semantic only), link to contracts/theming-contract.md.
 - [x] T020 [P] Run `bash scripts/gates/check-traceability.sh` — every S1-S7 maps to a test in the marked files.
 - [x] T021 Full suite: `bash scripts/gates/gates-suite.sh` exits 0 (the ONLY definition of done, Art. III).
+
+## Phase 7: Subtree theming and single-declaration schemes (2026-11-14)
+
+**Goal**: theme and scheme by subtree (US4), a dark page coherent with the
+tokens stylesheet alone (US5), and an emission that declares each token once
+(research.md D8-D11). Token names and effective values do not change.
+
+**Independent Test**: real components inside and outside a declared subtree
+against the same components in a document themed that way at the root; the
+bare page under a dark system preference; `public-api.json` byte-identical.
+
+### Contract first (Art. II)
+
+- [x] T022 [US4][US5] Add scenarios S8-S13 to `feature.feature` and sync the Gherkin block of `spec.md`; reword S6 for a theme stylesheet that carries overrides only. Update `contracts/theming-contract.md` (subtree scoping is now part of the contract).
+
+### RED: failing tests first
+
+- [x] T023 [P] [US4] `packages/elements/browser-tests/tokens-theming-subtree.browser.spec.ts`: S8-S12 measured on the computed paint of a real `ki-button` and `ki-input` through their shadow trees, never on token names. Verified failing on the previous stylesheets (11 of 12; the twelfth is the non-vacuity guard).
+- [x] T024 [P] [US5] `bare-page.browser.spec.ts`: S13 — tokens stylesheet alone under a dark system preference: `color-scheme` on the root, dark canvas and native control, every string of the 29 galleries ≥ 4.5:1 against its real backdrop down to the browser canvas. Verified failing (19 tests; 15 components below 4.5:1).
+- [x] T025 [P] Unit tests for the emitter (`packages/tokens/scripts/theme-stylesheet.test.mjs`) and for the new stylesheet grammar in the public-API surface (`scripts/tests/css-token-surface.test.mjs`, `scripts/mutation-tests/css-token-surface.spec.mjs`). Verified failing.
+
+### GREEN: implementation
+
+- [x] T026 `packages/tokens/scripts/theme-stylesheet.mjs` + `build.mjs` + `style-dictionary.config.mjs`: four compositions merged into `tokens.css` (colour-scheme contract + every token once, `light-dark()` per differing colour, on `:root, :where([data-ki-theme])`) and `tokens.material3.css` (overrides only, on `:root[data-ki-theme='material3'], [data-ki-theme='material3']`). No comments, no intermediate files. `base.css` no longer declares `color-scheme`.
+- [x] T027 Readers of the emitted CSS: `scripts/lib/css-token-surface.mjs` (closed grammar, themes resolved over the default stylesheet), `packages/tokens/scripts/check-contrast.mjs` (per-scheme branch of `light-dark()`, theme over default), `scripts/gates/check-generated-sync.mjs` (three stylesheets), browser token-reading helpers (a `light-dark()` token is read through a real colour property).
+
+### Quality gates
+
+- [x] T028 `public-api.json` byte-identical after regeneration; contrast gate reads byte-identical inputs; budgets lowered to lock the gain (material3 ≤ 5 KB, page contract ≤ 250 B, minified + brotli).
+- [ ] T029 Founder: regenerate the linux visual baselines of `ki-card` and `ki-dialog` dark (`visual-baselines` workflow). Both galleries slot NATIVE `<button>` elements, which the browser now paints in the dark scheme the tokens declare; no Kimen component changes a pixel.
 
 ## Dependencies & Execution Order
 

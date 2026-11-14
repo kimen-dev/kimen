@@ -34,12 +34,12 @@
     {
       "name": "material3 tokens stylesheet",
       "path": "dist/css/tokens.material3.css",
-      "limit": "11.5 KB"
+      "limit": "5 KB"
     },
     {
       "name": "page contract stylesheet",
       "path": "dist/css/base.css",
-      "limit": "1 KB"
+      "limit": "250 B"
     }
   ],
   "nx": {

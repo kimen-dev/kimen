@@ -1,6 +1,22 @@
 const CSS_EXPORT = /^\.\/css(?:\/([a-z0-9]+(?:-[a-z0-9]+)*))?$/u;
+/** The default theme: the stylesheet every other theme overrides. */
+const DEFAULT_THEME_EXPORT = './css';
 /** The one exported stylesheet that consumes tokens instead of publishing them. */
 const PAGE_CONTRACT_EXPORT = './css/base';
+/**
+ * The colour-scheme contract the default stylesheet opens with, in this order.
+ * Scheme-dependent tokens are `light-dark()` values: without these rules they
+ * never leave their light branch, and because the three selectors tie on
+ * specificity on the root, the attribute rules only win there by coming last.
+ */
+const SCHEME_CONTRACT = [
+  [':root', 'light dark'],
+  ["[data-ki-color-scheme='light']", 'light'],
+  ["[data-ki-color-scheme='dark']", 'dark'],
+];
+/** The root, and — at zero specificity — the root of any themed subtree. */
+const DEFAULT_THEME_SELECTOR = ':root,:where([data-ki-theme])';
+const SCHEMES = ['light', 'dark'];
 const CUSTOM_PROPERTY = /^--ki-[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const ZERO_DIMENSION =
   /(^|[^a-zA-Z0-9_.-])[-+]?0(?:\.0+)?(?:ch|cm|dvh|dvw|em|ex|in|lh|mm|pc|pt|px|q|rem|rlh|svh|svw|vh|vmax|vmin|vw)(?=$|[^a-zA-Z0-9_-])/giu;
@@ -136,18 +152,24 @@ function splitTopLevel(source, delimiter, label) {
   return result;
 }
 
-function declarations(body, label) {
+function plainDeclarations(body, label) {
   if (body.includes('{') || body.includes('}')) {
     throw new Error(`${label} contains an unexpected nested rule`);
   }
-  const result = new Map();
+  const result = [];
   for (const raw of splitTopLevel(body, ';', label)) {
     const declaration = raw.trim();
     if (declaration === '') continue;
     const colon = declaration.indexOf(':');
     if (colon <= 0) throw new Error(`${label} contains an invalid declaration`);
-    const name = declaration.slice(0, colon).trim();
-    const value = declaration.slice(colon + 1).trim();
+    result.push([declaration.slice(0, colon).trim(), declaration.slice(colon + 1).trim()]);
+  }
+  return result;
+}
+
+function declarations(body, label) {
+  const result = new Map();
+  for (const [name, value] of plainDeclarations(body, label)) {
     if (!CUSTOM_PROPERTY.test(name) || value === '') {
       throw new Error(`${label} contains unsupported declaration ${name || '<empty>'}`);
     }
@@ -165,7 +187,9 @@ function canonicalPrelude(prelude) {
     .replaceAll(/\s+/gu, '');
 }
 
-function parseRules(source, label, media = null, output = []) {
+/** The top-level rules of a theme stylesheet. It has no conditional rules at all. */
+function parseRules(source, label) {
+  const rules = [];
   let cursor = 0;
   while (cursor < source.length) {
     while (cursor < source.length && /[\s;]/u.test(source[cursor])) cursor += 1;
@@ -175,33 +199,16 @@ function parseRules(source, label, media = null, output = []) {
     const prelude = source.slice(cursor, opening).trim();
     if (prelude === '') throw new Error(`${label} contains a block without a prelude`);
     const closing = matchingBrace(source, opening, label);
-    const body = source.slice(opening + 1, closing);
-    const canonical = canonicalPrelude(prelude);
-    if (canonical.startsWith('@')) {
-      if (canonical !== '@media(prefers-color-scheme:dark)' || media !== null) {
-        throw new Error(`${label} contains unsupported conditional rule ${prelude}`);
-      }
-      parseRules(body, label, canonical, output);
-    } else {
-      output.push({
-        selector: canonical,
-        media,
-        declarations: declarations(body, `${label} rule ${prelude}`),
-      });
+    const selector = canonicalPrelude(prelude);
+    if (selector.startsWith('@')) {
+      // The scheme is `color-scheme` plus `light-dark()`, never a media query:
+      // a conditional rule here would be a second, divergent scheme switch.
+      throw new Error(`${label} contains unsupported conditional rule ${prelude}`);
     }
+    rules.push({ selector, prelude, body: source.slice(opening + 1, closing) });
     cursor = closing + 1;
   }
-  return output;
-}
-
-function findOneRule(rules, selector, media, label) {
-  const matches = rules.filter((rule) => rule.selector === selector && rule.media === media);
-  if (matches.length !== 1) {
-    throw new Error(
-      `${label} must contain exactly one ${selector} rule in ${media ?? 'light'} context`,
-    );
-  }
-  return matches[0].declarations;
+  return rules;
 }
 
 function mergeDeclarations(base, override) {
@@ -261,6 +268,32 @@ function replaceVariables(value, resolveProperty, label) {
   return result;
 }
 
+/** Replace every `light-dark(a, b)` with the branch the scheme selects. */
+function selectScheme(value, scheme, label) {
+  let result = '';
+  let cursor = 0;
+  while (cursor < value.length) {
+    const match = /light-dark\s*\(/giu.exec(value.slice(cursor));
+    if (match === null) {
+      result += value.slice(cursor);
+      break;
+    }
+    const start = cursor + match.index;
+    const opening = start + match[0].lastIndexOf('(');
+    const closing = matchingParenthesis(value, opening, label);
+    const branches = splitTopLevel(value.slice(opening + 1, closing), ',', label).map((branch) =>
+      branch.trim(),
+    );
+    if (branches.length !== 2 || branches.includes('')) {
+      throw new Error(`${label} contains a light-dark() that does not take exactly two values`);
+    }
+    result += value.slice(cursor, start);
+    result += selectScheme(branches[SCHEMES.indexOf(scheme)], scheme, label);
+    cursor = closing + 1;
+  }
+  return result;
+}
+
 function normalizeShadow(value) {
   return splitTopLevel(value, ',', 'shadow value')
     .map((layer) => {
@@ -289,7 +322,7 @@ function normalizeCssValue(value, propertyName) {
   return normalized;
 }
 
-function resolvedPublicValues(declarationMap, publicTokenNames, label) {
+function resolvedPublicValues(declarationMap, publicTokenNames, scheme, label) {
   const cache = new Map();
   const resolving = [];
   const resolveProperty = (name) => {
@@ -304,7 +337,11 @@ function resolvedPublicValues(declarationMap, publicTokenNames, label) {
     if (raw === undefined) throw new Error(`${label} references missing custom property ${name}`);
     resolving.push(name);
     const resolved = normalizeCssValue(
-      replaceVariables(raw, resolveProperty, `${label} ${name}`),
+      selectScheme(
+        replaceVariables(raw, resolveProperty, `${label} ${name}`),
+        scheme,
+        `${label} ${name}`,
+      ),
       name,
     );
     resolving.pop();
@@ -320,93 +357,89 @@ function resolvedPublicValues(declarationMap, publicTokenNames, label) {
   );
 }
 
-function stylesheetSelectors(subpath, theme) {
-  const base = theme === undefined ? ':root' : `:root[data-ki-theme='${theme}']`;
-  return {
-    light: base,
-    automaticDark: `${base}:not([data-ki-color-scheme='light'])`,
-    forcedDark: `${base}[data-ki-color-scheme='dark']`,
-    label: `${subpath} stylesheet`,
-  };
+function contexts(declarationMap, publicTokenNames, label) {
+  return Object.fromEntries(
+    SCHEMES.map((scheme) => [
+      scheme,
+      resolvedPublicValues(declarationMap, publicTokenNames, scheme, `${label} ${scheme}`),
+    ]),
+  );
 }
 
-function oneStylesheet({ subpath, target, css, publicTokenNames }) {
-  const match = CSS_EXPORT.exec(subpath);
-  if (match === null) throw new Error(`${subpath} is not a supported public CSS export`);
-  const selectors = stylesheetSelectors(subpath, match[1]);
-  const rules = parseRules(stripComments(css, selectors.label), selectors.label);
-  const light = findOneRule(rules, selectors.light, null, selectors.label);
-  const automaticOverride = findOneRule(
-    rules,
-    selectors.automaticDark,
-    '@media(prefers-color-scheme:dark)',
-    selectors.label,
-  );
-  const forcedOverride = findOneRule(rules, selectors.forcedDark, null, selectors.label);
-  if (rules.length !== 3) {
-    throw new Error(`${selectors.label} contains an unsupported public rule`);
+/**
+ * The default theme stylesheet: the colour-scheme contract, then every token in
+ * one rule that matches the root and the root of any themed subtree.
+ */
+function defaultThemeDeclarations(css, label) {
+  const rules = parseRules(stripComments(css, label), label);
+  const order = SCHEME_CONTRACT.map(([selector]) => selector).join(', ');
+  for (const [index, [selector, value]] of SCHEME_CONTRACT.entries()) {
+    const rule = rules[index];
+    if (rule?.selector !== selector) {
+      throw new Error(`${label} must declare, in order, ${order} before its tokens`);
+    }
+    const declared = plainDeclarations(rule.body, `${label} rule ${rule.prelude}`);
+    if (
+      declared.length !== 1 ||
+      declared[0][0] !== 'color-scheme' ||
+      declared[0][1].replaceAll(/\s+/gu, ' ') !== value
+    ) {
+      throw new Error(`${label} ${selector} must declare exactly color-scheme: ${value}`);
+    }
   }
-  const lightValues = resolvedPublicValues(light, publicTokenNames, `${selectors.label} light`);
-  const automaticValues = resolvedPublicValues(
-    mergeDeclarations(light, automaticOverride),
-    publicTokenNames,
-    `${selectors.label} automatic dark`,
-  );
-  const forcedValues = resolvedPublicValues(
-    mergeDeclarations(light, forcedOverride),
-    publicTokenNames,
-    `${selectors.label} forced dark`,
-  );
-  if (JSON.stringify(automaticValues) !== JSON.stringify(forcedValues)) {
-    throw new Error(`${selectors.label} automatic and forced dark contexts diverge`);
+  const tokens = rules[SCHEME_CONTRACT.length];
+  if (tokens?.selector !== DEFAULT_THEME_SELECTOR) {
+    throw new Error(`${label} must declare its tokens in one ${DEFAULT_THEME_SELECTOR} rule`);
   }
-  return { target, contexts: { light: lightValues, dark: automaticValues } };
+  if (rules.length !== SCHEME_CONTRACT.length + 1) {
+    throw new Error(`${label} contains an unsupported public rule`);
+  }
+  return declarations(tokens.body, `${label} rule ${tokens.prelude}`);
+}
+
+/**
+ * An opt-in theme stylesheet: one rule of overrides, scoped to a themed
+ * document and to a themed subtree. It declares only what it changes, so its
+ * effective contract is the default stylesheet's with those overrides applied —
+ * and it may reassign that contract, never extend it.
+ */
+function themeDeclarations({ css, theme, label, base }) {
+  const selector = `:root[data-ki-theme='${theme}'],[data-ki-theme='${theme}']`;
+  const rules = parseRules(stripComments(css, label), label);
+  if (rules.length !== 1 || rules[0].selector !== selector) {
+    throw new Error(`${label} must contain exactly the rule ${selector}`);
+  }
+  const overrides = declarations(rules[0].body, `${label} rule ${rules[0].prelude}`);
+  for (const name of overrides.keys()) {
+    if (!base.has(name)) {
+      throw new Error(
+        `${label} declares ${name}, which the ${DEFAULT_THEME_EXPORT} stylesheet does not`,
+      );
+    }
+  }
+  return mergeDeclarations(base, overrides);
 }
 
 /**
  * The page contract (`./css/base`) is the one exported stylesheet that PUBLISHES
  * no tokens: it only consumes them, so it carries none of the token surface and
- * is exempt from the three-rule theme grammar above. It exists because
- * `color-scheme` — the declaration that keeps a light-only page from rendering
- * dark component surfaces on a user-agent white canvas — is not a custom
- * property and therefore cannot live in a theme sheet.
+ * is exempt from the theme grammar above. It paints the page — background,
+ * text colour, typeface — from the tokens a theme stylesheet publishes.
  *
  * The exemption is narrow and fails closed in both directions: declaring any
  * `--ki-*` custom property here would smuggle a token past the surface gate,
- * and declaring a literal visual value would bypass Art. VI. Both are rejected.
+ * and declaring a literal value would bypass Art. VI. Both are rejected. That
+ * includes `color-scheme`: the default theme stylesheet owns it, and a
+ * `:root { color-scheme }` loaded after it would tie with
+ * `[data-ki-color-scheme]` on the root and win by order, silently undoing a
+ * forced scheme.
  */
 function onePageContract({ subpath, target, css }) {
   const label = `${subpath} stylesheet`;
   const source = stripComments(css, label);
-  // The theme grammar's parseRules() rejects every non-custom-property
-  // declaration, which is exactly what this sheet is made of, so the page
-  // contract gets its own flat parser. It accepts only top-level rules: no
-  // at-rules, no nesting.
-  const allowedLiterals = new Set(['light', 'dark', 'light dark', 'normal', 'only light']);
-  let cursor = 0;
-  let ruleCount = 0;
-  while (cursor < source.length) {
-    while (cursor < source.length && /[\s;]/u.test(source[cursor])) cursor += 1;
-    if (cursor >= source.length) break;
-    const opening = findStructuralCharacter(source, cursor, '{', label);
-    if (opening === -1) throw new Error(`${label} contains trailing CSS outside a block`);
-    const prelude = canonicalPrelude(source.slice(cursor, opening).trim());
-    if (prelude === '') throw new Error(`${label} contains a block without a prelude`);
-    if (prelude.startsWith('@')) {
-      throw new Error(`${label} contains unsupported conditional rule ${prelude}`);
-    }
-    const closing = matchingBrace(source, opening, label);
-    const body = source.slice(opening + 1, closing);
-    if (body.includes('{') || body.includes('}')) {
-      throw new Error(`${label} contains an unexpected nested rule`);
-    }
-    for (const raw of splitTopLevel(body, ';', label)) {
-      const declaration = raw.trim();
-      if (declaration === '') continue;
-      const colon = declaration.indexOf(':');
-      if (colon <= 0) throw new Error(`${label} contains an invalid declaration`);
-      const property = declaration.slice(0, colon).trim();
-      const value = declaration.slice(colon + 1).trim();
+  const rules = parseRules(source, label);
+  for (const rule of rules) {
+    for (const [property, value] of plainDeclarations(rule.body, label)) {
       if (value === '') throw new Error(`${label} contains unsupported declaration ${property}`);
       if (property.startsWith('--')) {
         throw new Error(`${label} must not publish token ${property}`);
@@ -414,22 +447,17 @@ function onePageContract({ subpath, target, css }) {
       const references = [...value.matchAll(/var\(\s*(--[a-zA-Z0-9-]+)/gu)].map(
         (match) => match[1],
       );
-      if (references.length > 0) {
-        for (const name of references) {
-          if (!CUSTOM_PROPERTY.test(name)) {
-            throw new Error(`${label} references non-public custom property ${name}`);
-          }
-        }
-        continue;
-      }
-      if (!allowedLiterals.has(value)) {
+      if (references.length === 0) {
         throw new Error(`${label} declares the hardcoded value ${property}: ${value}`);
       }
+      for (const name of references) {
+        if (!CUSTOM_PROPERTY.test(name)) {
+          throw new Error(`${label} references non-public custom property ${name}`);
+        }
+      }
     }
-    ruleCount += 1;
-    cursor = closing + 1;
   }
-  if (ruleCount === 0) throw new Error(`${label} declares no page contract`);
+  if (rules.length === 0) throw new Error(`${label} declares no page contract`);
   return { target, pageContract: true };
 }
 
@@ -462,17 +490,42 @@ export function buildPublicStylesheetSurface({
     if (!expectedSubpaths.has(subpath))
       throw new Error(`stylesheet source ${subpath} is not exported`);
   }
+  const sourceOf = (subpath) => {
+    const css = sources[subpath];
+    if (typeof css !== 'string' || css.trim() === '') {
+      throw new Error(`${subpath} stylesheet source must be a non-empty string`);
+    }
+    return css;
+  };
+  let defaultTheme;
+  const defaultThemeOf = (label) => {
+    if (!expectedSubpaths.has(DEFAULT_THEME_EXPORT)) {
+      throw new Error(
+        `${label} overrides the ${DEFAULT_THEME_EXPORT} stylesheet, which is not exported`,
+      );
+    }
+    defaultTheme ??= defaultThemeDeclarations(
+      sourceOf(DEFAULT_THEME_EXPORT),
+      `${DEFAULT_THEME_EXPORT} stylesheet`,
+    );
+    return defaultTheme;
+  };
   return sortedObject(
     cssExports.map(([subpath, entry]) => {
       const target = entry.target;
-      const css = sources[subpath];
-      if (typeof css !== 'string' || css.trim() === '') {
-        throw new Error(`${subpath} stylesheet source must be a non-empty string`);
-      }
+      const css = sourceOf(subpath);
+      const label = `${subpath} stylesheet`;
       if (subpath === PAGE_CONTRACT_EXPORT) {
         return [subpath, onePageContract({ subpath, target, css })];
       }
-      return [subpath, oneStylesheet({ subpath, target, css, publicTokenNames: names })];
+      const match = CSS_EXPORT.exec(subpath);
+      if (match === null) throw new Error(`${subpath} is not a supported public CSS export`);
+      const theme = match[1];
+      const declarationMap =
+        theme === undefined
+          ? defaultThemeOf(label)
+          : themeDeclarations({ css, theme, label, base: defaultThemeOf(label) });
+      return [subpath, { target, contexts: contexts(declarationMap, names, label) }];
     }),
   );
 }

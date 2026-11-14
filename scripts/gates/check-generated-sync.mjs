@@ -4,14 +4,12 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+// Exactly the three stylesheets @kimen/tokens exports. The build writes no
+// intermediate per-scheme files: a theme's two schemes are one stylesheet.
 const tokens = Object.freeze([
   'packages/tokens/dist/css/base.css',
   'packages/tokens/dist/css/tokens.css',
-  'packages/tokens/dist/css/tokens.dark.css',
-  'packages/tokens/dist/css/tokens.light.css',
   'packages/tokens/dist/css/tokens.material3.css',
-  'packages/tokens/dist/css/tokens.material3.dark.css',
-  'packages/tokens/dist/css/tokens.material3.light.css',
 ]);
 const surfaces = Object.freeze([
   'llms.txt',

@@ -46,7 +46,7 @@ breakdown and implementation
 ## Dependencies & Assumptions
 
 - [x] CHK021 - Is the M3 Design Kit baseline dependency documented and validated against the kit? [Assumption, Spec §Assumptions; research.md D2/D3]
-- [x] CHK022 - Is the subtree-theming exclusion documented for consumers? [Assumption, Spec §Assumptions; contracts/theming-contract.md §2]
+- [x] CHK022 - Is the subtree-theming exclusion documented for consumers? [Assumption, Spec §Assumptions; contracts/theming-contract.md §2] — superseded 2026-11-14: subtree theming is now part of the contract (S8-S12; contracts/theming-contract.md §2 and §6).
 
 ## Notes
 

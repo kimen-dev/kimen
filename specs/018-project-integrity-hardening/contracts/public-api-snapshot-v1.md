@@ -50,9 +50,13 @@ covers only canonical `surface`, avoiding self-reference.
 export. `stylesheets` inventories only exported combined CSS entrypoints and
 records the normalized effective value of every public semantic/component
 token in light and dark contexts. Resolution follows `var()` aliases across
-the full stylesheet; automatic and forced dark selectors must agree. Internal
-DTCG type/default representation changes do not override this published CSS
-contract.
+the full stylesheet and takes the scheme's branch of every `light-dark()`
+value; a theme stylesheet carries overrides only and is resolved over the
+default stylesheet it is loaded with. The emitted grammar is closed (the
+colour-scheme rules, one token rule per stylesheet, no conditional rules):
+anything else fails the gate. Internal DTCG type/default representation
+changes — and changes in how the stylesheets carry the same effective values —
+do not override this published CSS contract.
 
 Previous-release baselines live at
 `changes/api/baselines/<version>.json`, are committed from a protected release

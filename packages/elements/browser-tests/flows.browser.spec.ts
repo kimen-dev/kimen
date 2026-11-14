@@ -213,14 +213,6 @@ function formEntries(form: HTMLFormElement, submitter: HTMLElement | null): Reco
   );
 }
 
-function readCustomProperty(name: string): string {
-  const probe = document.createElement('div');
-  document.body.append(probe);
-  const value = getComputedStyle(probe).getPropertyValue(name).trim();
-  probe.remove();
-  return value;
-}
-
 function readTokenColor(name: string): string {
   const probe = document.createElement('div');
   probe.style.backgroundColor = `var(${name})`;
@@ -502,8 +494,8 @@ describe('composed user flows in a real browser', () => {
     const button = requireHost(main, 'ki-button');
     const input = requireHost(main, 'ki-input') as KiInputElement;
     const field = (): HTMLElement => requireHost(input.shadowRoot ?? input, '[part="field"]');
-    expect(rgbToHex(readCustomProperty('--ki-color-brand-500'))).toBe('#845abe');
-    expect(rgbToHex(readCustomProperty('--ki-surface-s0'))).toBe('#ffffff');
+    expect(rgbToHex(readTokenColor('--ki-color-brand-500'))).toBe('#845abe');
+    expect(rgbToHex(readTokenColor('--ki-surface-s0'))).toBe('#ffffff');
     const onmarsButtonBg = getComputedStyle(shadowButton(button)).backgroundColor;
     const onmarsFieldBg = getComputedStyle(field()).backgroundColor;
 
@@ -511,7 +503,7 @@ describe('composed user flows in a real browser', () => {
     ensureMaterial3Tokens();
     document.documentElement.setAttribute('data-ki-theme', 'material3');
     await waitFor(
-      () => rgbToHex(readCustomProperty('--ki-color-brand-500')) === '#6750a4',
+      () => rgbToHex(readTokenColor('--ki-color-brand-500')) === '#6750a4',
       'material3 brand token resolved',
     );
     await waitFor(
@@ -532,7 +524,7 @@ describe('composed user flows in a real browser', () => {
     document.documentElement.removeAttribute('data-ki-theme');
     document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
     await waitFor(
-      () => rgbToHex(readCustomProperty('--ki-surface-s0')) === '#0a0a0a',
+      () => rgbToHex(readTokenColor('--ki-surface-s0')) === '#0a0a0a',
       'forced dark surface token resolved',
     );
     await waitFor(

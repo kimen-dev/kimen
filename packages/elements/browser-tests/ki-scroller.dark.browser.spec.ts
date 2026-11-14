@@ -30,6 +30,11 @@ function landmark(): HTMLElement {
   let main = document.querySelector('main');
   if (!main) {
     main = document.createElement('main');
+    // The page paints its surface and text from tokens. Under the dark scheme
+    // the user agent paints a dark canvas and light default text; axe cannot
+    // see the canvas, so text left on it reads as undecidable to the scan.
+    main.style.backgroundColor = 'var(--ki-surface-s0)';
+    main.style.color = 'var(--ki-text-high-em)';
     document.body.appendChild(main);
   }
   return main;

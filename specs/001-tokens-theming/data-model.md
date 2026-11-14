@@ -31,23 +31,45 @@ A named, complete assignment of theme + semantic layers.
 
 | Theme | Sources | Output | Activation |
 |---|---|---|---|
-| onmars (default) | `themes/onmars.tokens.json` + `semantic.tokens.json` + `modes/dark.tokens.json` | `dist/css/tokens.css` (also `tokens.light.css`, `tokens.dark.css`) | none — `:root` |
-| material3 | onmars sources overridden by `themes/material3.tokens.json` + `semantic/material3.tokens.json` + `modes/material3.dark.tokens.json` | `dist/css/tokens.material3.css` | `data-ki-theme='material3'` on the document root + stylesheet loaded |
+| onmars (default) | `themes/onmars.tokens.json` + `semantic.tokens.json` + `modes/dark.tokens.json` | `dist/css/tokens.css`: every token, once | none — `:root`; any element carrying `data-ki-theme` starts from it |
+| material3 | onmars sources overridden by `themes/material3.tokens.json` + `semantic/material3.tokens.json` + `modes/material3.dark.tokens.json` | `dist/css/tokens.material3.css`: only the tokens whose expression differs from onmars | `data-ki-theme='material3'` on the root or on any element + both stylesheets loaded |
 
-**Invariant (FR-005/FR-006, S6)**: for every theme × scheme, the set of
-defined custom-property names is exactly equal to the onmars set. Enforced in
-the browser suite by set comparison of both compiled stylesheets.
+A theme is four **compositions** in the build (theme × scheme), each resolved
+by Style Dictionary on its own; the two schemes of a theme are merged into
+one expression per token, and a theme is emitted as its difference from the
+default theme (research.md D8-D10).
+
+**Invariant (FR-005/FR-006/FR-014, S6)**: for every theme × scheme, the set
+of defined custom-property names is exactly the onmars set — under any theme
+every name resolves, and a theme stylesheet declares names of that set only.
+Enforced by the build (both compositions of a theme and every theme must
+expose the same names), by the public-API surface gate and by the browser
+suite.
 
 ### Scheme
 
-Light or dark variant within a theme.
+Light or dark variant within a theme. The scheme is the `color-scheme`
+property; tokens follow it through `light-dark()`.
 
-| Scheme | Selector strategy (research.md D1) |
+| Scheme | Mechanism (research.md D8) |
 |---|---|
-| light (default) | `:root` (onmars) / `:root[data-ki-theme='material3']` |
-| dark, via system | `@media (prefers-color-scheme: dark)` scoped to `:root:not([data-ki-color-scheme='light'])` (and the material3-scoped equivalent) |
-| dark, forced | `:root[data-ki-color-scheme='dark']` (and material3-scoped equivalent) |
-| light, forced | absence of dark match — the media block excludes `[data-ki-color-scheme='light']` |
+| follow the system (default) | `:root { color-scheme: light dark }` in `tokens.css` |
+| dark, forced | `[data-ki-color-scheme='dark'] { color-scheme: dark }` on the root or on any element |
+| light, forced | `[data-ki-color-scheme='light'] { color-scheme: light }` on the root or on any element |
+
+A scheme-dependent token is declared once, as
+`light-dark(<light expression>, <dark expression>)`. Only colours can depend
+on the scheme (FR-015); a composite (border, shadow) wraps each colour
+component and must keep its geometry identical between schemes.
+
+### Subtree
+
+An element carrying `data-ki-theme` and/or `data-ki-color-scheme`.
+
+| Declaration on an element | What the stylesheet does there |
+|---|---|
+| `data-ki-color-scheme` | Sets `color-scheme`; redeclares nothing (`light-dark()` resolves at the point of use) |
+| `data-ki-theme` | Redeclares every default-theme token at zero specificity (`:where([data-ki-theme])`), so every alias is recomputed on that element; the named theme's overrides apply on top |
 
 ## State transitions
 
@@ -58,11 +80,21 @@ require no reload (spec edge case 3).
 ## Validation rules (enforced by gates)
 
 1. Every reference resolves — Style Dictionary build fails on broken refs.
-2. Contract equality across themes and schemes — browser test (S6).
+2. Contract equality across themes and schemes — build (name sets), public-API
+   surface gate and browser test (S6).
 3. Declared default text/surface pairs ≥ 4.5:1 per theme × scheme —
    `check-contrast.mjs` gate (FR-009): pairs = (text.high-em, surface.s0),
    (text.med-em, surface.s0), (text.high-em, surface.s1),
    (text.primary-on-primary, surface.primary-med-em).
-4. Stylesheet ≤ 9 KB gzipped per theme — size-limit gate.
-5. Scenario-to-test traceability — every S1-S7 ID appears in the browser
+4. Stylesheet within its gzip budget per theme — size-limit gate.
+5. Scenario-to-test traceability — every S1-S13 ID appears in the browser
    suite (existing traceability gate).
+6. Only colours depend on the scheme, and a composite keeps its geometry —
+   the build fails by token name (FR-015).
+7. The emitted grammar is closed — the public-API surface gate accepts
+   exactly: the three colour-scheme rules in order, one
+   `:root, :where([data-ki-theme])` token rule, and for a theme one
+   `:root[data-ki-theme='x'], [data-ki-theme='x']` rule; no conditional
+   rules, no comments needed, nothing else.
+8. The emitted sheets resolve to Style Dictionary's own value for every token
+   in every theme × scheme — unit test over the real sources.
