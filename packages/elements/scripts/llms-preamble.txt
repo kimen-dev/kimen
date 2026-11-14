@@ -10,14 +10,15 @@ import '@kimen/tokens/css/base';
 defineKiButton();
 ```
 
-Load `@kimen/tokens/css` once for the onmars default theme, and
-`@kimen/tokens/css/base` — the page contract — once per page. The page
-contract declares `color-scheme` and paints the page from the semantic
-tokens, which a token-only stylesheet cannot do; without it, a page whose
-visitor prefers dark renders 14 of 29 components below 4.5:1 contrast (the
-components paint correct dark-scheme text while the browser keeps a light
-canvas). Alternative: pin `data-ki-color-scheme="light"` on the document
-root.
+Load `@kimen/tokens/css` once per page: it is the onmars default theme and
+the only stylesheet the components require. It declares every `--ki-*` token
+for both schemes together with the `color-scheme` they resolve from, so a
+page follows its visitor's light or dark preference with no further setup.
+`@kimen/tokens/css/base` — the page contract — is optional: it paints the
+page background, text color and body font from those tokens and declares no
+color scheme of its own. Without it the page keeps the browser's own canvas
+and text color for the active scheme, and every component stays legible on
+it.
 
 Human-readable documentation: https://kimen.dev/docs/
 

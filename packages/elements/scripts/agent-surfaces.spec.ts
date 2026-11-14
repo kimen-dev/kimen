@@ -465,6 +465,26 @@ describe('agent surfaces', () => {
     expect(shippedPreamble).not.toContain('/dist/');
   });
 
+  it('S2 shipped installation guidance attributes color-scheme to the stylesheet that declares it', async () => {
+    const [shippedPreamble, themeCss, pageContractCss] = await Promise.all([
+      readFile(new URL('./scripts/llms-preamble.txt', packageRoot), 'utf8'),
+      readFile(new URL('../tokens/dist/css/tokens.css', packageRoot), 'utf8'),
+      readFile(new URL('../tokens/dist/css/base.css', packageRoot), 'utf8'),
+    ]);
+    const guidance = shippedPreamble.replace(/\s+/gu, ' ');
+
+    // The facts the guidance must describe: the token stylesheet owns the
+    // scheme; the page contract only paints the page from tokens.
+    expect(themeCss).toContain('color-scheme: light dark;');
+    expect(pageContractCss).not.toContain('color-scheme');
+    expect(guidance).not.toMatch(/page contract declares `color-scheme`/u);
+    expect(guidance).toContain(
+      '`@kimen/tokens/css` once per page: it is the onmars default theme and the only stylesheet the components require',
+    );
+    expect(guidance).toContain('together with the `color-scheme` they resolve from');
+    expect(guidance).toContain('`@kimen/tokens/css/base` — the page contract — is optional');
+  });
+
   it('S1 S2 render a documented public method in the manifest and llms.txt', async () => {
     const docs = normalizeDocs(await readFixture('path-a-docs.json'));
     const component = docs.components[0];
