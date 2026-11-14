@@ -1131,9 +1131,9 @@ theme-wide change or on any subtree for a scoped one.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-indicator-dot-block-size` | `0.5rem` | dimension used by the indicator component for the resting dot block size: the 8px circle diameter measured in the State=inactive vector (the 16px frame height is row alignment, carried by the current dot). |
-| `--ki-indicator-dot-color` | `rgba(0, 0, 0, 0.18)` | color used by the indicator component for the resting dot fill: Inverse_white/alpha_18, the exact variable bound to every Indicator variant fill (Black/18 light, White/18 dark) — the scheme flip rides the semantic layer. |
+| `--ki-indicator-dot-color` | `rgba(0, 0, 0, 0.48)` | color used by the indicator component for the resting dot fill: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_18, which reads 1.53:1 light and 1.64:1 dark against the page; alpha_48 is the first step of the same ramp that clears the 3:1 FR-012 and WCAG 1.4.11 ask. The scheme flip rides the semantic layer. |
 | `--ki-indicator-dot-current-block-size` | `1rem` | dimension used by the indicator component for the current dot block size: Space/3xl, the exact variable bound as the 16px height of the State=active pill (the full row line; declared family extension, design-extraction §Decisiones). |
-| `--ki-indicator-dot-current-color` | `rgba(0, 0, 0, 0.18)` | color used by the indicator component for the current dot treatment: Inverse_white/alpha_18, the exact fill of the State=active ring vector (Black/18 light, White/18 dark) — painted as the pill ring in onmars, as the solid dot in themes that zero the hole. |
+| `--ki-indicator-dot-current-color` | `rgba(0, 0, 0, 0.48)` | color used by the indicator component for the current dot treatment: Inverse_white/alpha_48, the same step as the resting dots — the MarsUI State=active ring vector binds the variable of the resting fill, and its alpha_18 reads 1.53-1.64:1 against the page (declared a11y deviation, FR-012). Painted as the pill ring in onmars, where elongation carries the state; as the solid dot in themes that zero the hole. |
 | `--ki-indicator-dot-current-hole-block-size` | `0.375rem` | dimension used by the indicator component for the block size of the transparent hole cut from the current pill: the 6px cutout height measured in the State=active vector; the ring width derives by construction as (current block size − hole block size) / 2 and a theme resolves it to zero for a solid dot (declared family extension, design-extraction §Decisiones). |
 | `--ki-indicator-dot-current-inline-size` | `2rem` | dimension used by the indicator component for the current dot inline size: Space/10xl, the exact variable bound as the 32px width of the State=active pill — the MarsUI elongation lives here, never in an attribute (FR-007). |
 | `--ki-indicator-dot-current-radius` | `1000px` | dimension used by the indicator component for the current dot shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent). |
@@ -1162,7 +1162,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-input-focus-border` | `#845abe` | color used by the input component for focus border. |
 | `--ki-input-focus-fg` | `#0a0c11` | color used by the input component for focus foreground. |
 | `--ki-input-focus-label-fg` | `#5b616d` | color used by the input component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint). |
-| `--ki-input-focus-placeholder-fg` | `#8c929c` | color used by the input component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep). |
+| `--ki-input-focus-placeholder-fg` | `#5b616d` | color used by the input component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
 | `--ki-input-focus-ring-color` | `#845abe` | color used by the input component for focus ring color. |
 | `--ki-input-focus-ring-offset` | `0.125rem` | dimension used by the input component for focus ring offset. |
 | `--ki-input-focus-ring-shadow` | `0 0 0 3px rgba(132, 90, 190, 0.2)` | shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
@@ -1176,14 +1176,14 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-input-hover-border` | `rgba(0, 0, 0, 0.56)` | color used by the input component for hover border. |
 | `--ki-input-hover-fg` | `#0a0c11` | color used by the input component for hover foreground. |
 | `--ki-input-hover-label-fg` | `#5b616d` | color used by the input component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint). |
-| `--ki-input-hover-placeholder-fg` | `#8c929c` | color used by the input component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep). |
+| `--ki-input-hover-placeholder-fg` | `#5b616d` | color used by the input component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
 | `--ki-input-icon-size` | `1.125rem` | dimension used by the input component for icon size. |
 | `--ki-input-invalid-bg` | `#ffffff` | color used by the input component for invalid background (MarsUI danger state keeps the white active fill; the ring and hint carry the signal). |
 | `--ki-input-invalid-border` | `#f05149` | color used by the input component for invalid border. |
 | `--ki-input-invalid-fg` | `#0a0c11` | color used by the input component for invalid foreground. |
 | `--ki-input-invalid-hint-fg` | `#cd2118` | color used by the input component for the invalid hint row foreground (MarsUI Hint_label danger: Text/danger_high_em carries the signal). |
 | `--ki-input-invalid-label-fg` | `#5b616d` | color used by the input component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint). |
-| `--ki-input-invalid-placeholder-fg` | `#8c929c` | color used by the input component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep). |
+| `--ki-input-invalid-placeholder-fg` | `#5b616d` | color used by the input component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
 | `--ki-input-invalid-ring` | `0 0 0 3px rgba(240, 81, 73, 0.2)` | shadow used by the input component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid)). |
 | `--ki-input-label-font-size` | `0.8125rem` | dimension used by the input component for label font size (MarsUI UI/Para/medium: body_1 13px). |
 | `--ki-input-label-font-weight` | `600` | font weight used by the input component for label font weight. |
@@ -1198,12 +1198,12 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-input-readonly-border` | `rgba(0, 0, 0, 0.48)` | color used by the input component for readonly border. |
 | `--ki-input-readonly-fg` | `#0a0c11` | color used by the input component for readonly foreground. |
 | `--ki-input-readonly-label-fg` | `#5b616d` | color used by the input component for readonly label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint). |
-| `--ki-input-readonly-placeholder-fg` | `#8c929c` | color used by the input component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep). |
+| `--ki-input-readonly-placeholder-fg` | `#5b616d` | color used by the input component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
 | `--ki-input-rest-bg` | `#f2f2f4` | color used by the input component for rest background (MarsUI Input_field rest fill Surface/s2: the fill identifies the field, not the outline). |
 | `--ki-input-rest-border` | `rgba(0, 0, 0, 0.48)` | color used by the input component for rest border. |
 | `--ki-input-rest-fg` | `#0a0c11` | color used by the input component for rest foreground. |
 | `--ki-input-rest-label-fg` | `#5b616d` | color used by the input component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state — active and danger included; the danger signal lives in the hint). |
-| `--ki-input-rest-placeholder-fg` | `#8c929c` | color used by the input component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep). |
+| `--ki-input-rest-placeholder-fg` | `#5b616d` | color used by the input component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
 
 ### `ki-list`
 
@@ -1335,7 +1335,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-scroller-focus-ring-width` | `0.125rem` | dimension used by the scroller component for the viewport focus ring width (ki-dialog precedent). |
 | `--ki-scroller-gutter` | `0.125rem` | dimension used by the scroller component for the clearance on each side of the thumb: the 2px padding-inline of the 8px Scroller rail (rail thickness = thumb-thickness + 2×gutter). |
 | `--ki-scroller-surface` | `rgba(255, 255, 255, 0)` | color used by the scroller component for the viewport surface: transparent in onmars — the scroller shows the consumer's own surface; a theme may resolve a proper surface here (FR-007). |
-| `--ki-scroller-thumb-color` | `rgba(0, 0, 0, 0.05)` | color used by the scroller component for the indicator thumb: Inverse_white/alpha_6, the exact variable bound to the scroll pill on both Scroller variants (Black/5 light, White/5 dark) — the scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md). |
+| `--ki-scroller-thumb-color` | `rgba(0, 0, 0, 0.48)` | color used by the scroller component for the indicator thumb: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_6 (Black/5 light, White/5 dark), which reads 1.12:1 and 1.09:1 against the content surface. The thumb is the only mark that shows the scroll position, so it takes the first step of the same ramp that clears WCAG 1.4.11's 3:1. The scheme flip rides the semantic layer (specs/023-ki-scroller/design-extraction.md). |
 | `--ki-scroller-thumb-min-length` | `1rem` | dimension used by the scroller component for the minimum thumb length along the scroll axis: the 16px min-height on the Figma scroll pill; the actual length stays the native visible-fraction proportion (FR-003). |
 | `--ki-scroller-thumb-radius` | `1000px` | dimension used by the scroller component for the thumb shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent). |
 | `--ki-scroller-thumb-thickness` | `0.25rem` | dimension used by the scroller component for the thumb cross size: the 4px pill measured inside the 8px MarsUI rail (rail = thumb + 2×gutter, verified 2026-07-17). |
@@ -1401,15 +1401,15 @@ theme-wide change or on any subtree for a scoped one.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-status-danger-color` | `#f05149` | color used by the status component for the danger tone fill: Surface/danger_med_em, the exact variable bound to the Type=danger Status variant (Danger/500). |
-| `--ki-status-info-color` | `#13b9ec` | color used by the status component for the info tone fill: no Figma Status variant ships an info Type, so the fill extrapolates the verified med-em 500 pattern to the Info ramp (001 contract, 010/015 precedent) — declared for founder ratification. |
-| `--ki-status-neutral-color` | `#afb3bb` | color used by the status component for the neutral tone fill: Surface/disabled_high_em, the exact variable bound to the Type=disabled Status variant (Gray/500 light, White/32 dark) — MarsUI's disabled gray maps to the charter neutral tone (spec Assumptions). |
+| `--ki-status-info-color` | `#0f94bd` | color used by the status component for the info tone fill: Surface/info_high_em (Info/600 light, Info/400 dark) — one step above the med-em 500 pattern the success and danger tones follow, because Info/500 reads 2.29:1 on the light page and WCAG 1.4.11 asks 3:1 of the dot (FR-008). No Figma Status variant ships an info Type, so the fill remains an extrapolation onto the Info ramp (001 contract, 010/015 precedent) declared for founder ratification. |
+| `--ki-status-neutral-color` | `rgba(0, 0, 0, 0.48)` | color used by the status component for the neutral tone fill: ki.outline.control, the semantic 3:1 non-text floor (Black/48 light, White/48 dark; md.sys.color.outline in material3) — a declared a11y deviation from the MarsUI binding Surface/disabled_high_em (Gray/500 light, White/32 dark), which reads 2.10:1 and 2.78:1 against the page where WCAG 1.4.11 asks 3:1 of the dot (FR-008). MarsUI's disabled gray still maps to the charter neutral tone (spec Assumptions). |
 | `--ki-status-radius` | `1000px` | dimension used by the status component for the dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent). |
 | `--ki-status-ring-color` | `#ffffff` | color used by the status component for the separating ring: Outline/inverse_black, the exact variable bound to Outline=True variants — white over light surfaces, black over dark ones, so the ring reads as a cutout from the underlying media (FR-002). |
 | `--ki-status-ring-width` | `0.125rem` | dimension used by the status component for the separating ring: the 2px stroke on every Outline=True Status variant (FR-002). |
 | `--ki-status-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), inset 0px 3px 3px 0px rgba(255, 255, 255, 0.12)` | shadow used by the status component for the dot effects: the exact MarsUI pair on every Status variant — e1 drop (0/1/1/-0.5 in the scheme shadow color) plus inner White/12 highlight (0/3/3), i.e. Component_effect/primary_default's box-shadow layers. The effect's backdrop blur is deliberately NOT applied: a 4px dot has no glass surface to blur (brief §5 perf note, glass restraint). |
 | `--ki-status-size` | `0.25rem` | dimension used by the status component for the dot: the MarsUI 4px dot, Space/xs bound to every Status variant (specs/021-ki-status/design-extraction.md). One size per theme, never an attribute (FR-006). |
 | `--ki-status-success-color` | `#409b3f` | color used by the status component for the success tone fill: Surface/success_med_em, the exact variable bound to the Type=success Status variant (Success/500). |
-| `--ki-status-warning-color` | `#f8ac3a` | color used by the status component for the warning tone fill: Surface/warning_med_em, the exact variable bound to the Type=warning Status variant (Warning/500). |
+| `--ki-status-warning-color` | `#945b05` | color used by the status component for the warning tone fill: Text/warning_high_em (Warning/800 light, Warning/300 dark) — a declared a11y deviation from the MarsUI binding Surface/warning_med_em (Warning/500), which reads 1.92:1 on the light page. No warning surface step clears the 3:1 WCAG 1.4.11 asks of the dot (Warning/600 reads 2.33:1), so the fill takes the warning ink that is legible on the page (FR-008). |
 
 ### `ki-switch`
 
@@ -1532,7 +1532,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-focus-border` | `#845abe` | color used by the textarea component for focus border. |
 | `--ki-textarea-focus-fg` | `#0a0c11` | color used by the textarea component for focus foreground. |
 | `--ki-textarea-focus-label-fg` | `#5b616d` | color used by the textarea component for focus label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
-| `--ki-textarea-focus-placeholder-fg` | `#8c929c` | color used by the textarea component for focus placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep). |
+| `--ki-textarea-focus-placeholder-fg` | `#5b616d` | color used by the textarea component for focus placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
 | `--ki-textarea-focus-ring-color` | `#845abe` | color used by the textarea component for focus ring color. |
 | `--ki-textarea-focus-ring-offset` | `0.125rem` | dimension used by the textarea component for focus ring offset. |
 | `--ki-textarea-focus-ring-shadow` | `0 0 0 3px rgba(132, 90, 190, 0.2)` | shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
@@ -1544,13 +1544,13 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-hover-border` | `rgba(0, 0, 0, 0.56)` | color used by the textarea component for hover border. |
 | `--ki-textarea-hover-fg` | `#0a0c11` | color used by the textarea component for hover foreground. |
 | `--ki-textarea-hover-label-fg` | `#5b616d` | color used by the textarea component for hover label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
-| `--ki-textarea-hover-placeholder-fg` | `#8c929c` | color used by the textarea component for hover placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep). |
+| `--ki-textarea-hover-placeholder-fg` | `#5b616d` | color used by the textarea component for hover placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
 | `--ki-textarea-invalid-bg` | `#ffffff` | color used by the textarea component for invalid background (MarsUI danger keeps the white active fill — no tinted slab; ring and hint carry the signal). |
 | `--ki-textarea-invalid-border` | `#f05149` | color used by the textarea component for invalid border. |
 | `--ki-textarea-invalid-fg` | `#0a0c11` | color used by the textarea component for invalid foreground. |
 | `--ki-textarea-invalid-hint-fg` | `#cd2118` | color used by the textarea component for the invalid hint row foreground (MarsUI Hint_label danger: Text/danger_high_em carries the signal). |
 | `--ki-textarea-invalid-label-fg` | `#5b616d` | color used by the textarea component for invalid label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
-| `--ki-textarea-invalid-placeholder-fg` | `#8c929c` | color used by the textarea component for invalid placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep). |
+| `--ki-textarea-invalid-placeholder-fg` | `#5b616d` | color used by the textarea component for invalid placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
 | `--ki-textarea-invalid-ring` | `0 0 0 3px rgba(240, 81, 73, 0.2)` | shadow used by the textarea component for the persistent invalid ring (MarsUI Focus/danger: 3px danger-500 alpha spread; applied as box-shadow while :state(user-invalid)). |
 | `--ki-textarea-label-font-size` | `0.8125rem` | dimension used by the textarea component for label font size (MarsUI UI/Para/medium: body_1 13px). |
 | `--ki-textarea-label-font-weight` | `600` | font weight used by the textarea component for label font weight. |
@@ -1566,12 +1566,12 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-readonly-border` | `rgba(0, 0, 0, 0.48)` | color used by the textarea component for readonly border. |
 | `--ki-textarea-readonly-fg` | `#0a0c11` | color used by the textarea component for readonly foreground. |
 | `--ki-textarea-readonly-label-fg` | `#5b616d` | color used by the textarea component for readonly label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
-| `--ki-textarea-readonly-placeholder-fg` | `#8c929c` | color used by the textarea component for readonly placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep). |
+| `--ki-textarea-readonly-placeholder-fg` | `#5b616d` | color used by the textarea component for readonly placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
 | `--ki-textarea-rest-bg` | `#f2f2f4` | color used by the textarea component for rest background (MarsUI textarea fill Surface/s2). |
 | `--ki-textarea-rest-border` | `rgba(0, 0, 0, 0.48)` | color used by the textarea component for rest border. |
 | `--ki-textarea-rest-fg` | `#0a0c11` | color used by the textarea component for rest foreground. |
 | `--ki-textarea-rest-label-fg` | `#5b616d` | color used by the textarea component for rest label foreground (MarsUI label is Text/med_em in every non-disabled state; matches ki-input). |
-| `--ki-textarea-rest-placeholder-fg` | `#8c929c` | color used by the textarea component for rest placeholder foreground (MarsUI placeholder Text/low_em; placeholder is not the accessible name, so it sits outside the 4.5:1 text sweep). |
+| `--ki-textarea-rest-placeholder-fg` | `#5b616d` | color used by the textarea component for rest placeholder foreground (Text/med_em — a declared a11y deviation from the MarsUI placeholder binding Text/low_em, which reads 2.66-3.13:1 on the light field fills; a placeholder is not the accessible name but it is still text, so the contrast gate holds it to 4.5:1). |
 
 ### `ki-tooltip`
 
