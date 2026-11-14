@@ -99,3 +99,79 @@ Feature: Neutral runtime catalog
     Given a UI spec whose total payload size exceeds the declared validation size budget
     When the spec is validated against the catalog
     Then validation rejects the spec naming the exceeded size budget
+
+  # Family: core behavior — declared prop constraints
+  # S15
+  Scenario: A prop the component contract declares required is required in the catalog
+    Given the manifest marks ki-textarea's "label" as required by the component contract
+    When the catalog is generated
+    Then the catalog marks ki-textarea's "label" as required
+
+  # S16
+  Scenario Outline: A spec without a usable value for a required prop is rejected
+    Given a UI spec whose ki-textarea <label state>
+    When the spec is validated against the catalog
+    Then validation rejects the spec naming ki-textarea and the missing required prop "label"
+
+    Examples:
+      | label state                      |
+      | sets no "label"                  |
+      | sets "label" to an empty string  |
+      | sets "label" to only white space |
+
+  # S17
+  Scenario: Numeric bounds the component contract declares become catalog constraints
+    Given the manifest bounds ki-indicator's "count" to the range 0 to 20
+    When the catalog is generated
+    Then the catalog constrains ki-indicator's "count" to a minimum of 0 and a maximum of 20
+
+  # S18
+  Scenario Outline: A number outside its declared bounds is rejected
+    Given a UI spec setting ki-indicator's "<prop>" to <value>
+    When the spec is validated against the catalog
+    Then validation rejects the spec naming ki-indicator, "<prop>" and its declared bounds
+
+    Examples:
+      | prop    | value   |
+      | count   | 1000000 |
+      | count   | -1      |
+      | current | 0       |
+
+  # Family: core behavior — URL policy at the validation boundary
+  # S19
+  Scenario: A prop the component contract declares URL-typed is URL-typed in the catalog
+    Given the manifest declares a string attribute with the URL format
+    When the catalog is generated
+    Then the catalog marks that prop as URL-typed
+
+  # S20
+  Scenario Outline: An executable URL value is rejected at validation
+    Given a UI spec setting ki-avatar's "src" to "<value>"
+    When the spec is validated against the catalog
+    Then validation rejects the spec naming "src" and the rejected scheme
+
+    Examples:
+      | value                     |
+      | javascript:alert(1)       |
+      | data:image/svg+xml,<svg/> |
+
+  # S21
+  Scenario Outline: With allowed origins declared, only URLs from those origins are accepted
+    Given validation restricted to the URL origin "https://cdn.example.com"
+    And a UI spec setting ki-avatar's "src" to "<value>"
+    When the spec is validated against the catalog
+    Then validation <outcome>
+
+    Examples:
+      | value                             | outcome                                              |
+      | https://cdn.example.com/ana.png   | accepts the spec                                     |
+      | https://tracker.example.net/p.gif | rejects the spec naming "src" and the foreign origin |
+      | /avatars/ana.png                  | rejects the spec naming "src" as not absolute        |
+      | //tracker.example.net/p.gif       | rejects the spec naming "src" as not absolute        |
+
+  # S22
+  Scenario: A QR code's value is data, not a URL the page loads
+    Given validation restricted to the URL origin "https://cdn.example.com"
+    And a UI spec setting ki-qr's "value" to "https://other.example.org/menu"
+    When the spec is validated against the catalog
+    Then validation accepts the spec

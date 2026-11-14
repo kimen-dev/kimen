@@ -201,3 +201,35 @@ Feature: Guarded renderer
         | hasOwnProperty | slot of a ki-card     | unknown-slot      |
         | valueOf        | component             | unknown-component |
         | isPrototypeOf  | prop of a ki-badge    | unknown-prop      |
+
+  Rule: Declared prop constraints bound every render
+
+    # S21
+    Scenario: A spec missing a required prop never renders
+      Given a spec whose ki-textarea node sets no "label", which the catalog declares required
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names ki-textarea and the missing required prop "label"
+
+    # S22
+    Scenario: A number beyond its declared bounds never renders
+      Given a spec whose ki-indicator node sets "count" to 1000000, beyond the catalog's declared maximum of 20
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names ki-indicator, "count" and the declared maximum
+
+  Rule: The host may restrict URL props to declared origins
+
+    # S23
+    Scenario Outline: With allowed origins declared, a URL outside them never renders
+      Given a renderer restricted to the URL origin "https://cdn.example.com"
+      And a spec setting ki-avatar's "src" to "<value>"
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names "src" and the rule "url-origin"
+
+      Examples:
+        | value                             |
+        | https://tracker.example.net/p.gif |
+        | /avatars/ana.png                  |
+        | //tracker.example.net/p.gif       |

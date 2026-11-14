@@ -80,11 +80,12 @@ export class KiProgress {
   /**
    * Accessible name applied to the internal progressbar. Always set this to
    * what is progressing, such as "Uploading report.pdf". Without it the
-   * element renders but exposes no accessible name.
+   * element renders but exposes no accessible name, so the catalog contract
+   * requires it.
    * When NOT to use: do not use a generic label such as "Loading" when the
    * task can be named more specifically.
    */
-  @Prop({ reflect: true }) label?: string;
+  @Prop({ reflect: true }) label!: string;
 
   private get normalizedMax(): number {
     return normalizeMax(this.max);

@@ -20,8 +20,9 @@ const tool = uiSpecTool(catalog, { target: 'openai-strict' });          // tool/
 ```
 
 Wire whichever your provider supports: prompt-only works everywhere;
-schema for structured outputs; tool for function calling. For providers
-without recursive-schema support use `{ target: 'anthropic-strict' }`.
+schema for structured outputs; tool for function calling. For a provider
+whose strict mode cannot hold the schema (no recursion, tight parameter
+limits), pass the default-dialect schema as advisory guidance instead.
 
 ## 2. Close the reliability loop (S13, S14)
 

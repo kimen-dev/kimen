@@ -48,6 +48,7 @@ export class KiAvatar {
    * load — initially or at runtime — the avatar silently falls back to the
    * initials (or the generic figure) with no error, no layout change and no
    * event (FR-001). Loading policy follows the platform image defaults.
+   * @format url
    * @default undefined
    */
   @Prop() src?: string;

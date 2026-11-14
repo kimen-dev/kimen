@@ -2,23 +2,31 @@
  * Catalog-specialized JSON Schema derivation (spec 033, FR-002/FR-003):
  * the neutral UI-spec format narrowed to exactly one catalog — one branch
  * per component, closed objects everywhere, enums closed over their
- * declared values — in the draft 2020-12 dialect by default, with
- * provider-strict lowerings. The schema is ADVISORY shape for a model;
+ * declared values — in the draft 2020-12 dialect by default, with one
+ * provider-strict lowering. The schema is ADVISORY shape for a model;
  * `validateUiSpec` and the guarded renderer remain the only enforcement
  * points (FR-011).
  */
 import type { Catalog, CatalogEntry, CatalogPropConstraint } from '@kimen/catalog';
+import { NODE_ID_GRAMMAR } from '@kimen/catalog';
 
 import type { Derivation, EmitterIssue, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
 
 /**
  * Schema lowering targets (research D2). `draft-2020-12` is the stable
- * default; `openai-strict` meets the all-required closed-object subset
- * (recursion kept via `$ref`); `anthropic-strict` additionally unrolls
- * recursion to a bounded composition depth.
+ * default and the one to hand to any provider surface that takes a JSON
+ * Schema as guidance (a regular, non-strict tool included). `openai-strict`
+ * meets OpenAI's strict structured-outputs subset: closed all-required
+ * objects, recursion kept via `$ref`, only the keywords that subset
+ * documents, and its published size limits enforced.
+ *
+ * There is deliberately no target for Anthropic's strict tools / structured
+ * outputs (removed, research D2 amendment): that subset rejects recursive
+ * schemas and allows 24 optional and 16 union-typed parameters per request,
+ * which no catalog-specialized schema of a real catalog fits.
  */
-export type EmitterTarget = 'anthropic-strict' | 'draft-2020-12' | 'openai-strict';
+export type EmitterTarget = 'draft-2020-12' | 'openai-strict';
 
 /** Options shared by every artifact derivation (spec 033 Key Entities). */
 export interface DerivationOptions {
@@ -26,40 +34,29 @@ export interface DerivationOptions {
   readonly components?: readonly string[];
   /** Schema lowering target; default `draft-2020-12`. */
   readonly target?: EmitterTarget;
-  /**
-   * `anthropic-strict` only: the unrolled composition depth bound (default 6,
-   * an integer in [1, 32]). The bound constrains the SCHEMA, not the format —
-   * deeper compositions still validate at the boundary; an out-of-range value
-   * fails the derivation closed rather than unrolling unboundedly.
-   */
-  readonly maxDepth?: number;
 }
-
-const DEFAULT_ANTHROPIC_DEPTH = 6;
-
-// The unrolled anthropic-strict lowering materializes one copy of every
-// component branch PER level, so an unbounded depth exhausts memory instead
-// of returning a fail-closed Derivation (review finding). 32 is far beyond any
-// real composition yet keeps the artifact bounded; the default is 6.
-const MAX_ANTHROPIC_DEPTH = 32;
 
 // The runtime target allowlist: a JS/config caller can pass a typo'd string
 // despite the EmitterTarget type; an unknown value must fail closed, not slip
-// into the strict-recursive fallback branch as ok:true (review finding).
-const KNOWN_TARGETS: ReadonlySet<string> = new Set([
-  'anthropic-strict',
-  'draft-2020-12',
-  'openai-strict',
-]);
+// into the strict branch as ok:true (review finding).
+const KNOWN_TARGETS: ReadonlySet<string> = new Set(['draft-2020-12', 'openai-strict']);
 
 const SCHEMA_ID_BASE = 'https://kimen.dev/schemas/ui-spec';
 
-// OpenAI strict-mode limits (research-pinned 2026-08, data-model.md table).
+// OpenAI strict-mode limits, as documented in the "Supported schemas" section
+// of https://developers.openai.com/api/docs/guides/structured-outputs (read
+// 2026-11-14; tests/provider-limits.spec.ts measures the artifact against
+// the same numbers). Nesting depth (10 levels) holds by construction.
 const OPENAI_LIMITS = {
   enumValues: 1000,
   nameAndEnumChars: 120_000,
   properties: 5000,
 } as const;
+
+// "For a single enum property with string values, the total string length of
+// all enum values cannot exceed 15,000 characters when there are more than
+// 250 enum values."
+const OPENAI_LARGE_ENUM = { chars: 15_000, values: 250 } as const;
 
 /**
  * A deterministic 32-bit content hash (FNV-1a) that discriminates the schema
@@ -77,6 +74,21 @@ function fnv1a(input: string): string {
   return (hash >>> 0).toString(16).padStart(8, '0');
 }
 
+// A required string must name something: the boundary rejects a blank value
+// (027 S16), and "contains one non-white-space character" is the same rule
+// as a regular expression every target supports.
+const NON_BLANK = '\\S';
+
+/**
+ * An action name: non-empty at the boundary. The default dialect says so
+ * with `minLength`; OpenAI's strict subset documents only `pattern` and
+ * `format` for strings, so there the rule is the non-blank pattern — a
+ * little stricter than the boundary, never laxer.
+ */
+function actionName(strict: boolean): Record<string, unknown> {
+  return strict ? { pattern: NON_BLANK, type: 'string' } : { minLength: 1, type: 'string' };
+}
+
 function propSchema(constraint: CatalogPropConstraint, strict: boolean): Record<string, unknown> {
   const base: Record<string, unknown> =
     constraint.type === 'enum'
@@ -84,6 +96,20 @@ function propSchema(constraint: CatalogPropConstraint, strict: boolean): Record<
       : { type: constraint.type };
   if (constraint.description !== '') {
     base['description'] = constraint.description;
+  }
+  // Declared numeric bounds (S17): inclusive, as the boundary enforces them.
+  if (constraint.minimum !== undefined) {
+    base['minimum'] = constraint.minimum;
+  }
+  if (constraint.maximum !== undefined) {
+    base['maximum'] = constraint.maximum;
+  }
+  if (constraint.required === true) {
+    if (constraint.type === 'string') {
+      base['pattern'] = NON_BLANK;
+    }
+    // A required prop has no placeholder: it is never nullable (S16).
+    return base;
   }
   // Strict targets demand every property present; optionality becomes a
   // null union the host strips back out with `normalizeEmission` (S13).
@@ -98,24 +124,37 @@ function componentBranch(
 ): Record<string, unknown> {
   const properties: Record<string, unknown> = { component: { const: tag } };
   const required = ['component'];
+  // The optional stable node id (spec 035), in the boundary's own grammar so
+  // a schema-accepted id is a boundary-accepted one (S19). Uniqueness within
+  // the document is a cross-node rule only the boundary can state.
+  const id = { pattern: NODE_ID_GRAMMAR.source, type: 'string' };
+  properties['id'] = strict ? { anyOf: [id, { type: 'null' }] } : id;
+  if (strict) {
+    required.push('id');
+  }
   const propEntries = Object.entries(entry.props);
   const propNames = propEntries.map(([name]) => name);
+  // The props the catalog declares required (S16): present in every dialect,
+  // and their container with them — an omitted `props` would otherwise skip
+  // the requirement altogether.
+  const requiredNames = propEntries
+    .filter(([, constraint]) => constraint.required === true)
+    .map(([name]) => name);
   if (propEntries.length > 0) {
     properties['props'] = {
       additionalProperties: false,
       properties: Object.fromEntries(
         propEntries.map(([name, constraint]) => [name, propSchema(constraint, strict)]),
       ),
-      required: strict ? propNames : undefined,
+      required: strict ? propNames : requiredNames.length > 0 ? requiredNames : undefined,
       type: 'object',
     };
-    if (strict) {
+    if (strict || requiredNames.length > 0) {
       required.push('props');
     }
   }
-  properties['action'] = strict
-    ? { anyOf: [{ minLength: 1, type: 'string' }, { type: 'null' }] }
-    : { minLength: 1, type: 'string' };
+  const action = actionName(strict);
+  properties['action'] = strict ? { anyOf: [action, { type: 'null' }] } : action;
   if (strict) {
     required.push('action');
   }
@@ -252,6 +291,20 @@ function openAiLimitIssues(
     ['nameAndEnumChars', tally.nameAndEnumChars],
     ['properties', tally.properties],
   ];
+  for (const [tag, entry] of entries) {
+    for (const [name, constraint] of Object.entries(entry.props)) {
+      const values = constraint.type === 'enum' ? (constraint.values ?? []) : [];
+      const chars = values.reduce((sum, value) => sum + value.length, 0);
+      if (values.length > OPENAI_LARGE_ENUM.values && chars > OPENAI_LARGE_ENUM.chars) {
+        issues.push({
+          code: 'provider-limit',
+          message: `openai-strict large-enum limit of ${String(OPENAI_LARGE_ENUM.chars)} characters exceeded by "${tag}" prop "${name}" (${String(values.length)} values, ${String(chars)} characters) — shorten the enum or derive a component subset`,
+          path: 'options.target',
+          value: tag,
+        });
+      }
+    }
+  }
   for (const [limit, total] of totals) {
     if (total > OPENAI_LIMITS[limit]) {
       // The real largest contributor to THIS metric, not a shared heuristic.
@@ -268,7 +321,7 @@ function openAiLimitIssues(
 }
 
 function baseDocument(catalog: Catalog, target: EmitterTarget): Record<string, unknown> {
-  const strict = target !== 'draft-2020-12';
+  const strict = target === 'openai-strict';
   return {
     $schema: 'https://json-schema.org/draft/2020-12/schema',
     // Version + target here; uiSpecJsonSchema appends a content hash of the
@@ -279,7 +332,7 @@ function baseDocument(catalog: Catalog, target: EmitterTarget): Record<string, u
     properties: {
       // The authoritative Zod is z.array(z.string().min(1)); mirror the
       // non-empty constraint so a schema-accepted spec is boundary-accepted.
-      actions: { items: { minLength: 1, type: 'string' }, type: 'array' },
+      actions: { items: actionName(strict), type: 'array' },
       root: { $ref: '#/$defs/node' },
       version: { const: 1 },
     },
@@ -304,37 +357,8 @@ function recursiveDefinitions(
 }
 
 /**
- * Recursion-free lowering (S6): the node tree unrolled level by level —
- * `node1` may contain `node2` children and so on; the deepest level
- * accepts text children only. The depth bound constrains the schema, not
- * the format (edge case in spec.md).
- */
-function unrolledDefinitions(
-  entries: readonly ResolvedEntry[],
-  depth: number,
-): Record<string, unknown> {
-  const defs: Record<string, unknown> = {};
-  for (let level = 1; level <= depth; level += 1) {
-    const childReference = level === depth ? '#/$defs/text' : `#/$defs/child${String(level + 1)}`;
-    defs[`node${String(level)}`] = {
-      anyOf: entries.map(([tag]) => ({ $ref: `#/$defs/${tag}-${String(level)}` })),
-    };
-    if (level < depth) {
-      defs[`child${String(level + 1)}`] = {
-        anyOf: [{ type: 'string' }, { $ref: `#/$defs/node${String(level + 1)}` }],
-      };
-    }
-    for (const [tag, entry] of entries) {
-      defs[`${tag}-${String(level)}`] = componentBranch(tag, entry, true, childReference);
-    }
-  }
-  defs['text'] = { type: 'string' };
-  return defs;
-}
-
-/**
  * Derives the catalog-specialized JSON Schema of the neutral UI-spec
- * format (S1–S6, S10–S12, S15). Deterministic (S11), version-stamped
+ * format (S1–S5, S10–S12, S15–S20). Deterministic (S11), version-stamped
  * (S10), fail-closed on skew, bad subsets and provider limits — never a
  * silent truncation (FR-009).
  */
@@ -355,7 +379,7 @@ export function uiSpecJsonSchema(
       issues: [
         {
           code: 'invalid-option',
-          message: `unknown schema target "${target}" (expected draft-2020-12, openai-strict or anthropic-strict)`,
+          message: `unknown schema target "${target}" (expected draft-2020-12 or openai-strict)`,
           path: 'options.target',
           value: target,
         },
@@ -363,38 +387,12 @@ export function uiSpecJsonSchema(
       ok: false,
     };
   }
-  const strict = target !== 'draft-2020-12';
+  const strict = target === 'openai-strict';
   const document = baseDocument(catalog, target);
-  if (target === 'anthropic-strict') {
-    const depth = options.maxDepth ?? DEFAULT_ANTHROPIC_DEPTH;
-    // A degenerate or unbounded depth would ship a dangling $ref as ok:true or
-    // exhaust memory unrolling (review finding): fail closed naming the option.
-    if (!Number.isInteger(depth) || depth < 1 || depth > MAX_ANTHROPIC_DEPTH) {
-      return {
-        issues: [
-          {
-            code: 'invalid-option',
-            message: `anthropic-strict maxDepth must be an integer in [1, ${String(MAX_ANTHROPIC_DEPTH)}] (received ${String(options.maxDepth)})`,
-            path: 'options.maxDepth',
-            value: String(options.maxDepth),
-          },
-        ],
-        ok: false,
-      };
-    }
-    document['$comment'] =
-      `composition depth bound: ${String(depth)} (schema bound only; the validation boundary accepts deeper specs)`;
-    document['description'] =
-      `${String(document['description'])} Composition depth bound: ${String(depth)}.`;
-    const properties = document['properties'] as Record<string, unknown>;
-    properties['root'] = { $ref: '#/$defs/node1' };
-    document['$defs'] = unrolledDefinitions(resolved.entries, depth);
-  } else {
-    document['$defs'] = recursiveDefinitions(resolved.entries, strict);
-  }
+  document['$defs'] = recursiveDefinitions(resolved.entries, strict);
   const artifact = pruneUndefined(document) as Record<string, unknown>;
   // Finalize the $id with a content hash of the built $defs, so two materially
-  // different derivations (different catalogs, subsets or depths) never share
+  // different derivations (different catalogs, subsets or targets) never share
   // an identifier in a JSON Schema registry. Deterministic: the $defs are
   // built in sorted order.
   artifact['$id'] = `${String(artifact['$id'])}/${fnv1a(JSON.stringify(artifact['$defs']))}`;

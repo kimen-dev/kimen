@@ -68,6 +68,103 @@ describe('catalogPrompt', () => {
     expect(report.ok).toBe(true);
   });
 
+  it('S16 marks required props as required in the prompt', () => {
+    const prompt = promptOrThrow(catalogData);
+    const block = prompt.slice(prompt.indexOf('### <ki-textarea>'));
+    expect(block).toMatch(/- `label` \(string, required\)/u);
+    expect(block).toMatch(/- `placeholder` \(string\)/u);
+    expect(prompt).toContain('Props marked "required" MUST be present');
+  });
+
+  it('S8 S16 keeps the example valid when its component declares a required prop', () => {
+    const derivation = catalogPrompt(catalogData, { components: ['ki-textarea'] });
+    expect(derivation.ok).toBe(true);
+    if (!derivation.ok) {
+      return;
+    }
+    const fence = /```json\n([\s\S]*?)\n```/u.exec(derivation.artifact);
+    const example: unknown = JSON.parse(fence?.[1] ?? 'null');
+    const report = validateUiSpec(example);
+    expect(report.issues).toEqual([]);
+    expect(report.ok).toBe(true);
+  });
+
+  it('S17 states the declared range of a bounded number in the prompt', () => {
+    const prompt = promptOrThrow(catalogData);
+    const block = prompt.slice(prompt.indexOf('### <ki-indicator>'));
+    expect(block).toMatch(/- `count` \(number, 0 to 20\)/u);
+    expect(block).toMatch(/- `current` \(number, 1 to 20\)/u);
+  });
+
+  it('S8 S17 keeps the example inside the bounds of a required number', () => {
+    const created = createCatalog({
+      components: {
+        'acme-gauge': {
+          description: 'A gauge.',
+          events: {},
+          props: {
+            level: {
+              description: 'Fill level.',
+              maximum: 9,
+              minimum: 5,
+              required: true,
+              type: 'number',
+            },
+          },
+          slots: {},
+          tag: 'acme-gauge',
+          whenNotToUse: 'Never.',
+          whenToUse: 'Only in this test.',
+        },
+      },
+    });
+    if (!created.ok) {
+      throw new Error(`fixture catalog must register: ${created.issues[0]?.message ?? ''}`);
+    }
+    const prompt = promptOrThrow(created.catalog);
+    const fence = /```json\n([\s\S]*?)\n```/u.exec(prompt);
+    const example: unknown = JSON.parse(fence?.[1] ?? 'null');
+    expect(validateUiSpec(example, { catalog: created.catalog }).issues).toEqual([]);
+  });
+
+  it('S18 flags URL-typed props in the prompt and states the accepted schemes', () => {
+    const created = createCatalog({
+      components: {
+        'acme-logo': {
+          description: 'A partner logo.',
+          events: {},
+          props: {
+            caption: { description: 'Caption.', type: 'string' },
+            source: { description: 'Logo image.', format: 'url', required: true, type: 'string' },
+          },
+          slots: {},
+          tag: 'acme-logo',
+          whenNotToUse: 'Decoration.',
+          whenToUse: 'Show a partner brand.',
+        },
+      },
+    });
+    if (!created.ok) {
+      throw new Error(`fixture catalog must register: ${created.issues[0]?.message ?? ''}`);
+    }
+    const prompt = promptOrThrow(created.catalog);
+    expect(prompt).toMatch(/- `source` \(string, URL, required\)/u);
+    expect(prompt).toMatch(/- `caption` \(string\)/u);
+    expect(prompt).toContain('Props marked "URL" accept only http(s) URLs or relative references');
+    // The example supplies the required URL prop with a value the boundary accepts.
+    const fence = /```json\n([\s\S]*?)\n```/u.exec(prompt);
+    const example: unknown = JSON.parse(fence?.[1] ?? 'null');
+    expect(validateUiSpec(example, { catalog: created.catalog }).issues).toEqual([]);
+  });
+
+  it('S19 states the optional node id and its grammar in the format rules', () => {
+    const prompt = promptOrThrow(catalogData);
+    expect(prompt).toContain('{"id": "<id>", "component": "<tag>"');
+    expect(prompt).toContain('"id", "props", "action" and "slots" are optional');
+    expect(prompt).toContain('unique within the document');
+    expect(prompt).toContain('at most 64 characters');
+  });
+
   it('S10 stamps the catalog schema version on the prompt', () => {
     expect(promptOrThrow(catalogData)).toContain(catalogData.catalogSchemaVersion);
   });

@@ -15,7 +15,7 @@ import type { StencilReactComponent } from '@stencil/react-output-target/runtime
 
 export type KiVideoEvents = NonNullable<unknown>;
 
-export const KiVideo: StencilReactComponent<KiVideoElement, KiVideoEvents, Components.KiVideo> = /*@__PURE__*/ createComponent<KiVideoElement, KiVideoEvents, Components.KiVideo>({
+export const KiVideo: StencilReactComponent<KiVideoElement, KiVideoEvents, Components.KiVideo, 'label'> = /*@__PURE__*/ createComponent<KiVideoElement, KiVideoEvents, Components.KiVideo, 'label'>({
     tagName: 'ki-video',
     elementClass: KiVideoElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.

@@ -21,12 +21,17 @@ CatalogPropConstraint>, slots: Record<name, string>, events: Record<name,
 string> }` — see `validate.ts:23-42`. Registered entries satisfy the exact
 same interface after validation.
 
-### CatalogPropConstraint (public, EXISTING — unchanged)
+### CatalogPropConstraint (public, EXISTING — extended by declared limits)
 
 `type: 'boolean' | 'enum' | 'number' | 'string'`; `values` present exactly
 when `type === 'enum'` (non-empty); optional `documentedValues` (open string
 unions), `default` (scalar), `description` (required string, may be empty
-for props but not for guidance fields).
+for props but not for guidance fields). Declared limits, all optional and
+enforced at the boundary (027 FR-016 onwards, S18): `required` (boolean —
+the node must set the prop, and a string must not be blank); `minimum` and
+`maximum` (finite numbers, inclusive, `number` props only, minimum ≤
+maximum, and a `default` must lie inside them); `format` (`'url'` only,
+`string` props only — the value is held to the URL policy).
 
 ### CatalogDefinition (public, NEW)
 

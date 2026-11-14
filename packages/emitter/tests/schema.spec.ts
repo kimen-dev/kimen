@@ -1,11 +1,11 @@
 // @spec:033-emitter-kit
-// Schema derivation (S1-S6, S10-S12, S15): the catalog-specialized JSON
+// Schema derivation (S1-S5, S10-S12, S15-S19): the catalog-specialized JSON
 // Schema behaves under an independent oracle (ajv, draft 2020-12) exactly
 // as the contract promises, deterministically, with provider lowerings
 // structurally verified and never silently truncated.
 
 import type { Catalog } from '@kimen/catalog';
-import { catalogData } from '@kimen/catalog';
+import { catalogData, validateUiSpec } from '@kimen/catalog';
 import Ajv2020 from 'ajv/dist/2020.js';
 import { describe, expect, it } from 'vitest';
 import { type EmitterTarget, uiSpecJsonSchema } from '../src/index.js';
@@ -124,78 +124,9 @@ describe('uiSpecJsonSchema', () => {
       root: {
         action: null,
         component: 'ki-badge',
+        id: null,
         props: { size: null, tone: 'info' },
         slots: { '': ['3 items'] },
-      },
-      version: 1,
-    });
-    expect(validate.errors ?? []).toEqual([]);
-    expect(accepted).toBe(true);
-  });
-
-  it('S6 contains no recursive references under anthropic-strict and declares its depth bound', () => {
-    const artifact = deriveOrThrow(catalogData, { target: 'anthropic-strict' });
-    expect(String(artifact['description'])).toContain('depth bound: 6');
-    expect(String(artifact['$comment'])).toContain('composition depth bound: 6');
-
-    const defs = artifact['$defs'] as Record<string, unknown>;
-    const referencesOf = (value: unknown, found: string[]): void => {
-      if (Array.isArray(value)) {
-        for (const child of value) {
-          referencesOf(child, found);
-        }
-        return;
-      }
-      if (value === null || typeof value !== 'object') {
-        return;
-      }
-      for (const [key, child] of Object.entries(value)) {
-        if (key === '$ref' && typeof child === 'string') {
-          found.push(child.replace('#/$defs/', ''));
-        } else {
-          referencesOf(child, found);
-        }
-      }
-    };
-    const visiting = new Set<string>();
-    const settled = new Set<string>();
-    const assertAcyclic = (name: string): void => {
-      if (settled.has(name)) {
-        return;
-      }
-      expect(visiting.has(name)).toBe(false);
-      visiting.add(name);
-      const found: string[] = [];
-      referencesOf(defs[name], found);
-      for (const next of found) {
-        assertAcyclic(next);
-      }
-      visiting.delete(name);
-      settled.add(name);
-    };
-    for (const name of Object.keys(defs)) {
-      assertAcyclic(name);
-    }
-
-    const validate = compile(artifact);
-    const accepted = validate({
-      actions: [],
-      root: {
-        action: null,
-        component: 'ki-card',
-        slots: {
-          '': [
-            {
-              action: null,
-              component: 'ki-badge',
-              props: { size: null, tone: 'info' },
-              slots: { '': ['nested'] },
-            },
-          ],
-          footer: [],
-          header: [],
-          media: [],
-        },
       },
       version: 1,
     });
@@ -237,6 +168,98 @@ describe('uiSpecJsonSchema', () => {
     }
   });
 
+  it('S16 requires the props the catalog declares required, in the default dialect', () => {
+    const validate = compile(deriveOrThrow(catalogData));
+    const spec = (node: Record<string, unknown>) => ({ root: node, version: 1 });
+    expect(validate(spec({ component: 'ki-textarea' }))).toBe(false);
+    expect(validate(spec({ component: 'ki-textarea', props: {} }))).toBe(false);
+    expect(validate(spec({ component: 'ki-textarea', props: { rows: 3 } }))).toBe(false);
+    // A blank value names nothing: the boundary rejects it, so the schema does too.
+    expect(validate(spec({ component: 'ki-textarea', props: { label: ' ' } }))).toBe(false);
+    expect(validate(spec({ component: 'ki-textarea', props: { label: 'Notes' } }))).toBe(true);
+    // A component without required props keeps its props container optional.
+    expect(validate(spec({ component: 'ki-badge' }))).toBe(true);
+  });
+
+  it('S16 makes required props non-nullable under openai-strict', () => {
+    const validate = compile(
+      deriveOrThrow(catalogData, { components: ['ki-textarea'], target: 'openai-strict' }),
+    );
+    const placeholders = Object.fromEntries(
+      Object.keys(catalogData.components['ki-textarea'].props).map((name) => [name, null]),
+    );
+    const node = (label: unknown) => ({
+      actions: [],
+      root: {
+        action: null,
+        component: 'ki-textarea',
+        id: null,
+        props: { ...placeholders, label },
+      },
+      version: 1,
+    });
+    expect(validate(node(null))).toBe(false);
+    expect(validate(node('Notes'))).toBe(true);
+  });
+
+  it.each(['draft-2020-12', 'openai-strict'] as const)(
+    'S17 carries the declared numeric bounds under %s',
+    (target) => {
+      const artifact = deriveOrThrow(catalogData, { components: ['ki-indicator'], target });
+      const validate = compile(artifact);
+      const spec = (count: number) => ({
+        actions: [],
+        root: {
+          action: target === 'draft-2020-12' ? undefined : null,
+          component: 'ki-indicator',
+          id: target === 'draft-2020-12' ? undefined : null,
+          props: { count, current: 1, label: 'Slide position' },
+        },
+        version: 1,
+      });
+      expect(validate(JSON.parse(JSON.stringify(spec(21))))).toBe(false);
+      expect(validate(JSON.parse(JSON.stringify(spec(-1))))).toBe(false);
+      expect(validate(JSON.parse(JSON.stringify(spec(20))))).toBe(true);
+    },
+  );
+
+  it('S19 admits stable node ids in the boundary grammar and rejects any other id', () => {
+    const validate = compile(deriveOrThrow(catalogData));
+    const spec = (rootId: unknown, childId: unknown) => ({
+      root: {
+        component: 'ki-card',
+        id: rootId,
+        slots: { '': [{ component: 'ki-badge', id: childId, slots: { '': ['3 items'] } }] },
+      },
+      version: 1,
+    });
+    const accepted = spec('order-card', 'items_badge-2');
+    expect(validate(accepted)).toBe(true);
+    expect(validateUiSpec(accepted).issues).toEqual([]);
+    for (const bad of ['Order Card', '-card', '', 'x'.repeat(65), 7]) {
+      expect(validate(spec(bad, 'ok')), String(bad)).toBe(false);
+      expect(validate(spec('ok', bad)), String(bad)).toBe(false);
+    }
+    // No id at all stays valid: ids are optional.
+    expect(validate({ root: { component: 'ki-card' }, version: 1 })).toBe(true);
+  });
+
+  it('S19 makes the id a nullable required property under openai-strict', () => {
+    const validate = compile(
+      deriveOrThrow(catalogData, { components: ['ki-badge'], target: 'openai-strict' }),
+    );
+    const root = { action: null, component: 'ki-badge', props: { size: null, tone: null } };
+    const spec = (node: Record<string, unknown>) => ({
+      actions: [],
+      root: { ...node, slots: { '': [] } },
+      version: 1,
+    });
+    expect(validate(spec({ ...root, id: null }))).toBe(true);
+    expect(validate(spec({ ...root, id: 'status-1' }))).toBe(true);
+    expect(validate(spec({ ...root, id: 'Status 1' }))).toBe(false);
+    expect(validate(spec(root))).toBe(false);
+  });
+
   it('S4 collapses duplicate subset tags instead of duplicating branches (review regression)', () => {
     const artifact = deriveOrThrow(catalogData, { components: ['ki-badge', 'ki-badge'] });
     const defs = artifact['$defs'] as Record<string, { anyOf?: readonly unknown[] }>;
@@ -261,25 +284,40 @@ describe('uiSpecJsonSchema', () => {
     expect(!arrayComponents.ok && arrayComponents.issues[0]?.code).toBe('malformed-catalog');
   });
 
-  it('S6 refuses a degenerate or over-budget anthropic-strict maxDepth with a named issue (review regression)', () => {
-    // 0/-1/2.5 are below the floor; 100000 is above the documented ceiling —
-    // an unbounded depth would allocate a copy of every branch per level and
-    // exhaust memory instead of returning a fail-closed Derivation.
-    for (const maxDepth of [0, -1, 2.5, 100_000]) {
-      const derivation = uiSpecJsonSchema(catalogData, { maxDepth, target: 'anthropic-strict' });
-      expect(derivation.ok).toBe(false);
-      if (!derivation.ok) {
-        expect(derivation.issues[0]?.code).toBe('invalid-option');
-        expect(derivation.issues[0]?.path).toBe('options.maxDepth');
-      }
-    }
-  });
-
   it('constrains action names to non-empty strings, matching the validator (review regression)', () => {
     // The authoritative Zod uses z.string().min(1); an empty action string is
     // schema-expressible, so the derived schema must reject it too.
     const validate = compile(deriveOrThrow(catalogData));
     expect(validate({ actions: [''], root: { component: 'ki-badge' }, version: 1 })).toBe(false);
+    expect(validate({ actions: [], root: { action: '', component: 'ki-badge' }, version: 1 })).toBe(
+      false,
+    );
+    // The strict target states the same rule with a keyword it supports.
+    const strict = compile(
+      deriveOrThrow(catalogData, { components: ['ki-badge'], target: 'openai-strict' }),
+    );
+    const node = (action: string | null) => ({
+      action,
+      component: 'ki-badge',
+      id: null,
+      props: { size: null, tone: null },
+      slots: { '': [] },
+    });
+    expect(strict({ actions: [''], root: node(null), version: 1 })).toBe(false);
+    expect(strict({ actions: ['confirm'], root: node(''), version: 1 })).toBe(false);
+    expect(strict({ actions: ['confirm'], root: node('confirm'), version: 1 })).toBe(true);
+  });
+
+  it('refuses the removed anthropic-strict target like any unknown target', () => {
+    // Removed on purpose (FR-003): the profile could not meet the provider's
+    // documented limits. A caller still passing it must fail closed, never
+    // receive a schema for another target.
+    const derivation = uiSpecJsonSchema(catalogData, {
+      target: 'anthropic-strict' as unknown as EmitterTarget,
+    });
+    expect(derivation.ok).toBe(false);
+    expect(!derivation.ok && derivation.issues[0]?.code).toBe('invalid-option');
+    expect(!derivation.ok && derivation.issues[0]?.value).toBe('anthropic-strict');
   });
 
   it('derives a distinct $id per target and per component subset (review regression)', () => {

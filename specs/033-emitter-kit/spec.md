@@ -77,10 +77,11 @@ Schema validator; check the prompt carries every component's guidance.
 ### User Story 2 - Provider-strict modes work without hand-tuning (Priority: P1)
 
 The integrator selects a lowering target for their provider: the full
-draft-2020-12 dialect by default, a strict lowering for providers that
-demand all-required properties with `additionalProperties: false`
-everywhere, and a recursion-free lowering for providers whose constrained
-decoding rejects recursive references. Where a strict mode forces the model
+draft-2020-12 dialect by default, and a strict lowering for the provider
+mode that demands all-required properties with `additionalProperties:
+false` everywhere. (A recursion-free lowering for constrained decoders
+that reject recursive references shipped first and was removed: see
+FR-003.) Where a strict mode forces the model
 to emit placeholder nulls, a normalization helper strips them so the
 emission validates; where a catalog exceeds a provider's documented limits,
 derivation fails naming the offending component instead of silently
@@ -91,10 +92,10 @@ time (verified: recursion is the fork — one major provider supports it via
 references, another rejects it); shipping targets that are wrong or silent
 about limits would be worse than shipping none.
 
-**Independent Test**: structural assertions on each target's output
-(additionalProperties, required completeness, absence of recursive
-references, bounded depth) plus the normalization round-trip and a
-limit-exceeding synthetic catalog.
+**Independent Test**: structural assertions on the strict target's output
+(additionalProperties, required completeness, only documented keywords,
+every documented size limit measured) plus the normalization round-trip
+and limit-exceeding synthetic catalogs.
 
 **Acceptance Scenarios**:
 
@@ -148,10 +149,12 @@ artifact; check determinism (identical derivations byte-for-byte).
   schemes) are not expressible in provider subsets: the schema is advisory
   shape, the validation boundary remains authoritative — pinned by the
   agreement property (SC-004) and the docs disclaimer (FR-011).
-- The recursion-free target bounds composition depth; a catalog whose
-  realistic compositions exceed the bound still validates at the boundary
-  (the bound constrains the SCHEMA, not the format) — the bound is
-  documented on the artifact.
+- A provider whose strict mode cannot hold the catalog-specialized schema
+  at all (Anthropic strict tools / structured outputs: no recursion, 24
+  optional and 16 union-typed parameters per request) gets NO target: the
+  integrator uses the default dialect as advisory guidance — a regular,
+  non-strict tool — with the prompt and the repair loop. A target that
+  emits a schema the provider rejects would be worse than none.
 - Guidance text stays OUT of the schema (token budget; provider
   name/enum-length limits) — judgment lives in the prompt, shape in the
   schema; the two are derived from the same entries so they cannot drift.
@@ -168,7 +171,7 @@ artifact; check determinism (identical derivations byte-for-byte).
 Feature: Emitter kit
   From one catalog value — built-in or registered — derive the guidance
   artifacts any LLM integration needs (prompt, catalog-specialized JSON
-  Schema with provider lowerings, tool definition) and the ingest helpers
+  Schema with a provider-strict lowering, tool definition) and the ingest helpers
   that close the reliability loop, deterministically, with the validation
   boundary staying the only enforcement point.
 
@@ -202,12 +205,6 @@ Feature: Emitter kit
     Given the JSON Schema derived with the openai-strict target
     When every object schema in the document is inspected
     Then each carries additionalProperties false and lists every declared property as required
-
-  # S6
-  Scenario: The recursion-free lowering contains no recursive references
-    Given the JSON Schema derived with the anthropic-strict target
-    When the document's reference graph is inspected
-    Then no reference cycle exists and the composition depth bound is declared on the artifact
 
   # Family: core behavior — prompt derivation
   # S7
@@ -265,6 +262,39 @@ Feature: Emitter kit
     Given a catalog whose declared enum surface exceeds the strict target's documented limit
     When the schema is derived for that target
     Then derivation fails naming the offending component and the exceeded limit
+
+  # Family: core behavior — declared prop constraints
+  # S16
+  Scenario: Required props are required in the schema and flagged in the prompt
+    Given a catalog whose ki-textarea declares "label" as a required prop
+    When the JSON Schema and the prompt are derived
+    Then the schema rejects a ki-textarea without "label" and the prompt marks "label" as required
+
+  # S17
+  Scenario: Numeric bounds reach the schema and the prompt
+    Given a catalog bounding ki-indicator's "count" to the range 0 to 20
+    When the JSON Schema and the prompt are derived
+    Then the schema rejects a ki-indicator whose "count" is 21 and the prompt states the range
+
+  # S18
+  Scenario: URL-typed props are flagged in the prompt
+    Given a catalog whose "acme-logo" declares "source" as a URL-typed prop
+    When the prompt is derived
+    Then the prompt marks "source" as a URL and states the schemes the boundary accepts
+
+  # Family: core behavior — agreement with the node format
+  # S19
+  Scenario: The derived artifacts admit the stable node ids the boundary accepts
+    Given a spec whose nodes carry stable ids in the boundary's id grammar
+    When the spec is checked against the derived JSON Schema
+    Then the schema accepts the spec, rejects an id outside the grammar, and the prompt states the id rule
+
+  # Family: core behavior — provider limits
+  # S20
+  Scenario: The strict lowering stays within the provider's documented schema limits
+    Given the JSON Schema derived with the openai-strict target
+    When the document is measured against the provider's documented keywords and size limits
+    Then it uses only supported keywords and stays within every documented limit
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -275,7 +305,7 @@ are inapplicable.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15 | |
+| Core behavior | S1, S2, S3, S4, S5, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20 | |
 | Keyboard path | | N/A — no interactive surface; artifacts are data consumed by models and integrations |
 | Assistive-tech outcome | | N/A — nothing renders; the emitter derives text and schema documents |
 | Form participation | | N/A — no form control is introduced |
@@ -298,11 +328,26 @@ are inapplicable.
   the spec `version` literal and declared-actions list are part of the
   schema shape.
 - **FR-003**: The kit MUST provide named lowering targets: the full
-  default dialect; a strict target meeting the all-required +
-  closed-object subset (optionality expressed as null unions); and a
-  recursion-free target that unrolls the node tree to a declared, bounded
-  composition depth. Transformations a target cannot express are dropped
-  to prompt guidance, never silently approximated in the schema.
+  default dialect, and a strict target (`openai-strict`) meeting the
+  all-required + closed-object subset (optionality expressed as null
+  unions). A strict target MUST stay inside what its provider documents:
+  it uses only the keywords the provider lists as supported — the
+  non-empty rule of an action name is a `pattern` there, because
+  `minLength` is not among the documented string keywords — and every
+  published size limit is either enforced at derivation (S15) or holds by
+  construction, and a test measures the built artifact against those
+  numbers so a regression fails the suite (S20). Transformations a target
+  cannot express are dropped to prompt guidance, never silently
+  approximated in the schema. A target is offered only when a
+  catalog-specialized schema of a real catalog fits the provider's
+  subset: the recursion-free `anthropic-strict` target (scenario S6,
+  retired) was removed because Anthropic's documented strict subset allows
+  24 optional and 16 union-typed parameters per request and rejects
+  `minLength`, while the unrolled schema of the built-in catalog carried
+  about 720 unions in 291 KB; no lowering that keeps one branch per
+  component with its declared props fits those limits (Art. VII: an
+  unusable profile is removed, not kept as a promise). A removed or
+  unknown target name fails closed as `invalid-option`.
 - **FR-004**: The kit MUST derive a provider-neutral tool definition (name,
   model-facing description, input schema) wrapping the lowered schema for
   the same options, mappable to any provider's tool/function surface
@@ -343,6 +388,27 @@ are inapplicable.
 - **FR-012**: The kit's artifacts MUST embed the catalog schema version
   (and the elements version when the catalog carries one) so emission-side
   version skew is diagnosable (Art. IX).
+
+- **FR-013**: The limits a catalog declares on a prop MUST reach both
+  artifacts, so a model is told what the boundary will enforce: a
+  `required` prop is listed in the schema's `required` (with its `props`
+  container), is never nullable in a strict target, carries the non-blank
+  rule when it is a string, and is marked "required" in the prompt, whose
+  embedded example supplies every required prop (S16, S8). Declared
+  numeric bounds become `minimum`/`maximum` in every target and a stated
+  range in the prompt; the example stays inside them (S17). A URL-typed
+  prop is marked "URL" in the prompt with the schemes the boundary accepts
+  (S18); the URL policy itself stays boundary-only — no target expresses
+  it faithfully, so the schema does not approximate it (FR-003, FR-011).
+- **FR-014**: The schema and the prompt MUST describe the node format the
+  boundary validates, field for field: every component branch admits the
+  optional stable node `id` (035 FR-001) under the boundary's own id
+  grammar, read from the catalog package rather than restated; a strict
+  target lists it as a nullable required property that normalization
+  strips like any other placeholder; and the prompt states the rule.
+  Uniqueness of ids within a document is a cross-node rule and stays
+  boundary-only (S19). A model guided by the schema can therefore emit the
+  ids a live surface addresses.
 
 ### Key Entities
 
@@ -390,7 +456,9 @@ are inapplicable.
   property test over generated specs (agreement property).
 - **SC-003**: Strict-target structural guarantees hold for every catalog
   the tests generate: 100% of object schemas closed and all-required
-  (S5), zero reference cycles in the recursion-free target (S6).
+  (S5), and the strict artifact of the built-in catalog and of a catalog
+  using every constraint measures inside every documented keyword and
+  size limit (S20).
 - **SC-004**: The repair loop is single-round by construction: the repair
   formatter never emits a second-round message and documentation states
   the fail-closed policy (S14 + docs check).
@@ -404,13 +472,18 @@ are inapplicable.
   decisions; the working names are `catalogPrompt`, `uiSpecJsonSchema`,
   `uiSpecTool`, `normalizeEmission`, `repairPrompt` in package
   `@kimen/emitter`.
-- Provider subset facts are pinned by research (2026-08): OpenAI strict
-  supports recursion via `$ref` but demands all-required + closed objects
-  (limits: 5000 properties, 1000 enum values, 120k chars, 10 nesting
-  levels); Anthropic structured outputs / strict tools reject recursive
-  schemas (hence the unrolled target, default depth 6). If a provider
-  changes its subset, the lowering targets adapt as MINOR versions of the
-  kit — the neutral default dialect is the stable core.
+- Provider subset facts are pinned by research and were re-read in the
+  official documentation on 2026-11-14 (research D2 amendment): OpenAI
+  strict supports recursion via `$ref` but demands all-required + closed
+  objects (limits: 5000 properties, 10 nesting levels, 120k characters of
+  property names, definition names, enum and const values, 1000 enum
+  values, and 15k characters for a single enum above 250 values; string
+  keywords `pattern` and `format` only); Anthropic structured outputs /
+  strict tools reject recursive schemas, numeric and string-length
+  constraints, and cap a request at 24 optional and 16 union-typed
+  parameters. If a provider changes its subset, the lowering targets adapt
+  as MINOR versions of the kit — the neutral default dialect is the stable
+  core.
 - Partial-JSON healing (text-level streaming repair) and an A2UI catalog
   export are explored-and-deferred: healing pends real demand; the A2UI
   export belongs to `@kimen/adapter-a2ui` (Art. VIII) as a follow-up.

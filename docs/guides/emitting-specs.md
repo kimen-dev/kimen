@@ -14,7 +14,7 @@ registered components
 | Nothing special (any chat model) | `catalogPrompt(catalog)` as a system-prompt block | The universal fallback; carries guidance + a validated example |
 | Structured outputs / response schemas | `uiSpecJsonSchema(catalog, { target })` | `openai-strict` for all-required closed-object modes; `draft-2020-12` elsewhere |
 | Tool / function calling | `uiSpecTool(catalog, { target })` | `{ name, description, inputSchema }`, provider-neutral |
-| No recursive schemas (grammar-compiled) | `target: 'anthropic-strict'` | Node tree unrolled to `maxDepth` (default 6) — schema bound only |
+| A strict mode without recursive schemas (Anthropic strict tools) | `draft-2020-12` on a regular, non-strict tool | No strict target exists: that subset cannot hold a catalog-specialized schema |
 
 Combine prompt + schema for best results: the schema constrains SHAPE, the
 prompt carries JUDGMENT (when to use which component). Both derive from

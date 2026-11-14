@@ -15,7 +15,7 @@ import type { StencilReactComponent } from '@stencil/react-output-target/runtime
 
 export type KiInputEvents = NonNullable<unknown>;
 
-export const KiInput: StencilReactComponent<KiInputElement, KiInputEvents, Components.KiInput> = /*@__PURE__*/ createComponent<KiInputElement, KiInputEvents, Components.KiInput>({
+export const KiInput: StencilReactComponent<KiInputElement, KiInputEvents, Components.KiInput, 'label'> = /*@__PURE__*/ createComponent<KiInputElement, KiInputEvents, Components.KiInput, 'label'>({
     tagName: 'ki-input',
     elementClass: KiInputElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.

@@ -10,6 +10,7 @@ import {
   type ActionEvent,
   type Catalog,
   catalogData,
+  createLiveSurface,
   createStreamingRenderer,
   DEFAULT_RENDER_BUDGETS,
   renderUiSpec,
@@ -469,5 +470,125 @@ describe('render defaults', () => {
     expect(DEFAULT_RENDER_BUDGETS.maxDepth).toBeGreaterThan(0);
     expect(DEFAULT_RENDER_BUDGETS.maxNodes).toBeGreaterThan(0);
     expect(DEFAULT_RENDER_BUDGETS.maxBytes).toBeGreaterThan(0);
+  });
+});
+
+describe('renderUiSpec — declared prop constraints bound every render', () => {
+  it('S21 never renders a spec missing a required prop, naming the component and the prop', () => {
+    const result = renderUiSpec(
+      {
+        version: 1,
+        root: { component: 'ki-card', slots: { '': [{ component: 'ki-textarea' }] } },
+      },
+      { surface },
+    );
+    expect(result.ok).toBe(false);
+    expect(surface.childNodes).toHaveLength(0);
+    const diagnostic = result.diagnostics[0];
+    expect(diagnostic?.rule).toBe('missing-required-prop');
+    expect(diagnostic?.path).toBe('root.slots.[0].props.label');
+    expect(diagnostic?.message).toContain('ki-textarea');
+    expect(diagnostic?.message).toContain('"label"');
+  });
+
+  it('S21 halts a stream on a chunk missing a required prop and attaches nothing of it', () => {
+    const stream = createStreamingRenderer({ surface });
+    const result = stream.push({ component: 'ki-textarea', props: { rows: 3 } });
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics[0]?.rule).toBe('missing-required-prop');
+    expect(surface.childNodes).toHaveLength(0);
+  });
+
+  it('S22 never renders a number beyond its declared bounds, naming the prop and the maximum', () => {
+    const result = renderUiSpec(
+      {
+        version: 1,
+        root: {
+          component: 'ki-indicator',
+          props: { count: 1_000_000, label: 'Slide position' },
+        },
+      },
+      { surface },
+    );
+    expect(result.ok).toBe(false);
+    expect(surface.childNodes).toHaveLength(0);
+    const diagnostic = result.diagnostics[0];
+    expect(diagnostic?.rule).toBe('prop-out-of-range');
+    expect(diagnostic?.path).toBe('root.props.count');
+    expect(diagnostic?.message).toContain('ki-indicator');
+    expect(diagnostic?.message).toContain('"count"');
+    expect(diagnostic?.message).toContain('20');
+  });
+
+  it('S22 rejects a live update that would take a number beyond its bounds and keeps the content', () => {
+    const live = createLiveSurface({ surface });
+    const inserted = live.apply({
+      ops: [
+        {
+          node: {
+            component: 'ki-indicator',
+            id: 'dots',
+            props: { count: 5, current: 2, label: 'Slide position' },
+          },
+          op: 'insert',
+        },
+      ],
+    });
+    expect(inserted.ok).toBe(true);
+    const rejected = live.apply({ ops: [{ id: 'dots', op: 'set', props: { count: 1_000_000 } }] });
+    expect(rejected.ok).toBe(false);
+    expect(rejected.diagnostics[0]?.rule).toBe('prop-out-of-range');
+    expect(surface.querySelector('ki-indicator')?.getAttribute('count')).toBe('5');
+  });
+});
+
+describe('renderUiSpec — the host may restrict URL props to declared origins', () => {
+  const allowedUrlOrigins = ['https://cdn.example.com'];
+  const avatar = (src: string) => ({ component: 'ki-avatar', props: { label: 'Ana García', src } });
+
+  it.each(['https://tracker.example.net/p.gif', '/avatars/ana.png', '//tracker.example.net/p.gif'])(
+    'S23 never renders the URL %j outside the allowed origins',
+    (src) => {
+      const result = renderUiSpec(
+        { version: 1, root: avatar(src) },
+        { allowedUrlOrigins, surface },
+      );
+      expect(result.ok).toBe(false);
+      expect(surface.childNodes).toHaveLength(0);
+      const diagnostic = result.diagnostics[0];
+      expect(diagnostic?.rule).toBe('url-origin');
+      expect(diagnostic?.path).toBe('root.props.src');
+      expect(diagnostic?.message).toContain('"src"');
+
+      const stream = createStreamingRenderer({ allowedUrlOrigins, surface });
+      expect(stream.push(avatar(src)).diagnostics[0]?.rule).toBe('url-origin');
+      expect(surface.childNodes).toHaveLength(0);
+    },
+  );
+
+  it('S23 renders a URL of an allowed origin, complete and streamed', () => {
+    const src = 'https://cdn.example.com/ana.png';
+    expect(renderUiSpec({ version: 1, root: avatar(src) }, { allowedUrlOrigins, surface }).ok).toBe(
+      true,
+    );
+    expect(surface.querySelector('ki-avatar')?.getAttribute('src')).toBe(src);
+    expect(createStreamingRenderer({ allowedUrlOrigins, surface }).push(avatar(src)).ok).toBe(true);
+  });
+
+  it('S23 holds every live batch to the allowed origins, inserts and updates alike', () => {
+    const live = createLiveSurface({ allowedUrlOrigins, surface });
+    const foreign = 'https://tracker.example.net/p.gif';
+    const rejectedInsert = live.apply({ ops: [{ node: avatar(foreign), op: 'insert' }] });
+    expect(rejectedInsert.diagnostics[0]?.rule).toBe('url-origin');
+    expect(surface.childNodes).toHaveLength(0);
+
+    const node = { ...avatar('https://cdn.example.com/ana.png'), id: 'ana' };
+    expect(live.apply({ ops: [{ node, op: 'insert' }] }).ok).toBe(true);
+    const rejectedSet = live.apply({ ops: [{ id: 'ana', op: 'set', props: { src: foreign } }] });
+    expect(rejectedSet.ok).toBe(false);
+    expect(rejectedSet.diagnostics[0]?.rule).toBe('url-origin');
+    expect(surface.querySelector('ki-avatar')?.getAttribute('src')).toBe(
+      'https://cdn.example.com/ana.png',
+    );
   });
 });

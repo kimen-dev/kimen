@@ -432,3 +432,92 @@ describe('createCatalog properties', () => {
     );
   });
 });
+
+describe('createCatalog — declared prop constraints over registered components', () => {
+  const withProps = (props: Record<string, unknown>) => ({
+    components: { 'acme-kpi-card': { ...acmeKpiCard, props } },
+  });
+
+  it.each([
+    [
+      'the required string prop "title"',
+      { title: { description: 'The metric name.', required: true, type: 'string' } },
+      {},
+      'title',
+      'missing-required-prop',
+    ],
+    [
+      'the number prop "trend" bounded to 0..100',
+      { trend: { description: 'Trend in percent.', maximum: 100, minimum: 0, type: 'number' } },
+      { trend: 101 },
+      'trend',
+      'prop-out-of-range',
+    ],
+    [
+      'the URL-typed string prop "logo"',
+      { logo: { description: 'Brand mark.', format: 'url', type: 'string' } },
+      { logo: 'javascript:alert(1)' },
+      'logo',
+      'url-scheme',
+    ],
+  ])(
+    'S18 enforces %s at validation, naming the component, the prop and the rule',
+    (_declaration, props, specProps, prop, rule) => {
+      const created = createCatalog(withProps(props));
+      expect(created.ok).toBe(true);
+      if (!created.ok) {
+        return;
+      }
+      const report = validateUiSpec(
+        { root: { component: 'acme-kpi-card', props: specProps }, version: 1 },
+        { catalog: created.catalog },
+      );
+      expect(report.ok).toBe(false);
+      const issue = report.issues[0];
+      expect(issue?.code).toBe(rule);
+      expect(issue?.path).toBe(`root.props.${prop}`);
+      expect(issue?.message).toContain('acme-kpi-card');
+      expect(issue?.message).toContain(`"${prop}"`);
+    },
+  );
+
+  it('S18 keeps a declared required flag through extension of the built-in catalog', () => {
+    const created = createCatalog(
+      withProps({ title: { description: 'The metric name.', required: true, type: 'string' } }),
+      { extend: catalogData },
+    );
+    expect(created.ok).toBe(true);
+    if (!created.ok) {
+      return;
+    }
+    expect(created.catalog.components['acme-kpi-card']?.props['title']?.required).toBe(true);
+    expect(created.catalog.components['ki-textarea']?.props['label']?.required).toBe(true);
+  });
+
+  it.each([
+    ['a bound on a prop that is not a number', { description: '', maximum: 3, type: 'string' }],
+    ['a minimum above its maximum', { description: '', maximum: 1, minimum: 2, type: 'number' }],
+    [
+      'a default outside its own bounds',
+      { default: 7, description: '', maximum: 5, minimum: 0, type: 'number' },
+    ],
+    ['a bound that is not a number', { description: '', maximum: '20', type: 'number' }],
+    ['a format on a prop that is not a string', { description: '', format: 'url', type: 'number' }],
+    ['a format the catalog does not know', { description: '', format: 'uri', type: 'string' }],
+  ])('S7 rejects %s as a malformed constraint', (_case, constraint) => {
+    const created = createCatalog(withProps({ trend: constraint }));
+    expect(created.ok).toBe(false);
+    if (!created.ok) {
+      expect(created.issues[0]?.code).toBe('malformed-constraint');
+      expect(created.issues[0]?.path).toContain('definition.components.acme-kpi-card.props.trend');
+    }
+  });
+
+  it('S7 rejects a required flag that is not a boolean', () => {
+    const created = createCatalog(
+      withProps({ title: { description: 'The metric name.', required: 'yes', type: 'string' } }),
+    );
+    expect(created.ok).toBe(false);
+    expect(!created.ok && created.issues[0]?.code).toBe('malformed-constraint');
+  });
+});

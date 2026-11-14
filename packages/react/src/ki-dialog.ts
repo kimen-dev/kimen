@@ -18,7 +18,7 @@ export type KiDialogEvents = {
   onKiClose: EventName<KiDialogCustomEvent<KiDialogCloseDetail>>
 };
 
-export const KiDialog: StencilReactComponent<KiDialogElement, KiDialogEvents, Components.KiDialog> = /*@__PURE__*/ createComponent<KiDialogElement, KiDialogEvents, Components.KiDialog>({
+export const KiDialog: StencilReactComponent<KiDialogElement, KiDialogEvents, Components.KiDialog, 'heading'> = /*@__PURE__*/ createComponent<KiDialogElement, KiDialogEvents, Components.KiDialog, 'heading'>({
     tagName: 'ki-dialog',
     elementClass: KiDialogElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.

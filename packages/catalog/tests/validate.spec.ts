@@ -119,6 +119,89 @@ describe('validateUiSpec', () => {
     expect(bounded.issues[0]?.code).toBe('size-budget');
   });
 
+  it.each([
+    ['sets no "label"', {}],
+    ['sets "label" to an empty string', { label: '' }],
+    ['sets "label" to only white space', { label: ' \t\n' }],
+  ])(
+    'S16 rejects a ki-textarea that %s naming the component and the required prop',
+    (_state, props) => {
+      const report = validateUiSpec({ version: 1, root: { component: 'ki-textarea', props } });
+      expect(report.ok).toBe(false);
+      expect(report.issues).toHaveLength(1);
+      const issue = report.issues[0];
+      expect(issue?.code).toBe('missing-required-prop');
+      expect(issue?.path).toBe('root.props.label');
+      expect(issue?.value).toBe('label');
+      expect(issue?.message).toContain('ki-textarea');
+      expect(issue?.message).toContain('"label"');
+    },
+  );
+
+  it('S16 rejects a missing required prop on a node that carries no props object at all', () => {
+    const report = validateUiSpec({
+      version: 1,
+      root: { component: 'ki-card', slots: { '': [{ component: 'ki-textarea' }] } },
+    });
+    expect(report.ok).toBe(false);
+    expect(report.issues.map((issue) => [issue.code, issue.path])).toEqual([
+      ['missing-required-prop', 'root.slots.[0].props.label'],
+    ]);
+  });
+
+  it('S16 accepts the same node once the required prop carries a usable value', () => {
+    const report = validateUiSpec({
+      version: 1,
+      root: { component: 'ki-textarea', props: { label: 'Delivery notes' } },
+    });
+    expect(report.issues).toEqual([]);
+    expect(report.ok).toBe(true);
+  });
+
+  it.each([
+    ['count', 1_000_000, 'between 0 and 20'],
+    ['count', -1, 'between 0 and 20'],
+    ['current', 0, 'between 1 and 20'],
+  ])(
+    'S18 rejects ki-indicator %s = %d naming the prop and its declared bounds',
+    (prop, value, bounds) => {
+      const report = validateUiSpec({
+        version: 1,
+        root: { component: 'ki-indicator', props: { label: 'Slide position', [prop]: value } },
+      });
+      expect(report.ok).toBe(false);
+      expect(report.issues).toHaveLength(1);
+      const issue = report.issues[0];
+      expect(issue?.code).toBe('prop-out-of-range');
+      expect(issue?.path).toBe(`root.props.${prop}`);
+      expect(issue?.value).toBe(String(value));
+      expect(issue?.message).toContain('ki-indicator');
+      expect(issue?.message).toContain(`"${prop}"`);
+      expect(issue?.message).toContain(bounds);
+    },
+  );
+
+  it('S18 accepts a bounded number at each of its limits', () => {
+    for (const [count, current] of [
+      [0, 1],
+      [20, 20],
+    ]) {
+      const report = validateUiSpec({
+        version: 1,
+        root: { component: 'ki-indicator', props: { count, current, label: 'Slide position' } },
+      });
+      expect(report.issues).toEqual([]);
+    }
+  });
+
+  it('S18 reports a wrong-typed bounded prop as a type error, not as a range error', () => {
+    const report = validateUiSpec({
+      version: 1,
+      root: { component: 'ki-indicator', props: { count: '1000000', label: 'Slide position' } },
+    });
+    expect(report.issues.map((issue) => issue.code)).toEqual(['invalid-prop-type']);
+  });
+
   // Purity-wall hardening (FR-004/FR-013/FR-014, Codex review of PR #57):
   // validation must never invoke foreign code, never blow the stack, and
   // never let object identity games defeat the budgets.

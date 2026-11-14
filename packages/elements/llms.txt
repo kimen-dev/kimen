@@ -954,7 +954,7 @@ Open it with the `show()` method (and close with `close()`); the `ki-close` even
 
 Attributes:
 - `close-on-backdrop` (boolean, default false): Opts into backdrop light-dismiss. Omit this attribute for critical confirmations; `close-on-backdrop="false"` still enables it. When to use: low-risk dialogs where an outside click may safely dismiss. When NOT to use: destructive confirmations or decisions that should not be lost to a stray click; omit the attribute entirely rather than setting it to `"false"`.
-- `heading` (string | undefined): Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
+- `heading` (string): Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
 - `open` (boolean, default false): Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close. When open, the native dialog enters the top layer and the page behind is inert. When to use: bind application state to the dialog's modal lifecycle. When NOT to use: do not set the internal native `<dialog open>` attribute; the host attribute is the only public source of truth.
 
 Slots:
@@ -1125,7 +1125,7 @@ Pair with `ki-tooltip` for sighted discoverability: the tooltip's `label` become
 
 Attributes:
 - `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. When NOT to use: do not use disabled for pending/loading semantics.
-- `label` (string | undefined): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
+- `label` (string): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
 - `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
@@ -1341,9 +1341,9 @@ Drive it from the composing carousel by updating `current` (1-based); the highli
 ```
 
 Attributes:
-- `count` (number | undefined): Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent).
-- `current` (number | undefined): The current position, 1-based to match the exposed position text ("2 / 5"). Exactly one dot presents the current appearance whenever `count` >= 1: values above `count` clamp to the last position, values below 1 and non-numeric values fall back to the first (FR-003). Updates re-render in place — the highlight and the exposed text follow immediately, re-applying the normalization (FR-004).
-- `label` (string | undefined): Accessible name of the sequence ("Slide position"). The exposed name combines it with the wordless numeric position — "<label>, <current> / <count>" — on a single non-interactive graphic; without a label the name degrades to the bare position text (documented as required authoring, FR-005). The label is never rendered visually and position changes are never announced (no live region, FR-006).
+- `count` (number | undefined): Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent). The catalog accepts at most 20 positions: the indicator serves a short sequence of peer views, 20 dots are the longest row that fits a 320 CSS px viewport (the WCAG reflow width) in both shipped themes, and one dot renders per position, so the bound also caps the work a single node can demand.
+- `current` (number | undefined): The current position, 1-based to match the exposed position text ("2 / 5"). Exactly one dot presents the current appearance whenever `count` >= 1: values above `count` clamp to the last position, values below 1 and non-numeric values fall back to the first (FR-003). Updates re-render in place — the highlight and the exposed text follow immediately, re-applying the normalization (FR-004). The catalog accepts 1 to 20, the positions a bounded `count` can have.
+- `label` (string): Accessible name of the sequence ("Slide position"). The exposed name combines it with the wordless numeric position — "<label>, <current> / <count>" — on a single non-interactive graphic; without a label the name degrades to the bare position text (documented as required authoring, FR-005). The label is never rendered visually and position changes are never announced (no live region, FR-006).
 
 Slots: none
 
@@ -1404,7 +1404,7 @@ Read-only and disabled are distinct states — read-only stays focusable and is 
 Attributes:
 - `autocomplete` (string | undefined): Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
 - `disabled` (boolean, default false): Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
-- `label` (string | undefined): Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
+- `label` (string): Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
 - `name` (string | undefined): Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
 - `placeholder` (string | undefined): Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
 - `readonly` (boolean, default false): Makes the value focusable and selectable while rejecting edits. When NOT to use: use `disabled` when the value must be unavailable and excluded from forms.
@@ -1746,7 +1746,7 @@ Unknown-duration work sets `indeterminate` instead of a fabricated `value` (whic
 
 Attributes:
 - `indeterminate` (boolean, default false): Unknown-duration mode. When set, no completed fraction or current value is exposed. Its motion is declared only when reduced motion is not requested. When to use: show ongoing work whose duration or total cannot be measured. When NOT to use: do not use for known fractions; use `value` and `max`.
-- `label` (string | undefined): Accessible name applied to the internal progressbar. Always set this to what is progressing, such as "Uploading report.pdf". Without it the element renders but exposes no accessible name. When NOT to use: do not use a generic label such as "Loading" when the task can be named more specifically.
+- `label` (string): Accessible name applied to the internal progressbar. Always set this to what is progressing, such as "Uploading report.pdf". Without it the element renders but exposes no accessible name, so the catalog contract requires it. When NOT to use: do not use a generic label such as "Loading" when the task can be named more specifically.
 - `max` (number, default 100): Total amount. Non-finite, zero or negative values normalize to `100` for presentation and ARIA. When to use: set when a determinate task's total is not 100. When NOT to use: omit for conventional percentage-style progress.
 - `shape` ("circular" | "linear", default 'linear'): Structural presentation. Use `linear` in page flows and lists; use `circular` in compact or centered placements. Unknown values render linear. When NOT to use: do not use shape to encode semantic status or task intent.
 - `value` (number, default 0): Completed amount. Presentation and ARIA clamp this value to `0..max`; malformed values fall back to `0`. Ignored while `indeterminate` is set. When to use: set with `max` for determinate task advancement. When NOT to use: do not set a fabricated value for unknown-duration work; set `indeterminate` instead.
@@ -2069,7 +2069,7 @@ Scrolling stays native (wheel, touch, arrows, Page Up/Down, Home/End); the viewp
 ```
 
 Attributes:
-- `label` (string | undefined): Accessible name of the scroll region ("Release notes", "Chat messages"). Assistive technology receives a `region` with this name whose slotted content keeps its own semantics (FR-006). Documented as required: a scroller without a label renders but exposes no accessible name and fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
+- `label` (string): Accessible name of the scroll region ("Release notes", "Chat messages"). Assistive technology receives a `region` with this name whose slotted content keeps its own semantics (FR-006). Documented as required: a scroller without a label renders but exposes no accessible name and fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
 - `orientation` ("horizontal" | "vertical", default 'vertical'): Declared scroll axis, mapping the design source's `Type` axis: `vertical` (default) scrolls the block axis, `horizontal` the inline axis. One axis per instance; the cross axis clips. A structural axis, never appearance — thickness, shape and colors of the indicator are per-theme `--ki-scroller-*` tokens. An unrecognized value matches no style selector and no `horizontal` code path, so the scroller keeps the default vertical behavior (fallback by CSS construction plus a single strict comparison — no validation code, FR-002/FR-009).
 
 Slots:
@@ -2136,7 +2136,7 @@ An option without `value` submits its trimmed label text, and `required` blocks 
 
 Attributes:
 - `disabled` (boolean, default false): Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
-- `label` (string, default ''): Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
+- `label` (string): Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
 - `name` (string | undefined): Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
 - `placeholder` (string, default ''): Text shown while no option is selected. When NOT to use: do not use it as a replacement for `label`.
 - `required` (boolean, default false): Requires a non-empty submitted value. The platform validation message is donated by a hidden native select.
@@ -2906,7 +2906,7 @@ The frame fills its container's inline size and the media keeps the intrinsic as
 ```
 
 Attributes:
-- `label` (string | undefined): Accessible name of the play control ("Play the product tour"). The control is a real button exposing role button with exactly this name; the frame contributes no role, name or state of its own (FR-004, FR-005). Documented as required: no default human-language string is baked in, and an unlabeled control renders but fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
+- `label` (string): Accessible name of the play control ("Play the product tour"). The control is a real button exposing role button with exactly this name; the frame contributes no role, name or state of its own (FR-004, FR-005). Documented as required: no default human-language string is baked in, and an unlabeled control renders but fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
 
 Slots:
 - (default): Exactly one native `<video>` element carrying its own poster, sources and `<track>` captions.

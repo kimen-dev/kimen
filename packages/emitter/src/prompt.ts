@@ -9,15 +9,46 @@ import type { Derivation, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
 import type { DerivationOptions } from './schema.js';
 
+/** The declared range of a bounded number as the prompt states it (S17). */
+function rangeText(constraint: CatalogPropConstraint): string {
+  const { minimum, maximum } = constraint;
+  if (minimum !== undefined && maximum !== undefined) {
+    return `, ${String(minimum)} to ${String(maximum)}`;
+  }
+  if (minimum !== undefined) {
+    return `, at least ${String(minimum)}`;
+  }
+  return maximum === undefined ? '' : `, at most ${String(maximum)}`;
+}
+
 function propLine(name: string, constraint: CatalogPropConstraint): string {
   const kind =
     constraint.type === 'enum'
       ? `enum: ${(constraint.values ?? []).map((value) => `"${value}"`).join(' | ')}`
-      : constraint.type;
+      : `${constraint.type}${rangeText(constraint)}`;
+  const url = constraint.format === 'url' ? ', URL' : '';
+  const required = constraint.required === true ? ', required' : '';
   const description = constraint.description === '' ? '' : ` — ${constraint.description}`;
   const fallback =
     constraint.default === undefined ? '' : ` (default: ${JSON.stringify(constraint.default)})`;
-  return `  - \`${name}\` (${kind})${description}${fallback}`;
+  return `  - \`${name}\` (${kind}${url}${required})${description}${fallback}`;
+}
+
+/** A value that satisfies a prop constraint, for the embedded example. */
+function exampleValue(constraint: CatalogPropConstraint): boolean | number | string {
+  switch (constraint.type) {
+    case 'boolean':
+      return true;
+    case 'number':
+      return Math.min(
+        constraint.maximum ?? Number.POSITIVE_INFINITY,
+        Math.max(constraint.minimum ?? Number.NEGATIVE_INFINITY, 1),
+      );
+    case 'enum':
+      return constraint.values?.[0] ?? '';
+    default:
+      return constraint.format === 'url' ? 'https://example.com/example' : 'Example';
+  }
 }
 
 function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
@@ -51,9 +82,10 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
 
 /**
  * The deterministic example spec: the first entry (sorted order) rendered
- * with its first enum prop at its first value and, when it declares a
- * default slot, one text child. Tests assert it validates against the same
- * catalog (S8) — the example can never drift from the boundary.
+ * with every required prop, its first enum prop at its first value and,
+ * when it declares a default slot, one text child. Tests assert it validates
+ * against the same catalog (S8) — the example can never drift from the
+ * boundary.
  */
 function exampleSpec(entries: readonly ResolvedEntry[]): {
   readonly root: UiSpecNode;
@@ -71,12 +103,18 @@ function exampleSpec(entries: readonly ResolvedEntry[]): {
     props?: Record<string, boolean | number | string>;
     slots?: Record<string, readonly (UiSpecNode | string)[]>;
   } = { component: tag };
+  const props: Record<string, boolean | number | string> = {};
+  let enumShown = false;
   for (const [name, constraint] of Object.entries(entry.props)) {
-    const value = constraint.type === 'enum' ? constraint.values?.[0] : undefined;
-    if (value !== undefined) {
-      node.props = { [name]: value };
-      break;
+    const showEnum =
+      !enumShown && constraint.type === 'enum' && constraint.values?.[0] !== undefined;
+    if (constraint.required === true || showEnum) {
+      props[name] = exampleValue(constraint);
+      enumShown ||= constraint.type === 'enum';
     }
+  }
+  if (Object.keys(props).length > 0) {
+    node.props = props;
   }
   if (Object.hasOwn(entry.slots, '')) {
     node.slots = { '': ['Example content'] };
@@ -103,8 +141,11 @@ export function catalogPrompt(
     '',
     '## Format rules',
     '- Emit exactly ONE JSON document: {"version": 1, "actions": [...], "root": <node>} — no prose, no markdown fences around your final answer.',
-    '- A <node> is {"component": "<tag>", "props": {...}, "action": "<name>", "slots": {"<slot>": [<node or "text">, ...]}}; "props", "action" and "slots" are optional.',
+    '- A <node> is {"id": "<id>", "component": "<tag>", "props": {...}, "action": "<name>", "slots": {"<slot>": [<node or "text">, ...]}}; "id", "props", "action" and "slots" are optional.',
+    '- "id" is a stable identity for a node the host may update later (a live surface addresses its operations by id): lowercase letters, digits, "-" and "_", starting with a letter or digit, at most 64 characters, unique within the document.',
     '- Only the components listed below exist. Only their listed props. Enum props allow only their listed values.',
+    '- Props marked "required" MUST be present with a non-blank value: a spec that omits one is rejected.',
+    '- Props marked "URL" accept only http(s) URLs or relative references; every other scheme is rejected, and the host may accept only absolute URLs of the origins it allows.',
     '- Every "action" you bind MUST appear in the top-level "actions" list; actions are named intents delivered to the host as data.',
     '- Slot children are nodes or plain text strings — never HTML, never code, never URLs with schemes other than http(s).',
     '- Styling is not expressible in a spec; appearance belongs to the host theme.',

@@ -50,9 +50,8 @@ export class KiScroller {
    * required: a scroller without a label renders but exposes no accessible
    * name and fails the accessibility audit (015-ki-progress precedent).
    * The label is never rendered visually.
-   * @default undefined
    */
-  @Prop() label?: string;
+  @Prop() label!: string;
 
   /**
    * Overflow state (FR-003, FR-005): the indicator and the viewport's Tab

@@ -1,7 +1,7 @@
 Feature: Emitter kit
   From one catalog value — built-in or registered — derive the guidance
   artifacts any LLM integration needs (prompt, catalog-specialized JSON
-  Schema with provider lowerings, tool definition) and the ingest helpers
+  Schema with a provider-strict lowering, tool definition) and the ingest helpers
   that close the reliability loop, deterministically, with the validation
   boundary staying the only enforcement point.
 
@@ -35,12 +35,6 @@ Feature: Emitter kit
     Given the JSON Schema derived with the openai-strict target
     When every object schema in the document is inspected
     Then each carries additionalProperties false and lists every declared property as required
-
-  # S6
-  Scenario: The recursion-free lowering contains no recursive references
-    Given the JSON Schema derived with the anthropic-strict target
-    When the document's reference graph is inspected
-    Then no reference cycle exists and the composition depth bound is declared on the artifact
 
   # Family: core behavior — prompt derivation
   # S7
@@ -98,3 +92,36 @@ Feature: Emitter kit
     Given a catalog whose declared enum surface exceeds the strict target's documented limit
     When the schema is derived for that target
     Then derivation fails naming the offending component and the exceeded limit
+
+  # Family: core behavior — declared prop constraints
+  # S16
+  Scenario: Required props are required in the schema and flagged in the prompt
+    Given a catalog whose ki-textarea declares "label" as a required prop
+    When the JSON Schema and the prompt are derived
+    Then the schema rejects a ki-textarea without "label" and the prompt marks "label" as required
+
+  # S17
+  Scenario: Numeric bounds reach the schema and the prompt
+    Given a catalog bounding ki-indicator's "count" to the range 0 to 20
+    When the JSON Schema and the prompt are derived
+    Then the schema rejects a ki-indicator whose "count" is 21 and the prompt states the range
+
+  # S18
+  Scenario: URL-typed props are flagged in the prompt
+    Given a catalog whose "acme-logo" declares "source" as a URL-typed prop
+    When the prompt is derived
+    Then the prompt marks "source" as a URL and states the schemes the boundary accepts
+
+  # Family: core behavior — agreement with the node format
+  # S19
+  Scenario: The derived artifacts admit the stable node ids the boundary accepts
+    Given a spec whose nodes carry stable ids in the boundary's id grammar
+    When the spec is checked against the derived JSON Schema
+    Then the schema accepts the spec, rejects an id outside the grammar, and the prompt states the id rule
+
+  # Family: core behavior — provider limits
+  # S20
+  Scenario: The strict lowering stays within the provider's documented schema limits
+    Given the JSON Schema derived with the openai-strict target
+    When the document is measured against the provider's documented keywords and size limits
+    Then it uses only supported keywords and stays within every documented limit

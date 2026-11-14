@@ -18,8 +18,12 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
  * The version of the catalog document format itself (FR-010, Art. IX).
  * 1.1.0 (spec 035): UI-spec nodes gain the optional stable `id` — an
  * additive minor the SemVer-compatible version gates accept alongside 1.0.0.
+ * 1.2.0: prop constraints gain optional declared limits (`required`,
+ * `minimum`, `maximum`, `format`) the boundary enforces. Additive again: a 1.2.0 boundary still validates what a
+ * 1.0.0 or 1.1.0 spec says, and a boundary that predates the limits refuses
+ * a 1.2.0 catalog instead of validating it under laxer rules (028 FR-012).
  */
-export const CATALOG_SCHEMA_VERSION = '1.1.0';
+export const CATALOG_SCHEMA_VERSION = '1.2.0';
 
 const isBlank = (text) => typeof text !== 'string' || text.trim() === '';
 
@@ -69,6 +73,37 @@ export function parseDefault(source, constraint) {
   return undefined;
 }
 
+/**
+ * The inclusive numeric bounds a manifest attribute declares (the
+ * component's `@minimum` / `@maximum` tags, carried as numbers), or the
+ * reason they cannot be trusted: a bound on a non-number, a non-finite value
+ * or an inverted range is a derivation defect and fails generation.
+ */
+function parseBounds(attribute, constraint) {
+  const bounds = {};
+  for (const name of ['minimum', 'maximum']) {
+    const value = attribute[name];
+    if (value === undefined) {
+      continue;
+    }
+    if (constraint.type !== 'number') {
+      return { violation: `${name} bound on a ${constraint.type} attribute` };
+    }
+    if (typeof value !== 'number' || !Number.isFinite(value)) {
+      return { violation: `${name} bound ${JSON.stringify(value)} is not a finite number` };
+    }
+    bounds[name] = value;
+  }
+  if (
+    bounds.minimum !== undefined &&
+    bounds.maximum !== undefined &&
+    bounds.minimum > bounds.maximum
+  ) {
+    return { violation: 'minimum bound is above the maximum bound' };
+  }
+  return { bounds };
+}
+
 const sortedRecord = (entries) =>
   Object.fromEntries([...entries].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
 
@@ -106,6 +141,28 @@ export function buildCatalog(manifest, { elementsVersion }) {
         const defaultValue = parseDefault(attribute.default, constraint);
         if (defaultValue !== undefined) {
           entry.default = defaultValue;
+        }
+        // Required by the component contract (a prop declared with `!`):
+        // carried only when set, so optional props stay byte-identical.
+        if (attribute.required === true) {
+          entry.required = true;
+        }
+        const { bounds, violation } = parseBounds(attribute, constraint);
+        if (violation !== undefined) {
+          violations.push(`${tag}.${attribute.name}: ${violation}`);
+          continue;
+        }
+        Object.assign(entry, bounds);
+        // `@format url` on the component prop: the value is held to the URL
+        // policy. One format exists; any other shape is a derivation defect.
+        if (attribute.format !== undefined) {
+          if (attribute.format !== 'url' || constraint.type !== 'string') {
+            violations.push(
+              `${tag}.${attribute.name}: unsupported format ${JSON.stringify(attribute.format)} on a ${constraint.type} attribute`,
+            );
+            continue;
+          }
+          entry.format = 'url';
         }
         props.set(attribute.name, entry);
       }

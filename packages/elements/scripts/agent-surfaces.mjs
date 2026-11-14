@@ -69,6 +69,7 @@ export function validateDocs(docs) {
       if (isBlank(prop.docs)) {
         violations.push(`${tag}.${prop.name}: property has no documentation`);
       }
+      violations.push(...boundViolations(tag, prop), ...formatViolations(tag, prop));
     }
 
     for (const event of component.events ?? []) {
@@ -173,6 +174,9 @@ export function buildManifest(docs, inputs = {}) {
               type: { text: prop.type },
               default: prop.default,
               description: prop.docs ?? '',
+              required: requiredFlag(prop),
+              ...numericBounds(prop),
+              format: urlFormat(prop),
             }),
           ),
         members: [
@@ -186,6 +190,9 @@ export function buildManifest(docs, inputs = {}) {
               description: prop.docs ?? '',
               attribute: prop.attr,
               reflects: Boolean(prop.reflectToAttr),
+              required: requiredFlag(prop),
+              ...numericBounds(prop),
+              format: urlFormat(prop),
             }),
           ),
           ...(component.methods ?? []).map((method) =>
@@ -570,6 +577,115 @@ function managedSlotsFor(component) {
     .filter((docsTag) => docsTag.name === 'managedSlot' && !isBlank(docsTag.text))
     .map((docsTag) => parseManagedSlotTag(docsTag.text))
     .filter((slot) => slot !== null);
+}
+
+// A prop declared with `!` in the component class is required by contract;
+// Stencil's docs-json records it as `required: true`. The manifest carries
+// the flag only when set (a Kimen extension field, like whenToUse), so the
+// catalog can reject a spec that omits the prop (spec 027 S15/S16) without a
+// second analysis pass over component source (Art. I).
+function requiredFlag(prop) {
+  return prop.required === true ? true : undefined;
+}
+
+// A number prop declares its inclusive bounds with `@minimum <n>` and
+// `@maximum <n>` JSDoc tags on the prop itself: Stencil's docs-json carries
+// every prop tag verbatim, so the bound sits beside the type it constrains
+// and the manifest, the catalog and the emitter schema derive from that one
+// declaration (Art. I). A malformed tag fails the build (validateDocs);
+// the manifest carries the bound as a number, only when declared.
+const BOUND_TAGS = ['minimum', 'maximum'];
+const PLAIN_DECIMAL = /^-?\d+(?:\.\d+)?$/u;
+
+function boundTags(prop, name) {
+  return (prop.docsTags ?? []).filter((docsTag) => docsTag.name === name);
+}
+
+function parseBound(text) {
+  const trimmed = typeof text === 'string' ? text.trim() : '';
+  return PLAIN_DECIMAL.test(trimmed) ? Number(trimmed) : null;
+}
+
+// The one scalar type a prop declares, ignoring the `undefined` an optional
+// prop adds; null for a union of several types.
+function soleType(prop) {
+  const parts = String(prop.type ?? '')
+    .split('|')
+    .map((part) => part.trim())
+    .filter((part) => part !== 'undefined');
+  return parts.length === 1 ? parts[0] : null;
+}
+
+function numericBounds(prop) {
+  const bounds = {};
+  for (const name of BOUND_TAGS) {
+    const value = parseBound(boundTags(prop, name)[0]?.text);
+    if (value !== null) {
+      bounds[name] = value;
+    }
+  }
+  return bounds;
+}
+
+function boundViolations(tag, prop) {
+  const subject = `${tag}.${prop.name}`;
+  const violations = [];
+  for (const name of BOUND_TAGS) {
+    const tags = boundTags(prop, name);
+    if (tags.length === 0) {
+      continue;
+    }
+    if (tags.length > 1) {
+      violations.push(`${subject}: @${name} is declared more than once`);
+    } else if (soleType(prop) !== 'number') {
+      violations.push(`${subject}: @${name} applies to number props only`);
+    } else if (parseBound(tags[0].text) === null) {
+      violations.push(
+        `${subject}: @${name} must be a finite number, received ${JSON.stringify(tags[0].text ?? '')}`,
+      );
+    }
+  }
+  const { minimum, maximum } = numericBounds(prop);
+  if (
+    violations.length === 0 &&
+    minimum !== undefined &&
+    maximum !== undefined &&
+    minimum > maximum
+  ) {
+    violations.push(`${subject}: @minimum ${String(minimum)} is above @maximum ${String(maximum)}`);
+  }
+  return violations;
+}
+
+// A string prop the browser may load or navigate to declares it with
+// `@format url` on the prop: the catalog then holds its value to the URL
+// policy (scheme allowlist, allowed origins) because the contract says so,
+// not because of what the prop happens to be called (spec 027 FR-018).
+// `url` is the only format; anything else fails the build.
+function formatTags(prop) {
+  return (prop.docsTags ?? []).filter((docsTag) => docsTag.name === 'format');
+}
+
+function urlFormat(prop) {
+  const [tag] = formatTags(prop);
+  return tag !== undefined && String(tag.text ?? '').trim() === 'url' ? 'url' : undefined;
+}
+
+function formatViolations(tag, prop) {
+  const subject = `${tag}.${prop.name}`;
+  const tags = formatTags(prop);
+  if (tags.length === 0) {
+    return [];
+  }
+  if (tags.length > 1) {
+    return [`${subject}: @format is declared more than once`];
+  }
+  if (urlFormat(prop) === undefined) {
+    return [`${subject}: @format must be "url", received ${JSON.stringify(tags[0].text ?? '')}`];
+  }
+  return soleType(prop) === 'string'
+    ? []
+    : [`${subject}: @format url applies to string props only`];
 }
 
 function getDocsTag(component, name) {

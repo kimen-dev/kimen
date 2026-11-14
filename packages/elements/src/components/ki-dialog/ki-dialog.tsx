@@ -63,7 +63,7 @@ export class KiDialog {
    * account?". When NOT to use: do not omit it for production dialogs; APG
    * modal dialogs require an accessible name.
    */
-  @Prop({ reflect: true }) heading?: string;
+  @Prop({ reflect: true }) heading!: string;
 
   /**
    * Opts into backdrop light-dismiss. Omit this attribute for critical
@@ -432,7 +432,9 @@ export class KiDialog {
   }
 
   render() {
-    const heading = this.heading?.trim();
+    // Required by contract (catalog, typed wrappers), yet hand-written HTML can
+    // still omit it: the dialog then renders unnamed instead of throwing.
+    const heading = (this.heading as string | undefined)?.trim();
 
     return (
       // Native modal <dialog> receives pointer/click events retargeted from

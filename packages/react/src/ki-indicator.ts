@@ -15,7 +15,7 @@ import type { StencilReactComponent } from '@stencil/react-output-target/runtime
 
 export type KiIndicatorEvents = NonNullable<unknown>;
 
-export const KiIndicator: StencilReactComponent<KiIndicatorElement, KiIndicatorEvents, Components.KiIndicator> = /*@__PURE__*/ createComponent<KiIndicatorElement, KiIndicatorEvents, Components.KiIndicator>({
+export const KiIndicator: StencilReactComponent<KiIndicatorElement, KiIndicatorEvents, Components.KiIndicator, 'label'> = /*@__PURE__*/ createComponent<KiIndicatorElement, KiIndicatorEvents, Components.KiIndicator, 'label'>({
     tagName: 'ki-indicator',
     elementClass: KiIndicatorElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.

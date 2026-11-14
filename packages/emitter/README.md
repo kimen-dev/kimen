@@ -31,18 +31,36 @@ uiSpecTool(catalog, { target: 'openai-strict' });        // → { ok, artifact: 
 
 - **Prompt** (`catalogPrompt`): works with ANY model — format rules, every
   component's when-to-use / when-NOT-to-use guidance verbatim, props with
-  enums inline, and one example spec that validates against the same
-  catalog. Judgment lives here; shape lives in the schema.
+  enums inline, required and URL props marked and numeric ranges stated, and one
+  example spec that validates against the same catalog. Judgment lives
+  here; shape lives in the schema.
 - **Schema** (`uiSpecJsonSchema`): the neutral UI-spec format specialized
   to your catalog (one branch per component, closed objects, closed
-  enums). Targets: `draft-2020-12` (default), `openai-strict` (closed
-  all-required objects, recursion kept via `$ref`, documented provider
-  limits enforced with named offenders), `anthropic-strict` (additionally
-  recursion-free: the node tree unrolled to a bounded composition depth,
-  default 6 via `maxDepth` — a schema bound only; deeper specs still
-  validate at the boundary).
+  enums, the optional stable node `id` in the boundary's grammar, and the
+  limits the catalog declares: a `required` prop is
+  required, non-blank and never nullable; numeric bounds become
+  `minimum`/`maximum`). The URL policy is not in the schema: no target
+  expresses it faithfully, so the prompt states it and the boundary
+  enforces it. Targets: `draft-2020-12` (default) and `openai-strict`
+  (closed all-required objects, recursion kept via `$ref`, only the
+  keywords OpenAI's strict mode documents, its published size limits
+  enforced with named offenders).
 - **Tool** (`uiSpecTool`): `{ name: 'emit_ui', description, inputSchema }`
   — maps mechanically onto any provider's tool/function surface.
+
+### Which target for which provider
+
+| Provider mode | Target | Why |
+|---|---|---|
+| OpenAI Structured Outputs / strict function calling | `openai-strict` | Stays inside the documented subset: `pattern` instead of `minLength`, every size limit checked. A test measures the artifact against the published numbers. |
+| Anthropic tools | `draft-2020-12` on a regular (non-strict) tool | Anthropic's strict mode rejects recursive schemas and caps a request at 24 optional and 16 union-typed parameters; no catalog-specialized schema of a real catalog fits, so the kit ships no strict target for it. |
+| Anything else that takes a JSON Schema as guidance | `draft-2020-12` | The neutral default. |
+| No schema support at all | prompt only | `catalogPrompt` works with any model. |
+
+Provider limits were read in the official documentation on 2026-11-14
+([OpenAI](https://developers.openai.com/api/docs/guides/structured-outputs),
+[Anthropic](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)).
+Whatever the mode, run every emission through `validateUiSpec`.
 
 Every derivation accepts `{ components: [...] }` to subset large catalogs,
 returns `{ ok: false, issues }` (never throws) on version skew, unknown
@@ -69,7 +87,7 @@ renderUiSpec(spec, { surface, catalog });   // renders the ACCEPTED emission
 
 `normalizeEmission` strips exactly the placeholders strict-mode
 all-required schemas force a model to emit (null-valued props, null action
-bindings, empty props containers) and touches nothing else — a value the
+bindings, null node ids, empty props containers) and touches nothing else — a value the
 model got WRONG stays wrong so validation reports it. `repairPrompt`
 formats every issue (code, path, named offender) into a single corrective
 message; the one-round-then-fail-closed policy is deliberate and fixed.

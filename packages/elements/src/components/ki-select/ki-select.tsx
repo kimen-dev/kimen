@@ -74,7 +74,7 @@ export class KiSelect {
    * Visible label and accessible-name source for the combobox trigger.
    * When NOT to use: do not omit it; unlabeled selects are invalid usage.
    */
-  @Prop({ reflect: true }) label = '';
+  @Prop({ reflect: true }) label!: string;
 
   /**
    * Text shown while no option is selected.

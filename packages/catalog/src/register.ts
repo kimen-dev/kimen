@@ -76,6 +76,10 @@ const propConstraintSchema = z.strictObject({
   default: z.union([z.boolean(), z.number(), z.string()]).optional(),
   description: z.string(),
   documentedValues: z.array(z.string()).optional(),
+  format: z.literal('url').optional(),
+  maximum: z.number().optional(),
+  minimum: z.number().optional(),
+  required: z.boolean().optional(),
   type: z.enum(['boolean', 'enum', 'number', 'string']),
   values: z.array(z.string()).optional(),
 });
@@ -202,12 +206,40 @@ function checkConstraint(
       value: name,
     });
   }
+  const { minimum, maximum } = constraint;
+  if ((minimum !== undefined || maximum !== undefined) && constraint.type !== 'number') {
+    issues.push({
+      code: 'malformed-constraint',
+      message: `${tag} prop "${name}" declares numeric bounds but is not a number constraint`,
+      path,
+      value: name,
+    });
+  } else if (minimum !== undefined && maximum !== undefined && minimum > maximum) {
+    issues.push({
+      code: 'malformed-constraint',
+      message: `${tag} prop "${name}" declares a minimum above its maximum`,
+      path,
+      value: name,
+    });
+  }
+  if (constraint.format !== undefined && constraint.type !== 'string') {
+    issues.push({
+      code: 'malformed-constraint',
+      message: `${tag} prop "${name}" declares a format but is not a string constraint`,
+      path,
+      value: name,
+    });
+  }
   if (constraint.default !== undefined) {
+    const inBounds =
+      typeof constraint.default !== 'number' ||
+      ((minimum === undefined || constraint.default >= minimum) &&
+        (maximum === undefined || constraint.default <= maximum));
     const satisfies =
       constraint.type === 'enum'
         ? typeof constraint.default === 'string' &&
           (constraint.values ?? []).includes(constraint.default)
-        : typeof constraint.default === constraint.type;
+        : typeof constraint.default === constraint.type && inBounds;
     if (!satisfies) {
       issues.push({
         code: 'malformed-constraint',
@@ -287,6 +319,10 @@ function normalizeConstraint(input: ParsedEntry['props'][string]): CatalogPropCo
     values?: readonly string[];
     documentedValues?: readonly string[];
     default?: boolean | number | string;
+    required?: boolean;
+    minimum?: number;
+    maximum?: number;
+    format?: 'url';
   } = { description: input.description, type: input.type };
   if (input.values !== undefined) {
     constraint.values = input.values;
@@ -296,6 +332,20 @@ function normalizeConstraint(input: ParsedEntry['props'][string]): CatalogPropCo
   }
   if (input.default !== undefined) {
     constraint.default = input.default;
+  }
+  // Only a set flag is kept: `required: false` and absence mean the same,
+  // and one normal form keeps registered and generated entries comparable.
+  if (input.required === true) {
+    constraint.required = true;
+  }
+  if (input.minimum !== undefined) {
+    constraint.minimum = input.minimum;
+  }
+  if (input.maximum !== undefined) {
+    constraint.maximum = input.maximum;
+  }
+  if (input.format !== undefined) {
+    constraint.format = input.format;
   }
   return constraint;
 }

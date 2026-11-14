@@ -15,7 +15,7 @@ import type { StencilReactComponent } from '@stencil/react-output-target/runtime
 
 export type KiSelectEvents = NonNullable<unknown>;
 
-export const KiSelect: StencilReactComponent<KiSelectElement, KiSelectEvents, Components.KiSelect> = /*@__PURE__*/ createComponent<KiSelectElement, KiSelectEvents, Components.KiSelect>({
+export const KiSelect: StencilReactComponent<KiSelectElement, KiSelectEvents, Components.KiSelect, 'label'> = /*@__PURE__*/ createComponent<KiSelectElement, KiSelectEvents, Components.KiSelect, 'label'>({
     tagName: 'ki-select',
     elementClass: KiSelectElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.

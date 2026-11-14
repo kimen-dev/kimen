@@ -105,6 +105,7 @@ export namespace Components {
         "size": KiAvatarSize;
         /**
           * Portrait URL, the first step of the fallback chain. When it fails to load — initially or at runtime — the avatar silently falls back to the initials (or the generic figure) with no error, no layout change and no event (FR-001). Loading policy follows the platform image defaults.
+          * @format url
           * @default undefined
          */
         "src"?: string;
@@ -278,7 +279,7 @@ export namespace Components {
         /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
-        "heading"?: string;
+        "heading": string;
         /**
           * Reflected live modal state. Add it or call `show()` to open; remove it or call `close()` to close. When open, the native dialog enters the top layer and the page behind is inert. When to use: bind application state to the dialog's modal lifecycle. When NOT to use: do not set the internal native `<dialog open>` attribute; the host attribute is the only public source of truth.
           * @default false
@@ -330,7 +331,7 @@ export namespace Components {
         /**
           * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
          */
-        "label"?: string;
+        "label": string;
         /**
           * Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
           * @default 'md'
@@ -367,20 +368,23 @@ export namespace Components {
      */
     interface KiIndicator {
         /**
-          * Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent).
+          * Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent). The catalog accepts at most 20 positions: the indicator serves a short sequence of peer views, 20 dots are the longest row that fits a 320 CSS px viewport (the WCAG reflow width) in both shipped themes, and one dot renders per position, so the bound also caps the work a single node can demand.
           * @default undefined
+          * @minimum 0
+          * @maximum 20
          */
         "count"?: number;
         /**
-          * The current position, 1-based to match the exposed position text ("2 / 5"). Exactly one dot presents the current appearance whenever `count` >= 1: values above `count` clamp to the last position, values below 1 and non-numeric values fall back to the first (FR-003). Updates re-render in place — the highlight and the exposed text follow immediately, re-applying the normalization (FR-004).
+          * The current position, 1-based to match the exposed position text ("2 / 5"). Exactly one dot presents the current appearance whenever `count` >= 1: values above `count` clamp to the last position, values below 1 and non-numeric values fall back to the first (FR-003). Updates re-render in place — the highlight and the exposed text follow immediately, re-applying the normalization (FR-004). The catalog accepts 1 to 20, the positions a bounded `count` can have.
           * @default undefined
+          * @minimum 1
+          * @maximum 20
          */
         "current"?: number;
         /**
           * Accessible name of the sequence ("Slide position"). The exposed name combines it with the wordless numeric position — "<label>, <current> / <count>" — on a single non-interactive graphic; without a label the name degrades to the bare position text (documented as required authoring, FR-005). The label is never rendered visually and position changes are never announced (no live region, FR-006).
-          * @default undefined
          */
-        "label"?: string;
+        "label": string;
     }
     /**
      * A token-styled single-line text field with native input semantics.
@@ -408,7 +412,7 @@ export namespace Components {
         /**
           * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
          */
-        "label"?: string;
+        "label": string;
         /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
@@ -498,9 +502,9 @@ export namespace Components {
          */
         "indeterminate": boolean;
         /**
-          * Accessible name applied to the internal progressbar. Always set this to what is progressing, such as "Uploading report.pdf". Without it the element renders but exposes no accessible name. When NOT to use: do not use a generic label such as "Loading" when the task can be named more specifically.
+          * Accessible name applied to the internal progressbar. Always set this to what is progressing, such as "Uploading report.pdf". Without it the element renders but exposes no accessible name, so the catalog contract requires it. When NOT to use: do not use a generic label such as "Loading" when the task can be named more specifically.
          */
-        "label"?: string;
+        "label": string;
         /**
           * Total amount. Non-finite, zero or negative values normalize to `100` for presentation and ARIA. When to use: set when a determinate task's total is not 100. When NOT to use: omit for conventional percentage-style progress.
           * @default 100
@@ -624,9 +628,8 @@ export namespace Components {
     interface KiScroller {
         /**
           * Accessible name of the scroll region ("Release notes", "Chat messages"). Assistive technology receives a `region` with this name whose slotted content keeps its own semantics (FR-006). Documented as required: a scroller without a label renders but exposes no accessible name and fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
-          * @default undefined
          */
-        "label"?: string;
+        "label": string;
         /**
           * Declared scroll axis, mapping the design source's `Type` axis: `vertical` (default) scrolls the block axis, `horizontal` the inline axis. One axis per instance; the cross axis clips. A structural axis, never appearance — thickness, shape and colors of the indicator are per-theme `--ki-scroller-*` tokens. An unrecognized value matches no style selector and no `horizontal` code path, so the scroller keeps the default vertical behavior (fallback by CSS construction plus a single strict comparison — no validation code, FR-002/FR-009).
           * @default 'vertical'
@@ -655,7 +658,6 @@ export namespace Components {
         "disabled": boolean;
         /**
           * Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
-          * @default ''
          */
         "label": string;
         /**
@@ -909,9 +911,8 @@ export namespace Components {
     interface KiVideo {
         /**
           * Accessible name of the play control ("Play the product tour"). The control is a real button exposing role button with exactly this name; the frame contributes no role, name or state of its own (FR-004, FR-005). Documented as required: no default human-language string is baked in, and an unlabeled control renders but fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
-          * @default undefined
          */
-        "label"?: string;
+        "label": string;
     }
 }
 export interface KiAlertCustomEvent<T> extends CustomEvent<T> {
@@ -1601,6 +1602,7 @@ declare namespace LocalJSX {
         "size"?: KiAvatarSize;
         /**
           * Portrait URL, the first step of the fallback chain. When it fails to load — initially or at runtime — the avatar silently falls back to the initials (or the generic figure) with no error, no layout change and no event (FR-001). Loading policy follows the platform image defaults.
+          * @format url
           * @default undefined
          */
         "src"?: string;
@@ -1778,7 +1780,7 @@ declare namespace LocalJSX {
         /**
           * Visible dialog title and accessible-name source. Always provide a heading; an empty value intentionally leaves the native dialog unnamed. When to use: name the interrupting decision, for example "Delete account?". When NOT to use: do not omit it for production dialogs; APG modal dialogs require an accessible name.
          */
-        "heading"?: string;
+        "heading": string;
         /**
           * Post-close notification for every close path. Footer actions report `method` when they call `close()`, Escape reports `escape`, and opt-in backdrop dismissal reports `backdrop`. When to use: update application state after the dialog is already closed and focus has returned through the native mechanism. When NOT to use: do not expect this event to veto closing; it is not cancelable in v1.
          */
@@ -1830,7 +1832,7 @@ declare namespace LocalJSX {
         /**
           * Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
          */
-        "label"?: string;
+        "label": string;
         /**
           * Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
           * @default 'md'
@@ -1867,20 +1869,23 @@ declare namespace LocalJSX {
      */
     interface KiIndicator {
         /**
-          * Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent).
+          * Number of positions (non-negative integer): one dot renders per position, in position order. A missing, non-numeric or negative value renders zero dots — an authoring mistake by catalog guidance, never an error state or a rendering failure (FR-002; empty ki-list precedent). The catalog accepts at most 20 positions: the indicator serves a short sequence of peer views, 20 dots are the longest row that fits a 320 CSS px viewport (the WCAG reflow width) in both shipped themes, and one dot renders per position, so the bound also caps the work a single node can demand.
           * @default undefined
+          * @minimum 0
+          * @maximum 20
          */
         "count"?: number;
         /**
-          * The current position, 1-based to match the exposed position text ("2 / 5"). Exactly one dot presents the current appearance whenever `count` >= 1: values above `count` clamp to the last position, values below 1 and non-numeric values fall back to the first (FR-003). Updates re-render in place — the highlight and the exposed text follow immediately, re-applying the normalization (FR-004).
+          * The current position, 1-based to match the exposed position text ("2 / 5"). Exactly one dot presents the current appearance whenever `count` >= 1: values above `count` clamp to the last position, values below 1 and non-numeric values fall back to the first (FR-003). Updates re-render in place — the highlight and the exposed text follow immediately, re-applying the normalization (FR-004). The catalog accepts 1 to 20, the positions a bounded `count` can have.
           * @default undefined
+          * @minimum 1
+          * @maximum 20
          */
         "current"?: number;
         /**
           * Accessible name of the sequence ("Slide position"). The exposed name combines it with the wordless numeric position — "<label>, <current> / <count>" — on a single non-interactive graphic; without a label the name degrades to the bare position text (documented as required authoring, FR-005). The label is never rendered visually and position changes are never announced (no live region, FR-006).
-          * @default undefined
          */
-        "label"?: string;
+        "label": string;
     }
     /**
      * A token-styled single-line text field with native input semantics.
@@ -1912,7 +1917,7 @@ declare namespace LocalJSX {
         /**
           * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
          */
-        "label"?: string;
+        "label": string;
         /**
           * Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
          */
@@ -2002,9 +2007,9 @@ declare namespace LocalJSX {
          */
         "indeterminate"?: boolean;
         /**
-          * Accessible name applied to the internal progressbar. Always set this to what is progressing, such as "Uploading report.pdf". Without it the element renders but exposes no accessible name. When NOT to use: do not use a generic label such as "Loading" when the task can be named more specifically.
+          * Accessible name applied to the internal progressbar. Always set this to what is progressing, such as "Uploading report.pdf". Without it the element renders but exposes no accessible name, so the catalog contract requires it. When NOT to use: do not use a generic label such as "Loading" when the task can be named more specifically.
          */
-        "label"?: string;
+        "label": string;
         /**
           * Total amount. Non-finite, zero or negative values normalize to `100` for presentation and ARIA. When to use: set when a determinate task's total is not 100. When NOT to use: omit for conventional percentage-style progress.
           * @default 100
@@ -2132,9 +2137,8 @@ declare namespace LocalJSX {
     interface KiScroller {
         /**
           * Accessible name of the scroll region ("Release notes", "Chat messages"). Assistive technology receives a `region` with this name whose slotted content keeps its own semantics (FR-006). Documented as required: a scroller without a label renders but exposes no accessible name and fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
-          * @default undefined
          */
-        "label"?: string;
+        "label": string;
         /**
           * Declared scroll axis, mapping the design source's `Type` axis: `vertical` (default) scrolls the block axis, `horizontal` the inline axis. One axis per instance; the cross axis clips. A structural axis, never appearance — thickness, shape and colors of the indicator are per-theme `--ki-scroller-*` tokens. An unrecognized value matches no style selector and no `horizontal` code path, so the scroller keeps the default vertical behavior (fallback by CSS construction plus a single strict comparison — no validation code, FR-002/FR-009).
           * @default 'vertical'
@@ -2167,9 +2171,8 @@ declare namespace LocalJSX {
         "form"?: string;
         /**
           * Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
-          * @default ''
          */
-        "label"?: string;
+        "label": string;
         /**
           * Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
          */
@@ -2433,9 +2436,8 @@ declare namespace LocalJSX {
     interface KiVideo {
         /**
           * Accessible name of the play control ("Play the product tour"). The control is a real button exposing role button with exactly this name; the frame contributes no role, name or state of its own (FR-004, FR-005). Documented as required: no default human-language string is baked in, and an unlabeled control renders but fails the accessibility audit (015-ki-progress precedent). The label is never rendered visually.
-          * @default undefined
          */
-        "label"?: string;
+        "label": string;
     }
 
     interface KiAlertAttributes {
@@ -2595,20 +2597,20 @@ declare namespace LocalJSX {
         "ki-button": Omit<KiButton, keyof KiButtonAttributes> & { [K in keyof KiButton & keyof KiButtonAttributes]?: KiButton[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `attr:${K}`]?: KiButtonAttributes[K] } & { [K in keyof KiButton & keyof KiButtonAttributes as `prop:${K}`]?: KiButton[K] };
         "ki-card": KiCard;
         "ki-checkbox": Omit<KiCheckbox, keyof KiCheckboxAttributes> & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes]?: KiCheckbox[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `attr:${K}`]?: KiCheckboxAttributes[K] } & { [K in keyof KiCheckbox & keyof KiCheckboxAttributes as `prop:${K}`]?: KiCheckbox[K] };
-        "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] };
+        "ki-dialog": Omit<KiDialog, keyof KiDialogAttributes> & { [K in keyof KiDialog & keyof KiDialogAttributes]?: KiDialog[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `attr:${K}`]?: KiDialogAttributes[K] } & { [K in keyof KiDialog & keyof KiDialogAttributes as `prop:${K}`]?: KiDialog[K] } & OneOf<"heading", KiDialog["heading"], KiDialogAttributes["heading"]>;
         "ki-divider": Omit<KiDivider, keyof KiDividerAttributes> & { [K in keyof KiDivider & keyof KiDividerAttributes]?: KiDivider[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `attr:${K}`]?: KiDividerAttributes[K] } & { [K in keyof KiDivider & keyof KiDividerAttributes as `prop:${K}`]?: KiDivider[K] };
-        "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] };
-        "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] };
-        "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] };
+        "ki-icon-button": Omit<KiIconButton, keyof KiIconButtonAttributes> & { [K in keyof KiIconButton & keyof KiIconButtonAttributes]?: KiIconButton[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `attr:${K}`]?: KiIconButtonAttributes[K] } & { [K in keyof KiIconButton & keyof KiIconButtonAttributes as `prop:${K}`]?: KiIconButton[K] } & OneOf<"label", KiIconButton["label"], KiIconButtonAttributes["label"]>;
+        "ki-indicator": Omit<KiIndicator, keyof KiIndicatorAttributes> & { [K in keyof KiIndicator & keyof KiIndicatorAttributes]?: KiIndicator[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `attr:${K}`]?: KiIndicatorAttributes[K] } & { [K in keyof KiIndicator & keyof KiIndicatorAttributes as `prop:${K}`]?: KiIndicator[K] } & OneOf<"label", KiIndicator["label"], KiIndicatorAttributes["label"]>;
+        "ki-input": Omit<KiInput, keyof KiInputAttributes> & { [K in keyof KiInput & keyof KiInputAttributes]?: KiInput[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `attr:${K}`]?: KiInputAttributes[K] } & { [K in keyof KiInput & keyof KiInputAttributes as `prop:${K}`]?: KiInput[K] } & OneOf<"label", KiInput["label"], KiInputAttributes["label"]>;
         "ki-list": KiList;
         "ki-list-item": KiListItem;
         "ki-option": Omit<KiOption, keyof KiOptionAttributes> & { [K in keyof KiOption & keyof KiOptionAttributes]?: KiOption[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `attr:${K}`]?: KiOptionAttributes[K] } & { [K in keyof KiOption & keyof KiOptionAttributes as `prop:${K}`]?: KiOption[K] };
-        "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] };
+        "ki-progress": Omit<KiProgress, keyof KiProgressAttributes> & { [K in keyof KiProgress & keyof KiProgressAttributes]?: KiProgress[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `attr:${K}`]?: KiProgressAttributes[K] } & { [K in keyof KiProgress & keyof KiProgressAttributes as `prop:${K}`]?: KiProgress[K] } & OneOf<"label", KiProgress["label"], KiProgressAttributes["label"]>;
         "ki-qr": Omit<KiQr, keyof KiQrAttributes> & { [K in keyof KiQr & keyof KiQrAttributes]?: KiQr[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `attr:${K}`]?: KiQrAttributes[K] } & { [K in keyof KiQr & keyof KiQrAttributes as `prop:${K}`]?: KiQr[K] };
         "ki-radio": Omit<KiRadio, keyof KiRadioAttributes> & { [K in keyof KiRadio & keyof KiRadioAttributes]?: KiRadio[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `attr:${K}`]?: KiRadioAttributes[K] } & { [K in keyof KiRadio & keyof KiRadioAttributes as `prop:${K}`]?: KiRadio[K] };
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
-        "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] };
-        "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] };
+        "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
+        "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
@@ -2616,7 +2618,7 @@ declare namespace LocalJSX {
         "ki-tabs": Omit<KiTabs, keyof KiTabsAttributes> & { [K in keyof KiTabs & keyof KiTabsAttributes]?: KiTabs[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `attr:${K}`]?: KiTabsAttributes[K] } & { [K in keyof KiTabs & keyof KiTabsAttributes as `prop:${K}`]?: KiTabs[K] };
         "ki-textarea": Omit<KiTextarea, keyof KiTextareaAttributes> & { [K in keyof KiTextarea & keyof KiTextareaAttributes]?: KiTextarea[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `attr:${K}`]?: KiTextareaAttributes[K] } & { [K in keyof KiTextarea & keyof KiTextareaAttributes as `prop:${K}`]?: KiTextarea[K] } & OneOf<"label", KiTextarea["label"], KiTextareaAttributes["label"]>;
         "ki-tooltip": Omit<KiTooltip, keyof KiTooltipAttributes> & { [K in keyof KiTooltip & keyof KiTooltipAttributes]?: KiTooltip[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `attr:${K}`]?: KiTooltipAttributes[K] } & { [K in keyof KiTooltip & keyof KiTooltipAttributes as `prop:${K}`]?: KiTooltip[K] };
-        "ki-video": Omit<KiVideo, keyof KiVideoAttributes> & { [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K] };
+        "ki-video": Omit<KiVideo, keyof KiVideoAttributes> & { [K in keyof KiVideo & keyof KiVideoAttributes]?: KiVideo[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `attr:${K}`]?: KiVideoAttributes[K] } & { [K in keyof KiVideo & keyof KiVideoAttributes as `prop:${K}`]?: KiVideo[K] } & OneOf<"label", KiVideo["label"], KiVideoAttributes["label"]>;
     }
 }
 export { LocalJSX as JSX };

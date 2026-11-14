@@ -51,6 +51,7 @@ export {
   type UiSpecNode,
   VALIDATION_MAX_BYTES,
   VALIDATION_MAX_DEPTH,
+  type ValidationContext,
   type ValidationIssue,
   type ValidationReport,
   validateUiSpec,

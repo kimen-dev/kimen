@@ -345,6 +345,38 @@ Feature: Guarded renderer
         | hasOwnProperty | slot of a ki-card     | unknown-slot      |
         | valueOf        | component             | unknown-component |
         | isPrototypeOf  | prop of a ki-badge    | unknown-prop      |
+
+  Rule: Declared prop constraints bound every render
+
+    # S21
+    Scenario: A spec missing a required prop never renders
+      Given a spec whose ki-textarea node sets no "label", which the catalog declares required
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names ki-textarea and the missing required prop "label"
+
+    # S22
+    Scenario: A number beyond its declared bounds never renders
+      Given a spec whose ki-indicator node sets "count" to 1000000, beyond the catalog's declared maximum of 20
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names ki-indicator, "count" and the declared maximum
+
+  Rule: The host may restrict URL props to declared origins
+
+    # S23
+    Scenario Outline: With allowed origins declared, a URL outside them never renders
+      Given a renderer restricted to the URL origin "https://cdn.example.com"
+      And a spec setting ki-avatar's "src" to "<value>"
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names "src" and the rule "url-origin"
+
+      Examples:
+        | value                             |
+        | https://tracker.example.net/p.gif |
+        | /avatars/ana.png                  |
+        | //tracker.example.net/p.gif       |
 ```
 
 ### Scenario Family Coverage
@@ -356,7 +388,7 @@ governed by its own approved contract (specs `002`–`016`).
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1–S20 | |
+| Core behavior | S1–S23 | |
 | Keyboard path | | N/A — the renderer adds no interaction; keyboard behavior is owned by each rendered component's own contract |
 | Assistive-tech outcome | | N/A — the accessibility tree is produced by the rendered catalog components under their own contracts |
 | Form participation | | N/A — form behavior is owned by the rendered form components; the renderer only passes validated declared props |
@@ -370,9 +402,12 @@ governed by its own approved contract (specs `002`–`016`).
   exclusively components present in the neutral catalog. A node whose type
   is not a catalog entry MUST cause fail-closed rejection naming that type.
 - **FR-002**: Every prop MUST validate against the generated catalog entry
-  for its component. Undeclared props, type mismatches and missing required
-  props MUST reject the spec naming the component, the prop and the violated
-  rule. Undeclared props MUST NOT be silently stripped.
+  for its component. Undeclared props, type mismatches, missing required
+  props (S21) and numbers outside their declared bounds (S22) MUST reject
+  the spec naming the component, the prop and the violated rule. Undeclared
+  props MUST NOT be silently stripped. These limits are the catalog's
+  (027 FR-016, FR-017): every render path — complete, streamed and live —
+  enforces them through the same validation, never a copy of it.
 - **FR-003**: Actions are declarative data. The spec's declared-actions list
   (the neutral format of `027-runtime-catalog`, its FR-005) is the only
   dispatch vocabulary: the renderer wires listeners only for component
@@ -398,7 +433,13 @@ governed by its own approved contract (specs `002`–`016`).
   parsed as markup; the catalog surface exposes no event-handler or
   code-valued props; URL-typed values accept only an allowlist (`https`,
   `http`, relative references) and every other scheme is rejected; the
-  renderer performs no dynamic code evaluation of any spec content.
+  renderer performs no dynamic code evaluation of any spec content. The
+  URL policy is the catalog's (027 FR-018), one implementation the
+  renderer inherits by validating through it: which props are URL-typed
+  comes from the catalog constraint, and every render entry point —
+  complete, streamed and live — MUST accept the host's list of allowed URL
+  origins and, when it is present, render only absolute `http(s)` URLs of
+  those origins (S23), fail-closed.
 - **FR-005**: Spec parsing MUST be immune to prototype pollution: a spec
   containing `__proto__`, `constructor` or `prototype` keys in any props or
   data object is rejected, and parsing never mutates shared prototypes.
@@ -515,7 +556,7 @@ governed by its own approved contract (specs `002`–`016`).
   stream closes; the invalid-chunk fixture attaches zero nodes at and below
   the violation and reports it.
 - **SC-007**: the `guarded-renderer` capability leaves `planned` only when
-  the S1–S20 traced tests run green inside the deterministic gates; the
+  the S1–S23 traced tests run green inside the deterministic gates; the
   capability gate enforces the linkage.
 - **SC-008**: module-boundary analysis reports zero protocol-specific
   imports or types in `@kimen/catalog`.
@@ -547,6 +588,8 @@ governed by its own approved contract (specs `002`–`016`).
   streams (already-attached validated content remains).
 - Budget default values are fixed at plan/implementation time; this contract
   fixes only the boundary semantics (at-budget passes, beyond fails).
-- URL allowlist v1 is `https`, `http` and relative references.
+- URL allowlist v1 is `https`, `http` and relative references. A host that
+  must also bound WHERE a URL may point passes its allowed origins
+  (FR-004, S23); without them any `https` host is accepted, as before.
 - Rendering is client-side for v1; SSR/Declarative Shadow DOM stays deferred
   per the declared bets. Zod (v4 line) is used at this boundary only.

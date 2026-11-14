@@ -15,7 +15,7 @@ import type { StencilReactComponent } from '@stencil/react-output-target/runtime
 
 export type KiProgressEvents = NonNullable<unknown>;
 
-export const KiProgress: StencilReactComponent<KiProgressElement, KiProgressEvents, Components.KiProgress> = /*@__PURE__*/ createComponent<KiProgressElement, KiProgressEvents, Components.KiProgress>({
+export const KiProgress: StencilReactComponent<KiProgressElement, KiProgressEvents, Components.KiProgress, 'label'> = /*@__PURE__*/ createComponent<KiProgressElement, KiProgressEvents, Components.KiProgress, 'label'>({
     tagName: 'ki-progress',
     elementClass: KiProgressElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
