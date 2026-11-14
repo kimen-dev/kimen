@@ -248,7 +248,7 @@ export class KiRadioGroup {
     }
 
     const nextIndex = nextEnabledIndex(
-      this.roster.map((radio) => radio.disabled),
+      this.roster.map((radio) => this.isOutOfReach(radio)),
       currentIndex,
       direction,
     );
@@ -291,7 +291,10 @@ export class KiRadioGroup {
       this.reconcileSelection();
     });
     for (const radio of this.roster) {
-      this.rosterObserver.observe(radio, { attributes: true, attributeFilter: ['disabled'] });
+      this.rosterObserver.observe(radio, {
+        attributes: true,
+        attributeFilter: ['disabled', 'hidden'],
+      });
       // An option appended after the group loaded is rostered before its first
       // render, so there is no input yet to check or to take out of the tab
       // order — and its own render then makes it a tab stop. Reconcile again
@@ -438,11 +441,21 @@ export class KiRadioGroup {
       return null;
     }
 
-    if (this.selectedRadio && !this.selectedRadio.disabled) {
+    if (this.selectedRadio && !this.isOutOfReach(this.selectedRadio)) {
       return this.selectedRadio;
     }
 
-    return this.roster.find((radio) => !radio.disabled) ?? null;
+    return this.roster.find((radio) => !this.isOutOfReach(radio)) ?? null;
+  }
+
+  /**
+   * An option the keyboard must not land on: disabled, or taken out of the
+   * page with the `hidden` attribute. A hidden option keeps its place in the
+   * roster and, when selected, its value — it only stops being a focus stop,
+   * so the visible options stay reachable.
+   */
+  private isOutOfReach(radio: KiRadioElement): boolean {
+    return radio.disabled || radio.hasAttribute('hidden');
   }
 
   private optionValue(radio: KiRadioElement): string {
