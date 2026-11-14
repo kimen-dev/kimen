@@ -50,10 +50,15 @@ export class KiRadioGroup {
   // Scoped to this group's shadow root, so a static id is unambiguous
   // (review 007 minor; matches the 003 call).
   private readonly labelId = 'group-label';
-  private disabledObserver?: MutationObserver;
+  private rosterObserver?: MutationObserver;
   private presenceObserver: MutationObserver | undefined;
   private resetValue = '';
   private suppressValueWatch = false;
+  // A value requested by attribute, property or reset that no option matches
+  // yet. `value` stays a projection of the selection (FR-002), so the request
+  // is remembered here and honoured when a matching option arrives — streamed
+  // generated UI and frameworks set the value before the options exist.
+  private pendingValue = '';
 
   /**
    * Form-data key for the selected option's value. Omit when the group should
@@ -151,6 +156,7 @@ export class KiRadioGroup {
 
   componentWillLoad(): void {
     this.applyAttributePresence();
+    this.pendingValue = this.value;
     this.syncInputs();
   }
 
@@ -167,7 +173,7 @@ export class KiRadioGroup {
     this.host.removeEventListener('keydown', this.handleKeyDown);
     this.host.removeEventListener('focusin', this.handleFocusIn);
     this.host.removeEventListener('invalid', this.handleInvalid);
-    this.disabledObserver?.disconnect();
+    this.rosterObserver?.disconnect();
     this.presenceObserver?.disconnect();
     this.presenceObserver = undefined;
   }
@@ -216,6 +222,7 @@ export class KiRadioGroup {
       return;
     }
 
+    this.pendingValue = '';
     this.setSelectedRadio(radio);
     setTimeout(() => {
       this.host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
@@ -275,16 +282,23 @@ export class KiRadioGroup {
       radio.removeAttribute('data-ki-group-disabled');
     }
     this.roster = assigned ?? [];
-    this.disabledObserver?.disconnect();
+    this.rosterObserver?.disconnect();
     if (typeof MutationObserver !== 'function') {
       this.reconcileSelection();
       return;
     }
-    this.disabledObserver = new MutationObserver(() => {
+    this.rosterObserver = new MutationObserver(() => {
       this.reconcileSelection();
     });
     for (const radio of this.roster) {
-      this.disabledObserver.observe(radio, { attributes: true, attributeFilter: ['disabled'] });
+      this.rosterObserver.observe(radio, { attributes: true, attributeFilter: ['disabled'] });
+      // An option appended after the group loaded is rostered before its first
+      // render, so there is no input yet to check or to take out of the tab
+      // order — and its own render then makes it a tab stop. Reconcile again
+      // when that render lands in its shadow root.
+      if (radio.shadowRoot && !this.inputFor(radio)) {
+        this.rosterObserver.observe(radio.shadowRoot, { childList: true });
+      }
     }
     this.reconcileSelection();
   }
@@ -306,8 +320,8 @@ export class KiRadioGroup {
 
     if (this.selectedRadio && !this.roster.includes(this.selectedRadio)) {
       this.setSelectedRadio(null);
-    } else if (!this.selectedRadio && this.value) {
-      this.selectByValue(this.value);
+    } else if (!this.selectedRadio && this.pendingValue) {
+      this.selectByValue(this.pendingValue);
     } else {
       this.syncInputs();
     }
@@ -328,6 +342,7 @@ export class KiRadioGroup {
 
   private selectByValue(value: string): void {
     const radio = this.roster.find((candidate) => this.optionValue(candidate) === value) ?? null;
+    this.pendingValue = radio ? '' : value;
     this.setSelectedRadio(radio);
   }
 

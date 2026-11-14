@@ -619,6 +619,75 @@ describe('ki-radio-group in a real browser', () => {
   });
 });
 
+// Generated UI streams: the group can be in the document, already loaded,
+// before any of its options exist. Selection re-derives from the declared
+// value as options arrive (spec 007 edge case "Options inserted at runtime").
+describe('ki-radio-group with options that arrive after the group', () => {
+  async function mountEmpty(value: string): Promise<KiRadioGroupElement> {
+    ensureTokens();
+    const el = document.createElement('ki-radio-group') as unknown as KiRadioGroupElement;
+    el.setAttribute('label', 'Plan');
+    el.setAttribute('value', value);
+    document.body.append(el);
+    await customElements.whenDefined('ki-radio-group');
+    await settleFrames(4);
+    return el;
+  }
+
+  function appendOption(el: KiRadioGroupElement, value: string): HTMLElement {
+    const option = document.createElement('ki-radio');
+    option.setAttribute('value', value);
+    option.textContent = `Plan ${value.toUpperCase()}`;
+    el.append(option);
+    return option;
+  }
+
+  function pageButton(label: string): HTMLButtonElement {
+    const button = document.createElement('button');
+    button.textContent = label;
+    document.body.append(button);
+    return button;
+  }
+
+  it('S5 options appended after load select the pending value and form a single tab stop', async () => {
+    cleanup();
+    const before = pageButton('Before');
+    const el = await mountEmpty('b');
+    const after = pageButton('After');
+
+    appendOption(el, 'a');
+    const pending = appendOption(el, 'b');
+    appendOption(el, 'c');
+    await settleFrames(4);
+
+    expect(el.value).toBe('b');
+    expect(radios(el).map((input) => input.checked)).toEqual([false, true, false]);
+    before.focus();
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(pending);
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(after);
+  });
+
+  it('S4 the pending value waits for its option while the others arrive one at a time', async () => {
+    cleanup();
+    const el = await mountEmpty('b');
+
+    appendOption(el, 'a');
+    await settleFrames(4);
+    expect(radios(el).map((input) => input.checked)).toEqual([false]);
+
+    appendOption(el, 'b');
+    await settleFrames(4);
+    appendOption(el, 'c');
+    await settleFrames(4);
+
+    expect(el.value).toBe('b');
+    expect(radios(el).map((input) => input.checked)).toEqual([false, true, false]);
+    expect(radios(el).map((input) => input.tabIndex)).toEqual([-1, 0, -1]);
+  });
+});
+
 // Boolean presence semantics (native HTML parity): a present attribute means
 // true whatever its value. Stencil >= 4.45 removes a host attribute when it
 // reflects a parsed `false`, so these run against the built output.
