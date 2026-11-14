@@ -478,7 +478,7 @@ export class KiRadioGroup {
    * so the visible options stay reachable.
    */
   private isOutOfReach(radio: KiRadioElement): boolean {
-    return radio.disabled || radio.hidden;
+    return radio.disabled || radio.hasAttribute('hidden');
   }
 
   private optionValue(radio: KiRadioElement): string {
