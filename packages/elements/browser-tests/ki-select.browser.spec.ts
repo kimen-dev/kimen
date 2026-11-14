@@ -4,7 +4,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 // what is asserted), never internals (Art. III).
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
 import { expectAccessible } from './axe';
@@ -13,6 +13,13 @@ type KiSelectElement = HTMLElement & {
   value: string;
   disabled: boolean;
   required: boolean;
+};
+
+const browserCommands = commands as unknown as {
+  installClock: () => Promise<void>;
+  pauseClock: () => Promise<void>;
+  fastForwardClock: (milliseconds: number) => Promise<void>;
+  resumeClock: () => Promise<void>;
 };
 
 beforeAll(() => {
@@ -581,6 +588,153 @@ describe('ki-select in a real browser', () => {
       .poll(() => getComputedStyle(trigger(el)).backgroundImage)
       .toContain('linear-gradient');
     expect(getComputedStyle(trigger(el)).backgroundColor).toBe(restBg);
+  });
+});
+
+// APG select-only combobox: printable characters move the active option to
+// the next one that starts with what was typed. Characters typed in quick
+// succession build one string; a pause starts a new one.
+describe('ki-select typeahead', () => {
+  const countries = `
+    <ki-option value="es">Spain</ki-option>
+    <ki-option value="fr">France</ki-option>
+    <ki-option value="pt">Portugal</ki-option>
+    <ki-option value="pl">Poland</ki-option>
+  `;
+
+  function activeOption(el: KiSelectElement): string {
+    const id = trigger(el).getAttribute('aria-activedescendant') ?? '';
+    return el.shadowRoot?.getElementById(id)?.textContent ?? '';
+  }
+
+  /** Open from the keyboard with no selection: "Spain" is the active option. */
+  async function openCountries(): Promise<KiSelectElement> {
+    const el = await mountSelect('', countries);
+    trigger(el).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.poll(() => activeOption(el)).toBe('Spain');
+    return el;
+  }
+
+  it('S27 typing a character on the closed select opens it on the matching option', async () => {
+    const el = await mountSelect('', countries);
+    trigger(el).focus();
+
+    await userEvent.keyboard('f');
+
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'true');
+    await expect.poll(() => activeOption(el)).toBe('France');
+    // Typing moves the active option; it never commits.
+    expect(el.value).toBe('');
+  });
+
+  it('S27 typing a character moves the active option of the open select', async () => {
+    const el = await openCountries();
+
+    await userEvent.keyboard('f');
+
+    await expect.poll(() => activeOption(el)).toBe('France');
+    expect(el.value).toBe('');
+  });
+
+  it('S27 characters typed in quick succession match as one string', async () => {
+    const el = await openCountries();
+
+    await userEvent.keyboard('pol');
+
+    await expect.poll(() => activeOption(el)).toBe('Poland');
+  });
+
+  it('S27 repeating a character walks the options that start with it', async () => {
+    const el = await openCountries();
+
+    await userEvent.keyboard('p');
+    await expect.poll(() => activeOption(el)).toBe('Portugal');
+    await userEvent.keyboard('p');
+    await expect.poll(() => activeOption(el)).toBe('Poland');
+    await userEvent.keyboard('p');
+    await expect.poll(() => activeOption(el)).toBe('Portugal');
+  });
+
+  it('S27 a pause starts a new string instead of extending the previous one', async () => {
+    await browserCommands.installClock();
+    try {
+      const el = await openCountries();
+      await browserCommands.pauseClock();
+
+      await userEvent.keyboard('p');
+      // Under the paused clock Stencil renders only once a frame elapses.
+      await browserCommands.fastForwardClock(20);
+      expect(activeOption(el)).toBe('Portugal');
+
+      // Typed straight after "p", the "f" would read "pf" and match nothing.
+      await browserCommands.fastForwardClock(600);
+      await userEvent.keyboard('f');
+      await browserCommands.fastForwardClock(20);
+
+      expect(activeOption(el)).toBe('France');
+    } finally {
+      await browserCommands.resumeClock();
+    }
+  });
+
+  it('S27 a string no option starts with leaves the active option where it was', async () => {
+    const el = await openCountries();
+
+    await userEvent.keyboard('pf');
+
+    await expect.poll(() => activeOption(el)).toBe('Portugal');
+  });
+
+  it('S27 S22 typeahead skips a disabled option', async () => {
+    const el = await mountSelect(
+      '',
+      `<ki-option value="es">Spain</ki-option><ki-option value="pt" disabled>Portugal</ki-option><ki-option value="pl">Poland</ki-option>`,
+    );
+    trigger(el).focus();
+
+    await userEvent.keyboard('p');
+
+    await expect.poll(() => activeOption(el)).toBe('Poland');
+  });
+
+  it('S27 the matching option is brought into view in a list longer than the panel', async () => {
+    const letters = [
+      'Alpha',
+      'Beta',
+      'Gamma',
+      'Delta',
+      'Epsilon',
+      'Zeta',
+      'Eta',
+      'Theta',
+      'Iota',
+      'Kappa',
+      'Lambda',
+      'Mu',
+    ];
+    const el = await mountSelect(
+      '',
+      letters.map((letter) => `<ki-option>${letter}</ki-option>`).join(''),
+    );
+    trigger(el).focus();
+
+    await userEvent.keyboard('k');
+
+    await expect.poll(() => activeOption(el)).toBe('Kappa');
+    const listbox = el.shadowRoot?.querySelector('[part="listbox"]');
+    if (!listbox) {
+      throw new Error('missing listbox');
+    }
+    // Both boxes are read together on every attempt: the panel is still
+    // easing in when the highlight lands, so a box read once goes stale.
+    await expect
+      .poll(() => {
+        const panel = listbox.getBoundingClientRect();
+        const row = rowAt(el, 9).getBoundingClientRect();
+        return row.top >= panel.top && row.bottom <= panel.bottom;
+      })
+      .toBe(true);
   });
 });
 

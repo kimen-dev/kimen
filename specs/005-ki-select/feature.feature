@@ -117,6 +117,20 @@ Feature: Select
     When the user opens it from the keyboard
     Then the options open with "Spain" highlighted
 
+  # S27
+  Scenario Outline: Typing characters highlights the next option that starts with them
+    Given a focused <popup> select "Country" listing "Spain", "France", "Portugal" and "Poland" with no selection
+    When the user types <typing>
+    Then the options are open with <option> highlighted
+
+    Examples:
+      | popup  | typing                        | option   |
+      | closed | "f"                           | "France" |
+      | open   | "f"                           | "France" |
+      | open   | "pol" in quick succession     | "Poland" |
+      | open   | "p" twice in quick succession | "Poland" |
+      | open   | "p" and, after a pause, "f"   | "France" |
+
   # Family: assistive-tech outcome
   # S11
   Scenario: The select is exposed as a named combobox with its value

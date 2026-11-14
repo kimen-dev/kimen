@@ -14,6 +14,7 @@ import {
   lastEnabled,
   moveHighlight,
   openHighlight,
+  typeaheadIndex,
 } from './ki-select.keyboard';
 
 type KiSelectHost = HTMLElement & {
@@ -492,7 +493,7 @@ describe('ki-select', () => {
     root.addEventListener('change', change);
 
     press(instance, 'ArrowDown');
-    const excluded = press(instance, 'f');
+    const excluded = press(instance, 'PageDown');
     await waitForChanges();
     expect(excluded.defaultPrevented).toBe(false);
     expect(trigger(root).getAttribute('aria-activedescendant')).toBe('option-0');
@@ -504,6 +505,50 @@ describe('ki-select', () => {
     expect(root.value).toBe('es');
     expect(trigger(root).getAttribute('aria-expanded')).toBe('false');
     expect(change).not.toHaveBeenCalled();
+  });
+
+  it('S27 a printable key moves the highlight to the matching option without committing', async () => {
+    const page = await aCountrySelect('value="es"');
+    const { root, waitForChanges } = page;
+    const instance = sourceInstance(page.instance);
+    const change = vi.fn();
+    root.addEventListener('change', change);
+
+    press(instance, 'ArrowDown');
+    const typed = press(instance, 'p');
+    await waitForChanges();
+
+    expect(typed.defaultPrevented).toBe(true);
+    expect(trigger(root).getAttribute('aria-activedescendant')).toBe('option-2');
+    expect(root.value).toBe('es');
+    expect(change).not.toHaveBeenCalled();
+  });
+
+  it('S27 a printable key on the closed select opens it past the selected option', async () => {
+    const page = await aCountrySelect(
+      'value="pt"',
+      `${countryOptions}<ki-option value="pl">Poland</ki-option>`,
+    );
+    const { root, waitForChanges } = page;
+    const instance = sourceInstance(page.instance);
+
+    press(instance, 'p');
+    await waitForChanges();
+
+    expect(trigger(root).getAttribute('aria-expanded')).toBe('true');
+    expect(trigger(root).getAttribute('aria-activedescendant')).toBe('option-3');
+  });
+
+  it('S27 a printable key that matches nothing still opens the closed select', async () => {
+    const page = await aCountrySelect('value="fr"');
+    const { root, waitForChanges } = page;
+    const instance = sourceInstance(page.instance);
+
+    press(instance, 'x');
+    await waitForChanges();
+
+    expect(trigger(root).getAttribute('aria-expanded')).toBe('true');
+    expect(trigger(root).getAttribute('aria-activedescendant')).toBe('option-1');
   });
 
   it('S23 Tab closes without preventing native focus movement or committing', async () => {
@@ -873,7 +918,7 @@ describe('ki-select', () => {
     expect(moveHighlight([{ disabled: true }], -1, 'next')).toBe(-1);
   });
 
-  it('S7 S8 S9 S10 S21 maps approved keys to intents and excludes typeahead', () => {
+  it('S7 S8 S9 S10 S21 S27 maps approved keys to intents and excludes the APG-optional ones', () => {
     expect(keyIntent('ArrowDown', false)).toBe('open-selected');
     expect(keyIntent('Home', false)).toBe('open-first');
     expect(keyIntent('End', false)).toBe('open-last');
@@ -883,7 +928,48 @@ describe('ki-select', () => {
     expect(keyIntent(' ', true)).toBe('commit');
     expect(keyIntent('Escape', true)).toBe('close');
     expect(keyIntent('Tab', true)).toBe('tab');
-    expect(keyIntent('f', true)).toBeNull();
+    expect(keyIntent('f', true)).toBe('type');
+    expect(keyIntent('F', false)).toBe('type');
+    expect(keyIntent('7', true)).toBe('type');
+    expect(keyIntent(' ', false)).toBe('open-selected');
     expect(keyIntent('PageDown', true)).toBeNull();
+    expect(keyIntent('PageUp', false)).toBeNull();
+    expect(keyIntent('Shift', true)).toBeNull();
+  });
+
+  const typeaheadCountries = [
+    { label: 'Spain', disabled: false },
+    { label: 'France', disabled: false },
+    { label: 'Portugal', disabled: false },
+    { label: 'Poland', disabled: false },
+  ];
+
+  it.each([
+    { typed: 'f', from: 0, expected: 1, rule: 'moves forward to the match' },
+    { typed: 's', from: 2, expected: 0, rule: 'wraps past the end of the list' },
+    { typed: 'F', from: 0, expected: 1, rule: 'ignores letter case' },
+    { typed: 'f', from: -1, expected: 1, rule: 'starts at the top when nothing is active' },
+    { typed: 'p', from: 2, expected: 3, rule: 'moves a single character on to the next match' },
+    { typed: 'p', from: 3, expected: 2, rule: 'wraps a single character back to the first match' },
+    { typed: 'f', from: 1, expected: 1, rule: 'stays when the active option is the only match' },
+    { typed: 'po', from: 2, expected: 2, rule: 'refines a longer string in place' },
+    { typed: 'pol', from: 2, expected: 3, rule: 'moves once the longer string stops matching' },
+    { typed: 'pp', from: 2, expected: 3, rule: 'walks the matches of a repeated character' },
+    { typed: 'pf', from: 2, expected: -1, rule: 'reports no match for an unknown string' },
+    { typed: 'x', from: 0, expected: -1, rule: 'reports no match for an unknown character' },
+  ])('S27 typeahead $rule ("$typed" from $from)', ({ typed, from, expected }) => {
+    expect(typeaheadIndex(typeaheadCountries, typed, from)).toBe(expected);
+  });
+
+  it('S27 S22 typeahead never lands on a disabled option and tolerates an empty list', () => {
+    const options = [
+      { label: 'Spain', disabled: false },
+      { label: 'Portugal', disabled: true },
+      { label: 'Poland', disabled: false },
+    ];
+
+    expect(typeaheadIndex(options, 'p', 0)).toBe(2);
+    expect(typeaheadIndex(options, 'por', 0)).toBe(-1);
+    expect(typeaheadIndex([], 'p', -1)).toBe(-1);
   });
 });
