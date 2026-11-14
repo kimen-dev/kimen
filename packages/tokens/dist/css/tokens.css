@@ -1,4 +1,4 @@
-:root {
+:where(:root) {
   color-scheme: light dark;
 }
 
@@ -1279,7 +1279,6 @@
   --ki-card-media-padding: var(--ki-space-md);
   --ki-card-padding-block: var(--ki-space-3xl);
   --ki-card-media-radius: var(--ki-radius-big-component-sm);
-  --ki-card-backdrop-blur: var(--ki-blur-96);
   --ki-card-header-padding: var(--ki-space-3xl);
   --ki-card-body-padding: var(--ki-space-3xl);
   --ki-card-footer-padding: var(--ki-space-3xl);
@@ -1575,7 +1574,6 @@
   --ki-input-gap: var(--ki-space-xs);
   --ki-input-label-gap: var(--ki-space-xs);
   --ki-input-label-padding-inline: var(--ki-space-xxs);
-  --ki-input-hint-fg: var(--ki-text-med-em);
   --ki-input-radius: var(--ki-radius-component-md);
   --ki-input-icon-size: var(--ki-space-4xl);
   --ki-input-font-size: var(--ki-typography-size-body-1);
@@ -1609,7 +1607,6 @@
   --ki-input-disabled-border: var(--ki-outline-low-em);
   --ki-input-disabled-label-fg: var(--ki-text-base-em);
   --ki-input-disabled-placeholder-fg: var(--ki-text-base-em);
-  --ki-input-disabled-hint-fg: var(--ki-text-base-em);
   --ki-input-readonly-bg: var(--ki-surface-s1);
   --ki-input-readonly-fg: var(--ki-text-high-em);
   --ki-input-readonly-border: var(--ki-outline-control);
@@ -1621,7 +1618,6 @@
   --ki-input-invalid-label-fg: var(--ki-text-med-em);
   --ki-input-invalid-placeholder-fg: var(--ki-text-med-em);
   --ki-input-invalid-ring: var(--ki-focus-danger);
-  --ki-input-invalid-hint-fg: var(--ki-text-danger-high-em);
   --ki-input-focus-ring-color: var(--ki-outline-primary-high-em);
   --ki-input-focus-ring-width: var(--ki-space-xxs);
   --ki-input-focus-ring-offset: var(--ki-space-xxs);
@@ -1873,7 +1869,6 @@
   --ki-textarea-padding-block: var(--ki-space-xl);
   --ki-textarea-label-gap: var(--ki-space-xs);
   --ki-textarea-label-padding-inline: var(--ki-space-xxs);
-  --ki-textarea-hint-fg: var(--ki-text-med-em);
   --ki-textarea-radius: var(--ki-radius-component-md);
   --ki-textarea-min-target: var(--ki-space-7xl);
   --ki-textarea-font-size: var(--ki-typography-size-body-1);
@@ -1907,7 +1902,6 @@
   --ki-textarea-disabled-border: var(--ki-outline-med-em);
   --ki-textarea-disabled-label-fg: var(--ki-text-base-em);
   --ki-textarea-disabled-placeholder-fg: var(--ki-text-base-em);
-  --ki-textarea-disabled-hint-fg: var(--ki-text-base-em);
   --ki-textarea-readonly-bg: var(--ki-surface-s0);
   --ki-textarea-readonly-fg: var(--ki-text-high-em);
   --ki-textarea-readonly-border: var(--ki-outline-control);
@@ -1919,7 +1913,6 @@
   --ki-textarea-invalid-label-fg: var(--ki-text-med-em);
   --ki-textarea-invalid-placeholder-fg: var(--ki-text-med-em);
   --ki-textarea-invalid-ring: var(--ki-focus-danger);
-  --ki-textarea-invalid-hint-fg: var(--ki-text-danger-high-em);
   --ki-textarea-focus-ring-color: var(--ki-outline-primary-high-em);
   --ki-textarea-focus-ring-width: var(--ki-space-xxs);
   --ki-textarea-focus-ring-offset: var(--ki-space-xxs);
