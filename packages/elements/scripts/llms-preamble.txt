@@ -1,6 +1,7 @@
 Install with `pnpm add @kimen/elements @kimen/tokens`.
 
-Register individual components from the custom-elements bundle before using them:
+Register each component before using it. Every component is exported from
+`@kimen/elements/<tag>`, the way `ki-button` is here:
 
 ```ts
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';

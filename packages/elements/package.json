@@ -14,7 +14,9 @@
     "dist",
     "loader",
     "generated/custom-elements.json",
-    "llms.txt"
+    "llms.txt",
+    "llms-full.txt",
+    "llms"
   ],
   "scripts": {
     "build": "stencil build && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/build-surfaces.mjs",
@@ -39,14 +41,20 @@
           "^default",
           "!{projectRoot}/generated/**",
           "!{projectRoot}/loader/**",
-          "!{projectRoot}/llms.txt"
+          "!{projectRoot}/llms.txt",
+          "!{projectRoot}/llms-full.txt",
+          "!{projectRoot}/llms/**"
         ],
         "outputs": [
           "{projectRoot}/dist",
           "{projectRoot}/generated",
           "{projectRoot}/loader",
           "{projectRoot}/llms.txt",
+          "{projectRoot}/llms-full.txt",
+          "{projectRoot}/llms",
           "{workspaceRoot}/llms.txt",
+          "{workspaceRoot}/llms-full.txt",
+          "{workspaceRoot}/llms",
           "{workspaceRoot}/packages/react/src",
           "{workspaceRoot}/packages/vue/src",
           "{workspaceRoot}/packages/angular/src/directives"

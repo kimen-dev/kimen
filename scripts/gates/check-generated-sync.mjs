@@ -11,24 +11,16 @@ const tokens = Object.freeze([
   'packages/tokens/dist/css/tokens.css',
   'packages/tokens/dist/css/tokens.material3.css',
 ]);
-const surfaces = Object.freeze([
-  'llms.txt',
-  'packages/elements/generated/custom-elements.json',
-  'packages/elements/generated/docs.d.ts',
-  'packages/elements/generated/docs.json',
-  'packages/elements/generated/public-api.json',
-  'packages/elements/llms.txt',
-]);
-
 const catalog = Object.freeze(['packages/catalog/src/generated/catalog.ts']);
 
 /**
- * The wrapper file lists derive from the committed Custom Elements Manifest
- * (spec 034, Art. I: one derivation source) — per-component modules for the
- * React and Vue wrappers, the proxies/accessors set for Angular, plus the
- * hand-written entry shells (tracked and clean like everything else under
- * the scopes; regeneration never touches them, so each group names them in
- * `handWritten` and `generatedOutputs` leaves them out).
+ * The per-component file lists derive from the committed Custom Elements
+ * Manifest (spec 034, Art. I: one derivation source) — per-component modules
+ * for the React and Vue wrappers, the proxies/accessors set for Angular, plus
+ * the hand-written entry shells (tracked and clean like everything else
+ * under the scopes; regeneration never touches them, so each group names
+ * them in `handWritten` and `generatedOutputs` leaves them out) — and one
+ * language-model document per component (spec 017).
  */
 const wrapperTags = (() => {
   const manifest = JSON.parse(
@@ -50,6 +42,28 @@ const wrapperTags = (() => {
   }
   return tags.sort();
 })();
+
+// One generated guide per GenUI package, named after its directory exactly
+// as packages/elements/scripts/agent-surfaces.mjs names it (spec 017 FR-015).
+const genUiGuides = JSON.parse(
+  readFileSync(new URL('../../docs/genui-surfaces.json', import.meta.url), 'utf8'),
+).packages.map(({ directory }) => `llms/${directory.split('/').filter(Boolean).at(-1)}.md`);
+
+// llms.txt is an index (spec 017 FR-011): beside each one sit the complete
+// summary and the documents it links, all generated, all drift-checked.
+const surfaces = Object.freeze([
+  ...genUiGuides,
+  'llms-full.txt',
+  'llms.txt',
+  'packages/elements/generated/custom-elements.json',
+  'packages/elements/generated/docs.d.ts',
+  'packages/elements/generated/docs.json',
+  'packages/elements/generated/public-api.json',
+  'packages/elements/llms-full.txt',
+  'packages/elements/llms.txt',
+  ...wrapperTags.map((tag) => `packages/elements/llms/${tag}.md`),
+  'packages/elements/llms/theming.md',
+]);
 
 const wrapperShells = Object.freeze([
   'packages/angular/src/index.ts',
@@ -82,8 +96,12 @@ export const generatedGroups = Object.freeze({
     required: surfaces,
     handWritten: Object.freeze([]),
     scopes: Object.freeze([
+      'llms',
+      'llms-full.txt',
       'llms.txt',
       'packages/elements/generated',
+      'packages/elements/llms',
+      'packages/elements/llms-full.txt',
       'packages/elements/llms.txt',
     ]),
   }),

@@ -280,7 +280,7 @@ export function buildLlmsTxt(docs, pkg, preamble, inputs = {}) {
   ];
 
   for (const component of docs.components ?? []) {
-    const usage = renderUsage(component);
+    const usage = usageText(component);
     lines.push(
       '',
       `### ${component.tag}`,
@@ -289,40 +289,11 @@ export function buildLlmsTxt(docs, pkg, preamble, inputs = {}) {
       '',
       `When to use: ${getDocsTag(component, 'whenToUse')}`,
       `When NOT to use: ${getDocsTag(component, 'whenNotToUse')}`,
-      ...(usage === null ? [] : ['', usage]),
-      '',
-      renderList(
-        'Attributes',
-        (component.props ?? []).filter((prop) => prop.attr).map(renderAttribute),
-      ),
-      '',
-      renderList(
-        'Slots',
-        (component.slots ?? []).map(
-          (slot) => `${slot.name ? `\`${slot.name}\`` : '(default)'}: ${oneLine(slot.docs ?? '')}`,
-        ),
-      ),
-      '',
-      renderList(
-        'Parts',
-        (component.parts ?? []).map((part) => `\`${part.name}\`: ${oneLine(part.docs ?? '')}`),
-      ),
-      '',
-      renderList('Events', [
-        ...(component.events ?? []).map(renderEvent),
-        ...nativeEventsFor(component).map(
-          (event) => `\`${event.name}\` (Event): ${oneLine(event.description)}`,
-        ),
+      ...(usage === null ? [] : ['', `Examples:\n\n${usage}`]),
+      ...componentFacets(component, inputs).flatMap(([label, entries]) => [
+        '',
+        renderList(label, entries),
       ]),
-      '',
-      renderList('Methods', (component.methods ?? []).map(renderMethod)),
-      '',
-      renderList(
-        'CSS custom properties',
-        cssPropertiesFor(component, inputs).map(
-          (style) => `\`${style.name}\`: ${oneLine(style.description)}`,
-        ),
-      ),
     );
   }
 
@@ -330,9 +301,264 @@ export function buildLlmsTxt(docs, pkg, preamble, inputs = {}) {
 }
 
 /**
+ * The size an index may reach (FR-011): about four thousand tokens at four
+ * bytes each, so an agent can always afford to read it before it has chosen
+ * anything. A test holds both committed indexes to it.
+ */
+export const LLMS_INDEX_MAX_BYTES = 16_384;
+
+// The names every index links. They are part of the published contract: the
+// package ships them at these paths and the site serves them at these URLs.
+const DOCUMENTS_DIRECTORY = 'llms';
+const FULL_FILE = 'llms-full.txt';
+
+const INDEX_NOTE = [
+  'This file is an index: read it first, then only the documents the task',
+  'needs. Each entry under Components says when to use that component; its',
+  'document is the complete contract — attributes, slots, parts, events,',
+  'methods, CSS custom properties and examples.',
+].join('\n');
+
+/**
+ * llms.txt as the llms.txt convention defines it (https://llmstxt.org/): an
+ * H1, a blockquote summary, body text without headings, then H2 sections
+ * that are lists of `[name](url): notes` links. `options.base` prefixes
+ * every document link: empty for the index shipped in the package (relative
+ * paths inside the tarball), the site origin for the repository index the
+ * site publishes. `options.genUi` — the validated GenUI source and the
+ * packages it names, `{ genUi, packages }` — adds the GenUI guides; the
+ * packaged index omits it because those packages are not in the tarball.
+ */
+export function buildLlmsIndex(docs, pkg, preamble, options = {}) {
+  const base = options.base ?? '';
+  const documentUrl = (file) => `${base}${DOCUMENTS_DIRECTORY}/${file}`;
+  const { body, sections } = splitPreamble(preamble);
+  const { genUi = {}, packages: genUiPackages = [] } = options.genUi ?? {};
+  const genUiSources = new Map(genUiPackages.map((entry) => [entry.directory, entry]));
+  const blocks = [
+    `# ${pkg.name} — Kimen web components`,
+    `> ${pkg.description}`,
+    body,
+    (genUi.intro ?? []).join('\n'),
+    INDEX_NOTE,
+    linkSection(
+      'Components',
+      (docs.components ?? []).map((component) =>
+        linkEntry(
+          component.tag,
+          documentUrl(componentDocumentFile(component)),
+          firstSentence(getDocsTag(component, 'whenToUse')),
+        ),
+      ),
+    ),
+    linkSection(
+      'Generative UI',
+      (genUi.packages ?? []).map((entry) =>
+        linkEntry(
+          genUiSources.get(entry.directory).packageJson.name,
+          documentUrl(genUiDocumentFile(entry)),
+          firstSentence(entry.whenToUse ?? ''),
+        ),
+      ),
+    ),
+    linkSection(
+      'Guides',
+      sections.map((section) =>
+        linkEntry(section.title, documentUrl(section.file), firstSentence(section.text)),
+      ),
+    ),
+    linkSection('Optional', [
+      linkEntry(
+        FULL_FILE,
+        `${base}${FULL_FILE}`,
+        'everything in one file — this guidance and every component contract. Large: fetch it only when the whole library is needed at once.',
+      ),
+      ...(options.manifestHref === undefined
+        ? []
+        : [
+            linkEntry(
+              'custom-elements.json',
+              options.manifestHref,
+              'the same component contracts as a Custom Elements Manifest (JSON).',
+            ),
+          ]),
+    ]),
+  ];
+
+  return `${blocks.filter((block) => block !== '').join('\n\n')}\n`;
+}
+
+/**
+ * The Markdown documents the packaged index links, as [file name, content]
+ * pairs: one per published component (FR-012) and one per `##` section of
+ * the preamble template (the guides, FR-015).
+ */
+export function buildLlmsDocuments(docs, preamble, inputs = {}) {
+  return [
+    ...(docs.components ?? []).map((component) => [
+      componentDocumentFile(component),
+      buildComponentDocument(component, inputs),
+    ]),
+    ...splitPreamble(preamble).sections.map((section) => [
+      section.file,
+      `# ${section.title}\n\n${section.text}\n`,
+    ]),
+  ];
+}
+
+/**
+ * One guide per GenUI package, from the same validated source as the GenUI
+ * layer of the repository llms-full.txt (FR-015).
+ */
+export function buildGenUiDocuments(genUi, packages) {
+  const sources = new Map(packages.map((entry) => [entry.directory, entry]));
+
+  return (genUi.packages ?? []).map((entry) => {
+    const { packageJson } = sources.get(entry.directory);
+    return [
+      genUiDocumentFile(entry),
+      `${[
+        `# ${packageJson.name}`,
+        `> ${oneLine(packageJson.description)}`,
+        `## When to use\n\n${oneLine(entry.whenToUse ?? '')}`,
+        `## When not to use\n\n${oneLine(entry.whenNotToUse ?? '')}`,
+        documentSection('Entry points', genUiEntryPoints(entry)),
+      ].join('\n\n')}\n`,
+    ];
+  });
+}
+
+function buildComponentDocument(component, inputs) {
+  const usage = usageText(component);
+
+  return `${[
+    `# ${component.tag}`,
+    `> ${oneLine(component.docs ?? '')}`,
+    `## When to use\n\n${getDocsTag(component, 'whenToUse')}`,
+    `## When not to use\n\n${getDocsTag(component, 'whenNotToUse')}`,
+    ...(usage === null ? [] : [`## Examples\n\n${usage}`]),
+    ...componentFacets(component, inputs).map(([label, entries]) =>
+      documentSection(label, entries),
+    ),
+  ].join('\n\n')}\n`;
+}
+
+// Every facet of a component as [label, one-line entries], in the order the
+// complete summary and the component document both render them.
+function componentFacets(component, inputs) {
+  return [
+    ['Attributes', (component.props ?? []).filter((prop) => prop.attr).map(renderAttribute)],
+    [
+      'Slots',
+      (component.slots ?? []).map(
+        (slot) => `${slot.name ? `\`${slot.name}\`` : '(default)'}: ${oneLine(slot.docs ?? '')}`,
+      ),
+    ],
+    [
+      'Parts',
+      (component.parts ?? []).map((part) => `\`${part.name}\`: ${oneLine(part.docs ?? '')}`),
+    ],
+    [
+      'Events',
+      [
+        ...(component.events ?? []).map(renderEvent),
+        ...nativeEventsFor(component).map(
+          (event) => `\`${event.name}\` (Event): ${oneLine(event.description)}`,
+        ),
+      ],
+    ],
+    ['Methods', (component.methods ?? []).map(renderMethod)],
+    [
+      'CSS custom properties',
+      cssPropertiesFor(component, inputs).map(
+        (style) => `\`${style.name}\`: ${oneLine(style.description)}`,
+      ),
+    ],
+  ];
+}
+
+function componentDocumentFile(component) {
+  return `${component.tag}.md`;
+}
+
+function genUiDocumentFile(entry) {
+  return `${entry.directory.split('/').filter(Boolean).at(-1)}.md`;
+}
+
+function genUiEntryPoints(entry) {
+  return (entry.entryPoints ?? []).map(
+    (entryPoint) =>
+      `\`${entryPoint.signature ?? entryPoint.name}\`: ${oneLine(entryPoint.summary ?? '')}`,
+  );
+}
+
+// A facet with no entries is stated ("None."), never omitted: an agent must
+// be able to tell "no events" from "events not documented here".
+function documentSection(label, entries) {
+  return `## ${label}\n\n${
+    entries.length === 0 ? 'None.' : entries.map((entry) => `- ${entry}`).join('\n')
+  }`;
+}
+
+function linkEntry(name, url, note) {
+  return `- [${name}](${url}): ${note}`;
+}
+
+function linkSection(title, entries) {
+  return entries.length === 0 ? '' : `## ${title}\n\n${entries.join('\n')}`;
+}
+
+// The preamble template is one hand-written source with two readers: the text
+// before its first `##` heading is the body of the index, and every `##`
+// section is a guide the index links (llms-full.txt keeps the template
+// verbatim). A `##` inside fenced code is content, not a heading.
+function splitPreamble(preamble) {
+  const body = [];
+  const sections = [];
+  let current = body;
+  let fenced = false;
+
+  for (const line of trimOneTrailingLf(preamble).split('\n')) {
+    if (line.startsWith('```')) {
+      fenced = !fenced;
+    }
+    const heading = fenced ? null : /^## (\S.*)$/u.exec(line);
+    if (heading === null) {
+      current.push(line);
+    } else {
+      current = [];
+      sections.push({ title: heading[1].trim(), lines: current });
+    }
+  }
+
+  return {
+    body: body.join('\n').trim(),
+    sections: sections.map(({ title, lines }) => ({
+      title,
+      file: `${title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/gu, '-')
+        .replace(/^-|-$/gu, '')}.md`,
+      text: lines.join('\n').trim(),
+    })),
+  };
+}
+
+// The index annotates a link with the first sentence of the guidance it
+// points at: a verbatim prefix, never a second wording (Art. I). A sentence
+// ends at a period followed by a capitalized word; "e.g." and "i.e." do not
+// end one, and a text with no such period is its own first sentence.
+function firstSentence(value) {
+  const text = oneLine(value);
+  const end = /(?<!\b(?:e\.g|i\.e))\.(?=\s+[A-Z])/u.exec(text);
+  return end === null ? text : text.slice(0, end.index + 1);
+}
+
+/**
  * Validates the hand-written GenUI surface source (docs/genui-surfaces.json)
- * against the real packages before anything renders into the root llms.txt
- * (Art. I: the artifact stays generated; only its sources are hand-written).
+ * against the real packages before anything renders into the repository
+ * surfaces (the root llms.txt, llms-full.txt and llms/ guides; Art. I: the
+ * artifacts stay generated, only their sources are hand-written).
  * `packages` carries one loaded entry per genUi package, aligned by
  * directory: { directory, packageJson, indexSource }.
  */
@@ -392,9 +618,9 @@ export function validateGenUiSurfaces(genUi, packages) {
 }
 
 /**
- * The GenUI layer section appended to the ROOT llms.txt only: the per-package
- * llms.txt stays elements-only (it ships inside the @kimen/elements tarball
- * and its fenced examples are executed against packed tarballs at release).
+ * The GenUI layer section appended to the ROOT llms-full.txt only: the
+ * surfaces shipped inside the @kimen/elements tarball stay elements-only,
+ * because the GenUI packages are separate packages that are not in it.
  */
 export function buildGenUiSection(genUi, packages) {
   const sources = new Map(packages.map((entry) => [entry.directory, entry]));
@@ -411,13 +637,7 @@ export function buildGenUiSection(genUi, packages) {
       `When to use: ${oneLine(entry.whenToUse ?? '')}`,
       `When NOT to use: ${oneLine(entry.whenNotToUse ?? '')}`,
       '',
-      renderList(
-        'Entry points',
-        (entry.entryPoints ?? []).map(
-          (entryPoint) =>
-            `\`${entryPoint.signature ?? entryPoint.name}\`: ${oneLine(entryPoint.summary ?? '')}`,
-        ),
-      ),
+      renderList('Entry points', genUiEntryPoints(entry)),
     );
   }
 
@@ -425,8 +645,9 @@ export function buildGenUiSection(genUi, packages) {
 }
 
 /**
- * The root llms.txt extends the package one: the full elements summary first
- * (unchanged bytes), then the GenUI layer section separated by a blank line.
+ * The root llms-full.txt extends the package one: the full elements summary
+ * first (unchanged bytes), then the GenUI layer section separated by a blank
+ * line.
  */
 export function buildRootLlmsTxt(llmsTxt, genUiSection) {
   return `${llmsTxt}\n${genUiSection}`;
@@ -713,11 +934,14 @@ function oneLine(value) {
 }
 
 // Stencil docs-json carries each component's usage/*.md files verbatim in
-// `usage`. Render them under an Examples heading, sorted by file name with
+// `usage`. They render under an Examples label, sorted by file name with
 // codepoint order (locale-independent, so artifacts stay byte-identical
-// across machines). Executable (ts/js) fences inside usage examples are run
-// by scripts/consumer-contract.mjs on release, exactly like the preamble.
-function renderUsage(component) {
+// across machines). scripts/consumer-contract.mjs runs the executable (ts/js)
+// fences of the packaged llms.txt on release; since that file became an index
+// it carries the preamble's fences only, and the usage examples here reach
+// the component documents and llms-full.txt, which that contract does not
+// read (specs/017-agent-surfaces/research.md D13).
+function usageText(component) {
   const entries = Object.entries(component.usage ?? {})
     .filter(([, text]) => typeof text === 'string' && text.trim().length > 0)
     .sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0));
@@ -726,7 +950,7 @@ function renderUsage(component) {
     return null;
   }
 
-  return `Examples:\n\n${entries.map(([, text]) => text.trim()).join('\n\n')}`;
+  return entries.map(([, text]) => text.trim()).join('\n\n');
 }
 
 function renderList(label, entries) {
@@ -737,9 +961,20 @@ function renderList(label, entries) {
   return `${label}:\n${entries.map((entry) => `- ${entry}`).join('\n')}`;
 }
 
+// An attribute line states what the contract declares beyond the type, in
+// the words the catalog enforces: `required`, the inclusive `minimum` /
+// `maximum` of a number, and `URL` for a value the URL policy governs.
 function renderAttribute(prop) {
-  const defaultText = prop.default === undefined ? '' : `, default ${prop.default}`;
-  return `\`${prop.attr}\` (${prop.type}${defaultText}): ${oneLine(prop.docs ?? '')}`;
+  const { minimum, maximum } = numericBounds(prop);
+  const facts = [
+    prop.type,
+    ...(requiredFlag(prop) === true ? ['required'] : []),
+    ...(prop.default === undefined ? [] : [`default ${prop.default}`]),
+    ...(minimum === undefined ? [] : [`minimum ${String(minimum)}`]),
+    ...(maximum === undefined ? [] : [`maximum ${String(maximum)}`]),
+    ...(urlFormat(prop) === 'url' ? ['URL'] : []),
+  ];
+  return `\`${prop.attr}\` (${facts.join(', ')}): ${oneLine(prop.docs ?? '')}`;
 }
 
 function renderEvent(event) {
