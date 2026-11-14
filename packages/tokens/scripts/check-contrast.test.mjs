@@ -6,7 +6,9 @@ import {
   compositeOver,
   contrastRatio,
   controlBoundaryCells,
+  currentMarkPairs,
   overlayRamps,
+  pageGraphicMarks,
   parseColor,
   placeholderCells,
   ratioReadoutPairs,
@@ -263,5 +265,71 @@ test('a placeholder with no field fill under its stem is reported, not dropped',
 
   assert.deepEqual(placeholderCells(declarations), [
     { placeholder: '--ki-input-rest-placeholder-fg', fills: [] },
+  ]);
+});
+
+test('page-graphic sweep derives every painted mark and leaves the grounds out', () => {
+  const declarations = new Map([
+    // every tone of the status dot is a mark, including ones added later
+    ['--ki-status-neutral-color', '#afb3bb'],
+    ['--ki-status-warning-color', '#f8ac3a'],
+    // the ring is a separator that takes the page's own colour on purpose
+    ['--ki-status-ring-color', '#ffffff'],
+    // not a colour at all
+    ['--ki-status-size', '0.25rem'],
+    ['--ki-indicator-dot-color', 'rgba(0, 0, 0, 0.18)'],
+    ['--ki-indicator-dot-current-color', 'rgba(0, 0, 0, 0.18)'],
+    ['--ki-scroller-thumb-color', 'rgba(0, 0, 0, 0.05)'],
+    // the ground a thumb moves over, and a focus ring measured elsewhere
+    ['--ki-scroller-track-color', 'rgba(0, 0, 0, 0)'],
+    ['--ki-scroller-focus-ring-color', '#845abe'],
+    // a component that carries its own label is out of scope entirely
+    ['--ki-progress-indicator-color', '#845abe'],
+  ]);
+
+  assert.deepEqual(pageGraphicMarks(declarations), [
+    '--ki-status-neutral-color',
+    '--ki-status-warning-color',
+    '--ki-indicator-dot-color',
+    '--ki-indicator-dot-current-color',
+    '--ki-scroller-thumb-color',
+  ]);
+});
+
+test('a current mark is paired with its resting mark, and knows when colour is all that tells them apart', () => {
+  const elongated = new Map([
+    // onmars: the current dot is a 32x16 pill among 8x8 dots — shape speaks
+    ['--ki-indicator-dot-color', 'rgba(0, 0, 0, 0.48)'],
+    ['--ki-indicator-dot-inline-size', '0.5rem'],
+    ['--ki-indicator-dot-block-size', '0.5rem'],
+    ['--ki-indicator-dot-current-color', 'rgba(0, 0, 0, 0.48)'],
+    ['--ki-indicator-dot-current-inline-size', '2rem'],
+    ['--ki-indicator-dot-current-block-size', '1rem'],
+  ]);
+  const uniform = new Map([
+    // material3: uniform circles — nothing but colour marks the current one
+    ['--ki-indicator-dot-color', '#79747e'],
+    ['--ki-indicator-dot-inline-size', '0.5rem'],
+    ['--ki-indicator-dot-block-size', '0.5rem'],
+    ['--ki-indicator-dot-current-color', '#000000'],
+    ['--ki-indicator-dot-current-inline-size', '0.5rem'],
+    ['--ki-indicator-dot-current-block-size', '0.5rem'],
+    // a tone is not a "current" state and has no resting sibling to pair with
+    ['--ki-status-neutral-color', '#79747e'],
+  ]);
+
+  assert.deepEqual(currentMarkPairs(elongated), [
+    {
+      current: '--ki-indicator-dot-current-color',
+      resting: '--ki-indicator-dot-color',
+      colourAlone: false,
+    },
+  ]);
+  assert.deepEqual(currentMarkPairs(uniform), [
+    {
+      current: '--ki-indicator-dot-current-color',
+      resting: '--ki-indicator-dot-color',
+      colourAlone: true,
+    },
   ]);
 });

@@ -455,6 +455,108 @@ function sweepRatioReadouts(theme, scheme, declarations) {
   return failures;
 }
 
+// WCAG 1.4.11 — the page-graphic sweep.
+//
+// Some components ARE a single non-text mark painted straight onto the page:
+// a status dot, a pager dot, a scroll thumb. Nothing is written inside them and
+// nothing is drawn around them, so neither the text sweep nor the
+// control-boundary sweep ever looked at them, and literal transcriptions
+// shipped at 1.1-2.3:1 — the scroll thumb at black 5%, the pager dots at black
+// 18%, the info and warning dots at their 500 step on white. Each mark must
+// clear 3:1 against the page it is painted on.
+//
+// The component set is listed — it states what a component IS, exactly like
+// EMPTY_BOX_COMPONENTS — but the marks inside it are derived: every colour the
+// component publishes, minus the roles that are ground rather than mark. A
+// tone added to ki-status tomorrow is swept the day it appears.
+const PAGE_GRAPHIC_COMPONENTS = new Set(['indicator', 'scroller', 'status']);
+// A ring is either the status cutout, which takes the page's own colour on
+// purpose, or a focus ring; a track is the ground a thumb moves over. None of
+// them is the mark.
+const GROUND_ROLE = /-(?:ring|track)-color$/u;
+const MARK_ROLE = '-color';
+
+export function pageGraphicMarks(declarations) {
+  return [...declarations.keys()].filter((name) => {
+    const component = name.match(/^--ki-([a-z][a-z0-9]*)-/u);
+    return (
+      component !== null &&
+      PAGE_GRAPHIC_COMPONENTS.has(component[1]) &&
+      name.endsWith(MARK_ROLE) &&
+      !GROUND_ROLE.test(name)
+    );
+  });
+}
+
+// A mark with a "current" state — the pager dot of the slide on screen — must
+// stay distinguishable from its resting siblings. Where a theme changes its
+// shape (the onmars elongated pill) the shape carries the state. Where a theme
+// draws it in the resting mark's own box (material3's uniform circles) colour
+// is all that is left, and two colours tell a state apart only when they are
+// 3:1 from each other (WCAG 1.4.1; spec 024 FR-012 names this gate for it).
+const CURRENT_ROLE = '-current-color';
+const BOX_AXES = ['inline-size', 'block-size'];
+
+export function currentMarkPairs(declarations) {
+  return pageGraphicMarks(declarations)
+    .filter((name) => name.endsWith(CURRENT_ROLE))
+    .map((current) => {
+      const stem = current.slice(0, current.length - CURRENT_ROLE.length);
+      return {
+        current,
+        resting: `${stem}${MARK_ROLE}`,
+        colourAlone: BOX_AXES.every(
+          (axis) =>
+            resolveCustomProperty(`${stem}-current-${axis}`, declarations) ===
+            resolveCustomProperty(`${stem}-${axis}`, declarations),
+        ),
+      };
+    });
+}
+
+function sweepPageGraphics(theme, scheme, declarations) {
+  const failures = [];
+  const page = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+  const painted = (name) => {
+    const raw = parseColor(resolveCustomProperty(name, declarations));
+    return raw.a < 1 ? compositeOver(raw, page) : raw;
+  };
+  const marks = pageGraphicMarks(declarations);
+
+  // The canary: ki-status is always present, so a zero-length derivation means
+  // the naming convention drifted, not that the library stopped having marks.
+  if (marks.length === 0) {
+    failures.push(
+      `${theme}/${scheme}: no page-graphic marks derived — the token naming convention drifted`,
+    );
+  }
+
+  for (const mark of marks) {
+    const ratio = contrastRatio(painted(mark), page);
+
+    if (ratio < NON_TEXT_MIN_RATIO) {
+      failures.push(
+        `${theme}/${scheme} ${mark} on --ki-surface-s0: ${ratio} (min ${NON_TEXT_MIN_RATIO})`,
+      );
+    }
+  }
+
+  for (const pair of currentMarkPairs(declarations)) {
+    if (!pair.colourAlone) {
+      continue;
+    }
+    const ratio = contrastRatio(painted(pair.current), painted(pair.resting));
+
+    if (ratio < NON_TEXT_MIN_RATIO) {
+      failures.push(
+        `${theme}/${scheme} ${pair.current} against ${pair.resting}: ${ratio} (min ${NON_TEXT_MIN_RATIO}; colour is all that marks the current one)`,
+      );
+    }
+  }
+
+  return failures;
+}
+
 // The interaction ramp.
 //
 // Pressed has one job: to read as MORE engaged than hover. A pressed wash
@@ -600,6 +702,7 @@ function evaluateStylesheet(theme, stylesheet) {
     failures.push(...sweepRatioReadouts(theme, scheme, declarations));
     failures.push(...sweepOverlayRamps(theme, scheme, declarations));
     failures.push(...sweepPlaceholders(theme, scheme, declarations));
+    failures.push(...sweepPageGraphics(theme, scheme, declarations));
 
     if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
       failures.push(

@@ -23,8 +23,8 @@
         "$description": "color used by the status component for the separating ring: Outline/inverse_black, the exact variable bound to Outline=True variants — white over light surfaces, black over dark ones, so the ring reads as a cutout from the underlying media (FR-002)."
       },
       "neutral-color": {
-        "$value": "{ki.surface.disabled-high-em}",
-        "$description": "color used by the status component for the neutral tone fill: Surface/disabled_high_em, the exact variable bound to the Type=disabled Status variant (Gray/500 light, White/32 dark) — MarsUI's disabled gray maps to the charter neutral tone (spec Assumptions)."
+        "$value": "{ki.outline.control}",
+        "$description": "color used by the status component for the neutral tone fill: ki.outline.control, the semantic 3:1 non-text floor (Black/48 light, White/48 dark; md.sys.color.outline in material3) — a declared a11y deviation from the MarsUI binding Surface/disabled_high_em (Gray/500 light, White/32 dark), which reads 2.10:1 and 2.78:1 against the page where WCAG 1.4.11 asks 3:1 of the dot (FR-008). MarsUI's disabled gray still maps to the charter neutral tone (spec Assumptions)."
       },
       "success-color": {
         "$value": "{ki.surface.success-med-em}",
@@ -35,12 +35,12 @@
         "$description": "color used by the status component for the danger tone fill: Surface/danger_med_em, the exact variable bound to the Type=danger Status variant (Danger/500)."
       },
       "info-color": {
-        "$value": "{ki.surface.info-med-em}",
-        "$description": "color used by the status component for the info tone fill: no Figma Status variant ships an info Type, so the fill extrapolates the verified med-em 500 pattern to the Info ramp (001 contract, 010/015 precedent) — declared for founder ratification."
+        "$value": "{ki.surface.info-high-em}",
+        "$description": "color used by the status component for the info tone fill: Surface/info_high_em (Info/600 light, Info/400 dark) — one step above the med-em 500 pattern the success and danger tones follow, because Info/500 reads 2.29:1 on the light page and WCAG 1.4.11 asks 3:1 of the dot (FR-008). No Figma Status variant ships an info Type, so the fill remains an extrapolation onto the Info ramp (001 contract, 010/015 precedent) declared for founder ratification."
       },
       "warning-color": {
-        "$value": "{ki.surface.warning-med-em}",
-        "$description": "color used by the status component for the warning tone fill: Surface/warning_med_em, the exact variable bound to the Type=warning Status variant (Warning/500)."
+        "$value": "{ki.text.warning-high-em}",
+        "$description": "color used by the status component for the warning tone fill: Text/warning_high_em (Warning/800 light, Warning/300 dark) — a declared a11y deviation from the MarsUI binding Surface/warning_med_em (Warning/500), which reads 1.92:1 on the light page. No warning surface step clears the 3:1 WCAG 1.4.11 asks of the dot (Warning/600 reads 2.33:1), so the fill takes the warning ink that is legible on the page (FR-008)."
       }
     }
   }

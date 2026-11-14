@@ -7,8 +7,8 @@
       },
       "dot": {
         "color": {
-          "$value": "{ki.inverse-white.alpha-32}",
-          "$description": "Material 3 color used by the indicator component for the resting dot fill: the M2-era pager-dot convention dims resting dots to a low-emphasis on-surface alpha (theme-author decision; the scheme flip rides the semantic layer)."
+          "$value": "{ki.outline.control}",
+          "$description": "Material 3 color used by the indicator component for the resting dot fill: md.sys.color.outline (ki.outline.control). The M2-era pager-dot convention dims resting dots to low emphasis, and outline is the lowest-emphasis M3 role that still clears the 3:1 non-text contrast FR-012 asks against the page — the previous on-surface 32% alpha read 2.22:1 light and 2.89:1 dark (theme-author decision)."
         },
         "current": {
           "inline-size": {
@@ -20,8 +20,8 @@
             "$description": "Material 3 dimension used by the indicator component for the current dot block size: uniform 8dp circles per the M2-era pager-dot convention (theme-author decision)."
           },
           "color": {
-            "$value": "{ki.surface.primary-high-em}",
-            "$description": "Material 3 color used by the indicator component for the current dot: the M2-era pager-dot convention emphasizes the current position by color alone — the theme's primary surface role (theme-author decision)."
+            "$value": "{ki.surface.inverse-white}",
+            "$description": "Material 3 color used by the indicator component for the current dot: the inverse surface ink (ki.surface.inverse-white — black on light, white on dark). The theme draws uniform circles, so color alone marks the current position and must sit 3:1 from the resting dots (FR-012, WCAG 1.4.1). The primary role cannot do that on the light scheme: no resting fill is 3:1 from both the page and primary tone 30. The M2-era convention of one opaque dot among dimmed ones holds either way (theme-author decision)."
           },
           "hole-block-size": {
             "$value": "{ki.space.zero}",

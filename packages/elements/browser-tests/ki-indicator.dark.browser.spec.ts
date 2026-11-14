@@ -72,8 +72,8 @@ describe('ki-indicator under the dark scheme', () => {
   it('S10 resolves the dot appearances from the dark token values', async () => {
     injectStylesheet();
     document.documentElement.setAttribute('data-ki-color-scheme', 'light');
-    // Inverse_white/alpha_18 is the scheme-sensitive paint of both the
-    // resting fill and the current ring (Black/18 light, White/18 dark).
+    // Inverse_white/alpha_48 is the scheme-sensitive paint of both the
+    // resting fill and the current ring (Black/48 light, White/48 dark).
     let el = await mount({ label: 'Slide position', count: '5', current: '2' });
     const lightResting = getComputedStyle(requireDot(el, 0)).backgroundColor;
     const lightRing = getComputedStyle(requireDot(el, 1)).borderTopColor;

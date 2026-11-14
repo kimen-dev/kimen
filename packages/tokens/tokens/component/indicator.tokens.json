@@ -19,8 +19,8 @@
           "$description": "dimension used by the indicator component for the resting dot shape: Radius/radius_round bound in Figma — the round dot is a radius token, never an attribute (002 shape precedent)."
         },
         "color": {
-          "$value": "{ki.inverse-white.alpha-18}",
-          "$description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_18, the exact variable bound to every Indicator variant fill (Black/18 light, White/18 dark) — the scheme flip rides the semantic layer."
+          "$value": "{ki.inverse-white.alpha-48}",
+          "$description": "color used by the indicator component for the resting dot fill: Inverse_white/alpha_48 (Black/48 light, White/48 dark) — a declared a11y deviation from the MarsUI binding Inverse_white/alpha_18, which reads 1.53:1 light and 1.64:1 dark against the page; alpha_48 is the first step of the same ramp that clears the 3:1 FR-012 and WCAG 1.4.11 ask. The scheme flip rides the semantic layer."
         },
         "current": {
           "inline-size": {
@@ -36,8 +36,8 @@
             "$description": "dimension used by the indicator component for the current dot shape: Radius/radius_round bound in Figma — the pill is a radius token, never an attribute (002 shape precedent)."
           },
           "color": {
-            "$value": "{ki.inverse-white.alpha-18}",
-            "$description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_18, the exact fill of the State=active ring vector (Black/18 light, White/18 dark) — painted as the pill ring in onmars, as the solid dot in themes that zero the hole."
+            "$value": "{ki.inverse-white.alpha-48}",
+            "$description": "color used by the indicator component for the current dot treatment: Inverse_white/alpha_48, the same step as the resting dots — the MarsUI State=active ring vector binds the variable of the resting fill, and its alpha_18 reads 1.53-1.64:1 against the page (declared a11y deviation, FR-012). Painted as the pill ring in onmars, where elongation carries the state; as the solid dot in themes that zero the hole."
           },
           "hole-block-size": {
             "$value": "{ki.space.sm}",
