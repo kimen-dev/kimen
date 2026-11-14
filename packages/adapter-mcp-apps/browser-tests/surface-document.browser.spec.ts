@@ -8,6 +8,7 @@
 //
 // Wire fixtures and their specification citations: ../tests/spec-messages.ts.
 import { catalogData } from '@kimen/catalog';
+import type { Catalog } from '@kimen/catalog';
 import { afterEach, describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
 
@@ -155,6 +156,35 @@ const rendering = (host: Host): { background: string; scheme: string } => {
   return { background: style.backgroundColor, scheme: style.colorScheme };
 };
 
+/**
+ * The smallest spec node the catalog accepts for `tag`: every prop the
+ * component contract requires, given a value of its declared type. Read from
+ * the catalog, so a newly required prop never needs this test edited.
+ */
+// Read through the published Catalog shape, where every constraint field is
+// optional, instead of the literal type of the generated data.
+const catalog: Catalog = catalogData;
+
+function minimalNode(tag: string): {
+  component: string;
+  props: Record<string, boolean | number | string>;
+} {
+  const props: Record<string, boolean | number | string> = {};
+  for (const [name, constraint] of Object.entries(catalog.components[tag]?.props ?? {})) {
+    if (constraint.required !== true) {
+      continue;
+    }
+    if (constraint.type === 'number') {
+      props[name] = constraint.minimum ?? 1;
+    } else if (constraint.type === 'boolean') {
+      props[name] = true;
+    } else {
+      props[name] = constraint.values?.[0] ?? 'Sample';
+    }
+  }
+  return { component: tag, props };
+}
+
 describe('the delivered document is a complete Kimen surface', () => {
   it('S16 renders a tool result as a registered, token-styled Kimen button', async () => {
     const host = await embed();
@@ -216,7 +246,7 @@ describe('the delivered document is a complete Kimen surface', () => {
         actions: [],
         root: {
           component: 'ki-card',
-          slots: { '': tags.map((tag) => ({ component: tag })) },
+          slots: { '': tags.map((tag) => minimalNode(tag)) },
         },
         version: 1,
       }),
