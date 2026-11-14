@@ -142,3 +142,15 @@
 :host([hidden]) {
   display: none;
 }
+
+/* Forced colors (Windows Contrast themes): the user's palette replaces the
+ * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
+ * are dropped, and only system colours — that palette — can be named.
+ *
+ * The selection indicator is a background: Canvas on Canvas, and no tab
+ * reads as selected. It takes the selection colour. */
+@media (forced-colors: active) {
+  [part="indicator"] {
+    background: Highlight;
+  }
+}

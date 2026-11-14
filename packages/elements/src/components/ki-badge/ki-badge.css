@@ -133,3 +133,17 @@
     transform: scale(0.92);
   }
 }
+
+/* Forced colors (Windows Contrast themes): the user's palette replaces the
+ * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
+ * are dropped, and only system colours — that palette — can be named.
+ *
+ * A tone badge is a fill around its text, and a forced palette leaves the
+ * text alone on the page. It gets an edge.
+ * `thin` is the browser's own hairline: a theme may set a border token to
+ * zero, never this. */
+@media (forced-colors: active) {
+  [part="badge"] {
+    border: thin solid CanvasText;
+  }
+}

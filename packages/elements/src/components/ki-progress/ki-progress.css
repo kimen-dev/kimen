@@ -167,3 +167,23 @@
     stroke-dashoffset: -92;
   }
 }
+
+/* Forced colors (Windows Contrast themes): the user's palette replaces the
+ * theme's. Author backgrounds are repainted as Canvas, gradients and shadows
+ * are dropped, and only system colours — that palette — can be named.
+ *
+ * The rail and its filled part are both backgrounds, so 0% and 80% look
+ * the same: nothing. The rail gets an edge, which is what an empty bar
+ * shows, and the filled part the selection colour. The circular shape is
+ * drawn with SVG strokes, which a forced palette leaves alone.
+ * `thin` is the browser's own hairline: a theme may set a border token to
+ * zero, never this. */
+@media (forced-colors: active) {
+  .base-linear [part="track"] {
+    border: thin solid CanvasText;
+  }
+
+  .base-linear [part="indicator"] {
+    background: Highlight;
+  }
+}

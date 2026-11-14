@@ -1,0 +1,467 @@
+// Forced-colors contract (Art. III: the reproduction IS a failing test).
+//
+// A forced palette — Windows Contrast themes, `forced-colors: active` — is the
+// user replacing every author colour with a handful of their own. The browser
+// repaints each author `background-color` as Canvas, drops every gradient and
+// every `box-shadow`, and repaints text and borders as CanvasText. What
+// survives is exactly what was drawn with text, a border or an outline.
+//
+// So a state that lives only in a fill disappears: the dot of a checked radio
+// is Canvas on Canvas, the filled part of a progress bar is the same Canvas as
+// its rail, the thumb of a switch is gone, the selected tab has no indicator,
+// and a dialog whose surface is a gradient is a window onto the page behind
+// it. None of that is visible to any other suite here, because every one of
+// them paints the palette the component asked for.
+//
+// Each test below mounts one component under the emulated palette and reads
+// what is painted. It never asks WHICH system colour a part uses — that is a
+// design decision the stylesheet is free to change — only whether the part
+// can be told apart from the Canvas it sits on, or from its other state.
+//
+// Every test runs under both shipped themes. The forced palette owes nothing
+// to either of them, and that is the point: a rule that leans on a theme
+// token holds only while the theme keeps it — material3 sets the dialog
+// border to `none`, onmars sets the card and alert border widths to zero.
+//
+// The emulation is Playwright's `emulateMedia({ forcedColors })`, and what it
+// does differs by engine: it can flip the media feature without the engine
+// repainting anything, on an engine that has no forced palette on any
+// platform. Measuring there would test the author's colours and call it the
+// user's. So every test carries a WITNESS — an element with an author
+// background that the palette must repaint — and where the witness keeps its
+// colour the test skips aloud instead of passing or failing for a reason
+// that has nothing to do with the component.
+//
+// That skip is not available to the engine the PR gate runs: on Chromium a
+// palette that is not applied fails the test, so the suite cannot go quietly
+// green by measuring nothing.
+import material3Css from '@kimen/tokens/css/material3?raw';
+import tokensCss from '@kimen/tokens/css?raw';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { commands, userEvent } from 'vitest/browser';
+
+import { defineAllComponents } from './all-components';
+
+const browserCommands = commands as unknown as {
+  emulateForcedColors: (forcedColors: 'active' | 'none' | null) => Promise<void>;
+};
+
+const TOKENS_STYLE_ID = 'forced-colors-tokens';
+const MATERIAL3_STYLE_ID = 'forced-colors-material3-tokens';
+const THEMES = ['onmars', 'material3'] as const;
+const SETTLE_DEADLINE_MS = 2000;
+// The engine the PR gate runs, where the palette is known to be applied and
+// its absence is therefore a regression. `Chrome/` and not a word-bounded
+// match: headless Chromium reports `HeadlessChrome/`
+// (pointer-capability.browser.spec.ts found that out).
+const MUST_APPLY_PALETTE = navigator.userAgent.includes('Chrome/');
+
+interface SkippableTest {
+  skip: (note?: string) => void;
+}
+
+async function nextFrame(): Promise<void> {
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+const WITNESS_COLOUR = 'rgb(1, 2, 3)';
+
+/** Does the palette repaint an author background, or is it only announced? */
+function witnessIsRepainted(): boolean {
+  const witness = document.createElement('span');
+  witness.style.backgroundColor = WITNESS_COLOUR;
+  document.body.append(witness);
+  const painted = getComputedStyle(witness).backgroundColor;
+  witness.remove();
+  return painted !== WITNESS_COLOUR;
+}
+
+/** Ask for the forced palette and report whether the page is really under it. */
+async function settleForcedColors(): Promise<boolean> {
+  await browserCommands.emulateForcedColors('active');
+  const applied = (): boolean =>
+    matchMedia('(forced-colors: active)').matches && witnessIsRepainted();
+  const deadline = Date.now() + SETTLE_DEADLINE_MS;
+  while (!applied() && Date.now() < deadline) {
+    await nextFrame();
+  }
+  return applied();
+}
+
+/** `undefined` until the first test finds out. */
+let paletteApplies: boolean | undefined;
+
+/** Put the page under the forced palette, or skip where the engine has none. */
+async function underForcedColors(test: SkippableTest): Promise<void> {
+  // An engine does not change its mind between tests: once it has shown that
+  // it does not apply the palette, the rest stop waiting out the deadline.
+  paletteApplies = paletteApplies !== false && (await settleForcedColors());
+  if (MUST_APPLY_PALETTE) {
+    expect(
+      paletteApplies,
+      'Chromium stopped applying the forced palette under emulation: nothing below is being measured',
+    ).toBe(true);
+  }
+  if (!paletteApplies) {
+    test.skip(`${navigator.userAgent} does not apply a forced palette under emulation`);
+  }
+}
+
+async function mount(html: string): Promise<HTMLElement> {
+  const fixture = document.createElement('main');
+  fixture.innerHTML = html;
+  document.body.append(fixture);
+  await Promise.all(
+    [...fixture.querySelectorAll('*')]
+      .map((element) => element.localName)
+      .filter((name) => name.startsWith('ki-'))
+      .map((name) => customElements.whenDefined(name)),
+  );
+  return fixture;
+}
+
+/** A shadow part of the host matching `hostSelector`, once it has rendered. */
+async function partOf(
+  fixture: HTMLElement,
+  hostSelector: string,
+  partSelector: string,
+): Promise<HTMLElement> {
+  const find = (): HTMLElement | null =>
+    fixture.querySelector(hostSelector)?.shadowRoot?.querySelector<HTMLElement>(partSelector) ??
+    null;
+  await expect
+    .poll(find, {
+      message: `${hostSelector} never rendered ${partSelector}`,
+      timeout: SETTLE_DEADLINE_MS,
+    })
+    .not.toBeNull();
+  const part = find();
+  if (part === null) {
+    throw new Error(`${hostSelector} dropped ${partSelector} right after rendering it`);
+  }
+  return part;
+}
+
+interface Rgba {
+  ink: string;
+  alpha: number;
+}
+
+function parseColor(value: string): Rgba {
+  const channels = (value.match(/[\d.]+/gu) ?? []).map(Number);
+  const [red = 0, green = 0, blue = 0, alpha = 1] = channels;
+  return { ink: `${String(red)},${String(green)},${String(blue)}`, alpha };
+}
+
+function systemColor(keyword: string): Rgba {
+  const probe = document.createElement('span');
+  probe.style.color = keyword;
+  document.body.append(probe);
+  const resolved = parseColor(getComputedStyle(probe).color);
+  probe.remove();
+  return resolved;
+}
+
+/**
+ * The ink a colour adds to Canvas, or `null` when it adds none: fully
+ * transparent, or Canvas itself at any opacity — which is precisely what a
+ * forced palette turns an author background into.
+ */
+function inkOnCanvas(value: string): string | null {
+  const color = parseColor(value);
+  return color.alpha === 0 || color.ink === systemColor('Canvas').ink ? null : color.ink;
+}
+
+/** The fill an element paints over Canvas, or `null` when it paints none. */
+function fillOf(element: Element, pseudo?: string): string | null {
+  return inkOnCanvas(getComputedStyle(element, pseudo).backgroundColor);
+}
+
+/** The border — or failing that the outline — that draws an element's edge. */
+function edgeOf(element: Element): string | null {
+  const style = getComputedStyle(element);
+  if (
+    style.borderBlockStartStyle !== 'none' &&
+    Number.parseFloat(style.borderBlockStartWidth) > 0
+  ) {
+    return inkOnCanvas(style.borderBlockStartColor);
+  }
+  if (style.outlineStyle !== 'none' && Number.parseFloat(style.outlineWidth) > 0) {
+    return inkOnCanvas(style.outlineColor);
+  }
+  return null;
+}
+
+/** Everything that tells one state of an element from another under the palette. */
+function paintOf(element: Element): string {
+  const style = getComputedStyle(element);
+  return JSON.stringify({
+    fill: fillOf(element),
+    edge: edgeOf(element),
+    text: parseColor(style.color).ink,
+  });
+}
+
+/**
+ * What an element's text is actually painted on. A forced palette draws a
+ * Canvas backplate behind every run of text so that it stays readable over
+ * whatever the page put there; only `forced-color-adjust: none` removes it.
+ * So a label reversed out of a filled row — HighlightText on Highlight — is
+ * painted on Canvas unless the row opts out, and reads as an empty box.
+ */
+function textBackdropOf(element: Element): string {
+  const style = getComputedStyle(element);
+  return style.getPropertyValue('forced-color-adjust') === 'none'
+    ? parseColor(style.backgroundColor).ink
+    : systemColor('Canvas').ink;
+}
+
+function isOpaqueCanvas(element: Element): boolean {
+  const background = parseColor(getComputedStyle(element).backgroundColor);
+  return background.alpha === 1 && background.ink === systemColor('Canvas').ink;
+}
+
+function injectStylesheet(id: string, css: string): void {
+  const style = document.createElement('style');
+  style.id = id;
+  style.textContent = css;
+  document.head.append(style);
+}
+
+beforeAll(() => {
+  defineAllComponents();
+  injectStylesheet(TOKENS_STYLE_ID, tokensCss);
+  injectStylesheet(MATERIAL3_STYLE_ID, material3Css);
+});
+
+// The emulation belongs to the Playwright page, not to this file: whatever a
+// test leaves behind is the palette the next spec file renders under. Restored
+// here, not in the test bodies, so a failing assertion cannot leak it.
+afterEach(async () => {
+  await browserCommands.emulateForcedColors(null);
+  document.body.replaceChildren();
+});
+
+afterAll(() => {
+  document.documentElement.removeAttribute('data-ki-theme');
+  document.getElementById(TOKENS_STYLE_ID)?.remove();
+  document.getElementById(MATERIAL3_STYLE_ID)?.remove();
+});
+
+describe.for(THEMES)('forced colors under the %s theme', (theme) => {
+  beforeAll(() => {
+    document.documentElement.setAttribute('data-ki-theme', theme);
+  });
+
+  it('ki-radio paints the dot of the checked option and none on the others', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-radio-group label="Contact method" value="email">' +
+        '<ki-radio value="email">Email</ki-radio>' +
+        '<ki-radio value="sms">SMS</ki-radio>' +
+        '</ki-radio-group>',
+    );
+    const checked = await partOf(fixture, 'ki-radio[value="email"]', '[part="control"]');
+    const unchecked = await partOf(fixture, 'ki-radio[value="sms"]', '[part="control"]');
+
+    await expect.poll(() => getComputedStyle(checked, '::before').opacity).toBe('1');
+    expect(
+      fillOf(checked, '::before'),
+      'the checked dot is Canvas on Canvas: checked and unchecked look the same',
+    ).not.toBeNull();
+    expect(getComputedStyle(unchecked, '::before').opacity).toBe('0');
+  });
+
+  it('ki-progress draws its rail when empty and fills it with something else', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-progress id="empty" label="Upload" value="0"></ki-progress>' +
+        '<ki-progress id="most" label="Upload" value="80"></ki-progress>',
+    );
+    const emptyRail = await partOf(fixture, '#empty', '[part="track"]');
+    const rail = await partOf(fixture, '#most', '[part="track"]');
+    const filled = await partOf(fixture, '#most', '[part="indicator"]');
+
+    expect(edgeOf(emptyRail), 'an empty progress bar paints nothing at all').not.toBeNull();
+    expect(fillOf(filled), 'the filled part is Canvas on Canvas').not.toBeNull();
+    expect(fillOf(filled), 'the filled part and the rail are the same paint').not.toBe(
+      fillOf(rail),
+    );
+  });
+
+  it.for(['neutral', 'success', 'danger', 'info', 'warning'])(
+    'ki-status paints the %s dot',
+    async (tone, test) => {
+      await underForcedColors(test);
+      const fixture = await mount(`<ki-status label="State" tone="${tone}"></ki-status>`);
+      const dot = await partOf(fixture, 'ki-status', '[part="dot"]');
+
+      expect(fillOf(dot), 'the status dot is Canvas on Canvas').not.toBeNull();
+    },
+  );
+
+  it('ki-tab marks the selected tab and only that one', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-tabs label="Settings" value="email">' +
+        '<ki-tab value="email">Email</ki-tab>' +
+        '<ki-tab value="billing">Billing</ki-tab>' +
+        '<ki-tab-panel value="email">Email settings.</ki-tab-panel>' +
+        '<ki-tab-panel value="billing">Billing settings.</ki-tab-panel>' +
+        '</ki-tabs>',
+    );
+    const selected = await partOf(fixture, 'ki-tab[value="email"]', '[part="indicator"]');
+    const other = await partOf(fixture, 'ki-tab[value="billing"]', '[part="indicator"]');
+
+    await expect.poll(() => getComputedStyle(selected).opacity).toBe('1');
+    expect(selected.getBoundingClientRect().height).toBeGreaterThan(0);
+    expect(
+      fillOf(selected),
+      'the selection indicator is Canvas on Canvas: no tab reads as selected',
+    ).not.toBeNull();
+    expect(
+      other.getBoundingClientRect().height === 0 || getComputedStyle(other).opacity === '0',
+      'an unselected tab shows the selection indicator too',
+    ).toBe(true);
+  });
+
+  it('ki-select tells the selected option, the active option and the rest apart', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-select label="Country" value="fr">' +
+        '<ki-option value="es">Spain</ki-option>' +
+        '<ki-option value="fr">France</ki-option>' +
+        '<ki-option value="it">Italy</ki-option>' +
+        '</ki-select>',
+    );
+    const trigger = await partOf(fixture, 'ki-select', '[part="trigger"]');
+    const listbox = await partOf(fixture, 'ki-select', '[part="listbox"]');
+    trigger.focus();
+    // Opens on the selected option, then moves the active option one further.
+    // Each selector names the whole state it wants: the listbox renders a
+    // frame after the key press, and a looser one would settle for the
+    // moment in between, when the selected option is still the active one.
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard('{ArrowDown}');
+    const active = await partOf(
+      fixture,
+      'ki-select',
+      '[part="option"][data-highlighted="true"]:not([aria-selected="true"])',
+    );
+    const selected = await partOf(
+      fixture,
+      'ki-select',
+      '[part="option"][aria-selected="true"]:not([data-highlighted="true"])',
+    );
+    const plain = await partOf(
+      fixture,
+      'ki-select',
+      '[part="option"]:not([aria-selected="true"], [data-highlighted="true"])',
+    );
+
+    await expect
+      .poll(() => new Set([paintOf(plain), paintOf(selected), paintOf(active)]).size, {
+        message: 'selected, active and plain options paint the same',
+      })
+      .toBe(3);
+    expect(
+      parseColor(getComputedStyle(active).color).ink,
+      'the label of the active option is the colour of the backplate drawn behind it',
+    ).not.toBe(textBackdropOf(active));
+    expect(isOpaqueCanvas(listbox), 'the option panel is see-through').toBe(true);
+    expect(edgeOf(listbox), 'the option panel has no edge against the page').not.toBeNull();
+  });
+
+  it('ki-switch paints its thumb in both positions', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-switch id="off">Notifications</ki-switch>' +
+        '<ki-switch id="on" checked>Notifications</ki-switch>',
+    );
+    const offThumb = await partOf(fixture, '#off', '[part="thumb"]');
+    const onThumb = await partOf(fixture, '#on', '[part="thumb"]');
+
+    expect(fillOf(offThumb), 'the thumb of an unchecked switch is Canvas on Canvas').not.toBeNull();
+    expect(fillOf(onThumb), 'the thumb of a checked switch is Canvas on Canvas').not.toBeNull();
+  });
+
+  it('ki-switch shows its focus ring only while focused', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount('<ki-switch>Notifications</ki-switch>');
+    const track = await partOf(fixture, 'ki-switch', '[part="track"]');
+    const input = await partOf(fixture, 'ki-switch', 'input');
+    const ring = (): string => {
+      const style = getComputedStyle(track);
+      return style.outlineStyle === 'none' ? 'none' : style.outlineWidth;
+    };
+
+    expect(
+      ring(),
+      'the transparent rest outline is repainted by the palette: every switch looks focused',
+    ).toBe('none');
+    input.focus();
+    await expect.poll(ring).not.toBe('none');
+  });
+
+  it('ki-dialog is an opaque surface with an edge', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-dialog heading="Confirm changes"><p>Publishing replaces the current version.</p></ki-dialog>',
+    );
+    const surface = await partOf(fixture, 'ki-dialog', '[part="dialog"]');
+
+    expect(isOpaqueCanvas(surface), 'the page shows through the dialog').toBe(true);
+    expect(edgeOf(surface), 'the dialog has no edge against the page').not.toBeNull();
+  });
+
+  it('ki-tooltip is an opaque surface with an edge', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-tooltip label="Explains the save action"><button type="button">Save</button></ki-tooltip>',
+    );
+    const surface = await partOf(fixture, 'ki-tooltip', '[part="tooltip"]');
+
+    expect(isOpaqueCanvas(surface), 'the page shows through the tooltip').toBe(true);
+    expect(edgeOf(surface), 'the tooltip has no edge against the page').not.toBeNull();
+  });
+
+  it('ki-divider paints its rule', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount('<ki-divider></ki-divider>');
+    const rule = await partOf(fixture, 'ki-divider', '[part="divider"]');
+
+    expect(fillOf(rule), 'the divider is Canvas on Canvas').not.toBeNull();
+  });
+
+  it('ki-indicator draws every resting dot and paints the current one differently', async (test) => {
+    await underForcedColors(test);
+    const fixture = await mount(
+      '<ki-indicator label="Slide position" count="3" current="2"></ki-indicator>',
+    );
+    const resting = await partOf(fixture, 'ki-indicator', '[part="dot"]');
+    const current = await partOf(fixture, 'ki-indicator', '[part~="dot-current"]');
+
+    expect(
+      fillOf(resting) ?? edgeOf(resting),
+      'a resting dot paints nothing: the number of positions is lost',
+    ).not.toBeNull();
+    expect(paintOf(current), 'the current dot paints like a resting one').not.toBe(
+      paintOf(resting),
+    );
+  });
+
+  it.for([
+    ['ki-card', '<ki-card>Quarterly report</ki-card>', '[part="card"]'],
+    ['ki-alert', '<ki-alert heading="Saved">Your changes are live.</ki-alert>', '[part="alert"]'],
+    ['ki-badge', '<ki-badge tone="success">Active</ki-badge>', '[part="badge"]'],
+  ] as const)('%s keeps an edge against the page', async ([tag, html, part], test) => {
+    await underForcedColors(test);
+    const fixture = await mount(html);
+    const surface = await partOf(fixture, tag, part);
+
+    expect(
+      edgeOf(surface),
+      `${tag} dissolves into the page: its fill was its only edge`,
+    ).not.toBeNull();
+  });
+});
