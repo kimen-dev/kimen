@@ -6,6 +6,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
+import { defineCustomElement as defineInput } from '../dist/components/ki-input.js';
 import { defineCustomElement as defineRadio } from '../dist/components/ki-radio.js';
 import { defineCustomElement as defineRadioGroup } from '../dist/components/ki-radio-group.js';
 import { expectAccessible } from './axe';
@@ -25,6 +26,7 @@ const MATERIAL3_STYLE_ID = 'ki-radio-group-browser-material3-token-style';
 beforeAll(() => {
   defineRadioGroup();
   defineRadio();
+  defineInput();
 });
 
 function ensureTokens(): void {
@@ -616,6 +618,40 @@ describe('ki-radio-group in a real browser', () => {
     expect(control.getBoundingClientRect().left).toBeGreaterThan(
       label.getBoundingClientRect().left,
     );
+  });
+});
+
+// The group listens for `input` in the capture phase to learn of a selection
+// before any application listener. Whatever else is composed inside it — the
+// text field next to an "Other" option is the common case — owns its events:
+// silencing them at the group would stop that control hearing its own input.
+describe('ki-radio-group with another control composed inside it', () => {
+  it('a text field inside the group still receives and publishes what the user types', async () => {
+    cleanup();
+    const el = await mount({ value: 'email' });
+    const other = document.createElement('ki-input') as HTMLElement & { value: string };
+    other.setAttribute('label', 'Other');
+    el.append(other);
+    await customElements.whenDefined('ki-input');
+    await settleFrames(4);
+    const field = other.shadowRoot?.querySelector('input');
+    if (!field) {
+      throw new Error('ki-input did not render an input');
+    }
+    const heard: (EventTarget | null)[] = [];
+    const listen = (event: Event): void => {
+      heard.push(event.target);
+    };
+    document.addEventListener('input', listen);
+
+    await userEvent.type(field, 'Fax');
+    document.removeEventListener('input', listen);
+
+    expect(other.value).toBe('Fax');
+    expect(heard).toEqual([other, other, other]);
+    // The group's own selection is none of the text field's business either.
+    expect(el.value).toBe('email');
+    expect(radioAt(el, 0).checked).toBe(true);
   });
 });
 

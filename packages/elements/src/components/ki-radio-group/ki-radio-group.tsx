@@ -212,7 +212,15 @@ export class KiRadioGroup {
       .composedPath()
       .find((target): target is KiRadioElement => this.isKiRadio(target));
 
-    if (!radio || !this.roster.includes(radio) || this.effectiveDisabled || radio.disabled) {
+    // Only this group's own options are its business. Anything else composed
+    // inside it (the text field beside an "Other" option) keeps its events:
+    // stopping them here, in the capture phase, silences that control before
+    // it has heard its own input.
+    if (!radio || !this.roster.includes(radio)) {
+      return;
+    }
+
+    if (this.effectiveDisabled || radio.disabled) {
       event.preventDefault();
       event.stopImmediatePropagation();
       return;
