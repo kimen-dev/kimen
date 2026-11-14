@@ -138,10 +138,6 @@ export class KiSelect {
     );
   }
 
-  private get normalizedRequired(): boolean {
-    return normalizeBooleanPresence(this.host.getAttribute('required') ?? this.required);
-  }
-
   private get selectedOption(): RosterOption | null {
     return this.selectedIndex >= 0 ? (this.roster[this.selectedIndex] ?? null) : null;
   }
@@ -458,7 +454,13 @@ export class KiSelect {
       this.internals.setFormValue(submittedValue);
     }
 
-    if (selectValueMissing(this.normalizedRequired, submittedValue)) {
+    // `required` is read from the property, never from the host attribute:
+    // Stencil un-reflects a cleared property only at the next render, so the
+    // attribute is still present when the watch calls this and would keep a
+    // select whose `required` was just set to `false` blocking its form.
+    // Presence semantics already reached the property (componentWillLoad and
+    // the attribute observer).
+    if (selectValueMissing(this.required, submittedValue)) {
       this.donorElement?.setAttribute('required', '');
       if (typeof this.internals.setValidity === 'function') {
         this.internals.setValidity(
@@ -520,7 +522,7 @@ export class KiSelect {
           aria-expanded={this.open ? 'true' : 'false'}
           aria-controls={this.listboxId}
           aria-activedescendant={activeId}
-          aria-required={this.normalizedRequired ? 'true' : null}
+          aria-required={this.required ? 'true' : null}
           aria-invalid={this.userInvalid ? 'true' : null}
           disabled={this.effectiveDisabled}
           onClick={this.handleTriggerClick}

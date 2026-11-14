@@ -12,6 +12,7 @@ import { expectAccessible } from './axe';
 type KiSelectElement = HTMLElement & {
   value: string;
   disabled: boolean;
+  required: boolean;
 };
 
 beforeAll(() => {
@@ -609,5 +610,20 @@ describe('ki-select boolean presence in a real browser', () => {
     // Presence is normalized: the host attribute stays, with an empty value.
     expect(options[1]?.getAttribute('disabled')).toBe('');
     expect(options[2]?.getAttribute('disabled')).toBe('');
+  });
+
+  // Presence semantics are about ATTRIBUTES. Framework wrappers assign
+  // PROPERTIES, and Stencil un-reflects a cleared property only at the next
+  // render: state derived from the still-present attribute goes stale.
+  it('S14 clearing the required property lifts the requirement from the form', async () => {
+    const { form, el } = await mountForm('required');
+    expect(form.checkValidity()).toBe(false);
+
+    el.required = false;
+    await frames();
+
+    expect(form.checkValidity()).toBe(true);
+    expect(el.matches(':invalid')).toBe(false);
+    expect(trigger(el).hasAttribute('aria-required')).toBe(false);
   });
 });
