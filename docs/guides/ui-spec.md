@@ -81,8 +81,9 @@ guarded by the `catalog-sync` gate:
 
 - [`packages/catalog/src/generated/catalog.ts`](../../packages/catalog/src/generated/catalog.ts)
   — the artifact itself, exported at runtime as `catalogData`;
-- [`llms.txt`](../../llms.txt) — the same component contracts in
-  agent-readable prose.
+- [`llms.txt`](../../llms.txt) — the index of the same component contracts
+  in agent-readable prose, one linked document per component
+  ([`llms-full.txt`](../../llms-full.txt) holds them all in one file).
 
 Query it instead of transcribing it:
 
