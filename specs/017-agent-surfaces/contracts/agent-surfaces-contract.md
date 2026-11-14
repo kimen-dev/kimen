@@ -1,6 +1,6 @@
 # Contract: Agent surfaces (CEM + llms.txt + pipeline)
 
-The behavior contract is `specs/017-agent-surfaces/feature.feature` (S1–S6).
+The behavior contract is `specs/017-agent-surfaces/feature.feature` (S1–S13).
 This document freezes the emitted formats, file locations, script names and
 gate wiring the scenarios observe. Any deviation discovered during
 implementation re-enters through the spec, not through code (Art. II).
@@ -11,8 +11,12 @@ implementation re-enters through the spec, not through code (Art. II).
 |---|---|---|
 | Normalized docs-json intermediate | `packages/elements/generated/docs.json` | `stencil build` + normalization step (FR-008) |
 | Custom Elements Manifest | `packages/elements/generated/custom-elements.json` | `buildManifest` |
-| LLM summary (published) | `packages/elements/llms.txt` | `buildLlmsTxt` |
-| LLM summary (repo root) | `llms.txt` | byte-identical copy of the above |
+| LLM index (published) | `packages/elements/llms.txt` | `buildLlmsIndex`, relative links |
+| LLM complete summary (published) | `packages/elements/llms-full.txt` | `buildLlmsTxt` |
+| Component documents and guides (published) | `packages/elements/llms/<tag>.md`, `packages/elements/llms/theming.md` | `buildLlmsDocuments` |
+| LLM index (repo root, served at `https://kimen.dev/llms.txt`) | `llms.txt` | `buildLlmsIndex`, absolute site links, plus the GenUI guides |
+| LLM complete summary (repo root) | `llms-full.txt` | the published one + the GenUI layer (`buildRootLlmsTxt`) |
+| GenUI guides (repo root) | `llms/<package>.md` | `buildGenUiDocuments` from `docs/genui-surfaces.json` |
 
 Hand-editing any of them is an Art. I violation; the `surfaces-sync` gate
 turns it into a failure.
@@ -105,7 +109,102 @@ Guarantees:
   ordering preserved, 2-space JSON + trailing LF.
 - Field-by-field derivation: [data-model.md](../data-model.md) §3.
 
-## llms.txt format
+## llms.txt format (the index, FR-011)
+
+The shape https://llmstxt.org/ specifies: an H1, a blockquote, body text
+with no headings, then H2 sections that contain nothing but link lists.
+
+```text
+# @kimen/elements — Kimen web components
+
+> <package.json description, verbatim>
+
+<the part of packages/elements/scripts/llms-preamble.txt that precedes its
+ first "## " heading, verbatim: installation instruction, registration
+ snippet, stylesheet note>
+
+<repository index only: the intro of docs/genui-surfaces.json>
+
+<fixed note: this file is an index; read only the documents you need>
+
+## Components
+
+- [ki-button](<base>llms/ki-button.md): <first sentence of @whenToUse>
+- …one entry per published component, docs.json order…
+
+## Generative UI            ← repository index only
+
+- [@kimen/catalog](<base>llms/catalog.md): <first sentence of whenToUse>
+- …one entry per package of docs/genui-surfaces.json, in its order…
+
+## Guides
+
+- [Theming](<base>llms/theming.md): <first sentence of the section>
+- …one entry per "## " section of the preamble template…
+
+## Optional
+
+- [llms-full.txt](<base>llms-full.txt): <fixed note>
+- [custom-elements.json](<manifest address>): <fixed note>
+```
+
+Rules:
+
+- `<base>` is empty in `packages/elements/llms.txt` (links are paths
+  relative to the package root) and `https://kimen.dev/` in the repository
+  `llms.txt` (FR-014). The manifest address is the package's
+  `customElements` field, respectively
+  `https://kimen.dev/assets/elements/custom-elements.json`.
+- The first sentence of a text is its prefix up to the first period that is
+  followed by whitespace and a capital letter ("e.g." and "i.e." never end
+  it), or the whole text when there is no such period; newlines collapse to
+  spaces. It is never reworded.
+- A section with no entries is omitted. Blocks are separated by one blank
+  line; the file ends with a single LF.
+- Both committed indexes stay at or below `LLMS_INDEX_MAX_BYTES` (16 384).
+
+## Component document format (FR-012)
+
+```text
+# ki-button
+
+> <component description, newlines collapsed to spaces>
+
+## When to use
+
+<verbatim @whenToUse text>
+
+## When not to use
+
+<verbatim @whenNotToUse text>
+
+## Examples                 ← omitted when the component has no usage/*.md
+
+<the component's usage/*.md files, sorted by name>
+
+## Attributes
+
+- `variant` ("primary" | …, default 'secondary'): <description, one line>
+- `label` (string, required): …
+- `count` (number | undefined, minimum 0, maximum 20): …
+- `src` (string | undefined, URL): …
+
+## Slots
+## Parts
+## Events
+## Methods
+## CSS custom properties
+```
+
+Rules: sections in this exact order; a facet with no entries reads `None.`;
+attribute facts appear in the order type, `required`, `default`,
+`minimum`, `maximum`, `URL`, each only when the contract declares it; the
+entry lines are the ones `llms-full.txt` prints for the same component. A
+guide is `# <title>`, a blank line and the section text verbatim. A GenUI
+guide is `# <package name>`, the description as a blockquote,
+`## When to use`, `## When not to use` and `## Entry points`.
+
+## llms-full.txt format (FR-013)
 
 ```text
 # @kimen/elements — Kimen web components
@@ -150,7 +249,8 @@ documented in the component contract when present).
 Rules: sections in this exact order; a facet with no entries renders as
 `<Facet>: none` (components with events/methods list them in the same
 one-line style); one blank line between blocks; file ends with a single LF.
-Root `llms.txt` and `packages/elements/llms.txt` are byte-identical.
+The repository `llms-full.txt` is the published one followed by the
+`## GenUI layer` section.
 
 ## Guidance tag convention (FR-003)
 
@@ -176,14 +276,15 @@ agent-surfaces: documentation incomplete (Art. I):
 
 | Piece | Name / location | Contract |
 |---|---|---|
-| Library (pure) | `packages/elements/scripts/agent-surfaces.mjs` | exports `normalizeDocs(docs)`, `validateDocs(docs)`, `buildManifest(docs)`, `buildLlmsTxt(docs, pkg, preamble)` — no I/O, no clock, no env |
-| CLI orchestrator | `packages/elements/scripts/build-surfaces.mjs` | all file I/O; reads `generated/docs.json`, `package.json`, `scripts/llms-preamble.txt`; writes the four artifacts; exit 1 on validation failure |
+| Library (pure) | `packages/elements/scripts/agent-surfaces.mjs` | exports `normalizeDocs(docs)`, `validateDocs(docs)`, `buildManifest(docs)`, `buildLlmsTxt(docs, pkg, preamble)`, `buildLlmsIndex(docs, pkg, preamble, options)`, `buildLlmsDocuments(docs, preamble)`, `buildGenUiDocuments(genUi, packages)`, `LLMS_INDEX_MAX_BYTES` — no I/O, no clock, no env |
+| CLI orchestrator | `packages/elements/scripts/build-surfaces.mjs` | all file I/O; reads `generated/docs.json`, `package.json`, `scripts/llms-preamble.txt`, `docs/genui-surfaces.json`; writes every artifact above; exit 1 on validation failure. Each index owns the companions derived from its own path (`<index>.txt` → `<index>-full.txt` and `<index>/`), and a `.md` in a documents directory that the run did not write is removed |
 | Preamble template | `packages/elements/scripts/llms-preamble.txt` | committed input (FR-002 source #2) |
 | Build wiring | `@kimen/elements` `build` script: `stencil build && node scripts/build-surfaces.mjs` | nx target name unchanged (`build`); FR-001/FR-002's "the build MUST produce" |
-| Nx caching | elements `nx.targets.build` | `outputs` += `{projectRoot}/generated`, `{projectRoot}/llms.txt`, `{workspaceRoot}/llms.txt`; `inputs` += `!{projectRoot}/llms.txt` (keeps `!{projectRoot}/generated/**`) |
-| Tests | `packages/elements/scripts/agent-surfaces.spec.ts` via `vitest.node.config.ts`, chained in the package `test` script | marker `// @spec:017-agent-surfaces`, S1–S6 in titles; nx target name unchanged (`test`) |
-| Gate | `surfaces-sync` in `scripts/gates/gates-suite.sh`, after `tokens-sync` | `git diff --exit-code -- packages/elements/generated packages/elements/llms.txt llms.txt` |
-| Publication | `packages/elements/package.json` | `"customElements": "generated/custom-elements.json"`; `files` += `"generated/custom-elements.json"`, `"llms.txt"` |
+| Nx caching | elements `nx.targets.build` | `outputs` += `{projectRoot}/generated` and, for the project and the workspace root alike, `llms.txt`, `llms-full.txt`, `llms`; `inputs` exclude the project's own outputs (`!{projectRoot}/generated/**`, `!{projectRoot}/llms.txt`, `!{projectRoot}/llms-full.txt`, `!{projectRoot}/llms/**`) and declare every source outside the project: `docs/genui-surfaces.json`, each GenUI package's `package.json` and `src/index.ts`, `scripts/lib/**/*`, `scripts/gates/check-component-inventory.mjs` |
+| Tests | `packages/elements/scripts/agent-surfaces.spec.ts` and `llms-index.spec.ts` via `vitest.node.config.ts`, chained in the package `test` script; `scripts/tests/agent-surfaces-publication.test.mjs` in the infrastructure tests (packs the package, assembles the site) | marker `// @spec:017-agent-surfaces`, S1–S13 in titles; nx target name unchanged (`test`) |
+| Gate | `surfaces-sync`: `node scripts/gates/check-generated-sync.mjs surfaces` | every artifact above is required, tracked and byte-equal to a fresh regeneration; one document per component of the committed manifest and per package of `docs/genui-surfaces.json`; both `llms/` directories are closed scopes |
+| Publication (npm) | `packages/elements/package.json` | `"customElements": "generated/custom-elements.json"`; `files` += `"generated/custom-elements.json"`, `"llms.txt"`, `"llms-full.txt"`, `"llms"` |
+| Publication (site) | `scripts/build-site.sh` | copies the repository `llms.txt` and `llms-full.txt` to the site root and `packages/elements/llms/*.md` plus `llms/*.md` to `/llms/` |
 | Generator inheritance | `tools/kimen-plugin/.../__name__.tsx.template` | scaffolds `@whenToUse` / `@whenNotToUse` TODO(spec) tags (FR-007) |
 | Template obligation | `.specify/templates/overrides/tasks-template.md` T019 | renamed to the delivered pipeline; Zod catalog annotated as Fase 3 (FR-009) |
 
@@ -191,7 +292,8 @@ agent-surfaces: documentation incomplete (Art. I):
 
 First release of both artifacts: from their first published version they
 version alongside the public API (Art. IX — spec Constitutional Surface).
-Renaming/removing the `customElements` field, the vendor guidance fields or
-any documented section of llms.txt after first publish is a breaking change
-to the machine contract. The Fase-3 Zod catalog consumes
+Renaming/removing the `customElements` field, the vendor guidance fields,
+any documented section of llms.txt, or the path of `llms-full.txt` or of a
+document under `llms/` after first publish is a breaking change to the
+machine contract. The Fase-3 Zod catalog consumes
 `generated/custom-elements.json`; it never replaces it.

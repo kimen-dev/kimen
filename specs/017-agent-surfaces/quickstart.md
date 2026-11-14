@@ -27,7 +27,8 @@ over the new scripts.
 ```bash
 # Regenerate the surfaces and inspect what changed
 pnpm exec nx run @kimen/elements:build
-git diff --stat -- packages/elements/generated packages/elements/llms.txt llms.txt
+git status --short -- packages/elements/generated packages/elements/llms.txt \
+  packages/elements/llms-full.txt packages/elements/llms llms.txt llms-full.txt llms
 
 # Generator tests only
 pnpm --filter @kimen/elements exec vitest run --config vitest.node.config.ts
@@ -44,13 +45,17 @@ bash scripts/gates/check-traceability.sh specs/017-agent-surfaces
    defaults, 3 slots, 2 cssParts, and `whenToUse`/`whenNotToUse` fields.
    No `timestamp` key; no `/Users/` or other absolute path anywhere
    (`grep -c '"/' generated/custom-elements.json` finds none).
-2. **Summary shape (S2)** — open `llms.txt` (root): H1 with the library
-   name, blockquote description, an installation instruction, `## Components`
-   with one `### ki-button` entry carrying both guidance lines.
-   `cmp llms.txt packages/elements/llms.txt` exits 0 (byte-identical copies).
+2. **Index shape (S2, S8)** — open `llms.txt` (root): H1 with the library
+   name, blockquote description, an installation instruction, then
+   `## Components` with one `- [ki-button](https://kimen.dev/llms/ki-button.md): …`
+   link per component. `wc -c llms.txt packages/elements/llms.txt` stays
+   under 16 384 bytes each; the packaged index links `llms/ki-button.md`
+   instead. `llms-full.txt` holds the `### ki-button` entry with both
+   guidance lines (S10).
 3. **Guidance verbatim (S3)** — copy the `@whenToUse` text from
-   `ki-button.tsx`; `grep -F` it in BOTH `generated/custom-elements.json`
-   and `llms.txt` — both must match exactly.
+   `ki-button.tsx`; `grep -F` its first line in `generated/custom-elements.json`,
+   `packages/elements/llms/ki-button.md` and `llms-full.txt` — all three must
+   match exactly.
 4. **Completeness enforcement (S4)** — temporarily delete the JSDoc block
    above `variant` in `ki-button.tsx`; run
    `pnpm exec nx run @kimen/elements:build --skip-nx-cache`: the build must
@@ -73,9 +78,10 @@ bash scripts/gates/check-traceability.sh specs/017-agent-surfaces
    cmp packages/elements/generated/custom-elements.json "$ORIGIN"/packages/elements/generated/custom-elements.json
    cmp packages/elements/generated/docs.json           "$ORIGIN"/packages/elements/generated/docs.json
    cmp llms.txt                                        "$ORIGIN"/llms.txt
+   diff -r packages/elements/llms                      "$ORIGIN"/packages/elements/llms
    ```
 
-   All three `cmp` calls exit 0 (byte-identical). CI re-proves this on
+   Every comparison exits 0 (byte-identical). CI re-proves this on
    every PR: its checkout path never matches a developer's.
 7. **Generator inheritance (SC-004 / FR-007)** — scaffold a scratch
    component (`pnpm exec nx g @kimen/nx-plugin:component ki-scratch`),
@@ -83,9 +89,16 @@ bash scripts/gates/check-traceability.sh specs/017-agent-surfaces
    guidance, with zero wiring. Delete the scratch component afterwards and
    rebuild (never commit it).
 8. **Agent smoke (SC-001, scheduled eval — never merge-blocking)** — give
-   an agent ONLY `llms.txt` + `generated/custom-elements.json` and ask it to
-   compose a form using `ki-button`; check every tag/attribute/slot it
-   produced exists in the manifest.
+   an agent ONLY `llms.txt` (letting it follow the links it chooses) +
+   `generated/custom-elements.json` and ask it to compose a form using
+   `ki-button`; check every tag/attribute/slot it produced exists in the
+   manifest.
+9. **Links resolve where the index is read (S11, S12)** —
+   `node --test scripts/tests/agent-surfaces-publication.test.mjs` packs
+   `@kimen/elements` (dry run) and assembles the site into a scratch
+   directory, then follows every link of the packaged index inside the
+   packed file list and every link of the published index inside the
+   assembled site.
 
 ## Expected outcomes
 

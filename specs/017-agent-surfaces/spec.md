@@ -56,8 +56,8 @@ against the component's public API.
    generated, **Then** the llms.txt summary carries the library name, an
    installation instruction and a ki-button entry with its usage guidance.
 3. **Given** a component contract documenting when-to-use guidance, **When**
-   the surfaces are generated, **Then** manifest and summary carry it
-   verbatim.
+   the surfaces are generated, **Then** the manifest, the component's own
+   document and the complete summary carry it verbatim.
 
 ---
 
@@ -102,6 +102,49 @@ filesystem path; both outputs must be byte-identical.
    checkout at a different filesystem path, **Then** both generated outputs
    are byte-identical.
 
+---
+
+### User Story 4 - An agent reads only the part of the library it needs (Priority: P1)
+
+An agent that has to place one button does not pay for the whole library.
+It reads a short `llms.txt` index — what Kimen is, how to install and load
+it, one line per component saying when to use it — and follows the link of
+the component it chose to a single Markdown document with that component's
+complete contract. The whole library in one file remains one link away for
+whoever wants it.
+
+**Why this priority**: the first release shipped `llms.txt` as one block of
+about 266 KB (roughly 70 thousand tokens) with no links, so reading the
+index of the library and reading the library were the same cost. That is
+the opposite of the llms.txt convention (https://llmstxt.org/: an H1, a
+blockquote summary, and H2 sections holding "file lists" of links to
+Markdown documents) and it spends an agent's context before it has chosen
+anything.
+
+**Independent Test**: measure `llms.txt` against its declared size budget;
+follow every link of the packaged index inside a packed tarball and every
+link of the published index inside the assembled site.
+
+**Acceptance Scenarios**:
+
+1. **Given** the published components, **When** the surfaces are generated,
+   **Then** `llms.txt` is an index within its size budget that links one
+   document per component beside the first sentence of its when-to-use
+   guidance.
+2. **Given** a component such as ki-indicator, **When** the surfaces are
+   generated, **Then** its document carries guidance, attributes (required,
+   bounded and URL attributes marked), slots, parts, events, methods,
+   styling tokens and examples.
+3. **Given** the published components, **When** the surfaces are generated,
+   **Then** `llms-full.txt` carries everything in one file.
+4. **Given** fresh surfaces, **When** the package is packed, **Then** every
+   link of its index is a relative path to a packed file; **When** the site
+   is assembled, **Then** every link of the published index is an address
+   the site serves.
+5. **Given** the theming guidance and the GenUI packages, **When** the
+   surfaces are generated, **Then** every index links the theming guide and
+   the repository index links one guide per GenUI package.
+
 ### Edge Cases
 
 - A component with no when-to-use guidance yet: generation fails (guidance
@@ -113,6 +156,12 @@ filesystem path; both outputs must be byte-identical.
   of this observed defect).
 - A future component added by generator: inherits the surfaces automatically
   from the build graph, no per-component wiring.
+- A component that is removed or renamed: its document is deleted by the
+  next generation, so a stale document can neither ship nor stay linked.
+- A when-to-use text that is a single sentence, or whose first sentence
+  holds an abbreviation such as "e.g.": the index line ends where the first
+  sentence ends (a period followed by a capitalized word) and never in the
+  middle of one.
 
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
@@ -140,7 +189,7 @@ Feature: Agent surfaces
   Scenario: When-to-use guidance flows from the component contract
     Given a component whose contract documents when to use it and when not to
     When the machine surfaces are generated
-    Then the manifest and the summary carry that guidance verbatim
+    Then the manifest, the component's own document and the complete summary carry that guidance verbatim
 
   # S4
   Scenario: An undocumented public API member fails the generation
@@ -167,13 +216,53 @@ Feature: Agent surfaces
     When the machine surfaces are generated
     Then the generation passes and neither the manifest nor the summary lists that slot
     And a rendered named slot that is neither documented nor declared still fails the generation
+
+  # S8
+  Scenario: The language-model summary is a brief index of linked documents
+    Given the elements package with its published components
+    When the machine surfaces are generated
+    Then llms.txt names the library, summarizes it, tells how to install and load it, and links one document per published component beside the first sentence of its when-to-use guidance
+    And llms.txt stays within its declared size budget
+
+  # S9
+  Scenario: Every published component has its own contract document
+    Given the elements package with the ki-indicator component
+    When the machine surfaces are generated
+    Then a ki-indicator document carries its guidance verbatim with its attributes, slots, parts, events, methods, styling tokens and examples
+    And the document marks each attribute the contract declares required, numerically bounded or a URL
+
+  # S10
+  Scenario: The complete summary stays available as one document
+    Given the elements package with its published components
+    When the machine surfaces are generated
+    Then llms-full.txt carries the installation guidance and the complete entry of every published component in a single file
+
+  # S11
+  Scenario: The packaged index links only files shipped in the package
+    Given machine surfaces freshly generated from the current contract
+    When the elements package is packed
+    Then every link in its llms.txt is a relative path to a file inside the packed package
+
+  # S12
+  Scenario: The published index links only documents the site serves
+    Given machine surfaces freshly generated from the current contract
+    When the public site is assembled
+    Then the site serves llms.txt and llms-full.txt at its root
+    And every link in the served llms.txt is an address of that site whose document the assembled site contains
+
+  # S13
+  Scenario: The index links the guides beyond the components
+    Given the theming guidance of the preamble and the GenUI packages described in the GenUI source
+    When the machine surfaces are generated
+    Then every llms.txt links a generated theming guide
+    And the repository llms.txt also links one generated guide per GenUI package carrying its usage guidance and entry points
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13 | |
 | Keyboard path | | N/A — generated artifacts; no interactive surface exists |
 | Assistive-tech outcome | | N/A — no rendered UI; the artifacts serve machine consumers |
 | Form participation | | N/A — no form surface; nothing is form-associated |
@@ -234,13 +323,51 @@ Feature: Agent surfaces
   every named `<slot>` that `render()` returns).
 - **FR-007**: New components scaffolded by the Nx generator MUST inherit
   the surfaces with zero per-component wiring.
+- **FR-011** *(amends FR-002)*: `llms.txt` MUST be an index that follows the
+  llms.txt convention (https://llmstxt.org/): an H1 naming the library, a
+  blockquote summary, body text without headings explaining how to install
+  and load it, then H2 sections that are lists of `[name](url): notes`
+  links. It MUST link one document per published component, annotated with
+  the first sentence of that component's when-to-use guidance, and MUST stay
+  within a declared size budget of 16 384 bytes that a test enforces.
+- **FR-012**: The build MUST produce one Markdown document per published
+  component carrying, from the component contract alone: description,
+  when-to-use and when-NOT-to-use guidance verbatim, examples, attributes,
+  slots, parts, events, methods and CSS custom properties. An attribute the
+  contract declares required, numerically bounded (`@minimum`/`@maximum`)
+  or a URL (`@format url`) MUST say so. A document whose component no
+  longer exists MUST be removed by the generation.
+- **FR-013**: The build MUST produce `llms-full.txt`, the complete content
+  in one file (what `llms.txt` carried before FR-011): the preamble and the
+  full entry of every published component, plus the GenUI layer in the
+  repository copy.
+- **FR-014**: Every link of an index MUST resolve where that index is read.
+  The index shipped in `@kimen/elements` links relative paths to files
+  inside the package; the repository index, which the site publishes at
+  `https://kimen.dev/llms.txt`, links absolute addresses of that site. The
+  site assembly MUST publish `llms.txt`, `llms-full.txt` and every linked
+  document at those addresses.
+- **FR-015**: The repository index MUST also link one generated guide per
+  GenUI package (catalog, emitter, protocol adapters), derived from the
+  same validated GenUI source that feeds the GenUI layer of
+  `llms-full.txt`; every index MUST link a theming guide generated from
+  the preamble template.
+- **FR-016** *(extends FR-005)*: The sync gate MUST cover every file named
+  by FR-011 to FR-015, and the build cache MUST be invalidated by every
+  source those files derive from, including the GenUI source and the
+  package metadata and entry modules it is validated against.
 
 ### Key Entities
 
 - **Custom Elements Manifest**: the community-standard JSON description of
   custom elements; the machine contract for editors, tooling and agents.
-- **llms.txt**: the language-model-facing summary of the library, one
-  self-contained text file.
+- **llms.txt**: the language-model-facing index of the library: a brief
+  summary plus links to the documents below (FR-011).
+- **Component document**: one Markdown file per published component with
+  its complete contract (FR-012).
+- **llms-full.txt**: everything in one self-contained text file (FR-013).
+- **Guide**: a generated Markdown document for a topic that is not a
+  component: theming, and one per GenUI package (FR-015).
 - **Usage guidance**: the when-to-use / when-NOT-to-use documentation tags
   carried by each component's contract.
 
@@ -248,7 +375,11 @@ Feature: Agent surfaces
 
 - **Public API delta** (Art. IX): no runtime API change. Adds two published
   artifacts (`custom-elements.json`, `llms.txt`) that become versioned
-  alongside the public API from their first release.
+  alongside the public API from their first release. FR-011 to FR-014
+  change the shape of `llms.txt` (an index instead of the whole library)
+  and add `llms-full.txt` and `llms/*.md` to the package. The package is
+  unpublished (0.0.0), so no released consumer is affected; from the first
+  release these paths are part of the machine contract.
 - **Bundle budget** (Art. IV): zero runtime impact — build-time artifacts
   only; no new runtime dependency. Build-time dependencies require the usual
   supply-chain review.
@@ -287,6 +418,12 @@ Feature: Agent surfaces
   FR-008.
 - Default placement: `llms.txt` at the repository root plus a copy published
   with the elements package; the plan may consolidate to one location.
+  Since FR-011 the two are no longer copies: the package index is
+  elements-only with relative links, the repository index adds the GenUI
+  guides and links the site (FR-014).
+- The public site is served from `https://kimen.dev/` (the `site` value of
+  the documentation build); the repository index derives its absolute links
+  from that origin.
 - The Fase 2 component specs (003–016) reference this feature for their
   T019 machine-surfaces obligation; implementation order (before or in
   parallel with the first component) is the founder's call at gate 1.

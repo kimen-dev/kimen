@@ -21,7 +21,7 @@ Feature: Agent surfaces
   Scenario: When-to-use guidance flows from the component contract
     Given a component whose contract documents when to use it and when not to
     When the machine surfaces are generated
-    Then the manifest and the summary carry that guidance verbatim
+    Then the manifest, the component's own document and the complete summary carry that guidance verbatim
 
   # S4
   Scenario: An undocumented public API member fails the generation
@@ -48,3 +48,43 @@ Feature: Agent surfaces
     When the machine surfaces are generated
     Then the generation passes and neither the manifest nor the summary lists that slot
     And a rendered named slot that is neither documented nor declared still fails the generation
+
+  # S8
+  Scenario: The language-model summary is a brief index of linked documents
+    Given the elements package with its published components
+    When the machine surfaces are generated
+    Then llms.txt names the library, summarizes it, tells how to install and load it, and links one document per published component beside the first sentence of its when-to-use guidance
+    And llms.txt stays within its declared size budget
+
+  # S9
+  Scenario: Every published component has its own contract document
+    Given the elements package with the ki-indicator component
+    When the machine surfaces are generated
+    Then a ki-indicator document carries its guidance verbatim with its attributes, slots, parts, events, methods, styling tokens and examples
+    And the document marks each attribute the contract declares required, numerically bounded or a URL
+
+  # S10
+  Scenario: The complete summary stays available as one document
+    Given the elements package with its published components
+    When the machine surfaces are generated
+    Then llms-full.txt carries the installation guidance and the complete entry of every published component in a single file
+
+  # S11
+  Scenario: The packaged index links only files shipped in the package
+    Given machine surfaces freshly generated from the current contract
+    When the elements package is packed
+    Then every link in its llms.txt is a relative path to a file inside the packed package
+
+  # S12
+  Scenario: The published index links only documents the site serves
+    Given machine surfaces freshly generated from the current contract
+    When the public site is assembled
+    Then the site serves llms.txt and llms-full.txt at its root
+    And every link in the served llms.txt is an address of that site whose document the assembled site contains
+
+  # S13
+  Scenario: The index links the guides beyond the components
+    Given the theming guidance of the preamble and the GenUI packages described in the GenUI source
+    When the machine surfaces are generated
+    Then every llms.txt links a generated theming guide
+    And the repository llms.txt also links one generated guide per GenUI package carrying its usage guidance and entry points
