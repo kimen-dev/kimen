@@ -16,8 +16,9 @@ import { wireSurface } from './surface-wiring.js';
 /**
  * The token contract's scheme selector (@kimen/tokens, "Theme and scheme
  * selection"): on the root element it forces the light or dark values of
- * every `--ki-*` token and, through the page contract, the user agent's own
- * `color-scheme`. Without it the stylesheets follow the viewer's preference.
+ * every `--ki-*` token and, through the same rule of the token stylesheet,
+ * the user agent's own `color-scheme`. Without it the stylesheet follows the
+ * viewer's preference.
  */
 const COLOR_SCHEME_ATTRIBUTE = 'data-ki-color-scheme';
 

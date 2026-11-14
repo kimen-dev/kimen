@@ -19,8 +19,8 @@ pnpm add @kimen/elements @kimen/tokens
 
 `@kimen/tokens` provides the `--ki-*` custom properties every component
 consumes; without its stylesheet the components render unstyled. Its
-`@kimen/tokens/css/base` export is the **page contract** — load it once per
-page (see [Theming](#theming)).
+`@kimen/tokens/css/base` export is the opt-in **page contract**, which
+paints the page itself from the tokens (see [Theming](#theming)).
 
 ## Register components
 
@@ -79,8 +79,8 @@ document.querySelector('ki-button')?.addEventListener('click', () => {
 ## Theming
 
 ```ts
-import '@kimen/tokens/css'; // onmars default theme, light/dark via prefers-color-scheme
-import '@kimen/tokens/css/base'; // page contract: color-scheme + page colors
+import '@kimen/tokens/css'; // onmars default theme + color-scheme, light/dark from the system
+import '@kimen/tokens/css/base'; // optional page contract: page background, text color, body font
 import '@kimen/tokens/css/material3'; // optional: Material 3 reference theme
 ```
 
@@ -88,12 +88,14 @@ import '@kimen/tokens/css/material3'; // optional: Material 3 reference theme
 <html data-ki-theme="material3" data-ki-color-scheme="dark">
 ```
 
-`@kimen/tokens/css/base` is the page contract: it declares `color-scheme` and
-paints the page from the semantic tokens, which a token-only stylesheet
-cannot do. Without it, a dark-scheme page renders 14 of 29 components below
-4.5:1 contrast — the components paint correct dark-scheme text while the
-browser keeps a light canvas. Load it, or pin the page with
-`data-ki-color-scheme="light"`.
+`@kimen/tokens/css` is the only requirement: it declares the tokens and the
+`color-scheme` they resolve from, so the browser's canvas and native controls
+follow the same scheme as the components and a page that loads nothing else
+stays legible in light and in dark. The declaration is a zero-specificity
+default: a `color-scheme` your own CSS sets on the page wins.
+`@kimen/tokens/css/base` is the opt-in page contract: it paints the page
+background, text color and body font from the semantic tokens, and declares
+no color scheme.
 
 Every visual value is a `--ki-*` custom property; themes reassign tokens, not
 component CSS. Details in the

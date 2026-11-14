@@ -41,28 +41,36 @@ stays on the default theme.
 
 ## Color scheme
 
-Both themes follow the OS by default and can be forced either way:
+Both themes follow the OS by default and can be forced either way, on the
+document root or on any element:
 
 ```html
 <html data-ki-color-scheme="dark">   <!-- force dark -->
 <html data-ki-color-scheme="light">  <!-- force light -->
-<!-- no attribute: follows prefers-color-scheme -->
+<!-- no attribute: follows the system color scheme -->
 ```
 
 This site's theme toggle drives exactly this attribute, so every live demo
 on these pages follows it.
 
+The scheme is one declaration, and the token stylesheet makes it: it sets
+`color-scheme: light dark` on the root, and `data-ki-color-scheme` pins it
+to one side. Every scheme-dependent token is a single `light-dark()` value
+that resolves from that declaration, so the tokens and the browser — page
+canvas, scrollbars, native controls, autofill — always agree. A page that
+loads only `@kimen/tokens/css` is coherent in both schemes.
+
+The root declaration is a default with zero specificity. If your page is
+deliberately single-scheme and already says so in its own CSS
+(`html { color-scheme: light }`, before or after the token stylesheet), your
+declaration wins and the tokens follow it. It has to be CSS: a
+`<meta name="color-scheme">` alone does not pin the page.
+
 ### The page contract
 
-A token stylesheet can only carry custom properties, so it cannot declare
-`color-scheme`. Without that declaration the tokens flip to their dark
-values for a visitor who prefers dark while the browser keeps painting a
-light canvas, light scrollbars and light autofill — dark Kimen surfaces on a
-white page.
-
-Load the opt-in page contract alongside a theme to close that gap. It
-declares `color-scheme`, paints the page from `--ki-surface-s0` /
-`--ki-text-high-em`, and sets the body family:
+Tokens are custom properties: loading them paints nothing. The opt-in page
+contract paints the page from them — background from `--ki-surface-s0`,
+text from `--ki-text-high-em`, and the body family:
 
 ```html
 <link rel="stylesheet" href="@kimen/tokens/css" />
@@ -70,18 +78,14 @@ declares `color-scheme`, paints the page from `--ki-surface-s0` /
 ```
 
 It publishes no tokens of its own — it only consumes them, so it never
-widens the token surface. If your page is deliberately single-scheme, set
-`data-ki-color-scheme` and both the tokens **and** the browser follow that
-choice.
+widens the token surface — and it declares no color scheme: the token
+stylesheet owns that.
 
-Skipping it is supported in the light scheme. In the dark scheme the number
-is measured rather than estimated: on a page loading only the token
-stylesheet, with the visitor's OS set to dark, **14 of 29 components render
-text that falls below 4.5:1** — most of it at 1.00:1, white on white.
-Nothing is broken in the components; the user agent simply keeps a light
-canvas because `color-scheme` is still `normal`. So: load the contract, or
-pin the page with `data-ki-color-scheme="light"`. Doing neither is the one
-combination the library cannot render legibly.
+Skipping it is supported in both schemes. Without it the page keeps the
+browser's own canvas and text color for the active scheme, and every
+component stays legible on it. That is measured rather than assumed: on a
+page loading only the token stylesheet, with the visitor's OS set to dark,
+all 29 components hold 4.5:1 for every rendered string.
 
 ## Surfaces
 
