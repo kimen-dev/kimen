@@ -118,3 +118,21 @@ Feature: Neutral runtime catalog
       | sets no "label"                  |
       | sets "label" to an empty string  |
       | sets "label" to only white space |
+
+  # S17
+  Scenario: Numeric bounds the component contract declares become catalog constraints
+    Given the manifest bounds ki-indicator's "count" to the range 0 to 20
+    When the catalog is generated
+    Then the catalog constrains ki-indicator's "count" to a minimum of 0 and a maximum of 20
+
+  # S18
+  Scenario Outline: A number outside its declared bounds is rejected
+    Given a UI spec setting ki-indicator's "<prop>" to <value>
+    When the spec is validated against the catalog
+    Then validation rejects the spec naming ki-indicator, "<prop>" and its declared bounds
+
+    Examples:
+      | prop    | value   |
+      | count   | 1000000 |
+      | count   | -1      |
+      | current | 0       |

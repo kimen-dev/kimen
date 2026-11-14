@@ -446,6 +446,13 @@ describe('createCatalog — declared prop constraints over registered components
       'title',
       'missing-required-prop',
     ],
+    [
+      'the number prop "trend" bounded to 0..100',
+      { trend: { description: 'Trend in percent.', maximum: 100, minimum: 0, type: 'number' } },
+      { trend: 101 },
+      'trend',
+      'prop-out-of-range',
+    ],
   ])(
     'S18 enforces %s at validation, naming the component, the prop and the rule',
     (_declaration, props, specProps, prop, rule) => {
@@ -478,6 +485,23 @@ describe('createCatalog — declared prop constraints over registered components
     }
     expect(created.catalog.components['acme-kpi-card']?.props['title']?.required).toBe(true);
     expect(created.catalog.components['ki-textarea']?.props['label']?.required).toBe(true);
+  });
+
+  it.each([
+    ['a bound on a prop that is not a number', { description: '', maximum: 3, type: 'string' }],
+    ['a minimum above its maximum', { description: '', maximum: 1, minimum: 2, type: 'number' }],
+    [
+      'a default outside its own bounds',
+      { default: 7, description: '', maximum: 5, minimum: 0, type: 'number' },
+    ],
+    ['a bound that is not a number', { description: '', maximum: '20', type: 'number' }],
+  ])('S7 rejects %s as a malformed constraint', (_case, constraint) => {
+    const created = createCatalog(withProps({ trend: constraint }));
+    expect(created.ok).toBe(false);
+    if (!created.ok) {
+      expect(created.issues[0]?.code).toBe('malformed-constraint');
+      expect(created.issues[0]?.path).toContain('definition.components.acme-kpi-card.props.trend');
+    }
   });
 
   it('S7 rejects a required flag that is not a boolean', () => {

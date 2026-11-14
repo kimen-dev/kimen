@@ -272,6 +272,12 @@ Feature: Emitter kit
     Given a catalog whose ki-textarea declares "label" as a required prop
     When the JSON Schema and the prompt are derived
     Then the schema rejects a ki-textarea without "label" and the prompt marks "label" as required
+
+  # S17
+  Scenario: Numeric bounds reach the schema and the prompt
+    Given a catalog bounding ki-indicator's "count" to the range 0 to 20
+    When the JSON Schema and the prompt are derived
+    Then the schema rejects a ki-indicator whose "count" is 21 and the prompt states the range
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -282,7 +288,7 @@ are inapplicable.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17 | |
 | Keyboard path | | N/A — no interactive surface; artifacts are data consumed by models and integrations |
 | Assistive-tech outcome | | N/A — nothing renders; the emitter derives text and schema documents |
 | Form participation | | N/A — no form control is introduced |
@@ -356,7 +362,9 @@ are inapplicable.
   `required` prop is listed in the schema's `required` (with its `props`
   container), is never nullable in a strict target, carries the non-blank
   rule when it is a string, and is marked "required" in the prompt, whose
-  embedded example supplies every required prop (S16, S8).
+  embedded example supplies every required prop (S16, S8). Declared
+  numeric bounds become `minimum`/`maximum` in every target and a stated
+  range in the prompt; the example stays inside them (S17).
 
 ### Key Entities
 

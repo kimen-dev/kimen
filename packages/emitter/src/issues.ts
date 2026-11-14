@@ -65,6 +65,10 @@ function isStringArray(value: unknown): boolean {
   return Array.isArray(value) && value.every((entry) => typeof entry === 'string');
 }
 
+function isOptionalFinite(value: unknown): boolean {
+  return value === undefined || (typeof value === 'number' && Number.isFinite(value));
+}
+
 function isConstraintShaped(value: unknown): boolean {
   if (!isPlainRecord(value)) {
     return false;
@@ -79,6 +83,8 @@ function isConstraintShaped(value: unknown): boolean {
     (value['values'] === undefined || isStringArray(value['values'])) &&
     (value['documentedValues'] === undefined || isStringArray(value['documentedValues'])) &&
     (value['required'] === undefined || typeof value['required'] === 'boolean') &&
+    isOptionalFinite(value['minimum']) &&
+    isOptionalFinite(value['maximum']) &&
     scalarDefault
   );
 }

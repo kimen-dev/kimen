@@ -303,8 +303,9 @@ Feature: Consumer catalog registration
     Then validation rejects the spec naming acme-kpi-card, the prop and the rule "<rule>"
 
     Examples:
-      | declaration                      | violation       | rule                  |
-      | the required string prop "title" | sets no "title" | missing-required-prop |
+      | declaration                                | violation            | rule                  |
+      | the required string prop "title"           | sets no "title"      | missing-required-prop |
+      | the number prop "trend" bounded to 0..100  | sets "trend" to 101  | prop-out-of-range     |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -400,10 +401,13 @@ own specs.
   boundary; this is defence in depth, mirroring the renderer's existing
   re-check of event-handler prop names.
 - **FR-014**: A definition's prop constraints MAY declare the limits the
-  generated catalog carries — `required` (027 FR-016) — in the same shape,
+  generated catalog carries — `required` (027 FR-016), `minimum` and
+  `maximum` on number props (027 FR-017) — in the same shape,
   and the boundary MUST enforce them over registered components exactly as
   over built-in ones (S18). A limit that is not well-formed for its
-  constraint is a `malformed-constraint` rejection (S7).
+  constraint — a bound on a non-number prop, a minimum above its maximum, a
+  default outside its own bounds — is a `malformed-constraint` rejection
+  (S7).
 
 ### Key Entities
 

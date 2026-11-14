@@ -42,6 +42,7 @@ interface DocsFixture {
     props?: {
       name: string;
       attr?: string;
+      type?: string;
       required?: boolean;
       docsTags?: { name: string; text: string }[];
     }[];
@@ -549,6 +550,79 @@ describe('agent surfaces', () => {
       'required',
     );
     expect(members.find((member) => member.name === 'tone')).not.toHaveProperty('required');
+  });
+
+  it('S1 buildManifest carries the numeric bounds a prop declares with @minimum and @maximum', async () => {
+    const docs = normalizeDocs(await readFixture('path-a-docs.json')) as DocsFixture;
+    const component = docs.components[0];
+    const variant = component?.props?.[0];
+    if (component === undefined || variant === undefined) {
+      throw new Error('fixture must declare one prop');
+    }
+    component.props = [
+      variant,
+      {
+        ...variant,
+        attr: 'count',
+        docsTags: [
+          { name: 'minimum', text: '0' },
+          { name: 'maximum', text: '20' },
+        ],
+        name: 'count',
+        type: 'number | undefined',
+      },
+    ];
+    expect(validateDocs(docs)).toEqual([]);
+
+    const declaration = buildManifest(docs).modules[0].declarations[0];
+    const attributes = declaration.attributes as Record<string, unknown>[];
+    const members = declaration.members as Record<string, unknown>[];
+    expect(attributes.find((attribute) => attribute['name'] === 'count')).toMatchObject({
+      maximum: 20,
+      minimum: 0,
+    });
+    expect(members.find((member) => member['name'] === 'count')).toMatchObject({
+      maximum: 20,
+      minimum: 0,
+    });
+    const unbounded = attributes.find((attribute) => attribute['name'] === 'variant');
+    expect(unbounded).not.toHaveProperty('minimum');
+    expect(unbounded).not.toHaveProperty('maximum');
+  });
+
+  it('S4 validateDocs rejects a bound that is not a number, not on a number prop, repeated or inverted', async () => {
+    const violationsFor = async (
+      type: string,
+      docsTags: { name: string; text: string }[],
+    ): Promise<string[]> => {
+      const docs = normalizeDocs(await readFixture('path-a-docs.json')) as DocsFixture;
+      const variant = docs.components[0]?.props?.[0];
+      if (variant === undefined) {
+        throw new Error('fixture must declare one prop');
+      }
+      variant.type = type;
+      variant.docsTags = docsTags;
+      return validateDocs(docs);
+    };
+
+    expect(await violationsFor('number', [{ name: 'maximum', text: 'twenty' }])).toEqual([
+      'ki-button.variant: @maximum must be a finite number, received "twenty"',
+    ]);
+    expect(await violationsFor('string | undefined', [{ name: 'minimum', text: '0' }])).toEqual([
+      'ki-button.variant: @minimum applies to number props only',
+    ]);
+    expect(
+      await violationsFor('number', [
+        { name: 'maximum', text: '5' },
+        { name: 'maximum', text: '9' },
+      ]),
+    ).toEqual(['ki-button.variant: @maximum is declared more than once']);
+    expect(
+      await violationsFor('number', [
+        { name: 'minimum', text: '9' },
+        { name: 'maximum', text: '5' },
+      ]),
+    ).toEqual(['ki-button.variant: @minimum 9 is above @maximum 5']);
   });
 
   it('S4 validateDocs rejects a malformed or duplicated @event tag', async () => {

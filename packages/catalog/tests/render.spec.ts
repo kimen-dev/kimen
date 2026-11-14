@@ -10,6 +10,7 @@ import {
   type ActionEvent,
   type Catalog,
   catalogData,
+  createLiveSurface,
   createStreamingRenderer,
   DEFAULT_RENDER_BUDGETS,
   renderUiSpec,
@@ -496,5 +497,47 @@ describe('renderUiSpec — declared prop constraints bound every render', () => 
     expect(result.ok).toBe(false);
     expect(result.diagnostics[0]?.rule).toBe('missing-required-prop');
     expect(surface.childNodes).toHaveLength(0);
+  });
+
+  it('S22 never renders a number beyond its declared bounds, naming the prop and the maximum', () => {
+    const result = renderUiSpec(
+      {
+        version: 1,
+        root: {
+          component: 'ki-indicator',
+          props: { count: 1_000_000, label: 'Slide position' },
+        },
+      },
+      { surface },
+    );
+    expect(result.ok).toBe(false);
+    expect(surface.childNodes).toHaveLength(0);
+    const diagnostic = result.diagnostics[0];
+    expect(diagnostic?.rule).toBe('prop-out-of-range');
+    expect(diagnostic?.path).toBe('root.props.count');
+    expect(diagnostic?.message).toContain('ki-indicator');
+    expect(diagnostic?.message).toContain('"count"');
+    expect(diagnostic?.message).toContain('20');
+  });
+
+  it('S22 rejects a live update that would take a number beyond its bounds and keeps the content', () => {
+    const live = createLiveSurface({ surface });
+    const inserted = live.apply({
+      ops: [
+        {
+          node: {
+            component: 'ki-indicator',
+            id: 'dots',
+            props: { count: 5, current: 2, label: 'Slide position' },
+          },
+          op: 'insert',
+        },
+      ],
+    });
+    expect(inserted.ok).toBe(true);
+    const rejected = live.apply({ ops: [{ id: 'dots', op: 'set', props: { count: 1_000_000 } }] });
+    expect(rejected.ok).toBe(false);
+    expect(rejected.diagnostics[0]?.rule).toBe('prop-out-of-range');
+    expect(surface.querySelector('ki-indicator')?.getAttribute('count')).toBe('5');
   });
 });

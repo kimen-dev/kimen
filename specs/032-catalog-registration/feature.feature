@@ -131,5 +131,6 @@ Feature: Consumer catalog registration
     Then validation rejects the spec naming acme-kpi-card, the prop and the rule "<rule>"
 
     Examples:
-      | declaration                      | violation       | rule                  |
-      | the required string prop "title" | sets no "title" | missing-required-prop |
+      | declaration                                | violation            | rule                  |
+      | the required string prop "title"           | sets no "title"      | missing-required-prop |
+      | the number prop "trend" bounded to 0..100  | sets "trend" to 101  | prop-out-of-range     |

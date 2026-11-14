@@ -89,6 +89,44 @@ describe('catalogPrompt', () => {
     expect(report.ok).toBe(true);
   });
 
+  it('S17 states the declared range of a bounded number in the prompt', () => {
+    const prompt = promptOrThrow(catalogData);
+    const block = prompt.slice(prompt.indexOf('### <ki-indicator>'));
+    expect(block).toMatch(/- `count` \(number, 0 to 20\)/u);
+    expect(block).toMatch(/- `current` \(number, 1 to 20\)/u);
+  });
+
+  it('S8 S17 keeps the example inside the bounds of a required number', () => {
+    const created = createCatalog({
+      components: {
+        'acme-gauge': {
+          description: 'A gauge.',
+          events: {},
+          props: {
+            level: {
+              description: 'Fill level.',
+              maximum: 9,
+              minimum: 5,
+              required: true,
+              type: 'number',
+            },
+          },
+          slots: {},
+          tag: 'acme-gauge',
+          whenNotToUse: 'Never.',
+          whenToUse: 'Only in this test.',
+        },
+      },
+    });
+    if (!created.ok) {
+      throw new Error(`fixture catalog must register: ${created.issues[0]?.message ?? ''}`);
+    }
+    const prompt = promptOrThrow(created.catalog);
+    const fence = /```json\n([\s\S]*?)\n```/u.exec(prompt);
+    const example: unknown = JSON.parse(fence?.[1] ?? 'null');
+    expect(validateUiSpec(example, { catalog: created.catalog }).issues).toEqual([]);
+  });
+
   it('S10 stamps the catalog schema version on the prompt', () => {
     expect(promptOrThrow(catalogData)).toContain(catalogData.catalogSchemaVersion);
   });

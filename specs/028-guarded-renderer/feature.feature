@@ -210,3 +210,10 @@ Feature: Guarded renderer
       When the renderer validates the spec
       Then no part of the spec renders
       And the diagnostic names ki-textarea and the missing required prop "label"
+
+    # S22
+    Scenario: A number beyond its declared bounds never renders
+      Given a spec whose ki-indicator node sets "count" to 1000000, beyond the catalog's declared maximum of 20
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names ki-indicator, "count" and the declared maximum

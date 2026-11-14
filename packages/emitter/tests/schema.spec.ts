@@ -266,6 +266,26 @@ describe('uiSpecJsonSchema', () => {
     expect(validate(node('Notes'))).toBe(true);
   });
 
+  it.each(['draft-2020-12', 'openai-strict'] as const)(
+    'S17 carries the declared numeric bounds under %s',
+    (target) => {
+      const artifact = deriveOrThrow(catalogData, { components: ['ki-indicator'], target });
+      const validate = compile(artifact);
+      const spec = (count: number) => ({
+        actions: [],
+        root: {
+          action: target === 'draft-2020-12' ? undefined : null,
+          component: 'ki-indicator',
+          props: { count, current: 1, label: 'Slide position' },
+        },
+        version: 1,
+      });
+      expect(validate(JSON.parse(JSON.stringify(spec(21))))).toBe(false);
+      expect(validate(JSON.parse(JSON.stringify(spec(-1))))).toBe(false);
+      expect(validate(JSON.parse(JSON.stringify(spec(20))))).toBe(true);
+    },
+  );
+
   it('S4 collapses duplicate subset tags instead of duplicating branches (review regression)', () => {
     const artifact = deriveOrThrow(catalogData, { components: ['ki-badge', 'ki-badge'] });
     const defs = artifact['$defs'] as Record<string, { anyOf?: readonly unknown[] }>;

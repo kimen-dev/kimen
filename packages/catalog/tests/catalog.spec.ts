@@ -13,7 +13,13 @@ interface ManifestDeclaration {
   tagName?: string;
   whenToUse?: string;
   whenNotToUse?: string;
-  attributes?: { name: string; required?: boolean; type?: { text?: string } }[];
+  attributes?: {
+    name: string;
+    maximum?: number;
+    minimum?: number;
+    required?: boolean;
+    type?: { text?: string };
+  }[];
   slots?: { name?: string }[];
   events?: { name: string }[];
 }
@@ -87,6 +93,29 @@ describe('catalog derivation', () => {
       for (const attribute of declaration.attributes ?? []) {
         expect(props[attribute.name]?.required, `${declaration.tagName}.${attribute.name}`).toBe(
           attribute.required === true ? true : undefined,
+        );
+      }
+    }
+  });
+
+  it('S17 carries the numeric bounds the manifest declares, and only those', () => {
+    const count: { maximum?: number; minimum?: number } =
+      catalogData.components['ki-indicator'].props.count;
+    expect([count.minimum, count.maximum]).toEqual([0, 20]);
+    const current: { maximum?: number; minimum?: number } =
+      catalogData.components['ki-indicator'].props.current;
+    expect([current.minimum, current.maximum]).toEqual([1, 20]);
+    for (const declaration of manifestElements) {
+      const entry =
+        catalogData.components[declaration.tagName as keyof typeof catalogData.components];
+      const props: Record<string, { maximum?: number; minimum?: number }> = entry.props;
+      for (const attribute of declaration.attributes ?? []) {
+        const constraint = props[attribute.name];
+        expect(constraint?.minimum, `${declaration.tagName}.${attribute.name}`).toBe(
+          attribute.minimum,
+        );
+        expect(constraint?.maximum, `${declaration.tagName}.${attribute.name}`).toBe(
+          attribute.maximum,
         );
       }
     }

@@ -34,7 +34,14 @@ export class KiIndicator {
    * position, in position order. A missing, non-numeric or negative value
    * renders zero dots — an authoring mistake by catalog guidance, never an
    * error state or a rendering failure (FR-002; empty ki-list precedent).
+   * The catalog accepts at most 20 positions: the indicator serves a short
+   * sequence of peer views, 20 dots are the longest row that fits a 320 CSS
+   * px viewport (the WCAG reflow width) in both shipped themes, and one dot
+   * renders per position, so the bound also caps the work a single node can
+   * demand.
    * @default undefined
+   * @minimum 0
+   * @maximum 20
    */
   @Prop() count?: number;
 
@@ -44,8 +51,11 @@ export class KiIndicator {
    * `count` >= 1: values above `count` clamp to the last position, values
    * below 1 and non-numeric values fall back to the first (FR-003). Updates
    * re-render in place — the highlight and the exposed text follow
-   * immediately, re-applying the normalization (FR-004).
+   * immediately, re-applying the normalization (FR-004). The catalog accepts
+   * 1 to 20, the positions a bounded `count` can have.
    * @default undefined
+   * @minimum 1
+   * @maximum 20
    */
   @Prop() current?: number;
 

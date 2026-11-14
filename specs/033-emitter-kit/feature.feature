@@ -105,3 +105,9 @@ Feature: Emitter kit
     Given a catalog whose ki-textarea declares "label" as a required prop
     When the JSON Schema and the prompt are derived
     Then the schema rejects a ki-textarea without "label" and the prompt marks "label" as required
+
+  # S17
+  Scenario: Numeric bounds reach the schema and the prompt
+    Given a catalog bounding ki-indicator's "count" to the range 0 to 20
+    When the JSON Schema and the prompt are derived
+    Then the schema rejects a ki-indicator whose "count" is 21 and the prompt states the range

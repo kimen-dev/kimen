@@ -85,6 +85,11 @@ path (`renderUiSpec`, the streaming renderer, the live surface):
 | Constraint field | Source in the component | Rejected as |
 |---|---|---|
 | `required: true` | a prop declared with `!` (`@Prop() label!: string`) | `missing-required-prop` when the node omits the prop, or sets a string to nothing but white space |
+| `minimum`, `maximum` | `@minimum <n>` / `@maximum <n>` JSDoc tags on a number prop | `prop-out-of-range` when the number lies outside the inclusive bounds |
+
+Bounds exist where a component spends work in proportion to a value:
+`ki-indicator` renders one dot per position, so its `count` is bounded to
+0–20 and a spec cannot ask one node for a million elements.
 
 A component that degrades gracefully without a prop (a decorative
 `ki-avatar` or `ki-status` next to visible text) keeps it optional: the

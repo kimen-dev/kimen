@@ -90,6 +90,13 @@ function propSchema(constraint: CatalogPropConstraint, strict: boolean): Record<
   if (constraint.description !== '') {
     base['description'] = constraint.description;
   }
+  // Declared numeric bounds (S17): inclusive, as the boundary enforces them.
+  if (constraint.minimum !== undefined) {
+    base['minimum'] = constraint.minimum;
+  }
+  if (constraint.maximum !== undefined) {
+    base['maximum'] = constraint.maximum;
+  }
   if (constraint.required === true) {
     if (constraint.type === 'string') {
       base['pattern'] = NON_BLANK;

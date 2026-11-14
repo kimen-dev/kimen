@@ -28,7 +28,9 @@ when `type === 'enum'` (non-empty); optional `documentedValues` (open string
 unions), `default` (scalar), `description` (required string, may be empty
 for props but not for guidance fields). Declared limits, all optional and
 enforced at the boundary (027 FR-016 onwards, S18): `required` (boolean —
-the node must set the prop, and a string must not be blank).
+the node must set the prop, and a string must not be blank); `minimum` and
+`maximum` (finite numbers, inclusive, `number` props only, minimum ≤
+maximum, and a `default` must lie inside them).
 
 ### CatalogDefinition (public, NEW)
 

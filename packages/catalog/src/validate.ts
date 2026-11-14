@@ -33,6 +33,16 @@ export interface CatalogPropConstraint {
    * `missing-required-prop`. Absent means optional.
    */
   readonly required?: boolean;
+  /**
+   * Inclusive lower bound of a `number` prop; a smaller value is rejected
+   * with `prop-out-of-range`. Absent means unbounded below.
+   */
+  readonly minimum?: number;
+  /**
+   * Inclusive upper bound of a `number` prop; a larger value is rejected
+   * with `prop-out-of-range`. Absent means unbounded above.
+   */
+  readonly maximum?: number;
   readonly description: string;
 }
 
@@ -101,6 +111,7 @@ export interface ValidationIssue {
     | 'invalid-prop-type'
     | 'malformed-spec'
     | 'missing-required-prop'
+    | 'prop-out-of-range'
     | 'size-budget'
     | 'undeclared-action'
     | 'unknown-component'
@@ -382,6 +393,23 @@ const uiSpecSchema = z.strictObject({
   root: uiSpecNodeSchema,
 });
 
+/**
+ * The declared bounds of a number prop as the message names them, or null
+ * when the value lies inside them (S18). Bounds are inclusive.
+ */
+function rangeViolation(value: number, constraint: CatalogPropConstraint): string | null {
+  const { minimum, maximum } = constraint;
+  const below = minimum !== undefined && value < minimum;
+  const above = maximum !== undefined && value > maximum;
+  if (!below && !above) {
+    return null;
+  }
+  if (minimum !== undefined && maximum !== undefined) {
+    return `between ${String(minimum)} and ${String(maximum)}`;
+  }
+  return minimum === undefined ? `at most ${String(maximum)}` : `at least ${String(minimum)}`;
+}
+
 function checkProp(
   component: string,
   name: string,
@@ -398,6 +426,16 @@ function checkProp(
         issues.push({
           code: 'invalid-prop-type',
           message: `${component} prop "${name}" expects a ${constraint.type} value`,
+          path,
+          value: String(value),
+        });
+        return;
+      }
+      const range = typeof value === 'number' ? rangeViolation(value, constraint) : null;
+      if (range !== null) {
+        issues.push({
+          code: 'prop-out-of-range',
+          message: `${component} prop "${name}" must be ${range}`,
           path,
           value: String(value),
         });
@@ -614,7 +652,7 @@ export function toPlainData(
 /**
  * Validates already-plain data (a `toPlainData` clone) against the catalog
  * in use: neutral-format shape, catalog membership, prop types, required
- * props, declared actions and slots. Returns the typed spec alongside the report so a caller
+ * props, numeric bounds, declared actions and slots. Returns the typed spec alongside the report so a caller
  * that will render (spec 028) never re-parses. Never touches untrusted input
  * directly. `catalog` selects the catalog in use (spec 032); absent, the
  * built-in generated catalog applies.

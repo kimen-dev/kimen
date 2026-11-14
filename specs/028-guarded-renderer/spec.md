@@ -354,6 +354,13 @@ Feature: Guarded renderer
       When the renderer validates the spec
       Then no part of the spec renders
       And the diagnostic names ki-textarea and the missing required prop "label"
+
+    # S22
+    Scenario: A number beyond its declared bounds never renders
+      Given a spec whose ki-indicator node sets "count" to 1000000, beyond the catalog's declared maximum of 20
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names ki-indicator, "count" and the declared maximum
 ```
 
 ### Scenario Family Coverage
@@ -365,7 +372,7 @@ governed by its own approved contract (specs `002`–`016`).
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1–S21 | |
+| Core behavior | S1–S22 | |
 | Keyboard path | | N/A — the renderer adds no interaction; keyboard behavior is owned by each rendered component's own contract |
 | Assistive-tech outcome | | N/A — the accessibility tree is produced by the rendered catalog components under their own contracts |
 | Form participation | | N/A — form behavior is owned by the rendered form components; the renderer only passes validated declared props |
@@ -379,9 +386,12 @@ governed by its own approved contract (specs `002`–`016`).
   exclusively components present in the neutral catalog. A node whose type
   is not a catalog entry MUST cause fail-closed rejection naming that type.
 - **FR-002**: Every prop MUST validate against the generated catalog entry
-  for its component. Undeclared props, type mismatches and missing required
-  props MUST reject the spec naming the component, the prop and the violated
-  rule. Undeclared props MUST NOT be silently stripped.
+  for its component. Undeclared props, type mismatches, missing required
+  props (S21) and numbers outside their declared bounds (S22) MUST reject
+  the spec naming the component, the prop and the violated rule. Undeclared
+  props MUST NOT be silently stripped. These limits are the catalog's
+  (027 FR-016, FR-017): every render path — complete, streamed and live —
+  enforces them through the same validation, never a copy of it.
 - **FR-003**: Actions are declarative data. The spec's declared-actions list
   (the neutral format of `027-runtime-catalog`, its FR-005) is the only
   dispatch vocabulary: the renderer wires listeners only for component
@@ -524,7 +534,7 @@ governed by its own approved contract (specs `002`–`016`).
   stream closes; the invalid-chunk fixture attaches zero nodes at and below
   the violation and reports it.
 - **SC-007**: the `guarded-renderer` capability leaves `planned` only when
-  the S1–S21 traced tests run green inside the deterministic gates; the
+  the S1–S22 traced tests run green inside the deterministic gates; the
   capability gate enforces the linkage.
 - **SC-008**: module-boundary analysis reports zero protocol-specific
   imports or types in `@kimen/catalog`.

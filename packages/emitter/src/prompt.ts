@@ -9,11 +9,23 @@ import type { Derivation, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
 import type { DerivationOptions } from './schema.js';
 
+/** The declared range of a bounded number as the prompt states it (S17). */
+function rangeText(constraint: CatalogPropConstraint): string {
+  const { minimum, maximum } = constraint;
+  if (minimum !== undefined && maximum !== undefined) {
+    return `, ${String(minimum)} to ${String(maximum)}`;
+  }
+  if (minimum !== undefined) {
+    return `, at least ${String(minimum)}`;
+  }
+  return maximum === undefined ? '' : `, at most ${String(maximum)}`;
+}
+
 function propLine(name: string, constraint: CatalogPropConstraint): string {
   const kind =
     constraint.type === 'enum'
       ? `enum: ${(constraint.values ?? []).map((value) => `"${value}"`).join(' | ')}`
-      : constraint.type;
+      : `${constraint.type}${rangeText(constraint)}`;
   const required = constraint.required === true ? ', required' : '';
   const description = constraint.description === '' ? '' : ` — ${constraint.description}`;
   const fallback =
@@ -27,7 +39,10 @@ function exampleValue(constraint: CatalogPropConstraint): boolean | number | str
     case 'boolean':
       return true;
     case 'number':
-      return 1;
+      return Math.min(
+        constraint.maximum ?? Number.POSITIVE_INFINITY,
+        Math.max(constraint.minimum ?? Number.NEGATIVE_INFINITY, 1),
+      );
     case 'enum':
       return constraint.values?.[0] ?? '';
     default:

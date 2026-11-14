@@ -292,6 +292,24 @@ Feature: Neutral runtime catalog
       | sets no "label"                  |
       | sets "label" to an empty string  |
       | sets "label" to only white space |
+
+  # S17
+  Scenario: Numeric bounds the component contract declares become catalog constraints
+    Given the manifest bounds ki-indicator's "count" to the range 0 to 20
+    When the catalog is generated
+    Then the catalog constrains ki-indicator's "count" to a minimum of 0 and a maximum of 20
+
+  # S18
+  Scenario Outline: A number outside its declared bounds is rejected
+    Given a UI spec setting ki-indicator's "<prop>" to <value>
+    When the spec is validated against the catalog
+    Then validation rejects the spec naming ki-indicator, "<prop>" and its declared bounds
+
+    Examples:
+      | prop    | value   |
+      | count   | 1000000 |
+      | count   | -1      |
+      | current | 0       |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -304,7 +322,7 @@ in specs 002–016.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18 | |
 | Keyboard path | | N/A — no interactive surface; the catalog is data consumed by machines |
 | Assistive-tech outcome | | N/A — nothing renders; accessibility contracts live in the component specs the catalog describes |
 | Form participation | | N/A — no form control is introduced; form components are described by entries, not implemented here |
@@ -402,6 +420,23 @@ in specs 002–016.
   that degrades gracefully without the prop (a decorative avatar or status
   dot) keeps it optional: the validator cannot see adjacent content, so it
   enforces only what the contract states unconditionally.
+- **FR-017**: A number prop MAY declare inclusive bounds in the component
+  contract with `@minimum <n>` and `@maximum <n>` JSDoc tags on the prop.
+  The tags travel verbatim through Stencil's docs-json, the manifest carries
+  them as numbers on the attribute, and the catalog constraint carries
+  `minimum`/`maximum`; validation MUST reject a value outside them with
+  `prop-out-of-range` naming the component, the prop and the bounds (S17,
+  S18). A tag that is not a plain number, sits on a non-number prop, is
+  repeated or inverts the range fails the build — it never widens the
+  guardrail silently. JSDoc tags are the mechanism because the bound then
+  lives on the declaration it constrains, in the one place the catalog
+  already derives from; a side table would be a second source (Art. I) and
+  a branded TypeScript type would add a type-level construct per bound for
+  no extra safety (Art. VII). A bound is declared only where the component
+  spends work in proportion to the value (`ki-indicator` renders one dot per
+  position: `count` 0 to 20, `current` 1 to 20); a prop the component
+  already clamps at constant cost (`ki-progress` `value` and `max`) needs
+  none.
 
 ### Key Entities
 
@@ -439,11 +474,13 @@ in specs 002–016.
   actions are rejected as data (S5–S8), prototype-pollution keys are
   rejected and validation cost is bounded by a declared size budget
   (S13, S14). A spec that validates is also one the component contract
-  calls usable: the props the contract requires are present (S15, S16).
+  calls usable: the props the contract requires are present (S15, S16)
+  and a number stays inside the bounds the contract declares, so a spec
+  value cannot make a component do unbounded work (S17, S18).
   The rendering half ("only catalog components render", "no
   code-execution path exists from spec data" at render time, URL-scheme
   allowlisting) is delivered and adversarially tested by spec 028; the two
-  specs jointly cover the four invariants. S5–S8, S13, S14 and S16 require
+  specs jointly cover the four invariants. S5–S8, S13, S14, S16 and S18 require
   explicit founder confirmation at gate 1.
 
 ## Success Criteria *(mandatory)*
