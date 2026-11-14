@@ -9,6 +9,11 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 @media (hover: hover) {
   :host(:hover) {
     --_ki-textarea-bg: var(--ki-textarea-hover-bg);

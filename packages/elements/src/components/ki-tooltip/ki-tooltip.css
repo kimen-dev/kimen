@@ -151,3 +151,8 @@
     translate: calc(-50% * var(--_ki-tooltip-inline-sign)) calc(-1 * var(--ki-motion-distance-sm));
   }
 }
+
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}

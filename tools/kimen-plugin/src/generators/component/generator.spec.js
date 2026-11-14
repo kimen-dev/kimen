@@ -76,6 +76,20 @@ test('S12 scaffolds a described component-token source consumed by ki-avatar CSS
   assert.match(tree.read(`${componentRoot}/${tag}.css`, 'utf8'), /var\(--ki-avatar-/u);
 });
 
+test('S12 scaffolds a host stylesheet that hands the hidden attribute back', async () => {
+  const tree = createGeneratorTree();
+
+  await scaffoldAvatar(tree);
+
+  // A scaffold that sets `display` on :host overrides the browser's own
+  // `[hidden]` rule unless it restores it, so every new component would ship
+  // rendering while hidden.
+  assert.match(
+    tree.read(`${componentRoot}/${tag}.css`, 'utf8'),
+    /:host\(\[hidden\]\)\s*\{\s*display:\s*none;\s*\}/u,
+  );
+});
+
 test('S12 relies on derived subpaths and leaves the frozen legacy root untouched', async () => {
   const tree = createGeneratorTree();
 

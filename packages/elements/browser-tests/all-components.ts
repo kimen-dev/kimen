@@ -1,6 +1,9 @@
-// Every published custom element, registered from the BUILT output (what
-// ships is what is asserted, Art. III). One list for the cross-cutting
-// suites, so a new component is added in exactly one place.
+// Every custom element the package ships, registered from the BUILT output
+// (what ships is what is asserted, Art. III). Cross-cutting contracts — the
+// ones that hold for the whole library rather than for one component — walk
+// this list, so a rule that must be true "everywhere" cannot quietly skip a
+// tag. Direct per-component imports on purpose: dist/components/index.js is a
+// barrel the suite never loads (Art. IV).
 import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
 import { defineCustomElement as defineKiAvatar } from '../dist/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '../dist/components/ki-avatar-group.js';
@@ -33,7 +36,7 @@ import { defineCustomElement as defineKiVideo } from '../dist/components/ki-vide
 import { visualGalleries } from './visual/galleries';
 import type { VisualComponent } from './visual/galleries';
 
-const definitions: readonly (() => void)[] = [
+const defineAll: readonly (() => void)[] = [
   defineKiAlert,
   defineKiAvatar,
   defineKiAvatarGroup,
@@ -65,12 +68,11 @@ const definitions: readonly (() => void)[] = [
   defineKiVideo,
 ];
 
-/** Registers every `ki-*` element. Idempotent: each define guards itself. */
+/** One tag per shipped component: the state galleries are keyed by it. */
+export const componentTags = Object.keys(visualGalleries) as VisualComponent[];
+
 export function defineAllComponents(): void {
-  for (const define of definitions) {
+  for (const define of defineAll) {
     define();
   }
 }
-
-/** Every component that has a state gallery — the whole published set. */
-export const allComponents = Object.keys(visualGalleries) as VisualComponent[];

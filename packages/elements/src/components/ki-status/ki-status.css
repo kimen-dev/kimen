@@ -16,6 +16,11 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 [part="dot"] {
   display: block;
   inline-size: var(--ki-status-size);

@@ -35,6 +35,11 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 :host(:dir(rtl)) {
   --_ki-switch-travel: calc(-1 * var(--_ki-switch-travel-distance));
   --_ki-switch-thumb-anchor: 100%;

@@ -202,3 +202,8 @@ input:active:checked:not([disabled], [data-ki-group-disabled]) ~ [part="control"
     transform: scale(0.94);
   }
 }
+
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}

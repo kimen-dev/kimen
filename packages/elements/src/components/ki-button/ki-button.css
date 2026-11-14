@@ -36,6 +36,11 @@
   font-family: var(--ki-button-font-family);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 :host([size="xs"]) {
   --_ki-button-height: var(--ki-button-xs-height);
   --_ki-button-padding-inline: var(--ki-button-xs-padding-inline);

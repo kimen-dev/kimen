@@ -30,6 +30,11 @@
   font-family: var(--ki-badge-font-family);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 :host([tone="success"]) {
   --_ki-badge-bg: var(--ki-badge-success-bg);
   --_ki-badge-fg: var(--ki-badge-success-fg);

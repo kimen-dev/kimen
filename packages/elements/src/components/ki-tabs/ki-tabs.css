@@ -39,3 +39,8 @@ slot[name="tab"] {
   align-items: end;
   border-block-end: var(--_ki-tabs-divider-width) solid var(--_ki-tabs-divider-color);
 }
+
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}

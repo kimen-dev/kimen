@@ -187,3 +187,8 @@
     transform: none;
   }
 }
+
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}

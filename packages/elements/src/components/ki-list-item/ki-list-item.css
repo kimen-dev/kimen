@@ -19,6 +19,11 @@
   font-family: var(--ki-typography-family-body);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 :host(.has-secondary) {
   --_ki-list-item-min-height: var(--ki-list-item-min-height-multiline);
 }

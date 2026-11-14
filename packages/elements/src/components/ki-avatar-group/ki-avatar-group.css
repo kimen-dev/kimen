@@ -20,6 +20,11 @@
   font-family: var(--ki-avatar-font-family);
 }
 
+/* The HTML hidden attribute outranks the host's own display. */
+:host([hidden]) {
+  display: none;
+}
+
 :host(:dir(rtl)) {
   --_enter-sign: -1;
 }
