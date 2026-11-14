@@ -189,8 +189,14 @@ describe('build-surfaces mutation boundary', () => {
       const manifest = JSON.parse(manifestBytes);
       const publicApiBytes = await readFile(resolve(generatedRoot, 'public-api.json'), 'utf8');
       const publicApi = JSON.parse(publicApiBytes);
-      const packageLlms = await readFile(resolve(packageRoot, 'llms.txt'), 'utf8');
-      const rootLlms = await readFile(resolve(root, 'llms.txt'), 'utf8');
+      // Each index owns its companions: the complete summary beside it and
+      // the documents it links in the directory named after it.
+      const packageIndex = await readFile(resolve(packageRoot, 'llms.txt'), 'utf8');
+      const packageLlms = await readFile(resolve(packageRoot, 'llms-full.txt'), 'utf8');
+      const packageDocument = await readFile(resolve(packageRoot, 'llms/ki-demo.md'), 'utf8');
+      const rootIndex = await readFile(resolve(root, 'llms.txt'), 'utf8');
+      const rootLlms = await readFile(resolve(root, 'llms-full.txt'), 'utf8');
+      const rootGuide = await readFile(resolve(root, 'llms/catalog.md'), 'utf8');
 
       expect(result.ok).toBe(true);
       expect(result.stderr).toBe('');
@@ -200,10 +206,31 @@ describe('build-surfaces mutation boundary', () => {
           [resolve(generatedRoot, 'docs.json'), `${JSON.stringify(docs, null, 2)}\n`],
           [resolve(generatedRoot, 'custom-elements.json'), manifestBytes],
           [resolve(generatedRoot, 'public-api.json'), publicApiBytes],
-          [resolve(packageRoot, 'llms.txt'), packageLlms],
-          [resolve(root, 'llms.txt'), rootLlms],
+          [resolve(packageRoot, 'llms.txt'), packageIndex],
+          [resolve(packageRoot, 'llms-full.txt'), packageLlms],
+          [resolve(packageRoot, 'llms/ki-demo.md'), packageDocument],
+          [resolve(root, 'llms.txt'), rootIndex],
+          [resolve(root, 'llms-full.txt'), rootLlms],
+          [resolve(root, 'llms/catalog.md'), rootGuide],
         ]),
       );
+      // The packaged index links by relative path, the repository index by
+      // the address the site publishes; only the latter knows the GenUI layer.
+      expect(packageIndex).toContain('- [ki-demo](llms/ki-demo.md): Use for demonstrations.');
+      expect(packageIndex).toContain('- [llms-full.txt](llms-full.txt): ');
+      expect(packageIndex).not.toContain('@kimen/catalog');
+      expect(rootIndex).toContain(
+        '- [ki-demo](https://kimen.dev/llms/ki-demo.md): Use for demonstrations.',
+      );
+      expect(rootIndex).toContain(
+        '- [@kimen/catalog](https://kimen.dev/llms/catalog.md): Validate fixture specs.',
+      );
+      expect(rootIndex).toContain('Fixture GenUI layer prose.');
+      expect(packageDocument).toContain('# ki-demo\n\n> Demonstrates the generated surfaces.\n');
+      expect(packageDocument).toContain(
+        '## CSS custom properties\n\n- `--ki-demo-color`: Demo color.',
+      );
+      expect(rootGuide).toContain('# @kimen/catalog\n\n> Fixture catalog.\n');
       expect(docs).not.toHaveProperty('timestamp');
       expect(manifest.completedMethods).toBe(1);
       expect(manifest.modules[0].path).toBe('dist/components/ki-demo.js');
@@ -291,12 +318,20 @@ describe('build-surfaces mutation boundary', () => {
         publicApi: { schemaVersion: 1, fixture: true },
       });
 
+      // A redirected index takes its companions with it: nothing is written
+      // next to an index the caller did not name.
+      const packageFullPath = resolve(custom, 'output-package-llms-full.txt');
+      const rootFullPath = resolve(custom, 'output-root-llms-full.txt');
       expect([...result.outputs.keys()]).toEqual([
         paths.docsPath,
         paths.manifestPath,
         paths.publicApiPath,
         paths.packageLlmsPath,
+        packageFullPath,
+        resolve(custom, 'output-package-llms/ki-demo.md'),
         paths.rootLlmsPath,
+        rootFullPath,
+        resolve(custom, 'output-root-llms/catalog.md'),
       ]);
       expect(JSON.parse(await readFile(paths.publicApiPath, 'utf8'))).toEqual({
         schemaVersion: 1,
@@ -305,10 +340,12 @@ describe('build-surfaces mutation boundary', () => {
       expect(JSON.parse(await readFile(paths.manifestPath, 'utf8')).modules[0].path).toBe(
         'custom/ki-demo.js',
       );
-      const packageLlms = await readFile(paths.packageLlmsPath, 'utf8');
-      const rootLlms = await readFile(paths.rootLlmsPath, 'utf8');
+      const packageLlms = await readFile(packageFullPath, 'utf8');
+      const rootLlms = await readFile(rootFullPath, 'utf8');
       expect(rootLlms.startsWith(packageLlms)).toBe(true);
       expect(rootLlms).toContain('Injected GenUI layer prose.');
+      expect(await readFile(paths.rootLlmsPath, 'utf8')).toContain('Injected GenUI layer prose.');
+      expect(await readFile(paths.packageLlmsPath, 'utf8')).toContain('Custom preamble.');
     } finally {
       await rm(root, { recursive: true, force: true });
     }

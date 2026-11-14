@@ -14,7 +14,9 @@
     "dist",
     "loader",
     "generated/custom-elements.json",
-    "llms.txt"
+    "llms.txt",
+    "llms-full.txt",
+    "llms"
   ],
   "scripts": {
     "build": "stencil build && node scripts/normalize-angular-proxies.mjs && node scripts/sync-components.mjs && node scripts/build-surfaces.mjs",
@@ -39,14 +41,31 @@
           "^default",
           "!{projectRoot}/generated/**",
           "!{projectRoot}/loader/**",
-          "!{projectRoot}/llms.txt"
+          "!{projectRoot}/llms.txt",
+          "!{projectRoot}/llms-full.txt",
+          "!{projectRoot}/llms/**",
+          "{workspaceRoot}/docs/genui-surfaces.json",
+          "{workspaceRoot}/packages/catalog/package.json",
+          "{workspaceRoot}/packages/catalog/src/index.ts",
+          "{workspaceRoot}/packages/emitter/package.json",
+          "{workspaceRoot}/packages/emitter/src/index.ts",
+          "{workspaceRoot}/packages/adapter-a2ui/package.json",
+          "{workspaceRoot}/packages/adapter-a2ui/src/index.ts",
+          "{workspaceRoot}/packages/adapter-mcp-apps/package.json",
+          "{workspaceRoot}/packages/adapter-mcp-apps/src/index.ts",
+          "{workspaceRoot}/scripts/lib/**/*",
+          "{workspaceRoot}/scripts/gates/check-component-inventory.mjs"
         ],
         "outputs": [
           "{projectRoot}/dist",
           "{projectRoot}/generated",
           "{projectRoot}/loader",
           "{projectRoot}/llms.txt",
+          "{projectRoot}/llms-full.txt",
+          "{projectRoot}/llms",
           "{workspaceRoot}/llms.txt",
+          "{workspaceRoot}/llms-full.txt",
+          "{workspaceRoot}/llms",
           "{workspaceRoot}/packages/react/src",
           "{workspaceRoot}/packages/vue/src",
           "{workspaceRoot}/packages/angular/src/directives"

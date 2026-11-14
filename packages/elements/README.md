@@ -121,13 +121,16 @@ per-framework notes live in the
 
 ## For agents
 
-[`llms.txt`](./llms.txt) (shipped inside this package) documents every
-component — attributes, slots, parts, events, methods, CSS custom properties,
-plus when-to-use / when-not-to-use guidance — and
-`generated/custom-elements.json` is the machine-readable Custom Elements
-Manifest. Both are generated from component JSDoc; never edit them by hand.
-The `llms.txt` code examples are executed against the packed packages during
-release validation, so they are guaranteed to run.
+[`llms.txt`](./llms.txt) (shipped inside this package) is a short index:
+how to install and load the library, when to use each component, and a
+relative link per component to a Markdown document under `llms/` with its
+attributes, slots, parts, events, methods, CSS custom properties, examples
+and when-to-use / when-not-to-use guidance. `llms-full.txt` is all of it in
+one file, and `generated/custom-elements.json` is the machine-readable
+Custom Elements Manifest. All of them are generated from component JSDoc;
+never edit them by hand. The `llms.txt` code examples are executed against
+the packed packages during release validation, so they are guaranteed to
+run.
 
 ## Explore
 

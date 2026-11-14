@@ -139,6 +139,15 @@ artifact, Art. I violation; rejected. (b) deriving entries from the CEM —
 adds an internal dependency between outputs for zero gain; rejected.
 (c) llms-full.txt / per-component files — speculative (Art. VII); rejected.
 
+**Superseded in part by D10 (2026-11-14)**: alternative (c) was rejected
+when the library had one component and the file was 2 KB. With 29
+components the single block measures 258 641 bytes in the package and
+269 407 at the repository root, so the cost (c) was meant to avoid is now
+the cost of *not* doing it. The composition rules above still describe
+`llms-full.txt`; `llms.txt` is the index D10 defines. The "byte-identical
+root copy" also stopped being true before D10: since the GenUI layer was
+added the root file extends the package one.
+
 ## D5 — Sync gate: `surfaces-sync` right after `tokens-sync`
 
 **Decision**: one new gate in `scripts/gates/gates-suite.sh`, placed
@@ -294,3 +303,170 @@ a line — a gate born red for the wrong reason.
 **Alternatives considered**: exempting undocumented *scaffolds* from FR-004
 via a marker — a hole in the completeness rule that would inevitably ship;
 rejected.
+
+## D10 — llms.txt becomes an index; one document per component; llms-full.txt keeps the whole
+
+**Decision** (FR-011, FR-012, FR-013; S8, S9, S10): the build emits three
+kinds of language-model surface instead of one block.
+
+- `llms.txt` is an index in the shape https://llmstxt.org/ specifies: "An H1
+  with the name of the project or site", "A blockquote with a short
+  summary", "Zero or more markdown sections (e.g. paragraphs, lists, etc) of
+  any type except headings", then "Zero or more markdown sections delimited
+  by H2 headers, containing 'file lists' of URLs where further detail is
+  available". Each list entry is "a required markdown hyperlink
+  `[name](url)`, then optionally a `:` and notes about the file"; the
+  section named `Optional` holds what "can be skipped" when a shorter
+  context is needed. Concretely: H1 and blockquote from package metadata;
+  the part of the preamble template that precedes its first `##` heading
+  (install, register, load); `## Components` with one entry per component
+  whose note is the first sentence of its `@whenToUse`; `## Guides`;
+  `## Optional` linking `llms-full.txt` and the Custom Elements Manifest.
+- `llms/<tag>.md`, one per published component: `# <tag>`, the description
+  as a blockquote, then `## When to use`, `## When not to use` (both
+  verbatim), `## Examples` (the `usage/*.md` files), `## Attributes`,
+  `## Slots`, `## Parts`, `## Events`, `## Methods` and
+  `## CSS custom properties`. A facet with no entries says `None.` instead
+  of disappearing, so an absent event is stated rather than left to guess.
+- `llms-full.txt` is exactly what `buildLlmsTxt` produced before: the
+  preamble and every component entry in one file.
+
+Attribute lines gain what the contract already declares and the catalog
+already enforces: `required` (Stencil's `required: true`), `minimum` /
+`maximum` (the `@minimum` / `@maximum` prop tags) and `URL`
+(`@format url`). One renderer serves the component documents and
+`llms-full.txt`, so the two can never disagree about an attribute.
+
+**Size budget**: the index must stay under 16 384 bytes, enforced by a test
+over both committed indexes. At roughly four bytes per token that is about
+four thousand tokens; today the repository index measures 9 079 bytes and
+the packaged one 7 021, which leaves room for the library to grow by more
+than half again before anyone has to revisit the one-line-per-component
+format.
+
+**The index note is the first sentence, not a rewrite.** A hand-written
+one-liner per component would be a second place where guidance lives
+(Art. I). The first sentence of `@whenToUse` is a verbatim prefix of the
+contract: it ends at the first period followed by whitespace and a
+capitalized word, or at the end of the text when there is no such period;
+"e.g." and "i.e." never end it. Every current component reads
+correctly under that rule; a test asserts each note is a prefix of its
+guidance.
+
+**Guides come from the preamble's own headings.** The preamble template is
+split at its `##` headings (fenced code is skipped): the text before the
+first one is the index body, and each section becomes `llms/<slug>.md`
+linked from `## Guides` with its first sentence as the note. Today that is
+one section, `## Theming` → `llms/theming.md`. `llms-full.txt` keeps the
+template verbatim. A second template file and a second option were
+considered and rejected: the split needs no configuration and existing
+callers that pass a heading-less preamble keep working unchanged.
+
+**Stale documents are pruned.** Generation removes any `.md` in a documents
+directory that it did not just write, so removing a component removes its
+document in the same build; the sync gate would otherwise report it as an
+undeclared tracked output and leave the fix to a human.
+
+**Rationale**: an agent choosing a component needs the list and the
+guidance, not 24 KB of ki-button token descriptions. Measured on the
+current library: the repository index is 3.4 % of the old file (9 079
+against 269 407 bytes); a component document is between 2 130 bytes
+(ki-option) and 30 864 (ki-icon-button), with a median of 7 610.
+
+**Alternatives considered**: (a) trim the single file (drop CSS custom
+properties or examples) — loses contract an agent needs once it has chosen;
+rejected. (b) Generate the documents but keep `llms.txt` as the whole —
+keeps the name pointing at the expensive thing, against the convention;
+rejected. (c) Derive the index note from the component description
+instead of `@whenToUse` — the description says what a component is, the
+guidance says when to pick it, and picking is what the index is for;
+rejected. (d) A UI-spec JSON example per component — the only derivation
+that exists is the emitter's `exampleSpec`, a placeholder ("Example",
+"Example content") built from the catalog, which is generated *from* the
+manifest this build writes; embedding it here would either duplicate that
+rule or make the elements build depend on packages that depend on it.
+No per-component UI-spec example exists as data anywhere in the
+repository, so none is emitted (Art. VII: no invented content).
+
+## D11 — One linking rule: an index links in the form native to where it is read
+
+**Decision** (FR-014; S11, S12): there are two indexes because there are
+two places an index is read, and each links its documents the way that
+place resolves them.
+
+| Index | Where it is read | Link form | Resolves to |
+|---|---|---|---|
+| `packages/elements/llms.txt` | `node_modules/@kimen/elements/`, offline | relative: `llms/ki-button.md`, `llms-full.txt`, `generated/custom-elements.json` | files of the same tarball (`files` gains `llms` and `llms-full.txt`) |
+| `llms.txt` (repository root) | the repository, and `https://kimen.dev/llms.txt` | absolute: `https://kimen.dev/llms/ki-button.md`, `https://kimen.dev/llms-full.txt`, `https://kimen.dev/assets/elements/custom-elements.json` | documents `scripts/build-site.sh` publishes |
+
+**Rationale**: a relative link in a tarball always points at the document
+of the installed version and needs no network; an absolute link survives
+the two ways a web index actually reaches a model, pasted into a
+conversation without its base URL and fetched by a tool that follows the
+listed URLs (every example at https://llmstxt.org/ uses absolute URLs, and
+the specification does not define relative ones). Using absolute links in
+the tarball would send an agent with version 1.2 installed to the
+documents of whatever the site currently serves; using relative links on
+the site would make the index useless once copied out of it.
+
+The site had not been publishing `llms.txt` at all (the documentation page
+linked the file on GitHub). `build-site.sh` now copies the repository
+index and `llms-full.txt` to the site root and every document to
+`/llms/`: the component and theming documents from
+`packages/elements/llms/`, the GenUI guides from the repository's `llms/`.
+Their names cannot collide by construction today (`ki-*`, `theming`, GenUI
+package directory names) and a test asserts the assembled directory holds
+the sum of both.
+
+**The package index stays elements-only** (FR-015): the GenUI packages are
+separate packages whose publication at v1 is an open founder decision, so
+their guides are generated at the repository root and linked only from
+the repository index, the same boundary the GenUI section of the root
+file already kept.
+
+**Alternatives considered**: (a) one index with relative links everywhere —
+needs the documents at the same relative path in the repository root, the
+tarball and the site, i.e. a second committed copy of every component
+document at the root; rejected. (b) one index with absolute links
+everywhere — breaks offline and version-matched reading from the tarball;
+rejected. (c) ship the GenUI guides inside `@kimen/elements` so both
+indexes are identical — advertises packages that may not be published;
+rejected.
+
+## D12 — The sync gate and the build cache follow the new files
+
+**Decision** (FR-016; S5): `check-generated-sync.mjs surfaces` requires, in
+addition to the previous list, both `llms-full.txt` files, one
+`packages/elements/llms/<tag>.md` per component of the committed manifest
+(the derivation the `wrappers` group already uses),
+`packages/elements/llms/theming.md` and one `llms/<package>.md` per package
+of `docs/genui-surfaces.json`; its scopes gain both documents directories,
+so a stray or missing document fails the gate.
+
+The elements `build` target declares the new files as `outputs` (a cache
+hit restores them) and excludes the ones under the project from `inputs`.
+It also declares the sources the build read without declaring them:
+`docs/genui-surfaces.json`, the `package.json` and `src/index.ts` of every
+GenUI package it is validated against, and the shared generator libraries
+under `scripts/lib/` plus the inventory gate the build spawns. Before this,
+editing the GenUI source and rebuilding replayed the cached `llms.txt`. A
+test derives the expected inputs from `docs/genui-surfaces.json` so a new
+GenUI package cannot be added without declaring it.
+
+**Alternatives considered**: a glob such as
+`{workspaceRoot}/packages/*/package.json` — invalidates the elements build
+on every unrelated package metadata change; rejected in favor of the
+explicit list plus the test.
+
+## D13 — What the release consumer contract executes (open founder decision)
+
+The release consumer contract (`scripts/consumer-contract.mjs`, spec 018)
+extracts the fenced `ts`/`js` examples of the packed `llms.txt` and runs
+them against the packed tarballs. The index still carries the install
+command and the registration example, so that contract keeps passing
+unchanged. What moved out of its reach is the one executable usage example
+that lives in a component's `usage/*.md` (ki-button's programmatic
+creation): it is now in `llms/ki-button.md` and `llms-full.txt`, which the
+contract does not read. Pointing the contract at `llms-full.txt` would
+restore the previous coverage exactly; that script and the release
+workflow are outside this change and the choice is the founder's.

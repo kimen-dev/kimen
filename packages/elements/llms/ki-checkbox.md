@@ -1,0 +1,139 @@
+# ki-checkbox
+
+> A form-associated checkbox for selecting independent options.
+
+## When to use
+
+selecting one or more independent options that a form submits
+later, including a "select all" parent that presents partial selection with
+`indeterminate`. Always provide a visible label in the default slot.
+
+## When not to use
+
+a single mutually exclusive choice, an immediate on/off
+effect, triggering an action, unlabeled/icon-only usage, or
+`checked="false"` to mean unchecked. Boolean attributes use presence
+semantics; omit `checked` to express unchecked.
+
+## Examples
+
+The default slot is the visible label — the accessible name and a native activation surface; when checked, `name` and `value` pair into the submitted form data:
+
+```html
+<form>
+  <ki-checkbox name="channels" value="email" checked>Email</ki-checkbox>
+  <ki-checkbox name="channels" value="sms">SMS</ki-checkbox>
+  <ki-button variant="primary">Save preferences</ki-button>
+</form>
+```
+
+Boolean attributes use presence semantics — omit `checked` to express unchecked, never write `checked="false"`; without `value` a checked box submits `on`, and unchecked boxes contribute no form entry:
+
+```html
+<ki-checkbox name="newsletter" checked>Send me the weekly digest</ki-checkbox>
+```
+
+`required` blocks submission while unchecked (the invalid appearance appears only after a blocked attempt or an invalidating toggle, never on initial render), and `disabled` removes the checkbox from keyboard reach and form data:
+
+```html
+<form>
+  <ki-checkbox name="terms" required>I accept the terms of service</ki-checkbox>
+  <ki-checkbox name="fax" disabled>Notify me by fax</ki-checkbox>
+  <ki-button variant="primary">Create account</ki-button>
+</form>
+```
+
+`indeterminate` presents the mixed state of a "select all" parent — presentation-only, exposed to assistive technology as mixed, cleared by any user toggle, and never submitted (model data stays binary through `checked`):
+
+```html
+<ki-checkbox indeterminate>Select all rows</ki-checkbox>
+```
+
+## Attributes
+
+- `checked` (boolean, default false): Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
+- `disabled` (boolean, default false): Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
+- `indeterminate` (boolean, default false): Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
+- `name` (string | undefined): Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
+- `required` (boolean, default false): Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
+- `value` (string | undefined): Form-data value paired with `name` when checked. If omitted, the submitted value is `on`, matching native checkbox behavior. When NOT to use: do not encode the unchecked state here; unchecked checkboxes contribute no form entry.
+
+## Slots
+
+- (default): Visible label content. This is the accessible name source and a native activation surface.
+
+## Parts
+
+- `control`: Visual checkbox box, border, focus ring and currentColor marks.
+- `label`: Label wrapper around the default slot.
+
+## Events
+
+- `change` (Event): Fired once after a user toggle (pointer, slotted label or Space) commits, composed across the shadow boundary; `checked` is already current when listeners run. When to use: react to the committed selection. When NOT to use: do not expect it for programmatic `checked` writes, which are silent.
+
+## Methods
+
+None.
+
+## CSS custom properties
+
+- `--ki-checkbox-border-width`: dimension used by the checkbox component for border width.
+- `--ki-checkbox-checked-active-bg`: color used by the checkbox component for checked active background.
+- `--ki-checkbox-checked-active-border`: color used by the checkbox component for checked active border.
+- `--ki-checkbox-checked-active-fg`: color used by the checkbox component for checked active foreground.
+- `--ki-checkbox-checked-disabled-bg`: color used by the checkbox component for checked disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark).
+- `--ki-checkbox-checked-disabled-border`: color used by the checkbox component for checked disabled border.
+- `--ki-checkbox-checked-disabled-fg`: color used by the checkbox component for checked disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias).
+- `--ki-checkbox-checked-hover-bg`: color used by the checkbox component for checked hover background.
+- `--ki-checkbox-checked-hover-border`: color used by the checkbox component for checked hover border.
+- `--ki-checkbox-checked-hover-fg`: color used by the checkbox component for checked hover foreground.
+- `--ki-checkbox-checked-rest-bg`: color used by the checkbox component for checked rest background.
+- `--ki-checkbox-checked-rest-border`: color used by the checkbox component for checked rest border.
+- `--ki-checkbox-checked-rest-fg`: color used by the checkbox component for checked rest foreground.
+- `--ki-checkbox-control-size`: dimension used by the checkbox component for control size.
+- `--ki-checkbox-focus-ring-color`: color used by the checkbox component for focus ring color.
+- `--ki-checkbox-focus-ring-offset`: dimension used by the checkbox component for focus ring offset.
+- `--ki-checkbox-focus-ring-shadow`: shadow used by the checkbox component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator).
+- `--ki-checkbox-focus-ring-width`: dimension used by the checkbox component for focus ring width.
+- `--ki-checkbox-gap`: dimension used by the checkbox component for gap (MarsUI md label pairing: Space/xl 12px for the 20px box).
+- `--ki-checkbox-indeterminate-active-bg`: color used by the checkbox component for indeterminate active background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint).
+- `--ki-checkbox-indeterminate-active-border`: color used by the checkbox component for indeterminate active border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control).
+- `--ki-checkbox-indeterminate-active-fg`: color used by the checkbox component for indeterminate active dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative).
+- `--ki-checkbox-indeterminate-disabled-bg`: color used by the checkbox component for indeterminate disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark).
+- `--ki-checkbox-indeterminate-disabled-border`: color used by the checkbox component for indeterminate disabled border.
+- `--ki-checkbox-indeterminate-disabled-fg`: color used by the checkbox component for indeterminate disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias).
+- `--ki-checkbox-indeterminate-hover-bg`: color used by the checkbox component for indeterminate hover background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint).
+- `--ki-checkbox-indeterminate-hover-border`: color used by the checkbox component for indeterminate hover border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control).
+- `--ki-checkbox-indeterminate-hover-fg`: color used by the checkbox component for indeterminate hover dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative).
+- `--ki-checkbox-indeterminate-rest-bg`: color used by the checkbox component for indeterminate rest background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint).
+- `--ki-checkbox-indeterminate-rest-border`: color used by the checkbox component for indeterminate rest border (Figma draws no border on the 20% tint, but the tint alone measures ~1.3:1 against light pages; the opaque brand ring keeps the WCAG 1.4.11 3:1 control boundary — gate-driven declared deviation, same law that pinned ki.outline.control).
+- `--ki-checkbox-indeterminate-rest-fg`: color used by the checkbox component for indeterminate rest dash (Figma binds Text/primary_med_em brand-500, which measures 2.7:1 against the 56% tint in dark; one em step up keeps the 3:1 non-text law in both schemes — gate-driven compliant alternative).
+- `--ki-checkbox-invalid-bg`: color used by the checkbox component for invalid background.
+- `--ki-checkbox-invalid-border`: color used by the checkbox component for invalid border.
+- `--ki-checkbox-invalid-fg`: color used by the checkbox component for invalid foreground.
+- `--ki-checkbox-label-font-size`: dimension used by the checkbox component for label font size (MarsUI md pairing: body_2 15px for the 20px box).
+- `--ki-checkbox-label-font-weight`: font weight used by the checkbox component for label font weight.
+- `--ki-checkbox-label-line-height`: dimension used by the checkbox component for label line height (MarsUI body_2 24px).
+- `--ki-checkbox-min-target`: dimension used by the checkbox component for min target.
+- `--ki-checkbox-radius`: dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap).
+- `--ki-checkbox-unchecked-active-bg`: color used by the checkbox component for unchecked active background.
+- `--ki-checkbox-unchecked-active-border`: color used by the checkbox component for unchecked active border.
+- `--ki-checkbox-unchecked-active-fg`: color used by the checkbox component for unchecked active foreground.
+- `--ki-checkbox-unchecked-disabled-bg`: color used by the checkbox component for unchecked disabled background (MarsUI Surface/disabled_med_em Gray/300 light / White-18 dark).
+- `--ki-checkbox-unchecked-disabled-border`: color used by the checkbox component for unchecked disabled border.
+- `--ki-checkbox-unchecked-disabled-fg`: color used by the checkbox component for unchecked disabled mark (MarsUI Text/base_em Gray/400 light / White-32 dark; retires the deprecated ki.text.muted alias).
+- `--ki-checkbox-unchecked-hover-bg`: color used by the checkbox component for unchecked hover background.
+- `--ki-checkbox-unchecked-hover-border`: color used by the checkbox component for unchecked hover border.
+- `--ki-checkbox-unchecked-hover-fg`: color used by the checkbox component for unchecked hover foreground.
+- `--ki-checkbox-unchecked-rest-bg`: color used by the checkbox component for unchecked rest background.
+- `--ki-checkbox-unchecked-rest-border`: color used by the checkbox component for unchecked rest border.
+- `--ki-checkbox-unchecked-rest-fg`: color used by the checkbox component for unchecked rest foreground.
+- `--ki-effect-component-primary-default-shadow`: MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)) — CSS cannot mix backdrop blur into box-shadow.
+- `--ki-motion-duration-fast`: Fast interaction transition duration.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-motion-easing-spring`: Gentle overshoot curve for glass pops and playful state transfers. onmars: ki.easing.spring; no MarsUI Figma motion variable exists (documented completion of the motion language).
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
+- `--ki-surface-special-dark-s0-light-s2`: semantic color for surface special dark s0 light s2.
+- `--ki-surface-special-light-s0-dark-s4`: semantic color for surface special light s0 dark s4.
+- `--ki-text-high-em`: semantic color for text high em.
+- `--ki-typography-family-body`: semantic font family for typography family body.

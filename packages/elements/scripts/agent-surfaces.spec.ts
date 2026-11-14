@@ -7,6 +7,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
   buildGenUiSection,
+  buildLlmsDocuments,
+  buildLlmsIndex,
   buildLlmsTxt,
   buildManifest,
   buildRootLlmsTxt,
@@ -433,6 +435,24 @@ describe('agent surfaces', () => {
     expect(declaration.whenNotToUse).toBe(guidance(component, 'whenNotToUse'));
   });
 
+  it("S3 the component's own document and the complete summary carry the guidance verbatim", async () => {
+    const docs = normalizeDocs(await readJson(docsUrl));
+    const component = docs.components.find(
+      (candidate: { tag: string }) => candidate.tag === 'ki-button',
+    );
+    const whenToUse = guidance(component, 'whenToUse') ?? '';
+    const whenNotToUse = guidance(component, 'whenNotToUse') ?? '';
+    const document = buildLlmsDocuments(docs, preamble).find(
+      ([file]: [string, string]) => file === 'ki-button.md',
+    )?.[1];
+    const summary = buildLlmsTxt(docs, (await readJson(pkgUrl)) as PackageFixture, preamble);
+
+    expect(whenToUse).toContain('\n');
+    expect(document).toContain(`## When to use\n\n${whenToUse}\n`);
+    expect(document).toContain(`## When not to use\n\n${whenNotToUse}\n`);
+    expect(summary).toContain(`When to use: ${whenToUse}\nWhen NOT to use: ${whenNotToUse}\n`);
+  });
+
   it('S2 buildLlmsTxt renders package metadata, preamble, facets, and none-lines', async () => {
     const docs = normalizeDocs(await readJson(docsUrl));
     const pkg = (await readJson(pkgUrl)) as PackageFixture;
@@ -463,6 +483,26 @@ describe('agent surfaces', () => {
     );
     expect(shippedPreamble).toContain("import '@kimen/tokens/css';");
     expect(shippedPreamble).not.toContain('/dist/');
+  });
+
+  it('S2 shipped installation guidance attributes color-scheme to the stylesheet that declares it', async () => {
+    const [shippedPreamble, themeCss, pageContractCss] = await Promise.all([
+      readFile(new URL('./scripts/llms-preamble.txt', packageRoot), 'utf8'),
+      readFile(new URL('../tokens/dist/css/tokens.css', packageRoot), 'utf8'),
+      readFile(new URL('../tokens/dist/css/base.css', packageRoot), 'utf8'),
+    ]);
+    const guidance = shippedPreamble.replace(/\s+/gu, ' ');
+
+    // The facts the guidance must describe: the token stylesheet owns the
+    // scheme; the page contract only paints the page from tokens.
+    expect(themeCss).toContain('color-scheme: light dark;');
+    expect(pageContractCss).not.toContain('color-scheme');
+    expect(guidance).not.toMatch(/page contract declares `color-scheme`/u);
+    expect(guidance).toContain(
+      '`@kimen/tokens/css` once per page: it is the onmars default theme and the only stylesheet the components require',
+    );
+    expect(guidance).toContain('together with the `color-scheme` they resolve from');
+    expect(guidance).toContain('`@kimen/tokens/css/base` — the page contract — is optional');
   });
 
   it('S1 S2 render a documented public method in the manifest and llms.txt', async () => {
@@ -803,6 +843,9 @@ describe('agent surfaces', () => {
     expect(slots.map((slot: { name: string }) => slot.name)).toEqual(['']);
     const summary = buildLlmsTxt(docs, await readJson(pkgUrl), preamble);
     expect(summary).not.toContain('`managed`');
+    const [document] = buildLlmsDocuments(docs, preamble);
+    expect(document?.[1]).toContain('## Slots\n\n- (default): ');
+    expect(document?.[1]).not.toContain('`managed`');
   });
 
   it('S7 an undeclared rendered slot still fails and a managed slot cannot also be public', async () => {
@@ -886,11 +929,15 @@ describe('agent surfaces', () => {
       serializeJson(docsA),
       serializeJson(buildManifest(docsA)),
       buildLlmsTxt(docsA, pkg, preamble),
+      buildLlmsIndex(docsA, pkg, preamble),
+      buildLlmsDocuments(docsA, preamble),
     ];
     const outputsB = [
       serializeJson(docsB),
       serializeJson(buildManifest(docsB)),
       buildLlmsTxt(docsB, pkg, preamble),
+      buildLlmsIndex(docsB, pkg, preamble),
+      buildLlmsDocuments(docsB, preamble),
     ];
 
     expect(outputsA).toEqual(outputsB);
@@ -900,6 +947,9 @@ describe('agent surfaces', () => {
         () => '',
       ),
       await readFile(new URL('./llms.txt', packageRoot), 'utf8'),
+      await readFile(new URL('./llms-full.txt', packageRoot), 'utf8'),
+      await readFile(new URL('./llms/ki-button.md', packageRoot), 'utf8'),
+      await readFile(new URL('../../llms.txt', packageRoot), 'utf8'),
     ]) {
       expect(artifact).not.toContain('"timestamp"');
       // Windows drive noise requires an ISOLATED drive letter (C:\...): a
@@ -1050,14 +1100,22 @@ describe('agent surfaces', () => {
       'run_core_gate surfaces-sync node scripts/gates/check-generated-sync.mjs surfaces',
     );
     for (const path of [
+      'llms-full.txt',
       'llms.txt',
       'packages/elements/generated/custom-elements.json',
       'packages/elements/generated/docs.d.ts',
       'packages/elements/generated/docs.json',
       'packages/elements/generated/public-api.json',
+      'packages/elements/llms-full.txt',
       'packages/elements/llms.txt',
+      'packages/elements/llms/theming.md',
     ]) {
       expect(sync).toContain(`'${path}'`);
     }
+    // One document per component and per GenUI package, derived rather than
+    // listed, and both documents directories closed against stray files.
+    expect(sync).toContain('`packages/elements/llms/${tag}.md`');
+    expect(sync).toContain("'packages/elements/llms',");
+    expect(sync).toContain("'llms',");
   });
 });

@@ -1,9 +1,12 @@
-import { readFile, writeFile } from 'node:fs/promises';
-import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
+  buildGenUiDocuments,
   buildGenUiSection,
+  buildLlmsDocuments,
+  buildLlmsIndex,
   buildLlmsTxt,
   buildManifest,
   buildRootLlmsTxt,
@@ -15,6 +18,12 @@ import {
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(packageRoot, '../..');
+
+// Where scripts/build-site.sh publishes the repository index and what it
+// links (research D11): the origin is the `site` of the documentation build
+// and the manifest path is where the assembler copies custom-elements.json.
+const SITE_ORIGIN = 'https://kimen.dev/';
+const SITE_MANIFEST_PATH = 'assets/elements/custom-elements.json';
 
 export async function runBuildSurfaces(options = {}) {
   const selectedPackageRoot = options.packageRoot ?? packageRoot;
@@ -45,10 +54,11 @@ export async function runBuildSurfaces(options = {}) {
     };
   }
 
-  // The root llms.txt extends the package summary with the GenUI layer
-  // (catalog + adapters). Its hand-written source is validated against the
-  // real package entry modules BEFORE any output is written, so a renamed
-  // export or blank guidance fails the build instead of shipping stale.
+  // The repository surfaces extend the package ones with the GenUI layer
+  // (catalog, emitter, adapters). Its hand-written source is validated
+  // against the real package entry modules BEFORE any output is written, so
+  // a renamed export or blank guidance fails the build instead of shipping
+  // stale.
   const genUiInputs = await loadGenUiSurfaces({
     genUiPath: paths.genUiPath,
     workspaceRoot: selectedWorkspaceRoot,
@@ -81,11 +91,34 @@ export async function runBuildSurfaces(options = {}) {
     ).href
   );
   const manifest = completeCemMethodSignatures({ manifest: rawManifest, docs });
-  const llmsTxt = buildLlmsTxt(docs, pkg, preamble, manifestInputs);
-  const rootLlmsTxt = buildRootLlmsTxt(
-    llmsTxt,
+  // Each index owns two companions next to it (llms.txt → llms-full.txt and
+  // llms/): the complete summary and the documents the index links. The
+  // packaged index links them by relative path; the repository index, which
+  // the site publishes, by their address on the site.
+  const packageCompanions = llmsCompanions(paths.packageLlmsPath);
+  const rootCompanions = llmsCompanions(paths.rootLlmsPath);
+  const packageFull = buildLlmsTxt(docs, pkg, preamble, manifestInputs);
+  const rootFull = buildRootLlmsTxt(
+    packageFull,
     buildGenUiSection(genUiInputs.genUi, genUiInputs.packages),
   );
+  const packageIndex = buildLlmsIndex(docs, pkg, preamble, {
+    manifestHref: pkg.customElements,
+  });
+  const rootIndex = buildLlmsIndex(docs, pkg, preamble, {
+    base: SITE_ORIGIN,
+    manifestHref: `${SITE_ORIGIN}${SITE_MANIFEST_PATH}`,
+    genUi: genUiInputs,
+  });
+  const packageDocuments = buildLlmsDocuments(docs, preamble, manifestInputs);
+  const rootDocuments = buildGenUiDocuments(genUiInputs.genUi, genUiInputs.packages);
+  // The site serves both sets from one /llms/ directory: a name written
+  // twice would publish one document over the other.
+  const documentFiles = [...packageDocuments, ...rootDocuments].map(([file]) => file);
+  const repeated = documentFiles.find((file, index) => documentFiles.indexOf(file) !== index);
+  if (repeated !== undefined) {
+    throw new Error(`build-surfaces: llms/${repeated} would be generated more than once`);
+  }
   const publicApi =
     options.publicApi ??
     (await buildPublicApi({
@@ -105,24 +138,56 @@ export async function runBuildSurfaces(options = {}) {
     options.workspaceRoot ?? workspaceRoot,
   );
 
-  await writeFile(paths.docsPath, serializeJson(docs));
-  await writeFile(paths.manifestPath, serializeJson(manifest));
-  await writeFile(paths.publicApiPath, publicApiBytes);
-  await writeFile(paths.packageLlmsPath, llmsTxt);
-  await writeFile(paths.rootLlmsPath, rootLlmsTxt);
-
-  return {
-    ok: true,
-    stderr: '',
-    violations: [],
-    outputs: new Map([
-      [paths.docsPath, serializeJson(docs)],
-      [paths.manifestPath, serializeJson(manifest)],
-      [paths.publicApiPath, publicApiBytes],
-      [paths.packageLlmsPath, llmsTxt],
-      [paths.rootLlmsPath, rootLlmsTxt],
+  const outputs = new Map([
+    [paths.docsPath, serializeJson(docs)],
+    [paths.manifestPath, serializeJson(manifest)],
+    [paths.publicApiPath, publicApiBytes],
+    [paths.packageLlmsPath, packageIndex],
+    [packageCompanions.fullPath, packageFull],
+    ...packageDocuments.map(([file, content]) => [
+      join(packageCompanions.documentsDirectory, file),
+      content,
     ]),
-  };
+    [paths.rootLlmsPath, rootIndex],
+    [rootCompanions.fullPath, rootFull],
+    ...rootDocuments.map(([file, content]) => [
+      join(rootCompanions.documentsDirectory, file),
+      content,
+    ]),
+  ]);
+
+  await mkdir(packageCompanions.documentsDirectory, { recursive: true });
+  await mkdir(rootCompanions.documentsDirectory, { recursive: true });
+  for (const [outputPath, content] of outputs) {
+    await writeFile(outputPath, content);
+  }
+  await removeStaleDocuments(packageCompanions.documentsDirectory, packageDocuments);
+  await removeStaleDocuments(rootCompanions.documentsDirectory, rootDocuments);
+
+  return { ok: true, stderr: '', violations: [], outputs };
+}
+
+// Deriving the companions from the index path keeps every caller that
+// redirects an index (tests, the generator smoke) inside its own directory:
+// nothing is ever written next to an index the caller did not name.
+function llmsCompanions(indexPath) {
+  const stem = indexPath.replace(/\.txt$/u, '');
+  if (stem === indexPath) {
+    throw new Error(`build-surfaces: an llms index path must end in .txt: ${indexPath}`);
+  }
+  return { fullPath: `${stem}-full.txt`, documentsDirectory: stem };
+}
+
+// A documents directory holds exactly what this run generated: the document
+// of a component or package that no longer exists is removed with it, so it
+// can neither ship nor stay published (FR-012).
+async function removeStaleDocuments(directory, documents) {
+  const generated = new Set(documents.map(([file]) => file));
+  for (const entry of await readdir(directory)) {
+    if (entry.endsWith('.md') && !generated.has(entry)) {
+      await rm(join(directory, entry));
+    }
+  }
 }
 
 // The GenUI surface source is hand-written (docs/genui-surfaces.json); the

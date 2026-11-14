@@ -10,17 +10,27 @@ with the package, so it can never drift from the code.
 
 ## llms.txt
 
-The library, summarized for language models: every component with its
-description, when-to-use / when-not-to-use guidance, typed props, events,
-slots, CSS parts and curated runnable examples.
+The library, indexed for language models the way the
+[llms.txt convention](https://llmstxt.org/) describes. The index is short —
+what Kimen is, how to install and load it, and one line per component saying
+when to use it — and each line links one Markdown document with that
+component's complete contract: when-to-use / when-not-to-use guidance, typed
+attributes (required, bounded and URL attributes marked), slots, CSS parts,
+events, methods, styling tokens and curated runnable examples.
 
+- On this site: [`/llms.txt`](/llms.txt) is the index. Every document it
+  links is served under `/llms/` — for example
+  [`/llms/ki-button.md`](/llms/ki-button.md) — and
+  [`/llms-full.txt`](/llms-full.txt) is all of it in one file.
+- In the npm package: `@kimen/elements` ships `llms.txt` with relative
+  links to `llms/*.md` and `llms-full.txt`, so an agent reads the documents
+  of the version that is installed, offline.
 - In the repository: [`llms.txt`](https://github.com/kimen-dev/kimen/blob/main/llms.txt)
   at the repository root.
-- In the npm package: `@kimen/elements/llms.txt` ships in the package files.
 
-Point your tool at it — `@docs` in Cursor or Windsurf, or paste the URL into
-a ChatGPT/Claude conversation — and the agent gets the whole component
-contract in one document.
+Point your tool at the index — `@docs` in Cursor or Windsurf, or paste the
+URL into a ChatGPT/Claude conversation — and the agent reads about two
+thousand tokens, then fetches only the components it decides to use.
 
 ## custom-elements.json
 

@@ -183,8 +183,16 @@ describe('agent surface mutation boundary', () => {
       );
       // Default workspace root: the root summary extends the package one with
       // the GenUI layer generated from the repository's committed sources.
-      const packageLlms = await readFile(join(root, 'package-llms.txt'), 'utf8');
-      const rootLlms = await readFile(join(root, 'root-llms.txt'), 'utf8');
+      // The named files are the indexes; the complete summaries sit beside
+      // them (package-llms.txt → package-llms-full.txt).
+      const packageLlms = await readFile(join(root, 'package-llms-full.txt'), 'utf8');
+      const rootLlms = await readFile(join(root, 'root-llms-full.txt'), 'utf8');
+      expect(await readFile(join(root, 'package-llms.txt'), 'utf8')).toContain(
+        '- [ki-dialog](llms/ki-dialog.md): Use for one interrupting decision.',
+      );
+      expect(await readFile(join(root, 'package-llms/ki-dialog.md'), 'utf8')).toContain(
+        '## When not to use\n\nDo not use for passive status.',
+      );
       expect(rootLlms.startsWith(packageLlms)).toBe(true);
       expect(packageLlms).not.toContain('## GenUI layer');
       expect(rootLlms).toContain('## GenUI layer');
