@@ -109,6 +109,65 @@ test('S11 every link of the packaged llms.txt is a relative path to a file insid
   );
 });
 
+// Runs the real assembler into a scratch directory (the publishing workflow
+// never sets KIMEN_SITE_OUT, so this is the artifact Cloudflare Pages serves).
+async function assembleSite() {
+  const output = await mkdtemp(join(tmpdir(), 'kimen-llms-site-'));
+  const environment = { ...process.env, KIMEN_SITE_OUT: output };
+  delete environment.KIMEN_ANALYTICS;
+  try {
+    await execFileAsync('bash', ['scripts/build-site.sh', '--skip-storybook'], {
+      cwd: repositoryRoot,
+      env: environment,
+    });
+  } catch (error) {
+    await rm(output, { force: true, recursive: true });
+    assert.fail(
+      `build-site.sh failed: ${error.stdout ?? ''}${error.stderr ?? ''} (${error.message})`,
+    );
+  }
+  return output;
+}
+
+test('S12 the assembled site serves llms.txt and llms-full.txt at its root and every document its index links', async (t) => {
+  const output = await assembleSite();
+  t.after(() => rm(output, { force: true, recursive: true }));
+  // The origin the index links is the one the documentation build declares.
+  const siteOrigin = /^\s*site: '(https:\/\/[^']+)',$/mu.exec(
+    await readRepositoryFile('site/docs/astro.config.mjs'),
+  )?.[1];
+  assert.equal(siteOrigin, 'https://kimen.dev');
+
+  const served = await readFile(join(output, 'llms.txt'), 'utf8');
+  assert.equal(served, await readRepositoryFile('llms.txt'));
+  assert.equal(
+    await readFile(join(output, 'llms-full.txt'), 'utf8'),
+    await readRepositoryFile('llms-full.txt'),
+  );
+
+  const links = linkedUrls(served);
+  assert.ok(links.includes(`${siteOrigin}/llms/ki-button.md`));
+  assert.ok(links.includes(`${siteOrigin}/llms/catalog.md`));
+  assert.ok(links.includes(`${siteOrigin}/llms-full.txt`));
+  for (const url of links) {
+    assert.ok(
+      url.startsWith(`${siteOrigin}/`),
+      `${url} must be an absolute address of the site: the published index is read pasted and fetched, away from its base URL`,
+    );
+    const content = await readFile(join(output, url.slice(siteOrigin.length + 1)), 'utf8').catch(
+      () => null,
+    );
+    assert.ok(content, `${url} is linked by the published index but the site does not serve it`);
+  }
+  // One directory, two sources: the component and theming documents of the
+  // package and the GenUI guides of the repository, none shadowing another
+  // and none published without a link.
+  assert.deepEqual(
+    (await readdir(join(output, 'llms'))).map((file) => `${siteOrigin}/llms/${file}`).toSorted(),
+    links.filter((url) => url.startsWith(`${siteOrigin}/llms/`)).toSorted(),
+  );
+});
+
 // Deliberately carries no scenario ID: build caching is tooling, not behavior
 // an agent can observe. It is the regression test for a cache that replayed a
 // stale llms.txt after docs/genui-surfaces.json changed, because the elements
