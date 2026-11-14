@@ -32,6 +32,7 @@ export type {
   ReceiveResult,
   SurfaceBridge,
   SurfaceBridgeOptions,
+  SurfaceColorScheme,
   SurfaceState,
 } from './bridge.js';
 export {

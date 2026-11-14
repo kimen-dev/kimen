@@ -11,7 +11,7 @@
  *   outbound — a reply is addressed to the host that spoke, when it has an
  *              address at all
  */
-import type { SurfaceBridge } from './bridge.js';
+import type { SurfaceBridge, SurfaceColorScheme } from './bridge.js';
 import { createSurfaceBridge } from './bridge.js';
 import type { SurfaceOutboundMessage } from './protocol.js';
 
@@ -44,6 +44,12 @@ export interface SurfaceWindow {
    * (apps.mdx:1217, SHOULD).
    */
   readonly observeSize?: (listener: (width: number, height: number) => void) => void;
+  /**
+   * Optional scheme sink: renders the document in the color scheme its host
+   * announced (the document runtime sets it on the root element, where the
+   * token stylesheets read it).
+   */
+  readonly applyColorScheme?: (scheme: SurfaceColorScheme) => void;
 }
 
 /** No addressee: used until a host has spoken, and for a host with no address. */
@@ -66,6 +72,9 @@ export function wireSurface(win: SurfaceWindow, surface: Element): SurfaceBridge
   let hostOrigin = ANY_ORIGIN;
 
   const bridge = createSurfaceBridge({
+    onColorScheme: (scheme: SurfaceColorScheme): void => {
+      win.applyColorScheme?.(scheme);
+    },
     send: (message: SurfaceOutboundMessage): void => {
       // The host mediates its own audit/consent path (apps.mdx:487); this only
       // decides the addressee.

@@ -24,6 +24,9 @@
  * - A declared action leaves as a standard `tools/call` (apps.mdx:493-495,
  *   1336-1338, 1490) to the adapter's fixed app-only action tool. Undeclared
  *   actions never leave (S6).
+ * - The host's `theme` (apps.mdx:544-545) — in the handshake result or a later
+ *   `ui/notifications/host-context-changed` — is handed to the document as its
+ *   color scheme (S19); any value the protocol does not define is ignored (S20).
  */
 import type { ActionEvent, RenderBudgets, RenderOptions, RenderResult } from '@kimen/catalog';
 import { renderUiSpec } from '@kimen/catalog';
@@ -68,6 +71,13 @@ export type GuardedRender = (input: unknown, options: RenderOptions) => RenderRe
 
 /** Where the surface is in the MCP Apps lifecycle. */
 export type SurfaceState = 'closed' | 'idle' | 'initializing' | 'ready' | 'refused';
+
+/**
+ * The color scheme a host can ask the surface to render in: the two values of
+ * `McpUiHostContext.theme` (apps.mdx:544-545), which are also the two values
+ * of the token contract's `data-ki-color-scheme` (@kimen/tokens).
+ */
+export type SurfaceColorScheme = 'dark' | 'light';
 
 /** A machine-readable, observable refusal (FR-003/FR-004): named, inert data. */
 export interface BridgeRefusal {
@@ -114,6 +124,13 @@ export interface SurfaceBridgeOptions {
   readonly render?: GuardedRender;
   /** Receives every refusal (unknown component, undeclared prop or action, version skew, ...). */
   readonly onRefusal?: (refusal: BridgeRefusal) => void;
+  /**
+   * Receives the host's color scheme whenever the host announces one: with the
+   * handshake result and on every later theme change (S19). The surface
+   * document applies it to its root. Never called with a value the protocol
+   * does not define, nor outside a completed handshake (S20).
+   */
+  readonly onColorScheme?: (scheme: SurfaceColorScheme) => void;
   readonly supportedVersions?: readonly string[];
   readonly budgets?: Partial<RenderBudgets>;
   readonly catalogSchemaVersion?: string;
@@ -126,6 +143,17 @@ const ACCEPTED: ReceiveResult = { handled: true, ok: true, refusals: [] };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+/**
+ * The color scheme a host context announces, or undefined when it announces
+ * none this surface can honor. `theme` is host data crossing the protocol
+ * boundary: only the two values the protocol defines pass, compared exactly —
+ * the value is never coerced, trimmed or case-folded into one.
+ */
+function colorSchemeOf(context: Readonly<Record<string, unknown>>): SurfaceColorScheme | undefined {
+  const theme = context['theme'];
+  return theme === 'dark' || theme === 'light' ? theme : undefined;
 }
 
 /** The declared action set the surface spec commits to (the outbound allowlist). */
@@ -187,6 +215,13 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
   const refuse = (refusal: BridgeRefusal): ReceiveResult => {
     report(refusal);
     return { handled: true, ok: false, refusals: [refusal] };
+  };
+
+  const applyColorScheme = (context: Readonly<Record<string, unknown>>): void => {
+    const scheme = colorSchemeOf(context);
+    if (scheme !== undefined) {
+      options.onColorScheme?.(scheme);
+    }
   };
 
   const flushSize = (): void => {
@@ -332,6 +367,9 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
     const context = message.result['hostContext'];
     hostContext = isRecord(context) ? { ...context } : {};
     state = 'ready';
+    // Before the confirmation leaves: the document is in the host's scheme by
+    // the time the host may send it anything to render.
+    applyColorScheme(hostContext);
     options.send({
       jsonrpc: JSONRPC_VERSION,
       method: METHOD_INITIALIZED,
@@ -386,7 +424,9 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
       case METHOD_TOOL_RESULT:
         return renderToolResult(message.params, true);
       case METHOD_HOST_CONTEXT_CHANGED:
+        // A partial update (apps.mdx:1229): only a theme it carries is applied.
         hostContext = { ...hostContext, ...message.params };
+        applyColorScheme(message.params);
         return ACCEPTED;
       case METHOD_TOOL_INPUT:
       case METHOD_TOOL_INPUT_PARTIAL:

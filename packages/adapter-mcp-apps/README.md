@@ -17,9 +17,17 @@ never touching core.
   props are rejected, no code path executes from data) are enforced there,
   once (Art. I).
 - **Self-contained, auditable resource.** The `ui://` document is one HTML file
-  with every script and style inline and a content policy (`default-src 'none'`)
-  that references no external origin — a host can audit and cache it before
-  first render (verified mechanically, S2).
+  with one inline script and one inline stylesheet, and a content policy
+  (`default-src 'none'`) that references no external origin and names exactly
+  those two elements by digest — no other inline script, inline style or
+  evaluated code is admitted. A host can audit and cache it before first
+  render (verified mechanically, S2 and S21), and regeneration is
+  byte-identical.
+- **The document is the whole surface.** It carries the definition of every
+  catalog component and the default token stylesheet, so a host that only
+  speaks the protocol displays real, styled, operable `ki-*` components — an
+  MCP server has nothing to add, and could not (verified in a real browser,
+  S16–S18). It follows the host's light/dark theme (S19).
 - **Validated boundary.** Inbound host traffic is classified as JSON-RPC 2.0
   and gated by the MCP Apps lifecycle before it can affect rendering: nothing
   renders before the `ui/initialize` handshake completes, and a non-protocol
@@ -75,8 +83,11 @@ Inside the surface document, `createSurfaceBridge` speaks the MCP Apps
 through the guarded renderer, answers `ui/resource-teardown` and `ping`,
 ignores non-protocol traffic, and lets only declared actions leave as
 `tools/call` to `kimen_surface_action`. A host negotiating a protocol version
-outside `COMPAT.md` is refused at the handshake. The full wire table is in
-[`COMPAT.md`](./COMPAT.md).
+outside `COMPAT.md` is refused at the handshake. The host's `theme` reaches
+the document as its color scheme: the packaged document sets it on its root
+element, and a custom document receives it through the bridge's
+`onColorScheme` option. The full wire table, what the document contains, its
+size and its declared boundaries are in [`COMPAT.md`](./COMPAT.md).
 
 See [Ship an MCP App with Kimen](../../docs/guides/mcp-apps.md) for the full
 guide, and the [roadmap](../../docs/roadmap.md) for project context.

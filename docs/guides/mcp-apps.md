@@ -149,18 +149,28 @@ will reach before you ship a spec shape (see
 
 ## The surface document
 
-`createKimenSurfaceResource` serves a generated, committed document
-(exported as `SURFACE_DOCUMENT`) with these properties:
+`createKimenSurfaceResource` serves a document generated at build time and
+shipped with the package (exported as `SURFACE_DOCUMENT`) with these
+properties:
 
-- **Self-contained.** Every script and style is inline; the guarded renderer
-  and the catalog validator are bundled into one `<script>`. Nothing is
-  fetched.
+- **Self-contained and complete.** One inline `<script>` carries the
+  definition of every catalog component, the guarded renderer and the catalog
+  validator; one inline `<style>` carries the default token stylesheet and
+  the page contract. Nothing is fetched, and nothing has to be added: a host
+  that only speaks the protocol displays real, styled, operable `ki-*`
+  components.
 - **No external origin, by policy and by content.** The document's CSP is
-  `default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline';
-  img-src data:; base-uri 'none'; form-action 'none'`, and its declared
-  SEP-1865 content policy (`_meta.ui.csp`) has empty allowlists. This is
-  defense in depth: the document stays safe by construction even if the host
-  does not enforce the policy.
+  `default-src 'none'; script-src 'sha256-…'; style-src 'sha256-…'; img-src
+  data:; base-uri 'none'; form-action 'none'` — the two digests are its own
+  script and stylesheet, so no other inline script, inline style or evaluated
+  code is admitted — and its declared SEP-1865 content policy
+  (`_meta.ui.csp`) has empty allowlists. This is defense in depth: the
+  document stays safe by construction even if the host does not enforce the
+  policy.
+- **Follows the host's theme.** A `theme` of `light` or `dark` in the host
+  context — in the handshake result or a later
+  `ui/notifications/host-context-changed` — selects the token color scheme;
+  without one the document follows the viewer's preference.
 - **Origin-checked channel.** The document accepts only messages whose
   `source` is the embedding frame — a well-formed tool result (or a forged
   handshake answer) posted by a sibling frame or an embedded third party is
@@ -171,18 +181,18 @@ will reach before you ship a spec shape (see
   then it sends `ui/notifications/initialized` and reports its size with
   `ui/notifications/size-changed`.
 
-One declared v1 boundary matters to integrators: the bundled document embeds
-the guarded **render path**, not the `ki-*` element definitions — registration
-and theming stay out of it to keep the document deterministic and small. The
-rendered tree is real `ki-*` markup either way; hosts and custom documents
-that load `@kimen/elements` and the token stylesheets get the fully styled
-components.
+Three declared v1 boundaries matter to integrators: only the host's
+light/dark theme is applied (host style variables and fonts are not mapped
+onto `--ki-*` tokens, so the document always renders the default Kimen
+theme); no webfont is embedded; and the document declares no network, so an
+avatar image or a video source does not load. The document's size and budget
+are in [`COMPAT.md`](../../packages/adapter-mcp-apps/COMPAT.md).
 
 ## Inside the surface: the bridge
 
 The bundled document wires itself. Reach for `createSurfaceBridge` when you
-build a **custom** surface document — for example one that also registers the
-elements and loads tokens — and need the same guarantees:
+build a **custom** surface document — for example one that renders another
+theme or your own registered catalog — and need the same guarantees:
 
 ```ts
 import { createSurfaceBridge } from '@kimen/adapter-mcp-apps';
@@ -191,6 +201,10 @@ const bridge = createSurfaceBridge({
   surface: document.querySelector('#kimen-surface'),
   send: (message) => window.parent.postMessage(message, hostOrigin),
   onRefusal: (refusal) => console.warn(refusal), // { reason, detail, value? }
+  onColorScheme: (scheme) => {
+    // 'light' | 'dark', from the host's theme — never any other value
+    document.documentElement.setAttribute('data-ki-color-scheme', scheme);
+  },
 });
 
 window.addEventListener('message', (event) => {

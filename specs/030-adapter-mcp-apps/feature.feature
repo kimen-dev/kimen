@@ -119,3 +119,48 @@ Feature: MCP Apps adapter
       Given a surface whose handshake has completed
       When the host sends a request for a method the surface does not implement
       Then the surface answers with a JSON-RPC "method not found" error for that request id
+
+  Rule: The delivered document is a complete Kimen surface
+
+    # S16
+    Scenario: A tool result renders as real, token-styled Kimen components
+      Given the packaged surface document embedded by a host that supplies only protocol messages
+      When the host sends a tool result whose spec contains a ki-button labeled "Confirm"
+      Then "Confirm" renders as a registered Kimen button styled by the Kimen design tokens
+
+    # S17
+    Scenario: Activating a rendered control sends its declared action to the host
+      Given the packaged surface document showing a "Confirm" button bound to the declared action "confirm"
+      When the user activates the button
+      Then the host receives one tools/call request naming the adapter's app-only action tool with the action "confirm"
+
+    # S18
+    Scenario: Every catalog component renders inside the document under its own content policy
+      Given the packaged surface document embedded by an MCP Apps host
+      When the host sends a tool result whose spec contains every component of the neutral catalog
+      Then every component renders as a registered Kimen element
+      And the document reports no content-policy violation
+
+    # S19
+    Scenario Outline: The document follows the host's color scheme
+      Given the packaged surface document embedded by an MCP Apps host
+      When the host announces the theme "<theme>" in <message>
+      Then the document renders in the <theme> color scheme
+
+      Examples:
+        | theme | message                                              |
+        | dark  | its ui/initialize result                             |
+        | light | a ui/notifications/host-context-changed notification |
+
+    # S20
+    Scenario: A theme the protocol does not define leaves the color scheme unchanged
+      Given a surface rendering in the dark color scheme its host announced
+      When the host sends ui/notifications/host-context-changed with the theme "sepia"
+      Then the document stays in the dark color scheme
+
+    # S21
+    Scenario: The content policy admits only the document's own script and stylesheet
+      Given the adapter's packaged surface document
+      When the host audits the document before first render
+      Then its content policy identifies the inline script and the inline stylesheet by digest
+      And the policy permits no other inline script, inline style or evaluated code
