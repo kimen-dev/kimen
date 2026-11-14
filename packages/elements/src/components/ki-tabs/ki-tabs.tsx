@@ -54,6 +54,8 @@ export class KiTabs {
   private tabRoster: HTMLElement[] = [];
   private panelRoster: HTMLElement[] = [];
   private pairings: PairingRecord[] = [];
+  private tabStrip: HTMLElement | undefined;
+  private revealedTab: HTMLElement | null = null;
   private disabledObserver?: MutationObserver;
   private reconciling = false;
 
@@ -107,6 +109,10 @@ export class KiTabs {
     this.disabledObserver?.disconnect();
   }
 
+  private readonly setTabStripRef = (strip?: HTMLElement): void => {
+    this.tabStrip = strip;
+  };
+
   private readonly handleSlotChange = (): void => {
     this.reconcile(this.value);
   };
@@ -156,6 +162,35 @@ export class KiTabs {
     nextTab.focus();
   };
 
+  /**
+   * The strip is a scrollport, and a scrollport clips the focus ring a tab
+   * draws outside its own box. While a tab shows that ring, the strip gets
+   * its reach as room on every side (ki-tabs.css). It is measured from the
+   * tab, not assumed: no ring (pointer focus) means no room.
+   */
+  private readonly handleFocusIn = (event: FocusEvent): void => {
+    const tab = this.tabFromEvent(event);
+    const strip = this.tabStrip;
+    if (!tab || !strip) {
+      return;
+    }
+    const ring = getComputedStyle(tab);
+    const reach =
+      ring.outlineStyle === 'none'
+        ? 0
+        : Number.parseFloat(ring.outlineWidth) + Number.parseFloat(ring.outlineOffset);
+    strip.style.setProperty('--_ki-tabs-focus-room', `${String(Math.max(reach, 0) || 0)}px`);
+    // Keyboard focus brings the tab in together with its ring. Pointer focus
+    // does not scroll: the strip must not move under a press still going on.
+    if (reach > 0) {
+      this.revealTab(tab);
+    }
+  };
+
+  private readonly handleFocusOut = (): void => {
+    this.tabStrip?.style.removeProperty('--_ki-tabs-focus-room');
+  };
+
   private tabFromEvent(event: Event): HTMLElement | null {
     for (const part of event.composedPath()) {
       if (
@@ -187,6 +222,41 @@ export class KiTabs {
     this.applyStamps(selectedTab);
     this.value = selectedTab ? this.elementValue(selectedTab) : '';
     this.reconciling = false;
+
+    // A selection made by pointer or through `value` brings its tab into
+    // view. Only a change does: reconciling an unchanged selection (a tab
+    // added, a tab disabled) leaves the strip where the person scrolled it.
+    if (selectedTab !== this.revealedTab) {
+      this.revealedTab = selectedTab;
+      if (selectedTab) {
+        this.revealTab(selectedTab);
+      }
+    }
+  }
+
+  /**
+   * Scrolls the strip, and only the strip, until the tab is whole inside it,
+   * clear of the focus-ring room when there is one. Not `scrollIntoView`:
+   * that also scrolls the page to a strip that is off screen. The deltas are
+   * physical, so they hold in either writing direction.
+   */
+  private revealTab(tab: HTMLElement): void {
+    const strip = this.tabStrip;
+    // Nothing to do unless the strip measurably overflows (also covers
+    // runtimes with no layout, where both sizes are absent).
+    if (!strip || !(strip.scrollWidth > strip.clientWidth)) {
+      return;
+    }
+    const room = Number.parseFloat(getComputedStyle(strip).scrollPaddingInlineStart) || 0;
+    const stripBox = strip.getBoundingClientRect();
+    const tabBox = tab.getBoundingClientRect();
+    const pastLeft = stripBox.left + room - tabBox.left;
+    const pastRight = tabBox.right - (stripBox.right - room);
+    if (pastLeft > 0) {
+      strip.scrollLeft -= pastLeft;
+    } else if (pastRight > 0) {
+      strip.scrollLeft += pastRight;
+    }
   }
 
   private stampTabSlots(): void {
@@ -342,9 +412,14 @@ export class KiTabs {
 
   render() {
     return (
-      <Host onClick={this.handleClick} onKeyDown={this.handleKeyDown}>
+      <Host
+        onClick={this.handleClick}
+        onKeyDown={this.handleKeyDown}
+        onFocusin={this.handleFocusIn}
+        onFocusout={this.handleFocusOut}
+      >
         <div part="tablist" role="tablist" aria-label={this.label}>
-          <slot name="tab" onSlotchange={this.handleSlotChange} />
+          <slot name="tab" ref={this.setTabStripRef} onSlotchange={this.handleSlotChange} />
         </div>
         <slot onSlotchange={this.handleSlotChange} />
       </Host>

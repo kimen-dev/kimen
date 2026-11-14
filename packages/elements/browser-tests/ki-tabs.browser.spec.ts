@@ -428,6 +428,209 @@ describe('ki-tabs keyboard behavior in a real browser', () => {
   });
 });
 
+// WCAG 1.4.10 (reflow at 320 CSS px): more tabs than fit must scroll inside
+// the strip, never widen the page, and stay reachable by keyboard and pointer.
+describe('ki-tabs narrow viewport behavior in a real browser', () => {
+  function sixTabs(): string {
+    const values = ['a', 'b', 'c', 'd', 'e', 'f'];
+    return `
+      <ki-tabs label="Settings" value="a">
+        ${values.map((value) => `<ki-tab value="${value}">Notifications ${value}</ki-tab>`).join('')}
+        ${values.map((value) => `<ki-tab-panel value="${value}">Panel ${value}</ki-tab-panel>`).join('')}
+      </ki-tabs>
+    `;
+  }
+
+  /**
+   * Whole tab inside the tab group's own box, which itself fits the page.
+   * One pixel of slack: scroll offsets are whole pixels while tab widths are
+   * not, so a tab scrolled flush to an edge can sit a fraction past it.
+   */
+  function inView(tabs: KiTabsElement, value: string): boolean {
+    const box = tab(tabs, value).getBoundingClientRect();
+    const group = tabs.getBoundingClientRect();
+    return box.left >= group.left - 1 && box.right <= group.right + 1;
+  }
+
+  /** The box that clips the strip: the nearest scroll container around the tabs. */
+  function scrollportOf(tabs: KiTabsElement): HTMLElement {
+    let el: HTMLElement | null = tab(tabs, 'a').assignedSlot;
+    while (el !== null && getComputedStyle(el).overflowX === 'visible') {
+      el = el.parentElement;
+    }
+    if (el === null) {
+      throw new Error('the tab strip is not a scroll container');
+    }
+    return el;
+  }
+
+  async function narrow(run: () => Promise<void>): Promise<void> {
+    await page.viewport(320, 640);
+    try {
+      await run();
+    } finally {
+      await page.viewport(414, 896);
+    }
+  }
+
+  it('S4 S5 S14 six tabs scroll inside the strip and keyboard focus stays in view', async () => {
+    await narrow(async () => {
+      const tabs = await mount(sixTabs());
+
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+      expect(tabs.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth);
+      expect(inView(tabs, 'a')).toBe(true);
+      expect(inView(tabs, 'f')).toBe(false);
+
+      tab(tabs, 'a').focus();
+      await userEvent.keyboard('{End}');
+      expect(document.activeElement).toBe(tab(tabs, 'f'));
+      expect(tabs.value).toBe('f');
+      await expect.poll(() => inView(tabs, 'f')).toBe(true);
+      expect(inView(tabs, 'a')).toBe(false);
+
+      await userEvent.keyboard('{Home}');
+      expect(document.activeElement).toBe(tab(tabs, 'a'));
+      await expect.poll(() => inView(tabs, 'a')).toBe(true);
+
+      await userEvent.keyboard('{ArrowRight}{ArrowRight}{ArrowRight}');
+      expect(document.activeElement).toBe(tab(tabs, 'd'));
+      expect(tabs.value).toBe('d');
+      await expect.poll(() => inView(tabs, 'd')).toBe(true);
+
+      // Only the strip moved: the page never gained a horizontal scroll.
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+      expect(window.scrollX).toBe(0);
+      await expectAccessible(main());
+    });
+  });
+
+  it('S1 a tab selected by value or by pointer is brought fully into view', async () => {
+    await narrow(async () => {
+      const tabs = await mount(sixTabs());
+
+      tabs.value = 'f';
+      await expect.poll(() => inView(tabs, 'f')).toBe(true);
+      tabs.value = 'a';
+      await expect.poll(() => inView(tabs, 'a')).toBe(true);
+
+      // Leave the first tab that does not fit cut in half by the edge of the
+      // strip: a press on its visible half selects it and scrolls the rest in.
+      const cutValue = ['b', 'c', 'd', 'e', 'f'].find((value) => !inView(tabs, value)) ?? 'f';
+      const cut = tab(tabs, cutValue);
+      const cutBox = cut.getBoundingClientRect();
+      scrollportOf(tabs).scrollLeft +=
+        cutBox.left + cutBox.width / 2 - tabs.getBoundingClientRect().right;
+      expect(inView(tabs, cutValue)).toBe(false);
+
+      await userEvent.click(cut, { position: { x: 4, y: 12 } });
+
+      expect(tabs.value).toBe(cutValue);
+      await expect.poll(() => inView(tabs, cutValue)).toBe(true);
+      expect(window.scrollX).toBe(0);
+    });
+  });
+
+  it('S11 six tabs scroll inside the strip from the right edge under RTL', async () => {
+    await narrow(async () => {
+      document.documentElement.dir = 'rtl';
+      const tabs = await mount(sixTabs());
+
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+      expect(inView(tabs, 'a')).toBe(true);
+      expect(inView(tabs, 'f')).toBe(false);
+
+      tabs.value = 'f';
+      await expect.poll(() => inView(tabs, 'f')).toBe(true);
+      tab(tabs, 'f').focus();
+      await userEvent.keyboard('{Home}');
+      expect(document.activeElement).toBe(tab(tabs, 'a'));
+      await expect.poll(() => inView(tabs, 'a')).toBe(true);
+    });
+  });
+
+  it.each(['ltr', 'rtl'])(
+    'S11 a strip flush with the page edges adds no page overflow under %s',
+    async (dir) => {
+      await narrow(async () => {
+        document.body.style.margin = '0';
+        try {
+          document.documentElement.dir = dir;
+          const tabs = await mount(sixTabs());
+
+          expect(tabs.getBoundingClientRect().width).toBe(window.innerWidth);
+          expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+        } finally {
+          document.body.style.margin = '';
+        }
+      });
+    },
+  );
+
+  // The room the strip takes for a focus ring must not sit on top of its
+  // neighbours when no ring is drawn: a control flush above the group keeps
+  // its whole hit area, at rest and after a pointer press on a tab, and
+  // keyboard focus (when that room appears) moves nothing.
+  it('S4 the strip takes no pointer area from a control flush above it and focus moves no tab', async () => {
+    await narrow(async () => {
+      const tabs = await mount(sixTabs());
+      const above = document.createElement('button');
+      above.textContent = 'Above';
+      above.style.display = 'block';
+      above.style.margin = '0';
+      tabs.before(above);
+      const aboveBox = above.getBoundingClientRect();
+      expect(tabs.getBoundingClientRect().top).toBe(aboveBox.bottom);
+
+      // The control still owns its last pixel rows: nothing of the group lies
+      // over them. (Hit-tested in page coordinates; a pointer click by offset
+      // would depend on the scale the runner gives the test frame.)
+      expect(document.elementFromPoint(aboveBox.left + 12, aboveBox.bottom - 2)).toBe(above);
+      await userEvent.click(tab(tabs, 'b'));
+      expect(document.activeElement).toBe(tab(tabs, 'b'));
+      expect(document.elementFromPoint(aboveBox.left + 12, aboveBox.bottom - 2)).toBe(above);
+
+      const resting = tab(tabs, 'b').getBoundingClientRect();
+      above.focus();
+      await userEvent.keyboard('{Tab}');
+      expect(document.activeElement).toBe(tab(tabs, 'b'));
+      const focused = tab(tabs, 'b').getBoundingClientRect();
+      expect([focused.left, focused.top, focused.width]).toEqual([
+        resting.left,
+        resting.top,
+        resting.width,
+      ]);
+    });
+  });
+
+  it.each([
+    ['first', 'a', '{Home}'],
+    ['last', 'f', '{End}'],
+  ])(
+    'S4 the focus ring of the %s tab is not clipped by the strip',
+    async (_position, value, key) => {
+      await narrow(async () => {
+        const tabs = await mount(sixTabs());
+        tab(tabs, 'c').focus();
+
+        await userEvent.keyboard(key);
+        await expect.poll(() => inView(tabs, value)).toBe(true);
+
+        const focused = tab(tabs, value);
+        const style = getComputedStyle(focused);
+        const ring = Number.parseFloat(style.outlineWidth) + Number.parseFloat(style.outlineOffset);
+        const box = focused.getBoundingClientRect();
+        const clip = scrollportOf(tabs).getBoundingClientRect();
+        expect(ring).toBeGreaterThan(0);
+        expect(box.left - ring).toBeGreaterThanOrEqual(clip.left - 0.5);
+        expect(box.right + ring).toBeLessThanOrEqual(clip.right + 0.5);
+        expect(box.top - ring).toBeGreaterThanOrEqual(clip.top - 0.5);
+        expect(box.bottom + ring).toBeLessThanOrEqual(clip.bottom + 0.5);
+      });
+    },
+  );
+});
+
 describe('ki-tabs theming behavior in a real browser', () => {
   it('S9 material3 restyles tabs through token values alone', async () => {
     const tabs = await mount(fixture());
