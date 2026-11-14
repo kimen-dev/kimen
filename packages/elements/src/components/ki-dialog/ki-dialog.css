@@ -97,6 +97,15 @@
   text-align: center;
 }
 
+/* The body is a Tab stop only while its content overflows (WCAG 2.1.1): the
+ * same double indicator as the surface — the opaque outline plus the MarsUI
+ * Focus/primary ring — drawn inside the dialog padding, never clipped. */
+[part="body"]:focus-visible {
+  outline: var(--ki-dialog-focus-ring-width) solid var(--ki-dialog-focus-ring-color);
+  outline-offset: var(--ki-dialog-focus-ring-offset);
+  box-shadow: var(--ki-focus-primary);
+}
+
 [part="footer"] {
   display: block;
   text-align: end;
