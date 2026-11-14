@@ -1,4 +1,9 @@
-const FOCUSABLE = 'a[href],area[href],button,input,select,textarea,[tabindex]:not([tabindex="-1"])';
+// A control its component took out of the Tab order (`tabindex="-1"`: the
+// play button of a ki-video that has yielded to the native player, the inner
+// button of a disabled ki-button) is not a focus stop, whatever its tag.
+const FOCUSABLE = ['a[href]', 'area[href]', 'button', 'input', 'select', 'textarea', '[tabindex]']
+  .map((control) => `${control}:not([tabindex="-1"])`)
+  .join(',');
 
 /**
  * The control inside `element`'s own shadow root that takes focus on its

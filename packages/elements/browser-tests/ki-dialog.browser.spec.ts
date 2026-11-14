@@ -9,6 +9,7 @@ import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
 import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
+import { defineCustomElement as defineKiVideo } from '../dist/components/ki-video.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 
@@ -28,6 +29,7 @@ beforeAll(() => {
   defineCustomElement();
   defineKiAlert();
   defineKiButton();
+  defineKiVideo();
 });
 
 function ensureTokens(): void {
@@ -680,6 +682,91 @@ describe('ki-dialog in a real browser', () => {
     await expect.poll(() => activeElementDeep()).toBe(footerButton(el, 'Delete'));
     await userEvent.keyboard('{Tab}');
     await expect.poll(() => activeElementDeep()).toBe(dismiss);
+
+    await el.close();
+  });
+
+  // ki-video keeps its play button mounted after it yields to the native
+  // player (the button fades out and hides). The trap went on counting that
+  // hidden button as the video's focus stop: a wrap onto it focused nothing,
+  // and Tab stopped advancing at whichever end of the dialog the video sat.
+  // Once the facade has yielded, the stop is the native player itself.
+  it('S7 Tab wraps onto the native player of a ki-video that leads the dialog', async () => {
+    cleanup();
+    const el = await mountDialog(
+      {},
+      document.body,
+      `<ki-video label="Play the tour"><video muted playsinline width="320" height="180"></video></ki-video>
+       <button slot="footer" type="button">Cancel</button>
+       <button slot="footer" type="button">Delete</button>`,
+    );
+    const video = requireEl(el, 'ki-video');
+    await waitFor(
+      () => Boolean(video.shadowRoot?.querySelector('[part="play"]')),
+      'ki-video hydrated its play control',
+    );
+    await openDialog(el);
+    const play = video.shadowRoot?.querySelector('[part="play"]');
+    const player = requireEl(el, 'video');
+
+    // Before activation the play control is the stop the wrap lands on.
+    footerButton(el, 'Delete').focus();
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => activeElementDeep()).toBe(play);
+
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => activeElementDeep()).toBe(player);
+    footerButton(el, 'Delete').focus();
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => activeElementDeep()).toBe(player);
+
+    // A native player holds Tab stops of its own (its controls) while
+    // document.activeElement stays the media element, so the dialog must not
+    // take a Tab pressed there: wrapping would skip those controls.
+    const tab = new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      key: 'Tab',
+      shiftKey: true,
+    });
+    player.dispatchEvent(tab);
+    expect(tab.defaultPrevented).toBe(false);
+
+    await el.close();
+  });
+
+  it('S7 Shift+Tab wraps onto the native player of a ki-video that closes the dialog', async () => {
+    cleanup();
+    const el = await mountDialog(
+      {},
+      document.body,
+      `<button type="button">Details</button>
+       <ki-video label="Play the tour"><video muted playsinline width="320" height="180"></video></ki-video>`,
+    );
+    const video = requireEl(el, 'ki-video');
+    await waitFor(
+      () => Boolean(video.shadowRoot?.querySelector('[part="play"]')),
+      'ki-video hydrated its play control',
+    );
+    await openDialog(el);
+    const details = requireEl(el, 'button');
+    const player = requireEl(el, 'video');
+
+    await userEvent.click(requireEl(video.shadowRoot ?? video, '[part="play"]'));
+    await waitFor(() => player.hasAttribute('controls'), 'the facade yielded to the player');
+    details.focus();
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    await expect.poll(() => activeElementDeep()).toBe(player);
+
+    const tab = new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      key: 'Tab',
+    });
+    player.dispatchEvent(tab);
+    expect(tab.defaultPrevented).toBe(false);
 
     await el.close();
   });

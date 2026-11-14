@@ -137,10 +137,20 @@ export class KiVideo {
     // The facade button stays mounted and yields through a token-driven
     // fade (visibility flips after it, instantly under reduced motion —
     // FR-013): a removed node could never honor a theme's dismissal motion.
+    // It leaves the Tab order the moment it yields, not when the fade ends:
+    // until then it could still take focus and lose it as it hid, and
+    // whoever asks for this element's focus stop (a ki-dialog wrapping Tab)
+    // would be handed a control on its way out.
     return (
       <div part="frame" class={{ playing: this.playing }} ref={this.setFrameRef}>
         <slot onSlotchange={this.neutralizeSlottedMedia}></slot>
-        <button part="play" type="button" aria-label={this.label} onClick={this.handleActivate}>
+        <button
+          part="play"
+          type="button"
+          aria-label={this.label}
+          tabIndex={this.playing ? -1 : 0}
+          onClick={this.handleActivate}
+        >
           <span class="control" aria-hidden="true">
             {/* The MarsUI Placeholder_xl play vector (12089:6573): inset
                 20.83% / 12.5% / 16.67% / 12.5% of the icon slot, so the ink
