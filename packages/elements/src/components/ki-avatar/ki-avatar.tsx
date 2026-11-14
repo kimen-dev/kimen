@@ -93,7 +93,19 @@ export class KiAvatar {
       <Host {...semantics}>
         <span part="avatar" class={{ 'has-portrait': portraitSrc !== null }}>
           {portraitSrc !== null && (
-            <img part="image" src={portraitSrc} alt="" onError={this.handlePortraitError} />
+            // A portrait is decoration beside a name: it loads only when it
+            // can be seen (a member behind an avatar group's cap never
+            // downloads) and decodes off the main thread. `loading` precedes
+            // `src` on purpose — attributes are written in this order, and
+            // an engine may start an eager fetch the moment `src` lands.
+            <img
+              part="image"
+              loading="lazy"
+              decoding="async"
+              src={portraitSrc}
+              alt=""
+              onError={this.handlePortraitError}
+            />
           )}
           {showInitials && <span part="initials">{this.initials}</span>}
           {portraitSrc === null && !showInitials && (

@@ -117,6 +117,28 @@ function counterOf(el: KiAvatarGroupElement): HTMLElement | null {
   return el.shadowRoot?.querySelector<HTMLElement>('[part="counter"]') ?? null;
 }
 
+/** A distinct, guaranteed-valid portrait per member: no network, no fixtures. */
+function portraitDataUri(shade: number): string {
+  const canvas = document.createElement('canvas');
+  canvas.width = 8;
+  canvas.height = 8;
+  const context = canvas.getContext('2d');
+  if (!context) {
+    throw new Error('canvas 2d context unavailable');
+  }
+  context.fillStyle = `rgb(${String(shade)}, 90, 190)`;
+  context.fillRect(0, 0, 8, 8);
+  return canvas.toDataURL('image/png');
+}
+
+function portraitOf(member: HTMLElement): HTMLImageElement {
+  const image = member.shadowRoot?.querySelector<HTMLImageElement>('[part="image"]');
+  if (!image) {
+    throw new Error('the member did not render its portrait');
+  }
+  return image;
+}
+
 describe('ki-avatar-group', () => {
   it('S5 stacks the capped members with the token overlap and trails a "+5" counter', async () => {
     cleanup();
@@ -167,6 +189,31 @@ describe('ki-avatar-group', () => {
     expect(counter.getBoundingClientRect().height).toBe(memberSize);
     expect(getComputedStyle(counter).minInlineSize).toBe(`${String(memberSize)}px`);
     expect(counter.getBoundingClientRect().width).toBeGreaterThanOrEqual(memberSize);
+  });
+
+  // Ten members behind max="2" used to download ten portraits to show two.
+  it('members hidden by the cap do not load their portraits until they show', async () => {
+    cleanup();
+    const el = await mountGroup(landmark(), 10, { max: '2' });
+    membersOf(el).forEach((member, index) => {
+      member.setAttribute('src', portraitDataUri(index * 20));
+    });
+    await until(() => membersOf(el).every((member) => member.shadowRoot?.querySelector('img')));
+    const [shown, capped] = [visibleMembersOf(el), membersOf(el).slice(2)];
+    await until(() => shown.every((member) => portraitOf(member).naturalWidth > 0));
+    expect(shown.map((member) => portraitOf(member).naturalWidth > 0)).toEqual([true, true]);
+
+    // An image requested AFTER the capped portraits has finished loading, so
+    // those are deferred, not merely slower than the two that show.
+    const later = new Image();
+    later.src = portraitDataUri(250);
+    await later.decode();
+    expect(capped.filter((member) => portraitOf(member).naturalWidth > 0)).toEqual([]);
+
+    // Lifting the cap shows them, and only then do they load.
+    el.max = 10;
+    await until(() => capped.every((member) => portraitOf(member).naturalWidth > 0));
+    expect(capped.filter((member) => portraitOf(member).naturalWidth === 0)).toEqual([]);
   });
 
   it('S6 renders every member at the group size, overriding member-declared sizes', async () => {
