@@ -3,9 +3,10 @@ import { defineConfig } from 'vitest/config';
 import browserConfig from './packages/elements/vitest.browser.config.ts';
 import unitConfig from './packages/elements/vitest.config.ts';
 
-// Keep both suites: mock-doc covers pure helpers and cheap rendering checks;
-// Chromium exercises slot assignment, focus, timers and native form/dialog APIs.
-// Both outputs are rebuilt from Stryker's instrumented source in each sandbox.
+// Keep both suites: the node unit project kills mutants in the pure helpers
+// straight from Stryker's instrumented source; Chromium exercises every
+// component behavior (slot assignment, focus, timers, native form and dialog
+// APIs) against dist/components, rebuilt from that source in each sandbox.
 const root = fileURLToPath(new URL('./packages/elements/', import.meta.url));
 const browserTest = browserConfig.test;
 if (!browserTest?.browser) throw new Error('Elements mutation requires the browser test config');

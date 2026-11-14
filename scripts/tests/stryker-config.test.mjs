@@ -75,7 +75,7 @@ test('@spec:018 S3 elements mutation config rebuilds Stencil and never relies on
   assert.equal(config.buildCommand, 'bash scripts/gates/build-mutation-elements.sh');
 });
 
-test('@spec:018 S3 mutation Vitest config keeps node and Stencil suites separate', async () => {
+test('@spec:018 S3 mutation Vitest config keeps the gate scripts and the elements helpers in separate node suites', async () => {
   const config = await loadConfig('vitest.mutation.config.ts');
   const projects = config.test?.projects;
 
@@ -89,12 +89,13 @@ test('@spec:018 S3 mutation Vitest config keeps node and Stencil suites separate
   assert.equal(nodeProject?.test?.environment, 'node');
   assert.deepEqual(nodeProject?.test?.setupFiles ?? [], []);
 
-  assert.deepEqual(elementsProject?.test?.include, ['packages/elements/src/**/*.spec.{ts,tsx}']);
-  assert.match(
-    elementsProject?.test?.environment ?? '',
-    /@stencil[/+]vitest.*environments[/\\]stencil\.js$/,
+  assert.deepEqual(elementsProject?.test?.include, ['packages/elements/src/**/*.spec.ts']);
+  assert.equal(
+    elementsProject?.test?.environment,
+    'node',
+    'no simulated DOM: component behavior is mutated through the Chromium project only',
   );
-  assert.deepEqual(elementsProject?.test?.setupFiles, ['./packages/elements/vitest.setup.mjs']);
+  assert.deepEqual(elementsProject?.test?.setupFiles ?? [], []);
   assert.equal(elementsProject?.test?.browser?.enabled ?? false, false);
 });
 
@@ -120,9 +121,9 @@ test('@spec:018 S3 each Stryker runner has an independently scoped Vitest config
   assert.equal(browser.cacheDir, '../../reports/cache/vite/mutation-elements-browser');
   assert.equal(elementsConfig.test.projects.length, 2);
   assert.equal(unit.test.name, 'elements-unit');
-  assert.deepEqual(unit.test.include, ['src/**/*.spec.{ts,tsx}']);
-  assert.match(unit.test.environment, /@stencil[/+]vitest/);
-  assert.deepEqual(unit.test.setupFiles, ['./vitest.setup.mjs']);
+  assert.deepEqual(unit.test.include, ['src/**/*.spec.ts']);
+  assert.equal(unit.test.environment, 'node');
+  assert.deepEqual(unit.test.setupFiles ?? [], []);
   assert.deepEqual(browser.test.include, ['browser-tests/ki-+([a-z-]).browser.spec.ts']);
   assert.equal(browser.test.browser.enabled, true);
   assert.ok(browser.test.browser.instances.every((instance) => instance.browser === 'chromium'));

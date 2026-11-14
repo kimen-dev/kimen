@@ -255,6 +255,39 @@ describe('ki-list in a real browser', () => {
     await expect.poll(() => item.classList.contains('has-secondary')).toBe(true);
   });
 
+  it('S4 renders an unrecognized variant attribute with the default list appearance', async () => {
+    const control = await mountList(`
+      <ki-list>
+        <ki-list-item>Storage</ki-list-item>
+        <ki-list-item>Email<span slot="secondary">ana@onmars.dev</span></ki-list-item>
+      </ki-list>
+      <ki-list variant="two-line">
+        <ki-list-item variant="two-line">Storage</ki-list-item>
+        <ki-list-item>Email<span slot="secondary">ana@onmars.dev</span></ki-list-item>
+      </ki-list>
+    `);
+    const foreign = control.parentElement?.querySelector<HTMLElement>('ki-list[variant]');
+    if (!foreign) {
+      throw new Error('ki-list variant fixture missing');
+    }
+    const appearance = (list: HTMLElement): Record<string, string | number>[] =>
+      [...list.querySelectorAll('ki-list-item')].map((item) => {
+        const { item: row } = itemParts(item);
+        const style = getComputedStyle(row);
+        const rect = item.getBoundingClientRect();
+        return {
+          color: style.color,
+          height: rect.height,
+          padding: style.padding,
+          text: item.textContent.trim(),
+          width: rect.width,
+        };
+      });
+
+    expect(appearance(foreign)).toEqual(appearance(control));
+    expect(appearance(foreign)).toHaveLength(2);
+  });
+
   it('S6 preserves an author-provided role on the list host', async () => {
     const list = await mountList(
       '<ki-list role="presentation"><ki-list-item>A</ki-list-item></ki-list>',

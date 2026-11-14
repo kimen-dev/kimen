@@ -30,7 +30,6 @@ function completeEvidence() {
     manualEdits: [],
     legacyRoot: { beforeSha256: digest, afterSha256: digest },
     surfaces: {
-      unit: discovered('unit'),
       tokens: discovered('tokens'),
       cem: discovered('cem'),
       llms: discovered('llms'),
@@ -65,7 +64,6 @@ function simulatedExecutor({ manifestTag = tag, tarballCount = 1 } = {}) {
     if (args.includes('@kimen/nx-plugin:component')) {
       expect(lstatSync(join(cwd, 'node_modules')).isSymbolicLink()).toBe(true);
       putSync(join(cwd, `packages/elements/src/components/${tag}/${tag}.tsx`));
-      putSync(join(cwd, `packages/elements/src/components/${tag}/${tag}.spec.tsx`));
       putSync(join(cwd, `packages/elements/browser-tests/${tag}.browser.spec.ts`));
       putSync(join(cwd, 'packages/tokens/tokens/component/avatar.tokens.json'), '{}\n');
     }
@@ -125,22 +123,11 @@ it('creates the exact disposable smoke plan', () => {
     spec,
     disposable: true,
     manualEdits: [],
-    requiredSurfaces: [
-      'unit',
-      'tokens',
-      'cem',
-      'llms',
-      'build',
-      'pack',
-      'attw',
-      'budget',
-      'browser',
-    ],
+    requiredSurfaces: ['tokens', 'cem', 'llms', 'build', 'pack', 'attw', 'budget', 'browser'],
     steps: [
       { id: 'scaffold' },
       { id: 'tokens' },
       { id: 'build' },
-      { id: 'unit' },
       { id: 'cem' },
       { id: 'llms' },
       { id: 'pack' },
@@ -226,39 +213,39 @@ it.each([
   ],
   [{ ...completeEvidence(), surfaces: null }, /no surface results/u],
   [
-    { ...completeEvidence(), surfaces: { ...completeEvidence().surfaces, unit: undefined } },
-    /passed unit discovery/u,
+    { ...completeEvidence(), surfaces: { ...completeEvidence().surfaces, tokens: undefined } },
+    /passed tokens discovery/u,
   ],
   [
     {
       ...completeEvidence(),
       surfaces: {
         ...completeEvidence().surfaces,
-        unit: { status: 'failed', discovered: ['unit'] },
+        tokens: { status: 'failed', discovered: ['tokens'] },
       },
     },
-    /passed unit discovery/u,
+    /passed tokens discovery/u,
   ],
   [
     {
       ...completeEvidence(),
-      surfaces: { ...completeEvidence().surfaces, unit: { status: 'passed', discovered: [] } },
+      surfaces: { ...completeEvidence().surfaces, tokens: { status: 'passed', discovered: [] } },
     },
-    /passed unit discovery/u,
+    /passed tokens discovery/u,
   ],
   [
     {
       ...completeEvidence(),
-      surfaces: { ...completeEvidence().surfaces, unit: { status: 'passed', discovered: [0] } },
+      surfaces: { ...completeEvidence().surfaces, tokens: { status: 'passed', discovered: [0] } },
     },
-    /passed unit discovery/u,
+    /passed tokens discovery/u,
   ],
   [
     {
       ...completeEvidence(),
-      surfaces: { ...completeEvidence().surfaces, unit: { status: 'passed', discovered: [''] } },
+      surfaces: { ...completeEvidence().surfaces, tokens: { status: 'passed', discovered: [''] } },
     },
-    /passed unit discovery/u,
+    /passed tokens discovery/u,
   ],
 ])('rejects malformed evidence %#', (evidence, diagnostic) => {
   expect(() => validateGeneratorSmokeEvidence(evidence)).toThrowError(diagnostic);
@@ -278,7 +265,6 @@ it('runs every generator surface in an isolated workspace and removes it afterwa
   expect(evidence.tag).toBe(tag);
   expect(evidence.legacyRoot.beforeSha256).toBe(evidence.legacyRoot.afterSha256);
   expect(Object.keys(evidence.surfaces)).toEqual([
-    'unit',
     'tokens',
     'cem',
     'llms',
@@ -288,11 +274,10 @@ it('runs every generator surface in an isolated workspace and removes it afterwa
     'budget',
     'browser',
   ]);
-  expect(simulation.calls).toHaveLength(8);
+  expect(simulation.calls).toHaveLength(7);
   expect(simulation.calls.map(({ command }) => command)).toEqual([
     'pnpm',
     'node',
-    'pnpm',
     'pnpm',
     'pnpm',
     'pnpm',
@@ -365,7 +350,7 @@ it('forwards explicit CLI arguments and writes the evidence summary', async () =
 
   expect(result.tag).toBe('ki-card');
   expect(calls).toEqual([{ workspaceRoot: '/workspace', tag: 'ki-card', spec: '123-card' }]);
-  expect(output).toEqual(['GENERATOR smoke: PASS (ki-card, 9 surfaces, disposable)\n']);
+  expect(output).toEqual(['GENERATOR smoke: PASS (ki-card, 8 surfaces, disposable)\n']);
 });
 
 it('uses the documented CLI defaults', async () => {

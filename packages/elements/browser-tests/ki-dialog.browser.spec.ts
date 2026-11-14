@@ -615,6 +615,27 @@ describe('ki-dialog in a real browser', () => {
     );
   });
 
+  // A candidate that cannot take focus must never win the entry: focusing it is
+  // a no-op that strands the dialog with nothing focused.
+  it('S6 entry focus skips controls that cannot take focus and lands on the first real action', async () => {
+    cleanup();
+    const el = await mountDialog(
+      {},
+      document.body,
+      `<input type="hidden" name="token" value="t" />
+       <button type="button" hidden>Hidden</button>
+       <button type="button" disabled>Disabled</button>
+       <button type="button" tabindex="-1">Skipped</button>
+       <div><button type="button" id="first-real">Keep account</button></div>
+       <button slot="footer" type="button">Delete</button>`,
+    );
+
+    await openDialog(el);
+
+    expect(activeElementDeep()).toBe(requireEl(el, '#first-real'));
+    await el.close();
+  });
+
   // Review round 1 (Critical): the CANONICAL footer is ki-button (shadow
   // delegatesFocus, no host tabindex) wrapped in a container — the shape every
   // story/harness uses. Entry focus must reach the autofocus action, and Tab

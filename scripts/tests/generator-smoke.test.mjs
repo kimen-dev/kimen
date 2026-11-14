@@ -7,7 +7,6 @@ const tag = 'ki-avatar';
 const feature = '018-project-integrity-hardening';
 const legacyRootDigest = 'a'.repeat(64);
 const requiredSurfaces = Object.freeze([
-  'unit',
   'tokens',
   'cem',
   'llms',
@@ -64,10 +63,6 @@ function aDisposableAvatarEvidence() {
       afterSha256: legacyRootDigest,
     },
     surfaces: {
-      unit: {
-        status: 'passed',
-        discovered: ['packages/elements/src/components/ki-avatar/ki-avatar.spec.tsx'],
-      },
       tokens: {
         status: 'passed',
         discovered: ['packages/tokens/tokens/component/avatar.tokens.json'],
@@ -132,13 +127,12 @@ test('S12 plans a disposable ki-avatar run with no post-generation edit step', a
     'pack',
     'scaffold',
     'tokens',
-    'unit',
   ]);
   assert.equal(
     plan.steps.findIndex(({ id }) => id === 'build') <
-      plan.steps.findIndex(({ id }) => id === 'unit'),
+      plan.steps.findIndex(({ id }) => id === 'browser'),
     true,
-    'the real unit setup imports built Stencil output',
+    'the real-browser spec imports built Stencil output',
   );
 });
 
@@ -157,7 +151,7 @@ test('S12 isolates npm, pnpm, Nx, and browser caches from mutable user state', a
   assert.equal(environment.NX_DAEMON, 'false');
 });
 
-test('S12 accepts complete unit/token/CEM/llms/build/pack/ATTW/budget/browser evidence', async () => {
+test('S12 accepts complete token/CEM/llms/build/pack/ATTW/budget/browser evidence', async () => {
   const { validateGeneratorSmokeEvidence } = await loadSubject();
   const evidence = aDisposableAvatarEvidence();
 

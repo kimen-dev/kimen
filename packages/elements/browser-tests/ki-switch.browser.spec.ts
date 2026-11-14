@@ -200,6 +200,17 @@ describe('ki-switch in a real browser', () => {
     expect(el.checked).toBe(false);
   });
 
+  it('S1 turning the switch on from script reports no input or change event', async () => {
+    const el = await mount();
+    const counts = eventCounts(el);
+
+    el.checked = true;
+
+    await expect.element(page.getByRole('switch', { name: 'Email notifications' })).toBeChecked();
+    expect(counts.input()).toBe(0);
+    expect(counts.change()).toBe(0);
+  });
+
   it('S3 a disabled switch does not toggle and reports no state change', async () => {
     const el = await mount('disabled');
     const counts = eventCounts(el);
@@ -429,6 +440,14 @@ describe('ki-switch in a real browser', () => {
     const { form } = await mountInForm('name="newsletter" value="weekly" checked');
 
     expect(formValue(form, 'newsletter')).toBe('weekly');
+  });
+
+  it('S18 a value changed after render is the one submitted', async () => {
+    const { form, el } = await mountInForm('name="newsletter" value="daily" checked');
+
+    el.value = 'weekly';
+
+    await expect.poll(() => formValue(form, 'newsletter')).toBe('weekly');
   });
 
   it('S14 material3 restyles checked and unchecked switch token values without markup changes', async () => {

@@ -12,7 +12,7 @@
     "packages/vue/src/ki-*.ts",
     "packages/angular/src/directives/**"
   ],
-  "ignoreDependencies": ["husky", "nx", "@kimen/nx-plugin"],
+  "ignoreDependencies": ["husky", "nx", "@kimen/nx-plugin", "@stencil/vitest"],
   "workspaces": {
     ".": {
       "entry": ["scripts/**/*.mjs", "*.config.{ts,mjs}"],
@@ -21,12 +21,7 @@
       "stencil": false
     },
     "packages/*": {
-      "entry": [
-        "src/index.ts",
-        "*.config.{ts,mjs}",
-        "vitest.setup.mjs",
-        "size-limit/**/*.{ts,tsx}"
-      ],
+      "entry": ["src/index.ts", "*.config.{ts,mjs}", "size-limit/**/*.{ts,tsx}"],
       "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"],
       "stencil": false
     },
@@ -45,9 +40,7 @@
         "src/index.ts",
         "src/components/*/*.tsx",
         "!src/components/*/*.stories.tsx",
-        "!src/components/*/*.spec.tsx",
         "*.config.{ts,mjs}",
-        "vitest.setup.mjs",
         "size-limit/**/*.{ts,tsx}"
       ],
       "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"],

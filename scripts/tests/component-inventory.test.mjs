@@ -38,7 +38,6 @@ const writeComponent = async (
     className = classNameForTag(tag),
     decorated = true,
     source = true,
-    unitSpec = true,
     browserSpec = true,
   },
 ) => {
@@ -51,9 +50,6 @@ const writeComponent = async (
       componentSource({ tag, className, decorated }),
       'utf8',
     );
-  }
-  if (unitSpec) {
-    await writeFile(join(componentDirectory, `${directory}.spec.tsx`), '// unit\n', 'utf8');
   }
   if (browserSpec) {
     const browserFile = join(
@@ -71,7 +67,6 @@ const fixtureComponents = [
     tag: 'ki-alpha',
     className: 'KiAlpha',
     sourceModule: 'packages/elements/src/components/ki-alpha/ki-alpha.tsx',
-    unitSpec: 'packages/elements/src/components/ki-alpha/ki-alpha.spec.tsx',
     browserSpec: 'packages/elements/browser-tests/ki-alpha.browser.spec.ts',
     distModule: './dist/components/ki-alpha.js',
     publicSubpath: './ki-alpha',
@@ -80,7 +75,6 @@ const fixtureComponents = [
     tag: 'ki-zeta',
     className: 'KiZeta',
     sourceModule: 'packages/elements/src/components/ki-zeta/ki-zeta.tsx',
-    unitSpec: 'packages/elements/src/components/ki-zeta/ki-zeta.spec.tsx',
     browserSpec: 'packages/elements/browser-tests/ki-zeta.browser.spec.ts',
     distModule: './dist/components/ki-zeta.js',
     publicSubpath: './ki-zeta',
@@ -121,11 +115,6 @@ test('component discovery fails closed on directory, module, tag, class, decorat
       name: 'decorator',
       options: { directory: 'ki-alpha', decorated: false },
       expected: /@Component/i,
-    },
-    {
-      name: 'unit spec',
-      options: { directory: 'ki-alpha', unitSpec: false },
-      expected: /unit spec/i,
     },
     {
       name: 'browser spec',

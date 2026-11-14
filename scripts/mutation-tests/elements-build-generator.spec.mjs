@@ -55,9 +55,8 @@ describe('component generator mutation boundary', () => {
     expect(tree.read(`${componentRoot}/${tag}.css`, 'utf8')).toContain(
       'var(--ki-avatar-card2-text-color)',
     );
-    expect(tree.read(`${componentRoot}/${tag}.spec.tsx`, 'utf8')).toContain(
-      '// @spec:018-project-integrity-hardening',
-    );
+    expect(tree.exists(`${componentRoot}/${tag}.spec.tsx`)).toBe(false);
+    expect(tree.read(browserSpec, 'utf8')).toContain('// @spec:018-project-integrity-hardening');
     expect(tree.read(browserSpec, 'utf8')).toContain(
       "import { defineCustomElement } from '../dist/components/ki-avatar-card2.js';",
     );
@@ -81,7 +80,7 @@ describe('component generator mutation boundary', () => {
     await componentGenerator(tree, { name: 'ki-avatar' });
 
     expect(
-      tree.read('packages/elements/src/components/ki-avatar/ki-avatar.spec.tsx', 'utf8'),
+      tree.read('packages/elements/browser-tests/ki-avatar.browser.spec.ts', 'utf8'),
     ).toContain(
       '// TODO(spec): add &#39;// @spec:&lt;feature-dir&gt;&#39; when the approved feature exists (Art. II).',
     );

@@ -164,6 +164,23 @@ describe('ki-alert in a real browser', () => {
     expect(backgrounds.size).toBe(tones.length);
   });
 
+  it('S5 renders an unrecognized tone exactly like the neutral tone, as a polite status', async () => {
+    cleanup();
+    const neutral = await mount('Service notice', { tone: 'neutral' });
+    const unknown = await mount('Service notice', { tone: 'banana' });
+    const danger = await mount('Service notice', { tone: 'danger' });
+    const neutralStyle = getComputedStyle(part(neutral, 'alert'));
+    const unknownStyle = getComputedStyle(part(unknown, 'alert'));
+
+    expect(unknownStyle.backgroundColor).toBe(neutralStyle.backgroundColor);
+    expect(unknownStyle.color).toBe(neutralStyle.color);
+    expect(unknownStyle.backgroundColor).not.toBe(
+      getComputedStyle(part(danger, 'alert')).backgroundColor,
+    );
+    expect(liveWrapper(unknown).getAttribute('role')).toBe('status');
+    expect(dismissButton(unknown)).toBeNull();
+  });
+
   it('S2 renders the heading before the message in visual flow', async () => {
     cleanup();
     const el = await mount('Restart soon', { heading: 'Update available' });
@@ -461,6 +478,43 @@ describe('ki-alert in a real browser', () => {
     expect(first.dismissed).toBe(true);
     expect(document.activeElement).toBe(second);
     expect(second.shadowRoot?.activeElement).toBe(dismissButton(second));
+  });
+
+  it('S16 falls back to the preceding control when nothing focusable follows the alert', async () => {
+    cleanup();
+    const back = document.createElement('button');
+    back.textContent = 'Back';
+    document.body.append(back);
+    const el = await mount('Backup completed', { dismissible: true });
+
+    dismissButton(el)?.focus();
+    await userEvent.keyboard('{Enter}');
+    await nextFrame();
+
+    expect(el.dismissed).toBe(true);
+    expect(document.activeElement).toBe(back);
+  });
+
+  // A scan of the body's own children would miss an alert nested in a section
+  // and hand focus to the control that precedes it.
+  it('S16 hands focus to the control that follows a nested alert in document order', async () => {
+    cleanup();
+    const main = document.createElement('main');
+    const back = document.createElement('button');
+    back.textContent = 'Back';
+    const section = document.createElement('section');
+    const save = document.createElement('button');
+    save.textContent = 'Save';
+    main.append(back, section, save);
+    document.body.append(main);
+    const el = await mount('Backup completed', { dismissible: true }, section);
+
+    dismissButton(el)?.focus();
+    await userEvent.keyboard('{Enter}');
+    await nextFrame();
+
+    expect(el.dismissed).toBe(true);
+    expect(document.activeElement).toBe(save);
   });
 
   it('S6 keeps the dismiss target at least 24 by 24 CSS pixels', async () => {

@@ -1,7 +1,6 @@
-import { defineVitestConfig } from '@stencil/vitest/config';
+import { defineConfig } from 'vitest/config';
 
-export default defineVitestConfig({
-  stencilConfig: './packages/elements/stencil.config.ts',
+export default defineConfig({
   test: {
     projects: [
       {
@@ -14,9 +13,8 @@ export default defineVitestConfig({
       {
         test: {
           name: 'elements-mutation',
-          include: ['packages/elements/src/**/*.spec.{ts,tsx}'],
-          environment: 'stencil',
-          setupFiles: ['./packages/elements/vitest.setup.mjs'],
+          include: ['packages/elements/src/**/*.spec.ts'],
+          environment: 'node',
         },
       },
     ],

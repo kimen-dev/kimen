@@ -1,7 +1,9 @@
 /**
  * Kimen component generator (constitution Art. X: deterministic scaffolding).
- * A component is born with every gate wired: tokens-only CSS, mock-doc spec,
- * real-browser + axe spec, and a component-token source. Direct package
+ * A component is born with every gate wired: tokens-only CSS, a real-browser
+ * + axe spec, and a component-token source. No simulated-DOM spec is
+ * scaffolded: component behavior is asserted in a real browser (Art. III), and
+ * pure helpers get their own node `*.spec.ts` when they appear. Direct package
  * subpaths and every generated surface derive from component source.
  */
 const path = require('node:path');

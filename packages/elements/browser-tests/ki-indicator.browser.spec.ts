@@ -340,6 +340,19 @@ describe('ki-indicator', () => {
     await expectAccessible(document.body);
   });
 
+  it('S8 an indicator without positions exposes no graphic at all', async () => {
+    cleanup();
+    const main = landmark();
+    main.id = 's8-empty-landmark';
+    const el = await mount(main, { label: 'Slide position' });
+
+    // Zero dots convey nothing: the empty row is decorative, never an unnamed
+    // or misleadingly named image in the computed accessibility tree.
+    expect(dotsOf(el)).toHaveLength(0);
+    expect(await browserCommands.ariaSnapshot('#s8-empty-landmark')).not.toContain('img');
+    await expectAccessible(document.body);
+  });
+
   it('S9 restyles size, shape, spacing and colors through material3 tokens alone', async () => {
     cleanup();
     ensureTokens();

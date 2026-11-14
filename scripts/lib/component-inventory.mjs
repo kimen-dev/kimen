@@ -251,7 +251,6 @@ export async function discoverComponents({ workspaceRoot }) {
     }
     const componentRoot = join(componentsRoot, tag);
     const sourcePath = join(componentRoot, `${tag}.tsx`);
-    const unitSpecPath = join(componentRoot, `${tag}.spec.tsx`);
     const browserSpecPath = join(
       absoluteWorkspaceRoot,
       'packages/elements/browser-tests',
@@ -259,7 +258,6 @@ export async function discoverComponents({ workspaceRoot }) {
     );
 
     await assertRegularFile(sourcePath, 'source module', tag);
-    await assertRegularFile(unitSpecPath, 'unit spec', tag);
     await assertRegularFile(browserSpecPath, 'browser spec', tag);
 
     const sourceModule = toRepositoryPath(absoluteWorkspaceRoot, sourcePath);
@@ -268,7 +266,6 @@ export async function discoverComponents({ workspaceRoot }) {
       tag,
       className,
       sourceModule,
-      unitSpec: toRepositoryPath(absoluteWorkspaceRoot, unitSpecPath),
       browserSpec: toRepositoryPath(absoluteWorkspaceRoot, browserSpecPath),
       distModule: `./dist/components/${tag}.js`,
       publicSubpath: `./${tag}`,

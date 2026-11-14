@@ -230,6 +230,46 @@ describe('ki-card in a real browser', () => {
     expect(body.hasAttribute('data-empty')).toBe(true);
   });
 
+  it('S3 renders an unrecognized variant attribute with the default card appearance', async () => {
+    cleanup();
+    const markup = (attributes: string): string => `
+      <ki-card ${attributes}>
+        <h2 slot="header">Monthly report</h2>
+        <p>Revenue increased.</p>
+      </ki-card>
+    `;
+    const control = await mount(markup(''));
+    const foreign = await mount(markup('variant="elevated"'));
+    const appearance = (el: HTMLElement): Record<string, string | number> => {
+      const style = getComputedStyle(cardPart(el));
+      const rect = cardPart(el).getBoundingClientRect();
+      return {
+        backgroundColor: style.backgroundColor,
+        borderRadius: style.borderRadius,
+        boxShadow: style.boxShadow,
+        color: style.color,
+        height: rect.height,
+        padding: style.padding,
+        width: rect.width,
+      };
+    };
+
+    // Rest-state read: park the pointer below both cards, off their hover lift.
+    const probe = document.createElement('button');
+    probe.textContent = 'probe';
+    document.body.append(probe);
+    await userEvent.hover(probe);
+    await nextFrame();
+    await settleMotion();
+
+    expect(appearance(foreign)).toEqual(appearance(control));
+    expect(regionPart(foreign, 'header').getBoundingClientRect().height).toBeGreaterThan(0);
+    expect(regionPart(foreign, 'body').getBoundingClientRect().height).toBeGreaterThan(0);
+    await expect
+      .element(page.getByRole('heading', { name: 'Monthly report' }).last())
+      .toBeVisible();
+  });
+
   it('S1 S2 have zero axe violations across representative region subsets', async () => {
     cleanup();
     ensureTokens();
