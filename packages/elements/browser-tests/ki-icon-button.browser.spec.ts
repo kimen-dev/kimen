@@ -376,7 +376,7 @@ describe('ki-icon-button in a real browser', () => {
     expect(button).toHaveProperty('disabled', true);
   });
 
-  it('S8 forwards a host aria-description onto the delegated inner button', async () => {
+  it('S8 S12 S13 forwards a host aria-description onto the inner button and follows its change and removal', async () => {
     cleanup();
     ensureTokens();
     // Focus delegates to the inner <button>, so a description on the host

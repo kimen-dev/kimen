@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-alert.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiAlertElement = HTMLElement & {
   dismissed: boolean;
@@ -94,24 +95,6 @@ function part(el: KiAlertElement, name: string): HTMLElement {
   return node;
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.backgroundColor = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).backgroundColor;
-  probe.remove();
-  return value;
-}
-
-function readTokenLength(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.blockSize = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).blockSize;
-  probe.remove();
-  return value;
-}
-
 /** Axe contrast scans must wait out the one-shot opacity entrance (the
  * alert surface animates in under no-preference motion). */
 async function motionSettled(el: Element): Promise<void> {
@@ -135,8 +118,9 @@ function dismissButton(el: KiAlertElement): HTMLButtonElement | null {
 }
 
 describe('ki-alert in a real browser', () => {
-  it('S1 presents the danger message with the danger tone appearance', async () => {
+  it('S1 presents the danger message on a surface of its own, unlike the neutral one', async () => {
     cleanup();
+    const neutral = await mount('Service notice', { tone: 'neutral' });
     const el = await mount('We could not save your changes', { tone: 'danger' });
     const alert = part(el, 'alert');
     const message = part(el, 'message');
@@ -148,8 +132,10 @@ describe('ki-alert in a real browser', () => {
         ?.assignedNodes()
         .map((node) => node.textContent),
     ).toEqual(['We could not save your changes']);
-    expect(getComputedStyle(alert).backgroundColor).toBe(readTokenColor('--ki-alert-danger-bg'));
-    expect(getComputedStyle(alert).color).toBe(readTokenColor('--ki-alert-danger-fg'));
+    expect(getComputedStyle(alert).backgroundColor).not.toMatch(/, 0\)$/u);
+    expect(getComputedStyle(alert).backgroundColor).not.toBe(
+      getComputedStyle(part(neutral, 'alert')).backgroundColor,
+    );
   });
 
   it('S1 resolves five distinct tone background values', async () => {
@@ -162,6 +148,23 @@ describe('ki-alert in a real browser', () => {
     }
 
     expect(backgrounds.size).toBe(tones.length);
+  });
+
+  it('S5 renders an unrecognized tone exactly like the neutral tone, as a polite status', async () => {
+    cleanup();
+    const neutral = await mount('Service notice', { tone: 'neutral' });
+    const unknown = await mount('Service notice', { tone: 'banana' });
+    const danger = await mount('Service notice', { tone: 'danger' });
+    const neutralStyle = getComputedStyle(part(neutral, 'alert'));
+    const unknownStyle = getComputedStyle(part(unknown, 'alert'));
+
+    expect(unknownStyle.backgroundColor).toBe(neutralStyle.backgroundColor);
+    expect(unknownStyle.color).toBe(neutralStyle.color);
+    expect(unknownStyle.backgroundColor).not.toBe(
+      getComputedStyle(part(danger, 'alert')).backgroundColor,
+    );
+    expect(liveWrapper(unknown).getAttribute('role')).toBe('status');
+    expect(dismissButton(unknown)).toBeNull();
   });
 
   it('S2 renders the heading before the message in visual flow', async () => {
@@ -463,6 +466,43 @@ describe('ki-alert in a real browser', () => {
     expect(second.shadowRoot?.activeElement).toBe(dismissButton(second));
   });
 
+  it('S16 falls back to the preceding control when nothing focusable follows the alert', async () => {
+    cleanup();
+    const back = document.createElement('button');
+    back.textContent = 'Back';
+    document.body.append(back);
+    const el = await mount('Backup completed', { dismissible: true });
+
+    dismissButton(el)?.focus();
+    await userEvent.keyboard('{Enter}');
+    await nextFrame();
+
+    expect(el.dismissed).toBe(true);
+    expect(document.activeElement).toBe(back);
+  });
+
+  // A scan of the body's own children would miss an alert nested in a section
+  // and hand focus to the control that precedes it.
+  it('S16 hands focus to the control that follows a nested alert in document order', async () => {
+    cleanup();
+    const main = document.createElement('main');
+    const back = document.createElement('button');
+    back.textContent = 'Back';
+    const section = document.createElement('section');
+    const save = document.createElement('button');
+    save.textContent = 'Save';
+    main.append(back, section, save);
+    document.body.append(main);
+    const el = await mount('Backup completed', { dismissible: true }, section);
+
+    dismissButton(el)?.focus();
+    await userEvent.keyboard('{Enter}');
+    await nextFrame();
+
+    expect(el.dismissed).toBe(true);
+    expect(document.activeElement).toBe(save);
+  });
+
   it('S6 keeps the dismiss target at least 24 by 24 CSS pixels', async () => {
     cleanup();
     const el = await mount('Backup completed', { dismissible: true });
@@ -513,6 +553,18 @@ describe('ki-alert in a real browser', () => {
     await expectAccessible(main);
   });
 
+  it('S14 honors a forced dark scheme: the surface, the heading and the message repaint', async () => {
+    cleanup();
+    const el = await mount('We could not save your changes', {
+      heading: 'Save failed',
+      tone: 'danger',
+    });
+
+    expect(await repaintedUnderForcedDark(el)).toEqual(
+      expect.arrayContaining(['alert', 'heading', 'message']),
+    );
+  });
+
   it('S13 material3 restyles all five alert tones through tokens alone', async () => {
     cleanup();
     ensureTokens();
@@ -547,12 +599,12 @@ describe('ki-alert in a real browser', () => {
 
     // MarsUI never strokes alert surfaces: tone lives in fill and text.
     expect(computed.borderTopWidth).toBe('0px');
-    expect(computed.columnGap).toBe(readTokenLength('--ki-alert-gap'));
+    expect(computed.columnGap).toBe('12px');
 
     // Text_wrap: heading→description stack gap is Space/xs (4px), not the
     // outer card gap.
     const live = liveWrapper(el);
-    expect(getComputedStyle(live).rowGap).toBe(readTokenLength('--ki-space-xs'));
+    expect(getComputedStyle(live).rowGap).toBe('4px');
   });
 
   it('S1 renders the message at the MarsUI 13/20 para line height', async () => {
@@ -560,9 +612,8 @@ describe('ki-alert in a real browser', () => {
     const el = await mount('Something you might like to know.');
     const message = part(el, 'message');
 
-    expect(getComputedStyle(message).lineHeight).toBe(
-      readTokenLength('--ki-alert-message-line-height'),
-    );
+    expect(getComputedStyle(message).fontSize).toBe('13px');
+    expect(getComputedStyle(message).lineHeight).toBe('20px');
   });
 
   it('S6 raises the dismiss control as the MarsUI circular secondary chip', async () => {
@@ -576,11 +627,13 @@ describe('ki-alert in a real browser', () => {
     }
     const computed = getComputedStyle(button);
 
-    // 24px circle: radius-round, hairline bevel, light-s0/dark-s2 fill.
-    expect(computed.borderTopLeftRadius).toBe(readTokenLength('--ki-radius-round'));
-    expect(computed.borderTopWidth).toBe(readTokenLength('--ki-size-border-hairline'));
-    expect(computed.borderTopColor).toBe(readTokenColor('--ki-outline-secondary-button-top'));
-    expect(computed.backgroundColor).toBe(readTokenColor('--ki-surface-special-light-s0-dark-s2'));
+    // A circle with a hairline bevel, on a fill of its own that lifts it off
+    // the alert surface.
+    const box = button.getBoundingClientRect();
+    expect(box.width).toBe(box.height);
+    expect(Number.parseFloat(computed.borderTopLeftRadius)).toBeGreaterThanOrEqual(box.width / 2);
+    expect(Number.parseFloat(computed.borderTopWidth)).toBeGreaterThan(0);
+    expect(computed.backgroundColor).not.toBe(getComputedStyle(part(el, 'alert')).backgroundColor);
 
     // Component_effect/secondary_default: drop shadow + inner highlight.
     expect(computed.boxShadow).not.toBe('none');

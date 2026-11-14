@@ -27,7 +27,9 @@ Core stance: a test suite exists to let you change code without fear. Every rule
 ## 1. Strategy: what to test where
 
 - **[Always]** Layer 0 is static analysis: TypeScript `strict`, ESLint (with a11y plugins), Zod schemas at boundaries. A bug a type can catch must never need a test. (This layer runs first in the gates suite, Art. X.)
-- **[Default]** Testing trophy: unit tests for pure logic → **component tests in a real browser as the bulk** → few E2E journeys. jsdom lies about focus, layout, and shadow DOM — for `ki-` web components, browser-mode tests (Vitest browser mode via `@stencil/vitest`, Playwright provider) are the rule, never jsdom-only (Art. III).
+- **[Default]** Testing trophy: unit tests for pure logic → **component tests in a real browser as the bulk** → few E2E journeys. jsdom and Stencil's mock-doc lie about focus, layout, shadow DOM, forms and observers — a `ki-` component renders in a test in exactly one place: the real-browser suite (`packages/elements/browser-tests/`, Vitest browser mode, Playwright provider; Art. III).
+- **[Always]** No simulated-DOM component layer. A `*.spec.tsx` beside a component (mock-doc, jsdom, happy-dom) is rejected: it repeats the browser suite scenario by scenario, it reaches private methods and mocks the platform to get anything done, and it forces "is this API missing?" guards into production code that no supported browser needs.
+- **[Default]** Pure logic lives in a helper module beside the component (`ki-x.form.ts`, `ki-x.keyboard.ts`, `ki-x.math.ts`, `ki-x.position.ts`, `src/utils/*`) with a node `*.spec.ts` next to it (`pnpm --filter @kimen/elements run test`). A helper that needs a DOM is not pure logic: assert it through the component's public API in the browser suite.
 - **[Default]** Each behavior is tested at exactly one level — the lowest level that can observe it. Re-testing the same rule in unit + component + E2E triples maintenance for zero extra safety.
 - **[Judgment]** Ask "what breaks if this is wrong, and who notices?" — test value is proportional to blast radius, not to ease of writing.
 
@@ -61,11 +63,13 @@ The evidence for TDD-always is mixed; its reliable value is **design pressure** 
 
 - **[Always]** S-ID traceability (Art. II): when a behavior contract exists, every scenario ID (S1..Sn) appears in at least one test at the right level. `scripts/gates/check-traceability.sh` checks this, and the test must assert the observable outcome — not merely name-drop the ID.
 - **[Always]** Query like a user: by role/label/text first, `data-testid` as fallback, CSS/XPath only when nothing else fits. Role-based queries double as a continuous accessibility probe (Art. V: the accessibility tree is also how agents read our components).
+- **[Always]** Assert what the browser painted, never the token that painted it. `expect(computed).toBe(readToken('--ki-x'))` reads one declaration twice: it breaks on every rename and passes on a wrong value. Assert the outcome a person perceives — a state distinguishable from its neighbour, a contrast ratio, a target size, a value that follows a consumer's token override, a part that repaints when the scheme flips (`repaintedUnderForcedDark` in `browser-tests/color-scheme.ts`).
+- **[Default]** Cross-cutting guarantees are asserted once, for every component, by the transversal suites: `contracts.browser.spec.ts` (axe + target size, AA contrast of every text run, live theme/scheme switch, reflow, text spacing — per theme × scheme), `hidden-attribute` and `forced-colors`. A component spec does not repeat them, and there is no per-component `*.dark.` functional file: a behavior specific to a scheme is one test in the component's own spec. Pixel fidelity per theme and scheme belongs to the `*.visual[.dark]` galleries.
 - **[Always]** Web-first/auto-retrying assertions; never `waitForTimeout`/sleep — fixed waits are the #1 flake source and slow the suite even when green.
 - **[Always]** Full isolation: fresh state per test, no execution-order dependence, parallel-safe (own data per worker). Mock external/third-party network in component tests and most E2E.
 - **[Default]** E2E budget: a thin set of money-path journeys (form submits, generation flow renders, theme switches). Every E2E must justify why a component test can't catch the same failure.
 - **[Default]** Flaky policy: retries are *detection*, not cure. A test that needs a retry gets quarantined (tagged, excluded from merge-blocking) with an owner and a deadline: fix or delete within a sprint. A suite people re-run "until green" is already dead. (A flaky gate is a bug fixed before the gate is trusted, Art. X.)
-- **[Default]** Component test minimum per `ki-` component = the five scenario families of Art. II: core behavior, keyboard path, assistive-tech outcome (axe scan + semantics), form participation where applicable (ElementInternals), theming/token override.
+- **[Default]** Component test minimum per `ki-` component = the five scenario families of Art. II: core behavior, keyboard path, assistive-tech outcome (axe scan + semantics), form participation where applicable (ElementInternals), theming/token override. All five are browser tests.
 
 ## 6. CI quality gates (the pipeline IS the QA process)
 
@@ -93,6 +97,9 @@ LLM output is non-deterministic; exact-match assertions are the wrong tool. Read
 | Testing AI output with exact match | Non-determinism = permanent red or useless tolerance | Schema + guardrail + golden with fuzzy match |
 | E2E for every feature | Slow, flaky, duplicate coverage | Trophy: push down to component level |
 | Asserting internal state/private methods | Couples tests to implementation | Public API + observable outcomes |
+| A mock-doc/jsdom twin of a browser test | Same scenario asserted twice, the weaker copy needs platform mocks and production guards | One browser test; node `*.spec.ts` only for pure helpers |
+| `expect(style).toBe(readToken('--ki-x'))` | The stylesheet compared with itself: red on a rename, green on a wrong value | Assert the perceivable outcome (distinguishable state, contrast, size, repaint) |
+| Re-running axe/contrast per component × scheme | The transversal contracts already do it for all components | One scheme-specific behavior test, only where the behavior is the component's own |
 | Writing tests after, "to bump coverage" | Tests inherit the code's assumptions and bugs | TDD for logic; tests-from-spec (Gherkin) otherwise |
 
 ## 9. Rationalizations and red flags — the excuse table
@@ -133,7 +140,7 @@ For an ordinary change, done means `scripts/gates/gates-suite.sh` exits 0 and th
 2. Bug fixes carry their regression test, and you watched it fail first.
 3. Suite is deterministic: no retries needed locally, parallel-safe.
 4. New/changed core logic is inside the daily mutation scope; do not rerun mutation to finish the PR.
-5. Component minimum covered per `ki-` component: core behavior, keyboard, axe + semantics, theming/token override, form participation where applicable.
+5. Component minimum covered per `ki-` component, in the real-browser suite: core behavior, keyboard, axe + semantics, theming/token override, form participation where applicable. No component test runs in a simulated DOM.
 6. No new quarantined tests without owner + deadline.
 
 Then run the gates. If they're red, the work isn't done — no matter who says otherwise.

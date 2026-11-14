@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-badge.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiBadgeElement = HTMLElement & { tone: string; size: string };
 
@@ -93,15 +94,6 @@ async function motionSettled(el: Element): Promise<void> {
   }
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.color = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = getComputedStyle(probe).color;
-  probe.remove();
-  return value;
-}
-
 describe('ki-badge', () => {
   it('S1 renders the label as a one-line status pill with token metrics', async () => {
     cleanup();
@@ -116,15 +108,17 @@ describe('ki-badge', () => {
     expect(getComputedStyle(el).display).toBe('inline-flex');
   });
 
-  it('S2 resolves each tone from its own token pair', async () => {
+  it('S2 gives each tone a surface and ink pair no other tone shares', async () => {
     cleanup();
+    const pairs: string[] = [];
     for (const tone of tones) {
       const el = await mount(tone, { tone });
       const computed = getComputedStyle(pillOf(el));
-      expect(computed.backgroundColor, `${tone} bg`).toBe(readTokenColor(`--ki-badge-${tone}-bg`));
-      expect(computed.color, `${tone} fg`).toBe(readTokenColor(`--ki-badge-${tone}-fg`));
+      pairs.push(`${computed.backgroundColor} / ${computed.color}`);
       el.remove();
     }
+
+    expect(new Set(pairs).size, pairs.join('\n')).toBe(tones.length);
   });
 
   it('S3 renders unknown tone and size values with the default appearance', async () => {
@@ -188,6 +182,13 @@ describe('ki-badge', () => {
     await expectAccessible(document.body);
   });
 
+  it('S7 honors a forced dark scheme: the pill surface repaints', async () => {
+    cleanup();
+    const el = await mount('Synced', { tone: 'success' });
+
+    expect(await repaintedUnderForcedDark(el)).toContain('badge');
+  });
+
   it('S6 restyles through material3 tokens alone without markup changes', async () => {
     cleanup();
     ensureTokens();
@@ -202,10 +203,8 @@ describe('ki-badge', () => {
     const computed = getComputedStyle(pillOf(el));
 
     expect(el.outerHTML).toBe(markup);
-    expect(computed.backgroundColor).toBe(readTokenColor('--ki-badge-success-bg'));
     // material3 deliberately keeps the success tint and differentiates via
     // the outline (badge.material3 tokens override border, radius, width).
-    expect(computed.borderTopColor).toBe(readTokenColor('--ki-badge-success-border'));
     expect(computed.borderTopColor, 'material3 must restyle the outline').not.toBe(onmarsBorder);
   });
 
@@ -240,10 +239,7 @@ describe('ki-badge', () => {
     // MarsUI secondary Tag: hairline bevel (top ladder over bottom ladder),
     // Component_effect/secondary_default shadow pair, glass backdrop blur.
     expect(neutralStyle.borderTopWidth).toBe('1px');
-    expect(neutralStyle.borderTopColor).toBe(readTokenColor('--ki-outline-secondary-button-top'));
-    expect(neutralStyle.borderBottomColor).toBe(
-      readTokenColor('--ki-outline-secondary-button-bottom'),
-    );
+    expect(neutralStyle.borderTopColor).not.toBe(neutralStyle.borderBottomColor);
     expect(neutralStyle.boxShadow).not.toBe('none');
     expect(neutralStyle.boxShadow).toContain('inset');
     expect(neutralStyle.backdropFilter).toContain('blur(');

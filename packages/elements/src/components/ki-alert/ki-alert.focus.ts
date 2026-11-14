@@ -8,8 +8,7 @@ const FOCUSABLE = 'a[href],button,input,select,textarea,[tabindex]:not([tabindex
  * (FR-013). A pre-order depth-first walk of the whole document — NOT just
  * body children — so a nested alert (inside a card, section or main) still
  * hands focus to the element that genuinely follows it, never one that
- * precedes it. The manual walk avoids compareDocumentPosition/TreeWalker so
- * the same code runs under mock-doc and real browsers alike.
+ * precedes it.
  */
 export function resolveDismissFocusTarget(host: HTMLElement): HTMLElement | null {
   const root = host.shadowRoot;
@@ -68,12 +67,10 @@ function isFocusable(element: HTMLElement): boolean {
 }
 
 // A candidate that cannot actually receive focus — focus() on it is a no-op, so
-// it must not win the handoff (codex review). Safe under mock-doc: checkVisibility
-// is only consulted when present (real browsers).
+// it must not win the handoff (codex review).
 function isHidden(element: HTMLElement): boolean {
   if (element.hasAttribute('hidden') || element.closest('[inert]')) {
     return true;
   }
-  const checkVisibility = (element as { checkVisibility?: () => boolean }).checkVisibility;
-  return typeof checkVisibility === 'function' && !checkVisibility.call(element);
+  return !element.checkVisibility();
 }

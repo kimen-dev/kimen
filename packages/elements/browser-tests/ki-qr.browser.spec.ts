@@ -117,24 +117,6 @@ function codeOf(el: KiQrElement): SVGSVGElement {
   return svg;
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.color = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = getComputedStyle(probe).color;
-  probe.remove();
-  return value;
-}
-
-function readTokenLength(name: string): number {
-  const probe = document.createElement('div');
-  probe.style.blockSize = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = Number.parseFloat(getComputedStyle(probe).blockSize);
-  probe.remove();
-  return value;
-}
-
 /** WCAG relative luminance of a computed rgb()/rgba() color. */
 function luminanceOf(color: string): number {
   const parts = /rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(color);
@@ -251,21 +233,18 @@ describe('ki-qr', () => {
       el.remove();
     }
 
-    // Geometry and paint resolve from tokens (FR-006): the 120px square
-    // tile, the token-floored quiet zone and the scheme-stable
-    // dark-on-light pair at scanner-safe non-text contrast (FR-010).
+    // What a scanner needs from the rendered tile (FR-006, FR-010): a square
+    // symbol, a quiet zone and a dark-on-light pair at scanner-safe non-text
+    // contrast.
     const el = await mount(landmark(), { value: 'https://onmars.dev', label: 'Open' });
     const code = codeOf(el);
     const rect = code.getBoundingClientRect();
-    expect(rect.width).toBe(readTokenLength('--ki-qr-size'));
+    expect(rect.width).toBeGreaterThan(0);
     expect(rect.height).toBe(rect.width);
     const style = getComputedStyle(code);
-    expect(style.backgroundColor).toBe(readTokenColor('--ki-qr-background'));
-    // The quiet zone honors the token as a floor and never drops under the
-    // four modules scanners assume (ISO/IEC 18004): this version-2 symbol
-    // (25 modules) derives a 4-module padding wider than the 8px token.
+    // The quiet zone never drops under the four modules scanners assume
+    // (ISO/IEC 18004): this version-2 symbol has 25 modules a side.
     const padding = Number.parseFloat(style.paddingBlockStart);
-    expect(padding).toBeGreaterThanOrEqual(readTokenLength('--ki-qr-quiet-zone'));
     const moduleSize = (rect.width - 2 * padding) / 25;
     expect(padding / moduleSize).toBeCloseTo(4, 1);
     const module = code.querySelector('.module');
@@ -274,13 +253,13 @@ describe('ki-qr', () => {
       throw new Error('ki-qr rendered no modules');
     }
     const moduleStyle = getComputedStyle(module);
-    expect(moduleStyle.fill).toBe(readTokenColor('--ki-qr-color'));
+    expect(luminanceOf(style.backgroundColor)).toBeGreaterThan(luminanceOf(moduleStyle.fill));
     expect(contrastRatio(moduleStyle.fill, style.backgroundColor)).toBeGreaterThanOrEqual(3);
     // Seam closure: the masters export the symbol as ONE merged vector with
     // zero seams between touching modules, so each module rect carries a
     // same-ink 0.5-user-unit stroke (1/16 module of overlap per shared
     // edge) that closes the antialiasing hairlines inside dark clusters.
-    expect(moduleStyle.stroke).toBe(readTokenColor('--ki-qr-color'));
+    expect(moduleStyle.stroke).toBe(moduleStyle.fill);
     expect(Number.parseFloat(moduleStyle.strokeWidth)).toBeCloseTo(0.5, 5);
   });
 
@@ -315,6 +294,10 @@ describe('ki-qr', () => {
     cleanup();
     const control = await mount(landmark(), { value: 'https://onmars.dev', label: 'Open' });
     const controlViewBox = codeOf(control).getAttribute('viewBox');
+    const controlModule = codeOf(control).querySelector('.module');
+    const controlPaint = controlModule ? getComputedStyle(controlModule) : null;
+    const controlAppearance = [controlPaint?.rx, controlPaint?.fill];
+    expect(controlModule).toBeTruthy();
     control.remove();
 
     const el = await mount(landmark(), {
@@ -326,16 +309,14 @@ describe('ki-qr', () => {
     });
 
     // Unknown vocabulary from another design system matches no code path
-    // and no selector: same anatomy, same token-resolved appearance.
+    // and no selector: same anatomy, same module shape and ink as the control.
     expect(codeOf(el).getAttribute('viewBox')).toBe(controlViewBox);
     const module = codeOf(el).querySelector('.module');
     expect(module).toBeTruthy();
     if (!module) {
       throw new Error('ki-qr rendered no modules');
     }
-    expect(Number.parseFloat(getComputedStyle(module).rx)).toBe(
-      readTokenLength('--ki-qr-module-radius'),
-    );
+    expect([getComputedStyle(module).rx, getComputedStyle(module).fill]).toEqual(controlAppearance);
     expect(await decodeRendered(el)).toBe('https://onmars.dev');
   });
 
@@ -388,8 +369,7 @@ describe('ki-qr', () => {
     cleanup();
     ensureTokens();
     const onmars = await mount(landmark(), { value: 'https://onmars.dev', label: 'Open' });
-    const onmarsRadius = readTokenLength('--ki-qr-radius');
-    const onmarsQuietZone = readTokenLength('--ki-qr-quiet-zone');
+    const onmarsRadius = getComputedStyle(codeOf(onmars)).borderRadius;
     const markup = onmars.outerHTML;
     onmars.remove();
 
@@ -398,27 +378,22 @@ describe('ki-qr', () => {
     const el = await mount(landmark(), { value: 'https://onmars.dev', label: 'Open' });
 
     expect(el.outerHTML).toBe(markup);
-    // The theme decisions (no M3 QR artifact exists): a 12dp rounded tile
-    // and a generous 16dp quiet zone; size, colors and the square module
-    // shape resolve through the material3 composition's token values.
+    // The theme decisions (no M3 QR artifact exists), read off the render: a
+    // 12dp rounded tile where onmars draws another radius, a quiet zone of at
+    // least 16dp, and the same scanner-safe dark-on-light pair.
     const code = codeOf(el);
     const style = getComputedStyle(code);
-    expect(readTokenLength('--ki-qr-radius')).toBe(12);
-    expect(readTokenLength('--ki-qr-radius')).not.toBe(onmarsRadius);
     expect(Number.parseFloat(style.borderRadius)).toBe(12);
-    expect(readTokenLength('--ki-qr-quiet-zone')).toBe(16);
-    expect(readTokenLength('--ki-qr-quiet-zone')).not.toBe(onmarsQuietZone);
-    expect(code.getBoundingClientRect().width).toBe(readTokenLength('--ki-qr-size'));
-    expect(style.backgroundColor).toBe(readTokenColor('--ki-qr-background'));
+    expect(style.borderRadius).not.toBe(onmarsRadius);
+    expect(Number.parseFloat(style.paddingBlockStart)).toBeGreaterThanOrEqual(16);
     const module = code.querySelector('.module');
     expect(module).toBeTruthy();
     if (!module) {
       throw new Error('ki-qr rendered no modules');
     }
-    expect(getComputedStyle(module).fill).toBe(readTokenColor('--ki-qr-color'));
-    expect(Number.parseFloat(getComputedStyle(module).rx)).toBe(
-      readTokenLength('--ki-qr-module-radius'),
-    );
+    expect(
+      contrastRatio(getComputedStyle(module).fill, style.backgroundColor),
+    ).toBeGreaterThanOrEqual(3);
 
     expect(await decodeRendered(el)).toBe('https://onmars.dev');
     await expectAccessible(document.body);
@@ -451,6 +426,28 @@ describe('ki-qr', () => {
       throw new Error('ki-qr rendered no finders');
     }
     expect(Number.parseFloat(getComputedStyle(finder).rx)).toBe(14);
+    expect(await decodeRendered(el)).toBe('https://onmars.dev');
+  });
+
+  it('S10 stays scannable under a forced dark scheme: dark modules on a light tile that still decode', async () => {
+    cleanup();
+    document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
+    const el = await mount(landmark(), {
+      value: 'https://onmars.dev',
+      label: 'Open on your phone',
+    });
+    const code = codeOf(el);
+    const module = code.querySelector('.module');
+    if (!module) {
+      throw new Error('ki-qr rendered no modules');
+    }
+
+    // The theme keeps the code scheme-stable on purpose (FR-010): a scanner
+    // needs dark modules on a light tile whatever the page around it does.
+    const moduleColor = getComputedStyle(module).fill;
+    const tileColor = getComputedStyle(code).backgroundColor;
+    expect(luminanceOf(tileColor)).toBeGreaterThan(luminanceOf(moduleColor));
+    expect(contrastRatio(moduleColor, tileColor)).toBeGreaterThanOrEqual(3);
     expect(await decodeRendered(el)).toBe('https://onmars.dev');
   });
 

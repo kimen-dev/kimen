@@ -214,21 +214,11 @@ export class KiInput {
     return this.disabled || this.formDisabled;
   }
 
-  private get supportsFormInternals(): boolean {
-    return typeof this.internals.setFormValue === 'function';
-  }
-
   private syncFormValue(): void {
-    if (!this.supportsFormInternals) {
-      return;
-    }
     this.internals.setFormValue(this.effectiveDisabled ? null : this.value);
   }
 
   private syncValidity(): void {
-    if (!this.supportsFormInternals) {
-      return;
-    }
     if (!this.input || this.effectiveDisabled) {
       // Disabled controls are barred from constraint validation; drop any
       // lingering user-invalid affordance so a now-inert field is not styled

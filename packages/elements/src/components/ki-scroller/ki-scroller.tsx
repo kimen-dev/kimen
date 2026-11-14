@@ -72,11 +72,9 @@ export class KiScroller {
   componentDidLoad(): void {
     // Overflow observation only — scrolling itself stays native and the
     // component registers no wheel, touch or scroll listener (FR-004).
-    if (typeof ResizeObserver !== 'undefined') {
-      this.resizeObserver = new ResizeObserver(() => {
-        this.syncOverflow();
-      });
-    }
+    this.resizeObserver = new ResizeObserver(() => {
+      this.syncOverflow();
+    });
     this.observeContent();
     this.syncOverflow();
   }

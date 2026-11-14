@@ -10,10 +10,6 @@ type KiRadioElement = HTMLElement & {
   disabled: boolean;
   value?: string;
 };
-interface MaybeFormValueInternals {
-  setFormValue?: unknown;
-  setValidity?: unknown;
-}
 
 /**
  * A token-styled radio group that owns selection, keyboard coordination and
@@ -291,10 +287,6 @@ export class KiRadioGroup {
     }
     this.roster = assigned ?? [];
     this.rosterObserver?.disconnect();
-    if (typeof MutationObserver !== 'function') {
-      this.reconcileSelection();
-      return;
-    }
     this.rosterObserver = new MutationObserver(() => {
       this.reconcileSelection();
     });
@@ -388,14 +380,7 @@ export class KiRadioGroup {
       // the group unable to tell an option the consumer disabled from one it
       // disabled itself, and would clear the former on re-enable. It would also
       // feed the roster's own `disabled` MutationObserver.
-      // set/remove rather than toggleAttribute: Stencil's mock-doc, which the
-      // unit suite renders against, does not implement toggleAttribute — which
-      // is why the ki-avatar-group precedent uses this pair too.
-      if (this.effectiveDisabled) {
-        radio.setAttribute('data-ki-group-disabled', '');
-      } else {
-        radio.removeAttribute('data-ki-group-disabled');
-      }
+      radio.toggleAttribute('data-ki-group-disabled', this.effectiveDisabled);
 
       const input = this.inputFor(radio);
       if (!input) {
@@ -408,25 +393,17 @@ export class KiRadioGroup {
       input.tabIndex = unavailable || radio !== this.tabStopRadio() ? -1 : 0;
     }
 
-    const setFormValue = (this.internals as MaybeFormValueInternals).setFormValue;
-    if (typeof setFormValue === 'function') {
-      setFormValue.call(this.internals, radioGroupFormValue(this.selectedFormOption()));
-    }
+    this.internals.setFormValue(radioGroupFormValue(this.selectedFormOption()));
     this.syncValidity();
   }
 
   private syncValidity(): void {
-    const setValidity = (this.internals as MaybeFormValueInternals).setValidity;
-    if (typeof setValidity !== 'function') {
-      return;
-    }
-
     if (this.roster.length === 0) {
       return;
     }
 
     if (!this.required || this.selectedRadio || this.effectiveDisabled) {
-      setValidity.call(this.internals, {});
+      this.internals.setValidity({});
       this.userInvalid = false;
       return;
     }
@@ -437,7 +414,7 @@ export class KiRadioGroup {
       return;
     }
 
-    setValidity.call(this.internals, { valueMissing: true }, this.valueMissingMessage(), anchor);
+    this.internals.setValidity({ valueMissing: true }, this.valueMissingMessage(), anchor);
   }
 
   private valueMissingMessage(): string {

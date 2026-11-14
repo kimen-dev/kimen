@@ -63,12 +63,10 @@ export class KiCard {
     // changes (e.g. body text driven from '' to real text, or back), so a
     // characterData observer re-checks the regions on those mutations too
     // (codex review).
-    if (typeof MutationObserver === 'function') {
-      this.observer = new MutationObserver(() => {
-        this.syncAllRegions();
-      });
-      this.observer.observe(this.host, { characterData: true, childList: true, subtree: true });
-    }
+    this.observer = new MutationObserver(() => {
+      this.syncAllRegions();
+    });
+    this.observer.observe(this.host, { characterData: true, childList: true, subtree: true });
   }
 
   disconnectedCallback(): void {

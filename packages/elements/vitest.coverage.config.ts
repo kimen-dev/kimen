@@ -12,8 +12,11 @@ interface DistSourceMap {
 }
 
 /**
- * Both suites execute the BUILT dist output (what ships is what is asserted,
- * Art. III), so V8 coverage observes dist chunks, never src. Stencil emits
+ * The browser suite executes the BUILT dist output (what ships is what is
+ * asserted, Art. III), so V8 coverage observes dist chunks, never src. The
+ * pure-logic node suite (vitest.config.ts) measures no coverage of its own:
+ * the helpers it exercises are bundled into the same dist chunks and are
+ * attributed here, by the suite that renders the components. Stencil emits
  * sourcemaps whose `sources` are package-relative (`src/...`); served as-is
  * they resolve underneath dist/ and can never match the src-only coverage
  * scope, leaving every component at a false 0%. This load plugin serves each
@@ -51,7 +54,6 @@ export const distSourceCoveragePlugin = {
  * tree, a sibling of the KIMEN_CACHE_ROOT default (reports/cache).
  *
  * Baseline (2026-07-16, `pnpm --filter @kimen/elements run test:coverage`):
- * - elements-unit: 69.95% lines / 63.27% branches / 72.23% functions
  * - elements-browser-chromium: 90.53% lines / 77.97% branches / 97.41% functions
  */
 interface CoverageThresholds {
@@ -73,7 +75,6 @@ interface CoverageThresholds {
  * suite with V8 coverage, so it is the only browser key here.
  */
 const coverageThresholds: Record<string, CoverageThresholds> = {
-  'elements-unit': { lines: 68, branches: 61, functions: 70 },
   'elements-browser-chromium': { lines: 88, branches: 75, functions: 95 },
 };
 

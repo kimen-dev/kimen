@@ -26,7 +26,6 @@ async function writeFixtureComponent(root, tag, { material3 = false } = {}) {
     .map((segment) => `${segment[0].toUpperCase()}${segment.slice(1)}`)
     .join('');
   const source = join(root, 'packages/elements/src/components', tag, `${tag}.tsx`);
-  const unit = join(root, 'packages/elements/src/components', tag, `${tag}.spec.tsx`);
   const browser = join(root, 'packages/elements/browser-tests', `${tag}.browser.spec.ts`);
   const slug = tag.slice(3);
   const token = join(root, 'packages/tokens/tokens/component', `${slug}.tokens.json`);
@@ -38,7 +37,6 @@ async function writeFixtureComponent(root, tag, { material3 = false } = {}) {
     `export type ${className}Size = 'md';\n@Component({ tag: '${tag}', shadow: true })\nexport class ${className} {}`,
     'utf8',
   );
-  await writeFile(unit, '// unit\n', 'utf8');
   await writeFile(browser, '// browser\n', 'utf8');
   const tokenDocument = `${JSON.stringify({ ki: { [slug]: { color: { $value: '{ki.text.base}' } } } })}\n`;
   await writeFile(token, tokenDocument, 'utf8');
@@ -70,7 +68,6 @@ test('derives direct module exports, tests, token sources, and budget membership
       tag: 'ki-alpha',
       className: 'KiAlpha',
       sourceModule: 'packages/elements/src/components/ki-alpha/ki-alpha.tsx',
-      unitSpec: 'packages/elements/src/components/ki-alpha/ki-alpha.spec.tsx',
       browserSpec: 'packages/elements/browser-tests/ki-alpha.browser.spec.ts',
       distModule: './dist/components/ki-alpha.js',
       publicSubpath: './ki-alpha',
@@ -85,7 +82,6 @@ test('derives direct module exports, tests, token sources, and budget membership
       tag: 'ki-beta',
       className: 'KiBeta',
       sourceModule: 'packages/elements/src/components/ki-beta/ki-beta.tsx',
-      unitSpec: 'packages/elements/src/components/ki-beta/ki-beta.spec.tsx',
       browserSpec: 'packages/elements/browser-tests/ki-beta.browser.spec.ts',
       distModule: './dist/components/ki-beta.js',
       publicSubpath: './ki-beta',

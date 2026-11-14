@@ -10,6 +10,7 @@ import { defineCustomElement as defineKiTab } from '../dist/components/ki-tab.js
 import { defineCustomElement as defineKiTabPanel } from '../dist/components/ki-tab-panel.js';
 import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiTabsElement = HTMLElement & { value: string };
 const browserCommands = commands as unknown as {
@@ -632,6 +633,12 @@ describe('ki-tabs narrow viewport behavior in a real browser', () => {
 });
 
 describe('ki-tabs theming behavior in a real browser', () => {
+  it('S10 honors a forced dark scheme: the tabs and the visible panel repaint', async () => {
+    const tabs = await mount(fixture());
+
+    expect(await repaintedUnderForcedDark(tabs)).toEqual(expect.arrayContaining(['tab', 'panel']));
+  });
+
   it('S9 material3 restyles tabs through token values alone', async () => {
     const tabs = await mount(fixture());
     const email = tab(tabs, 'email');

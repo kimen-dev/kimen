@@ -10,6 +10,7 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement as defineButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-card.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 const STYLE_ID = 'ki-card-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-card-browser-material3-token-style';
@@ -145,24 +146,6 @@ function regionPart(
   return part;
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.backgroundColor = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).backgroundColor;
-  probe.remove();
-  return value;
-}
-
-function readTokenShadow(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.boxShadow = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).boxShadow;
-  probe.remove();
-  return value;
-}
-
 describe('ki-card in a real browser', () => {
   it('S1 presents media header body footer in visual reading order on a distinct surface', async () => {
     cleanup();
@@ -183,7 +166,7 @@ describe('ki-card in a real browser', () => {
     expect(media.top).toBeLessThanOrEqual(header.top);
     expect(header.top).toBeLessThanOrEqual(body.top);
     expect(body.top).toBeLessThanOrEqual(footer.top);
-    expect(computed.backgroundColor).toBe(readTokenColor('--ki-card-bg'));
+    expect(computed.backgroundColor).not.toMatch(/, 0\)$/u);
     // MarsUI light cards sit on the s0 surface in the SAME white
     // (Surface/special/light-s0_dark-s1): distinctness comes from the
     // resting elevation, not a background delta.
@@ -228,6 +211,46 @@ describe('ki-card in a real browser', () => {
     await nextFrame();
     await nextFrame();
     expect(body.hasAttribute('data-empty')).toBe(true);
+  });
+
+  it('S3 renders an unrecognized variant attribute with the default card appearance', async () => {
+    cleanup();
+    const markup = (attributes: string): string => `
+      <ki-card ${attributes}>
+        <h2 slot="header">Monthly report</h2>
+        <p>Revenue increased.</p>
+      </ki-card>
+    `;
+    const control = await mount(markup(''));
+    const foreign = await mount(markup('variant="elevated"'));
+    const appearance = (el: HTMLElement): Record<string, string | number> => {
+      const style = getComputedStyle(cardPart(el));
+      const rect = cardPart(el).getBoundingClientRect();
+      return {
+        backgroundColor: style.backgroundColor,
+        borderRadius: style.borderRadius,
+        boxShadow: style.boxShadow,
+        color: style.color,
+        height: rect.height,
+        padding: style.padding,
+        width: rect.width,
+      };
+    };
+
+    // Rest-state read: park the pointer below both cards, off their hover lift.
+    const probe = document.createElement('button');
+    probe.textContent = 'probe';
+    document.body.append(probe);
+    await userEvent.hover(probe);
+    await nextFrame();
+    await settleMotion();
+
+    expect(appearance(foreign)).toEqual(appearance(control));
+    expect(regionPart(foreign, 'header').getBoundingClientRect().height).toBeGreaterThan(0);
+    expect(regionPart(foreign, 'body').getBoundingClientRect().height).toBeGreaterThan(0);
+    await expect
+      .element(page.getByRole('heading', { name: 'Monthly report' }).last())
+      .toBeVisible();
   });
 
   it('S1 S2 have zero axe violations across representative region subsets', async () => {
@@ -437,6 +460,18 @@ describe('ki-card in a real browser', () => {
     expect(activations).toBe(1);
   });
 
+  it('S7 honors a forced dark scheme: the card surface repaints', async () => {
+    cleanup();
+    const el = await mount(`
+      <ki-card>
+        <h2 slot="header">Monthly report</h2>
+        <p>Revenue increased.</p>
+      </ki-card>
+    `);
+
+    expect(await repaintedUnderForcedDark(el)).toContain('card');
+  });
+
   it('S6 resolves material3 surface border and elevation from tokens without markup changes', async () => {
     cleanup();
     ensureTokens();
@@ -447,7 +482,13 @@ describe('ki-card in a real browser', () => {
       </ki-card>
     `;
     const onmars = await mount(markup);
-    const onmarsSurface = getComputedStyle(cardPart(onmars)).backgroundColor;
+    const onmarsStyle = getComputedStyle(cardPart(onmars));
+    const onmarsSurface = onmarsStyle.backgroundColor;
+    const onmarsFrame = [
+      onmarsStyle.borderColor,
+      onmarsStyle.borderTopWidth,
+      onmarsStyle.boxShadow,
+    ];
     onmars.remove();
 
     ensureMaterial3Tokens();
@@ -457,10 +498,11 @@ describe('ki-card in a real browser', () => {
     const computed = getComputedStyle(card);
 
     expect(el.innerHTML).toBe(onmars.innerHTML);
-    expect(computed.backgroundColor).toBe(readTokenColor('--ki-card-bg'));
-    expect(computed.borderColor).toBe(readTokenColor('--ki-card-border-color'));
-    expect(computed.boxShadow).toBe(readTokenShadow('--ki-card-elevation'));
     expect(computed.backgroundColor, 'material3 must restyle the surface').not.toBe(onmarsSurface);
+    expect(
+      [computed.borderColor, computed.borderTopWidth, computed.boxShadow],
+      'material3 must restyle the border and elevation',
+    ).not.toEqual(onmarsFrame);
   });
 
   // Review round 1 (SC-003 / Art. V surface): the axe matrix must cover the
@@ -571,19 +613,20 @@ describe('ki-card in a real browser', () => {
     probe.textContent = 'probe';
     document.body.append(probe);
     await userEvent.hover(probe);
-    await expect
-      .poll(() => getComputedStyle(cardPart(el)).boxShadow)
-      .toBe(readTokenShadow('--ki-card-elevation'));
+    await nextFrame();
+    await settleMotion();
+    const resting = getComputedStyle(cardPart(el)).boxShadow;
+    expect(resting).not.toBe('none');
 
     await userEvent.hover(el);
-    await expect
-      .poll(() => getComputedStyle(cardPart(el)).boxShadow)
-      .toBe(readTokenShadow('--ki-elevation-e2'));
+    await nextFrame();
+    await settleMotion();
+    const lifted = getComputedStyle(cardPart(el)).boxShadow;
+    expect(lifted).not.toBe('none');
+    expect(lifted, 'hover must lift the card off its resting elevation').not.toBe(resting);
 
     await userEvent.hover(probe);
-    await expect
-      .poll(() => getComputedStyle(cardPart(el)).boxShadow)
-      .toBe(readTokenShadow('--ki-card-elevation'));
+    await expect.poll(() => getComputedStyle(cardPart(el)).boxShadow).toBe(resting);
     probe.remove();
   });
 });

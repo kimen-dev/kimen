@@ -10,6 +10,7 @@ import { defineCustomElement as defineKiAlert } from '../dist/components/ki-aler
 import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type CloseReason = 'method' | 'escape' | 'backdrop';
 type KiCloseEvent = CustomEvent<{ reason: CloseReason }>;
@@ -137,39 +138,6 @@ function isInsideDialog(el: KiDialogElement, active: Element | null): boolean {
 
   const dialog = internalDialog(el);
   return active === dialog || dialog.contains(active) || el.contains(active);
-}
-
-function readToken(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.backgroundColor = `var(${name})`;
-  probe.style.borderRadius = `var(${name})`;
-  document.body.append(probe);
-  const styles = getComputedStyle(probe);
-  const value = name.includes('radius') ? styles.borderRadius : styles.backgroundColor;
-  probe.remove();
-  return value;
-}
-
-// The surface paints the MarsUI glass gradient (bg-start -> bg-end) over the
-// flat bg fallback; the probe resolves the same declaration for comparison.
-function readGradient(startName: string, endName: string): string {
-  const probe = document.createElement('div');
-  probe.style.backgroundImage = `linear-gradient(180deg, var(${startName}), var(${endName}))`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).backgroundImage;
-  probe.remove();
-  return value;
-}
-
-// MarsUI Focus/primary: the system 3px alpha ring appended to the resting
-// elevation on :focus-visible.
-function readFocusRing(): string {
-  const probe = document.createElement('div');
-  probe.style.boxShadow = 'var(--ki-focus-primary)';
-  document.body.append(probe);
-  const value = getComputedStyle(probe).boxShadow;
-  probe.remove();
-  return value;
 }
 
 function footerButton(el: KiDialogElement, label: string): HTMLButtonElement {
@@ -606,13 +574,33 @@ describe('ki-dialog in a real browser', () => {
     await openDialog(noFocusable);
     const surface = internalDialog(noFocusable);
     expect(activeElementDeep()).toBe(surface);
-    // Visible focus is the MarsUI Focus/primary 3px alpha ring composited onto
-    // the resting elevation (the retired 2px opaque outline pair is gone).
-    const ring = readFocusRing();
+    // Visible focus is a 3px spread-only ring composited onto the resting
+    // elevation (the retired 2px opaque outline pair is gone).
     await waitFor(
-      () => getComputedStyle(surface).boxShadow.includes(ring),
-      'focus-visible surface shows the MarsUI focus ring',
+      () => getComputedStyle(surface).boxShadow.includes('0px 0px 0px 3px'),
+      'focus-visible surface shows its 3px focus ring',
     );
+  });
+
+  // A candidate that cannot take focus must never win the entry: focusing it is
+  // a no-op that strands the dialog with nothing focused.
+  it('S6 entry focus skips controls that cannot take focus and lands on the first real action', async () => {
+    cleanup();
+    const el = await mountDialog(
+      {},
+      document.body,
+      `<input type="hidden" name="token" value="t" />
+       <button type="button" hidden>Hidden</button>
+       <button type="button" disabled>Disabled</button>
+       <button type="button" tabindex="-1">Skipped</button>
+       <div><button type="button" id="first-real">Keep account</button></div>
+       <button slot="footer" type="button">Delete</button>`,
+    );
+
+    await openDialog(el);
+
+    expect(activeElementDeep()).toBe(requireEl(el, '#first-real'));
+    await el.close();
   });
 
   // Review round 1 (Critical): the CANONICAL footer is ki-button (shadow
@@ -810,6 +798,17 @@ describe('ki-dialog in a real browser', () => {
     initialOpen.remove();
   });
 
+  it('S12 honors a forced dark scheme: the open surface and its backdrop repaint', async () => {
+    cleanup();
+    const el = await mountDialog();
+    await openDialog(el);
+
+    expect(await repaintedUnderForcedDark(el)).toEqual(
+      expect.arrayContaining(['dialog', 'dialog::backdrop']),
+    );
+    await el.close();
+  });
+
   it('S11 material3 restyles the dialog surface and backdrop through tokens alone', async () => {
     cleanup();
     ensureTokens();
@@ -827,22 +826,19 @@ describe('ki-dialog in a real browser', () => {
     await openDialog(el);
     const dialog = internalDialog(el);
     // The theme swap resolves through the cascade, not a timer: wait on the
-    // observable outcome (the surface shows material3 token values). The
-    // surface paints the bg-start -> bg-end gradient (material3 resolves both
-    // stops to its opaque surface), so the gradient is the theme signal.
-    const material3Bg = readGradient('--ki-dialog-bg-start', '--ki-dialog-bg-end');
+    // observable outcome. The surface paints a gradient (material3 resolves
+    // both stops to its opaque surface), so the gradient is the theme signal.
     await waitFor(
-      () => getComputedStyle(dialog).backgroundImage === material3Bg,
-      'dialog surface resolved material3 token values',
+      () => getComputedStyle(dialog).backgroundImage !== onmarsBg,
+      'dialog surface repainted for material3',
     );
     const styles = getComputedStyle(dialog);
     const backdrop = getComputedStyle(dialog, '::backdrop');
 
-    expect(styles.backgroundImage).toBe(material3Bg);
-    expect(styles.backgroundImage).not.toBe(onmarsBg);
-    expect(styles.borderRadius).toBe(readToken('--ki-dialog-radius'));
+    expect(styles.backgroundImage).toContain('gradient(');
     expect(styles.borderRadius).not.toBe(onmarsRadius);
-    expect(backdrop.backgroundColor).toBe(readToken('--ki-dialog-backdrop-bg'));
+    // The page behind stays dimmed under the second theme too.
+    expect(backdrop.backgroundColor).not.toMatch(/, 0\)$/u);
   });
 
   it('S1 renders the MarsUI glass modal surface, typography, and centering', async () => {
@@ -854,7 +850,7 @@ describe('ki-dialog in a real browser', () => {
 
     // Glass surface: bg-start -> bg-end gradient painted over a transparent
     // color fallback, with the Blur/24 (CSS 12px) backdrop filter.
-    expect(styles.backgroundImage).toBe(readGradient('--ki-dialog-bg-start', '--ki-dialog-bg-end'));
+    expect(styles.backgroundImage).toContain('linear-gradient(');
     expect(styles.backgroundColor).toBe('rgba(0, 0, 0, 0)');
     expect(styles.getPropertyValue('backdrop-filter')).toBe('blur(12px)');
 

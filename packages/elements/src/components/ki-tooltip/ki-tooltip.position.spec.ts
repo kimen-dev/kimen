@@ -1,84 +1,25 @@
-import { h } from '@stencil/core';
-import { describe, expect, it, render } from '@stencil/vitest';
-import { parseDelay } from './ki-tooltip.delay';
+import { describe, expect, it } from 'vitest';
 import {
+  type KiTooltipRect,
   normalizePlacement,
   resolveTooltipPosition,
-  type KiTooltipRect,
 } from './ki-tooltip.position';
 
+function rect(x: number, y: number, width: number, height: number): KiTooltipRect {
+  return {
+    x,
+    y,
+    width,
+    height,
+    top: y,
+    right: x + width,
+    bottom: y + height,
+    left: x,
+  };
+}
+
 // @spec:013-ki-tooltip
-// mock-doc is a fast diagnostic only; the authoritative suite is the
-// real-browser spec (Art. III). Every test maps to a scenario ID (S<n>)
-// from the approved feature.feature (traceability gate, Art. II).
-describe('ki-tooltip', () => {
-  function shadowOf(root: HTMLElement): ShadowRoot {
-    const shadow = root.shadowRoot;
-    expect(shadow).toBeInstanceOf(ShadowRoot);
-    if (!shadow) {
-      throw new Error('Expected ki-tooltip to render a shadow root');
-    }
-    return shadow;
-  }
-
-  function rect(x: number, y: number, width: number, height: number): KiTooltipRect {
-    return {
-      x,
-      y,
-      width,
-      height,
-      top: y,
-      right: x + width,
-      bottom: y + height,
-      left: x,
-    };
-  }
-
-  it('S1 renders the trigger slot and one hidden tooltip bubble with label text', async () => {
-    const { root } = await render(
-      <ki-tooltip label="Send immediately">
-        <button>Send</button>
-      </ki-tooltip>,
-    );
-    const shadow = shadowOf(root);
-    const slot = shadow.querySelector('slot');
-    const tooltip = shadow.querySelector('[part="tooltip"]');
-
-    if (!slot) {
-      throw new Error('Expected a default trigger slot');
-    }
-    if (!tooltip) {
-      throw new Error('Expected a tooltip bubble');
-    }
-    expect(tooltip.nodeName).toBe('DIV');
-    expect(slot.nodeName).toBe('SLOT');
-    expect(tooltip.getAttribute('role')).toBe('tooltip');
-    expect(tooltip.textContent).toBe('Send immediately');
-    expect(tooltip.classList.contains('is-visible')).toBe(false);
-  });
-
-  it('S13 renders no tooltip bubble for a blank label', async () => {
-    const { root } = await render(
-      <ki-tooltip label="  ">
-        <button>Send</button>
-      </ki-tooltip>,
-    );
-    const shadow = shadowOf(root);
-
-    expect(shadow.querySelector('[part="tooltip"]')).toBeNull();
-  });
-
-  it('S8 keeps the tooltip out of the tab order', async () => {
-    const { root } = await render(
-      <ki-tooltip label="Send immediately">
-        <button>Send</button>
-      </ki-tooltip>,
-    );
-    const shadow = shadowOf(root);
-
-    expect(shadow.querySelector('[tabindex]')).toBeNull();
-  });
-
+describe('ki-tooltip position', () => {
   it('S3 normalizes unknown placement values to top', () => {
     expect(normalizePlacement('top')).toBe('top');
     expect(normalizePlacement('bottom')).toBe('bottom');
@@ -194,12 +135,5 @@ describe('ki-tooltip', () => {
 
     expect(position.effectivePlacement).toBe('top');
     expect(position.crossAxisShift).toBeGreaterThan(0);
-  });
-
-  it('S1 parses tokenized show and hide delays', () => {
-    expect(parseDelay('150ms')).toBe(150);
-    expect(parseDelay('0.15s')).toBe(150);
-    expect(parseDelay('')).toBe(0);
-    expect(parseDelay('later')).toBe(0);
   });
 });

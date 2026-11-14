@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-status.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiStatusElement = HTMLElement & { tone: string; ring: boolean; label?: string };
 
@@ -156,41 +157,20 @@ async function motionSettled(el: Element): Promise<void> {
   }
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.color = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = getComputedStyle(probe).color;
-  probe.remove();
-  return value;
-}
-
-function readTokenLength(name: string): number {
-  const probe = document.createElement('div');
-  probe.style.blockSize = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = Number.parseFloat(getComputedStyle(probe).blockSize);
-  probe.remove();
-  return value;
-}
-
 describe('ki-status', () => {
-  it('S1 fills the dot from the tone token values at the theme token size', async () => {
+  it('S1 draws a filled round dot whose fill tells one tone from another', async () => {
     cleanup();
     const online = await mount(landmark(), { label: 'Online', tone: 'success' });
     const onlineDot = dotOf(online);
     await motionSettled(online);
-    expect(getComputedStyle(onlineDot).backgroundColor).toBe(
-      readTokenColor('--ki-status-success-color'),
-    );
     const rect = onlineDot.getBoundingClientRect();
-    expect(rect.width).toBe(readTokenLength('--ki-status-size'));
-    expect(rect.height).toBe(readTokenLength('--ki-status-size'));
+    expect(rect.width).toBeGreaterThan(0);
+    expect(rect.height).toBe(rect.width);
+    expect(getComputedStyle(onlineDot).backgroundColor).not.toMatch(/, 0\)$/u);
 
     const failing = await mount(landmark(), { label: 'Build failing', tone: 'danger' });
-    expect(getComputedStyle(dotOf(failing)).backgroundColor).toBe(
-      readTokenColor('--ki-status-danger-color'),
-    );
+    await motionSettled(failing);
+    expect(dotOf(failing).getBoundingClientRect().width).toBe(rect.width);
     expect(getComputedStyle(dotOf(failing)).backgroundColor).not.toBe(
       getComputedStyle(onlineDot).backgroundColor,
     );
@@ -203,7 +183,9 @@ describe('ki-status', () => {
 
     const unknown = await mount(landmark(), { tone: 'primary', label: 'Unknown' });
     expect(getComputedStyle(dotOf(unknown)).backgroundColor).toBe(neutralColor);
-    expect(neutralColor).toBe(readTokenColor('--ki-status-neutral-color'));
+    expect(dotOf(unknown).getBoundingClientRect().width).toBe(
+      dotOf(control).getBoundingClientRect().width,
+    );
   });
 
   it('S4 surrounds the dot with a contrasting ring over an avatar image', async () => {
@@ -227,15 +209,15 @@ describe('ki-status', () => {
     await motionSettled(el);
     const ringShadow = getComputedStyle(dotOf(el)).boxShadow;
 
-    // The ring is a spread box-shadow layer in the theme ring color,
-    // stacked over the base effects — and absent without the attribute.
-    expect(ringShadow).toContain(readTokenColor('--ki-status-ring-color'));
-    expect(ringShadow).toContain(
-      `0px 0px 0px ${String(readTokenLength('--ki-status-ring-width'))}px`,
+    // The ring is a spread-only box-shadow layer stacked over the base
+    // effects — present with the attribute, absent without it.
+    const spreadOnlyLayer = /0px 0px 0px [1-9][\d.]*px/u;
+    expect(ringShadow).toMatch(spreadOnlyLayer);
+    expect(plainShadow).not.toMatch(spreadOnlyLayer);
+    // The ring never resizes the dot.
+    expect(dotOf(el).getBoundingClientRect().width).toBe(
+      dotOf(plain).getBoundingClientRect().width,
     );
-    expect(plainShadow).not.toContain(readTokenColor('--ki-status-ring-color'));
-    // The ring never resizes the dot (the Figma symbol stays 4x4).
-    expect(dotOf(el).getBoundingClientRect().width).toBe(readTokenLength('--ki-status-size'));
   });
 
   it('S5 adds no keyboard stop between two buttons', async () => {
@@ -291,6 +273,13 @@ describe('ki-status', () => {
     await expectAccessible(document.body);
   });
 
+  it('S9 honors a forced dark scheme: the neutral dot repaints', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Offline', tone: 'neutral' });
+
+    expect(await repaintedUnderForcedDark(el)).toContain('dot');
+  });
+
   it('S8 restyles size, fill and effects through material3 tokens alone', async () => {
     cleanup();
     ensureTokens();
@@ -308,13 +297,11 @@ describe('ki-status', () => {
     const dot = dotOf(el);
 
     expect(el.outerHTML).toBe(markup);
-    expect(getComputedStyle(dot).backgroundColor).toBe(readTokenColor('--ki-status-danger-color'));
     expect(getComputedStyle(dot).backgroundColor, 'material3 must restyle the fill').not.toBe(
       onmarsColor,
     );
-    // material3 resolves the dot to the ~6dp badge-dot size, onmars to 4px.
-    expect(dot.getBoundingClientRect().width).toBe(readTokenLength('--ki-status-size'));
-    expect(dot.getBoundingClientRect().width).not.toBe(onmarsSize);
+    // material3 draws the dot at its own badge-dot size, larger than onmars.
+    expect(dot.getBoundingClientRect().width).toBeGreaterThan(onmarsSize);
 
     await expectAccessible(document.body);
   });

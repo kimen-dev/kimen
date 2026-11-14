@@ -9,6 +9,7 @@ import { page, userEvent } from 'vitest/browser';
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import { defineCustomElement } from '../dist/components/ki-switch.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiSwitchElement = HTMLElement & {
   checked: boolean;
@@ -198,6 +199,17 @@ describe('ki-switch in a real browser', () => {
     await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
 
     expect(el.checked).toBe(false);
+  });
+
+  it('S1 turning the switch on from script reports no input or change event', async () => {
+    const el = await mount();
+    const counts = eventCounts(el);
+
+    el.checked = true;
+
+    await expect.element(page.getByRole('switch', { name: 'Email notifications' })).toBeChecked();
+    expect(counts.input()).toBe(0);
+    expect(counts.change()).toBe(0);
   });
 
   it('S3 a disabled switch does not toggle and reports no state change', async () => {
@@ -429,6 +441,20 @@ describe('ki-switch in a real browser', () => {
     const { form } = await mountInForm('name="newsletter" value="weekly" checked');
 
     expect(formValue(form, 'newsletter')).toBe('weekly');
+  });
+
+  it('S18 a value changed after render is the one submitted', async () => {
+    const { form, el } = await mountInForm('name="newsletter" value="daily" checked');
+
+    el.value = 'weekly';
+
+    await expect.poll(() => formValue(form, 'newsletter')).toBe('weekly');
+  });
+
+  it('S15 honors a forced dark scheme: the off track and its thumb repaint', async () => {
+    const el = await mount();
+
+    expect(await repaintedUnderForcedDark(el)).toEqual(expect.arrayContaining(['track', 'thumb']));
   });
 
   it('S14 material3 restyles checked and unchecked switch token values without markup changes', async () => {

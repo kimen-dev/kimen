@@ -8,6 +8,7 @@ import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiOption } from '../dist/components/ki-option.js';
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiSelectElement = HTMLElement & {
   value: string;
@@ -152,6 +153,32 @@ describe('ki-select in a real browser', () => {
     expect(valueText(el)).toBe('Choose a country');
   });
 
+  it('S1 choosing the option that is already selected closes without input or change events', async () => {
+    const el = await mountSelect('value="fr"');
+    const events: string[] = [];
+    el.addEventListener('input', () => events.push('input'));
+    el.addEventListener('change', () => events.push('change'));
+
+    await userEvent.click(trigger(el));
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.click(rowAt(el, 1));
+
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'false');
+    expect(el.value).toBe('fr');
+    expect(events).toEqual([]);
+  });
+
+  it('S3 disabling a select while its options are open closes them', async () => {
+    const el = await mountSelect();
+
+    await userEvent.click(trigger(el));
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'true');
+    el.disabled = true;
+
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'false');
+    expect(trigger(el).disabled).toBe(true);
+  });
+
   // Select-only combobox (APG): DOM focus stays on the combobox while the
   // options are pointed at through aria-activedescendant. A real pointer press
   // moves focus onto the pressed row, and the row is then hidden with the
@@ -263,6 +290,22 @@ describe('ki-select in a real browser', () => {
     expect(events).toHaveLength(0);
   });
 
+  it('S20 moving focus outside the open select closes it without committing', async () => {
+    const el = await mountSelect('value="es"');
+    const events: Event[] = [];
+    el.addEventListener('change', (event) => events.push(event));
+
+    trigger(el).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard('{End}');
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'true');
+    document.querySelector<HTMLElement>('#after')?.focus();
+
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'false');
+    expect(valueText(el)).toBe('Spain');
+    expect(events).toHaveLength(0);
+  });
+
   it('S11 S12 exposes combobox and listbox roles in the real accessibility path', async () => {
     const el = await mountSelect('value="fr"');
 
@@ -297,6 +340,20 @@ describe('ki-select in a real browser', () => {
     expect(activeId).toBe(rows(el)[1]?.id);
     expect(el.shadowRoot?.getElementById(activeId ?? '')).toBe(rows(el)[1]);
   });
+
+  it.each(['Alt', 'Control', 'Meta'])(
+    'S7 leaves Arrow Down held with %s to the browser and stays closed',
+    async (modifier) => {
+      const el = await mountSelect('value="fr"');
+
+      trigger(el).focus();
+      await userEvent.keyboard(`{${modifier}>}{ArrowDown}{/${modifier}}`);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
+      expect(el.value).toBe('fr');
+    },
+  );
 
   it('S8 S9 S10 S21 S22 S23 implements the approved keyboard path', async () => {
     const el = await mountSelect(
@@ -341,6 +398,33 @@ describe('ki-select in a real browser', () => {
       .toHaveAttribute('aria-activedescendant', rows(unselected)[0]?.id ?? '');
     await userEvent.keyboard('f');
     expect(unselected.value).toBe('');
+  });
+
+  // The active option is what assistive technology announces: it must never
+  // point at an option that stopped being available while the list is open.
+  it('S22 moves the highlight off an option that is disabled or removed while the list is open', async () => {
+    const el = await mountSelect();
+    const events: string[] = [];
+    el.addEventListener('input', () => events.push('input'));
+    el.addEventListener('change', () => events.push('change'));
+    const activeText = (): string =>
+      el.shadowRoot
+        ?.getElementById(trigger(el).getAttribute('aria-activedescendant') ?? '')
+        ?.textContent.trim() ?? '';
+
+    trigger(el).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.poll(activeText).toBe('Spain');
+
+    el.querySelector('ki-option[value="es"]')?.setAttribute('disabled', '');
+    await expect.poll(activeText).toBe('France');
+
+    el.querySelector('ki-option[value="fr"]')?.remove();
+    await expect.poll(activeText).toBe('Portugal');
+
+    expect(trigger(el).getAttribute('aria-expanded')).toBe('true');
+    expect(el.value).toBe('');
+    expect(events).toEqual([]);
   });
 
   it('S13 S24 submits selected values and omits unselected values', async () => {
@@ -435,6 +519,20 @@ describe('ki-select in a real browser', () => {
     expect(changes).toHaveLength(1);
   });
 
+  it('S15 resetting a form after a blocked submission clears the invalid state', async () => {
+    const { form, el } = await mountForm('required');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+    });
+
+    form.requestSubmit();
+    await expect.element(trigger(el)).toHaveAttribute('aria-invalid', 'true');
+    form.reset();
+
+    await expect.element(trigger(el)).not.toHaveAttribute('aria-invalid');
+    expect(el.value).toBe('');
+  });
+
   it('S16 honors disabled fieldsets', async () => {
     const { form, el } = await mountForm('value="fr"');
     const fieldset = document.createElement('fieldset');
@@ -449,6 +547,16 @@ describe('ki-select in a real browser', () => {
     expect(trigger(el).disabled).toBe(true);
     expect(trigger(el).getAttribute('aria-expanded')).toBe('false');
     expect(new FormData(form).has('country')).toBe(false);
+  });
+
+  it('S18 honors a forced dark scheme: the trigger and the open options panel repaint', async () => {
+    const el = await mountSelect('value="fr"');
+    trigger(el).click();
+    await expect.element(trigger(el)).toHaveAttribute('aria-expanded', 'true');
+
+    expect(await repaintedUnderForcedDark(el)).toEqual(
+      expect.arrayContaining(['trigger', 'listbox', 'option']),
+    );
   });
 
   it('S17 S19 rethemes with material3 and keeps RTL logical ordering', async () => {

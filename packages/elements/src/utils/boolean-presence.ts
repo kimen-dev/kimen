@@ -23,11 +23,7 @@ export function observeAttributePresence(
   host: HTMLElement,
   attributes: readonly string[],
   onPresent: (attribute: string) => void,
-): MutationObserver | undefined {
-  if (typeof MutationObserver === 'undefined') {
-    return undefined;
-  }
-
+): MutationObserver {
   const observer = new MutationObserver(() => {
     for (const attribute of attributes) {
       if (host.hasAttribute(attribute)) {

@@ -168,10 +168,6 @@ export class KiSwitch {
   }
 
   private syncFormValue(): void {
-    if (typeof this.internals.setFormValue !== 'function') {
-      return;
-    }
-
     this.internals.setFormValue(resolveSubmittedValue(this.checked, this.value));
   }
 

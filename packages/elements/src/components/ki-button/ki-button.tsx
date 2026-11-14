@@ -103,14 +103,12 @@ export class KiButton {
 
   componentDidLoad(): void {
     this.syncForwardedDescription();
-    if (typeof MutationObserver !== 'undefined') {
-      this.descriptionObserver = new MutationObserver(() => {
-        this.syncForwardedDescription();
-      });
-      this.descriptionObserver.observe(this.host, {
-        attributeFilter: ['aria-description'],
-      });
-    }
+    this.descriptionObserver = new MutationObserver(() => {
+      this.syncForwardedDescription();
+    });
+    this.descriptionObserver.observe(this.host, {
+      attributeFilter: ['aria-description'],
+    });
   }
 
   disconnectedCallback(): void {

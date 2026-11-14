@@ -243,6 +243,15 @@ describe('ki-checkbox in a real browser', () => {
     expect(el.checked).toBe(false);
   });
 
+  it('S4 checked="false" in the markup renders the checkbox checked', async () => {
+    cleanup();
+    const el = await mount('Email notifications', { checked: 'false' });
+
+    expect(el.checked).toBe(true);
+    expect(inputOf(el).checked).toBe(true);
+    await expect.element(page.getByRole('checkbox', { name: 'Email notifications' })).toBeChecked();
+  });
+
   it('S2 disabled checkbox stays inert, unfocused and emits no change', async () => {
     cleanup();
     const el = await mount('Email notifications', { disabled: true });

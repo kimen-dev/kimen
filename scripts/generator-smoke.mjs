@@ -18,7 +18,6 @@ import { pathToFileURL } from 'node:url';
 
 const TAG = /^ki-[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/u;
 const REQUIRED_SURFACES = Object.freeze([
-  'unit',
   'tokens',
   'cem',
   'llms',
@@ -75,7 +74,6 @@ export function createGeneratorSmokePlan({ tag, spec }) {
       { id: 'scaffold' },
       { id: 'tokens' },
       { id: 'build' },
-      { id: 'unit' },
       { id: 'cem' },
       { id: 'llms' },
       { id: 'pack' },
@@ -262,21 +260,11 @@ export async function runGeneratorSmoke({
     ]);
     const afterSha256 = sha256(await readFile(rootPath, 'utf8'));
     await assertFile(join(componentRoot, `${tag}.tsx`));
-    await assertFile(join(componentRoot, `${tag}.spec.tsx`));
     await assertFile(browserSpec);
     await assertFile(tokenSource);
 
     run('node', ['scripts/gates/check-tokens.mjs']);
     run('pnpm', ['exec', 'nx', 'run', '@kimen/elements:build', '--skipNxCache']);
-    run('pnpm', [
-      '--filter',
-      '@kimen/elements',
-      'exec',
-      'vitest',
-      'run',
-      `src/components/${tag}/${tag}.spec.tsx`,
-    ]);
-
     const manifest = JSON.parse(
       await readFile(
         join(disposableRoot, 'packages/elements/generated/custom-elements.json'),
@@ -331,10 +319,6 @@ export async function runGeneratorSmoke({
       manualEdits: plan.manualEdits,
       legacyRoot: { beforeSha256, afterSha256 },
       surfaces: {
-        unit: {
-          status: 'passed',
-          discovered: [`packages/elements/src/components/${tag}/${tag}.spec.tsx`],
-        },
         tokens: {
           status: 'passed',
           discovered: [`packages/tokens/tokens/component/${tag.slice(3)}.tokens.json`],

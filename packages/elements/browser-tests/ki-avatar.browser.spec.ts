@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-avatar.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiAvatarElement = HTMLElement & {
   label?: string;
@@ -251,6 +252,13 @@ describe('ki-avatar', () => {
     expect(row.textContent).toContain('Ana García');
 
     await expectAccessible(document.body);
+  });
+
+  it('S12 honors a forced dark scheme: the avatar surface repaints', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Ana García', initials: 'AG' });
+
+    expect(await repaintedUnderForcedDark(el)).toContain('avatar');
   });
 
   it('S11 restyles shape, colors and metrics through material3 tokens alone', async () => {

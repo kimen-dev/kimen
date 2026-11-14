@@ -7,11 +7,18 @@ component in `packages/elements`.
 
 ```
 packages/elements/src/components/ki-button/
-├── ki-button.tsx        # component class (JSDoc = public contract, Art. I)
-├── ki-button.css        # styles (tokens only, logical properties only)
-├── ki-button.spec.tsx   # logic tests (see frontend-qa skill)
-└── ki-button.e2e.ts     # browser tests: keyboard, axe, theming, forms
+├── ki-button.tsx           # component class (JSDoc = public contract, Art. I)
+├── ki-button.css           # styles (tokens only, logical properties only)
+├── ki-button.form.ts       # pure helper, once logic earns extraction
+└── ki-button.form.spec.ts  # node unit test for that helper (frontend-qa skill)
+packages/elements/browser-tests/
+└── ki-button.browser.spec.ts  # every component behavior, in a real browser:
+                               # keyboard, focus, axe, theming, forms
 ```
+
+No `ki-button.spec.tsx`: components are never rendered in a simulated DOM
+(mock-doc/jsdom). Do not add "is this platform API present?" guards to make
+one possible.
 
 - Scaffold with the Nx generator — never by hand (Art. X: deterministic
   scaffolding keeps structure and gate wiring reproducible).

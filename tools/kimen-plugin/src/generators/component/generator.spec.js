@@ -45,20 +45,17 @@ async function scaffoldAvatar(tree) {
   await componentGenerator(tree, { name: tag, spec: feature });
 }
 
-test('S12 scaffolds source, unit, and real-browser contracts with traceability', async () => {
+test('S12 scaffolds source and a real-browser contract with traceability, and no simulated-DOM spec', async () => {
   const tree = createGeneratorTree();
 
   await scaffoldAvatar(tree);
 
   assert.equal(tree.exists(`${componentRoot}/${tag}.tsx`), true);
   assert.equal(tree.exists(`${componentRoot}/${tag}.css`), true);
-  assert.equal(tree.exists(`${componentRoot}/${tag}.spec.tsx`), true);
+  assert.equal(tree.exists(`${componentRoot}/${tag}.spec.tsx`), false);
   assert.equal(tree.exists(browserSpec), true);
   assert.match(tree.read(`${componentRoot}/${tag}.tsx`, 'utf8'), /export class KiAvatar/u);
-  assert.match(
-    tree.read(`${componentRoot}/${tag}.spec.tsx`, 'utf8'),
-    /@spec:018-project-integrity-hardening/u,
-  );
+  assert.match(tree.read(browserSpec, 'utf8'), /@spec:018-project-integrity-hardening/u);
   assert.match(tree.read(browserSpec, 'utf8'), /dist\/components\/ki-avatar\.js/u);
 });
 

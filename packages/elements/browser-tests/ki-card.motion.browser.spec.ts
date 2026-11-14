@@ -7,6 +7,7 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-card.js';
+import { parkPointer } from './axe';
 
 const browserCommands = commands as unknown as {
   emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
@@ -50,15 +51,6 @@ function cardPart(el: HTMLElement): HTMLElement {
   return part;
 }
 
-function readTokenShadow(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.boxShadow = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).boxShadow;
-  probe.remove();
-  return value;
-}
-
 describe('ki-card with reduced motion', () => {
   it('S9 suppresses the entrance animation and elevation transition, keeping end states', async () => {
     const el = await mount();
@@ -71,8 +63,12 @@ describe('ki-card with reduced motion', () => {
     // No elevation transition is declared on the surface.
     expect(getComputedStyle(card).transitionDuration).toBe('0s');
 
-    // The hover END STATE still applies (it lives outside the gate).
+    // The hover END STATE still applies (it lives outside the gate), and
+    // with no transition it is there at once.
+    await parkPointer();
+    const resting = getComputedStyle(card).boxShadow;
     await userEvent.hover(el);
-    expect(getComputedStyle(card).boxShadow).toBe(readTokenShadow('--ki-elevation-e2'));
+    expect(getComputedStyle(card).boxShadow).not.toBe('none');
+    expect(getComputedStyle(card).boxShadow).not.toBe(resting);
   });
 });

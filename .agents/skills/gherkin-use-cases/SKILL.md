@@ -120,7 +120,7 @@ S4, S5 · theming S6.
 
 Traceability: each test carries the ID in its title, e.g.
 `it("S2: Space toggles the focused switch", ...)` in
-`packages/elements/src/components/switch/switch.spec.tsx`.
+`packages/elements/browser-tests/ki-switch.browser.spec.ts`.
 
 ## Anti-patterns (reject in review)
 

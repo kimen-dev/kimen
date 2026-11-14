@@ -26,7 +26,6 @@ const CONFIG_PATHS = Object.freeze({
   'elements-browser': 'packages/elements/vitest.browser.config.ts',
   'elements-build': 'scripts/gates/build-mutation-elements.sh',
   'elements-coverage': 'packages/elements/vitest.coverage.config.ts',
-  'elements-setup': 'packages/elements/vitest.setup.mjs',
   'elements-stencil': 'packages/elements/stencil.config.ts',
   'elements-unit': 'packages/elements/vitest.config.ts',
   node: 'stryker.node.config.mjs',

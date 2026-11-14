@@ -4,9 +4,10 @@ if (!Number.isSafeInteger(concurrency) || concurrency < 1) {
 }
 
 /**
- * Stable Stencil mutation policy. Unit specs consume the built lazy loader;
- * browser specs consume dist/components. Rebuild both from instrumented source
- * and build the tokens used by browser fixtures in every sandbox.
+ * Stable Stencil mutation policy. Node unit specs import the pure helpers from
+ * instrumented source; browser specs consume dist/components. Rebuild that
+ * output from instrumented source and build the tokens used by browser
+ * fixtures in every sandbox.
  * T026 supplies all scope-specific paths and flags programmatically.
  *
  * @satisfies {import('@stryker-mutator/api/core').PartialStrykerOptions & {

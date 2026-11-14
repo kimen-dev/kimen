@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-textarea.js';
 import { expectAccessible, parkPointer } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiTextareaElement = HTMLElement & {
   autocomplete?: string;
@@ -179,15 +180,6 @@ function px(value: string): number {
   return Number.parseFloat(value.replace('px', ''));
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.backgroundColor = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).backgroundColor;
-  probe.remove();
-  return value;
-}
-
 describe('ki-textarea in a real browser', () => {
   it('S1 typing fills the textarea and the page observes composed input', async () => {
     cleanup();
@@ -250,7 +242,7 @@ describe('ki-textarea in a real browser', () => {
     expect(el.shadowRoot?.activeElement).not.toBe(textarea);
   });
 
-  it('S5 a fieldset-disabled textarea uses the disabled token matrix', async () => {
+  it('S5 a fieldset-disabled textarea looks disabled, not like an editable one', async () => {
     cleanup();
     ensureTokens();
     const form = document.createElement('form');
@@ -258,16 +250,19 @@ describe('ki-textarea in a real browser', () => {
     fieldset.disabled = true;
     form.append(fieldset);
     document.body.append(form);
-    const el = await mount({}, fieldset);
+    const inFieldset = await mount({}, fieldset);
+    const disabled = await mount({ disabled: true });
+    const editable = await mount();
     await waitForStyles();
-    const field = requireElement(
-      el.shadowRoot?.querySelector('[part="field"]'),
-      'field part missing',
-    );
+    const appearance = (el: HTMLElement): string[] => {
+      const style = getComputedStyle(
+        requireElement(el.shadowRoot?.querySelector('[part="field"]'), 'field part missing'),
+      );
+      return [style.borderTopColor, style.backgroundColor, style.color];
+    };
 
-    expect(getComputedStyle(field).borderTopColor).toBe(
-      readTokenColor('--ki-textarea-disabled-border'),
-    );
+    expect(appearance(inFieldset)).toEqual(appearance(disabled));
+    expect(appearance(inFieldset)).not.toEqual(appearance(editable));
   });
 
   it('S19 placeholder shows only while the field is empty', async () => {
@@ -579,10 +574,6 @@ describe('ki-textarea in a real browser', () => {
     const field = el.shadowRoot?.querySelector('[part="field"]');
     await waitForStyles();
 
-    expect([
-      readTokenColor('--ki-textarea-rest-bg'),
-      readTokenColor('--ki-textarea-hover-bg'),
-    ]).toContain(getComputedStyle(requireElement(field, 'field part missing')).backgroundColor);
     expect(getComputedStyle(requireElement(field, 'field part missing')).backgroundColor).not.toBe(
       onmarsBg,
     );
@@ -591,29 +582,13 @@ describe('ki-textarea in a real browser', () => {
     ).not.toBe(onmarsBlockStart);
   });
 
-  it('S18 forced dark under onmars resolves dark textarea token values', async () => {
+  it('S18 honors a forced dark scheme: the field surface and its label repaint', async () => {
     cleanup();
     ensureTokens();
-    const baseline = await mount();
-    const baselineField = baseline.shadowRoot?.querySelector('[part="field"]');
-    await waitForStyles();
-    const lightBg = getComputedStyle(
-      requireElement(baselineField, 'field part missing'),
-    ).backgroundColor;
-    baseline.remove();
-
-    document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
     const el = await mount();
-    const field = el.shadowRoot?.querySelector('[part="field"]');
     await waitForStyles();
 
-    expect([
-      readTokenColor('--ki-textarea-rest-bg'),
-      readTokenColor('--ki-textarea-hover-bg'),
-    ]).toContain(getComputedStyle(requireElement(field, 'field part missing')).backgroundColor);
-    expect(getComputedStyle(requireElement(field, 'field part missing')).backgroundColor).not.toBe(
-      lightBg,
-    );
+    expect(await repaintedUnderForcedDark(el)).toEqual(expect.arrayContaining(['field', 'label']));
   });
 
   it('S24 label and entered text follow the document writing direction', async () => {

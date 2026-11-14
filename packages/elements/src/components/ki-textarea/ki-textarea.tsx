@@ -197,7 +197,7 @@ export class KiTextarea {
   }
 
   private syncFormValue(): void {
-    (this.internals as Partial<ElementInternals>).setFormValue?.(this.value);
+    this.internals.setFormValue(this.value);
   }
 
   private syncValidity(): void {
@@ -205,7 +205,7 @@ export class KiTextarea {
       return;
     }
 
-    (this.internals as Partial<ElementInternals>).setValidity?.(
+    this.internals.setValidity(
       this.textarea.validity,
       this.textarea.validationMessage,
       this.textarea,
@@ -229,11 +229,11 @@ export class KiTextarea {
   }
 
   private addUserInvalidState(): void {
-    (this.internals as { states?: CustomStateSet }).states?.add('user-invalid');
+    this.internals.states.add('user-invalid');
   }
 
   private deleteUserInvalidState(): void {
-    (this.internals as { states?: CustomStateSet }).states?.delete('user-invalid');
+    this.internals.states.delete('user-invalid');
   }
 
   private syncDisabledFocus(): void {

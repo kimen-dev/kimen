@@ -24,11 +24,11 @@ const componentFixtureFiles = {
   'packages/elements/vitest.browser.config.ts': 'export default {};\n',
   'packages/elements/vitest.config.ts': 'export default {};\n',
   'packages/elements/vitest.coverage.config.ts': 'export default {};\n',
-  'packages/elements/vitest.setup.mjs': 'export {};\n',
   'scripts/gates/build-mutation-elements.sh': '#!/usr/bin/env bash\n',
   'packages/elements/src/components/ki-button/ki-button.css': ':host { display: block; }\n',
-  'packages/elements/src/components/ki-button/ki-button.spec.tsx': 'export const spec = 1;\n',
   'packages/elements/src/components/ki-button/ki-button.tsx': 'export const button = 1;\n',
+  'packages/elements/src/components/ki-progress/ki-progress.math.spec.ts':
+    'export const spec = 1;\n',
   'packages/elements/src/components/ki-progress/ki-progress.math.ts': 'export const math = 1;\n',
   'packages/elements/src/components/ki-progress/ki-progress.tsx': 'export const progress = 1;\n',
 };
@@ -267,7 +267,6 @@ test('@spec:018 S3 CLI classifies every argument and groups core files determini
     'elements-browser',
     'elements-build',
     'elements-coverage',
-    'elements-setup',
     'elements-stencil',
     'elements-unit',
     'node',
@@ -306,7 +305,7 @@ test('@spec:018 S3 CLI JSON stdin is canonical and rejects unclassified executab
 for (const configPath of [
   'packages/elements/vitest.browser.config.ts',
   'packages/elements/stencil.config.ts',
-  'packages/elements/vitest.setup.mjs',
+  'packages/elements/vitest.config.ts',
 ]) {
   test(`editing ${configPath} invalidates the elements mutation cache`, async (t) => {
     const workspaceRoot = await createCliFixture(t);
@@ -342,7 +341,7 @@ test('@spec:018 S3 CLI full-elements scope mutates every component implementatio
     ],
     node: [],
   });
-  const spec = report.files.find(({ path }) => path.endsWith('ki-button.spec.tsx'));
+  const spec = report.files.find(({ path }) => path.endsWith('ki-progress.math.spec.ts'));
   assert.equal(spec?.classification, 'excluded');
   assert.equal(
     report.files.some(({ path }) => path.endsWith('.css')),

@@ -11,6 +11,7 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
 import { defineCustomElement as defineKiListItem } from '../dist/components/ki-list-item.js';
 import { expectAccessible } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
 
 const STYLE_ID = 'ki-list-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-list-browser-material3-token-style';
@@ -64,15 +65,6 @@ async function settle(): Promise<void> {
       .getAnimations({ subtree: true })
       .map((animation) => animation.finished.catch(() => undefined)),
   );
-}
-
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.color = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).color;
-  probe.remove();
-  return value;
 }
 
 async function mountList(html: string): Promise<HTMLElement> {
@@ -190,11 +182,10 @@ describe('ki-list in a real browser', () => {
     expect(endStyle.fontSize).toBe('13px');
     expect(endStyle.lineHeight).toBe('20px');
     expect(endStyle.fontWeight).toBe('600');
-    expect(endStyle.color).toBe(readTokenColor('--ki-list-item-secondary-fg'));
+    // Medium emphasis: the meta reads quieter than the primary line.
+    expect(endStyle.color).not.toBe(getComputedStyle(primary).color);
     expect(endStyle.textAlign).toBe('end');
-    // Leading media inherits the scheme's primary fg (Gray/950 light,
-    // White/100 dark), matching the primary line.
-    expect(startStyle.color).toBe(readTokenColor('--ki-list-item-primary-fg'));
+    // Leading media takes the same ink as the primary line.
     expect(startStyle.color).toBe(getComputedStyle(primary).color);
     // Slotted content resolves through the part wrappers by inheritance.
     const meta = list.querySelector('[data-test="meta"]');
@@ -253,6 +244,39 @@ describe('ki-list in a real browser', () => {
     // The re-check runs from a characterData MutationObserver: poll the
     // observable class flip instead of guessing a settle delay.
     await expect.poll(() => item.classList.contains('has-secondary')).toBe(true);
+  });
+
+  it('S4 renders an unrecognized variant attribute with the default list appearance', async () => {
+    const control = await mountList(`
+      <ki-list>
+        <ki-list-item>Storage</ki-list-item>
+        <ki-list-item>Email<span slot="secondary">ana@onmars.dev</span></ki-list-item>
+      </ki-list>
+      <ki-list variant="two-line">
+        <ki-list-item variant="two-line">Storage</ki-list-item>
+        <ki-list-item>Email<span slot="secondary">ana@onmars.dev</span></ki-list-item>
+      </ki-list>
+    `);
+    const foreign = control.parentElement?.querySelector<HTMLElement>('ki-list[variant]');
+    if (!foreign) {
+      throw new Error('ki-list variant fixture missing');
+    }
+    const appearance = (list: HTMLElement): Record<string, string | number>[] =>
+      [...list.querySelectorAll('ki-list-item')].map((item) => {
+        const { item: row } = itemParts(item);
+        const style = getComputedStyle(row);
+        const rect = item.getBoundingClientRect();
+        return {
+          color: style.color,
+          height: rect.height,
+          padding: style.padding,
+          text: item.textContent.trim(),
+          width: rect.width,
+        };
+      });
+
+    expect(appearance(foreign)).toEqual(appearance(control));
+    expect(appearance(foreign)).toHaveLength(2);
   });
 
   it('S6 preserves an author-provided role on the list host', async () => {
@@ -366,6 +390,19 @@ describe('ki-list in a real browser', () => {
 
     expect(control.checked).toBe(true);
     expect(changes).toBe(1);
+  });
+
+  it('S8 honors a forced dark scheme: the list and its items repaint', async () => {
+    const list = await mountList(`
+      <ki-list>
+        <ki-list-item>Email<span slot="secondary">ana@onmars.dev</span></ki-list-item>
+        <ki-list-item>Storage</ki-list-item>
+      </ki-list>
+    `);
+
+    expect(await repaintedUnderForcedDark(list)).toEqual(
+      expect.arrayContaining(['list', 'ki-list-item']),
+    );
   });
 
   it('S7 restyles spacing, separation and text through material3 tokens only', async () => {
