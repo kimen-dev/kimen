@@ -426,6 +426,21 @@ describe('ki-video', () => {
     expect(document.activeElement).toBe(media);
   });
 
+  // Whoever asks for the video's focus stop on the very next keystroke (a
+  // ki-dialog wrapping Tab) must not be handed the control on its way out:
+  // focus sent there falls to the document body once the facade hides. The
+  // Tab order therefore changes with the activation itself, not with the
+  // render it schedules.
+  it('S7 the play control leaves the Tab order in the same turn it yields', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Play the tour' });
+    const play = playControlOf(el);
+
+    play.click();
+
+    expect(play.tabIndex).toBe(-1);
+  });
+
   it('S2 activation from elsewhere leaves focus where the person put it', async () => {
     cleanup();
     const el = await mount(landmark(), { label: 'Play the tour' });
