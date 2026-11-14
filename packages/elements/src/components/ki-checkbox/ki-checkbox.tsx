@@ -254,29 +254,17 @@ export class KiCheckbox {
   }
 
   private syncFormValue(): void {
-    const setFormValue = (this.internals as { setFormValue?: ElementInternals['setFormValue'] })
-      .setFormValue;
-    if (typeof setFormValue !== 'function') {
-      return;
-    }
-
-    setFormValue.call(this.internals, checkboxFormValue(this.checked, this.value));
+    this.internals.setFormValue(checkboxFormValue(this.checked, this.value));
   }
 
   private syncValidity(): void {
-    const setValidity = (this.internals as { setValidity?: ElementInternals['setValidity'] })
-      .setValidity;
-    if (typeof setValidity !== 'function') {
-      return;
-    }
-
     if (!this.input || this.effectiveDisabled) {
-      setValidity.call(this.internals, {});
+      this.internals.setValidity({});
       this.setUserInvalid(false);
       return;
     }
 
-    setValidity.call(this.internals, this.input.validity, this.input.validationMessage, this.input);
+    this.internals.setValidity(this.input.validity, this.input.validationMessage, this.input);
   }
 
   private syncUserInvalidState(fromUserToggle: boolean): void {
@@ -300,15 +288,10 @@ export class KiCheckbox {
       this.host.classList.toggle('ki-user-invalid', enabled);
     }
 
-    const states = (this.internals as { states?: CustomStateSet }).states;
-    if (!states) {
-      return;
-    }
-
     if (enabled) {
-      states.add(name);
+      this.internals.states.add(name);
     } else {
-      states.delete(name);
+      this.internals.states.delete(name);
     }
   }
 

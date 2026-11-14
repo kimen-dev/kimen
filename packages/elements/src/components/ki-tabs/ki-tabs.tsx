@@ -94,11 +94,9 @@ export class KiTabs {
   }
 
   connectedCallback(): void {
-    if (typeof MutationObserver === 'function') {
-      this.disabledObserver = new MutationObserver(() => {
-        this.reconcile(this.value);
-      });
-    }
+    this.disabledObserver = new MutationObserver(() => {
+      this.reconcile(this.value);
+    });
   }
 
   componentDidLoad(): void {

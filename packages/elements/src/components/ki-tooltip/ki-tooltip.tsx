@@ -105,15 +105,11 @@ export class KiTooltip {
       // Measure AFTER Stencil renders the new label text, or the bubble is
       // positioned from the previous size and can overflow near an edge until
       // it is hidden and shown again (codex review).
-      if (typeof requestAnimationFrame === 'function') {
-        requestAnimationFrame(() => {
-          if (this.visible) {
-            this.positionTooltip();
-          }
-        });
-      } else {
-        this.positionTooltip();
-      }
+      requestAnimationFrame(() => {
+        if (this.visible) {
+          this.positionTooltip();
+        }
+      });
     }
   }
 

@@ -306,12 +306,9 @@ export class KiSelect {
     const selectedElement = this.selectedOption?.element;
 
     this.mutationObserver?.disconnect();
-    this.mutationObserver =
-      typeof MutationObserver === 'function'
-        ? new MutationObserver(() => {
-            this.reconcileRoster();
-          })
-        : undefined;
+    this.mutationObserver = new MutationObserver(() => {
+      this.reconcileRoster();
+    });
 
     this.roster = options.map((element, index) => {
       const text = optionLabelText(element);
@@ -472,20 +469,14 @@ export class KiSelect {
     // required-but-empty select must not stay value-missing / user-invalid
     // (codex review).
     if (this.effectiveDisabled) {
-      if (typeof this.internals.setFormValue === 'function') {
-        this.internals.setFormValue(null);
-      }
-      if (typeof this.internals.setValidity === 'function') {
-        this.internals.setValidity({});
-      }
+      this.internals.setFormValue(null);
+      this.internals.setValidity({});
       this.userInvalid = false;
       return;
     }
 
     const submittedValue = selectFormValue(this.selectedOption);
-    if (typeof this.internals.setFormValue === 'function') {
-      this.internals.setFormValue(submittedValue);
-    }
+    this.internals.setFormValue(submittedValue);
 
     // `required` is read from the property, never from the host attribute:
     // Stencil un-reflects a cleared property only at the next render, so the
@@ -495,17 +486,13 @@ export class KiSelect {
     // the attribute observer).
     if (selectValueMissing(this.required, submittedValue)) {
       this.donorElement?.setAttribute('required', '');
-      if (typeof this.internals.setValidity === 'function') {
-        this.internals.setValidity(
-          this.donorElement?.validity ?? { valueMissing: true },
-          this.donorElement?.validationMessage,
-          this.triggerElement,
-        );
-      }
+      this.internals.setValidity(
+        this.donorElement?.validity ?? { valueMissing: true },
+        this.donorElement?.validationMessage,
+        this.triggerElement,
+      );
     } else {
-      if (typeof this.internals.setValidity === 'function') {
-        this.internals.setValidity({});
-      }
+      this.internals.setValidity({});
       this.userInvalid = false;
     }
   }

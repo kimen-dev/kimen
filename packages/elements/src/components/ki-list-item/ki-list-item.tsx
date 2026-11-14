@@ -63,12 +63,10 @@ export class KiListItem {
     // changes (e.g. secondary text populated after async load), so a
     // characterData observer re-checks the slots on those mutations (codex
     // review).
-    if (typeof MutationObserver === 'function') {
-      this.observer = new MutationObserver(() => {
-        this.syncSlotState();
-      });
-      this.observer.observe(this.host, { characterData: true, childList: true, subtree: true });
-    }
+    this.observer = new MutationObserver(() => {
+      this.syncSlotState();
+    });
+    this.observer.observe(this.host, { characterData: true, childList: true, subtree: true });
   }
 
   disconnectedCallback(): void {

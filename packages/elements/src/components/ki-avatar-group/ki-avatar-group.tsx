@@ -75,10 +75,7 @@ export class KiAvatarGroup {
   private members(): HTMLElement[] {
     const slot = this.host.shadowRoot?.querySelector('slot');
     const assigned = slot?.assignedElements() ?? [];
-    // mock-doc reports no slot assignment; the light children are the same
-    // set there (the browser suite is authoritative, Art. III).
-    const candidates = assigned.length > 0 ? assigned : Array.from(this.host.children);
-    return candidates.filter(
+    return assigned.filter(
       (candidate): candidate is HTMLElement =>
         candidate instanceof HTMLElement && candidate.localName === 'ki-avatar',
     );

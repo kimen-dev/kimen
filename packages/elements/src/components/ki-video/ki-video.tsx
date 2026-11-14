@@ -62,17 +62,10 @@ export class KiVideo {
     this.neutralizeSlottedMedia();
   }
 
-  /**
-   * The consumer's media element behind the facade. Slot assignment is the
-   * browser truth; the light-DOM children are the same elements in
-   * mock-doc, whose slots implement no assignment API.
-   */
+  /** The consumer's media element behind the facade: what the slot assigns. */
   private slottedMedia(): HTMLVideoElement | undefined {
     const slot = this.frame?.querySelector('slot');
-    const assigned: readonly Element[] =
-      typeof slot?.assignedElements === 'function'
-        ? slot.assignedElements({ flatten: true })
-        : [...this.host.children];
+    const assigned: readonly Element[] = slot?.assignedElements({ flatten: true }) ?? [];
     return assigned.find((element): element is HTMLVideoElement => element.localName === 'video');
   }
 
@@ -97,9 +90,7 @@ export class KiVideo {
     media.removeAttribute('autoplay');
     media.controls = false;
     media.removeAttribute('controls');
-    // The strict comparison plus typeof detour keeps mock-doc (no media
-    // pipeline: `paused` and `pause` are absent) safe, mirroring play().
-    if (!media.paused && typeof media.pause === 'function') {
+    if (!media.paused) {
       media.pause();
     }
   };
@@ -135,18 +126,11 @@ export class KiVideo {
     if (this.host.shadowRoot?.activeElement) {
       media.focus();
     }
-    if (typeof media.play === 'function') {
-      // The play() promise's outcome (source availability, platform policy)
-      // belongs to the consumer's element, observable through the native
-      // media events they already own (FR-011); the component only
-      // initiates, so its own reference must not surface a rejection. The
-      // unknown detour keeps runtimes without a promise return (mock-doc)
-      // safe without an unnecessary-condition lint suppression.
-      const playback: unknown = media.play();
-      if (playback instanceof Promise) {
-        playback.catch(() => undefined);
-      }
-    }
+    // The play() promise's outcome (source availability, platform policy)
+    // belongs to the consumer's element, observable through the native media
+    // events they already own (FR-011); the component only initiates, so its
+    // own reference must not surface a rejection.
+    media.play().catch(() => undefined);
   };
 
   render() {

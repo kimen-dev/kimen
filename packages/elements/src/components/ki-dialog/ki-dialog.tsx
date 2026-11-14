@@ -118,10 +118,8 @@ export class KiDialog {
   }
 
   componentDidLoad(): void {
-    if (typeof MutationObserver !== 'undefined') {
-      this.openObserver = new MutationObserver(this.handleHostMutation);
-      this.openObserver.observe(this.host, { attributeFilter: ['open', 'close-on-backdrop'] });
-    }
+    this.openObserver = new MutationObserver(this.handleHostMutation);
+    this.openObserver.observe(this.host, { attributeFilter: ['open', 'close-on-backdrop'] });
     document.addEventListener('keydown', this.handleKeyDown, { capture: true });
     this.updateFooterState();
     this.syncDialogToHost();
@@ -331,7 +329,7 @@ export class KiDialog {
    */
   private observeBody(): void {
     const body = this.body;
-    if (!body || typeof ResizeObserver === 'undefined') {
+    if (!body) {
       return;
     }
     this.bodyObserver ??= new ResizeObserver(this.syncBodyTabStop);
@@ -404,7 +402,7 @@ export class KiDialog {
       return deepActive() === target;
     };
 
-    if (apply() || typeof requestAnimationFrame !== 'function') {
+    if (apply()) {
       return;
     }
     let remainingFrames = 10;
