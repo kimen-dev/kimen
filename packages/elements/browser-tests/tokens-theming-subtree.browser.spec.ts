@@ -1,7 +1,9 @@
 // @spec:001-tokens-theming
 //
 // Subtree theming (S8-S12): a theme or a colour scheme declared on any element
-// restyles that element's subtree and nothing else.
+// restyles that element's subtree and nothing else. And the document-level
+// counterpart (S14): the colour scheme the tokens stylesheet declares for the
+// page is a default, so the scheme a host page declares for itself wins.
 //
 // Every assertion reads what real components PAINT — the computed colours,
 // shadows, radii and typeface of a ki-button and a ki-input, through their
@@ -312,6 +314,88 @@ describe('nested subtrees', () => {
     expect(appearanceIn(outerRegion)).toEqual(reference.material3.light);
     expect(appearanceIn(innerRegion)).toEqual(reference.material3.dark);
     expect(appearanceIn(main)).toEqual(reference.onmars.light);
+  });
+});
+
+describe('host page colour scheme', () => {
+  const HOST_STYLE_ID = 'subtree-host-page';
+
+  /**
+   * The host page's own stylesheet, declaring the scheme for its document the
+   * way a page that knows nothing about Kimen does: a type selector on `html`.
+   * `before` puts it ahead of the tokens stylesheet in the cascade — the order
+   * a page gets when it loads the tokens after its own CSS, and the one a
+   * later-wins tie could never rescue.
+   */
+  function declareHostScheme(scheme: Scheme, position: 'after' | 'before'): void {
+    const style = document.createElement('style');
+    style.id = HOST_STYLE_ID;
+    style.textContent = `html { color-scheme: ${scheme}; }`;
+    const tokens = document.getElementById(ONMARS_STYLE_ID);
+    if (tokens === null) {
+      throw new Error('the tokens stylesheet must be loaded before the host declares a scheme');
+    }
+    if (position === 'before') {
+      tokens.before(style);
+    } else {
+      document.head.append(style);
+    }
+  }
+
+  afterEach(async () => {
+    document.getElementById(HOST_STYLE_ID)?.remove();
+    await browserCommands.emulateColorScheme('light');
+  });
+
+  it.each(['before', 'after'] as const)(
+    'S14 renders light for a host page that declares light %s the tokens stylesheet, under a dark system preference',
+    async (position) => {
+      await browserCommands.emulateColorScheme('dark');
+      declareHostScheme('light', position);
+
+      const main = await mount({}, COMPONENTS);
+
+      expect(getComputedStyle(document.documentElement).colorScheme).toBe('light');
+      expect(appearanceIn(main)).toEqual(reference.onmars.light);
+    },
+  );
+
+  it('S14 renders dark for a host page that declares dark, under a light system preference', async () => {
+    declareHostScheme('dark', 'before');
+
+    const main = await mount({}, COMPONENTS);
+
+    expect(getComputedStyle(document.documentElement).colorScheme).toBe('dark');
+    expect(appearanceIn(main)).toEqual(reference.onmars.dark);
+  });
+
+  it('S14 applies the host page scheme to the material3 theme too', async () => {
+    await browserCommands.emulateColorScheme('dark');
+    declareHostScheme('light', 'before');
+
+    const main = await mount({ theme: 'material3' }, COMPONENTS);
+
+    expect(appearanceIn(main)).toEqual(reference.material3.light);
+  });
+
+  // The two guards around S14: the default it leaves in place, and the
+  // explicit declaration it must not weaken.
+  it('S14 keeps following the system preference when the host page declares no scheme', async () => {
+    await browserCommands.emulateColorScheme('dark');
+
+    const main = await mount({}, COMPONENTS);
+
+    expect(getComputedStyle(document.documentElement).colorScheme).toBe('light dark');
+    expect(appearanceIn(main)).toEqual(reference.onmars.dark);
+  });
+
+  it('S14 keeps a scheme forced on the root over the one the host page declares', async () => {
+    declareHostScheme('light', 'after');
+
+    const main = await mount({ scheme: 'dark' }, COMPONENTS);
+
+    expect(getComputedStyle(document.documentElement).colorScheme).toBe('dark');
+    expect(appearanceIn(main)).toEqual(reference.onmars.dark);
   });
 });
 

@@ -6,7 +6,7 @@ The interface this feature exposes to consumers (pre-1.0; additive; Art. IX).
 
 | Export | File | Contents |
 |---|---|---|
-| `@kimen/tokens/css` | `dist/css/tokens.css` | The colour-scheme contract (`color-scheme` on `:root`, pinned by `data-ki-color-scheme`) and every onmars token, declared once on `:root` and on any themed subtree |
+| `@kimen/tokens/css` | `dist/css/tokens.css` | The colour-scheme contract (a zero-specificity `color-scheme` default on the root, pinned by `data-ki-color-scheme`) and every onmars token, declared once on `:root` and on any themed subtree |
 | `@kimen/tokens/css/material3` | `dist/css/tokens.material3.css` | The tokens material3 changes over onmars, scoped to `data-ki-theme='material3'` on the root or on any element |
 | `@kimen/tokens/css/base` | `dist/css/base.css` | The opt-in page contract: page background, text colour and body typeface painted from tokens. Declares no `color-scheme` |
 
@@ -19,7 +19,7 @@ overrides and is inert on its own.
 | Attribute | Values | Effect |
 |---|---|---|
 | `data-ki-theme` | `material3`; `onmars` (the default theme); future theme names | Selects the theme. Unknown value or missing theme stylesheet → onmars (safe fallback, FR-007/S7) |
-| `data-ki-color-scheme` | `light` \| `dark` | Forces the scheme (FR-003/S3-S4). Absent → follow the system (FR-002/S2) |
+| `data-ki-color-scheme` | `light` \| `dark` | Forces the scheme (FR-003/S3-S4). Absent → follow the page's `color-scheme`: the system preference (FR-002/S2) unless the host page declares one (FR-016/S14) |
 
 Both are read on the document root (`<html>`) **and on any element**
 (FR-010-FR-012, S8-S12):
@@ -40,14 +40,23 @@ Both are read on the document root (`<html>`) **and on any element**
 
 ## 3. Colour-scheme contract
 
-`@kimen/tokens/css` declares `color-scheme: light dark` on `:root`, and
+`@kimen/tokens/css` declares `color-scheme: light dark` on the root, and
 `color-scheme: light` / `dark` on any element carrying
 `data-ki-color-scheme`. The tokens resolve from that declaration, and so does
 the browser: page canvas, scrollbars, native controls, autofill (FR-013/S13).
 
-- A page that pins its own `color-scheme` after the tokens stylesheet takes
-  the tokens with it: Kimen follows the page's `color-scheme`, not
-  `prefers-color-scheme` directly.
+- The root declaration is a default, emitted at zero specificity
+  (`:where(:root)`). A page that declares its own `color-scheme` for its
+  document takes the tokens with it — `html { color-scheme: light }` is
+  enough, before or after the tokens stylesheet (FR-016/S14). Kimen follows
+  the page's `color-scheme`, not `prefers-color-scheme` directly.
+- The page's declaration has to be CSS. A `<meta name="color-scheme">` alone
+  does not pin the page: it applies only while the root's `color-scheme` is
+  `normal`, and the tokens stylesheet declares one.
+- `data-ki-color-scheme` is an explicit declaration and keeps its attribute
+  specificity: on the root it wins over a host `html { color-scheme }` rule,
+  and ties with a host `:root { color-scheme }` rule, where the later
+  stylesheet wins.
 - A scheme-dependent token is one declaration. A consumer reassigning it
   supplies both values (`light-dark(a, b)`); a single value applies to both
   schemes.
@@ -86,7 +95,8 @@ Deprecated compat aliases (kept until a formal deprecation cycle):
 ## 5. Guarantees
 
 1. Zero configuration → onmars light (S1).
-2. Scheme follows the system unless forced (S2-S4).
+2. Scheme follows the system unless forced (S2-S4) or declared by the host
+   page for its own document (S14).
 3. One attribute (+ stylesheet) switches theme (S5); unknown themes are
    inert (S7).
 4. Identical name contract across themes (S6): under any theme every name of
@@ -108,7 +118,7 @@ are unchanged. What changed is how the stylesheets carry them:
 |---|---|---|
 | Subtree scoping excluded | Both attributes work on any element | Anyone who had the attributes on a non-root element: they were inert and now apply |
 | Dark values in `@media (prefers-color-scheme: dark)` plus a `:root[data-ki-color-scheme='dark']` block | One `light-dark()` declaration per scheme-dependent token | A page that pins `color-scheme` itself now takes the tokens with it. A consumer `:root` reassignment of a scheme-dependent token now applies in both schemes instead of losing to the dark block. Script that read a scheme-dependent token with `getPropertyValue()` now receives the `light-dark()` pair instead of the active colour |
-| `color-scheme` declared only by `@kimen/tokens/css/base` | Declared by `@kimen/tokens/css` | A page loading only the tokens stylesheet: its canvas and native controls now follow the system preference |
+| `color-scheme` declared only by `@kimen/tokens/css/base` | Declared by `@kimen/tokens/css`, as a zero-specificity default on the root (`:where(:root)`) | A page loading only the tokens stylesheet: its canvas and native controls now follow the system preference. A page that declares `color-scheme` for its own document is not overridden: its declaration wins in either stylesheet order (S14) |
 | `@kimen/tokens/css/material3` declared the full contract | It declares its overrides only | A page loading the material3 stylesheet without the default one (never supported, but it worked). A consumer `:root` reassignment under material3 used to lose for every token (the theme block redeclared all of them at higher specificity); it now loses only for the tokens material3 overrides |
 | Per-scheme files `tokens.light.css`, `tokens.dark.css`, `tokens.material3.light.css`, `tokens.material3.dark.css` in `dist/css` | Not emitted | Nobody through the package exports: they were never exported |
 | Token descriptions emitted as CSS comments | No comments in `dist` | Nobody: the token reference is generated from the sources |

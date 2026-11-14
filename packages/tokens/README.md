@@ -61,7 +61,8 @@ Two attributes drive everything, on the document root or on any element:
 
 - `data-ki-color-scheme`: `light` or `dark` forces a scheme for any theme.
   Without it the page follows the system preference: the token stylesheet
-  declares `color-scheme: light dark` on `:root`, and the attribute pins it.
+  declares `color-scheme: light dark` on the root as a default, and the
+  attribute pins it.
 - `data-ki-theme`: opts into a non-default theme. Unknown theme names and
   missing theme stylesheets fall back to onmars through the cascade. No
   runtime code is involved anywhere.
@@ -72,7 +73,7 @@ The scheme is a single declaration, `color-scheme`, and every
 scheme-dependent token is a single `light-dark()` value that resolves from it:
 
 ```css
-:root {
+:where(:root) {
   color-scheme: light dark;
 }
 
@@ -87,10 +88,17 @@ scheme-dependent token is a single `light-dark()` value that resolves from it:
 ```
 
 The same declaration tells the browser which canvas, scrollbars, native
-controls and autofill to paint, so the two cannot disagree. Two consequences:
+controls and autofill to paint, so the two cannot disagree. Consequences:
 
 - Kimen follows the page's `color-scheme`, not `prefers-color-scheme`
-  directly. Pin the page in your own CSS and the tokens follow.
+  directly. The default is declared with `:where()`, at zero specificity, so
+  any `color-scheme` your own CSS declares for the document wins —
+  `html { color-scheme: light }` is enough, before or after the token
+  stylesheet — and the tokens follow it. It has to be CSS: a
+  `<meta name="color-scheme">` alone does not pin the page once a stylesheet
+  declares the property on the root.
+- `data-ki-color-scheme` is the explicit declaration: on the root it wins
+  over an `html { color-scheme }` rule of the page.
 - Reassign a scheme-dependent token with both values
   (`light-dark(#fff, #111)`); a single value applies to both schemes.
 - A scheme-dependent token only becomes a colour where it is used. Script

@@ -5,7 +5,7 @@
 //
 // The published shape, and why each part is the way it is:
 //
-//   :root { color-scheme: light dark }
+//   :where(:root) { color-scheme: light dark }
 //   [data-ki-color-scheme='light'|'dark'] { color-scheme: ... }
 //     The scheme is ONE declaration. Scheme-dependent tokens are `light-dark()`
 //     values, so the declaration that picks their branch is the same one that
@@ -13,6 +13,13 @@
 //     paint: the two can no longer disagree. On any element, so a subtree can
 //     force a scheme; it needs to redeclare nothing, because `light-dark()`
 //     resolves where a token is USED, not where it was declared.
+//
+//     The document default is a DEFAULT: `:where()` gives it zero specificity,
+//     so the `color-scheme` a host page declares for its own document —
+//     `html { color-scheme: light }` — wins in either stylesheet order, and
+//     the tokens follow it. A bare `:root` (0,1,0) outranked that `html`
+//     (0,0,1) even when the page declared it last. The two attribute rules
+//     keep their specificity on purpose: they are explicit Kimen declarations.
 //
 //   :root, :where([data-ki-theme]) { ...every token, once... }
 //     A custom property that aliases another (`--a: var(--b)`) substitutes the
@@ -184,7 +191,7 @@ function rule(selectors, declarations) {
 export function renderBaseStylesheet(declarations) {
   if (declarations.size === 0) throw new Error('the base theme has no tokens to declare');
   return [
-    rule([':root'], [['color-scheme', 'light dark']]),
+    rule([':where(:root)'], [['color-scheme', 'light dark']]),
     rule(["[data-ki-color-scheme='light']"], [['color-scheme', 'light']]),
     rule(["[data-ki-color-scheme='dark']"], [['color-scheme', 'dark']]),
     rule([':root', ':where([data-ki-theme])'], [...declarations]),

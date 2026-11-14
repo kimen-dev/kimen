@@ -167,6 +167,19 @@ that selects a token's branch is the same one the browser paints the canvas,
 scrollbars and native controls from: they cannot disagree. It also resolves
 where a token is USED, so a scheme subtree needs to redeclare nothing.
 
+**Amended — the document default has zero specificity**: the root rule is
+emitted as `:where(:root) { color-scheme: light dark }`. A bare `:root`
+(0,1,0) outranked the `html { color-scheme: light }` (0,0,1) of a host page
+in either stylesheet order, so a single-scheme page embedding Kimen under
+the opposite system preference got its canvas flipped and the components in
+the wrong scheme. At zero specificity any declaration the page makes for its
+own document wins and the tokens follow it (FR-016, S14); the two
+`[data-ki-color-scheme]` rules keep their specificity because they are
+explicit Kimen declarations. `:where()` is long inside the baseline (Chrome
+88, Firefox 78, Safari 14). Not solvable for a page that states its scheme
+only through `<meta name="color-scheme">`: the meta applies while the root's
+`color-scheme` is `normal`, and any stylesheet declaration ends that.
+
 **Browser baseline (Art. IV)**: `light-dark()` is Baseline — Chrome 123
 (March 2024), Firefox 120 (November 2023), Safari 17.5 (May 2024) — well
 inside "current + previous stable" for the three engines the release matrix
@@ -215,7 +228,7 @@ reassignments by the consumer do not flow into it. Documented in the
 contract; the themed element is where a consumer reassigns tokens for a
 subtree.
 
-**Not done**: `color-scheme: light dark` is declared on `:root` only, never
+**Not done**: `color-scheme: light dark` is declared on the root only, never
 on the themed-subtree selector — a themed subtree inside a forced-scheme
 ancestor must inherit that scheme, not reset to the system preference.
 

@@ -6,11 +6,16 @@ const PAGE_CONTRACT_EXPORT = './css/base';
 /**
  * The colour-scheme contract the default stylesheet opens with, in this order.
  * Scheme-dependent tokens are `light-dark()` values: without these rules they
- * never leave their light branch, and because the three selectors tie on
- * specificity on the root, the attribute rules only win there by coming last.
+ * never leave their light branch.
+ *
+ * The document default sits at zero specificity (`:where()`), so the
+ * `color-scheme` a host page declares for its own document
+ * (`html { color-scheme: light }`) wins in either stylesheet order; the two
+ * forced schemes keep their specificity. A bare `:root` here would be a
+ * different contract — one that overrides the host — and is rejected.
  */
 const SCHEME_CONTRACT = [
-  [':root', 'light dark'],
+  [':where(:root)', 'light dark'],
   ["[data-ki-color-scheme='light']", 'light'],
   ["[data-ki-color-scheme='dark']", 'dark'],
 ];

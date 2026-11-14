@@ -53,7 +53,8 @@ property; tokens follow it through `light-dark()`.
 
 | Scheme | Mechanism (research.md D8) |
 |---|---|
-| follow the system (default) | `:root { color-scheme: light dark }` in `tokens.css` |
+| follow the system (default) | `:where(:root) { color-scheme: light dark }` in `tokens.css` — zero specificity |
+| declared by the host page | the page's own `color-scheme` on its document; it wins over the default in either stylesheet order (FR-016) |
 | dark, forced | `[data-ki-color-scheme='dark'] { color-scheme: dark }` on the root or on any element |
 | light, forced | `[data-ki-color-scheme='light'] { color-scheme: light }` on the root or on any element |
 
