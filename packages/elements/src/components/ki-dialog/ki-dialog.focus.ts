@@ -1,4 +1,4 @@
-const NATIVE_FOCUSABLE = 'button, input, select, textarea, a[href], area[href], [tabindex]';
+import { shadowFocusTarget } from '../../utils/shadow-focus';
 
 export function resolveEntryFocusTarget(host: HTMLElement): HTMLElement | null {
   const focusable = resolveFocusableTargets(host);
@@ -6,19 +6,19 @@ export function resolveEntryFocusTarget(host: HTMLElement): HTMLElement | null {
   if (!chosen) {
     return null;
   }
-  // If the chosen action delegates focus to an internal native control, focus
-  // that control directly — focusing the delegating host alone is not a
-  // reliable focus move across engines. The host stays the target for the
-  // Tab-wrap set; entry focus lands on the real control.
-  return chosen.shadowRoot?.querySelector<HTMLElement>(NATIVE_FOCUSABLE) ?? chosen;
+  // If the chosen action hosts its real control in a shadow root, focus that
+  // control directly — focusing the host is a no-op unless it delegates
+  // focus. The host stays the target for the Tab-wrap set; entry focus lands
+  // on the real control.
+  return shadowFocusTarget(chosen) ?? chosen;
 }
 
 /**
  * Every focusable action inside the dialog, in document order — walking the
  * whole light-DOM subtree (not just direct children) so container-wrapped
- * actions are found, and treating a custom element that delegates focus (its
- * shadow root holds a native focusable, e.g. `ki-button`) as a single focus
- * target. Native `<dialog>` traps Tab across these; this set is what the
+ * actions are found, and treating a custom element whose shadow root holds a
+ * focusable control (e.g. `ki-button`, `ki-alert`) as a single focus target.
+ * Native `<dialog>` traps Tab across these; this set is what the
  * boundary-wrap and the entry assist operate on.
  */
 export function resolveFocusableTargets(host: HTMLElement): HTMLElement[] {
@@ -27,7 +27,7 @@ export function resolveFocusableTargets(host: HTMLElement): HTMLElement[] {
     if (isDisabledOrHidden(el)) {
       continue;
     }
-    if (isNativeFocusable(el) || delegatesFocusToShadow(el)) {
+    if (isNativeFocusable(el) || shadowFocusTarget(el) !== null) {
       targets.push(el);
     }
   }
@@ -64,12 +64,4 @@ function isNativeFocusable(element: HTMLElement): boolean {
     return element.hasAttribute('href');
   }
   return element.hasAttribute('tabindex');
-}
-
-// A custom element whose shadow root delegates focus to an internal native
-// focusable (e.g. ki-button uses shadow delegatesFocus with an inner button).
-// Focusing the HOST moves focus into that control, so the host is the target.
-function delegatesFocusToShadow(element: HTMLElement): boolean {
-  const shadow = element.shadowRoot;
-  return shadow !== null && shadow.querySelector(NATIVE_FOCUSABLE) !== null;
 }

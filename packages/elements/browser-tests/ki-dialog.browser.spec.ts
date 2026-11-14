@@ -6,6 +6,7 @@ import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
+import { defineCustomElement as defineKiAlert } from '../dist/components/ki-alert.js';
 import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
 import { defineCustomElement } from '../dist/components/ki-dialog.js';
 import { expectAccessible } from './axe';
@@ -24,6 +25,7 @@ const STYLE_ID = 'ki-dialog-browser-token-style';
 const MATERIAL3_STYLE_ID = 'ki-dialog-browser-material3-token-style';
 beforeAll(() => {
   defineCustomElement();
+  defineKiAlert();
   defineKiButton();
 });
 
@@ -560,6 +562,37 @@ describe('ki-dialog in a real browser', () => {
     await userEvent.keyboard('{Tab}');
     expect(activeElementDeep()).not.toBe(internalDialog(el));
     expect(inAction(activeElementDeep())).toBe(true);
+
+    await el.close();
+  });
+
+  // ki-alert renders its dismiss button in a shadow root that does NOT
+  // delegate focus, so focusing the host is a no-op: the wrap has to land on
+  // the control itself or the dismiss button is unreachable after leaving it.
+  it('S7 Tab wraps back to a slotted control whose host does not delegate focus', async () => {
+    cleanup();
+    const el = await mountDialog(
+      {},
+      document.body,
+      `<ki-alert dismissible heading="Heads up">Note</ki-alert>
+       <button slot="footer" type="button">Cancel</button>
+       <button slot="footer" type="button">Delete</button>`,
+    );
+    const alert = requireEl(el, 'ki-alert');
+    await waitFor(
+      () => Boolean(alert.shadowRoot?.querySelector('[part="dismiss"]')),
+      'ki-alert hydrated its dismiss control',
+    );
+    await openDialog(el);
+    const dismiss = alert.shadowRoot?.querySelector('[part="dismiss"]');
+    await expect.poll(() => activeElementDeep()).toBe(dismiss);
+
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => activeElementDeep()).toBe(footerButton(el, 'Cancel'));
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => activeElementDeep()).toBe(footerButton(el, 'Delete'));
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => activeElementDeep()).toBe(dismiss);
 
     await el.close();
   });

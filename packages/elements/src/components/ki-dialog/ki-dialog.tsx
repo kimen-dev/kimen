@@ -1,5 +1,6 @@
 import { Component, Element, Event, h, Method, Prop, State, Watch } from '@stencil/core';
 import { booleanFromAttributePresence } from '../../utils/boolean-presence';
+import { focusThroughShadow } from '../../utils/shadow-focus';
 import { isOutsideRect } from './ki-dialog.backdrop';
 import { resolveEntryFocusTarget, resolveFocusableTargets } from './ki-dialog.focus';
 
@@ -247,13 +248,13 @@ export class KiDialog {
 
     if (event.shiftKey && active === first) {
       event.preventDefault();
-      last.focus();
+      focusThroughShadow(last);
       return;
     }
 
     if (!event.shiftKey && active === last) {
       event.preventDefault();
-      first.focus();
+      focusThroughShadow(first);
     }
   };
 
