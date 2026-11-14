@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "554c1227985a0c3ddc37e6ad1a0f9347a395f8c5a40df56346bfc1f2ecb4a80a",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Accessibility contrast floor (WCAG 1.4.3), cumulative since baseline 0.0.0 and superseding declaration stencil-4-45-2-generated-types (its deltas, and those of every declaration it supersedes, remain as declared there). No published name is added, renamed or removed: every change is a deliberate effective-value change to already-published component token leaves, together with the descriptions that record it. (1) Placeholder text. The ki-input and ki-textarea placeholder foreground in the rest, hover, focus, readonly and invalid cells (--ki-input-{state}-placeholder-fg, --ki-textarea-{state}-placeholder-fg) moves from ki.text.low-em to ki.text.med-em. A placeholder is not the accessible name, and the old descriptions used that to keep it outside the 4.5:1 text sweep; it is still text a sighted user has to read. On the onmars light field fills the old value measured 2.80:1 at rest, 2.66:1 on hover and 3.13:1 focused (13px text); the new value measures 5.56, 5.28 and 6.22:1 there and 8.71-10.20:1 in onmars dark. material3 already pinned ki.text.med-em on every cell except the textarea readonly one, which it inherited from onmars at 4.33:1 light and now inherits at 8.88:1. Disabled cells are unchanged (exempt under 1.4.3). This is a declared deviation from the MarsUI placeholder binding Text/low_em, not a transcription. The contrast gate now derives every placeholder cell from the token names and holds it to 4.5:1, so the exemption cannot return unnoticed.",
+  "release": "major",
+  "schemaVersion": 1
+}

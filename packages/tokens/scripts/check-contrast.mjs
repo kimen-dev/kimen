@@ -236,6 +236,72 @@ export function componentPairs(declarations) {
   return pairs;
 }
 
+// WCAG 1.4.3 — the placeholder sweep.
+//
+// A placeholder is text. It is not the accessible name, and that is the one
+// thing it is excused from: the example it shows ("name@example.com") still
+// has to be readable by the person it was written for. It sat outside every
+// sweep because its token is neither a `-bg` nor the `-fg` sibling of one, and
+// shipped at 2.66-3.13:1 on the onmars light fills for exactly that reason.
+//
+// DERIVED, like every sweep here. A placeholder stands in for the value text,
+// so it is read against the fills that text is painted on: the cells of
+// componentPairs() under the placeholder's own stem. A state-scoped token
+// (`--ki-input-rest-placeholder-fg`) resolves to its one cell; a component-wide
+// one (`--ki-select-placeholder-fg`) to every state of the trigger. Disabled
+// cells stay exempt, exactly as they are for the value text.
+const PLACEHOLDER_ROLE = '-placeholder-fg';
+
+export function placeholderCells(declarations) {
+  const textFills = componentPairs(declarations).map((pair) => pair.surface);
+
+  return [...declarations.keys()]
+    .filter((name) => name.endsWith(PLACEHOLDER_ROLE) && !/-disabled-/u.test(name))
+    .map((name) => {
+      const stem = name.slice(0, name.length - PLACEHOLDER_ROLE.length);
+      return { placeholder: name, fills: textFills.filter((fill) => fill.startsWith(`${stem}-`)) };
+    });
+}
+
+function sweepPlaceholders(theme, scheme, declarations) {
+  const failures = [];
+  const page = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+  const cells = placeholderCells(declarations);
+
+  // The canary: ki-input is always present and always has a placeholder, so a
+  // zero-length derivation means the naming convention drifted.
+  if (cells.length === 0) {
+    failures.push(
+      `${theme}/${scheme}: no placeholder cells derived — the token naming convention drifted`,
+    );
+  }
+
+  for (const cell of cells) {
+    if (cell.fills.length === 0) {
+      failures.push(
+        `${theme}/${scheme} ${cell.placeholder}: a placeholder with no field fill to be read against`,
+      );
+      continue;
+    }
+
+    const text = parseColor(resolveCustomProperty(cell.placeholder, declarations));
+
+    for (const fillName of cell.fills) {
+      const rawFill = parseColor(resolveCustomProperty(fillName, declarations));
+      const fill = rawFill.a < 1 ? compositeOver(rawFill, page) : rawFill;
+      const ratio = contrastRatio(text, fill);
+
+      if (ratio < MIN_RATIO) {
+        failures.push(
+          `${theme}/${scheme} ${cell.placeholder} on ${fillName}: ${ratio} (min ${MIN_RATIO})`,
+        );
+      }
+    }
+  }
+
+  return failures;
+}
+
 // WCAG 1.4.11 — the control-boundary sweep.
 //
 // A control that can be EMPTY carries no label inside its own box, so the box
@@ -533,6 +599,7 @@ function evaluateStylesheet(theme, stylesheet) {
     failures.push(...sweepControlBoundaries(theme, scheme, declarations));
     failures.push(...sweepRatioReadouts(theme, scheme, declarations));
     failures.push(...sweepOverlayRamps(theme, scheme, declarations));
+    failures.push(...sweepPlaceholders(theme, scheme, declarations));
 
     if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
       failures.push(

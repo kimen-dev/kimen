@@ -8,6 +8,7 @@ import {
   controlBoundaryCells,
   overlayRamps,
   parseColor,
+  placeholderCells,
   ratioReadoutPairs,
   relativeLuminance,
   resolveContrastPairs,
@@ -217,4 +218,50 @@ test('a component whose name extends an empty-box name is not pooled into it', (
   ]);
 
   assert.deepEqual(controlBoundaryCells(declarations), []);
+});
+
+test('placeholder sweep reads each placeholder against the fills its field can show', () => {
+  const declarations = new Map([
+    // a state-scoped placeholder is painted on its own cell, and only there
+    ['--ki-input-rest-bg', '#f2f2f4'],
+    ['--ki-input-rest-fg', '#0a0c11'],
+    ['--ki-input-rest-placeholder-fg', '#8c929c'],
+    ['--ki-input-focus-bg', '#ffffff'],
+    ['--ki-input-focus-fg', '#0a0c11'],
+    ['--ki-input-focus-placeholder-fg', '#8c929c'],
+    // a component-wide placeholder (ki-select) stands in for the value text,
+    // so it is read against every cell that text is painted on
+    ['--ki-select-rest-bg', '#f2f2f4'],
+    ['--ki-select-rest-fg', '#0a0c11'],
+    ['--ki-select-hover-bg', '#ececf0'],
+    ['--ki-select-hover-fg', '#0a0c11'],
+    ['--ki-select-placeholder-fg', '#5b616d'],
+    // a floating surface carries no value text, so no placeholder either
+    ['--ki-select-listbox-bg', '#f9f9fa'],
+    // disabled → exempt, exactly like the text sweep
+    ['--ki-input-disabled-bg', '#fafafa'],
+    ['--ki-input-disabled-fg', '#cccccc'],
+    ['--ki-input-disabled-placeholder-fg', '#cccccc'],
+    ['--ki-select-disabled-bg', '#fafafa'],
+    ['--ki-select-disabled-fg', '#cccccc'],
+  ]);
+
+  assert.deepEqual(
+    placeholderCells(declarations).map((cell) => [cell.placeholder, cell.fills]),
+    [
+      ['--ki-input-rest-placeholder-fg', ['--ki-input-rest-bg']],
+      ['--ki-input-focus-placeholder-fg', ['--ki-input-focus-bg']],
+      ['--ki-select-placeholder-fg', ['--ki-select-rest-bg', '--ki-select-hover-bg']],
+    ],
+  );
+});
+
+test('a placeholder with no field fill under its stem is reported, not dropped', () => {
+  // A renamed `-bg` must surface as a named failure. Dropping the pair in
+  // silence is how the placeholder stayed outside every sweep to begin with.
+  const declarations = new Map([['--ki-input-rest-placeholder-fg', '#8c929c']]);
+
+  assert.deepEqual(placeholderCells(declarations), [
+    { placeholder: '--ki-input-rest-placeholder-fg', fills: [] },
+  ]);
 });
