@@ -220,7 +220,7 @@ const defaultTokenComposition = {
 
 const stylesheetSources = {
   './css': `
-    :root { color-scheme: light dark; }
+    :where(:root) { color-scheme: light dark; }
     [data-ki-color-scheme='light'] { color-scheme: light; }
     [data-ki-color-scheme='dark'] { color-scheme: dark; }
     :root, :where([data-ki-theme]) { --ki-button-bg: light-dark(#ffffff, #111111); }
@@ -466,7 +466,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/027-catalog-required-props.json',
+      '../../changes/api/001-tokens-theming-followups.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -525,10 +525,29 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // selected-active-bg mirrors rest and a keyboard hold on a selected radio
   // otherwise shows no paint delta under reduced motion (bare-page
   // state-delta contract). 1316 + 52 = 1368.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1368);
+  // The tokens follow-ups (changes/api/001-tokens-theming-followups) take
+  // seven of those leaves back out: the ki-input and ki-textarea hint trios
+  // (hint-fg, disabled.hint-fg, invalid.hint-fg) and --ki-card-backdrop-blur,
+  // all added by 011 for a hint row and a card glass surface that no
+  // stylesheet ever consumed. None is in the 0.0.0 baseline, so the removals
+  // list below stays empty: against the baseline they were never published.
+  // 1368 - 7 = 1361.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1361);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1368,
+    1361,
   );
+  const published = candidate.surface.packages['@kimen/tokens'].tokens;
+  for (const name of [
+    '--ki-card-backdrop-blur',
+    '--ki-input-hint-fg',
+    '--ki-input-disabled-hint-fg',
+    '--ki-input-invalid-hint-fg',
+    '--ki-textarea-hint-fg',
+    '--ki-textarea-disabled-hint-fg',
+    '--ki-textarea-invalid-hint-fg',
+  ]) {
+    assert.equal(Object.hasOwn(published, name), false, `${name} is no longer published`);
+  }
 });

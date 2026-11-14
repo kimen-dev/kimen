@@ -89,3 +89,10 @@ Feature: Tokens and theming with onmars as the default theme
     When the document renders under a dark system color scheme
     Then the browser paints the page canvas and its native controls dark
     And every component text stays readable against the surface behind it
+
+  # S14
+  Scenario: a host page's own color scheme wins over the tokens stylesheet
+    Given a document that loads the Kimen tokens stylesheet
+    And the host page's own stylesheet declares the color scheme "light" for the page
+    When the document renders under a dark system color scheme
+    Then a button and a text field render as they do in a light document

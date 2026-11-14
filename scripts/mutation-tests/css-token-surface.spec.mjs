@@ -18,7 +18,7 @@ const publicTokenNames = [
   '--ki-space-zero',
 ];
 
-const rootScheme = ':root { color-scheme: light dark; }';
+const rootScheme = ':where(:root) { color-scheme: light dark; }';
 const lightScheme = "[data-ki-color-scheme='light'] { color-scheme: light; }";
 // Double quotes on purpose: selectors are compared after quote normalization.
 const darkScheme = '[data-ki-color-scheme="dark"] { color-scheme: dark; }';
@@ -198,7 +198,7 @@ describe('public stylesheet mutation boundary', () => {
     [
       'a missing colour-scheme rule',
       onmars.replace(darkScheme, ''),
-      /must declare, in order, :root, \[data-ki-color-scheme='light'\], \[data-ki-color-scheme='dark'\] before its tokens/u,
+      /must declare, in order, :where\(:root\), \[data-ki-color-scheme='light'\], \[data-ki-color-scheme='dark'\] before its tokens/u,
     ],
     [
       'colour-scheme rules out of order',
@@ -213,12 +213,12 @@ describe('public stylesheet mutation boundary', () => {
     [
       'a colour-scheme rule that declares something else',
       onmars.replace('color-scheme: light dark;', 'color: red;'),
-      /:root must declare exactly color-scheme: light dark/u,
+      /:where\(:root\) must declare exactly color-scheme: light dark/u,
     ],
     [
       'a colour-scheme rule with an extra declaration',
       onmars.replace('color-scheme: light dark;', 'color-scheme: light dark; color: red;'),
-      /:root must declare exactly color-scheme: light dark/u,
+      /:where\(:root\) must declare exactly color-scheme: light dark/u,
     ],
     [
       'a conditional rule',

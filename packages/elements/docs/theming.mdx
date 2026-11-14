@@ -52,18 +52,20 @@ Both themes follow the OS by default and can be forced either way:
 
 The **Scheme** toolbar above drives exactly this attribute.
 
-The scheme is one declaration, and the token stylesheet makes it: `:root`
-gets `color-scheme: light dark`, and `data-ki-color-scheme` pins it to one
-side. Every scheme-dependent token is a single `light-dark()` value that
+The scheme is one declaration, and the token stylesheet makes it: the root
+gets `color-scheme: light dark` as a default, and `data-ki-color-scheme` pins
+it to one side. Every scheme-dependent token is a single `light-dark()` value that
 resolves from that declaration, so the tokens and the browser — page canvas,
 scrollbars, native controls, autofill — always agree. A page that loads only
 `@kimen/tokens/css` is coherent in both schemes.
 
-Two consequences worth knowing:
+Consequences worth knowing:
 
 - Kimen follows the page's `color-scheme`, not `prefers-color-scheme`
-  directly. If your own CSS pins the page (`:root { color-scheme: light }`
-  after the token stylesheet), the tokens stay light with it.
+  directly. The stylesheet's own declaration has zero specificity, so if
+  your CSS declares the page's scheme (`html { color-scheme: light }`, before
+  or after the token stylesheet) yours wins and the tokens stay light with
+  it. A `<meta name="color-scheme">` alone does not: declare it in CSS.
 - To reassign a scheme-dependent token, give both values:
   `--ki-surface-s0: light-dark(#fff, #111)`. A single value applies to both
   schemes.

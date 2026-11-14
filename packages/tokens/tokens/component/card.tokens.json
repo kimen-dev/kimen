@@ -42,11 +42,6 @@
         "$value": "{ki.radius.big-component.sm}",
         "$description": "dimension used by the card component for slotted media corner radius (MarsUI nested media panel Radius/big_component/radius_sm 20px; formalizes the fallback ki-card.css already consumes)."
       },
-      "backdrop-blur": {
-        "$value": "{ki.blur.96}",
-        "$type": "dimension",
-        "$description": "backdrop blur for the card glass surface (MarsUI Dashboard masters BACKGROUND_BLUR 96 = CSS 48px). Opt-in: ki-card.css does not consume it yet — enabling it is a component change gated on a perf measurement; material3 resolves blur none via its override."
-      },
       "header-padding": {
         "$value": "{ki.space.3xl}",
         "$description": "dimension used by the card component for header padding."

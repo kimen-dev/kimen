@@ -15,6 +15,9 @@ import {
   ratioReadoutPairs,
   relativeLuminance,
   resolveContrastPairs,
+  splitToneFamilies,
+  toneFamilies,
+  toneInks,
 } from './check-contrast.mjs';
 
 test('relative luminance matches WCAG anchors', () => {
@@ -335,9 +338,127 @@ test('a current mark is paired with its resting mark, and knows when colour is a
   ]);
 });
 
+test('tone-ink sweep derives every high-emphasis tone ink and nothing else', () => {
+  const declarations = new Map([
+    ['--ki-text-danger-high-em', '#cd2118'],
+    // a tone added later is swept the day it appears
+    ['--ki-text-warning-high-em', '#945b05'],
+    ['--ki-text-primary-high-em', '#5f3d92'],
+    // the neutral ink is in the fixed pair table already
+    ['--ki-text-high-em', '#0a0c11'],
+    // lower emphasis steps are decoration ramps, not a readable-ink promise
+    ['--ki-text-warning-med-em', '#f8ac3a'],
+    ['--ki-text-warning-base-em', '#fdeace'],
+    // a fill and an edge are not ink
+    ['--ki-surface-warning-high-em', '#f29408'],
+    ['--ki-outline-warning-high-em', '#f8ac3a'],
+  ]);
+
+  assert.deepEqual(toneInks(declarations), [
+    '--ki-text-danger-high-em',
+    '--ki-text-warning-high-em',
+    '--ki-text-primary-high-em',
+  ]);
+});
+
+test('tone-family sweep groups the text cells that differ only in their tone', () => {
+  const declarations = new Map([
+    ['--ki-badge-neutral-bg', '#f5f5f6'],
+    ['--ki-badge-neutral-fg', '#0a0c11'],
+    ['--ki-badge-info-bg', '#e3f7fd'],
+    ['--ki-badge-info-fg', '#085268'],
+    // each state of a toned control is its own family
+    ['--ki-button-primary-neutral-rest-bg', '#845abe'],
+    ['--ki-button-primary-neutral-rest-fg', '#ffffff'],
+    ['--ki-button-primary-danger-rest-bg', '#cd2118'],
+    ['--ki-button-primary-danger-rest-fg', '#ffffff'],
+    ['--ki-button-primary-neutral-hover-bg', '#7648b7'],
+    ['--ki-button-primary-neutral-hover-fg', '#ffffff'],
+    // a single tone is not a family
+    ['--ki-alert-success-bg', '#e8f3e8'],
+    ['--ki-alert-success-fg', '#2c6a2b'],
+    // a cell with no tone in its name has no siblings to agree with
+    ['--ki-card-bg', '#ffffff'],
+    ['--ki-card-fg', '#0a0c11'],
+    // disabled cells are exempt, as they are for the text sweep
+    ['--ki-button-primary-danger-disabled-bg', '#eeeeee'],
+    ['--ki-button-primary-danger-disabled-fg', '#aaaaaa'],
+    ['--ki-button-primary-neutral-disabled-bg', '#eeeeee'],
+    ['--ki-button-primary-neutral-disabled-fg', '#aaaaaa'],
+  ]);
+
+  assert.deepEqual(toneFamilies(declarations), [
+    {
+      stem: '--ki-badge-*-bg',
+      cells: [
+        { tone: 'neutral', text: '--ki-badge-neutral-fg', surface: '--ki-badge-neutral-bg' },
+        { tone: 'info', text: '--ki-badge-info-fg', surface: '--ki-badge-info-bg' },
+      ],
+    },
+    {
+      stem: '--ki-button-primary-*-rest-bg',
+      cells: [
+        {
+          tone: 'neutral',
+          text: '--ki-button-primary-neutral-rest-fg',
+          surface: '--ki-button-primary-neutral-rest-bg',
+        },
+        {
+          tone: 'danger',
+          text: '--ki-button-primary-danger-rest-fg',
+          surface: '--ki-button-primary-danger-rest-bg',
+        },
+      ],
+    },
+  ]);
+});
+
+test('a tone family is split when one tone paints the other polarity', () => {
+  const page = ['--ki-surface-s0', '#141218'];
+  // The material3 dark badge as it shipped: three dark chips with light ink,
+  // and two tones still resolved in the light scheme. Every pair clears 4.5:1.
+  const leaked = new Map([
+    page,
+    ['--ki-badge-neutral-bg', '#211f26'],
+    ['--ki-badge-neutral-fg', '#e6e0e9'],
+    ['--ki-badge-success-bg', '#0d260e'],
+    ['--ki-badge-success-fg', '#9cda9b'],
+    ['--ki-badge-info-bg', '#d0f1fb'],
+    ['--ki-badge-info-fg', '#085268'],
+    ['--ki-badge-warning-bg', '#fffeea'],
+    ['--ki-badge-warning-fg', '#945b05'],
+  ]);
+  const coherent = new Map([
+    ...leaked,
+    ['--ki-badge-info-bg', '#032630'],
+    ['--ki-badge-info-fg', '#71d5f4'],
+    ['--ki-badge-warning-bg', '#321f01'],
+    ['--ki-badge-warning-fg', '#fbcb84'],
+  ]);
+  // A translucent tint is whatever it is painted over: dark on a dark page.
+  const tinted = new Map([
+    page,
+    ['--ki-alert-neutral-bg', '#1d1b20'],
+    ['--ki-alert-neutral-fg', '#e6e0e9'],
+    ['--ki-alert-info-bg', 'rgba(19, 185, 236, 0.24)'],
+    ['--ki-alert-info-fg', 'var(--ki-ink)'],
+    ['--ki-ink', '#71d5f4'],
+  ]);
+
+  assert.deepEqual(splitToneFamilies(leaked), [
+    {
+      stem: '--ki-badge-*-bg',
+      lightFill: ['info', 'warning'],
+      darkFill: ['neutral', 'success'],
+    },
+  ]);
+  assert.deepEqual(splitToneFamilies(coherent), []);
+  assert.deepEqual(splitToneFamilies(tinted), []);
+});
+
 test('each scheme reads its own branch of every light-dark() declaration', () => {
   const { light, dark } = collectSchemeDeclarations(`
-    :root { color-scheme: light dark; }
+    :where(:root) { color-scheme: light dark; }
     :root,
     :where([data-ki-theme]) {
       --ki-color-white: #ffffff;

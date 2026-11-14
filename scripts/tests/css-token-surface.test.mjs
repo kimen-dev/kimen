@@ -9,7 +9,7 @@ const publicExport = (target) => ({ target, deprecatedSince: null, replacement: 
 const publicExports = { './css': publicExport('./dist/css/tokens.css') };
 
 const schemeContract = `
-:root {
+:where(:root) {
   color-scheme: light dark;
 }
 
@@ -163,22 +163,35 @@ test('[S10] the default stylesheet must carry the colour-scheme contract its tok
   // Without these three rules `light-dark()` never leaves its light branch.
   assert.throws(
     () => build(tokenRule),
-    /must declare, in order, :root, \[data-ki-color-scheme='light'\], \[data-ki-color-scheme='dark'\]/u,
+    /must declare, in order, :where\(:root\), \[data-ki-color-scheme='light'\], \[data-ki-color-scheme='dark'\]/u,
   );
   assert.throws(
     () => build(stylesheet.replace('color-scheme: light dark;', 'color-scheme: light;')),
-    /:root must declare exactly color-scheme: light dark/u,
+    /:where\(:root\) must declare exactly color-scheme: light dark/u,
   );
   assert.throws(
     () => build(stylesheet.replace('color-scheme: dark;', 'color-scheme: light;')),
     /\[data-ki-color-scheme='dark'\] must declare exactly color-scheme: dark/u,
   );
-  // On the root the three selectors tie on specificity: the attribute rules
-  // must come after the default or a forced scheme would lose to it.
+  // One published shape: the default first, then the two forced schemes.
   const [root, light, dark] = schemeContract.trim().split('\n\n');
   assert.throws(
     () => build(`${light}\n${root}\n${dark}\n${tokenRule}`),
-    /must declare, in order, :root, \[data-ki-color-scheme='light'\], \[data-ki-color-scheme='dark'\]/u,
+    /must declare, in order, :where\(:root\), \[data-ki-color-scheme='light'\], \[data-ki-color-scheme='dark'\]/u,
+  );
+});
+
+test('[S10] the default colour scheme must stay at zero specificity so a host page can override it', () => {
+  // `:root { color-scheme }` outranks the `html { color-scheme }` of a host
+  // page whatever the order of the two stylesheets; `:where(:root)` loses to
+  // it. The published default is the second and only the second.
+  assert.throws(
+    () => build(stylesheet.replace(':where(:root) {', ':root {')),
+    /must declare, in order, :where\(:root\), \[data-ki-color-scheme='light'\], \[data-ki-color-scheme='dark'\]/u,
+  );
+  assert.throws(
+    () => build(stylesheet.replace(':where(:root) {', 'html {')),
+    /must declare, in order, :where\(:root\)/u,
   );
 });
 

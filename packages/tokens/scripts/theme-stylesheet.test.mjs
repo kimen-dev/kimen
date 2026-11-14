@@ -238,7 +238,7 @@ test('a theme must expose exactly the token names of the base theme', () => {
   );
 });
 
-test('the base stylesheet declares the colour scheme and then every token on :root and on any themed subtree', () => {
+test('the base stylesheet declares the colour scheme as a zero-specificity default and then every token on :root and on any themed subtree', () => {
   const css = renderBaseStylesheet(
     new Map([
       ['--ki-color-white', '#ffffff'],
@@ -249,7 +249,9 @@ test('the base stylesheet declares the colour scheme and then every token on :ro
   assert.equal(
     css,
     [
-      ':root {',
+      // `:where()` keeps the default at zero specificity: any `color-scheme`
+      // the host page declares for its document wins, in either order.
+      ':where(:root) {',
       '  color-scheme: light dark;',
       '}',
       '',

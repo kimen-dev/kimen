@@ -591,6 +591,120 @@ function sweepPageGraphics(theme, scheme, declarations) {
   return failures;
 }
 
+// WCAG 1.4.3 — the tone-ink sweep.
+//
+// `--ki-text-<tone>-high-em` is text: the ink a tone is written in on the page
+// (the message under an invalid field) and the ink a component borrows for a
+// tone mark (the ki-status warning dot). The fixed table above only ever listed
+// the neutral ink, so nothing read the others against the page. A theme whose
+// dark mode never chose its info and warning inks kept the light scheme's dark
+// ones — 2.14:1 and 3.33:1 on the material3 dark page — and the gate was green.
+//
+// DERIVED from the names, like every sweep here: every high-emphasis ink the
+// semantic layer publishes. A tone added tomorrow is swept the day it appears.
+const TONE_INK = /^--ki-text-[a-z]+-high-em$/u;
+
+export function toneInks(declarations) {
+  return [...declarations.keys()].filter((name) => TONE_INK.test(name));
+}
+
+function sweepToneInks(theme, scheme, declarations) {
+  const failures = [];
+  const page = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+  const inks = toneInks(declarations);
+
+  // The canary: the danger ink is always present, so a zero-length derivation
+  // means the naming convention drifted.
+  if (inks.length === 0) {
+    failures.push(`${theme}/${scheme}: no tone inks derived — the token naming convention drifted`);
+  }
+
+  for (const ink of inks) {
+    const ratio = contrastRatio(parseColor(resolveCustomProperty(ink, declarations)), page);
+
+    if (ratio < MIN_RATIO) {
+      failures.push(`${theme}/${scheme} ${ink} on --ki-surface-s0: ${ratio} (min ${MIN_RATIO})`);
+    }
+  }
+
+  return failures;
+}
+
+// The tone family.
+//
+// A component that comes in tones — a badge, an alert, a button — is ONE
+// surface in several colours. Within a scheme its tones share a polarity: light
+// ink on a dark fill, or dark ink on a light one. A tone on the other side is
+// not a colour choice, it is a pair still resolved in the other scheme. The
+// material3 dark badge kept light info and warning chips (15.6:1 and 18.3:1
+// against the page) beside dark neutral, success and danger ones; each pair
+// cleared 4.5:1 on its own, so the text sweep had nothing to say.
+//
+// DERIVED from the text cells of componentPairs(): cells whose names differ
+// only in the tone segment are siblings. The tone vocabulary is the one thing
+// listed — it states what a tone IS, the `tone` prop's own values.
+const TONE_SEGMENTS = new Set(['neutral', 'success', 'danger', 'info', 'warning']);
+
+export function toneFamilies(declarations) {
+  const families = new Map();
+
+  for (const pair of componentPairs(declarations)) {
+    const segments = pair.surface.split('-');
+    const index = segments.findIndex((segment) => TONE_SEGMENTS.has(segment));
+    if (index === -1) {
+      continue;
+    }
+    const stem = segments.with(index, '*').join('-');
+    const family = families.get(stem) ?? { stem, cells: [] };
+    family.cells.push({ tone: segments[index], text: pair.text, surface: pair.surface });
+    families.set(stem, family);
+  }
+
+  return [...families.values()].filter((family) => family.cells.length > 1);
+}
+
+/** The tone families whose tones do not all paint the same polarity. */
+export function splitToneFamilies(declarations) {
+  const page = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+
+  return toneFamilies(declarations)
+    .map((family) => {
+      const lightFill = [];
+      const darkFill = [];
+      for (const cell of family.cells) {
+        // A translucent fill is whatever it is painted over, and translucent
+        // ink whatever it is written on: composite both before comparing.
+        const rawFill = parseColor(resolveCustomProperty(cell.surface, declarations));
+        const fill = rawFill.a < 1 ? compositeOver(rawFill, page) : rawFill;
+        const rawInk = parseColor(resolveCustomProperty(cell.text, declarations));
+        const ink = rawInk.a < 1 ? compositeOver(rawInk, fill) : rawInk;
+        (relativeLuminance(fill) > relativeLuminance(ink) ? lightFill : darkFill).push(cell.tone);
+      }
+      return { stem: family.stem, lightFill, darkFill };
+    })
+    .filter((family) => family.lightFill.length > 0 && family.darkFill.length > 0);
+}
+
+function sweepToneFamilies(theme, scheme, declarations) {
+  const failures = [];
+
+  // The canary: ki-badge always comes in tones, so a zero-length derivation
+  // means the naming convention drifted.
+  if (toneFamilies(declarations).length === 0) {
+    failures.push(
+      `${theme}/${scheme}: no tone families derived — the token naming convention drifted`,
+    );
+  }
+
+  for (const family of splitToneFamilies(declarations)) {
+    failures.push(
+      `${theme}/${scheme} ${family.stem}: ${family.lightFill.join(', ')} paint dark ink on a light fill where ${family.darkFill.join(', ')} paint light ink on a dark one — a tone resolved in the other colour scheme`,
+    );
+  }
+
+  return failures;
+}
+
 // The interaction ramp.
 //
 // Pressed has one job: to read as MORE engaged than hover. A pressed wash
@@ -737,6 +851,8 @@ function evaluateStylesheet(theme, stylesheets) {
     failures.push(...sweepOverlayRamps(theme, scheme, declarations));
     failures.push(...sweepPlaceholders(theme, scheme, declarations));
     failures.push(...sweepPageGraphics(theme, scheme, declarations));
+    failures.push(...sweepToneInks(theme, scheme, declarations));
+    failures.push(...sweepToneFamilies(theme, scheme, declarations));
 
     if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
       failures.push(

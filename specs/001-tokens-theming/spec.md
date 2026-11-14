@@ -116,6 +116,7 @@ actually behind it, down to the browser canvas.
 **Acceptance Scenarios**:
 
 1. **Given** a document that loads only the tokens stylesheet, **When** the system preference is dark, **Then** the canvas and native controls render dark and every component string meets 4.5:1.
+2. **Given** a host page whose own stylesheet declares a single colour scheme for the page, **When** the system preference is the other one, **Then** components render in the scheme the page declared.
 
 ---
 
@@ -127,7 +128,8 @@ actually behind it, down to the browser canvas.
 - A subtree declares only a scheme inside a themed ancestor subtree: it keeps
   that ancestor's theme and flips its scheme alone.
 - A page pins its own `color-scheme`: the tokens follow the page's
-  declaration, not the system preference.
+  declaration, not the system preference, wherever the page declares it
+  relative to the tokens stylesheet (S14).
 - A document declares an unknown theme name (e.g. "acme"): the appearance
   remains onmars (safe fallback, never undefined styles).
 - A document declares theme "material3" but its stylesheet was not loaded:
@@ -231,6 +233,13 @@ Feature: Tokens and theming with onmars as the default theme
     When the document renders under a dark system color scheme
     Then the browser paints the page canvas and its native controls dark
     And every component text stays readable against the surface behind it
+
+  # S14
+  Scenario: a host page's own color scheme wins over the tokens stylesheet
+    Given a document that loads the Kimen tokens stylesheet
+    And the host page's own stylesheet declares the color scheme "light" for the page
+    When the document renders under a dark system color scheme
+    Then a button and a text field render as they do in a light document
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -241,7 +250,7 @@ Feature: Tokens and theming with onmars as the default theme
 | Keyboard path | — | Token-only feature: no interactive surface ships in this feature |
 | Assistive-tech outcome | — | No markup or announced state ships; contrast obligations are covered by FR-009/SC-005 |
 | Form participation | — | No form component ships in this feature |
-| Theming | S3, S4, S5, S6, S7, S8, S9, S10, S11, S12 | |
+| Theming | S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S14 | |
 
 ## Requirements *(mandatory)*
 
@@ -283,6 +292,10 @@ Feature: Tokens and theming with onmars as the default theme
   instead of it.
 - **FR-015**: Only colours MAY depend on the colour scheme; a token whose
   light and dark values differ in anything else MUST fail the build.
+- **FR-016**: The colour scheme the tokens stylesheet declares for the
+  document MUST be a default that any `color-scheme` the host page declares
+  for its own document overrides, in either stylesheet order; an explicit
+  `data-ki-color-scheme` declaration keeps forcing the scheme (FR-003).
 
 ### Key Entities
 
@@ -307,7 +320,8 @@ Feature: Tokens and theming with onmars as the default theme
   unchanged — `public-api.json` is byte-identical across the emission change.
   Two behaviors change and are called out in the theming contract: a theme
   stylesheet is no longer self-sufficient (it carries overrides only), and
-  the tokens stylesheet now declares `color-scheme` on the root.
+  the tokens stylesheet now declares `color-scheme` on the root — as a
+  zero-specificity default, so a host page's own declaration wins (FR-016).
 - **Bundle budget** (Art. IV): each compiled theme stylesheet stays within a
   single-digit KB compressed budget; no runtime dependency (none added).
 - **Accessibility** (Art. V): default text/surface pairs meet AA contrast in

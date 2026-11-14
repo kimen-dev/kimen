@@ -32,12 +32,12 @@ pnpm add @kimen/elements @kimen/tokens
 ```
 
 Register each component from its direct subpath, then load the token
-stylesheet and the page contract once:
+stylesheet once — and, optionally, the page contract:
 
 ```ts
 import { defineCustomElement as defineKiButton } from '@kimen/elements/ki-button';
-import '@kimen/tokens/css'; // design tokens: onmars theme, light + dark
-import '@kimen/tokens/css/base'; // page contract: color-scheme + page colors
+import '@kimen/tokens/css'; // design tokens + color-scheme: onmars theme, light + dark
+import '@kimen/tokens/css/base'; // optional page contract: page background, text color, body font
 
 defineKiButton();
 ```
@@ -46,22 +46,25 @@ defineKiButton();
 <ki-button variant="primary">Save</ki-button>
 ```
 
-`@kimen/tokens/css/base` is the **page contract**. A token stylesheet can
-only carry custom properties, so it cannot declare `color-scheme`; the page
-contract declares it and paints the page from the semantic tokens. Skipping
-it is supported in the light scheme, but on a dark-scheme page the cost is
-measured, not estimated: **14 of 29 components render text below 4.5:1
-contrast** — the components paint their correct dark-scheme foreground while
-the browser keeps a light canvas. Load it, or pin the page with
-`data-ki-color-scheme="light"`; doing neither is the one combination the
-library cannot render legibly.
+`@kimen/tokens/css` is the only requirement. Besides every `--ki-*` token
+it declares the `color-scheme` they resolve from, so the browser paints the
+canvas, scrollbars and native controls in the same scheme as the components:
+a page that loads nothing else stays legible in light and in dark (measured
+over all 29 components under a dark system preference). That declaration is
+a zero-specificity default — a `color-scheme` your own CSS sets on the page
+wins, and the tokens follow it.
+
+`@kimen/tokens/css/base` is the opt-in **page contract**: it paints the page
+itself from the semantic tokens — background, text color and body font — and
+declares no color scheme.
 
 ## Themes and color schemes
 
-`@kimen/tokens/css` ships the default onmars theme and follows
-`prefers-color-scheme`. To opt into the Material 3 reference theme, also load
-its stylesheet and select it on the document root; `data-ki-color-scheme`
-(`light` / `dark`) overrides the OS scheme for any theme:
+`@kimen/tokens/css` ships the default onmars theme and follows the system
+color scheme. To opt into the Material 3 reference theme, also load its
+stylesheet and select it with `data-ki-theme`; `data-ki-color-scheme`
+(`light` / `dark`) overrides the OS scheme for any theme. Both attributes
+work on the document root or on any element:
 
 ```ts
 import '@kimen/tokens/css/material3';

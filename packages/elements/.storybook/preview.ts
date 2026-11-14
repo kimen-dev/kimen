@@ -9,9 +9,11 @@ import '@kimen/tokens/css';
 // statically is inert until the theme toolbar sets the attribute (opt-in by
 // attribute, exactly like a consumer loading both stylesheets).
 import '@kimen/tokens/css/material3';
-// Page contract (same opt-in a consumer app loads): scheme-aware s0 canvas,
-// high-em text and the body font family — without it the dark scheme renders
-// on a white canvas and slotted story content inherits browser defaults.
+// Page contract (same opt-in a consumer app loads): the s0 canvas, high-em
+// text and the body font family, painted from tokens. The colour scheme is
+// not its job — the token stylesheet above declares it — so without this
+// sheet the page would still follow the scheme, on the user agent's own
+// canvas, and slotted story content would inherit browser defaults.
 import '@kimen/tokens/css/base';
 // The workshop pins the same font fixtures the visual harness vendors, so
 // stories render real Inter/Roboto glyphs even when the fonts are not

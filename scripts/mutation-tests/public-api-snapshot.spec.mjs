@@ -199,7 +199,7 @@ const fixture = () => ({
   },
   stylesheetSources: {
     './css': `
-      :root { color-scheme: light dark; }
+      :where(:root) { color-scheme: light dark; }
       [data-ki-color-scheme='light'] { color-scheme: light; }
       [data-ki-color-scheme='dark'] { color-scheme: dark; }
       :root, :where([data-ki-theme]) { --ki-button-bg: light-dark(#ffffff, #111111); }
