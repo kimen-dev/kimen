@@ -1,4 +1,5 @@
 import { Component, Element, Event, type EventEmitter, h, Prop } from '@stencil/core';
+import { focusThroughShadow } from '../../utils/shadow-focus.js';
 import { resolveDismissFocusTarget } from './ki-alert.focus.js';
 import { type KiAlertTone, liveExposureForTone } from './ki-alert.tone.js';
 
@@ -114,7 +115,9 @@ export class KiAlert {
     const focusTarget = resolveDismissFocusTarget(this.host);
 
     this.dismissed = true;
-    focusTarget?.focus();
+    if (focusTarget) {
+      focusThroughShadow(focusTarget);
+    }
     this.kiDismiss.emit(null);
   };
 

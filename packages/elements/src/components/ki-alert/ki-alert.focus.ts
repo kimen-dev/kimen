@@ -1,3 +1,5 @@
+import { shadowFocusTarget } from '../../utils/shadow-focus.js';
+
 const FOCUSABLE = 'a[href],button,input,select,textarea,[tabindex]:not([tabindex="-1"])';
 
 /**
@@ -31,11 +33,12 @@ export function resolveDismissFocusTarget(host: HTMLElement): HTMLElement | null
       seenHost = true;
       return; // do not descend into the alert being removed
     }
-    // A custom element that delegates focus to a control in its own shadow
-    // (e.g. ki-button) is ONE handoff target — the host — and is not descended
-    // into, so a following ki-button is reachable even though the host itself
-    // matches no native focusable selector (codex review).
-    if (delegatesFocusToShadow(element)) {
+    // A custom element that hosts a focusable control in its own shadow
+    // (e.g. ki-button, another ki-alert) is ONE handoff target — the host —
+    // and is not descended into, so a following ki-button is reachable even
+    // though the host itself matches no native focusable selector (codex
+    // review). The caller focuses it through that control.
+    if (shadowFocusTarget(element) !== null) {
       if (!isHidden(element)) {
         (seenHost ? after : before).push(element);
       }
@@ -73,11 +76,4 @@ function isHidden(element: HTMLElement): boolean {
   }
   const checkVisibility = (element as { checkVisibility?: () => boolean }).checkVisibility;
   return typeof checkVisibility === 'function' && !checkVisibility.call(element);
-}
-
-// True when the element's shadow root contains a natively focusable control,
-// so focusing the host delegates into it (Kimen components use delegatesFocus).
-function delegatesFocusToShadow(element: HTMLElement): boolean {
-  const shadow = element.shadowRoot;
-  return shadow !== null && shadow.querySelector(FOCUSABLE) !== null;
 }
