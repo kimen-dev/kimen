@@ -59,8 +59,8 @@ without touching the core. AG-UI and json-render adapters remain planned.
 `@kimen/emitter` closes the loop from the model side: from any catalog —
 built-in or registered — it derives a deterministic system prompt (usage
 guidance verbatim plus a validated example), a catalog-specialized JSON
-Schema with provider-strict lowerings (`draft-2020-12`, `openai-strict`
-with enforced provider limits, recursion-free `anthropic-strict`), and a
+Schema (`draft-2020-12`, plus `openai-strict` with enforced provider
+limits), and a
 provider-neutral tool definition; `normalizeEmission` and `repairPrompt`
 close the validate-once-repair-once reliability loop. Everything it
 produces is advisory: the validation boundary and the guarded renderer

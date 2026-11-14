@@ -7,15 +7,13 @@ only. Every member ships complete JSDoc (Art. I).
 import type { Catalog, UiSpec, ValidationReport } from '@kimen/catalog';
 
 /** JSON Schema dialect/lowering targets (research D2). */
-export type EmitterTarget = 'anthropic-strict' | 'draft-2020-12' | 'openai-strict';
+export type EmitterTarget = 'draft-2020-12' | 'openai-strict';
 
 export interface DerivationOptions {
   /** Restrict artifacts to these tags (plus their guidance); default: whole catalog. */
   readonly components?: readonly string[];
   /** Lowering target; default 'draft-2020-12'. */
   readonly target?: EmitterTarget;
-  /** anthropic-strict only: unrolled composition depth bound (default 6). */
-  readonly maxDepth?: number;
 }
 
 export type EmitterIssueCode =
@@ -40,7 +38,7 @@ export type Derivation<T> =
 /** Model-facing prompt: guidance verbatim + format rules + validated example (S7, S8). */
 export function catalogPrompt(catalog: Catalog, options?: DerivationOptions): Derivation<string>;
 
-/** Catalog-specialized JSON Schema of the UI-spec format, lowered per target (S1–S6). */
+/** Catalog-specialized JSON Schema of the UI-spec format, lowered per target (S1–S5, S15–S20). */
 export function uiSpecJsonSchema(
   catalog: Catalog,
   options?: DerivationOptions,

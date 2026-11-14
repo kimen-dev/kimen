@@ -47,6 +47,52 @@ OpenAI's recursion support and bloats every schema); per-provider SDK
 adapters (rejected: Art. VII, and the tool artifact already maps
 mechanically).
 
+### D2 amendment (2026-11-14): `anthropic-strict` removed, `openai-strict` re-pinned
+
+Both provider subsets were re-read in the official documentation on
+2026-11-14.
+
+Anthropic, "Structured outputs"
+(<https://platform.claude.com/docs/en/build-with-claude/structured-outputs>),
+sections "JSON Schema limitations" and "Schema complexity limits": not
+supported — recursive schemas, numerical constraints (`minimum`, `maximum`,
+`multipleOf`), string constraints (`minLength`, `maxLength`), array
+constraints beyond `minItems` 0 or 1, `additionalProperties` other than
+`false`. Explicit limits per request, across all strict schemas: 20 strict
+tools, 24 optional parameters (each parameter not listed in `required`),
+16 parameters with union types (`anyOf` or type arrays); beyond them, an
+internal grammar-size limit ("Schema is too complex for compilation") and a
+180-second compilation timeout.
+
+Measured on the built-in catalog, the shipped `anthropic-strict` artifact
+was 291 KB with 719 `anyOf` (708 of them null unions) and 175 `minLength`.
+It could not be sent. Every optional prop costs one optional parameter or
+one union, and a catalog-specialized schema needs one union per child
+position to choose among components, per unrolled level: three small
+components at depth 2 already carried 27 unions. Only a single leaf
+component at depth 1 fit. **Decision**: remove the target (Art. VII) rather
+than ship a lowering that only toy subsets satisfy and that cannot be
+verified without calling the provider. Integrators on that provider use the
+default dialect as advisory guidance (a regular, non-strict tool), the
+prompt and the single-round repair loop.
+
+OpenAI, "Structured Outputs", section "Supported schemas"
+(<https://developers.openai.com/api/docs/guides/structured-outputs>):
+supported string keywords are `pattern` and `format` (date-time, time,
+date, duration, email, hostname, ipv4, ipv6, uuid); number keywords
+`multipleOf`, `maximum`, `exclusiveMaximum`, `minimum`, `exclusiveMinimum`;
+array keywords `minItems`, `maxItems`. Root must be an object and not
+`anyOf`; all fields required; `additionalProperties: false` on every
+object; up to 5000 object properties and 10 nesting levels; 120,000
+characters of property names, definition names, enum values and const
+values; 1000 enum values, and 15,000 characters for a single string enum
+above 250 values; `allOf`, `not`, `dependentRequired`, `dependentSchemas`,
+`if`/`then`/`else` unsupported; recursion and `$defs` supported. The guide
+lists `minLength`/`maxLength` only among the keywords fine-tuned models do
+not support, never among the supported string properties, so
+`openai-strict` no longer emits `minLength` (the non-empty rule of an
+action name is a `pattern`), and the single-enum rule is now enforced.
+
 ## D3 — Prompt carries judgment, schema carries shape
 
 **Decision**: whenToUse/whenNotToUse, composition rules and the validated
