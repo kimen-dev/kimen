@@ -52,6 +52,9 @@ the browser: page canvas, scrollbars, native controls, autofill (FR-013/S13).
   supplies both values (`light-dark(a, b)`); a single value applies to both
   schemes.
 - Only colours depend on the scheme (FR-015).
+- A scheme-dependent token becomes a colour where it is used. Its custom
+  property holds the `light-dark()` pair, so script reading it with
+  `getPropertyValue()` gets the pair, not a colour.
 
 ## 4. Token name contract
 
@@ -104,7 +107,7 @@ are unchanged. What changed is how the stylesheets carry them:
 | Before | Now | Who notices |
 |---|---|---|
 | Subtree scoping excluded | Both attributes work on any element | Anyone who had the attributes on a non-root element: they were inert and now apply |
-| Dark values in `@media (prefers-color-scheme: dark)` plus a `:root[data-ki-color-scheme='dark']` block | One `light-dark()` declaration per scheme-dependent token | A page that pins `color-scheme` itself now takes the tokens with it. A consumer `:root` reassignment of a scheme-dependent token now applies in both schemes instead of losing to the dark block |
+| Dark values in `@media (prefers-color-scheme: dark)` plus a `:root[data-ki-color-scheme='dark']` block | One `light-dark()` declaration per scheme-dependent token | A page that pins `color-scheme` itself now takes the tokens with it. A consumer `:root` reassignment of a scheme-dependent token now applies in both schemes instead of losing to the dark block. Script that read a scheme-dependent token with `getPropertyValue()` now receives the `light-dark()` pair instead of the active colour |
 | `color-scheme` declared only by `@kimen/tokens/css/base` | Declared by `@kimen/tokens/css` | A page loading only the tokens stylesheet: its canvas and native controls now follow the system preference |
 | `@kimen/tokens/css/material3` declared the full contract | It declares its overrides only | A page loading the material3 stylesheet without the default one (never supported, but it worked). A consumer `:root` reassignment under material3 used to lose for every token (the theme block redeclared all of them at higher specificity); it now loses only for the tokens material3 overrides |
 | Per-scheme files `tokens.light.css`, `tokens.dark.css`, `tokens.material3.light.css`, `tokens.material3.dark.css` in `dist/css` | Not emitted | Nobody through the package exports: they were never exported |

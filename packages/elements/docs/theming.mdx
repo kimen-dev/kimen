@@ -67,6 +67,10 @@ Two consequences worth knowing:
 - To reassign a scheme-dependent token, give both values:
   `--ki-surface-s0: light-dark(#fff, #111)`. A single value applies to both
   schemes.
+- A scheme-dependent token only becomes a colour where it is used. Script
+  that reads one with `getPropertyValue('--ki-surface-s0')` gets the
+  `light-dark()` pair; read the computed `color` or `background-color` of an
+  element that uses the token instead.
 
 ## Theming a subtree
 

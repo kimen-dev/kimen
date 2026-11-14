@@ -93,6 +93,9 @@ controls and autofill to paint, so the two cannot disagree. Two consequences:
   directly. Pin the page in your own CSS and the tokens follow.
 - Reassign a scheme-dependent token with both values
   (`light-dark(#fff, #111)`); a single value applies to both schemes.
+- A scheme-dependent token only becomes a colour where it is used. Script
+  reading one with `getPropertyValue()` gets the `light-dark()` pair; read
+  the computed `color` of an element that uses the token instead.
 
 `light-dark()` is Baseline (Chrome 123, Firefox 120, Safari 17.5), inside the
 library's browser baseline.
