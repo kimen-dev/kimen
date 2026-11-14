@@ -310,7 +310,7 @@ describe('ki-icon-button in a real browser', () => {
     await waitForStyles();
 
     expect(getComputedStyle(button).backgroundColor).toBe(
-      readTokenColor('--ki-icon-button-secondary-neutral-rest-bg'),
+      readTokenColor('--ki-button-secondary-neutral-rest-bg'),
     );
   });
 
@@ -470,7 +470,7 @@ describe('ki-icon-button in a real browser', () => {
         await waitForStyles();
 
         const state = paintedState(button);
-        const expected = readTokenColor(`--ki-icon-button-${variant}-${tone}-${state}-bg`);
+        const expected = readTokenColor(`--ki-button-${variant}-${tone}-${state}-bg`);
         const actual = getComputedStyle(button).backgroundColor;
         expect(actual, `${variant}/${tone}`).toBe(expected);
         // Brand-colored cells must actually change theme (m3 legitimately
@@ -501,9 +501,7 @@ describe('ki-icon-button in a real browser', () => {
     await waitForStyles();
 
     const darkBg = getComputedStyle(button).backgroundColor;
-    expect(darkBg).toBe(
-      readTokenColor(`--ki-icon-button-secondary-neutral-${paintedState(button)}-bg`),
-    );
+    expect(darkBg).toBe(readTokenColor(`--ki-button-secondary-neutral-${paintedState(button)}-bg`));
     expect(darkBg, 'forced dark must change the resolved fill').not.toBe(lightBg);
   });
 
@@ -534,13 +532,13 @@ describe('ki-icon-button in a real browser', () => {
       await waitForStyles();
 
       expect(getComputedStyle(button).backgroundColor, `${variant} disabled bg`).toBe(
-        readTokenColor(`--ki-icon-button-${variant}-neutral-disabled-bg`),
+        readTokenColor(`--ki-button-${variant}-neutral-disabled-bg`),
       );
       expect(getComputedStyle(button).color, `${variant} disabled fg`).toBe(
-        readTokenColor(`--ki-icon-button-${variant}-neutral-disabled-fg`),
+        readTokenColor(`--ki-button-${variant}-neutral-disabled-fg`),
       );
       expect(getComputedStyle(button).borderTopColor, `${variant} disabled border`).toBe(
-        readTokenColor(`--ki-icon-button-${variant}-neutral-disabled-border`),
+        readTokenColor(`--ki-button-${variant}-neutral-disabled-border`),
       );
     }
   });
@@ -617,7 +615,7 @@ describe('ki-icon-button in a real browser', () => {
         // Pixel pass: tertiary carries the SECONDARY bevel pair
         // (Figma 10078:2975: Outline/secondary_button_bottom block-end edge).
         expect(style.borderBlockEndColor, 'tertiary bevel bottom (secondary pair)').toBe(
-          readTokenColor('--ki-icon-button-tertiary-rest-border-bottom'),
+          readTokenColor('--ki-button-tertiary-rest-border-bottom'),
         );
       }
       if (variant === 'quaternary') {
@@ -651,7 +649,7 @@ describe('ki-icon-button in a real browser', () => {
     await new Promise((resolve) => setTimeout(resolve, 300));
 
     const probe = document.createElement('div');
-    probe.style.boxShadow = 'var(--ki-icon-button-focus-ring-shadow)';
+    probe.style.boxShadow = 'var(--ki-button-focus-ring-shadow)';
     document.body.append(probe);
     const ringOnly = getComputedStyle(probe).boxShadow;
     probe.remove();

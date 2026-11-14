@@ -22,7 +22,7 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
  */
 @Component({
   tag: 'ki-button',
-  styleUrl: 'ki-button.css',
+  styleUrls: ['ki-button.surface.css', 'ki-button.css'],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })

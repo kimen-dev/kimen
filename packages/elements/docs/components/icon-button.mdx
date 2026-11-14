@@ -67,19 +67,32 @@ when-NOT-to-use — reach for `ki-button`.
 
 ## Customization
 
-| Token                                        | Controls                            |
-| -------------------------------------------- | ----------------------------------- |
-| `--ki-icon-button-primary-neutral-rest-bg`   | Primary variant resting background  |
-| `--ki-icon-button-md-size`                   | Square box of the `md` size         |
-| `--ki-icon-button-md-icon-size`              | Icon size of the `md` size          |
-| `--ki-icon-button-md-radius`                 | Corner radius of the `md` size      |
-| `--ki-icon-button-focus-ring-color`          | Keyboard focus ring color           |
+| Token                                 | Controls                            |
+| ------------------------------------- | ----------------------------------- |
+| `--ki-icon-button-md-size`            | Square box of the `md` size         |
+| `--ki-icon-button-md-icon-size`       | Icon size of the `md` size          |
+| `--ki-button-primary-neutral-rest-bg` | Primary variant resting background  |
+| `--ki-button-md-radius`               | Corner radius of the `md` size      |
+| `--ki-button-focus-ring-color`        | Keyboard focus ring color           |
 
-The full matrix follows
-`--ki-icon-button-{variant}-{tone}-{state}-{bg|border|fg}` and
-`--ki-icon-button-{size}-*`, plus the fidelity-pass effect tokens:
-`--ki-icon-button-{variant}-{state}-shadow` and the per-side bevel
-`--ki-icon-button-{variant}-rest-border-bottom` (raised variants only).
+Only the square box and the icon ramp are the icon button's own:
+`--ki-icon-button-{size}-size` and `--ki-icon-button-{size}-icon-size`.
+Everything else is the button visual system, defined once and shared with
+`ki-button`: the matrix `--ki-button-{variant}-{tone}-{state}-{bg|border|fg}`,
+the radius `--ki-button-{size}-radius`, the effect tokens
+`--ki-button-{variant}-{state}-shadow`, the per-side bevel
+`--ki-button-{variant}-rest-border-bottom` (raised variants only) and the
+focus ring. A theme that restyles buttons restyles icon buttons with them.
+
+To style icon buttons apart from buttons, set the button tokens on the
+element itself:
+
+```css
+ki-icon-button {
+  --ki-button-md-radius: var(--ki-radius-round);
+}
+```
+
 Shadow parts: `::part(button)` (internal native button) and `::part(icon)`
 (icon wrapper).
 

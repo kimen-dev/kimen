@@ -1,5 +1,5 @@
 import { readdir, readFile } from 'node:fs/promises';
-import { join, relative, sep } from 'node:path';
+import { join, relative, resolve, sep } from 'node:path';
 
 const LAYERS = Object.freeze(['primitive', 'theme', 'semantic', 'component']);
 const LAYER_RANK = new Map(LAYERS.map((layer, index) => [layer, index]));
@@ -711,6 +711,19 @@ const cssFilesBelow = async (directory) => {
   return files.sort(compareText);
 };
 
+/**
+ * The sheets a component loads through Stencil `styleUrls` from outside its
+ * own directory (ki-icon-button paints with the ki-button surface sheet). A
+ * component consumes the tokens of every sheet it loads, wherever it lives.
+ */
+const sheetsLoadedFromElsewhere = async (directory, tag) => {
+  const component = await readFile(join(directory, `${tag}.tsx`), 'utf8');
+  const urls = /styleUrls:\s*\[([^\]]*)\]/u.exec(component)?.[1] ?? '';
+  return [...urls.matchAll(/['"]([^'"]+)['"]/gu)]
+    .map(([, url]) => resolve(directory, url))
+    .filter((filePath) => relative(directory, filePath).startsWith('..'));
+};
+
 /** Read component styles and derive the CEM CSS-property contract by tag. */
 export const readConsumedPublicCssProperties = async ({ inventory, componentsRoot }) => {
   const cssByTag = {};
@@ -719,7 +732,11 @@ export const readConsumedPublicCssProperties = async ({ inventory, componentsRoo
     if (!entry.isDirectory() || !entry.name.startsWith('ki-')) {
       continue;
     }
-    const files = await cssFilesBelow(join(componentsRoot, entry.name));
+    const directory = join(componentsRoot, entry.name);
+    const files = [
+      ...(await cssFilesBelow(directory)),
+      ...(await sheetsLoadedFromElsewhere(directory, entry.name)),
+    ];
     cssByTag[entry.name] = (
       await Promise.all(files.map((filePath) => readFile(filePath, 'utf8')))
     ).join('\n');

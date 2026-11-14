@@ -1,10 +1,14 @@
 import assert from 'node:assert/strict';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import test from 'node:test';
 
 import {
   createOrderedTokenInventory,
   deriveConsumedPublicCssProperties,
   parseTokenComposition,
+  readConsumedPublicCssProperties,
 } from '../lib/token-inventory.mjs';
 
 const source = (filePath, layer, contents, options = {}) => ({
@@ -482,4 +486,51 @@ test('rejects a consumed token that is not part of the public inventory', () => 
       }),
     /ki-dialog.*--ki-color-brand.*not a public semantic or component token/iu,
   );
+});
+
+// ki-icon-button paints with the ki-button surface sheet, which lives in
+// ki-button's directory: a component consumes what it loads, wherever the
+// sheet sits, or its manifest entry would list only a fraction of its tokens.
+test('attributes a sheet loaded from another component directory to every component that loads it', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'kimen-consumed-css-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const files = {
+    'ki-button/ki-button.tsx':
+      "@Component({ tag: 'ki-button', styleUrls: ['ki-button.surface.css', 'ki-button.css'] })",
+    'ki-button/ki-button.surface.css': 'button { color: var(--ki-button-fg); }',
+    'ki-button/ki-button.css': 'button { block-size: var(--ki-button-height); }',
+    'ki-icon-button/ki-icon-button.tsx': [
+      '@Component({',
+      "  tag: 'ki-icon-button',",
+      "  styleUrls: ['../ki-button/ki-button.surface.css', 'ki-icon-button.css'],",
+      '})',
+    ].join('\n'),
+    'ki-icon-button/ki-icon-button.css': 'button { block-size: var(--ki-icon-button-size); }',
+    'ki-badge/ki-badge.tsx': "@Component({ tag: 'ki-badge', styleUrl: 'ki-badge.css' })",
+    'ki-badge/ki-badge.css': ':host { color: var(--ki-badge-fg); }',
+  };
+  for (const [path, contents] of Object.entries(files)) {
+    await mkdir(join(root, path, '..'), { recursive: true });
+    await writeFile(join(root, path), contents);
+  }
+  const leaf = (description) => token('{ki.color.brand}', { $description: description });
+  const component = (name, tokens) =>
+    source(`${name}.tokens.json`, 'component', { ki: { [name]: { $type: 'color', ...tokens } } });
+  const inventory = createOrderedTokenInventory([
+    composition([
+      source('primitive.tokens.json', 'primitive', {
+        ki: { color: { $type: 'color', brand: token('#000000') } },
+      }),
+      component('button', { fg: leaf('Button text.'), height: leaf('Button height.') }),
+      component('icon-button', { size: leaf('Icon button box.') }),
+      component('badge', { fg: leaf('Badge text.') }),
+    ]),
+  ]);
+
+  const properties = await readConsumedPublicCssProperties({ inventory, componentsRoot: root });
+
+  const names = (tag) => properties[tag].map(({ name }) => name);
+  assert.deepEqual(names('ki-button'), ['--ki-button-fg', '--ki-button-height']);
+  assert.deepEqual(names('ki-icon-button'), ['--ki-button-fg', '--ki-icon-button-size']);
+  assert.deepEqual(names('ki-badge'), ['--ki-badge-fg']);
 });
