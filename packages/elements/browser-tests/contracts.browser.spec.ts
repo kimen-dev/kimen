@@ -14,7 +14,7 @@ import onmarsCss from '@kimen/tokens/css?raw';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { commands, page } from 'vitest/browser';
 
-import { allComponents, defineAllComponents } from './all-components';
+import { componentTags, defineAllComponents } from './all-components';
 import { expectAccessible } from './axe';
 import {
   applyTextSpacing,
@@ -136,7 +136,7 @@ afterAll(async () => {
 });
 
 describe.each(combinations)('contracts in %s / %s', (...combination) => {
-  it.each(allComponents)('%s passes the automated accessibility audit', async (component) => {
+  it.each(componentTags)('%s passes the automated accessibility audit', async (component) => {
     applyCombination(combination);
     const wrapper = await mountGallery(component);
 
@@ -148,7 +148,7 @@ describe.each(combinations)('contracts in %s / %s', (...combination) => {
     ).toEqual([]);
   });
 
-  it.each(allComponents)('%s keeps every active text run at AA contrast', async (component) => {
+  it.each(componentTags)('%s keeps every active text run at AA contrast', async (component) => {
     applyCombination(combination);
     const wrapper = await mountGallery(component);
 
@@ -164,7 +164,7 @@ describe.each(combinations)('contracts in %s / %s', (...combination) => {
 });
 
 describe('contracts when the theme or scheme changes at runtime', () => {
-  it.each(allComponents)(
+  it.each(componentTags)(
     '%s restyles live exactly like a fresh mount, with nothing left stale',
     async (component) => {
       const fresh = new Map<string, string[]>();
@@ -197,7 +197,7 @@ describe('contracts under user-controlled layout', () => {
     await page.viewport(DEFAULT_VIEWPORT.width, DEFAULT_VIEWPORT.height);
   });
 
-  it.each(allComponents)('%s reflows at 320px with no page-level scroll', async (component) => {
+  it.each(componentTags)('%s reflows at 320px with no page-level scroll', async (component) => {
     await page.viewport(REFLOW_VIEWPORT.width, REFLOW_VIEWPORT.height);
     await mountGallery(component, true);
 
@@ -208,7 +208,7 @@ describe('contracts under user-controlled layout', () => {
     );
   });
 
-  it.each(allComponents)('%s loses no text to the 1.4.12 spacing overrides', async (component) => {
+  it.each(componentTags)('%s loses no text to the 1.4.12 spacing overrides', async (component) => {
     await page.viewport(DEFAULT_VIEWPORT.width, DEFAULT_VIEWPORT.height);
     const wrapper = await mountGallery(component);
     const before = clippedText(wrapper);
