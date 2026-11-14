@@ -14,6 +14,7 @@ import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-indicator.js';
+import manifestJson from '../generated/custom-elements.json?raw';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 
@@ -127,6 +128,30 @@ function currentIndexOf(el: KiIndicatorElement): number {
   return dots.indexOf(only);
 }
 
+interface BoundedAttribute {
+  name: string;
+  maximum?: number;
+}
+
+/**
+ * The bound the catalog enforces, read from the generated manifest (the
+ * contract's `@maximum`): the component must cap at the same number, and
+ * this is what fails if the two ever drift apart.
+ */
+function catalogMaximum(attribute: 'count' | 'current'): number {
+  const manifest = JSON.parse(manifestJson) as {
+    modules: { declarations: { tagName?: string; attributes?: BoundedAttribute[] }[] }[];
+  };
+  const maximum = manifest.modules
+    .flatMap((module) => module.declarations)
+    .find((declaration) => declaration.tagName === 'ki-indicator')
+    ?.attributes?.find(({ name }) => name === attribute)?.maximum;
+  if (maximum === undefined) {
+    throw new Error(`the manifest declares no maximum for ki-indicator ${attribute}`);
+  }
+  return maximum;
+}
+
 function readTokenColor(name: string): string {
   const probe = document.createElement('div');
   probe.style.color = `var(${name})`;
@@ -222,6 +247,34 @@ describe('ki-indicator', () => {
     expect(dotsOf(el)).toHaveLength(5);
     expect(currentIndexOf(el)).toBe(0);
     expect(el.getAttribute('aria-label')).toBe('Slide position, 1 / 5');
+  });
+
+  // The catalog rejects more positions than its bound, but markup and
+  // scripts reach the element directly: one dot renders per position, so an
+  // unbounded count is unbounded work (count="20000" built 20,001 nodes).
+  it('renders no more positions than the catalog bound, whatever count asks for', async () => {
+    cleanup();
+    const bound = catalogMaximum('count');
+    expect(catalogMaximum('current')).toBe(bound);
+    const el = await mount(landmark(), {
+      label: 'Slide position',
+      count: '20000',
+      current: '20000',
+    });
+
+    expect(dotsOf(el)).toHaveLength(bound);
+    expect(currentIndexOf(el)).toBe(bound - 1);
+    expect(el.getAttribute('aria-label')).toBe(
+      `Slide position, ${String(bound)} / ${String(bound)}`,
+    );
+
+    // One past the bound is capped; the bound itself is untouched.
+    el.count = bound + 1;
+    el.current = 1;
+    await waitUntil(() => currentIndexOf(el) === 0, 'the highlight did not follow the change');
+    expect(dotsOf(el)).toHaveLength(bound);
+    el.count = bound - 1;
+    await waitUntil(() => dotsOf(el).length === bound - 1, 'a count under the bound was altered');
   });
 
   it('S5 renders the default appearance under an unrecognized variant attribute', async () => {
