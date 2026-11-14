@@ -3,7 +3,7 @@
 // packages/catalog/scripts/generate-catalog.mjs; the catalog-sync gate
 // fails any drift between this artifact and a fresh regeneration.
 export const catalogData = {
-  "catalogSchemaVersion": "1.1.0",
+  "catalogSchemaVersion": "1.2.0",
   "components": {
     "ki-alert": {
       "description": "A persistent inline status message with token-backed tone semantics.",
@@ -77,7 +77,8 @@ export const catalogData = {
         },
         "src": {
           "type": "string",
-          "description": "Portrait URL, the first step of the fallback chain. When it fails to\nload — initially or at runtime — the avatar silently falls back to the\ninitials (or the generic figure) with no error, no layout change and no\nevent (FR-001). Loading policy follows the platform image defaults."
+          "description": "Portrait URL, the first step of the fallback chain. When it fails to\nload — initially or at runtime — the avatar silently falls back to the\ninitials (or the generic figure) with no error, no layout change and no\nevent (FR-001). Loading policy follows the platform image defaults.",
+          "format": "url"
         }
       },
       "slots": {},
@@ -287,7 +288,8 @@ export const catalogData = {
         },
         "heading": {
           "type": "string",
-          "description": "Visible dialog title and accessible-name source. Always provide a heading;\nan empty value intentionally leaves the native dialog unnamed.\nWhen to use: name the interrupting decision, for example \"Delete\naccount?\". When NOT to use: do not omit it for production dialogs; APG\nmodal dialogs require an accessible name."
+          "description": "Visible dialog title and accessible-name source. Always provide a heading;\nan empty value intentionally leaves the native dialog unnamed.\nWhen to use: name the interrupting decision, for example \"Delete\naccount?\". When NOT to use: do not omit it for production dialogs; APG\nmodal dialogs require an accessible name.",
+          "required": true
         },
         "open": {
           "type": "boolean",
@@ -333,7 +335,8 @@ export const catalogData = {
         },
         "label": {
           "type": "string",
-          "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button)."
+          "description": "Accessible name of the internal focusable button (\"Close\", \"Play\").\nRequired in the catalog contract: the icon is presentational, so without\na label the control exposes no name and fails the accessibility audit.\nThe component never invents a fallback name.\nWhen NOT to use: never omit it; never duplicate it as visible text (a\nvisible label means ki-button).",
+          "required": true
         },
         "size": {
           "type": "enum",
@@ -383,15 +386,20 @@ export const catalogData = {
       "props": {
         "count": {
           "type": "number",
-          "description": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent)."
+          "description": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).\nThe catalog accepts at most 20 positions: the indicator serves a short\nsequence of peer views, 20 dots are the longest row that fits a 320 CSS\npx viewport (the WCAG reflow width) in both shipped themes, and one dot\nrenders per position, so the bound also caps the work a single node can\ndemand.",
+          "minimum": 0,
+          "maximum": 20
         },
         "current": {
           "type": "number",
-          "description": "The current position, 1-based to match the exposed position text\n(\"2 / 5\"). Exactly one dot presents the current appearance whenever\n`count` >= 1: values above `count` clamp to the last position, values\nbelow 1 and non-numeric values fall back to the first (FR-003). Updates\nre-render in place — the highlight and the exposed text follow\nimmediately, re-applying the normalization (FR-004)."
+          "description": "The current position, 1-based to match the exposed position text\n(\"2 / 5\"). Exactly one dot presents the current appearance whenever\n`count` >= 1: values above `count` clamp to the last position, values\nbelow 1 and non-numeric values fall back to the first (FR-003). Updates\nre-render in place — the highlight and the exposed text follow\nimmediately, re-applying the normalization (FR-004). The catalog accepts\n1 to 20, the positions a bounded `count` can have.",
+          "minimum": 1,
+          "maximum": 20
         },
         "label": {
           "type": "string",
-          "description": "Accessible name of the sequence (\"Slide position\"). The exposed name\ncombines it with the wordless numeric position —\n\"<label>, <current> / <count>\" — on a single non-interactive graphic;\nwithout a label the name degrades to the bare position text (documented\nas required authoring, FR-005). The label is never rendered visually\nand position changes are never announced (no live region, FR-006)."
+          "description": "Accessible name of the sequence (\"Slide position\"). The exposed name\ncombines it with the wordless numeric position —\n\"<label>, <current> / <count>\" — on a single non-interactive graphic;\nwithout a label the name degrades to the bare position text (documented\nas required authoring, FR-005). The label is never rendered visually\nand position changes are never announced (no live region, FR-006).",
+          "required": true
         }
       },
       "slots": {},
@@ -416,7 +424,8 @@ export const catalogData = {
         },
         "label": {
           "type": "string",
-          "description": "Visible label rendered next to the entry area and used as the accessible\nname. This is mandatory for valid usage.\nWhen NOT to use: never use `placeholder` as a label substitute."
+          "description": "Visible label rendered next to the entry area and used as the accessible\nname. This is mandatory for valid usage.\nWhen NOT to use: never use `placeholder` as a label substitute.",
+          "required": true
         },
         "name": {
           "type": "string",
@@ -520,7 +529,8 @@ export const catalogData = {
         },
         "label": {
           "type": "string",
-          "description": "Accessible name applied to the internal progressbar. Always set this to\nwhat is progressing, such as \"Uploading report.pdf\". Without it the\nelement renders but exposes no accessible name.\nWhen NOT to use: do not use a generic label such as \"Loading\" when the\ntask can be named more specifically."
+          "description": "Accessible name applied to the internal progressbar. Always set this to\nwhat is progressing, such as \"Uploading report.pdf\". Without it the\nelement renders but exposes no accessible name, so the catalog contract\nrequires it.\nWhen NOT to use: do not use a generic label such as \"Loading\" when the\ntask can be named more specifically.",
+          "required": true
         },
         "max": {
           "type": "number",
@@ -600,7 +610,8 @@ export const catalogData = {
         },
         "label": {
           "type": "string",
-          "description": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it; unlabeled groups fail accessibility gates."
+          "description": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it; unlabeled groups fail accessibility gates.",
+          "required": true
         },
         "name": {
           "type": "string",
@@ -630,7 +641,8 @@ export const catalogData = {
       "props": {
         "label": {
           "type": "string",
-          "description": "Accessible name of the scroll region (\"Release notes\", \"Chat\nmessages\"). Assistive technology receives a `region` with this name\nwhose slotted content keeps its own semantics (FR-006). Documented as\nrequired: a scroller without a label renders but exposes no accessible\nname and fails the accessibility audit (015-ki-progress precedent).\nThe label is never rendered visually."
+          "description": "Accessible name of the scroll region (\"Release notes\", \"Chat\nmessages\"). Assistive technology receives a `region` with this name\nwhose slotted content keeps its own semantics (FR-006). Documented as\nrequired: a scroller without a label renders but exposes no accessible\nname and fails the accessibility audit (015-ki-progress precedent).\nThe label is never rendered visually.",
+          "required": true
         },
         "orientation": {
           "type": "enum",
@@ -663,7 +675,7 @@ export const catalogData = {
         "label": {
           "type": "string",
           "description": "Visible label and accessible-name source for the combobox trigger.\nWhen NOT to use: do not omit it; unlabeled selects are invalid usage.",
-          "default": ""
+          "required": true
         },
         "name": {
           "type": "string",
@@ -841,7 +853,8 @@ export const catalogData = {
         },
         "label": {
           "type": "string",
-          "description": "Visible label rendered by the component and used as the accessible name.\nWhen to use: always provide a concise label for the requested long-form\ntext. When NOT to use: do not substitute placeholder text for the label."
+          "description": "Visible label rendered by the component and used as the accessible name.\nWhen to use: always provide a concise label for the requested long-form\ntext. When NOT to use: do not substitute placeholder text for the label.",
+          "required": true
         },
         "name": {
           "type": "string",
@@ -911,7 +924,8 @@ export const catalogData = {
       "props": {
         "label": {
           "type": "string",
-          "description": "Accessible name of the play control (\"Play the product tour\"). The\ncontrol is a real button exposing role button with exactly this name;\nthe frame contributes no role, name or state of its own (FR-004,\nFR-005). Documented as required: no default human-language string is\nbaked in, and an unlabeled control renders but fails the accessibility\naudit (015-ki-progress precedent). The label is never rendered visually."
+          "description": "Accessible name of the play control (\"Play the product tour\"). The\ncontrol is a real button exposing role button with exactly this name;\nthe frame contributes no role, name or state of its own (FR-004,\nFR-005). Documented as required: no default human-language string is\nbaked in, and an unlabeled control renders but fails the accessibility\naudit (015-ki-progress precedent). The label is never rendered visually.",
+          "required": true
         }
       },
       "slots": {

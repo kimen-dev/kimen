@@ -429,6 +429,10 @@
           "docs": "Portrait URL, the first step of the fallback chain. When it fails to\nload — initially or at runtime — the avatar silently falls back to the\ninitials (or the generic figure) with no error, no layout change and no\nevent (FR-001). Loading policy follows the platform image defaults.",
           "docsTags": [
             {
+              "name": "format",
+              "text": "url"
+            },
+            {
               "name": "default",
               "text": "undefined"
             }
@@ -1520,10 +1524,10 @@
         },
         {
           "name": "heading",
-          "type": "string | undefined",
+          "type": "string",
           "complexType": {
             "original": "string",
-            "resolved": "string | undefined",
+            "resolved": "string",
             "references": {}
           },
           "mutable": false,
@@ -1534,13 +1538,10 @@
           "values": [
             {
               "type": "string"
-            },
-            {
-              "type": "undefined"
             }
           ],
-          "optional": true,
-          "required": false,
+          "optional": false,
+          "required": true,
           "getter": false,
           "setter": false
         },
@@ -1819,10 +1820,10 @@
         },
         {
           "name": "label",
-          "type": "string | undefined",
+          "type": "string",
           "complexType": {
             "original": "string",
-            "resolved": "string | undefined",
+            "resolved": "string",
             "references": {}
           },
           "mutable": false,
@@ -1833,13 +1834,10 @@
           "values": [
             {
               "type": "string"
-            },
-            {
-              "type": "undefined"
             }
           ],
-          "optional": true,
-          "required": false,
+          "optional": false,
+          "required": true,
           "getter": false,
           "setter": false
         },
@@ -2059,11 +2057,19 @@
           "mutable": false,
           "attr": "count",
           "reflectToAttr": false,
-          "docs": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).",
+          "docs": "Number of positions (non-negative integer): one dot renders per\nposition, in position order. A missing, non-numeric or negative value\nrenders zero dots — an authoring mistake by catalog guidance, never an\nerror state or a rendering failure (FR-002; empty ki-list precedent).\nThe catalog accepts at most 20 positions: the indicator serves a short\nsequence of peer views, 20 dots are the longest row that fits a 320 CSS\npx viewport (the WCAG reflow width) in both shipped themes, and one dot\nrenders per position, so the bound also caps the work a single node can\ndemand.",
           "docsTags": [
             {
               "name": "default",
               "text": "undefined"
+            },
+            {
+              "name": "minimum",
+              "text": "0"
+            },
+            {
+              "name": "maximum",
+              "text": "20"
             }
           ],
           "values": [
@@ -2090,11 +2096,19 @@
           "mutable": false,
           "attr": "current",
           "reflectToAttr": false,
-          "docs": "The current position, 1-based to match the exposed position text\n(\"2 / 5\"). Exactly one dot presents the current appearance whenever\n`count` >= 1: values above `count` clamp to the last position, values\nbelow 1 and non-numeric values fall back to the first (FR-003). Updates\nre-render in place — the highlight and the exposed text follow\nimmediately, re-applying the normalization (FR-004).",
+          "docs": "The current position, 1-based to match the exposed position text\n(\"2 / 5\"). Exactly one dot presents the current appearance whenever\n`count` >= 1: values above `count` clamp to the last position, values\nbelow 1 and non-numeric values fall back to the first (FR-003). Updates\nre-render in place — the highlight and the exposed text follow\nimmediately, re-applying the normalization (FR-004). The catalog accepts\n1 to 20, the positions a bounded `count` can have.",
           "docsTags": [
             {
               "name": "default",
               "text": "undefined"
+            },
+            {
+              "name": "minimum",
+              "text": "1"
+            },
+            {
+              "name": "maximum",
+              "text": "20"
             }
           ],
           "values": [
@@ -2112,32 +2126,24 @@
         },
         {
           "name": "label",
-          "type": "string | undefined",
+          "type": "string",
           "complexType": {
             "original": "string",
-            "resolved": "string | undefined",
+            "resolved": "string",
             "references": {}
           },
           "mutable": false,
           "attr": "label",
           "reflectToAttr": false,
           "docs": "Accessible name of the sequence (\"Slide position\"). The exposed name\ncombines it with the wordless numeric position —\n\"<label>, <current> / <count>\" — on a single non-interactive graphic;\nwithout a label the name degrades to the bare position text (documented\nas required authoring, FR-005). The label is never rendered visually\nand position changes are never announced (no live region, FR-006).",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "undefined"
-            }
-          ],
+          "docsTags": [],
           "values": [
             {
               "type": "string"
-            },
-            {
-              "type": "undefined"
             }
           ],
-          "optional": true,
-          "required": false,
+          "optional": false,
+          "required": true,
           "getter": false,
           "setter": false
         }
@@ -2266,10 +2272,10 @@
         },
         {
           "name": "label",
-          "type": "string | undefined",
+          "type": "string",
           "complexType": {
             "original": "string",
-            "resolved": "string | undefined",
+            "resolved": "string",
             "references": {}
           },
           "mutable": false,
@@ -2280,13 +2286,10 @@
           "values": [
             {
               "type": "string"
-            },
-            {
-              "type": "undefined"
             }
           ],
-          "optional": true,
-          "required": false,
+          "optional": false,
+          "required": true,
           "getter": false,
           "setter": false
         },
@@ -2822,27 +2825,24 @@
         },
         {
           "name": "label",
-          "type": "string | undefined",
+          "type": "string",
           "complexType": {
             "original": "string",
-            "resolved": "string | undefined",
+            "resolved": "string",
             "references": {}
           },
           "mutable": false,
           "attr": "label",
           "reflectToAttr": true,
-          "docs": "Accessible name applied to the internal progressbar. Always set this to\nwhat is progressing, such as \"Uploading report.pdf\". Without it the\nelement renders but exposes no accessible name.\nWhen NOT to use: do not use a generic label such as \"Loading\" when the\ntask can be named more specifically.",
+          "docs": "Accessible name applied to the internal progressbar. Always set this to\nwhat is progressing, such as \"Uploading report.pdf\". Without it the\nelement renders but exposes no accessible name, so the catalog contract\nrequires it.\nWhen NOT to use: do not use a generic label such as \"Loading\" when the\ntask can be named more specifically.",
           "docsTags": [],
           "values": [
             {
               "type": "string"
-            },
-            {
-              "type": "undefined"
             }
           ],
-          "optional": true,
-          "required": false,
+          "optional": false,
+          "required": true,
           "getter": false,
           "setter": false
         },
@@ -3400,32 +3400,24 @@
       "props": [
         {
           "name": "label",
-          "type": "string | undefined",
+          "type": "string",
           "complexType": {
             "original": "string",
-            "resolved": "string | undefined",
+            "resolved": "string",
             "references": {}
           },
           "mutable": false,
           "attr": "label",
           "reflectToAttr": false,
           "docs": "Accessible name of the scroll region (\"Release notes\", \"Chat\nmessages\"). Assistive technology receives a `region` with this name\nwhose slotted content keeps its own semantics (FR-006). Documented as\nrequired: a scroller without a label renders but exposes no accessible\nname and fails the accessibility audit (015-ki-progress precedent).\nThe label is never rendered visually.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "undefined"
-            }
-          ],
+          "docsTags": [],
           "values": [
             {
               "type": "string"
-            },
-            {
-              "type": "undefined"
             }
           ],
-          "optional": true,
-          "required": false,
+          "optional": false,
+          "required": true,
           "getter": false,
           "setter": false
         },
@@ -3583,20 +3575,14 @@
           "attr": "label",
           "reflectToAttr": true,
           "docs": "Visible label and accessible-name source for the combobox trigger.\nWhen NOT to use: do not omit it; unlabeled selects are invalid usage.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "''"
-            }
-          ],
-          "default": "''",
+          "docsTags": [],
           "values": [
             {
               "type": "string"
             }
           ],
           "optional": false,
-          "required": false,
+          "required": true,
           "getter": false,
           "setter": false
         },
@@ -4940,32 +4926,24 @@
       "props": [
         {
           "name": "label",
-          "type": "string | undefined",
+          "type": "string",
           "complexType": {
             "original": "string",
-            "resolved": "string | undefined",
+            "resolved": "string",
             "references": {}
           },
           "mutable": false,
           "attr": "label",
           "reflectToAttr": false,
           "docs": "Accessible name of the play control (\"Play the product tour\"). The\ncontrol is a real button exposing role button with exactly this name;\nthe frame contributes no role, name or state of its own (FR-004,\nFR-005). Documented as required: no default human-language string is\nbaked in, and an unlabeled control renders but fails the accessibility\naudit (015-ki-progress precedent). The label is never rendered visually.",
-          "docsTags": [
-            {
-              "name": "default",
-              "text": "undefined"
-            }
-          ],
+          "docsTags": [],
           "values": [
             {
               "type": "string"
-            },
-            {
-              "type": "undefined"
             }
           ],
-          "optional": true,
-          "required": false,
+          "optional": false,
+          "required": true,
           "getter": false,
           "setter": false
         }

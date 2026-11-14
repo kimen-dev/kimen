@@ -15,7 +15,7 @@ import type { StencilReactComponent } from '@stencil/react-output-target/runtime
 
 export type KiScrollerEvents = NonNullable<unknown>;
 
-export const KiScroller: StencilReactComponent<KiScrollerElement, KiScrollerEvents, Components.KiScroller> = /*@__PURE__*/ createComponent<KiScrollerElement, KiScrollerEvents, Components.KiScroller>({
+export const KiScroller: StencilReactComponent<KiScrollerElement, KiScrollerEvents, Components.KiScroller, 'label'> = /*@__PURE__*/ createComponent<KiScrollerElement, KiScrollerEvents, Components.KiScroller, 'label'>({
     tagName: 'ki-scroller',
     elementClass: KiScrollerElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.

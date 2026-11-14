@@ -216,7 +216,7 @@ export declare interface KiCheckbox extends Components.KiCheckbox {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['closeOnBackdrop', 'heading', 'open'],
+  inputs: ['closeOnBackdrop', { name: 'heading', required: true }, 'open'],
 })
 export class KiDialog {
   protected el: HTMLKiDialogElement;
@@ -273,7 +273,7 @@ export declare interface KiDivider extends Components.KiDivider {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'label', 'size', 'tone', 'variant'],
+  inputs: ['disabled', { name: 'label', required: true }, 'size', 'tone', 'variant'],
 })
 export class KiIconButton {
   protected el: HTMLKiIconButtonElement;
@@ -296,7 +296,7 @@ export declare interface KiIconButton extends Components.KiIconButton {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['count', 'current', 'label'],
+  inputs: ['count', 'current', { name: 'label', required: true }],
 })
 export class KiIndicator {
   protected el: HTMLKiIndicatorElement;
@@ -319,7 +319,7 @@ export declare interface KiIndicator extends Components.KiIndicator {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['autocomplete', 'disabled', 'label', 'name', 'placeholder', 'readonly', 'required', 'type', 'value'],
+  inputs: ['autocomplete', 'disabled', { name: 'label', required: true }, 'name', 'placeholder', 'readonly', 'required', 'type', 'value'],
 })
 export class KiInput {
   protected el: HTMLKiInputElement;
@@ -409,7 +409,7 @@ export declare interface KiOption extends Components.KiOption {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['indeterminate', 'label', 'max', 'shape', 'value'],
+  inputs: ['indeterminate', { name: 'label', required: true }, 'max', 'shape', 'value'],
 })
 export class KiProgress {
   protected el: HTMLKiProgressElement;
@@ -501,7 +501,7 @@ export declare interface KiRadioGroup extends Components.KiRadioGroup {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['label', 'orientation'],
+  inputs: [{ name: 'label', required: true }, 'orientation'],
 })
 export class KiScroller {
   protected el: HTMLKiScrollerElement;
@@ -524,7 +524,7 @@ export declare interface KiScroller extends Components.KiScroller {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'label', 'name', 'placeholder', 'required', 'value'],
+  inputs: ['disabled', { name: 'label', required: true }, 'name', 'placeholder', 'required', 'value'],
 })
 export class KiSelect {
   protected el: HTMLKiSelectElement;
@@ -716,7 +716,7 @@ export declare interface KiTooltip extends Components.KiTooltip {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['label'],
+  inputs: [{ name: 'label', required: true }],
 })
 export class KiVideo {
   protected el: HTMLKiVideoElement;
