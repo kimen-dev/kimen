@@ -51,9 +51,7 @@
 
 /* The keyboard-focusable scroll region (FR-005) shows the theme's focus
  * ring: the opaque outline pair (ki-dialog precedent) PLUS the MarsUI
- * Focus/primary 3px alpha halo that ki-button pairs with its outline.
- * --ki-scroller-focus-ring-shadow is the forward token hook (pending in
- * tokens); the semantic Focus/primary fallback keeps the halo until then. */
+ * Focus/primary 3px alpha halo that ki-button pairs with its outline. */
 [part="viewport"]:focus-visible {
   outline: var(--ki-scroller-focus-ring-width) solid var(--ki-scroller-focus-ring-color);
   outline-offset: var(--ki-scroller-focus-ring-offset);

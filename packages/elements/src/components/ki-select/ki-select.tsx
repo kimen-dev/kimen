@@ -188,7 +188,7 @@ export class KiSelect {
 
   @Watch('value')
   protected valueChanged(nextValue: string): void {
-    this.selectByValue(nextValue, false);
+    this.selectByValue(nextValue);
   }
 
   @Watch('disabled')
@@ -207,7 +207,7 @@ export class KiSelect {
 
   formResetCallback(): void {
     this.userInvalid = false;
-    this.selectByValue(this.host.getAttribute('value') ?? '', false);
+    this.selectByValue(this.host.getAttribute('value') ?? '');
   }
 
   formDisabledCallback(disabled: boolean): void {
@@ -347,7 +347,7 @@ export class KiSelect {
     } else if (this.value !== '' || this.host.hasAttribute('value')) {
       const declaredValue =
         this.value !== '' ? this.value : (this.host.getAttribute('value') ?? '');
-      this.selectByValue(declaredValue, false);
+      this.selectByValue(declaredValue);
     } else {
       // No declared default: an option carrying value="" must NOT be
       // auto-selected — show the placeholder and submit nothing (S2/S24,
@@ -362,7 +362,7 @@ export class KiSelect {
     }
   }
 
-  private selectByValue(value: string, emit: boolean): void {
+  private selectByValue(value: string): void {
     const selected = resolveSelection(this.roster, value);
     this.selectedIndex = selected ? this.roster.indexOf(selected) : -1;
     // Clear an unmatched value once options exist OR ever existed. A roster
@@ -375,11 +375,6 @@ export class KiSelect {
       this.value = selected?.value ?? '';
     }
     this.syncValidity();
-
-    if (emit) {
-      this.host.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-      this.host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
-    }
   }
 
   private commit(index: number): void {
