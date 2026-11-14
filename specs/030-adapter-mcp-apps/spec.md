@@ -22,7 +22,10 @@ capability claims follow green evidence."
 **Constitution check**: this spec is not approvable until the Gherkin section
 below is complete. Behavior enters the system exactly once, here (Art. II).
 Scenarios S4, S5, S6, S7 and S8 exercise the Art. VIII security boundary and
-require standalone founder attention at human gate 1.
+require standalone founder attention at human gate 1. S20 (host theme values
+validated at the protocol boundary) and S21 (the document's content policy)
+joined that boundary with the 2026-11-14 amendment and carry the same
+requirement.
 
 ## Design-source analysis (Figma)
 
@@ -96,6 +99,28 @@ module boundaries for protocol-type leakage.
 
 **Acceptance Scenarios**: S8, S9 and S10.
 
+---
+
+### User Story 4 - The delivered document is the whole surface (Priority: P1)
+
+An MCP server can hand a host nothing but the resource: it cannot inject a
+script or a stylesheet into a self-contained document. So the document the
+adapter delivers carries everything a Kimen surface needs — the definition of
+every catalog component and the design tokens that style them — and follows
+the color scheme its host announces. A host that only speaks the protocol
+shows real, styled, operable Kimen components.
+
+**Why this priority**: without it the adapter renders unknown elements with no
+behavior and no styling in every real host — the declare → resolve → render
+path of User Story 1 ends in nothing a user can use.
+
+**Independent Test**: load the packaged document in a sandboxed frame of a
+real browser, drive it only through `postMessage` as a host would, and
+observe registered, token-styled components, an action reaching the host and
+the color scheme following the host's theme.
+
+**Acceptance Scenarios**: S16, S17, S18, S19, S20 and S21.
+
 ### Edge Cases
 
 - Partial or streaming tool input (`ui/notifications/tool-input-partial`) is
@@ -113,6 +138,19 @@ module boundaries for protocol-type leakage.
   from data) — defense in depth, not delegation to the host.
 - The host never renders the declared surface at all: the text content (S3)
   is the complete degraded experience.
+- A host that announces no theme: the document keeps following the viewer's
+  own color-scheme preference; nothing is guessed.
+- A host that announces host style variables (`hostContext.styles`): they are
+  kept in the host context and not applied — appearance stays token-driven
+  (see Assumptions).
+- XML namespace names (`http://www.w3.org/2000/svg`, `/1999/xhtml`,
+  `/1999/xlink`) appear verbatim in the bundled component runtime because the
+  DOM requires them as identifiers. They are never dereferenced; the
+  self-containment audit (S2) allowlists exactly those three names and
+  nothing else.
+- A catalog component whose content is a network resource (an avatar image,
+  a video source): the document declares no network, so the resource does not
+  load and the component shows its own fallback.
 
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
@@ -238,6 +276,51 @@ Feature: MCP Apps adapter
       Given a surface whose handshake has completed
       When the host sends a request for a method the surface does not implement
       Then the surface answers with a JSON-RPC "method not found" error for that request id
+
+  Rule: The delivered document is a complete Kimen surface
+
+    # S16
+    Scenario: A tool result renders as real, token-styled Kimen components
+      Given the packaged surface document embedded by a host that supplies only protocol messages
+      When the host sends a tool result whose spec contains a ki-button labeled "Confirm"
+      Then "Confirm" renders as a registered Kimen button styled by the Kimen design tokens
+
+    # S17
+    Scenario: Activating a rendered control sends its declared action to the host
+      Given the packaged surface document showing a "Confirm" button bound to the declared action "confirm"
+      When the user activates the button
+      Then the host receives one tools/call request naming the adapter's app-only action tool with the action "confirm"
+
+    # S18
+    Scenario: Every catalog component renders inside the document under its own content policy
+      Given the packaged surface document embedded by an MCP Apps host
+      When the host sends a tool result whose spec contains every component of the neutral catalog
+      Then every component renders as a registered Kimen element
+      And the document reports no content-policy violation
+
+    # S19
+    Scenario Outline: The document follows the host's color scheme
+      Given the packaged surface document embedded by an MCP Apps host
+      When the host announces the theme "<theme>" in <message>
+      Then the document renders in the <theme> color scheme
+
+      Examples:
+        | theme | message                                              |
+        | dark  | its ui/initialize result                             |
+        | light | a ui/notifications/host-context-changed notification |
+
+    # S20
+    Scenario: A theme the protocol does not define leaves the color scheme unchanged
+      Given a surface rendering in the dark color scheme its host announced
+      When the host sends ui/notifications/host-context-changed with the theme "sepia"
+      Then the document stays in the dark color scheme
+
+    # S21
+    Scenario: The content policy admits only the document's own script and stylesheet
+      Given the adapter's packaged surface document
+      When the host audits the document before first render
+      Then its content policy identifies the inline script and the inline stylesheet by digest
+      And the policy permits no other inline script, inline style or evaluated code
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -249,11 +332,11 @@ renderer contract, which this adapter consumes and never re-implements.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S21 | |
 | Keyboard path | | N/A — the adapter adds no interaction pattern; keyboard behavior is each catalog component's own contract |
 | Assistive-tech outcome | | N/A — the accessibility tree is produced by catalog components under their own contracts; the adapter adds no rendered semantics |
 | Form participation | | N/A — form behavior is the components' contract; the adapter transports declared actions, not form controls |
-| Theming | | N/A — appearance flows from the components' token contract (Art. VI); mapping host theme context onto tokens is deferred until the bridge context API is verified (see Assumptions) |
+| Theming | S19, S20 | The host's light/dark theme selects the token color scheme; mapping host style variables onto tokens stays deferred (see Assumptions) |
 
 ## Requirements *(mandatory)*
 
@@ -307,6 +390,21 @@ renderer contract, which this adapter consumes and never re-implements.
   `@kimen/catalog` (Art. VIII: adapters are disposable).
 - **FR-010**: The package MUST join the root packaging validation (publint +
   attw) and the standard gate suite like every publishable package.
+- **FR-011**: The packaged surface document MUST register the definition of
+  every component of the neutral catalog and embed the default token
+  stylesheets inline, so a host that supplies only protocol messages displays
+  operable, token-styled Kimen components. The registered set is derived from
+  the catalog at generation time, never hand-listed (Art. I).
+- **FR-012**: The surface MUST apply the host's color scheme: a `theme` of
+  `light` or `dark` in the host context — in the `ui/initialize` result or a
+  later `ui/notifications/host-context-changed` — selects the document's
+  token color scheme. Any other value is ignored without changing the
+  scheme. Without an announced theme the document follows the viewer's
+  preference.
+- **FR-013**: The document's content policy MUST identify its inline script
+  and inline stylesheet by digest and permit no other inline script, inline
+  style or evaluated code. The document MUST operate inside that policy
+  without raising a violation.
 
 ### Key Entities
 
@@ -331,13 +429,19 @@ renderer contract, which this adapter consumes and never re-implements.
   with its own SemVer; `COMPAT.md` is versioned alongside it. Zero change to
   the public API of `@kimen/elements`, `@kimen/tokens` or `@kimen/catalog`.
 - **Bundle budget** (Art. IV): zero impact on existing package budgets. The
-  surface document embeds the renderer and catalog components, so it
-  receives its own size budget, declared at plan time. Any protocol runtime
+  surface document embeds the renderer, the catalog validator, every catalog
+  component definition and the default token stylesheets, so it receives its
+  own size budget, enforced by the package's test suite
+  (`tests/resource.spec.ts`): at most 600 kB raw, 135 kB gzip and 112 kB
+  brotli — about 5% above the document measured on 2026-11-14 (571 kB raw,
+  128 kB gzip, 106 kB brotli, 29 components). Any protocol runtime
   dependency is subject to the audit-and-pin supply-chain gate.
 - **Accessibility** (Art. V): no new interaction pattern; each catalog
   component's APG pattern applies unchanged inside the surface.
-- **Tokens** (Art. VI): none introduced. Host-theme mapping onto `--ki-*`
-  tokens is explicitly deferred (see Assumptions).
+- **Tokens** (Art. VI): none introduced. The document embeds the default
+  theme's token stylesheet and page contract unchanged and selects their
+  color scheme from the host's theme; mapping host style variables onto
+  `--ki-*` tokens is explicitly deferred (see Assumptions).
 - **Catalog/agent legibility** (Art. I): when-to-use — presenting a Kimen
   surface for an MCP tool's results inside an MCP Apps host. When NOT to use
   — any non-MCP host (use the catalog and renderer directly, or the A2UI
@@ -366,6 +470,11 @@ renderer contract, which this adapter consumes and never re-implements.
 - **SC-005**: The public MCP Apps adapter claim changes from planned only in
   a change where the capabilities gate passes with this feature's green
   evidence listed.
+- **SC-006**: In a real browser, the packaged document — driven only through
+  protocol messages inside a sandboxed frame — registers 100% of the catalog
+  components, renders them token-styled, delivers a user activation to the
+  host as its declared action and follows the host's light/dark theme, with
+  zero content-policy violations.
 
 ## Assumptions
 
@@ -411,9 +520,22 @@ renderer contract, which this adapter consumes and never re-implements.
   even for a host that does not enforce the declared content policy
   (defense in depth: inline-only document, guarded render path, no code
   execution from data).
-- Mapping host theme and style context onto `--ki-*` tokens is out of scope
-  for v1; it enters through a follow-up contract once the bridge context API
-  is verified.
+- **Amendment — the delivered document is the whole surface (2026-11-14)**:
+  the first release declared registering the `ki-*` definitions and loading
+  the tokens "the consuming MCP server's step". A server cannot take that
+  step: the resource is one self-contained document and the host loads
+  nothing else, so every real host displayed unknown elements with no
+  behavior and no styling. Through the Art. II amendment path S16–S21 were
+  appended (no IDs retired): the document now carries every catalog
+  component definition and the default token stylesheets, follows the host's
+  light/dark theme (`McpUiHostContext.theme`, apps.mdx:544-545), and its
+  content policy names its script and stylesheet by digest instead of
+  allowing any inline code.
+- Mapping host **style variables** (`hostContext.styles`, apps.mdx:895-908)
+  onto `--ki-*` tokens stays out of scope: there is no verified one-to-one
+  mapping between the host's standardized variables and the token layers,
+  and a wrong one would silently break contrast. It enters through a
+  follow-up contract. Only the theme (light/dark) is applied.
 - WebMCP is tracked but shapes no API here (Art. VIII).
 - In-repo references for implementers: `.agents/skills/create-mcp-app/SKILL.md`
   and `.agents/skills/mcp-builder/SKILL.md`. Their network and install steps
