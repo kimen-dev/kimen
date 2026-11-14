@@ -19,7 +19,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
  * 1.1.0 (spec 035): UI-spec nodes gain the optional stable `id` — an
  * additive minor the SemVer-compatible version gates accept alongside 1.0.0.
  * 1.2.0: prop constraints gain optional declared limits (`required`,
- * `minimum`, `maximum`) the boundary enforces. Additive again: a 1.2.0 boundary still validates what a
+ * `minimum`, `maximum`, `format`) the boundary enforces. Additive again: a 1.2.0 boundary still validates what a
  * 1.0.0 or 1.1.0 spec says, and a boundary that predates the limits refuses
  * a 1.2.0 catalog instead of validating it under laxer rules (028 FR-012).
  */
@@ -153,6 +153,17 @@ export function buildCatalog(manifest, { elementsVersion }) {
           continue;
         }
         Object.assign(entry, bounds);
+        // `@format url` on the component prop: the value is held to the URL
+        // policy. One format exists; any other shape is a derivation defect.
+        if (attribute.format !== undefined) {
+          if (attribute.format !== 'url' || constraint.type !== 'string') {
+            violations.push(
+              `${tag}.${attribute.name}: unsupported format ${JSON.stringify(attribute.format)} on a ${constraint.type} attribute`,
+            );
+            continue;
+          }
+          entry.format = 'url';
+        }
         props.set(attribute.name, entry);
       }
       components.set(tag, {

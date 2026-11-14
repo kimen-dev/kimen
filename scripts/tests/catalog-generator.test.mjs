@@ -61,3 +61,24 @@ test('S17 a malformed bound fails generation naming the attribute', () => {
     );
   }
 });
+
+test('S19 a string attribute declared with the url format becomes a URL-typed constraint', () => {
+  const props = propsOf([
+    { format: 'url', name: 'source', type: { text: 'string | undefined' } },
+    { name: 'caption', type: { text: 'string | undefined' } },
+  ]);
+  assert.equal(props.source.format, 'url');
+  assert.equal(Object.hasOwn(props.caption, 'format'), false);
+});
+
+test('S19 a format the catalog does not know, or one on a non-string attribute, fails generation', () => {
+  for (const attribute of [
+    { format: 'uri', name: 'source', type: { text: 'string' } },
+    { format: 'url', name: 'count', type: { text: 'number' } },
+  ]) {
+    assert.throws(
+      () => buildCatalog(manifestWith([attribute]), { elementsVersion: '0.0.0' }),
+      new RegExp(`ki-probe\\.${attribute.name}: .*format`, 'u'),
+    );
+  }
+});

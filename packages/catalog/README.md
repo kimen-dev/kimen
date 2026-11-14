@@ -86,6 +86,7 @@ path (`renderUiSpec`, the streaming renderer, the live surface):
 |---|---|---|
 | `required: true` | a prop declared with `!` (`@Prop() label!: string`) | `missing-required-prop` when the node omits the prop, or sets a string to nothing but white space |
 | `minimum`, `maximum` | `@minimum <n>` / `@maximum <n>` JSDoc tags on a number prop | `prop-out-of-range` when the number lies outside the inclusive bounds |
+| `format: 'url'` | a `@format url` JSDoc tag on a string prop | `url-scheme` for any scheme but `http`/`https` (relative references pass); `url-origin` under `allowedUrlOrigins` |
 
 Bounds exist where a component spends work in proportion to a value:
 `ki-indicator` renders one dot per position, so its `count` is bounded to
@@ -96,13 +97,53 @@ A component that degrades gracefully without a prop (a decorative
 validator cannot see adjacent content, so it enforces only what the
 contract states unconditionally.
 
+### URL props and allowed origins
+
+A URL-typed prop is one the browser may load or navigate to the moment the
+attribute is set, so its value is held to a policy that has ONE
+implementation: `validateUiSpec` applies it, and the renderers inherit it by
+validating through the same code.
+
+- **Schemes, always**: `http`, `https` and relative references pass; every
+  other scheme (`javascript:`, `data:`, `blob:`, …) is rejected as
+  `url-scheme`, control-character smuggling such as `java\tscript:`
+  included.
+- **Origins, when you declare them**: any `https` host is accepted by
+  default, so a spec can make the page request an image from a host of its
+  choosing. Pass `allowedUrlOrigins` to close that:
+
+```ts
+const options = { allowedUrlOrigins: ['https://cdn.example.com'] };
+validateUiSpec(spec, options);
+renderUiSpec(spec, { surface, ...options }); // also the streaming renderer and the live surface
+```
+
+With the option present — even as an empty list — every URL prop value must
+be an absolute `http(s)://` URL whose origin is on the list, else
+`url-origin`. That mode is fail-closed: relative and scheme-relative
+references (`/a.png`, `//host/a.png`) are rejected because the boundary
+cannot know the document they resolve against and a same-origin request
+carries the user's credentials; values with inner white space are rejected
+(a multi-URL value names more than one origin); and each entry must be
+written exactly as `URL.origin` prints an origin (`https://cdn.example.com`,
+`https://localhost:8443`) — a host name alone, a trailing slash or a path
+matches nothing, so a typo can only narrow what is accepted.
+
+A prop is URL-typed because its constraint says `format: 'url'`. As a
+backstop, a string prop named like a fetchable native attribute (`src`,
+`href`, `poster`, `srcset`, `action`, `formaction`, `data`, `cite`,
+`background`, `ping`, `xlink:href`) stays URL-typed when its entry declares
+no format; declare the format on your own components instead of relying on
+the name. `ki-qr`'s `value` is deliberately not URL-typed: the component
+encodes it and never loads it, and a QR payload is legitimately any text.
+What a code invites a person to scan is your content decision, like the text
+of an alert.
+
 ### What validation does NOT protect against
 
-URL-scheme allowlisting (`javascript:`, `data:` and other executable
-schemes) and markup inertness are render-path invariants owned by the
-guarded renderer (below): the safe-scheme policy is a render decision, and
-duplicating it in `validateUiSpec` would create two drifting sources for one
-rule (Art. I). Catalog validation is a schema boundary, never content
+Markup inertness is a render-path invariant owned by the guarded renderer
+(below), and a string prop that is not URL-typed is opaque data to
+validation. Catalog validation is a schema boundary, never content
 sanitization — a host that renders outside the guarded renderer is outside
 the guardrail.
 
@@ -132,13 +173,13 @@ A re-render on the same surface replaces the previous tree (and its action
 listeners) atomically once validation succeeds; a rejected re-render leaves
 the previous content intact.
 
-The renderer adds no schema of its own — catalog membership, prop types,
-declared actions and the purity wall all come from the validation layer
-above (Art. I). Over that it enforces the safe-render semantics: **no code
-path from spec data** (text is attached as inert text nodes, never parsed as
-markup; the catalog exposes no event-handler props; URL-typed props accept
-only `http`, `https` and relative references, every other scheme rejected
-naming the prop and scheme), **declared budgets** (depth, node count, payload
+The renderer adds no schema of its own — catalog membership, prop types and
+limits, the URL policy, declared actions and the purity wall all come from
+the validation layer above (Art. I). Over that it enforces the safe-render
+semantics: **no code path from spec data** (text is attached as inert text
+nodes, never parsed as markup; the catalog exposes no event-handler props;
+URL-typed props obey the URL policy above, `allowedUrlOrigins` included),
+**declared budgets** (depth, node count, payload
 size — a spec exactly at a budget renders, one beyond it is rejected before
 any node attaches), **version skew** (a spec declaring an incompatible
 `catalogSchemaVersion` — as a top-level field of the spec document, or via
@@ -250,8 +291,9 @@ depth, not a substitute for registration.
 The returned catalog is deeply frozen — later mutation attempts throw in
 strict mode and can never alter validation or render outcomes. Every
 guardrail invariant applies to registered components identically: unknown
-components and props are rejected relative to the catalog in use, URL-named
-props obey the scheme allowlist, budgets and the version-skew gate fail
+components and props are rejected relative to the catalog in use, declared
+limits (`required`, `minimum`/`maximum`, `format: 'url'`) are enforced, URL
+props obey the URL policy, budgets and the version-skew gate fail
 closed on the complete and streaming paths alike, and the spec format still
 exposes no styling surface — your identity lives in your components and
 your token layer. Accessibility of registered components remains their

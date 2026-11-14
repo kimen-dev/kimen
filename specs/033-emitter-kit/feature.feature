@@ -111,3 +111,9 @@ Feature: Emitter kit
     Given a catalog bounding ki-indicator's "count" to the range 0 to 20
     When the JSON Schema and the prompt are derived
     Then the schema rejects a ki-indicator whose "count" is 21 and the prompt states the range
+
+  # S18
+  Scenario: URL-typed props are flagged in the prompt
+    Given a catalog whose "acme-logo" declares "source" as a URL-typed prop
+    When the prompt is derived
+    Then the prompt marks "source" as a URL and states the schemes the boundary accepts

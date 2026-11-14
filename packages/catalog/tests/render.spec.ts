@@ -541,3 +541,54 @@ describe('renderUiSpec — declared prop constraints bound every render', () => 
     expect(surface.querySelector('ki-indicator')?.getAttribute('count')).toBe('5');
   });
 });
+
+describe('renderUiSpec — the host may restrict URL props to declared origins', () => {
+  const allowedUrlOrigins = ['https://cdn.example.com'];
+  const avatar = (src: string) => ({ component: 'ki-avatar', props: { label: 'Ana García', src } });
+
+  it.each(['https://tracker.example.net/p.gif', '/avatars/ana.png', '//tracker.example.net/p.gif'])(
+    'S23 never renders the URL %j outside the allowed origins',
+    (src) => {
+      const result = renderUiSpec(
+        { version: 1, root: avatar(src) },
+        { allowedUrlOrigins, surface },
+      );
+      expect(result.ok).toBe(false);
+      expect(surface.childNodes).toHaveLength(0);
+      const diagnostic = result.diagnostics[0];
+      expect(diagnostic?.rule).toBe('url-origin');
+      expect(diagnostic?.path).toBe('root.props.src');
+      expect(diagnostic?.message).toContain('"src"');
+
+      const stream = createStreamingRenderer({ allowedUrlOrigins, surface });
+      expect(stream.push(avatar(src)).diagnostics[0]?.rule).toBe('url-origin');
+      expect(surface.childNodes).toHaveLength(0);
+    },
+  );
+
+  it('S23 renders a URL of an allowed origin, complete and streamed', () => {
+    const src = 'https://cdn.example.com/ana.png';
+    expect(renderUiSpec({ version: 1, root: avatar(src) }, { allowedUrlOrigins, surface }).ok).toBe(
+      true,
+    );
+    expect(surface.querySelector('ki-avatar')?.getAttribute('src')).toBe(src);
+    expect(createStreamingRenderer({ allowedUrlOrigins, surface }).push(avatar(src)).ok).toBe(true);
+  });
+
+  it('S23 holds every live batch to the allowed origins, inserts and updates alike', () => {
+    const live = createLiveSurface({ allowedUrlOrigins, surface });
+    const foreign = 'https://tracker.example.net/p.gif';
+    const rejectedInsert = live.apply({ ops: [{ node: avatar(foreign), op: 'insert' }] });
+    expect(rejectedInsert.diagnostics[0]?.rule).toBe('url-origin');
+    expect(surface.childNodes).toHaveLength(0);
+
+    const node = { ...avatar('https://cdn.example.com/ana.png'), id: 'ana' };
+    expect(live.apply({ ops: [{ node, op: 'insert' }] }).ok).toBe(true);
+    const rejectedSet = live.apply({ ops: [{ id: 'ana', op: 'set', props: { src: foreign } }] });
+    expect(rejectedSet.ok).toBe(false);
+    expect(rejectedSet.diagnostics[0]?.rule).toBe('url-origin');
+    expect(surface.querySelector('ki-avatar')?.getAttribute('src')).toBe(
+      'https://cdn.example.com/ana.png',
+    );
+  });
+});

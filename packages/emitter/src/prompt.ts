@@ -26,11 +26,12 @@ function propLine(name: string, constraint: CatalogPropConstraint): string {
     constraint.type === 'enum'
       ? `enum: ${(constraint.values ?? []).map((value) => `"${value}"`).join(' | ')}`
       : `${constraint.type}${rangeText(constraint)}`;
+  const url = constraint.format === 'url' ? ', URL' : '';
   const required = constraint.required === true ? ', required' : '';
   const description = constraint.description === '' ? '' : ` — ${constraint.description}`;
   const fallback =
     constraint.default === undefined ? '' : ` (default: ${JSON.stringify(constraint.default)})`;
-  return `  - \`${name}\` (${kind}${required})${description}${fallback}`;
+  return `  - \`${name}\` (${kind}${url}${required})${description}${fallback}`;
 }
 
 /** A value that satisfies a prop constraint, for the embedded example. */
@@ -46,7 +47,7 @@ function exampleValue(constraint: CatalogPropConstraint): boolean | number | str
     case 'enum':
       return constraint.values?.[0] ?? '';
     default:
-      return 'Example';
+      return constraint.format === 'url' ? 'https://example.com/example' : 'Example';
   }
 }
 
@@ -143,6 +144,7 @@ export function catalogPrompt(
     '- A <node> is {"component": "<tag>", "props": {...}, "action": "<name>", "slots": {"<slot>": [<node or "text">, ...]}}; "props", "action" and "slots" are optional.',
     '- Only the components listed below exist. Only their listed props. Enum props allow only their listed values.',
     '- Props marked "required" MUST be present with a non-blank value: a spec that omits one is rejected.',
+    '- Props marked "URL" accept only http(s) URLs or relative references; every other scheme is rejected, and the host may accept only absolute URLs of the origins it allows.',
     '- Every "action" you bind MUST appear in the top-level "actions" list; actions are named intents delivered to the host as data.',
     '- Slot children are nodes or plain text strings — never HTML, never code, never URLs with schemes other than http(s).',
     '- Styling is not expressible in a spec; appearance belongs to the host theme.',

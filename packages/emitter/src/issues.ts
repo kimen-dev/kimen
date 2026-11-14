@@ -83,6 +83,7 @@ function isConstraintShaped(value: unknown): boolean {
     (value['values'] === undefined || isStringArray(value['values'])) &&
     (value['documentedValues'] === undefined || isStringArray(value['documentedValues'])) &&
     (value['required'] === undefined || typeof value['required'] === 'boolean') &&
+    (value['format'] === undefined || value['format'] === 'url') &&
     isOptionalFinite(value['minimum']) &&
     isOptionalFinite(value['maximum']) &&
     scalarDefault

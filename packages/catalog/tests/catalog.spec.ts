@@ -15,6 +15,7 @@ interface ManifestDeclaration {
   whenNotToUse?: string;
   attributes?: {
     name: string;
+    format?: string;
     maximum?: number;
     minimum?: number;
     required?: boolean;
@@ -116,6 +117,19 @@ describe('catalog derivation', () => {
         );
         expect(constraint?.maximum, `${declaration.tagName}.${attribute.name}`).toBe(
           attribute.maximum,
+        );
+      }
+    }
+  });
+
+  it('S19 marks as URL-typed exactly the props the manifest declares with the url format', () => {
+    for (const declaration of manifestElements) {
+      const entry =
+        catalogData.components[declaration.tagName as keyof typeof catalogData.components];
+      const props: Record<string, { format?: string }> = entry.props;
+      for (const attribute of declaration.attributes ?? []) {
+        expect(props[attribute.name]?.format, `${declaration.tagName}.${attribute.name}`).toBe(
+          attribute.format,
         );
       }
     }

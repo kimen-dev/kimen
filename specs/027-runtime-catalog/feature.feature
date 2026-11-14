@@ -136,3 +136,42 @@ Feature: Neutral runtime catalog
       | count   | 1000000 |
       | count   | -1      |
       | current | 0       |
+
+  # Family: core behavior — URL policy at the validation boundary
+  # S19
+  Scenario: A prop the component contract declares URL-typed is URL-typed in the catalog
+    Given the manifest declares a string attribute with the URL format
+    When the catalog is generated
+    Then the catalog marks that prop as URL-typed
+
+  # S20
+  Scenario Outline: An executable URL value is rejected at validation
+    Given a UI spec setting ki-avatar's "src" to "<value>"
+    When the spec is validated against the catalog
+    Then validation rejects the spec naming "src" and the rejected scheme
+
+    Examples:
+      | value                     |
+      | javascript:alert(1)       |
+      | data:image/svg+xml,<svg/> |
+
+  # S21
+  Scenario Outline: With allowed origins declared, only URLs from those origins are accepted
+    Given validation restricted to the URL origin "https://cdn.example.com"
+    And a UI spec setting ki-avatar's "src" to "<value>"
+    When the spec is validated against the catalog
+    Then validation <outcome>
+
+    Examples:
+      | value                             | outcome                                              |
+      | https://cdn.example.com/ana.png   | accepts the spec                                     |
+      | https://tracker.example.net/p.gif | rejects the spec naming "src" and the foreign origin |
+      | /avatars/ana.png                  | rejects the spec naming "src" as not absolute        |
+      | //tracker.example.net/p.gif       | rejects the spec naming "src" as not absolute        |
+
+  # S22
+  Scenario: A QR code's value is data, not a URL the page loads
+    Given validation restricted to the URL origin "https://cdn.example.com"
+    And a UI spec setting ki-qr's "value" to "https://other.example.org/menu"
+    When the spec is validated against the catalog
+    Then validation accepts the spec

@@ -7,17 +7,22 @@
  * accepted; everything else is rejected with issues naming the offending
  * component, prop, value or action and its location.
  *
- * What this boundary does NOT protect against (FR-015): URL-scheme
- * allowlisting (`javascript:`, `data:` and other executable schemes) and
- * markup inertness are render-path invariants owned by the guarded renderer
- * (spec 028) — the safe-scheme policy is a render decision, and duplicating
- * it here would create two drifting sources for one rule (Art. I). Catalog
- * validation is a schema boundary, never content sanitization; a host that
- * renders outside the guarded renderer is outside the guardrail.
+ * The URL policy is part of this boundary (FR-018): a URL-typed prop is held
+ * to the scheme allowlist and, when the host declares them, to the allowed
+ * origins — by the one implementation in `url-policy.ts`, which the guarded
+ * renderer inherits by validating through this module (Art. I).
+ *
+ * What this boundary does NOT protect against (FR-015): markup inertness is
+ * a render-path invariant owned by the guarded renderer (spec 028), and a
+ * string prop that is not URL-typed is opaque data here — `ki-qr`'s `value`
+ * is encoded, never loaded. Catalog validation is a schema boundary, never
+ * content sanitization; a host that renders outside the guarded renderer is
+ * outside the guardrail.
  */
 import { z } from 'zod';
 
 import { catalogData } from './generated/catalog.js';
+import { isUrlProp, urlViolation } from './url-policy.js';
 
 /** One prop constraint, exactly as narrow as the manifest documents. */
 export interface CatalogPropConstraint {
@@ -43,6 +48,12 @@ export interface CatalogPropConstraint {
    * with `prop-out-of-range`. Absent means unbounded above.
    */
   readonly maximum?: number;
+  /**
+   * `'url'` marks a `string` prop the browser may load or navigate to: its
+   * value must pass the URL policy (`url-scheme`, and `url-origin` under
+   * `allowedUrlOrigins`). Absent means opaque text.
+   */
+  readonly format?: 'url';
   readonly description: string;
 }
 
@@ -116,7 +127,9 @@ export interface ValidationIssue {
     | 'undeclared-action'
     | 'unknown-component'
     | 'unknown-prop'
-    | 'unknown-slot';
+    | 'unknown-slot'
+    | 'url-origin'
+    | 'url-scheme';
   /** Location in the spec document, e.g. `root.slots.footer[0].props.tone`. */
   readonly path: string;
   readonly message: string;
@@ -410,6 +423,41 @@ function rangeViolation(value: number, constraint: CatalogPropConstraint): strin
   return minimum === undefined ? `at most ${String(maximum)}` : `at least ${String(minimum)}`;
 }
 
+/** What every node check of one validation run shares. */
+interface CheckContext {
+  readonly declaredActions: ReadonlySet<string>;
+  readonly entries: Readonly<Record<string, CatalogEntry>>;
+  readonly ids: Set<string>;
+  readonly issues: ValidationIssue[];
+  readonly allowedUrlOrigins: readonly string[] | undefined;
+}
+
+/**
+ * The URL policy over one prop value (S20, S21): applied to every string
+ * under a URL-typed prop, whatever else the constraint says about it.
+ */
+function checkUrl(
+  component: string,
+  name: string,
+  value: boolean | number | string,
+  constraint: CatalogPropConstraint,
+  path: string,
+  context: CheckContext,
+): void {
+  if (typeof value !== 'string' || !isUrlProp(name, constraint)) {
+    return;
+  }
+  const violation = urlViolation(value, context.allowedUrlOrigins);
+  if (violation !== null) {
+    context.issues.push({
+      code: violation.code,
+      message: `${component} URL prop "${name}" ${violation.reason}`,
+      path,
+      value,
+    });
+  }
+}
+
 function checkProp(
   component: string,
   name: string,
@@ -539,14 +587,8 @@ export function ownEntry<T>(
   return record !== undefined && Object.hasOwn(record, name) ? record[name] : undefined;
 }
 
-function checkNode(
-  node: UiSpecNode,
-  path: string,
-  declaredActions: ReadonlySet<string>,
-  issues: ValidationIssue[],
-  entries: Readonly<Record<string, CatalogEntry>>,
-  ids = new Set<string>(),
-): void {
+function checkNode(node: UiSpecNode, path: string, context: CheckContext): void {
+  const { declaredActions, entries, ids, issues } = context;
   checkId(node, path, ids, issues);
   const entry = ownEntry(entries, node.component);
   if (entry === undefined) {
@@ -569,7 +611,9 @@ function checkNode(
       continue;
     }
     if (constraint !== undefined) {
-      checkProp(node.component, name, value, constraint, `${path}.props.${name}`, issues);
+      const propPath = `${path}.props.${name}`;
+      checkProp(node.component, name, value, constraint, propPath, issues);
+      checkUrl(node.component, name, value, constraint, propPath, context);
     }
   }
   if (entry !== undefined) {
@@ -594,14 +638,7 @@ function checkNode(
     }
     children.forEach((child, index) => {
       if (typeof child !== 'string') {
-        checkNode(
-          child,
-          `${path}.slots.${slotName}[${String(index)}]`,
-          declaredActions,
-          issues,
-          entries,
-          ids,
-        );
+        checkNode(child, `${path}.slots.${slotName}[${String(index)}]`, context);
       }
     });
   }
@@ -649,17 +686,31 @@ export function toPlainData(
   return snapshotPlainData(input, maxBytes, labels);
 }
 
+/** What one validation run is checked against, beyond the spec itself. */
+export interface ValidationContext {
+  /** The catalog in use (spec 032); absent, the built-in generated catalog. */
+  readonly catalog?: Catalog | undefined;
+  /**
+   * The allowed origins of URL props (FR-018). Absent, URL props are held to
+   * the scheme allowlist alone. Present — even empty — every URL prop value
+   * must be an absolute http(s) URL whose origin is listed exactly as
+   * `URL.origin` prints it (`https://cdn.example.com`); relative references
+   * are rejected, and an entry in any other form matches nothing.
+   */
+  readonly allowedUrlOrigins?: readonly string[] | undefined;
+}
+
 /**
  * Validates already-plain data (a `toPlainData` clone) against the catalog
  * in use: neutral-format shape, catalog membership, prop types, required
- * props, numeric bounds, declared actions and slots. Returns the typed spec alongside the report so a caller
- * that will render (spec 028) never re-parses. Never touches untrusted input
- * directly. `catalog` selects the catalog in use (spec 032); absent, the
- * built-in generated catalog applies.
+ * props, numeric bounds, the URL policy, declared actions and slots. Returns
+ * the typed spec alongside the report so a caller that will render (spec
+ * 028) never re-parses. Never touches untrusted input directly. `ids`
+ * carries the node ids already seen when several roots share one surface.
  */
 export function validatePlainData(
   data: unknown,
-  catalog?: Catalog,
+  context: ValidationContext = {},
   ids = new Set<string>(),
 ): ValidationReport & { spec?: UiSpec } {
   const parsed = uiSpecSchema.safeParse(data);
@@ -675,15 +726,13 @@ export function validatePlainData(
   }
 
   const issues: ValidationIssue[] = [];
-  const declaredActions = new Set(parsed.data.actions ?? []);
-  checkNode(
-    parsed.data.root,
-    'root',
-    declaredActions,
-    issues,
-    (catalog ?? builtInCatalog).components,
+  checkNode(parsed.data.root, 'root', {
+    allowedUrlOrigins: context.allowedUrlOrigins,
+    declaredActions: new Set(parsed.data.actions ?? []),
+    entries: (context.catalog ?? builtInCatalog).components,
     ids,
-  );
+    issues,
+  });
   return { issues, ok: issues.length === 0, spec: parsed.data };
 }
 
@@ -694,16 +743,17 @@ export function validatePlainData(
  * object input crosses the iterative snapshot wall (budgets enforced while
  * walking, foreign code never invoked, see `snapshotPlainData`) — nothing
  * outside the spec is ever mutated, every check runs on the plain-data
- * clone, and every rejection names its offender.
+ * clone, and every rejection names its offender. `allowedUrlOrigins`
+ * restricts URL props to declared origins (see `ValidationContext`).
  */
 export function validateUiSpec(
   input: unknown,
-  options: { readonly maxBytes?: number; readonly catalog?: Catalog } = {},
+  options: ValidationContext & { readonly maxBytes?: number } = {},
 ): ValidationReport {
   const { data, issues } = toPlainData(input, options.maxBytes ?? VALIDATION_MAX_BYTES);
   if (issues.length > 0) {
     return { issues, ok: false };
   }
-  const report = validatePlainData(data, options.catalog);
+  const report = validatePlainData(data, options);
   return { issues: report.issues, ok: report.ok };
 }

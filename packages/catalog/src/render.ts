@@ -6,10 +6,10 @@
  * bound every render, including the accumulated state of a stream.
  *
  * The renderer owns the SAFE-RENDER semantics over the neutral format of
- * spec 027 (budgets, the URL allowlist, streaming attachment) and adds no
- * schema of its own: catalog membership, prop types, declared actions and
- * the purity wall all come from `@kimen/catalog`'s validation layer
- * (Art. I, one source of truth). It is client-side (touches `document`);
+ * spec 027 (budgets, inert attachment, streaming) and adds no schema of its
+ * own: catalog membership, prop types and limits, the URL policy, declared
+ * actions and the purity wall all come from `@kimen/catalog`'s validation
+ * layer (Art. I, one source of truth). It is client-side (touches `document`);
  * SSR/DSD is a deferred bet.
  */
 import { catalogData } from './generated/catalog.js';
@@ -21,6 +21,7 @@ import type {
   CatalogPropConstraint,
   UiSpec,
   UiSpecNode,
+  ValidationContext,
 } from './validate.js';
 import { ownEntry, toPlainData, validatePlainData } from './validate.js';
 
@@ -95,29 +96,15 @@ export interface RenderOptions {
    * this catalog in use; it is never half-applied (032 FR-011).
    */
   readonly catalog?: Catalog;
+  /**
+   * The allowed origins of URL props (FR-004, S23). Absent, URL props are
+   * held to the scheme allowlist alone. Present — even empty — every URL
+   * prop value must be an absolute http(s) URL whose origin is listed
+   * exactly as `URL.origin` prints it (`https://cdn.example.com`); relative
+   * references are rejected, and an entry in any other form matches nothing.
+   */
+  readonly allowedUrlOrigins?: readonly string[];
 }
-
-/**
- * URL-bearing prop names, as a renderer-wide policy rather than a
- * per-component schema (FR-011): any string prop under one of these names is
- * held to the URL allowlist. Component-agnostic and conservative — the same
- * attribute names a browser treats as fetchable/navigable.
- */
-const URL_PROP_NAMES = new Set([
-  'action',
-  'background',
-  'cite',
-  'data',
-  'formaction',
-  'href',
-  'ping',
-  'poster',
-  'src',
-  'srcset',
-  'xlink:href',
-]);
-
-const SUPPORTED_SCHEMES = new Set(['http', 'https']);
 
 // HTML inline event-handler content attributes: setting one via setAttribute
 // installs executable code, so the renderer rejects the whole on* namespace
@@ -131,32 +118,6 @@ const EVENT_HANDLER_PROP = /^on/iu;
 // (fail-closed diagnostic instead). Every built-in catalog prop name satisfies
 // it, so normal rendering is unaffected.
 const SAFE_PROP_NAME = /^[a-z][a-z0-9_-]*$/u;
-
-/**
- * The scheme of a URL value that is NOT on the allowlist, or null when the
- * value is a relative reference or an http(s) URL (FR-004). Control
- * characters and surrounding whitespace are stripped first, so
- * `java\tscript:` and leading-newline tricks cannot smuggle a live scheme
- * past the check.
- */
-function offendingScheme(value: string): string | null {
-  // Strip the C0/C1 controls and spaces a browser ignores when resolving
-  // a URL scheme (defeats `java\tscript:` and leading-newline tricks) by
-  // code point, so no control-character regex literal is needed.
-  let normalized = '';
-  for (const character of value) {
-    const code = character.codePointAt(0) ?? 0;
-    if (code > 0x20 && !(code >= 0x7f && code <= 0x9f)) {
-      normalized += character;
-    }
-  }
-  const match = /^([a-zA-Z][a-zA-Z0-9+.-]*):/u.exec(normalized);
-  if (match === null) {
-    return null;
-  }
-  const scheme = (match[1] ?? '').toLowerCase();
-  return SUPPORTED_SCHEMES.has(scheme) ? null : scheme;
-}
 
 export interface GuardState {
   nodes: number;
@@ -184,8 +145,9 @@ export function declaredEvents(entry: CatalogEntry | undefined): readonly string
 
 /**
  * Renderer-native guards over the already-catalog-validated tree (plain,
- * safe data): node-count and depth budgets and the URL allowlist. Catalog
- * membership, prop types, actions and slots were already enforced upstream.
+ * safe data): node-count and depth budgets, the tag grammar, the activation
+ * event and the prop-name guards. Catalog membership, prop types and limits,
+ * the URL policy, actions and slots were already enforced upstream.
  */
 export function guardNode(node: UiSpecNode, path: string, depth: number, state: GuardState): void {
   state.nodes += 1;
@@ -234,7 +196,7 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
       });
     }
   }
-  for (const [name, value] of Object.entries(node.props ?? {})) {
+  for (const name of Object.keys(node.props ?? {})) {
     // Renderer-native name guard (defence in depth for hand-built catalogs that
     // never crossed createCatalog): an on* name would compile into a live
     // inline handler, and an exotic name would throw InvalidCharacterError out
@@ -258,17 +220,6 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
       });
       continue;
     }
-    if (typeof value === 'string' && URL_PROP_NAMES.has(name.toLowerCase())) {
-      const scheme = offendingScheme(value);
-      if (scheme !== null) {
-        state.diagnostics.push({
-          message: `${node.component} URL prop "${name}" uses the rejected scheme "${scheme}"`,
-          path: `${path}.props.${name}`,
-          rule: 'url-scheme',
-          value,
-        });
-      }
-    }
   }
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
     children.forEach((child, index) => {
@@ -291,7 +242,7 @@ export function payloadBytes(data: unknown): number {
 /**
  * The live-state props a declared-event activation reports (FR-003, S17): the
  * control's own value channel, which the user changes in place. A renderer-
- * wide policy like the URL prop names, applied only where the entry declares
+ * wide policy, applied only where the entry declares
  * the prop and only when the live value has the declared type, so nothing
  * undeclared or mistyped ever crosses the action channel.
  */
@@ -535,16 +486,18 @@ export function versionDiagnostic(
 
 /**
  * The shared validation pipeline for one spec/node payload: purity wall →
- * catalog-schema-version gate → catalog validation → renderer guards
- * (budgets, URL allowlist). Returns the typed spec only when every layer
- * passes; otherwise fail-closed diagnostics and no spec.
+ * catalog-schema-version gate → catalog validation (URL policy included) →
+ * renderer guards (budgets, tag and prop-name guards). Returns the typed
+ * spec only when every layer passes; otherwise fail-closed diagnostics and
+ * no spec.
  */
 function prepare(
   input: unknown,
   budgets: RenderBudgets,
   optionsVersion: string | undefined,
-  catalog: Catalog,
+  context: ValidationContext & { readonly catalog: Catalog },
 ): PreparedSpec {
+  const { catalog } = context;
   const { data, issues } = toPlainData(input, ABSOLUTE_MAX_BYTES);
   if (issues.length > 0) {
     return { diagnostics: issues.map(toDiagnostic), spec: undefined as unknown as UiSpec };
@@ -583,7 +536,7 @@ function prepare(
       spec: undefined as unknown as UiSpec,
     };
   }
-  const report = validatePlainData(data, catalog);
+  const report = validatePlainData(data, context);
   if (!report.ok || report.spec === undefined) {
     return {
       diagnostics: report.issues.map(toDiagnostic),
@@ -624,7 +577,10 @@ export function toDiagnostic(issue: {
 export function renderUiSpec(input: unknown, options: RenderOptions): RenderResult {
   const budgets: RenderBudgets = { ...DEFAULT_RENDER_BUDGETS, ...options.budgets };
   const catalog = options.catalog ?? builtInCatalog;
-  const prepared = prepare(input, budgets, options.catalogSchemaVersion, catalog);
+  const prepared = prepare(input, budgets, options.catalogSchemaVersion, {
+    allowedUrlOrigins: options.allowedUrlOrigins,
+    catalog,
+  });
   if (prepared.diagnostics.length > 0) {
     return { diagnostics: prepared.diagnostics, ok: false };
   }
@@ -663,6 +619,7 @@ export function createStreamingRenderer(
   // The catalog in use is fixed at creation (032 S16): every pushed chunk
   // validates and renders against the same catalog for the stream's life.
   const catalog = options.catalog ?? builtInCatalog;
+  const context: ValidationContext = { allowedUrlOrigins: options.allowedUrlOrigins, catalog };
   const doc = ownerDocument(options.surface);
   const declaredActions = options.actions ?? [];
   let accumulatedBytes = 0;
@@ -709,7 +666,7 @@ export function createStreamingRenderer(
         };
         return { diagnostics: [halted], ok: false };
       }
-      const report = validatePlainData(data, catalog);
+      const report = validatePlainData(data, context);
       if (!report.ok || report.spec === undefined) {
         // FR-008: an invalid chunk halts the stream fail-closed; its subtree
         // never attaches and previously validated content remains.

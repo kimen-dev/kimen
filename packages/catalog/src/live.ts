@@ -6,8 +6,9 @@
  * state it would PRODUCE: the purity wall over the whole batch, the batch
  * shape and per-batch budgets, then every op applied to a copy of the state
  * (each new node validated as a spec root), then the resulting state
- * validated as a whole (catalog membership, props, actions, slots, unique
- * ids, tag grammar, prop-name guards, URL allowlist, state budgets). Only a
+ * validated as a whole (catalog membership, props and their limits, the URL
+ * policy, actions, slots, unique ids, tag grammar, prop-name guards, state
+ * budgets). Only a
  * batch that passes every layer touches the DOM, and it touches only what it
  * names: existing elements keep their identity, focus, typed values and
  * scroll. A rejected batch changes nothing and the surface stays live.
@@ -37,7 +38,13 @@ import {
   wireActivation,
   writeProp,
 } from './render.js';
-import type { Catalog, CatalogEntry, UiSpecNode, ValidationIssue } from './validate.js';
+import type {
+  Catalog,
+  CatalogEntry,
+  UiSpecNode,
+  ValidationContext,
+  ValidationIssue,
+} from './validate.js';
 import { FORBIDDEN_KEYS, ownEntry, toPlainData, validatePlainData } from './validate.js';
 
 type Scalar = boolean | number | string;
@@ -70,6 +77,13 @@ export interface LiveSurfaceOptions {
   readonly surface: Element;
   /** The catalog in use, fixed for the surface's life (032 S16); default built-in. */
   readonly catalog?: Catalog;
+  /**
+   * The allowed origins of URL props, fixed for the surface's life: absent,
+   * the scheme allowlist alone; present, every URL prop value in the
+   * resulting state must be an absolute http(s) URL of a listed origin
+   * (see `RenderOptions.allowedUrlOrigins`).
+   */
+  readonly allowedUrlOrigins?: readonly string[];
   /** The declared actions, fixed for the surface's life. */
   readonly actions?: readonly string[];
   /** Budgets of the RESULTING state (depth, node count, payload bytes). */
@@ -826,6 +840,9 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   const onAction = options.onAction;
   const allowUserStateOverride = options.allowUserStateOverride === true;
   const skew = versionDiagnostic(options.catalogSchemaVersion, catalog.catalogSchemaVersion);
+  // What every validation of this surface is checked against (FR-004): the
+  // catalog and the URL origins are fixed at creation, never per batch.
+  const context: ValidationContext = { allowedUrlOrigins: options.allowedUrlOrigins, catalog };
   const live: MState = { ids: new Map(), roots: [] };
   let revision = 0;
   let cached: LiveSnapshot | null = null;
@@ -939,7 +956,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     raw: unknown,
     at: string,
   ): { node?: UiSpecNode; diagnostics: RenderDiagnostic[] } => {
-    const report = validatePlainData({ actions, root: raw, version: 1 }, catalog);
+    const report = validatePlainData({ actions, root: raw, version: 1 }, context);
     if (!report.ok || report.spec === undefined) {
       return { diagnostics: report.issues.map((issue) => rebase(issue, `${at}.node`)) };
     }
@@ -961,7 +978,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
     const diagnostics: RenderDiagnostic[] = [];
     plain.forEach((root, index) => {
       const at = `surface[${String(index)}]`;
-      const report = validatePlainData({ actions, root, version: 1 }, catalog, ids);
+      const report = validatePlainData({ actions, root, version: 1 }, context, ids);
       if (!report.ok || report.spec === undefined) {
         diagnostics.push(...report.issues.map((issue) => rebase(issue, at)));
         return;

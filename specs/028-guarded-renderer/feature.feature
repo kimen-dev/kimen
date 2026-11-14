@@ -217,3 +217,19 @@ Feature: Guarded renderer
       When the renderer validates the spec
       Then no part of the spec renders
       And the diagnostic names ki-indicator, "count" and the declared maximum
+
+  Rule: The host may restrict URL props to declared origins
+
+    # S23
+    Scenario Outline: With allowed origins declared, a URL outside them never renders
+      Given a renderer restricted to the URL origin "https://cdn.example.com"
+      And a spec setting ki-avatar's "src" to "<value>"
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names "src" and the rule "url-origin"
+
+      Examples:
+        | value                             |
+        | https://tracker.example.net/p.gif |
+        | /avatars/ana.png                  |
+        | //tracker.example.net/p.gif       |

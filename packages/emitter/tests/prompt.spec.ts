@@ -127,6 +127,36 @@ describe('catalogPrompt', () => {
     expect(validateUiSpec(example, { catalog: created.catalog }).issues).toEqual([]);
   });
 
+  it('S18 flags URL-typed props in the prompt and states the accepted schemes', () => {
+    const created = createCatalog({
+      components: {
+        'acme-logo': {
+          description: 'A partner logo.',
+          events: {},
+          props: {
+            caption: { description: 'Caption.', type: 'string' },
+            source: { description: 'Logo image.', format: 'url', required: true, type: 'string' },
+          },
+          slots: {},
+          tag: 'acme-logo',
+          whenNotToUse: 'Decoration.',
+          whenToUse: 'Show a partner brand.',
+        },
+      },
+    });
+    if (!created.ok) {
+      throw new Error(`fixture catalog must register: ${created.issues[0]?.message ?? ''}`);
+    }
+    const prompt = promptOrThrow(created.catalog);
+    expect(prompt).toMatch(/- `source` \(string, URL, required\)/u);
+    expect(prompt).toMatch(/- `caption` \(string\)/u);
+    expect(prompt).toContain('Props marked "URL" accept only http(s) URLs or relative references');
+    // The example supplies the required URL prop with a value the boundary accepts.
+    const fence = /```json\n([\s\S]*?)\n```/u.exec(prompt);
+    const example: unknown = JSON.parse(fence?.[1] ?? 'null');
+    expect(validateUiSpec(example, { catalog: created.catalog }).issues).toEqual([]);
+  });
+
   it('S10 stamps the catalog schema version on the prompt', () => {
     expect(promptOrThrow(catalogData)).toContain(catalogData.catalogSchemaVersion);
   });

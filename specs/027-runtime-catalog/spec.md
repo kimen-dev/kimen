@@ -310,6 +310,45 @@ Feature: Neutral runtime catalog
       | count   | 1000000 |
       | count   | -1      |
       | current | 0       |
+
+  # Family: core behavior — URL policy at the validation boundary
+  # S19
+  Scenario: A prop the component contract declares URL-typed is URL-typed in the catalog
+    Given the manifest declares a string attribute with the URL format
+    When the catalog is generated
+    Then the catalog marks that prop as URL-typed
+
+  # S20
+  Scenario Outline: An executable URL value is rejected at validation
+    Given a UI spec setting ki-avatar's "src" to "<value>"
+    When the spec is validated against the catalog
+    Then validation rejects the spec naming "src" and the rejected scheme
+
+    Examples:
+      | value                     |
+      | javascript:alert(1)       |
+      | data:image/svg+xml,<svg/> |
+
+  # S21
+  Scenario Outline: With allowed origins declared, only URLs from those origins are accepted
+    Given validation restricted to the URL origin "https://cdn.example.com"
+    And a UI spec setting ki-avatar's "src" to "<value>"
+    When the spec is validated against the catalog
+    Then validation <outcome>
+
+    Examples:
+      | value                             | outcome                                              |
+      | https://cdn.example.com/ana.png   | accepts the spec                                     |
+      | https://tracker.example.net/p.gif | rejects the spec naming "src" and the foreign origin |
+      | /avatars/ana.png                  | rejects the spec naming "src" as not absolute        |
+      | //tracker.example.net/p.gif       | rejects the spec naming "src" as not absolute        |
+
+  # S22
+  Scenario: A QR code's value is data, not a URL the page loads
+    Given validation restricted to the URL origin "https://cdn.example.com"
+    And a UI spec setting ki-qr's "value" to "https://other.example.org/menu"
+    When the spec is validated against the catalog
+    Then validation accepts the spec
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -322,7 +361,7 @@ in specs 002–016.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22 | |
 | Keyboard path | | N/A — no interactive surface; the catalog is data consumed by machines |
 | Assistive-tech outcome | | N/A — nothing renders; accessibility contracts live in the component specs the catalog describes |
 | Form participation | | N/A — no form control is introduced; form components are described by entries, not implemented here |
@@ -400,13 +439,14 @@ in specs 002–016.
   (depth, node count, accumulated stream) remain the renderer's contract
   (028 FR-006).
 - **FR-015**: The validation API MUST document what it does NOT protect
-  against: URL-scheme allowlisting (`javascript:`, `data:` and other
-  executable schemes) and markup inertness are render-path invariants owned
-  by the guarded renderer (028 FR-004, its S6/S7), because the safe-scheme
-  policy is a render decision and duplicating it here would create two
-  drifting sources for one rule (Art. I). Catalog validation is a schema
-  boundary, never content sanitization; a host that renders outside the
-  guarded renderer is outside the guardrail.
+  against: markup inertness is a render-path invariant owned by the guarded
+  renderer (028 FR-004, its S6), and a string prop that is not URL-typed is
+  opaque data to validation. Catalog validation is a schema boundary, never
+  content sanitization; a host that renders outside the guarded renderer is
+  outside the guardrail. (The original text also left URL-scheme
+  allowlisting to the renderer, to avoid two sources for one rule; FR-018
+  keeps the single source and moves it here, so a spec the validator
+  accepts is no longer one the renderer rejects for its URLs.)
 
 - **FR-016**: A prop the component contract declares required MUST be
   marked `required` in its catalog entry, and validation MUST reject a node
@@ -437,6 +477,35 @@ in specs 002–016.
   position: `count` 0 to 20, `current` 1 to 20); a prop the component
   already clamps at constant cost (`ki-progress` `value` and `max`) needs
   none.
+- **FR-018**: The URL policy is part of the validation boundary, in ONE
+  implementation that every render path inherits by validating through it
+  (Art. I): a string value under a URL-typed prop MUST use `http`, `https`
+  or be a relative reference, and any other scheme is rejected with
+  `url-scheme` naming the prop and the scheme (S20; control characters and
+  white space are stripped before the scheme is read). A prop is URL-typed
+  because its catalog constraint says `format: 'url'`, derived from a
+  `@format url` JSDoc tag on the component prop through the manifest (S19)
+  — a malformed tag fails the build. As a backstop, a string prop named
+  like a fetchable or navigable native attribute (`src`, `href`, `poster`,
+  `srcset`, `action`, `formaction`, `data`, `cite`, `background`, `ping`,
+  `xlink:href`) stays URL-typed when its entry declares no format, so a
+  catalog written before the field existed, or built by hand, is never
+  less protected than before. Validation and rendering MUST accept an
+  explicit list of allowed URL origins: absent, the scheme rule alone
+  applies (the behavior before this requirement); present — even empty —
+  every URL prop value MUST be an absolute `http(s)://` URL whose origin,
+  as the platform URL parser resolves it, is listed exactly as `URL.origin`
+  serializes it, else `url-origin` names the prop and the origin (S21).
+  That mode is fail-closed by construction: relative and scheme-relative
+  references, single-slash and backslash forms and values with inner white
+  space are rejected (the boundary cannot know the document they resolve
+  against, and a multi-URL value names more than one origin), and an entry
+  in any other form matches nothing, so a typo can only narrow what is
+  accepted. `ki-qr`'s `value` is deliberately NOT URL-typed (S22): the
+  component encodes it and never loads, resolves or navigates to it, a QR
+  payload is legitimately any text (Wi-Fi, vCard, `mailto:`), and what a
+  code invites a person to scan is a content decision of the host, like
+  the text of a `ki-alert`, not a resource the page loads.
 
 ### Key Entities
 
@@ -476,12 +545,14 @@ in specs 002–016.
   (S13, S14). A spec that validates is also one the component contract
   calls usable: the props the contract requires are present (S15, S16)
   and a number stays inside the bounds the contract declares, so a spec
-  value cannot make a component do unbounded work (S17, S18).
-  The rendering half ("only catalog components render", "no
-  code-execution path exists from spec data" at render time, URL-scheme
-  allowlisting) is delivered and adversarially tested by spec 028; the two
-  specs jointly cover the four invariants. S5–S8, S13, S14, S16 and S18 require
-  explicit founder confirmation at gate 1.
+  value cannot make a component do unbounded work (S17, S18). The URL
+  policy lives here too, in one implementation: executable schemes are
+  rejected at validation and a host may restrict URL props to declared
+  origins (S19–S22). The rendering half ("only catalog components render",
+  "no code-execution path exists from spec data" at render time, markup
+  inertness) is delivered and adversarially tested by spec 028; the two
+  specs jointly cover the four invariants. S5–S8, S13, S14, S16, S18 and
+  S20–S22 require explicit founder confirmation at gate 1.
 
 ## Success Criteria *(mandatory)*
 

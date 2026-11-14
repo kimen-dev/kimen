@@ -361,6 +361,22 @@ Feature: Guarded renderer
       When the renderer validates the spec
       Then no part of the spec renders
       And the diagnostic names ki-indicator, "count" and the declared maximum
+
+  Rule: The host may restrict URL props to declared origins
+
+    # S23
+    Scenario Outline: With allowed origins declared, a URL outside them never renders
+      Given a renderer restricted to the URL origin "https://cdn.example.com"
+      And a spec setting ki-avatar's "src" to "<value>"
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names "src" and the rule "url-origin"
+
+      Examples:
+        | value                             |
+        | https://tracker.example.net/p.gif |
+        | /avatars/ana.png                  |
+        | //tracker.example.net/p.gif       |
 ```
 
 ### Scenario Family Coverage
@@ -372,7 +388,7 @@ governed by its own approved contract (specs `002`–`016`).
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1–S22 | |
+| Core behavior | S1–S23 | |
 | Keyboard path | | N/A — the renderer adds no interaction; keyboard behavior is owned by each rendered component's own contract |
 | Assistive-tech outcome | | N/A — the accessibility tree is produced by the rendered catalog components under their own contracts |
 | Form participation | | N/A — form behavior is owned by the rendered form components; the renderer only passes validated declared props |
@@ -417,7 +433,13 @@ governed by its own approved contract (specs `002`–`016`).
   parsed as markup; the catalog surface exposes no event-handler or
   code-valued props; URL-typed values accept only an allowlist (`https`,
   `http`, relative references) and every other scheme is rejected; the
-  renderer performs no dynamic code evaluation of any spec content.
+  renderer performs no dynamic code evaluation of any spec content. The
+  URL policy is the catalog's (027 FR-018), one implementation the
+  renderer inherits by validating through it: which props are URL-typed
+  comes from the catalog constraint, and every render entry point —
+  complete, streamed and live — MUST accept the host's list of allowed URL
+  origins and, when it is present, render only absolute `http(s)` URLs of
+  those origins (S23), fail-closed.
 - **FR-005**: Spec parsing MUST be immune to prototype pollution: a spec
   containing `__proto__`, `constructor` or `prototype` keys in any props or
   data object is rejected, and parsing never mutates shared prototypes.
@@ -534,7 +556,7 @@ governed by its own approved contract (specs `002`–`016`).
   stream closes; the invalid-chunk fixture attaches zero nodes at and below
   the violation and reports it.
 - **SC-007**: the `guarded-renderer` capability leaves `planned` only when
-  the S1–S22 traced tests run green inside the deterministic gates; the
+  the S1–S23 traced tests run green inside the deterministic gates; the
   capability gate enforces the linkage.
 - **SC-008**: module-boundary analysis reports zero protocol-specific
   imports or types in `@kimen/catalog`.
@@ -566,6 +588,8 @@ governed by its own approved contract (specs `002`–`016`).
   streams (already-attached validated content remains).
 - Budget default values are fixed at plan/implementation time; this contract
   fixes only the boundary semantics (at-budget passes, beyond fails).
-- URL allowlist v1 is `https`, `http` and relative references.
+- URL allowlist v1 is `https`, `http` and relative references. A host that
+  must also bound WHERE a URL may point passes its allowed origins
+  (FR-004, S23); without them any `https` host is accepted, as before.
 - Rendering is client-side for v1; SSR/Declarative Shadow DOM stays deferred
   per the declared bets. Zod (v4 line) is used at this boundary only.

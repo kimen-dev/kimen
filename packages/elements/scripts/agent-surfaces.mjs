@@ -69,7 +69,7 @@ export function validateDocs(docs) {
       if (isBlank(prop.docs)) {
         violations.push(`${tag}.${prop.name}: property has no documentation`);
       }
-      violations.push(...boundViolations(tag, prop));
+      violations.push(...boundViolations(tag, prop), ...formatViolations(tag, prop));
     }
 
     for (const event of component.events ?? []) {
@@ -176,6 +176,7 @@ export function buildManifest(docs, inputs = {}) {
               description: prop.docs ?? '',
               required: requiredFlag(prop),
               ...numericBounds(prop),
+              format: urlFormat(prop),
             }),
           ),
         members: [
@@ -191,6 +192,7 @@ export function buildManifest(docs, inputs = {}) {
               reflects: Boolean(prop.reflectToAttr),
               required: requiredFlag(prop),
               ...numericBounds(prop),
+              format: urlFormat(prop),
             }),
           ),
           ...(component.methods ?? []).map((method) =>
@@ -604,12 +606,14 @@ function parseBound(text) {
   return PLAIN_DECIMAL.test(trimmed) ? Number(trimmed) : null;
 }
 
-function isNumberProp(prop) {
+// The one scalar type a prop declares, ignoring the `undefined` an optional
+// prop adds; null for a union of several types.
+function soleType(prop) {
   const parts = String(prop.type ?? '')
     .split('|')
     .map((part) => part.trim())
     .filter((part) => part !== 'undefined');
-  return parts.length === 1 && parts[0] === 'number';
+  return parts.length === 1 ? parts[0] : null;
 }
 
 function numericBounds(prop) {
@@ -633,7 +637,7 @@ function boundViolations(tag, prop) {
     }
     if (tags.length > 1) {
       violations.push(`${subject}: @${name} is declared more than once`);
-    } else if (!isNumberProp(prop)) {
+    } else if (soleType(prop) !== 'number') {
       violations.push(`${subject}: @${name} applies to number props only`);
     } else if (parseBound(tags[0].text) === null) {
       violations.push(
@@ -651,6 +655,37 @@ function boundViolations(tag, prop) {
     violations.push(`${subject}: @minimum ${String(minimum)} is above @maximum ${String(maximum)}`);
   }
   return violations;
+}
+
+// A string prop the browser may load or navigate to declares it with
+// `@format url` on the prop: the catalog then holds its value to the URL
+// policy (scheme allowlist, allowed origins) because the contract says so,
+// not because of what the prop happens to be called (spec 027 FR-018).
+// `url` is the only format; anything else fails the build.
+function formatTags(prop) {
+  return (prop.docsTags ?? []).filter((docsTag) => docsTag.name === 'format');
+}
+
+function urlFormat(prop) {
+  const [tag] = formatTags(prop);
+  return tag !== undefined && String(tag.text ?? '').trim() === 'url' ? 'url' : undefined;
+}
+
+function formatViolations(tag, prop) {
+  const subject = `${tag}.${prop.name}`;
+  const tags = formatTags(prop);
+  if (tags.length === 0) {
+    return [];
+  }
+  if (tags.length > 1) {
+    return [`${subject}: @format is declared more than once`];
+  }
+  if (urlFormat(prop) === undefined) {
+    return [`${subject}: @format must be "url", received ${JSON.stringify(tags[0].text ?? '')}`];
+  }
+  return soleType(prop) === 'string'
+    ? []
+    : [`${subject}: @format url applies to string props only`];
 }
 
 function getDocsTag(component, name) {

@@ -453,6 +453,13 @@ describe('createCatalog — declared prop constraints over registered components
       'trend',
       'prop-out-of-range',
     ],
+    [
+      'the URL-typed string prop "logo"',
+      { logo: { description: 'Brand mark.', format: 'url', type: 'string' } },
+      { logo: 'javascript:alert(1)' },
+      'logo',
+      'url-scheme',
+    ],
   ])(
     'S18 enforces %s at validation, naming the component, the prop and the rule',
     (_declaration, props, specProps, prop, rule) => {
@@ -495,6 +502,8 @@ describe('createCatalog — declared prop constraints over registered components
       { default: 7, description: '', maximum: 5, minimum: 0, type: 'number' },
     ],
     ['a bound that is not a number', { description: '', maximum: '20', type: 'number' }],
+    ['a format on a prop that is not a string', { description: '', format: 'url', type: 'number' }],
+    ['a format the catalog does not know', { description: '', format: 'uri', type: 'string' }],
   ])('S7 rejects %s as a malformed constraint', (_case, constraint) => {
     const created = createCatalog(withProps({ trend: constraint }));
     expect(created.ok).toBe(false);

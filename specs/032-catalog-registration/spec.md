@@ -303,9 +303,10 @@ Feature: Consumer catalog registration
     Then validation rejects the spec naming acme-kpi-card, the prop and the rule "<rule>"
 
     Examples:
-      | declaration                                | violation            | rule                  |
-      | the required string prop "title"           | sets no "title"      | missing-required-prop |
-      | the number prop "trend" bounded to 0..100  | sets "trend" to 101  | prop-out-of-range     |
+      | declaration                               | violation                            | rule                  |
+      | the required string prop "title"          | sets no "title"                      | missing-required-prop |
+      | the number prop "trend" bounded to 0..100 | sets "trend" to 101                  | prop-out-of-range     |
+      | the URL-typed string prop "logo"          | sets "logo" to "javascript:alert(1)" | url-scheme            |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -402,12 +403,15 @@ own specs.
   re-check of event-handler prop names.
 - **FR-014**: A definition's prop constraints MAY declare the limits the
   generated catalog carries — `required` (027 FR-016), `minimum` and
-  `maximum` on number props (027 FR-017) — in the same shape,
+  `maximum` on number props (027 FR-017), `format: 'url'` on string props
+  (027 FR-018) — in the same shape,
   and the boundary MUST enforce them over registered components exactly as
   over built-in ones (S18). A limit that is not well-formed for its
   constraint — a bound on a non-number prop, a minimum above its maximum, a
-  default outside its own bounds — is a `malformed-constraint` rejection
-  (S7).
+  default outside its own bounds, a format on a non-string prop or a format
+  other than `url` — is a `malformed-constraint` rejection (S7). A string
+  prop named like a fetchable native attribute stays URL-typed without the
+  declaration (S14, the 027 FR-018 backstop).
 
 ### Key Entities
 

@@ -625,6 +625,64 @@ describe('agent surfaces', () => {
     ).toEqual(['ki-button.variant: @minimum 9 is above @maximum 5']);
   });
 
+  it('S1 buildManifest carries the url format a string prop declares with @format', async () => {
+    const docs = normalizeDocs(await readFixture('path-a-docs.json')) as DocsFixture;
+    const component = docs.components[0];
+    const variant = component?.props?.[0];
+    if (component === undefined || variant === undefined) {
+      throw new Error('fixture must declare one prop');
+    }
+    component.props = [
+      variant,
+      {
+        ...variant,
+        attr: 'src',
+        docsTags: [{ name: 'format', text: 'url' }],
+        name: 'src',
+        type: 'string | undefined',
+      },
+    ];
+    expect(validateDocs(docs)).toEqual([]);
+
+    const declaration = buildManifest(docs).modules[0].declarations[0];
+    const attributes = declaration.attributes as Record<string, unknown>[];
+    const members = declaration.members as Record<string, unknown>[];
+    expect(attributes.find((attribute) => attribute['name'] === 'src')?.['format']).toBe('url');
+    expect(members.find((member) => member['name'] === 'src')?.['format']).toBe('url');
+    expect(attributes.find((attribute) => attribute['name'] === 'variant')).not.toHaveProperty(
+      'format',
+    );
+  });
+
+  it('S4 validateDocs rejects an unknown, misplaced or repeated @format tag', async () => {
+    const violationsFor = async (
+      type: string,
+      docsTags: { name: string; text: string }[],
+    ): Promise<string[]> => {
+      const docs = normalizeDocs(await readFixture('path-a-docs.json')) as DocsFixture;
+      const variant = docs.components[0]?.props?.[0];
+      if (variant === undefined) {
+        throw new Error('fixture must declare one prop');
+      }
+      variant.type = type;
+      variant.docsTags = docsTags;
+      return validateDocs(docs);
+    };
+
+    expect(await violationsFor('string', [{ name: 'format', text: 'uri' }])).toEqual([
+      'ki-button.variant: @format must be "url", received "uri"',
+    ]);
+    expect(await violationsFor('number', [{ name: 'format', text: 'url' }])).toEqual([
+      'ki-button.variant: @format url applies to string props only',
+    ]);
+    expect(
+      await violationsFor('string', [
+        { name: 'format', text: 'url' },
+        { name: 'format', text: 'url' },
+      ]),
+    ).toEqual(['ki-button.variant: @format is declared more than once']);
+  });
+
   it('S4 validateDocs rejects a malformed or duplicated @event tag', async () => {
     const docs = normalizeDocs(await readFixture('path-a-docs.json'));
     const component = docs.components[0];
