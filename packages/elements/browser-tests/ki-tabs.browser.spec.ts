@@ -263,6 +263,58 @@ describe('ki-tabs assistive technology outcomes in a real browser', () => {
     expect(snapshot).toContain('tabpanel "Email"');
   });
 
+  // Ids used to be derived from the element's position in the list, so a tab
+  // added after an earlier one was removed reused a live id and the
+  // tab/panel references crossed.
+  it('S7 S8 keeps ids unique and each tab paired with its panel when tabs are removed and added', async () => {
+    const tabs = await mount(`
+      <ki-tabs label="Settings" value="b">
+        <ki-tab value="a">Alpha</ki-tab>
+        <ki-tab value="b">Bravo</ki-tab>
+        <ki-tab value="c">Charlie</ki-tab>
+        <ki-tab-panel value="a">Alpha panel</ki-tab-panel>
+        <ki-tab-panel value="b">Bravo panel</ki-tab-panel>
+        <ki-tab-panel value="c">Charlie panel</ki-tab-panel>
+      </ki-tabs>
+    `);
+    const stableIds = [
+      tab(tabs, 'b').id,
+      tab(tabs, 'c').id,
+      panel(tabs, 'b').id,
+      panel(tabs, 'c').id,
+    ];
+
+    tab(tabs, 'a').remove();
+    panel(tabs, 'a').remove();
+    const delta = document.createElement('ki-tab');
+    delta.setAttribute('value', 'd');
+    delta.textContent = 'Delta';
+    const deltaPanel = document.createElement('ki-tab-panel');
+    deltaPanel.setAttribute('value', 'd');
+    deltaPanel.textContent = 'Delta panel';
+    tabs.append(delta, deltaPanel);
+    await expect.poll(() => delta.getAttribute('aria-controls')).not.toBeNull();
+
+    const ids = [...tabs.querySelectorAll('ki-tab, ki-tab-panel')].map((el) => el.id);
+    expect(ids).toHaveLength(6);
+    expect(new Set(ids).size).toBe(6);
+    expect([
+      tab(tabs, 'b').id,
+      tab(tabs, 'c').id,
+      panel(tabs, 'b').id,
+      panel(tabs, 'c').id,
+    ]).toEqual(stableIds);
+    for (const value of ['b', 'c', 'd']) {
+      expect(tab(tabs, value).getAttribute('aria-controls')).toBe(panel(tabs, value).id);
+      expect(panel(tabs, value).getAttribute('aria-labelledby')).toBe(tab(tabs, value).id);
+    }
+
+    // What assistive technology gets: the new panel is named after its own tab.
+    tabs.value = 'd';
+    await expect.poll(() => panel(tabs, 'd').hasAttribute('hidden')).toBe(false);
+    expect(await browserCommands.ariaSnapshot('main')).toContain('tabpanel "Delta"');
+  });
+
   it('S7 S8 has zero axe violations across selected and disabled states', async () => {
     const tabs = await mount(fixture());
 

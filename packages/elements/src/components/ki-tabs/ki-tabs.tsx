@@ -50,6 +50,7 @@ export class KiTabs {
   @Element() private readonly host!: HTMLElement;
 
   private readonly instanceId = nextId++;
+  private readonly issuedIds = new Map<string, number>();
   private tabRoster: HTMLElement[] = [];
   private panelRoster: HTMLElement[] = [];
   private pairings: PairingRecord[] = [];
@@ -295,9 +296,15 @@ export class KiTabs {
     });
   }
 
+  /**
+   * Ids come from a per-group counter that only moves forward, never from the
+   * element's position: a position is reused as soon as one tab is removed
+   * and another added, and two live elements would share an id.
+   */
   private ensureId(element: HTMLElement, prefix: string): void {
     if (!element.id) {
-      const ordinal = this.tabRoster.indexOf(element) + this.panelRoster.indexOf(element) + 2;
+      const ordinal = (this.issuedIds.get(prefix) ?? 0) + 1;
+      this.issuedIds.set(prefix, ordinal);
       element.id = `${prefix}-${String(this.instanceId)}-${String(ordinal)}`;
     }
   }
