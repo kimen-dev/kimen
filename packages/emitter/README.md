@@ -36,7 +36,8 @@ uiSpecTool(catalog, { target: 'openai-strict' });        // → { ok, artifact: 
   here; shape lives in the schema.
 - **Schema** (`uiSpecJsonSchema`): the neutral UI-spec format specialized
   to your catalog (one branch per component, closed objects, closed
-  enums, and the limits the catalog declares: a `required` prop is
+  enums, the optional stable node `id` in the boundary's grammar, and the
+  limits the catalog declares: a `required` prop is
   required, non-blank and never nullable; numeric bounds become
   `minimum`/`maximum`). The URL policy is not in the schema: no target
   expresses it faithfully, so the prompt states it and the boundary
@@ -74,7 +75,7 @@ renderUiSpec(spec, { surface, catalog });   // renders the ACCEPTED emission
 
 `normalizeEmission` strips exactly the placeholders strict-mode
 all-required schemas force a model to emit (null-valued props, null action
-bindings, empty props containers) and touches nothing else — a value the
+bindings, null node ids, empty props containers) and touches nothing else — a value the
 model got WRONG stays wrong so validation reports it. `repairPrompt`
 formats every issue (code, path, named offender) into a single corrective
 message; the one-round-then-fail-closed policy is deliberate and fixed.

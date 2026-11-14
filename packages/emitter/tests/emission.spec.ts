@@ -63,6 +63,30 @@ describe('normalizeEmission', () => {
     expect(root.props).toBeUndefined();
   });
 
+  it('S13 S19 strips null id placeholders at every depth and keeps real ids', () => {
+    const emission: unknown = {
+      actions: [],
+      root: {
+        action: null,
+        component: 'ki-card',
+        id: 'order-card',
+        slots: {
+          '': [
+            { action: null, component: 'ki-badge', id: null, props: { size: null, tone: null } },
+          ],
+        },
+      },
+      version: 1,
+    };
+    expect(validateUiSpec(emission).ok).toBe(false);
+    const normalized = normalizeEmission(emission) as {
+      root: { id?: unknown; slots: { '': { id?: unknown }[] } };
+    };
+    expect(validateUiSpec(normalized).issues).toEqual([]);
+    expect(normalized.root.id).toBe('order-card');
+    expect(normalized.root.slots[''][0]).not.toHaveProperty('id');
+  });
+
   it('S13 normalizes hostile nesting depths without overflowing (review regression)', () => {
     let node: Record<string, unknown> = { component: 'ki-badge', props: { tone: null } };
     for (let level = 0; level < 3000; level += 1) {
@@ -155,7 +179,9 @@ describe('repairPrompt', () => {
 
 describe('schema and boundary agreement', () => {
   it('S1 S2 specs the schema accepts are accepted by the boundary or rejected only for schema-inexpressible rules', () => {
-    const derivation = uiSpecJsonSchema(catalogData, { components: ['ki-badge', 'ki-card'] });
+    const derivation = uiSpecJsonSchema(catalogData, {
+      components: ['ki-badge', 'ki-card', 'ki-indicator'],
+    });
     expect(derivation.ok).toBe(true);
     if (!derivation.ok) {
       return;
@@ -170,13 +196,30 @@ describe('schema and boundary agreement', () => {
     const actionArb = fc.option(fc.constantFrom('confirm', 'undeclared-intent', ''), {
       nil: undefined,
     });
+    // Ids in and out of the grammar, repeated on purpose: uniqueness is a
+    // cross-node rule only the boundary can state (S19).
+    const idArb = fc.option(fc.constantFrom('a', 'b-1', 'Bad Id', ''), { nil: undefined });
+    // The declared limits of ki-indicator (required label, bounded numbers)
+    // are schema-expressible, so the schema must never be laxer (S16, S17).
+    const propsArb = fc.oneof(
+      fc.record({ tone: toneArb }),
+      fc.record(
+        {
+          count: fc.constantFrom(-1, 0, 5, 20, 21),
+          current: fc.constantFrom(0, 1, 20, 21),
+          label: fc.constantFrom('Slide position', '', ' '),
+        },
+        { requiredKeys: [] },
+      ),
+    );
     const nodeArb = fc.letrec<{ node: Record<string, unknown> }>((tie) => ({
       node: fc
         .record(
           {
             action: actionArb,
-            component: fc.constantFrom('ki-badge', 'ki-card'),
-            props: fc.option(fc.record({ tone: toneArb }), { nil: undefined }),
+            component: fc.constantFrom('ki-badge', 'ki-card', 'ki-indicator'),
+            id: idArb,
+            props: fc.option(propsArb, { nil: undefined }),
             slots: fc.option(
               fc.record({
                 '': fc.array(fc.oneof(fc.string({ maxLength: 6 }), tie('node')), {
@@ -203,12 +246,12 @@ describe('schema and boundary agreement', () => {
           const report = validateUiSpec(spec);
           if (!report.ok) {
             for (const issue of report.issues) {
-              expect(issue.code).toBe('undeclared-action');
+              expect(['duplicate-id', 'undeclared-action']).toContain(issue.code);
             }
           }
         },
       ),
-      { numRuns: 300, seed: 33_033 },
+      { numRuns: 600, seed: 33_033 },
     );
   });
 });

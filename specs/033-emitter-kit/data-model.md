@@ -23,8 +23,9 @@ unsupported-version`.
 ### Schema artifact (public shape)
 
 Draft 2020-12 document: root object `{version: const 1, actions?: string[],
-root: node}`, `$defs` with per-component branches (`component` const,
-closed `props`, declared `slots` as child containers, `action?: string`),
+root: node}`, `$defs` with per-component branches (`component` const, `id?: string` in
+the boundary's id grammar, closed `props`, declared `slots` as child
+containers, `action?: string`),
 `child = anyOf[string, node]`; `$id` is
 `.../ui-spec/<schema-version>/<target>/<defs-content-hash>`, unique per
 catalog, subset and target so two derivations never collide in one registry.

@@ -284,6 +284,13 @@ Feature: Emitter kit
     Given a catalog whose "acme-logo" declares "source" as a URL-typed prop
     When the prompt is derived
     Then the prompt marks "source" as a URL and states the schemes the boundary accepts
+
+  # Family: core behavior — agreement with the node format
+  # S19
+  Scenario: The derived artifacts admit the stable node ids the boundary accepts
+    Given a spec whose nodes carry stable ids in the boundary's id grammar
+    When the spec is checked against the derived JSON Schema
+    Then the schema accepts the spec, rejects an id outside the grammar, and the prompt states the id rule
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -294,7 +301,7 @@ are inapplicable.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19 | |
 | Keyboard path | | N/A — no interactive surface; artifacts are data consumed by models and integrations |
 | Assistive-tech outcome | | N/A — nothing renders; the emitter derives text and schema documents |
 | Form participation | | N/A — no form control is introduced |
@@ -374,6 +381,15 @@ are inapplicable.
   prop is marked "URL" in the prompt with the schemes the boundary accepts
   (S18); the URL policy itself stays boundary-only — no target expresses
   it faithfully, so the schema does not approximate it (FR-003, FR-011).
+- **FR-014**: The schema and the prompt MUST describe the node format the
+  boundary validates, field for field: every component branch admits the
+  optional stable node `id` (035 FR-001) under the boundary's own id
+  grammar, read from the catalog package rather than restated; a strict
+  target lists it as a nullable required property that normalization
+  strips like any other placeholder; and the prompt states the rule.
+  Uniqueness of ids within a document is a cross-node rule and stays
+  boundary-only (S19). A model guided by the schema can therefore emit the
+  ids a live surface addresses.
 
 ### Key Entities
 

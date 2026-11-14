@@ -75,7 +75,7 @@ function normalizeTree(root: unknown): unknown {
         }
         continue;
       }
-      if (key === 'action' && value === null) {
+      if ((key === 'action' || key === 'id') && value === null) {
         continue;
       }
       if (key === 'slots' && isRecord(value)) {
@@ -107,8 +107,8 @@ function normalizeTree(root: unknown): unknown {
 
 /**
  * Strips strict-mode placeholders from an emission (S13): null-valued
- * props and null action bindings disappear, empty props containers are
- * dropped, and everything else — including values a model got WRONG — is
+ * props, null action bindings and null node ids disappear, empty props
+ * containers are dropped, and everything else — including values a model got WRONG — is
  * preserved untouched, so validation still sees the real mistake.
  * Pure data cleanup over a fresh clone; the input is never mutated and
  * the output is untrusted until `validateUiSpec` passes.

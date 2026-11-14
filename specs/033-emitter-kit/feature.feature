@@ -117,3 +117,10 @@ Feature: Emitter kit
     Given a catalog whose "acme-logo" declares "source" as a URL-typed prop
     When the prompt is derived
     Then the prompt marks "source" as a URL and states the schemes the boundary accepts
+
+  # Family: core behavior — agreement with the node format
+  # S19
+  Scenario: The derived artifacts admit the stable node ids the boundary accepts
+    Given a spec whose nodes carry stable ids in the boundary's id grammar
+    When the spec is checked against the derived JSON Schema
+    Then the schema accepts the spec, rejects an id outside the grammar, and the prompt states the id rule

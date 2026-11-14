@@ -157,6 +157,14 @@ describe('catalogPrompt', () => {
     expect(validateUiSpec(example, { catalog: created.catalog }).issues).toEqual([]);
   });
 
+  it('S19 states the optional node id and its grammar in the format rules', () => {
+    const prompt = promptOrThrow(catalogData);
+    expect(prompt).toContain('{"id": "<id>", "component": "<tag>"');
+    expect(prompt).toContain('"id", "props", "action" and "slots" are optional');
+    expect(prompt).toContain('unique within the document');
+    expect(prompt).toContain('at most 64 characters');
+  });
+
   it('S10 stamps the catalog schema version on the prompt', () => {
     expect(promptOrThrow(catalogData)).toContain(catalogData.catalogSchemaVersion);
   });

@@ -8,6 +8,7 @@
  * points (FR-011).
  */
 import type { Catalog, CatalogEntry, CatalogPropConstraint } from '@kimen/catalog';
+import { NODE_ID_GRAMMAR } from '@kimen/catalog';
 
 import type { Derivation, EmitterIssue, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
@@ -117,6 +118,14 @@ function componentBranch(
 ): Record<string, unknown> {
   const properties: Record<string, unknown> = { component: { const: tag } };
   const required = ['component'];
+  // The optional stable node id (spec 035), in the boundary's own grammar so
+  // a schema-accepted id is a boundary-accepted one (S19). Uniqueness within
+  // the document is a cross-node rule only the boundary can state.
+  const id = { pattern: NODE_ID_GRAMMAR.source, type: 'string' };
+  properties['id'] = strict ? { anyOf: [id, { type: 'null' }] } : id;
+  if (strict) {
+    required.push('id');
+  }
   const propEntries = Object.entries(entry.props);
   const propNames = propEntries.map(([name]) => name);
   // The props the catalog declares required (S16): present in every dialect,

@@ -5,7 +5,7 @@
 // structurally verified and never silently truncated.
 
 import type { Catalog } from '@kimen/catalog';
-import { catalogData } from '@kimen/catalog';
+import { catalogData, validateUiSpec } from '@kimen/catalog';
 import Ajv2020 from 'ajv/dist/2020.js';
 import { describe, expect, it } from 'vitest';
 import { type EmitterTarget, uiSpecJsonSchema } from '../src/index.js';
@@ -124,6 +124,7 @@ describe('uiSpecJsonSchema', () => {
       root: {
         action: null,
         component: 'ki-badge',
+        id: null,
         props: { size: null, tone: 'info' },
         slots: { '': ['3 items'] },
       },
@@ -183,11 +184,13 @@ describe('uiSpecJsonSchema', () => {
       root: {
         action: null,
         component: 'ki-card',
+        id: null,
         slots: {
           '': [
             {
               action: null,
               component: 'ki-badge',
+              id: null,
               props: { size: null, tone: 'info' },
               slots: { '': ['nested'] },
             },
@@ -259,7 +262,12 @@ describe('uiSpecJsonSchema', () => {
     );
     const node = (label: unknown) => ({
       actions: [],
-      root: { action: null, component: 'ki-textarea', props: { ...placeholders, label } },
+      root: {
+        action: null,
+        component: 'ki-textarea',
+        id: null,
+        props: { ...placeholders, label },
+      },
       version: 1,
     });
     expect(validate(node(null))).toBe(false);
@@ -276,6 +284,7 @@ describe('uiSpecJsonSchema', () => {
         root: {
           action: target === 'draft-2020-12' ? undefined : null,
           component: 'ki-indicator',
+          id: target === 'draft-2020-12' ? undefined : null,
           props: { count, current: 1, label: 'Slide position' },
         },
         version: 1,
@@ -285,6 +294,43 @@ describe('uiSpecJsonSchema', () => {
       expect(validate(JSON.parse(JSON.stringify(spec(20))))).toBe(true);
     },
   );
+
+  it('S19 admits stable node ids in the boundary grammar and rejects any other id', () => {
+    const validate = compile(deriveOrThrow(catalogData));
+    const spec = (rootId: unknown, childId: unknown) => ({
+      root: {
+        component: 'ki-card',
+        id: rootId,
+        slots: { '': [{ component: 'ki-badge', id: childId, slots: { '': ['3 items'] } }] },
+      },
+      version: 1,
+    });
+    const accepted = spec('order-card', 'items_badge-2');
+    expect(validate(accepted)).toBe(true);
+    expect(validateUiSpec(accepted).issues).toEqual([]);
+    for (const bad of ['Order Card', '-card', '', 'x'.repeat(65), 7]) {
+      expect(validate(spec(bad, 'ok')), String(bad)).toBe(false);
+      expect(validate(spec('ok', bad)), String(bad)).toBe(false);
+    }
+    // No id at all stays valid: ids are optional.
+    expect(validate({ root: { component: 'ki-card' }, version: 1 })).toBe(true);
+  });
+
+  it('S19 makes the id a nullable required property under openai-strict', () => {
+    const validate = compile(
+      deriveOrThrow(catalogData, { components: ['ki-badge'], target: 'openai-strict' }),
+    );
+    const root = { action: null, component: 'ki-badge', props: { size: null, tone: null } };
+    const spec = (node: Record<string, unknown>) => ({
+      actions: [],
+      root: { ...node, slots: { '': [] } },
+      version: 1,
+    });
+    expect(validate(spec({ ...root, id: null }))).toBe(true);
+    expect(validate(spec({ ...root, id: 'status-1' }))).toBe(true);
+    expect(validate(spec({ ...root, id: 'Status 1' }))).toBe(false);
+    expect(validate(spec(root))).toBe(false);
+  });
 
   it('S4 collapses duplicate subset tags instead of duplicating branches (review regression)', () => {
     const artifact = deriveOrThrow(catalogData, { components: ['ki-badge', 'ki-badge'] });
