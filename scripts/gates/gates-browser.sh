@@ -115,5 +115,10 @@ if [ "$ENGINE" = 'chromium' ]; then
   # native-control activation; like the wrapper glue it runs on the ordinary
   # PR engine — the controls themselves carry the three-engine matrix.
   run_browser_gate "test-browser-catalog:$ENGINE" pnpm exec nx run @kimen/catalog:test-browser --skipNxCache
+  # The packaged MCP Apps surface document (spec 030 S16–S21) is only proven
+  # where it runs: inside a sandboxed frame, driven by postMessage alone, under
+  # its own content policy. Chromium-scoped for now — its content-policy probe
+  # is verified on this engine only (packages/adapter-mcp-apps/COMPAT.md).
+  run_browser_gate "test-browser-adapter-mcp-apps:$ENGINE" pnpm exec nx run @kimen/adapter-mcp-apps:test-browser --skipNxCache
 fi
 echo "BROWSER GATE GREEN — engine=$ENGINE executable=$BROWSER_EXECUTABLE"
