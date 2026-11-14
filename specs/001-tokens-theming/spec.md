@@ -75,8 +75,59 @@ is name-identical to the onmars contract.
 
 ---
 
+### User Story 4 - A region with its own theme or scheme (Priority: P3)
+
+A host page embeds an island of generated UI. The island needs its own theme
+or colour scheme — material3 inside an onmars page, a dark panel inside a
+light page, or the default theme inside a page themed otherwise — without
+touching the page around it, and nesting must compose.
+
+**Why this priority**: generative UI is embedded in pages Kimen does not own.
+Document-only theming forces the host to adopt the island's theme or the
+island to give up its own.
+
+**Independent Test**: Declare a theme or a scheme on an element and compare
+what real components paint inside and outside it with what they paint in a
+document themed that way at the root.
+
+**Acceptance Scenarios**:
+
+1. **Given** an onmars document, **When** a subtree declares theme "material3", **Then** components inside it render as in a material3 document and components outside keep the onmars appearance.
+2. **Given** a light document, **When** a subtree declares scheme "dark", **Then** components inside it render as in a dark document and components outside keep the light appearance.
+3. **Given** nested subtrees, **When** each declares a theme and/or a scheme, **Then** every component follows its nearest declaration.
+
+---
+
+### User Story 5 - A dark page that is coherent without extra stylesheets (Priority: P2)
+
+A visitor who prefers dark opens a page that loads only the Kimen tokens
+stylesheet. The browser paints the page canvas, scrollbars and native
+controls in the same scheme the tokens resolve to, so component text is
+never light-on-light.
+
+**Why this priority**: the alternative shipped an unreadable combination by
+default — dark tokens on a light canvas — unless an opt-in stylesheet was
+also loaded.
+
+**Independent Test**: Load only the tokens stylesheet under an emulated dark
+system preference and measure every rendered string against the surface
+actually behind it, down to the browser canvas.
+
+**Acceptance Scenarios**:
+
+1. **Given** a document that loads only the tokens stylesheet, **When** the system preference is dark, **Then** the canvas and native controls render dark and every component string meets 4.5:1.
+
+---
+
 ### Edge Cases
 
+- A subtree declares an unknown theme name, or a theme whose stylesheet was
+  not loaded: the subtree renders in the default theme (the same safe
+  fallback as at the root).
+- A subtree declares only a scheme inside a themed ancestor subtree: it keeps
+  that ancestor's theme and flips its scheme alone.
+- A page pins its own `color-scheme`: the tokens follow the page's
+  declaration, not the system preference.
 - A document declares an unknown theme name (e.g. "acme"): the appearance
   remains onmars (safe fallback, never undefined styles).
 - A document declares theme "material3" but its stylesheet was not loaded:
@@ -128,26 +179,69 @@ Feature: Tokens and theming with onmars as the default theme
 
   # S6
   Scenario: material3 exposes the identical token contract as onmars
-    Given the compiled onmars and material3 stylesheets
-    When their token contracts are compared
-    Then material3 defines exactly the same set of token names as onmars
+    Given a document that loads the Kimen tokens and material3 stylesheets
+    When the document root declares the theme "material3"
+    Then every token name of the onmars contract resolves to a value
+    And the material3 stylesheet reassigns no token name outside that contract
 
   # S7
   Scenario: an unknown theme declaration falls back to onmars
     Given a document that loads the Kimen tokens stylesheet
     When the document root declares the unknown theme "acme"
     Then the brand token resolves to the onmars purple "#845abe"
+
+  # S8
+  Scenario: a subtree can declare the material3 theme inside an onmars document
+    Given an onmars document that loads the Kimen tokens and material3 stylesheets
+    When a subtree of the document declares the theme "material3"
+    Then a button and a text field inside the subtree render as they do in a material3 document
+    And a button and a text field outside the subtree keep the onmars appearance
+
+  # S9
+  Scenario: a subtree can return to the default theme inside a material3 document
+    Given a document whose root declares the theme "material3"
+    When a subtree of the document declares the theme "onmars"
+    Then a button and a text field inside the subtree render as they do in an onmars document
+    And a button and a text field outside the subtree keep the material3 appearance
+
+  # S10
+  Scenario: a subtree can force dark inside a light document
+    Given a document that renders in the light color scheme
+    When a subtree of the document declares the color scheme "dark"
+    Then a button and a text field inside the subtree render as they do in a dark document
+    And a button and a text field outside the subtree keep the light appearance
+
+  # S11
+  Scenario: a subtree can force light inside a dark document
+    Given a document whose root declares the color scheme "dark"
+    When a subtree of the document declares the color scheme "light"
+    Then a button and a text field inside the subtree render as they do in a light document
+    And a button and a text field outside the subtree keep the dark appearance
+
+  # S12
+  Scenario: nested subtrees each follow their nearest declaration
+    Given a material3 dark subtree inside an onmars light document
+    When a subtree nested inside it declares the theme "onmars" and the color scheme "light"
+    Then a button inside the nested subtree renders as it does in an onmars light document
+    And a button between the two subtrees renders as it does in a material3 dark document
+
+  # S13
+  Scenario: the tokens stylesheet alone keeps a dark page coherent
+    Given a document that loads only the Kimen tokens stylesheet
+    When the document renders under a dark system color scheme
+    Then the browser paints the page canvas and its native controls dark
+    And every component text stays readable against the surface behind it
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2 | |
+| Core behavior | S1, S2, S13 | |
 | Keyboard path | — | Token-only feature: no interactive surface ships in this feature |
 | Assistive-tech outcome | — | No markup or announced state ships; contrast obligations are covered by FR-009/SC-005 |
 | Form participation | — | No form component ships in this feature |
-| Theming | S3, S4, S5, S6, S7 | |
+| Theming | S3, S4, S5, S6, S7, S8, S9, S10, S11, S12 | |
 
 ## Requirements *(mandatory)*
 
@@ -173,6 +267,22 @@ Feature: Tokens and theming with onmars as the default theme
   (primitive → theme → semantic).
 - **FR-009**: The default text-on-surface pairs of both themes MUST meet
   contrast ≥4.5:1 in both light and dark schemes.
+- **FR-010**: Any element MUST be able to declare a theme for its subtree with
+  the same declaration the document root uses; the default theme's name (or
+  an unknown one) MUST return the subtree to the default theme.
+- **FR-011**: Any element MUST be able to force the light or dark scheme for
+  its subtree, inside any theme, without redeclaring any token.
+- **FR-012**: Nested declarations MUST compose: each component follows the
+  nearest theme declaration and the nearest scheme declaration,
+  independently.
+- **FR-013**: The tokens stylesheet alone MUST make the browser paint the
+  page in the scheme the tokens resolve to (canvas, native controls), so a
+  page that loads nothing else stays legible under a dark system preference.
+- **FR-014**: A theme stylesheet MUST reassign only token names of the
+  default contract; it is loaded alongside the default stylesheet, never
+  instead of it.
+- **FR-015**: Only colours MAY depend on the colour scheme; a token whose
+  light and dark values differ in anything else MUST fail the build.
 
 ### Key Entities
 
@@ -184,19 +294,30 @@ Feature: Tokens and theming with onmars as the default theme
 - **Theme**: a named, complete assignment of the theme + semantic layers
   (onmars, material3). Every theme ships light and dark schemes.
 - **Scheme**: the light or dark variant within a theme, selected by system
-  preference or document-level override.
+  preference or by a declaration on the document root or on any element.
+- **Subtree**: an element that carries a theme and/or scheme declaration,
+  together with its descendants (shadow trees included).
 
 ## Constitutional Surface *(mandatory)*
 
 - **Public API delta** (Art. IX): the token name contract and two
-  document-level declarations (theme selection, scheme override) become
-  public API (pre-1.0, first publication of this contract; no breaking
-  change).
+  declarations (theme selection, scheme override) are public API. Subtree
+  scoping of both declarations is additive (pre-1.0). Token names and the
+  effective value of every public token in every theme × scheme are
+  unchanged — `public-api.json` is byte-identical across the emission change.
+  Two behaviors change and are called out in the theming contract: a theme
+  stylesheet is no longer self-sufficient (it carries overrides only), and
+  the tokens stylesheet now declares `color-scheme` on the root.
 - **Bundle budget** (Art. IV): each compiled theme stylesheet stays within a
   single-digit KB compressed budget; no runtime dependency (none added).
 - **Accessibility** (Art. V): default text/surface pairs meet AA contrast in
   both themes and schemes (FR-009); system color-scheme preference respected
-  (FR-002). No new interaction pattern → no APG walkthrough required.
+  (FR-002); the browser canvas follows the tokens' scheme, closing the
+  dark-tokens-on-light-canvas combination (FR-013, S13). No new interaction
+  pattern → no APG walkthrough required.
+- **Browser baseline** (Art. IV): scheme-dependent tokens use the CSS
+  `light-dark()` function (Baseline: Chrome 123, Firefox 120, Safari 17.5) —
+  inside "current + previous stable" for all three engines (research D8).
 - **Tokens** (Art. VI): this feature IS the token system: primitive → theme →
   semantic layers; the component layer starts with the first Fase 2
   component. Re-theming by semantic/theme reassignment proven in CI (FR-005,
@@ -222,14 +343,24 @@ Feature: Tokens and theming with onmars as the default theme
   size budget (single-digit KB compressed), enforced by the budget gate.
 - **SC-005**: Default text-on-surface pairs measure ≥4.5:1 contrast in both
   themes and both schemes, verified automatically.
+- **SC-006**: Giving a subtree its own theme or scheme requires exactly 1
+  declaration on 1 element and 0 token redeclarations by the consumer —
+  verified in the browser on real components.
+- **SC-007**: With only the tokens stylesheet loaded and a dark system
+  preference, 0 of the library's components render text below 4.5:1.
+- **SC-008**: Each scheme-dependent token is declared once per theme
+  stylesheet (no per-scheme duplicate blocks), and a theme stylesheet
+  declares only the tokens it changes.
 
 ## Assumptions
 
 - material3 ships light and dark schemes, using the Material 3 Design Kit
   baseline palette (default seed; primary #6750a4). The kit is a reference,
   not a pixel-perfect Material implementation.
-- Theme and scheme declarations apply at the document root; subtree-scoped
-  theming may work naturally but is not guaranteed or tested in this feature.
+- Theme and scheme declarations apply at the document root and on any
+  element (S8-S12). A declaration restyles what consumes tokens; it does not
+  paint the element that carries it — a region that wants its own surface
+  paints it from tokens, as the page contract does for the page.
 - The onmars token sources generated from MarsUI on 2026-07-05 (primitive,
   theme, semantic, dark) are the working base of this feature.
 - The token component layer, the RTL showcase and forced-colors/high-contrast
