@@ -18,8 +18,12 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
  * The version of the catalog document format itself (FR-010, Art. IX).
  * 1.1.0 (spec 035): UI-spec nodes gain the optional stable `id` — an
  * additive minor the SemVer-compatible version gates accept alongside 1.0.0.
+ * 1.2.0: prop constraints gain optional declared limits (`required`) the
+ * boundary enforces. Additive again: a 1.2.0 boundary still validates what a
+ * 1.0.0 or 1.1.0 spec says, and a boundary that predates the limits refuses
+ * a 1.2.0 catalog instead of validating it under laxer rules (028 FR-012).
  */
-export const CATALOG_SCHEMA_VERSION = '1.1.0';
+export const CATALOG_SCHEMA_VERSION = '1.2.0';
 
 const isBlank = (text) => typeof text !== 'string' || text.trim() === '';
 
@@ -106,6 +110,11 @@ export function buildCatalog(manifest, { elementsVersion }) {
         const defaultValue = parseDefault(attribute.default, constraint);
         if (defaultValue !== undefined) {
           entry.default = defaultValue;
+        }
+        // Required by the component contract (a prop declared with `!`):
+        // carried only when set, so optional props stay byte-identical.
+        if (attribute.required === true) {
+          entry.required = true;
         }
         props.set(attribute.name, entry);
       }

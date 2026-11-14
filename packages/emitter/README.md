@@ -31,11 +31,12 @@ uiSpecTool(catalog, { target: 'openai-strict' });        // → { ok, artifact: 
 
 - **Prompt** (`catalogPrompt`): works with ANY model — format rules, every
   component's when-to-use / when-NOT-to-use guidance verbatim, props with
-  enums inline, and one example spec that validates against the same
-  catalog. Judgment lives here; shape lives in the schema.
+  enums inline and required props marked, and one example spec that
+  validates against the same catalog. Judgment lives here; shape lives in the schema.
 - **Schema** (`uiSpecJsonSchema`): the neutral UI-spec format specialized
   to your catalog (one branch per component, closed objects, closed
-  enums). Targets: `draft-2020-12` (default), `openai-strict` (closed
+  enums, and the limits the catalog declares: a `required` prop is
+  required, non-blank and never nullable). Targets: `draft-2020-12` (default), `openai-strict` (closed
   all-required objects, recursion kept via `$ref`, documented provider
   limits enforced with named offenders), `anthropic-strict` (additionally
   recursion-free: the node tree unrolled to a bounded composition depth,

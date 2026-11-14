@@ -237,6 +237,35 @@ describe('uiSpecJsonSchema', () => {
     }
   });
 
+  it('S16 requires the props the catalog declares required, in the default dialect', () => {
+    const validate = compile(deriveOrThrow(catalogData));
+    const spec = (node: Record<string, unknown>) => ({ root: node, version: 1 });
+    expect(validate(spec({ component: 'ki-textarea' }))).toBe(false);
+    expect(validate(spec({ component: 'ki-textarea', props: {} }))).toBe(false);
+    expect(validate(spec({ component: 'ki-textarea', props: { rows: 3 } }))).toBe(false);
+    // A blank value names nothing: the boundary rejects it, so the schema does too.
+    expect(validate(spec({ component: 'ki-textarea', props: { label: ' ' } }))).toBe(false);
+    expect(validate(spec({ component: 'ki-textarea', props: { label: 'Notes' } }))).toBe(true);
+    // A component without required props keeps its props container optional.
+    expect(validate(spec({ component: 'ki-badge' }))).toBe(true);
+  });
+
+  it('S16 makes required props non-nullable under openai-strict', () => {
+    const validate = compile(
+      deriveOrThrow(catalogData, { components: ['ki-textarea'], target: 'openai-strict' }),
+    );
+    const placeholders = Object.fromEntries(
+      Object.keys(catalogData.components['ki-textarea'].props).map((name) => [name, null]),
+    );
+    const node = (label: unknown) => ({
+      actions: [],
+      root: { action: null, component: 'ki-textarea', props: { ...placeholders, label } },
+      version: 1,
+    });
+    expect(validate(node(null))).toBe(false);
+    expect(validate(node('Notes'))).toBe(true);
+  });
+
   it('S4 collapses duplicate subset tags instead of duplicating branches (review regression)', () => {
     const artifact = deriveOrThrow(catalogData, { components: ['ki-badge', 'ki-badge'] });
     const defs = artifact['$defs'] as Record<string, { anyOf?: readonly unknown[] }>;

@@ -265,6 +265,13 @@ Feature: Emitter kit
     Given a catalog whose declared enum surface exceeds the strict target's documented limit
     When the schema is derived for that target
     Then derivation fails naming the offending component and the exceeded limit
+
+  # Family: core behavior — declared prop constraints
+  # S16
+  Scenario: Required props are required in the schema and flagged in the prompt
+    Given a catalog whose ki-textarea declares "label" as a required prop
+    When the JSON Schema and the prompt are derived
+    Then the schema rejects a ki-textarea without "label" and the prompt marks "label" as required
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -275,7 +282,7 @@ are inapplicable.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16 | |
 | Keyboard path | | N/A — no interactive surface; artifacts are data consumed by models and integrations |
 | Assistive-tech outcome | | N/A — nothing renders; the emitter derives text and schema documents |
 | Form participation | | N/A — no form control is introduced |
@@ -343,6 +350,13 @@ are inapplicable.
 - **FR-012**: The kit's artifacts MUST embed the catalog schema version
   (and the elements version when the catalog carries one) so emission-side
   version skew is diagnosable (Art. IX).
+
+- **FR-013**: The limits a catalog declares on a prop MUST reach both
+  artifacts, so a model is told what the boundary will enforce: a
+  `required` prop is listed in the schema's `required` (with its `props`
+  container), is never nullable in a strict target, carries the non-blank
+  rule when it is a string, and is marked "required" in the prompt, whose
+  embedded example supplies every required prop (S16, S8).
 
 ### Key Entities
 

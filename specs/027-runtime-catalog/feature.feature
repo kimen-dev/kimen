@@ -99,3 +99,22 @@ Feature: Neutral runtime catalog
     Given a UI spec whose total payload size exceeds the declared validation size budget
     When the spec is validated against the catalog
     Then validation rejects the spec naming the exceeded size budget
+
+  # Family: core behavior — declared prop constraints
+  # S15
+  Scenario: A prop the component contract declares required is required in the catalog
+    Given the manifest marks ki-textarea's "label" as required by the component contract
+    When the catalog is generated
+    Then the catalog marks ki-textarea's "label" as required
+
+  # S16
+  Scenario Outline: A spec without a usable value for a required prop is rejected
+    Given a UI spec whose ki-textarea <label state>
+    When the spec is validated against the catalog
+    Then validation rejects the spec naming ki-textarea and the missing required prop "label"
+
+    Examples:
+      | label state                      |
+      | sets no "label"                  |
+      | sets "label" to an empty string  |
+      | sets "label" to only white space |

@@ -294,6 +294,17 @@ Feature: Consumer catalog registration
       | script    |
       | iframe    |
       | font-face |
+
+  # Family: declared prop constraints over registered components
+  # S18
+  Scenario Outline: A constraint a registered component declares is enforced at validation
+    Given a catalog registered with "acme-kpi-card" declaring <declaration>
+    When a UI spec whose acme-kpi-card <violation> is validated against that catalog
+    Then validation rejects the spec naming acme-kpi-card, the prop and the rule "<rule>"
+
+    Examples:
+      | declaration                      | violation       | rule                  |
+      | the required string prop "title" | sets no "title" | missing-required-prop |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -307,7 +318,7 @@ own specs.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18 | |
 | Keyboard path | | N/A — no interactive surface; registration is data consumed by machines |
 | Assistive-tech outcome | | N/A — nothing new renders; registered components' accessibility contracts belong to their authors (documented limitation) |
 | Form participation | | N/A — no form control is introduced |
@@ -388,6 +399,11 @@ own specs.
   an inert diagnostic naming the tag (S17). Registration stays the primary
   boundary; this is defence in depth, mirroring the renderer's existing
   re-check of event-handler prop names.
+- **FR-014**: A definition's prop constraints MAY declare the limits the
+  generated catalog carries — `required` (027 FR-016) — in the same shape,
+  and the boundary MUST enforce them over registered components exactly as
+  over built-in ones (S18). A limit that is not well-formed for its
+  constraint is a `malformed-constraint` rejection (S7).
 
 ### Key Entities
 
@@ -424,7 +440,7 @@ own specs.
   the "an agent can author it from the docs alone" bar (FR-010).
 - **Guardrail/security boundary** (Art. VIII): the entire spec IS a
   guardrail change: registration opens the catalog without weakening any
-  invariant (FR-002, FR-007, FR-008). All seventeen scenarios require explicit
+  invariant (FR-002, FR-007, FR-008). All eighteen scenarios require explicit
   founder confirmation at gate 1; S4–S10 are the new adversarial surface,
   S11–S16 are the parity proof.
 

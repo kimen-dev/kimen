@@ -345,6 +345,15 @@ Feature: Guarded renderer
         | hasOwnProperty | slot of a ki-card     | unknown-slot      |
         | valueOf        | component             | unknown-component |
         | isPrototypeOf  | prop of a ki-badge    | unknown-prop      |
+
+  Rule: Declared prop constraints bound every render
+
+    # S21
+    Scenario: A spec missing a required prop never renders
+      Given a spec whose ki-textarea node sets no "label", which the catalog declares required
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names ki-textarea and the missing required prop "label"
 ```
 
 ### Scenario Family Coverage
@@ -356,7 +365,7 @@ governed by its own approved contract (specs `002`–`016`).
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1–S20 | |
+| Core behavior | S1–S21 | |
 | Keyboard path | | N/A — the renderer adds no interaction; keyboard behavior is owned by each rendered component's own contract |
 | Assistive-tech outcome | | N/A — the accessibility tree is produced by the rendered catalog components under their own contracts |
 | Form participation | | N/A — form behavior is owned by the rendered form components; the renderer only passes validated declared props |
@@ -515,7 +524,7 @@ governed by its own approved contract (specs `002`–`016`).
   stream closes; the invalid-chunk fixture attaches zero nodes at and below
   the violation and reports it.
 - **SC-007**: the `guarded-renderer` capability leaves `planned` only when
-  the S1–S20 traced tests run green inside the deterministic gates; the
+  the S1–S21 traced tests run green inside the deterministic gates; the
   capability gate enforces the linkage.
 - **SC-008**: module-boundary analysis reports zero protocol-specific
   imports or types in `@kimen/catalog`.

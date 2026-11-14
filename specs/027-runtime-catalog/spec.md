@@ -273,6 +273,25 @@ Feature: Neutral runtime catalog
     Given a UI spec whose total payload size exceeds the declared validation size budget
     When the spec is validated against the catalog
     Then validation rejects the spec naming the exceeded size budget
+
+  # Family: core behavior — declared prop constraints
+  # S15
+  Scenario: A prop the component contract declares required is required in the catalog
+    Given the manifest marks ki-textarea's "label" as required by the component contract
+    When the catalog is generated
+    Then the catalog marks ki-textarea's "label" as required
+
+  # S16
+  Scenario Outline: A spec without a usable value for a required prop is rejected
+    Given a UI spec whose ki-textarea <label state>
+    When the spec is validated against the catalog
+    Then validation rejects the spec naming ki-textarea and the missing required prop "label"
+
+    Examples:
+      | label state                      |
+      | sets no "label"                  |
+      | sets "label" to an empty string  |
+      | sets "label" to only white space |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -285,7 +304,7 @@ in specs 002–016.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16 | |
 | Keyboard path | | N/A — no interactive surface; the catalog is data consumed by machines |
 | Assistive-tech outcome | | N/A — nothing renders; accessibility contracts live in the component specs the catalog describes |
 | Form participation | | N/A — no form control is introduced; form components are described by entries, not implemented here |
@@ -371,6 +390,19 @@ in specs 002–016.
   boundary, never content sanitization; a host that renders outside the
   guarded renderer is outside the guardrail.
 
+- **FR-016**: A prop the component contract declares required MUST be
+  marked `required` in its catalog entry, and validation MUST reject a node
+  that omits it — or sets a string to nothing but white space, which names
+  nothing — with `missing-required-prop` naming the component and the prop
+  (S15, S16). The single source is the component class: a prop declared
+  with `!` is recorded by Stencil's docs-json as `required: true`, the
+  manifest carries that flag on the attribute, and the catalog derives from
+  the manifest (FR-001). Requiredness is never inferred from description
+  prose and never kept in a table beside the contract (Art. I). A component
+  that degrades gracefully without the prop (a decorative avatar or status
+  dot) keeps it optional: the validator cannot see adjacent content, so it
+  enforces only what the contract states unconditionally.
+
 ### Key Entities
 
 - **Catalog**: the generated, committed artifact describing everything an
@@ -406,10 +438,12 @@ in specs 002–016.
   half of the guardrail — unknown components, unknown props and undeclared
   actions are rejected as data (S5–S8), prototype-pollution keys are
   rejected and validation cost is bounded by a declared size budget
-  (S13, S14). The rendering half ("only catalog components render", "no
+  (S13, S14). A spec that validates is also one the component contract
+  calls usable: the props the contract requires are present (S15, S16).
+  The rendering half ("only catalog components render", "no
   code-execution path exists from spec data" at render time, URL-scheme
   allowlisting) is delivered and adversarially tested by spec 028; the two
-  specs jointly cover the four invariants. S5–S8, S13 and S14 require
+  specs jointly cover the four invariants. S5–S8, S13, S14 and S16 require
   explicit founder confirmation at gate 1.
 
 ## Success Criteria *(mandatory)*

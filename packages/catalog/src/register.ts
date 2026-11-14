@@ -76,6 +76,7 @@ const propConstraintSchema = z.strictObject({
   default: z.union([z.boolean(), z.number(), z.string()]).optional(),
   description: z.string(),
   documentedValues: z.array(z.string()).optional(),
+  required: z.boolean().optional(),
   type: z.enum(['boolean', 'enum', 'number', 'string']),
   values: z.array(z.string()).optional(),
 });
@@ -287,6 +288,7 @@ function normalizeConstraint(input: ParsedEntry['props'][string]): CatalogPropCo
     values?: readonly string[];
     documentedValues?: readonly string[];
     default?: boolean | number | string;
+    required?: boolean;
   } = { description: input.description, type: input.type };
   if (input.values !== undefined) {
     constraint.values = input.values;
@@ -296,6 +298,11 @@ function normalizeConstraint(input: ParsedEntry['props'][string]): CatalogPropCo
   }
   if (input.default !== undefined) {
     constraint.default = input.default;
+  }
+  // Only a set flag is kept: `required: false` and absence mean the same,
+  // and one normal form keeps registered and generated entries comparable.
+  if (input.required === true) {
+    constraint.required = true;
   }
   return constraint;
 }

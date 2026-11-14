@@ -78,6 +78,7 @@ function isConstraintShaped(value: unknown): boolean {
     typeof value['description'] === 'string' &&
     (value['values'] === undefined || isStringArray(value['values'])) &&
     (value['documentedValues'] === undefined || isStringArray(value['documentedValues'])) &&
+    (value['required'] === undefined || typeof value['required'] === 'boolean') &&
     scalarDefault
   );
 }

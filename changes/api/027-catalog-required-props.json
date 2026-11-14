@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "35729a0c6371f5e9b04209f44ff23aaed231d3f3d3a33e9fc76f5149ea3ccf97",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Accessible-name props required by contract (spec 027 S15-S16), cumulative since baseline 0.0.0 and superseding declaration stencil-4-45-2-generated-types (its deltas, and those of every declaration it supersedes, remain as declared there). New deltas, only on @kimen/elements: the label prop of ki-icon-button, ki-indicator, ki-input, ki-progress and ki-scroller is now declared required in the component class, as its own documentation already stated (ki-radio-group and ki-textarea already were). The public type narrows from string | undefined to string and required flips to true, so the generated JSX types, the React wrappers and the Angular proxies (required inputs) now demand the prop at compile time; the gate classifies a narrowed type as MAJOR and the cumulative delta since 0.0.0 was already MAJOR. No runtime behavior of any component changes: an element without label still renders exactly as before. The Custom Elements Manifest additionally carries required: true on those attributes and fields (an extension field the catalog derives from), and llms.txt prints the narrowed type. Zero removals, no root growth, no CSS or token change. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}

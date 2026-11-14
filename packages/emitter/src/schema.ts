@@ -77,6 +77,11 @@ function fnv1a(input: string): string {
   return (hash >>> 0).toString(16).padStart(8, '0');
 }
 
+// A required string must name something: the boundary rejects a blank value
+// (027 S16), and "contains one non-white-space character" is the same rule
+// as a regular expression every target supports.
+const NON_BLANK = '\\S';
+
 function propSchema(constraint: CatalogPropConstraint, strict: boolean): Record<string, unknown> {
   const base: Record<string, unknown> =
     constraint.type === 'enum'
@@ -84,6 +89,13 @@ function propSchema(constraint: CatalogPropConstraint, strict: boolean): Record<
       : { type: constraint.type };
   if (constraint.description !== '') {
     base['description'] = constraint.description;
+  }
+  if (constraint.required === true) {
+    if (constraint.type === 'string') {
+      base['pattern'] = NON_BLANK;
+    }
+    // A required prop has no placeholder: it is never nullable (S16).
+    return base;
   }
   // Strict targets demand every property present; optionality becomes a
   // null union the host strips back out with `normalizeEmission` (S13).
@@ -100,16 +112,22 @@ function componentBranch(
   const required = ['component'];
   const propEntries = Object.entries(entry.props);
   const propNames = propEntries.map(([name]) => name);
+  // The props the catalog declares required (S16): present in every dialect,
+  // and their container with them — an omitted `props` would otherwise skip
+  // the requirement altogether.
+  const requiredNames = propEntries
+    .filter(([, constraint]) => constraint.required === true)
+    .map(([name]) => name);
   if (propEntries.length > 0) {
     properties['props'] = {
       additionalProperties: false,
       properties: Object.fromEntries(
         propEntries.map(([name, constraint]) => [name, propSchema(constraint, strict)]),
       ),
-      required: strict ? propNames : undefined,
+      required: strict ? propNames : requiredNames.length > 0 ? requiredNames : undefined,
       type: 'object',
     };
-    if (strict) {
+    if (strict || requiredNames.length > 0) {
       required.push('props');
     }
   }

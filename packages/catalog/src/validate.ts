@@ -27,6 +27,12 @@ export interface CatalogPropConstraint {
   /** Documented values of a deliberately open string union (agent guidance). */
   readonly documentedValues?: readonly string[];
   readonly default?: boolean | number | string;
+  /**
+   * The prop is required by the component contract: a node that omits it, or
+   * sets a string to nothing but white space, is rejected with
+   * `missing-required-prop`. Absent means optional.
+   */
+  readonly required?: boolean;
   readonly description: string;
 }
 
@@ -94,6 +100,7 @@ export interface ValidationIssue {
     | 'invalid-id'
     | 'invalid-prop-type'
     | 'malformed-spec'
+    | 'missing-required-prop'
     | 'size-budget'
     | 'undeclared-action'
     | 'unknown-component'
@@ -415,6 +422,38 @@ function checkProp(
 }
 
 /**
+ * The required props of one node (S16): every prop its catalog entry marks
+ * `required` must be present, and a string must name something — a blank
+ * value satisfies the type but leaves the control as unnamed as an absent
+ * one. A wrong-typed value is `checkProp`'s finding, never a second issue
+ * here.
+ */
+function checkRequiredProps(
+  node: UiSpecNode,
+  entry: CatalogEntry,
+  path: string,
+  issues: ValidationIssue[],
+): void {
+  for (const [name, constraint] of Object.entries(entry.props)) {
+    if (constraint.required !== true) {
+      continue;
+    }
+    const value = ownEntry(node.props, name);
+    const blank = typeof value === 'string' && value.trim() === '';
+    if (value === undefined || blank) {
+      issues.push({
+        code: 'missing-required-prop',
+        message: blank
+          ? `${node.component} requires a non-blank value for the prop "${name}"`
+          : `${node.component} requires the prop "${name}"`,
+        path: `${path}.props.${name}`,
+        value: name,
+      });
+    }
+  }
+}
+
+/**
  * The id checks of one node (spec 035 FR-001): grammar, then uniqueness
  * against every id already seen in the same document.
  */
@@ -495,6 +534,9 @@ function checkNode(
       checkProp(node.component, name, value, constraint, `${path}.props.${name}`, issues);
     }
   }
+  if (entry !== undefined) {
+    checkRequiredProps(node, entry, path, issues);
+  }
   if (node.action !== undefined && !declaredActions.has(node.action)) {
     issues.push({
       code: 'undeclared-action',
@@ -571,8 +613,8 @@ export function toPlainData(
 
 /**
  * Validates already-plain data (a `toPlainData` clone) against the catalog
- * in use: neutral-format shape, catalog membership, prop types, declared
- * actions and slots. Returns the typed spec alongside the report so a caller
+ * in use: neutral-format shape, catalog membership, prop types, required
+ * props, declared actions and slots. Returns the typed spec alongside the report so a caller
  * that will render (spec 028) never re-parses. Never touches untrusted input
  * directly. `catalog` selects the catalog in use (spec 032); absent, the
  * built-in generated catalog applies.

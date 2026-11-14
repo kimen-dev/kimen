@@ -122,3 +122,14 @@ Feature: Consumer catalog registration
       | script    |
       | iframe    |
       | font-face |
+
+  # Family: declared prop constraints over registered components
+  # S18
+  Scenario Outline: A constraint a registered component declares is enforced at validation
+    Given a catalog registered with "acme-kpi-card" declaring <declaration>
+    When a UI spec whose acme-kpi-card <violation> is validated against that catalog
+    Then validation rejects the spec naming acme-kpi-card, the prop and the rule "<rule>"
+
+    Examples:
+      | declaration                      | violation       | rule                  |
+      | the required string prop "title" | sets no "title" | missing-required-prop |

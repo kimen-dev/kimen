@@ -69,7 +69,7 @@ export class KiIconButton {
    * When NOT to use: never omit it; never duplicate it as visible text (a
    * visible label means ki-button).
    */
-  @Prop({ reflect: true }) label?: string;
+  @Prop({ reflect: true }) label!: string;
 
   /**
    * Prevents activation, removes the icon button from keyboard reach, and

@@ -432,3 +432,59 @@ describe('createCatalog properties', () => {
     );
   });
 });
+
+describe('createCatalog — declared prop constraints over registered components', () => {
+  const withProps = (props: Record<string, unknown>) => ({
+    components: { 'acme-kpi-card': { ...acmeKpiCard, props } },
+  });
+
+  it.each([
+    [
+      'the required string prop "title"',
+      { title: { description: 'The metric name.', required: true, type: 'string' } },
+      {},
+      'title',
+      'missing-required-prop',
+    ],
+  ])(
+    'S18 enforces %s at validation, naming the component, the prop and the rule',
+    (_declaration, props, specProps, prop, rule) => {
+      const created = createCatalog(withProps(props));
+      expect(created.ok).toBe(true);
+      if (!created.ok) {
+        return;
+      }
+      const report = validateUiSpec(
+        { root: { component: 'acme-kpi-card', props: specProps }, version: 1 },
+        { catalog: created.catalog },
+      );
+      expect(report.ok).toBe(false);
+      const issue = report.issues[0];
+      expect(issue?.code).toBe(rule);
+      expect(issue?.path).toBe(`root.props.${prop}`);
+      expect(issue?.message).toContain('acme-kpi-card');
+      expect(issue?.message).toContain(`"${prop}"`);
+    },
+  );
+
+  it('S18 keeps a declared required flag through extension of the built-in catalog', () => {
+    const created = createCatalog(
+      withProps({ title: { description: 'The metric name.', required: true, type: 'string' } }),
+      { extend: catalogData },
+    );
+    expect(created.ok).toBe(true);
+    if (!created.ok) {
+      return;
+    }
+    expect(created.catalog.components['acme-kpi-card']?.props['title']?.required).toBe(true);
+    expect(created.catalog.components['ki-textarea']?.props['label']?.required).toBe(true);
+  });
+
+  it('S7 rejects a required flag that is not a boolean', () => {
+    const created = createCatalog(
+      withProps({ title: { description: 'The metric name.', required: 'yes', type: 'string' } }),
+    );
+    expect(created.ok).toBe(false);
+    expect(!created.ok && created.issues[0]?.code).toBe('malformed-constraint');
+  });
+});

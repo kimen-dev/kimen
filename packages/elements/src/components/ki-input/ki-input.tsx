@@ -53,7 +53,7 @@ export class KiInput {
    * name. This is mandatory for valid usage.
    * When NOT to use: never use `placeholder` as a label substitute.
    */
-  @Prop({ reflect: true }) label?: string;
+  @Prop({ reflect: true }) label!: string;
 
   /**
    * Hint shown when the field is empty.

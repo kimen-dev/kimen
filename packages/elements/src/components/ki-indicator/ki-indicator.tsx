@@ -56,9 +56,8 @@ export class KiIndicator {
    * without a label the name degrades to the bare position text (documented
    * as required authoring, FR-005). The label is never rendered visually
    * and position changes are never announced (no live region, FR-006).
-   * @default undefined
    */
-  @Prop() label?: string;
+  @Prop() label!: string;
 
   /** FR-002: non-negative integer, or zero dots — never a failure. */
   private normalizedCount(): number {

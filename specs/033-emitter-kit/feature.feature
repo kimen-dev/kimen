@@ -98,3 +98,10 @@ Feature: Emitter kit
     Given a catalog whose declared enum surface exceeds the strict target's documented limit
     When the schema is derived for that target
     Then derivation fails naming the offending component and the exceeded limit
+
+  # Family: core behavior — declared prop constraints
+  # S16
+  Scenario: Required props are required in the schema and flagged in the prompt
+    Given a catalog whose ki-textarea declares "label" as a required prop
+    When the JSON Schema and the prompt are derived
+    Then the schema rejects a ki-textarea without "label" and the prompt marks "label" as required

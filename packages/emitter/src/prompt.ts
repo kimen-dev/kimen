@@ -14,10 +14,25 @@ function propLine(name: string, constraint: CatalogPropConstraint): string {
     constraint.type === 'enum'
       ? `enum: ${(constraint.values ?? []).map((value) => `"${value}"`).join(' | ')}`
       : constraint.type;
+  const required = constraint.required === true ? ', required' : '';
   const description = constraint.description === '' ? '' : ` — ${constraint.description}`;
   const fallback =
     constraint.default === undefined ? '' : ` (default: ${JSON.stringify(constraint.default)})`;
-  return `  - \`${name}\` (${kind})${description}${fallback}`;
+  return `  - \`${name}\` (${kind}${required})${description}${fallback}`;
+}
+
+/** A value that satisfies a prop constraint, for the embedded example. */
+function exampleValue(constraint: CatalogPropConstraint): boolean | number | string {
+  switch (constraint.type) {
+    case 'boolean':
+      return true;
+    case 'number':
+      return 1;
+    case 'enum':
+      return constraint.values?.[0] ?? '';
+    default:
+      return 'Example';
+  }
 }
 
 function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
@@ -51,9 +66,10 @@ function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
 
 /**
  * The deterministic example spec: the first entry (sorted order) rendered
- * with its first enum prop at its first value and, when it declares a
- * default slot, one text child. Tests assert it validates against the same
- * catalog (S8) — the example can never drift from the boundary.
+ * with every required prop, its first enum prop at its first value and,
+ * when it declares a default slot, one text child. Tests assert it validates
+ * against the same catalog (S8) — the example can never drift from the
+ * boundary.
  */
 function exampleSpec(entries: readonly ResolvedEntry[]): {
   readonly root: UiSpecNode;
@@ -71,12 +87,18 @@ function exampleSpec(entries: readonly ResolvedEntry[]): {
     props?: Record<string, boolean | number | string>;
     slots?: Record<string, readonly (UiSpecNode | string)[]>;
   } = { component: tag };
+  const props: Record<string, boolean | number | string> = {};
+  let enumShown = false;
   for (const [name, constraint] of Object.entries(entry.props)) {
-    const value = constraint.type === 'enum' ? constraint.values?.[0] : undefined;
-    if (value !== undefined) {
-      node.props = { [name]: value };
-      break;
+    const showEnum =
+      !enumShown && constraint.type === 'enum' && constraint.values?.[0] !== undefined;
+    if (constraint.required === true || showEnum) {
+      props[name] = exampleValue(constraint);
+      enumShown ||= constraint.type === 'enum';
     }
+  }
+  if (Object.keys(props).length > 0) {
+    node.props = props;
   }
   if (Object.hasOwn(entry.slots, '')) {
     node.slots = { '': ['Example content'] };
@@ -105,6 +127,7 @@ export function catalogPrompt(
     '- Emit exactly ONE JSON document: {"version": 1, "actions": [...], "root": <node>} — no prose, no markdown fences around your final answer.',
     '- A <node> is {"component": "<tag>", "props": {...}, "action": "<name>", "slots": {"<slot>": [<node or "text">, ...]}}; "props", "action" and "slots" are optional.',
     '- Only the components listed below exist. Only their listed props. Enum props allow only their listed values.',
+    '- Props marked "required" MUST be present with a non-blank value: a spec that omits one is rejected.',
     '- Every "action" you bind MUST appear in the top-level "actions" list; actions are named intents delivered to the host as data.',
     '- Slot children are nodes or plain text strings — never HTML, never code, never URLs with schemes other than http(s).',
     '- Styling is not expressible in a spec; appearance belongs to the host theme.',

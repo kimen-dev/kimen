@@ -201,3 +201,12 @@ Feature: Guarded renderer
         | hasOwnProperty | slot of a ki-card     | unknown-slot      |
         | valueOf        | component             | unknown-component |
         | isPrototypeOf  | prop of a ki-badge    | unknown-prop      |
+
+  Rule: Declared prop constraints bound every render
+
+    # S21
+    Scenario: A spec missing a required prop never renders
+      Given a spec whose ki-textarea node sets no "label", which the catalog declares required
+      When the renderer validates the spec
+      Then no part of the spec renders
+      And the diagnostic names ki-textarea and the missing required prop "label"

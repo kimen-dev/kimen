@@ -75,6 +75,22 @@ cycles are rejected (a spec is a JSON tree), and every later check runs on
 the plain-data snapshot, so mutating the original mid-validation changes
 nothing.
 
+### Declared prop limits
+
+A catalog entry states more than a type. Each limit below is generated from
+the component contract — never from description prose, never from a table
+kept beside it — and is enforced by `validateUiSpec` and by every render
+path (`renderUiSpec`, the streaming renderer, the live surface):
+
+| Constraint field | Source in the component | Rejected as |
+|---|---|---|
+| `required: true` | a prop declared with `!` (`@Prop() label!: string`) | `missing-required-prop` when the node omits the prop, or sets a string to nothing but white space |
+
+A component that degrades gracefully without a prop (a decorative
+`ki-avatar` or `ki-status` next to visible text) keeps it optional: the
+validator cannot see adjacent content, so it enforces only what the
+contract states unconditionally.
+
 ### What validation does NOT protect against
 
 URL-scheme allowlisting (`javascript:`, `data:` and other executable

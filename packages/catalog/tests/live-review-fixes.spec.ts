@@ -205,7 +205,11 @@ describe('035 S21 — replace and remove keep what the user changed', () => {
     'remove of the node': [{ id: 'note', op: 'remove' }],
     'remove then insert of the same id': [
       { id: 'note', op: 'remove' },
-      { node: { component: 'ki-input', id: 'note' }, op: 'insert', parent: 'card' },
+      {
+        node: { component: 'ki-input', id: 'note', props: { label: 'Note' } },
+        op: 'insert',
+        parent: 'card',
+      },
     ],
     'replace of the ancestor': [{ id: 'card', node: newCard, op: 'replace' }],
     'replace of the node': [

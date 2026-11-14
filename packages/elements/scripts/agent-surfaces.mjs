@@ -173,6 +173,7 @@ export function buildManifest(docs, inputs = {}) {
               type: { text: prop.type },
               default: prop.default,
               description: prop.docs ?? '',
+              required: requiredFlag(prop),
             }),
           ),
         members: [
@@ -186,6 +187,7 @@ export function buildManifest(docs, inputs = {}) {
               description: prop.docs ?? '',
               attribute: prop.attr,
               reflects: Boolean(prop.reflectToAttr),
+              required: requiredFlag(prop),
             }),
           ),
           ...(component.methods ?? []).map((method) =>
@@ -570,6 +572,15 @@ function managedSlotsFor(component) {
     .filter((docsTag) => docsTag.name === 'managedSlot' && !isBlank(docsTag.text))
     .map((docsTag) => parseManagedSlotTag(docsTag.text))
     .filter((slot) => slot !== null);
+}
+
+// A prop declared with `!` in the component class is required by contract;
+// Stencil's docs-json records it as `required: true`. The manifest carries
+// the flag only when set (a Kimen extension field, like whenToUse), so the
+// catalog can reject a spec that omits the prop (spec 027 S15/S16) without a
+// second analysis pass over component source (Art. I).
+function requiredFlag(prop) {
+  return prop.required === true ? true : undefined;
 }
 
 function getDocsTag(component, name) {

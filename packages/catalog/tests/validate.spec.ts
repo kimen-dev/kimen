@@ -119,6 +119,45 @@ describe('validateUiSpec', () => {
     expect(bounded.issues[0]?.code).toBe('size-budget');
   });
 
+  it.each([
+    ['sets no "label"', {}],
+    ['sets "label" to an empty string', { label: '' }],
+    ['sets "label" to only white space', { label: ' \t\n' }],
+  ])(
+    'S16 rejects a ki-textarea that %s naming the component and the required prop',
+    (_state, props) => {
+      const report = validateUiSpec({ version: 1, root: { component: 'ki-textarea', props } });
+      expect(report.ok).toBe(false);
+      expect(report.issues).toHaveLength(1);
+      const issue = report.issues[0];
+      expect(issue?.code).toBe('missing-required-prop');
+      expect(issue?.path).toBe('root.props.label');
+      expect(issue?.value).toBe('label');
+      expect(issue?.message).toContain('ki-textarea');
+      expect(issue?.message).toContain('"label"');
+    },
+  );
+
+  it('S16 rejects a missing required prop on a node that carries no props object at all', () => {
+    const report = validateUiSpec({
+      version: 1,
+      root: { component: 'ki-card', slots: { '': [{ component: 'ki-textarea' }] } },
+    });
+    expect(report.ok).toBe(false);
+    expect(report.issues.map((issue) => [issue.code, issue.path])).toEqual([
+      ['missing-required-prop', 'root.slots.[0].props.label'],
+    ]);
+  });
+
+  it('S16 accepts the same node once the required prop carries a usable value', () => {
+    const report = validateUiSpec({
+      version: 1,
+      root: { component: 'ki-textarea', props: { label: 'Delivery notes' } },
+    });
+    expect(report.issues).toEqual([]);
+    expect(report.ok).toBe(true);
+  });
+
   // Purity-wall hardening (FR-004/FR-013/FR-014, Codex review of PR #57):
   // validation must never invoke foreign code, never blow the stack, and
   // never let object identity games defeat the budgets.

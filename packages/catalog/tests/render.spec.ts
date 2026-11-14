@@ -471,3 +471,30 @@ describe('render defaults', () => {
     expect(DEFAULT_RENDER_BUDGETS.maxBytes).toBeGreaterThan(0);
   });
 });
+
+describe('renderUiSpec — declared prop constraints bound every render', () => {
+  it('S21 never renders a spec missing a required prop, naming the component and the prop', () => {
+    const result = renderUiSpec(
+      {
+        version: 1,
+        root: { component: 'ki-card', slots: { '': [{ component: 'ki-textarea' }] } },
+      },
+      { surface },
+    );
+    expect(result.ok).toBe(false);
+    expect(surface.childNodes).toHaveLength(0);
+    const diagnostic = result.diagnostics[0];
+    expect(diagnostic?.rule).toBe('missing-required-prop');
+    expect(diagnostic?.path).toBe('root.slots.[0].props.label');
+    expect(diagnostic?.message).toContain('ki-textarea');
+    expect(diagnostic?.message).toContain('"label"');
+  });
+
+  it('S21 halts a stream on a chunk missing a required prop and attaches nothing of it', () => {
+    const stream = createStreamingRenderer({ surface });
+    const result = stream.push({ component: 'ki-textarea', props: { rows: 3 } });
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics[0]?.rule).toBe('missing-required-prop');
+    expect(surface.childNodes).toHaveLength(0);
+  });
+});

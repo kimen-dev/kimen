@@ -68,6 +68,27 @@ describe('catalogPrompt', () => {
     expect(report.ok).toBe(true);
   });
 
+  it('S16 marks required props as required in the prompt', () => {
+    const prompt = promptOrThrow(catalogData);
+    const block = prompt.slice(prompt.indexOf('### <ki-textarea>'));
+    expect(block).toMatch(/- `label` \(string, required\)/u);
+    expect(block).toMatch(/- `placeholder` \(string\)/u);
+    expect(prompt).toContain('Props marked "required" MUST be present');
+  });
+
+  it('S8 S16 keeps the example valid when its component declares a required prop', () => {
+    const derivation = catalogPrompt(catalogData, { components: ['ki-textarea'] });
+    expect(derivation.ok).toBe(true);
+    if (!derivation.ok) {
+      return;
+    }
+    const fence = /```json\n([\s\S]*?)\n```/u.exec(derivation.artifact);
+    const example: unknown = JSON.parse(fence?.[1] ?? 'null');
+    const report = validateUiSpec(example);
+    expect(report.issues).toEqual([]);
+    expect(report.ok).toBe(true);
+  });
+
   it('S10 stamps the catalog schema version on the prompt', () => {
     expect(promptOrThrow(catalogData)).toContain(catalogData.catalogSchemaVersion);
   });
