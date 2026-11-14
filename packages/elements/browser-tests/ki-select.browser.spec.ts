@@ -584,6 +584,120 @@ describe('ki-select in a real browser', () => {
   });
 });
 
+// WCAG 2.4.7 / 1.4.11 / 1.4.1: whoever moves through the list with the arrow
+// keys must be able to see where they are, and the committed choice must not
+// rest on a tint alone. Measured on the rendered result, in every theme and
+// scheme the tokens ship, against the panel the rows actually sit on.
+describe('ki-select active and selected options can be told apart', () => {
+  const contexts = [
+    { theme: 'onmars', scheme: 'light' },
+    { theme: 'onmars', scheme: 'dark' },
+    { theme: 'material3', scheme: 'light' },
+    { theme: 'material3', scheme: 'dark' },
+  ] as const;
+
+  type Rgba = [red: number, green: number, blue: number, alpha: number];
+
+  function parseColor(color: string): Rgba {
+    const channels =
+      /rgba?\(([^)]+)\)/
+        .exec(color)?.[1]
+        ?.split(/[\s,/]+/)
+        .map(Number) ?? [];
+    const [red, green, blue, alpha = 1] = channels;
+    if (red === undefined || green === undefined || blue === undefined) {
+      throw new Error(`Unparseable color: ${color}`);
+    }
+    return [red, green, blue, alpha];
+  }
+
+  function over([red, green, blue, alpha]: Rgba, [backRed, backGreen, backBlue]: Rgba): Rgba {
+    const mix = (front: number, back: number): number => front * alpha + back * (1 - alpha);
+    return [mix(red, backRed), mix(green, backGreen), mix(blue, backBlue), 1];
+  }
+
+  /** WCAG relative luminance. */
+  function luminance([red, green, blue]: Rgba): number {
+    const channel = (value: number): number => {
+      const normalized = value / 255;
+      return normalized <= 0.040_45 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+    };
+    return 0.2126 * channel(red) + 0.7152 * channel(green) + 0.0722 * channel(blue);
+  }
+
+  function contrast(first: Rgba, second: Rgba): number {
+    const lighter = Math.max(luminance(first), luminance(second));
+    const darker = Math.min(luminance(first), luminance(second));
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  /** The panel as painted: its (possibly translucent) fill over the page. */
+  function panel(el: KiSelectElement): Rgba {
+    const listbox = el.shadowRoot?.querySelector('[part="listbox"]');
+    if (!listbox) {
+      throw new Error('missing listbox');
+    }
+    return over(
+      parseColor(getComputedStyle(listbox).backgroundColor),
+      parseColor(getComputedStyle(document.body).backgroundColor),
+    );
+  }
+
+  /** France is selected; the keyboard has moved the active option to Portugal. */
+  async function openWithPortugalActive(
+    theme: (typeof contexts)[number]['theme'],
+    scheme: (typeof contexts)[number]['scheme'],
+  ): Promise<KiSelectElement> {
+    const el = await mountSelect('value="fr"');
+    const page = document.createElement('style');
+    // The page contract (@kimen/tokens/css/base): the page sits on surface s0.
+    page.textContent = `${material3Css} body { background-color: var(--ki-surface-s0); }`;
+    document.body.append(page);
+    document.documentElement.setAttribute('data-ki-theme', theme);
+    document.documentElement.setAttribute('data-ki-color-scheme', scheme);
+
+    trigger(el).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.element(trigger(el)).toHaveAttribute('aria-activedescendant', rowAt(el, 2).id);
+    return el;
+  }
+
+  it.each(contexts)(
+    'S7 the keyboard-active option shows an indicator at 3:1 or more against the panel ($theme $scheme)',
+    async ({ theme, scheme }) => {
+      const el = await openWithPortugalActive(theme, scheme);
+      const active = getComputedStyle(rowAt(el, 2));
+
+      expect(active.outlineStyle).toBe('solid');
+      expect(Number.parseFloat(active.outlineWidth)).toBeGreaterThanOrEqual(2);
+      expect(contrast(parseColor(active.outlineColor), panel(el))).toBeGreaterThanOrEqual(3);
+      // The indicator says where the keyboard is: no other row carries it.
+      expect(getComputedStyle(rowAt(el, 0)).outlineStyle).toBe('none');
+      expect(getComputedStyle(rowAt(el, 1)).outlineStyle).toBe('none');
+    },
+  );
+
+  it.each(contexts)(
+    'S12 the selected option carries a mark that does not rely on colour ($theme $scheme)',
+    async ({ theme, scheme }) => {
+      const el = await openWithPortugalActive(theme, scheme);
+      const mark = getComputedStyle(rowAt(el, 1), '::after');
+
+      // A drawn glyph in the label ink, not text and not a tint.
+      expect(mark.content).toBe('""');
+      expect(Number.parseFloat(mark.inlineSize)).toBeGreaterThan(0);
+      expect(Number.parseFloat(mark.blockSize)).toBeGreaterThan(0);
+      expect(Number.parseFloat(mark.borderBlockEndWidth)).toBeGreaterThan(0);
+      expect(mark.borderBlockEndColor).toBe(getComputedStyle(rowAt(el, 1)).color);
+      expect(contrast(parseColor(mark.borderBlockEndColor), panel(el))).toBeGreaterThanOrEqual(3);
+      // Unselected rows, the active one included, carry no mark.
+      expect(getComputedStyle(rowAt(el, 0), '::after').content).toBe('none');
+      expect(getComputedStyle(rowAt(el, 2), '::after').content).toBe('none');
+    },
+  );
+});
+
 // Boolean presence semantics (native HTML parity): a present attribute means
 // true whatever its value. Stencil >= 4.45 removes a host attribute when it
 // reflects a parsed `false`, so these run against the built output.
