@@ -200,6 +200,13 @@ async function mountPage(pageName: PageName, javaScript = true): Promise<void> {
     );
   }
   await settleInitialLayout();
+  // Swapping markup inside one long-lived document is not a navigation: on a
+  // loaded runner Chromium has applied a 2px scroll on the first frame after
+  // the swap, with no page script involved. A navigation starts at the scroll
+  // origin, so the mounted page does too; a scroll caused by the test's own
+  // actions still fails the origin checks that precede whole-page axe scans.
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  await nextFrame();
 }
 
 async function resetExperience(): Promise<void> {
