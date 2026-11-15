@@ -75,7 +75,7 @@ overrides:
   devalue: 6.0.3
   # GHSA-8r9p-f939-6h3c, GHSA-mrwp-f3q8-3g9p, GHSA-q3jh-wrc6-jgq8, via axios
   # and nx (^1.16.0), 1.16.0 → 1.16.2.
-  follow-redirects: 1.16.2
+  follow-redirects: 1.16.3
   # GHSA-gjj5-9665-rwrc, via less (^7.2.3), 7.3.0 → 7.4.0.
   probe-image-size: 7.5.0
   # GHSA-7w5x-hrqm-74c2 (High) and GHSA-r4xh-jqrq-34v2, via astro, knip and
