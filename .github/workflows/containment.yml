@@ -61,3 +61,110 @@ jobs:
           KIMEN_CONTAINMENT_IMAGE: kimen-sandbox
           KIMEN_REQUIRE_DOCKER_CONTAINMENT: '1'
         run: bash sandbox/tests/containment.test.sh
+
+  # TEMPORARY diagnostic for the S5 lock-race flake; reverted before review.
+  lock-race-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Platform mkdir
+        run: |
+          head -2 /etc/os-release
+          ls -l /bin/mkdir /usr/bin/mkdir
+          readlink -f /usr/bin/mkdir
+          /bin/mkdir --version | head -1 || true
+          dpkg -S "$(readlink -f /usr/bin/mkdir)" || true
+          dpkg -l | grep -Ei 'coreutils' || true
+          node --version
+          bash --version | head -1
+          nproc
+
+      - name: mkdir exclusivity probe (8 simultaneous creators x 300 rounds)
+        run: |
+          base=$(mktemp -d)
+          probe() {
+            local label=$1 creator=$2 doubled=0 round winners
+            for round in $(seq 1 300); do
+              rm -f "$base/go" "$base"/won.*
+              for k in 1 2 3 4 5 6 7 8; do
+                ( while [ ! -e "$base/go" ]; do :; done
+                  if $creator "$base/$label-$round"; then : > "$base/won.$k"; fi ) 2>/dev/null &
+              done
+              : > "$base/go"
+              wait
+              winners=$(find "$base" -maxdepth 1 -name 'won.*' | wc -l)
+              [ "$winners" -eq 1 ] || doubled=$((doubled + 1))
+            done
+            echo "lock-race-diag probe $label: rounds-without-exactly-one-winner=$doubled/300"
+          }
+          bin_mkdir() { /bin/mkdir -m 0700 "$1"; }
+          syscall_mkdir() { node -e 'require("node:fs").mkdirSync(process.argv[1], { mode: 0o700 })' "$1"; }
+          probe bin-mkdir bin_mkdir
+          probe mkdir-syscall syscall_mkdir
+
+      - name: S5 race stress (main loop.sh vs this branch)
+        run: |
+          git show origin/main:sandbox/loop.sh > "$RUNNER_TEMP/loop-main.sh"
+          harness="$RUNNER_TEMP/race.sh"
+          cat > "$harness" <<'HARNESS'
+          set -euo pipefail
+          REPO=$1; N=$2; LABEL=$3; LOOP_UNDER_TEST=$4
+          DEFS=$(mktemp)
+          sed -n '1,/^run_test .S5 clean attempts/p' "$REPO/sandbox/tests/loop-host.test.sh" | sed '$d' |
+            sed "s#^ROOT=.*#ROOT='$REPO'#" > "$DEFS"
+          source "$DEFS"
+          LOOP=$LOOP_UNDER_TEST
+          launch() {
+            local tmp=$1 tag=$2; shift 2
+            ( cd "$tmp/source"
+              env PATH="$tmp/bin:$PATH" KIMEN_HOST_EVENT_LOG="$tmp/events.log" KIMEN_HOST_STATE="$tmp/state" \
+                KIMEN_MODEL_LEASE_HELPER="$tmp/external-broker-fixture" KIMEN_REAL_FINALIZER="$FINALIZER" \
+                KIMEN_LOOP_TEST_MODE=1 "$@" bash sandbox/loop.sh main 'S5 host fixture'
+            ) > "$tmp/host.$tag.log" 2>&1
+          }
+          bad=0
+          for i in $(seq 1 "$N"); do
+            tmp=$(mktemp -d); new_host_fixture "$tmp"
+            set +e
+            launch "$tmp" first KIMEN_ATTEMPT_ID_TEST=20260710-010203 LOCK_WAIT_BEFORE_MKDIR_TEST=1 \
+              BOOTSTRAP_TEST_RC=0 AGENT_EXTERNAL_BLOCK_TEST=1 REVOKE_TEST_RC=0 GATE_TEST_RC=0 & p1=$!
+            launch "$tmp" second KIMEN_ATTEMPT_ID_TEST=20260710-010204 LOCK_WAIT_BEFORE_MKDIR_TEST=1 \
+              BOOTSTRAP_TEST_RC=0 AGENT_EXTERNAL_BLOCK_TEST=1 REVOKE_TEST_RC=0 GATE_TEST_RC=0 & p2=$!
+            remaining=200
+            until [ "$({ compgen -G "$tmp/state/lock-ready.*" || true; } | wc -l)" -eq 2 ] || [ "$remaining" -eq 0 ]; do
+              sleep 0.05; remaining=$((remaining - 1)); done
+            : > "$tmp/state/release-lock-race"
+            remaining=200
+            until [ -e "$tmp/state/agent-external-blocked" ] || [ "$remaining" -eq 0 ]; do
+              sleep 0.05; remaining=$((remaining - 1)); done
+            winner=$([ -e "$tmp/state/agent-external-blocked" ] && echo yes || echo no)
+            : > "$tmp/state/release-agent"
+            wait "$p1"; r1=$?; wait "$p2"; r2=$?
+            set -e
+            boots=$(grep -c '^docker:bootstrap$' "$tmp/events.log" 2>/dev/null || true)
+            leases=$(grep -c '^lease:acquire$' "$tmp/events.log" 2>/dev/null || true)
+            verdict=ok
+            { [ "$r1:$r2" = 0:75 ] || [ "$r1:$r2" = 75:0 ]; } && [ "$boots" = 1 ] && [ "$leases" = 1 ] && [ "$winner" = yes ] ||
+              { verdict=FAIL; bad=$((bad + 1)); }
+            echo "lock-race-diag $LABEL $i $verdict first=$r1 second=$r2 winner=$winner bootstraps=$boots leases=$leases"
+            rm -rf "$tmp"
+          done
+          echo "lock-race-diag $LABEL summary: $bad/$N failed"
+          [ "$bad" -eq 0 ]
+          HARNESS
+          bash "$harness" "$PWD" 25 main-loop "$RUNNER_TEMP/loop-main.sh" || true
+          bash "$harness" "$PWD" 50 fixed-loop "$PWD/sandbox/loop.sh"
