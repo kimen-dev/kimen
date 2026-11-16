@@ -4,7 +4,7 @@
 // committed component manifest and the emitter's derivations.
 import { readFileSync } from 'node:fs';
 
-import { catalogData } from '@kimen/catalog';
+import { catalogData, NATIVE_PRIMITIVE_TAGS } from '@kimen/catalog';
 import { catalogPrompt, uiSpecJsonSchema } from '@kimen/emitter';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
@@ -85,6 +85,17 @@ describe('Kimen MCP server: the catalog (038 S1-S4)', () => {
     const text = textOf(result);
     for (const tag of expected) {
       expect(text).toContain(tag);
+    }
+  });
+
+  it('S1: the native primitives of the generated catalog are listed, with no server change', async () => {
+    const result = await server.client.callTool({ arguments: {}, name: 'kimen_list_components' });
+    const tags = (result.structuredContent as { components: { tag: string }[] }).components.map(
+      (component) => component.tag,
+    );
+    expect(NATIVE_PRIMITIVE_TAGS.length).toBeGreaterThan(0);
+    for (const tag of NATIVE_PRIMITIVE_TAGS) {
+      expect(tags).toContain(tag);
     }
   });
 

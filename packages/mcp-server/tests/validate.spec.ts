@@ -74,6 +74,25 @@ describe('Kimen MCP server: validation (038 S5-S8, S15)', () => {
     expect(text).toContain('valid');
   });
 
+  it('S5: a spec of native primitives validates', async () => {
+    const spec = {
+      root: {
+        component: 'div',
+        slots: {
+          '': [
+            { component: 'h2', slots: { '': ['Inventory'] } },
+            {
+              component: 'p',
+              slots: { '': ['12 in ', { component: 'strong', slots: { '': ['stock'] } }] },
+            },
+          ],
+        },
+      },
+      version: 1,
+    };
+    expect((await validate(spec)).report).toEqual({ issueCount: 0, issues: [], ok: true });
+  });
+
   it('S5: a spec sent as JSON text is judged exactly like the object', async () => {
     const { report } = await validate(JSON.stringify(INVENTORY_SPEC));
     expect(report).toEqual({ issueCount: 0, issues: [], ok: true });

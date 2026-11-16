@@ -13,8 +13,9 @@
  * SSR/DSD is a deferred bet.
  */
 import { catalogData } from './generated/catalog.js';
+import { pinNative, writeNativeLayout } from './primitives.js';
 import { compatibleRange, isCompatibleSchemaVersion } from './schema-version.js';
-import { tagGrammarViolation } from './tag-grammar.js';
+import { renderableTagViolation } from './tag-grammar.js';
 import type {
   Catalog,
   CatalogEntry,
@@ -171,9 +172,14 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
   }
   // Renderer-native tag guard (032 FR-013/S17, defence in depth): `Catalog`
   // is structural, so a hand-built value that never crossed createCatalog
-  // could declare a native tag such as `script` or `iframe`. Re-apply the
-  // registration tag grammar before buildNode ever calls createElement.
-  const tagViolation = tagGrammarViolation(node.component);
+  // could declare a native tag such as `script` or `iframe`, or a laxer
+  // native primitive (037 S16). Re-apply the registration tag grammar — and,
+  // for a native primitive, the canonical-definition check — before
+  // buildNode ever calls createElement.
+  const tagViolation = renderableTagViolation(
+    node.component,
+    ownEntry(state.components, node.component),
+  );
   if (tagViolation !== null) {
     state.diagnostics.push({
       message: `component "${node.component}" ${tagViolation}`,
@@ -336,6 +342,35 @@ export function writeProp(element: Element, name: string, value: Scalar | undefi
 }
 
 /**
+ * Creates the element of one validated, guarded node: a catalog component
+ * or a native primitive (spec 037), the latter with what the renderer pins
+ * on it (an image's referrer policy and container-fit sizing).
+ */
+export function createNodeElement(doc: Document, component: string): Element {
+  const element = doc.createElement(component);
+  pinNative(element, component);
+  return element;
+}
+
+/**
+ * Writes the validated props of a node: a native layout element's props are
+ * layout written through the CSSOM (spec 037 D4), every other prop is an
+ * attribute. Never a `style` or `class` attribute from spec data.
+ */
+export function writeProps(
+  element: Element,
+  component: string,
+  props: Readonly<Record<string, Scalar>>,
+): void {
+  if (writeNativeLayout(element, component, props)) {
+    return;
+  }
+  for (const [name, value] of Object.entries(props)) {
+    writeProp(element, name, value);
+  }
+}
+
+/**
  * Declaratively neutralizes a form-submitting default when the catalog
  * types this component's `type` prop and the spec left it unset: pins it to
  * "button" so no native submit path runs alongside a click-bound action.
@@ -415,11 +450,9 @@ function buildNode(
   onAction: ((event: ActionEvent) => void) | undefined,
   entries: Readonly<Record<string, CatalogEntry>>,
 ): Element {
-  const element = doc.createElement(node.component);
+  const element = createNodeElement(doc, node.component);
   const props = node.props ?? {};
-  for (const [name, value] of Object.entries(props)) {
-    writeProp(element, name, value);
-  }
+  writeProps(element, node.component, props);
   if (node.action !== undefined && onAction !== undefined) {
     const action = node.action;
     wireActivation(

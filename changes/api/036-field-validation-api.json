@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "cef06aa59e2d3f13ed15dfab4c8c5b7a38650c11d54fdbdb90a046c8ec5ae601",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Field validation API (spec 036-field-validation-api), cumulative since baseline 0.0.0 and superseding declaration elements-cleanup (its deltas, and those of every declaration it supersedes, remain as declared there). (1) ki-input, ki-textarea, ki-select, ki-checkbox, ki-switch and ki-radio-group gain the native constraint validation members as synchronous class members delegating to ElementInternals: the getters validity, validationMessage (already present on ki-radio-group) and willValidate, and the methods checkValidity(), reportValidity() and setCustomValidity(message). They are plain members, not @Method, because @Method is always asynchronous and generic code that walks form.elements expects the native boolean; they exist on the custom-elements build and the framework wrappers, not on hosts created by the lazy loader. (2) An error set with setCustomValidity persists through the control's own revalidation until it is cleared and outranks the platform message. (3) Each control's description documents the members, so docs.json, the Custom Elements Manifest, llms.txt, the per-component llms documents and the catalog descriptions regenerate with that sentence. The gate classifies every module symbol signature change as MAJOR, so this candidate is declared major; the cumulative delta since 0.0.0 was already MAJOR. Purely additive: no member, prop, event, part, slot or token is removed or renamed, no root growth, no CSS or token change. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}
