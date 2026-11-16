@@ -141,9 +141,14 @@
           "summary": "The app-only MCP tool (kimen_surface_action, _meta.ui.visibility [\"app\"]) that receives the surface's declared actions as tools/call { action, data }; register it on the same server and validate the action."
         },
         {
+          "name": "acknowledgeSurfaceAction",
+          "signature": "acknowledgeSurfaceAction(action, options?) => SurfaceActionAcknowledgment",
+          "summary": "The action tool's answer for an action your server accepts. With { relay: true } the surface relays that exact action to the model as one ui/message, if the host advertises text messages: one line, kimen-surface-action followed by { action, data } as escaped JSON, at most 8192 bytes, built by the surface from what it sent, never from this result. Relay when the person's choice needs the model; leave it off for UI-only actions such as a refresh."
+        },
+        {
           "name": "createSurfaceBridge",
           "signature": "createSurfaceBridge(options) => SurfaceBridge",
-          "summary": "Runs inside the surface document and speaks the MCP Apps 2026-01-26 lifecycle: sends ui/initialize, refuses an undeclared negotiated version, renders ui/notifications/tool-result specs through the guarded renderer only after the handshake, answers ui/resource-teardown and ping, and dispatches only declared actions as tools/call; non-protocol messages are ignored with no state change."
+          "summary": "Runs inside the surface document and speaks the MCP Apps 2026-01-26 lifecycle: sends ui/initialize, refuses an undeclared negotiated version, renders ui/notifications/tool-result specs through the guarded renderer only after the handshake, answers ui/resource-teardown and ping, and dispatches only declared actions as tools/call; when the server acknowledges one for relay and the host advertises text messages, relays it once as ui/message. Non-protocol messages are ignored with no state change."
         },
         {
           "name": "MCP_APPS_PROTOCOL_VERSIONS",

@@ -62,6 +62,12 @@ export const METHOD_SIZE_CHANGED = 'ui/notifications/size-changed';
 /** View → Host: standard MCP tool call, proxied to the server (apps.mdx:493-495, 1337-1338). */
 export const METHOD_TOOLS_CALL = 'tools/call';
 
+/**
+ * View → Host: adds a message to the conversation, which the host follows up
+ * (apps.mdx:998-1035, 1345-1348). Spec 040 relays a declared action with it.
+ */
+export const METHOD_MESSAGE = 'ui/message';
+
 /** Connection health check, valid in either direction (apps.mdx:508). */
 export const METHOD_PING = 'ping';
 
@@ -79,6 +85,14 @@ export const KIMEN_ACTION_TOOL = 'kimen_surface_action';
 
 /** Key under `CallToolResult.structuredContent` that carries the surface payload (apps.mdx:1474). */
 export const KIMEN_SURFACE_KEY = 'kimenSurface';
+
+/**
+ * Key under the action tool's `CallToolResult.structuredContent` that carries
+ * the server's acknowledgment of one action: `{ action, relay }` (spec 040
+ * D2). `relay: true` for the exact action the surface sent is the server's
+ * only contribution to a relay; it never supplies the relayed text.
+ */
+export const KIMEN_ACTION_KEY = 'kimenAction';
 
 /** `Implementation` (MCP core): a peer's name and version. */
 export interface Implementation {
@@ -129,6 +143,22 @@ export interface ActionCallRequest {
   };
 }
 
+/**
+ * View → Host `ui/message` relaying one declared action (spec 040 FR-002).
+ * `content` is an array of one text block: the reference SDK's type
+ * (ext-apps `src/spec.types.ts:208-217`) and the schema its host validates
+ * (`src/generated/schema.ts:801-813`); the 2026-01-26 prose shows one object.
+ */
+export interface MessageRequest {
+  readonly jsonrpc: '2.0';
+  readonly id: RequestId;
+  readonly method: 'ui/message';
+  readonly params: {
+    readonly role: 'user';
+    readonly content: readonly [{ readonly type: 'text'; readonly text: string }];
+  };
+}
+
 /** `ui/notifications/size-changed` (apps.mdx:1206-1214). */
 export interface SizeChangedNotification {
   readonly jsonrpc: '2.0';
@@ -149,11 +179,12 @@ export type ViewResponse =
       readonly error: { readonly code: number; readonly message: string };
     };
 
-/** Every message the surface may emit: lifecycle, declared actions, size, responses. */
+/** Every message the surface may emit: lifecycle, declared actions and their relay, size, responses. */
 export type SurfaceOutboundMessage =
   | ActionCallRequest
   | InitializedNotification
   | InitializeRequest
+  | MessageRequest
   | SizeChangedNotification
   | ViewResponse;
 

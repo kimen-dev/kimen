@@ -17,17 +17,20 @@ const STABLE_VERSION = '2026-01-26';
  * (result fields: spec.types.ts:570-584). The `styles` block is elided — the
  * adapter applies the host's `theme` (apps.mdx:544-545) and does not map host
  * style variables. `hostContext` overrides the example's context fields; pass
- * `{ theme: undefined }` for a host that announces no theme.
+ * `{ theme: undefined }` for a host that announces no theme. `hostCapabilities`
+ * replaces the example's capabilities (`McpUiHostCapabilities`,
+ * spec.types.ts:494-523).
  */
 export const initializeResult = (
   id: number | string,
   protocolVersion = STABLE_VERSION,
   hostContext: Readonly<Record<string, unknown>> = {},
+  hostCapabilities: Readonly<Record<string, unknown>> = { logging: {}, serverTools: {} },
 ): Fixture => ({
   id,
   jsonrpc: '2.0',
   result: {
-    hostCapabilities: { logging: {}, serverTools: {} },
+    hostCapabilities,
     hostContext: {
       containerDimensions: { maxHeight: 600, width: 400 },
       displayMode: 'inline',
@@ -146,6 +149,45 @@ export const expectedActionCall = (
   jsonrpc: '2.0',
   method: 'tools/call',
   params: { arguments: { action, data }, name: KIMEN_ACTION_TOOL },
+});
+
+/**
+ * `McpUiHostCapabilities` of a host that accepts text messages from the View
+ * (spec 040 D3): `message` is `McpUiSupportedContentBlockModalities` with its
+ * `text` member (spec.types.ts:462-475, 523; draft apps.mdx:776-777).
+ */
+export const TEXT_MESSAGE_CAPABILITIES: Readonly<Record<string, unknown>> = {
+  logging: {},
+  message: { text: {} },
+  serverTools: {},
+};
+
+/**
+ * Host → View success response to a View request: the server's
+ * `CallToolResult` for a `tools/call` the host proxied (apps.mdx:1337-1342,
+ * 1400-1410), or the empty result of `ui/message` (apps.mdx:1014-1019).
+ */
+export const resultResponse = (
+  id: number | string,
+  result: Readonly<Record<string, unknown>> = {},
+): Fixture => ({
+  id,
+  jsonrpc: '2.0',
+  result,
+});
+
+/**
+ * Expected View → Host `ui/message` relaying one declared action (spec 040
+ * FR-002): role `user` (apps.mdx:1005-1011) and `content` as an ARRAY of one
+ * text block — the reference SDK's normative type (spec.types.ts:208-217) and
+ * the schema its host validates against (generated/schema.ts:801-813); the
+ * 2026-01-26 prose shows a single object.
+ */
+export const expectedMessageRequest = (id: number | string, text: string): Fixture => ({
+  id,
+  jsonrpc: '2.0',
+  method: 'ui/message',
+  params: { content: [{ text, type: 'text' }], role: 'user' },
 });
 
 /** Expected View → Host empty success result, after apps.mdx:1183-1188. */

@@ -152,10 +152,11 @@ origins in v1 (Art. VII): it would admit URLs the surface still cannot load.
 (`declareActionTool`, `visibility: ["app"]`). It acknowledges an action only
 when a surface it rendered on the same connection declared it (remembering
 the declared actions of the last 32 rendered surfaces) and refuses every
-other action by name. In v1 an acknowledged action has no further effect: it
-is not relayed to the model, because MCP Apps relays it with `ui/message` or
-`ui/update-model-context`, which the adapter does not implement yet
-(`COMPAT.md`). Relaying user actions to the model is a follow-up to spec 030.
+other action by name. *Amended by spec `040-surface-action-relay` (D7,
+2026-11-16):* every acknowledged action asks the surface to relay it to the
+model (`acknowledgeSurfaceAction(action, { relay: true })`), and the surface
+sends one `ui/message` to a host that advertises text messages; the render
+tool's description says how a relayed action reads. S12 holds as written.
 
 **D7 — "Valid" means "the guarded renderer will paint it".** The catalog
 validator alone accepts specs the guarded renderer refuses: 33 to 256 levels
@@ -258,7 +259,7 @@ rendered surface declared is refused.
 
 **Why this priority**: without the action tool, activating a control in an
 MCP Apps host ends in an unknown-tool error; relaying actions to the model is
-deferred (D6).
+spec 040's (D6, amended).
 
 **Independent Test**: render a spec with a declared action, then call the
 action tool with declared and undeclared actions.

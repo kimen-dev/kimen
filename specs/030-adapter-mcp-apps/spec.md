@@ -362,8 +362,11 @@ renderer contract, which this adapter consumes and never re-implements.
 - **FR-004**: Protocol traffic entering the surface MUST be validated at the
   boundary before it affects rendering; a message that does not conform to
   the declared protocol envelope is ignored without state change. Outbound
-  traffic MUST be limited to declared actions plus the protocol's required
-  lifecycle messages, mediated by the host. Before the `ui/initialize`
+  traffic MUST be limited to declared actions, the protocol's required
+  lifecycle messages, and the one `ui/message` relay spec
+  `040-surface-action-relay` defines for a declared action the integrating
+  server acknowledged for relay, all mediated by the host (amended by spec
+  040 D8, 2026-11-16; S6 and S17 hold as written). Before the `ui/initialize`
   handshake completes the surface sends nothing but that request, and host
   traffic does not affect rendering. A declared action leaves as a standard
   `tools/call` to one app-only tool whose name is fixed by the adapter, never
@@ -413,7 +416,8 @@ renderer contract, which this adapter consumes and never re-implements.
 - **Surface spec**: the catalog-schema payload derived from tool input and
   results; the only input the renderer accepts.
 - **Declared action**: a named interaction declared in the surface spec; the
-  only application traffic allowed to leave the surface.
+  only application traffic allowed to leave the surface, as its `tools/call`
+  and, when the server asks for it, its spec 040 relay.
 - **Protocol envelope**: the JSON-RPC 2.0 message shape (request,
   notification, result, error) host and surface exchange over `postMessage`
   (MCP Apps 2026-01-26); traffic outside it is ignored.

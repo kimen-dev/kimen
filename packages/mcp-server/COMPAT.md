@@ -49,10 +49,10 @@ result's text outline.
 
 - **stdio only.** No HTTP transport, no prompts, no completions, no
   subscriptions.
-- **No relay of surface actions.** A declared action is acknowledged and goes
-  no further; MCP Apps relays actions to the model with `ui/message` or
-  `ui/update-model-context`, which the surface adapter does not implement
-  yet.
+- **Relay through `ui/message` only.** Every acknowledged action asks the
+  surface to relay it (spec 040); the surface sends one `ui/message` only to
+  a host that advertises `hostCapabilities.message.text`, so a host without
+  it receives no relay. `ui/update-model-context` is not used.
 - **URL properties are refused.** The surface declares no network origin, so
   no URL could load or open there.
 - **Real hosts are not exercised by CI.** Interoperability is proven against

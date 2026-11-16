@@ -27,8 +27,11 @@ reference SDK `@modelcontextprotocol/ext-apps` is `2.0.4` and its
 `LATEST_PROTOCOL_VERSION` is `2026-01-26` (`src/spec.types.ts:29`). The
 `specification/draft/` revision is not implemented. Interoperability was
 exercised against that SDK's `AppBridge` host (handshake, tool input/result,
-`tools/call`, size, teardown); no production host (Claude, ChatGPT, VS Code,
-Goose) has been tested yet.
+`tools/call`, size, teardown); the relay of declared actions (spec 040) runs
+against that same `AppBridge` in the real-browser suite on every change
+(`browser-tests/relay.browser.spec.ts`, the SDK is a pinned development
+dependency). No production host (Claude, ChatGPT, VS Code, Goose) has been
+tested yet.
 
 The surface states its version in its `ui/initialize` request; a host whose
 `McpUiInitializeResult` negotiates any other protocol version is refused,
@@ -43,19 +46,35 @@ JSON-RPC 2.0 over `postMessage`, View = this surface document:
 | Direction | Message | Kimen behavior |
 | --- | --- | --- |
 | View → Host | `ui/initialize` request (`appInfo`, `appCapabilities: {}`, `protocolVersion`) | sent once on load; the only message before the host answers |
-| Host → View | `McpUiInitializeResult` | version negotiated; `hostContext` kept; its `theme` (`light` or `dark`) becomes the document's color scheme |
+| Host → View | `McpUiInitializeResult` | version negotiated; `hostContext` kept; its `theme` (`light` or `dark`) becomes the document's color scheme; `hostCapabilities.message.text` present means the host accepts relayed actions |
 | View → Host | `ui/notifications/initialized` | sent only after a supported result |
 | Host → View | `ui/notifications/tool-input`, `tool-input-partial`, `tool-cancelled` | acknowledged, never rendered |
 | Host → View | `ui/notifications/tool-result` (`CallToolResult`) | `structuredContent.kimenSurface.spec` rendered through the guarded renderer |
 | Host → View | `ui/notifications/host-context-changed` | merged into the host context; a `theme` of `light` or `dark` switches the document's color scheme, any other value is ignored |
 | View → Host | `tools/call` → `kimen_surface_action` `{ action, data }` | one per declared action; the tool name is fixed by the adapter |
+| Host → View | `CallToolResult` of `kimen_surface_action` | a surface it carries re-renders; `structuredContent.kimenAction = { action, relay: true }` for the exact action sent asks for its relay |
+| View → Host | `ui/message` `{ role: "user", content: [one text block] }` | the relay (spec 040): at most one per acknowledgment that asks for it, only to a host advertising text messages; text `kimen-surface-action ` + `{ action, data }` as escaped JSON, one line, at most 8192 bytes, never retried |
+| Host → View | `ui/message` result or error | success is silent; an error or `isError` is reported as `relay-failed` |
 | View → Host | `ui/notifications/size-changed` | on content size change, after the handshake |
 | Host → View | `ui/resource-teardown` request, `ping` | answered with `{}` |
 | Host → View | any other request | JSON-RPC error `-32601` |
 
-Not used in this release: `ui/message`, `ui/update-model-context`,
-`ui/open-link`, `ui/request-display-mode`, `resources/read`,
-`notifications/message`, app-provided tools.
+Not used in this release: `ui/update-model-context`, `ui/open-link`,
+`ui/request-display-mode`, `resources/read`, `notifications/message`,
+app-provided tools.
+
+Two gaps between the 2026-01-26 prose and the reference SDK at the pinned
+commit; the adapter follows the SDK on both:
+
+- `ui/message` `content`: the prose (apps.mdx:1005-1011) shows one object;
+  the SDK's type (`src/spec.types.ts:208-217`) and the schema its host
+  validates (`src/generated/schema.ts:801-813`) require an array of content
+  blocks. The surface sends an array of one text block.
+- The prose defines no host capability for `ui/message`; the SDK's
+  `McpUiHostCapabilities.message` (`src/spec.types.ts:523`) and the draft
+  (`specification/draft/apps.mdx:776-777`) do. The surface relays only to a
+  host whose `hostCapabilities.message` has a `text` member, and reports
+  `relay-unsupported` otherwise.
 
 ## What the surface document contains
 
@@ -109,7 +128,15 @@ and `allow-scripts` alone) and drives it only through `postMessage`.
 - The integrating server registers the app-only action tool
   (`declareActionTool`, `visibility: ["app"]`) and validates each `action`
   it receives; the surface only guarantees that undeclared actions never
-  leave.
+  leave. It decides, per action, whether the model hears of it: its answer
+  built with `acknowledgeSurfaceAction(action, { relay: true })` asks the
+  surface to relay that action; any other answer keeps the action between
+  surface and server.
+- **What a relay carries.** Exactly the dispatched action and its data (the
+  bound control's spec properties and live state), never the server's
+  answer or host data. A relay above 8192 bytes is not sent and
+  never cut (`relay-too-large`). Consent is the host's: the surface shows
+  nothing when it relays.
 - The surface consumes already-delivered protocol messages; transport and
   iframe sandboxing are the host's obligation (the document stays safe by
   construction even if the host does not enforce its content policy). A host

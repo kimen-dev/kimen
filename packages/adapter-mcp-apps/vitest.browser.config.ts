@@ -16,9 +16,10 @@ export default defineConfig({
   ...(cacheDir ? { cacheDir } : {}),
   optimizeDeps: {
     // The host double imports the adapter's public entry, which reaches the
-    // catalog validator. Pre-bundled up front so a cold cache never reloads a
-    // running spec.
-    include: ['@kimen/catalog > zod'],
+    // catalog validator; the reference host (spec 040 S15) is the SDK's own
+    // AppBridge. Pre-bundled up front so a cold cache never reloads a running
+    // spec.
+    include: ['@kimen/catalog > zod', '@modelcontextprotocol/ext-apps/app-bridge'],
   },
   test: {
     name: 'adapter-mcp-apps-browser',
