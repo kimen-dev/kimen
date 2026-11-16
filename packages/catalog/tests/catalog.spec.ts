@@ -6,7 +6,12 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { CATALOG_SCHEMA_VERSION, catalogData } from '../src/index.js';
+import {
+  CATALOG_SCHEMA_VERSION,
+  type CatalogPropConstraint,
+  catalogData,
+  NATIVE_PRIMITIVE_TAGS,
+} from '../src/index.js';
 
 interface ManifestDeclaration {
   customElement?: boolean;
@@ -39,7 +44,10 @@ const manifestElements = manifest.modules
 
 describe('catalog derivation', () => {
   it('S1 carries one entry per published custom element with tag, typed props, slots and events', () => {
-    const catalogTags = Object.keys(catalogData.components).sort();
+    // The native primitives (spec 037) are not manifest elements.
+    const catalogTags = Object.keys(catalogData.components)
+      .filter((tag) => !NATIVE_PRIMITIVE_TAGS.includes(tag))
+      .sort();
     const manifestTags = manifestElements.map((declaration) => declaration.tagName).sort();
     expect(catalogTags).toEqual(manifestTags);
     for (const declaration of manifestElements) {
@@ -90,7 +98,7 @@ describe('catalog derivation', () => {
     for (const declaration of manifestElements) {
       const entry =
         catalogData.components[declaration.tagName as keyof typeof catalogData.components];
-      const props: Record<string, { required?: boolean }> = entry.props;
+      const props: Readonly<Record<string, CatalogPropConstraint>> = entry.props;
       for (const attribute of declaration.attributes ?? []) {
         expect(props[attribute.name]?.required, `${declaration.tagName}.${attribute.name}`).toBe(
           attribute.required === true ? true : undefined,
@@ -109,7 +117,7 @@ describe('catalog derivation', () => {
     for (const declaration of manifestElements) {
       const entry =
         catalogData.components[declaration.tagName as keyof typeof catalogData.components];
-      const props: Record<string, { maximum?: number; minimum?: number }> = entry.props;
+      const props: Readonly<Record<string, CatalogPropConstraint>> = entry.props;
       for (const attribute of declaration.attributes ?? []) {
         const constraint = props[attribute.name];
         expect(constraint?.minimum, `${declaration.tagName}.${attribute.name}`).toBe(
@@ -126,7 +134,7 @@ describe('catalog derivation', () => {
     for (const declaration of manifestElements) {
       const entry =
         catalogData.components[declaration.tagName as keyof typeof catalogData.components];
-      const props: Record<string, { format?: string }> = entry.props;
+      const props: Readonly<Record<string, CatalogPropConstraint>> = entry.props;
       for (const attribute of declaration.attributes ?? []) {
         expect(props[attribute.name]?.format, `${declaration.tagName}.${attribute.name}`).toBe(
           attribute.format,

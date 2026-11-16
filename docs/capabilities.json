@@ -130,6 +130,24 @@
       "plannedText": "Changed-core mutation quality gate in hardening"
     },
     {
+      "id": "mcp-server",
+      "state": "available",
+      "evidence": ["build", "test"],
+      "destinations": [
+        "catalog-package-status",
+        "catalog-readme-status",
+        "emitter-readme-status",
+        "elements-workshop-status",
+        "kimen-package-status",
+        "kimen-readme-status",
+        "roadmap-status",
+        "root-readme-status",
+        "site-status"
+      ],
+      "availableText": "Kimen MCP server: over stdio, agents list and describe the catalog, validate UI specs with correctable issues and render them as MCP Apps surfaces through the guarded renderer",
+      "plannedText": ""
+    },
+    {
       "id": "protocol-adapter-a2ui",
       "state": "available",
       "evidence": ["build", "test"],

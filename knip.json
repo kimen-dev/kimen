@@ -35,6 +35,11 @@
       "project": ["**/*.{ts,tsx,mjs}", "!**/*.d.ts"],
       "stencil": false
     },
+    "packages/mcp-server": {
+      "entry": ["src/main.ts", "scripts/build.mjs", "*.config.{ts,mjs}"],
+      "project": ["**/*.{ts,mjs}", "!**/*.d.ts"],
+      "stencil": false
+    },
     "packages/elements": {
       "entry": [
         "src/index.ts",

@@ -23,6 +23,7 @@ export {
   type LiveSurface,
   type LiveSurfaceOptions,
 } from './live.js';
+export { NATIVE_PRIMITIVE_TAGS } from './primitives.js';
 export {
   type CatalogCreationOptions,
   type CatalogCreationResult,
@@ -35,6 +36,8 @@ export {
   type ActionEvent,
   createStreamingRenderer,
   DEFAULT_RENDER_BUDGETS,
+  type PreflightOptions,
+  preflightUiSpec,
   type RenderBudgets,
   type RenderDiagnostic,
   type RenderOptions,

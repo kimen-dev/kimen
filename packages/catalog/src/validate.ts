@@ -5,7 +5,9 @@
  * interprets spec content (FR-004). Specs composed only of cataloged
  * components with declared, well-typed props and declared actions are
  * accepted; everything else is rejected with issues naming the offending
- * component, prop, value or action and its location.
+ * component, prop, value or action and its location. The native primitives
+ * (spec 037) are catalog entries like any other, plus a content model and
+ * no actions.
  *
  * The URL policy is part of this boundary (FR-018): a URL-typed prop is held
  * to the scheme allowlist and, when the host declares them, to the allowed
@@ -22,6 +24,7 @@
 import { z } from 'zod';
 
 import { catalogData } from './generated/catalog.js';
+import { contentModelViolation, isNativePrimitive } from './primitives.js';
 import { isUrlProp, urlViolation } from './url-policy.js';
 
 /** One prop constraint, exactly as narrow as the manifest documents. */
@@ -38,6 +41,14 @@ export interface CatalogPropConstraint {
    * `missing-required-prop`. Absent means optional.
    */
   readonly required?: boolean;
+  /**
+   * A required string prop may be EXACTLY empty (spec 037): `""` is a
+   * deliberate value — `img`'s `alt` marks a decorative image — while white
+   * space alone is still `missing-required-prop`. Valid only alongside
+   * `required` on a `string` constraint. Absent means a blank value is
+   * missing.
+   */
+  readonly allowEmpty?: boolean;
   /**
    * Inclusive lower bound of a `number` prop; a smaller value is rejected
    * with `prop-out-of-range`. Absent means unbounded below.
@@ -115,9 +126,11 @@ export interface UiSpec {
 
 export interface ValidationIssue {
   readonly code:
+    | 'action-not-allowed'
     | 'depth-budget'
     | 'duplicate-id'
     | 'forbidden-key'
+    | 'invalid-child'
     | 'invalid-id'
     | 'invalid-prop-type'
     | 'malformed-spec'
@@ -525,7 +538,10 @@ function checkRequiredProps(
       continue;
     }
     const value = ownEntry(node.props, name);
-    const blank = typeof value === 'string' && value.trim() === '';
+    // `allowEmpty` admits the exact empty string as a deliberate value
+    // (spec 037: a decorative image's alt); white space alone stays blank.
+    const deliberatelyEmpty = constraint.allowEmpty === true && value === '';
+    const blank = typeof value === 'string' && value.trim() === '' && !deliberatelyEmpty;
     if (value === undefined || blank) {
       issues.push({
         code: 'missing-required-prop',
@@ -619,7 +635,17 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
   if (entry !== undefined) {
     checkRequiredProps(node, entry, path, issues);
   }
-  if (node.action !== undefined && !declaredActions.has(node.action)) {
+  if (node.action !== undefined && isNativePrimitive(node.component)) {
+    // A native primitive never binds an action (spec 037 D7): a clickable
+    // div or image is not keyboard operable (Art. V); controls are catalog
+    // components with their own activation.
+    issues.push({
+      code: 'action-not-allowed',
+      message: `the native element ${node.component} cannot bind an action`,
+      path: `${path}.action`,
+      value: node.action,
+    });
+  } else if (node.action !== undefined && !declaredActions.has(node.action)) {
     issues.push({
       code: 'undeclared-action',
       message: `action "${node.action}" is not declared in the spec's action list`,
@@ -638,7 +664,17 @@ function checkNode(node: UiSpecNode, path: string, context: CheckContext): void 
     }
     children.forEach((child, index) => {
       if (typeof child !== 'string') {
-        checkNode(child, `${path}.slots.${slotName}[${String(index)}]`, context);
+        const childPath = `${path}.slots.${slotName}[${String(index)}]`;
+        const misplaced = contentModelViolation(node.component, child.component);
+        if (misplaced !== null) {
+          issues.push({
+            code: 'invalid-child',
+            message: misplaced,
+            path: childPath,
+            value: child.component,
+          });
+        }
+        checkNode(child, childPath, context);
       }
     });
   }

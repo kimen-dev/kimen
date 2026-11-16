@@ -7,7 +7,7 @@
 // server cannot inject anything into a self-contained resource).
 //
 // Wire fixtures and their specification citations: ../tests/spec-messages.ts.
-import { catalogData } from '@kimen/catalog';
+import { catalogData, NATIVE_PRIMITIVE_TAGS } from '@kimen/catalog';
 import type { Catalog } from '@kimen/catalog';
 import { afterEach, describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
@@ -238,7 +238,10 @@ describe('the delivered document is a complete Kimen surface', () => {
   });
 
   it('S18 registers every catalog component and renders them all inside its own content policy', async () => {
-    const tags = Object.keys(catalogData.components);
+    // Native primitives (spec 037) are platform elements: nothing to register.
+    const tags = Object.keys(catalogData.components).filter(
+      (tag) => !NATIVE_PRIMITIVE_TAGS.includes(tag),
+    );
     const host = await embed();
 
     host.send(

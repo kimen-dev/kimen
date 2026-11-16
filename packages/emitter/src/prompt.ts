@@ -5,6 +5,7 @@
  * (research D3). Deterministic text (S11), version-stamped (S10).
  */
 import type { Catalog, CatalogEntry, CatalogPropConstraint, UiSpecNode } from '@kimen/catalog';
+import { NATIVE_PRIMITIVE_TAGS } from '@kimen/catalog';
 import type { Derivation, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
 import type { DerivationOptions } from './schema.js';
@@ -27,7 +28,8 @@ function propLine(name: string, constraint: CatalogPropConstraint): string {
       ? `enum: ${(constraint.values ?? []).map((value) => `"${value}"`).join(' | ')}`
       : `${constraint.type}${rangeText(constraint)}`;
   const url = constraint.format === 'url' ? ', URL' : '';
-  const required = constraint.required === true ? ', required' : '';
+  const emptiable = constraint.allowEmpty === true ? ', may be empty' : '';
+  const required = constraint.required === true ? `, required${emptiable}` : '';
   const description = constraint.description === '' ? '' : ` — ${constraint.description}`;
   const fallback =
     constraint.default === undefined ? '' : ` (default: ${JSON.stringify(constraint.default)})`;
@@ -54,6 +56,9 @@ function exampleValue(constraint: CatalogPropConstraint): boolean | number | str
 function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
   const lines: string[] = [`### <${tag}>`, entry.description];
   lines.push(`- Use when: ${entry.whenToUse}`, `- Avoid when: ${entry.whenNotToUse}`);
+  if (NATIVE_PRIMITIVE_TAGS.includes(tag)) {
+    lines.push('- Native HTML element: it never binds an action.');
+  }
   const propEntries = Object.entries(entry.props);
   if (propEntries.length > 0) {
     lines.push('- Props:');
@@ -144,7 +149,7 @@ export function catalogPrompt(
     '- A <node> is {"id": "<id>", "component": "<tag>", "props": {...}, "action": "<name>", "slots": {"<slot>": [<node or "text">, ...]}}; "id", "props", "action" and "slots" are optional.',
     '- "id" is a stable identity for a node the host may update later (a live surface addresses its operations by id): lowercase letters, digits, "-" and "_", starting with a letter or digit, at most 64 characters, unique within the document.',
     '- Only the components listed below exist. Only their listed props. Enum props allow only their listed values.',
-    '- Props marked "required" MUST be present with a non-blank value: a spec that omits one is rejected.',
+    '- Props marked "required" MUST be present with a non-blank value unless marked "may be empty": a spec that omits one is rejected.',
     '- Props marked "URL" accept only http(s) URLs or relative references; every other scheme is rejected, and the host may accept only absolute URLs of the origins it allows.',
     '- Every "action" you bind MUST appear in the top-level "actions" list; actions are named intents delivered to the host as data.',
     '- Slot children are nodes or plain text strings — never HTML, never code, never URLs with schemes other than http(s).',

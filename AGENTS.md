@@ -52,7 +52,8 @@ merges.
   allowlist); see `sandbox/README.md`
 - `/scripts/gates/`: the deterministic gate suite (Art. X)
 - `packages/`: `tokens`, `elements`, `catalog`, `emitter`, `adapter-a2ui`,
-  `adapter-mcp-apps`, `kimen` (placeholder)
+  `adapter-mcp-apps`, `mcp-server` (the `kimen-mcp` stdio binary), `kimen`
+  (placeholder)
 - `/docs/`: public documentation — `roadmap.md`, `releasing.md`, `guides/`
   (end-to-end GenUI guides), `migrations/`, `capabilities.json` (the
   capability-claims source that drives the generated status blocks)

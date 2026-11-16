@@ -11,6 +11,7 @@
 import { z } from 'zod';
 
 import { catalogData } from './generated/catalog.js';
+import { isNativePrimitive, nativeEntryViolation } from './primitives.js';
 import { propNameViolation } from './prop-names.js';
 import { isCompatibleSchemaVersion } from './schema-version.js';
 import { tagGrammarViolation } from './tag-grammar.js';
@@ -74,6 +75,7 @@ export type CatalogCreationResult =
 // 027 precedent): unknown keys rejected everywhere, scalar-only constraint
 // grammar, the entry shape shared verbatim with the generated catalog.
 const propConstraintSchema = z.strictObject({
+  allowEmpty: z.boolean().optional(),
   default: z.union([z.boolean(), z.number(), z.string()]).optional(),
   description: z.string(),
   documentedValues: z.array(z.string()).optional(),
@@ -208,6 +210,17 @@ function checkConstraint(
       value: name,
     });
   }
+  if (
+    constraint.allowEmpty !== undefined &&
+    (constraint.type !== 'string' || constraint.required !== true)
+  ) {
+    issues.push({
+      code: 'malformed-constraint',
+      message: `${tag} prop "${name}" declares allowEmpty but is not a required string constraint`,
+      path,
+      value: name,
+    });
+  }
   if (constraint.format !== undefined && constraint.type !== 'string') {
     issues.push({
       code: 'malformed-constraint',
@@ -235,6 +248,21 @@ function checkConstraint(
       });
     }
   }
+}
+
+/**
+ * Why `entry`'s tag cannot be registered, or null. A consumer definition
+ * never declares a native primitive (spec 037 D9); an extended base may
+ * carry one only as exactly Kimen's definition, as the built-in catalog does.
+ */
+function entryTagViolation(entry: ParsedEntry, fromBase: boolean): string | null {
+  if (!isNativePrimitive(entry.tag)) {
+    return tagGrammarViolation(entry.tag);
+  }
+  if (!fromBase) {
+    return 'is a native primitive that only Kimen defines; a consumer definition cannot declare it';
+  }
+  return nativeEntryViolation(entry.tag, normalizeEntry(entry));
 }
 
 /**
@@ -277,6 +305,7 @@ function checkEntry(
   issues: RegistrationIssue[],
   pathRoot = 'definition.components',
 ): void {
+  const fromBase = pathRoot !== 'definition.components';
   const path = `${pathRoot}.${key}`;
   if (entry.tag !== key) {
     issues.push({
@@ -286,7 +315,7 @@ function checkEntry(
       value: entry.tag,
     });
   }
-  const tagViolation = tagGrammarViolation(entry.tag);
+  const tagViolation = entryTagViolation(entry, fromBase);
   if (tagViolation !== null) {
     issues.push({
       code: 'invalid-tag',
@@ -330,6 +359,7 @@ function normalizeConstraint(input: ParsedEntry['props'][string]): CatalogPropCo
     minimum?: number;
     maximum?: number;
     format?: 'url';
+    allowEmpty?: boolean;
   } = { description: input.description, type: input.type };
   if (input.values !== undefined) {
     constraint.values = input.values;
@@ -353,6 +383,10 @@ function normalizeConstraint(input: ParsedEntry['props'][string]): CatalogPropCo
   }
   if (input.format !== undefined) {
     constraint.format = input.format;
+  }
+  // Like `required`, only a set flag is kept (spec 037).
+  if (input.allowEmpty === true) {
+    constraint.allowEmpty = true;
   }
   return constraint;
 }

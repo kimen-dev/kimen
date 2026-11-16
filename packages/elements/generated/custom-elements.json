@@ -2240,7 +2240,7 @@
           "name": "KiCheckbox",
           "customElement": true,
           "tagName": "ki-checkbox",
-          "description": "A form-associated checkbox for selecting independent options.",
+          "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
           "whenToUse": "selecting one or more independent options that a form submits\nlater, including a \"select all\" parent that presents partial selection with\n`indeterminate`. Always provide a visible label in the default slot.",
           "whenNotToUse": "a single mutually exclusive choice, an immediate on/off\neffect, triggering an action, unlabeled/icon-only usage, or\n`checked=\"false\"` to mean unchecked. Boolean attributes use presence\nsemantics; omit `checked` to express unchecked.",
           "attributes": [
@@ -3994,7 +3994,7 @@
           "name": "KiInput",
           "customElement": true,
           "tagName": "ki-input",
-          "description": "A token-styled single-line text field with native input semantics.",
+          "description": "A token-styled single-line text field with native input semantics.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
           "whenToUse": "collect one line of free text from a person, always with a\nvisible `label`; choose the `type` and `autocomplete` that match the entry\npurpose.",
           "whenNotToUse": "multiline text, predefined choices, boolean state, numeric\nstepper entry, or placeholder-only labeling.",
           "attributes": [
@@ -5422,7 +5422,7 @@
           "name": "KiRadioGroup",
           "customElement": true,
           "tagName": "ki-radio-group",
-          "description": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.",
+          "description": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
           "whenToUse": "a person must choose exactly one of a small set of mutually\nexclusive options that should all be visible at once.",
           "whenNotToUse": "many options or tight space (use `ki-select`), independent\non/off settings (use `ki-checkbox` or `ki-switch`), multiple selection, or\nauthored selection on options; set this group's `value` instead.",
           "attributes": [
@@ -5767,7 +5767,7 @@
           "name": "KiSelect",
           "customElement": true,
           "tagName": "ki-select",
-          "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.",
+          "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
           "whenToUse": "choose exactly one value from a known closed list, especially\nwhen there are roughly five or more choices or space is limited.",
           "whenNotToUse": "`ki-radio-group` for a few always-visible choices,\n`ki-input` for free or searchable text, `ki-checkbox`/`ki-switch` for\nbinary decisions, or multiselect and command menus.",
           "attributes": [
@@ -6427,7 +6427,7 @@
           "name": "KiSwitch",
           "customElement": true,
           "tagName": "ki-switch",
-          "description": "A token-styled switch for immediate on/off settings.",
+          "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
           "whenToUse": "binary settings whose change takes effect immediately, always\nwith a slotted label.",
           "whenNotToUse": "selections collected for later form submission; use\nki-checkbox for recorded choices, ki-radio-group for mutually exclusive\nchoices, and ki-button for actions.",
           "attributes": [
@@ -7287,7 +7287,7 @@
           "name": "KiTextarea",
           "customElement": true,
           "tagName": "ki-textarea",
-          "description": "A token-styled multiline text field with native form semantics.",
+          "description": "A token-styled multiline text field with native form semantics.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
           "whenToUse": "free-form text longer than one line, such as comments,\ndescriptions, messages, delivery notes, or addresses when paired with a\nmatching `autocomplete` purpose.",
           "whenNotToUse": "single-line values (`ki-input`), constrained choices,\nrich or formatted text editing, or search boxes.\n\nAgent note: initial text is declared through the `value` attribute; element\ntext content is ignored. Enter inserts a line break and never submits the\nenclosing form, the inverse of `ki-input`.",
           "attributes": [

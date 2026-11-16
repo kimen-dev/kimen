@@ -75,6 +75,51 @@ cycles are rejected (a spec is a JSON tree), and every later check runs on
 the plain-data snapshot, so mutating the original mid-validation changes
 nothing.
 
+### Native primitives
+
+Next to catalog components a spec may carry a closed set of native HTML
+elements (spec 037), listed in `NATIVE_PRIMITIVE_TAGS`:
+
+- **Text**: `h2`, `h3`, `h4`, `p`, and `strong`/`em` inside them. No
+  attributes; the text takes the host page's typography (the renderer
+  writes none). `h1` is the host's.
+- **Image**: `img` with `src` (held to the URL policy below), `alt`
+  (required: a description, or exactly `""` for a decorative image; white
+  space alone is rejected) and optional `width`/`height` hints. The
+  renderer pins `referrerpolicy="no-referrer"` and container-fit sizing.
+- **Layout**: `div` with `direction` (`column` | `row`), `gap` (a spacing
+  token step: `zero`, `xs`, `sm`, `md`, `lg`, `xl`, `3xl`, `7xl`, written
+  as `var(--ki-space-<step>)`), `align`, `justify` and `wrap`. The layout
+  is written through the CSSOM, never as a `style` attribute, so a page
+  whose Content-Security-Policy forbids inline styles keeps working.
+
+```json
+{
+  "version": 1,
+  "root": {
+    "component": "div",
+    "props": { "gap": "lg" },
+    "slots": {
+      "": [
+        { "component": "h2", "slots": { "": ["Resumen"] } },
+        { "component": "p", "slots": { "": ["Ventas de ", { "component": "strong", "slots": { "": ["marzo"] } }] } },
+        { "component": "img", "props": { "src": "/img/ventas.png", "alt": "Gráfico de ventas" } },
+        { "component": "ki-button", "slots": { "": ["Ver detalle"] } }
+      ]
+    }
+  }
+}
+```
+
+Every other element (`script`, `iframe`, `a`, `span`, `SCRIPT`, …) is
+`unknown-component`, and every other attribute (`style`, `class`, `on*`,
+`srcset`, …) is `unknown-prop`. Headings, paragraphs and emphasis accept
+only text, `strong` and `em` (`invalid-child` otherwise), and no native
+element binds an action (`action-not-allowed`). The primitives come with
+the built-in catalog and with catalogs that `extend` it; a consumer
+definition can never declare one, and the renderer renders a native tag
+only when the catalog in use carries exactly Kimen's definition of it.
+
 ### Declared prop limits
 
 A catalog entry states more than a type. Each limit below is generated from
@@ -209,6 +254,22 @@ Every rejection is a `RenderDiagnostic` — node path, violated rule and
 offending value — pure data, safe to display because a host renders it as
 text.
 
+`preflightUiSpec(input, options?)` returns the renderer's verdict without a
+DOM: it runs exactly the preparation `renderUiSpec` runs before its first
+attach (purity wall, version gate, payload budget, catalog validation, then
+the depth, node-count, tag, activation and prop-name guards) and renders
+nothing. A DOM-less boundary — the [Kimen MCP server](../mcp-server/README.md),
+or a service that checks specs before forwarding them to a page — reports as
+valid only what the renderer will paint; `validateUiSpec` alone accepts specs
+the renderer's tighter budgets refuse.
+
+```ts
+import { preflightUiSpec } from '@kimen/catalog';
+
+const verdict = preflightUiSpec(spec, { allowedUrlOrigins: [] });
+if (!verdict.ok) console.warn(verdict.diagnostics); // same diagnostics renderUiSpec would return
+```
+
 ## Live surface
 
 `createLiveSurface` keeps a long-lived surface current through atomic
@@ -324,6 +385,7 @@ context.
 - **available** — Emitter kit: model-agnostic prompt, catalog-specialized JSON Schema and tool definition so any LLM emits valid specs, with a single-round repair loop
 - **available** — Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
+- **available** — Kimen MCP server: over stdio, agents list and describe the catalog, validate UI specs with correctable issues and render them as MCP Apps surfaces through the guarded renderer
 - **hardening** — Changed-core mutation quality gate in hardening
 - **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer
 - **available** — MCP Apps adapter: Kimen surfaces reach MCP Apps hosts as self-contained ui:// resources rendered through the guarded renderer
