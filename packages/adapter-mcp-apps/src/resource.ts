@@ -9,6 +9,7 @@
  */
 import { SURFACE_DOCUMENT } from './generated/surface-document.js';
 import {
+  KIMEN_ACTION_KEY,
   KIMEN_ACTION_TOOL,
   KIMEN_SURFACE_KEY,
   SURFACE_MIME_TYPE,
@@ -143,5 +144,41 @@ export function surfaceToolResult(spec: unknown, textFallback: string): SurfaceT
   return {
     content: [{ text: textFallback, type: 'text' }],
     structuredContent: { [KIMEN_SURFACE_KEY]: { spec } },
+  };
+}
+
+/** Options of `acknowledgeSurfaceAction`. */
+export interface AcknowledgeSurfaceActionOptions {
+  /**
+   * Ask the surface to relay this action to the model as one `ui/message`
+   * (spec 040 D2). Relay when the person's choice needs the model; leave it
+   * off for a UI-only action the tool fully handles (a refresh). Default
+   * `false`.
+   */
+  readonly relay?: boolean;
+}
+
+/** The `CallToolResult` of an acknowledged surface action (spec 040 FR-008). */
+export interface SurfaceActionAcknowledgment {
+  readonly content: readonly { readonly type: 'text'; readonly text: string }[];
+  readonly structuredContent: {
+    readonly kimenAction: { readonly action: string; readonly relay: boolean };
+  };
+}
+
+/**
+ * Builds the action tool's answer for an action the server accepts, after it
+ * checked that a surface it rendered declared it (the server is the
+ * authority). With `relay: true` the surface relays that exact action to the
+ * model, provided the host advertises text messages; the relayed text is
+ * built by the surface from what it sent, never from this result.
+ */
+export function acknowledgeSurfaceAction(
+  action: string,
+  options: AcknowledgeSurfaceActionOptions = {},
+): SurfaceActionAcknowledgment {
+  return {
+    content: [{ text: `Action ${JSON.stringify(action)} acknowledged.`, type: 'text' }],
+    structuredContent: { [KIMEN_ACTION_KEY]: { action, relay: options.relay === true } },
   };
 }

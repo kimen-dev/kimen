@@ -65,7 +65,7 @@ The binary takes no arguments.
 | `kimen_describe_component` | write a node for one component | `{ tag }` → its props (types, allowed values, defaults, required), slots, events, `--ki-*` tokens and parts; the text is the emitter's authoring block for it |
 | `kimen_validate_spec` | draft and correct a spec | `{ spec }` → `{ ok, issueCount, issues[] }`, each issue `{ code, path, message, value? }`; at most 50 issues listed, values cut to 256 characters |
 | `kimen_render_spec` | show the spec to the person | `{ spec }` → the MCP Apps surface result and a text outline; an invalid spec is never rendered, the issues come back instead |
-| `kimen_surface_action` | — (app-only) | the surface's declared actions; acknowledged only when a surface rendered on the same connection declared them |
+| `kimen_surface_action` | — (app-only) | the surface's declared actions; acknowledged only when a surface rendered on the same connection declared them; each acknowledgment asks the surface to relay the action to the model |
 
 `spec` is a UI spec object, or the same JSON as text. The catalog, the
 spec-authoring guide and the spec JSON Schema are also resources:
@@ -80,8 +80,11 @@ the surface document is `ui://kimen/surface`.
   512-component budgets. A spec that does not pass is never rendered.
 - **Only catalog components, only declared actions.** Components outside the
   catalog are refused by name. An action reaches the server only if a surface
-  it rendered declared it, and it goes no further: v1 does not relay actions
-  to the model.
+  it rendered declared it. The server then asks the surface to relay it, and
+  a host that advertises text messages receives one user message,
+  `kimen-surface-action {"action":…,"data":…}`, a single line of at most
+  8192 bytes that the surface builds from what it sent (spec 040). The
+  render tool's description tells the model how to read it.
 - **URL properties are refused.** The surface declares no network origin, so
   no URL could load or open there.
 - **Bounded input.** A stdio message over 4 MiB is discarded before it is

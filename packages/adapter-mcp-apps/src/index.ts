@@ -9,17 +9,21 @@
  * here or retires this package, never touching core.
  */
 export {
+  acknowledgeSurfaceAction,
   createKimenSurfaceResource,
   declareActionTool,
   declareToolSurface,
   surfaceToolResult,
 } from './resource.js';
 export type {
+  AcknowledgeSurfaceActionOptions,
   KimenActionTool,
   KimenSurfaceResource,
+  SurfaceActionAcknowledgment,
   SurfaceContentPolicy,
   SurfaceToolResult,
 } from './resource.js';
+export { RELAY_MAX_BYTES, SURFACE_ACTION_RELAY_PREFIX } from './relay.js';
 export {
   createSurfaceBridge,
   KIMEN_APP_INFO,
@@ -39,12 +43,14 @@ export {
   isSupportedProtocolVersion,
   JSONRPC_METHOD_NOT_FOUND,
   JSONRPC_VERSION,
+  KIMEN_ACTION_KEY,
   KIMEN_ACTION_TOOL,
   KIMEN_SURFACE_KEY,
   MCP_APPS_PROTOCOL_VERSIONS,
   METHOD_HOST_CONTEXT_CHANGED,
   METHOD_INITIALIZE,
   METHOD_INITIALIZED,
+  METHOD_MESSAGE,
   METHOD_PING,
   METHOD_RESOURCE_TEARDOWN,
   METHOD_SIZE_CHANGED,
@@ -64,6 +70,7 @@ export type {
   InitializedNotification,
   InitializeRequest,
   JsonRpcMessage,
+  MessageRequest,
   RequestId,
   SizeChangedNotification,
   SurfaceOutboundMessage,

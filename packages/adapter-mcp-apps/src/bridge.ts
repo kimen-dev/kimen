@@ -27,6 +27,12 @@
  * - The host's `theme` (apps.mdx:544-545) — in the handshake result or a later
  *   `ui/notifications/host-context-changed` — is handed to the document as its
  *   color scheme (S19); any value the protocol does not define is ignored (S20).
+ * - Spec 040: when the server's answer to a declared action's `tools/call`
+ *   asks for it (`structuredContent.kimenAction = { action, relay: true }`,
+ *   the exact action sent) and the host advertised text messages, the action
+ *   is relayed to the model as one `ui/message` (apps.mdx:998-1035) whose text
+ *   the adapter builds from the dispatched action and data alone (relay.ts).
+ *   At most one relay per acknowledgment, never retried, never after teardown.
  */
 import type { ActionEvent, RenderBudgets, RenderOptions, RenderResult } from '@kimen/catalog';
 import { renderUiSpec } from '@kimen/catalog';
@@ -40,12 +46,14 @@ import type {
 import {
   JSONRPC_METHOD_NOT_FOUND,
   JSONRPC_VERSION,
+  KIMEN_ACTION_KEY,
   KIMEN_ACTION_TOOL,
   KIMEN_SURFACE_KEY,
   MCP_APPS_PROTOCOL_VERSIONS,
   METHOD_HOST_CONTEXT_CHANGED,
   METHOD_INITIALIZE,
   METHOD_INITIALIZED,
+  METHOD_MESSAGE,
   METHOD_PING,
   METHOD_RESOURCE_TEARDOWN,
   METHOD_SIZE_CHANGED,
@@ -56,6 +64,15 @@ import {
   METHOD_TOOLS_CALL,
   parseJsonRpcMessage,
 } from './protocol.js';
+import { formatActionRelay, RELAY_MAX_BYTES, relayBytes } from './relay.js';
+
+type ActionData = Readonly<Record<string, boolean | number | string>>;
+
+/** One declared action whose `tools/call` awaits the server's answer. */
+interface PendingAction {
+  readonly action: string;
+  readonly data: ActionData;
+}
 
 /**
  * The surface's `appInfo` in `ui/initialize`. `version` is the adapter
@@ -156,6 +173,21 @@ function colorSchemeOf(context: Readonly<Record<string, unknown>>): SurfaceColor
   return theme === 'dark' || theme === 'light' ? theme : undefined;
 }
 
+/**
+ * Whether the host's capabilities accept text messages from the View
+ * (spec 040 D3): `hostCapabilities.message` is an object with a `text`
+ * member (ext-apps `src/spec.types.ts:462-475, 523`, draft apps.mdx:776-777).
+ * Anything else — absent, not an object, no `text` — is a host that did not
+ * say it listens, and receives no message in the person's name.
+ */
+function advertisesTextMessages(capabilities: unknown): boolean {
+  if (!isRecord(capabilities)) {
+    return false;
+  }
+  const message = capabilities['message'];
+  return isRecord(message) && isRecord(message['text']);
+}
+
 /** The declared action set the surface spec commits to (the outbound allowlist). */
 function declaredActionsOf(spec: unknown): ReadonlySet<string> {
   if (isRecord(spec) && Array.isArray(spec['actions'])) {
@@ -203,8 +235,12 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
   let declaredActions: ReadonlySet<string> = new Set();
   let nextId = 1;
   let initializeId: RequestId | undefined;
+  /** Whether the host advertised text messages in its handshake result (spec 040 D3). */
+  let acceptsTextMessages = false;
   /** Outstanding `tools/call` requests, by id: only their responses are accepted. */
-  const pendingActions = new Map<RequestId, string>();
+  const pendingActions = new Map<RequestId, PendingAction>();
+  /** Outstanding `ui/message` relays, by id, naming the action each relays. */
+  const pendingRelays = new Map<RequestId, string>();
   let lastSize: { width: number; height: number } | undefined;
   let sentSize: { width: number; height: number } | undefined;
 
@@ -239,10 +275,7 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
     });
   };
 
-  const dispatch = (
-    action: string,
-    data: Readonly<Record<string, boolean | number | string>> = {},
-  ): DispatchResult => {
+  const dispatch = (action: string, data: ActionData = {}): DispatchResult => {
     if (state !== 'ready') {
       const refusal: BridgeRefusal = {
         detail: `action "${action}" cannot leave a surface in state "${state}"`,
@@ -264,7 +297,9 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
       return { refusal, sent: false };
     }
     const id = nextId++;
-    pendingActions.set(id, action);
+    // A copy: the relay (spec 040) carries exactly what this request carried,
+    // even if the caller changes its object before the server answers.
+    pendingActions.set(id, { action, data: { ...data } });
     // `tools/call` (apps.mdx:493-495): the host proxies it to the server and
     // MUST reject it unless the tool's visibility includes "app" (:399-400).
     // The tool name is the adapter's constant, never spec data.
@@ -329,6 +364,94 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
     return ACCEPTED;
   };
 
+  /**
+   * Relays one acknowledged action to the model when the server asked for it
+   * (spec 040 FR-001). Returns the refusal that withheld the relay, if any.
+   * The server's answer contributes one boolean: the text is built from the
+   * action and data this surface dispatched, never from the answer (FR-003).
+   */
+  const relayAcknowledged = (
+    result: Record<string, unknown>,
+    pending: PendingAction,
+  ): BridgeRefusal | undefined => {
+    const structured = result['structuredContent'];
+    const acknowledgment = isRecord(structured) ? structured[KIMEN_ACTION_KEY] : undefined;
+    if (acknowledgment === undefined) {
+      // An acknowledgment without the Kimen key: the action stays between
+      // surface and server, as before spec 040 (S2).
+      return undefined;
+    }
+    if (
+      !isRecord(acknowledgment) ||
+      acknowledgment['action'] !== pending.action ||
+      typeof acknowledgment['relay'] !== 'boolean'
+    ) {
+      // A relay request for some other action, or one whose `relay` is not the
+      // boolean the protocol of D2 defines, relays nothing (S6).
+      return {
+        detail: `the server's acknowledgment of action "${pending.action}" is not a relay request for that action; nothing was relayed`,
+        reason: 'relay-mismatch',
+        value: pending.action,
+      };
+    }
+    if (!acknowledgment['relay']) {
+      // Acknowledged without relay: the action stays between surface and server.
+      return undefined;
+    }
+    if (!acceptsTextMessages) {
+      return {
+        detail: `the host did not advertise text messages (hostCapabilities.message.text); action "${pending.action}" was not relayed`,
+        reason: 'relay-unsupported',
+        value: pending.action,
+      };
+    }
+    const text = formatActionRelay(pending.action, pending.data);
+    const bytes = relayBytes(text);
+    if (bytes > RELAY_MAX_BYTES) {
+      // Never truncated: a cut value would tell the model something the
+      // person did not do (D5, S12).
+      return {
+        detail: `the relay of action "${pending.action}" is ${String(bytes)} bytes, above the ${String(RELAY_MAX_BYTES)}-byte bound; it was not sent`,
+        reason: 'relay-too-large',
+        value: pending.action,
+      };
+    }
+    const id = nextId++;
+    pendingRelays.set(id, pending.action);
+    options.send({
+      id,
+      jsonrpc: JSONRPC_VERSION,
+      method: METHOD_MESSAGE,
+      params: { content: [{ text, type: 'text' }], role: 'user' },
+    });
+    return undefined;
+  };
+
+  /**
+   * The host's answer to one relay: success is silent; a denial or failure is
+   * reported and never retried, so the action is never posted twice (S13).
+   */
+  const answerRelay = (
+    message: Extract<JsonRpcMessage, { kind: 'error' | 'result' }>,
+    action: string,
+  ): ReceiveResult => {
+    if (message.kind === 'error') {
+      return refuse({
+        detail: `the host did not relay action "${action}": ${message.error.message}`,
+        reason: 'relay-failed',
+        value: action,
+      });
+    }
+    if (message.result['isError'] === true) {
+      return refuse({
+        detail: `the host reported an error relaying action "${action}"`,
+        reason: 'relay-failed',
+        value: action,
+      });
+    }
+    return ACCEPTED;
+  };
+
   const respond = (id: RequestId, error?: { code: number; message: string }): void => {
     options.send(
       error === undefined
@@ -366,6 +489,7 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
     }
     const context = message.result['hostContext'];
     hostContext = isRecord(context) ? { ...context } : {};
+    acceptsTextMessages = advertisesTextMessages(message.result['hostCapabilities']);
     state = 'ready';
     // Before the confirmation leaves: the document is in the host's scheme by
     // the time the host may send it anything to render.
@@ -385,6 +509,9 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
         // apps.mdx:1171-1202: answer with an empty result; nothing leaves after.
         state = 'closed';
         declaredActions = new Set();
+        // Nothing relays after teardown (spec 040 S14): late answers are ignored.
+        pendingActions.clear();
+        pendingRelays.clear();
         respond(message.id);
         return ACCEPTED;
       }
@@ -396,28 +523,46 @@ export function createSurfaceBridge(options: SurfaceBridgeOptions): SurfaceBridg
     }
 
     if (message.kind === 'result' || message.kind === 'error') {
-      if (message.id === null || !pendingActions.has(message.id)) {
+      if (message.id === null) {
         return IGNORED;
       }
-      const action = pendingActions.get(message.id);
+      const relayed = pendingRelays.get(message.id);
+      if (relayed !== undefined) {
+        pendingRelays.delete(message.id);
+        return answerRelay(message, relayed);
+      }
+      const pending = pendingActions.get(message.id);
+      if (pending === undefined) {
+        // An answer to a request this surface never sent — e.g. the model
+        // calling the app-only tool itself — never relays (spec 040 S9).
+        return IGNORED;
+      }
       pendingActions.delete(message.id);
+      const { action } = pending;
       if (message.kind === 'error') {
         return refuse({
-          detail: `host rejected action "${String(action)}": ${message.error.message}`,
+          detail: `host rejected action "${action}": ${message.error.message}`,
           reason: 'action-failed',
           value: action,
         });
       }
       if (message.result['isError'] === true) {
         return refuse({
-          detail: `tool "${KIMEN_ACTION_TOOL}" reported an error for action "${String(action)}"`,
+          detail: `tool "${KIMEN_ACTION_TOOL}" reported an error for action "${action}"`,
           reason: 'action-failed',
           value: action,
         });
       }
       // "Views can request fresh data by calling tools" (apps.mdx:1477-1488):
       // a response that carries a surface re-renders through the same path.
-      return renderToolResult(message.result, false);
+      const rendered = renderToolResult(message.result, false);
+      // The relay depends on the acknowledgment only, not on that re-render.
+      const withheld = relayAcknowledged(message.result, pending);
+      if (withheld === undefined) {
+        return rendered;
+      }
+      report(withheld);
+      return { handled: true, ok: false, refusals: [...rendered.refusals, withheld] };
     }
 
     switch (message.method) {

@@ -3,7 +3,12 @@
 // host proxies the surface's `tools/call` to the server; here the client
 // plays that host. Each test opens its own connection: the declared-action
 // memory belongs to one connection.
-import { declareActionTool, KIMEN_ACTION_TOOL, surfaceResourceUri } from '@kimen/adapter-mcp-apps';
+import {
+  declareActionTool,
+  KIMEN_ACTION_KEY,
+  KIMEN_ACTION_TOOL,
+  surfaceResourceUri,
+} from '@kimen/adapter-mcp-apps';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { type Connection, connect, INVENTORY_SPEC, textOf } from './harness.js';
@@ -40,7 +45,9 @@ describe('Kimen MCP server: surface actions (038 S12-S14)', () => {
     });
     const result = await sendAction(connection, 'refresh', { sku: 'A-12' });
     expect(result.isError).not.toBe(true);
-    expect(result.structuredContent).toEqual({ acknowledged: 'refresh' });
+    expect(result.structuredContent).toEqual({
+      [KIMEN_ACTION_KEY]: { action: 'refresh', relay: true },
+    });
     expect(textOf(result)).toContain('"refresh"');
   });
 
@@ -59,7 +66,7 @@ describe('Kimen MCP server: surface actions (038 S12-S14)', () => {
     expect(rendered.isError).not.toBe(true);
     const result = await sendAction(connection, action);
     expect(result.isError).not.toBe(true);
-    expect(result.structuredContent).toEqual({ acknowledged: action });
+    expect(result.structuredContent).toEqual({ [KIMEN_ACTION_KEY]: { action, relay: true } });
     // The text echo stays bounded.
     expect(textOf(result).length).toBeLessThan(400);
   });

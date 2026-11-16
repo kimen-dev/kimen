@@ -54,6 +54,7 @@ returning tool results and host negotiation — is
 
 ```ts
 import {
+  acknowledgeSurfaceAction,
   createKimenSurfaceResource,
   declareActionTool,
   declareToolSurface,
@@ -77,12 +78,28 @@ const result = surfaceToolResult(
 The result is a `CallToolResult`: the spec travels in
 `structuredContent.kimenSurface`, the text in `content`.
 
+```ts
+// 3. Answer a declared action. Ask for relay when the person's choice needs
+//    the model; leave it off for a UI-only action such as a refresh.
+const answer = acknowledgeSurfaceAction('confirm-order', { relay: true });
+// structuredContent.kimenAction = { action: 'confirm-order', relay: true }
+```
+
+With `relay: true`, a host that advertises text messages receives one
+`ui/message` in the person's name:
+`kimen-surface-action {"action":"confirm-order","data":{…}}`. The surface
+builds that line from the action and data it sent — never from your answer —
+escapes line breaks and direction controls, and sends nothing above 8192
+bytes. Tell the model how to read it in the description of the tool that
+renders the surface (spec 040).
+
 Inside the surface document, `createSurfaceBridge` speaks the MCP Apps
 2026-01-26 lifecycle: it opens with `ui/initialize`, confirms with
 `ui/notifications/initialized`, renders `ui/notifications/tool-result`
 through the guarded renderer, answers `ui/resource-teardown` and `ping`,
 ignores non-protocol traffic, and lets only declared actions leave as
-`tools/call` to `kimen_surface_action`. A host negotiating a protocol version
+`tools/call` to `kimen_surface_action` — relayed to the model as one
+`ui/message` when the server's answer asks for it. A host negotiating a protocol version
 outside `COMPAT.md` is refused at the handshake. The host's `theme` reaches
 the document as its color scheme: the packaged document sets it on its root
 element, and a custom document receives it through the bridge's

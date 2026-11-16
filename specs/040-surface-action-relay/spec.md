@@ -9,9 +9,9 @@
 
 **Created**: 2026-11-16
 
-**Status**: Draft — waiting for founder confirmation. No code is written
-until the founder confirms the scenarios, the guardrail scenarios and
-decisions D1–D8.
+**Status**: Confirmed — the founder confirmed the scenarios, the guardrail
+scenarios S5–S14 and decisions D1–D8 as recommended on 2026-11-16
+("Confirmo, implementa").
 
 **Input**: Founder request (2026-11-16): today `@kimen/adapter-mcp-apps`
 (spec `030-adapter-mcp-apps`) sends a declared action only as `tools/call
@@ -29,8 +29,7 @@ boundary (only declared actions dispatch, no code path from spec data) and
 require explicit founder confirmation at human gate 1.
 
 **Depends on**: PR [kimen-dev/kimen#281](https://github.com/kimen-dev/kimen/pull/281)
-(`@kimen/mcp-server`, spec 038) for S3 and S4. The adapter half (every other
-scenario) builds on `main` as it is.
+(`@kimen/mcp-server`, spec 038) for S3 and S4, merged on 2026-11-16.
 
 ## Design-source analysis
 
@@ -60,7 +59,7 @@ are recorded in `COMPAT.md` when this lands: the prose shows `ui/message`
 defines no host capability for `ui/message` while the SDK and the draft do.
 The adapter follows the SDK on both, as it already does for interoperability.
 
-## Decisions *(recommended, waiting for founder confirmation)*
+## Decisions *(founder, 2026-11-16)*
 
 **D1 — Mechanism: `ui/message`.** A person activating a control is a turn of
 the conversation: they chose "Confirm" and expect an answer. `ui/message`
@@ -130,8 +129,8 @@ U+0000–U+001F, quotes and backslashes. Stripping the prefix and parsing the
 rest returns exactly the dispatched action and data.
 
 No prose: the line carries no English (Art. IV, no hardcoded user-visible
-strings) and no label text from the spec, and it reads as data rather than as
-the person's words. Its meaning is taught to the model where the model reads
+strings) and nothing from the spec beyond the action and the dispatched data,
+and it reads as data rather than as the person's words. Its meaning is taught to the model where the model reads
 it: the description of the tool that rendered the surface (D7).
 
 **D5 — Bounded: 8192 bytes, never truncated.** The UTF-8 length of the
@@ -509,11 +508,22 @@ change.
 ## Constitutional Surface *(mandatory)*
 
 - **Public API delta** (Art. IX): additive (MINOR) on
-  `@kimen/adapter-mcp-apps` — `acknowledgeSurfaceAction` and its options and
-  result types, the `METHOD_MESSAGE` and `KIMEN_ACTION_KEY` constants, and
-  the four new `BridgeRefusal` reasons. `@kimen/mcp-server` (private,
-  unpublished) changes its action answer additively. Zero change to the
-  public API of `@kimen/elements`, `@kimen/tokens` or `@kimen/catalog`.
+  `@kimen/adapter-mcp-apps` — `acknowledgeSurfaceAction` with the
+  `AcknowledgeSurfaceActionOptions` and `SurfaceActionAcknowledgment` types;
+  the `METHOD_MESSAGE`, `KIMEN_ACTION_KEY`, `SURFACE_ACTION_RELAY_PREFIX` and
+  `RELAY_MAX_BYTES` constants; the `MessageRequest` member of
+  `SurfaceOutboundMessage`; and the four new `BridgeRefusal` reasons.
+  `@kimen/mcp-server` (private, unpublished) answers an acknowledged action
+  with the adapter's `kimenAction` request in place of its former
+  `acknowledged` field. Zero change to the public API of `@kimen/elements`,
+  `@kimen/tokens` or `@kimen/catalog`.
+- **Dependencies**: `@modelcontextprotocol/ext-apps` 2.0.4 (the reference
+  SDK `COMPAT.md` pins; published 2026-10-27 with SLSA provenance, no install
+  scripts, one dependency already in the lockfile) joins the adapter's
+  development dependencies with its required peers at the versions the
+  workspace already locks (`@modelcontextprotocol/core` and `client` 2.4.0,
+  `zod` 4.6.7), plus `fast-check` 4.10.2 for SC-002. Test-only: nothing
+  reaches the published package or the surface document.
 - **Bundle budget** (Art. IV): the bridge grows by the relay builder and its
   checks, well inside the surface document's existing budget; no dependency
   is added.

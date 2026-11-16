@@ -33,6 +33,8 @@ host delivers the tool result ──▶ ui/notifications/tool-result ──▶ g
                                           │
 user activates a declared action ◀────────┘
         └──▶ tools/call kimen_surface_action ──▶ host audit path ──▶ server
+                                  ◀── acknowledgment { kimenAction: { action, relay } }
+        └──▶ ui/message (only when relay is true) ──▶ host ──▶ model
 ```
 
 Every message crosses MCP's JSON-RPC base protocol; the host mediates both
@@ -90,6 +92,34 @@ const actionTool = declareActionTool('inventory');
 Validate `action` in its handler: the surface never sends an undeclared
 action, but your server is the authority. The handler may return another
 `surfaceToolResult`; the surface renders it through the same guarded path.
+
+**Tell the model what the person chose.** An app-only tool's result never
+reaches the model, so a click is invisible to it unless you ask for a relay.
+Answer the action with `acknowledgeSurfaceAction`:
+
+```ts
+import { acknowledgeSurfaceAction } from '@kimen/adapter-mcp-apps';
+
+// The person's choice needs the model: relay it.
+return acknowledgeSurfaceAction('confirm-order', { relay: true });
+// A UI-only action your tool fully handles (a refresh): no relay.
+return acknowledgeSurfaceAction('refresh-inventory');
+```
+
+With `relay: true`, and only when the host's `ui/initialize` result
+advertises `hostCapabilities.message.text`, the surface sends the host one
+`ui/message` with role `user`:
+
+```text
+kimen-surface-action {"action":"confirm-order","data":{"sku":"A-12"}}
+```
+
+The surface builds that line from the action and data it dispatched, never
+from your answer: line breaks and direction controls are written as `\u`
+escapes, a relay above 8192 bytes is not sent (never cut), and a relay the
+host refuses is reported, never retried. Say how to read the line in the
+description of the tool that renders the surface; `SURFACE_ACTION_RELAY_PREFIX`
+is the exact prefix.
 
 **Return tool results through the surface.** `surfaceToolResult` wraps a
 neutral UI spec together with a text fallback:
@@ -251,6 +281,10 @@ User activation of a rendered, action-bound control dispatches through the
 same path automatically; the host receives
 `{ jsonrpc: '2.0', id, method: 'tools/call', params: { name: 'kimen_surface_action', arguments: { action, data } } }`
 and mediates its own audit/consent step before anything reaches the server.
+When the server's answer asks for a relay, the bridge then sends one
+`ui/message`; every relay it withholds is reported to `onRefusal` as
+`relay-mismatch`, `relay-unsupported`, `relay-too-large` or, when the host
+refuses it, `relay-failed`.
 The tool name is a constant of the adapter: a spec can choose which declared
 action fires, never which tool is called.
 
@@ -275,9 +309,12 @@ if (!outcome.ok) {
 The protocol constants are exported for hosts and tests that speak the wire
 format directly: `JSONRPC_VERSION` (`'2.0'`), the `METHOD_*` names
 (`METHOD_INITIALIZE` = `'ui/initialize'`, `METHOD_TOOL_RESULT` =
-`'ui/notifications/tool-result'`, `METHOD_TOOLS_CALL` = `'tools/call'`, ...),
+`'ui/notifications/tool-result'`, `METHOD_TOOLS_CALL` = `'tools/call'`,
+`METHOD_MESSAGE` = `'ui/message'`, ...),
 `KIMEN_ACTION_TOOL` (`'kimen_surface_action'`), `KIMEN_SURFACE_KEY`
-(`'kimenSurface'`), `UI_SCHEME` (`'ui://'`), `SURFACE_MIME_TYPE`
+(`'kimenSurface'`), `KIMEN_ACTION_KEY` (`'kimenAction'`),
+`SURFACE_ACTION_RELAY_PREFIX` (`'kimen-surface-action '`), `RELAY_MAX_BYTES`
+(`8192`), `UI_SCHEME` (`'ui://'`), `SURFACE_MIME_TYPE`
 (`'text/html;profile=mcp-app'`), plus `surfaceResourceUri(name)`,
 `isSupportedProtocolVersion(version)` and `parseJsonRpcMessage(message)`.
 
