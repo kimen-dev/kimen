@@ -11,7 +11,7 @@ import { brotliCompressSync, gzipSync } from 'node:zlib';
 
 import { describe, expect, it } from 'vitest';
 
-import { BUNDLE } from './harness.js';
+import { BUNDLE, PACKAGE } from './harness.js';
 
 const BUDGET = { brotli: 345_000, gzip: 455_000, raw: 2_410_000 };
 
@@ -21,6 +21,12 @@ describe('Kimen MCP server: the shipped binary (038 S16)', () => {
     const result = spawnSync(process.execPath, [script, '--check'], { encoding: 'utf8' });
     expect(result.stderr).toBe('');
     expect(result.status).toBe(0);
+  });
+
+  it('S16: the declared binary is the built file, and the package ships it', () => {
+    expect(PACKAGE.bin['kimen-mcp']).toBe('./dist/kimen-mcp.mjs');
+    expect(BUNDLE.endsWith('/dist/kimen-mcp.mjs')).toBe(true);
+    expect(PACKAGE.files).toContain('dist/kimen-mcp.mjs');
   });
 
   it('stays within its size budget', () => {

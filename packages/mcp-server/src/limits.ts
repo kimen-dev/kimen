@@ -22,6 +22,3 @@ export const REMEMBERED_SURFACES = 32;
 
 /** Longest component tag `kimen_describe_component` accepts. */
 export const MAX_TAG_CHARS = 128;
-
-/** Longest action name `kimen_surface_action` accepts. */
-export const MAX_ACTION_CHARS = 256;

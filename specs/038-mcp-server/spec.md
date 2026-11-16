@@ -94,9 +94,11 @@ in v1.
   each offending value cut to 256 characters; the text outline at 200 lines.
 - One stdio message is at most 4 MiB. A longer line is discarded before it is
   parsed and reported on stderr; the server keeps serving.
-- Tool arguments are bounded too: a component tag at most 128 characters, an
-  action name at most 256. A call that omits `spec` is answered by the SDK's
-  argument validation with an error naming it.
+- Tool arguments are bounded too: a component tag at most 128 characters; an
+  action name at most the spec byte budget, so every action an accepted spec
+  can declare is accepted (the declared-action memory decides), and its echo
+  in the answer text is cut to 256 characters. A call that omits `spec` is
+  answered by the SDK's argument validation with an error naming it.
 - A spec that does not validate is never rendered (S10). Only catalog
   components are accepted, only declared actions are acknowledged (S13), and
   URL properties are refused (D5).

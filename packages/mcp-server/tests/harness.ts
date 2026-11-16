@@ -6,15 +6,20 @@
  * what is tested.
  */
 import { spawn } from 'node:child_process';
-import { realpathSync } from 'node:fs';
+import { readFileSync, realpathSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { Client } from '@modelcontextprotocol/client';
 import { StdioClientTransport } from '@modelcontextprotocol/client/stdio';
 
-export const BUNDLE = realpathSync(
-  fileURLToPath(new URL('../dist/kimen-mcp.mjs', import.meta.url)),
-);
+/** The package manifest: the binary under test is the one `bin` declares. */
+export const PACKAGE = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
+) as { bin: Record<string, string>; files: string[] };
+
+const BIN = PACKAGE.bin['kimen-mcp'] ?? '';
+
+export const BUNDLE = realpathSync(fileURLToPath(new URL(`../${BIN}`, import.meta.url)));
 
 export type Era = 'legacy' | 'modern';
 

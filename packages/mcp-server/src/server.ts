@@ -12,6 +12,7 @@ import {
   declareToolSurface,
   surfaceToolResult,
 } from '@kimen/adapter-mcp-apps';
+import { VALIDATION_MAX_BYTES } from '@kimen/catalog';
 import { McpServer } from '@modelcontextprotocol/server';
 import { z } from 'zod';
 
@@ -27,10 +28,10 @@ import {
   unknownComponentText,
 } from './catalog-answers.js';
 import { SERVER_VERSION } from './generated/manifest.js';
-import { MAX_ACTION_CHARS, MAX_TAG_CHARS } from './limits.js';
+import { MAX_TAG_CHARS } from './limits.js';
 import { fenced, outlineSpec } from './outline.js';
 import { SERVER_NAME } from './protocol.js';
-import { judgeSpec, type SpecReport } from './verdict.js';
+import { cut, judgeSpec, type SpecReport } from './verdict.js';
 
 const SURFACE_NAME = 'surface';
 const SURFACE = createKimenSurfaceResource(SURFACE_NAME);
@@ -179,7 +180,9 @@ export function createKimenServer(): McpServer {
       description: ACTION_TOOL.description,
       inputSchema: z
         .object({
-          action: z.string().min(1).max(MAX_ACTION_CHARS),
+          // Any action name an accepted spec can declare: the spec byte
+          // budget bounds it. The declared-action memory is the authority.
+          action: z.string().min(1).max(VALIDATION_MAX_BYTES),
           data: z.record(z.string(), z.union([z.boolean(), z.number(), z.string()])).optional(),
         })
         .strict(),
@@ -190,7 +193,7 @@ export function createKimenServer(): McpServer {
         return {
           content: [
             {
-              text: `Action ${JSON.stringify(action)} is not declared by any surface this server rendered on this connection; it was refused.`,
+              text: `Action ${JSON.stringify(cut(action))} is not declared by any surface this server rendered on this connection; it was refused.`,
               type: 'text',
             },
           ],
@@ -198,7 +201,7 @@ export function createKimenServer(): McpServer {
         };
       }
       return {
-        content: [{ text: `Action ${JSON.stringify(action)} acknowledged.`, type: 'text' }],
+        content: [{ text: `Action ${JSON.stringify(cut(action))} acknowledged.`, type: 'text' }],
         structuredContent: { acknowledged: action },
       };
     },

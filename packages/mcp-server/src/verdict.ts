@@ -42,7 +42,7 @@ export type SpecVerdict =
   | { readonly ok: false; readonly report: SpecReport };
 
 /** `value` cut to `MAX_VALUE_CHARS` UTF-16 units, never splitting a surrogate pair. */
-function cut(value: string): string {
+export function cut(value: string): string {
   if (value.length <= MAX_VALUE_CHARS) {
     return value;
   }

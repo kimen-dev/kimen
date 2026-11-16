@@ -11,10 +11,10 @@
   },
   "type": "module",
   "bin": {
-    "kimen-mcp": "./dist/kimen-mcp.js"
+    "kimen-mcp": "./dist/kimen-mcp.mjs"
   },
   "files": [
-    "dist/kimen-mcp.js",
+    "dist/kimen-mcp.mjs",
     "COMPAT.md"
   ],
   "engines": {

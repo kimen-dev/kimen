@@ -44,6 +44,26 @@ describe('Kimen MCP server: surface actions (038 S12-S14)', () => {
     expect(textOf(result)).toContain('"refresh"');
   });
 
+  it('S12: every action an accepted spec can declare is acknowledged, however long its name', async () => {
+    const connection = await open();
+    const action = `refresh-${'x'.repeat(300)}`;
+    const spec = {
+      actions: [action],
+      root: { action, component: 'ki-button', slots: { '': ['Refresh'] } },
+      version: 1,
+    };
+    const rendered = await connection.client.callTool({
+      arguments: { spec },
+      name: 'kimen_render_spec',
+    });
+    expect(rendered.isError).not.toBe(true);
+    const result = await sendAction(connection, action);
+    expect(result.isError).not.toBe(true);
+    expect(result.structuredContent).toEqual({ acknowledged: action });
+    // The text echo stays bounded.
+    expect(textOf(result).length).toBeLessThan(400);
+  });
+
   it('S13: an action no rendered surface declared is refused by name', async () => {
     const connection = await open();
     await connection.client.callTool({
