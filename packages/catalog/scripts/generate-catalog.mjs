@@ -14,6 +14,8 @@ import { mkdirSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { NATIVE_PRIMITIVES } from './primitives.mjs';
+
 /**
  * The version of the catalog document format itself (FR-010, Art. IX).
  * 1.1.0 (spec 035): UI-spec nodes gain the optional stable `id` — an
@@ -22,8 +24,12 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
  * `minimum`, `maximum`, `format`) the boundary enforces. Additive again: a 1.2.0 boundary still validates what a
  * 1.0.0 or 1.1.0 spec says, and a boundary that predates the limits refuses
  * a 1.2.0 catalog instead of validating it under laxer rules (028 FR-012).
+ * 1.3.0 (spec 037): the catalog gains the native primitives (h2–h4, p,
+ * strong, em, img, div) and prop constraints gain the optional `allowEmpty`.
+ * Additive: a 1.2.0 spec still validates, and a 1.2.0 boundary refuses a
+ * 1.3.0 spec rather than reading native tags it cannot guard.
  */
-export const CATALOG_SCHEMA_VERSION = '1.2.0';
+export const CATALOG_SCHEMA_VERSION = '1.3.0';
 
 const isBlank = (text) => typeof text !== 'string' || text.trim() === '';
 
@@ -113,7 +119,7 @@ const sortedRecord = (entries) =>
  * (missing guidance, unparseable type) — a build failure, never a warning
  * (FR-003; the agent-surfaces Art. I bar).
  */
-export function buildCatalog(manifest, { elementsVersion }) {
+export function buildCatalog(manifest, { elementsVersion, primitives = NATIVE_PRIMITIVES }) {
   const violations = [];
   const components = new Map();
   for (const module of manifest.modules ?? []) {
@@ -183,6 +189,21 @@ export function buildCatalog(manifest, { elementsVersion }) {
   }
   if (components.size === 0) {
     violations.push('manifest yielded no custom elements');
+  }
+  // The native primitives (spec 037) join the manifest's elements from their
+  // one definition; a manifest element of the same tag is impossible (custom
+  // elements carry a hyphen, primitives never do) and fails generation.
+  for (const [tag, entry] of Object.entries(primitives)) {
+    if (components.has(tag) || entry.tag !== tag) {
+      violations.push(`${tag}: native primitive collides with a manifest element or its own tag`);
+      continue;
+    }
+    components.set(tag, {
+      ...entry,
+      events: sortedRecord(Object.entries(entry.events)),
+      props: sortedRecord(Object.entries(entry.props)),
+      slots: sortedRecord(Object.entries(entry.slots)),
+    });
   }
   if (violations.length > 0) {
     throw new Error(`catalog generation failed (Art. I):\n${violations.join('\n')}`);
