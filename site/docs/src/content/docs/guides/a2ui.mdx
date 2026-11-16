@@ -61,9 +61,12 @@ const result = adapter.apply({
 result.ok; // true — or false with inert diagnostics naming each offender
 ```
 
-The adapter implements A2UI **v0.9.1** over its basic catalog. The surface's
-data model (bindings, `updateDataModel`, list templates) is resolved inside
-the adapter; the catalog never learns about it.
+The adapter implements A2UI **1.0** (preferred) and **v0.9.1** over the basic
+catalog of each. Every message is validated against the version its envelope
+declares (`"1.0"`, or `"v0.9.1"`/`"v0.9"`), and a surface accepts only the
+version that created it. The surface's data model (bindings, `updateDataModel`,
+list templates) is resolved inside the adapter; the catalog never learns about
+it.
 
 ## Degradation rules
 
@@ -77,7 +80,10 @@ An A2UI message is data, never code:
   so do undeclared properties and client functions that reach a browser
   capability (`openUrl`).
 - **Unsupported protocol versions are rejected** naming the supported set
-  (`v0.9.1`, `v0.9`).
+  (`1.0`, `v0.9.1`, `v0.9`), and so is a message that uses the other
+  version's vocabulary.
+- **Agents cannot run renderer functions**: every A2UI 1.0
+  `callRendererFunction` is refused with `INVALID_FUNCTION_CALL`.
 - **The action set is fixed**: incremental `updateComponents` /
   `updateDataModel` messages revise the surface without discarding it, but no
   later update can bind an undeclared action.

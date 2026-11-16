@@ -1,6 +1,6 @@
 # @kimen/adapter-a2ui
 
-The first Kimen protocol adapter (constitution Art. VIII, spec 029). It
+The first Kimen protocol adapter (constitution Art. VIII, specs 029 and 039). It
 translates declarative [A2UI](https://a2ui.org/) messages into Kimen's neutral
 runtime catalog and renders every surface through the guarded renderer alone.
 The catalog and the `ki-*` elements are the durable assets; this adapter is
@@ -44,6 +44,7 @@ const adapter = createA2uiAdapter({
   surface: document.querySelector('#genui'),        // or (surfaceId) => element
   onAction: (event, metadata) => channelToAgent.send(event, metadata), // A2UI `action`
   onError: (error) => channelToAgent.send(error),   // A2UI `error` (VALIDATION_FAILED)
+  onFunctionResponse: (r) => channelToAgent.send(r), // A2UI 1.0: every callRendererFunction refused
   onDegradation: (report) => log(report),           // fallback gaps, as data
 });
 
@@ -74,15 +75,23 @@ const result = adapter.apply({
 result.ok; // true — or false with inert diagnostics naming each offender
 ```
 
-The adapter implements A2UI **v0.9.1** (`createSurface`, `updateComponents`,
-`updateDataModel`, `deleteSurface`; envelope `version` `v0.9.1` or `v0.9`) over
-the basic catalog. The surface's data model lives inside the adapter: `{ path }`
-bindings, `updateDataModel` upserts and removals, `ChildList` templates with
-relative paths and the pure formatting functions resolve here, so the catalog
-never learns about data models. A user activation returns as an A2UI `action`
-event (`name`, `surfaceId`, `sourceComponentId`, `timestamp`, resolved
-`context`), with the `a2uiClientDataModel` metadata when the surface asked for
-`sendDataModel`.
+The adapter implements A2UI **1.0** (preferred; envelope `version` `1.0`) and
+A2UI **v0.9.1** (envelope `version` `v0.9.1` or `v0.9`), each over its own basic
+catalog (`createSurface`, `updateComponents`, `updateDataModel`,
+`deleteSurface`). The envelope `version` selects the validator, so a message
+can only use its own version's vocabulary (`{ "@path" }` in 1.0, `{ path }` in
+0.9.1), and a surface accepts only the version that created it. A 1.0
+`createSurface` may carry the components and data model, applied atomically;
+every 1.0 `callRendererFunction` is refused with `INVALID_FUNCTION_CALL`. The
+surface's data model lives inside the adapter: bindings, `updateDataModel`
+upserts and removals, `ChildList` templates with relative paths and the pure
+formatting functions resolve here, so the catalog never learns about data
+models. A user activation returns as an A2UI `action` event in the surface's
+version (`name`, `surfaceId`, `sourceComponentId`, `timestamp`, resolved
+`context`, and the 1.0 `userMessage`), with the data-model metadata
+(`a2uiClientDataModel` or `a2uiRendererDataModel`) when the surface asked for
+`sendDataModel`. `A2UI_RENDERER_CAPABILITIES` lists what to advertise per
+version, 1.0 first.
 
 An A2UI message is data, never code. Basic-catalog types without a catalog
 counterpart (Image, Icon, Modal…) degrade per node to a fixed fallback that

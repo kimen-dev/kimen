@@ -1,8 +1,9 @@
 /**
- * A2UI v0.9.1 protocol vocabulary (constitution Art. VIII: protocol types live
- * ONLY inside this disposable adapter and never leak into @kimen/elements or
- * @kimen/catalog — enforced mechanically by the `scope:adapter` module
- * boundary).
+ * A2UI v0.9.1 protocol vocabulary, plus the client-to-server messages shared
+ * with A2UI 1.0 (the 1.0 server messages live in `protocol-v1.ts`).
+ * Constitution Art. VIII: protocol types live ONLY inside this disposable
+ * adapter and never leak into @kimen/elements or @kimen/catalog — enforced
+ * mechanically by the `scope:adapter` module boundary.
  *
  * Source of truth: the A2UI specification repository (github.com/google/A2UI,
  * also served as github.com/a2ui-project/a2ui), directory
@@ -132,16 +133,20 @@ export type A2uiServerMessage =
   | A2uiUpdateDataModel
   | A2uiDeleteSurface;
 
-/** The `version` this adapter writes on every client-to-server message. */
-export type A2uiEmittedVersion = 'v0.9.1';
+/**
+ * The `version` the adapter writes on client-to-server messages: `v0.9.1` on
+ * 0.9.1 surfaces, `1.0` on 1.0 surfaces (spec 039 FR-003).
+ */
+export type A2uiEmittedVersion = 'v0.9.1' | '1.0';
 
 /**
- * The client-to-server `action` event (`client_to_server.json`): emitted when
- * a component's declared `action.event` fires. `context` holds the event's
- * context with every data binding already resolved.
+ * The client-to-server `action` event of a 0.9.1 surface
+ * (`client_to_server.json`): emitted when a component's declared
+ * `action.event` fires. `context` holds the event's context with every data
+ * binding already resolved.
  */
-export interface A2uiActionMessage {
-  readonly version: A2uiEmittedVersion;
+export interface A2uiV09ActionMessage {
+  readonly version: 'v0.9.1';
   readonly action: {
     readonly name: string;
     readonly surfaceId: string;
@@ -152,9 +157,29 @@ export interface A2uiActionMessage {
 }
 
 /**
+ * The renderer-to-agent `action` event of a 1.0 surface
+ * (`v1_0/json/renderer_to_agent.json`): as in 0.9.1, plus the resolved
+ * `userMessage` when the action declares one.
+ */
+export interface A2uiV1ActionMessage {
+  readonly version: '1.0';
+  readonly action: {
+    readonly name: string;
+    readonly userMessage?: string;
+    readonly surfaceId: string;
+    readonly sourceComponentId: string;
+    readonly timestamp: string;
+    readonly context: Readonly<Record<string, unknown>>;
+  };
+}
+
+/** An `action` event, in the version of the surface that fired it. */
+export type A2uiActionMessage = A2uiV09ActionMessage | A2uiV1ActionMessage;
+
+/**
  * The client-to-server `error` report, validation variant
- * (`client_to_server.json`): lets the agent correct a message the adapter
- * rejected.
+ * (`client_to_server.json`, `renderer_to_agent.json`): lets the agent correct
+ * a message the adapter rejected, in the version of the surface it names.
  */
 export interface A2uiErrorMessage {
   readonly version: A2uiEmittedVersion;
@@ -167,11 +192,20 @@ export interface A2uiErrorMessage {
 }
 
 /**
- * The transport metadata a client attaches when a surface was created with
- * `sendDataModel: true` (`client_data_model.json`); the caller's transport
- * places it under the `a2uiClientDataModel` metadata key.
+ * The transport metadata a client attaches when a 0.9.1 surface was created
+ * with `sendDataModel: true` (`client_data_model.json`); the caller's
+ * transport places it under the `a2uiClientDataModel` metadata key.
  */
 export interface A2uiClientDataModel {
-  readonly version: A2uiEmittedVersion;
+  readonly version: 'v0.9.1';
+  readonly surfaces: Readonly<Record<string, Readonly<Record<string, unknown>>>>;
+}
+
+/**
+ * The 1.0 counterpart (`v1_0/json/renderer_data_model.json`), placed under the
+ * `a2uiRendererDataModel` metadata key.
+ */
+export interface A2uiRendererDataModel {
+  readonly version: '1.0';
   readonly surfaces: Readonly<Record<string, Readonly<Record<string, unknown>>>>;
 }

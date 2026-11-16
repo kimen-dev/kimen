@@ -203,7 +203,7 @@ describe('protocol gaps and churn degrade by declaration, never silently', () =>
   it('S5 rejects a message whose version is outside the v0.9.1 envelope enum', () => {
     const adapter = createA2uiAdapter({ surface });
 
-    for (const version of ['v0.8', '0.9.1', '1.0', 'v1.0']) {
+    for (const version of ['v0.8', '0.9.1', 'v1.0']) {
       const result = adapter.apply({
         version,
         createSurface: { surfaceId: 's', catalogId: BASIC },

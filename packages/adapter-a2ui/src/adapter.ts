@@ -1,49 +1,56 @@
 /**
- * The A2UI v0.9.1 adapter (spec 029): the disposable boundary where untrusted
- * A2UI messages become neutral catalog specs and reach the DOM through the
- * guarded renderer ALONE (constitution Art. VIII). It owns the protocol
- * state of each surface — catalog, component map, data model, frozen action
- * set — and hands every revision to the single render point
- * (`render-point.ts`), which is why S12/SC-006 can prove the guarantee by
- * substituting an instrumented renderer double.
+ * The A2UI adapter (specs 029 and 039): the disposable boundary where
+ * untrusted A2UI 0.9.1 and 1.0 messages become neutral catalog specs and reach
+ * the DOM through the guarded renderer ALONE (constitution Art. VIII). It owns
+ * the protocol state of each surface — version family, catalog, component
+ * map, data model, frozen action set — and hands every revision to the single
+ * render point (`render-point.ts`), which is why S12/SC-006 can prove the
+ * guarantee by substituting an instrumented renderer double.
  *
  * Messages are untrusted runtime data (transport is caller-owned): the
- * envelope is validated against the v0.9.1 shape before any field is read (a
- * malformed payload fails closed, never throws), a surface's state is
- * committed only after its render succeeds (a rejected message never poisons
- * prior state), forbidden types are rejected whole across every updated
- * component, and data-model paths can never address a prototype.
+ * envelope is validated against the shapes of the version it declares before
+ * any other field is read (`envelope.ts`; a malformed payload fails closed,
+ * never throws), a surface only ever accepts messages of the version family
+ * that created it, a surface's state is committed only after its render
+ * succeeds (a rejected message never poisons prior state, and a rejected 1.0
+ * creation creates nothing), forbidden types are rejected whole across every
+ * updated component, data-model paths can never address a prototype, and no
+ * agent request ever runs a renderer function.
  */
 import type { ActionEvent, RenderBudgets } from '@kimen/catalog';
 import { renderUiSpec } from '@kimen/catalog';
 
-import {
-  A2UI_BASIC_CATALOG_IDS,
-  EMITTED_A2UI_VERSION,
-  forbiddenReason,
-  SUPPORTED_A2UI_VERSIONS,
-} from './coverage.js';
-import { isPlainObject, parsePointer, REMOVE, writeAt } from './data-model.js';
+import { A2UI_V1_RESERVED_TYPE, forbiddenReason } from './coverage.js';
+import { isPlainObject, parsePointer, writeAt } from './data-model.js';
+import type { Dialect } from './dialect.js';
+import { dialectOf } from './dialect.js';
+import type { Classified } from './envelope.js';
+import { classify } from './envelope.js';
 import type {
   A2uiActionMessage,
   A2uiClientDataModel,
   A2uiComponent,
-  A2uiEmittedVersion,
   A2uiErrorMessage,
+  A2uiRendererDataModel,
 } from './protocol.js';
+import type { A2uiRendererFunctionResponse } from './protocol-v1.js';
 import type { GuardedRender } from './render-point.js';
 import { renderSurface } from './render-point.js';
 import type { A2uiDegradationReport, A2uiDiagnostic, ActionBinding } from './translate.js';
 import { translateSurface, undeclaredProperty } from './translate.js';
-import { resolveDynamic } from './values.js';
+import { resolveDynamic, toText } from './values.js';
 
 export type { GuardedRender } from './render-point.js';
 export type { A2uiDegradationReport, A2uiDiagnostic } from './translate.js';
 
-/** Transport metadata accompanying an action when the surface asked for `sendDataModel`. */
-export interface A2uiActionMetadata {
-  readonly a2uiClientDataModel: A2uiClientDataModel;
-}
+/**
+ * Transport metadata accompanying an action when the surface asked for
+ * `sendDataModel`: `a2uiClientDataModel` on 0.9.1 surfaces,
+ * `a2uiRendererDataModel` on 1.0 surfaces.
+ */
+export type A2uiActionMetadata =
+  | { readonly a2uiClientDataModel: A2uiClientDataModel }
+  | { readonly a2uiRendererDataModel: A2uiRendererDataModel };
 
 export interface A2uiAdapterOptions {
   /**
@@ -53,13 +60,23 @@ export interface A2uiAdapterOptions {
    */
   readonly surface: Element | ((surfaceId: string) => Element | null);
   /**
-   * Receives the A2UI `action` event each time a declared action fires, plus
-   * the `a2uiClientDataModel` metadata when the surface was created with
-   * `sendDataModel: true` (the caller's transport attaches it).
+   * Receives the A2UI `action` event each time a declared action fires, in
+   * the version of its surface, plus the data-model metadata when the
+   * surface was created with `sendDataModel: true` (the caller's transport
+   * attaches it).
    */
   readonly onAction?: (event: A2uiActionMessage, metadata?: A2uiActionMetadata) => void;
-  /** Receives an A2UI `error` (VALIDATION_FAILED) for each rejected message that names a known surface. */
+  /**
+   * Receives an A2UI `error` (VALIDATION_FAILED) for each rejected message
+   * that names a known surface, in that surface's version.
+   */
   readonly onError?: (error: A2uiErrorMessage) => void;
+  /**
+   * Receives the A2UI 1.0 `rendererFunctionResponse` refusing each
+   * `callRendererFunction` (`INVALID_FUNCTION_CALL`, spec 039 S21): no
+   * basic-catalog function may be called by the agent.
+   */
+  readonly onFunctionResponse?: (response: A2uiRendererFunctionResponse) => void;
   /** Receives a report for each component that degraded to the declared fallback (S4). */
   readonly onDegradation?: (report: A2uiDegradationReport) => void;
   /**
@@ -86,207 +103,107 @@ export interface A2uiApplyResult {
 
 export interface A2uiAdapter {
   /**
-   * Applies one server-to-client A2UI message (`A2uiServerMessage`; typed
-   * `unknown` because it arrives untrusted from the transport): validate, update state, translate, render through the guardrail. */
+   * Applies one agent-to-renderer A2UI message (`A2uiServerMessage` or
+   * `A2uiV1ServerMessage`; typed `unknown` because it arrives untrusted from
+   * the transport): validate, update state, translate, render through the
+   * guardrail.
+   */
   apply(message: unknown): A2uiApplyResult;
 }
 
 interface SurfaceState {
   readonly element: Element;
   readonly sendDataModel: boolean;
+  /** The version family the surface was created with; every later message must match it. */
+  readonly dialect: Dialect;
+  /** The surface's catalog (in 1.0, the optional default for components without `@catalogId`). */
+  readonly catalogId: string | undefined;
   components: ReadonlyMap<string, A2uiComponent>;
   dataModel: Record<string, unknown>;
   /** Frozen on the first successful render that binds an action (S8). */
   declaredActions: readonly string[] | null;
 }
 
-type Classified =
-  | {
-      readonly kind: 'createSurface';
-      readonly surfaceId: string;
-      readonly catalogId: string;
-      readonly sendDataModel: boolean;
-    }
-  | {
-      readonly kind: 'updateComponents';
-      readonly surfaceId: string;
-      readonly components: readonly A2uiComponent[];
-    }
-  | {
-      readonly kind: 'updateDataModel';
-      readonly surfaceId: string;
-      readonly path: string;
-      readonly value: unknown;
-    }
-  | { readonly kind: 'deleteSurface'; readonly surfaceId: string }
-  | {
-      readonly kind: 'error';
-      readonly diagnostic: A2uiDiagnostic;
-      readonly surfaceId?: string;
-    };
+const OK: A2uiApplyResult = { degradations: [], diagnostics: [], ok: true };
 
-const MESSAGE_KINDS = ['createSurface', 'updateComponents', 'updateDataModel', 'deleteSurface'];
-
-const malformed = (path: string, message: string, surfaceId?: string): Classified => ({
-  diagnostic: { message, path, rule: 'malformed-message' },
-  kind: 'error',
-  ...(surfaceId === undefined ? {} : { surfaceId }),
+const failure = (diagnostic: A2uiDiagnostic): A2uiApplyResult => ({
+  degradations: [],
+  diagnostics: [diagnostic],
+  ok: false,
 });
 
-const onlyKeys = (
-  record: Record<string, unknown>,
-  allowed: readonly string[],
-): string | undefined => Object.keys(record).find((key) => !allowed.includes(key));
-
 /**
- * Validates the untrusted envelope against the v0.9.1 shapes
- * (`server_to_client.json`: a mandatory supported `version` plus exactly one
- * message key, `additionalProperties: false` at both levels) and narrows it.
+ * The receipt checks every incoming component passes before it joins a
+ * surface, reachable from the root or not: a forbidden type rejects the whole
+ * message (FR-002/FR-004, S7), the 1.0 reserved `Surface` type and any
+ * catalog other than the 1.0 basic catalog reject it too (spec 039 S18, S19),
+ * and an unknown property rejects it at receipt so a component buffered
+ * before its root exists cannot carry one (S9).
  */
-function classify(record: Record<string, unknown>): Classified {
-  const version = record['version'];
-  if (typeof version !== 'string') {
-    return malformed('/version', 'an A2UI message needs a string "version"');
+function receive(
+  components: readonly A2uiComponent[],
+  dialect: Dialect,
+  catalogId: string | undefined,
+  base: string,
+): A2uiDiagnostic | null {
+  for (const [index, instance] of components.entries()) {
+    const reason = forbiddenReason(instance.component, dialect.protocol.coverage);
+    if (reason !== null) {
+      return {
+        message: `A2UI type "${instance.component}" is forbidden for security (${reason})`,
+        path: `${base}/${String(index)}/component`,
+        rule: 'forbidden-type',
+        value: instance.component,
+      };
+    }
   }
-  if (!SUPPORTED_A2UI_VERSIONS.includes(version)) {
-    return {
-      diagnostic: {
-        message: `A2UI protocol version "${version}" is outside the supported set (${SUPPORTED_A2UI_VERSIONS.join(', ')})`,
-        path: '/version',
-        rule: 'unsupported-version',
-        value: version,
-      },
-      kind: 'error',
-    };
-  }
-  const kinds = Object.keys(record).filter((key) => key !== 'version');
-  const kind = kinds[0];
-  if (kinds.length !== 1 || kind === undefined || !MESSAGE_KINDS.includes(kind)) {
-    return malformed(
-      '/',
-      `an A2UI message carries "version" and exactly one of ${MESSAGE_KINDS.join(', ')}`,
-    );
-  }
-  const payload = record[kind];
-  if (!isPlainObject(payload) || typeof payload['surfaceId'] !== 'string') {
-    return malformed(
-      `/${kind}/surfaceId`,
-      `${kind} needs an object payload with a string surfaceId`,
-    );
-  }
-  const surfaceId = payload['surfaceId'];
-
-  if (kind === 'createSurface') {
-    const extra = onlyKeys(payload, ['surfaceId', 'catalogId', 'theme', 'sendDataModel']);
-    if (extra !== undefined) {
-      return malformed(
-        `/createSurface/${extra}`,
-        `createSurface does not declare "${extra}"`,
-        surfaceId,
-      );
-    }
-    const { catalogId, sendDataModel, theme } = payload;
-    if (typeof catalogId !== 'string') {
-      return malformed(
-        '/createSurface/catalogId',
-        'createSurface needs a string catalogId',
-        surfaceId,
-      );
-    }
-    if (sendDataModel !== undefined && typeof sendDataModel !== 'boolean') {
-      return malformed(
-        '/createSurface/sendDataModel',
-        'sendDataModel must be a boolean',
-        surfaceId,
-      );
-    }
-    if (theme !== undefined && !isPlainObject(theme)) {
-      return malformed('/createSurface/theme', 'theme must be an object', surfaceId);
-    }
-    return {
-      catalogId,
-      kind,
-      sendDataModel: sendDataModel === true,
-      surfaceId,
-    };
-  }
-
-  if (kind === 'updateComponents') {
-    const extra = onlyKeys(payload, ['surfaceId', 'components']);
-    if (extra !== undefined) {
-      return malformed(
-        `/updateComponents/${extra}`,
-        `updateComponents does not declare "${extra}"`,
-        surfaceId,
-      );
-    }
-    const components = payload['components'];
-    if (!Array.isArray(components) || components.length === 0) {
-      return malformed(
-        '/updateComponents/components',
-        'components must be a non-empty list',
-        surfaceId,
-      );
-    }
-    const instances: A2uiComponent[] = [];
-    for (const [index, element] of components.entries()) {
-      if (
-        !isPlainObject(element) ||
-        typeof element['id'] !== 'string' ||
-        typeof element['component'] !== 'string'
-      ) {
-        return malformed(
-          `/updateComponents/components/${String(index)}`,
-          'each component needs a string id and a string component type',
-          surfaceId,
-        );
+  if (dialect.reservedNamespace) {
+    const supported = dialect.protocol.basicCatalogIds;
+    for (const [index, instance] of components.entries()) {
+      const at = `${base}/${String(index)}`;
+      if (instance.component === A2UI_V1_RESERVED_TYPE) {
+        return {
+          message: `A2UI type "${instance.component}" is reserved for the implicit surface container`,
+          path: `${at}/component`,
+          rule: 'reserved-type',
+          value: instance.component,
+        };
       }
-      instances.push(element as A2uiComponent);
+      const own = instance['@catalogId'];
+      if (own !== undefined && typeof own !== 'string') {
+        return {
+          message: '@catalogId must be a string',
+          path: `${at}/@catalogId`,
+          rule: 'malformed-message',
+        };
+      }
+      const resolved = own ?? catalogId;
+      if (resolved === undefined) {
+        return {
+          message: `component "${instance.id}" names no catalog and the surface has no default catalogId`,
+          path: `${at}/@catalogId`,
+          rule: 'unresolved-catalog',
+          value: instance.id,
+        };
+      }
+      if (!supported.includes(resolved)) {
+        return {
+          message: `catalog "${resolved}" is not supported (${supported.join(', ')})`,
+          path: `${at}/@catalogId`,
+          rule: 'unsupported-catalog',
+          value: resolved,
+        };
+      }
     }
-    return { components: instances, kind, surfaceId };
   }
-
-  if (kind === 'updateDataModel') {
-    const extra = onlyKeys(payload, ['surfaceId', 'path', 'value']);
-    if (extra !== undefined) {
-      return malformed(
-        `/updateDataModel/${extra}`,
-        `updateDataModel does not declare "${extra}"`,
-        surfaceId,
-      );
+  for (const instance of components) {
+    const undeclared = undeclaredProperty(instance.id, instance, dialect);
+    if (undeclared !== null) {
+      return undeclared;
     }
-    const path = payload['path'] ?? '/';
-    if (typeof path !== 'string') {
-      return malformed('/updateDataModel/path', 'updateDataModel path must be a string', surfaceId);
-    }
-    if (path !== '' && path !== '/' && !path.startsWith('/')) {
-      return malformed(
-        '/updateDataModel/path',
-        'updateDataModel path must be an absolute JSON Pointer',
-        surfaceId,
-      );
-    }
-    return {
-      kind,
-      path,
-      surfaceId,
-      value: Object.hasOwn(payload, 'value') ? payload['value'] : REMOVE,
-    };
   }
-
-  const extra = onlyKeys(payload, ['surfaceId']);
-  if (extra !== undefined) {
-    return malformed(
-      `/deleteSurface/${extra}`,
-      `deleteSurface does not declare "${extra}"`,
-      surfaceId,
-    );
-  }
-  return { kind: 'deleteSurface', surfaceId };
+  return null;
 }
-
-const OK: A2uiApplyResult = { degradations: [], diagnostics: [], ok: true };
-const EMITTED: A2uiEmittedVersion = EMITTED_A2UI_VERSION;
 
 export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
   const render: GuardedRender = options.render ?? renderUiSpec;
@@ -294,7 +211,8 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
   const now = options.now ?? (() => new Date());
 
   const reject = (diagnostic: A2uiDiagnostic, surfaceId?: string): A2uiApplyResult => {
-    if (surfaceId !== undefined && surfaces.has(surfaceId) && options.onError !== undefined) {
+    const state = surfaceId === undefined ? undefined : surfaces.get(surfaceId);
+    if (state !== undefined && surfaceId !== undefined && options.onError !== undefined) {
       options.onError({
         error: {
           code: 'VALIDATION_FAILED',
@@ -302,10 +220,10 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
           path: diagnostic.path,
           surfaceId,
         },
-        version: EMITTED,
+        version: state.dialect.protocol.emittedVersion,
       });
     }
-    return { degradations: [], diagnostics: [diagnostic], ok: false };
+    return failure(diagnostic);
   };
 
   const dispatch = (surfaceId: string, state: SurfaceState, binding: ActionBinding): void => {
@@ -314,13 +232,15 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
     }
     // Resolve the event context against the data model as it is NOW, in the
     // collection scope of the component instance that fired.
+    const values = {
+      dialect: state.dialect,
+      locale: options.locale,
+      model: state.dataModel,
+      scope: binding.scope,
+    };
     const context: Record<string, unknown> = {};
     for (const [key, raw] of Object.entries(binding.context)) {
-      const resolved = resolveDynamic(raw, {
-        locale: options.locale,
-        model: state.dataModel,
-        scope: binding.scope,
-      });
+      const resolved = resolveDynamic(raw, values, { literal: true });
       if (resolved.ok && resolved.value !== undefined) {
         Object.defineProperty(context, key, {
           enumerable: true,
@@ -328,22 +248,35 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
         });
       }
     }
-    const event: A2uiActionMessage = {
-      action: {
-        context,
-        name: binding.name,
-        sourceComponentId: binding.componentId,
-        surfaceId,
-        timestamp: now().toISOString(),
-      },
-      version: EMITTED,
+    const surfacesData = { [surfaceId]: state.dataModel };
+    const base = {
+      context,
+      name: binding.name,
+      sourceComponentId: binding.componentId,
+      surfaceId,
+      timestamp: now().toISOString(),
     };
+    if (state.dialect.protocol.family === '1.0') {
+      const message =
+        binding.userMessage === undefined ? undefined : resolveDynamic(binding.userMessage, values);
+      const userMessage = message?.ok === true ? toText(message.value) : '';
+      const event: A2uiActionMessage = {
+        action: userMessage === '' ? base : { ...base, userMessage },
+        version: '1.0',
+      };
+      if (state.sendDataModel) {
+        options.onAction(event, {
+          a2uiRendererDataModel: { surfaces: surfacesData, version: '1.0' },
+        });
+      } else {
+        options.onAction(event);
+      }
+      return;
+    }
+    const event: A2uiActionMessage = { action: base, version: 'v0.9.1' };
     if (state.sendDataModel) {
       options.onAction(event, {
-        a2uiClientDataModel: {
-          surfaces: { [surfaceId]: state.dataModel },
-          version: EMITTED,
-        },
+        a2uiClientDataModel: { surfaces: surfacesData, version: 'v0.9.1' },
       });
     } else {
       options.onAction(event);
@@ -362,21 +295,16 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
       components,
       dataModel,
       declaredActions: declared,
+      dialect: state.dialect,
       locale: options.locale,
       surfaceId,
     });
     if (!translation.ok) {
       const [first] = translation.diagnostics;
-      return first === undefined
-        ? reject(
-            {
-              message: 'translation failed',
-              path: '/',
-              rule: 'malformed-message',
-            },
-            surfaceId,
-          )
-        : reject(first, surfaceId);
+      return reject(
+        first ?? { message: 'translation failed', path: '/', rule: 'malformed-message' },
+        surfaceId,
+      );
     }
     if (declared !== null) {
       const undeclared = translation.actions.find((name) => !declared.includes(name));
@@ -411,11 +339,7 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
         // stays intact and, because state commits only below, so does the model.
         const [first] = result.diagnostics;
         return reject(
-          first ?? {
-            message: 'render rejected',
-            path: '/',
-            rule: 'render-rejected',
-          },
+          first ?? { message: 'render rejected', path: '/', rule: 'render-rejected' },
           surfaceId,
         );
       }
@@ -428,11 +352,100 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
     for (const report of translation.degradations) {
       options.onDegradation?.(report);
     }
-    return {
-      degradations: translation.degradations,
-      diagnostics: [],
-      ok: true,
+    return { degradations: translation.degradations, diagnostics: [], ok: true };
+  };
+
+  /** Refuses an agent-initiated function call (spec 039 S21, FR-007). */
+  const refuseFunctionCall = (functionCallId: string, name: string): A2uiApplyResult => {
+    const message = `function "${name}" cannot be called by the agent: no function of the A2UI 1.0 basic catalog allows agent callers`;
+    options.onFunctionResponse?.({
+      rendererFunctionResponse: {
+        error: { code: 'INVALID_FUNCTION_CALL', message },
+        functionCallId,
+      },
+      version: '1.0',
+    });
+    return failure({
+      message,
+      path: '/callRendererFunction/callFunction',
+      rule: 'invalid-function-call',
+      value: name,
+    });
+  };
+
+  const createSurface = (
+    classified: Extract<Classified, { kind: 'createSurface' }>,
+  ): A2uiApplyResult => {
+    const { surfaceId } = classified;
+    if (surfaces.has(surfaceId)) {
+      return reject(
+        {
+          message: `surface "${surfaceId}" already exists; delete it before creating it again`,
+          path: '/createSurface/surfaceId',
+          rule: 'surface-exists',
+          value: surfaceId,
+        },
+        surfaceId,
+      );
+    }
+    const dialect = dialectOf(classified.protocol.family);
+    const supported = dialect.protocol.basicCatalogIds;
+    if (classified.catalogId !== undefined && !supported.includes(classified.catalogId)) {
+      return failure({
+        message: `catalog "${classified.catalogId}" is not supported for ${dialect.label} (${supported.join(', ')})`,
+        path: '/createSurface/catalogId',
+        rule: 'unsupported-catalog',
+        value: classified.catalogId,
+      });
+    }
+    // 1.0 inline content is checked before the host is asked for an element:
+    // a rejected creation creates nothing (spec 039, atomic creation).
+    const inline = classified.components ?? [];
+    const received = receive(inline, dialect, classified.catalogId, '/createSurface/components');
+    if (received !== null) {
+      return failure(received);
+    }
+    let dataModel: Record<string, unknown> = {};
+    if (classified.dataModel !== undefined) {
+      const written = writeAt(dataModel, [], classified.dataModel);
+      if (!written.ok) {
+        return failure({
+          message: `createSurface dataModel cannot apply: ${written.detail}`,
+          path: '/createSurface/dataModel',
+          rule: 'malformed-message',
+        });
+      }
+      dataModel = written.model;
+    }
+    const element =
+      typeof options.surface === 'function' ? options.surface(surfaceId) : options.surface;
+    if (element === null) {
+      return failure({
+        message: `the host provides no element for surface "${surfaceId}"`,
+        path: '/createSurface/surfaceId',
+        rule: 'no-host-surface',
+        value: surfaceId,
+      });
+    }
+    const state: SurfaceState = {
+      catalogId: classified.catalogId,
+      components: new Map(),
+      dataModel: {},
+      declaredActions: null,
+      dialect,
+      element,
+      sendDataModel: classified.sendDataModel,
     };
+    if (classified.components === undefined && classified.dataModel === undefined) {
+      surfaces.set(surfaceId, state);
+      return OK;
+    }
+    const components = new Map(inline.map((instance) => [instance.id, instance] as const));
+    const result = commit(surfaceId, state, components, dataModel);
+    if (result.ok) {
+      surfaces.set(surfaceId, state);
+    }
+    return result;
   };
 
   const apply = (message: unknown): A2uiApplyResult => {
@@ -447,49 +460,22 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
     if (classified.kind === 'error') {
       return reject(classified.diagnostic, classified.surfaceId);
     }
-    const { surfaceId } = classified;
-    const state = surfaces.get(surfaceId);
-
-    if (classified.kind === 'createSurface') {
-      if (state !== undefined) {
-        return reject(
-          {
-            message: `surface "${surfaceId}" already exists; delete it before creating it again`,
-            path: '/createSurface/surfaceId',
-            rule: 'surface-exists',
-            value: surfaceId,
-          },
-          surfaceId,
-        );
-      }
-      if (!A2UI_BASIC_CATALOG_IDS.includes(classified.catalogId)) {
-        return reject({
-          message: `catalog "${classified.catalogId}" is not supported (${A2UI_BASIC_CATALOG_IDS.join(', ')})`,
-          path: '/createSurface/catalogId',
-          rule: 'unsupported-catalog',
-          value: classified.catalogId,
-        });
-      }
-      const element =
-        typeof options.surface === 'function' ? options.surface(surfaceId) : options.surface;
-      if (element === null) {
-        return reject({
-          message: `the host provides no element for surface "${surfaceId}"`,
-          path: '/createSurface/surfaceId',
-          rule: 'no-host-surface',
-          value: surfaceId,
-        });
-      }
-      surfaces.set(surfaceId, {
-        components: new Map(),
-        dataModel: {},
-        declaredActions: null,
-        element,
-        sendDataModel: classified.sendDataModel,
+    if (classified.kind === 'callRendererFunction') {
+      return refuseFunctionCall(classified.functionCallId, classified.name);
+    }
+    if (classified.kind === 'agentFunctionResponse') {
+      return failure({
+        message: 'the adapter never calls agent functions, so no agentFunctionResponse is expected',
+        path: '/agentFunctionResponse',
+        rule: 'unexpected-message',
       });
-      return OK;
+    }
+    if (classified.kind === 'createSurface') {
+      return createSurface(classified);
     }
 
+    const { surfaceId } = classified;
+    const state = surfaces.get(surfaceId);
     if (state === undefined) {
       return reject({
         message: `${classified.kind} references surface "${surfaceId}" that no createSurface created`,
@@ -497,6 +483,18 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
         rule: 'unknown-surface',
         value: surfaceId,
       });
+    }
+    if (state.dialect.protocol.family !== classified.protocol.family) {
+      const spoken = state.dialect.protocol.specVersion;
+      return reject(
+        {
+          message: `surface "${surfaceId}" speaks A2UI ${spoken}; a message tagged "${classified.version}" cannot address it`,
+          path: '/version',
+          rule: 'version-mismatch',
+          value: spoken,
+        },
+        surfaceId,
+      );
     }
 
     if (classified.kind === 'deleteSurface') {
@@ -507,29 +505,14 @@ export function createA2uiAdapter(options: A2uiAdapterOptions): A2uiAdapter {
     }
 
     if (classified.kind === 'updateComponents') {
-      // Reject the WHOLE message if ANY updated component declares a forbidden
-      // type — reachable from the root or not (FR-002/FR-004, S7).
-      for (const [index, instance] of classified.components.entries()) {
-        const reason = forbiddenReason(instance.component);
-        if (reason !== null) {
-          return reject(
-            {
-              message: `A2UI type "${instance.component}" is forbidden for security (${reason})`,
-              path: `/updateComponents/components/${String(index)}/component`,
-              rule: 'forbidden-type',
-              value: instance.component,
-            },
-            surfaceId,
-          );
-        }
-      }
-      // Unknown properties are rejected at receipt too, so a component
-      // buffered before its root exists cannot carry one (S9).
-      for (const instance of classified.components) {
-        const undeclared = undeclaredProperty(instance.id, instance);
-        if (undeclared !== null) {
-          return reject(undeclared, surfaceId);
-        }
+      const received = receive(
+        classified.components,
+        state.dialect,
+        state.catalogId,
+        '/updateComponents/components',
+      );
+      if (received !== null) {
+        return reject(received, surfaceId);
       }
       const components = new Map(state.components);
       for (const instance of classified.components) {
