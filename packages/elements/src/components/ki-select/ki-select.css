@@ -51,6 +51,10 @@
   /* MarsUI UI/Body 1/medium on the value: 13px / 24px / 600. */
   font-weight: var(--ki-select-font-weight);
   line-height: var(--ki-select-line-height);
+
+  /* The list is anchored here: it opens in the top layer, outside the
+     host's box, so it can no longer hang off the host itself. */
+  anchor-name: --ki-select-trigger;
 }
 
 @media (hover: hover) {
@@ -162,14 +166,36 @@
      token to md.sys.elevation.level2 (menu). */
   box-shadow: var(--ki-select-listbox-shadow);
   box-sizing: border-box;
-  inset-block-start: calc(100% + var(--ki-select-listbox-offset));
-  inset-inline-start: 0;
-  max-block-size: var(--ki-select-listbox-max-block-size);
-  min-inline-size: 100%;
   overflow-block: auto;
   padding: var(--ki-select-listbox-padding);
-  position: absolute;
-  z-index: 1;
+
+  /* A manual popover in the top layer: no ancestor's overflow clips it and
+     no stacking context paints over it. Being out of flow, it no longer
+     lengthens the page either, so it must fit the viewport by itself. Like
+     the platform's own customizable select, it opens on the side of the
+     trigger with more room and never grows past that room, scrolling
+     instead. It keeps the trigger's width, wider only when a word needs it,
+     and starts at the trigger's inline-start edge unless that overflows.
+     The popover defaults (centred, bordered, Canvas-coloured) are reset to
+     the panel's own. */
+  border: none;
+  color: inherit;
+  inline-size: anchor-size(inline);
+  inset: auto;
+  margin: 0;
+  margin-block-start: var(--ki-select-listbox-offset);
+  max-block-size: min(
+    var(--ki-select-listbox-max-block-size),
+    calc(100% - var(--ki-select-listbox-offset))
+  );
+  min-inline-size: min-content;
+  position-anchor: --ki-select-trigger;
+  position-area: block-end span-inline-end;
+  position-try-fallbacks:
+    flip-block,
+    flip-inline,
+    flip-block flip-inline;
+  position-try-order: most-block-size;
 }
 
 [part="option"] {

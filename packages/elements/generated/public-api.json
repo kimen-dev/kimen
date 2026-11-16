@@ -4062,7 +4062,7 @@
                 "type": null
               }
             },
-            "description": "A form-associated checkbox for selecting independent options.",
+            "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
             "events": {
               "change": {
                 "default": null,
@@ -6678,7 +6678,7 @@
                 "type": null
               }
             },
-            "description": "A token-styled single-line text field with native input semantics.",
+            "description": "A token-styled single-line text field with native input semantics.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
             "events": {
               "change": {
                 "default": null,
@@ -8112,7 +8112,7 @@
                 "type": null
               }
             },
-            "description": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.",
+            "description": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
             "events": {
               "change": {
                 "default": null,
@@ -9007,7 +9007,7 @@
                 "type": null
               }
             },
-            "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.",
+            "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
             "events": {
               "change": {
                 "default": null,
@@ -9765,7 +9765,7 @@
                 "type": null
               }
             },
-            "description": "A token-styled switch for immediate on/off settings.",
+            "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
             "events": {
               "change": {
                 "default": null,
@@ -10979,7 +10979,7 @@
                 "type": null
               }
             },
-            "description": "A token-styled multiline text field with native form semantics.",
+            "description": "A token-styled multiline text field with native form semantics.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
             "events": {
               "change": {
                 "default": null,
@@ -11840,7 +11840,7 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiCheckbox {\n    checked: boolean;\n    indeterminate: boolean;\n    disabled: boolean;\n    required: boolean;\n    name?: string;\n    value?: string;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected checkedChanged(): void;\n    protected indeterminateChanged(): void;\n    protected inputConstraintChanged(): void;\n    protected valueChanged(): void;\n    formAssociatedCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    formResetCallback(): void;\n    protected hostInvalid(): void;\n    render(): any;\n}"
+                "signature": "export declare class KiCheckbox {\n    checked: boolean;\n    indeterminate: boolean;\n    disabled: boolean;\n    required: boolean;\n    name?: string;\n    value?: string;\n    get validity(): ValidityState;\n    get validationMessage(): string;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected checkedChanged(): void;\n    protected indeterminateChanged(): void;\n    protected inputConstraintChanged(): void;\n    protected valueChanged(): void;\n    formAssociatedCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    formResetCallback(): void;\n    protected hostInvalid(): void;\n    render(): any;\n}"
               },
               "KiDialog": {
                 "kinds": [
@@ -11872,7 +11872,7 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiInput {\n    type: KiInputType;\n    label: string;\n    placeholder?: string;\n    value: string;\n    name?: string;\n    required: boolean;\n    readonly: boolean;\n    disabled: boolean;\n    autocomplete?: string;\n    componentDidLoad(): void;\n    protected valueChanged(): void;\n    protected validityAffectingPropChanged(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    protected handleInvalid(): void;\n    render(): any;\n}"
+                "signature": "export declare class KiInput {\n    type: KiInputType;\n    label: string;\n    placeholder?: string;\n    value: string;\n    name?: string;\n    required: boolean;\n    readonly: boolean;\n    disabled: boolean;\n    autocomplete?: string;\n    get validity(): ValidityState;\n    get validationMessage(): string;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    componentDidLoad(): void;\n    protected valueChanged(): void;\n    protected validityAffectingPropChanged(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    protected handleInvalid(): void;\n    render(): any;\n}"
               },
               "KiInputType": {
                 "kinds": [
@@ -11926,21 +11926,21 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiRadioGroup {\n    name?: string;\n    value: string;\n    label: string;\n    required: boolean;\n    disabled: boolean;\n    get validationMessage(): string;\n    protected handleValueChange(): void;\n    protected normalizeBooleanProps(): void;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    formAssociatedCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    formResetCallback(): void;\n    render(): any;\n}"
+                "signature": "export declare class KiRadioGroup {\n    name?: string;\n    value: string;\n    label: string;\n    required: boolean;\n    disabled: boolean;\n    get validationMessage(): string;\n    protected handleValueChange(): void;\n    protected normalizeBooleanProps(): void;\n    get validity(): ValidityState;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    formAssociatedCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    formResetCallback(): void;\n    render(): any;\n}"
               },
               "KiSelect": {
                 "kinds": [
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiSelect {\n    label: string;\n    placeholder: string;\n    name?: string;\n    value: string;\n    disabled: boolean;\n    required: boolean;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected valueChanged(nextValue: string): void;\n    protected stateAttributeChanged(): void;\n    protected handleInvalid(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    render(): any;\n}"
+                "signature": "export declare class KiSelect {\n    label: string;\n    placeholder: string;\n    name?: string;\n    value: string;\n    disabled: boolean;\n    required: boolean;\n    get validity(): ValidityState;\n    get validationMessage(): string;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    connectedCallback(): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected valueChanged(nextValue: string): void;\n    protected stateAttributeChanged(): void;\n    protected handleInvalid(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    render(): any;\n}"
               },
               "KiSwitch": {
                 "kinds": [
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiSwitch {\n    checked: boolean;\n    disabled: boolean;\n    name?: string;\n    value?: string;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected checkedChanged(): void;\n    protected disabledChanged(): void;\n    protected valueChanged(): void;\n    formAssociatedCallback(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    render(): any;\n}"
+                "signature": "export declare class KiSwitch {\n    checked: boolean;\n    disabled: boolean;\n    name?: string;\n    value?: string;\n    get validity(): ValidityState;\n    get validationMessage(): string;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    componentWillLoad(): void;\n    componentDidLoad(): void;\n    disconnectedCallback(): void;\n    protected checkedChanged(): void;\n    protected disabledChanged(): void;\n    protected valueChanged(): void;\n    formAssociatedCallback(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    render(): any;\n}"
               },
               "KiTab": {
                 "kinds": [
@@ -11974,7 +11974,7 @@
                   "type",
                   "value"
                 ],
-                "signature": "export declare class KiTextarea {\n    label: string;\n    placeholder?: string;\n    value: string;\n    name?: string;\n    rows: number;\n    required: boolean;\n    readonly: boolean;\n    disabled: boolean;\n    autocomplete?: string;\n    protected valueChanged(): void;\n    protected validityChanged(): void;\n    componentDidLoad(): void;\n    componentDidRender(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    protected handleInvalid(): void;\n    render(): any;\n}"
+                "signature": "export declare class KiTextarea {\n    label: string;\n    placeholder?: string;\n    value: string;\n    name?: string;\n    rows: number;\n    required: boolean;\n    readonly: boolean;\n    disabled: boolean;\n    autocomplete?: string;\n    protected valueChanged(): void;\n    protected validityChanged(): void;\n    get validity(): ValidityState;\n    get validationMessage(): string;\n    get willValidate(): boolean;\n    checkValidity(): boolean;\n    reportValidity(): boolean;\n    setCustomValidity(message: string): void;\n    componentDidLoad(): void;\n    componentDidRender(): void;\n    formResetCallback(): void;\n    formDisabledCallback(disabled: boolean): void;\n    protected handleInvalid(): void;\n    render(): any;\n}"
               },
               "KiTooltip": {
                 "kinds": [
@@ -28175,5 +28175,5 @@
       }
     }
   },
-  "surfaceSha256": "8bf4c378a7277f0c2211f39d06ecce82a6beece28566e9accacad25990adec6e"
+  "surfaceSha256": "cef06aa59e2d3f13ed15dfab4c8c5b7a38650c11d54fdbdb90a046c8ec5ae601"
 }
