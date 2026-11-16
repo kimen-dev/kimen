@@ -4,6 +4,11 @@ import { normalizeKiTextareaRows } from './ki-textarea.form';
 /**
  * A token-styled multiline text field with native form semantics.
  *
+ * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+ * `setCustomValidity(message)`, `validity`, `validationMessage` and
+ * `willValidate` synchronously, on the custom-elements build (not on hosts
+ * created by the lazy loader).
+ *
  * @whenToUse free-form text longer than one line, such as comments,
  * descriptions, messages, delivery notes, or addresses when paired with a
  * matching `autocomplete` purpose.
@@ -139,6 +144,79 @@ export class KiTextarea {
     this.syncValidity();
   }
 
+  // The application's own error (setCustomValidity); '' when none. It is
+  // reapplied on every validity sync, so the control's own revalidation never
+  // drops it.
+  private customValidity = '';
+
+  /**
+   * Validity of the control, as on a native form control: which constraint
+   * fails, if any, including an error set with `setCustomValidity`. Present
+   * on the custom-elements build (`@kimen/elements/ki-*`,
+   * `@kimen/elements/components` and the framework wrappers), not on hosts
+   * created by the lazy loader.
+   * When NOT to use: do not read it to style the control; the control shows
+   * its own invalid state after a blocked submission.
+   */
+  get validity(): ValidityState {
+    return this.internals.validity;
+  }
+
+  /**
+   * Validation message for the current validity state: the browser's, or the
+   * error set with `setCustomValidity`. Empty when the control is valid.
+   * Custom-elements build only.
+   * When NOT to use: do not parse or localize the browser's message in
+   * application code.
+   */
+  get validationMessage(): string {
+    return this.internals.validationMessage;
+  }
+
+  /**
+   * Whether the control takes part in constraint validation: false while it
+   * is disabled, directly or through a fieldset. Custom-elements build only.
+   * When NOT to use: do not use it to test whether the control is disabled;
+   * read `disabled` for that.
+   */
+  get willValidate(): boolean {
+    return this.internals.willValidate;
+  }
+
+  /**
+   * Answers at once whether the control satisfies its constraints, firing
+   * `invalid` when it does not, exactly as a native field does.
+   * Custom-elements build only.
+   * When NOT to use: use `reportValidity()` instead when the user should see
+   * the problem.
+   */
+  checkValidity(): boolean {
+    return this.internals.checkValidity();
+  }
+
+  /**
+   * Like `checkValidity()`, and when the control is invalid the browser shows
+   * its message and moves focus to the control. Custom-elements build only.
+   * When NOT to use: do not call it on every keystroke; it interrupts the user.
+   */
+  reportValidity(): boolean {
+    return this.internals.reportValidity();
+  }
+
+  /**
+   * Sets an error of the application's own, such as a server-side or
+   * cross-field rule. While `message` is not empty the control is invalid,
+   * blocks its form and reports that message, and it keeps doing so through
+   * the user's edits until `setCustomValidity('')` clears it.
+   * Custom-elements build only.
+   * When NOT to use: do not use it for `required` or other constraints the
+   * control already enforces.
+   */
+  setCustomValidity(message: string): void {
+    this.customValidity = message;
+    this.syncValidity();
+  }
+
   componentDidLoad(): void {
     this.syncTextareaValue();
     this.syncFormValue();
@@ -204,6 +282,8 @@ export class KiTextarea {
     if (!this.textarea?.validity) {
       return;
     }
+
+    this.textarea.setCustomValidity(this.customValidity);
 
     this.internals.setValidity(
       this.textarea.validity,
