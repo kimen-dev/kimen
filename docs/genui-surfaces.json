@@ -26,6 +26,11 @@
           "summary": "Validates and renders a spec into options.surface through the guarded renderer: only components of the catalog in use render (options.catalog selects it; absent, the built-in catalog applies) plus the native primitives it carries, only actions declared in the spec dispatch (delivered as data to options.onAction), unknown props are rejected and no code path executes from spec data. Failures come back as diagnostics naming rule, path and value; nothing attaches on failure."
         },
         {
+          "name": "preflightUiSpec",
+          "signature": "preflightUiSpec(input, options?) => RenderResult",
+          "summary": "The guarded renderer's verdict without a DOM: runs exactly the preparation renderUiSpec runs before its first attach (purity wall, version gate, payload budget, catalog validation, then the depth, node-count, tag, activation and prop-name guards) and renders nothing. Use it at a DOM-less boundary — an MCP server, a service that checks specs before forwarding them — so that \"valid\" means \"the renderer will paint it\"; validateUiSpec alone accepts specs the renderer's tighter budgets refuse."
+        },
+        {
           "name": "createStreamingRenderer",
           "signature": "createStreamingRenderer(options) => StreamingRenderer",
           "summary": "Progressive rendering over a streamed spec: each push(node) validates one top-level subtree and attaches it only when fully valid; an invalid node fails closed while previously attached content remains, and the render budgets bind the accumulated stream. The catalog in use is fixed at creation via options.catalog."

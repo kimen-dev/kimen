@@ -109,6 +109,13 @@ export default tseslint.config(
               sourceTag: 'scope:wrapper',
               onlyDependOnLibsWithTags: ['scope:elements'],
             },
+            {
+              // The MCP server (spec 038) composes the GenUI layer: it may
+              // read the catalog, the emitter and the protocol adapters,
+              // never the elements directly.
+              sourceTag: 'scope:server',
+              onlyDependOnLibsWithTags: ['scope:catalog', 'scope:emitter', 'scope:adapter'],
+            },
           ],
         },
       ],

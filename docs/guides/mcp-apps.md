@@ -15,6 +15,9 @@ never touching core.
 
 This guide covers both halves: the MCP server that declares and serves the
 surface, and the surface document that renders results and returns actions.
+If you only want an agent to compose and show Kimen UI in a conversation, you
+need no server of your own: run [`@kimen/mcp-server`](../../packages/mcp-server/README.md),
+which serves the catalog, validation and this same surface over stdio.
 
 ## The flow
 
