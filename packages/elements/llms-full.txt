@@ -794,7 +794,7 @@ CSS custom properties:
 
 ### ki-checkbox
 
-A form-associated checkbox for selecting independent options.
+A form-associated checkbox for selecting independent options. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
 
 When to use: selecting one or more independent options that a form submits
 later, including a "select all" parent that presents partial selection with
@@ -1375,7 +1375,7 @@ CSS custom properties:
 
 ### ki-input
 
-A token-styled single-line text field with native input semantics.
+A token-styled single-line text field with native input semantics. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
 
 When to use: collect one line of free text from a person, always with a
 visible `label`; choose the `type` and `autocomplete` that match the entry
@@ -1949,7 +1949,7 @@ CSS custom properties:
 
 ### ki-radio-group
 
-A token-styled radio group that owns selection, keyboard coordination and form participation for slotted `ki-radio` options.
+A token-styled radio group that owns selection, keyboard coordination and form participation for slotted `ki-radio` options. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
 
 When to use: a person must choose exactly one of a small set of mutually
 exclusive options that should all be visible at once.
@@ -2101,7 +2101,7 @@ CSS custom properties:
 
 ### ki-select
 
-A form-associated select-only combobox for choosing one option from declarative `ki-option` children.
+A form-associated select-only combobox for choosing one option from declarative `ki-option` children. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
 
 When to use: choose exactly one value from a known closed list, especially
 when there are roughly five or more choices or space is limited.
@@ -2310,7 +2310,7 @@ CSS custom properties:
 
 ### ki-switch
 
-A token-styled switch for immediate on/off settings.
+A token-styled switch for immediate on/off settings. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
 
 When to use: binary settings whose change takes effect immediately, always
 with a slotted label.
@@ -2646,7 +2646,7 @@ CSS custom properties:
 
 ### ki-textarea
 
-A token-styled multiline text field with native form semantics.
+A token-styled multiline text field with native form semantics. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
 
 When to use: free-form text longer than one line, such as comments,
 descriptions, messages, delivery notes, or addresses when paired with a

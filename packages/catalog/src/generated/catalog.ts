@@ -234,7 +234,7 @@ export const catalogData = {
       "whenToUse": "group related media, heading, supporting text and actions into\none scannable surface visually distinct from the page; fill any subset of\nregions. Supply the heading element yourself in the `header` slot — plain\ntext slotted there carries no heading semantics for assistive technology."
     },
     "ki-checkbox": {
-      "description": "A form-associated checkbox for selecting independent options.",
+      "description": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
         "change": "Fired once after a user toggle (pointer, slotted label or Space)\ncommits, composed across the shadow boundary; `checked` is already current\nwhen listeners run. When to use: react to the committed selection. When NOT\nto use: do not expect it for programmatic `checked` writes, which are silent."
       },
@@ -408,7 +408,7 @@ export const catalogData = {
       "whenToUse": "show the current position within a bounded, sequential set of\npeer views whose navigation lives elsewhere: carousel slides, unlabeled\nonboarding steps, gallery pages. Wire `count` and `current` (1-based) to\nthe sequence the consumer renders and give it a `label` (required\nauthoring: assistive technology reads one graphic named\n\"<label>, <current> / <count>\"). Below two positions an indicator carries\nno information."
     },
     "ki-input": {
-      "description": "A token-styled single-line text field with native input semantics.",
+      "description": "A token-styled single-line text field with native input semantics.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
         "change": "Fired when the user commits an edited value (native text-field\ntiming, such as on blur), composed across the shadow boundary; `value` is\nalready current when listeners run. When to use: react to a committed\nvalue. When NOT to use: do not use it for per-keystroke updates; the native\n`input` event carries those."
       },
@@ -598,7 +598,7 @@ export const catalogData = {
       "whenToUse": "place inside `ki-radio-group` when a person must choose\nexactly one of a small visible set."
     },
     "ki-radio-group": {
-      "description": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.",
+      "description": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
         "change": "Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent."
       },
@@ -662,7 +662,7 @@ export const catalogData = {
       "whenToUse": "a bounded region inside a view whose content can outgrow it:\nchat or message panes, code and log blocks, tag rows, sidebar navigation,\ntall menus inside cards. Give it bounds (its size comes entirely from your\nlayout) and a `label` (required: the accessible name of the scroll\nregion). Scrolling stays native — wheel, touch, keyboard and indicator\ndrag operate the viewport directly."
     },
     "ki-select": {
-      "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.",
+      "description": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
         "change": "Fired once after the user commits a different option, composed\nacross the shadow boundary and preceded by `input`; `value` is already\ncurrent when listeners run. When to use: react to the committed choice.\nWhen NOT to use: do not expect it for programmatic `value` writes, which\nare silent."
       },
@@ -736,7 +736,7 @@ export const catalogData = {
       "whenToUse": "mark a state with minimal footprint adjacent to (or overlaid\non) the item it describes: presence on an avatar, health of a service\nlist entry, connection state in a toolbar. Label it (`label`) or pair it\nwith adjacent visible text — color is never the only carrier of the\nmeaning (WCAG 1.4.1)."
     },
     "ki-switch": {
-      "description": "A token-styled switch for immediate on/off settings.",
+      "description": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
         "change": "Fired once after a user toggle commits, composed across the shadow\nboundary; `checked` is already current when listeners run. When to use:\napply the on/off effect. When NOT to use: do not expect it for programmatic\n`checked` writes, which are silent."
       },
@@ -837,7 +837,7 @@ export const catalogData = {
       "whenToUse": "switch between small sets of peer views inside the same page,\nwith one visible panel at a time."
     },
     "ki-textarea": {
-      "description": "A token-styled multiline text field with native form semantics.",
+      "description": "A token-styled multiline text field with native form semantics.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "events": {
         "change": "Fired when the user commits an edited value (on blur, with native\ntextarea timing), composed across the shadow boundary; `value` is already\ncurrent when listeners run. When to use: react to a committed value. When\nNOT to use: do not use it for per-keystroke updates; the native `input`\nevent carries those."
       },

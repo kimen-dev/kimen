@@ -1219,7 +1219,7 @@
       "filePath": "src/components/ki-checkbox/ki-checkbox.tsx",
       "encapsulation": "shadow",
       "tag": "ki-checkbox",
-      "docs": "A form-associated checkbox for selecting independent options.",
+      "docs": "A form-associated checkbox for selecting independent options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "docsTags": [
         {
           "name": "whenToUse",
@@ -2176,7 +2176,7 @@
       "filePath": "src/components/ki-input/ki-input.tsx",
       "encapsulation": "shadow",
       "tag": "ki-input",
-      "docs": "A token-styled single-line text field with native input semantics.",
+      "docs": "A token-styled single-line text field with native input semantics.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "docsTags": [
         {
           "name": "whenToUse",
@@ -3186,7 +3186,7 @@
       "filePath": "src/components/ki-radio-group/ki-radio-group.tsx",
       "encapsulation": "shadow",
       "tag": "ki-radio-group",
-      "docs": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.",
+      "docs": "A token-styled radio group that owns selection, keyboard coordination and\nform participation for slotted `ki-radio` options.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "docsTags": [
         {
           "name": "whenToUse",
@@ -3487,7 +3487,7 @@
       "filePath": "src/components/ki-select/ki-select.tsx",
       "encapsulation": "shadow",
       "tag": "ki-select",
-      "docs": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.",
+      "docs": "A form-associated select-only combobox for choosing one option from\ndeclarative `ki-option` children.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "docsTags": [
         {
           "name": "whenToUse",
@@ -3903,7 +3903,7 @@
       "filePath": "src/components/ki-switch/ki-switch.tsx",
       "encapsulation": "shadow",
       "tag": "ki-switch",
-      "docs": "A token-styled switch for immediate on/off settings.",
+      "docs": "A token-styled switch for immediate on/off settings.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "docsTags": [
         {
           "name": "whenToUse",
@@ -4458,7 +4458,7 @@
       "filePath": "src/components/ki-textarea/ki-textarea.tsx",
       "encapsulation": "shadow",
       "tag": "ki-textarea",
-      "docs": "A token-styled multiline text field with native form semantics.",
+      "docs": "A token-styled multiline text field with native form semantics.\n\nLike a native field, it answers `checkValidity()`, `reportValidity()`,\n`setCustomValidity(message)`, `validity`, `validationMessage` and\n`willValidate` synchronously, on the custom-elements build (not on hosts\ncreated by the lazy loader).",
       "docsTags": [
         {
           "name": "whenToUse",
