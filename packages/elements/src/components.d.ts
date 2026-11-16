@@ -213,6 +213,10 @@ export namespace Components {
     }
     /**
      * A form-associated checkbox for selecting independent options.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse selecting one or more independent options that a form submits
      * later, including a "select all" parent that presents partial selection with
      * `indeterminate`. Always provide a visible label in the default slot.
@@ -388,6 +392,10 @@ export namespace Components {
     }
     /**
      * A token-styled single-line text field with native input semantics.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse collect one line of free text from a person, always with a
      * visible `label`; choose the `type` and `autocomplete` that match the entry
      * purpose.
@@ -574,6 +582,10 @@ export namespace Components {
     /**
      * A token-styled radio group that owns selection, keyboard coordination and
      * form participation for slotted `ki-radio` options.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse a person must choose exactly one of a small set of mutually
      * exclusive options that should all be visible at once.
      * @whenNotToUse many options or tight space (use `ki-select`), independent
@@ -639,6 +651,10 @@ export namespace Components {
     /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse choose exactly one value from a known closed list, especially
      * when there are roughly five or more choices or space is limited.
      * @whenNotToUse `ki-radio-group` for a few always-visible choices,
@@ -713,6 +729,10 @@ export namespace Components {
     }
     /**
      * A token-styled switch for immediate on/off settings.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse binary settings whose change takes effect immediately, always
      * with a slotted label.
      * @whenNotToUse selections collected for later form submission; use
@@ -808,6 +828,10 @@ export namespace Components {
     }
     /**
      * A token-styled multiline text field with native form semantics.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
      * matching `autocomplete` purpose.
@@ -1046,6 +1070,10 @@ declare global {
     };
     /**
      * A form-associated checkbox for selecting independent options.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse selecting one or more independent options that a form submits
      * later, including a "select all" parent that presents partial selection with
      * `indeterminate`. Always provide a visible label in the default slot.
@@ -1155,6 +1183,10 @@ declare global {
     };
     /**
      * A token-styled single-line text field with native input semantics.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse collect one line of free text from a person, always with a
      * visible `label`; choose the `type` and `autocomplete` that match the entry
      * purpose.
@@ -1275,6 +1307,10 @@ declare global {
     /**
      * A token-styled radio group that owns selection, keyboard coordination and
      * form participation for slotted `ki-radio` options.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse a person must choose exactly one of a small set of mutually
      * exclusive options that should all be visible at once.
      * @whenNotToUse many options or tight space (use `ki-select`), independent
@@ -1316,6 +1352,10 @@ declare global {
     /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse choose exactly one value from a known closed list, especially
      * when there are roughly five or more choices or space is limited.
      * @whenNotToUse `ki-radio-group` for a few always-visible choices,
@@ -1355,6 +1395,10 @@ declare global {
     };
     /**
      * A token-styled switch for immediate on/off settings.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse binary settings whose change takes effect immediately, always
      * with a slotted label.
      * @whenNotToUse selections collected for later form submission; use
@@ -1427,6 +1471,10 @@ declare global {
     };
     /**
      * A token-styled multiline text field with native form semantics.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
      * matching `autocomplete` purpose.
@@ -1714,6 +1762,10 @@ declare namespace LocalJSX {
     }
     /**
      * A form-associated checkbox for selecting independent options.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse selecting one or more independent options that a form submits
      * later, including a "select all" parent that presents partial selection with
      * `indeterminate`. Always provide a visible label in the default slot.
@@ -1889,6 +1941,10 @@ declare namespace LocalJSX {
     }
     /**
      * A token-styled single-line text field with native input semantics.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse collect one line of free text from a person, always with a
      * visible `label`; choose the `type` and `autocomplete` that match the entry
      * purpose.
@@ -2079,6 +2135,10 @@ declare namespace LocalJSX {
     /**
      * A token-styled radio group that owns selection, keyboard coordination and
      * form participation for slotted `ki-radio` options.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse a person must choose exactly one of a small set of mutually
      * exclusive options that should all be visible at once.
      * @whenNotToUse many options or tight space (use `ki-select`), independent
@@ -2148,6 +2208,10 @@ declare namespace LocalJSX {
     /**
      * A form-associated select-only combobox for choosing one option from
      * declarative `ki-option` children.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse choose exactly one value from a known closed list, especially
      * when there are roughly five or more choices or space is limited.
      * @whenNotToUse `ki-radio-group` for a few always-visible choices,
@@ -2226,6 +2290,10 @@ declare namespace LocalJSX {
     }
     /**
      * A token-styled switch for immediate on/off settings.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse binary settings whose change takes effect immediately, always
      * with a slotted label.
      * @whenNotToUse selections collected for later form submission; use
@@ -2329,6 +2397,10 @@ declare namespace LocalJSX {
     }
     /**
      * A token-styled multiline text field with native form semantics.
+     * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+     * `setCustomValidity(message)`, `validity`, `validationMessage` and
+     * `willValidate` synchronously, on the custom-elements build (not on hosts
+     * created by the lazy loader).
      * @whenToUse free-form text longer than one line, such as comments,
      * descriptions, messages, delivery notes, or addresses when paired with a
      * matching `autocomplete` purpose.
@@ -2702,6 +2774,10 @@ declare module "@stencil/core" {
             "ki-card": LocalJSX.IntrinsicElements["ki-card"] & JSXBase.HTMLAttributes<HTMLKiCardElement>;
             /**
              * A form-associated checkbox for selecting independent options.
+             * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+             * `setCustomValidity(message)`, `validity`, `validationMessage` and
+             * `willValidate` synchronously, on the custom-elements build (not on hosts
+             * created by the lazy loader).
              * @whenToUse selecting one or more independent options that a form submits
              * later, including a "select all" parent that presents partial selection with
              * `indeterminate`. Always provide a visible label in the default slot.
@@ -2775,6 +2851,10 @@ declare module "@stencil/core" {
             "ki-indicator": LocalJSX.IntrinsicElements["ki-indicator"] & JSXBase.HTMLAttributes<HTMLKiIndicatorElement>;
             /**
              * A token-styled single-line text field with native input semantics.
+             * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+             * `setCustomValidity(message)`, `validity`, `validationMessage` and
+             * `willValidate` synchronously, on the custom-elements build (not on hosts
+             * created by the lazy loader).
              * @whenToUse collect one line of free text from a person, always with a
              * visible `label`; choose the `type` and `autocomplete` that match the entry
              * purpose.
@@ -2860,6 +2940,10 @@ declare module "@stencil/core" {
             /**
              * A token-styled radio group that owns selection, keyboard coordination and
              * form participation for slotted `ki-radio` options.
+             * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+             * `setCustomValidity(message)`, `validity`, `validationMessage` and
+             * `willValidate` synchronously, on the custom-elements build (not on hosts
+             * created by the lazy loader).
              * @whenToUse a person must choose exactly one of a small set of mutually
              * exclusive options that should all be visible at once.
              * @whenNotToUse many options or tight space (use `ki-select`), independent
@@ -2891,6 +2975,10 @@ declare module "@stencil/core" {
             /**
              * A form-associated select-only combobox for choosing one option from
              * declarative `ki-option` children.
+             * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+             * `setCustomValidity(message)`, `validity`, `validationMessage` and
+             * `willValidate` synchronously, on the custom-elements build (not on hosts
+             * created by the lazy loader).
              * @whenToUse choose exactly one value from a known closed list, especially
              * when there are roughly five or more choices or space is limited.
              * @whenNotToUse `ki-radio-group` for a few always-visible choices,
@@ -2920,6 +3008,10 @@ declare module "@stencil/core" {
             "ki-status": LocalJSX.IntrinsicElements["ki-status"] & JSXBase.HTMLAttributes<HTMLKiStatusElement>;
             /**
              * A token-styled switch for immediate on/off settings.
+             * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+             * `setCustomValidity(message)`, `validity`, `validationMessage` and
+             * `willValidate` synchronously, on the custom-elements build (not on hosts
+             * created by the lazy loader).
              * @whenToUse binary settings whose change takes effect immediately, always
              * with a slotted label.
              * @whenNotToUse selections collected for later form submission; use
@@ -2961,6 +3053,10 @@ declare module "@stencil/core" {
             "ki-tabs": LocalJSX.IntrinsicElements["ki-tabs"] & JSXBase.HTMLAttributes<HTMLKiTabsElement>;
             /**
              * A token-styled multiline text field with native form semantics.
+             * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+             * `setCustomValidity(message)`, `validity`, `validationMessage` and
+             * `willValidate` synchronously, on the custom-elements build (not on hosts
+             * created by the lazy loader).
              * @whenToUse free-form text longer than one line, such as comments,
              * descriptions, messages, delivery notes, or addresses when paired with a
              * matching `autocomplete` purpose.

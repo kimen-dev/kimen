@@ -18,12 +18,12 @@
         {
           "name": "validateUiSpec",
           "signature": "validateUiSpec(input, options?) => ValidationReport",
-          "summary": "Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, unknown-slot, undeclared-action, invalid-id, duplicate-id, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value."
+          "summary": "Accepts or rejects an agent-emitted UI spec against the catalog in use — the built-in generated catalog, or a registered one passed as options.catalog — before anything renders. The report lists every issue with a code (unknown-component, unknown-prop, invalid-prop-type, missing-required-prop, prop-out-of-range, unknown-slot, undeclared-action, invalid-child, action-not-allowed, url-scheme, url-origin, invalid-id, duplicate-id, forbidden-key, size-budget, depth-budget, malformed-spec), a path into the spec document and the offending value."
         },
         {
           "name": "renderUiSpec",
           "signature": "renderUiSpec(input, options) => RenderResult",
-          "summary": "Validates and renders a spec into options.surface through the guarded renderer: only components of the catalog in use render (options.catalog selects it; absent, the built-in catalog applies), only actions declared in the spec dispatch (delivered as data to options.onAction), unknown props are rejected and no code path executes from spec data. Failures come back as diagnostics naming rule, path and value; nothing attaches on failure."
+          "summary": "Validates and renders a spec into options.surface through the guarded renderer: only components of the catalog in use render (options.catalog selects it; absent, the built-in catalog applies) plus the native primitives it carries, only actions declared in the spec dispatch (delivered as data to options.onAction), unknown props are rejected and no code path executes from spec data. Failures come back as diagnostics naming rule, path and value; nothing attaches on failure."
         },
         {
           "name": "createStreamingRenderer",
@@ -46,7 +46,11 @@
         },
         {
           "name": "catalogData",
-          "summary": "The generated catalog document itself: one entry per published ki-* element with typed props, events, slots and when-to-use guidance, plus the elements version it derives from. Its schema version is exported as CATALOG_SCHEMA_VERSION."
+          "summary": "The generated catalog document itself: one entry per published ki-* element and per native primitive with typed props, events, slots and when-to-use guidance, plus the elements version it derives from. Its schema version is exported as CATALOG_SCHEMA_VERSION."
+        },
+        {
+          "name": "NATIVE_PRIMITIVE_TAGS",
+          "summary": "The closed set of native HTML elements a spec may carry next to catalog components: h2, h3, h4, p, strong and em for text, img for images and div for layout. They take the host page's typography, carry only their declared attributes (img: src under the URL policy, alt that is a description or exactly empty for decoration, width, height; div: direction, gap on the --ki-space-* steps, align, justify, wrap), never bind an action, and lay out through the CSSOM so a CSP without unsafe-inline styles holds. They come with the built-in catalog and with catalogs that extend it; a consumer definition can never declare one."
         }
       ]
     },

@@ -41,6 +41,11 @@ type RosterOption = SelectOptionRecord & {
  * A form-associated select-only combobox for choosing one option from
  * declarative `ki-option` children.
  *
+ * Like a native field, it answers `checkValidity()`, `reportValidity()`,
+ * `setCustomValidity(message)`, `validity`, `validationMessage` and
+ * `willValidate` synchronously, on the custom-elements build (not on hosts
+ * created by the lazy loader).
+ *
  * @whenToUse choose exactly one value from a known closed list, especially
  * when there are roughly five or more choices or space is limited.
  * @whenNotToUse `ki-radio-group` for a few always-visible choices,
@@ -126,6 +131,7 @@ export class KiSelect {
   private mutationObserver: MutationObserver | undefined;
   private presenceObserver: MutationObserver | undefined;
   private triggerElement?: HTMLButtonElement;
+  private listboxElement?: HTMLElement;
   private donorElement?: HTMLSelectElement;
   // Distinguishes "options never slotted yet" (retain a pending value for the
   // framework property-before-children path) from "options were present and
@@ -148,6 +154,79 @@ export class KiSelect {
     return this.selectedIndex >= 0 ? (this.roster[this.selectedIndex] ?? null) : null;
   }
 
+  // The application's own error (setCustomValidity); '' when none. It is
+  // reapplied on every validity sync, so the control's own revalidation never
+  // drops it.
+  private customValidity = '';
+
+  /**
+   * Validity of the control, as on a native form control: which constraint
+   * fails, if any, including an error set with `setCustomValidity`. Present
+   * on the custom-elements build (`@kimen/elements/ki-*`,
+   * `@kimen/elements/components` and the framework wrappers), not on hosts
+   * created by the lazy loader.
+   * When NOT to use: do not read it to style the control; the control shows
+   * its own invalid state after a blocked submission.
+   */
+  get validity(): ValidityState {
+    return this.internals.validity;
+  }
+
+  /**
+   * Validation message for the current validity state: the browser's, or the
+   * error set with `setCustomValidity`. Empty when the control is valid.
+   * Custom-elements build only.
+   * When NOT to use: do not parse or localize the browser's message in
+   * application code.
+   */
+  get validationMessage(): string {
+    return this.internals.validationMessage;
+  }
+
+  /**
+   * Whether the control takes part in constraint validation: false while it
+   * is disabled, directly or through a fieldset. Custom-elements build only.
+   * When NOT to use: do not use it to test whether the control is disabled;
+   * read `disabled` for that.
+   */
+  get willValidate(): boolean {
+    return this.internals.willValidate;
+  }
+
+  /**
+   * Answers at once whether the control satisfies its constraints, firing
+   * `invalid` when it does not, exactly as a native field does.
+   * Custom-elements build only.
+   * When NOT to use: use `reportValidity()` instead when the user should see
+   * the problem.
+   */
+  checkValidity(): boolean {
+    return this.internals.checkValidity();
+  }
+
+  /**
+   * Like `checkValidity()`, and when the control is invalid the browser shows
+   * its message and moves focus to the control. Custom-elements build only.
+   * When NOT to use: do not call it on every keystroke; it interrupts the user.
+   */
+  reportValidity(): boolean {
+    return this.internals.reportValidity();
+  }
+
+  /**
+   * Sets an error of the application's own, such as a server-side or
+   * cross-field rule. While `message` is not empty the control is invalid,
+   * blocks its form and reports that message, and it keeps doing so through
+   * the user's edits until `setCustomValidity('')` clears it.
+   * Custom-elements build only.
+   * When NOT to use: do not use it for `required` or other constraints the
+   * control already enforces.
+   */
+  setCustomValidity(message: string): void {
+    this.customValidity = message;
+    this.syncValidity();
+  }
+
   connectedCallback(): void {
     this.host.addEventListener('focusout', this.handleFocusOut);
     // Presence semantics for attributes written after hydration: Stencil parses
@@ -158,6 +237,9 @@ export class KiSelect {
       ['disabled', 'required'],
       this.handlePresentAttribute,
     );
+    // Removal from the document hides a popover; a select moved while open
+    // shows its list again where it lands.
+    this.syncPopover();
   }
 
   componentWillLoad(): void {
@@ -221,6 +303,12 @@ export class KiSelect {
   private readonly setTriggerRef = (element?: HTMLButtonElement): void => {
     if (element) {
       this.triggerElement = element;
+    }
+  };
+
+  private readonly setListboxRef = (element?: HTMLElement): void => {
+    if (element) {
+      this.listboxElement = element;
     }
   };
 
@@ -424,6 +512,7 @@ export class KiSelect {
 
   private openWithHighlight(index: number): void {
     this.open = true;
+    this.syncPopover();
     this.highlightedIndex = index;
     document.addEventListener('pointerdown', this.handleOutsidePointerDown);
     requestAnimationFrame(() => {
@@ -433,8 +522,28 @@ export class KiSelect {
 
   private close(): void {
     this.open = false;
+    this.syncPopover();
     this.highlightedIndex = -1;
     this.detachOutsideListener();
+  }
+
+  /**
+   * The list opens in the top layer, so no ancestor's overflow clips it and no
+   * stacking context paints over it. `open` stays the one source of truth:
+   * this only mirrors it into the popover. Shown while still `hidden`, the
+   * list appears once the render it schedules lifts the attribute.
+   */
+  private syncPopover(): void {
+    const listbox = this.listboxElement;
+    if (!listbox?.isConnected || typeof listbox.showPopover !== 'function') {
+      return;
+    }
+    const shown = listbox.matches(':popover-open');
+    if (this.open && !shown) {
+      listbox.showPopover();
+    } else if (!this.open && shown) {
+      listbox.hidePopover();
+    }
   }
 
   private detachOutsideListener(): void {
@@ -479,7 +588,16 @@ export class KiSelect {
     // select whose `required` was just set to `false` blocking its form.
     // Presence semantics already reached the property (componentWillLoad and
     // the attribute observer).
-    if (selectValueMissing(this.required, submittedValue)) {
+    const valueMissing = selectValueMissing(this.required, submittedValue);
+    if (this.customValidity !== '') {
+      // The application's error outranks the platform message, as on a
+      // native select; a missing value still shows in the flags.
+      this.internals.setValidity(
+        { customError: true, valueMissing },
+        this.customValidity,
+        this.triggerElement,
+      );
+    } else if (valueMissing) {
       this.donorElement?.setAttribute('required', '');
       this.internals.setValidity(
         this.donorElement?.validity ?? { valueMissing: true },
@@ -549,10 +667,12 @@ export class KiSelect {
           <span part="indicator" aria-hidden="true" />
         </button>
         <div
+          ref={this.setListboxRef}
           id={this.listboxId}
           part="listbox"
           role="listbox"
           aria-labelledby={this.labelId}
+          popover="manual"
           hidden={!this.open}
         >
           {this.roster.map((option, index) => this.renderOption(option, index))}

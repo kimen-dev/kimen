@@ -53,6 +53,8 @@ test('S10 catalog regeneration from checkouts at different paths is byte-identic
       'packages/elements/generated/custom-elements.json',
       'packages/elements/package.json',
       'packages/catalog/scripts/generate-catalog.mjs',
+      // The native primitives' one definition (spec 037), read by the generator.
+      'packages/catalog/scripts/primitives.mjs',
     ]) {
       await mkdir(join(checkout, dirname(path)), { recursive: true });
       await copyFile(join(repoRoot, path), join(checkout, path));

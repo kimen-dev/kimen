@@ -1,6 +1,6 @@
 # ki-radio-group
 
-> A token-styled radio group that owns selection, keyboard coordination and form participation for slotted `ki-radio` options.
+> A token-styled radio group that owns selection, keyboard coordination and form participation for slotted `ki-radio` options. Like a native field, it answers `checkValidity()`, `reportValidity()`, `setCustomValidity(message)`, `validity`, `validationMessage` and `willValidate` synchronously, on the custom-elements build (not on hosts created by the lazy loader).
 
 ## When to use
 

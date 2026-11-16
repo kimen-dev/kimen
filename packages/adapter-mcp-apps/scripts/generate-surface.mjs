@@ -23,7 +23,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { brotliCompressSync, gzipSync } from 'node:zlib';
 
-import { catalogData } from '@kimen/catalog';
+import { catalogData, NATIVE_PRIMITIVE_TAGS } from '@kimen/catalog';
 import { build, transform } from 'esbuild';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -43,7 +43,10 @@ const catalogDist = dirname(fileURLToPath(import.meta.resolve('@kimen/catalog'))
 
 // The registered set IS the catalog (FR-011, Art. I): every component the
 // guarded renderer may render gets its definition, and nothing is hand-listed.
-const tags = Object.keys(catalogData.components).sort();
+// The native primitives (spec 037) are platform elements and need none.
+const tags = Object.keys(catalogData.components)
+  .filter((tag) => !NATIVE_PRIMITIVE_TAGS.includes(tag))
+  .sort();
 const componentModules = tags.map((tag) => {
   const file = resolve(elementsComponents, `${tag}.js`);
   if (!/^ki-[a-z0-9-]+$/u.test(tag) || !existsSync(file)) {
