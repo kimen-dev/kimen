@@ -131,6 +131,7 @@ export class KiSelect {
   private mutationObserver: MutationObserver | undefined;
   private presenceObserver: MutationObserver | undefined;
   private triggerElement?: HTMLButtonElement;
+  private listboxElement?: HTMLElement;
   private donorElement?: HTMLSelectElement;
   // Distinguishes "options never slotted yet" (retain a pending value for the
   // framework property-before-children path) from "options were present and
@@ -236,6 +237,9 @@ export class KiSelect {
       ['disabled', 'required'],
       this.handlePresentAttribute,
     );
+    // Removal from the document hides a popover; a select moved while open
+    // shows its list again where it lands.
+    this.syncPopover();
   }
 
   componentWillLoad(): void {
@@ -299,6 +303,12 @@ export class KiSelect {
   private readonly setTriggerRef = (element?: HTMLButtonElement): void => {
     if (element) {
       this.triggerElement = element;
+    }
+  };
+
+  private readonly setListboxRef = (element?: HTMLElement): void => {
+    if (element) {
+      this.listboxElement = element;
     }
   };
 
@@ -502,6 +512,7 @@ export class KiSelect {
 
   private openWithHighlight(index: number): void {
     this.open = true;
+    this.syncPopover();
     this.highlightedIndex = index;
     document.addEventListener('pointerdown', this.handleOutsidePointerDown);
     requestAnimationFrame(() => {
@@ -511,8 +522,28 @@ export class KiSelect {
 
   private close(): void {
     this.open = false;
+    this.syncPopover();
     this.highlightedIndex = -1;
     this.detachOutsideListener();
+  }
+
+  /**
+   * The list opens in the top layer, so no ancestor's overflow clips it and no
+   * stacking context paints over it. `open` stays the one source of truth:
+   * this only mirrors it into the popover. Shown while still `hidden`, the
+   * list appears once the render it schedules lifts the attribute.
+   */
+  private syncPopover(): void {
+    const listbox = this.listboxElement;
+    if (!listbox?.isConnected || typeof listbox.showPopover !== 'function') {
+      return;
+    }
+    const shown = listbox.matches(':popover-open');
+    if (this.open && !shown) {
+      listbox.showPopover();
+    } else if (!this.open && shown) {
+      listbox.hidePopover();
+    }
   }
 
   private detachOutsideListener(): void {
@@ -636,10 +667,12 @@ export class KiSelect {
           <span part="indicator" aria-hidden="true" />
         </button>
         <div
+          ref={this.setListboxRef}
           id={this.listboxId}
           part="listbox"
           role="listbox"
           aria-labelledby={this.labelId}
+          popover="manual"
           hidden={!this.open}
         >
           {this.roster.map((option, index) => this.renderOption(option, index))}

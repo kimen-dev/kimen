@@ -306,6 +306,88 @@ describe('ki-select in a real browser', () => {
     expect(events).toHaveLength(0);
   });
 
+  it('S1 an option past the edge of a container that clips its overflow can still be chosen', async () => {
+    const el = await mountSelect();
+    // A card-like container exactly as tall as the closed select: the open
+    // list hangs past its edge, where a clipped list paints nothing.
+    const clip = document.createElement('div');
+    clip.style.overflow = 'hidden';
+    clip.style.blockSize = `${String(el.getBoundingClientRect().height)}px`;
+    el.before(clip);
+    clip.append(el);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    trigger(el).click();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    const portugal = rowAt(el, 2);
+    const box = portugal.getBoundingClientRect();
+    const x = box.left + box.width / 2;
+    const y = box.top + box.height / 2;
+    expect(y).toBeGreaterThan(clip.getBoundingClientRect().bottom);
+    const hit = el.shadowRoot?.elementFromPoint(x, y);
+    expect(hit === portugal || (hit instanceof Node && portugal.contains(hit))).toBe(true);
+
+    (hit as HTMLElement).click();
+    expect(el.value).toBe('pt');
+    await expect.poll(() => valueText(el)).toBe('Portugal');
+  });
+
+  it('S8 S10 in a viewport too short for the whole list, the open list stays on screen and its last option can be chosen', async () => {
+    await page.viewport(320, 256);
+    try {
+      const many = Array.from(
+        { length: 12 },
+        (_, index) => `<ki-option value="v${String(index)}">Option ${String(index)}</ki-option>`,
+      ).join('');
+      const el = await mountSelect('', many);
+      // Near the bottom edge: the room below cannot hold the list, and the
+      // list no longer lengthens the page to make room.
+      const dock = document.createElement('div');
+      dock.style.cssText = 'position: fixed; inset-block-end: 8px; inset-inline-start: 8px';
+      el.before(dock);
+      dock.append(el);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      trigger(el).focus();
+      await userEvent.keyboard('{End}');
+      const listbox = el.shadowRoot?.querySelector('[part="listbox"]');
+      if (!(listbox instanceof HTMLElement)) {
+        throw new Error('missing listbox');
+      }
+      const last = rowAt(el, 11);
+      // Its centre is what the pointer would hit: the list and the scroll
+      // that brings the last option into view settle over a few frames.
+      await expect
+        .poll(() => {
+          const box = last.getBoundingClientRect();
+          const hit = el.shadowRoot?.elementFromPoint(
+            box.left + box.width / 2,
+            box.top + box.height / 2,
+          );
+          return hit === last || (hit instanceof Node && last.contains(hit));
+        })
+        .toBe(true);
+
+      // Read once the panel has eased in: until then a transform offsets it.
+      await expect
+        .poll(() => {
+          const list = listbox.getBoundingClientRect();
+          const control = trigger(el).getBoundingClientRect();
+          return {
+            onScreen: list.top >= 0 && list.bottom <= window.innerHeight,
+            clearOfTrigger: list.bottom <= control.top || list.top >= control.bottom,
+          };
+        })
+        .toEqual({ onScreen: true, clearOfTrigger: true });
+
+      await userEvent.keyboard('{Enter}');
+      expect(el.value).toBe('v11');
+    } finally {
+      await page.viewport(414, 896);
+    }
+  });
+
   it('S11 S12 exposes combobox and listbox roles in the real accessibility path', async () => {
     const el = await mountSelect('value="fr"');
 
