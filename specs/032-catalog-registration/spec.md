@@ -495,8 +495,10 @@ own specs.
   invariant (FR-002, FR-007, FR-008). All eighteen scenarios require explicit
   founder confirmation at gate 1; S4–S10 are the new adversarial surface,
   S11–S16 are the parity proof. S19–S20 (FR-015, added 2026-11-16 after the
-  clean-context review of spec 037) close the reserved-attribute path and
-  need the same explicit confirmation before implementation. It is a
+  clean-context review of spec 037) close the reserved-attribute path; the
+  founder confirmed them in the working conversation (2026-11-16) before
+  implementation, keeping the existing `forbidden-key` and
+  `forbidden-prop-name` codes and the four-name list. It is a
   tightening: a consumer definition declaring `style`, `class`, `slot` or
   `id` as a prop, accepted until now, is rejected from this change on.
 

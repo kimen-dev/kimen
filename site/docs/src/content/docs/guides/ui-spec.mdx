@@ -59,8 +59,10 @@ and every later check runs on a plain-data snapshot — so mutating the
 original mid-validation changes nothing.
 
 The v1 spec format exposes **no styling surface**: no CSS values, no
-per-spec token reassignment. Appearance stays at the consuming application's
-token layer.
+per-spec token reassignment, and no `style`, `class`, `slot` or `id`
+attribute written from spec data (no catalog, built-in or registered, can
+declare those props). Appearance stays at the consuming application's token
+layer.
 
 ## The guarded renderer
 

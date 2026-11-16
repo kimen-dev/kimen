@@ -11,6 +11,7 @@
 import { z } from 'zod';
 
 import { catalogData } from './generated/catalog.js';
+import { propNameViolation } from './prop-names.js';
 import { isCompatibleSchemaVersion } from './schema-version.js';
 import { tagGrammarViolation } from './tag-grammar.js';
 import type { Catalog, CatalogEntry, CatalogPropConstraint, ValidationIssue } from './validate.js';
@@ -113,21 +114,6 @@ function baseSchemaIssues(error: z.ZodError): readonly RegistrationIssue[] {
 }
 
 type ParsedEntry = z.output<typeof entrySchema>;
-
-// HTML inline event-handler content attributes (onclick, onerror, …) install
-// EXECUTABLE code the moment they are set via setAttribute — the one prop-name
-// class the no-code-execution guardrail (Art. VIII) must reject at the
-// registration boundary. The whole on* namespace, case-insensitive because
-// setAttribute lowercases the name, so no handler slips through.
-const EVENT_HANDLER_PROP = /^on/iu;
-
-// A conservative DOM attribute name (kept in sync with render.ts's renderer
-// guard): a lowercase ASCII start then letters, digits, hyphen or underscore.
-// An empty or exotic name would throw InvalidCharacterError from setAttribute
-// at render time; the boundary rejects it up front, fail-closed. Every prop
-// name the built-in catalog declares (kebab-case) satisfies it, so extending
-// the built-in catalog stays valid.
-const SAFE_PROP_NAME = /^[a-z][a-z0-9_-]*$/u;
 
 const GUIDANCE_FIELDS = ['description', 'whenNotToUse', 'whenToUse'] as const;
 const GUIDANCE_FIELD_SET: ReadonlySet<string> = new Set(GUIDANCE_FIELDS);
@@ -251,6 +237,40 @@ function checkConstraint(
   }
 }
 
+/**
+ * The registration issue for a prop name spec data must never write as an
+ * attribute (shared grammar in prop-names.ts), or null. Handler and reserved
+ * names are forbidden keys, like the on* precedent (032 FR-002/FR-015); an
+ * exotic name is a malformed constraint.
+ */
+function propNameIssue(tag: string, name: string, path: string): RegistrationIssue | null {
+  switch (propNameViolation(name)) {
+    case 'event-handler':
+      return {
+        code: 'forbidden-key',
+        message: `${tag} prop "${name}" uses a forbidden event-handler attribute name; such a name would install executable inline handler code`,
+        path,
+        value: name,
+      };
+    case 'reserved':
+      return {
+        code: 'forbidden-key',
+        message: `${tag} prop "${name}" uses a reserved attribute name; spec data never writes style, class, slot or id onto a component`,
+        path,
+        value: name,
+      };
+    case 'malformed':
+      return {
+        code: 'malformed-constraint',
+        message: `${tag} prop "${name}" is not a valid attribute name`,
+        path,
+        value: name,
+      };
+    case null:
+      return null;
+  }
+}
+
 function checkEntry(
   key: string,
   entry: ParsedEntry,
@@ -287,22 +307,9 @@ function checkEntry(
   }
   for (const [name, constraint] of Object.entries(entry.props)) {
     const propPath = `${path}.props.${name}`;
-    if (EVENT_HANDLER_PROP.test(name)) {
-      issues.push({
-        code: 'forbidden-key',
-        message: `${entry.tag} prop "${name}" uses a forbidden event-handler attribute name; such a name would install executable inline handler code`,
-        path: propPath,
-        value: name,
-      });
-      continue;
-    }
-    if (!SAFE_PROP_NAME.test(name)) {
-      issues.push({
-        code: 'malformed-constraint',
-        message: `${entry.tag} prop "${name}" is not a valid attribute name`,
-        path: propPath,
-        value: name,
-      });
+    const nameIssue = propNameIssue(entry.tag, name, propPath);
+    if (nameIssue !== null) {
+      issues.push(nameIssue);
       continue;
     }
     checkConstraint(entry.tag, name, constraint, propPath, issues);
