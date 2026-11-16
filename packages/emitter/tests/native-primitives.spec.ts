@@ -82,6 +82,8 @@ describe('037 — agents learn the primitives from the emitter', () => {
       expect(prompt.artifact).toContain(`### <${tag}>`);
     }
     expect(prompt.artifact).toMatch(/`alt` \(string, required, may be empty\)/u);
+    // The generic rule must not contradict the emptiable alt (review finding).
+    expect(prompt.artifact).toContain('non-blank value unless marked "may be empty"');
     const imgBlock = prompt.artifact.slice(prompt.artifact.indexOf('### <img>'));
     expect(imgBlock.slice(0, imgBlock.indexOf('\n###'))).toContain('never binds an action');
   });

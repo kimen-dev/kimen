@@ -149,7 +149,7 @@ export function catalogPrompt(
     '- A <node> is {"id": "<id>", "component": "<tag>", "props": {...}, "action": "<name>", "slots": {"<slot>": [<node or "text">, ...]}}; "id", "props", "action" and "slots" are optional.',
     '- "id" is a stable identity for a node the host may update later (a live surface addresses its operations by id): lowercase letters, digits, "-" and "_", starting with a letter or digit, at most 64 characters, unique within the document.',
     '- Only the components listed below exist. Only their listed props. Enum props allow only their listed values.',
-    '- Props marked "required" MUST be present with a non-blank value: a spec that omits one is rejected.',
+    '- Props marked "required" MUST be present with a non-blank value unless marked "may be empty": a spec that omits one is rejected.',
     '- Props marked "URL" accept only http(s) URLs or relative references; every other scheme is rejected, and the host may accept only absolute URLs of the origins it allows.',
     '- Every "action" you bind MUST appear in the top-level "actions" list; actions are named intents delivered to the host as data.',
     '- Slot children are nodes or plain text strings — never HTML, never code, never URLs with schemes other than http(s).',
