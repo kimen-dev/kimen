@@ -7,7 +7,7 @@ is the boundary where those untrusted messages become Kimen surfaces — every
 message is translated into a neutral [UI spec](./ui-spec.md) and reaches the
 DOM through the guarded renderer alone. The catalog and the `ki-*` elements
 are the durable assets; the adapter is **disposable by design**: the exact
-supported protocol version (A2UI **v0.9.1**) lives in
+supported protocol versions (A2UI **1.0**, preferred, and **v0.9.1**) live in
 [`COMPAT.md`](../../packages/adapter-a2ui/COMPAT.md), protocol churn is
 absorbed inside the package, and an unabsorbable break retires it without
 touching core.
@@ -19,7 +19,7 @@ data binding, the `action` round-trip, and the degradation policy.
 
 ```
 agent ──(your transport)──▶ adapter.apply(message)
-                                │  validate envelope + version (v0.9.1 / v0.9)
+                                │  validate envelope against its version (1.0 / v0.9.1 / v0.9)
                                 │  update surface state (components, data model)
                                 │  translate from `root` → neutral UI spec
                                 ▼
@@ -33,8 +33,9 @@ rejected message (known surface) ──▶ onError(error) ──▶ your transpo
 ```
 
 Transport is deliberately caller-owned: the adapter consumes already-delivered
-A2UI messages (payload MIME type `application/a2ui+json` in v0.9.1) and emits
-client messages to the callbacks you supply. It works identically over
+A2UI messages (payload MIME type `application/a2ui+json` in 1.0,
+`application/json+a2ui` in v0.9.1) and emits client messages to the callbacks
+you supply. It works identically over
 WebSocket, SSE, A2A, or an in-process agent loop.
 
 ## Wiring
@@ -90,9 +91,13 @@ reaches the surface outside it.
 
 ## The message lifecycle
 
-Every server message carries `"version"` (`"v0.9.1"`, or `"v0.9"`, which the
-v0.9.1 schema also accepts) and exactly one message key. Every `apply` result
-is an `A2uiApplyResult`: `{ ok, diagnostics, degradations }`.
+Every server message carries `"version"` and exactly one message key. The
+adapter reads `version` first and validates the message against that version's
+shapes only: `"1.0"` for A2UI 1.0, `"v0.9.1"` or `"v0.9"` (one
+payload-compatible family) for A2UI 0.9.1. A surface accepts only the version
+that created it. The examples below use v0.9.1; [A2UI 1.0](#a2ui-10) lists what
+changes. Every `apply` result is an `A2uiApplyResult`:
+`{ ok, diagnostics, degradations }`.
 
 ### 1. `createSurface` binds a surface to the basic catalog
 
@@ -215,6 +220,47 @@ cannot smuggle `export-account-data` into a surface that only declared
 `confirm-order`. An `Action.functionCall` (a local client function such as
 `openUrl`) is refused: the client-function allowlist is empty by design.
 
+## A2UI 1.0
+
+1.0 is the preferred version (`PREFERRED_A2UI_VERSION`). It keeps the same
+basic-catalog components and the same mapping, so a 1.0 description renders
+the same catalog components as its 0.9.1 equivalent. What changes on the wire:
+
+```json
+{ "version": "1.0", "createSurface": {
+    "surfaceId": "checkout",
+    "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+    "dataModel": { "order": { "total": "€42.00" } },
+    "components": [
+      { "id": "root", "component": "Card", "child": "confirm" },
+      { "id": "confirm", "component": "Button", "child": "label",
+        "action": { "event": { "name": "confirm-order",
+          "userMessage": "Order confirmed",
+          "context": { "total": { "@path": "/order/total" } } } } },
+      { "id": "label", "component": "Text", "text": "Confirm order" }
+    ] } }
+```
+
+- Bindings are `{ "@path": … }` and calls `{ "@call": … }`; component envelope
+  keys are `@checks`, `@accessibility`, `@catalogId` and `@metadata`. The
+  0.9.1 spellings are rejected on a 1.0 surface, and the reverse.
+- `createSurface` may carry the components and data model; they apply
+  atomically with the creation. `theme` is gone.
+- `updateDataModel` needs a `value`; `null` removes the key.
+- The `action` event is written with `"version": "1.0"` and the resolved
+  `userMessage`; `sendDataModel` metadata arrives as `a2uiRendererDataModel`.
+- In an action context a plain object is literal data (`@@type` unescapes to
+  `@type`); an unknown `@` key anywhere is rejected (`reserved-key`).
+- `{ "@call": "@index", "args": { "offset": 1 } }` numbers list-template
+  items.
+- Every `callRendererFunction` is refused with an `INVALID_FUNCTION_CALL`
+  `rendererFunctionResponse` delivered to `onFunctionResponse`; the adapter
+  never calls agent functions.
+
+Advertise both versions from `A2UI_RENDERER_CAPABILITIES`, preferred first:
+each entry names the transport metadata key (`a2uiRendererCapabilities` for
+1.0, `a2uiClientCapabilities` for 0.9.1) and the value to attach.
+
 ## Degradation and the COMPAT policy
 
 The compatibility matrix
@@ -259,7 +305,13 @@ produced by the adapter itself:
 | --- | --- |
 | `malformed-message` | The envelope or a component has the wrong shape (missing `version`, zero or two message keys, an undeclared envelope field, an empty component list, a component without `id` or `component`, a value that is not a literal, binding or function call) |
 | `unsupported-version` | `version` outside `SUPPORTED_A2UI_VERSIONS` |
-| `unsupported-catalog` | `createSurface` names a catalog other than the basic catalog |
+| `version-mismatch` | A message for a surface created with the other A2UI version |
+| `unsupported-catalog` | A catalog other than the basic catalog of the message's version (`createSurface`, a 1.0 `@catalogId` or function `catalogId`) |
+| `unresolved-catalog` | A 1.0 component without `@catalogId` on a surface created without a default `catalogId` |
+| `reserved-type` | A 1.0 component of the reserved type `Surface` |
+| `reserved-key` | An unknown `@`-prefixed key in a 1.0 value |
+| `invalid-function-call` | A 1.0 `callRendererFunction` (always refused) |
+| `unexpected-message` | A 1.0 `agentFunctionResponse` (the adapter never calls agent functions) |
 | `surface-exists` | `createSurface` for a surface that already exists |
 | `unknown-surface` | A message for a surface no `createSurface` created |
 | `no-host-surface` | The `surface` resolver returned `null` |
@@ -280,7 +332,7 @@ render budgets — passes through with the renderer's own rule names; see
 - [`@kimen/adapter-a2ui` README](../../packages/adapter-a2ui/README.md) —
   package reference and safety model.
 - [`COMPAT.md`](../../packages/adapter-a2ui/COMPAT.md) — the supported
-  protocol version, the full coverage matrix, lossy mappings and gaps.
+  protocol versions, the coverage matrix of each, lossy mappings and gaps.
 - [The UI-spec format](./ui-spec.md) — the neutral document every message
   becomes.
 - [Ship an MCP App with Kimen](./mcp-apps.md) — the same guardrail behind a

@@ -1,6 +1,7 @@
 /**
- * Pure translation of an A2UI v0.9.1 surface into one neutral catalog spec
- * (spec 029 FR-001/FR-002/FR-005). No DOM, no rendering, no protocol I/O: it
+ * Pure translation of an A2UI surface (0.9.1 or 1.0, in the dialect of the
+ * surface) into one neutral catalog spec (spec 029 FR-001/FR-002/FR-005,
+ * spec 039 FR-005). No DOM, no rendering, no protocol I/O: it
  * walks the flat component list from the component with id `root`, resolves
  * every dynamic value against the adapter-held data model (bindings,
  * collection scopes of `ChildList` templates, pure functions), maps each
@@ -15,7 +16,7 @@ import type { UiSpec, UiSpecNode } from '@kimen/catalog';
 import type { A2uiCoverageEntry } from './coverage.js';
 import {
   A2UI_CLIENT_FUNCTION_ALLOWLIST,
-  A2UI_COMMON_PROPERTIES,
+  A2UI_V1_RESERVED_TYPE,
   coverageOf,
   FALLBACK_CATALOG_TAG,
   FALLBACK_LABEL,
@@ -23,9 +24,10 @@ import {
   ROOT_CONTAINER_TAG,
 } from './coverage.js';
 import { isPlainObject, readAt, resolveScopedPointer } from './data-model.js';
+import type { Dialect } from './dialect.js';
 import type { A2uiComponent } from './protocol.js';
 import type { ValueContext, ValueOutcome } from './values.js';
-import { resolveDynamic, toText } from './values.js';
+import { resolveDynamic, staticFailure, toText } from './values.js';
 
 /** A machine-readable, inert rejection (spec 029 FR-003): named, never markup. */
 export interface A2uiDiagnostic {
@@ -53,6 +55,8 @@ export interface ActionBinding {
   readonly name: string;
   readonly componentId: string;
   readonly context: Readonly<Record<string, unknown>>;
+  /** The raw 1.0 `userMessage` (a dynamic string), resolved at dispatch. */
+  readonly userMessage?: unknown;
   readonly scope: readonly string[];
 }
 
@@ -69,6 +73,8 @@ export interface TranslationResult {
 
 export interface TranslateInput {
   readonly surfaceId: string;
+  /** The wire dialect of the surface's version family. */
+  readonly dialect: Dialect;
   readonly components: ReadonlyMap<string, A2uiComponent>;
   readonly dataModel: unknown;
   /** The declared action set, or `null` to declare exactly the actions this tree binds. */
@@ -92,6 +98,7 @@ type Piece = UiSpecNode | string;
 
 interface WalkContext {
   readonly surfaceId: string;
+  readonly dialect: Dialect;
   readonly components: ReadonlyMap<string, A2uiComponent>;
   readonly dataModel: unknown;
   readonly locale: string | undefined;
@@ -157,6 +164,7 @@ class Instance {
 
   private get values(): ValueContext {
     return {
+      dialect: this.context.dialect,
       locale: this.context.locale,
       model: this.context.dataModel,
       scope: this.scope,
@@ -184,10 +192,24 @@ class Instance {
           rule: 'forbidden-key',
           value: outcome.detail,
         });
+      case 'reserved-key':
+        throw new Abort({
+          message: `key "${outcome.detail}" is reserved by ${this.context.dialect.label} (escape a literal leading @ as @@)`,
+          path: where(this.id, property),
+          rule: 'reserved-key',
+          value: outcome.detail,
+        });
+      case 'unsupported-catalog':
+        throw new Abort({
+          message: `catalog "${outcome.detail}" is not supported (${this.context.dialect.protocol.basicCatalogIds.join(', ')})`,
+          path: where(this.id, property),
+          rule: 'unsupported-catalog',
+          value: outcome.detail,
+        });
       default:
         throw this.malformed(
           property,
-          `${this.type} property "${property}" is malformed (${outcome.detail})`,
+          `${this.type} property "${property}" is malformed for ${this.context.dialect.label} (${outcome.detail})`,
         );
     }
   }
@@ -305,7 +327,7 @@ class Instance {
       return target;
     }
     if (isPlainObject(raw) && Object.keys(raw).length === 1 && isPlainObject(raw['functionCall'])) {
-      const call = raw['functionCall']['call'];
+      const call = raw['functionCall'][this.context.dialect.callKey];
       const name = typeof call === 'string' ? call : '';
       if (!A2UI_CLIENT_FUNCTION_ALLOWLIST.includes(name)) {
         throw new Abort({
@@ -323,15 +345,33 @@ class Instance {
         `${this.type} action must be { event: { name } } with a non-empty name`,
       );
     }
+    const { dialect } = this.context;
+    const eventKeys = dialect.reservedNamespace
+      ? ['name', 'context', 'userMessage']
+      : ['name', 'context'];
     const context = event['context'] ?? {};
-    if (
-      !isPlainObject(context) ||
-      Object.keys(event).some((key) => key !== 'name' && key !== 'context')
-    ) {
+    if (!isPlainObject(context) || Object.keys(event).some((key) => !eventKeys.includes(key))) {
       throw this.malformed(
         'action',
-        `${this.type} action event must carry only name and an object context`,
+        `${this.type} action event may carry only ${eventKeys.join(', ')} in ${dialect.label}, with an object context`,
       );
+    }
+    if (dialect.reservedNamespace) {
+      // 1.0 context and user message resolve only at dispatch: a reserved key,
+      // a capability function or a foreign catalog in them rejects the
+      // message now (spec 039 S19, S20, S22).
+      const entries: [unknown, 'context' | 'value'][] = [
+        ...Object.values(context).map((value): [unknown, 'context'] => [value, 'context']),
+        ...(event['userMessage'] === undefined
+          ? []
+          : [[event['userMessage'], 'value'] as [unknown, 'value']]),
+      ];
+      for (const [value, mode] of entries) {
+        const failure = staticFailure(value, dialect, mode);
+        if (failure !== null) {
+          this.settle(failure, 'action');
+        }
+      }
     }
     const name = event['name'];
     this.context.encounteredActions.add(name);
@@ -341,6 +381,7 @@ class Instance {
       context,
       name,
       scope: this.scope,
+      ...(event['userMessage'] === undefined ? {} : { userMessage: event['userMessage'] }),
     });
     return withAction;
   }
@@ -466,8 +507,11 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
   TextField: (it) => {
     const label = it.text('label');
     const value = it.value('value');
+    // `placeholder` exists in 1.0 only; on 0.9.1 the property check rejects it first.
+    const placeholder = it.text('placeholder');
     const props: Record<string, string> = {
       ...(label === '' ? {} : { label }),
+      ...(placeholder === '' ? {} : { placeholder }),
       ...(value === undefined || toText(value) === '' ? {} : { value: toText(value) }),
     };
     const variant = it.literal('variant');
@@ -506,21 +550,27 @@ function resolveOption(it: Instance, raw: unknown, index: number): unknown {
  * catalog declaring it (S9), as a diagnostic; null when every property is
  * declared or the type is unmapped (its fallback carries nothing).
  */
-export function undeclaredProperty(id: string, body: A2uiComponent): A2uiDiagnostic | null {
-  const entry = coverageOf(body.component);
-  return entry === undefined ? null : checkProperties(id, body, entry);
+export function undeclaredProperty(
+  id: string,
+  body: A2uiComponent,
+  dialect: Dialect,
+): A2uiDiagnostic | null {
+  const entry = coverageOf(body.component, dialect.protocol.coverage);
+  return entry === undefined ? null : checkProperties(id, body, entry, dialect);
 }
 
 function checkProperties(
   id: string,
   body: A2uiComponent,
   entry: A2uiCoverageEntry,
+  dialect: Dialect,
 ): A2uiDiagnostic | null {
   if (entry.kind === 'unmapped' || entry.kind === 'forbidden') {
     return null;
   }
+  const common = dialect.protocol.commonProperties;
   for (const property of Object.keys(body)) {
-    if (!A2UI_COMMON_PROPERTIES.includes(property) && !entry.properties.includes(property)) {
+    if (!common.includes(property) && !entry.properties.includes(property)) {
       return {
         message: `${body.component} does not declare the property "${property}"`,
         path: where(id, property),
@@ -581,7 +631,15 @@ function resolveComponent(
     return [];
   }
   const type = body.component;
-  const entry = coverageOf(type);
+  if (context.dialect.reservedNamespace && type === A2UI_V1_RESERVED_TYPE) {
+    return fail({
+      message: `A2UI type "${type}" is reserved for the implicit surface container`,
+      path: where(id, 'component'),
+      rule: 'reserved-type',
+      value: type,
+    });
+  }
+  const entry = coverageOf(type, context.dialect.protocol.coverage);
   if (entry?.kind === 'forbidden') {
     return fail({
       message: `A2UI type "${type}" is forbidden for security (${entry.reason})`,
@@ -606,7 +664,7 @@ function resolveComponent(
     // content (S4/S11), and report the gap as data.
     return degrade('unmapped-type');
   }
-  const unknown = checkProperties(id, body, entry);
+  const unknown = checkProperties(id, body, entry, context.dialect);
   if (unknown !== null) {
     return fail(unknown);
   }
@@ -667,6 +725,7 @@ export function translateSurface(input: TranslateInput): TranslationResult {
     components: input.components,
     dataModel: input.dataModel,
     degradations: [],
+    dialect: input.dialect,
     encounteredActions: new Set<string>(),
     locale: input.locale,
     nodes: 0,
