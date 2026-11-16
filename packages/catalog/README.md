@@ -338,7 +338,15 @@ names excluded), collisions with the extended catalog are hard errors
 (built-ins are never overridden or shadowed), usage guidance
 (`description`, `whenToUse`, `whenNotToUse`) is mandatory because it is
 what an agent selects components by, and enum constraints need non-empty
-values. `createCatalog` never throws on hostile input: it returns
+values. Prop names become attribute names, so they must be conservative
+attribute names (lowercase ASCII, then letters, digits, `-` or `_`), and
+two classes are forbidden in any letter case (`forbidden-key`): the `on*`
+event-handler namespace, which would install executable inline code, and
+the reserved names `style`, `class`, `slot` and `id`, which spec data never
+writes onto a component (CSS injection and a `style-src-attr 'none'` CSP
+breach, coupling to the host page's stylesheets, the renderer's own slot
+assignment, and collisions with the host page's ids; 032 FR-015/S19).
+`createCatalog` never throws on hostile input: it returns
 `{ ok: false, issues }`, and no partial catalog escapes.
 
 `Catalog` is a structural type, so nothing stops a host from handing the
@@ -346,6 +354,9 @@ renderers a catalog value it built by hand. Both renderers therefore re-apply
 the same tag grammar to every node before creating any element: a hand-built
 entry for `script`, `iframe` or a reserved name is rejected fail-closed with
 an `invalid-tag` diagnostic and the surface stays untouched (032 FR-013/S17).
+They re-check every prop name the same way, on complete, streamed and live
+renders alike: an `on*` or reserved name (`style`, `class`, `slot`, `id`)
+is a `forbidden-prop-name` diagnostic and nothing attaches (032 S20).
 Always build catalogs with `createCatalog`; the re-check is defence in
 depth, not a substitute for registration.
 
