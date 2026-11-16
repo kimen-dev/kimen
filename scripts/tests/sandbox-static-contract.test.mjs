@@ -4,6 +4,7 @@ import test from 'node:test';
 
 const dockerfile = await readFile(new URL('../../sandbox/Dockerfile', import.meta.url), 'utf8');
 const loginScript = await readFile(new URL('../../sandbox/login.sh', import.meta.url), 'utf8');
+const loopScript = await readFile(new URL('../../sandbox/loop.sh', import.meta.url), 'utf8');
 const packageJson = JSON.parse(
   await readFile(new URL('../../sandbox/package.json', import.meta.url), 'utf8'),
 );
@@ -67,6 +68,32 @@ test('sandbox image pre-fetches the pnpm the repository declares', () => {
     rootPackageJson.packageManager,
     'update `corepack prepare` in sandbox/Dockerfile to the root packageManager field',
   );
+});
+
+// The global loop lock is mutually exclusive only because mkdir(2) fails with
+// EEXIST for the second creator. An external mkdir binary does not guarantee
+// that: uutils coreutils before 0.11, the default /bin/mkdir on Ubuntu 26.04
+// runners, turned a concurrent EEXIST into success (uutils/coreutils#13970),
+// so two simultaneous loops both became lock owners.
+// @spec:018-project-integrity-hardening#S5
+test('loop lock directories are created exclusively by mkdir(2), not an external mkdir', () => {
+  const loopCode = loopScript
+    .split('\n')
+    .filter((line) => !/^\s*#/u.test(line))
+    .join('\n');
+  const externalMkdirs = [
+    ...loopCode.matchAll(/(?:^|[\s;&|(!])((?:\/usr)?\/bin\/)?mkdir\s+(\S+)/gmu),
+  ];
+  for (const [invocation, absolutePath, firstArgument] of externalMkdirs) {
+    assert.equal(absolutePath, undefined, `exclusive creation through ${invocation.trim()}`);
+    assert.equal(firstArgument, '-p', `${invocation.trim()} must be idempotent or use mkdir(2)`);
+  }
+  const exclusiveCreates = [...loopCode.matchAll(/fs\.mkdirSync\(([^)]*)\)/gu)];
+  assert.ok(exclusiveCreates.length > 0, 'lock directories need an exclusive mkdir(2) helper');
+  for (const [call, argumentsText] of exclusiveCreates) {
+    assert.match(argumentsText, /mode: 0o700/u, `${call} must create a private directory`);
+    assert.doesNotMatch(argumentsText, /recursive/u, `${call} must fail on EEXIST`);
+  }
 });
 
 test('durable device login is retired from unattended use', () => {

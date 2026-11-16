@@ -251,11 +251,25 @@ remove_lock_claim_directory() {
   lock_claim_directory "$1" "$2" remove
 }
 
+# The lock protocol is exclusive only because mkdir(2) fails with EEXIST for the
+# second creator. External mkdir binaries do not all surface that: uutils
+# coreutils before 0.11, the default on Ubuntu 26.04, reported success when the
+# directory appeared between its existence check and mkdir(2)
+# (uutils/coreutils#13970), so two simultaneous loops both owned the lock.
+create_private_directory() {
+  node - "$1" <<'NODE'
+const fs = require('node:fs');
+try { fs.mkdirSync(process.argv[2], { mode: 0o700 }); } catch (error) {
+  process.exit(error?.code === 'EEXIST' ? 75 : 78);
+}
+NODE
+}
+
 prepare_lock_owner_directory() {
   local directory=$1
   local kind=$2
   local kill_before_rename=0
-  /bin/mkdir -m 0700 "$directory" || return 78
+  create_private_directory "$directory" || return 78
   fsync_directory "$(dirname "$directory")" || return 78
   if [ "${KIMEN_LOOP_TEST_MODE:-0}" = 1 ]; then
     case "$kind" in
@@ -368,7 +382,7 @@ acquire_loop_lock() {
     : > "$KIMEN_HOST_STATE/lock-ready.$$"
     while [ ! -e "$KIMEN_HOST_STATE/release-lock-race" ]; do sleep 0.05; done
   fi
-  if /bin/mkdir -m 0700 "$LOCK_DIR" 2>/dev/null; then
+  if create_private_directory "$LOCK_DIR"; then
     validate_lock_directory "$LOCK_DIR" || return 78
     if [ "${KIMEN_LOOP_TEST_MODE:-0}" = 1 ] && [ "${LOCK_KILL_BEFORE_PUBLISH_TEST:-0}" = 1 ]; then
       kill -KILL "$$"
