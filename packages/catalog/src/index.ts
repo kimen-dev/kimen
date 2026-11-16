@@ -35,6 +35,8 @@ export {
   type ActionEvent,
   createStreamingRenderer,
   DEFAULT_RENDER_BUDGETS,
+  type PreflightOptions,
+  preflightUiSpec,
   type RenderBudgets,
   type RenderDiagnostic,
   type RenderOptions,

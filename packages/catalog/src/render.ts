@@ -565,6 +565,30 @@ export function toDiagnostic(issue: {
   return { message: issue.message, path: issue.path, rule: issue.code, value: issue.value };
 }
 
+/** The render options that decide a verdict: everything but the surface and the action channel. */
+export type PreflightOptions = Omit<RenderOptions, 'onAction' | 'surface'>;
+
+/**
+ * The guarded renderer's verdict on an untrusted UI spec, without a DOM
+ * (spec 038 FR-014): exactly the preparation `renderUiSpec` runs before its
+ * first attach — purity wall, version gate, payload budget, catalog
+ * validation, then the renderer-native depth, node-count, tag, activation
+ * and prop-name guards. A DOM-less boundary (an MCP server) reports as valid
+ * only what the renderer will paint. Pure data processing: nothing is
+ * rendered, and the input is never mutated.
+ */
+export function preflightUiSpec(input: unknown, options: PreflightOptions = {}): RenderResult {
+  const prepared = prepare(
+    input,
+    { ...DEFAULT_RENDER_BUDGETS, ...options.budgets },
+    options.catalogSchemaVersion,
+    { allowedUrlOrigins: options.allowedUrlOrigins, catalog: options.catalog ?? builtInCatalog },
+  );
+  return prepared.diagnostics.length > 0
+    ? { diagnostics: prepared.diagnostics, ok: false }
+    : { diagnostics: [], ok: true };
+}
+
 /**
  * Renders a complete untrusted UI spec into `surface`, fail-closed and
  * atomic (FR-007): full validation precedes the first attach, so a rejected

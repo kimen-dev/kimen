@@ -1,0 +1,63 @@
+{
+  "name": "@kimen/mcp-server",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Kimen MCP server (spec 038): an agent queries the Kimen catalog, validates UI specs with correctable issues, and renders accepted specs as an MCP Apps surface painted only by the guarded renderer. One bundled stdio binary with no runtime dependencies, no network and no file access beyond itself. Supported protocol versions live in COMPAT.md.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimen-dev/kimen.git",
+    "directory": "packages/mcp-server"
+  },
+  "type": "module",
+  "bin": {
+    "kimen-mcp": "./dist/kimen-mcp.js"
+  },
+  "files": [
+    "dist/kimen-mcp.js",
+    "COMPAT.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs && tsc -p tsconfig.json --noEmit --pretty false",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@kimen/adapter-mcp-apps": "workspace:*",
+    "@kimen/catalog": "workspace:*",
+    "@kimen/emitter": "workspace:*",
+    "@modelcontextprotocol/client": "2.4.0",
+    "@modelcontextprotocol/server": "2.4.0",
+    "@types/node": "26.6.6",
+    "esbuild": "0.28.2",
+    "vitest": "5.0.5",
+    "zod": "4.6.7"
+  },
+  "nx": {
+    "tags": [
+      "scope:server"
+    ],
+    "implicitDependencies": [
+      "@kimen/elements"
+    ],
+    "targets": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [
+          "{projectRoot}/**/*",
+          "!{projectRoot}/src/generated/**",
+          "^default",
+          "{workspaceRoot}/packages/elements/generated/custom-elements.json"
+        ],
+        "outputs": [
+          "{projectRoot}/dist",
+          "{projectRoot}/src/generated"
+        ]
+      }
+    }
+  }
+}
