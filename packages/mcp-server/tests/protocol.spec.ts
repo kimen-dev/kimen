@@ -4,7 +4,11 @@
 // declare the same revisions.
 import { readFileSync } from 'node:fs';
 
-import { KIMEN_SURFACE_KEY, MCP_APPS_PROTOCOL_VERSIONS } from '@kimen/adapter-mcp-apps';
+import {
+  KIMEN_SURFACE_KEY,
+  MCP_APPS_PROTOCOL_VERSIONS,
+  surfaceResourceUri,
+} from '@kimen/adapter-mcp-apps';
 import { describe, expect, it } from 'vitest';
 
 import { MCP_APPS_REVISIONS, MCP_REVISIONS } from '../src/protocol.js';
@@ -51,6 +55,10 @@ describe('Kimen MCP server: protocol eras (038 S18, S19)', () => {
           'kimen_surface_action',
           'kimen_validate_spec',
         ]);
+        // The MCP Apps metadata reaches clients of both eras unchanged.
+        expect(tools.find((tool) => tool.name === 'kimen_render_spec')?._meta).toEqual({
+          ui: { resourceUri: surfaceResourceUri('surface') },
+        });
         const result = await server.client.callTool({
           arguments: { spec: INVENTORY_SPEC },
           name: 'kimen_render_spec',

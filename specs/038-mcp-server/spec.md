@@ -10,8 +10,11 @@
 
 **Created**: 2026-11-16
 
-**Status**: Draft — awaiting founder confirmation of the decisions and of the
-guardrail scenarios before implementation.
+**Status**: Confirmed — the founder confirmed the scenarios, the guardrail
+scenarios and decisions D1–D8 as recommended on 2026-11-16 ("Confirmo,
+implementa"), including the open points: `preflightUiSpec` in
+`@kimen/catalog`, component-level tokens only, acknowledgment-only actions,
+and the names `@kimen/mcp-server` / `kimen-mcp`.
 
 **Input**: Founder request (2026-11-16): "A Kimen MCP server in a new package,
 over stdio, so an agent (Claude Code, Claude Desktop, …) can (1) query the
@@ -35,7 +38,7 @@ host displays comes from catalog components painted by the guarded renderer
 are the constitution (Art. VIII, XI), the MCP specification and the MCP Apps
 extension (SEP-1865), and the catalog contract.
 
-## Decisions *(recommended, pending founder confirmation)*
+## Decisions *(founder, 2026-11-16)*
 
 **D1 — What "render" means.** The server never paints and never produces
 HTML in Node. `kimen_render_spec` validates the spec exactly as the guarded
@@ -91,6 +94,9 @@ in v1.
   each offending value cut to 256 characters; the text outline at 200 lines.
 - One stdio message is at most 4 MiB. A longer line is discarded before it is
   parsed and reported on stderr; the server keeps serving.
+- Tool arguments are bounded too: a component tag at most 128 characters, an
+  action name at most 256. A call that omits `spec` is answered by the SDK's
+  argument validation with an error naming it.
 - A spec that does not validate is never rendered (S10). Only catalog
   components are accepted, only declared actions are acknowledged (S13), and
   URL properties are refused (D5).
@@ -164,9 +170,10 @@ public API change to `@kimen/catalog` (Art. IX, MINOR).
 `0.0.0` like every package; binary `kimen-mcp`; server name `kimen`. The
 build bundles the server, the SDK, the catalog, the emitter output, the
 adapter's surface document and the token documentation of the component
-manifest into one ESM file with esbuild, the surface-document precedent. The
-build is deterministic and is the only artifact the permission-model run
-reads. The package exports no library API in v1: the binary is its whole
+manifest into one ESM file, `dist/kimen-mcp.mjs`, with esbuild, the
+surface-document precedent. The build is deterministic (`scripts/build.mjs
+--check` proves a rebuild byte-identical) and is the only artifact the
+permission-model run reads. The package exports no library API in v1: the binary is its whole
 contract.
 
 ## User Scenarios & Testing *(mandatory)*
@@ -549,7 +556,9 @@ re-implements.
 - **Public API delta** (Art. IX): a new package `@kimen/mcp-server`, private
   until release, whose contract is the binary, its tools and resources, and
   `COMPAT.md`. One additive export in `@kimen/catalog`: `preflightUiSpec`
-  (D7), declared under `changes/api/`. No change to `@kimen/elements`,
+  (D7), documented in the catalog README and the GenUI agent surfaces
+  (`docs/genui-surfaces.json`); the public-API snapshot gate covers
+  `@kimen/elements` and `@kimen/tokens` only. No change to `@kimen/elements`,
   `@kimen/tokens`, `@kimen/emitter` or `@kimen/adapter-mcp-apps`.
 - **Bundle budget** (Art. IV): no impact on existing package budgets. The
   binary embeds the surface document (about 571 kB), the SDK and the catalog;

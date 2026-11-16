@@ -110,6 +110,9 @@ const tsExtensionPlugin = {
 
 async function bundle() {
   const result = await build({
+    // Paths esbuild writes into the bundle are relative to this directory:
+    // pin it, so the bytes do not depend on where the build runs from.
+    absWorkingDir: packageRoot,
     banner: { js: '#!/usr/bin/env node' },
     bundle: true,
     entryPoints: [resolve(packageRoot, 'src/main.ts')],
@@ -135,7 +138,7 @@ async function same(file, expected) {
 
 const manifestSource = await manifestModuleSource();
 if (CHECK) {
-  if (!(await same(generatedFile, new TextEncoder().encode(manifestSource)))) {
+  if (!(await same(generatedFile, Buffer.from(manifestSource)))) {
     throw new Error('mcp-server: src/generated/manifest.ts is stale — run the build');
   }
   if (!(await same(outFile, await bundle()))) {

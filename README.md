@@ -114,6 +114,7 @@ and the guarded renderer stay the only enforcement points.
 | [`@kimen/catalog`](./packages/catalog) | Implemented, unpublished | Neutral catalog schema + guarded renderer (`validateUiSpec`, `renderUiSpec`, streaming) |
 | [`@kimen/adapter-a2ui`](./packages/adapter-a2ui) | Implemented, unpublished | A2UI protocol adapter over the guarded renderer |
 | [`@kimen/adapter-mcp-apps`](./packages/adapter-mcp-apps) | Implemented, unpublished | MCP Apps adapter: Kimen surfaces as self-contained `ui://` resources |
+| [`@kimen/mcp-server`](./packages/mcp-server) | Implemented, unpublished | MCP server over stdio: agents list the catalog, validate specs and render them as MCP Apps surfaces |
 | [`@kimen/emitter`](./packages/emitter) | Implemented, unpublished | Emitter kit: prompt, provider-lowered JSON Schema and tool definition from any catalog, plus normalize + single-round repair |
 | [`@kimen/react`](./packages/react) | Implemented, unpublished | Generated React bindings: typed props, event callbacks, controlled forms |
 | [`@kimen/vue`](./packages/vue) | Implemented, unpublished | Generated Vue 3 bindings with v-model on the form components |
@@ -176,6 +177,7 @@ everything else: see [`CONTRIBUTING.md`](./CONTRIBUTING.md). Security reports:
 - **available** — Emitter kit: model-agnostic prompt, catalog-specialized JSON Schema and tool definition so any LLM emits valid specs, with a single-round repair loop
 - **available** — Generated framework wrappers: @kimen/react, @kimen/vue and @kimen/angular with typed props, native events and each framework form idiom, drift-gated
 - **available** — Schema-constrained guarded renderer: untrusted UI specs render only through the neutral catalog, fail-closed
+- **available** — Kimen MCP server: over stdio, agents list and describe the catalog, validate UI specs with correctable issues and render them as MCP Apps surfaces through the guarded renderer
 - **hardening** — Changed-core mutation quality gate in hardening
 - **available** — A2UI protocol adapter: declarative A2UI messages render through the guarded renderer
 - **available** — MCP Apps adapter: Kimen surfaces reach MCP Apps hosts as self-contained ui:// resources rendered through the guarded renderer

@@ -41,8 +41,14 @@ export type SpecVerdict =
   | { readonly ok: true; readonly spec: UiSpec; readonly report: SpecReport }
   | { readonly ok: false; readonly report: SpecReport };
 
+/** `value` cut to `MAX_VALUE_CHARS` UTF-16 units, never splitting a surrogate pair. */
 function cut(value: string): string {
-  return value.length > MAX_VALUE_CHARS ? `${value.slice(0, MAX_VALUE_CHARS)}…` : value;
+  if (value.length <= MAX_VALUE_CHARS) {
+    return value;
+  }
+  const last = value.charCodeAt(MAX_VALUE_CHARS - 1);
+  const end = last >= 0xd800 && last <= 0xdbff ? MAX_VALUE_CHARS - 1 : MAX_VALUE_CHARS;
+  return `${value.slice(0, end)}…`;
 }
 
 function toIssue(diagnostic: RenderDiagnostic): SpecIssue {
