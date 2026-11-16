@@ -60,8 +60,9 @@ original mid-validation changes nothing.
 
 The v1 spec format exposes **no styling surface**: no CSS values, no
 per-spec token reassignment (a layout `div` takes spacing token steps, never
-CSS). Appearance stays at the consuming application's
-token layer.
+CSS), and no `style`, `class`, `slot` or `id` attribute written from spec
+data (no catalog, built-in or registered, can declare those props).
+Appearance stays at the consuming application's token layer.
 
 ## Native primitives
 

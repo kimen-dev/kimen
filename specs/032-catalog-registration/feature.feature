@@ -135,3 +135,33 @@ Feature: Consumer catalog registration
       | the required string prop "title"          | sets no "title"                      | missing-required-prop |
       | the number prop "trend" bounded to 0..100 | sets "trend" to 101                  | prop-out-of-range     |
       | the URL-typed string prop "logo"          | sets "logo" to "javascript:alert(1)" | url-scheme            |
+
+  # Family: reserved attribute names never come from spec data
+  # S19
+  Scenario Outline: A definition declaring a reserved attribute name as a prop is rejected
+    Given a catalog definition declaring "acme-kpi-card" with the string prop "<name>"
+    When a catalog is registered from that definition
+    Then registration is rejected naming "acme-kpi-card" and the reserved prop "<name>"
+
+    Examples:
+      | name  |
+      | style |
+      | class |
+      | slot  |
+      | id    |
+      | STYLE |
+
+  # S20
+  Scenario Outline: A hand-built catalog cannot write a reserved attribute from spec data
+    Given a catalog value built by hand, never registered, declaring "acme-box" with the string prop "<name>"
+    When a UI spec setting acme-box's "<name>" to "<value>" is rendered with that catalog, complete, streamed or as a live batch
+    Then the render is rejected naming the reserved prop "<name>"
+    And the surface stays untouched
+
+    Examples:
+      | name  | value                  |
+      | style | position:fixed;inset:0 |
+      | class | ki-overlay             |
+      | slot  | header                 |
+      | id    | checkout               |
+      | Class | ki-overlay             |

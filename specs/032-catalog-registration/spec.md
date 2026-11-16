@@ -307,6 +307,36 @@ Feature: Consumer catalog registration
       | the required string prop "title"          | sets no "title"                      | missing-required-prop |
       | the number prop "trend" bounded to 0..100 | sets "trend" to 101                  | prop-out-of-range     |
       | the URL-typed string prop "logo"          | sets "logo" to "javascript:alert(1)" | url-scheme            |
+
+  # Family: reserved attribute names never come from spec data
+  # S19
+  Scenario Outline: A definition declaring a reserved attribute name as a prop is rejected
+    Given a catalog definition declaring "acme-kpi-card" with the string prop "<name>"
+    When a catalog is registered from that definition
+    Then registration is rejected naming "acme-kpi-card" and the reserved prop "<name>"
+
+    Examples:
+      | name  |
+      | style |
+      | class |
+      | slot  |
+      | id    |
+      | STYLE |
+
+  # S20
+  Scenario Outline: A hand-built catalog cannot write a reserved attribute from spec data
+    Given a catalog value built by hand, never registered, declaring "acme-box" with the string prop "<name>"
+    When a UI spec setting acme-box's "<name>" to "<value>" is rendered with that catalog, complete, streamed or as a live batch
+    Then the render is rejected naming the reserved prop "<name>"
+    And the surface stays untouched
+
+    Examples:
+      | name  | value                  |
+      | style | position:fixed;inset:0 |
+      | class | ki-overlay             |
+      | slot  | header                 |
+      | id    | checkout               |
+      | Class | ki-overlay             |
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -320,7 +350,7 @@ own specs.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20 | |
 | Keyboard path | | N/A — no interactive surface; registration is data consumed by machines |
 | Assistive-tech outcome | | N/A — nothing new renders; registered components' accessibility contracts belong to their authors (documented limitation) |
 | Form participation | | N/A — no form control is introduced |
@@ -412,6 +442,20 @@ own specs.
   other than `url` — is a `malformed-constraint` rejection (S7). A string
   prop named like a fetchable native attribute stays URL-typed without the
   declaration (S14, the 027 FR-018 backstop).
+- **FR-015**: Four attribute names are reserved and MUST never be written
+  from spec data onto a catalog component: `style` (a CSS-injection path,
+  e.g. `position:fixed;inset:0` overlaying the host page, and a breach of a
+  CSP with `style-src-attr 'none'`), `class` (couples spec data to the host
+  page's stylesheets), `slot` (fights the renderer's own slot assignment)
+  and `id` (collides with the host page's ids). Registration MUST reject a
+  definition declaring any of them as a prop, case-insensitively, naming
+  the entry and the prop (S19), as it rejects the `on*` event-handler
+  namespace. Both renderers and the live surface MUST re-check every prop
+  name of every node before any element is created or attribute written,
+  rejecting a reserved name fail-closed with an inert diagnostic naming the
+  prop (S20), the same defence in depth FR-013 applies to tags. No built-in
+  component declares any of the four names, so the built-in catalog stays
+  valid and extending it is unaffected.
 
 ### Key Entities
 
@@ -450,7 +494,13 @@ own specs.
   guardrail change: registration opens the catalog without weakening any
   invariant (FR-002, FR-007, FR-008). All eighteen scenarios require explicit
   founder confirmation at gate 1; S4–S10 are the new adversarial surface,
-  S11–S16 are the parity proof.
+  S11–S16 are the parity proof. S19–S20 (FR-015, added 2026-11-16 after the
+  clean-context review of spec 037) close the reserved-attribute path; the
+  founder confirmed them in the working conversation (2026-11-16) before
+  implementation, keeping the existing `forbidden-key` and
+  `forbidden-prop-name` codes and the four-name list. It is a
+  tightening: a consumer definition declaring `style`, `class`, `slot` or
+  `id` as a prop, accepted until now, is rejected from this change on.
 
 ## Success Criteria *(mandatory)*
 

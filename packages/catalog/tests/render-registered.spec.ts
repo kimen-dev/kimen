@@ -10,6 +10,7 @@ import type { Catalog } from '../src/index.js';
 import {
   catalogData,
   createCatalog,
+  createLiveSurface,
   createStreamingRenderer,
   renderUiSpec,
   validateUiSpec,
@@ -189,6 +190,109 @@ describe('hand-built catalog values', () => {
     );
     expect(result.diagnostics).toEqual([]);
     expect(surface.querySelector('acme-frame')?.textContent).toBe('ok');
+  });
+});
+
+describe('hand-built catalog values and reserved attribute names (FR-015)', () => {
+  // A hand-built catalog may declare a reserved name that createCatalog
+  // rejects (S19). The renderers and the live surface re-check every prop
+  // name, so spec data never writes style, class, slot or id onto an element.
+  function handBuiltWith(name: string): Catalog {
+    return {
+      catalogSchemaVersion: catalogData.catalogSchemaVersion,
+      components: {
+        'acme-box': {
+          description: 'hand-built',
+          events: {},
+          props: { [name]: { description: 'hand-built', type: 'string' } },
+          slots: { '': 'content' },
+          tag: 'acme-box',
+          whenNotToUse: 'never',
+          whenToUse: 'never',
+        },
+      },
+    };
+  }
+
+  const reserved = [
+    ['style', 'position:fixed;inset:0'],
+    ['class', 'ki-overlay'],
+    ['slot', 'header'],
+    ['id', 'checkout'],
+    ['Class', 'ki-overlay'],
+    ['STYLE', 'position:fixed;inset:0'],
+  ] as const;
+
+  for (const [name, value] of reserved) {
+    const node = { component: 'acme-box', props: { [name]: value } };
+    const rejection = { path: `root.props.${name}`, rule: 'forbidden-prop-name', value: name };
+
+    it(`S20 rejects the reserved prop "${name}" from a hand-built catalog, complete render`, () => {
+      const surface = document.createElement('div');
+      const result = renderUiSpec(
+        { root: node, version: 1 },
+        { catalog: handBuiltWith(name), surface },
+      );
+      expect(result.ok).toBe(false);
+      expect(result.diagnostics).toContainEqual(expect.objectContaining(rejection));
+      expect(result.diagnostics.find((d) => d.value === name)?.message).toContain(`"${name}"`);
+      expect(surface.childNodes).toHaveLength(0);
+    });
+
+    it(`S20 rejects the reserved prop "${name}" from a hand-built catalog, streamed`, () => {
+      const surface = document.createElement('div');
+      const stream = createStreamingRenderer({ catalog: handBuiltWith(name), surface });
+      const result = stream.push(node);
+      expect(result.ok).toBe(false);
+      expect(result.diagnostics[0]).toMatchObject(rejection);
+      expect(surface.childNodes).toHaveLength(0);
+    });
+
+    it(`S20 rejects the reserved prop "${name}" inserted by a live batch`, () => {
+      const surface = document.createElement('div');
+      const live = createLiveSurface({ catalog: handBuiltWith(name), surface });
+      const result = live.apply({ ops: [{ node, op: 'insert' }] });
+      expect(result.ok).toBe(false);
+      expect(result.diagnostics[0]).toMatchObject({ rule: 'forbidden-prop-name', value: name });
+      expect(surface.childNodes).toHaveLength(0);
+    });
+
+    it(`S20 rejects the reserved prop "${name}" set by a live batch on a live node`, () => {
+      const surface = document.createElement('div');
+      const live = createLiveSurface({ catalog: handBuiltWith(name), surface });
+      expect(
+        live.apply({ ops: [{ node: { component: 'acme-box', id: 'box' }, op: 'insert' }] }).ok,
+      ).toBe(true);
+      const html = surface.innerHTML;
+      const result = live.apply({ ops: [{ id: 'box', op: 'set', props: { [name]: value } }] });
+      expect(result.ok).toBe(false);
+      expect(result.diagnostics[0]).toMatchObject({ rule: 'forbidden-prop-name', value: name });
+      expect(surface.innerHTML).toBe(html);
+      expect(surface.querySelector('acme-box')?.hasAttribute(name)).toBe(false);
+    });
+  }
+
+  it('S20 rejects a reserved prop on a nested node before any element attaches', () => {
+    const surface = document.createElement('div');
+    const result = renderUiSpec(
+      {
+        root: {
+          component: 'acme-box',
+          slots: { '': [{ component: 'acme-box', props: { style: 'position:fixed;inset:0' } }] },
+        },
+        version: 1,
+      },
+      { catalog: handBuiltWith('style'), surface },
+    );
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({
+        path: 'root.slots.[0].props.style',
+        rule: 'forbidden-prop-name',
+        value: 'style',
+      }),
+    );
+    expect(surface.childNodes).toHaveLength(0);
   });
 });
 

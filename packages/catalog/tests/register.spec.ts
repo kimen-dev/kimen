@@ -339,7 +339,6 @@ describe('createCatalog', () => {
     expect(spaced.ok).toBe(false);
     expect(!spaced.ok && spaced.issues.some((i) => i.code === 'malformed-constraint')).toBe(true);
   });
-
   it('snapshots the extend base before reading it, so a top-level accessor cannot run or throw (review regression)', () => {
     let getterRan = false;
     const hostileBase: Record<string, unknown> = {
@@ -519,5 +518,92 @@ describe('createCatalog — declared prop constraints over registered components
     );
     expect(created.ok).toBe(false);
     expect(!created.ok && created.issues[0]?.code).toBe('malformed-constraint');
+  });
+});
+
+describe('createCatalog — reserved attribute names (FR-015)', () => {
+  const withProp = (name: string) => ({
+    components: {
+      'acme-kpi-card': {
+        ...acmeKpiCard,
+        props: { [name]: { description: 'hostile', type: 'string' } },
+      },
+    },
+  });
+
+  it.each(['style', 'class', 'slot', 'id', 'STYLE', 'Class', 'sLoT', 'ID'])(
+    'S19 rejects a definition declaring the reserved prop "%s", naming the entry and the prop',
+    (name) => {
+      const created = createCatalog(withProp(name));
+      expect(created.ok).toBe(false);
+      expect(created.issues).toEqual([
+        {
+          code: 'forbidden-key',
+          message: expect.stringMatching(
+            new RegExp(`^acme-kpi-card prop "${name}" uses a reserved attribute name`, 'u'),
+          ) as string,
+          path: `definition.components.acme-kpi-card.props.${name}`,
+          value: name,
+        },
+      ]);
+    },
+  );
+
+  it('S19 rejects every letter-case spelling of the four reserved names', () => {
+    const spelling = fc
+      .constantFrom('style', 'class', 'slot', 'id')
+      .chain((name) =>
+        fc
+          .array(fc.boolean(), { maxLength: name.length, minLength: name.length })
+          .map((upper) =>
+            name.replace(/[a-z]/gu, (char, index: number) =>
+              upper[index] === true ? char.toUpperCase() : char,
+            ),
+          ),
+      );
+    fc.assert(
+      fc.property(spelling, (name) => {
+        const created = createCatalog(withProp(name));
+        expect(created.ok).toBe(false);
+        expect(created.issues.map((issue) => [issue.code, issue.value])).toEqual([
+          ['forbidden-key', name],
+        ]);
+      }),
+    );
+  });
+
+  it('S19 rejects a reserved prop carried by an extended base catalog', () => {
+    const base = {
+      catalogSchemaVersion: catalogData.catalogSchemaVersion,
+      components: {
+        'acme-legacy': {
+          ...acmeKpiCard,
+          props: { class: { description: 'hostile', type: 'string' } },
+          tag: 'acme-legacy',
+        },
+      },
+    } as unknown as typeof catalogData;
+    const created = createCatalog(acmeDefinition, { extend: base });
+    expect(created.ok).toBe(false);
+    expect(created.issues).toContainEqual(
+      expect.objectContaining({
+        code: 'forbidden-key',
+        path: 'options.extend.components.acme-legacy.props.class',
+        value: 'class',
+      }),
+    );
+  });
+
+  it.each(['styles', 'classes', 'slotted', 'identifier', 'data-id', 'style-name', 'idle'])(
+    'S19 still accepts the non-reserved prop name "%s"',
+    (name) => {
+      expect(createCatalog(withProp(name)).ok).toBe(true);
+    },
+  );
+
+  it('S19 keeps the built-in catalog extendable: no built-in prop is reserved', () => {
+    const created = createCatalog(acmeDefinition, { extend: catalogData });
+    expect(created.issues).toEqual([]);
+    expect(created.ok).toBe(true);
   });
 });

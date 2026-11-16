@@ -368,8 +368,10 @@ documented in the
 ## Two things a spec cannot say
 
 - **Styling.** The v1 format exposes no CSS values and no per-spec token
-  reassignment. Appearance stays at the consuming application's token layer —
-  see [Tokens & theming](../../packages/elements/docs/theming.mdx).
+  reassignment, and no catalog, built-in or registered, can declare a
+  `style`, `class`, `slot` or `id` prop: those attributes are never written
+  from spec data. Appearance stays at the consuming application's token
+  layer — see [Tokens & theming](../../packages/elements/docs/theming.mdx).
 - **Arbitrary events.** There is no way to bind a DOM event name or a
   callback. The only interaction surface is `action`, and the only receiver
   is the host's `onAction` channel.

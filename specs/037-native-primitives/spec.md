@@ -514,8 +514,9 @@ host's page. Their families are covered as follows.
   writes `img` `src`, `alt`, `width` and `height` as attributes, pins
   `referrerpolicy="no-referrer"`, and writes the image sizing and every
   `div` layout value through `style.setProperty` only. No code path writes
-  a `style` or `class` attribute on a primitive from spec data (consumer
-  components keep today's prop-name rules, outside this feature). Text
+  a `style` or `class` attribute on a primitive from spec data (for every
+  other catalog component, 032 FR-015 reserves `style`, `class`, `slot`
+  and `id` as prop names, outside this feature). Text
   primitives get no style. A live `set` rewrites only the attributes or style properties
   whose value changes, on the same element.
 - **FR-006** (D3): nothing in the renderer sets typography on any

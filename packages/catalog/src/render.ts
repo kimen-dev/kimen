@@ -14,6 +14,7 @@
  */
 import { catalogData } from './generated/catalog.js';
 import { pinNative, writeNativeLayout } from './primitives.js';
+import { type PropNameViolation, propNameViolation } from './prop-names.js';
 import { compatibleRange, isCompatibleSchemaVersion } from './schema-version.js';
 import { renderableTagViolation } from './tag-grammar.js';
 import type {
@@ -107,18 +108,13 @@ export interface RenderOptions {
   readonly allowedUrlOrigins?: readonly string[];
 }
 
-// HTML inline event-handler content attributes: setting one via setAttribute
-// installs executable code, so the renderer rejects the whole on* namespace
-// (case-insensitive) — the last line of defence for a hand-built `Catalog`
-// value that never crossed `createCatalog`'s registration guard.
-const EVENT_HANDLER_PROP = /^on/iu;
-
-// A conservative DOM attribute name, kept in sync with @kimen/catalog's
-// registration guard (register.ts SAFE_PROP_NAME): rejecting empty/exotic
-// names keeps an InvalidCharacterError from throwing out of setAttribute
-// (fail-closed diagnostic instead). Every built-in catalog prop name satisfies
-// it, so normal rendering is unaffected.
-const SAFE_PROP_NAME = /^[a-z][a-z0-9_-]*$/u;
+// The fixed reason of each renderer prop-name rejection: never derived from
+// spec data, so the diagnostic stays inert.
+const PROP_NAME_REASONS: Readonly<Record<PropNameViolation, string>> = {
+  'event-handler': 'uses a forbidden event-handler attribute name',
+  malformed: 'is not a valid attribute name',
+  reserved: 'uses a reserved attribute name that spec data never writes',
+};
 
 export interface GuardState {
   nodes: number;
@@ -204,27 +200,20 @@ export function guardNode(node: UiSpecNode, path: string, depth: number, state: 
   }
   for (const name of Object.keys(node.props ?? {})) {
     // Renderer-native name guard (defence in depth for hand-built catalogs that
-    // never crossed createCatalog): an on* name would compile into a live
-    // inline handler, and an exotic name would throw InvalidCharacterError out
-    // of setAttribute — reject both fail-closed before buildNode touches the
-    // DOM. Kept in sync with register.ts's registration-time check.
-    if (EVENT_HANDLER_PROP.test(name)) {
+    // never crossed createCatalog), the same grammar registration applies
+    // (prop-names.ts): an on* name would compile into a live inline handler, a
+    // reserved name (style, class, slot, id; 032 FR-015) is never written from
+    // spec data, and an exotic name would throw InvalidCharacterError out of
+    // setAttribute — reject all three fail-closed before buildNode touches the
+    // DOM.
+    const violation = propNameViolation(name);
+    if (violation !== null) {
       state.diagnostics.push({
-        message: `${node.component} prop "${name}" uses a forbidden event-handler attribute name`,
+        message: `${node.component} prop "${name}" ${PROP_NAME_REASONS[violation]}`,
         path: `${path}.props.${name}`,
-        rule: 'forbidden-prop-name',
+        rule: violation === 'malformed' ? 'malformed-prop-name' : 'forbidden-prop-name',
         value: name,
       });
-      continue;
-    }
-    if (!SAFE_PROP_NAME.test(name)) {
-      state.diagnostics.push({
-        message: `${node.component} prop "${name}" is not a valid attribute name`,
-        path: `${path}.props.${name}`,
-        rule: 'malformed-prop-name',
-        value: name,
-      });
-      continue;
     }
   }
   for (const [slotName, children] of Object.entries(node.slots ?? {})) {
