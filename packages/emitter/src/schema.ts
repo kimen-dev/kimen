@@ -8,7 +8,7 @@
  * points (FR-011).
  */
 import type { Catalog, CatalogEntry, CatalogPropConstraint } from '@kimen/catalog';
-import { NODE_ID_GRAMMAR } from '@kimen/catalog';
+import { NATIVE_PRIMITIVE_TAGS, NODE_ID_GRAMMAR } from '@kimen/catalog';
 
 import type { Derivation, EmitterIssue, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
@@ -105,7 +105,10 @@ function propSchema(constraint: CatalogPropConstraint, strict: boolean): Record<
     base['maximum'] = constraint.maximum;
   }
   if (constraint.required === true) {
-    if (constraint.type === 'string') {
+    // A required string must name something — unless the catalog admits the
+    // exact empty string as a deliberate value (spec 037: a decorative
+    // image's alt), where the boundary alone tells "" from white space.
+    if (constraint.type === 'string' && constraint.allowEmpty !== true) {
       base['pattern'] = NON_BLANK;
     }
     // A required prop has no placeholder: it is never nullable (S16).
@@ -153,10 +156,14 @@ function componentBranch(
       required.push('props');
     }
   }
-  const action = actionName(strict);
-  properties['action'] = strict ? { anyOf: [action, { type: 'null' }] } : action;
-  if (strict) {
-    required.push('action');
+  // A native primitive never binds an action (spec 037 D7): its branch
+  // offers none, so a model is never invited to emit one.
+  if (!NATIVE_PRIMITIVE_TAGS.includes(tag)) {
+    const action = actionName(strict);
+    properties['action'] = strict ? { anyOf: [action, { type: 'null' }] } : action;
+    if (strict) {
+      required.push('action');
+    }
   }
   const slotNames = Object.keys(entry.slots);
   if (slotNames.length > 0) {

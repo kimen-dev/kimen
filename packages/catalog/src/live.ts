@@ -19,10 +19,12 @@
 import { z } from 'zod';
 
 import { catalogData } from './generated/catalog.js';
+import { writeNativeLayout } from './primitives.js';
 import {
   ABSOLUTE_MAX_BYTES,
   type ActionEvent,
   attachText,
+  createNodeElement,
   DEFAULT_RENDER_BUDGETS,
   declaredEvents,
   type GuardState,
@@ -37,6 +39,7 @@ import {
   versionDiagnostic,
   wireActivation,
   writeProp,
+  writeProps,
 } from './render.js';
 import type {
   Catalog,
@@ -655,7 +658,9 @@ function applySet(
     }
     const overriding = force && ctx.allowUserStateOverride && USER_STATE_PROPS.has(name);
     const current = ownEntry(node.props, name);
-    if (previous !== current) {
+    // A native layout element's props are CSSOM layout (spec 037 D4): the
+    // whole layout is re-derived and only changed style properties written.
+    if (previous !== current && !writeNativeLayout(element, node.component, node.props)) {
       writeProp(element, name, current);
     }
     if (overriding) {
@@ -891,7 +896,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
 
   /** Builds a validated node into a detached element subtree (FR-005). */
   const build = (node: UiSpecNode, parent: MNode | null, slot: string): MNode => {
-    const element = doc.createElement(node.component);
+    const element = createNodeElement(doc, node.component);
     const model: MNode = {
       action: node.action,
       component: node.component,
@@ -904,9 +909,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       slots: new Map(),
       touched: false,
     };
-    for (const [name, value] of Object.entries(model.props)) {
-      writeProp(element, name, value);
-    }
+    writeProps(element, node.component, model.props);
     const entry = ownEntry(components, node.component);
     if (node.action !== undefined && onAction !== undefined) {
       const action = node.action;

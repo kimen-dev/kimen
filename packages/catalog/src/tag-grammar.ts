@@ -4,6 +4,7 @@
  * (032 FR-013): one definition, so the two checks can never drift apart.
  * Internal module — not part of the package's public surface.
  */
+import { isNativePrimitive, nativeEntryViolation } from './primitives.js';
 
 /**
  * A conservative custom-element name: lowercase ASCII, digit-friendly, a
@@ -39,4 +40,14 @@ export function tagGrammarViolation(tag: string): string | null {
     return 'is not a valid custom-element name (lowercase ASCII with a hyphen required)';
   }
   return null;
+}
+
+/**
+ * Why the renderer must not create an element for `tag` under `entry` (the
+ * entry of the catalog in use), or null when it may (spec 037 FR-007): a
+ * custom element passes the tag grammar; a native tag passes only as a
+ * native primitive whose entry is exactly Kimen's definition.
+ */
+export function renderableTagViolation(tag: string, entry: unknown): string | null {
+  return isNativePrimitive(tag) ? nativeEntryViolation(tag, entry) : tagGrammarViolation(tag);
 }

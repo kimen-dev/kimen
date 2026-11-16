@@ -5,6 +5,7 @@
  * (research D3). Deterministic text (S11), version-stamped (S10).
  */
 import type { Catalog, CatalogEntry, CatalogPropConstraint, UiSpecNode } from '@kimen/catalog';
+import { NATIVE_PRIMITIVE_TAGS } from '@kimen/catalog';
 import type { Derivation, ResolvedEntry } from './issues.js';
 import { resolveEntries, versionStamp } from './issues.js';
 import type { DerivationOptions } from './schema.js';
@@ -27,7 +28,8 @@ function propLine(name: string, constraint: CatalogPropConstraint): string {
       ? `enum: ${(constraint.values ?? []).map((value) => `"${value}"`).join(' | ')}`
       : `${constraint.type}${rangeText(constraint)}`;
   const url = constraint.format === 'url' ? ', URL' : '';
-  const required = constraint.required === true ? ', required' : '';
+  const emptiable = constraint.allowEmpty === true ? ', may be empty' : '';
+  const required = constraint.required === true ? `, required${emptiable}` : '';
   const description = constraint.description === '' ? '' : ` — ${constraint.description}`;
   const fallback =
     constraint.default === undefined ? '' : ` (default: ${JSON.stringify(constraint.default)})`;
@@ -54,6 +56,9 @@ function exampleValue(constraint: CatalogPropConstraint): boolean | number | str
 function componentBlock(tag: string, entry: CatalogEntry): readonly string[] {
   const lines: string[] = [`### <${tag}>`, entry.description];
   lines.push(`- Use when: ${entry.whenToUse}`, `- Avoid when: ${entry.whenNotToUse}`);
+  if (NATIVE_PRIMITIVE_TAGS.includes(tag)) {
+    lines.push('- Native HTML element: it never binds an action.');
+  }
   const propEntries = Object.entries(entry.props);
   if (propEntries.length > 0) {
     lines.push('- Props:');
