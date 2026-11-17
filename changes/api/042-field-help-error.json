@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "11ff112d4cb484cfa8a206f1f299366dfdaee3097fc587ee979f1801246fdb6f",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Field help and error text (spec 042-field-help-error), cumulative since baseline 0.0.0 and superseding declaration 036-field-validation-api (its deltas, and those of every declaration it supersedes, remain as declared there). (1) ki-input, ki-textarea, ki-select, ki-checkbox, ki-switch and ki-radio-group gain a help-text string prop, and all of them except ki-switch an error-text string prop (11 props, reflected attributes, documented with when-to-use and when-NOT-to-use guidance), and the parts help and error (12 parts). (2) The control's role-carrying element points aria-describedby at the shown help or error line and exposes aria-invalid true while the error shows and false otherwise; the error line is a polite live region that starts with a decorative error symbol. (3) Behavior change: with error-text set, validationMessage and the browser's bubble carry error-text instead of the browser's message for a failing native constraint, while the validity flags stay native; an error set with setCustomValidity still outranks it. Untouched controls are no longer exposed as invalid (aria-invalid false). (4) The lines are styled from the existing semantic inks --ki-text-med-em and --ki-text-danger-high-em and the caption type scale through a shared stylesheet; no token is added, removed or renamed, and no token value changes. docs.json, the Custom Elements Manifest, llms.txt, the per-component llms documents, the framework wrappers and the catalog regenerate with the props. The gate classifies every module symbol signature change as MAJOR and the cumulative delta since 0.0.0 was already MAJOR, so this candidate is declared major; on its own the change is additive (MINOR). Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}

@@ -287,11 +287,12 @@ describe('composed user flows in a real browser', () => {
       submitted = formEntries(form, event.submitter);
     });
 
-    // Before any submission attempt no field advertises an invalid state.
+    // Before any submission attempt no field advertises an invalid state
+    // (spec 042 D6: an explicit aria-invalid="false" until the error shows).
     expect(email.matches(':state(user-invalid)')).toBe(false);
     expect(terms.matches(':state(user-invalid)')).toBe(false);
-    expect(selectTrigger(country).hasAttribute('aria-invalid')).toBe(false);
-    expect(radiogroupPart(contact).hasAttribute('aria-invalid')).toBe(false);
+    expect(selectTrigger(country).getAttribute('aria-invalid')).toBe('false');
+    expect(radiogroupPart(contact).getAttribute('aria-invalid')).toBe('false');
 
     // Submitting through the real submit control is blocked by constraint
     // validation while every required field is still empty.
@@ -326,13 +327,13 @@ describe('composed user flows in a real browser', () => {
       'select popup closed after commit',
     );
     await waitFor(
-      () => !selectTrigger(country).hasAttribute('aria-invalid'),
+      () => selectTrigger(country).getAttribute('aria-invalid') === 'false',
       'select invalid affordance cleared by the commit',
     );
     await userEvent.click(groupRadio(contact, 1));
     await waitFor(() => contact.value === 'sms', 'radio group selected SMS');
     await waitFor(
-      () => !radiogroupPart(contact).hasAttribute('aria-invalid'),
+      () => radiogroupPart(contact).getAttribute('aria-invalid') === 'false',
       'radio group invalid affordance cleared by the selection',
     );
 

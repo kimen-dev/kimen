@@ -1,4 +1,11 @@
 import { AttachInternals, Component, Element, Listen, Prop, State, Watch, h } from '@stencil/core';
+import {
+  FieldMessage,
+  fieldDescribedBy,
+  fieldInvalid,
+  fieldText,
+  fieldValidationMessage,
+} from '../../utils/field-message';
 import { normalizeKiInputType } from './ki-input.form';
 
 export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
@@ -19,7 +26,11 @@ export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'searc
  *
  * @slot start - Leading icon or text affix inside the field. Follows writing direction.
  * @slot end - Trailing icon or text affix inside the field. Follows writing direction.
+ * @part error - Error line shown in place of the help text while the field is invalid
+ * after the person answered or submitted; a polite live region, starting with a
+ * decorative error symbol.
  * @part field - Enclosure wrapper for background, border, radius and focus ring.
+ * @part help - Help line under the field, read as the field's description.
  * @part input - Internal native input that owns entry text, caret and selection.
  * @part label - Visible label that provides the accessible name.
  * @event change - Fired when the user commits an edited value (native text-field
@@ -30,7 +41,7 @@ export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'searc
  */
 @Component({
   tag: 'ki-input',
-  styleUrl: 'ki-input.css',
+  styleUrls: ['../../utils/field-message.css', 'ki-input.css'],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -43,6 +54,10 @@ export class KiInput {
   @AttachInternals() private readonly internals!: ElementInternals;
 
   @State() private formDisabled = false;
+  // Mirrors the `user-invalid` custom state, which a render cannot observe.
+  @State() private userInvalid = false;
+  // The validation message last handed to ElementInternals (D4).
+  @State() private message = '';
 
   /**
    * Entry kind with native single-line input semantics. Unknown runtime
@@ -118,6 +133,26 @@ export class KiInput {
    */
   @Prop({ reflect: true }) autocomplete?: string;
 
+  /**
+   * One line of help under the field, read with it as its description: the
+   * format expected, or why the answer is asked. While an error shows, the
+   * error takes its place.
+   * When NOT to use: do not repeat the label, and do not use it for error
+   * messages; use `error-text`.
+   */
+  @Prop({ reflect: true }) helpText?: string;
+
+  /**
+   * Message shown in place of the help text once the person's answer fails a
+   * constraint (`required`, `type`), and the field's `validationMessage`. Say
+   * how to fix the answer ("Enter an email address like name@example.com").
+   * Without it the browser's own message shows, in the browser's language. An
+   * error set with `setCustomValidity` outranks it.
+   * When NOT to use: do not use it for server-side or cross-field errors; call
+   * `setCustomValidity` for those.
+   */
+  @Prop({ reflect: true }) errorText?: string;
+
   // The application's own error (setCustomValidity); '' when none. It is
   // reapplied on every validity sync, so the control's own revalidation never
   // drops it.
@@ -137,8 +172,9 @@ export class KiInput {
   }
 
   /**
-   * Validation message for the current validity state: the browser's, or the
-   * error set with `setCustomValidity`. Empty when the control is valid.
+   * Validation message for the current validity state: the error set with
+   * `setCustomValidity`, else `error-text`, else the browser's. Empty when the
+   * control is valid.
    * Custom-elements build only.
    * When NOT to use: do not parse or localize the browser's message in
    * application code.
@@ -202,6 +238,11 @@ export class KiInput {
       this.input.value = this.value;
     }
     this.syncFormValue();
+    this.syncValidity();
+  }
+
+  @Watch('errorText')
+  protected errorTextChanged(): void {
     this.syncValidity();
   }
 
@@ -303,17 +344,24 @@ export class KiInput {
       // lingering user-invalid affordance so a now-inert field is not styled
       // invalid (codex review).
       this.internals.setValidity({});
+      this.message = '';
       this.clearUserInvalid();
       return;
     }
 
     if (this.input.validity.valid) {
       this.internals.setValidity({});
+      this.message = '';
       this.clearUserInvalid();
       return;
     }
 
-    this.internals.setValidity(this.input.validity, this.input.validationMessage, this.input);
+    this.internals.setValidity(
+      this.input.validity,
+      fieldValidationMessage(this.customValidity, this.errorText, this.input.validationMessage),
+      this.input,
+    );
+    this.message = this.internals.validationMessage;
   }
 
   // Imperatively mirror validity-affecting props onto the internal input so its
@@ -331,14 +379,20 @@ export class KiInput {
 
   private setUserInvalid(): void {
     this.internals.states.add('user-invalid');
+    this.userInvalid = true;
   }
 
   private clearUserInvalid(): void {
     this.internals.states.delete('user-invalid');
+    this.userInvalid = false;
   }
 
   render() {
     const type = normalizeKiInputType(this.type);
+    const messages = {
+      help: fieldText(this.helpText),
+      error: this.userInvalid ? this.message : '',
+    };
 
     return (
       <div class="root">
@@ -361,6 +415,8 @@ export class KiInput {
             required={this.required}
             readOnly={this.readonly}
             disabled={this.effectiveDisabled}
+            aria-describedby={fieldDescribedBy(messages)}
+            aria-invalid={fieldInvalid(messages)}
             {...(this.name !== undefined ? { name: this.name } : {})}
             {...(this.placeholder !== undefined ? { placeholder: this.placeholder } : {})}
             {...(this.autocomplete !== undefined ? { autocomplete: this.autocomplete } : {})}
@@ -370,6 +426,7 @@ export class KiInput {
           />
           <slot name="end" />
         </div>
+        <FieldMessage {...messages} />
       </div>
     );
   }

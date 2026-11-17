@@ -14,6 +14,13 @@ import {
   observeAttributePresence,
 } from '../../utils/boolean-presence';
 import {
+  FieldMessage,
+  fieldDescribedBy,
+  fieldInvalid,
+  fieldText,
+  fieldValidationMessage,
+} from '../../utils/field-message';
+import {
   normalizeBooleanPresence,
   optionLabelText,
   optionValue,
@@ -59,6 +66,10 @@ type RosterOption = SelectOptionRecord & {
  * @part indicator - Decorative dropdown indicator.
  * @part listbox - Popup listbox surface.
  * @part option - Mirrored option row rendered in this shadow root.
+ * @part help - Help line under the trigger, read as the combobox description.
+ * @part error - Error line shown in place of the help text while the select is
+ * invalid after the person chose or submitted; a polite live region, starting with
+ * a decorative error symbol.
  * @event change - Fired once after the user commits a different option, composed
  * across the shadow boundary and preceded by `input`; `value` is already
  * current when listeners run. When to use: react to the committed choice.
@@ -67,7 +78,7 @@ type RosterOption = SelectOptionRecord & {
  */
 @Component({
   tag: 'ki-select',
-  styleUrl: 'ki-select.css',
+  styleUrls: ['../../utils/field-message.css', 'ki-select.css'],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -118,12 +129,33 @@ export class KiSelect {
    */
   @Prop({ reflect: true }) required = false;
 
+  /**
+   * One line of help under the trigger, read with it as the combobox
+   * description: what the choice decides. While an error shows, the error
+   * takes its place.
+   * When NOT to use: do not repeat the label, and do not use it for error
+   * messages; use `error-text`.
+   */
+  @Prop({ reflect: true }) helpText?: string;
+
+  /**
+   * Message shown in place of the help text once a `required` select is left
+   * without a choice, and its `validationMessage` ("Choose a country").
+   * Without it the browser's own message shows, in the browser's language. An
+   * error set with `setCustomValidity` outranks it.
+   * When NOT to use: do not use it for server-side or cross-field errors; call
+   * `setCustomValidity` for those.
+   */
+  @Prop({ reflect: true }) errorText?: string;
+
   @State() private roster: RosterOption[] = [];
   @State() private open = false;
   @State() private highlightedIndex = -1;
   @State() private selectedIndex = -1;
   @State() private formDisabled = false;
   @State() private userInvalid = false;
+  // The validation message last handed to ElementInternals (D4).
+  @State() private message = '';
 
   private readonly labelId = 'label';
   private readonly triggerId = 'trigger';
@@ -271,6 +303,11 @@ export class KiSelect {
   @Watch('value')
   protected valueChanged(nextValue: string): void {
     this.selectByValue(nextValue);
+  }
+
+  @Watch('errorText')
+  protected errorTextChanged(): void {
+    this.syncValidity();
   }
 
   @Watch('disabled')
@@ -575,6 +612,7 @@ export class KiSelect {
     if (this.effectiveDisabled) {
       this.internals.setFormValue(null);
       this.internals.setValidity({});
+      this.message = '';
       this.userInvalid = false;
       return;
     }
@@ -601,13 +639,14 @@ export class KiSelect {
       this.donorElement?.setAttribute('required', '');
       this.internals.setValidity(
         this.donorElement?.validity ?? { valueMissing: true },
-        this.donorElement?.validationMessage,
+        fieldValidationMessage('', this.errorText, this.donorElement?.validationMessage ?? ''),
         this.triggerElement,
       );
     } else {
       this.internals.setValidity({});
       this.userInvalid = false;
     }
+    this.message = this.internals.validationMessage;
   }
 
   private renderOption(option: RosterOption, index: number) {
@@ -639,6 +678,10 @@ export class KiSelect {
     const displayValue = selected?.label ?? this.placeholder;
     const activeId =
       this.open && this.highlightedIndex >= 0 ? this.roster[this.highlightedIndex]?.id : undefined;
+    const messages = {
+      help: fieldText(this.helpText),
+      error: this.userInvalid ? this.message : '',
+    };
 
     return (
       <Host>
@@ -656,7 +699,8 @@ export class KiSelect {
           aria-controls={this.listboxId}
           aria-activedescendant={activeId}
           aria-required={this.required ? 'true' : null}
-          aria-invalid={this.userInvalid ? 'true' : null}
+          aria-invalid={fieldInvalid(messages)}
+          aria-describedby={fieldDescribedBy(messages)}
           disabled={this.effectiveDisabled}
           onClick={this.handleTriggerClick}
           onKeyDown={this.handleKeyDown}
@@ -666,6 +710,7 @@ export class KiSelect {
           </span>
           <span part="indicator" aria-hidden="true" />
         </button>
+        <FieldMessage {...messages} />
         <div
           ref={this.setListboxRef}
           id={this.listboxId}

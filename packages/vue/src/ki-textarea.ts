@@ -18,7 +18,9 @@ export const KiTextarea: StencilVueComponent<JSX.KiTextarea, JSX.KiTextarea["val
   'required',
   'readonly',
   'disabled',
-  'autocomplete'
+  'autocomplete',
+  'helpText',
+  'errorText'
 ], [],
 'value', 'input', undefined);
 

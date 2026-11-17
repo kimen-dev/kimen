@@ -7,7 +7,7 @@
 
 **Created**: 2026-11-17
 
-**Status**: Draft, waiting for founder confirmation of D1–D9
+**Status**: Confirmed by the founder (D1–D9, 2026-11-17)
 
 **Input**: No Kimen form control can show help text or an error message.
 `ki-input` exposes only its `start` and `end` slots; a blocked submission
@@ -61,7 +61,7 @@ helpers against `--ki-surface-s0/s1/s2` in the four theme × scheme pairs:
 and returned nothing on topic; the decisions below rest on the platform,
 WCAG 2.2, the APG and the shipped practice of other web-component systems.
 
-## Decisions *(proposed; founder confirmation pending)*
+## Decisions *(founder, 2026-11-17)*
 
 - **D1 API shape: two text props, no slots.** `help-text` on all six
   controls; `error-text` on the five that have constraints of their own
