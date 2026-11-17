@@ -36,7 +36,7 @@ ENV PATH=/opt/kimen-agent-clis/node_modules/.bin:$PATH
 # node-writable for packageManager bumps fetched in the bootstrap phase.
 ENV COREPACK_HOME=/opt/corepack \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-RUN corepack prepare pnpm@12.17.0 --activate \
+RUN corepack prepare pnpm@12.19.0 --activate \
     && pnpm --version \
     && chown -R node:node /opt/corepack
 
