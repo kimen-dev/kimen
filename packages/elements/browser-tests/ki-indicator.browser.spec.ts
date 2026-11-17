@@ -16,6 +16,7 @@ import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-indicator.js';
 import manifestJson from '../generated/custom-elements.json?raw';
 import { expectAccessible } from './axe';
+import { alphaOf } from './contracts';
 import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiIndicatorElement = HTMLElement & { count?: number; current?: number; label?: string };
@@ -152,31 +153,23 @@ function catalogMaximum(attribute: 'count' | 'current'): number {
   return maximum;
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.color = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = getComputedStyle(probe).color;
-  probe.remove();
-  return value;
-}
+/** The MarsUI standard easing curve, as the browser serializes it. */
+const MARSUI_STANDARD_EASING = 'cubic-bezier(0.25, 0.1, 0.25, 1)';
 
-function readTokenLength(name: string): number {
-  const probe = document.createElement('div');
-  probe.style.blockSize = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = Number.parseFloat(getComputedStyle(probe).blockSize);
-  probe.remove();
-  return value;
-}
-
-function readTokenTimingFunction(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.transitionTimingFunction = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = getComputedStyle(probe).transitionTimingFunction;
-  probe.remove();
-  return value;
+/** What a viewer sees of the indicator: geometry and paint of its marks. */
+function indicatorAppearance(el: KiIndicatorElement) {
+  const resting = dotAt(el, 0);
+  const current = dotAt(el, 1);
+  const currentStyle = getComputedStyle(current);
+  const currentRect = current.getBoundingClientRect();
+  return {
+    gap: currentRect.left - resting.getBoundingClientRect().right,
+    currentWidth: currentRect.width,
+    currentHeight: currentRect.height,
+    ringWidth: Number.parseFloat(currentStyle.borderTopWidth),
+    currentPaint: currentStyle.borderTopColor,
+    restingPaint: getComputedStyle(resting).backgroundColor,
+  };
 }
 
 describe('ki-indicator', () => {
@@ -196,28 +189,23 @@ describe('ki-indicator', () => {
       expect(Math.abs(rect.top + rect.height / 2 - rowCenter)).toBeLessThan(1);
     }
 
-    // Geometry and paint resolve from tokens (FR-007): the onmars 8px
-    // resting circle, the 32x16 current pill and the Space/sm gap.
-    expect(firstRect.width).toBe(readTokenLength('--ki-indicator-dot-inline-size'));
-    expect(firstRect.height).toBe(readTokenLength('--ki-indicator-dot-block-size'));
-    expect(getComputedStyle(dotAt(el, 0)).backgroundColor).toBe(
-      readTokenColor('--ki-indicator-dot-color'),
-    );
-    const current = dotAt(el, 1).getBoundingClientRect();
-    expect(current.width).toBe(readTokenLength('--ki-indicator-dot-current-inline-size'));
-    expect(current.height).toBe(readTokenLength('--ki-indicator-dot-current-block-size'));
-    expect(current.left - firstRect.right).toBe(readTokenLength('--ki-indicator-gap'));
+    // The onmars geometry (FR-007): 8px resting circles, a 32x16 current
+    // pill and 6px between marks; the resting dots are visibly painted.
+    expect(firstRect.width).toBe(8);
+    expect(firstRect.height).toBe(8);
+    const appearance = indicatorAppearance(el);
+    expect(alphaOf(appearance.restingPaint)).toBeGreaterThan(0);
+    expect(appearance.currentWidth).toBe(32);
+    expect(appearance.currentHeight).toBe(16);
+    expect(appearance.gap).toBe(6);
 
     // The MarsUI ring construction: transparent center, the paint on the
-    // border, ring width = (block-size − hole) / 2 = (16 − 6) / 2.
-    const style = getComputedStyle(dotAt(el, 1));
-    expect(style.borderTopColor).toBe(readTokenColor('--ki-indicator-dot-current-color'));
-    expect(Number.parseFloat(style.borderTopWidth)).toBe(
-      (readTokenLength('--ki-indicator-dot-current-block-size') -
-        readTokenLength('--ki-indicator-dot-current-hole-block-size')) /
-        2,
-    );
-    expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    // border, ring width = (block-size − hole) / 2 = (16 − 6) / 2, drawn in
+    // the resting ink: in onmars the shape, not the colour, marks the
+    // current position.
+    expect(appearance.ringWidth).toBe(5);
+    expect(appearance.currentPaint).toBe(appearance.restingPaint);
+    expect(getComputedStyle(dotAt(el, 1)).backgroundColor).toBe('rgba(0, 0, 0, 0)');
   });
 
   it('S2 moves the highlight and the exposed position text when the current position changes', async () => {
@@ -325,8 +313,7 @@ describe('ki-indicator', () => {
 
     // The transfer transition rides duration AND easing tokens (the MarsUI
     // standard curve), never the UA default `ease`.
-    const expectedTiming = readTokenTimingFunction('--ki-indicator-motion-easing');
-    expect(expectedTiming).not.toBe('ease');
+    const expectedTiming = MARSUI_STANDARD_EASING;
     for (const dot of dotsOf(el)) {
       const computed = getComputedStyle(dot);
       const timings = computed.transitionTimingFunction
@@ -420,10 +407,7 @@ describe('ki-indicator', () => {
     cleanup();
     ensureTokens();
     const onmars = await mount(landmark(), { label: 'Slide position', count: '5', current: '2' });
-    const onmarsGap = readTokenLength('--ki-indicator-gap');
-    const onmarsCurrentWidth = readTokenLength('--ki-indicator-dot-current-inline-size');
-    const onmarsCurrentPaint = getComputedStyle(dotAt(onmars, 1)).borderTopColor;
-    const onmarsRestingColor = readTokenColor('--ki-indicator-dot-color');
+    const before = indicatorAppearance(onmars);
     const markup = onmars.outerHTML;
     onmars.remove();
 
@@ -434,19 +418,19 @@ describe('ki-indicator', () => {
     expect(el.outerHTML).toBe(markup);
     // Uniform 8dp circles at 8dp gaps: emphasis by color alone (the M2
     // pager-dot reading recorded in the theme token values).
-    expect(readTokenLength('--ki-indicator-dot-current-inline-size')).toBe(8);
-    expect(readTokenLength('--ki-indicator-dot-current-inline-size')).not.toBe(onmarsCurrentWidth);
-    expect(readTokenLength('--ki-indicator-gap')).toBe(8);
-    expect(readTokenLength('--ki-indicator-gap')).not.toBe(onmarsGap);
-    expect(readTokenLength('--ki-indicator-dot-current-hole-block-size')).toBe(0);
-    expect(dotAt(el, 1).getBoundingClientRect().width).toBe(8);
-    expect(dotAt(el, 1).getBoundingClientRect().height).toBe(8);
-    // The zeroed hole collapses the ring into a solid current dot painted
-    // in the theme's current color, distinct from the resting fill.
-    const currentPaint = getComputedStyle(dotAt(el, 1)).borderTopColor;
-    expect(currentPaint).toBe(readTokenColor('--ki-indicator-dot-current-color'));
-    expect(currentPaint).not.toBe(onmarsCurrentPaint);
-    expect(readTokenColor('--ki-indicator-dot-color')).not.toBe(onmarsRestingColor);
+    const after = indicatorAppearance(el);
+    expect(after.currentWidth).toBe(8);
+    expect(after.currentHeight).toBe(8);
+    expect(before.currentWidth).toBe(32);
+    expect(after.gap).toBe(8);
+    expect(before.gap).toBe(6);
+    // The zeroed hole collapses the ring into a solid current dot (the ring
+    // is half the dot's block size), painted in the theme's current color:
+    // colour alone tells it from the resting fill.
+    expect(after.ringWidth).toBe(after.currentHeight / 2);
+    expect(after.currentPaint).not.toBe(after.restingPaint);
+    expect(after.currentPaint).not.toBe(before.currentPaint);
+    expect(after.restingPaint).not.toBe(before.restingPaint);
 
     await expectAccessible(document.body);
   });
