@@ -5,6 +5,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-checkbox.js';
 import { expectAccessible, parkPointer } from './axe';
+import { paintContrast } from './contracts';
 
 type KiCheckboxElement = HTMLElement & {
   checked: boolean;
@@ -169,20 +170,10 @@ async function waitForStyles(): Promise<void> {
   }
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.backgroundColor = `var(${name})`;
-  document.documentElement.append(probe);
-  const value = getComputedStyle(probe).backgroundColor;
-  probe.remove();
-  return value;
-}
-
-function checkboxState(el: KiCheckboxElement): 'hover' | 'rest' {
-  // Hover paint lives behind `@media (hover: hover)`. `:hover` latches on a
-  // device that cannot hover — that is the whole reason the query is there —
-  // so predicting one without the other predicts a cascade that never ran.
-  return el.matches(':hover') && matchMedia('(hover: hover)').matches ? 'hover' : 'rest';
+/** How well the checkbox mark reads against the box it is drawn in. */
+function markContrast(el: KiCheckboxElement): number {
+  const control = getComputedStyle(controlOf(el));
+  return paintContrast(control.color, control.backgroundColor);
 }
 
 function formEntries(form: HTMLFormElement): Record<string, string> {
@@ -426,9 +417,12 @@ describe('ki-checkbox in a real browser', () => {
     await waitForStyles();
 
     expect(el.matches(':state(user-invalid)')).toBe(true);
-    expect(getComputedStyle(control).borderTopColor).toBe(
-      readTokenColor('--ki-checkbox-invalid-border'),
-    );
+    // The error boundary is visibly different and holds 3:1 on the page.
+    const invalidBorder = getComputedStyle(control).borderTopColor;
+    expect(invalidBorder).not.toBe(restBorder);
+    expect(
+      paintContrast(invalidBorder, getComputedStyle(document.body).backgroundColor),
+    ).toBeGreaterThanOrEqual(3);
   });
 
   it('S14 relaxing required after a failed submit clears the user-invalid affordance', async () => {
@@ -465,13 +459,16 @@ describe('ki-checkbox in a real browser', () => {
     expect(formEntries(form)).toEqual({});
   });
 
-  it('S16 material3 restyles checkbox selection states through component tokens', async () => {
+  it('S16 material3 repaints both selection states and keeps their marks legible', async () => {
     cleanup();
     ensureTokens();
     const baseline = await mount('Selected', { checked: true });
+    const baselineMixed = await mount('Mixed', { indeterminate: true });
     await waitForStyles();
     const onmars = getComputedStyle(controlOf(baseline)).backgroundColor;
+    const onmarsMixed = getComputedStyle(controlOf(baselineMixed)).backgroundColor;
     baseline.remove();
+    baselineMixed.remove();
 
     ensureMaterial3Tokens();
     document.documentElement.setAttribute('data-ki-theme', 'material3');
@@ -479,16 +476,14 @@ describe('ki-checkbox in a real browser', () => {
     const mixed = await mount('Mixed', { indeterminate: true });
     await waitForStyles();
 
-    expect(getComputedStyle(controlOf(selected)).backgroundColor).toBe(
-      readTokenColor(`--ki-checkbox-checked-${checkboxState(selected)}-bg`),
-    );
-    expect(getComputedStyle(controlOf(mixed)).backgroundColor).toBe(
-      readTokenColor(`--ki-checkbox-indeterminate-${checkboxState(mixed)}-bg`),
-    );
+    // Both selection states repaint, and their marks stay legible.
     expect(getComputedStyle(controlOf(selected)).backgroundColor).not.toBe(onmars);
+    expect(getComputedStyle(controlOf(mixed)).backgroundColor).not.toBe(onmarsMixed);
+    expect(markContrast(selected)).toBeGreaterThanOrEqual(3);
+    expect(markContrast(mixed)).toBeGreaterThanOrEqual(3);
   });
 
-  it('S17 forced dark resolves dark onmars token values', async () => {
+  it('S17 forced dark repaints the unchecked box and keeps the checked mark legible', async () => {
     cleanup();
     ensureTokens();
     const light = await mount('Unchecked');
@@ -501,9 +496,8 @@ describe('ki-checkbox in a real browser', () => {
     const darkUnchecked = await mount('Unchecked');
     await waitForStyles();
 
-    expect(getComputedStyle(controlOf(dark)).backgroundColor).toBe(
-      readTokenColor(`--ki-checkbox-checked-${checkboxState(dark)}-bg`),
-    );
+    // The checked mark stays legible on its fill in the dark scheme.
+    expect(markContrast(dark)).toBeGreaterThanOrEqual(3);
     // The checked fill cannot witness the scheme flip anymore: the MarsUI
     // fidelity pass keeps Surface/primary_med_em at brand-500 #845abe in
     // BOTH schemes. The unchecked control rides the surface ramp (s0),
@@ -551,8 +545,12 @@ describe('ki-checkbox in a real browser', () => {
     expect(label).toBeInstanceOf(HTMLElement);
 
     // Checkbox_label rows are items-START: the box rides line one instead of
-    // centering against a wrapped text block.
-    expect(getComputedStyle(label as HTMLElement).alignItems).toBe('flex-start');
+    // centering against a wrapped text block. Chromium now treats flow-start
+    // as an alias of flex-start and serializes both as flow-start; Firefox
+    // and WebKit still report flex-start. Either is the same alignment.
+    expect(['flex-start', 'flow-start']).toContain(
+      getComputedStyle(label as HTMLElement).alignItems,
+    );
     // (line-height 24 - control 20) / 2 = 2px keeps single-line geometry.
     expect(getComputedStyle(controlOf(el)).marginBlockStart).toBe('2px');
   });

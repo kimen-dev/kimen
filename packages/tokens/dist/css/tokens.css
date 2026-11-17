@@ -1198,7 +1198,7 @@
   --ki-button-quaternary-neutral-active-fg: var(--ki-text-med-em); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-quaternary-neutral-rest-fg */
   --ki-button-quaternary-neutral-active-border: var(--ki-outline-none); /* deprecated since 0.1.0, removed in 1.0.0: use --ki-button-quaternary-neutral-rest-border */
   --ki-button-quaternary-neutral-disabled-bg: var(--ki-transparent-inverse);
-  --ki-button-quaternary-neutral-disabled-fg: var(--ki-text-muted);
+  --ki-button-quaternary-neutral-disabled-fg: var(--ki-text-base-em);
   --ki-button-quaternary-neutral-disabled-border: var(--ki-outline-none);
   --ki-button-quaternary-success-rest-bg: var(--ki-transparent-inverse);
   --ki-button-quaternary-success-rest-fg: var(--ki-text-success-high-em);
