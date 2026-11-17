@@ -15,7 +15,7 @@ import { parkPointer } from './axe';
 
 const modeCommands = commands as unknown as {
   emulateColorScheme: (scheme: 'dark' | 'light' | null) => Promise<void>;
-  emulateContrast: (contrast: 'more' | 'no-preference' | null) => Promise<void>;
+  emulateContrast: (contrast: 'more' | 'no-preference' | null) => Promise<boolean>;
   emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
   emulateReducedTransparency: (transparency: 'reduce' | 'no-preference' | null) => Promise<boolean>;
 };
@@ -151,28 +151,57 @@ async function nextFrame(): Promise<void> {
 }
 
 /** Wait until a media query reports the emulated value, or fail on the PR engine. */
-async function settleMedia(query: string, expected: boolean): Promise<boolean> {
+/** The part of a Vitest test context a measurement needs: skipping aloud. */
+export interface SkippableTest {
+  skip: (note?: string) => void;
+}
+
+/**
+ * Wait until a media query reports the emulated value. On the PR gate's engine
+ * an emulation that does not apply is a failure. Elsewhere (Firefox and
+ * WebKit have no CDP, and Safari reports no reduced-transparency preference)
+ * the test skips aloud instead of measuring the standard appearance and
+ * calling it the mode; tests that only need the preference to be absent, and
+ * every declaration-based test, keep running on every engine.
+ */
+async function settleMedia(
+  query: string,
+  expected: boolean,
+  emulated: boolean,
+  test: SkippableTest,
+): Promise<void> {
   const deadline = Date.now() + SETTLE_DEADLINE_MS;
-  while (matchMedia(query).matches !== expected && Date.now() < deadline) {
+  while (emulated && matchMedia(query).matches !== expected && Date.now() < deadline) {
     await nextFrame();
   }
   const settled = matchMedia(query).matches === expected;
   if (MUST_EMULATE) {
-    expect(settled, `Chromium did not apply ${query} = ${String(expected)}`).toBe(true);
+    expect(emulated && settled, `Chromium did not apply ${query} = ${String(expected)}`).toBe(true);
+  } else if (!settled) {
+    test.skip(`${navigator.userAgent} cannot emulate ${query} = ${String(expected)}`);
   }
   await settleAnimations();
-  return settled;
 }
 
-export async function underContrast(contrast: 'more' | 'no-preference'): Promise<void> {
-  await modeCommands.emulateContrast(contrast);
-  await settleMedia('(prefers-contrast: more)', contrast === 'more');
+export async function underContrast(
+  contrast: 'more' | 'no-preference',
+  test: SkippableTest,
+): Promise<void> {
+  const emulated = await modeCommands.emulateContrast(contrast);
+  await settleMedia('(prefers-contrast: more)', contrast === 'more', emulated, test);
 }
 
-export async function underTransparency(transparency: 'reduce' | 'no-preference'): Promise<void> {
+export async function underTransparency(
+  transparency: 'reduce' | 'no-preference',
+  test: SkippableTest,
+): Promise<void> {
   const emulated = await modeCommands.emulateReducedTransparency(transparency);
-  if (MUST_EMULATE) expect(emulated, 'CDP is unavailable on Chromium').toBe(true);
-  await settleMedia('(prefers-reduced-transparency: reduce)', transparency === 'reduce');
+  await settleMedia(
+    '(prefers-reduced-transparency: reduce)',
+    transparency === 'reduce',
+    emulated,
+    test,
+  );
 }
 
 export async function resetPreferences(): Promise<void> {
@@ -331,8 +360,12 @@ export function textRatio(element: Element, pseudo?: string): number {
   return contrast(over(color, behind), behind);
 }
 
-/** Paint of every rendered piece under `root`, without positions. */
-export function paint(root: Element): string[] {
+/**
+ * Paint of every rendered piece under `root`, without positions. `filters`
+ * includes the backdrop filter: a colours-only comparison leaves it out,
+ * because a blur behind an opaque fill paints nothing.
+ */
+export function paint(root: Element, { filters = true }: { filters?: boolean } = {}): string[] {
   return deepElements(root).map((element) => {
     const style = getComputedStyle(element);
     return [
@@ -346,7 +379,7 @@ export function paint(root: Element): string[] {
       style.boxShadow,
       style.outlineColor,
       style.outlineWidth,
-      style.backdropFilter,
+      filters ? style.backdropFilter : '',
     ].join(' | ');
   });
 }

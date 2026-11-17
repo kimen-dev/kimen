@@ -89,16 +89,16 @@ afterAll(async () => {
 });
 
 describe('043 more contrast under the system preference', () => {
-  it('S1: secondary text reaches enhanced contrast under the system preference', async () => {
+  it('S1: secondary text reaches enhanced contrast under the system preference', async (context) => {
     const fixture = await mount(EMAIL_FIELD);
-    await underContrast('more');
+    await underContrast('more', context);
 
     const ratios = fieldTextRatios(field(fixture));
     expect(ratios.label).toBeGreaterThanOrEqual(NEUTRAL_TEXT);
     expect(ratios.placeholder).toBeGreaterThanOrEqual(NEUTRAL_TEXT);
   });
 
-  it('S2: control boundaries strengthen under the system preference', async () => {
+  it('S2: control boundaries strengthen under the system preference', async (context) => {
     const fixture = await mount(
       EMAIL_FIELD +
         '<ki-select label="Country" placeholder="Choose a country">' +
@@ -106,7 +106,7 @@ describe('043 more contrast under the system preference', () => {
         '<ki-checkbox>Accept the terms</ki-checkbox>' +
         '<ki-radio-group label="Plan"><ki-radio value="basic">Basic</ki-radio></ki-radio-group>',
     );
-    await underContrast('more');
+    await underContrast('more', context);
     const page = pageSurface(fixture);
 
     for (const selector of ['ki-input', 'ki-select', 'ki-checkbox', 'ki-radio']) {
@@ -116,9 +116,9 @@ describe('043 more contrast under the system preference', () => {
     }
   });
 
-  it('S3: separators and container edges become visible under the system preference', async () => {
+  it('S3: separators and container edges become visible under the system preference', async (context) => {
     const fixture = await mount('<ki-card>Invoice</ki-card><ki-divider></ki-divider>');
-    await underContrast('more');
+    await underContrast('more', context);
     const page = pageSurface(fixture);
 
     expect(boundaryRatio(field(fixture, 'ki-card'), page), 'card edge').toBeGreaterThanOrEqual(
@@ -129,9 +129,9 @@ describe('043 more contrast under the system preference', () => {
     );
   });
 
-  it('S4: the keyboard focus indicator thickens under the system preference', async () => {
+  it('S4: the keyboard focus indicator thickens under the system preference', async (context) => {
     const fixture = await mount('<ki-button variant="primary">Save</ki-button>');
-    await underContrast('more');
+    await underContrast('more', context);
     await userEvent.tab();
     await settleAnimations();
     const button = findDeep(field(fixture, 'ki-button'), byPart('button'));
@@ -145,13 +145,38 @@ describe('043 more contrast under the system preference', () => {
     );
   });
 
+  it('S4: the keyboard focus indicator of a material3 text field thickens too', async (context) => {
+    // A theme that overrides one component's ring must not keep it at the
+    // standard 2px under the mode.
+    themeDocument('material3', 'light');
+    const fixture = await mount(EMAIL_FIELD);
+    await underContrast('more', context);
+    await userEvent.tab();
+    await settleAnimations();
+    const input = findDeep(field(fixture), (element) => element instanceof HTMLInputElement);
+    expect(input.matches(':focus-visible'), 'Email has keyboard focus').toBe(true);
+
+    const ring = findDeep(
+      field(fixture),
+      (element) =>
+        getComputedStyle(element).outlineStyle !== 'none' &&
+        Number.parseFloat(getComputedStyle(element).outlineWidth) > 0,
+    );
+    const style = getComputedStyle(ring);
+    const page = pageSurface(fixture);
+    expect(Number.parseFloat(style.outlineWidth)).toBeGreaterThanOrEqual(FOCUS_RING_WIDTH);
+    expect(contrast(over(parseColor(style.outlineColor), page), page)).toBeGreaterThanOrEqual(
+      FOCUS_RING_CONTRAST,
+    );
+  });
+
   describe.each(THEMES.flatMap((theme) => SCHEMES.map((scheme) => [theme, scheme] as const)))(
     'S5: enhanced contrast holds in %s %s',
     (theme, scheme) => {
-      it(`S5: every neutral text, boundary and separator meets the enhanced thresholds in ${theme} ${scheme}`, async () => {
+      it(`S5: every neutral text, boundary and separator meets the enhanced thresholds in ${theme} ${scheme}`, async (context) => {
         themeDocument(theme, scheme);
         const fixture = await mount(NEUTRAL_GALLERY);
-        await underContrast('more');
+        await underContrast('more', context);
         const page = pageSurface(fixture);
 
         const weak = textMeasurements(fixture).filter((text) => text.ratio < NEUTRAL_TEXT);
@@ -173,56 +198,77 @@ describe('043 more contrast under the system preference', () => {
     },
   );
 
-  it('S6: text on brand and tone fills keeps at least the standard contrast', async () => {
+  it('S6: text on brand and tone fills keeps at least the standard contrast', async (context) => {
     themeDocument('material3', 'light');
     const fixture = await mount(
       '<ki-button variant="primary">Save</ki-button>' +
         '<ki-alert tone="danger">Payment failed</ki-alert>',
     );
-    await underContrast('more');
+    await underContrast('more', context);
 
     const weak = textMeasurements(fixture).filter((text) => text.ratio < 4.5);
     expect(weak.map((text) => `${text.where} "${text.text}" ${text.ratio.toFixed(2)}`)).toEqual([]);
   });
 
-  it('S9: disabled controls keep their standard appearance under more contrast', async () => {
-    const fixture = await mount('<ki-input label="Email" disabled></ki-input>');
-    await underContrast('no-preference');
-    const standard = paint(field(fixture));
-    await underContrast('more');
+  it('S9: disabled controls keep their standard appearance under more contrast', async (context) => {
+    // Every disabled ink the library paints: a field, a single option, a
+    // whole group (its label too), and buttons whose disabled labels share
+    // the secondary-text step the mode strengthens for enabled controls.
+    const fixture = await mount(
+      '<ki-input label="Email" disabled></ki-input>' +
+        '<ki-radio-group label="Plan"><ki-radio value="basic" disabled>Basic</ki-radio>' +
+        '<ki-radio value="pro">Pro</ki-radio></ki-radio-group>' +
+        '<ki-radio-group label="Billing" disabled><ki-radio value="monthly">Monthly</ki-radio>' +
+        '</ki-radio-group>' +
+        '<ki-button variant="primary" disabled>Save</ki-button>' +
+        '<ki-button variant="secondary" disabled>Cancel</ki-button>' +
+        '<ki-button variant="quaternary" disabled>More</ki-button>',
+    );
+    const disabled = [
+      field(fixture),
+      field(fixture, 'ki-radio[disabled]'),
+      field(fixture, 'ki-radio-group[disabled]'),
+      ...fixture.querySelectorAll<HTMLElement>('ki-button'),
+    ];
+    // Colours, not filters: more contrast also removes backdrop blur, which
+    // behind a disabled button's opaque fill paints nothing either way.
+    const colours = (): string[][] => disabled.map((element) => paint(element, { filters: false }));
+    await underContrast('no-preference', context);
+    const standard = colours();
+    await underContrast('more', context);
 
-    expect(paint(field(fixture))).toEqual(standard);
+    expect(colours()).toEqual(standard);
   });
 });
 
 describe('043 more contrast declared by the page', () => {
-  it('S7: a page can declare more contrast without the system preference', async () => {
+  it('S7: a page can declare more contrast without the system preference', async (context) => {
     document.documentElement.setAttribute('data-ki-contrast', 'more');
     const fixture = await mount(EMAIL_FIELD);
-    await underContrast('no-preference');
+    await underContrast('no-preference', context);
 
     const ratios = fieldTextRatios(field(fixture));
     expect(ratios.label).toBeGreaterThanOrEqual(NEUTRAL_TEXT);
     expect(ratios.placeholder).toBeGreaterThanOrEqual(NEUTRAL_TEXT);
   });
 
-  it('S8: without the preference or a declaration the standard appearance is unchanged', async () => {
+  it('S8: without the preference or a declaration the standard appearance is unchanged', async (context) => {
     const fixture = await mount(EMAIL_FIELD);
-    await underContrast('no-preference');
+    await underContrast('no-preference', context);
     const standard = paint(field(fixture));
     const standardRatios = fieldTextRatios(field(fixture));
-    await underContrast('more');
+    await underContrast('more', context);
     const enhanced = paint(field(fixture));
-    await underContrast('no-preference');
+    await underContrast('no-preference', context);
 
     expect(enhanced, 'the mode changes something it is meant to').not.toEqual(standard);
     expect(paint(field(fixture))).toEqual(standard);
     expect(standardRatios.placeholder).toBeLessThan(NEUTRAL_TEXT);
   });
 
-  it('S10: a themed region inside a page that declares more contrast keeps it', async () => {
+  it('S10: a themed region inside a page that declares more contrast keeps it', async (context) => {
     document.documentElement.setAttribute('data-ki-contrast', 'more');
-    await underContrast('no-preference');
+    await underContrast('no-preference', context);
     const region = await mount(`<section data-ki-theme="material3">${EMAIL_FIELD}</section>`);
     const inRegion = paint(field(region));
     unmountAll();
@@ -233,8 +279,8 @@ describe('043 more contrast declared by the page', () => {
     expectEnhancedField(field(page), pageSurface(page));
   });
 
-  it('S11: a themed region can declare more contrast on its own', async () => {
-    await underContrast('no-preference');
+  it('S11: a themed region can declare more contrast on its own', async (context) => {
+    await underContrast('no-preference', context);
     const outsideOnly = await mount(EMAIL_FIELD);
     const standard = paint(field(outsideOnly));
     unmountAll();
@@ -249,14 +295,14 @@ describe('043 more contrast declared by the page', () => {
     expect(paint(outside)).toEqual(standard);
   });
 
-  it("S12: a page's own value for a strengthened token wins under more contrast", async () => {
+  it("S12: a page's own value for a strengthened token wins under more contrast", async (context) => {
     const own = document.createElement('style');
     own.textContent =
       '@media (prefers-contrast: more) { :root { --ki-outline-control: #000000; } }';
     document.head.append(own);
     try {
       const fixture = await mount(EMAIL_FIELD);
-      await underContrast('more');
+      await underContrast('more', context);
 
       const edge = findDeep(field(fixture), byPart('field'));
       expect(getComputedStyle(edge).borderTopColor).toBe('rgb(0, 0, 0)');

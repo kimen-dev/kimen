@@ -886,6 +886,13 @@ export const CONTEXTS = [
   { name: 'contrast-more', activation: "[data-ki-contrast='more']" },
 ];
 
+const ENHANCED_TEXT_PAIRS = ['--ki-surface-s0', '--ki-surface-s1', '--ki-surface-s2'].flatMap(
+  (surface) => [
+    { text: '--ki-text-high-em', surface },
+    { text: '--ki-text-supporting', surface },
+  ],
+);
+
 // Spec 043 D1 — the more-contrast thresholds.
 export const ENHANCED_TEXT_RATIO = 7;
 export const ENHANCED_BOUNDARY_RATIO = 4.5;
@@ -960,9 +967,13 @@ function sweepEnhancedContrast(theme, scheme, declarations) {
     return raw.a < 1 ? compositeOver(raw, under) : raw;
   };
 
-  const textPairs = [...CONTRAST_PAIRS, ...componentPairs(declarations)].filter(
-    (pair) => (pair.minRatio ?? MIN_RATIO) === MIN_RATIO,
-  );
+  // The semantic pairs this mode strengthens: high-emphasis text and enabled
+  // supporting text. The med-em emphasis step itself is not one of them: the
+  // disabled ink draws from it and stays as it is.
+  const textPairs = [
+    ...ENHANCED_TEXT_PAIRS,
+    ...componentPairs(declarations).filter((pair) => pair.minRatio === MIN_RATIO),
+  ];
   for (const pair of textPairs) {
     const surface = painted(pair.surface);
     const text = painted(pair.text, surface);
@@ -1093,8 +1104,44 @@ function evaluateContext(theme, scheme, declarations) {
   return failures;
 }
 
+// A mode never touches a disabled control (spec 043 D1, spec 044 D1): every
+// disabled cell resolves exactly as it does in the standard appearance. A
+// disabled ink raised to enabled-like contrast reads as operable.
+const DISABLED_CELL = /-disabled-/u;
+
+function sweepDisabledUnchanged(theme, scheme, declarations, standard) {
+  const failures = [];
+  for (const name of declarations.keys()) {
+    if (!name.startsWith('--ki-') || !DISABLED_CELL.test(name)) continue;
+    const moded = resolveCustomProperty(name, declarations);
+    const unchanged = resolveCustomProperty(name, standard);
+    if (moded !== unchanged) {
+      failures.push(
+        `${theme}/${scheme} ${name}: ${moded} (a mode must leave disabled cells at ${unchanged})`,
+      );
+    }
+  }
+  return failures;
+}
+
+// Every component's focus ring follows the mode, whichever theme painted it:
+// a theme override of one component's ring width would keep the standard 2px.
+const FOCUS_RING_WIDTH = /^--ki-[a-z0-9-]+-focus-ring-width$/u;
+
+function sweepFocusRingWidths(theme, scheme, declarations) {
+  return [...declarations.keys()]
+    .filter((name) => FOCUS_RING_WIDTH.test(name))
+    .map((name) => [name, lengthInPx(resolveCustomProperty(name, declarations))])
+    .filter(([, width]) => width < ENHANCED_FOCUS_RING_WIDTH_PX)
+    .map(
+      ([name, width]) =>
+        `${theme}/${scheme} ${name}: ${width}px (min ${ENHANCED_FOCUS_RING_WIDTH_PX}px)`,
+    );
+}
+
 export function evaluateCss(theme, css) {
   const failures = [];
+  const standard = collectSchemeDeclarations(css);
 
   for (const context of CONTEXTS) {
     const label = context.activation === null ? theme : `${theme}+${context.name}`;
@@ -1104,9 +1151,11 @@ export function evaluateCss(theme, css) {
       failures.push(...evaluateContext(label, scheme, declarations));
       if (context.activation !== null) {
         failures.push(...sweepOpaqueSurfaces(label, scheme, declarations));
+        failures.push(...sweepDisabledUnchanged(label, scheme, declarations, standard[scheme]));
       }
       if (context.name === 'contrast-more') {
         failures.push(...sweepEnhancedContrast(label, scheme, declarations));
+        failures.push(...sweepFocusRingWidths(label, scheme, declarations));
       }
     }
   }
