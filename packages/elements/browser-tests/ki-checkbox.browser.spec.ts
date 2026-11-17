@@ -545,8 +545,12 @@ describe('ki-checkbox in a real browser', () => {
     expect(label).toBeInstanceOf(HTMLElement);
 
     // Checkbox_label rows are items-START: the box rides line one instead of
-    // centering against a wrapped text block.
-    expect(getComputedStyle(label as HTMLElement).alignItems).toBe('flex-start');
+    // centering against a wrapped text block. Chromium now treats flow-start
+    // as an alias of flex-start and serializes both as flow-start; Firefox
+    // and WebKit still report flex-start. Either is the same alignment.
+    expect(['flex-start', 'flow-start']).toContain(
+      getComputedStyle(label as HTMLElement).alignItems,
+    );
     // (line-height 24 - control 20) / 2 = 2px keeps single-line geometry.
     expect(getComputedStyle(controlOf(el)).marginBlockStart).toBe('2px');
   });
