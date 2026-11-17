@@ -527,11 +527,7 @@ describe('ki-icon-button in a real browser', () => {
       await parkPointer();
       await waitForStyles();
       const disabledPaint = paintOf(disabled);
-      // onmars quaternary paints its disabled cell with its resting ink on a
-      // transparent ground, so only the tone rule below holds for it.
-      if (variant !== 'quaternary') {
-        expect(disabledPaint, `${variant} disabled differs from rest`).not.toEqual(paintOf(rest));
-      }
+      expect(disabledPaint, `${variant} disabled differs from rest`).not.toEqual(paintOf(rest));
 
       // Disabled does not depend on the tone: every tone shows the same cell.
       for (const tone of tones) {
