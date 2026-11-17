@@ -18,10 +18,11 @@
 // anything the stylesheet cannot express (a token that is not a colour and
 // still depends on the scheme, two tokens compiling to one custom property)
 // fails the build outright.
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 import StyleDictionary from 'style-dictionary';
 
+import { assertNoDeprecationDue, collectDeprecations } from './scripts/deprecation.mjs';
 import {
   combineSchemes,
   compositionDeclarations,
@@ -43,15 +44,27 @@ async function composition(config) {
   return compositionDeclarations(dictionary);
 }
 
+// Deprecations (spec 041) are declared on base definitions, so the default
+// light composition carries all of them. An incomplete deprecation, a
+// replacement that is not a live published token, or a deprecated token the
+// package still ships at its removal version fails the build.
+const { version } = JSON.parse(await readFile(new URL('./package.json', import.meta.url), 'utf8'));
+const deprecations = collectDeprecations(
+  (await new StyleDictionary(lightConfig).getPlatformTokens('css')).allTokens,
+);
+assertNoDeprecationDue(deprecations, version);
+
 await mkdir(dist, { recursive: true });
 
 const onmars = combineSchemes({
   light: await composition(lightConfig),
   dark: await composition(darkConfig),
 });
-await writeFile(new URL('tokens.css', dist), renderBaseStylesheet(onmars));
+await writeFile(new URL('tokens.css', dist), renderBaseStylesheet(onmars, { deprecations }));
 
-console.log(`✔ dist/css/tokens.css (theme: onmars — ${onmars.size} tokens, light + dark)`);
+console.log(
+  `✔ dist/css/tokens.css (theme: onmars — ${onmars.size} tokens, light + dark, ${deprecations.size} deprecated)`,
+);
 
 const material3 = themeOverrides({
   base: onmars,
@@ -62,7 +75,7 @@ const material3 = themeOverrides({
 });
 await writeFile(
   new URL('tokens.material3.css', dist),
-  renderThemeStylesheet('material3', material3),
+  renderThemeStylesheet('material3', material3, { deprecations }),
 );
 
 console.log(

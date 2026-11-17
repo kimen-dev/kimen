@@ -1,4 +1,5 @@
 // @spec:018-project-integrity-hardening#S10
+// @spec:041-token-deprecation
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
@@ -339,6 +340,30 @@ test('[S10] repository snapshot expands exports and inventories every public sur
   });
 });
 
+test('S2 the public API snapshot records a token deprecation on its facet', () => {
+  const deprecation = {
+    reason: 'Nothing paints it.',
+    since: '0.1.0',
+    removal: '1.0.0',
+    replacement: '--ki-button-fg',
+  };
+  const snapshot = build({
+    tokenInventory: {
+      ...tokenInventory,
+      publicTokens: tokenInventory.publicTokens.map((token) => ({ ...token, deprecation })),
+    },
+  });
+
+  assert.deepEqual(snapshot.surface.packages['@kimen/tokens'].tokens['--ki-button-bg'], {
+    default: '#ffffff',
+    deprecatedSince: '0.1.0',
+    description: 'Button background color.',
+    replacement: '--ki-button-fg',
+    required: false,
+    type: 'color',
+  });
+});
+
 test('[S10] module signatures normalize an explicitly exported merged interface', () => {
   assert.equal(
     normalizePrintedSignature('export interface KiButton extends HTMLElement {\n}'),
@@ -558,4 +583,14 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   ]) {
     assert.equal(Object.hasOwn(published, name), false, `${name} is no longer published`);
   }
+  // The token deprecation (changes/api/041-token-deprecation) keeps the 85
+  // component leaves nothing reads published, each with deprecatedSince 0.1.0
+  // and a replacement, so a later major can remove them.
+  const deprecated = Object.values(published).filter(({ deprecatedSince }) => deprecatedSince);
+  assert.equal(deprecated.length, 85);
+  assert.ok(
+    deprecated.every(
+      ({ deprecatedSince, replacement }) => deprecatedSince === '0.1.0' && replacement,
+    ),
+  );
 });

@@ -19456,57 +19456,57 @@
           },
           "--ki-button-ghost-active-shadow": {
             "default": "none",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "value used by the button component for ghost active shadow.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-rest-shadow",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-danger-active-bg": {
             "default": "#ffebed",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost danger active background.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-danger-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-danger-active-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost danger active border.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-danger-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-danger-active-fg": {
             "default": "#cd2118",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost danger active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-danger-rest-fg",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-danger-disabled-bg": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost danger disabled background.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-neutral-disabled-bg",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-danger-disabled-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost danger disabled border.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-neutral-disabled-border",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-danger-disabled-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost danger disabled foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-neutral-disabled-fg",
             "required": false,
             "type": null
           },
@@ -19576,25 +19576,25 @@
           },
           "--ki-button-ghost-neutral-active-bg": {
             "default": "#ece4f5",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost neutral active background.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-neutral-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-neutral-active-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost neutral active border.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-neutral-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-neutral-active-fg": {
             "default": "#5f3993",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost neutral active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-neutral-rest-fg",
             "required": false,
             "type": null
           },
@@ -19680,49 +19680,49 @@
           },
           "--ki-button-ghost-success-active-bg": {
             "default": "#e3f6e2",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost success active background.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-success-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-success-active-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost success active border.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-success-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-success-active-fg": {
             "default": "#2c6a2b",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost success active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-success-rest-fg",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-success-disabled-bg": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost success disabled background.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-neutral-disabled-bg",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-success-disabled-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost success disabled border.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-neutral-disabled-border",
             "required": false,
             "type": null
           },
           "--ki-button-ghost-success-disabled-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for ghost success disabled foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-ghost-neutral-disabled-fg",
             "required": false,
             "type": null
           },
@@ -19950,57 +19950,57 @@
                 }
               }
             ],
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest).",
-            "replacement": null,
+            "replacement": "--ki-button-primary-rest-shadow",
             "required": false,
             "type": "shadow"
           },
           "--ki-button-primary-danger-active-bg": {
             "default": "#cd2118",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary danger active background.",
-            "replacement": null,
+            "replacement": "--ki-button-primary-danger-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-primary-danger-active-border": {
             "default": "#00000014",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary danger active border (MarsUI bevel top/inline edge).",
-            "replacement": null,
+            "replacement": "--ki-button-primary-danger-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-primary-danger-active-fg": {
             "default": "#ffffff",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary danger active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-primary-danger-rest-fg",
             "required": false,
             "type": null
           },
           "--ki-button-primary-danger-disabled-bg": {
             "default": "#ececf0",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary danger disabled background.",
-            "replacement": null,
+            "replacement": "--ki-button-primary-neutral-disabled-bg",
             "required": false,
             "type": null
           },
           "--ki-button-primary-danger-disabled-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary danger disabled border.",
-            "replacement": null,
+            "replacement": "--ki-button-primary-neutral-disabled-border",
             "required": false,
             "type": null
           },
           "--ki-button-primary-danger-disabled-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary danger disabled foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-primary-neutral-disabled-fg",
             "required": false,
             "type": null
           },
@@ -20114,25 +20114,25 @@
           },
           "--ki-button-primary-neutral-active-bg": {
             "default": "#845abe",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary neutral active background (MarsUI defines no pressed state; mirrors rest).",
-            "replacement": null,
+            "replacement": "--ki-button-primary-neutral-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-primary-neutral-active-border": {
             "default": "#00000014",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary neutral active border (MarsUI bevel top/inline edge).",
-            "replacement": null,
+            "replacement": "--ki-button-primary-neutral-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-primary-neutral-active-fg": {
             "default": "#ffffff",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary neutral active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-primary-neutral-rest-fg",
             "required": false,
             "type": null
           },
@@ -20248,49 +20248,49 @@
           },
           "--ki-button-primary-success-active-bg": {
             "default": "#2c6a2b",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary success active background.",
-            "replacement": null,
+            "replacement": "--ki-button-primary-success-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-primary-success-active-border": {
             "default": "#00000014",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary success active border (MarsUI bevel top/inline edge).",
-            "replacement": null,
+            "replacement": "--ki-button-primary-success-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-primary-success-active-fg": {
             "default": "#ffffff",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary success active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-primary-success-rest-fg",
             "required": false,
             "type": null
           },
           "--ki-button-primary-success-disabled-bg": {
             "default": "#ececf0",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary success disabled background.",
-            "replacement": null,
+            "replacement": "--ki-button-primary-neutral-disabled-bg",
             "required": false,
             "type": null
           },
           "--ki-button-primary-success-disabled-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary success disabled border.",
-            "replacement": null,
+            "replacement": "--ki-button-primary-neutral-disabled-border",
             "required": false,
             "type": null
           },
           "--ki-button-primary-success-disabled-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for primary success disabled foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-primary-neutral-disabled-fg",
             "required": false,
             "type": null
           },
@@ -20344,57 +20344,57 @@
           },
           "--ki-button-quaternary-active-shadow": {
             "default": "none",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "value used by the button component for quaternary active shadow.",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-rest-shadow",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-danger-active-bg": {
             "default": "#ffebed",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary danger active background.",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-danger-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-danger-active-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary danger active border (MarsUI quaternary is borderless in every state).",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-danger-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-danger-active-fg": {
             "default": "#cd2118",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary danger active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-danger-rest-fg",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-danger-disabled-bg": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary danger disabled background.",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-neutral-disabled-bg",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-danger-disabled-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary danger disabled border (MarsUI quaternary is borderless in every state).",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-neutral-disabled-border",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-danger-disabled-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary danger disabled foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-neutral-disabled-fg",
             "required": false,
             "type": null
           },
@@ -20464,25 +20464,25 @@
           },
           "--ki-button-quaternary-neutral-active-bg": {
             "default": "#0000000d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary neutral active background (pressed wash one rung beyond hover: Black/5 light, White/5 dark).",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-neutral-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-neutral-active-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary neutral active border (MarsUI quaternary is borderless in every state).",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-neutral-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-neutral-active-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary neutral active foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-neutral-rest-fg",
             "required": false,
             "type": null
           },
@@ -20568,49 +20568,49 @@
           },
           "--ki-button-quaternary-success-active-bg": {
             "default": "#e3f6e2",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary success active background.",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-success-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-success-active-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary success active border (MarsUI quaternary is borderless in every state).",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-success-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-success-active-fg": {
             "default": "#2c6a2b",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary success active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-success-rest-fg",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-success-disabled-bg": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary success disabled background.",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-neutral-disabled-bg",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-success-disabled-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary success disabled border (MarsUI quaternary is borderless in every state).",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-neutral-disabled-border",
             "required": false,
             "type": null
           },
           "--ki-button-quaternary-success-disabled-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for quaternary success disabled foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-quaternary-neutral-disabled-fg",
             "required": false,
             "type": null
           },
@@ -20694,57 +20694,57 @@
                 }
               }
             ],
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "shadow used by the button component for secondary active shadow (MarsUI defines no pressed state; mirrors rest).",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-rest-shadow",
             "required": false,
             "type": "shadow"
           },
           "--ki-button-secondary-danger-active-bg": {
             "default": "#ffebed",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary danger active background.",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-danger-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-danger-active-border": {
             "default": "#0000000d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary danger active border (MarsUI bevel top/inline edge, variant trait).",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-danger-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-danger-active-fg": {
             "default": "#cd2118",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary danger active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-danger-rest-fg",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-danger-disabled-bg": {
             "default": "#ececf0",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary danger disabled background.",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-neutral-disabled-bg",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-danger-disabled-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary danger disabled border.",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-neutral-disabled-border",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-danger-disabled-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary danger disabled foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-neutral-disabled-fg",
             "required": false,
             "type": null
           },
@@ -20858,25 +20858,25 @@
           },
           "--ki-button-secondary-neutral-active-bg": {
             "default": "#f2f2f4cc",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary neutral active background (MarsUI defines no pressed state; mirrors rest).",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-neutral-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-neutral-active-border": {
             "default": "#0000000d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary neutral active border (MarsUI bevel top/inline edge).",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-neutral-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-neutral-active-fg": {
             "default": "#0a0c11",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary neutral active foreground (MarsUI text/high_em).",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-neutral-rest-fg",
             "required": false,
             "type": null
           },
@@ -20992,49 +20992,49 @@
           },
           "--ki-button-secondary-success-active-bg": {
             "default": "#e3f6e2",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary success active background.",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-success-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-success-active-border": {
             "default": "#0000000d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait).",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-success-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-success-active-fg": {
             "default": "#2c6a2b",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary success active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-success-rest-fg",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-success-disabled-bg": {
             "default": "#ececf0",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary success disabled background.",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-neutral-disabled-bg",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-success-disabled-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary success disabled border.",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-neutral-disabled-border",
             "required": false,
             "type": null
           },
           "--ki-button-secondary-success-disabled-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for secondary success disabled foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-secondary-neutral-disabled-fg",
             "required": false,
             "type": null
           },
@@ -21174,57 +21174,57 @@
                 }
               }
             ],
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "shadow used by the button component for tertiary active shadow (MarsUI defines no pressed state; mirrors rest).",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-rest-shadow",
             "required": false,
             "type": "shadow"
           },
           "--ki-button-tertiary-danger-active-bg": {
             "default": "#f2f2f4",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary danger active background (MarsUI defines no pressed state; one step beyond hover in both schemes).",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-danger-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-danger-active-border": {
             "default": "#0000000d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary danger active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-danger-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-danger-active-fg": {
             "default": "#cd2118",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary danger active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-danger-rest-fg",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-danger-disabled-bg": {
             "default": "#ececf0",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary danger disabled background.",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-neutral-disabled-bg",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-danger-disabled-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary danger disabled border.",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-neutral-disabled-border",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-danger-disabled-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary danger disabled foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-neutral-disabled-fg",
             "required": false,
             "type": null
           },
@@ -21330,25 +21330,25 @@
           },
           "--ki-button-tertiary-neutral-active-bg": {
             "default": "#f2f2f4",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary neutral active background (MarsUI defines no pressed state; one step beyond hover in both schemes).",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-neutral-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-neutral-active-border": {
             "default": "#0000000d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary neutral active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-neutral-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-neutral-active-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary neutral active foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative).",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-neutral-rest-fg",
             "required": false,
             "type": null
           },
@@ -21464,49 +21464,49 @@
           },
           "--ki-button-tertiary-success-active-bg": {
             "default": "#f2f2f4",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary success active background (MarsUI defines no pressed state; one step beyond hover in both schemes).",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-success-rest-bg",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-success-active-border": {
             "default": "#0000000d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary success active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-success-rest-border",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-success-active-fg": {
             "default": "#2c6a2b",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary success active foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-success-rest-fg",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-success-disabled-bg": {
             "default": "#ececf0",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary success disabled background.",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-neutral-disabled-bg",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-success-disabled-border": {
             "default": "#ffffff00",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary success disabled border.",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-neutral-disabled-border",
             "required": false,
             "type": null
           },
           "--ki-button-tertiary-success-disabled-fg": {
             "default": "#5b616d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the button component for tertiary success disabled foreground.",
-            "replacement": null,
+            "replacement": "--ki-button-tertiary-neutral-disabled-fg",
             "required": false,
             "type": null
           },
@@ -23162,9 +23162,9 @@
           },
           "--ki-input-focus-border": {
             "default": "#845abe",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the input component for focus border.",
-            "replacement": null,
+            "replacement": "--ki-input-focus-ring-color",
             "required": false,
             "type": null
           },
@@ -23414,9 +23414,9 @@
           },
           "--ki-input-min-target": {
             "default": "1.5rem",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "dimension used by the input component for min target.",
-            "replacement": null,
+            "replacement": "--ki-input-height",
             "required": false,
             "type": null
           },
@@ -25406,9 +25406,9 @@
           },
           "--ki-select-hover-bg": {
             "default": "#f2f2f4",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the select component for hover background (MarsUI hover = rest fill + hover_overlay_inverse; nearest cross-scheme step that keeps the ramp monotonic in dark).",
-            "replacement": null,
+            "replacement": "--ki-surface-hover-overlay-inverse",
             "required": false,
             "type": null
           },
@@ -25518,9 +25518,9 @@
           },
           "--ki-select-listbox-elevation": {
             "default": "#0000000d",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the select component for listbox elevation. Legacy of the pre-ramp hand-composed listbox shadow, superseded by ki.select.listbox.shadow; kept published because the public-api contract requires deprecation metadata at least one minor before removal.",
-            "replacement": null,
+            "replacement": "--ki-select-listbox-shadow",
             "required": false,
             "type": null
           },
@@ -27518,9 +27518,9 @@
           },
           "--ki-textarea-focus-border": {
             "default": "#845abe",
-            "deprecatedSince": null,
+            "deprecatedSince": "0.1.0",
             "description": "color used by the textarea component for focus border.",
-            "replacement": null,
+            "replacement": "--ki-textarea-focus-ring-color",
             "required": false,
             "type": null
           },
@@ -28671,5 +28671,5 @@
       }
     }
   },
-  "surfaceSha256": "9c46b8d895aadf56023bdfbe004d2c686512645b9f813404e4683655dd25a2a2"
+  "surfaceSha256": "a2fcbbe35bb0ef9e9969552bbe0a4621f174fdd67075ecc26f545a2157970e41"
 }

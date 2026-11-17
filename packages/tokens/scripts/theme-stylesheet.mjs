@@ -35,7 +35,15 @@
 //     A theme emits only the tokens whose expression differs from the base
 //     theme. Everything else is already declared on the same element by the
 //     rule above, so repeating it would only repeat bytes.
+//
+//   --ki-x: value; /* deprecated since 0.1.0, removed in 1.0.0: use --ki-y */
+//     The only comment the stylesheets carry (spec 041): a deprecated token
+//     keeps its value until it is removed, and says so where a consumer reads
+//     it. Comments are outside the published value contract, and minifiers
+//     drop them.
 import { createPropertyFormatter } from 'style-dictionary/utils';
+
+import { deprecationComment } from './deprecation.mjs';
 
 const THEME_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 // The only colour shapes the Kimen value transforms emit (#rrggbb for opaque
@@ -178,31 +186,38 @@ export function themeOverrides({ base, theme }) {
   return new Map([...theme].filter(([name, expression]) => base.get(name) !== expression));
 }
 
-function rule(selectors, declarations) {
-  return [
-    `${selectors.join(',\n')} {`,
-    ...declarations.map(([property, value]) => `  ${property}: ${value};`),
-    '}',
-    '',
-  ].join('\n');
+function rule(selectors, declarations, deprecations = new Map()) {
+  const line = ([property, value]) => {
+    const deprecation = deprecations.get(property);
+    const note = deprecation === undefined ? '' : ` /* ${deprecationComment(deprecation)} */`;
+    return `  ${property}: ${value};${note}`;
+  };
+  return [`${selectors.join(',\n')} {`, ...declarations.map(line), '}', ''].join('\n');
 }
 
-/** The default theme: the colour-scheme contract plus every token. */
-export function renderBaseStylesheet(declarations) {
+/**
+ * The default theme: the colour-scheme contract plus every token. `deprecations`
+ * (custom property name -> deprecation) annotates the deprecated declarations.
+ */
+export function renderBaseStylesheet(declarations, { deprecations } = {}) {
   if (declarations.size === 0) throw new Error('the base theme has no tokens to declare');
   return [
     rule([':where(:root)'], [['color-scheme', 'light dark']]),
     rule(["[data-ki-color-scheme='light']"], [['color-scheme', 'light']]),
     rule(["[data-ki-color-scheme='dark']"], [['color-scheme', 'dark']]),
-    rule([':root', ':where([data-ki-theme])'], [...declarations]),
+    rule([':root', ':where([data-ki-theme])'], [...declarations], deprecations),
   ].join('\n');
 }
 
 /** An opt-in theme: its overrides, for a themed document and for a themed subtree. */
-export function renderThemeStylesheet(theme, declarations) {
+export function renderThemeStylesheet(theme, declarations, { deprecations } = {}) {
   if (!THEME_NAME.test(theme)) throw new Error(`unsupported theme name ${JSON.stringify(theme)}`);
   if (declarations.size === 0) {
     throw new Error(`theme ${theme} does not differ from the base theme`);
   }
-  return rule([`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`], [...declarations]);
+  return rule(
+    [`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`],
+    [...declarations],
+    deprecations,
+  );
 }

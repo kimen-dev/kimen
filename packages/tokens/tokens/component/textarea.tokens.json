@@ -124,7 +124,15 @@
         },
         "border": {
           "$value": "{ki.outline.primary-high-em}",
-          "$description": "color used by the textarea component for focus border."
+          "$description": "color used by the textarea component for focus border.",
+          "$deprecated": "Nothing paints it: a focused field keeps its resting border and is marked by its focus ring.",
+          "$extensions": {
+            "dev.kimen.deprecation": {
+              "since": "0.1.0",
+              "removal": "1.0.0",
+              "replacement": "--ki-textarea-focus-ring-color"
+            }
+          }
         },
         "label-fg": {
           "$value": "{ki.text.med-em}",
