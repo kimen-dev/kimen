@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "6467936c9af238233c2322dbef94abe4d2e9c5a144c92bc41b2ed1c7a83af737",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Disabled quaternary button (bug fix), cumulative since baseline 0.0.0 and superseding declaration 036-field-validation-api (its deltas, and those of every declaration it supersedes, remain as declared there). No published name is added, renamed or removed. One deliberate effective-value change: in onmars, --ki-button-quaternary-neutral-disabled-fg moves from ki.text.muted to ki.text.base-em (#5b616d -> #c3c6cc light, rgba(255,255,255,0.72) -> rgba(255,255,255,0.32) dark), the disabled ink every field and selection control already uses. ki.text.muted resolves to the same colour as ki.text.med-em, the resting quaternary ink, and quaternary has no fill or border, so a disabled quaternary ki-button or ki-icon-button looked exactly like an enabled one. material3 keeps its value (#49454f light, #cac4d0 dark), which already differed from its resting ink: the material3 overlay now pins ki.text.muted for this cell instead of inheriting it, so its stylesheet gains one override and no effective value changes. Disabled text is exempt from WCAG 1.4.3; the token description records the change.",
+  "release": "major",
+  "schemaVersion": 1
+}

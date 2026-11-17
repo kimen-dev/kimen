@@ -130,6 +130,8 @@ export function collectCssIssues(filePath, contents, recordsByCssName, { workspa
       issues.push(`primitive-css-consumption ${relativePath} ${cssName}`);
     } else if (record.layer === 'theme') {
       issues.push(`theme-css-consumption ${relativePath} ${cssName}`);
+    } else if (record.deprecation) {
+      issues.push(`deprecated-css-consumption ${relativePath} ${cssName}`);
     }
   }
 
