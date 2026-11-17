@@ -499,6 +499,10 @@
         "$value": "{ki.text.med-em}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em."
       },
+      "supporting": {
+        "$value": "{ki.text.med-em}",
+        "$description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
+      },
       "danger": {
         "$value": "{ki.text.danger-med-em}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.text.danger-med-em."

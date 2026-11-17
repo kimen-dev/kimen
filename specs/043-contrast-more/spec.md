@@ -71,7 +71,14 @@ neutrals reach 0.06, the weakest tone tint 0.09). Separators and container
 edges are the divider rule, list-row and tab-list dividers where a theme
 draws them, and the card, alert, tooltip and dialog edges; cards and alerts
 draw their edge in this mode. The outline emphasis ramp itself is not
-remapped, because disabled borders draw from it.
+remapped, because disabled borders draw from it. For the same reason the
+mode strengthens the role `--ki-text-supporting` (enabled labels,
+placeholders, list secondary lines, quiet button labels, unselected tabs),
+which those component tokens alias in both themes, and not the `med-em`
+emphasis step: disabled ink also draws from `med-em`, directly (radio and
+radio-group labels) or through `text.muted` (every disabled button label).
+The token sweep holds every disabled cell to its standard value under each
+mode, and every component's focus-ring width to 3px under more contrast.
 
 **D2 — Text on brand and tone fills stays at ≥ 4.5:1.** Recommended for this
 spec. Taking it to 7:1 is a palette decision (darker primary and tone fills
@@ -350,7 +357,9 @@ Feature: More contrast when the person asks for it
   `data-ki-contrast="more"`; new semantic tokens `--ki-focus-ring-width`,
   `--ki-focus-ring-color`, `--ki-focus-ring-offset`, and the component token
   `--ki-tooltip-border-color` (the tooltip edge, previously painted from a
-  semantic token in component CSS, same value). The mode is published as the
+  semantic token in component CSS, same value) and the role
+  `--ki-text-supporting` (aliased by enabled supporting-text tokens, same
+  value). The mode is published as the
   `contrast-more/{light,dark}` contexts of both stylesheets. No token renamed
   or removed; every default value unchanged (FR-005, FR-009).
   `changes/api/043-preference-modes.json` records the delta for 043 and 044.
@@ -378,7 +387,7 @@ Feature: More contrast when the person asks for it
 - **SC-003**: Outside the mode, `public-api.json` token values and every
   visual baseline are byte-identical.
 - **SC-004**: The mode's source is 1 override file; material3 needs 0 mode
-  files of its own (it re-asserts 14 remapped tokens it overrides).
+  files of its own (it re-asserts 13 remapped tokens it overrides).
 
 ## Assumptions
 

@@ -99,11 +99,11 @@
           "$description": "Material 3 color used by the input component for rest border."
         },
         "label-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the input component for rest label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the input component for rest placeholder foreground."
         }
       },
@@ -125,7 +125,7 @@
           "$description": "Material 3 color used by the input component for hover label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the input component for hover placeholder foreground."
         }
       },
@@ -147,7 +147,7 @@
           "$description": "Material 3 color used by the input component for focus label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the input component for focus placeholder foreground."
         }
       },
@@ -187,11 +187,11 @@
           "$description": "Material 3 color used by the input component for readonly border."
         },
         "label-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the input component for readonly label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the input component for readonly placeholder foreground."
         }
       },
@@ -213,7 +213,7 @@
           "$description": "Material 3 color used by the input component for invalid label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the input component for invalid placeholder foreground."
         },
         "ring": {
@@ -229,15 +229,15 @@
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}",
+          "$value": "{ki.focus.ring-color}",
           "$description": "Material 3 color used by the input component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-width}",
           "$description": "Material 3 dimension used by the input component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-offset}",
           "$description": "Material 3 dimension used by the input component for focus ring offset."
         }
       }

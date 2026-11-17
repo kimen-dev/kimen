@@ -156,9 +156,17 @@ export default defineConfig({
         // `prefers-contrast` (specs 043/044). Same baseline rule as above:
         // `null` restores `no-preference`, never the host's own setting, so a
         // host with Increase Contrast on cannot leak into the specs that follow.
+        // Returns false where the engine cannot emulate it, so a spec can say
+        // which engine it could not measure instead of failing or passing for
+        // a reason that has nothing to do with the component.
         emulateContrast: defineBrowserCommand(
           async ({ page }, contrast: 'more' | 'no-preference' | null) => {
-            await page.emulateMedia({ contrast: contrast ?? 'no-preference' });
+            try {
+              await page.emulateMedia({ contrast: contrast ?? 'no-preference' });
+              return true;
+            } catch {
+              return false;
+            }
           },
         ),
         // `prefers-reduced-transparency` (spec 044). Playwright's emulateMedia

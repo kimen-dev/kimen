@@ -565,7 +565,7 @@ test('more contrast holds neutral text to 7:1 and neutral boundaries to 4.5:1', 
   const failures = evaluateCss(
     'onmars',
     `${built('tokens.css')}\n:root:where([data-ki-contrast='more']) {
-      --ki-text-med-em: #6e6e6e;
+      --ki-text-supporting: #6e6e6e;
       --ki-outline-control: rgba(0, 0, 0, 0.48);
     }`,
   );
@@ -626,5 +626,33 @@ test('reduced transparency holds every content surface opaque and leaves state w
     !failures.some((failure) =>
       /--ki-(?:button-ghost-neutral|option)-hover-bg: alpha/u.test(failure),
     ),
+  );
+});
+
+test('a mode leaves every disabled cell exactly as the standard appearance paints it', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root:where([data-ki-contrast='more']) { --ki-text-muted: #000000; }`,
+  );
+  assert.ok(
+    failures.some((failure) =>
+      /contrast-more\/light --ki-button-primary-neutral-disabled-fg: #000000 \(a mode must leave disabled cells/u.test(
+        failure,
+      ),
+    ),
+    failures.join('\n'),
+  );
+});
+
+test("more contrast thickens every component's focus ring, whichever theme overrides it", () => {
+  const failures = evaluateCss(
+    'material3',
+    `${built('tokens.css')}\n${built('tokens.material3.css')}\n:root[data-ki-theme='material3'] { --ki-input-focus-ring-width: var(--ki-space-xxs); }`,
+  );
+  assert.ok(
+    failures.some((failure) =>
+      /material3\+contrast-more\/light --ki-input-focus-ring-width: 2px \(min 3px\)/u.test(failure),
+    ),
+    failures.join('\n'),
   );
 });

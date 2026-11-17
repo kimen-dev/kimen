@@ -3,9 +3,9 @@
     "$description": "More contrast (spec 043): neutral text at 7:1 or more, neutral control boundaries at 4.5:1, separators and container edges at 3:1, a 3px focus ring. References only, so one file serves every theme and scheme; it always applies over reduced transparency, which more contrast implies. Text on brand and tone fills, brand and tone boundaries and disabled controls are unchanged (spec 043 D1, D2): the outline emphasis ramp itself is left alone because disabled borders draw from it.",
     "text": {
       "$type": "color",
-      "med-em": {
+      "supporting": {
         "$value": "{ki.inverse-white.alpha-72}",
-        "$description": "Secondary text, labels and placeholders on the scheme-aware 72% neutral ink."
+        "$description": "Enabled supporting text — labels, placeholders, secondary lines — on the scheme-aware 72% neutral ink. The med-em step itself is left alone: disabled ink draws from it."
       }
     },
     "outline": {
