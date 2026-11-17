@@ -3,8 +3,9 @@
 // and what the engine's own accessibility tree says about it. Asserted on the
 // BUILT custom elements (Art. III). The description and the invalid state are
 // read from Chromium's computed accessibility tree over CDP, the only place
-// that shows what a screen reader receives across shadow roots; the shown
-// text is read from the documented `help` and `error` parts.
+// that shows what a screen reader receives across shadow roots, so those
+// assertions run on Chromium only; the shown text, read from the documented
+// `help` and `error` parts, and everything else run on every engine.
 import pageContractCss from '@kimen/tokens/css/base?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
@@ -153,12 +154,21 @@ function shown(field: HTMLElement, name: 'error' | 'help'): string | null {
   return text === '' ? null : text;
 }
 
+// The engine's accessibility tree is read over CDP, which only Chromium
+// exposes: `accessibilityTree` answers null on Firefox and WebKit. So the
+// assertions on it run on Chromium, the engine the PR gate runs, where a null
+// answer fails the test; everything a page can observe (the shown lines,
+// focus, validity, styles, axe) runs on every engine of the release matrix.
+// `Chrome/` and not a word-bounded match: headless Chromium reports
+// `HeadlessChrome/` (pointer-capability.browser.spec.ts found that out).
+const IS_CHROMIUM = navigator.userAgent.includes('Chrome/');
+
 async function tree(): Promise<AxNode[]> {
   await nextFrame();
   await nextFrame();
   const nodes = await browserCommands.accessibilityTree();
   if (nodes === null) {
-    throw new Error('the accessibility tree is read over CDP, which only Chromium exposes');
+    throw new Error('Chromium stopped answering its accessibility tree over CDP');
   }
   return nodes;
 }
@@ -172,6 +182,26 @@ const description = async (role: string, name: string): Promise<string | undefin
 
 const invalid = async (role: string, name: string): Promise<unknown> =>
   (await axNode(role, name))?.invalid;
+
+const WITNESS_COLOUR = 'rgb(1, 2, 3)';
+const FORCED_PALETTE_DEADLINE_MS = 2000;
+
+/** Is the page really under a forced palette, or is it only announced? */
+async function forcedPaletteApplies(): Promise<boolean> {
+  const witness = document.createElement('span');
+  witness.style.backgroundColor = WITNESS_COLOUR;
+  document.body.append(witness);
+  const applied = (): boolean =>
+    matchMedia('(forced-colors: active)').matches &&
+    getComputedStyle(witness).backgroundColor !== WITNESS_COLOUR;
+  const deadline = Date.now() + FORCED_PALETTE_DEADLINE_MS;
+  while (!applied() && Date.now() < deadline) {
+    await nextFrame();
+  }
+  const result = applied();
+  witness.remove();
+  return result;
+}
 
 beforeAll(() => {
   defineAllComponents();
@@ -197,9 +227,11 @@ describe('help text guides the answer', () => {
       field.focus();
 
       await expect.poll(() => shown(field, 'help')).toBe('You can change this later');
-      await expect
-        .poll(() => description(roleOf[control], 'Answer'))
-        .toBe('You can change this later');
+      if (IS_CHROMIUM) {
+        await expect
+          .poll(() => description(roleOf[control], 'Answer'))
+          .toBe('You can change this later');
+      }
     });
   }
 
@@ -208,12 +240,17 @@ describe('help text guides the answer', () => {
       '<ki-input label="Email" name="email" help-text="We never share your email"></ki-input>',
     );
     const field = found(main.querySelector<Field>('ki-input'), 'the Email field');
-    await expect.poll(() => description('textbox', 'Email')).toBe('We never share your email');
+    await expect.poll(() => shown(field, 'help')).toBe('We never share your email');
+    if (IS_CHROMIUM) {
+      await expect.poll(() => description('textbox', 'Email')).toBe('We never share your email');
+    }
 
     field.removeAttribute('help-text');
 
     await expect.poll(() => shown(field, 'help')).toBeNull();
-    await expect.poll(() => description('textbox', 'Email')).toBe('');
+    if (IS_CHROMIUM) {
+      await expect.poll(() => description('textbox', 'Email')).toBe('');
+    }
   });
 
   it('S1 whitespace-only help text shows nothing and describes nothing', async () => {
@@ -222,7 +259,9 @@ describe('help text guides the answer', () => {
     await nextFrame();
 
     expect(shown(field, 'help')).toBeNull();
-    await expect.poll(() => description('textbox', 'Answer')).toBe('');
+    if (IS_CHROMIUM) {
+      await expect.poll(() => description('textbox', 'Answer')).toBe('');
+    }
   });
 });
 
@@ -245,7 +284,9 @@ describe('the error message takes the help text place once the answer fails', ()
     await expect
       .poll(() => shown(field, 'error'))
       .toBe('Enter an email address like name@example.com');
-    await expect.poll(() => invalid('textbox', 'Email')).toBe('true');
+    if (IS_CHROMIUM) {
+      await expect.poll(() => invalid('textbox', 'Email')).toBe('true');
+    }
   });
 
   for (const control of validatingControls) {
@@ -275,7 +316,9 @@ describe('the error message takes the help text place once the answer fails', ()
 
       expect(document.activeElement?.textContent).toBe('After');
       expect(shown(field, 'error')).toBeNull();
-      await expect.poll(() => invalid(roleOf[control], 'Answer')).toBe('false');
+      if (IS_CHROMIUM) {
+        await expect.poll(() => invalid(roleOf[control], 'Answer')).toBe('false');
+      }
     });
   }
 
@@ -292,8 +335,10 @@ describe('the error message takes the help text place once the answer fails', ()
 
     await expect.poll(() => shown(field, 'help')).toBe('We never share your email');
     expect(shown(field, 'error')).toBeNull();
-    await expect.poll(() => invalid('textbox', 'Email')).toBe('false');
-    await expect.poll(() => description('textbox', 'Email')).toBe('We never share your email');
+    if (IS_CHROMIUM) {
+      await expect.poll(() => invalid('textbox', 'Email')).toBe('false');
+      await expect.poll(() => description('textbox', 'Email')).toBe('We never share your email');
+    }
   });
 
   it('S7 without error text a control shows its own validation message', async () => {
@@ -326,7 +371,9 @@ describe('the error message takes the help text place once the answer fails', ()
 
       expect(submits()).toBe(0);
       await expect.poll(() => shown(field, 'error')).toBe('Choose another answer');
-      await expect.poll(() => invalid(roleOf[control], 'Answer')).toBe('true');
+      if (IS_CHROMIUM) {
+        await expect.poll(() => invalid(roleOf[control], 'Answer')).toBe('true');
+      }
     });
   }
 
@@ -368,7 +415,9 @@ describe('the error message takes the help text place once the answer fails', ()
     field.disabled = true;
 
     await expect.poll(() => shown(field, 'error')).toBeNull();
-    await expect.poll(() => invalid('textbox', 'Email')).toBe('false');
+    if (IS_CHROMIUM) {
+      await expect.poll(() => invalid('textbox', 'Email')).toBe('false');
+    }
   });
 });
 
@@ -384,11 +433,18 @@ describe('assistive technology learns of the error', () => {
     // region created together with its text is not announced.
     const politeText = async (): Promise<string[]> =>
       (await tree()).filter((node) => node.live === 'polite').map((node) => node.text);
-    expect(await politeText()).toEqual(['']);
+    if (IS_CHROMIUM) {
+      expect(await politeText()).toEqual(['']);
+    }
 
     await userEvent.tab();
 
-    await expect.poll(politeText).toEqual(['Enter an email address like name@example.com']);
+    await expect
+      .poll(() => shown(field, 'error'))
+      .toBe('Enter an email address like name@example.com');
+    if (IS_CHROMIUM) {
+      await expect.poll(politeText).toEqual(['Enter an email address like name@example.com']);
+    }
   });
 
   it('S13 a blocked submission lands on the first invalid control with its error as description', async () => {
@@ -400,9 +456,12 @@ describe('assistive technology learns of the error', () => {
     await send();
 
     expect(document.activeElement).toBe(field);
-    await expect
-      .poll(() => axNode('textbox', 'Email'))
-      .toMatchObject({ focused: true, invalid: 'true', description: 'Enter your email' });
+    await expect.poll(() => shown(field, 'error')).toBe('Enter your email');
+    if (IS_CHROMIUM) {
+      await expect
+        .poll(() => axNode('textbox', 'Email'))
+        .toMatchObject({ focused: true, invalid: 'true', description: 'Enter your email' });
+    }
   });
 });
 
@@ -458,13 +517,21 @@ describe('help and error restyle through semantic tokens alone', () => {
     expect(getComputedStyle(found(part(field, 'help'), 'the help line')).color).toBe(reassignedInk);
   });
 
-  it('S17 under forced colors the error is marked by a symbol, not by color alone', async () => {
+  it('S17 under forced colors the error is marked by a symbol, not by color alone', async (context) => {
     await browserCommands.emulateForcedColors('active');
     const { send } = await mountForm(
       '<ki-input label="Email" name="email" required error-text="Enter your email"></ki-input>',
     );
     const field = found(document.querySelector<Field>('ki-input'), 'the Email field');
-    expect(matchMedia('(forced-colors: active)').matches).toBe(true);
+    // An engine may flip the media feature without repainting anything
+    // (forced-colors.browser.spec.ts): measuring there would test the
+    // author's colours. Chromium, the PR gate's engine, must repaint.
+    if (!(await forcedPaletteApplies())) {
+      expect(IS_CHROMIUM, 'Chromium stopped applying the forced palette under emulation').toBe(
+        false,
+      );
+      context.skip(`${navigator.userAgent} does not apply a forced palette under emulation`);
+    }
     const witness = document.createElement('span');
     witness.style.color = 'CanvasText';
     document.body.append(witness);
