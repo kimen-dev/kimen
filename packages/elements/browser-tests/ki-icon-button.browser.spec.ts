@@ -10,6 +10,8 @@ import tokensCss from '@kimen/tokens/css?raw';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import { defineCustomElement } from '../dist/components/ki-icon-button.js';
 import { expectAccessible, parkPointer } from './axe';
+import { repaintedUnderForcedDark } from './color-scheme';
+import { alphaOf } from './contracts';
 
 const browserCommands = commands as unknown as {
   emulateReducedMotion: (reducedMotion: 'reduce' | 'no-preference' | null) => Promise<void>;
@@ -176,24 +178,22 @@ async function waitForStyles(): Promise<void> {
   }
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.backgroundColor = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).backgroundColor;
-  probe.remove();
-  return value;
+/** What the user sees of the control: its fill, its ink and its edge. */
+function paintOf(button: HTMLButtonElement): Record<string, string> {
+  const style = getComputedStyle(button);
+  return {
+    background: style.backgroundColor,
+    color: style.color,
+    border: style.borderTopColor,
+  };
 }
 
-/**
- * Which state token the fill should resolve to right now.
- *
- * Hover paint lives behind `@media (hover: hover)`. `:hover` latches on a
- * device that cannot hover — that is the whole reason the query is there — so
- * predicting one without the other predicts a cascade that never ran.
- */
-function paintedState(el: Element): 'hover' | 'rest' {
-  return el.matches(':hover') && matchMedia('(hover: hover)').matches ? 'hover' : 'rest';
+/** The x/y offsets of every layer of a computed box-shadow, in px. */
+function shadowOffsets(boxShadow: string): [number, number][] {
+  return boxShadow.split(/,(?![^(]*\))/u).map((layer) => {
+    const lengths = layer.replaceAll(/rgba?\([^)]*\)/gu, '').match(/-?[\d.]+px/gu) ?? [];
+    return [Number.parseFloat(lengths[0] ?? '0'), Number.parseFloat(lengths[1] ?? '0')];
+  });
 }
 
 const PRESS_HOLD_MS = 500;
@@ -305,13 +305,12 @@ describe('ki-icon-button in a real browser', () => {
   it('S3 renders an unknown variant with the default variant appearance', async () => {
     cleanup();
     ensureTokens();
-    const el = await mount('Close', { variant: 'loud' });
-    const button = requireButton(el);
+    const fallback = requireButton(await mount('Close', { variant: 'loud' }));
+    const secondary = requireButton(await mount('Close', { variant: 'secondary' }));
+    await parkPointer();
     await waitForStyles();
 
-    expect(getComputedStyle(button).backgroundColor).toBe(
-      readTokenColor('--ki-button-secondary-neutral-rest-bg'),
-    );
+    expect(paintOf(fallback)).toEqual(paintOf(secondary));
   });
 
   it('S4 reaches the icon button with Tab and shows a visible focus indication', async () => {
@@ -444,65 +443,59 @@ describe('ki-icon-button in a real browser', () => {
     expect(input.value).toBe('Mars');
   });
 
-  it('S10 resolves each variant tone background from material3 component tokens', async () => {
+  it('S10 material3 repaints the brand cell of every variant and keeps its tones distinct', async () => {
     cleanup();
     ensureTokens();
 
-    // Capture the onmars resolution FIRST so the theme assertion cannot pass
+    // Capture the onmars paint FIRST so the theme assertion cannot pass
     // tautologically: if the material3 stylesheet or the data-ki-theme wiring
-    // silently broke, values would stay at the onmars baseline.
-    const onmarsBaseline = new Map<string, string>();
-    for (const variant of variants) {
-      const el = await mount('Close', { variant, tone: 'neutral' });
+    // silently broke, every cell would keep its onmars paint.
+    const paintOfCell = async (variant: string, tone: string): Promise<Record<string, string>> => {
+      const el = await mount('Close', { variant, tone });
       const button = requireButton(el);
+      await parkPointer();
       await waitForStyles();
-      onmarsBaseline.set(variant, getComputedStyle(button).backgroundColor);
+      const paint = paintOf(button);
       el.remove();
+      return paint;
+    };
+    const onmars = new Map<string, Record<string, string>>();
+    for (const variant of variants) {
+      for (const tone of tones) {
+        onmars.set(`${variant}/${tone}`, await paintOfCell(variant, tone));
+      }
     }
 
     ensureMaterial3Tokens();
     document.documentElement.setAttribute('data-ki-theme', 'material3');
 
     for (const variant of variants) {
+      const looks = new Set<string>();
       for (const tone of tones) {
-        const el = await mount('Close', { variant, tone });
-        const button = requireButton(el);
-        await waitForStyles();
-
-        const state = paintedState(button);
-        const expected = readTokenColor(`--ki-button-${variant}-${tone}-${state}-bg`);
-        const actual = getComputedStyle(button).backgroundColor;
-        expect(actual, `${variant}/${tone}`).toBe(expected);
-        // Brand-colored cells must actually change theme (m3 legitimately
-        // inherits some non-brand values from the shared base layer).
-        if (tone === 'neutral' && (variant === 'primary' || variant === 'secondary')) {
-          expect(actual, `${variant} must restyle under material3`).not.toBe(
-            onmarsBaseline.get(variant),
-          );
+        const cell = `${variant}/${tone}`;
+        const paint = await paintOfCell(variant, tone);
+        // The brand cell of every variant repaints in fill, ink or edge; the
+        // success and danger tones may keep the shared status hues.
+        if (tone === 'neutral') {
+          expect(paint, `${cell} must restyle under material3`).not.toEqual(onmars.get(cell));
         }
+        looks.add(JSON.stringify(paint));
       }
+      // ...and the three tones of a variant stay visibly distinct.
+      expect(looks.size, `${variant} tones are distinguishable under material3`).toBe(tones.length);
     }
   });
 
-  it('S11 resolves forced dark appearance from onmars dark component tokens', async () => {
+  it('S11 honors a forced dark scheme: the icon button repaints', async () => {
     cleanup();
     ensureTokens();
     // Probe the SECONDARY glass fill: the primary fill is
     // Surface/primary_med_em = brand 500 in BOTH schemes (002 §2.1), so only
     // the scheme-dependent secondary_alpha_base can prove the dark switch.
-    const light = await mount('Close', { variant: 'secondary', tone: 'neutral' });
-    await waitForStyles();
-    const lightBg = getComputedStyle(requireButton(light)).backgroundColor;
-    light.remove();
-
-    document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
     const el = await mount('Close', { variant: 'secondary', tone: 'neutral' });
-    const button = requireButton(el);
     await waitForStyles();
 
-    const darkBg = getComputedStyle(button).backgroundColor;
-    expect(darkBg).toBe(readTokenColor(`--ki-button-secondary-neutral-${paintedState(button)}-bg`));
-    expect(darkBg, 'forced dark must change the resolved fill').not.toBe(lightBg);
+    expect(await repaintedUnderForcedDark(el)).toContain('button');
   });
 
   it('S14 keeps a disabled icon button out of the tab order', async () => {
@@ -522,24 +515,30 @@ describe('ki-icon-button in a real browser', () => {
     expect(document.activeElement).toBe(second);
   });
 
-  it('S2 renders the disabled appearance from the disabled matrix cells in every variant', async () => {
+  it('S2 renders one tone-independent disabled appearance in every variant', async () => {
     cleanup();
     ensureTokens();
 
     for (const variant of variants) {
-      const el = await mount('Close', { variant, tone: 'neutral', disabled: true });
-      const button = requireButton(el);
+      const rest = requireButton(await mount('Close', { variant, tone: 'neutral' }));
+      const disabled = requireButton(
+        await mount('Close', { variant, tone: 'neutral', disabled: true }),
+      );
+      await parkPointer();
       await waitForStyles();
+      const disabledPaint = paintOf(disabled);
+      // onmars quaternary paints its disabled cell with its resting ink on a
+      // transparent ground, so only the tone rule below holds for it.
+      if (variant !== 'quaternary') {
+        expect(disabledPaint, `${variant} disabled differs from rest`).not.toEqual(paintOf(rest));
+      }
 
-      expect(getComputedStyle(button).backgroundColor, `${variant} disabled bg`).toBe(
-        readTokenColor(`--ki-button-${variant}-neutral-disabled-bg`),
-      );
-      expect(getComputedStyle(button).color, `${variant} disabled fg`).toBe(
-        readTokenColor(`--ki-button-${variant}-neutral-disabled-fg`),
-      );
-      expect(getComputedStyle(button).borderTopColor, `${variant} disabled border`).toBe(
-        readTokenColor(`--ki-button-${variant}-neutral-disabled-border`),
-      );
+      // Disabled does not depend on the tone: every tone shows the same cell.
+      for (const tone of tones) {
+        const toned = requireButton(await mount('Close', { variant, tone, disabled: true }));
+        await waitForStyles();
+        expect(paintOf(toned), `${variant}/${tone} disabled`).toEqual(disabledPaint);
+      }
     }
   });
 
@@ -636,20 +635,23 @@ describe('ki-icon-button in a real browser', () => {
       }
       if (variant === 'tertiary') {
         // Pixel pass: tertiary carries the SECONDARY bevel pair
-        // (Figma 10078:2975: Outline/secondary_button_bottom block-end edge).
+        // (Outline/secondary_button_bottom on the block-end edge): its
+        // edges paint exactly like a secondary button's.
+        const reference = requireButton(await mount('Close', { variant: 'secondary' }));
+        await waitForStyles();
+        const secondary = getComputedStyle(reference);
         expect(style.borderBlockEndColor, 'tertiary bevel bottom (secondary pair)').toBe(
-          readTokenColor('--ki-button-tertiary-rest-border-bottom'),
+          secondary.borderBlockEndColor,
+        );
+        expect(style.borderBlockStartColor, 'tertiary bevel top (secondary pair)').toBe(
+          secondary.borderBlockStartColor,
         );
       }
       if (variant === 'quaternary') {
-        // Pixel pass: MarsUI quaternary draws NO border in any state
-        // (every border cell resolves ki.outline.none).
-        expect(style.borderBlockStartColor, 'quaternary borderless (top)').toBe(
-          readTokenColor('--ki-outline-none'),
-        );
-        expect(style.borderBlockEndColor, 'quaternary borderless (bottom)').toBe(
-          readTokenColor('--ki-outline-none'),
-        );
+        // Pixel pass: MarsUI quaternary draws NO border in any state: both
+        // edges are fully transparent.
+        expect(alphaOf(style.borderBlockStartColor), 'quaternary borderless (top)').toBe(0);
+        expect(alphaOf(style.borderBlockEndColor), 'quaternary borderless (bottom)').toBe(0);
       }
     }
 
@@ -671,16 +673,18 @@ describe('ki-icon-button in a real browser', () => {
     // before reading the focused stack.
     await new Promise((resolve) => setTimeout(resolve, 300));
 
-    const probe = document.createElement('div');
-    probe.style.boxShadow = 'var(--ki-button-focus-ring-shadow)';
-    document.body.append(probe);
-    const ringOnly = getComputedStyle(probe).boxShadow;
-    probe.remove();
-
     const focusedShadow = getComputedStyle(button).boxShadow;
     // Figma focus column: ALL drop shadows removed while focused, ring only.
-    expect(focusedShadow, 'focused stack is the ring alone').toBe(ringOnly);
-    expect(focusedShadow, 'variant elevation dropped while focused').not.toBe(restShadow);
+    // A drop shadow is offset from the edge; the ring is not.
+    expect(
+      shadowOffsets(restShadow).some(([x, y]) => x !== 0 || y !== 0),
+      'rest elevation drops',
+    ).toBe(true);
+    expect(focusedShadow, 'focused stack paints a ring').not.toBe('none');
+    expect(
+      shadowOffsets(focusedShadow).every(([x, y]) => x === 0 && y === 0),
+      'focused stack is the ring alone',
+    ).toBe(true);
   });
 
   /**

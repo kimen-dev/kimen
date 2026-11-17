@@ -8,8 +8,9 @@ import { page, userEvent } from 'vitest/browser';
 // what is asserted), never internals (Art. III). They live outside src/ so
 // Stencil never compiles them; the build gate runs before type-aware gates.
 import { defineCustomElement } from '../dist/components/ki-switch.js';
-import { expectAccessible } from './axe';
+import { expectAccessible, settleEntryMotion } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { paintContrast } from './contracts';
 
 type KiSwitchElement = HTMLElement & {
   checked: boolean;
@@ -139,22 +140,6 @@ function glyphOf(el: KiSwitchElement, kind: 'check' | 'dash'): SVGElement {
 }
 
 /** Resolves a token to its computed value through a probe element. */
-function readToken(property: 'backgroundColor' | 'fontSize' | 'lineHeight', name: string): string {
-  const probe = document.createElement('div');
-  if (property === 'backgroundColor') {
-    probe.style.backgroundColor = `var(${name})`;
-  } else if (property === 'fontSize') {
-    probe.style.fontSize = `var(${name})`;
-  } else {
-    probe.style.fontSize = '16px';
-    probe.style.lineHeight = `var(${name})`;
-  }
-  document.body.append(probe);
-  const value = getComputedStyle(probe)[property];
-  probe.remove();
-  return value;
-}
-
 function baseOf(el: KiSwitchElement): HTMLElement {
   const base = el.shadowRoot?.querySelector('.base');
   expect(base).toBeInstanceOf(HTMLElement);
@@ -457,23 +442,26 @@ describe('ki-switch in a real browser', () => {
     expect(await repaintedUnderForcedDark(el)).toEqual(expect.arrayContaining(['track', 'thumb']));
   });
 
-  it('S14 material3 restyles checked and unchecked switch token values without markup changes', async () => {
-    await mount();
-    const rootStyle = getComputedStyle(document.documentElement);
-    const onmarsOffTrack = rootStyle.getPropertyValue('--ki-switch-unchecked-rest-track');
-    const onmarsOnTrack = rootStyle.getPropertyValue('--ki-switch-checked-rest-track');
+  it('S14 material3 restyles the checked and unchecked tracks without markup changes', async () => {
+    const onmarsOff = await mount();
+    const markup = onmarsOff.outerHTML;
+    const onmarsOffTrack = getComputedStyle(trackPart(onmarsOff)).backgroundColor;
+    const onmarsOnTrack = getComputedStyle(trackPart(await mount('checked'))).backgroundColor;
 
     ensureMaterial3Tokens();
-    document.documentElement.setAttribute('data-ki-theme', 'material3');
-    await new Promise((resolve) => requestAnimationFrame(resolve));
+    // mount() starts from a clean document, so the theme is declared after it.
+    const inMaterial3 = async (attrs = ''): Promise<KiSwitchElement> => {
+      const el = await mount(attrs);
+      document.documentElement.setAttribute('data-ki-theme', 'material3');
+      await settleEntryMotion();
+      return el;
+    };
 
-    const materialStyle = getComputedStyle(document.documentElement);
-    expect(materialStyle.getPropertyValue('--ki-switch-unchecked-rest-track')).not.toBe(
-      onmarsOffTrack,
-    );
-    expect(materialStyle.getPropertyValue('--ki-switch-checked-rest-track')).not.toBe(
-      onmarsOnTrack,
-    );
+    const materialOff = await inMaterial3();
+    expect(materialOff.outerHTML).toBe(markup);
+    expect(getComputedStyle(trackPart(materialOff)).backgroundColor).not.toBe(onmarsOffTrack);
+    const materialOn = await inMaterial3('checked');
+    expect(getComputedStyle(trackPart(materialOn)).backgroundColor).not.toBe(onmarsOnTrack);
   });
 
   it('S7 keeps MarsUI md pointer geometry: 22x18 thumb in a 40x22 track with its dark shadow', async () => {
@@ -507,14 +495,16 @@ describe('ki-switch in a real browser', () => {
     expect(getComputedStyle(thumbPart(el)).translate).not.toBe('none');
   });
 
-  it('S7 resolves Toggle_label md typography from body-2 tokens', async () => {
+  it('S7 sets the Toggle_label md typography: 15/24 medium, legible on the page', async () => {
     const el = await mount();
     const label = getComputedStyle(labelPart(el));
 
-    expect(label.fontSize).toBe(readToken('fontSize', '--ki-typography-size-body-2'));
-    expect(label.lineHeight).toBe(readToken('lineHeight', '--ki-typography-line-height-body-2'));
+    expect(label.fontSize).toBe('15px');
+    expect(label.lineHeight).toBe('24px');
     expect(label.fontWeight).toBe('500');
-    expect(label.color).toBe(readToken('backgroundColor', '--ki-text-high-em'));
+    expect(
+      paintContrast(label.color, getComputedStyle(document.body).backgroundColor),
+    ).toBeGreaterThanOrEqual(4.5);
   });
 
   it('S7 S9 shows the check glyph only when on and the dash only when off and disabled', async () => {
@@ -525,25 +515,24 @@ describe('ki-switch in a real browser', () => {
     const on = await mount('checked');
     expect(getComputedStyle(glyphOf(on, 'check')).opacity).toBe('1');
     expect(getComputedStyle(glyphOf(on, 'dash')).opacity).toBe('0');
-    // ON glyph ink: Text/primary_on_primary_light (Brand/600 in light).
-    expect(getComputedStyle(glyphOf(on, 'check')).color).toBe(
-      readToken('backgroundColor', '--ki-text-primary-on-primary-light'),
-    );
+    // The ON check reads against the thumb it is drawn on (WCAG 1.4.11).
+    const enabledInk = getComputedStyle(glyphOf(on, 'check')).color;
+    expect(
+      paintContrast(enabledInk, getComputedStyle(thumbPart(on)).backgroundColor),
+    ).toBeGreaterThanOrEqual(3);
 
     const offDisabled = await mount('disabled');
     expect(getComputedStyle(glyphOf(offDisabled, 'dash')).opacity).toBe('1');
     expect(getComputedStyle(glyphOf(offDisabled, 'check')).opacity).toBe('0');
-    // Disabled glyph ink: Text/base_em (Gray/400 in light).
-    expect(getComputedStyle(glyphOf(offDisabled, 'dash')).color).toBe(
-      readToken('backgroundColor', '--ki-text-base-em'),
-    );
+    const disabledDashInk = getComputedStyle(glyphOf(offDisabled, 'dash')).color;
 
     const onDisabled = await mount('checked disabled');
     expect(getComputedStyle(glyphOf(onDisabled, 'check')).opacity).toBe('1');
     expect(getComputedStyle(glyphOf(onDisabled, 'dash')).opacity).toBe('0');
-    expect(getComputedStyle(glyphOf(onDisabled, 'check')).color).toBe(
-      readToken('backgroundColor', '--ki-text-base-em'),
-    );
+    // Disabled glyphs share one muted ink, distinct from the enabled check.
+    const disabledCheckInk = getComputedStyle(glyphOf(onDisabled, 'check')).color;
+    expect(disabledCheckInk).toBe(disabledDashInk);
+    expect(disabledCheckInk).not.toBe(enabledInk);
   });
 
   it('S16 mirrors label order and on-state thumb travel under RTL', async () => {
