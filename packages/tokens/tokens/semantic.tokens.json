@@ -1468,6 +1468,34 @@
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl."
       }
     },
+    "density": {
+      "$description": "Region density (spec 045). Both tokens are inherited from the document root, never redeclared on a theme root, and consumed directly by component CSS, so a density declaration on any element reaches every component inside it, in any theme. Nothing aliases them and no theme or mode reassigns them or what they reference (the build checks both).",
+      "control-offset": {
+        "$type": "dimension",
+        "$value": "{ki.space.zero}",
+        "$description": "Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.",
+        "$extensions": {
+          "dev.kimen": {
+            "inherit": "document"
+          }
+        }
+      },
+      "space-scale": {
+        "$type": "number",
+        "$value": "{ki.scale.unit}",
+        "$description": "Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).",
+        "$extensions": {
+          "dev.kimen": {
+            "inherit": "document"
+          }
+        }
+      },
+      "target-min": {
+        "$type": "dimension",
+        "$value": "{ki.size.target-min}",
+        "$description": "The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset)."
+      }
+    },
     "corner": {
       "$type": "dimension",
       "control": {

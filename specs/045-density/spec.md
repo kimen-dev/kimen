@@ -59,7 +59,7 @@ Material.
 
 **D4 — WCAG 2.5.8: a floor, applied by the component.** Every scaled
 interactive dimension renders as the larger of the target minimum token
-`--ki-size-target-min` (24px) and the compact size, so compact can never
+`--ki-density-target-min` (24px, an alias of the primitive `ki.size.target-min`) and the compact size, so compact can never
 produce a target under 24 × 24 CSS px, whatever the size prop or theme (S4,
 S5). The floor is in px on purpose: WCAG measures CSS px, and a page that
 shrinks its root font size must not shrink the floor.
@@ -72,12 +72,23 @@ CSS.** Recommended:
 - `--ki-density-space-scale` (`1` default, `0.75` compact) — multiplies every
   scaled padding and gap.
 
-Components compute `max(var(--ki-size-target-min), calc(<their size token> +
-var(--ki-density-control-offset)))` where they use the size. Because the two
-tokens are numbers that nothing aliases, they inherit through any element,
-shadow roots included, and resolve against whatever theme is active where the
-component is: one declaration rule, no per-theme files, consumer themes
-included. The tokens are declared once on the document root, never on theme
+Components compute `max(var(--ki-density-target-min), calc(<their size token> +
+var(--ki-density-control-offset)))` where they use the size. Because nothing aliases the two
+tokens, they inherit through any element, shadow roots included, and resolve
+against whatever theme is active where the component is: one declaration
+rule, no per-theme files, consumer themes included.
+
+*Implementation note (2026-11-17):* the values live in primitives, because
+the semantic layer holds references only (`ki.space.zero` and
+`ki.space.minus-md` for the offset, `ki.scale.unit` and `ki.scale.compact`
+for the scale), and the floor is the semantic `--ki-density-target-min`
+aliasing the primitive `ki.size.target-min`, because components consume only
+public semantic and component tokens. The build marks the two density tokens
+with `$extensions["dev.kimen"].inherit = "document"`, declares them in their
+own `:root` rule, and fails if a token aliases them or a theme or mode
+reassigns them or what they reference. The native input of `ki-input` now
+spans the whole field height: in material3 its text line measured under
+24px, a WCAG 2.5.8 target that predates this spec and that S5 measures. The tokens are declared once on the document root, never on theme
 roots, so a theme region nested inside a compact region stays compact (S8);
 the build fails if any token aliases them or any theme overrides them.
 
@@ -265,7 +276,7 @@ Feature: A compact density for dense regions
 - **FR-002**: Font sizes, line heights, icon sizes, radius, borders, focus
   rings and content sizes MUST NOT change.
 - **FR-003**: No interactive target MAY render smaller than
-  `--ki-size-target-min` (24 × 24 CSS px) under any density, size or theme.
+  `--ki-density-target-min` (24 × 24 CSS px) under any density, size or theme.
 - **FR-004**: The nearest density declaration MUST win; `default` MUST
   restore the default; unknown values MUST be ignored.
 - **FR-005**: A theme root nested in a compact region MUST stay compact; the
@@ -281,13 +292,13 @@ Feature: A compact density for dense regions
 - **Density**: a named region-level step (default, compact) applied through
   two inherited tokens.
 - **Target minimum**: the smallest interactive dimension any density may
-  produce, `--ki-size-target-min`.
+  produce, `--ki-density-target-min`.
 
 ## Constitutional Surface *(mandatory)*
 
 - **Public API delta** (Art. IX): additive. New declaration
   `data-ki-density`; new tokens `--ki-density-control-offset`,
-  `--ki-density-space-scale`, `--ki-size-target-min`. No prop added; `size`
+  `--ki-density-space-scale`, `--ki-density-target-min`. No prop added; `size`
   props unchanged. A declaration in `changes/api/` records the tokens.
 - **Bundle budget** (Art. IV): one `calc()`/`max()` per scaled dimension in
   about 15 component stylesheets and two rules in the token stylesheet; no

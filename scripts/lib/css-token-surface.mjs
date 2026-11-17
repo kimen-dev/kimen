@@ -43,6 +43,13 @@ const MODE_CONTRACT = [
   },
 ];
 
+/**
+ * Density levels (spec 045), in the order a stylesheet declares them, each
+ * published as one context per scheme; `default` follows them and restores
+ * the document-inherited tokens they reassign.
+ */
+const DENSITY_CONTRACT = ['compact'];
+
 function modeSelectors(mode, theme) {
   const activation = mode.activations.join(', ');
   if (theme === undefined) {
@@ -526,9 +533,53 @@ function defaultThemeDeclarations(css, label) {
   if (tokens?.selector !== DEFAULT_THEME_SELECTOR) {
     throw new Error(`${label} must declare its tokens in one ${DEFAULT_THEME_SELECTOR} rule`);
   }
-  const base = declarations(tokens.body, `${label} rule ${tokens.prelude}`);
-  const modes = modeDeclarations(rules.slice(SCHEME_CONTRACT.length + 1), { label, known: base });
-  return { base, modes };
+  const contextual = declarations(tokens.body, `${label} rule ${tokens.prelude}`);
+  let index = SCHEME_CONTRACT.length + 1;
+  // Document-inherited tokens (spec 045): one `:root` rule, then each density
+  // level and `default`, each reassigning only those tokens.
+  let inherited = new Map();
+  const densities = new Map();
+  if (rules[index]?.selector === ':root' && rules[index].media === undefined) {
+    inherited = declarations(rules[index].body, `${label} rule ${rules[index].prelude}`);
+    for (const name of inherited.keys()) {
+      if (contextual.has(name)) {
+        throw new Error(
+          `${label} declares ${name} both on its theme roots and as inherited from the document`,
+        );
+      }
+    }
+    index += 1;
+    for (const level of [...DENSITY_CONTRACT, 'default']) {
+      const rule = rules[index];
+      if (rule?.selector !== `[data-ki-density='${level}']` || rule.media !== undefined) {
+        throw new Error(`${label} must declare the density ${level} after its inherited tokens`);
+      }
+      const levelDeclarations = declarations(rule.body, `${label} rule ${rule.prelude}`);
+      for (const name of levelDeclarations.keys()) {
+        if (!inherited.has(name)) {
+          throw new Error(
+            `${label} density ${level} reassigns ${name}, which is not inherited from the document`,
+          );
+        }
+      }
+      densities.set(level, levelDeclarations);
+      index += 1;
+    }
+    const reassigned = new Set(
+      DENSITY_CONTRACT.flatMap((level) => [...densities.get(level).keys()]),
+    );
+    const restored = densities.get('default');
+    if (
+      restored.size !== reassigned.size ||
+      [...reassigned].some((name) => restored.get(name) !== inherited.get(name))
+    ) {
+      throw new Error(`${label} density default must restore every inherited token`);
+    }
+    densities.delete('default');
+  }
+  const base = mergeDeclarations(contextual, inherited);
+  const modes = modeDeclarations(rules.slice(index), { label, known: base });
+  return { base, modes, densities };
 }
 
 /**
@@ -559,7 +610,7 @@ function themeDeclarations({ css, theme, label, base }) {
       );
     }
   }
-  return { base: base.base, baseModes: base.modes, overrides, modes };
+  return { base: base.base, baseModes: base.modes, densities: base.densities, overrides, modes };
 }
 
 /**
@@ -568,9 +619,18 @@ function themeDeclarations({ css, theme, label, base }) {
  * cascade order the stylesheets are built for (default rule, default modes,
  * theme overrides, theme mode re-assertions).
  */
-function contextDeclarations({ base, baseModes, overrides = new Map(), modes = new Map() }) {
+function contextDeclarations({
+  base,
+  baseModes,
+  densities = new Map(),
+  overrides = new Map(),
+  modes = new Map(),
+}) {
   const layer = (maps) => maps.reduce((merged, map) => mergeDeclarations(merged, map), new Map());
   const result = new Map([['', layer([base, overrides])]]);
+  for (const [level, levelDeclarations] of densities) {
+    result.set(level, layer([base, overrides, levelDeclarations]));
+  }
   for (const mode of MODE_CONTRACT) {
     if (!baseModes.has(mode.name)) continue;
     const active = activatedBy(mode).map((candidate) => candidate.name);
@@ -690,7 +750,11 @@ export function buildPublicStylesheetSurface({
       const theme = match[1];
       const layers =
         theme === undefined
-          ? { base: defaultThemeOf(label).base, baseModes: defaultThemeOf(label).modes }
+          ? {
+              base: defaultThemeOf(label).base,
+              baseModes: defaultThemeOf(label).modes,
+              densities: defaultThemeOf(label).densities,
+            }
           : themeDeclarations({ css, theme, label, base: defaultThemeOf(label) });
       return [subpath, { target, contexts: contexts(contextDeclarations(layers), names, label) }];
     }),

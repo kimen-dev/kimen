@@ -42,7 +42,13 @@
   display: inline-flex;
   gap: var(--ki-select-gap);
   justify-content: space-between;
-  min-block-size: max(var(--ki-select-height), var(--ki-select-min-target));
+  min-block-size: max(
+    var(--ki-density-target-min),
+    calc(
+      max(var(--ki-select-height), var(--ki-select-min-target)) +
+      var(--ki-density-control-offset)
+    )
+  );
   min-inline-size: 100%;
   padding-inline: var(--ki-select-padding-inline);
   font: inherit;
@@ -167,7 +173,7 @@
   box-shadow: var(--ki-select-listbox-shadow);
   box-sizing: border-box;
   overflow-block: auto;
-  padding: var(--ki-select-listbox-padding);
+  padding: calc(var(--ki-select-listbox-padding) * var(--ki-density-space-scale));
 
   /* A manual popover in the top layer: no ancestor's overflow clips it and
      no stacking context paints over it. Being out of flow, it no longer
@@ -208,7 +214,10 @@
   /* MarsUI Dropmenu row label UI/Para/medium: 13px / 20px / weight 600. */
   font-weight: var(--ki-typography-weight-body-medium);
   line-height: var(--ki-typography-line-height-para);
-  min-block-size: var(--ki-option-min-target);
+  min-block-size: max(
+    var(--ki-density-target-min),
+    calc(var(--ki-option-min-target) + var(--ki-density-control-offset))
+  );
   padding-inline: var(--ki-option-padding-inline);
   display: flex;
   align-items: center;

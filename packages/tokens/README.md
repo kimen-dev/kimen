@@ -150,6 +150,27 @@ standard appearance and in each mode, with the stronger thresholds under more
 contrast. The public token surface publishes each mode as its own context
 (`contrast-more/light`, `reduced-transparency/dark`, …).
 
+### Density
+
+`data-ki-density="compact"` on any element makes its region compact;
+`data-ki-density="default"` restores the default inside it (spec 045). Two
+tokens carry the step and are **inherited from the document**: declared once
+in their own `:root` rule, never redeclared on a theme root, and read by
+component CSS where a size is used — so the declaration reaches every
+component inside the element, in any theme, and the nearest declaration wins
+by plain inheritance:
+
+| Token | Default | Compact | Used for |
+|---|---|---|---|
+| `--ki-density-control-offset` | `0` | `-0.5rem` | added to the block size of buttons, icon buttons, fields, selects, options, list items, tabs |
+| `--ki-density-space-scale` | `1` | `0.75` | multiplies the padding and gaps of cards, dialogs, alerts, lists, listboxes, tab panels, tooltips |
+| `--ki-density-target-min` | `24px` | `24px` | the floor every scaled control respects (WCAG 2.5.8) |
+
+The build marks the inherited tokens with
+`$extensions["dev.kimen"].inherit = "document"` and fails if a token aliases
+them or a theme or mode reassigns them or what they reference. The levels
+live in `tokens/modes/compact.tokens.json`.
+
 ## Layer model
 
 The token graph is layered **primitive → theme → semantic → component**:

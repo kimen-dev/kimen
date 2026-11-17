@@ -159,3 +159,20 @@ export function withMode(config, mode) {
     source: sources.slice(-1),
   };
 }
+
+// Densities (spec 045): a level reassigns the document-inherited density
+// tokens and nothing else. Its composition is the default one with the
+// level's file as the sole `source`.
+export const DENSITY_SOURCES = Object.freeze({
+  compact: 'tokens/modes/compact.tokens.json',
+});
+
+export function withDensity(config, level) {
+  const source = DENSITY_SOURCES[level];
+  if (source === undefined) throw new Error(`unknown density ${JSON.stringify(level)}`);
+  return {
+    ...config,
+    include: [...(config.include ?? []), ...config.source],
+    source: [source],
+  };
+}

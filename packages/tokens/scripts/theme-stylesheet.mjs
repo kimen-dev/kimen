@@ -90,6 +90,7 @@ export function compositionDeclarations(dictionary) {
     declarations.set(name, {
       expression: line.slice(prefix.length, -1),
       resolved: String(token.$value),
+      inherited: token.$extensions?.['dev.kimen']?.inherit === 'document',
     });
   }
   return declarations;
@@ -285,14 +286,64 @@ function modeRules(modes, theme) {
   return modes.map(({ mode, declarations }) => renderModeRules(mode, declarations, theme));
 }
 
-/** The default theme: the colour-scheme contract, every token, then each mode. */
-export function renderBaseStylesheet(declarations, modes = []) {
+/** The density levels the stylesheet publishes, besides `default` (spec 045). */
+export const DENSITIES = Object.freeze(['compact']);
+
+/**
+ * A document-inherited token (`$extensions['dev.kimen'].inherit: 'document'`)
+ * is declared on `:root` alone and read where a component uses it, so a
+ * declaration on any element reaches every component inside it and a theme
+ * root nested in it does not reset it. That holds only while no other token
+ * aliases it — an alias would freeze its value where the alias is declared —
+ * and while no theme or mode reassigns it or a token it references: those
+ * references resolve once, on `:root`.
+ */
+export function assertInheritedTokens({ declarations, inherited, overrides, label = 'a theme' }) {
+  const referencesOf = (expression) =>
+    [...expression.matchAll(/var\((--[a-z0-9-]+)\)/gu)].map((match) => match[1]);
+  const pinned = new Set(inherited);
+  for (const name of inherited) {
+    const expression = declarations.get(name);
+    if (expression === undefined) throw new Error(`${name} is not declared`);
+    for (const reference of referencesOf(expression)) pinned.add(reference);
+  }
+  for (const [name, expression] of declarations) {
+    for (const reference of referencesOf(expression)) {
+      if (inherited.has(reference)) {
+        throw new Error(`${name} aliases ${reference}, which is inherited from the document`);
+      }
+    }
+  }
+  for (const name of overrides?.keys() ?? []) {
+    if (pinned.has(name)) {
+      throw new Error(
+        `${label} reassigns ${name}, which ${inherited.has(name) ? 'is' : 'a token'} inherited from the document ${inherited.has(name) ? '' : 'references'}`.trim(),
+      );
+    }
+  }
+}
+
+/**
+ * The default theme: the colour-scheme contract, every token, the
+ * document-inherited tokens and each density level, then each mode.
+ */
+export function renderBaseStylesheet(
+  declarations,
+  modes = [],
+  { inherited = new Set(), densities = [] } = {},
+) {
   if (declarations.size === 0) throw new Error('the base theme has no tokens to declare');
+  const contextual = [...declarations].filter(([name]) => !inherited.has(name));
+  const documentWide = [...declarations].filter(([name]) => inherited.has(name));
   return [
     rule([':where(:root)'], [['color-scheme', 'light dark']]),
     rule(["[data-ki-color-scheme='light']"], [['color-scheme', 'light']]),
     rule(["[data-ki-color-scheme='dark']"], [['color-scheme', 'dark']]),
-    rule([':root', ':where([data-ki-theme])'], [...declarations]),
+    rule([':root', ':where([data-ki-theme])'], contextual),
+    documentWide.length === 0 ? '' : rule([':root'], documentWide),
+    ...densities.map(({ level, declarations: levelDeclarations }) =>
+      rule([`[data-ki-density='${level}']`], [...levelDeclarations]),
+    ),
     ...modeRules(modes),
   ]
     .filter((block) => block !== '')

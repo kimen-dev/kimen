@@ -8,11 +8,14 @@ import {
   lightConfig,
   material3DarkConfig,
   material3LightConfig,
+  withDensity,
   withMode,
 } from '../style-dictionary.config.mjs';
 import {
+  assertInheritedTokens,
   combineSchemes,
   compositionDeclarations,
+  DENSITIES,
   layeredOverrides,
   MODES,
   renderBaseStylesheet,
@@ -322,6 +325,13 @@ test('a composition is read from Style Dictionary with references kept and descr
           'black-3': { $type: 'color', $value: '#00000008' },
         },
         size: { hairline: { $type: 'dimension', $value: '1px' } },
+        density: {
+          scale: {
+            $type: 'number',
+            $value: 1,
+            $extensions: { 'dev.kimen': { inherit: 'document' } },
+          },
+        },
         surface: { $type: 'color', s0: { $value: '{ki.color.black}', $description: 'Page.' } },
         border: {
           hairline: {
@@ -339,14 +349,23 @@ test('a composition is read from Style Dictionary with references kept and descr
   assert.deepEqual(declarations.get('--ki-color-black'), {
     expression: '#000000',
     resolved: '#000000',
+    inherited: false,
   });
   assert.deepEqual(declarations.get('--ki-surface-s0'), {
     expression: 'var(--ki-color-black)',
     resolved: '#000000',
+    inherited: false,
   });
   assert.deepEqual(declarations.get('--ki-border-hairline'), {
     expression: 'var(--ki-size-hairline) solid var(--ki-color-black-3)',
     resolved: '1px solid rgba(0, 0, 0, 0.03)',
+    inherited: false,
+  });
+  // A token marked as inherited from the document says so.
+  assert.deepEqual(declarations.get('--ki-density-scale'), {
+    expression: '1',
+    resolved: '1',
+    inherited: true,
   });
 });
 
@@ -654,4 +673,131 @@ test('the two mode files reassign disjoint token sets, so they compose in any co
     contrast.filter((path) => transparency.has(path)),
     [],
   );
+});
+
+// Density (spec 045): two tokens inherited from the document root, consumed by
+// component CSS, set on any element by a density declaration.
+const inheritedTokens = new Set(['--ki-density-control-offset', '--ki-density-space-scale']);
+
+test('document-inherited tokens are declared once on :root, never on a theme root, then each density level', () => {
+  const css = renderBaseStylesheet(
+    new Map([
+      ['--ki-space-md', '0.5rem'],
+      ['--ki-density-control-offset', '0rem'],
+      ['--ki-density-space-scale', '1'],
+    ]),
+    [],
+    {
+      inherited: inheritedTokens,
+      densities: [
+        {
+          level: 'compact',
+          declarations: new Map([
+            ['--ki-density-control-offset', '-0.5rem'],
+            ['--ki-density-space-scale', '0.75'],
+          ]),
+        },
+        {
+          level: 'default',
+          declarations: new Map([
+            ['--ki-density-control-offset', '0rem'],
+            ['--ki-density-space-scale', '1'],
+          ]),
+        },
+      ],
+    },
+  );
+
+  assert.ok(
+    css.endsWith(
+      [
+        ':root,',
+        ':where([data-ki-theme]) {',
+        '  --ki-space-md: 0.5rem;',
+        '}',
+        '',
+        // A theme root does not redeclare them, so a themed region nested in
+        // a compact region stays compact: the nearest declaration wins by
+        // plain inheritance.
+        ':root {',
+        '  --ki-density-control-offset: 0rem;',
+        '  --ki-density-space-scale: 1;',
+        '}',
+        '',
+        "[data-ki-density='compact'] {",
+        '  --ki-density-control-offset: -0.5rem;',
+        '  --ki-density-space-scale: 0.75;',
+        '}',
+        '',
+        "[data-ki-density='default'] {",
+        '  --ki-density-control-offset: 0rem;',
+        '  --ki-density-space-scale: 1;',
+        '}',
+        '',
+      ].join('\n'),
+    ),
+    css,
+  );
+});
+
+test('a document-inherited token is one nothing aliases, and no theme or mode reassigns it or what it references', () => {
+  const base = new Map([
+    ['--ki-a', '1px'],
+    ['--ki-density-control-offset', 'var(--ki-a)'],
+    ['--ki-density-space-scale', '1'],
+  ]);
+  assert.doesNotThrow(() =>
+    assertInheritedTokens({ declarations: base, inherited: inheritedTokens }),
+  );
+  assert.throws(
+    () =>
+      assertInheritedTokens({
+        declarations: new Map([...base, ['--ki-b', 'calc(var(--ki-density-space-scale) * 2px)']]),
+        inherited: inheritedTokens,
+      }),
+    /--ki-b aliases --ki-density-space-scale/u,
+  );
+  assert.throws(
+    () =>
+      assertInheritedTokens({
+        declarations: base,
+        inherited: inheritedTokens,
+        overrides: new Map([['--ki-density-space-scale', '0.9']]),
+        label: 'material3',
+      }),
+    /material3 reassigns --ki-density-space-scale, which is inherited from the document/u,
+  );
+  assert.throws(
+    () =>
+      assertInheritedTokens({
+        declarations: base,
+        inherited: inheritedTokens,
+        overrides: new Map([['--ki-a', '2px']]),
+        label: 'contrast-more',
+      }),
+    /contrast-more reassigns --ki-a, which a token inherited from the document references/u,
+  );
+});
+
+test('the shipped density levels change the inherited tokens and nothing else', async () => {
+  const read = async (config) =>
+    compositionDeclarations(
+      await new StyleDictionary({ ...config, log: { verbosity: 'silent' } }).getPlatformTokens(
+        'css',
+      ),
+    );
+  const light = await read(lightConfig);
+  const compact = await read(withDensity(lightConfig, 'compact'));
+  const inherited = new Set(
+    [...light].filter(([, token]) => token.inherited).map(([name]) => name),
+  );
+
+  assert.deepEqual([...inherited].sort(), [...inheritedTokens].sort());
+  assert.deepEqual(DENSITIES, ['compact']);
+  const changed = [...compact]
+    .filter(([name, token]) => light.get(name).expression !== token.expression)
+    .map(([name]) => name);
+  assert.deepEqual(changed.sort(), [...inheritedTokens].sort());
+  assert.equal(compact.get('--ki-density-control-offset').resolved, '-0.5rem');
+  assert.equal(compact.get('--ki-density-space-scale').resolved, '0.75');
 });

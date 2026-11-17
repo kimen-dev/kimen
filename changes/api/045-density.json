@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "08ed361bbb9293a5a04029459460bb4b30c9325981a0f5d4d6f5ea5bd7207695",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Compact region density (spec 045-density), cumulative since baseline 0.0.0 and superseding declaration 043-preference-modes (its deltas, and those of every declaration it supersedes, remain as declared there). (1) New public tokens --ki-density-control-offset and --ki-density-space-scale, inherited from the document root (declared in their own :root rule, never on a theme root), and --ki-density-target-min (the 24 x 24 CSS px WCAG 2.5.8 floor). New primitives ki.space.minus-md, ki.scale.unit, ki.scale.compact and ki.size.target-min hold their values. (2) The default stylesheet declares data-ki-density=\"compact\" and data-ki-density=\"default\", published as the compact/{light,dark} contexts of both stylesheets; the standard light and dark contexts keep every existing token value byte-identical. (3) ki-button, ki-icon-button, ki-input, ki-textarea, ki-select (trigger, listbox and option rows), ki-list-item and ki-tab add the density offset to their block size, floored at --ki-density-target-min; ki-card, ki-dialog, ki-alert, ki-list, ki-list-item, ki-select's listbox, ki-tab-panel and ki-tooltip scale their padding and gaps by --ki-density-space-scale. Their manifests and llms documents list the new tokens. With no declaration every computed size is unchanged. (4) ki-input's native input spans the whole field height, so the field never offers a target under 24px (material3). Purely additive: no token, member, prop, event, part or slot is removed or renamed and no existing effective value changes. The cumulative delta since 0.0.0 was already MAJOR. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}
