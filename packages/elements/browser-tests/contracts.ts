@@ -78,6 +78,20 @@ function contrast(a: Rgba, b: Rgba): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
+/** The alpha channel of a computed colour: 0 is fully transparent. */
+export function alphaOf(color: string): number {
+  return parseColor(color).a;
+}
+
+/**
+ * The WCAG contrast ratio between two computed paints: `background` is laid
+ * over white when it is translucent, and `foreground` over that.
+ */
+export function paintContrast(foreground: string, background: string): number {
+  const ground = over(parseColor(background), WHITE);
+  return contrast(over(parseColor(foreground), ground), ground);
+}
+
 /**
  * Every opaque colour that can sit behind `element`. A gradient fans out into
  * one candidate per colour stop, so text over a gradient is measured against

@@ -1212,7 +1212,7 @@
   --ki-button-quaternary-neutral-active-fg: var(--ki-text-supporting);
   --ki-button-quaternary-neutral-active-border: var(--ki-outline-none);
   --ki-button-quaternary-neutral-disabled-bg: var(--ki-transparent-inverse);
-  --ki-button-quaternary-neutral-disabled-fg: var(--ki-text-muted);
+  --ki-button-quaternary-neutral-disabled-fg: var(--ki-text-base-em);
   --ki-button-quaternary-neutral-disabled-border: var(--ki-outline-none);
   --ki-button-quaternary-success-rest-bg: var(--ki-transparent-inverse);
   --ki-button-quaternary-success-rest-fg: var(--ki-text-success-high-em);

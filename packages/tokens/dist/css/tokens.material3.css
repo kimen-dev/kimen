@@ -361,6 +361,7 @@
   --ki-button-quaternary-neutral-active-bg: var(--ki-surface-primary-low-em);
   --ki-button-quaternary-neutral-active-fg: var(--ki-text-primary-high-em);
   --ki-button-quaternary-neutral-active-border: var(--ki-outline-primary-high-em);
+  --ki-button-quaternary-neutral-disabled-fg: var(--ki-text-muted);
   --ki-button-quaternary-neutral-disabled-border: var(--ki-outline-low-em);
   --ki-button-quaternary-success-rest-border: var(--ki-outline-success-med-em);
   --ki-button-quaternary-success-hover-border: var(--ki-outline-success-high-em);

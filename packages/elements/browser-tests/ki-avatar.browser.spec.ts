@@ -9,6 +9,7 @@ import { commands } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-avatar.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { alphaOf, paintContrast } from './contracts';
 
 type KiAvatarElement = HTMLElement & {
   label?: string;
@@ -110,24 +111,6 @@ function boxOf(el: KiAvatarElement): HTMLElement {
   return box;
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.color = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = getComputedStyle(probe).color;
-  probe.remove();
-  return value;
-}
-
-function readTokenLength(name: string): number {
-  const probe = document.createElement('div');
-  probe.style.blockSize = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = Number.parseFloat(getComputedStyle(probe).blockSize);
-  probe.remove();
-  return value;
-}
-
 describe('ki-avatar', () => {
   it('S1 shows the loaded portrait covering the themed avatar box', async () => {
     cleanup();
@@ -145,7 +128,8 @@ describe('ki-avatar', () => {
 
     expect(image.naturalWidth).toBeGreaterThan(0);
     const box = boxOf(el).getBoundingClientRect();
-    expect(box.width).toBe(readTokenLength('--ki-avatar-md-size'));
+    // The default medium avatar is a 40px box (MarsUI Avatar md).
+    expect(box.width).toBe(40);
     // The portrait fills the shape; initials and figure stay out of the tree.
     expect(image.getBoundingClientRect().width).toBeCloseTo(box.width, 0);
     expect(el.shadowRoot?.querySelector('[part="initials"]')).toBeNull();
@@ -177,7 +161,7 @@ describe('ki-avatar', () => {
     expect(el.shadowRoot?.querySelector('[part="initials"]')?.textContent).toBe('AG');
     expect(el.shadowRoot?.querySelector('[part="image"]')).toBeNull();
     // The swap never changes the avatar size (FR-001).
-    expect(boxOf(el).getBoundingClientRect().width).toBe(readTokenLength('--ki-avatar-md-size'));
+    expect(boxOf(el).getBoundingClientRect().width).toBe(40);
   });
 
   it('S3 shows the built-in generic figure without portrait and initials', async () => {
@@ -188,8 +172,11 @@ describe('ki-avatar', () => {
     if (!icon) {
       throw new Error('generic figure did not render');
     }
-    expect(icon.getBoundingClientRect().width).toBe(readTokenLength('--ki-avatar-md-icon-size'));
-    expect(getComputedStyle(boxOf(el)).backgroundColor).toBe(readTokenColor('--ki-avatar-bg'));
+    expect(icon.getBoundingClientRect().width).toBe(20);
+    // Visible: the figure reads against the avatar surface (WCAG 1.4.11).
+    expect(
+      paintContrast(getComputedStyle(icon).color, getComputedStyle(boxOf(el)).backgroundColor),
+    ).toBeGreaterThanOrEqual(3);
   });
 
   it('fades each fallback step in through an opacity-only transition gated by reduced motion', async () => {
@@ -221,22 +208,20 @@ describe('ki-avatar', () => {
   it('S4 renders an unrecognized size at the default medium metrics', async () => {
     cleanup();
     const unknown = await mount(landmark(), { label: 'Ana García', initials: 'AG', size: 'mega' });
+    const medium = await mount(landmark(), { label: 'Ana García', initials: 'AG', size: 'md' });
     expect(boxOf(unknown).getBoundingClientRect().width).toBe(
-      readTokenLength('--ki-avatar-md-size'),
+      boxOf(medium).getBoundingClientRect().width,
+    );
+    expect(getComputedStyle(boxOf(unknown)).fontSize).toBe(
+      getComputedStyle(boxOf(medium)).fontSize,
     );
 
-    // The recognized ramp keeps resolving from its per-size tokens.
+    // The recognized ramp keeps its own metrics: 20px xxs, 56px xl.
     const smallest = await mount(landmark(), { label: 'Ana García', initials: 'A', size: 'xxs' });
-    expect(boxOf(smallest).getBoundingClientRect().width).toBe(
-      readTokenLength('--ki-avatar-xxs-size'),
-    );
+    expect(boxOf(smallest).getBoundingClientRect().width).toBe(20);
     const largest = await mount(landmark(), { label: 'Ana García', initials: 'AG', size: 'xl' });
-    expect(boxOf(largest).getBoundingClientRect().width).toBe(
-      readTokenLength('--ki-avatar-xl-size'),
-    );
-    expect(getComputedStyle(boxOf(largest)).fontSize).toBe(
-      `${String(readTokenLength('--ki-avatar-xl-font-size'))}px`,
-    );
+    expect(boxOf(largest).getBoundingClientRect().width).toBe(56);
+    expect(getComputedStyle(boxOf(largest)).fontSize).toBe('18px');
   });
 
   it('S8 exposes a labeled avatar as one named image with no interactive role', async () => {
@@ -279,6 +264,7 @@ describe('ki-avatar', () => {
     ensureTokens();
     const onmars = await mount(landmark(), { label: 'Ana García', initials: 'AG' });
     const onmarsBorder = getComputedStyle(boxOf(onmars)).borderColor;
+    const onmarsSurface = getComputedStyle(boxOf(onmars)).backgroundColor;
     const markup = onmars.outerHTML;
     onmars.remove();
 
@@ -288,13 +274,12 @@ describe('ki-avatar', () => {
     const box = boxOf(el);
 
     expect(el.outerHTML).toBe(markup);
-    expect(getComputedStyle(box).backgroundColor).toBe(readTokenColor('--ki-avatar-bg'));
-    expect(getComputedStyle(box).borderColor).toBe(readTokenColor('--ki-avatar-border-color'));
-    // material3 disables the MarsUI hairline (avatar.material3 override).
-    expect(getComputedStyle(box).borderColor, 'material3 must restyle the border').not.toBe(
-      onmarsBorder,
-    );
-    expect(box.getBoundingClientRect().width).toBe(readTokenLength('--ki-avatar-md-size'));
+    // material3 paints its own primary surface and disables the MarsUI
+    // hairline (the border is fully transparent); the box keeps 40px.
+    expect(getComputedStyle(box).backgroundColor).not.toBe(onmarsSurface);
+    expect(alphaOf(onmarsBorder)).toBeGreaterThan(0);
+    expect(alphaOf(getComputedStyle(box).borderColor)).toBe(0);
+    expect(box.getBoundingClientRect().width).toBe(40);
 
     await expectAccessible(document.body);
   });

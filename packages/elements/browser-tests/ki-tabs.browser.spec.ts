@@ -639,29 +639,37 @@ describe('ki-tabs theming behavior in a real browser', () => {
     expect(await repaintedUnderForcedDark(tabs)).toEqual(expect.arrayContaining(['tab', 'panel']));
   });
 
-  it('S9 material3 restyles tabs through token values alone', async () => {
+  it('S9 material3 repaints the tabs and their indicator with unchanged markup', async () => {
     const tabs = await mount(fixture());
     const email = tab(tabs, 'email');
+    const indicator = (): HTMLElement => {
+      const part = email.shadowRoot?.querySelector<HTMLElement>('[part="indicator"]');
+      if (!part) {
+        throw new Error('the selected tab paints no indicator');
+      }
+      return part;
+    };
+    const gapBetweenTabs = (): number =>
+      tab(tabs, 'notifications').getBoundingClientRect().left - email.getBoundingClientRect().right;
+    const markup = tabs.outerHTML;
     const onmarsColor = getComputedStyle(email).color;
-    const onmarsIndicator = getComputedStyle(email)
-      .getPropertyValue('--ki-tab-indicator-color')
-      .trim();
+    const onmarsIndicator = getComputedStyle(indicator()).backgroundColor;
+    const onmarsGap = gapBetweenTabs();
 
     ensureMaterial3Tokens();
     document.documentElement.setAttribute('data-ki-theme', 'material3');
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
-    // Poll the color: the fidelity pass transitions the tab foreground, so
+    // Poll the paint: the fidelity pass transitions the tab foreground, so
     // one frame after the theme flip it still reads the onmars value it is
-    // tweening away from. Custom properties below flip instantly.
+    // tweening away from.
     await expect.poll(() => getComputedStyle(email).color).not.toBe(onmarsColor);
-
-    const material3Style = getComputedStyle(email);
-    expect(material3Style.getPropertyValue('--ki-tab-indicator-color').trim()).not.toBe(
-      onmarsIndicator,
-    );
-    expect(material3Style.getPropertyValue('--ki-tabs-gap').trim()).not.toBe('');
-    expect(material3Style.getPropertyValue('--ki-tab-panel-bg').trim()).not.toBe('');
+    await expect
+      .poll(() => getComputedStyle(indicator()).backgroundColor)
+      .not.toBe(onmarsIndicator);
+    // material3 lays its tabs flush; onmars spaces them apart.
+    expect(gapBetweenTabs()).not.toBe(onmarsGap);
+    expect(tabs.outerHTML).toBe(markup);
   });
 
   it('S11 lays out the first tab from the right in RTL', async () => {

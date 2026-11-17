@@ -905,8 +905,8 @@
               "$description": "color used by the button component for quaternary neutral disabled background."
             },
             "fg": {
-              "$value": "{ki.text.muted}",
-              "$description": "color used by the button component for quaternary neutral disabled foreground."
+              "$value": "{ki.text.base-em}",
+              "$description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars."
             },
             "border": {
               "$value": "{ki.outline.none}",

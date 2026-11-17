@@ -335,6 +335,9 @@
             }
           },
           "disabled": {
+            "fg": {
+              "$value": "{ki.text.muted}"
+            },
             "border": {
               "$value": "{ki.outline.low-em}"
             }
