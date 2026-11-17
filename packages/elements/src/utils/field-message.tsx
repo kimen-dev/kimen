@@ -8,8 +8,8 @@ import { type FunctionalComponent, h } from '@stencil/core';
 // hidden (D2, evidence E4).
 
 /** Shadow-root ids of the two lines; ids are scoped per shadow root. */
-export const fieldHelpId = 'help';
-export const fieldErrorId = 'error';
+const fieldHelpId = 'help';
+const fieldErrorId = 'error';
 
 /** Author text as shown: trimmed, and '' when absent or whitespace only. */
 export function fieldText(text: string | null | undefined): string {
