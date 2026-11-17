@@ -154,7 +154,7 @@
       "indeterminate": {
         "rest": {
           "bg": {
-            "$value": "{ki.surface.primary-low-em-alpha}",
+            "$value": "{ki.surface.primary-tint}",
             "$description": "color used by the checkbox component for indeterminate rest background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint)."
           },
           "fg": {
@@ -168,7 +168,7 @@
         },
         "hover": {
           "bg": {
-            "$value": "{ki.surface.primary-low-em-alpha}",
+            "$value": "{ki.surface.primary-tint}",
             "$description": "color used by the checkbox component for indeterminate hover background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint)."
           },
           "fg": {
@@ -182,7 +182,7 @@
         },
         "active": {
           "bg": {
-            "$value": "{ki.surface.primary-low-em-alpha}",
+            "$value": "{ki.surface.primary-tint}",
             "$description": "color used by the checkbox component for indeterminate active background (MarsUI Surface/primary_low_em_alpha: brand-500 at 20% light / 56% dark; the master defines no indeterminate hover, so every state keeps the tint)."
           },
           "fg": {
@@ -225,15 +225,15 @@
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}",
+          "$value": "{ki.focus.ring-color}",
           "$description": "color used by the checkbox component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-width}",
           "$description": "dimension used by the checkbox component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-offset}",
           "$description": "dimension used by the checkbox component for focus ring offset."
         },
         "shadow": {

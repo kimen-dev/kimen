@@ -1,0 +1,136 @@
+{
+  "ki": {
+    "$description": "More contrast (spec 043): neutral text at 7:1 or more, neutral control boundaries at 4.5:1, separators and container edges at 3:1, a 3px focus ring. References only, so one file serves every theme and scheme; it always applies over reduced transparency, which more contrast implies. Text on brand and tone fills, brand and tone boundaries and disabled controls are unchanged (spec 043 D1, D2): the outline emphasis ramp itself is left alone because disabled borders draw from it.",
+    "text": {
+      "$type": "color",
+      "med-em": {
+        "$value": "{ki.inverse-white.alpha-72}",
+        "$description": "Secondary text, labels and placeholders on the scheme-aware 72% neutral ink."
+      }
+    },
+    "outline": {
+      "$type": "color",
+      "control": {
+        "$value": "{ki.inverse-white.alpha-64}",
+        "$description": "Control boundaries at 4.5:1 or more against s0-s2."
+      },
+      "control-hover": {
+        "$value": "{ki.inverse-white.alpha-72}",
+        "$description": "Hovered control boundary, a step beyond the rest boundary."
+      }
+    },
+    "focus": {
+      "ring-width": {
+        "$type": "dimension",
+        "$value": "{ki.shadow.ring}",
+        "$description": "A 3px keyboard focus ring."
+      }
+    },
+    "card": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Cards draw their edge."
+      },
+      "border-color": {
+        "$type": "color",
+        "$value": "{ki.outline.strong}",
+        "$description": "The card edge at 3:1 or more against the page, in every theme."
+      }
+    },
+    "indicator": {
+      "dot": {
+        "color": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "Resting pager dots on the strong outline: 3:1 against the page and, where colour alone marks the current dot (material3), 3:1 from it — the strengthened control boundary would have closed that gap."
+        }
+      }
+    },
+    "divider": {
+      "color": {
+        "$type": "color",
+        "$value": "{ki.outline.strong}",
+        "$description": "The divider rule at 3:1 or more against the page."
+      }
+    },
+    "list": {
+      "item": {
+        "divider-color": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "Row dividers, where a theme draws them, at 3:1 or more."
+        }
+      }
+    },
+    "tabs": {
+      "divider": {
+        "color": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "The tab-list divider, where a theme draws it, at 3:1 or more."
+        }
+      }
+    },
+    "alert": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{ki.space.xxs}",
+        "$description": "Alerts draw a 2px edge in every theme."
+      },
+      "neutral": {
+        "border": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "The alert edge at 3:1 or more against the page; the fill and the icon keep the tone."
+        }
+      },
+      "success": {
+        "border": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "The alert edge at 3:1 or more against the page; the fill and the icon keep the tone."
+        }
+      },
+      "danger": {
+        "border": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "The alert edge at 3:1 or more against the page; the fill and the icon keep the tone."
+        }
+      },
+      "info": {
+        "border": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "The alert edge at 3:1 or more against the page; the fill and the icon keep the tone."
+        }
+      },
+      "warning": {
+        "border": {
+          "$type": "color",
+          "$value": "{ki.outline.strong}",
+          "$description": "The alert edge at 3:1 or more against the page; the fill and the icon keep the tone."
+        }
+      }
+    },
+    "tooltip": {
+      "border-color": {
+        "$type": "color",
+        "$value": "{ki.outline.strong}",
+        "$description": "The tooltip edge at 3:1 or more against the page."
+      }
+    },
+    "dialog": {
+      "border": {
+        "$type": "border",
+        "$value": {
+          "color": "{ki.outline.strong}",
+          "width": "{ki.size.border.hairline}",
+          "style": "solid"
+        },
+        "$description": "The dialog edge at 3:1 or more against the page, in every theme."
+      }
+    }
+  }
+}

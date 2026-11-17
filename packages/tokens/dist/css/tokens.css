@@ -653,6 +653,11 @@
   --ki-surface-danger-base-em: light-dark(var(--ki-color-danger-50), var(--ki-color-danger-950));
   --ki-surface-danger-low-em-alpha: light-dark(var(--ki-color-danger-500-alpha-2), var(--ki-color-danger-500-alpha-5));
   --ki-surface-danger-base-em-alpha: light-dark(var(--ki-color-danger-500-alpha-1), var(--ki-color-danger-500-alpha-2));
+  --ki-surface-primary-tint: var(--ki-surface-primary-low-em-alpha);
+  --ki-surface-info-tint: var(--ki-surface-info-base-em-alpha);
+  --ki-surface-success-tint: var(--ki-surface-success-base-em-alpha);
+  --ki-surface-warning-tint: var(--ki-surface-warning-base-em-alpha);
+  --ki-surface-danger-tint: var(--ki-surface-danger-base-em-alpha);
   --ki-surface-disabled-high-em: light-dark(var(--ki-color-gray-500), var(--ki-color-white-32));
   --ki-surface-disabled-med-em: light-dark(var(--ki-color-gray-300), var(--ki-color-white-18));
   --ki-surface-disabled-low-em: light-dark(var(--ki-color-gray-200), var(--ki-color-white-12));
@@ -812,6 +817,9 @@
   --ki-focus-primary: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-primary-base-em-alpha);
   --ki-focus-gray: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-med-em);
   --ki-focus-danger: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-danger-base-em-alpha);
+  --ki-focus-ring-width: var(--ki-space-xxs);
+  --ki-focus-ring-color: var(--ki-outline-primary-high-em);
+  --ki-focus-ring-offset: var(--ki-space-xxs);
   --ki-transparent-inverse: light-dark(var(--ki-color-transparent-white), var(--ki-color-transparent-black));
   --ki-typography-family-display: var(--ki-font-family-display);
   --ki-typography-family-body: var(--ki-font-family-body);
@@ -910,16 +918,16 @@
   --ki-alert-neutral-bg: var(--ki-surface-s1);
   --ki-alert-neutral-fg: var(--ki-text-high-em);
   --ki-alert-neutral-border: var(--ki-outline-none);
-  --ki-alert-success-bg: var(--ki-surface-success-base-em-alpha);
+  --ki-alert-success-bg: var(--ki-surface-success-tint);
   --ki-alert-success-fg: var(--ki-text-success-high-em);
   --ki-alert-success-border: var(--ki-outline-none);
-  --ki-alert-danger-bg: var(--ki-surface-danger-base-em-alpha);
+  --ki-alert-danger-bg: var(--ki-surface-danger-tint);
   --ki-alert-danger-fg: var(--ki-text-danger-high-em);
   --ki-alert-danger-border: var(--ki-outline-none);
-  --ki-alert-info-bg: var(--ki-surface-info-base-em-alpha);
+  --ki-alert-info-bg: var(--ki-surface-info-tint);
   --ki-alert-info-fg: var(--ki-text-info-high-em);
   --ki-alert-info-border: var(--ki-outline-none);
-  --ki-alert-warning-bg: var(--ki-surface-warning-base-em-alpha);
+  --ki-alert-warning-bg: var(--ki-surface-warning-tint);
   --ki-alert-warning-fg: var(--ki-text-warning-high-em);
   --ki-alert-warning-border: var(--ki-outline-none);
   --ki-alert-dismiss-border-width: var(--ki-size-border-hairline);
@@ -928,9 +936,9 @@
   --ki-alert-dismiss-hover-fg: var(--ki-text-high-em);
   --ki-alert-dismiss-hover-bg: var(--ki-surface-hover-overlay-inverse);
   --ki-alert-dismiss-active-fg: var(--ki-text-high-em);
-  --ki-alert-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-alert-focus-ring-width: var(--ki-space-xxs);
-  --ki-alert-focus-ring-offset: var(--ki-space-xxs);
+  --ki-alert-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-alert-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-alert-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-alert-focus-ring-shadow: var(--ki-focus-primary);
   --ki-avatar-group-xxs-overlap: var(--ki-space-md);
   --ki-avatar-group-xxs-counter-padding-inline: var(--ki-space-md);
@@ -1000,16 +1008,16 @@
   --ki-badge-neutral-fg: var(--ki-text-high-em);
   --ki-badge-neutral-border: var(--ki-outline-secondary-button-top);
   --ki-badge-neutral-border-width: var(--ki-size-border-hairline);
-  --ki-badge-success-bg: var(--ki-surface-success-base-em-alpha);
+  --ki-badge-success-bg: var(--ki-surface-success-tint);
   --ki-badge-success-fg: var(--ki-text-success-high-em);
   --ki-badge-success-border: var(--ki-outline-none);
-  --ki-badge-danger-bg: var(--ki-surface-danger-base-em-alpha);
+  --ki-badge-danger-bg: var(--ki-surface-danger-tint);
   --ki-badge-danger-fg: var(--ki-text-danger-high-em);
   --ki-badge-danger-border: var(--ki-outline-none);
-  --ki-badge-info-bg: var(--ki-surface-info-base-em-alpha);
+  --ki-badge-info-bg: var(--ki-surface-info-tint);
   --ki-badge-info-fg: var(--ki-text-info-high-em);
   --ki-badge-info-border: var(--ki-outline-none);
-  --ki-badge-warning-bg: var(--ki-surface-warning-base-em-alpha);
+  --ki-badge-warning-bg: var(--ki-surface-warning-tint);
   --ki-badge-warning-fg: var(--ki-text-warning-high-em);
   --ki-badge-warning-border: var(--ki-outline-none);
   --ki-button-xs-height: var(--ki-space-7xl);
@@ -1057,9 +1065,9 @@
   --ki-button-padding-block: var(--ki-space-xs);
   --ki-button-label-padding-inline: var(--ki-space-xs);
   --ki-button-backdrop-blur: var(--ki-effect-component-backdrop-blur);
-  --ki-button-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-button-focus-ring-width: var(--ki-space-xxs);
-  --ki-button-focus-ring-offset: var(--ki-space-xxs);
+  --ki-button-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-button-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-button-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-button-focus-ring-shadow: var(--ki-focus-primary);
   --ki-button-primary-neutral-rest-bg: var(--ki-surface-primary-med-em);
   --ki-button-primary-neutral-rest-fg: var(--ki-text-primary-on-primary);
@@ -1314,13 +1322,13 @@
   --ki-checkbox-checked-disabled-bg: var(--ki-surface-disabled-med-em);
   --ki-checkbox-checked-disabled-fg: var(--ki-text-base-em);
   --ki-checkbox-checked-disabled-border: var(--ki-outline-none);
-  --ki-checkbox-indeterminate-rest-bg: var(--ki-surface-primary-low-em-alpha);
+  --ki-checkbox-indeterminate-rest-bg: var(--ki-surface-primary-tint);
   --ki-checkbox-indeterminate-rest-fg: var(--ki-text-primary-high-em);
   --ki-checkbox-indeterminate-rest-border: var(--ki-outline-primary-high-em);
-  --ki-checkbox-indeterminate-hover-bg: var(--ki-surface-primary-low-em-alpha);
+  --ki-checkbox-indeterminate-hover-bg: var(--ki-surface-primary-tint);
   --ki-checkbox-indeterminate-hover-fg: var(--ki-text-primary-high-em);
   --ki-checkbox-indeterminate-hover-border: var(--ki-outline-primary-high-em);
-  --ki-checkbox-indeterminate-active-bg: var(--ki-surface-primary-low-em-alpha);
+  --ki-checkbox-indeterminate-active-bg: var(--ki-surface-primary-tint);
   --ki-checkbox-indeterminate-active-fg: var(--ki-text-primary-high-em);
   --ki-checkbox-indeterminate-active-border: var(--ki-outline-primary-high-em);
   --ki-checkbox-indeterminate-disabled-bg: var(--ki-surface-disabled-med-em);
@@ -1329,9 +1337,9 @@
   --ki-checkbox-invalid-bg: var(--ki-surface-danger-low-em);
   --ki-checkbox-invalid-fg: var(--ki-text-danger-high-em);
   --ki-checkbox-invalid-border: var(--ki-outline-danger-high-em);
-  --ki-checkbox-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-checkbox-focus-ring-width: var(--ki-space-xxs);
-  --ki-checkbox-focus-ring-offset: var(--ki-space-xxs);
+  --ki-checkbox-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-checkbox-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-checkbox-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-checkbox-focus-ring-shadow: var(--ki-focus-primary);
   --ki-dialog-radius: var(--ki-radius-big-component-sm);
   --ki-dialog-padding: var(--ki-space-7xl);
@@ -1349,9 +1357,9 @@
   --ki-dialog-heading-font-size: var(--ki-typography-size-title-2);
   --ki-dialog-heading-font-weight: var(--ki-typography-weight-body-semibold);
   --ki-dialog-heading-line-height: var(--ki-typography-line-height-title-2);
-  --ki-dialog-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-dialog-focus-ring-width: var(--ki-space-xxs);
-  --ki-dialog-focus-ring-offset: var(--ki-space-xxs);
+  --ki-dialog-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-dialog-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-dialog-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-dialog-motion-duration: var(--ki-motion-duration-medium-1);
   --ki-dialog-motion-easing: var(--ki-motion-easing-out);
   --ki-divider-thickness: var(--ki-size-border-hairline);
@@ -1430,9 +1438,9 @@
   --ki-input-invalid-label-fg: var(--ki-text-med-em);
   --ki-input-invalid-placeholder-fg: var(--ki-text-med-em);
   --ki-input-invalid-ring: var(--ki-focus-danger);
-  --ki-input-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-input-focus-ring-width: var(--ki-space-xxs);
-  --ki-input-focus-ring-offset: var(--ki-space-xxs);
+  --ki-input-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-input-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-input-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-input-focus-ring-shadow: var(--ki-focus-primary);
   --ki-list-bg: var(--ki-surface-s0);
   --ki-list-padding: var(--ki-space-zero);
@@ -1520,9 +1528,9 @@
   --ki-radio-selected-disabled-bg: var(--ki-surface-disabled-med-em);
   --ki-radio-selected-disabled-fg: var(--ki-surface-disabled-base-em);
   --ki-radio-selected-disabled-border: var(--ki-surface-disabled-med-em);
-  --ki-radio-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-radio-focus-ring-width: var(--ki-space-xxs);
-  --ki-radio-focus-ring-offset: var(--ki-space-xxs);
+  --ki-radio-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-radio-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-radio-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-radio-focus-ring-shadow: var(--ki-focus-primary);
   --ki-scroller-thumb-color: var(--ki-inverse-white-alpha-48);
   --ki-scroller-thumb-thickness: var(--ki-space-xs);
@@ -1532,9 +1540,9 @@
   --ki-scroller-gutter: var(--ki-space-xxs);
   --ki-scroller-track-inset: var(--ki-space-xs);
   --ki-scroller-surface: var(--ki-transparent-inverse);
-  --ki-scroller-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-scroller-focus-ring-width: var(--ki-space-xxs);
-  --ki-scroller-focus-ring-offset: var(--ki-space-xxs);
+  --ki-scroller-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-scroller-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-scroller-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-scroller-focus-ring-shadow: var(--ki-focus-primary);
   --ki-select-height: var(--ki-space-12xl);
   --ki-select-min-target: var(--ki-space-7xl);
@@ -1581,9 +1589,9 @@
   --ki-select-listbox-padding: var(--ki-space-xl);
   --ki-select-listbox-max-block-size: var(--ki-size-surface-xs);
   --ki-select-listbox-offset: var(--ki-space-xs);
-  --ki-select-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-select-focus-ring-width: var(--ki-space-xxs);
-  --ki-select-focus-ring-offset: var(--ki-space-xxs);
+  --ki-select-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-select-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-select-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-select-focus-ring-shadow: var(--ki-focus-primary);
   --ki-status-size: var(--ki-space-xs);
   --ki-status-radius: var(--ki-radius-round);
@@ -1632,17 +1640,17 @@
   --ki-switch-checked-disabled-track: var(--ki-surface-disabled-med-em);
   --ki-switch-checked-disabled-thumb: var(--ki-surface-special-light-s0-dark-s4);
   --ki-switch-checked-disabled-border: var(--ki-surface-disabled-med-em);
-  --ki-switch-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-switch-focus-ring-width: var(--ki-space-xxs);
-  --ki-switch-focus-ring-offset: var(--ki-space-xxs);
+  --ki-switch-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-switch-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-switch-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-switch-focus-ring-shadow: var(--ki-focus-primary);
   --ki-tab-panel-padding-block: var(--ki-space-lg);
   --ki-tab-panel-padding-inline: var(--ki-space-lg);
   --ki-tab-panel-bg: var(--ki-transparent-inverse);
   --ki-tab-panel-fg: var(--ki-text-high-em);
-  --ki-tab-panel-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-tab-panel-focus-ring-width: var(--ki-space-xxs);
-  --ki-tab-panel-focus-ring-offset: var(--ki-space-xxs);
+  --ki-tab-panel-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-tab-panel-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-tab-panel-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-tab-min-block-size: var(--ki-space-12xl);
   --ki-tab-padding-block-end: var(--ki-space-md);
   --ki-tab-padding-inline: var(--ki-space-zero);
@@ -1670,9 +1678,9 @@
   --ki-tab-indicator-size: var(--ki-space-xxs);
   --ki-tab-indicator-color: var(--ki-outline-inverse-white);
   --ki-tab-indicator-radius: var(--ki-radius-0);
-  --ki-tab-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-tab-focus-ring-width: var(--ki-space-xxs);
-  --ki-tab-focus-ring-offset: var(--ki-space-xxs);
+  --ki-tab-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-tab-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-tab-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-tab-focus-ring-shadow: var(--ki-focus-primary);
   --ki-tabs-gap: var(--ki-space-8xl);
   --ki-tabs-divider-width: var(--ki-space-zero);
@@ -1725,9 +1733,9 @@
   --ki-textarea-invalid-label-fg: var(--ki-text-med-em);
   --ki-textarea-invalid-placeholder-fg: var(--ki-text-med-em);
   --ki-textarea-invalid-ring: var(--ki-focus-danger);
-  --ki-textarea-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-textarea-focus-ring-width: var(--ki-space-xxs);
-  --ki-textarea-focus-ring-offset: var(--ki-space-xxs);
+  --ki-textarea-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-textarea-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-textarea-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-textarea-focus-ring-shadow: var(--ki-focus-primary);
   --ki-tooltip-radius: var(--ki-radius-big-component-xs);
   --ki-tooltip-padding-inline: var(--ki-space-xl);
@@ -1736,6 +1744,7 @@
   --ki-tooltip-offset: var(--ki-space-md);
   --ki-tooltip-bg: var(--ki-surface-special-light-s0-dark-s2);
   --ki-tooltip-border-width: var(--ki-size-border-hairline);
+  --ki-tooltip-border-color: var(--ki-outline-secondary-button-top);
   --ki-tooltip-bg-start: var(--ki-surface-special-blur-base-light);
   --ki-tooltip-bg-end: var(--ki-surface-special-light-s0-dark-s2);
   --ki-tooltip-backdrop-blur: var(--ki-effect-component-backdrop-blur);
@@ -1759,8 +1768,86 @@
   --ki-video-play-border-color: var(--ki-outline-primary-button-top);
   --ki-video-play-border-width: var(--ki-size-border-hairline);
   --ki-video-play-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-4) var(--ki-shadow-distance-4) var(--ki-shadow-spread-4) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-5) var(--ki-shadow-distance-5) var(--ki-shadow-spread-5) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-6) var(--ki-shadow-distance-6) var(--ki-shadow-spread-6) var(--ki-elevation-shadow), var(--ki-shadow-inner-primary-default);
-  --ki-video-focus-ring-color: var(--ki-outline-primary-high-em);
-  --ki-video-focus-ring-width: var(--ki-space-xxs);
-  --ki-video-focus-ring-offset: var(--ki-space-xxs);
+  --ki-video-focus-ring-color: var(--ki-focus-ring-color);
+  --ki-video-focus-ring-width: var(--ki-focus-ring-width);
+  --ki-video-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-video-motion-duration: var(--ki-motion-duration-fast);
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :root,
+  :where([data-ki-theme]) {
+    --ki-surface-special-blur-base-light: var(--ki-surface-special-light-s0-dark-s3);
+    --ki-surface-special-blur-base-dark: var(--ki-surface-special-light-s0-dark-s3);
+    --ki-surface-special-secondary-alpha-base: var(--ki-surface-special-light-s2-dark-s3);
+    --ki-surface-primary-tint: var(--ki-surface-primary-low-em);
+    --ki-surface-info-tint: var(--ki-surface-info-base-em);
+    --ki-surface-success-tint: var(--ki-surface-success-base-em);
+    --ki-surface-warning-tint: var(--ki-surface-warning-base-em);
+    --ki-surface-danger-tint: var(--ki-surface-danger-base-em);
+    --ki-effect-component-backdrop-blur: var(--ki-blur-none);
+    --ki-select-listbox-backdrop-blur: var(--ki-blur-none);
+  }
+}
+
+:root:where([data-ki-transparency='reduce'], [data-ki-contrast='more']),
+:where([data-ki-theme]:is([data-ki-transparency='reduce'], [data-ki-contrast='more'])),
+:where(:is(:root, [data-ki-theme]):is([data-ki-transparency='reduce'], [data-ki-contrast='more']) [data-ki-theme]) {
+  --ki-surface-special-blur-base-light: var(--ki-surface-special-light-s0-dark-s3);
+  --ki-surface-special-blur-base-dark: var(--ki-surface-special-light-s0-dark-s3);
+  --ki-surface-special-secondary-alpha-base: var(--ki-surface-special-light-s2-dark-s3);
+  --ki-surface-primary-tint: var(--ki-surface-primary-low-em);
+  --ki-surface-info-tint: var(--ki-surface-info-base-em);
+  --ki-surface-success-tint: var(--ki-surface-success-base-em);
+  --ki-surface-warning-tint: var(--ki-surface-warning-base-em);
+  --ki-surface-danger-tint: var(--ki-surface-danger-base-em);
+  --ki-effect-component-backdrop-blur: var(--ki-blur-none);
+  --ki-select-listbox-backdrop-blur: var(--ki-blur-none);
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  :where([data-ki-theme]) {
+    --ki-text-med-em: var(--ki-inverse-white-alpha-72);
+    --ki-outline-control: var(--ki-inverse-white-alpha-64);
+    --ki-outline-control-hover: var(--ki-inverse-white-alpha-72);
+    --ki-focus-ring-width: var(--ki-shadow-ring);
+    --ki-alert-border-width: var(--ki-space-xxs);
+    --ki-alert-neutral-border: var(--ki-outline-strong);
+    --ki-alert-success-border: var(--ki-outline-strong);
+    --ki-alert-danger-border: var(--ki-outline-strong);
+    --ki-alert-info-border: var(--ki-outline-strong);
+    --ki-alert-warning-border: var(--ki-outline-strong);
+    --ki-card-border-color: var(--ki-outline-strong);
+    --ki-card-border-width: var(--ki-size-border-hairline);
+    --ki-dialog-border: var(--ki-size-border-hairline) solid var(--ki-outline-strong);
+    --ki-divider-color: var(--ki-outline-strong);
+    --ki-indicator-dot-color: var(--ki-outline-strong);
+    --ki-list-item-divider-color: var(--ki-outline-strong);
+    --ki-tabs-divider-color: var(--ki-outline-strong);
+    --ki-tooltip-border-color: var(--ki-outline-strong);
+  }
+}
+
+:root:where([data-ki-contrast='more']),
+:where([data-ki-theme]:is([data-ki-contrast='more'])),
+:where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {
+  --ki-text-med-em: var(--ki-inverse-white-alpha-72);
+  --ki-outline-control: var(--ki-inverse-white-alpha-64);
+  --ki-outline-control-hover: var(--ki-inverse-white-alpha-72);
+  --ki-focus-ring-width: var(--ki-shadow-ring);
+  --ki-alert-border-width: var(--ki-space-xxs);
+  --ki-alert-neutral-border: var(--ki-outline-strong);
+  --ki-alert-success-border: var(--ki-outline-strong);
+  --ki-alert-danger-border: var(--ki-outline-strong);
+  --ki-alert-info-border: var(--ki-outline-strong);
+  --ki-alert-warning-border: var(--ki-outline-strong);
+  --ki-card-border-color: var(--ki-outline-strong);
+  --ki-card-border-width: var(--ki-size-border-hairline);
+  --ki-dialog-border: var(--ki-size-border-hairline) solid var(--ki-outline-strong);
+  --ki-divider-color: var(--ki-outline-strong);
+  --ki-indicator-dot-color: var(--ki-outline-strong);
+  --ki-list-item-divider-color: var(--ki-outline-strong);
+  --ki-tabs-divider-color: var(--ki-outline-strong);
+  --ki-tooltip-border-color: var(--ki-outline-strong);
 }

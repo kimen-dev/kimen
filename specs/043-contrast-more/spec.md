@@ -60,6 +60,19 @@ removes that true duplication (D4).
 Disabled stays as it is on purpose: raising it to enabled-like contrast makes
 a disabled control look operable, which is the larger harm.
 
+*Implementation note (2026-11-17), within D1–D2:* the 4.5:1 boundary
+threshold applies to **neutral** boundaries (a control at rest, empty,
+hovered). A boundary drawn in a brand or tone colour — a checked box, an
+invalid field's danger edge, a focused field's brand edge — keeps the
+standard 3:1, for the same reason D2 keeps brand and tone text at 4.5:1:
+raising it means darkening the palette in this mode. Neutral is measured, not
+named: a colour whose channels stay within 0.075 of each other (both themes'
+neutrals reach 0.06, the weakest tone tint 0.09). Separators and container
+edges are the divider rule, list-row and tab-list dividers where a theme
+draws them, and the card, alert, tooltip and dialog edges; cards and alerts
+draw their edge in this mode. The outline emphasis ramp itself is not
+remapped, because disabled borders draw from it.
+
 **D2 — Text on brand and tone fills stays at ≥ 4.5:1.** Recommended for this
 spec. Taking it to 7:1 is a palette decision (darker primary and tone fills
 in this mode, in both themes) that deserves its own design pass; the token
@@ -91,9 +104,10 @@ theme: `<section data-ki-theme="material3" data-ki-contrast="more">`.
 Contrast describes the person, not the region, so this is rarely needed.
 
 **D5 — Theming: a mode is a small override file, composed by the build.**
-`packages/tokens/tokens/modes/contrast-more.tokens.json` remaps semantic
-tokens onto other existing semantic tokens (for example control boundary →
-the scheme-aware neutral alpha ramp; separators → `outline-strong`). Because
+`packages/tokens/tokens/modes/contrast-more.tokens.json` remaps tokens onto
+other existing tokens (for example control boundary and secondary text → the
+scheme-aware neutral alpha ramp; separators and container edges →
+`outline-strong`). Because
 every value is a reference, one file serves both themes and both schemes,
 and a consumer theme that reassigns the semantic layer gets the mode for
 free. The build composes theme × scheme × mode, merges schemes with
@@ -334,9 +348,12 @@ Feature: More contrast when the person asks for it
 
 - **Public API delta** (Art. IX): additive. New declaration
   `data-ki-contrast="more"`; new semantic tokens `--ki-focus-ring-width`,
-  `--ki-focus-ring-color`, `--ki-focus-ring-offset`. No token renamed or
-  removed; every default value unchanged (FR-005, FR-009). A declaration in
-  `changes/api/` records the new tokens.
+  `--ki-focus-ring-color`, `--ki-focus-ring-offset`, and the component token
+  `--ki-tooltip-border-color` (the tooltip edge, previously painted from a
+  semantic token in component CSS, same value). The mode is published as the
+  `contrast-more/{light,dark}` contexts of both stylesheets. No token renamed
+  or removed; every default value unchanged (FR-005, FR-009).
+  `changes/api/043-preference-modes.json` records the delta for 043 and 044.
 - **Bundle budget** (Art. IV): the mode adds two rule blocks of a few dozen
   declarations to each theme stylesheet; the stylesheets stay inside their
   budgets. No runtime JavaScript.
@@ -361,7 +378,7 @@ Feature: More contrast when the person asks for it
 - **SC-003**: Outside the mode, `public-api.json` token values and every
   visual baseline are byte-identical.
 - **SC-004**: The mode's source is 1 override file; material3 needs 0 mode
-  files of its own.
+  files of its own (it re-asserts 14 remapped tokens it overrides).
 
 ## Assumptions
 

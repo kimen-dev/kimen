@@ -228,15 +228,15 @@
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}",
+          "$value": "{ki.focus.ring-color}",
           "$description": "color used by the input component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-width}",
           "$description": "dimension used by the input component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-offset}",
           "$description": "dimension used by the input component for focus ring offset."
         },
         "shadow": {

@@ -35,15 +35,15 @@
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}",
+          "$value": "{ki.focus.ring-color}",
           "$description": "color used by the scroller component for the viewport focus ring: the keyboard-focusable scroll region (FR-005) adopts the ki-dialog focus-ring pair verbatim."
         },
         "width": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-width}",
           "$description": "dimension used by the scroller component for the viewport focus ring width (ki-dialog precedent)."
         },
         "offset": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-offset}",
           "$description": "dimension used by the scroller component for the viewport focus ring offset (ki-dialog precedent)."
         },
         "shadow": {

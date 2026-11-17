@@ -7833,10 +7833,6 @@
               "description": "Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in)."
             },
             {
-              "name": "--ki-outline-secondary-button-top",
-              "description": "semantic color for outline secondary button top."
-            },
-            {
               "name": "--ki-tooltip-backdrop-blur",
               "description": "backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override)."
             },
@@ -7851,6 +7847,10 @@
             {
               "name": "--ki-tooltip-bg-start",
               "description": "color used by the tooltip component for the glass gradient start (MarsUI Surface/special/blur_base_light White/80; dark Dark/700 blur base). Paint background: linear-gradient(180deg, var(--ki-tooltip-bg-start), var(--ki-tooltip-bg-end))."
+            },
+            {
+              "name": "--ki-tooltip-border-color",
+              "description": "color used by the tooltip component for its edge (MarsUI hairline bevel, Outline/secondary_button_top); one token so a mode or a theme can strengthen it."
             },
             {
               "name": "--ki-tooltip-border-width",

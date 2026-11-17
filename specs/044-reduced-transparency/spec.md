@@ -73,8 +73,20 @@ as 043 D3.
 `modes/reduced-transparency.tokens.json` of references, composed by the build
 and emitted as differences; material3 re-asserts only the remapped tokens it
 overrides. Its token set is disjoint from the contrast mode's, so the two
-compose in either combination without an ordering rule (the build checks the
-disjointness).
+compose in either combination without an ordering rule (a token test checks
+the disjointness).
+
+*Implementation note (2026-11-17), within D1:* the semantic tint ramp
+(`surface-*-low-em-alpha`, `*-base-em-alpha`) is shared by content (alert and
+badge tones, the indeterminate checkbox box) and by state washes (ghost and
+quaternary hovers, option highlight, material3 radio and tab washes).
+Remapping the ramp would have made the washes opaque. Content tints get their
+own semantic tokens, `--ki-surface-{primary,info,success,warning,danger}-tint`,
+which those three components alias with unchanged values; the mode makes them
+opaque and leaves the ramp alone. A theme that paints those components
+without the tints (material3's indeterminate checkbox is already opaque) is
+untouched. The token sweep treats a state cell as a wash while it stays a
+light tint (alpha ≤ 0.5): glass is glass in every state.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -270,8 +282,11 @@ Feature: Opaque surfaces when the person asks for less transparency
 ## Constitutional Surface *(mandatory)*
 
 - **Public API delta** (Art. IX): additive. New declaration
-  `data-ki-transparency="reduce"`. No new, renamed or removed tokens; every
-  default value unchanged.
+  `data-ki-transparency="reduce"`; five new semantic content tints
+  `--ki-surface-{primary,info,success,warning,danger}-tint` (D4 note). The
+  mode is published as the `reduced-transparency/{light,dark}` contexts of
+  both stylesheets. No renamed or removed tokens; every default value
+  unchanged. Declared with 043 in `changes/api/043-preference-modes.json`.
 - **Bundle budget** (Art. IV): two rule blocks per theme stylesheet; no
   runtime JavaScript.
 - **Accessibility** (Art. V): honours a user preference the library ignored;
@@ -292,7 +307,8 @@ Feature: Opaque surfaces when the person asks for less transparency
   sweep.
 - **SC-003**: Outside the mode, token values and visual baselines are
   byte-identical.
-- **SC-004**: 1 override file; material3 needs 0 mode files of its own.
+- **SC-004**: 1 override file; material3 needs 0 mode files of its own (it
+  re-asserts 3 remapped tokens it overrides).
 
 ## Assumptions
 

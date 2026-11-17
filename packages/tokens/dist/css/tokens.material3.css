@@ -285,6 +285,7 @@
   --ki-alert-warning-bg: var(--ki-surface-s4);
   --ki-alert-warning-fg: var(--ki-text-high-em);
   --ki-alert-warning-border: var(--ki-outline-high-em);
+  --ki-alert-focus-ring-color: var(--ki-outline-primary-high-em);
   --ki-avatar-group-counter-border-color: var(--ki-outline-none);
   --ki-avatar-group-counter-shadow: 0 0 0 0 var(--ki-color-transparent-black);
   --ki-avatar-border-color: var(--ki-outline-none);
@@ -434,6 +435,9 @@
   --ki-input-invalid-bg: var(--ki-surface-s1);
   --ki-input-invalid-label-fg: var(--ki-text-danger-med-em);
   --ki-input-invalid-ring: 0 0 0 0 var(--ki-color-transparent-black);
+  --ki-input-focus-ring-color: var(--ki-outline-primary-high-em);
+  --ki-input-focus-ring-width: var(--ki-space-xxs);
+  --ki-input-focus-ring-offset: var(--ki-space-xxs);
   --ki-list-item-min-height: var(--ki-space-14xl);
   --ki-list-item-min-height-multiline: var(--ki-space-18xl);
   --ki-list-item-padding-inline: var(--ki-space-3xl);
@@ -500,6 +504,7 @@
   --ki-select-listbox-radius: var(--ki-radius-component-xs);
   --ki-select-listbox-shadow: var(--ki-elevation-e2);
   --ki-select-listbox-padding: var(--ki-space-xs);
+  --ki-select-focus-ring-color: var(--ki-outline-primary-high-em);
   --ki-status-size: var(--ki-space-sm);
   --ki-status-shadow: 0 0 0 0 var(--ki-color-transparent-black);
   --ki-switch-track-width: var(--ki-space-15xl);
@@ -576,4 +581,60 @@
   --ki-video-play-fg: var(--ki-text-primary-on-primary);
   --ki-video-play-border-color: var(--ki-outline-none);
   --ki-video-play-shadow: none;
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :root[data-ki-theme='material3'],
+  [data-ki-theme='material3'] {
+    --ki-surface-special-blur-base-light: var(--ki-surface-special-light-s0-dark-s3);
+    --ki-surface-special-blur-base-dark: var(--ki-surface-special-light-s0-dark-s3);
+    --ki-surface-special-secondary-alpha-base: var(--ki-surface-special-light-s2-dark-s3);
+  }
+}
+
+:root[data-ki-theme='material3']:where([data-ki-transparency='reduce'], [data-ki-contrast='more']),
+[data-ki-theme='material3']:where([data-ki-transparency='reduce'], [data-ki-contrast='more']),
+[data-ki-theme='material3']:where(:is(:root, [data-ki-theme]):is([data-ki-transparency='reduce'], [data-ki-contrast='more']) *) {
+  --ki-surface-special-blur-base-light: var(--ki-surface-special-light-s0-dark-s3);
+  --ki-surface-special-blur-base-dark: var(--ki-surface-special-light-s0-dark-s3);
+  --ki-surface-special-secondary-alpha-base: var(--ki-surface-special-light-s2-dark-s3);
+}
+
+@media (prefers-contrast: more) {
+  :root[data-ki-theme='material3'],
+  [data-ki-theme='material3'] {
+    --ki-text-med-em: var(--ki-inverse-white-alpha-72);
+    --ki-outline-control: var(--ki-inverse-white-alpha-64);
+    --ki-outline-control-hover: var(--ki-inverse-white-alpha-72);
+    --ki-alert-neutral-border: var(--ki-outline-strong);
+    --ki-alert-success-border: var(--ki-outline-strong);
+    --ki-alert-danger-border: var(--ki-outline-strong);
+    --ki-alert-info-border: var(--ki-outline-strong);
+    --ki-alert-warning-border: var(--ki-outline-strong);
+    --ki-card-border-color: var(--ki-outline-strong);
+    --ki-dialog-border: var(--ki-size-border-hairline) solid var(--ki-outline-strong);
+    --ki-divider-color: var(--ki-outline-strong);
+    --ki-indicator-dot-color: var(--ki-outline-strong);
+    --ki-list-item-divider-color: var(--ki-outline-strong);
+    --ki-tabs-divider-color: var(--ki-outline-strong);
+  }
+}
+
+:root[data-ki-theme='material3']:where([data-ki-contrast='more']),
+[data-ki-theme='material3']:where([data-ki-contrast='more']),
+[data-ki-theme='material3']:where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) *) {
+  --ki-text-med-em: var(--ki-inverse-white-alpha-72);
+  --ki-outline-control: var(--ki-inverse-white-alpha-64);
+  --ki-outline-control-hover: var(--ki-inverse-white-alpha-72);
+  --ki-alert-neutral-border: var(--ki-outline-strong);
+  --ki-alert-success-border: var(--ki-outline-strong);
+  --ki-alert-danger-border: var(--ki-outline-strong);
+  --ki-alert-info-border: var(--ki-outline-strong);
+  --ki-alert-warning-border: var(--ki-outline-strong);
+  --ki-card-border-color: var(--ki-outline-strong);
+  --ki-dialog-border: var(--ki-size-border-hairline) solid var(--ki-outline-strong);
+  --ki-divider-color: var(--ki-outline-strong);
+  --ki-indicator-dot-color: var(--ki-outline-strong);
+  --ki-list-item-divider-color: var(--ki-outline-strong);
+  --ki-tabs-divider-color: var(--ki-outline-strong);
 }
