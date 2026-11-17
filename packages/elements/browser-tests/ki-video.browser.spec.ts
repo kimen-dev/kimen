@@ -171,22 +171,32 @@ function countPlays(media: HTMLVideoElement): () => number {
   return () => plays;
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.color = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = getComputedStyle(probe).color;
-  probe.remove();
-  return value;
+/** The painted play disc inside the play control's halo. */
+function discOf(el: KiVideoElement): HTMLElement {
+  const disc = playControlOf(el).querySelector<HTMLElement>('.control');
+  expect(disc).toBeTruthy();
+  if (!disc) {
+    throw new Error('ki-video did not paint its play disc');
+  }
+  return disc;
 }
 
-function readTokenLength(name: string): number {
-  const probe = document.createElement('div');
-  probe.style.blockSize = `var(${name})`;
-  document.body.appendChild(probe);
-  const value = Number.parseFloat(getComputedStyle(probe).blockSize);
-  probe.remove();
-  return value;
+/** How far the halo extends past the disc on each side, in px. */
+function haloInset(el: KiVideoElement): number {
+  return (
+    (playControlOf(el).getBoundingClientRect().width - discOf(el).getBoundingClientRect().width) / 2
+  );
+}
+
+/** What a viewer sees of the play control: its shape, inset and paint. */
+function playAppearance(el: KiVideoElement) {
+  const disc = getComputedStyle(discOf(el));
+  return {
+    frameRadius: getComputedStyle(frameOf(el)).borderTopLeftRadius,
+    haloInset: haloInset(el),
+    discRadius: Number.parseFloat(disc.borderTopLeftRadius),
+    discBackground: disc.backgroundColor,
+  };
 }
 
 describe('ki-video', () => {
@@ -204,7 +214,10 @@ describe('ki-video', () => {
     expect(media.getBoundingClientRect().width).toBe(frameRect.width);
     // ...inside the token-resolved frame (FR-007): big_component/radius_xs.
     expect(getComputedStyle(frameOf(el)).borderRadius).toBe('16px');
-    expect(readTokenLength('--ki-video-play-size')).toBe(56);
+    // ...behind a 56px play disc (Placeholder_xl).
+    const disc = discOf(el).getBoundingClientRect();
+    expect(disc.width).toBe(56);
+    expect(disc.height).toBe(56);
     // ...and exactly one interactive element, centered in both axes:
     expect(el.shadowRoot?.querySelectorAll('button, [tabindex]')).toHaveLength(1);
     expect(media.hasAttribute('controls')).toBe(false);
@@ -218,7 +231,9 @@ describe('ki-video', () => {
     // The Placeholder_xl play vector (12089:6573): inset 20.83% / 12.5% /
     // 16.67% / 12.5% of the 28px icon slot, so the glyph ink spans 15x18 of
     // the 24-unit viewBox — 17.5x21px rendered, not the old 12.8x13.9 path.
-    expect(readTokenLength('--ki-video-play-icon-size')).toBe(28);
+    const glyphSlot = el.shadowRoot?.querySelector('.glyph')?.getBoundingClientRect();
+    expect(glyphSlot?.width).toBe(28);
+    expect(glyphSlot?.height).toBe(28);
     const glyphPath = el.shadowRoot?.querySelector<SVGPathElement>('.glyph path');
     expect(glyphPath).toBeTruthy();
     if (!glyphPath) {
@@ -500,10 +515,7 @@ describe('ki-video', () => {
     cleanup();
     ensureTokens();
     const onmars = await mount(landmark(), { label: 'Play the product tour' });
-    const onmarsPlayBg = readTokenColor('--ki-video-play-bg');
-    const onmarsFrameRadius = readTokenLength('--ki-video-frame-radius');
-    const onmarsScrimPadding = readTokenLength('--ki-video-scrim-padding');
-    const onmarsPlayRadius = readTokenLength('--ki-video-play-radius');
+    const before = playAppearance(onmars);
     const markup = onmars.outerHTML;
     onmars.remove();
 
@@ -515,15 +527,16 @@ describe('ki-video', () => {
     // values (S10): 12dp medium shape, no halo, round filled control —
     // zero markup or component changes.
     expect(el.outerHTML).toBe(markup);
-    expect(readTokenLength('--ki-video-frame-radius')).toBe(12);
-    expect(onmarsFrameRadius).toBe(16);
-    expect(readTokenLength('--ki-video-scrim-padding')).toBe(0);
-    expect(onmarsScrimPadding).toBe(16);
-    // M3 shape Round: the radius token resolves to the theme's full-round
-    // primitive (≥1000px), replacing the onmars 14px glass square.
-    expect(readTokenLength('--ki-video-play-radius')).toBeGreaterThanOrEqual(1000);
-    expect(onmarsPlayRadius).toBe(14);
-    expect(readTokenColor('--ki-video-play-bg')).not.toBe(onmarsPlayBg);
+    const after = playAppearance(el);
+    expect(before.frameRadius).toBe('16px');
+    expect(after.frameRadius).toBe('12px');
+    expect(before.haloInset).toBe(16);
+    expect(after.haloInset).toBe(0);
+    // M3 shape Round: the disc reads as a circle (its corner radius reaches
+    // half its height), replacing the onmars 14px glass square.
+    expect(before.discRadius).toBe(14);
+    expect(after.discRadius).toBeGreaterThanOrEqual(discOf(el).getBoundingClientRect().height / 2);
+    expect(after.discBackground).not.toBe(before.discBackground);
 
     await expectAccessible(document.body);
   });
