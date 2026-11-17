@@ -1,3 +1,4 @@
+// @spec:041-token-deprecation
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
@@ -11,6 +12,7 @@ import {
   withDensity,
   withMode,
 } from '../style-dictionary.config.mjs';
+import { collectDeprecations } from './deprecation.mjs';
 import {
   assertInheritedTokens,
   combineSchemes,
@@ -295,12 +297,82 @@ test('a theme stylesheet scopes its overrides to the themed root and to any them
   );
 });
 
-test('emitted stylesheets carry no comments', () => {
+test('emitted stylesheets carry no comments unless a token is deprecated', () => {
   const declarations = new Map([['--ki-a', '1px']]);
 
   assert.doesNotMatch(renderBaseStylesheet(declarations), /\/\*/u);
   assert.doesNotMatch(renderThemeStylesheet('material3', declarations), /\/\*/u);
 });
+
+const focusBorderDeprecation = new Map([
+  [
+    '--ki-input-focus-border',
+    {
+      reason: 'A focused field keeps its resting border and is marked by its focus ring.',
+      since: '0.1.0',
+      removal: '1.0.0',
+      replacement: '--ki-input-focus-ring-color',
+    },
+  ],
+]);
+const ANNOTATION =
+  '/* deprecated since 0.1.0, removed in 1.0.0: use --ki-input-focus-ring-color */';
+
+test('S1 a deprecated declaration keeps its value and is annotated in both stylesheets', () => {
+  const declarations = new Map([
+    ['--ki-input-focus-border', 'var(--ki-outline-primary-high-em)'],
+    ['--ki-input-focus-ring-color', 'var(--ki-outline-primary-high-em)'],
+  ]);
+  const options = { deprecations: focusBorderDeprecation };
+
+  const base = renderBaseStylesheet(declarations, options);
+  const theme = renderThemeStylesheet('material3', declarations, options);
+
+  for (const css of [base, theme]) {
+    assert.match(
+      css,
+      new RegExp(
+        `^  --ki-input-focus-border: var\\(--ki-outline-primary-high-em\\); ${ANNOTATION.replaceAll('*', '\\*')}$`,
+        'mu',
+      ),
+    );
+    assert.match(css, /^ {2}--ki-input-focus-ring-color: var\(--ki-outline-primary-high-em\);$/mu);
+  }
+  // Removing the annotations gives back the stylesheet without deprecations.
+  assert.equal(base.replace(` ${ANNOTATION}`, ''), renderBaseStylesheet(declarations));
+});
+
+test('S1 the published sources mark the 85 dead component tokens and annotate them', async () => {
+  const dictionary = await new StyleDictionary({
+    ...lightConfig,
+    log: { verbosity: 'silent' },
+  }).getPlatformTokens('css');
+  const deprecations = collectDeprecations(dictionary.allTokens);
+
+  assert.equal(deprecations.size, 85);
+  const { reason, since, removal, replacement } = deprecations.get('--ki-input-focus-border') ?? {};
+  assert.match(reason ?? '', /focus ring/u);
+  assert.deepEqual(
+    { since, removal, replacement },
+    { since: '0.1.0', removal: '1.0.0', replacement: '--ki-input-focus-ring-color' },
+  );
+  for (const deprecation of deprecations.values()) {
+    assert.equal(deprecation.since, '0.1.0');
+    assert.equal(deprecation.removal, '1.0.0');
+  }
+  const css = renderBaseStylesheet(compositionDeclarationsOf(dictionary), { deprecations });
+  assert.match(
+    css,
+    new RegExp(`^  --ki-input-focus-border: [^;]+; ${ANNOTATION.replaceAll('*', '\\*')}$`, 'mu'),
+  );
+  assert.equal(css.match(/\/\* deprecated since /gu)?.length, 85);
+});
+
+/** One composition's expressions, as build.mjs hands them to the renderer. */
+const compositionDeclarationsOf = (dictionary) =>
+  new Map(
+    [...compositionDeclarations(dictionary)].map(([name, { expression }]) => [name, expression]),
+  );
 
 test('a stylesheet with nothing to declare, or an unsafe theme name, is rejected', () => {
   assert.throws(() => renderBaseStylesheet(new Map()), /no tokens to declare/u);
@@ -584,16 +656,18 @@ test('a mode with nothing to say renders nothing, and the stylesheets append the
   const [transparency, contrast] = MODES;
   assert.equal(renderModeRules(contrast, new Map()), '');
 
-  const base = renderBaseStylesheet(new Map([['--ki-a', '1px']]), [
-    { mode: transparency, declarations: new Map([['--ki-a', '2px']]) },
-    { mode: contrast, declarations: new Map() },
-  ]);
+  const base = renderBaseStylesheet(new Map([['--ki-a', '1px']]), {
+    modes: [
+      { mode: transparency, declarations: new Map([['--ki-a', '2px']]) },
+      { mode: contrast, declarations: new Map() },
+    ],
+  });
   assert.ok(base.endsWith(renderModeRules(transparency, new Map([['--ki-a', '2px']]))));
   assert.doesNotMatch(base, /@media \(prefers-contrast: more\) \{/u);
 
-  const theme = renderThemeStylesheet('material3', new Map([['--ki-a', '3px']]), [
-    { mode: contrast, declarations: new Map([['--ki-a', '4px']]) },
-  ]);
+  const theme = renderThemeStylesheet('material3', new Map([['--ki-a', '3px']]), {
+    modes: [{ mode: contrast, declarations: new Map([['--ki-a', '4px']]) }],
+  });
   assert.ok(theme.startsWith(":root[data-ki-theme='material3'],\n[data-ki-theme='material3'] {"));
   assert.ok(theme.endsWith(renderModeRules(contrast, new Map([['--ki-a', '4px']]), 'material3')));
 });
@@ -686,7 +760,6 @@ test('document-inherited tokens are declared once on :root, never on a theme roo
       ['--ki-density-control-offset', '0rem'],
       ['--ki-density-space-scale', '1'],
     ]),
-    [],
     {
       inherited: inheritedTokens,
       densities: [

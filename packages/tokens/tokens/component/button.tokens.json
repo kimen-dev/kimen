@@ -244,15 +244,39 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.primary-med-em}",
-              "$description": "color used by the button component for primary neutral active background (MarsUI defines no pressed state; mirrors rest)."
+              "$description": "color used by the button component for primary neutral active background (MarsUI defines no pressed state; mirrors rest).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-neutral-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.primary-on-primary}",
-              "$description": "color used by the button component for primary neutral active foreground."
+              "$description": "color used by the button component for primary neutral active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-neutral-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary neutral active border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for primary neutral active border (MarsUI bevel top/inline edge).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-neutral-rest-border"
+                }
+              }
             }
           },
           "disabled": {
@@ -302,29 +326,77 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.success-high-em}",
-              "$description": "color used by the button component for primary success active background."
+              "$description": "color used by the button component for primary success active background.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-success-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.primary-on-success}",
-              "$description": "color used by the button component for primary success active foreground."
+              "$description": "color used by the button component for primary success active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-success-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary success active border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for primary success active border (MarsUI bevel top/inline edge).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-success-rest-border"
+                }
+              }
             }
           },
           "disabled": {
             "bg": {
               "$value": "{ki.surface.disabled-low-em}",
-              "$description": "color used by the button component for primary success disabled background."
+              "$description": "color used by the button component for primary success disabled background.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-neutral-disabled-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.muted}",
-              "$description": "color used by the button component for primary success disabled foreground."
+              "$description": "color used by the button component for primary success disabled foreground.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-neutral-disabled-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for primary success disabled border."
+              "$description": "color used by the button component for primary success disabled border.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-neutral-disabled-border"
+                }
+              }
             }
           }
         },
@@ -360,29 +432,77 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.danger-high-em}",
-              "$description": "color used by the button component for primary danger active background."
+              "$description": "color used by the button component for primary danger active background.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-danger-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.primary-on-danger}",
-              "$description": "color used by the button component for primary danger active foreground."
+              "$description": "color used by the button component for primary danger active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-danger-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.primary-button-top}",
-              "$description": "color used by the button component for primary danger active border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for primary danger active border (MarsUI bevel top/inline edge).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-primary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-danger-rest-border"
+                }
+              }
             }
           },
           "disabled": {
             "bg": {
               "$value": "{ki.surface.disabled-low-em}",
-              "$description": "color used by the button component for primary danger disabled background."
+              "$description": "color used by the button component for primary danger disabled background.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-neutral-disabled-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.muted}",
-              "$description": "color used by the button component for primary danger disabled foreground."
+              "$description": "color used by the button component for primary danger disabled foreground.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-neutral-disabled-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for primary danger disabled border."
+              "$description": "color used by the button component for primary danger disabled border.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-primary-neutral-disabled-border"
+                }
+              }
             }
           }
         },
@@ -414,6 +534,14 @@
           "shadow": {
             "$value": "{ki.effect.component.primary.default.shadow}",
             "$description": "shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest).",
+            "$deprecated": "Nothing paints it: a pressed button keeps its resting shadow under the pressed overlay.",
+            "$extensions": {
+              "dev.kimen.deprecation": {
+                "since": "0.1.0",
+                "removal": "1.0.0",
+                "replacement": "--ki-button-primary-rest-shadow"
+              }
+            },
             "$type": "shadow"
           },
           "overlay": {
@@ -462,15 +590,39 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.special.secondary-alpha-base}",
-              "$description": "color used by the button component for secondary neutral active background (MarsUI defines no pressed state; mirrors rest)."
+              "$description": "color used by the button component for secondary neutral active background (MarsUI defines no pressed state; mirrors rest).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-neutral-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.high-em}",
-              "$description": "color used by the button component for secondary neutral active foreground (MarsUI text/high_em)."
+              "$description": "color used by the button component for secondary neutral active foreground (MarsUI text/high_em).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-neutral-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary neutral active border (MarsUI bevel top/inline edge)."
+              "$description": "color used by the button component for secondary neutral active border (MarsUI bevel top/inline edge).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-neutral-rest-border"
+                }
+              }
             }
           },
           "disabled": {
@@ -520,29 +672,77 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.success-low-em}",
-              "$description": "color used by the button component for secondary success active background."
+              "$description": "color used by the button component for secondary success active background.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-success-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.success-high-em}",
-              "$description": "color used by the button component for secondary success active foreground."
+              "$description": "color used by the button component for secondary success active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-success-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait)."
+              "$description": "color used by the button component for secondary success active border (MarsUI bevel top/inline edge, variant trait).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-success-rest-border"
+                }
+              }
             }
           },
           "disabled": {
             "bg": {
               "$value": "{ki.surface.disabled-low-em}",
-              "$description": "color used by the button component for secondary success disabled background."
+              "$description": "color used by the button component for secondary success disabled background.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-neutral-disabled-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.muted}",
-              "$description": "color used by the button component for secondary success disabled foreground."
+              "$description": "color used by the button component for secondary success disabled foreground.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-neutral-disabled-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for secondary success disabled border."
+              "$description": "color used by the button component for secondary success disabled border.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-neutral-disabled-border"
+                }
+              }
             }
           }
         },
@@ -578,29 +778,77 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.danger-low-em}",
-              "$description": "color used by the button component for secondary danger active background."
+              "$description": "color used by the button component for secondary danger active background.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-danger-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.danger-high-em}",
-              "$description": "color used by the button component for secondary danger active foreground."
+              "$description": "color used by the button component for secondary danger active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-danger-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for secondary danger active border (MarsUI bevel top/inline edge, variant trait)."
+              "$description": "color used by the button component for secondary danger active border (MarsUI bevel top/inline edge, variant trait).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-danger-rest-border"
+                }
+              }
             }
           },
           "disabled": {
             "bg": {
               "$value": "{ki.surface.disabled-low-em}",
-              "$description": "color used by the button component for secondary danger disabled background."
+              "$description": "color used by the button component for secondary danger disabled background.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-neutral-disabled-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.muted}",
-              "$description": "color used by the button component for secondary danger disabled foreground."
+              "$description": "color used by the button component for secondary danger disabled foreground.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-neutral-disabled-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for secondary danger disabled border."
+              "$description": "color used by the button component for secondary danger disabled border.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-secondary-neutral-disabled-border"
+                }
+              }
             }
           }
         },
@@ -632,6 +880,14 @@
           "shadow": {
             "$value": "{ki.effect.component.secondary.default.shadow}",
             "$description": "shadow used by the button component for secondary active shadow (MarsUI defines no pressed state; mirrors rest).",
+            "$deprecated": "Nothing paints it: a pressed button keeps its resting shadow under the pressed overlay.",
+            "$extensions": {
+              "dev.kimen.deprecation": {
+                "since": "0.1.0",
+                "removal": "1.0.0",
+                "replacement": "--ki-button-secondary-rest-shadow"
+              }
+            },
             "$type": "shadow"
           },
           "overlay": {
@@ -680,15 +936,39 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.special.light-s2-dark-s3}",
-              "$description": "color used by the button component for tertiary neutral active background (MarsUI defines no pressed state; one step beyond hover in both schemes)."
+              "$description": "color used by the button component for tertiary neutral active background (MarsUI defines no pressed state; one step beyond hover in both schemes).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-neutral-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.supporting}",
-              "$description": "color used by the button component for tertiary neutral active foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
+              "$description": "color used by the button component for tertiary neutral active foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-neutral-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary neutral active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "$description": "color used by the button component for tertiary neutral active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-neutral-rest-border"
+                }
+              }
             }
           },
           "disabled": {
@@ -738,29 +1018,77 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.special.light-s2-dark-s3}",
-              "$description": "color used by the button component for tertiary success active background (MarsUI defines no pressed state; one step beyond hover in both schemes)."
+              "$description": "color used by the button component for tertiary success active background (MarsUI defines no pressed state; one step beyond hover in both schemes).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-success-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.success-high-em}",
-              "$description": "color used by the button component for tertiary success active foreground."
+              "$description": "color used by the button component for tertiary success active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-success-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary success active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "$description": "color used by the button component for tertiary success active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-success-rest-border"
+                }
+              }
             }
           },
           "disabled": {
             "bg": {
               "$value": "{ki.surface.disabled-low-em}",
-              "$description": "color used by the button component for tertiary success disabled background."
+              "$description": "color used by the button component for tertiary success disabled background.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-neutral-disabled-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.muted}",
-              "$description": "color used by the button component for tertiary success disabled foreground."
+              "$description": "color used by the button component for tertiary success disabled foreground.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-neutral-disabled-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for tertiary success disabled border."
+              "$description": "color used by the button component for tertiary success disabled border.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-neutral-disabled-border"
+                }
+              }
             }
           }
         },
@@ -796,29 +1124,77 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.special.light-s2-dark-s3}",
-              "$description": "color used by the button component for tertiary danger active background (MarsUI defines no pressed state; one step beyond hover in both schemes)."
+              "$description": "color used by the button component for tertiary danger active background (MarsUI defines no pressed state; one step beyond hover in both schemes).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-danger-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.danger-high-em}",
-              "$description": "color used by the button component for tertiary danger active foreground."
+              "$description": "color used by the button component for tertiary danger active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-danger-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.secondary-button-top}",
-              "$description": "color used by the button component for tertiary danger active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair)."
+              "$description": "color used by the button component for tertiary danger active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-danger-rest-border"
+                }
+              }
             }
           },
           "disabled": {
             "bg": {
               "$value": "{ki.surface.disabled-low-em}",
-              "$description": "color used by the button component for tertiary danger disabled background."
+              "$description": "color used by the button component for tertiary danger disabled background.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-neutral-disabled-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.muted}",
-              "$description": "color used by the button component for tertiary danger disabled foreground."
+              "$description": "color used by the button component for tertiary danger disabled foreground.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-neutral-disabled-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for tertiary danger disabled border."
+              "$description": "color used by the button component for tertiary danger disabled border.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-tertiary-neutral-disabled-border"
+                }
+              }
             }
           }
         },
@@ -845,6 +1221,14 @@
           "shadow": {
             "$value": "{ki.effect.component.secondary.default.shadow}",
             "$description": "shadow used by the button component for tertiary active shadow (MarsUI defines no pressed state; mirrors rest).",
+            "$deprecated": "Nothing paints it: a pressed button keeps its resting shadow under the pressed overlay.",
+            "$extensions": {
+              "dev.kimen.deprecation": {
+                "since": "0.1.0",
+                "removal": "1.0.0",
+                "replacement": "--ki-button-tertiary-rest-shadow"
+              }
+            },
             "$type": "shadow"
           }
         },
@@ -888,15 +1272,39 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.pressed-overlay-inverse}",
-              "$description": "color used by the button component for quaternary neutral active background (pressed wash one rung beyond hover: Black/5 light, White/5 dark)."
+              "$description": "color used by the button component for quaternary neutral active background (pressed wash one rung beyond hover: Black/5 light, White/5 dark).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-neutral-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.supporting}",
-              "$description": "color used by the button component for quaternary neutral active foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
+              "$description": "color used by the button component for quaternary neutral active foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-neutral-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for quaternary neutral active border (MarsUI quaternary is borderless in every state)."
+              "$description": "color used by the button component for quaternary neutral active border (MarsUI quaternary is borderless in every state).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-neutral-rest-border"
+                }
+              }
             }
           },
           "disabled": {
@@ -946,29 +1354,77 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.success-low-em}",
-              "$description": "color used by the button component for quaternary success active background."
+              "$description": "color used by the button component for quaternary success active background.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-success-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.success-high-em}",
-              "$description": "color used by the button component for quaternary success active foreground."
+              "$description": "color used by the button component for quaternary success active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-success-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for quaternary success active border (MarsUI quaternary is borderless in every state)."
+              "$description": "color used by the button component for quaternary success active border (MarsUI quaternary is borderless in every state).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-success-rest-border"
+                }
+              }
             }
           },
           "disabled": {
             "bg": {
               "$value": "{ki.transparent-inverse}",
-              "$description": "color used by the button component for quaternary success disabled background."
+              "$description": "color used by the button component for quaternary success disabled background.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-neutral-disabled-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.muted}",
-              "$description": "color used by the button component for quaternary success disabled foreground."
+              "$description": "color used by the button component for quaternary success disabled foreground.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-neutral-disabled-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for quaternary success disabled border (MarsUI quaternary is borderless in every state)."
+              "$description": "color used by the button component for quaternary success disabled border (MarsUI quaternary is borderless in every state).",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-neutral-disabled-border"
+                }
+              }
             }
           }
         },
@@ -1004,29 +1460,77 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.danger-low-em}",
-              "$description": "color used by the button component for quaternary danger active background."
+              "$description": "color used by the button component for quaternary danger active background.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-danger-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.danger-high-em}",
-              "$description": "color used by the button component for quaternary danger active foreground."
+              "$description": "color used by the button component for quaternary danger active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-danger-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for quaternary danger active border (MarsUI quaternary is borderless in every state)."
+              "$description": "color used by the button component for quaternary danger active border (MarsUI quaternary is borderless in every state).",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-danger-rest-border"
+                }
+              }
             }
           },
           "disabled": {
             "bg": {
               "$value": "{ki.transparent-inverse}",
-              "$description": "color used by the button component for quaternary danger disabled background."
+              "$description": "color used by the button component for quaternary danger disabled background.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-neutral-disabled-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.muted}",
-              "$description": "color used by the button component for quaternary danger disabled foreground."
+              "$description": "color used by the button component for quaternary danger disabled foreground.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-neutral-disabled-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for quaternary danger disabled border (MarsUI quaternary is borderless in every state)."
+              "$description": "color used by the button component for quaternary danger disabled border (MarsUI quaternary is borderless in every state).",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-quaternary-neutral-disabled-border"
+                }
+              }
             }
           }
         },
@@ -1045,7 +1549,15 @@
         "active": {
           "shadow": {
             "$value": "none",
-            "$description": "value used by the button component for quaternary active shadow."
+            "$description": "value used by the button component for quaternary active shadow.",
+            "$deprecated": "Nothing paints it: a pressed button keeps its resting shadow under the pressed overlay.",
+            "$extensions": {
+              "dev.kimen.deprecation": {
+                "since": "0.1.0",
+                "removal": "1.0.0",
+                "replacement": "--ki-button-quaternary-rest-shadow"
+              }
+            }
           }
         },
         "disabled": {
@@ -1088,15 +1600,39 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.primary-low-em}",
-              "$description": "color used by the button component for ghost neutral active background."
+              "$description": "color used by the button component for ghost neutral active background.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-neutral-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.primary-high-em}",
-              "$description": "color used by the button component for ghost neutral active foreground."
+              "$description": "color used by the button component for ghost neutral active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-neutral-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for ghost neutral active border."
+              "$description": "color used by the button component for ghost neutral active border.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-neutral-rest-border"
+                }
+              }
             }
           },
           "disabled": {
@@ -1146,29 +1682,77 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.success-low-em}",
-              "$description": "color used by the button component for ghost success active background."
+              "$description": "color used by the button component for ghost success active background.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-success-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.success-high-em}",
-              "$description": "color used by the button component for ghost success active foreground."
+              "$description": "color used by the button component for ghost success active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-success-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for ghost success active border."
+              "$description": "color used by the button component for ghost success active border.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-success-rest-border"
+                }
+              }
             }
           },
           "disabled": {
             "bg": {
               "$value": "{ki.transparent-inverse}",
-              "$description": "color used by the button component for ghost success disabled background."
+              "$description": "color used by the button component for ghost success disabled background.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-neutral-disabled-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.muted}",
-              "$description": "color used by the button component for ghost success disabled foreground."
+              "$description": "color used by the button component for ghost success disabled foreground.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-neutral-disabled-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for ghost success disabled border."
+              "$description": "color used by the button component for ghost success disabled border.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-neutral-disabled-border"
+                }
+              }
             }
           }
         },
@@ -1204,29 +1788,77 @@
           "active": {
             "bg": {
               "$value": "{ki.surface.danger-low-em}",
-              "$description": "color used by the button component for ghost danger active background."
+              "$description": "color used by the button component for ghost danger active background.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-danger-rest-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.danger-high-em}",
-              "$description": "color used by the button component for ghost danger active foreground."
+              "$description": "color used by the button component for ghost danger active foreground.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-danger-rest-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for ghost danger active border."
+              "$description": "color used by the button component for ghost danger active border.",
+              "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-danger-rest-border"
+                }
+              }
             }
           },
           "disabled": {
             "bg": {
               "$value": "{ki.transparent-inverse}",
-              "$description": "color used by the button component for ghost danger disabled background."
+              "$description": "color used by the button component for ghost danger disabled background.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-neutral-disabled-bg"
+                }
+              }
             },
             "fg": {
               "$value": "{ki.text.muted}",
-              "$description": "color used by the button component for ghost danger disabled foreground."
+              "$description": "color used by the button component for ghost danger disabled foreground.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-neutral-disabled-fg"
+                }
+              }
             },
             "border": {
               "$value": "{ki.outline.none}",
-              "$description": "color used by the button component for ghost danger disabled border."
+              "$description": "color used by the button component for ghost danger disabled border.",
+              "$deprecated": "Nothing paints it: disabled does not depend on the tone, so every tone shows the neutral disabled cell.",
+              "$extensions": {
+                "dev.kimen.deprecation": {
+                  "since": "0.1.0",
+                  "removal": "1.0.0",
+                  "replacement": "--ki-button-ghost-neutral-disabled-border"
+                }
+              }
             }
           }
         },
@@ -1245,7 +1877,15 @@
         "active": {
           "shadow": {
             "$value": "none",
-            "$description": "value used by the button component for ghost active shadow."
+            "$description": "value used by the button component for ghost active shadow.",
+            "$deprecated": "Nothing paints it: a pressed button keeps its resting shadow under the pressed overlay.",
+            "$extensions": {
+              "dev.kimen.deprecation": {
+                "since": "0.1.0",
+                "removal": "1.0.0",
+                "replacement": "--ki-button-ghost-rest-shadow"
+              }
+            }
           }
         },
         "disabled": {

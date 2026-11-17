@@ -53,7 +53,15 @@
 //     its own sheet, exactly the mode values its overrides displaced. A mode
 //     only ever switches ON: there is no declaration that removes it against
 //     the person's preference.
+//
+//   --ki-x: value; /* deprecated since 0.1.0, removed in 1.0.0: use --ki-y */
+//     The only comment the stylesheets carry (spec 041): a deprecated token
+//     keeps its value until it is removed, and says so where a consumer reads
+//     it. Comments are outside the published value contract, and minifiers
+//     drop them.
 import { createPropertyFormatter } from 'style-dictionary/utils';
+
+import { deprecationComment } from './deprecation.mjs';
 
 const THEME_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 // The only colour shapes the Kimen value transforms emit (#rrggbb for opaque
@@ -197,13 +205,13 @@ export function themeOverrides({ base, theme }) {
   return new Map([...theme].filter(([name, expression]) => base.get(name) !== expression));
 }
 
-function rule(selectors, declarations) {
-  return [
-    `${selectors.join(',\n')} {`,
-    ...declarations.map(([property, value]) => `  ${property}: ${value};`),
-    '}',
-    '',
-  ].join('\n');
+function rule(selectors, declarations, deprecations = new Map()) {
+  const line = ([property, value]) => {
+    const deprecation = deprecations.get(property);
+    const note = deprecation === undefined ? '' : ` /* ${deprecationComment(deprecation)} */`;
+    return `  ${property}: ${value};${note}`;
+  };
+  return [`${selectors.join(',\n')} {`, ...declarations.map(line), '}', ''].join('\n');
 }
 
 /**
@@ -256,7 +264,7 @@ function indented(css) {
  * One mode for the default theme (no `theme`) or re-asserted by a theme: the
  * media-query block and the declaration block, with the same declarations.
  */
-export function renderModeRules(mode, declarations, theme) {
+export function renderModeRules(mode, declarations, theme, deprecations) {
   if (declarations.size === 0) return '';
   const activation = mode.activations.join(', ');
   const preference = theme
@@ -275,15 +283,17 @@ export function renderModeRules(mode, declarations, theme) {
       ];
   return [
     `@media ${mode.media} {`,
-    indented(rule(preference, [...declarations])).trimEnd(),
+    indented(rule(preference, [...declarations], deprecations)).trimEnd(),
     '}',
     '',
-    rule(declared, [...declarations]),
+    rule(declared, [...declarations], deprecations),
   ].join('\n');
 }
 
-function modeRules(modes, theme) {
-  return modes.map(({ mode, declarations }) => renderModeRules(mode, declarations, theme));
+function modeRules(modes, theme, deprecations) {
+  return modes.map(({ mode, declarations }) =>
+    renderModeRules(mode, declarations, theme, deprecations),
+  );
 }
 
 /** The density levels the stylesheet publishes, besides `default` (spec 045). */
@@ -326,11 +336,12 @@ export function assertInheritedTokens({ declarations, inherited, overrides, labe
 /**
  * The default theme: the colour-scheme contract, every token, the
  * document-inherited tokens and each density level, then each mode.
+ * `deprecations` (custom property name -> deprecation) annotates the
+ * deprecated declarations.
  */
 export function renderBaseStylesheet(
   declarations,
-  modes = [],
-  { inherited = new Set(), densities = [] } = {},
+  { deprecations, modes = [], inherited = new Set(), densities = [] } = {},
 ) {
   if (declarations.size === 0) throw new Error('the base theme has no tokens to declare');
   const contextual = [...declarations].filter(([name]) => !inherited.has(name));
@@ -339,12 +350,12 @@ export function renderBaseStylesheet(
     rule([':where(:root)'], [['color-scheme', 'light dark']]),
     rule(["[data-ki-color-scheme='light']"], [['color-scheme', 'light']]),
     rule(["[data-ki-color-scheme='dark']"], [['color-scheme', 'dark']]),
-    rule([':root', ':where([data-ki-theme])'], contextual),
-    documentWide.length === 0 ? '' : rule([':root'], documentWide),
+    rule([':root', ':where([data-ki-theme])'], contextual, deprecations),
+    documentWide.length === 0 ? '' : rule([':root'], documentWide, deprecations),
     ...densities.map(({ level, declarations: levelDeclarations }) =>
-      rule([`[data-ki-density='${level}']`], [...levelDeclarations]),
+      rule([`[data-ki-density='${level}']`], [...levelDeclarations], deprecations),
     ),
-    ...modeRules(modes),
+    ...modeRules(modes, undefined, deprecations),
   ]
     .filter((block) => block !== '')
     .join('\n');
@@ -354,14 +365,18 @@ export function renderBaseStylesheet(
  * An opt-in theme: its overrides, for a themed document and for a themed
  * subtree, then the mode values those overrides displaced.
  */
-export function renderThemeStylesheet(theme, declarations, modes = []) {
+export function renderThemeStylesheet(theme, declarations, { deprecations, modes = [] } = {}) {
   if (!THEME_NAME.test(theme)) throw new Error(`unsupported theme name ${JSON.stringify(theme)}`);
   if (declarations.size === 0) {
     throw new Error(`theme ${theme} does not differ from the base theme`);
   }
   return [
-    rule([`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`], [...declarations]),
-    ...modeRules(modes, theme),
+    rule(
+      [`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`],
+      [...declarations],
+      deprecations,
+    ),
+    ...modeRules(modes, theme, deprecations),
   ]
     .filter((block) => block !== '')
     .join('\n');

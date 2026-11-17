@@ -1,6 +1,13 @@
 import { readdir, readFile } from 'node:fs/promises';
 import { join, relative, resolve, sep } from 'node:path';
 
+import {
+  declaresDeprecation,
+  deprecationComment,
+  readDeprecation,
+  replacementProblems,
+} from '../../packages/tokens/scripts/deprecation.mjs';
+
 const LAYERS = Object.freeze(['primitive', 'theme', 'semantic', 'component']);
 const LAYER_RANK = new Map(LAYERS.map((layer, index) => [layer, index]));
 const PUBLIC_LAYERS = new Set(['semantic', 'component']);
@@ -86,18 +93,23 @@ const collectReferences = (value, references = new Set()) => {
 
 const flattenTokens = (contents) => {
   const tokens = [];
+  const deprecatedGroups = [];
 
   const visitToken = (node, path, inheritedType) => {
     if (path.length === 0) {
       throw new TypeError('A token must have a non-empty DTCG path.');
     }
 
+    const { deprecation, problems } = readDeprecation(node);
     tokens.push({
       path: path.join('.'),
       type: typeof node.$type === 'string' ? node.$type : inheritedType,
       value: cloneJsonValue(node.$value),
       hasDescription: hasOwn(node, '$description'),
       description: typeof node.$description === 'string' ? node.$description : null,
+      declaresDeprecation: declaresDeprecation(node),
+      deprecation,
+      deprecationProblems: problems,
     });
   };
 
@@ -109,6 +121,12 @@ const flattenTokens = (contents) => {
     if (hasOwn(node, '$value')) {
       visitToken(node, path, inheritedType);
       return;
+    }
+
+    // DTCG lets a group's $deprecated reach its tokens; Kimen declares each
+    // deprecation on the token it retires, with that token's replacement.
+    if (declaresDeprecation(node)) {
+      deprecatedGroups.push(path.join('.'));
     }
 
     const groupType = typeof node.$type === 'string' ? node.$type : inheritedType;
@@ -128,7 +146,10 @@ const flattenTokens = (contents) => {
   };
 
   visitGroup(contents, [], null);
-  return tokens.sort((left, right) => compareText(left.path, right.path));
+  return {
+    tokens: tokens.sort((left, right) => compareText(left.path, right.path)),
+    deprecatedGroups: deprecatedGroups.sort(compareText),
+  };
 };
 
 const issue = ({ code, path, filePath, message, related = [] }) => ({
@@ -338,7 +359,18 @@ export const parseTokenComposition = ({ id, theme, scheme, sources }) => {
     }
 
     const contents = normalizeContents(tokenSource.contents, filePath);
-    for (const tokenDefinition of flattenTokens(contents)) {
+    const { tokens: tokenDefinitions, deprecatedGroups } = flattenTokens(contents);
+    for (const groupPath of deprecatedGroups) {
+      issues.push(
+        issue({
+          code: 'group-deprecation',
+          path: groupPath,
+          filePath,
+          message: 'Declare a deprecation on the token it retires, never on a group.',
+        }),
+      );
+    }
+    for (const tokenDefinition of tokenDefinitions) {
       const existing = recordsByPath.get(tokenDefinition.path);
       const inheritsContract = overlay && existing !== undefined;
 
@@ -362,6 +394,31 @@ export const parseTokenComposition = ({ id, theme, scheme, sources }) => {
           ? tokenDefinition.description
           : null;
       const value = cloneJsonValue(tokenDefinition.value);
+      if (overlay && tokenDefinition.declaresDeprecation) {
+        issues.push(
+          issue({
+            code: 'overlay-deprecation',
+            path: tokenDefinition.path,
+            filePath,
+            message: 'A deprecation is declared on the base definition; an overlay inherits it.',
+          }),
+        );
+      } else if (tokenDefinition.deprecationProblems.length > 0) {
+        issues.push(
+          issue({
+            code: 'invalid-deprecation',
+            path: tokenDefinition.path,
+            filePath,
+            message: 'A deprecation needs its reason, its schedule and its replacement.',
+            related: tokenDefinition.deprecationProblems,
+          }),
+        );
+      }
+      const deprecation = inheritsContract
+        ? existing.deprecation
+        : overlay
+          ? null
+          : tokenDefinition.deprecation;
 
       recordsByPath.set(tokenDefinition.path, {
         path: tokenDefinition.path,
@@ -372,6 +429,7 @@ export const parseTokenComposition = ({ id, theme, scheme, sources }) => {
         value,
         references: [...collectReferences(value)].sort(),
         description,
+        deprecation,
         public: PUBLIC_LAYERS.has(recordLayer),
         theme,
         scheme,
@@ -421,6 +479,16 @@ export const parseTokenComposition = ({ id, theme, scheme, sources }) => {
             path: record.path,
             filePath: record.filePath,
             message: 'A token reference does not resolve in the final composition.',
+            related: [reference],
+          }),
+        );
+      } else if (target.deprecation !== null && record.deprecation === null) {
+        issues.push(
+          issue({
+            code: 'deprecated-reference',
+            path: record.path,
+            filePath: record.filePath,
+            message: 'A live token may not reference a deprecated one.',
             related: [reference],
           }),
         );
@@ -477,6 +545,7 @@ const publicContractFrom = (record) => ({
   component: record.component,
   type: record.type,
   description: record.description,
+  deprecation: record.deprecation,
 });
 
 const samePublicContract = (left, right) =>
@@ -485,7 +554,8 @@ const samePublicContract = (left, right) =>
   left.layer === right.layer &&
   left.component === right.component &&
   left.type === right.type &&
-  left.description === right.description;
+  left.description === right.description &&
+  JSON.stringify(left.deprecation) === JSON.stringify(right.deprecation);
 
 /**
  * Collapse explicitly ordered theme/scheme compositions into the stable public
@@ -547,6 +617,16 @@ export const createOrderedTokenInventory = (compositions) => {
     }
   }
 
+  const deprecations = new Map(
+    [...publicTokensByName.values()]
+      .filter(({ deprecation }) => deprecation !== null)
+      .map(({ cssName, deprecation }) => [cssName, deprecation]),
+  );
+  const problems = replacementProblems(deprecations, new Set(publicTokensByName.keys()));
+  if (problems.length > 0) {
+    throw new Error(`Invalid token deprecation:\n  ${problems.join('\n  ')}`);
+  }
+
   return {
     schemaVersion: 1,
     compositions: compositionSummaries,
@@ -586,6 +666,11 @@ export const deriveConsumedPublicCssProperties = ({ inventory, cssByTag }) => {
       if (record === undefined) {
         throw new Error(
           `${tag} consumes ${cssName}, which is not a public semantic or component token.`,
+        );
+      }
+      if (record.deprecation) {
+        throw new Error(
+          `${tag} reads ${cssName}, which is ${deprecationComment(record.deprecation)}.`,
         );
       }
       consumed.add(cssName);
