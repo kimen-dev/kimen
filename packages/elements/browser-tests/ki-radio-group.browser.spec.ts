@@ -597,19 +597,31 @@ describe('ki-radio-group in a real browser', () => {
     expect(await repaintedUnderForcedDark(el)).toContain('control');
   });
 
-  it('S16 material3 restyles the group through token values alone', async () => {
+  it('S16 material3 repaints the selected dot and spaces the options with unchanged markup', async () => {
     cleanup();
     ensureMaterial3Tokens();
     const el = await mount({ value: 'email' });
-    const before = getComputedStyle(radioAt(el, 0)).getPropertyValue('--ki-radio-selected-rest-fg');
+    const options = [...el.querySelectorAll('ki-radio')];
+    const selectedDot = (): string => {
+      const control = options[0]?.shadowRoot?.querySelector('[part="control"]');
+      if (!control) {
+        throw new Error('Missing radio control');
+      }
+      return getComputedStyle(control, '::before').backgroundColor;
+    };
+    const gapBetweenOptions = (): number =>
+      (options[1]?.getBoundingClientRect().top ?? 0) -
+      (options[0]?.getBoundingClientRect().bottom ?? 0);
+    const markup = el.outerHTML;
+    const before = { dot: selectedDot(), gap: gapBetweenOptions() };
 
     document.documentElement.setAttribute('data-ki-theme', 'material3');
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
-    const after = getComputedStyle(radioAt(el, 0)).getPropertyValue('--ki-radio-selected-rest-fg');
-    const groupGap = getComputedStyle(el).getPropertyValue('--ki-radio-group-gap');
-    expect(after).not.toBe(before);
-    expect(groupGap.trim()).not.toBe('');
+    // The selected dot takes the theme's ink and the options spread apart.
+    await expect.poll(selectedDot).not.toBe(before.dot);
+    expect(gapBetweenOptions()).toBeGreaterThan(before.gap);
+    expect(el.outerHTML).toBe(markup);
   });
 
   it('S18 option layout follows the document writing direction under RTL', async () => {

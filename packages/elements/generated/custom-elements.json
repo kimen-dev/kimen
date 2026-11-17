@@ -1685,7 +1685,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-disabled-fg",
-              "description": "color used by the button component for quaternary neutral disabled foreground."
+              "description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars."
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-bg",
@@ -3455,7 +3455,7 @@
             },
             {
               "name": "--ki-button-quaternary-neutral-disabled-fg",
-              "description": "color used by the button component for quaternary neutral disabled foreground."
+              "description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars."
             },
             {
               "name": "--ki-button-quaternary-neutral-hover-bg",
