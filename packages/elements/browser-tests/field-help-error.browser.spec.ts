@@ -94,7 +94,21 @@ const nextFrame = (): Promise<void> =>
     });
   });
 
+// A blocked submission leaves Firefox's validation bubble over the page until
+// the invalid control loses focus, and removing the focused control does not
+// blur it: the bubble then swallows the next test's click. Blur first.
+function releaseFocus(): void {
+  let active = document.activeElement;
+  while (active?.shadowRoot?.activeElement) {
+    active = active.shadowRoot.activeElement;
+  }
+  if (active instanceof HTMLElement) {
+    active.blur();
+  }
+}
+
 async function mount(html: string, theme = ''): Promise<HTMLElement> {
+  releaseFocus();
   document.body.replaceChildren();
   const style = document.createElement('style');
   style.textContent = `${tokensCss}\n${theme}`;
@@ -132,10 +146,19 @@ async function mountForm(
     submitted += 1;
   });
   const sendButton = found(form.querySelector('button[type="submit"]'), 'the send button');
+  let clicks = 0;
+  sendButton.addEventListener('click', () => {
+    clicks += 1;
+  });
   return {
     form,
     submits: () => submitted,
-    send: () => userEvent.click(sendButton),
+    // A click that never reaches the button blocks nothing either: without
+    // this check "the form is not submitted" would pass for a lost click.
+    send: async () => {
+      await userEvent.click(sendButton);
+      expect(clicks, 'the click on Send reached the button').toBe(1);
+    },
   };
 }
 
@@ -305,16 +328,20 @@ describe('the error message takes the help text place once the answer fails', ()
 
   for (const control of ['ki-input', 'ki-checkbox'] as const) {
     it(`S5 a required ${control} the user has not answered yet shows no error`, async () => {
+      // Text fields as bookends: every engine puts them in the tab order,
+      // while WebKit on macOS leaves buttons and checkboxes out by default.
       const main = await mount(
-        `<button type="button">Before</button>${markup(control, 'required error-text="Answer this question"')}<button type="button">After</button>`,
+        `<input aria-label="Before">${markup(control, 'required error-text="Answer this question"')}<input aria-label="After">`,
       );
       const field = found(main.querySelector<Field>(control), control);
-      found(main.querySelector('button'), 'the Before button').focus();
+      const after = found(main.querySelector('input[aria-label="After"]'), 'the After field');
+      found(main.querySelector<HTMLInputElement>('input'), 'the Before field').focus();
 
-      await userEvent.tab();
-      await userEvent.tab();
+      for (let press = 0; press < 3 && document.activeElement !== after; press += 1) {
+        await userEvent.tab();
+      }
 
-      expect(document.activeElement?.textContent).toBe('After');
+      expect(document.activeElement).toBe(after);
       expect(shown(field, 'error')).toBeNull();
       if (IS_CHROMIUM) {
         await expect.poll(() => invalid(roleOf[control], 'Answer')).toBe('false');
