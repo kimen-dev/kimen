@@ -18,10 +18,11 @@
 // anything the stylesheet cannot express (a token that is not a colour and
 // still depends on the scheme, two tokens compiling to one custom property)
 // fails the build outright.
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 import StyleDictionary from 'style-dictionary';
 
+import { assertNoDeprecationDue, collectDeprecations } from './scripts/deprecation.mjs';
 import {
   combineSchemes,
   compositionDeclarations,
@@ -45,6 +46,16 @@ async function composition(config) {
   const dictionary = await new StyleDictionary(config).getPlatformTokens('css');
   return compositionDeclarations(dictionary);
 }
+
+// Deprecations (spec 041) are declared on base definitions, so the default
+// light composition carries all of them. An incomplete deprecation, a
+// replacement that is not a live published token, or a deprecated token the
+// package still ships at its removal version fails the build.
+const { version } = JSON.parse(await readFile(new URL('./package.json', import.meta.url), 'utf8'));
+const deprecations = collectDeprecations(
+  (await new StyleDictionary(lightConfig).getPlatformTokens('css')).allTokens,
+);
+assertNoDeprecationDue(deprecations, version);
 
 await mkdir(dist, { recursive: true });
 
@@ -88,17 +99,20 @@ for (const mode of MODES) {
   material3Modes.push({ mode, declarations: reasserted });
 }
 
-await writeFile(new URL('tokens.css', dist), renderBaseStylesheet(onmars, baseModes));
+await writeFile(
+  new URL('tokens.css', dist),
+  renderBaseStylesheet(onmars, { deprecations, modes: baseModes }),
+);
 
 const modeSummary = (modes) =>
   modes.map(({ mode, declarations }) => `${mode.name} ${declarations.size}`).join(', ');
 console.log(
-  `✔ dist/css/tokens.css (theme: onmars — ${onmars.size} tokens, light + dark; modes: ${modeSummary(baseModes)})`,
+  `✔ dist/css/tokens.css (theme: onmars — ${onmars.size} tokens, light + dark, ${deprecations.size} deprecated; modes: ${modeSummary(baseModes)})`,
 );
 
 await writeFile(
   new URL('tokens.material3.css', dist),
-  renderThemeStylesheet('material3', material3, material3Modes),
+  renderThemeStylesheet('material3', material3, { deprecations, modes: material3Modes }),
 );
 
 console.log(

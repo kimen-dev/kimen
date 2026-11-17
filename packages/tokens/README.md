@@ -228,6 +228,15 @@ values differ in anything else fails the build.
 The approved public contract for this feature is documented in the
 [theming contract](https://github.com/kimen-dev/kimen/blob/main/specs/001-tokens-theming/contracts/theming-contract.md).
 
+## Deprecated tokens
+
+A token that no component paints is deprecated before it is removed: it keeps
+its value, its declaration in the stylesheet is followed by a
+`/* deprecated since …, removed in …: use --ki-… */` comment, and the token
+reference lists it with its replacement. It is removed at the next major, and
+only after a later minor has shipped the deprecation. See the
+[deprecated tokens migration guide](https://github.com/kimen-dev/kimen/blob/main/docs/migrations/deprecated-tokens.md).
+
 ## When not to use
 
 Do not import token source JSON from application code. Do not patch generated

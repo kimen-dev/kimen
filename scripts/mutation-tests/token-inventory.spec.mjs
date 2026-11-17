@@ -57,6 +57,7 @@ describe('token inventory mutation boundary', () => {
           resolvedValue: '#445566',
           references: [],
           description: null,
+          deprecation: null,
           public: false,
           theme: 'onmars',
           scheme: 'light',
@@ -439,6 +440,7 @@ describe('token inventory mutation boundary', () => {
           component: 'ki-dialog',
           type: 'color',
           description: 'Dialog background color.',
+          deprecation: null,
         },
         {
           path: 'ki.text.body',
@@ -447,6 +449,7 @@ describe('token inventory mutation boundary', () => {
           component: null,
           type: 'color',
           description: 'Body text color.',
+          deprecation: null,
         },
       ],
     });

@@ -97,7 +97,14 @@ const publicExport = (target) => ({
 });
 
 const publicFacet = (
-  { type = null, defaultValue = null, required = false, description },
+  {
+    type = null,
+    defaultValue = null,
+    required = false,
+    description,
+    deprecatedSince = null,
+    replacement = null,
+  },
   label,
 ) => {
   if (type !== null) {
@@ -109,8 +116,8 @@ const publicFacet = (
     default: defaultValue,
     required,
     description,
-    deprecatedSince: null,
-    replacement: null,
+    deprecatedSince,
+    replacement,
   };
 };
 
@@ -930,6 +937,11 @@ const tokenSurface = ({ tokenInventory, defaultTokenComposition }) => {
             type: record.type ?? null,
             defaultValue: resolved.resolvedValue,
             description: record.description,
+            // A deprecated token (spec 041) records when it was deprecated and
+            // what replaces it: the public API gate allows its removal only
+            // once a later minor has shipped both.
+            deprecatedSince: record.deprecation?.since ?? null,
+            replacement: record.deprecation?.replacement ?? null,
           },
           cssName,
         ),
