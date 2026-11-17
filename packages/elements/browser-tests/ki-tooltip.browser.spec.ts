@@ -288,6 +288,29 @@ describe('ki-tooltip pointer path in a real browser', () => {
     }
   });
 
+  // A card, a scroll panel or a dialog body clips its overflow. The bubble
+  // sits outside the trigger's box, so inside such a container it was cut off
+  // and painted nothing; it has to escape every ancestor's clip.
+  it('S1 a trigger inside a container that clips its overflow still shows the whole tooltip', async () => {
+    const clip = document.createElement('div');
+    clip.style.overflow = 'hidden';
+    clip.style.marginBlockStart = '160px';
+    document.body.append(clip);
+    const { host, trigger } = await mount({ placement: 'top' }, clip);
+    clip.style.blockSize = `${String(host.getBoundingClientRect().height)}px`;
+
+    await hoverTrigger(host, trigger);
+
+    const tooltip = requireTooltip(host);
+    const rect = tooltip.getBoundingClientRect();
+    expect(rect.bottom).toBeLessThanOrEqual(clip.getBoundingClientRect().top);
+    const hit = host.shadowRoot?.elementFromPoint(
+      rect.left + rect.width / 2,
+      rect.top + rect.height / 2,
+    );
+    expect(hit).toBe(tooltip);
+  });
+
   it('S10 honors a forced dark scheme: the shown tooltip repaints', async () => {
     const { host, trigger } = await mount();
     trigger.tabIndex = 0;

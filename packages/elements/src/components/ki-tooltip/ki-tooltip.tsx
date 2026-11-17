@@ -234,13 +234,34 @@ export class KiTooltip {
 
     this.positionTooltip();
     this.visible = true;
+    this.syncPopover();
     this.addEscapeListener();
   }
 
   private hideNow(): void {
     this.clearTimer();
     this.visible = false;
+    this.syncPopover();
     this.removeEscapeListener();
+  }
+
+  // The bubble is a manual popover: shown, it is painted in the top layer, so
+  // no ancestor that clips its overflow (a card, a scroll panel, a dialog body)
+  // can cut it off and no stacking context can paint over it. `manual` keeps
+  // the platform's light dismiss out of the way: `visible` stays the single
+  // source of truth for hover, focus and Escape, and is mirrored here.
+  private syncPopover(): void {
+    const tooltip = this.tooltipEl;
+    if (!tooltip?.isConnected || typeof tooltip.showPopover !== 'function') {
+      return;
+    }
+
+    const shown = tooltip.matches(':popover-open');
+    if (this.visible && !shown) {
+      tooltip.showPopover();
+    } else if (!this.visible && shown) {
+      tooltip.hidePopover();
+    }
   }
 
   private addEscapeListener(): void {
@@ -362,6 +383,7 @@ export class KiTooltip {
             }}
             part="tooltip"
             role="tooltip"
+            popover="manual"
             class={{
               tooltip: true,
               'is-visible': this.visible,
