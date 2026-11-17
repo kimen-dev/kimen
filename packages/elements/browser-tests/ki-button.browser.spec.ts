@@ -677,6 +677,29 @@ describe('ki-button in a real browser', () => {
     }
   });
 
+  // Regression: onmars painted a disabled quaternary button with its resting
+  // ink on a transparent ground, so disabled and enabled looked identical.
+  it('S2 shows a disabled quaternary button differently from a resting one, in light and dark', async () => {
+    cleanup();
+    ensureTokens();
+    const inkOf = async (): Promise<{ rest: string; disabled: string }> => {
+      const rest = requireButton(await mount('Save', { variant: 'quaternary' }));
+      const disabled = requireButton(
+        await mount('Save', { variant: 'quaternary', disabled: true }),
+      );
+      await parkPointer();
+      await waitForStyles();
+      return { rest: getComputedStyle(rest).color, disabled: getComputedStyle(disabled).color };
+    };
+
+    const light = await inkOf();
+    expect(light.disabled, 'light disabled ink').not.toBe(light.rest);
+
+    document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
+    const dark = await inkOf();
+    expect(dark.disabled, 'dark disabled ink').not.toBe(dark.rest);
+  });
+
   /**
    * Issue #71: pressed paints over the RESTING appearance whatever the input,
    * the Material 3 rule of one state layer at a time — pressed replaces hover,

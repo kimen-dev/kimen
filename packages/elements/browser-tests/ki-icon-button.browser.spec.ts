@@ -543,6 +543,29 @@ describe('ki-icon-button in a real browser', () => {
     }
   });
 
+  // Regression: onmars painted a disabled quaternary button with its resting
+  // ink on a transparent ground, so disabled and enabled looked identical.
+  it('S2 shows a disabled quaternary button differently from a resting one, in light and dark', async () => {
+    cleanup();
+    ensureTokens();
+    const inkOf = async (): Promise<{ rest: string; disabled: string }> => {
+      const rest = requireButton(await mount('Close', { variant: 'quaternary' }));
+      const disabled = requireButton(
+        await mount('Close', { variant: 'quaternary', disabled: true }),
+      );
+      await parkPointer();
+      await waitForStyles();
+      return { rest: getComputedStyle(rest).color, disabled: getComputedStyle(disabled).color };
+    };
+
+    const light = await inkOf();
+    expect(light.disabled, 'light disabled ink').not.toBe(light.rest);
+
+    document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
+    const dark = await inkOf();
+    expect(dark.disabled, 'dark disabled ink').not.toBe(dark.rest);
+  });
+
   it('exact squares, the icon ramp, glass effects and zero axe violations across the matrix (SC-003, SC-004)', async () => {
     cleanup();
     ensureTokens();

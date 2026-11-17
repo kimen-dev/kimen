@@ -2444,7 +2444,7 @@
               "--ki-button-quaternary-neutral-disabled-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for quaternary neutral disabled foreground.",
+                "description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -5227,7 +5227,7 @@
               "--ki-button-quaternary-neutral-disabled-fg": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "color used by the button component for quaternary neutral disabled foreground.",
+                "description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -13438,7 +13438,7 @@
                 "--ki-button-quaternary-neutral-active-fg": "rgba(255,255,255,0.72)",
                 "--ki-button-quaternary-neutral-disabled-bg": "rgba(0,0,0,0)",
                 "--ki-button-quaternary-neutral-disabled-border": "rgba(0,0,0,0)",
-                "--ki-button-quaternary-neutral-disabled-fg": "rgba(255,255,255,0.72)",
+                "--ki-button-quaternary-neutral-disabled-fg": "rgba(255,255,255,0.32)",
                 "--ki-button-quaternary-neutral-hover-bg": "rgba(255,255,255,0.03)",
                 "--ki-button-quaternary-neutral-hover-border": "rgba(0,0,0,0)",
                 "--ki-button-quaternary-neutral-hover-fg": "rgba(255,255,255,0.72)",
@@ -14613,7 +14613,7 @@
                 "--ki-button-quaternary-neutral-active-fg": "#5b616d",
                 "--ki-button-quaternary-neutral-disabled-bg": "rgba(255,255,255,0)",
                 "--ki-button-quaternary-neutral-disabled-border": "rgba(255,255,255,0)",
-                "--ki-button-quaternary-neutral-disabled-fg": "#5b616d",
+                "--ki-button-quaternary-neutral-disabled-fg": "#c3c6cc",
                 "--ki-button-quaternary-neutral-hover-bg": "rgba(0,0,0,0.03)",
                 "--ki-button-quaternary-neutral-hover-border": "rgba(255,255,255,0)",
                 "--ki-button-quaternary-neutral-hover-fg": "#5b616d",
@@ -20007,9 +20007,9 @@
             "type": null
           },
           "--ki-button-quaternary-neutral-disabled-fg": {
-            "default": "#5b616d",
+            "default": "#c3c6cc",
             "deprecatedSince": null,
-            "description": "color used by the button component for quaternary neutral disabled foreground.",
+            "description": "color used by the button component for quaternary neutral disabled foreground: the disabled ink of every field and selection control (Text/base_em). quaternary has no fill or border, so its ink alone shows the state; ki.text.muted equals its resting ki.text.med-em in onmars.",
             "replacement": null,
             "required": false,
             "type": null
@@ -28175,5 +28175,5 @@
       }
     }
   },
-  "surfaceSha256": "cef06aa59e2d3f13ed15dfab4c8c5b7a38650c11d54fdbdb90a046c8ec5ae601"
+  "surfaceSha256": "6467936c9af238233c2322dbef94abe4d2e9c5a144c92bc41b2ed1c7a83af737"
 }
