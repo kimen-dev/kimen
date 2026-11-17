@@ -9,8 +9,9 @@
 
 **Created**: 2026-11-17
 
-**Status**: Draft — awaiting founder confirmation of the scenarios, the token
-list and decisions D1–D7. No token source changes before that.
+**Status**: Confirmed — the founder confirmed the scenarios, the token list
+and decisions D1–D7 as proposed on 2026-11-17 ("Confirmo, implementa"),
+including S9 and the 0.1.0 → 1.0.0 schedule.
 
 **Input**: Founder request (2026-11-17), following the 2026-11-14 audit: about
 95 published tokens are consumed by no component, no other token and no
@@ -66,7 +67,7 @@ all 85. They fall into five groups:
 `{variant}` is each of `primary`, `secondary`, `tertiary`, `quaternary` and
 `ghost`.
 
-## Decisions *(proposed, awaiting the founder)*
+## Decisions *(founder, 2026-11-17)*
 
 **D1 — Scope: the 85 component tokens; the semantic layer stays.** The
 semantic layer is the published theming palette: the tokens guide tells

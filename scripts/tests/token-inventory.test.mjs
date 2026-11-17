@@ -49,6 +49,7 @@ test('composes sources in explicit order with last occurrence winning', () => {
       resolvedValue: '#445566',
       references: [],
       description: null,
+      deprecation: null,
       public: false,
       theme: 'onmars',
       scheme: 'light',
@@ -402,6 +403,7 @@ test('builds one stable public inventory across ordered compositions', () => {
       component: 'ki-dialog',
       type: 'color',
       description: 'Dialog background color.',
+      deprecation: null,
     },
     {
       path: 'ki.text.body',
@@ -410,6 +412,7 @@ test('builds one stable public inventory across ordered compositions', () => {
       component: null,
       type: 'color',
       description: 'Body text color.',
+      deprecation: null,
     },
   ]);
 });
