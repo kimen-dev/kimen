@@ -35,7 +35,33 @@
 //     A theme emits only the tokens whose expression differs from the base
 //     theme. Everything else is already declared on the same element by the
 //     rule above, so repeating it would only repeat bytes.
+//
+//   @media (<preference>) { <token roots> { ...mode... } }
+//   <token roots carrying, or inside one carrying, the declaration> { ...mode... }
+//     A MODE (specs 043/044) reassigns part of the token set on top of
+//     whatever theme is active: reduced transparency, more contrast. It is
+//     emitted twice with the same declarations — once for the person's
+//     preference, once for the page's own declaration — and only on token
+//     roots (`:root` and `[data-ki-theme]`), because those are the elements
+//     that redeclare every alias: a mode set anywhere else would change a
+//     token and leave every alias of it holding the old value.
+//
+//     Precedence never depends on stylesheet order: a default-theme mode rule
+//     has the specificity of the default rule (`:where()` around the
+//     declaration) and follows it in the same sheet, so a theme override
+//     still outranks it; the theme then re-asserts, after its own rule and in
+//     its own sheet, exactly the mode values its overrides displaced. A mode
+//     only ever switches ON: there is no declaration that removes it against
+//     the person's preference.
+//
+//   --ki-x: value; /* deprecated since 0.1.0, removed in 1.0.0: use --ki-y */
+//     The only comment the stylesheets carry (spec 041): a deprecated token
+//     keeps its value until it is removed, and says so where a consumer reads
+//     it. Comments are outside the published value contract, and minifiers
+//     drop them.
 import { createPropertyFormatter } from 'style-dictionary/utils';
+
+import { deprecationComment } from './deprecation.mjs';
 
 const THEME_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 // The only colour shapes the Kimen value transforms emit (#rrggbb for opaque
@@ -72,6 +98,7 @@ export function compositionDeclarations(dictionary) {
     declarations.set(name, {
       expression: line.slice(prefix.length, -1),
       resolved: String(token.$value),
+      inherited: token.$extensions?.['dev.kimen']?.inherit === 'document',
     });
   }
   return declarations;
@@ -178,31 +205,179 @@ export function themeOverrides({ base, theme }) {
   return new Map([...theme].filter(([name, expression]) => base.get(name) !== expression));
 }
 
-function rule(selectors, declarations) {
+function rule(selectors, declarations, deprecations = new Map()) {
+  const line = ([property, value]) => {
+    const deprecation = deprecations.get(property);
+    const note = deprecation === undefined ? '' : ` /* ${deprecationComment(deprecation)} */`;
+    return `  ${property}: ${value};${note}`;
+  };
+  return [`${selectors.join(',\n')} {`, ...declarations.map(line), '}', ''].join('\n');
+}
+
+/**
+ * The modes, in cascade order. Each one is activated by a user-preference
+ * media query or by one of its declarations; more contrast also activates
+ * reduced transparency, because a contrast ratio over glass depends on
+ * whatever is behind the glass and cannot be guaranteed.
+ */
+export const MODES = Object.freeze([
+  Object.freeze({
+    name: 'reduced-transparency',
+    media: '(prefers-reduced-transparency: reduce), (prefers-contrast: more)',
+    activations: Object.freeze(["[data-ki-transparency='reduce']", "[data-ki-contrast='more']"]),
+  }),
+  Object.freeze({
+    name: 'contrast-more',
+    media: '(prefers-contrast: more)',
+    activations: Object.freeze(["[data-ki-contrast='more']"]),
+  }),
+]);
+
+/**
+ * What a mode has to declare on top of a cascade: the tokens whose target
+ * expression differs from the one the layers below produce (each layer a
+ * partial map, the first one complete; the last layer that declares a token
+ * wins, as in the stylesheet).
+ */
+export function layeredOverrides({ target, layers }) {
+  const [base] = layers;
+  for (const name of base.keys()) {
+    if (!target.has(name)) throw new Error(`the mode does not define ${name}`);
+  }
+  for (const name of target.keys()) {
+    if (!base.has(name)) {
+      throw new Error(`the mode defines ${name}, which the base layer does not`);
+    }
+  }
+  const effective = new Map(layers.flatMap((layer) => [...layer]));
+  return new Map([...target].filter(([name, expression]) => effective.get(name) !== expression));
+}
+
+function indented(css) {
+  return css
+    .split('\n')
+    .map((line) => (line === '' ? line : `  ${line}`))
+    .join('\n');
+}
+
+/**
+ * One mode for the default theme (no `theme`) or re-asserted by a theme: the
+ * media-query block and the declaration block, with the same declarations.
+ */
+export function renderModeRules(mode, declarations, theme, deprecations) {
+  if (declarations.size === 0) return '';
+  const activation = mode.activations.join(', ');
+  const preference = theme
+    ? [`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`]
+    : [':root', ':where([data-ki-theme])'];
+  const declared = theme
+    ? [
+        `:root[data-ki-theme='${theme}']:where(${activation})`,
+        `[data-ki-theme='${theme}']:where(${activation})`,
+        `[data-ki-theme='${theme}']:where(:is(:root, [data-ki-theme]):is(${activation}) *)`,
+      ]
+    : [
+        `:root:where(${activation})`,
+        `:where([data-ki-theme]:is(${activation}))`,
+        `:where(:is(:root, [data-ki-theme]):is(${activation}) [data-ki-theme])`,
+      ];
   return [
-    `${selectors.join(',\n')} {`,
-    ...declarations.map(([property, value]) => `  ${property}: ${value};`),
+    `@media ${mode.media} {`,
+    indented(rule(preference, [...declarations], deprecations)).trimEnd(),
     '}',
     '',
+    rule(declared, [...declarations], deprecations),
   ].join('\n');
 }
 
-/** The default theme: the colour-scheme contract plus every token. */
-export function renderBaseStylesheet(declarations) {
+function modeRules(modes, theme, deprecations) {
+  return modes.map(({ mode, declarations }) =>
+    renderModeRules(mode, declarations, theme, deprecations),
+  );
+}
+
+/** The density levels the stylesheet publishes, besides `default` (spec 045). */
+export const DENSITIES = Object.freeze(['compact']);
+
+/**
+ * A document-inherited token (`$extensions['dev.kimen'].inherit: 'document'`)
+ * is declared on `:root` alone and read where a component uses it, so a
+ * declaration on any element reaches every component inside it and a theme
+ * root nested in it does not reset it. That holds only while no other token
+ * aliases it — an alias would freeze its value where the alias is declared —
+ * and while no theme or mode reassigns it or a token it references: those
+ * references resolve once, on `:root`.
+ */
+export function assertInheritedTokens({ declarations, inherited, overrides, label = 'a theme' }) {
+  const referencesOf = (expression) =>
+    [...expression.matchAll(/var\((--[a-z0-9-]+)\)/gu)].map((match) => match[1]);
+  const pinned = new Set(inherited);
+  for (const name of inherited) {
+    const expression = declarations.get(name);
+    if (expression === undefined) throw new Error(`${name} is not declared`);
+    for (const reference of referencesOf(expression)) pinned.add(reference);
+  }
+  for (const [name, expression] of declarations) {
+    for (const reference of referencesOf(expression)) {
+      if (inherited.has(reference)) {
+        throw new Error(`${name} aliases ${reference}, which is inherited from the document`);
+      }
+    }
+  }
+  for (const name of overrides?.keys() ?? []) {
+    if (pinned.has(name)) {
+      throw new Error(
+        `${label} reassigns ${name}, which ${inherited.has(name) ? 'is' : 'a token'} inherited from the document ${inherited.has(name) ? '' : 'references'}`.trim(),
+      );
+    }
+  }
+}
+
+/**
+ * The default theme: the colour-scheme contract, every token, the
+ * document-inherited tokens and each density level, then each mode.
+ * `deprecations` (custom property name -> deprecation) annotates the
+ * deprecated declarations.
+ */
+export function renderBaseStylesheet(
+  declarations,
+  { deprecations, modes = [], inherited = new Set(), densities = [] } = {},
+) {
   if (declarations.size === 0) throw new Error('the base theme has no tokens to declare');
+  const contextual = [...declarations].filter(([name]) => !inherited.has(name));
+  const documentWide = [...declarations].filter(([name]) => inherited.has(name));
   return [
     rule([':where(:root)'], [['color-scheme', 'light dark']]),
     rule(["[data-ki-color-scheme='light']"], [['color-scheme', 'light']]),
     rule(["[data-ki-color-scheme='dark']"], [['color-scheme', 'dark']]),
-    rule([':root', ':where([data-ki-theme])'], [...declarations]),
-  ].join('\n');
+    rule([':root', ':where([data-ki-theme])'], contextual, deprecations),
+    documentWide.length === 0 ? '' : rule([':root'], documentWide, deprecations),
+    ...densities.map(({ level, declarations: levelDeclarations }) =>
+      rule([`[data-ki-density='${level}']`], [...levelDeclarations], deprecations),
+    ),
+    ...modeRules(modes, undefined, deprecations),
+  ]
+    .filter((block) => block !== '')
+    .join('\n');
 }
 
-/** An opt-in theme: its overrides, for a themed document and for a themed subtree. */
-export function renderThemeStylesheet(theme, declarations) {
+/**
+ * An opt-in theme: its overrides, for a themed document and for a themed
+ * subtree, then the mode values those overrides displaced.
+ */
+export function renderThemeStylesheet(theme, declarations, { deprecations, modes = [] } = {}) {
   if (!THEME_NAME.test(theme)) throw new Error(`unsupported theme name ${JSON.stringify(theme)}`);
   if (declarations.size === 0) {
     throw new Error(`theme ${theme} does not differ from the base theme`);
   }
-  return rule([`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`], [...declarations]);
+  return [
+    rule(
+      [`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`],
+      [...declarations],
+      deprecations,
+    ),
+    ...modeRules(modes, theme, deprecations),
+  ]
+    .filter((block) => block !== '')
+    .join('\n');
 }

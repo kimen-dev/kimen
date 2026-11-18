@@ -95,14 +95,22 @@
           "$description": "color used by the select component for rest border."
         },
         "label-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "color used by the select component for rest label foreground."
         }
       },
       "hover": {
         "bg": {
           "$value": "{ki.surface.special.light-s2-dark-s3}",
-          "$description": "color used by the select component for hover background (MarsUI hover = rest fill + hover_overlay_inverse; nearest cross-scheme step that keeps the ramp monotonic in dark)."
+          "$description": "color used by the select component for hover background (MarsUI hover = rest fill + hover_overlay_inverse; nearest cross-scheme step that keeps the ramp monotonic in dark).",
+          "$deprecated": "Nothing paints it: on hover the trigger keeps its resting fill under the inverse hover overlay.",
+          "$extensions": {
+            "dev.kimen.deprecation": {
+              "since": "0.1.0",
+              "removal": "1.0.0",
+              "replacement": "--ki-surface-hover-overlay-inverse"
+            }
+          }
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -154,7 +162,7 @@
         }
       },
       "placeholder-fg": {
-        "$value": "{ki.text.med-em}",
+        "$value": "{ki.text.supporting}",
         "$description": "color used by the select component for placeholder foreground."
       },
       "listbox": {
@@ -173,7 +181,15 @@
         },
         "elevation": {
           "$value": "{ki.elevation.shadow-med}",
-          "$description": "color used by the select component for listbox elevation. Legacy of the pre-ramp hand-composed listbox shadow, superseded by ki.select.listbox.shadow; kept published because the public-api contract requires deprecation metadata at least one minor before removal."
+          "$description": "color used by the select component for listbox elevation. Legacy of the pre-ramp hand-composed listbox shadow, superseded by ki.select.listbox.shadow; kept published because the public-api contract requires deprecation metadata at least one minor before removal.",
+          "$deprecated": "Nothing paints it: the listbox shadow replaced the hand-composed elevation.",
+          "$extensions": {
+            "dev.kimen.deprecation": {
+              "since": "0.1.0",
+              "removal": "1.0.0",
+              "replacement": "--ki-select-listbox-shadow"
+            }
+          }
         },
         "shadow": {
           "$value": "{ki.elevation.e3}",
@@ -195,15 +211,15 @@
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}",
+          "$value": "{ki.focus.ring-color}",
           "$description": "color used by the select component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-width}",
           "$description": "dimension used by the select component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-offset}",
           "$description": "dimension used by the select component for focus ring offset."
         },
         "shadow": {

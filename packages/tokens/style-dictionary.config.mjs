@@ -136,3 +136,43 @@ export const material3DarkConfig = {
   hooks: kimenCssHooks,
   platforms: { css: cssPlatform },
 };
+
+// Modes (specs 043/044): each is a file of references layered over a whole
+// composition, so one file serves every theme and scheme. A mode's
+// composition includes every file of the composition it modifies plus the
+// modes it implies (more contrast implies reduced transparency) and takes its
+// own file as the sole `source`, keeping collisions inside it audible.
+export const MODE_SOURCES = Object.freeze({
+  'reduced-transparency': Object.freeze(['tokens/modes/reduced-transparency.tokens.json']),
+  'contrast-more': Object.freeze([
+    'tokens/modes/reduced-transparency.tokens.json',
+    'tokens/modes/contrast-more.tokens.json',
+  ]),
+});
+
+export function withMode(config, mode) {
+  const sources = MODE_SOURCES[mode];
+  if (sources === undefined) throw new Error(`unknown mode ${JSON.stringify(mode)}`);
+  return {
+    ...config,
+    include: [...(config.include ?? []), ...config.source, ...sources.slice(0, -1)],
+    source: sources.slice(-1),
+  };
+}
+
+// Densities (spec 045): a level reassigns the document-inherited density
+// tokens and nothing else. Its composition is the default one with the
+// level's file as the sole `source`.
+export const DENSITY_SOURCES = Object.freeze({
+  compact: 'tokens/modes/compact.tokens.json',
+});
+
+export function withDensity(config, level) {
+  const source = DENSITY_SOURCES[level];
+  if (source === undefined) throw new Error(`unknown density ${JSON.stringify(level)}`);
+  return {
+    ...config,
+    include: [...(config.include ?? []), ...config.source],
+    source: [source],
+  };
+}

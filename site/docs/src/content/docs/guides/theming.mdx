@@ -87,6 +87,78 @@ component stays legible on it. That is measured rather than assumed: on a
 page loading only the token stylesheet, with the visitor's OS set to dark,
 all 29 components hold 4.5:1 for every rendered string.
 
+## More contrast and less transparency
+
+Both themes answer two accessibility preferences of the person, in both
+schemes, through tokens alone:
+
+- **More contrast** (`prefers-contrast: more`): neutral text — body,
+  secondary, labels, helper and placeholders — measures 7:1 or more against
+  the surface behind it, neutral control boundaries 4.5:1, separators and
+  container edges 3:1, and the keyboard focus ring is 3px thick. Text on
+  brand and tone fills keeps 4.5:1, and disabled controls keep their
+  standard look, so they never read as operable.
+- **Less transparency** (`prefers-reduced-transparency: reduce`): every
+  surface that holds content — menus, tooltips, dialogs, glass buttons,
+  badges, alerts — becomes the opaque surface it reads as over the page, and
+  nothing blurs what is behind it. Hover and press washes and the modal
+  backdrop keep their translucency. More contrast implies it: a contrast
+  ratio over glass depends on what is behind the glass.
+
+A page can switch either mode on without the system preference, for an
+in-app accessibility setting or for browsers that do not report it (Safari
+has no `prefers-reduced-transparency`):
+
+```html
+<html data-ki-contrast="more">
+<html data-ki-transparency="reduce">
+```
+
+A declaration only ever adds: no value switches a mode off against the
+person's preference. It takes effect on the document root and on a theme
+root (an element with `data-ki-theme`), and a theme root nested inside one
+that declares it follows it. A region that needs its own contrast declares
+it next to its theme: `<section data-ki-theme="material3"
+data-ki-contrast="more">`.
+
+To give your own theme different values under a mode, restate them under the
+same media query (and the declaration, if you use it):
+
+```css
+@media (prefers-contrast: more) {
+  :root { --ki-outline-control: #000000; }
+}
+```
+
+## Density
+
+Any element can make its region compact — a data table, a toolbar, a dense
+settings panel — with one attribute:
+
+```html
+<section data-ki-density="compact">…</section>
+<div data-ki-density="default">…</div> <!-- back to the default inside it -->
+<html data-ki-density="compact">        <!-- the whole page -->
+```
+
+Compact is Material's −2 step: controls and rows 8px shorter (40 → 32 in
+onmars, 48 → 40 for material3 fields) and container padding and gaps ×0.75
+(16 → 12). Text, icons, radius, borders, focus rings and content sizes
+(avatar, badge, QR, progress, video) keep their size, and the `size` props
+still pick a size within the density. The nearest declaration wins, theme
+regions nested inside a compact region stay compact, and unknown values are
+ignored.
+
+No target ever drops under 24 × 24 CSS px (WCAG 2.5.8): every scaled
+control floors its size at `--ki-density-target-min`, so in compact the
+extra-small and small sizes can coincide at 24px. Two tokens carry the
+step, and you can set your own: `--ki-density-control-offset` (added to block
+sizes) and `--ki-density-space-scale` (multiplies padding and gaps).
+
+```css
+[data-ki-density='compact'] { --ki-density-control-offset: -4px; }
+```
+
 ## Surfaces
 
 The semantic surface scale in the current scheme — each swatch reads its

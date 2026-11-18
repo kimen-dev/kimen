@@ -64,17 +64,18 @@ None.
 
 ## CSS custom properties
 
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
 - `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-duration-instant`: Zero-duration step: transitions that must complete immediately (reduced-motion fallbacks, instant handoffs).
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard-accelerate`: Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in).
-- `--ki-outline-secondary-button-top`: semantic color for outline secondary button top.
 - `--ki-tooltip-backdrop-blur`: backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override).
 - `--ki-tooltip-bg`: color used by the tooltip component for background (flat fallback of the MarsUI glass card gradient; the v1 inverse bubble predates the master — specs/013 correction block. material3 keeps the inverse bubble via its override).
 - `--ki-tooltip-bg-end`: color used by the tooltip component for the glass gradient end (MarsUI Surface/special/light-s0_dark-s2).
 - `--ki-tooltip-bg-start`: color used by the tooltip component for the glass gradient start (MarsUI Surface/special/blur_base_light White/80; dark Dark/700 blur base). Paint background: linear-gradient(180deg, var(--ki-tooltip-bg-start), var(--ki-tooltip-bg-end)).
+- `--ki-tooltip-border-color`: color used by the tooltip component for its edge (MarsUI hairline bevel, Outline/secondary_button_top); one token so a mode or a theme can strengthen it.
 - `--ki-tooltip-border-width`: dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending).
 - `--ki-tooltip-fg`: color used by the tooltip component for foreground (MarsUI title row Text/high_em; lands together with the glass background — white-on-glass would break contrast).
 - `--ki-tooltip-font-size`: dimension used by the tooltip component for font size (MarsUI Heading_top style UI/Para/medium: body_1 13px).

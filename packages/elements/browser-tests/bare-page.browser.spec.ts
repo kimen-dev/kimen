@@ -94,14 +94,18 @@ const defineAll: readonly (() => void)[] = [
 const components = Object.keys(visualGalleries) as VisualComponent[];
 
 /**
- * The typeface a consumer is entitled to. Read from the shipped token
- * stylesheet rather than hardcoded, so a theme that renames its body family
- * still holds the contract.
+ * The typeface a consumer is entitled to: the one a Kimen page shows once it
+ * opts into the shipped page contract. Measured, not hardcoded and not read
+ * by token name, so a theme that changes its body family still holds the
+ * contract. If the page contract is already loaded it is left in place.
  */
 function expectedFontFamily(): string {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue('--ki-typography-family-body')
-    .trim();
+  const style = document.createElement('style');
+  style.textContent = pageContractCss;
+  document.head.append(style);
+  const family = getComputedStyle(document.documentElement).fontFamily;
+  style.remove();
+  return family;
 }
 
 /** Computed `font-family` strings quote families inconsistently across engines. */
@@ -340,7 +344,7 @@ afterAll(async () => {
 });
 
 describe('bare-page typography contract', () => {
-  it.each(components)('%s resolves the token typeface on its own host', async (component) => {
+  it.each(components)('%s uses the page-contract typeface on its own host', async (component) => {
     const wrapper = await mountBare(component);
     const expected = normalizeFamily(expectedFontFamily());
     expect(expected, 'the token stylesheet must publish a body family').not.toBe('');
@@ -359,7 +363,7 @@ describe('bare-page typography contract', () => {
   // it — but the user agent stylesheet sets `font` on native form controls
   // and buttons, and that beats inheritance. Those need an explicit reset.
   it.each(components)(
-    '%s resolves the token typeface on its native controls',
+    '%s uses the page-contract typeface on its native controls',
     async (component) => {
       const wrapper = await mountBare(component);
       const expected = normalizeFamily(expectedFontFamily());
@@ -451,12 +455,15 @@ describe('page contract', () => {
 
   it('paints the page from tokens instead of leaving the user agent canvas', async () => {
     await mountBare('ki-card');
+    // An earlier case may have loaded the page contract: start from a bare page.
+    document.getElementById(PAGE_CONTRACT_STYLE_ID)?.remove();
+    const userAgentFamily = getComputedStyle(document.documentElement).fontFamily;
     loadPageContract();
     const root = getComputedStyle(document.documentElement);
 
     expect(root.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
     expect(root.backgroundColor).not.toBe(root.color);
-    expect(normalizeFamily(root.fontFamily)).toBe(normalizeFamily(expectedFontFamily()));
+    expect(normalizeFamily(root.fontFamily)).not.toBe(normalizeFamily(userAgentFamily));
   });
 });
 

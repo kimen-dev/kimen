@@ -29,8 +29,8 @@
 
   /* Kimen-owned value, not MarsUI-derived: the Tab_nav masters define only
      the bar, so the 10px panel inset has no Figma reference to match. */
-  padding-block: var(--ki-tab-panel-padding-block);
-  padding-inline: var(--ki-tab-panel-padding-inline);
+  padding-block: calc(var(--ki-tab-panel-padding-block) * var(--ki-density-space-scale));
+  padding-inline: calc(var(--ki-tab-panel-padding-inline) * var(--ki-density-space-scale));
   background: var(--_ki-tab-panel-bg);
 }
 

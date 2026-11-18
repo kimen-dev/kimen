@@ -18,13 +18,18 @@
 // anything the stylesheet cannot express (a token that is not a colour and
 // still depends on the scheme, two tokens compiling to one custom property)
 // fails the build outright.
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 import StyleDictionary from 'style-dictionary';
 
+import { assertNoDeprecationDue, collectDeprecations } from './scripts/deprecation.mjs';
 import {
+  assertInheritedTokens,
   combineSchemes,
   compositionDeclarations,
+  DENSITIES,
+  layeredOverrides,
+  MODES,
   renderBaseStylesheet,
   renderThemeStylesheet,
   themeOverrides,
@@ -34,6 +39,8 @@ import {
   lightConfig,
   material3DarkConfig,
   material3LightConfig,
+  withDensity,
+  withMode,
 } from './style-dictionary.config.mjs';
 
 const dist = new URL('./dist/css/', import.meta.url);
@@ -43,30 +50,122 @@ async function composition(config) {
   return compositionDeclarations(dictionary);
 }
 
+// Deprecations (spec 041) are declared on base definitions, so the default
+// light composition carries all of them. An incomplete deprecation, a
+// replacement that is not a live published token, or a deprecated token the
+// package still ships at its removal version fails the build.
+const { version } = JSON.parse(await readFile(new URL('./package.json', import.meta.url), 'utf8'));
+const deprecations = collectDeprecations(
+  (await new StyleDictionary(lightConfig).getPlatformTokens('css')).allTokens,
+);
+assertNoDeprecationDue(deprecations, version);
+
 await mkdir(dist, { recursive: true });
 
-const onmars = combineSchemes({
-  light: await composition(lightConfig),
-  dark: await composition(darkConfig),
-});
-await writeFile(new URL('tokens.css', dist), renderBaseStylesheet(onmars));
+const themes = {
+  onmars: { light: lightConfig, dark: darkConfig },
+  material3: { light: material3LightConfig, dark: material3DarkConfig },
+};
+// One theme's two schemes merged into one expression per token, optionally
+// with a mode layered over both.
+async function theme(name, mode, variant = (config) => config) {
+  const { light, dark } = themes[name];
+  return combineSchemes({
+    light: await composition(variant(mode ? withMode(light, mode) : light)),
+    dark: await composition(variant(mode ? withMode(dark, mode) : dark)),
+  });
+}
 
-console.log(`✔ dist/css/tokens.css (theme: onmars — ${onmars.size} tokens, light + dark)`);
+const onmars = await theme('onmars');
+const material3 = themeOverrides({ base: onmars, theme: await theme('material3') });
 
-const material3 = themeOverrides({
-  base: onmars,
-  theme: combineSchemes({
-    light: await composition(material3LightConfig),
-    dark: await composition(material3DarkConfig),
-  }),
+// Each mode is emitted as what the cascade below it does not already produce,
+// in cascade order: the default theme's mode rules follow the default rule
+// (and every earlier mode), and a theme re-asserts, after its own rule, the
+// mode values its overrides displaced (./scripts/theme-stylesheet.mjs).
+const baseLayers = [onmars];
+const themeLayers = [];
+const baseModes = [];
+const material3Modes = [];
+for (const mode of MODES) {
+  const declarations = layeredOverrides({
+    target: await theme('onmars', mode.name),
+    layers: baseLayers,
+  });
+  baseLayers.push(declarations);
+  baseModes.push({ mode, declarations });
+  const reasserted = layeredOverrides({
+    target: await theme('material3', mode.name),
+    layers: [...baseLayers, material3, ...themeLayers],
+  });
+  themeLayers.push(reasserted);
+  material3Modes.push({ mode, declarations: reasserted });
+}
+
+// Density (spec 045): the document-inherited tokens, declared on :root alone,
+// and one rule per level that reassigns them on any element.
+const lightComposition = await composition(lightConfig);
+const inherited = new Set(
+  [...lightComposition].filter(([, token]) => token.inherited).map(([name]) => name),
+);
+assertInheritedTokens({ declarations: onmars, inherited });
+assertInheritedTokens({
+  declarations: onmars,
+  inherited,
+  overrides: material3,
+  label: 'material3',
 });
+for (const { mode, declarations } of [...baseModes, ...material3Modes]) {
+  assertInheritedTokens({
+    declarations: onmars,
+    inherited,
+    overrides: declarations,
+    label: mode.name,
+  });
+}
+const densities = [];
+for (const level of DENSITIES) {
+  const declarations = layeredOverrides({
+    target: await theme('onmars', undefined, (config) => withDensity(config, level)),
+    layers: [onmars],
+  });
+  for (const name of declarations.keys()) {
+    if (!inherited.has(name)) {
+      throw new Error(
+        `density ${level} reassigns ${name}, which is not inherited from the document`,
+      );
+    }
+  }
+  densities.push({ level, declarations });
+}
+densities.push({
+  level: 'default',
+  declarations: new Map(
+    [...new Set(densities.flatMap(({ declarations }) => [...declarations.keys()]))].map((name) => [
+      name,
+      onmars.get(name),
+    ]),
+  ),
+});
+
+await writeFile(
+  new URL('tokens.css', dist),
+  renderBaseStylesheet(onmars, { deprecations, modes: baseModes, inherited, densities }),
+);
+
+const modeSummary = (modes) =>
+  modes.map(({ mode, declarations }) => `${mode.name} ${declarations.size}`).join(', ');
+console.log(
+  `✔ dist/css/tokens.css (theme: onmars — ${onmars.size} tokens, light + dark, ${deprecations.size} deprecated; densities: ${densities.map(({ level }) => level).join(', ')}; modes: ${modeSummary(baseModes)})`,
+);
+
 await writeFile(
   new URL('tokens.material3.css', dist),
-  renderThemeStylesheet('material3', material3),
+  renderThemeStylesheet('material3', material3, { deprecations, modes: material3Modes }),
 );
 
 console.log(
-  `✔ dist/css/tokens.material3.css (theme: material3 — ${material3.size} overrides of onmars)`,
+  `✔ dist/css/tokens.material3.css (theme: material3 — ${material3.size} overrides of onmars; modes: ${modeSummary(material3Modes)})`,
 );
 
 // The page contract (opt-in): what a consumer page needs beyond tokens to

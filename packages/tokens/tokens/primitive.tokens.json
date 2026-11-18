@@ -499,6 +499,21 @@
       },
       "26xl": {
         "$value": "10rem"
+      },
+      "minus-md": {
+        "$value": "-0.5rem",
+        "$description": "Negative half-rem step: the compact density offset (spec 045), Material's -2 density step (2 x -4px)."
+      }
+    },
+    "scale": {
+      "$type": "number",
+      "unit": {
+        "$value": 1,
+        "$description": "Identity multiplier: spacing at its authored size."
+      },
+      "compact": {
+        "$value": 0.75,
+        "$description": "Compact density spacing multiplier (spec 045): 16px -> 12px."
       }
     },
     "radius": {
@@ -794,6 +809,10 @@
           "$value": "1px",
           "$description": "MarsUI hairline stroke: 1px divider/border width."
         }
+      },
+      "target-min": {
+        "$value": "24px",
+        "$description": "The smallest pointer target any density may produce: WCAG 2.5.8 (AA) asks for 24 x 24 CSS px. In px on purpose: WCAG measures CSS px, and a page that shrinks its root font size must not shrink the floor."
       },
       "qr": {
         "$value": "8rem",

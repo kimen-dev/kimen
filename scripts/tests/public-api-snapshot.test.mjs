@@ -1,4 +1,5 @@
 // @spec:018-project-integrity-hardening#S10
+// @spec:041-token-deprecation
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
@@ -339,6 +340,30 @@ test('[S10] repository snapshot expands exports and inventories every public sur
   });
 });
 
+test('S2 the public API snapshot records a token deprecation on its facet', () => {
+  const deprecation = {
+    reason: 'Nothing paints it.',
+    since: '0.1.0',
+    removal: '1.0.0',
+    replacement: '--ki-button-fg',
+  };
+  const snapshot = build({
+    tokenInventory: {
+      ...tokenInventory,
+      publicTokens: tokenInventory.publicTokens.map((token) => ({ ...token, deprecation })),
+    },
+  });
+
+  assert.deepEqual(snapshot.surface.packages['@kimen/tokens'].tokens['--ki-button-bg'], {
+    default: '#ffffff',
+    deprecatedSince: '0.1.0',
+    description: 'Button background color.',
+    replacement: '--ki-button-fg',
+    required: false,
+    type: 'color',
+  });
+});
+
 test('[S10] module signatures normalize an explicitly exported merged interface', () => {
   assert.equal(
     normalizePrintedSignature('export interface KiButton extends HTMLElement {\n}'),
@@ -466,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/036-field-validation-api.json',
+      '../../changes/api/045-density.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -540,11 +565,35 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // ki-icon-button now consumes the button tokens directly. None of the 188
   // was in the 0.0.0 baseline, so they leave the candidate without being
   // removals. 1361 - 188 = 1173.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1173);
+  // The preference modes (changes/api/043-preference-modes) add ten leaves:
+  // the focus-ring triple every focusable component now aliases, the tooltip
+  // edge colour, the supporting-text role enabled labels and placeholders
+  // alias (so more contrast leaves the disabled ink alone), and the five
+  // content tints (primary/info/success/warning/danger) that alert, badge and
+  // the indeterminate checkbox alias so reduced transparency can make them
+  // opaque while state washes keep their alpha. 1173 + 10 = 1183. Both modes
+  // are published as their own contexts.
+  // The compact density (changes/api/045-density) adds three: the two
+  // document-inherited density tokens and the 24px target floor. 1183 + 3 =
+  // 1186. The compact level is published as its own context too.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1186);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1173,
+    1186,
+  );
+  assert.deepEqual(
+    Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
+    [
+      'compact/dark',
+      'compact/light',
+      'contrast-more/dark',
+      'contrast-more/light',
+      'dark',
+      'light',
+      'reduced-transparency/dark',
+      'reduced-transparency/light',
+    ],
   );
   const published = candidate.surface.packages['@kimen/tokens'].tokens;
   for (const name of [
@@ -558,4 +607,14 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   ]) {
     assert.equal(Object.hasOwn(published, name), false, `${name} is no longer published`);
   }
+  // The token deprecation (changes/api/041-token-deprecation) keeps the 85
+  // component leaves nothing reads published, each with deprecatedSince 0.1.0
+  // and a replacement, so a later major can remove them.
+  const deprecated = Object.values(published).filter(({ deprecatedSince }) => deprecatedSince);
+  assert.equal(deprecated.length, 85);
+  assert.ok(
+    deprecated.every(
+      ({ deprecatedSince, replacement }) => deprecatedSince === '0.1.0' && replacement,
+    ),
+  );
 });

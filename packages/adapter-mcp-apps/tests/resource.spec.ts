@@ -31,11 +31,17 @@ const compat = readFileSync(join(process.cwd(), 'COMPAT.md'), 'utf8');
  * The document's declared size budget in bytes (Art. IV, spec "Bundle
  * budget"): the renderer, the validator, every catalog component definition
  * and the default token stylesheets, inline. Set about 5% above the measured
- * document (570 671 raw, 128 341 gzip, 106 036 brotli with 29 components).
- * Raising a number is a deliberate, reviewed act — the budget exists so
- * growth is noticed, not absorbed.
+ * document. Raising a number is a deliberate, reviewed act — the budget exists
+ * so growth is noticed, not absorbed.
+ *
+ * First set at 570 671 raw, 128 341 gzip, 106 036 brotli with 29 components.
+ * Re-based for spec 045 (compact density), when the document measured
+ * 577 458 raw, 135 256 gzip, 110 877 brotli: the token deprecation and field
+ * help of specs 041/042 had brought it to 134 418 gzip, the preference modes
+ * of 043/044 added 434 bytes and the density rules and per-component sizing
+ * of 045 another 404, 256 over the old gzip line.
  */
-const SIZE_BUDGET = { brotli: 112_000, gzip: 135_000, raw: 600_000 } as const;
+const SIZE_BUDGET = { brotli: 116_500, gzip: 142_000, raw: 606_000 } as const;
 
 /**
  * XML namespace names the DOM requires verbatim (`createElementNS`): they are

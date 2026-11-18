@@ -35,6 +35,8 @@ Read-only and disabled are distinct states — read-only stays focusable and is 
 
 - `autocomplete` (string | undefined): Native autocomplete detail token forwarded to the internal input. When NOT to use: omit when no autofill entry purpose is known.
 - `disabled` (boolean, default false): Prevents editing, removes the field from keyboard reach and exposes the unavailable state through the internal native input. When NOT to use: do not use disabled for readonly reference values.
+- `error-text` (string | undefined): Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `help-text` (string | undefined): One line of help under the field, read with it as its description: the format expected, or why the answer is asked. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
 - `name` (string | undefined): Form-data key for the submitted value. When NOT to use: omit when the field must not contribute named form data.
 - `placeholder` (string | undefined): Hint shown when the field is empty. When NOT to use: do not use placeholder as the accessible name.
@@ -50,7 +52,9 @@ Read-only and disabled are distinct states — read-only stays focusable and is 
 
 ## Parts
 
+- `error`: Error line shown in place of the help text while the field is invalid after the person answered or submitted; a polite live region, starting with a decorative error symbol.
 - `field`: Enclosure wrapper for background, border, radius and focus ring.
+- `help`: Help line under the field, read as the field's description.
 - `input`: Internal native input that owns entry text, caret and selection.
 - `label`: Visible label that provides the accessible name.
 
@@ -64,6 +68,8 @@ None.
 
 ## CSS custom properties
 
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-input-border-block-end-width`: dimension used by the input component for border block end width.
 - `--ki-input-border-block-start-width`: dimension used by the input component for border block start width.
 - `--ki-input-border-inline-end-width`: dimension used by the input component for border inline end width.
@@ -118,4 +124,9 @@ None.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.
+- `--ki-text-danger-high-em`: semantic color for text danger high em.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.

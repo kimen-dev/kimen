@@ -30,6 +30,19 @@ allowBuilds:
   # it detects the workspace's own nx copy (Nx Cloud steps stay off here,
   # nx.json has no cloud config), and 24.0.3 cleared minimumReleaseAge.
   'nx@24.0.3': true
+  # 24.0.5, reviewed for the dev-dependency group update: the postinstall
+  # command and dist/bin/post-install.js are byte-for-byte those of 24.0.3;
+  # of the modules it requires only get-cloud-options (now also reads an
+  # optional nx.json cloud url; nx.json has none) and package-json (env for
+  # temporary installs) changed. 24.0.5 cleared minimumReleaseAge.
+  'nx@24.0.5': true
+  # 24.0.6, reviewed for the dev-dependency group update: the postinstall
+  # command and dist/bin/post-install.js are byte-for-byte those of 24.0.5;
+  # of the modules it requires only update-manager (keeps the Nx Cloud client
+  # in a private owned directory instead of the shared temp dir; nx.json has
+  # no cloud config) and package-json (manifest lookup) changed, with no new
+  # network, exec or eval calls. 24.0.6 cleared minimumReleaseAge.
+  'nx@24.0.6': true
 
 # Resolution pins. These live here and not under `pnpm.overrides` in
 # package.json: pnpm 10 stopped reading that field, and a pin it does not read
@@ -44,7 +57,7 @@ overrides:
   # GHSA-42h9-826w-cgv3 and nine more, 1.16.0 → 1.18.0; then
   # GHSA-3pq3-5fj3-cg6v, GHSA-542g-h47m-68v8, GHSA-c29m-xwm3-cm6r,
   # GHSA-mghh-pgcx-3jjj, GHSA-x97p-jq2g-jp4f and seven more, 1.19.0 → 1.20.0.
-  axios: 1.21.0
+  axios: 1.21.1
   # GHSA-3jxr-9vmj-r5cp, GHSA-mh99-v99m-4gvg and GHSA-rgw5-rvv9-x895. The
   # 1.x line carries no fix for the later ones, so both lines resolve to
   # 5.0.9. Then GHSA-6j4f-fj2g-mc7p, GHSA-qhr7-859c-m2p7 (High) and
@@ -90,7 +103,7 @@ overrides:
   svgo: 4.1.0
   # GHSA-587h-7wmj-h5pm (High) and five Medium/Low, via astro (^8.0.13),
   # vitest, storybook and unplugin-stencil (all accept 8.x), 8.2.0 → 8.2.4.
-  vite: 8.3.5
+  vite: 8.3.8
   # GHSA-2wm5-q62r-hmrv, via stylelint (^2.9.3), 2.9.3 → 2.9.4.
   colord: 2.11.0
   # GHSA-rj75-hqrm-r3gf on both majors in the tree: postcss-nested wants

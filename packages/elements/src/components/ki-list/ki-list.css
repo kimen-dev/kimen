@@ -2,8 +2,8 @@
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
   --_ki-list-bg: var(--ki-list-bg);
-  --_ki-list-padding: var(--ki-list-padding);
-  --_ki-list-gap: var(--ki-list-gap);
+  --_ki-list-padding: calc(var(--ki-list-padding) * var(--ki-density-space-scale));
+  --_ki-list-gap: calc(var(--ki-list-gap) * var(--ki-density-space-scale));
   --_ki-list-item-divider-width: var(--ki-list-item-divider-width);
   --_ki-list-item-divider-color: var(--ki-list-item-divider-color);
 

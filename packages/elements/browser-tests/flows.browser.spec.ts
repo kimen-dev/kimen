@@ -31,6 +31,7 @@ import { defineCustomElement as defineKiSelect } from '../dist/components/ki-sel
 import { defineCustomElement as defineKiTab } from '../dist/components/ki-tab.js';
 import { defineCustomElement as defineKiTabPanel } from '../dist/components/ki-tab-panel.js';
 import { defineCustomElement as defineKiTabs } from '../dist/components/ki-tabs.js';
+import { settleEntryMotion } from './axe';
 
 type KiInputElement = HTMLElement & { value: string };
 type KiCheckboxElement = HTMLElement & { checked: boolean; value: string };
@@ -213,28 +214,6 @@ function formEntries(form: HTMLFormElement, submitter: HTMLElement | null): Reco
   );
 }
 
-function readTokenColor(name: string): string {
-  const probe = document.createElement('div');
-  probe.style.backgroundColor = `var(${name})`;
-  document.body.append(probe);
-  const value = getComputedStyle(probe).backgroundColor;
-  probe.remove();
-  return value;
-}
-
-function rgbToHex(value: string): string {
-  const rgbPattern = /^rgba?\((\d+),\s*(\d+),\s*(\d+)/u;
-  const match = rgbPattern.exec(value);
-
-  if (!match) {
-    return value.toLowerCase();
-  }
-
-  return `#${[match[1], match[2], match[3]]
-    .map((part) => Number(part).toString(16).padStart(2, '0'))
-    .join('')}`;
-}
-
 describe('composed user flows in a real browser', () => {
   // Flow 1 — complete account form. Composes 003-ki-input S1 (typing syncs
   // value) + S14 (empty required blocks submission) + S21 (invalid appearance
@@ -287,11 +266,12 @@ describe('composed user flows in a real browser', () => {
       submitted = formEntries(form, event.submitter);
     });
 
-    // Before any submission attempt no field advertises an invalid state.
+    // Before any submission attempt no field advertises an invalid state
+    // (spec 042 D6: an explicit aria-invalid="false" until the error shows).
     expect(email.matches(':state(user-invalid)')).toBe(false);
     expect(terms.matches(':state(user-invalid)')).toBe(false);
-    expect(selectTrigger(country).hasAttribute('aria-invalid')).toBe(false);
-    expect(radiogroupPart(contact).hasAttribute('aria-invalid')).toBe(false);
+    expect(selectTrigger(country).getAttribute('aria-invalid')).toBe('false');
+    expect(radiogroupPart(contact).getAttribute('aria-invalid')).toBe('false');
 
     // Submitting through the real submit control is blocked by constraint
     // validation while every required field is still empty.
@@ -326,13 +306,13 @@ describe('composed user flows in a real browser', () => {
       'select popup closed after commit',
     );
     await waitFor(
-      () => !selectTrigger(country).hasAttribute('aria-invalid'),
+      () => selectTrigger(country).getAttribute('aria-invalid') === 'false',
       'select invalid affordance cleared by the commit',
     );
     await userEvent.click(groupRadio(contact, 1));
     await waitFor(() => contact.value === 'sms', 'radio group selected SMS');
     await waitFor(
-      () => !radiogroupPart(contact).hasAttribute('aria-invalid'),
+      () => radiogroupPart(contact).getAttribute('aria-invalid') === 'false',
       'radio group invalid affordance cleared by the selection',
     );
 
@@ -469,7 +449,7 @@ describe('composed user flows in a real browser', () => {
   // S5 (declaring material3 restyles the document) + S3 (a document can force
   // dark over a light system preference), observed as live token
   // re-resolution on components that never remount.
-  it('flow: re-resolves brand, surface and component tokens on a live tree when theme and scheme change', async () => {
+  it('flow: a live tree repaints like a fresh mount when theme and scheme change', async () => {
     cleanup();
     // The earlier flows leave the pointer wherever they last clicked, and the
     // fidelity pass gave the field real hover paint — park it so every read
@@ -484,58 +464,54 @@ describe('composed user flows in a real browser', () => {
     await flowCommands.emulateColorScheme(null);
     await flowCommands.resetPointer();
     await nextFrame();
-    const main = await mountTree(
-      `
+    const markup = `
       <ki-button>Save changes</ki-button>
       <ki-input label="Email"></ki-input>
-      `,
-      ['ki-button', 'ki-input'],
-    );
-    const button = requireHost(main, 'ki-button');
-    const input = requireHost(main, 'ki-input') as KiInputElement;
-    const field = (): HTMLElement => requireHost(input.shadowRoot ?? input, '[part="field"]');
-    expect(rgbToHex(readTokenColor('--ki-color-brand-500'))).toBe('#845abe');
-    expect(rgbToHex(readTokenColor('--ki-surface-s0'))).toBe('#ffffff');
-    const onmarsButtonBg = getComputedStyle(shadowButton(button)).backgroundColor;
-    const onmarsFieldBg = getComputedStyle(field()).backgroundColor;
+      `;
+    const tags = ['ki-button', 'ki-input'];
+    const main = await mountTree(markup, tags);
+    const paintOf = (tree: HTMLElement) => {
+      const input = requireHost(tree, 'ki-input');
+      return {
+        button: getComputedStyle(shadowButton(requireHost(tree, 'ki-button'))).backgroundColor,
+        field: getComputedStyle(requireHost(input.shadowRoot ?? input, '[part="field"]'))
+          .backgroundColor,
+      };
+    };
+    // The live tree ends up looking exactly like the same markup mounted
+    // fresh under the new theme or scheme. Eventually-equal, not read-now:
+    // the fidelity pass transitions the field surface, so a snapshot taken
+    // while the swap is still tweening reports a colour between the two.
+    const expectLooksFreshlyMounted = async (message: string): Promise<void> => {
+      const fresh = await mountTree(markup, tags);
+      await settleEntryMotion();
+      const expected = paintOf(fresh);
+      await waitFor(
+        () => JSON.stringify(paintOf(main)) === JSON.stringify(expected),
+        `${message}: the live tree paints like a fresh mount`,
+      );
+      fresh.remove();
+    };
+    const onmars = paintOf(main);
 
     // Declare material3 with the tree mounted: tokens re-resolve in place.
     ensureMaterial3Tokens();
     document.documentElement.setAttribute('data-ki-theme', 'material3');
     await waitFor(
-      () => rgbToHex(readTokenColor('--ki-color-brand-500')) === '#6750a4',
-      'material3 brand token resolved',
-    );
-    await waitFor(
-      () => getComputedStyle(shadowButton(button)).backgroundColor !== onmarsButtonBg,
+      () => paintOf(main).button !== onmars.button,
       'mounted button repainted from material3 tokens',
     );
-    // Eventually-equal, not read-now: the fidelity pass transitions the field
-    // surface, so a snapshot taken while the theme swap is still tweening
-    // reports a colour between the two tokens that matches neither.
-    await waitFor(
-      () => getComputedStyle(field()).backgroundColor === readTokenColor('--ki-input-rest-bg'),
-      'mounted field settled on the material3 rest-bg token',
-    );
-    expect(button.isConnected && input.isConnected).toBe(true);
+    await expectLooksFreshlyMounted('material3');
+    expect(main.querySelector('ki-button')?.isConnected).toBe(true);
 
     // Back to onmars, then force dark over the light preference: the same
     // mounted components repaint from the dark token values.
     document.documentElement.removeAttribute('data-ki-theme');
     document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
     await waitFor(
-      () => rgbToHex(readTokenColor('--ki-surface-s0')) === '#0a0a0a',
-      'forced dark surface token resolved',
-    );
-    await waitFor(
-      () => getComputedStyle(field()).backgroundColor !== onmarsFieldBg,
+      () => paintOf(main).field !== onmars.field,
       'mounted field repainted from dark tokens',
     );
-    // Same eventually-equal read as the material3 leg above, and for the
-    // same reason: the field surface tweens between schemes.
-    await waitFor(
-      () => getComputedStyle(field()).backgroundColor === readTokenColor('--ki-input-rest-bg'),
-      'mounted field settled on the dark rest-bg token',
-    );
+    await expectLooksFreshlyMounted('forced dark');
   });
 });

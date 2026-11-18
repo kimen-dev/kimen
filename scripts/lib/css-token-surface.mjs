@@ -21,6 +21,56 @@ const SCHEME_CONTRACT = [
 ];
 /** The root, and — at zero specificity — the root of any themed subtree. */
 const DEFAULT_THEME_SELECTOR = ':root,:where([data-ki-theme])';
+/**
+ * The modes (specs 043/044), in the order a stylesheet must declare them.
+ * Each is published, when the default stylesheet declares it, as one context
+ * per scheme. A mode is a media-query block and a declaration rule carrying
+ * the same declarations; `activations` lists the declarations that switch it
+ * on, the first being its own, so more contrast also applies the reduced
+ * transparency block. Selectors are compared with their whitespace collapsed,
+ * not removed: a descendant combinator is part of the contract.
+ */
+const MODE_CONTRACT = [
+  {
+    name: 'reduced-transparency',
+    media: '@media (prefers-reduced-transparency: reduce), (prefers-contrast: more)',
+    activations: ["[data-ki-transparency='reduce']", "[data-ki-contrast='more']"],
+  },
+  {
+    name: 'contrast-more',
+    media: '@media (prefers-contrast: more)',
+    activations: ["[data-ki-contrast='more']"],
+  },
+];
+
+/**
+ * Density levels (spec 045), in the order a stylesheet declares them, each
+ * published as one context per scheme; `default` follows them and restores
+ * the document-inherited tokens they reassign.
+ */
+const DENSITY_CONTRACT = ['compact'];
+
+function modeSelectors(mode, theme) {
+  const activation = mode.activations.join(', ');
+  if (theme === undefined) {
+    return {
+      preference: ':root, :where([data-ki-theme])',
+      declared: [
+        `:root:where(${activation})`,
+        `:where([data-ki-theme]:is(${activation}))`,
+        `:where(:is(:root, [data-ki-theme]):is(${activation}) [data-ki-theme])`,
+      ].join(', '),
+    };
+  }
+  return {
+    preference: `:root[data-ki-theme='${theme}'], [data-ki-theme='${theme}']`,
+    declared: [
+      `:root[data-ki-theme='${theme}']:where(${activation})`,
+      `[data-ki-theme='${theme}']:where(${activation})`,
+      `[data-ki-theme='${theme}']:where(:is(:root, [data-ki-theme]):is(${activation}) *)`,
+    ].join(', '),
+  };
+}
 const SCHEMES = ['light', 'dark'];
 const CUSTOM_PROPERTY = /^--ki-[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const ZERO_DIMENSION =
@@ -192,6 +242,17 @@ function canonicalPrelude(prelude) {
     .replaceAll(/\s+/gu, '');
 }
 
+/** Whitespace collapsed, never removed, and normalized around `,`, `(` and `)`. */
+function spacedPrelude(prelude) {
+  return prelude
+    .trim()
+    .replaceAll(/"([^"\\]*)"/gu, "'$1'")
+    .replaceAll(/\s+/gu, ' ')
+    .replaceAll(/\s*,\s*/gu, ', ')
+    .replaceAll(/\(\s+/gu, '(')
+    .replaceAll(/\s+\)/gu, ')');
+}
+
 /** The top-level rules of a theme stylesheet. It has no conditional rules at all. */
 function parseRules(source, label) {
   const rules = [];
@@ -208,7 +269,15 @@ function parseRules(source, label) {
     if (selector.startsWith('@')) {
       // The scheme is `color-scheme` plus `light-dark()`, never a media query:
       // a conditional rule here would be a second, divergent scheme switch.
-      throw new Error(`${label} contains unsupported conditional rule ${prelude}`);
+      // The only conditional rules are the preference blocks of the modes.
+      const media = spacedPrelude(prelude);
+      if (!MODE_CONTRACT.some((mode) => mode.media === media)) {
+        throw new Error(`${label} contains unsupported conditional rule ${prelude}`);
+      }
+      const nested = parseRules(source.slice(opening + 1, closing), `${label} ${media}`);
+      rules.push({ selector, prelude, media, nested });
+      cursor = closing + 1;
+      continue;
     }
     rules.push({ selector, prelude, body: source.slice(opening + 1, closing) });
     cursor = closing + 1;
@@ -362,13 +431,81 @@ function resolvedPublicValues(declarationMap, publicTokenNames, scheme, label) {
   );
 }
 
-function contexts(declarationMap, publicTokenNames, label) {
-  return Object.fromEntries(
-    SCHEMES.map((scheme) => [
-      scheme,
-      resolvedPublicValues(declarationMap, publicTokenNames, scheme, `${label} ${scheme}`),
-    ]),
+function contexts(declarationMaps, publicTokenNames, label) {
+  return sortedObject(
+    [...declarationMaps].flatMap(([mode, declarationMap]) =>
+      SCHEMES.map((scheme) => {
+        const name = mode === '' ? scheme : `${mode}/${scheme}`;
+        return [
+          name,
+          resolvedPublicValues(declarationMap, publicTokenNames, scheme, `${label} ${name}`),
+        ];
+      }),
+    ),
   );
+}
+
+function sameDeclarations(left, right) {
+  return left.size === right.size && [...left].every(([name, value]) => right.get(name) === value);
+}
+
+/**
+ * The mode blocks that follow a stylesheet's own rule: for each mode of the
+ * contract, in order, either nothing or its preference block (one rule) and
+ * its declaration rule, with exactly the same declarations, each a token the
+ * stylesheet's contract already declares.
+ */
+function modeDeclarations(rules, { label, theme, known }) {
+  const modes = new Map();
+  let index = 0;
+  for (const mode of MODE_CONTRACT) {
+    const preference = rules[index];
+    if (preference?.media !== mode.media) continue;
+    const selectors = modeSelectors(mode, theme);
+    const [inner, ...extra] = preference.nested;
+    const declared = rules[index + 1];
+    if (
+      extra.length > 0 ||
+      inner === undefined ||
+      inner.media !== undefined ||
+      spacedPrelude(inner.prelude) !== selectors.preference ||
+      declared === undefined ||
+      declared.media !== undefined ||
+      spacedPrelude(declared.prelude) !== selectors.declared
+    ) {
+      throw new Error(`${label} contains an unsupported public rule for mode ${mode.name}`);
+    }
+    const underPreference = declarations(inner.body, `${label} ${mode.media}`);
+    const underDeclaration = declarations(declared.body, `${label} rule ${declared.prelude}`);
+    if (!sameDeclarations(underPreference, underDeclaration)) {
+      throw new Error(
+        `${label} mode ${mode.name} declares different tokens under its preference and its declaration`,
+      );
+    }
+    for (const name of underDeclaration.keys()) {
+      if (!known.has(name)) {
+        throw new Error(
+          `${label} mode ${mode.name} declares ${name}, which the token rule does not`,
+        );
+      }
+    }
+    modes.set(mode.name, underDeclaration);
+    index += 2;
+  }
+  if (index !== rules.length) {
+    throw new Error(
+      theme === undefined
+        ? `${label} contains an unsupported public rule`
+        : `${label} must contain exactly the rule :root[data-ki-theme='${theme}'],[data-ki-theme='${theme}'], followed only by its mode re-assertions`,
+    );
+  }
+  return modes;
+}
+
+/** Every mode that `mode`'s own declaration switches on, in contract order. */
+function activatedBy(mode) {
+  const [own] = mode.activations;
+  return MODE_CONTRACT.filter((candidate) => candidate.activations.includes(own));
 }
 
 /**
@@ -396,10 +533,53 @@ function defaultThemeDeclarations(css, label) {
   if (tokens?.selector !== DEFAULT_THEME_SELECTOR) {
     throw new Error(`${label} must declare its tokens in one ${DEFAULT_THEME_SELECTOR} rule`);
   }
-  if (rules.length !== SCHEME_CONTRACT.length + 1) {
-    throw new Error(`${label} contains an unsupported public rule`);
+  const contextual = declarations(tokens.body, `${label} rule ${tokens.prelude}`);
+  let index = SCHEME_CONTRACT.length + 1;
+  // Document-inherited tokens (spec 045): one `:root` rule, then each density
+  // level and `default`, each reassigning only those tokens.
+  let inherited = new Map();
+  const densities = new Map();
+  if (rules[index]?.selector === ':root' && rules[index].media === undefined) {
+    inherited = declarations(rules[index].body, `${label} rule ${rules[index].prelude}`);
+    for (const name of inherited.keys()) {
+      if (contextual.has(name)) {
+        throw new Error(
+          `${label} declares ${name} both on its theme roots and as inherited from the document`,
+        );
+      }
+    }
+    index += 1;
+    for (const level of [...DENSITY_CONTRACT, 'default']) {
+      const rule = rules[index];
+      if (rule?.selector !== `[data-ki-density='${level}']` || rule.media !== undefined) {
+        throw new Error(`${label} must declare the density ${level} after its inherited tokens`);
+      }
+      const levelDeclarations = declarations(rule.body, `${label} rule ${rule.prelude}`);
+      for (const name of levelDeclarations.keys()) {
+        if (!inherited.has(name)) {
+          throw new Error(
+            `${label} density ${level} reassigns ${name}, which is not inherited from the document`,
+          );
+        }
+      }
+      densities.set(level, levelDeclarations);
+      index += 1;
+    }
+    const reassigned = new Set(
+      DENSITY_CONTRACT.flatMap((level) => [...densities.get(level).keys()]),
+    );
+    const restored = densities.get('default');
+    if (
+      restored.size !== reassigned.size ||
+      [...reassigned].some((name) => restored.get(name) !== inherited.get(name))
+    ) {
+      throw new Error(`${label} density default must restore every inherited token`);
+    }
+    densities.delete('default');
   }
-  return declarations(tokens.body, `${label} rule ${tokens.prelude}`);
+  const base = mergeDeclarations(contextual, inherited);
+  const modes = modeDeclarations(rules.slice(index), { label, known: base });
+  return { base, modes, densities };
 }
 
 /**
@@ -411,18 +591,60 @@ function defaultThemeDeclarations(css, label) {
 function themeDeclarations({ css, theme, label, base }) {
   const selector = `:root[data-ki-theme='${theme}'],[data-ki-theme='${theme}']`;
   const rules = parseRules(stripComments(css, label), label);
-  if (rules.length !== 1 || rules[0].selector !== selector) {
+  if (rules[0]?.selector !== selector || rules[0].media !== undefined) {
     throw new Error(`${label} must contain exactly the rule ${selector}`);
   }
   const overrides = declarations(rules[0].body, `${label} rule ${rules[0].prelude}`);
   for (const name of overrides.keys()) {
-    if (!base.has(name)) {
+    if (!base.base.has(name)) {
       throw new Error(
         `${label} declares ${name}, which the ${DEFAULT_THEME_EXPORT} stylesheet does not`,
       );
     }
   }
-  return mergeDeclarations(base, overrides);
+  const modes = modeDeclarations(rules.slice(1), { label, theme, known: base.base });
+  for (const name of modes.keys()) {
+    if (!base.modes.has(name)) {
+      throw new Error(
+        `${label} re-asserts mode ${name}, which the ${DEFAULT_THEME_EXPORT} stylesheet does not declare`,
+      );
+    }
+  }
+  return { base: base.base, baseModes: base.modes, densities: base.densities, overrides, modes };
+}
+
+/**
+ * The declaration map in effect in each published context: the standard
+ * appearance, and each mode the default stylesheet declares, layered in the
+ * cascade order the stylesheets are built for (default rule, default modes,
+ * theme overrides, theme mode re-assertions).
+ */
+function contextDeclarations({
+  base,
+  baseModes,
+  densities = new Map(),
+  overrides = new Map(),
+  modes = new Map(),
+}) {
+  const layer = (maps) => maps.reduce((merged, map) => mergeDeclarations(merged, map), new Map());
+  const result = new Map([['', layer([base, overrides])]]);
+  for (const [level, levelDeclarations] of densities) {
+    result.set(level, layer([base, overrides, levelDeclarations]));
+  }
+  for (const mode of MODE_CONTRACT) {
+    if (!baseModes.has(mode.name)) continue;
+    const active = activatedBy(mode).map((candidate) => candidate.name);
+    result.set(
+      mode.name,
+      layer([
+        base,
+        ...active.filter((name) => baseModes.has(name)).map((name) => baseModes.get(name)),
+        overrides,
+        ...active.filter((name) => modes.has(name)).map((name) => modes.get(name)),
+      ]),
+    );
+  }
+  return result;
 }
 
 /**
@@ -526,11 +748,15 @@ export function buildPublicStylesheetSurface({
       const match = CSS_EXPORT.exec(subpath);
       if (match === null) throw new Error(`${subpath} is not a supported public CSS export`);
       const theme = match[1];
-      const declarationMap =
+      const layers =
         theme === undefined
-          ? defaultThemeOf(label)
+          ? {
+              base: defaultThemeOf(label).base,
+              baseModes: defaultThemeOf(label).modes,
+              densities: defaultThemeOf(label).densities,
+            }
           : themeDeclarations({ css, theme, label, base: defaultThemeOf(label) });
-      return [subpath, { target, contexts: contexts(declarationMap, names, label) }];
+      return [subpath, { target, contexts: contexts(contextDeclarations(layers), names, label) }];
     }),
   );
 }

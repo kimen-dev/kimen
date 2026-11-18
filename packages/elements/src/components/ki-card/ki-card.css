@@ -12,13 +12,13 @@
   --_ki-card-border-width: var(--ki-card-border-width);
   --_ki-card-radius: var(--ki-card-radius);
   --_ki-card-elevation: var(--ki-card-elevation);
-  --_ki-card-gap: var(--ki-card-gap);
-  --_ki-card-padding-block: var(--ki-card-padding-block);
-  --_ki-card-media-padding: var(--ki-card-media-padding);
+  --_ki-card-gap: calc(var(--ki-card-gap) * var(--ki-density-space-scale));
+  --_ki-card-padding-block: calc(var(--ki-card-padding-block) * var(--ki-density-space-scale));
+  --_ki-card-media-padding: calc(var(--ki-card-media-padding) * var(--ki-density-space-scale));
   --_ki-card-media-radius: var(--ki-card-media-radius);
-  --_ki-card-header-padding: var(--ki-card-header-padding);
-  --_ki-card-body-padding: var(--ki-card-body-padding);
-  --_ki-card-footer-padding: var(--ki-card-footer-padding);
+  --_ki-card-header-padding: calc(var(--ki-card-header-padding) * var(--ki-density-space-scale));
+  --_ki-card-body-padding: calc(var(--ki-card-body-padding) * var(--ki-density-space-scale));
+  --_ki-card-footer-padding: calc(var(--ki-card-footer-padding) * var(--ki-density-space-scale));
 
   display: block;
   font-family: var(--ki-typography-family-body);

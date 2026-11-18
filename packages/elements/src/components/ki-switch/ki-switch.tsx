@@ -1,8 +1,9 @@
-import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
+import { AttachInternals, Component, Element, h, Listen, Prop, State, Watch } from '@stencil/core';
 import {
   booleanFromAttributePresence,
   observeAttributePresence,
 } from '../../utils/boolean-presence';
+import { FieldMessage, fieldDescribedBy, fieldInvalid, fieldText } from '../../utils/field-message';
 import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
 
 /**
@@ -23,6 +24,10 @@ import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
  * @part track - On/off channel.
  * @part thumb - Traveling handle.
  * @part label - Label wrapper around the default slot.
+ * @part help - Help line under the switch, read as its description.
+ * @part error - Line that shows, in place of the help text, an error the
+ * application set with `setCustomValidity` once the form is submitted; a polite
+ * live region, starting with a decorative error symbol.
  * @event change - Fired once after a user toggle commits, composed across the shadow
  * boundary; `checked` is already current when listeners run. When to use:
  * apply the on/off effect. When NOT to use: do not expect it for programmatic
@@ -30,7 +35,7 @@ import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
  */
 @Component({
   tag: 'ki-switch',
-  styleUrl: 'ki-switch.css',
+  styleUrls: ['../../utils/field-message.css', 'ki-switch.css'],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -82,7 +87,21 @@ export class KiSwitch {
    */
   @Prop({ reflect: true }) value?: string;
 
+  /**
+   * One line of help under the switch, read with it as its description: what
+   * turning it on changes.
+   * When NOT to use: do not repeat the label. A switch has no constraint of
+   * its own, so it takes no error text; an error the application sets with
+   * `setCustomValidity` shows in this line's place.
+   */
+  @Prop({ reflect: true }) helpText?: string;
+
   @State() private formDisabled = false;
+  // Whether the application's error has been reported to the person (a
+  // blocked submission, checkValidity or reportValidity).
+  @State() private userInvalid = false;
+  // The validation message last handed to ElementInternals.
+  @State() private message = '';
 
   private input: HTMLInputElement | undefined;
   private resetChecked = false;
@@ -207,6 +226,7 @@ export class KiSwitch {
   @Watch('disabled')
   protected disabledChanged(): void {
     this.syncInput();
+    this.syncUserInvalid();
   }
 
   @Watch('value')
@@ -221,6 +241,7 @@ export class KiSwitch {
 
   formResetCallback(): void {
     this.checked = this.resetChecked;
+    this.userInvalid = false;
     this.syncInput();
     this.syncFormValue();
   }
@@ -229,6 +250,19 @@ export class KiSwitch {
     this.formDisabled = disabled;
     this.syncInput();
     this.syncFormValue();
+    this.syncUserInvalid();
+  }
+
+  @Listen('invalid')
+  protected handleInvalid(): void {
+    this.userInvalid = true;
+  }
+
+  // A disabled switch takes no part in validation, so its error stops showing.
+  private syncUserInvalid(): void {
+    if (this.effectiveDisabled) {
+      this.userInvalid = false;
+    }
   }
 
   private readonly setInput = (input: HTMLInputElement | undefined): void => {
@@ -248,10 +282,13 @@ export class KiSwitch {
     this.input.setCustomValidity(this.customValidity);
     if (this.input.validity.valid) {
       this.internals.setValidity({});
+      this.message = '';
+      this.userInvalid = false;
       return;
     }
 
     this.internals.setValidity(this.input.validity, this.input.validationMessage, this.input);
+    this.message = this.internals.validationMessage;
   }
 
   private syncInput(): void {
@@ -283,7 +320,11 @@ export class KiSwitch {
   };
 
   render() {
-    return (
+    const messages = {
+      help: fieldText(this.helpText),
+      error: this.userInvalid && !this.effectiveDisabled ? this.message : '',
+    };
+    return [
       // eslint-disable-next-line jsx-a11y/label-has-associated-control -- Shadow label wraps the native input and slotted accessible-name content.
       <label class="base">
         <input
@@ -295,6 +336,8 @@ export class KiSwitch {
           disabled={this.effectiveDisabled}
           name={this.name ?? ''}
           value={this.value ?? 'on'}
+          aria-describedby={fieldDescribedBy(messages)}
+          aria-invalid={fieldInvalid(messages)}
           onInput={this.handleInput}
           onChange={this.handleChange}
         />
@@ -317,7 +360,8 @@ export class KiSwitch {
         <span part="label">
           <slot />
         </span>
-      </label>
-    );
+      </label>,
+      <FieldMessage {...messages} />,
+    ];
   }
 }

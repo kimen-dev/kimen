@@ -473,8 +473,9 @@ describe('ki-radio-group in a real browser', () => {
     document.body.append(form);
     const el = await mount({ name: 'contact', required: true }, form);
 
-    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.hasAttribute('aria-invalid')).toBe(
-      false,
+    // Spec 042 D6: an explicit aria-invalid="false" until the error shows.
+    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.getAttribute('aria-invalid')).toBe(
+      'false',
     );
     form.reportValidity();
     await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -486,7 +487,7 @@ describe('ki-radio-group in a real browser', () => {
 
     await expect
       .element(page.getByRole('radiogroup', { name: 'Contact preference' }))
-      .not.toHaveAttribute('aria-invalid');
+      .toHaveAttribute('aria-invalid', 'false');
   });
 
   it('S14 form reset restores the initial selection silently', async () => {
@@ -597,19 +598,31 @@ describe('ki-radio-group in a real browser', () => {
     expect(await repaintedUnderForcedDark(el)).toContain('control');
   });
 
-  it('S16 material3 restyles the group through token values alone', async () => {
+  it('S16 material3 repaints the selected dot and spaces the options with unchanged markup', async () => {
     cleanup();
     ensureMaterial3Tokens();
     const el = await mount({ value: 'email' });
-    const before = getComputedStyle(radioAt(el, 0)).getPropertyValue('--ki-radio-selected-rest-fg');
+    const options = [...el.querySelectorAll('ki-radio')];
+    const selectedDot = (): string => {
+      const control = options[0]?.shadowRoot?.querySelector('[part="control"]');
+      if (!control) {
+        throw new Error('Missing radio control');
+      }
+      return getComputedStyle(control, '::before').backgroundColor;
+    };
+    const gapBetweenOptions = (): number =>
+      (options[1]?.getBoundingClientRect().top ?? 0) -
+      (options[0]?.getBoundingClientRect().bottom ?? 0);
+    const markup = el.outerHTML;
+    const before = { dot: selectedDot(), gap: gapBetweenOptions() };
 
     document.documentElement.setAttribute('data-ki-theme', 'material3');
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
-    const after = getComputedStyle(radioAt(el, 0)).getPropertyValue('--ki-radio-selected-rest-fg');
-    const groupGap = getComputedStyle(el).getPropertyValue('--ki-radio-group-gap');
-    expect(after).not.toBe(before);
-    expect(groupGap.trim()).not.toBe('');
+    // The selected dot takes the theme's ink and the options spread apart.
+    await expect.poll(selectedDot).not.toBe(before.dot);
+    expect(gapBetweenOptions()).toBeGreaterThan(before.gap);
+    expect(el.outerHTML).toBe(markup);
   });
 
   it('S18 option layout follows the document writing direction under RTL', async () => {
@@ -693,11 +706,21 @@ describe('ki-radio-group with options that arrive after the group', () => {
     return button;
   }
 
+  // The stop AFTER the group is a text field: every engine puts one in the
+  // tab order, while WebKit on macOS leaves buttons out by default, so a
+  // trailing button let Tab fall through to the body there.
+  function pageField(label: string): HTMLInputElement {
+    const field = document.createElement('input');
+    field.setAttribute('aria-label', label);
+    document.body.append(field);
+    return field;
+  }
+
   it('S5 options appended after load select the pending value and form a single tab stop', async () => {
     cleanup();
     const before = pageButton('Before');
     const el = await mountEmpty('b');
-    const after = pageButton('After');
+    const after = pageField('After');
 
     appendOption(el, 'a');
     const pending = appendOption(el, 'b');

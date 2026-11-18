@@ -59,6 +59,9 @@
   --_ki-textarea-border: var(--ki-textarea-disabled-border);
   --_ki-textarea-label-fg: var(--ki-textarea-disabled-label-fg);
   --_ki-textarea-placeholder-fg: var(--ki-textarea-disabled-placeholder-fg);
+
+  /* The help line dims with the label (spec 042 D9). */
+  --_ki-field-help-fg: var(--ki-textarea-disabled-label-fg);
 }
 
 .root {
@@ -84,7 +87,10 @@
   border-inline-start: var(--ki-textarea-border-inline-start-width) solid var(--_ki-textarea-border);
   border-inline-end: var(--ki-textarea-border-inline-end-width) solid var(--_ki-textarea-border);
   border-radius: var(--ki-textarea-radius);
-  min-block-size: var(--ki-textarea-min-target);
+  min-block-size: max(
+    var(--ki-density-target-min),
+    calc(var(--ki-textarea-min-target) + var(--ki-density-control-offset))
+  );
 }
 
 /* Double focus mechanism (patrón V.1 §2.5, same as ki-input): MarsUI
@@ -137,4 +143,11 @@
     transition-property: background-color, border-color, box-shadow;
     transition-timing-function: var(--ki-motion-easing-out);
   }
+}
+
+/* Help and error lines (spec 042) share the label's inline inset, so their
+   ink aligns with the label's. */
+[part="help"],
+[part="error"] {
+  padding-inline: var(--ki-textarea-label-padding-inline);
 }

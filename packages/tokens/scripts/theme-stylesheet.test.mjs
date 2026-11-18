@@ -1,3 +1,4 @@
+// @spec:041-token-deprecation
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
@@ -8,11 +9,19 @@ import {
   lightConfig,
   material3DarkConfig,
   material3LightConfig,
+  withDensity,
+  withMode,
 } from '../style-dictionary.config.mjs';
+import { collectDeprecations } from './deprecation.mjs';
 import {
+  assertInheritedTokens,
   combineSchemes,
   compositionDeclarations,
+  DENSITIES,
+  layeredOverrides,
+  MODES,
   renderBaseStylesheet,
+  renderModeRules,
   renderThemeStylesheet,
   themeOverrides,
 } from './theme-stylesheet.mjs';
@@ -288,12 +297,82 @@ test('a theme stylesheet scopes its overrides to the themed root and to any them
   );
 });
 
-test('emitted stylesheets carry no comments', () => {
+test('emitted stylesheets carry no comments unless a token is deprecated', () => {
   const declarations = new Map([['--ki-a', '1px']]);
 
   assert.doesNotMatch(renderBaseStylesheet(declarations), /\/\*/u);
   assert.doesNotMatch(renderThemeStylesheet('material3', declarations), /\/\*/u);
 });
+
+const focusBorderDeprecation = new Map([
+  [
+    '--ki-input-focus-border',
+    {
+      reason: 'A focused field keeps its resting border and is marked by its focus ring.',
+      since: '0.1.0',
+      removal: '1.0.0',
+      replacement: '--ki-input-focus-ring-color',
+    },
+  ],
+]);
+const ANNOTATION =
+  '/* deprecated since 0.1.0, removed in 1.0.0: use --ki-input-focus-ring-color */';
+
+test('S1 a deprecated declaration keeps its value and is annotated in both stylesheets', () => {
+  const declarations = new Map([
+    ['--ki-input-focus-border', 'var(--ki-outline-primary-high-em)'],
+    ['--ki-input-focus-ring-color', 'var(--ki-outline-primary-high-em)'],
+  ]);
+  const options = { deprecations: focusBorderDeprecation };
+
+  const base = renderBaseStylesheet(declarations, options);
+  const theme = renderThemeStylesheet('material3', declarations, options);
+
+  for (const css of [base, theme]) {
+    assert.match(
+      css,
+      new RegExp(
+        `^  --ki-input-focus-border: var\\(--ki-outline-primary-high-em\\); ${ANNOTATION.replaceAll('*', '\\*')}$`,
+        'mu',
+      ),
+    );
+    assert.match(css, /^ {2}--ki-input-focus-ring-color: var\(--ki-outline-primary-high-em\);$/mu);
+  }
+  // Removing the annotations gives back the stylesheet without deprecations.
+  assert.equal(base.replace(` ${ANNOTATION}`, ''), renderBaseStylesheet(declarations));
+});
+
+test('S1 the published sources mark the 85 dead component tokens and annotate them', async () => {
+  const dictionary = await new StyleDictionary({
+    ...lightConfig,
+    log: { verbosity: 'silent' },
+  }).getPlatformTokens('css');
+  const deprecations = collectDeprecations(dictionary.allTokens);
+
+  assert.equal(deprecations.size, 85);
+  const { reason, since, removal, replacement } = deprecations.get('--ki-input-focus-border') ?? {};
+  assert.match(reason ?? '', /focus ring/u);
+  assert.deepEqual(
+    { since, removal, replacement },
+    { since: '0.1.0', removal: '1.0.0', replacement: '--ki-input-focus-ring-color' },
+  );
+  for (const deprecation of deprecations.values()) {
+    assert.equal(deprecation.since, '0.1.0');
+    assert.equal(deprecation.removal, '1.0.0');
+  }
+  const css = renderBaseStylesheet(compositionDeclarationsOf(dictionary), { deprecations });
+  assert.match(
+    css,
+    new RegExp(`^  --ki-input-focus-border: [^;]+; ${ANNOTATION.replaceAll('*', '\\*')}$`, 'mu'),
+  );
+  assert.equal(css.match(/\/\* deprecated since /gu)?.length, 85);
+});
+
+/** One composition's expressions, as build.mjs hands them to the renderer. */
+const compositionDeclarationsOf = (dictionary) =>
+  new Map(
+    [...compositionDeclarations(dictionary)].map(([name, { expression }]) => [name, expression]),
+  );
 
 test('a stylesheet with nothing to declare, or an unsafe theme name, is rejected', () => {
   assert.throws(() => renderBaseStylesheet(new Map()), /no tokens to declare/u);
@@ -318,6 +397,13 @@ test('a composition is read from Style Dictionary with references kept and descr
           'black-3': { $type: 'color', $value: '#00000008' },
         },
         size: { hairline: { $type: 'dimension', $value: '1px' } },
+        density: {
+          scale: {
+            $type: 'number',
+            $value: 1,
+            $extensions: { 'dev.kimen': { inherit: 'document' } },
+          },
+        },
         surface: { $type: 'color', s0: { $value: '{ki.color.black}', $description: 'Page.' } },
         border: {
           hairline: {
@@ -335,14 +421,23 @@ test('a composition is read from Style Dictionary with references kept and descr
   assert.deepEqual(declarations.get('--ki-color-black'), {
     expression: '#000000',
     resolved: '#000000',
+    inherited: false,
   });
   assert.deepEqual(declarations.get('--ki-surface-s0'), {
     expression: 'var(--ki-color-black)',
     resolved: '#000000',
+    inherited: false,
   });
   assert.deepEqual(declarations.get('--ki-border-hairline'), {
     expression: 'var(--ki-size-hairline) solid var(--ki-color-black-3)',
     resolved: '1px solid rgba(0, 0, 0, 0.03)',
+    inherited: false,
+  });
+  // A token marked as inherited from the document says so.
+  assert.deepEqual(declarations.get('--ki-density-scale'), {
+    expression: '1',
+    resolved: '1',
+    inherited: true,
   });
 });
 
@@ -440,4 +535,342 @@ test('the emitted stylesheets resolve to the Style Dictionary value of every tok
       assert.deepEqual(mismatches, [], `${theme} ${scheme}`);
     }
   }
+});
+
+// Modes (specs 043/044). A mode is a reassignment of part of the token set
+// that applies on top of a theme. The stylesheets emit, per mode, only what
+// the cascade below it does not already produce.
+
+test('a mode emits only the tokens whose expression differs from what the lower layers produce', () => {
+  const base = new Map([
+    ['--ki-a', '#000000'],
+    ['--ki-b', 'var(--ki-a)'],
+    ['--ki-c', '1px'],
+  ]);
+  const theme = new Map([['--ki-b', '#111111']]);
+  const target = new Map([
+    ['--ki-a', '#000000'],
+    ['--ki-b', 'var(--ki-c)'],
+    ['--ki-c', '1px'],
+  ]);
+
+  assert.deepEqual([...layeredOverrides({ target, layers: [base] })], [['--ki-b', 'var(--ki-c)']]);
+  // The theme already moved --ki-b; the mode must say it again above the theme.
+  assert.deepEqual(
+    [...layeredOverrides({ target, layers: [base, theme] })],
+    [['--ki-b', 'var(--ki-c)']],
+  );
+  // Nothing to say when the lower layers already produce the target.
+  assert.deepEqual(
+    [
+      ...layeredOverrides({
+        target: new Map([...base, ['--ki-b', '#111111']]),
+        layers: [base, theme],
+      }),
+    ],
+    [],
+  );
+});
+
+test('a mode target must expose exactly the token names of the base layer', () => {
+  const base = new Map([['--ki-a', '#000000']]);
+  assert.throws(
+    () => layeredOverrides({ target: new Map(), layers: [base] }),
+    /does not define --ki-a/u,
+  );
+  assert.throws(
+    () => layeredOverrides({ target: new Map([...base, ['--ki-z', '1px']]), layers: [base] }),
+    /--ki-z, which the base layer does not/u,
+  );
+});
+
+test('the modes are reduced transparency, which more contrast also activates, then more contrast', () => {
+  assert.deepEqual(
+    MODES.map(({ name, media, activations }) => [name, media, activations]),
+    [
+      [
+        'reduced-transparency',
+        '(prefers-reduced-transparency: reduce), (prefers-contrast: more)',
+        ["[data-ki-transparency='reduce']", "[data-ki-contrast='more']"],
+      ],
+      ['contrast-more', '(prefers-contrast: more)', ["[data-ki-contrast='more']"]],
+    ],
+  );
+});
+
+test('a default-theme mode applies under its media query and under its declaration, on the root and on every theme root', () => {
+  const contrast = MODES.find((mode) => mode.name === 'contrast-more');
+  const css = renderModeRules(
+    contrast,
+    new Map([['--ki-outline-control', 'var(--ki-outline-strong)']]),
+  );
+
+  assert.equal(
+    css,
+    [
+      '@media (prefers-contrast: more) {',
+      '  :root,',
+      '  :where([data-ki-theme]) {',
+      '    --ki-outline-control: var(--ki-outline-strong);',
+      '  }',
+      '}',
+      '',
+      // Same specificity as the default rule it follows: `:where()` wraps
+      // the declaration, so a theme override still outranks the mode and a
+      // theme re-asserts its own mode values in its own stylesheet.
+      ":root:where([data-ki-contrast='more']),",
+      ":where([data-ki-theme]:is([data-ki-contrast='more'])),",
+      ":where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) [data-ki-theme]) {",
+      '  --ki-outline-control: var(--ki-outline-strong);',
+      '}',
+      '',
+    ].join('\n'),
+  );
+});
+
+test('a theme re-asserts its mode values above its own overrides', () => {
+  const transparency = MODES.find((mode) => mode.name === 'reduced-transparency');
+  const css = renderModeRules(transparency, new Map([['--ki-blur', '0px']]), 'material3');
+
+  assert.equal(
+    css,
+    [
+      '@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {',
+      "  :root[data-ki-theme='material3'],",
+      "  [data-ki-theme='material3'] {",
+      '    --ki-blur: 0px;',
+      '  }',
+      '}',
+      '',
+      ":root[data-ki-theme='material3']:where([data-ki-transparency='reduce'], [data-ki-contrast='more']),",
+      "[data-ki-theme='material3']:where([data-ki-transparency='reduce'], [data-ki-contrast='more']),",
+      "[data-ki-theme='material3']:where(:is(:root, [data-ki-theme]):is([data-ki-transparency='reduce'], [data-ki-contrast='more']) *) {",
+      '  --ki-blur: 0px;',
+      '}',
+      '',
+    ].join('\n'),
+  );
+});
+
+test('a mode with nothing to say renders nothing, and the stylesheets append the modes after their own rule', () => {
+  const [transparency, contrast] = MODES;
+  assert.equal(renderModeRules(contrast, new Map()), '');
+
+  const base = renderBaseStylesheet(new Map([['--ki-a', '1px']]), {
+    modes: [
+      { mode: transparency, declarations: new Map([['--ki-a', '2px']]) },
+      { mode: contrast, declarations: new Map() },
+    ],
+  });
+  assert.ok(base.endsWith(renderModeRules(transparency, new Map([['--ki-a', '2px']]))));
+  assert.doesNotMatch(base, /@media \(prefers-contrast: more\) \{/u);
+
+  const theme = renderThemeStylesheet('material3', new Map([['--ki-a', '3px']]), {
+    modes: [{ mode: contrast, declarations: new Map([['--ki-a', '4px']]) }],
+  });
+  assert.ok(theme.startsWith(":root[data-ki-theme='material3'],\n[data-ki-theme='material3'] {"));
+  assert.ok(theme.endsWith(renderModeRules(contrast, new Map([['--ki-a', '4px']]), 'material3')));
+});
+
+test('under every mode the emitted stylesheets resolve to the Style Dictionary value of every token in every theme and scheme', async () => {
+  const read = async (config) =>
+    compositionDeclarations(
+      await new StyleDictionary({ ...config, log: { verbosity: 'silent' } }).getPlatformTokens(
+        'css',
+      ),
+    );
+  const configs = {
+    onmars: { light: lightConfig, dark: darkConfig },
+    material3: { light: material3LightConfig, dark: material3DarkConfig },
+  };
+  const combined = async (theme, mode) =>
+    combineSchemes({
+      light: await read(mode ? withMode(configs[theme].light, mode) : configs[theme].light),
+      dark: await read(mode ? withMode(configs[theme].dark, mode) : configs[theme].dark),
+    });
+
+  const base = await combined('onmars');
+  const material3 = themeOverrides({ base, theme: await combined('material3') });
+  const baseLayers = [base];
+  const themeLayers = [];
+  const emitted = new Map();
+  for (const mode of MODES) {
+    const baseMode = layeredOverrides({
+      target: await combined('onmars', mode.name),
+      layers: baseLayers,
+    });
+    baseLayers.push(baseMode);
+    const themeMode = layeredOverrides({
+      target: await combined('material3', mode.name),
+      layers: [...baseLayers, material3, ...themeLayers],
+    });
+    themeLayers.push(themeMode);
+    emitted.set(mode.name, {
+      onmars: new Map(baseLayers.flatMap((layer) => [...layer])),
+      material3: new Map([...baseLayers, material3, ...themeLayers].flatMap((layer) => [...layer])),
+    });
+  }
+
+  assert.ok(emitted.get('contrast-more').onmars.size === base.size);
+  for (const mode of MODES) {
+    for (const theme of ['onmars', 'material3']) {
+      for (const scheme of ['light', 'dark']) {
+        const expected = await read(withMode(configs[theme][scheme], mode.name));
+        const actual = resolveAll(emitted.get(mode.name)[theme], scheme);
+        const mismatches = [...expected]
+          .filter(([name, token]) => actual.get(name) !== token.resolved)
+          .map(([name, token]) => `${name}: ${actual.get(name)} != ${token.resolved}`);
+        assert.deepEqual(mismatches, [], `${mode.name} ${theme} ${scheme}`);
+      }
+    }
+  }
+});
+
+test('the two mode files reassign disjoint token sets, so they compose in any combination', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const paths = (tree, prefix = []) =>
+    Object.entries(tree).flatMap(([key, value]) => {
+      if (key.startsWith('$') || value === null || typeof value !== 'object') return [];
+      return '$value' in value ? [[...prefix, key].join('.')] : paths(value, [...prefix, key]);
+    });
+  const read = async (name) =>
+    paths(
+      JSON.parse(
+        await readFile(new URL(`../tokens/modes/${name}.tokens.json`, import.meta.url), 'utf8'),
+      ),
+    );
+  const transparency = new Set(await read('reduced-transparency'));
+  const contrast = await read('contrast-more');
+
+  assert.ok(transparency.size > 0 && contrast.length > 0);
+  assert.deepEqual(
+    contrast.filter((path) => transparency.has(path)),
+    [],
+  );
+});
+
+// Density (spec 045): two tokens inherited from the document root, consumed by
+// component CSS, set on any element by a density declaration.
+const inheritedTokens = new Set(['--ki-density-control-offset', '--ki-density-space-scale']);
+
+test('document-inherited tokens are declared once on :root, never on a theme root, then each density level', () => {
+  const css = renderBaseStylesheet(
+    new Map([
+      ['--ki-space-md', '0.5rem'],
+      ['--ki-density-control-offset', '0rem'],
+      ['--ki-density-space-scale', '1'],
+    ]),
+    {
+      inherited: inheritedTokens,
+      densities: [
+        {
+          level: 'compact',
+          declarations: new Map([
+            ['--ki-density-control-offset', '-0.5rem'],
+            ['--ki-density-space-scale', '0.75'],
+          ]),
+        },
+        {
+          level: 'default',
+          declarations: new Map([
+            ['--ki-density-control-offset', '0rem'],
+            ['--ki-density-space-scale', '1'],
+          ]),
+        },
+      ],
+    },
+  );
+
+  assert.ok(
+    css.endsWith(
+      [
+        ':root,',
+        ':where([data-ki-theme]) {',
+        '  --ki-space-md: 0.5rem;',
+        '}',
+        '',
+        // A theme root does not redeclare them, so a themed region nested in
+        // a compact region stays compact: the nearest declaration wins by
+        // plain inheritance.
+        ':root {',
+        '  --ki-density-control-offset: 0rem;',
+        '  --ki-density-space-scale: 1;',
+        '}',
+        '',
+        "[data-ki-density='compact'] {",
+        '  --ki-density-control-offset: -0.5rem;',
+        '  --ki-density-space-scale: 0.75;',
+        '}',
+        '',
+        "[data-ki-density='default'] {",
+        '  --ki-density-control-offset: 0rem;',
+        '  --ki-density-space-scale: 1;',
+        '}',
+        '',
+      ].join('\n'),
+    ),
+    css,
+  );
+});
+
+test('a document-inherited token is one nothing aliases, and no theme or mode reassigns it or what it references', () => {
+  const base = new Map([
+    ['--ki-a', '1px'],
+    ['--ki-density-control-offset', 'var(--ki-a)'],
+    ['--ki-density-space-scale', '1'],
+  ]);
+  assert.doesNotThrow(() =>
+    assertInheritedTokens({ declarations: base, inherited: inheritedTokens }),
+  );
+  assert.throws(
+    () =>
+      assertInheritedTokens({
+        declarations: new Map([...base, ['--ki-b', 'calc(var(--ki-density-space-scale) * 2px)']]),
+        inherited: inheritedTokens,
+      }),
+    /--ki-b aliases --ki-density-space-scale/u,
+  );
+  assert.throws(
+    () =>
+      assertInheritedTokens({
+        declarations: base,
+        inherited: inheritedTokens,
+        overrides: new Map([['--ki-density-space-scale', '0.9']]),
+        label: 'material3',
+      }),
+    /material3 reassigns --ki-density-space-scale, which is inherited from the document/u,
+  );
+  assert.throws(
+    () =>
+      assertInheritedTokens({
+        declarations: base,
+        inherited: inheritedTokens,
+        overrides: new Map([['--ki-a', '2px']]),
+        label: 'contrast-more',
+      }),
+    /contrast-more reassigns --ki-a, which a token inherited from the document references/u,
+  );
+});
+
+test('the shipped density levels change the inherited tokens and nothing else', async () => {
+  const read = async (config) =>
+    compositionDeclarations(
+      await new StyleDictionary({ ...config, log: { verbosity: 'silent' } }).getPlatformTokens(
+        'css',
+      ),
+    );
+  const light = await read(lightConfig);
+  const compact = await read(withDensity(lightConfig, 'compact'));
+  const inherited = new Set(
+    [...light].filter(([, token]) => token.inherited).map(([name]) => name),
+  );
+
+  assert.deepEqual([...inherited].sort(), [...inheritedTokens].sort());
+  assert.deepEqual(DENSITIES, ['compact']);
+  const changed = [...compact]
+    .filter(([name, token]) => light.get(name).expression !== token.expression)
+    .map(([name]) => name);
+  assert.deepEqual(changed.sort(), [...inheritedTokens].sort());
+  assert.equal(compact.get('--ki-density-control-offset').resolved, '-0.5rem');
+  assert.equal(compact.get('--ki-density-space-scale').resolved, '0.75');
 });

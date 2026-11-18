@@ -1,0 +1,17 @@
+{
+  "ki": {
+    "$description": "Compact density (spec 045): Material's -2 step, controls and rows 8px shorter, container spacing x 0.75. Declared with data-ki-density=\"compact\" on any element; data-ki-density=\"default\" restores the default inside it.",
+    "density": {
+      "control-offset": {
+        "$type": "dimension",
+        "$value": "{ki.space.minus-md}",
+        "$description": "Controls and rows 8px shorter (40 -> 32 in onmars, 48 -> 40 for material3 fields)."
+      },
+      "space-scale": {
+        "$type": "number",
+        "$value": "{ki.scale.compact}",
+        "$description": "Container padding and gaps x 0.75 (16px -> 12px)."
+      }
+    }
+  }
+}

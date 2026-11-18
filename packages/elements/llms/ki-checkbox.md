@@ -53,6 +53,8 @@ Boolean attributes use presence semantics — omit `checked` to express unchecke
 
 - `checked` (boolean, default false): Live binary selection state. User activation by pointer, slotted label or Space toggles it with native checkbox parity and emits composed `input` before composed `change`. Boolean presence semantics apply: `checked="false"` still renders checked; omit the attribute to express unchecked. Programmatic assignment is silent. When NOT to use: do not treat this reflected attribute as a native `defaultChecked`; reset uses the baseline captured at form association.
 - `disabled` (boolean, default false): Prevents activation, removes the checkbox from keyboard reach, exposes the unavailable state, and excludes it from form data. When NOT to use: do not use disabled for validation errors or pending state.
+- `error-text` (string | undefined): Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `help-text` (string | undefined): One line of help under the checkbox, read with it as its description: what checking it means or commits to. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `indeterminate` (boolean, default false): Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
 - `name` (string | undefined): Form-data key contributed when the checkbox is checked. When NOT to use: omit when the checkbox should not submit a value.
 - `required` (boolean, default false): Requires the checkbox to be checked before form submission can proceed. The invalid appearance appears after a blocked submission attempt or an invalidating user toggle, never on initial render. When NOT to use: do not use required to express group-level rules; compose those at the form/application layer.
@@ -65,6 +67,8 @@ Boolean attributes use presence semantics — omit `checked` to express unchecke
 ## Parts
 
 - `control`: Visual checkbox box, border, focus ring and currentColor marks.
+- `error`: Error line shown in place of the help text while the checkbox is invalid after the person toggled it or submitted; a polite live region, starting with a decorative error symbol.
+- `help`: Help line under the checkbox, read as its description.
 - `label`: Label wrapper around the default slot.
 
 ## Events
@@ -135,5 +139,10 @@ None.
 - `--ki-motion-easing-standard`: Standard interaction transition easing curve.
 - `--ki-surface-special-dark-s0-light-s2`: semantic color for surface special dark s0 light s2.
 - `--ki-surface-special-light-s0-dark-s4`: semantic color for surface special light s0 dark s4.
+- `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.

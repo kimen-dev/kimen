@@ -78,7 +78,7 @@
       "unselected": {
         "rest": {
           "fg": {
-            "$value": "{ki.text.med-em}",
+            "$value": "{ki.text.supporting}",
             "$description": "color used by the tab component for unselected rest foreground (Figma inactive is Text/low_em, which fails the 4.5:1 text gate at 13px; med_em is the gate-compliant rest value — declared deviation)."
           },
           "bg": {
@@ -133,15 +133,15 @@
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}",
+          "$value": "{ki.focus.ring-color}",
           "$description": "color used by the tab component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-width}",
           "$description": "dimension used by the tab component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-offset}",
           "$description": "dimension used by the tab component for focus ring offset."
         },
         "shadow": {

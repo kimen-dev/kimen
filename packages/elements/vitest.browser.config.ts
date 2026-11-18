@@ -153,6 +153,126 @@ export default defineConfig({
             await page.emulateMedia({ forcedColors: forcedColors ?? 'none' });
           },
         ),
+        // `prefers-contrast` (specs 043/044). Same baseline rule as above:
+        // `null` restores `no-preference`, never the host's own setting, so a
+        // host with Increase Contrast on cannot leak into the specs that follow.
+        // Returns false where the engine cannot emulate it, so a spec can say
+        // which engine it could not measure instead of failing or passing for
+        // a reason that has nothing to do with the component.
+        emulateContrast: defineBrowserCommand(
+          async ({ page }, contrast: 'more' | 'no-preference' | null) => {
+            try {
+              await page.emulateMedia({ contrast: contrast ?? 'no-preference' });
+              return true;
+            } catch {
+              return false;
+            }
+          },
+        ),
+        // `prefers-reduced-transparency` (spec 044). Playwright's emulateMedia
+        // does not carry it, so it goes over CDP, which exists on Chromium
+        // alone; the command returns false elsewhere so a spec can say which
+        // engine it could not measure. Same baseline rule: `null` restores
+        // `no-preference`. The session is the long-lived one of
+        // emulateHoverCapability, for the same detach reason.
+        emulateReducedTransparency: defineBrowserCommand(
+          async ({ page }, transparency: 'reduce' | 'no-preference' | null) => {
+            let session: { send: CdpSend };
+            try {
+              let pending = cdpSessions.get(page);
+              if (pending === undefined) {
+                pending = page.context().newCDPSession(page) as Promise<{ send: CdpSend }>;
+                cdpSessions.set(page, pending);
+              }
+              session = await pending;
+            } catch {
+              cdpSessions.delete(page);
+              return false;
+            }
+            await session.send('Emulation.setEmulatedMedia', {
+              features: [
+                {
+                  name: 'prefers-reduced-transparency',
+                  value: transparency ?? 'no-preference',
+                },
+              ],
+            });
+            return true;
+          },
+        ),
+        // The engine's own computed accessibility tree of the tester frame,
+        // flattened: role, name, DESCRIPTION, invalid and live-region state
+        // of every node the tree does not ignore, and for a live region the
+        // text it holds (Chromium marks only the region root as live, and a
+        // generic root has no name of its own). Playwright's ariaSnapshot
+        // carries no description, and dom-accessibility-api resolves names
+        // itself instead of reading what the engine exposes across shadow
+        // roots (spec 042). CDP exists on Chromium alone: elsewhere this
+        // returns null so a spec can report the engine it could not measure.
+        accessibilityTree: defineBrowserCommand(async ({ page }) => {
+          if (browser !== 'chromium') {
+            return null;
+          }
+          const tester = await page.locator('[data-vitest="true"]').elementHandle();
+          const testerUrl = (await tester?.contentFrame())?.url();
+          const session = await page.context().newCDPSession(page);
+          try {
+            interface FrameTree {
+              frame: { id: string; url: string };
+              childFrames?: FrameTree[];
+            }
+            const find = (tree: FrameTree): string | undefined =>
+              tree.frame.url === testerUrl
+                ? tree.frame.id
+                : (tree.childFrames ?? []).map(find).find((id) => id !== undefined);
+            const { frameTree } = (await session.send('Page.getFrameTree')) as {
+              frameTree: FrameTree;
+            };
+            const frameId = find(frameTree);
+            await session.send('Accessibility.enable');
+            const { nodes } = (await session.send(
+              'Accessibility.getFullAXTree',
+              frameId === undefined ? {} : { frameId },
+            )) as {
+              nodes: {
+                nodeId: string;
+                childIds?: string[];
+                ignored: boolean;
+                role?: { value?: string };
+                name?: { value?: string };
+                description?: { value?: string };
+                properties?: { name: string; value?: { value?: unknown } }[];
+              }[];
+            };
+            const byId = new Map(nodes.map((node) => [node.nodeId, node]));
+            const textOf = (node: (typeof nodes)[number]): string =>
+              node.role?.value === 'StaticText'
+                ? (node.name?.value ?? '')
+                : (node.childIds ?? [])
+                    .map((id) => byId.get(id))
+                    .filter((child) => child !== undefined)
+                    .map(textOf)
+                    .join('');
+            return nodes
+              .filter((node) => !node.ignored)
+              .map((node) => {
+                const property = (name: string): unknown =>
+                  node.properties?.find((entry) => entry.name === name)?.value?.value;
+                const live = property('live') ?? null;
+                return {
+                  role: node.role?.value ?? '',
+                  name: node.name?.value ?? '',
+                  description: node.description?.value ?? '',
+                  invalid: property('invalid') ?? 'false',
+                  live,
+                  text: live === null ? '' : textOf(node),
+                  focused: property('focused') === true,
+                };
+              });
+          } finally {
+            await session.detach();
+          }
+        }),
         ariaSnapshotByRole: defineBrowserCommand(
           async ({ page }, role: Parameters<typeof page.getByRole>[0], name?: string) =>
             page

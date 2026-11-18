@@ -1,6 +1,6 @@
 # Kimen unattended-loop sandbox (constitution Art. XI):
 # disposable, credential-free, egress restricted by init-firewall.sh.
-FROM node:26.12.1-bookworm@sha256:3b764117159bda01d2396391e7789b6a9106af9729cfd001ef55e98557868310
+FROM node:26.13.0-bookworm@sha256:a546d3f8acd2af4382668a7e6acd3bc4418e6a27478373e3246f8162f5181509
 
 ARG DEBIAN_SNAPSHOT=20260709T000000Z
 RUN rm -f /etc/apt/sources.list.d/debian.sources \
@@ -36,7 +36,7 @@ ENV PATH=/opt/kimen-agent-clis/node_modules/.bin:$PATH
 # node-writable for packageManager bumps fetched in the bootstrap phase.
 ENV COREPACK_HOME=/opt/corepack \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-RUN corepack prepare pnpm@12.17.0 --activate \
+RUN corepack prepare pnpm@12.19.0 --activate \
     && pnpm --version \
     && chown -R node:node /opt/corepack
 
