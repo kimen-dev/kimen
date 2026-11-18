@@ -59,7 +59,7 @@
 
   /* Bevel hairline: Outline/secondary_button_top on all four sides while no
    * caret ships (suppress the caret side per placement once it exists). */
-  border: var(--ki-tooltip-border-width) solid var(--ki-outline-secondary-button-top);
+  border: var(--ki-tooltip-border-width) solid var(--ki-tooltip-border-color);
   box-shadow: var(--_ki-tooltip-surface-shadow);
   color: var(--_ki-tooltip-fg);
   font-size: var(--_ki-tooltip-font-size);

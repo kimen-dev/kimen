@@ -39,11 +39,11 @@
           "$description": "Material 3 color used by the textarea component for rest border."
         },
         "label-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the textarea component for rest label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the textarea component for rest placeholder foreground."
         }
       },
@@ -61,11 +61,11 @@
           "$description": "Material 3 color used by the textarea component for hover border."
         },
         "label-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the textarea component for hover label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the textarea component for hover placeholder foreground."
         }
       },
@@ -87,7 +87,7 @@
           "$description": "Material 3 color used by the textarea component for focus label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the textarea component for focus placeholder foreground."
         }
       },
@@ -109,7 +109,7 @@
           "$description": "Material 3 color used by the textarea component for invalid label foreground."
         },
         "placeholder-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the textarea component for invalid placeholder foreground."
         },
         "ring": {

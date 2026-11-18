@@ -194,15 +194,15 @@
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}",
+          "$value": "{ki.focus.ring-color}",
           "$description": "color used by the button component for focus ring color."
         },
         "width": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-width}",
           "$description": "dimension used by the button component for focus ring width."
         },
         "offset": {
-          "$value": "{ki.space.xxs}",
+          "$value": "{ki.focus.ring-offset}",
           "$description": "dimension used by the button component for focus ring offset."
         },
         "shadow": {
@@ -911,7 +911,7 @@
               "$description": "color used by the button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark)."
             },
             "fg": {
-              "$value": "{ki.text.med-em}",
+              "$value": "{ki.text.supporting}",
               "$description": "color used by the button component for tertiary neutral rest foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
             },
             "border": {
@@ -925,7 +925,7 @@
               "$description": "color used by the button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover)."
             },
             "fg": {
-              "$value": "{ki.text.med-em}",
+              "$value": "{ki.text.supporting}",
               "$description": "color used by the button component for tertiary neutral hover foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative)."
             },
             "border": {
@@ -947,7 +947,7 @@
               }
             },
             "fg": {
-              "$value": "{ki.text.med-em}",
+              "$value": "{ki.text.supporting}",
               "$description": "color used by the button component for tertiary neutral active foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {
@@ -1247,7 +1247,7 @@
               "$description": "color used by the button component for quaternary neutral rest background."
             },
             "fg": {
-              "$value": "{ki.text.med-em}",
+              "$value": "{ki.text.supporting}",
               "$description": "color used by the button component for quaternary neutral rest foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
             },
             "border": {
@@ -1261,7 +1261,7 @@
               "$description": "color used by the button component for quaternary neutral hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash over the transparent rest fill)."
             },
             "fg": {
-              "$value": "{ki.text.med-em}",
+              "$value": "{ki.text.supporting}",
               "$description": "color used by the button component for quaternary neutral hover foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis)."
             },
             "border": {
@@ -1283,7 +1283,7 @@
               }
             },
             "fg": {
-              "$value": "{ki.text.med-em}",
+              "$value": "{ki.text.supporting}",
               "$description": "color used by the button component for quaternary neutral active foreground (MarsUI quaternary label text/med_em gray; the outlined-purple rest identity was a pre-master synthesis).",
               "$deprecated": "Nothing paints it: a pressed button shows its resting cell under the pressed overlay (--ki-button-secondary-active-overlay).",
               "$extensions": {

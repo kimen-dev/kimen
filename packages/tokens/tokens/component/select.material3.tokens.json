@@ -35,7 +35,7 @@
           "$description": "Material 3 color used by the select component for rest border."
         },
         "label-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "Material 3 color used by the select component for rest label foreground."
         }
       },
@@ -94,7 +94,7 @@
         }
       },
       "placeholder-fg": {
-        "$value": "{ki.text.med-em}",
+        "$value": "{ki.text.supporting}",
         "$description": "Material 3 color used by the select component for placeholder foreground."
       },
       "listbox": {
@@ -121,7 +121,7 @@
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}",
+          "$value": "{ki.focus.ring-color}",
           "$description": "Material 3 color used by the select component for focus ring color."
         }
       },

@@ -126,6 +126,30 @@ on a plain element does not reach the tokens that alias it. Neither attribute
 paints the element that carries it: give a region its surface with
 `background-color: var(--ki-surface-s0); color: var(--ki-text-high-em)`.
 
+### Preference modes
+
+Two modes reassign part of the token set on top of whatever theme and scheme
+are active (specs 043 and 044):
+
+| Mode | Activated by | What changes |
+|---|---|---|
+| more contrast | `prefers-contrast: more`, `data-ki-contrast="more"` | neutral text ≥ 7:1, neutral control boundaries ≥ 4.5:1, separators and container edges ≥ 3:1, a 3px focus ring; implies reduced transparency |
+| reduced transparency | `prefers-reduced-transparency: reduce`, `data-ki-transparency="reduce"`, more contrast | every content surface opaque (`surface-special-*` glass, `surface-*-tint`), no backdrop blur; state washes and the modal scrim keep their alpha |
+
+Each mode is one file of references in `tokens/modes/` (`contrast-more`,
+`reduced-transparency`), so it serves every theme and scheme. The build
+composes it with each theme and emits only the differences, twice: under the
+media query and under the declaration, on the root and on every theme root.
+A theme re-asserts, after its own rule, the mode values its overrides
+displaced, so precedence never depends on the order the stylesheets load.
+The declarations only switch a mode on; they take effect on the root and on
+theme roots, because those are the elements that redeclare every alias.
+
+`pnpm --filter @kimen/tokens contrast` sweeps every theme × scheme in the
+standard appearance and in each mode, with the stronger thresholds under more
+contrast. The public token surface publishes each mode as its own context
+(`contrast-more/light`, `reduced-transparency/dark`, …).
+
 ## Layer model
 
 The token graph is layered **primitive → theme → semantic → component**:

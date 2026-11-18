@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/042-field-help-error.json',
+      '../../changes/api/043-preference-modes.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -565,11 +565,30 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // ki-icon-button now consumes the button tokens directly. None of the 188
   // was in the 0.0.0 baseline, so they leave the candidate without being
   // removals. 1361 - 188 = 1173.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1173);
+  // The preference modes (changes/api/043-preference-modes) add ten leaves:
+  // the focus-ring triple every focusable component now aliases, the tooltip
+  // edge colour, the supporting-text role enabled labels and placeholders
+  // alias (so more contrast leaves the disabled ink alone), and the five
+  // content tints (primary/info/success/warning/danger) that alert, badge and
+  // the indeterminate checkbox alias so reduced transparency can make them
+  // opaque while state washes keep their alpha. 1173 + 10 = 1183. Both modes
+  // are published as their own contexts.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1183);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1173,
+    1183,
+  );
+  assert.deepEqual(
+    Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
+    [
+      'contrast-more/dark',
+      'contrast-more/light',
+      'dark',
+      'light',
+      'reduced-transparency/dark',
+      'reduced-transparency/light',
+    ],
   );
   const published = candidate.surface.packages['@kimen/tokens'].tokens;
   for (const name of [

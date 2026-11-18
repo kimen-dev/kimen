@@ -29,6 +29,11 @@
         "$value": "{ki.size.border.hairline}",
         "$description": "dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending)."
       },
+      "border-color": {
+        "$value": "{ki.outline.secondary-button-top}",
+        "$description": "color used by the tooltip component for its edge (MarsUI hairline bevel, Outline/secondary_button_top); one token so a mode or a theme can strengthen it.",
+        "$type": "color"
+      },
       "bg-start": {
         "$value": "{ki.surface.special.blur-base-light}",
         "$description": "color used by the tooltip component for the glass gradient start (MarsUI Surface/special/blur_base_light White/80; dark Dark/700 blur base). Paint background: linear-gradient(180deg, var(--ki-tooltip-bg-start), var(--ki-tooltip-bg-end))."

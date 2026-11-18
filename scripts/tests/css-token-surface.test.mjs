@@ -312,3 +312,87 @@ test('[S10] the page contract must not redeclare the colour scheme the token sty
     /declares the hardcoded value color-scheme: light dark/u,
   );
 });
+
+// Modes (specs 043/044): each mode is a media-query block and a declaration
+// rule with the same declarations, after the token rule, in contract order.
+const modeBlocks = (activation, media, declarations, theme) => {
+  const preference = theme
+    ? `:root[data-ki-theme='${theme}'],\n  [data-ki-theme='${theme}']`
+    : ':root,\n  :where([data-ki-theme])';
+  const declared = theme
+    ? `:root[data-ki-theme='${theme}']:where(${activation}),\n[data-ki-theme='${theme}']:where(${activation}),\n[data-ki-theme='${theme}']:where(:is(:root, [data-ki-theme]):is(${activation}) *)`
+    : `:root:where(${activation}),\n:where([data-ki-theme]:is(${activation})),\n:where(:is(:root, [data-ki-theme]):is(${activation}) [data-ki-theme])`;
+  return `
+@media ${media} {
+  ${preference} {
+    ${declarations}
+  }
+}
+
+${declared} {
+  ${declarations}
+}
+`;
+};
+const TRANSPARENCY = [
+  "[data-ki-transparency='reduce'], [data-ki-contrast='more']",
+  '(prefers-reduced-transparency: reduce), (prefers-contrast: more)',
+];
+const CONTRAST = ["[data-ki-contrast='more']", '(prefers-contrast: more)'];
+const withModes = `${stylesheet}${modeBlocks(...TRANSPARENCY, '--ki-zero: 1px;')}${modeBlocks(...CONTRAST, '--ki-color: rgb(9, 9, 9);')}`;
+
+test('[S10] a stylesheet publishes each mode as its own context, more contrast over reduced transparency', () => {
+  const { contexts } = build(withModes)['./css'];
+  assert.deepEqual(Object.keys(contexts).sort(), [
+    'contrast-more/dark',
+    'contrast-more/light',
+    'dark',
+    'light',
+    'reduced-transparency/dark',
+    'reduced-transparency/light',
+  ]);
+  assert.equal(contexts.light['--ki-zero'], '0');
+  assert.equal(contexts['reduced-transparency/light']['--ki-zero'], '1px');
+  assert.equal(contexts['reduced-transparency/light']['--ki-color'], 'rgb(0,0,0)');
+  assert.equal(contexts['contrast-more/dark']['--ki-zero'], '1px');
+  assert.equal(contexts['contrast-more/dark']['--ki-color'], 'rgb(9,9,9)');
+  assert.equal(contexts['contrast-more/dark']['--ki-shadow'], '0 1px 2px 0 rgb(9,9,9)');
+});
+
+test('[S10] a themed export re-asserts its mode values over its own overrides', () => {
+  const theme = `${material3}${modeBlocks(...CONTRAST, '--ki-color: rgb(7, 7, 7);', 'material3')}`;
+  const { contexts } = buildThemed({ base: withModes, theme })['./css/material3'];
+  assert.equal(contexts.light['--ki-color'], 'rgb(10,20,30)');
+  assert.equal(contexts['reduced-transparency/light']['--ki-color'], 'rgb(10,20,30)');
+  assert.equal(contexts['reduced-transparency/light']['--ki-zero'], '1px');
+  assert.equal(contexts['contrast-more/light']['--ki-color'], 'rgb(7,7,7)');
+});
+
+test('[S10] a mode must declare the same tokens under its preference and under its declaration', () => {
+  // The declaration rule is the last block: change its value, not the
+  // preference block's.
+  const at = withModes.lastIndexOf('--ki-color: rgb(9, 9, 9);');
+  const diverging = `${withModes.slice(0, at)}--ki-color: rgb(8, 8, 8);${withModes.slice(at + 25)}`;
+  assert.notEqual(diverging, withModes);
+  assert.throws(
+    () => build(diverging),
+    /declares different tokens under its preference and its declaration/u,
+  );
+});
+
+test('[S10] modes follow the token rule in contract order, each with its exact selectors', () => {
+  const reversed = `${stylesheet}${modeBlocks(...CONTRAST, '--ki-zero: 1px;')}${modeBlocks(...TRANSPARENCY, '--ki-zero: 1px;')}`;
+  assert.throws(
+    () => build(reversed),
+    /contains an unsupported public rule|unsupported conditional rule/u,
+  );
+  const compound = withModes.replace(
+    ":is([data-ki-contrast='more']) [data-ki-theme])",
+    ":is([data-ki-contrast='more'])[data-ki-theme])",
+  );
+  assert.throws(() => build(compound), /contains an unsupported public rule/u);
+  assert.throws(
+    () => build(`${stylesheet}${modeBlocks(...CONTRAST, '--ki-unknown: 1px;')}`),
+    /declares --ki-unknown, which the token rule does not/u,
+  );
+});

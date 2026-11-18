@@ -1,13 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
+import { readFileSync } from 'node:fs';
+
 import {
+  CONTEXTS,
+  chroma,
   collectSchemeDeclarations,
   componentPairs,
   compositeOver,
   contrastRatio,
   controlBoundaryCells,
   currentMarkPairs,
+  evaluateCss,
   overlayRamps,
   pageGraphicMarks,
   parseColor,
@@ -498,4 +503,158 @@ test('a theme stylesheet overrides the default one it is loaded after', () => {
   assert.equal(light.get('--ki-brand'), '#6750a4');
   assert.equal(dark.get('--ki-brand'), '#d0bcff');
   assert.equal(dark.get('--ki-surface-s0'), '#0a0a0a');
+});
+
+// Modes (specs 043/044): the standard appearance never sees a mode's values;
+// each mode context sees every rule its declaration activates, in order.
+const MODE_CSS = `
+  :root, :where([data-ki-theme]) { --ki-a: #000000; --ki-b: #111111; }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    :root, :where([data-ki-theme]) { --ki-a: #222222; }
+  }
+  :root:where([data-ki-transparency='reduce'], [data-ki-contrast='more']) { --ki-a: #222222; }
+  @media (prefers-contrast: more) { :root, :where([data-ki-theme]) { --ki-b: #333333; } }
+  :root:where([data-ki-contrast='more']) { --ki-b: #333333; }
+`;
+
+test('the standard context reads no mode rule, not even inside a media query', () => {
+  const { light } = collectSchemeDeclarations(MODE_CSS);
+  assert.equal(light.get('--ki-a'), '#000000');
+  assert.equal(light.get('--ki-b'), '#111111');
+});
+
+test('a mode context reads the rules its declaration activates, and only those', () => {
+  const transparency = collectSchemeDeclarations(MODE_CSS, "[data-ki-transparency='reduce']").light;
+  assert.equal(transparency.get('--ki-a'), '#222222');
+  assert.equal(transparency.get('--ki-b'), '#111111');
+
+  // More contrast activates reduced transparency too.
+  const contrast = collectSchemeDeclarations(MODE_CSS, "[data-ki-contrast='more']").light;
+  assert.equal(contrast.get('--ki-a'), '#222222');
+  assert.equal(contrast.get('--ki-b'), '#333333');
+});
+
+test('every theme is swept in the standard appearance and in each mode', () => {
+  assert.deepEqual(
+    CONTEXTS.map(({ name, activation }) => [name, activation]),
+    [
+      ['standard', null],
+      ['reduced-transparency', "[data-ki-transparency='reduce']"],
+      ['contrast-more', "[data-ki-contrast='more']"],
+    ],
+  );
+});
+
+test('chroma separates neutral inks and surfaces from brand and tone colours', () => {
+  assert.equal(chroma(parseColor('#474747')), 0);
+  assert.ok(chroma(parseColor('#49454f')) <= 0.075, 'material3 neutral variant');
+  assert.ok(chroma(parseColor('#845abe')) > 0.075, 'onmars brand');
+});
+
+// Against the built stylesheets: a regression in a mode file must surface as
+// a named failure of that mode, and only of that mode.
+const built = (name) => readFileSync(new URL(`../dist/css/${name}`, import.meta.url), 'utf8');
+
+test('the built stylesheets pass every sweep in every context', () => {
+  assert.deepEqual(evaluateCss('onmars', built('tokens.css')), []);
+  assert.deepEqual(
+    evaluateCss('material3', `${built('tokens.css')}\n${built('tokens.material3.css')}`),
+    [],
+  );
+});
+
+test('more contrast holds neutral text to 7:1 and neutral boundaries to 4.5:1', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root:where([data-ki-contrast='more']) {
+      --ki-text-supporting: #6e6e6e;
+      --ki-outline-control: rgba(0, 0, 0, 0.48);
+    }`,
+  );
+  assert.ok(
+    failures.some((failure) =>
+      /contrast-more\/light --ki-input-rest-placeholder-fg .*min 7/u.test(failure),
+    ),
+  );
+  assert.ok(
+    failures.some((failure) => /contrast-more\/light .*min 7 for neutral text/u.test(failure)),
+  );
+  assert.ok(
+    failures.some((failure) =>
+      /contrast-more\/light --ki-input-rest on .*min 4.5 for a neutral boundary/u.test(failure),
+    ),
+  );
+  assert.ok(
+    failures.every((failure) => failure.startsWith('onmars+contrast-more/')),
+    failures.join('\n'),
+  );
+});
+
+test('more contrast keeps a brand or tone boundary at the standard 3:1', () => {
+  // The danger edge of an invalid field measures 3.51:1 on the page: above the
+  // standard floor, below the neutral 4.5:1, and not a failure.
+  assert.deepEqual(evaluateCss('onmars', built('tokens.css')), []);
+  const { light } = collectSchemeDeclarations(built('tokens.css'), "[data-ki-contrast='more']");
+  const resolve = (name) => {
+    const value = light.get(name);
+    const reference = /^var\((--[a-z0-9-]+)\)$/u.exec(value);
+    return reference === null ? value : resolve(reference[1]);
+  };
+  const edge = compositeOver(
+    parseColor(resolve('--ki-input-invalid-border')),
+    parseColor('#ffffff'),
+  );
+  assert.ok(chroma(edge) > 0.075);
+});
+
+test('reduced transparency holds every content surface opaque and leaves state washes translucent', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root:where([data-ki-transparency='reduce'], [data-ki-contrast='more']) {
+      --ki-surface-special-secondary-alpha-base: rgba(242, 242, 244, 0.8);
+    }`,
+  );
+  assert.ok(
+    failures.some((failure) =>
+      /onmars\+reduced-transparency\/light --ki-badge-neutral-bg: alpha 0.8/u.test(failure),
+    ),
+    failures.join('\n'),
+  );
+  // Glass is glass in every state; a light tint while hovered is a wash.
+  assert.ok(
+    failures.some((failure) => /--ki-button-secondary-neutral-hover-bg: alpha 0.8/u.test(failure)),
+  );
+  assert.ok(
+    !failures.some((failure) =>
+      /--ki-(?:button-ghost-neutral|option)-hover-bg: alpha/u.test(failure),
+    ),
+  );
+});
+
+test('a mode leaves every disabled cell exactly as the standard appearance paints it', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root:where([data-ki-contrast='more']) { --ki-text-muted: #000000; }`,
+  );
+  assert.ok(
+    failures.some((failure) =>
+      /contrast-more\/light --ki-button-primary-neutral-disabled-fg: #000000 \(a mode must leave disabled cells/u.test(
+        failure,
+      ),
+    ),
+    failures.join('\n'),
+  );
+});
+
+test("more contrast thickens every component's focus ring, whichever theme overrides it", () => {
+  const failures = evaluateCss(
+    'material3',
+    `${built('tokens.css')}\n${built('tokens.material3.css')}\n:root[data-ki-theme='material3'] { --ki-input-focus-ring-width: var(--ki-space-xxs); }`,
+  );
+  assert.ok(
+    failures.some((failure) =>
+      /material3\+contrast-more\/light --ki-input-focus-ring-width: 2px \(min 3px\)/u.test(failure),
+    ),
+    failures.join('\n'),
+  );
 });

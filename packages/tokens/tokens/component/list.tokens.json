@@ -75,7 +75,7 @@
           "$description": "font weight used by the list component for item secondary font weight."
         },
         "secondary-fg": {
-          "$value": "{ki.text.med-em}",
+          "$value": "{ki.text.supporting}",
           "$description": "color used by the list component for item secondary foreground."
         }
       }

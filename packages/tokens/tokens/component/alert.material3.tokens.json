@@ -97,7 +97,7 @@
       },
       "focus-ring": {
         "color": {
-          "$value": "{ki.outline.primary-high-em}",
+          "$value": "{ki.focus.ring-color}",
           "$description": "Material 3 color used by the alert component for focus ring color."
         }
       },

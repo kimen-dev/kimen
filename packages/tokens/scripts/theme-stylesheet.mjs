@@ -36,6 +36,24 @@
 //     theme. Everything else is already declared on the same element by the
 //     rule above, so repeating it would only repeat bytes.
 //
+//   @media (<preference>) { <token roots> { ...mode... } }
+//   <token roots carrying, or inside one carrying, the declaration> { ...mode... }
+//     A MODE (specs 043/044) reassigns part of the token set on top of
+//     whatever theme is active: reduced transparency, more contrast. It is
+//     emitted twice with the same declarations — once for the person's
+//     preference, once for the page's own declaration — and only on token
+//     roots (`:root` and `[data-ki-theme]`), because those are the elements
+//     that redeclare every alias: a mode set anywhere else would change a
+//     token and leave every alias of it holding the old value.
+//
+//     Precedence never depends on stylesheet order: a default-theme mode rule
+//     has the specificity of the default rule (`:where()` around the
+//     declaration) and follows it in the same sheet, so a theme override
+//     still outranks it; the theme then re-asserts, after its own rule and in
+//     its own sheet, exactly the mode values its overrides displaced. A mode
+//     only ever switches ON: there is no declaration that removes it against
+//     the person's preference.
+//
 //   --ki-x: value; /* deprecated since 0.1.0, removed in 1.0.0: use --ki-y */
 //     The only comment the stylesheets carry (spec 041): a deprecated token
 //     keeps its value until it is removed, and says so where a consumer reads
@@ -196,28 +214,122 @@ function rule(selectors, declarations, deprecations = new Map()) {
 }
 
 /**
- * The default theme: the colour-scheme contract plus every token. `deprecations`
- * (custom property name -> deprecation) annotates the deprecated declarations.
+ * The modes, in cascade order. Each one is activated by a user-preference
+ * media query or by one of its declarations; more contrast also activates
+ * reduced transparency, because a contrast ratio over glass depends on
+ * whatever is behind the glass and cannot be guaranteed.
  */
-export function renderBaseStylesheet(declarations, { deprecations } = {}) {
+export const MODES = Object.freeze([
+  Object.freeze({
+    name: 'reduced-transparency',
+    media: '(prefers-reduced-transparency: reduce), (prefers-contrast: more)',
+    activations: Object.freeze(["[data-ki-transparency='reduce']", "[data-ki-contrast='more']"]),
+  }),
+  Object.freeze({
+    name: 'contrast-more',
+    media: '(prefers-contrast: more)',
+    activations: Object.freeze(["[data-ki-contrast='more']"]),
+  }),
+]);
+
+/**
+ * What a mode has to declare on top of a cascade: the tokens whose target
+ * expression differs from the one the layers below produce (each layer a
+ * partial map, the first one complete; the last layer that declares a token
+ * wins, as in the stylesheet).
+ */
+export function layeredOverrides({ target, layers }) {
+  const [base] = layers;
+  for (const name of base.keys()) {
+    if (!target.has(name)) throw new Error(`the mode does not define ${name}`);
+  }
+  for (const name of target.keys()) {
+    if (!base.has(name)) {
+      throw new Error(`the mode defines ${name}, which the base layer does not`);
+    }
+  }
+  const effective = new Map(layers.flatMap((layer) => [...layer]));
+  return new Map([...target].filter(([name, expression]) => effective.get(name) !== expression));
+}
+
+function indented(css) {
+  return css
+    .split('\n')
+    .map((line) => (line === '' ? line : `  ${line}`))
+    .join('\n');
+}
+
+/**
+ * One mode for the default theme (no `theme`) or re-asserted by a theme: the
+ * media-query block and the declaration block, with the same declarations.
+ */
+export function renderModeRules(mode, declarations, theme, deprecations) {
+  if (declarations.size === 0) return '';
+  const activation = mode.activations.join(', ');
+  const preference = theme
+    ? [`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`]
+    : [':root', ':where([data-ki-theme])'];
+  const declared = theme
+    ? [
+        `:root[data-ki-theme='${theme}']:where(${activation})`,
+        `[data-ki-theme='${theme}']:where(${activation})`,
+        `[data-ki-theme='${theme}']:where(:is(:root, [data-ki-theme]):is(${activation}) *)`,
+      ]
+    : [
+        `:root:where(${activation})`,
+        `:where([data-ki-theme]:is(${activation}))`,
+        `:where(:is(:root, [data-ki-theme]):is(${activation}) [data-ki-theme])`,
+      ];
+  return [
+    `@media ${mode.media} {`,
+    indented(rule(preference, [...declarations], deprecations)).trimEnd(),
+    '}',
+    '',
+    rule(declared, [...declarations], deprecations),
+  ].join('\n');
+}
+
+function modeRules(modes, theme, deprecations) {
+  return modes.map(({ mode, declarations }) =>
+    renderModeRules(mode, declarations, theme, deprecations),
+  );
+}
+
+/**
+ * The default theme: the colour-scheme contract, every token, then each mode.
+ * `deprecations` (custom property name -> deprecation) annotates the
+ * deprecated declarations.
+ */
+export function renderBaseStylesheet(declarations, { deprecations, modes = [] } = {}) {
   if (declarations.size === 0) throw new Error('the base theme has no tokens to declare');
   return [
     rule([':where(:root)'], [['color-scheme', 'light dark']]),
     rule(["[data-ki-color-scheme='light']"], [['color-scheme', 'light']]),
     rule(["[data-ki-color-scheme='dark']"], [['color-scheme', 'dark']]),
     rule([':root', ':where([data-ki-theme])'], [...declarations], deprecations),
-  ].join('\n');
+    ...modeRules(modes, undefined, deprecations),
+  ]
+    .filter((block) => block !== '')
+    .join('\n');
 }
 
-/** An opt-in theme: its overrides, for a themed document and for a themed subtree. */
-export function renderThemeStylesheet(theme, declarations, { deprecations } = {}) {
+/**
+ * An opt-in theme: its overrides, for a themed document and for a themed
+ * subtree, then the mode values those overrides displaced.
+ */
+export function renderThemeStylesheet(theme, declarations, { deprecations, modes = [] } = {}) {
   if (!THEME_NAME.test(theme)) throw new Error(`unsupported theme name ${JSON.stringify(theme)}`);
   if (declarations.size === 0) {
     throw new Error(`theme ${theme} does not differ from the base theme`);
   }
-  return rule(
-    [`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`],
-    [...declarations],
-    deprecations,
-  );
+  return [
+    rule(
+      [`:root[data-ki-theme='${theme}']`, `[data-ki-theme='${theme}']`],
+      [...declarations],
+      deprecations,
+    ),
+    ...modeRules(modes, theme, deprecations),
+  ]
+    .filter((block) => block !== '')
+    .join('\n');
 }

@@ -176,12 +176,47 @@ function selectScheme(value, branch) {
 // Every token is declared once and a scheme-dependent one carries both values
 // in `light-dark()`. Rules merge in source order, so a theme stylesheet
 // concatenated after the default one overrides it, as it does in the cascade.
-export function collectSchemeDeclarations(css) {
-  const declarations = new Map();
-  const blockPattern = /([^{}]+)\{([^{}]*)\}/gu;
+//
+// Only TOP-LEVEL rules are read, and a mode rule (specs 043/044) only for the
+// context it belongs to: the standard appearance never sees a mode's values,
+// and a mode context (`activation`, the declaration that switches it on) sees
+// every rule that declaration activates, in cascade order. The `@media` copy
+// of each mode carries the same declarations as its declaration rule — the
+// public token-surface gate holds the two equal — so it is skipped here.
+const MODE_DECLARATION = /data-ki-(?:contrast|transparency)/u;
 
-  for (const match of stripComments(css).matchAll(blockPattern)) {
-    mergeDeclarations(declarations, declarationsFromBlock(match[2]));
+function topLevelRules(css) {
+  const rules = [];
+  let depth = 0;
+  let start = 0;
+  let opening = -1;
+  for (let index = 0; index < css.length; index += 1) {
+    if (css[index] === '{') {
+      if (depth === 0) opening = index;
+      depth += 1;
+    } else if (css[index] === '}') {
+      depth -= 1;
+      if (depth === 0) {
+        rules.push({
+          prelude: css.slice(start, opening).trim(),
+          body: css.slice(opening + 1, index),
+        });
+        start = index + 1;
+      }
+    }
+  }
+  return rules;
+}
+
+export function collectSchemeDeclarations(css, activation = null) {
+  const declarations = new Map();
+
+  for (const { prelude, body } of topLevelRules(stripComments(css))) {
+    if (prelude.startsWith('@')) continue;
+    if (MODE_DECLARATION.test(prelude) && (activation === null || !prelude.includes(activation))) {
+      continue;
+    }
+    mergeDeclarations(declarations, declarationsFromBlock(body));
   }
 
   const forScheme = (branch) =>
@@ -302,7 +337,7 @@ export function placeholderCells(declarations) {
     });
 }
 
-function sweepPlaceholders(theme, scheme, declarations) {
+function sweepPlaceholders(theme, scheme, declarations, minRatio = MIN_RATIO) {
   const failures = [];
   const page = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
   const cells = placeholderCells(declarations);
@@ -330,9 +365,9 @@ function sweepPlaceholders(theme, scheme, declarations) {
       const fill = rawFill.a < 1 ? compositeOver(rawFill, page) : rawFill;
       const ratio = contrastRatio(text, fill);
 
-      if (ratio < MIN_RATIO) {
+      if (ratio < minRatio) {
         failures.push(
-          `${theme}/${scheme} ${cell.placeholder} on ${fillName}: ${ratio} (min ${MIN_RATIO})`,
+          `${theme}/${scheme} ${cell.placeholder} on ${fillName}: ${ratio} (min ${minRatio})`,
         );
       }
     }
@@ -813,7 +848,7 @@ function sweepOverlayRamps(theme, scheme, declarations) {
   return failures;
 }
 
-function sweepControlBoundaries(theme, scheme, declarations) {
+function sweepControlBoundaries(theme, scheme, declarations, minRatio = NON_TEXT_MIN_RATIO) {
   const failures = [];
 
   for (const surfaceName of CONTROL_PAGE_SURFACES) {
@@ -833,9 +868,9 @@ function sweepControlBoundaries(theme, scheme, declarations) {
         }
       }
 
-      if (best < NON_TEXT_MIN_RATIO) {
+      if (best < minRatio) {
         failures.push(
-          `${theme}/${scheme} ${cell.stem} on ${surfaceName}: ${best} (min ${NON_TEXT_MIN_RATIO}, strongest edge ${via})`,
+          `${theme}/${scheme} ${cell.stem} on ${surfaceName}: ${best} (min ${minRatio}, strongest edge ${via})`,
         );
       }
     }
@@ -844,45 +879,298 @@ function sweepControlBoundaries(theme, scheme, declarations) {
   return failures;
 }
 
-function evaluateStylesheet(theme, stylesheets) {
-  const css = stylesheets.map((stylesheet) => readFileSync(stylesheet, 'utf8')).join('\n');
-  const schemes = collectSchemeDeclarations(css);
+// The contexts every theme is swept in: the standard appearance, then each
+// mode, identified by the declaration that switches it on (specs 043/044).
+// Every sweep above runs in every context — a mode may strengthen the
+// standard appearance, never weaken it — and each mode adds its own.
+export const CONTEXTS = [
+  { name: 'standard', activation: null },
+  { name: 'reduced-transparency', activation: "[data-ki-transparency='reduce']" },
+  { name: 'contrast-more', activation: "[data-ki-contrast='more']" },
+];
+
+const ENHANCED_TEXT_PAIRS = ['--ki-surface-s0', '--ki-surface-s1', '--ki-surface-s2'].flatMap(
+  (surface) => [
+    { text: '--ki-text-high-em', surface },
+    { text: '--ki-text-supporting', surface },
+  ],
+);
+
+// Spec 043 D1 — the more-contrast thresholds.
+export const ENHANCED_TEXT_RATIO = 7;
+export const ENHANCED_BOUNDARY_RATIO = 4.5;
+export const SEPARATOR_RATIO = 3;
+export const ENHANCED_FOCUS_RING_WIDTH_PX = 3;
+// A colour is neutral when its channels stay this close together. Measured on
+// the shipped themes: the neutral inks and surfaces of both reach at most 0.06
+// (material3's neutrals carry a violet cast), the weakest tone tint over the
+// page 0.09, the brand fills 0.3 and more.
+const NEUTRAL_CHROMA = 0.075;
+// Separators and container edges: the rule a divider paints and the edge a
+// container draws. DERIVED from the token roles, never listed per component:
+// a `-divider-color`, the divider's own `-color`, a container's
+// `-border-color`, an alert tone's `-border`, the dialog's border shorthand.
+// Controls are excluded: their boundaries are swept above at their own,
+// stronger threshold. The edge must also be drawn: `-border-width` and
+// `-divider-width` of the containers must be non-zero, except where a theme
+// draws no divider at all (a list or a tab row without one has nothing to
+// separate visually).
+const SEPARATOR_ROLE =
+  /^--ki-(?:divider-color|[a-z-]+-divider-color|(?:card|tooltip)-border-color|alert-[a-z]+-border|dialog-border)$/u;
+const DRAWN_EDGE_WIDTHS = ['--ki-card-border-width', '--ki-alert-border-width'];
+
+export function separatorTokens(declarations) {
+  return [...declarations.keys()].filter((name) => SEPARATOR_ROLE.test(name));
+}
+
+const SEPARATOR_SURFACES = ['--ki-surface-s0', '--ki-surface-s1'];
+// A state wash only exists while a pointer or a key acts on the control, and
+// is translucent on purpose: a light tint over the page or the cell beneath it
+// (spec 044 D1). Glass in a hover or active state is still glass: a state
+// cell is a wash only while it stays a tint, never a panel.
+const STATE_WASH = /-(?:hover|active|pressed|highlight|focus)-/u;
+const WASH_MAX_ALPHA = 0.5;
+
+export function chroma({ r, g, b }) {
+  return (Math.max(r, g, b) - Math.min(r, g, b)) / 255;
+}
+
+function isNeutral(color) {
+  return chroma(color) <= NEUTRAL_CHROMA;
+}
+
+function lengthInPx(value) {
+  const match = /^(-?[\d.]+)(px|rem)$/u.exec(value.trim());
+  if (match === null) throw new Error(`Unsupported length ${value}`);
+  return Number(match[1]) * (match[2] === 'rem' ? 16 : 1);
+}
+
+// Spec 044 — every content cell is opaque, or paints nothing at all (a ghost
+// cell at rest shows the page, which is not a translucent layer).
+function sweepOpaqueSurfaces(theme, scheme, declarations) {
   const failures = [];
-
-  for (const [scheme, declarations] of Object.entries(schemes)) {
-    const swept = componentPairs(declarations);
-    failures.push(...sweepControlBoundaries(theme, scheme, declarations));
-    failures.push(...sweepRatioReadouts(theme, scheme, declarations));
-    failures.push(...sweepOverlayRamps(theme, scheme, declarations));
-    failures.push(...sweepPlaceholders(theme, scheme, declarations));
-    failures.push(...sweepPageGraphics(theme, scheme, declarations));
-    failures.push(...sweepToneInks(theme, scheme, declarations));
-    failures.push(...sweepToneFamilies(theme, scheme, declarations));
-
-    if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
+  for (const pair of componentPairs(declarations)) {
+    const alpha = parseColor(resolveCustomProperty(pair.surface, declarations)).a;
+    if (STATE_WASH.test(pair.surface) && alpha <= WASH_MAX_ALPHA) continue;
+    if (alpha > 0 && alpha < 1) {
       failures.push(
-        `${theme}/${scheme}: no ${CANARY_COMPONENT}-layer pairs matched — the component sweep pattern drifted from the token names`,
+        `${theme}/${scheme} ${pair.surface}: alpha ${alpha} (a content surface must be opaque)`,
       );
     }
+  }
+  return failures;
+}
 
-    // Component cells may be translucent (ghost/quaternary): composite the
-    // cell background over the page surface before measuring.
-    const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+// Spec 043 — the enhanced thresholds on top of the standard sweeps.
+function sweepEnhancedContrast(theme, scheme, declarations) {
+  const failures = [];
+  const page = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+  const painted = (name, under = page) => {
+    const raw = parseColor(resolveCustomProperty(name, declarations));
+    return raw.a < 1 ? compositeOver(raw, under) : raw;
+  };
 
-    for (const pair of [...CONTRAST_PAIRS, ...swept]) {
-      const text = parseColor(resolveCustomProperty(pair.text, declarations));
-      const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
-      const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
-      const ratio = contrastRatio(text, surface);
-      const min = pair.minRatio ?? MIN_RATIO;
+  // The semantic pairs this mode strengthens: high-emphasis text and enabled
+  // supporting text. The med-em emphasis step itself is not one of them: the
+  // disabled ink draws from it and stays as it is.
+  const textPairs = [
+    ...ENHANCED_TEXT_PAIRS,
+    ...componentPairs(declarations).filter((pair) => pair.minRatio === MIN_RATIO),
+  ];
+  for (const pair of textPairs) {
+    const surface = painted(pair.surface);
+    const text = painted(pair.text, surface);
+    if (!isNeutral(surface) || !isNeutral(text)) continue;
+    const ratio = contrastRatio(text, surface);
+    if (ratio < ENHANCED_TEXT_RATIO) {
+      failures.push(
+        `${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio} (min ${ENHANCED_TEXT_RATIO} for neutral text)`,
+      );
+    }
+  }
 
-      if (ratio < min) {
-        failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio} (min ${min})`);
+  failures.push(...sweepPlaceholders(theme, scheme, declarations, ENHANCED_TEXT_RATIO));
+
+  // A neutral boundary rises to 4.5:1. A boundary drawn in a brand or tone
+  // colour — a checked box, an invalid field's danger edge, a focused field's
+  // brand edge — keeps the standard 3:1, exactly as text on brand and tone
+  // fills keeps 4.5:1 (spec 043 D2): raising it is a palette decision.
+  for (const surfaceName of CONTROL_PAGE_SURFACES) {
+    const surface = painted(surfaceName);
+    for (const cell of controlBoundaryCells(declarations)) {
+      let best = { ratio: 0, member: null, color: null };
+      for (const member of cell.members) {
+        const color = painted(member, surface);
+        const ratio = contrastRatio(color, surface);
+        if (ratio > best.ratio) best = { ratio, member, color };
+      }
+      if (best.color === null || !isNeutral(best.color)) continue;
+      if (best.ratio < ENHANCED_BOUNDARY_RATIO) {
+        failures.push(
+          `${theme}/${scheme} ${cell.stem} on ${surfaceName}: ${best.ratio} (min ${ENHANCED_BOUNDARY_RATIO} for a neutral boundary, strongest edge ${best.member})`,
+        );
+      }
+    }
+  }
+
+  const separators = separatorTokens(declarations);
+  if (!separators.includes('--ki-divider-color')) {
+    failures.push(
+      `${theme}/${scheme}: no separator tokens derived — the token naming convention drifted`,
+    );
+  }
+  for (const width of DRAWN_EDGE_WIDTHS) {
+    if (lengthInPx(resolveCustomProperty(width, declarations)) <= 0) {
+      failures.push(`${theme}/${scheme} ${width}: the container edge is not drawn`);
+    }
+  }
+  const edgeColour = (name) => {
+    const value = resolveCustomProperty(name, declarations);
+    if (value === 'none') return null;
+    const colour = /(?:#[0-9a-f]{3,8}|rgba?\([^()]*\))\s*$/iu.exec(
+      value.replaceAll(/var\((--[a-z0-9-]+)\)/gu, (_, reference) =>
+        resolveCustomProperty(reference, declarations),
+      ),
+    );
+    if (colour === null) throw new Error(`${name} has no edge colour: ${value}`);
+    return parseColor(colour[0]);
+  };
+  for (const surfaceName of SEPARATOR_SURFACES) {
+    const surface = painted(surfaceName);
+    for (const separator of separators) {
+      const colour = edgeColour(separator);
+      if (colour === null) {
+        failures.push(`${theme}/${scheme} ${separator}: none (a container edge must be drawn)`);
+        continue;
+      }
+      const ratio = contrastRatio(colour.a < 1 ? compositeOver(colour, surface) : colour, surface);
+      if (ratio < SEPARATOR_RATIO) {
+        failures.push(
+          `${theme}/${scheme} ${separator} on ${surfaceName}: ${ratio} (min ${SEPARATOR_RATIO} for a separator)`,
+        );
+      }
+    }
+  }
+
+  const ringWidth = lengthInPx(resolveCustomProperty('--ki-focus-ring-width', declarations));
+  if (ringWidth < ENHANCED_FOCUS_RING_WIDTH_PX) {
+    failures.push(
+      `${theme}/${scheme} --ki-focus-ring-width: ${ringWidth}px (min ${ENHANCED_FOCUS_RING_WIDTH_PX}px)`,
+    );
+  }
+  for (const surfaceName of SEPARATOR_SURFACES) {
+    const surface = painted(surfaceName);
+    const ratio = contrastRatio(painted('--ki-focus-ring-color', surface), surface);
+    if (ratio < ENHANCED_BOUNDARY_RATIO) {
+      failures.push(
+        `${theme}/${scheme} --ki-focus-ring-color on ${surfaceName}: ${ratio} (min ${ENHANCED_BOUNDARY_RATIO})`,
+      );
+    }
+  }
+
+  return failures;
+}
+
+function evaluateContext(theme, scheme, declarations) {
+  const failures = [];
+  const swept = componentPairs(declarations);
+  failures.push(...sweepControlBoundaries(theme, scheme, declarations));
+  failures.push(...sweepRatioReadouts(theme, scheme, declarations));
+  failures.push(...sweepOverlayRamps(theme, scheme, declarations));
+  failures.push(...sweepPlaceholders(theme, scheme, declarations));
+  failures.push(...sweepPageGraphics(theme, scheme, declarations));
+  failures.push(...sweepToneInks(theme, scheme, declarations));
+  failures.push(...sweepToneFamilies(theme, scheme, declarations));
+
+  if (!swept.some((pair) => pair.component === CANARY_COMPONENT)) {
+    failures.push(
+      `${theme}/${scheme}: no ${CANARY_COMPONENT}-layer pairs matched — the component sweep pattern drifted from the token names`,
+    );
+  }
+
+  // Component cells may be translucent (ghost/quaternary): composite the
+  // cell background over the page surface before measuring.
+  const pageSurface = parseColor(resolveCustomProperty('--ki-surface-s0', declarations));
+
+  for (const pair of [...CONTRAST_PAIRS, ...swept]) {
+    const text = parseColor(resolveCustomProperty(pair.text, declarations));
+    const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
+    const surface = rawSurface.a < 1 ? compositeOver(rawSurface, pageSurface) : rawSurface;
+    const ratio = contrastRatio(text, surface);
+    const min = pair.minRatio ?? MIN_RATIO;
+
+    if (ratio < min) {
+      failures.push(`${theme}/${scheme} ${pair.text} on ${pair.surface}: ${ratio} (min ${min})`);
+    }
+  }
+
+  return failures;
+}
+
+// A mode never touches a disabled control (spec 043 D1, spec 044 D1): every
+// disabled cell resolves exactly as it does in the standard appearance. A
+// disabled ink raised to enabled-like contrast reads as operable.
+const DISABLED_CELL = /-disabled-/u;
+
+function sweepDisabledUnchanged(theme, scheme, declarations, standard) {
+  const failures = [];
+  for (const name of declarations.keys()) {
+    if (!name.startsWith('--ki-') || !DISABLED_CELL.test(name)) continue;
+    const moded = resolveCustomProperty(name, declarations);
+    const unchanged = resolveCustomProperty(name, standard);
+    if (moded !== unchanged) {
+      failures.push(
+        `${theme}/${scheme} ${name}: ${moded} (a mode must leave disabled cells at ${unchanged})`,
+      );
+    }
+  }
+  return failures;
+}
+
+// Every component's focus ring follows the mode, whichever theme painted it:
+// a theme override of one component's ring width would keep the standard 2px.
+const FOCUS_RING_WIDTH = /^--ki-[a-z0-9-]+-focus-ring-width$/u;
+
+function sweepFocusRingWidths(theme, scheme, declarations) {
+  return [...declarations.keys()]
+    .filter((name) => FOCUS_RING_WIDTH.test(name))
+    .map((name) => [name, lengthInPx(resolveCustomProperty(name, declarations))])
+    .filter(([, width]) => width < ENHANCED_FOCUS_RING_WIDTH_PX)
+    .map(
+      ([name, width]) =>
+        `${theme}/${scheme} ${name}: ${width}px (min ${ENHANCED_FOCUS_RING_WIDTH_PX}px)`,
+    );
+}
+
+export function evaluateCss(theme, css) {
+  const failures = [];
+  const standard = collectSchemeDeclarations(css);
+
+  for (const context of CONTEXTS) {
+    const label = context.activation === null ? theme : `${theme}+${context.name}`;
+    const schemes = collectSchemeDeclarations(css, context.activation);
+
+    for (const [scheme, declarations] of Object.entries(schemes)) {
+      failures.push(...evaluateContext(label, scheme, declarations));
+      if (context.activation !== null) {
+        failures.push(...sweepOpaqueSurfaces(label, scheme, declarations));
+        failures.push(...sweepDisabledUnchanged(label, scheme, declarations, standard[scheme]));
+      }
+      if (context.name === 'contrast-more') {
+        failures.push(...sweepEnhancedContrast(label, scheme, declarations));
+        failures.push(...sweepFocusRingWidths(label, scheme, declarations));
       }
     }
   }
 
   return failures;
+}
+
+function evaluateStylesheet(theme, stylesheets) {
+  return evaluateCss(
+    theme,
+    stylesheets.map((stylesheet) => readFileSync(stylesheet, 'utf8')).join('\n'),
+  );
 }
 
 export function checkContrast() {
@@ -909,7 +1197,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 
   if (failures.length > 0) {
     console.error(
-      `Contrast check failed. Text ${MIN_RATIO}:1, non-text control ${NON_TEXT_MIN_RATIO}:1 (WCAG 1.4.3/1.4.11).`,
+      `Contrast check failed. Text ${MIN_RATIO}:1, non-text control ${NON_TEXT_MIN_RATIO}:1 (WCAG 1.4.3/1.4.11); under more contrast neutral text ${ENHANCED_TEXT_RATIO}:1, control boundary ${ENHANCED_BOUNDARY_RATIO}:1, separator ${SEPARATOR_RATIO}:1.`,
     );
     for (const failure of failures) {
       console.error(`- ${failure}`);
@@ -918,6 +1206,6 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   }
 
   console.log(
-    `Contrast check passed. Text ${MIN_RATIO}:1, non-text control ${NON_TEXT_MIN_RATIO}:1 (WCAG 1.4.3/1.4.11).`,
+    `Contrast check passed in ${CONTEXTS.map((context) => context.name).join(', ')}. Text ${MIN_RATIO}:1, non-text control ${NON_TEXT_MIN_RATIO}:1 (WCAG 1.4.3/1.4.11); under more contrast neutral text ${ENHANCED_TEXT_RATIO}:1, control boundary ${ENHANCED_BOUNDARY_RATIO}:1, separator ${SEPARATOR_RATIO}:1.`,
   );
 }

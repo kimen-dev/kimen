@@ -10,8 +10,11 @@
   line-height: var(--ki-typography-line-height-caption-2);
 }
 
+/* The help ink is the supporting-text role (an alias of --ki-text-med-em),
+   so more contrast strengthens it with every other enabled supporting text
+   (spec 043) while a disabled control's own ink stays as it is. */
 [part="help"] {
-  color: var(--_ki-field-help-fg, var(--ki-text-med-em));
+  color: var(--_ki-field-help-fg, var(--ki-text-supporting));
 }
 
 /* The MarsUI hint red (danger-500) reads 3.51:1 on the onmars light page, so

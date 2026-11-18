@@ -83,6 +83,7 @@ None.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-text-med-em`: semantic color for text med em.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 - `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
 - `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.

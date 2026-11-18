@@ -153,6 +153,53 @@ export default defineConfig({
             await page.emulateMedia({ forcedColors: forcedColors ?? 'none' });
           },
         ),
+        // `prefers-contrast` (specs 043/044). Same baseline rule as above:
+        // `null` restores `no-preference`, never the host's own setting, so a
+        // host with Increase Contrast on cannot leak into the specs that follow.
+        // Returns false where the engine cannot emulate it, so a spec can say
+        // which engine it could not measure instead of failing or passing for
+        // a reason that has nothing to do with the component.
+        emulateContrast: defineBrowserCommand(
+          async ({ page }, contrast: 'more' | 'no-preference' | null) => {
+            try {
+              await page.emulateMedia({ contrast: contrast ?? 'no-preference' });
+              return true;
+            } catch {
+              return false;
+            }
+          },
+        ),
+        // `prefers-reduced-transparency` (spec 044). Playwright's emulateMedia
+        // does not carry it, so it goes over CDP, which exists on Chromium
+        // alone; the command returns false elsewhere so a spec can say which
+        // engine it could not measure. Same baseline rule: `null` restores
+        // `no-preference`. The session is the long-lived one of
+        // emulateHoverCapability, for the same detach reason.
+        emulateReducedTransparency: defineBrowserCommand(
+          async ({ page }, transparency: 'reduce' | 'no-preference' | null) => {
+            let session: { send: CdpSend };
+            try {
+              let pending = cdpSessions.get(page);
+              if (pending === undefined) {
+                pending = page.context().newCDPSession(page) as Promise<{ send: CdpSend }>;
+                cdpSessions.set(page, pending);
+              }
+              session = await pending;
+            } catch {
+              cdpSessions.delete(page);
+              return false;
+            }
+            await session.send('Emulation.setEmulatedMedia', {
+              features: [
+                {
+                  name: 'prefers-reduced-transparency',
+                  value: transparency ?? 'no-preference',
+                },
+              ],
+            });
+            return true;
+          },
+        ),
         // The engine's own computed accessibility tree of the tester frame,
         // flattened: role, name, DESCRIPTION, invalid and live-region state
         // of every node the tree does not ignore, and for a live region the

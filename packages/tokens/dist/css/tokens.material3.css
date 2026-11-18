@@ -578,3 +578,57 @@
   --ki-video-play-border-color: var(--ki-outline-none);
   --ki-video-play-shadow: none;
 }
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :root[data-ki-theme='material3'],
+  [data-ki-theme='material3'] {
+    --ki-surface-special-blur-base-light: var(--ki-surface-special-light-s0-dark-s3);
+    --ki-surface-special-blur-base-dark: var(--ki-surface-special-light-s0-dark-s3);
+    --ki-surface-special-secondary-alpha-base: var(--ki-surface-special-light-s2-dark-s3);
+  }
+}
+
+:root[data-ki-theme='material3']:where([data-ki-transparency='reduce'], [data-ki-contrast='more']),
+[data-ki-theme='material3']:where([data-ki-transparency='reduce'], [data-ki-contrast='more']),
+[data-ki-theme='material3']:where(:is(:root, [data-ki-theme]):is([data-ki-transparency='reduce'], [data-ki-contrast='more']) *) {
+  --ki-surface-special-blur-base-light: var(--ki-surface-special-light-s0-dark-s3);
+  --ki-surface-special-blur-base-dark: var(--ki-surface-special-light-s0-dark-s3);
+  --ki-surface-special-secondary-alpha-base: var(--ki-surface-special-light-s2-dark-s3);
+}
+
+@media (prefers-contrast: more) {
+  :root[data-ki-theme='material3'],
+  [data-ki-theme='material3'] {
+    --ki-outline-control: var(--ki-inverse-white-alpha-64);
+    --ki-outline-control-hover: var(--ki-inverse-white-alpha-72);
+    --ki-alert-neutral-border: var(--ki-outline-strong);
+    --ki-alert-success-border: var(--ki-outline-strong);
+    --ki-alert-danger-border: var(--ki-outline-strong);
+    --ki-alert-info-border: var(--ki-outline-strong);
+    --ki-alert-warning-border: var(--ki-outline-strong);
+    --ki-card-border-color: var(--ki-outline-strong);
+    --ki-dialog-border: var(--ki-size-border-hairline) solid var(--ki-outline-strong);
+    --ki-divider-color: var(--ki-outline-strong);
+    --ki-indicator-dot-color: var(--ki-outline-strong);
+    --ki-list-item-divider-color: var(--ki-outline-strong);
+    --ki-tabs-divider-color: var(--ki-outline-strong);
+  }
+}
+
+:root[data-ki-theme='material3']:where([data-ki-contrast='more']),
+[data-ki-theme='material3']:where([data-ki-contrast='more']),
+[data-ki-theme='material3']:where(:is(:root, [data-ki-theme]):is([data-ki-contrast='more']) *) {
+  --ki-outline-control: var(--ki-inverse-white-alpha-64);
+  --ki-outline-control-hover: var(--ki-inverse-white-alpha-72);
+  --ki-alert-neutral-border: var(--ki-outline-strong);
+  --ki-alert-success-border: var(--ki-outline-strong);
+  --ki-alert-danger-border: var(--ki-outline-strong);
+  --ki-alert-info-border: var(--ki-outline-strong);
+  --ki-alert-warning-border: var(--ki-outline-strong);
+  --ki-card-border-color: var(--ki-outline-strong);
+  --ki-dialog-border: var(--ki-size-border-hairline) solid var(--ki-outline-strong);
+  --ki-divider-color: var(--ki-outline-strong);
+  --ki-indicator-dot-color: var(--ki-outline-strong);
+  --ki-list-item-divider-color: var(--ki-outline-strong);
+  --ki-tabs-divider-color: var(--ki-outline-strong);
+}

@@ -77,7 +77,7 @@
       },
       "success": {
         "bg": {
-          "$value": "{ki.surface.success-base-em-alpha}",
+          "$value": "{ki.surface.success-tint}",
           "$description": "color used by the badge component for success background (MarsUI Surface/success_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
         },
         "fg": {
@@ -91,7 +91,7 @@
       },
       "danger": {
         "bg": {
-          "$value": "{ki.surface.danger-base-em-alpha}",
+          "$value": "{ki.surface.danger-tint}",
           "$description": "color used by the badge component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
         },
         "fg": {
@@ -105,7 +105,7 @@
       },
       "info": {
         "bg": {
-          "$value": "{ki.surface.info-base-em-alpha}",
+          "$value": "{ki.surface.info-tint}",
           "$description": "color used by the badge component for info background (MarsUI Surface/info_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
         },
         "fg": {
@@ -119,7 +119,7 @@
       },
       "warning": {
         "bg": {
-          "$value": "{ki.surface.warning-base-em-alpha}",
+          "$value": "{ki.surface.warning-tint}",
           "$description": "color used by the badge component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light — the tint composites over any surface and the dark alias adapts automatically)."
         },
         "fg": {
