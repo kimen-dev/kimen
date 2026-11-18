@@ -41,6 +41,8 @@ An option without `value` submits its trimmed label text, and `required` blocks 
 ## Attributes
 
 - `disabled` (boolean, default false): Prevents opening, removes the trigger from keyboard reach, and excludes the select from form submission. Boolean presence semantics apply.
+- `error-text` (string | undefined): Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `help-text` (string | undefined): One line of help under the trigger, read with it as the combobox description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
 - `name` (string | undefined): Form-data key used when a selected option contributes its value. When NOT to use: omit it when the select should not submit data.
 - `placeholder` (string, default ''): Text shown while no option is selected. When NOT to use: do not use it as a replacement for `label`.
@@ -53,6 +55,8 @@ An option without `value` submits its trimmed label text, and `required` blocks 
 
 ## Parts
 
+- `error`: Error line shown in place of the help text while the select is invalid after the person chose or submitted; a polite live region, starting with a decorative error symbol.
+- `help`: Help line under the trigger, read as the combobox description.
 - `indicator`: Decorative dropdown indicator.
 - `label`: Visible label and accessible-name source.
 - `listbox`: Popup listbox surface.
@@ -143,6 +147,11 @@ None.
 - `--ki-select-rest-fg`: color used by the select component for rest foreground.
 - `--ki-select-rest-label-fg`: color used by the select component for rest label foreground.
 - `--ki-surface-hover-overlay-inverse`: semantic color for surface hover overlay inverse.
+- `--ki-text-danger-high-em`: semantic color for text danger high em.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
 - `--ki-typography-line-height-para`: semantic dimension for typography line height para.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.

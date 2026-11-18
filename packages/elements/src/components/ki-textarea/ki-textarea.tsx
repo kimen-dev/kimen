@@ -1,4 +1,11 @@
 import { AttachInternals, Component, Element, Listen, Prop, State, Watch, h } from '@stencil/core';
+import {
+  FieldMessage,
+  fieldDescribedBy,
+  fieldInvalid,
+  fieldText,
+  fieldValidationMessage,
+} from '../../utils/field-message';
 import { normalizeKiTextareaRows } from './ki-textarea.form';
 
 /**
@@ -19,7 +26,11 @@ import { normalizeKiTextareaRows } from './ki-textarea.form';
  * text content is ignored. Enter inserts a line break and never submits the
  * enclosing form, the inverse of `ki-input`.
  *
+ * @part error - Error line shown in place of the help text while the field is invalid
+ * after the person answered or submitted; a polite live region, starting with a
+ * decorative error symbol.
  * @part field - The enclosure wrapper.
+ * @part help - Help line under the field, read as the field's description.
  * @part textarea - Internal native multiline control.
  * @part label - Rendered visible label and accessible-name source.
  * @event change - Fired when the user commits an edited value (on blur, with native
@@ -30,7 +41,7 @@ import { normalizeKiTextareaRows } from './ki-textarea.form';
  */
 @Component({
   tag: 'ki-textarea',
-  styleUrl: 'ki-textarea.css',
+  styleUrls: ['../../utils/field-message.css', 'ki-textarea.css'],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -116,7 +127,29 @@ export class KiTextarea {
    */
   @Prop({ reflect: true }) autocomplete?: string;
 
+  /**
+   * One line of help under the field, read with it as its description: what
+   * to write, or how long. While an error shows, the error takes its place.
+   * When NOT to use: do not repeat the label, and do not use it for error
+   * messages; use `error-text`.
+   */
+  @Prop({ reflect: true }) helpText?: string;
+
+  /**
+   * Message shown in place of the help text once the person's answer fails a
+   * constraint (`required`), and the field's `validationMessage`. Say how to
+   * fix the answer. Without it the browser's own message shows, in the
+   * browser's language. An error set with `setCustomValidity` outranks it.
+   * When NOT to use: do not use it for server-side or cross-field errors; call
+   * `setCustomValidity` for those.
+   */
+  @Prop({ reflect: true }) errorText?: string;
+
   @State() private formDisabled = false;
+  // Mirrors the `user-invalid` custom state, which a render cannot observe.
+  @State() private userInvalid = false;
+  // The validation message last handed to ElementInternals (D4).
+  @State() private message = '';
 
   private controlId = `ki-textarea-${Math.random().toString(36).slice(2)}`;
   private textarea: HTMLTextAreaElement | undefined;
@@ -136,6 +169,7 @@ export class KiTextarea {
     this.syncValidity();
   }
 
+  @Watch('errorText')
   @Watch('required')
   @Watch('readonly')
   @Watch('disabled')
@@ -287,9 +321,10 @@ export class KiTextarea {
 
     this.internals.setValidity(
       this.textarea.validity,
-      this.textarea.validationMessage,
+      fieldValidationMessage(this.customValidity, this.errorText, this.textarea.validationMessage),
       this.textarea,
     );
+    this.message = this.internals.validationMessage;
 
     if (this.textarea.validity.valid) {
       this.deleteUserInvalidState();
@@ -310,10 +345,12 @@ export class KiTextarea {
 
   private addUserInvalidState(): void {
     this.internals.states.add('user-invalid');
+    this.userInvalid = true;
   }
 
   private deleteUserInvalidState(): void {
     this.internals.states.delete('user-invalid');
+    this.userInvalid = false;
   }
 
   private syncDisabledFocus(): void {
@@ -323,6 +360,10 @@ export class KiTextarea {
   }
 
   render() {
+    const messages = {
+      help: fieldText(this.helpText),
+      error: this.userInvalid && !this.effectiveDisabled ? this.message : '',
+    };
     const optionalTextareaAttributes = {
       ...(this.placeholder === undefined ? {} : { placeholder: this.placeholder }),
       ...(this.autocomplete === undefined ? {} : { autocomplete: this.autocomplete }),
@@ -345,11 +386,14 @@ export class KiTextarea {
             required={this.required}
             readOnly={this.readonly}
             disabled={this.effectiveDisabled}
+            aria-describedby={fieldDescribedBy(messages)}
+            aria-invalid={fieldInvalid(messages)}
             onInput={this.handleInput}
             onChange={this.handleChange}
             {...optionalTextareaAttributes}
           />
         </div>
+        <FieldMessage {...messages} />
       </div>
     );
   }

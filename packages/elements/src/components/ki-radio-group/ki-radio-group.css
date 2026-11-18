@@ -33,6 +33,12 @@
   gap: var(--_ki-radio-group-gap);
 }
 
+/* Help and error lines (spec 042) sit under the options, one group gap away. */
+[part="help"],
+[part="error"] {
+  margin-block-start: var(--_ki-radio-group-gap);
+}
+
 /* The HTML hidden attribute outranks the host's own display. */
 :host([hidden]) {
   display: none;

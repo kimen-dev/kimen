@@ -51,6 +51,9 @@
   --_ki-input-border: var(--ki-input-disabled-border);
   --_ki-input-label-fg: var(--ki-input-disabled-label-fg);
   --_ki-input-placeholder-fg: var(--ki-input-disabled-placeholder-fg);
+
+  /* The help line dims with the label (spec 042 D9). */
+  --_ki-field-help-fg: var(--ki-input-disabled-label-fg);
 }
 
 :host(:state(user-invalid)) {
@@ -171,4 +174,11 @@ slot::slotted(img) {
   [part="input"]::placeholder {
     transition: color var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
   }
+}
+
+/* Help and error lines (spec 042) share the label's inline inset, so their
+   ink aligns with the label's. */
+[part="help"],
+[part="error"] {
+  padding-inline: var(--ki-input-label-padding-inline);
 }

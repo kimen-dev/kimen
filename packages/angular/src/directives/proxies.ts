@@ -185,14 +185,14 @@ export declare interface KiCard extends Components.KiCard {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiCheckbox,
-  inputs: ['checked', 'disabled', 'indeterminate', 'name', 'required', 'value']
+  inputs: ['checked', 'disabled', 'errorText', 'helpText', 'indeterminate', 'name', 'required', 'value']
 })
 @Component({
   selector: 'ki-checkbox',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['checked', 'disabled', 'indeterminate', 'name', 'required', 'value'],
+  inputs: ['checked', 'disabled', 'errorText', 'helpText', 'indeterminate', 'name', 'required', 'value'],
 })
 export class KiCheckbox {
   protected el: HTMLKiCheckboxElement;
@@ -312,14 +312,14 @@ export declare interface KiIndicator extends Components.KiIndicator {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiInput,
-  inputs: ['autocomplete', 'disabled', 'label', 'name', 'placeholder', 'readonly', 'required', 'type', 'value']
+  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'name', 'placeholder', 'readonly', 'required', 'type', 'value']
 })
 @Component({
   selector: 'ki-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['autocomplete', 'disabled', { name: 'label', required: true }, 'name', 'placeholder', 'readonly', 'required', 'type', 'value'],
+  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'name', 'placeholder', 'readonly', 'required', 'type', 'value'],
 })
 export class KiInput {
   protected el: HTMLKiInputElement;
@@ -471,14 +471,14 @@ export declare interface KiRadio extends Components.KiRadio {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiRadioGroup,
-  inputs: ['disabled', 'label', 'name', 'required', 'value']
+  inputs: ['disabled', 'errorText', 'helpText', 'label', 'name', 'required', 'value']
 })
 @Component({
   selector: 'ki-radio-group',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', { name: 'label', required: true }, 'name', 'required', 'value'],
+  inputs: ['disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'name', 'required', 'value'],
 })
 export class KiRadioGroup {
   protected el: HTMLKiRadioGroupElement;
@@ -517,14 +517,14 @@ export declare interface KiScroller extends Components.KiScroller {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiSelect,
-  inputs: ['disabled', 'label', 'name', 'placeholder', 'required', 'value']
+  inputs: ['disabled', 'errorText', 'helpText', 'label', 'name', 'placeholder', 'required', 'value']
 })
 @Component({
   selector: 'ki-select',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', { name: 'label', required: true }, 'name', 'placeholder', 'required', 'value'],
+  inputs: ['disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'name', 'placeholder', 'required', 'value'],
 })
 export class KiSelect {
   protected el: HTMLKiSelectElement;
@@ -563,14 +563,14 @@ export declare interface KiStatus extends Components.KiStatus {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiSwitch,
-  inputs: ['checked', 'disabled', 'name', 'value']
+  inputs: ['checked', 'disabled', 'helpText', 'name', 'value']
 })
 @Component({
   selector: 'ki-switch',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['checked', 'disabled', 'name', 'value'],
+  inputs: ['checked', 'disabled', 'helpText', 'name', 'value'],
 })
 export class KiSwitch {
   protected el: HTMLKiSwitchElement;
@@ -663,14 +663,14 @@ first-render fallback are silent.
 
 @ProxyCmp({
   defineCustomElementFn: defineKiTextarea,
-  inputs: ['autocomplete', 'disabled', 'label', 'name', 'placeholder', 'readonly', 'required', 'rows', 'value']
+  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', 'label', 'name', 'placeholder', 'readonly', 'required', 'rows', 'value']
 })
 @Component({
   selector: 'ki-textarea',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['autocomplete', 'disabled', { name: 'label', required: true }, 'name', 'placeholder', 'readonly', 'required', 'rows', 'value'],
+  inputs: ['autocomplete', 'disabled', 'errorText', 'helpText', { name: 'label', required: true }, 'name', 'placeholder', 'readonly', 'required', 'rows', 'value'],
 })
 export class KiTextarea {
   protected el: HTMLKiTextareaElement;

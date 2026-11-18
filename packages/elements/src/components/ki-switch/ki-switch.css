@@ -100,6 +100,12 @@
   cursor: default;
 }
 
+/* Help and error lines (spec 042) align with the label text, past the track. */
+[part="help"],
+[part="error"] {
+  padding-inline-start: calc(var(--ki-switch-track-width) + var(--ki-switch-gap));
+}
+
 input {
   block-size: var(--ki-switch-track-height);
   cursor: inherit;

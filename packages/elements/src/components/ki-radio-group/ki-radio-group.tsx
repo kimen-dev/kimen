@@ -3,6 +3,13 @@ import {
   booleanFromAttributePresence,
   observeAttributePresence,
 } from '../../utils/boolean-presence';
+import {
+  FieldMessage,
+  fieldDescribedBy,
+  fieldInvalid,
+  fieldText,
+  fieldValidationMessage,
+} from '../../utils/field-message';
 import { radioGroupFormValue } from './ki-radio-group.form';
 import { arrowDirection, nextEnabledIndex } from './ki-radio-group.keyboard';
 
@@ -28,6 +35,10 @@ type KiRadioElement = HTMLElement & {
  *
  * @slot - `ki-radio` options. Document order is navigation order.
  * @part label - Visible group label and accessible-name source.
+ * @part help - Help line under the options, read as the radiogroup description.
+ * @part error - Error line shown in place of the help text while the group is
+ * invalid after the person submitted; a polite live region, starting with a
+ * decorative error symbol.
  * @event change - Fired once after the user selects a different radio, composed
  * across the shadow boundary; `value` is already current when listeners run.
  * When to use: react to the committed choice. When NOT to use: do not expect
@@ -35,7 +46,7 @@ type KiRadioElement = HTMLElement & {
  */
 @Component({
   tag: 'ki-radio-group',
-  styleUrl: 'ki-radio-group.css',
+  styleUrls: ['../../utils/field-message.css', 'ki-radio-group.css'],
   shadow: true,
   formAssociated: true,
 })
@@ -47,6 +58,8 @@ export class KiRadioGroup {
   @State() private selectedRadio: KiRadioElement | null = null;
   @State() private formDisabled = false;
   @State() private userInvalid = false;
+  // The validation message last handed to ElementInternals (D4).
+  @State() private message = '';
 
   // Scoped to this group's shadow root, so a static id is unambiguous
   // (review 007 minor; matches the 003 call).
@@ -104,8 +117,28 @@ export class KiRadioGroup {
   @Prop({ reflect: true, mutable: true }) disabled = false;
 
   /**
-   * Validation message for the current group validity state: the browser's,
-   * or the error set with `setCustomValidity`. Empty when the group is valid.
+   * One line of help under the options, read with the group as its
+   * description: what the choice decides. While an error shows, the error
+   * takes its place.
+   * When NOT to use: do not repeat the label, and do not use it for error
+   * messages; use `error-text`.
+   */
+  @Prop({ reflect: true }) helpText?: string;
+
+  /**
+   * Message shown in place of the help text once a `required` group is left
+   * without a choice, and its `validationMessage` ("Choose a plan"). Without
+   * it the browser's own message shows, in the browser's language. An error
+   * set with `setCustomValidity` outranks it.
+   * When NOT to use: do not use it for server-side or cross-field errors; call
+   * `setCustomValidity` for those.
+   */
+  @Prop({ reflect: true }) errorText?: string;
+
+  /**
+   * Validation message for the current group validity state: the error set
+   * with `setCustomValidity`, else `error-text`, else the browser's. Empty
+   * when the group is valid.
    * Custom-elements build only.
    * When NOT to use: do not parse or localize the browser's message in
    * application code.
@@ -132,6 +165,11 @@ export class KiRadioGroup {
   @Watch('required')
   protected normalizeBooleanProps(): void {
     this.syncInputs();
+  }
+
+  @Watch('errorText')
+  protected errorTextChanged(): void {
+    this.syncValidity();
   }
 
   // Presence semantics: a present attribute means `true` whatever its value
@@ -478,6 +516,7 @@ export class KiRadioGroup {
     const valueMissing = this.required && !this.selectedRadio;
     if (this.effectiveDisabled || (!valueMissing && this.customValidity === '')) {
       this.internals.setValidity({});
+      this.message = '';
       this.userInvalid = false;
       return;
     }
@@ -492,10 +531,16 @@ export class KiRadioGroup {
       // The application's error outranks the platform message, as on a
       // native field; a missing value still shows in the flags.
       this.internals.setValidity({ customError: true, valueMissing }, this.customValidity, anchor);
+      this.message = this.internals.validationMessage;
       return;
     }
 
-    this.internals.setValidity({ valueMissing: true }, this.valueMissingMessage(), anchor);
+    this.internals.setValidity(
+      { valueMissing: true },
+      fieldValidationMessage('', this.errorText, this.valueMissingMessage()),
+      anchor,
+    );
+    this.message = this.internals.validationMessage;
   }
 
   private valueMissingMessage(): string {
@@ -552,6 +597,10 @@ export class KiRadioGroup {
   }
 
   render() {
+    const messages = {
+      help: fieldText(this.helpText),
+      error: this.userInvalid ? this.message : '',
+    };
     return (
       <div>
         <span part="label" id={this.labelId}>
@@ -562,10 +611,12 @@ export class KiRadioGroup {
           aria-labelledby={this.labelId}
           aria-disabled={this.effectiveDisabled ? 'true' : null}
           aria-required={this.required ? 'true' : null}
-          aria-invalid={this.userInvalid ? 'true' : null}
+          aria-invalid={fieldInvalid(messages)}
+          aria-describedby={fieldDescribedBy(messages)}
         >
           <slot onSlotchange={this.handleSlotChange} />
         </div>
+        <FieldMessage {...messages} />
       </div>
     );
   }
