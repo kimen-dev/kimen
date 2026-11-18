@@ -37,6 +37,10 @@
   display: inline-block;
   position: relative;
   font-family: var(--ki-typography-family-body);
+
+  /* The bubble opens in the top layer and is placed against the host's box,
+   * which wraps the slotted trigger. */
+  anchor-name: --ki-tooltip-anchor;
 }
 
 :host(:dir(rtl)) {
@@ -47,7 +51,17 @@
   /* Closed, the bubble generates no box: hidden but laid out it still counts
    * as scrollable overflow and widens a narrow page (WCAG 1.4.10). */
   display: none;
-  position: absolute;
+
+  /* A manual popover: shown, it is painted in the top layer, out of reach of
+   * every ancestor's overflow clip and stacking context. Its containing block
+   * is the viewport, the frame the flip and clamp are computed in, and it is
+   * anchored to the host. The popover defaults (centered inset, auto margin,
+   * scrolling overflow) are cleared so the placement rules alone place it. */
+  position: fixed;
+  position-anchor: --ki-tooltip-anchor;
+  inset: auto;
+  margin: 0;
+  overflow: visible;
   box-sizing: border-box;
   inline-size: max-content;
   max-inline-size: var(--_ki-tooltip-max-inline-size);
@@ -87,32 +101,39 @@
   visibility: visible;
 }
 
+/* Each inset is measured from the host's edge (`anchor()`), in the bubble's
+ * own writing direction (`self-start`/`self-end`), so a right-to-left subtree
+ * mirrors start and end even when the page itself is left-to-right. */
 .tooltip.placement-top,
 .tooltip.placement-bottom {
-  inset-inline-start: calc(50% + var(--_ki-tooltip-cross-shift) * var(--_ki-tooltip-inline-sign));
+  inset-inline-start: calc(
+    anchor(center) +
+    var(--_ki-tooltip-cross-shift) *
+    var(--_ki-tooltip-inline-sign)
+  );
   translate: calc(-50% * var(--_ki-tooltip-inline-sign)) 0;
 }
 
 .tooltip.placement-top {
-  inset-block-end: calc(100% + var(--_ki-tooltip-offset));
+  inset-block-end: calc(anchor(self-start) + var(--_ki-tooltip-offset));
 }
 
 .tooltip.placement-bottom {
-  inset-block-start: calc(100% + var(--_ki-tooltip-offset));
+  inset-block-start: calc(anchor(self-end) + var(--_ki-tooltip-offset));
 }
 
 .tooltip.placement-start,
 .tooltip.placement-end {
-  inset-block-start: calc(50% + var(--_ki-tooltip-cross-shift));
+  inset-block-start: calc(anchor(center) + var(--_ki-tooltip-cross-shift));
   translate: 0 -50%;
 }
 
 .tooltip.placement-start {
-  inset-inline-end: calc(100% + var(--_ki-tooltip-offset));
+  inset-inline-end: calc(anchor(self-start) + var(--_ki-tooltip-offset));
 }
 
 .tooltip.placement-end {
-  inset-inline-start: calc(100% + var(--_ki-tooltip-offset));
+  inset-inline-start: calc(anchor(self-end) + var(--_ki-tooltip-offset));
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -126,7 +147,8 @@
       opacity var(--ki-motion-duration-fast) var(--ki-motion-easing-standard-accelerate),
       translate var(--ki-motion-duration-fast) var(--ki-motion-easing-standard-accelerate),
       visibility var(--ki-motion-duration-instant) var(--ki-motion-duration-fast),
-      display var(--ki-motion-duration-fast) allow-discrete;
+      display var(--ki-motion-duration-fast) allow-discrete,
+      overlay var(--ki-motion-duration-fast) allow-discrete;
   }
 
   .tooltip.is-visible {
