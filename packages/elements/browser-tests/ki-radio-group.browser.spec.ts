@@ -473,8 +473,9 @@ describe('ki-radio-group in a real browser', () => {
     document.body.append(form);
     const el = await mount({ name: 'contact', required: true }, form);
 
-    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.hasAttribute('aria-invalid')).toBe(
-      false,
+    // Spec 042 D6: an explicit aria-invalid="false" until the error shows.
+    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.getAttribute('aria-invalid')).toBe(
+      'false',
     );
     form.reportValidity();
     await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -486,7 +487,7 @@ describe('ki-radio-group in a real browser', () => {
 
     await expect
       .element(page.getByRole('radiogroup', { name: 'Contact preference' }))
-      .not.toHaveAttribute('aria-invalid');
+      .toHaveAttribute('aria-invalid', 'false');
   });
 
   it('S14 form reset restores the initial selection silently', async () => {
@@ -705,11 +706,21 @@ describe('ki-radio-group with options that arrive after the group', () => {
     return button;
   }
 
+  // The stop AFTER the group is a text field: every engine puts one in the
+  // tab order, while WebKit on macOS leaves buttons out by default, so a
+  // trailing button let Tab fall through to the body there.
+  function pageField(label: string): HTMLInputElement {
+    const field = document.createElement('input');
+    field.setAttribute('aria-label', label);
+    document.body.append(field);
+    return field;
+  }
+
   it('S5 options appended after load select the pending value and form a single tab stop', async () => {
     cleanup();
     const before = pageButton('Before');
     const el = await mountEmpty('b');
-    const after = pageButton('After');
+    const after = pageField('After');
 
     appendOption(el, 'a');
     const pending = appendOption(el, 'b');

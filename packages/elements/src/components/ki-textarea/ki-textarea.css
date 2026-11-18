@@ -59,6 +59,9 @@
   --_ki-textarea-border: var(--ki-textarea-disabled-border);
   --_ki-textarea-label-fg: var(--ki-textarea-disabled-label-fg);
   --_ki-textarea-placeholder-fg: var(--ki-textarea-disabled-placeholder-fg);
+
+  /* The help line dims with the label (spec 042 D9). */
+  --_ki-field-help-fg: var(--ki-textarea-disabled-label-fg);
 }
 
 .root {
@@ -137,4 +140,11 @@
     transition-property: background-color, border-color, box-shadow;
     transition-timing-function: var(--ki-motion-easing-out);
   }
+}
+
+/* Help and error lines (spec 042) share the label's inline inset, so their
+   ink aligns with the label's. */
+[part="help"],
+[part="error"] {
+  padding-inline: var(--ki-textarea-label-padding-inline);
 }

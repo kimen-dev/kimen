@@ -49,6 +49,8 @@ A `disabled` group is skipped in Tab order and contributes no form entry; do not
 ## Attributes
 
 - `disabled` (boolean, default false): Makes the whole group unavailable, skips it in Tab order and removes its form entry. When NOT to use: do not use disabled for pending/loading semantics.
+- `error-text` (string | undefined): Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+- `help-text` (string | undefined): One line of help under the options, read with the group as its description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
 - `label` (string, required): Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
 - `name` (string | undefined): Form-data key for the selected option's value. Omit when the group should not contribute a form entry. When NOT to use: do not put `name` on `ki-radio` options; their internal native inputs are intentionally unnamed.
 - `required` (boolean, default false): Requires one selected option for form submission. The group uses platform `valueMissing` from its internal native radio inputs. When NOT to use: do not use required when no answer is acceptable.
@@ -60,6 +62,8 @@ A `disabled` group is skipped in Tab order and contributes no form entry; do not
 
 ## Parts
 
+- `error`: Error line shown in place of the help text while the group is invalid after the person submitted; a polite live region, starting with a decorative error symbol.
+- `help`: Help line under the options, read as the radiogroup description.
 - `label`: Visible group label and accessible-name source.
 
 ## Events
@@ -76,6 +80,10 @@ None.
 - `--ki-radio-group-label-font-size`: dimension used by the radio group component for label font size.
 - `--ki-radio-group-label-font-weight`: font weight used by the radio group component for label font weight.
 - `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement).
+- `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-text-med-em`: semantic color for text med em.
 - `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.

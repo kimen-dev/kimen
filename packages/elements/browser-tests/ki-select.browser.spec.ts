@@ -543,7 +543,7 @@ describe('ki-select in a real browser', () => {
   it('S16 a disabled required select is not reported invalid', async () => {
     const { el } = await mountForm('required disabled');
 
-    expect(trigger(el).hasAttribute('aria-invalid')).toBe(false);
+    expect(trigger(el).getAttribute('aria-invalid')).toBe('false');
     expect(el.matches(':state(user-invalid)')).toBe(false);
   });
 
@@ -572,7 +572,7 @@ describe('ki-select in a real browser', () => {
     await new Promise((resolve) => requestAnimationFrame(resolve));
     rows(el)[1]?.click();
     await new Promise((resolve) => requestAnimationFrame(resolve));
-    expect(trigger(el).hasAttribute('aria-invalid')).toBe(false);
+    expect(trigger(el).getAttribute('aria-invalid')).toBe('false');
 
     const emptyOption = await mountForm(
       'required',
@@ -611,7 +611,7 @@ describe('ki-select in a real browser', () => {
     await expect.element(trigger(el)).toHaveAttribute('aria-invalid', 'true');
     form.reset();
 
-    await expect.element(trigger(el)).not.toHaveAttribute('aria-invalid');
+    await expect.element(trigger(el)).toHaveAttribute('aria-invalid', 'false');
     expect(el.value).toBe('');
   });
 

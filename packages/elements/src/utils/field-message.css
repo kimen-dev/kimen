@@ -1,0 +1,38 @@
+/* Help and error lines of every form control (spec 042), loaded through each
+ * control's `styleUrls` before the control's own sheet. Tokens only (Art. VI):
+ * two semantic inks and the caption type scale, no tokens of their own (D9).
+ * Each control insets the lines with its own label metrics, and dims its help
+ * under its own disabled ink by setting --_ki-field-help-fg. */
+[part="help"],
+[part="error"] {
+  font-size: var(--ki-typography-size-caption-2);
+  font-weight: var(--ki-typography-weight-body-normal);
+  line-height: var(--ki-typography-line-height-caption-2);
+}
+
+[part="help"] {
+  color: var(--_ki-field-help-fg, var(--ki-text-med-em));
+}
+
+/* The MarsUI hint red (danger-500) reads 3.51:1 on the onmars light page, so
+   the error takes the high-emphasis danger ink: a declared a11y deviation. */
+[part="error"] {
+  display: flex;
+  align-items: flex-start;
+  color: var(--ki-text-danger-high-em);
+}
+
+/* The error line is the polite live region, so it stays in the tree while it
+   has nothing to say. Out of flow, it opens no grid track and no gap. */
+[part="error"]:empty {
+  position: absolute;
+}
+
+/* One caption line box tall, so the symbol rides the first line of a wrapped
+   message. The viewBox (18 x 16) holds a 12-unit symbol and the space after
+   it, so the symbol scales with the caption line and needs no gap token. */
+.field-error-glyph {
+  flex: none;
+  block-size: var(--ki-typography-line-height-caption-2);
+  aspect-ratio: 9 / 8;
+}

@@ -86,6 +86,9 @@
 
 :host(:has([part="trigger"]:disabled)) {
   --_ki-select-label-fg: var(--ki-select-disabled-label-fg);
+
+  /* The help line dims with the label (spec 042 D9). */
+  --_ki-field-help-fg: var(--ki-select-disabled-label-fg);
 }
 
 /* Double focus mechanism (patrón V.1 §2.5, same as ki-button): MarsUI
@@ -367,4 +370,11 @@
     box-shadow: none;
     color: HighlightText;
   }
+}
+
+/* Help and error lines (spec 042) share the label's inline inset, so their
+   ink aligns with the label's. */
+[part="help"],
+[part="error"] {
+  padding-inline: var(--ki-select-label-padding-inline);
 }

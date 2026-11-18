@@ -3,6 +3,13 @@ import {
   booleanFromAttributePresence,
   observeAttributePresence,
 } from '../../utils/boolean-presence';
+import {
+  FieldMessage,
+  fieldDescribedBy,
+  fieldInvalid,
+  fieldText,
+  fieldValidationMessage,
+} from '../../utils/field-message';
 import { checkboxFormValue } from './ki-checkbox.form';
 
 /**
@@ -24,6 +31,10 @@ import { checkboxFormValue } from './ki-checkbox.form';
  * @slot - Visible label content. This is the accessible name source and a
  * native activation surface.
  * @part control - Visual checkbox box, border, focus ring and currentColor marks.
+ * @part error - Error line shown in place of the help text while the checkbox is
+ * invalid after the person toggled it or submitted; a polite live region, starting
+ * with a decorative error symbol.
+ * @part help - Help line under the checkbox, read as its description.
  * @part label - Label wrapper around the default slot.
  * @event change - Fired once after a user toggle (pointer, slotted label or Space)
  * commits, composed across the shadow boundary; `checked` is already current
@@ -32,7 +43,7 @@ import { checkboxFormValue } from './ki-checkbox.form';
  */
 @Component({
   tag: 'ki-checkbox',
-  styleUrl: 'ki-checkbox.css',
+  styleUrls: ['../../utils/field-message.css', 'ki-checkbox.css'],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -101,7 +112,30 @@ export class KiCheckbox {
    */
   @Prop({ reflect: true }) value?: string;
 
+  /**
+   * One line of help under the checkbox, read with it as its description:
+   * what checking it means or commits to.
+   * When NOT to use: do not repeat the label, and do not use it for error
+   * messages; use `error-text`.
+   */
+  @Prop({ reflect: true }) helpText?: string;
+
+  /**
+   * Message shown in place of the help text once a `required` checkbox is
+   * left unchecked, and its `validationMessage`. Say what checking it means
+   * ("Accept the terms to continue"). Without it the browser's own message
+   * shows, in the browser's language. An error set with `setCustomValidity`
+   * outranks it.
+   * When NOT to use: do not use it for server-side or cross-field errors; call
+   * `setCustomValidity` for those.
+   */
+  @Prop({ reflect: true }) errorText?: string;
+
   @State() private formDisabled = false;
+  // Mirrors the `user-invalid` custom state, which a render cannot observe.
+  @State() private userInvalid = false;
+  // The validation message last handed to ElementInternals (D4).
+  @State() private message = '';
 
   private input: HTMLInputElement | undefined;
   private resetBaseline = false;
@@ -262,6 +296,11 @@ export class KiCheckbox {
     this.syncFormValue();
   }
 
+  @Watch('errorText')
+  protected errorTextChanged(): void {
+    this.syncValidity();
+  }
+
   formAssociatedCallback(): void {
     this.resetBaseline = this.checked;
     this.syncFormValue();
@@ -339,11 +378,17 @@ export class KiCheckbox {
     this.input?.setCustomValidity(this.customValidity);
     if (!this.input || this.effectiveDisabled) {
       this.internals.setValidity({});
+      this.message = '';
       this.setUserInvalid(false);
       return;
     }
 
-    this.internals.setValidity(this.input.validity, this.input.validationMessage, this.input);
+    this.internals.setValidity(
+      this.input.validity,
+      fieldValidationMessage(this.customValidity, this.errorText, this.input.validationMessage),
+      this.input,
+    );
+    this.message = this.internals.validationMessage;
   }
 
   private syncUserInvalidState(fromUserToggle: boolean): void {
@@ -360,6 +405,7 @@ export class KiCheckbox {
 
   private setUserInvalid(invalid: boolean): void {
     this.setState('user-invalid', invalid);
+    this.userInvalid = invalid;
   }
 
   private setState(name: string, enabled: boolean): void {
@@ -375,7 +421,11 @@ export class KiCheckbox {
   }
 
   render() {
-    return (
+    const messages = {
+      help: fieldText(this.helpText),
+      error: this.userInvalid ? this.message : '',
+    };
+    return [
       <label htmlFor="ki-checkbox-control">
         <input
           id="ki-checkbox-control"
@@ -386,6 +436,8 @@ export class KiCheckbox {
           disabled={this.effectiveDisabled}
           required={this.required}
           value={this.value ?? 'on'}
+          aria-describedby={fieldDescribedBy(messages)}
+          aria-invalid={fieldInvalid(messages)}
           onInput={this.handleInput}
           onChange={this.handleChange}
         />
@@ -402,7 +454,8 @@ export class KiCheckbox {
         <span part="label">
           <slot />
         </span>
-      </label>
-    );
+      </label>,
+      <FieldMessage {...messages} />,
+    ];
   }
 }
