@@ -7,7 +7,10 @@
   box-sizing: border-box;
   display: inline-flex;
   position: relative;
-  min-block-size: var(--ki-tab-min-block-size);
+  min-block-size: max(
+    var(--ki-density-target-min),
+    calc(var(--ki-tab-min-block-size) + var(--ki-density-control-offset))
+  );
   color: var(--_ki-tab-fg);
   font-family: var(--ki-typography-family-body);
   font-size: var(--ki-tab-font-size);
@@ -73,7 +76,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-block-size: var(--ki-tab-min-block-size);
+  min-block-size: max(
+    var(--ki-density-target-min),
+    calc(var(--ki-tab-min-block-size) + var(--ki-density-control-offset))
+  );
 
   /* MarsUI Tab_nav_item (10048:1266): padding-top 0, padding-bottom 8
      (Space/md) at every size, so the 2px underline clears the label block. */

@@ -396,3 +396,67 @@ test('[S10] modes follow the token rule in contract order, each with its exact s
     /declares --ki-unknown, which the token rule does not/u,
   );
 });
+
+// Density (spec 045): the document-inherited tokens in one :root rule after
+// the token rule, then one rule per level, published as the compact contexts.
+const densityRules = `
+:root {
+  --ki-zero: 0px;
+}
+
+[data-ki-density='compact'] {
+  --ki-zero: -8px;
+}
+
+[data-ki-density='default'] {
+  --ki-zero: 0px;
+}
+`;
+const densityTokenRule = tokenRule.replace('  --ki-zero: 0px;\n', '');
+const withDensity = `${schemeContract}${densityTokenRule}${densityRules}`;
+
+test('[S10] document-inherited tokens and density levels publish the compact contexts', () => {
+  const { contexts } = build(withDensity)['./css'];
+  assert.deepEqual(Object.keys(contexts).sort(), [
+    'compact/dark',
+    'compact/light',
+    'dark',
+    'light',
+  ]);
+  assert.equal(contexts.light['--ki-zero'], '0');
+  assert.equal(contexts['compact/light']['--ki-zero'], '-8px');
+  assert.equal(contexts['compact/dark']['--ki-color'], 'rgb(255,255,255)');
+});
+
+test('[S10] a themed export publishes the compact contexts of the default stylesheet', () => {
+  const { contexts } = buildThemed({ base: withDensity })['./css/material3'];
+  assert.equal(contexts['compact/light']['--ki-zero'], '-8px');
+  assert.equal(contexts['compact/light']['--ki-color'], 'rgb(10,20,30)');
+});
+
+test('[S10] density rules may only reassign document-inherited tokens, and default must restore them', () => {
+  assert.throws(
+    () =>
+      build(
+        withDensity.replace(
+          "[data-ki-density='compact'] {\n  --ki-zero: -8px;",
+          "[data-ki-density='compact'] {\n  --ki-color: rgb(1, 1, 1);",
+        ),
+      ),
+    /density compact reassigns --ki-color, which is not inherited from the document/u,
+  );
+  assert.throws(
+    () =>
+      build(
+        withDensity.replace(
+          "[data-ki-density='default'] {\n  --ki-zero: 0px;",
+          "[data-ki-density='default'] {\n  --ki-zero: 1px;",
+        ),
+      ),
+    /density default must restore every inherited token/u,
+  );
+  assert.throws(
+    () => build(`${schemeContract}${tokenRule}${densityRules}`),
+    /declares --ki-zero both on its theme roots and as inherited from the document/u,
+  );
+});

@@ -2,8 +2,14 @@
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
   --_ki-tooltip-radius: var(--ki-tooltip-radius);
-  --_ki-tooltip-padding-inline: var(--ki-tooltip-padding-inline);
-  --_ki-tooltip-padding-block: var(--ki-tooltip-padding-block);
+  --_ki-tooltip-padding-inline: calc(
+    var(--ki-tooltip-padding-inline) *
+    var(--ki-density-space-scale)
+  );
+  --_ki-tooltip-padding-block: calc(
+    var(--ki-tooltip-padding-block) *
+    var(--ki-density-space-scale)
+  );
   --_ki-tooltip-max-inline-size: var(--ki-tooltip-max-inline-size);
   --_ki-tooltip-offset: var(--ki-tooltip-offset);
   --_ki-tooltip-bg: var(--ki-tooltip-bg);

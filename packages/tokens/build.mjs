@@ -24,8 +24,10 @@ import StyleDictionary from 'style-dictionary';
 
 import { assertNoDeprecationDue, collectDeprecations } from './scripts/deprecation.mjs';
 import {
+  assertInheritedTokens,
   combineSchemes,
   compositionDeclarations,
+  DENSITIES,
   layeredOverrides,
   MODES,
   renderBaseStylesheet,
@@ -37,6 +39,7 @@ import {
   lightConfig,
   material3DarkConfig,
   material3LightConfig,
+  withDensity,
   withMode,
 } from './style-dictionary.config.mjs';
 
@@ -65,11 +68,11 @@ const themes = {
 };
 // One theme's two schemes merged into one expression per token, optionally
 // with a mode layered over both.
-async function theme(name, mode) {
+async function theme(name, mode, variant = (config) => config) {
   const { light, dark } = themes[name];
   return combineSchemes({
-    light: await composition(mode ? withMode(light, mode) : light),
-    dark: await composition(mode ? withMode(dark, mode) : dark),
+    light: await composition(variant(mode ? withMode(light, mode) : light)),
+    dark: await composition(variant(mode ? withMode(dark, mode) : dark)),
   });
 }
 
@@ -99,15 +102,61 @@ for (const mode of MODES) {
   material3Modes.push({ mode, declarations: reasserted });
 }
 
+// Density (spec 045): the document-inherited tokens, declared on :root alone,
+// and one rule per level that reassigns them on any element.
+const lightComposition = await composition(lightConfig);
+const inherited = new Set(
+  [...lightComposition].filter(([, token]) => token.inherited).map(([name]) => name),
+);
+assertInheritedTokens({ declarations: onmars, inherited });
+assertInheritedTokens({
+  declarations: onmars,
+  inherited,
+  overrides: material3,
+  label: 'material3',
+});
+for (const { mode, declarations } of [...baseModes, ...material3Modes]) {
+  assertInheritedTokens({
+    declarations: onmars,
+    inherited,
+    overrides: declarations,
+    label: mode.name,
+  });
+}
+const densities = [];
+for (const level of DENSITIES) {
+  const declarations = layeredOverrides({
+    target: await theme('onmars', undefined, (config) => withDensity(config, level)),
+    layers: [onmars],
+  });
+  for (const name of declarations.keys()) {
+    if (!inherited.has(name)) {
+      throw new Error(
+        `density ${level} reassigns ${name}, which is not inherited from the document`,
+      );
+    }
+  }
+  densities.push({ level, declarations });
+}
+densities.push({
+  level: 'default',
+  declarations: new Map(
+    [...new Set(densities.flatMap(({ declarations }) => [...declarations.keys()]))].map((name) => [
+      name,
+      onmars.get(name),
+    ]),
+  ),
+});
+
 await writeFile(
   new URL('tokens.css', dist),
-  renderBaseStylesheet(onmars, { deprecations, modes: baseModes }),
+  renderBaseStylesheet(onmars, { deprecations, modes: baseModes, inherited, densities }),
 );
 
 const modeSummary = (modes) =>
   modes.map(({ mode, declarations }) => `${mode.name} ${declarations.size}`).join(', ');
 console.log(
-  `✔ dist/css/tokens.css (theme: onmars — ${onmars.size} tokens, light + dark, ${deprecations.size} deprecated; modes: ${modeSummary(baseModes)})`,
+  `✔ dist/css/tokens.css (theme: onmars — ${onmars.size} tokens, light + dark, ${deprecations.size} deprecated; densities: ${densities.map(({ level }) => level).join(', ')}; modes: ${modeSummary(baseModes)})`,
 );
 
 await writeFile(

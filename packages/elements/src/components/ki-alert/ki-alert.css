@@ -4,9 +4,9 @@
   --_ki-alert-bg: var(--ki-alert-neutral-bg);
   --_ki-alert-fg: var(--ki-alert-neutral-fg);
   --_ki-alert-border: var(--ki-alert-neutral-border);
-  --_ki-alert-padding-inline: var(--ki-alert-padding-inline);
-  --_ki-alert-padding-block: var(--ki-alert-padding-block);
-  --_ki-alert-gap: var(--ki-alert-gap);
+  --_ki-alert-padding-inline: calc(var(--ki-alert-padding-inline) * var(--ki-density-space-scale));
+  --_ki-alert-padding-block: calc(var(--ki-alert-padding-block) * var(--ki-density-space-scale));
+  --_ki-alert-gap: calc(var(--ki-alert-gap) * var(--ki-density-space-scale));
   --_ki-alert-radius: var(--ki-alert-radius);
   --_ki-alert-border-width: var(--ki-alert-border-width);
   --_ki-alert-font-size: var(--ki-alert-font-size);

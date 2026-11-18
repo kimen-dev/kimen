@@ -78,6 +78,7 @@ None.
 
 ## CSS custom properties
 
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-list-bg`: color used by the list component for background.
 - `--ki-list-gap`: dimension used by the list component for gap (MarsUI compositions stack rows contiguously; --ki-list-gap stays as the theme hook).
 - `--ki-list-item-divider-color`: color used by the list component for item divider color.

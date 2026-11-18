@@ -160,6 +160,7 @@ CSS custom properties:
 - `--ki-alert-warning-bg`: color used by the alert component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs).
 - `--ki-alert-warning-border`: color used by the alert component for warning border (MarsUI draws no tone border on any alert/note/toast surface).
 - `--ki-alert-warning-fg`: color used by the alert component for warning foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 5.5:1).
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-effect-component-backdrop-blur`: MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
 - `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
@@ -702,6 +703,8 @@ CSS custom properties:
 - `--ki-button-xs-min-target`: dimension used by the button component for xs min target.
 - `--ki-button-xs-padding-inline`: dimension used by the button component for xs padding inline.
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 
@@ -784,6 +787,7 @@ CSS custom properties:
 - `--ki-card-media-radius`: dimension used by the card component for slotted media corner radius (MarsUI nested media panel Radius/big_component/radius_sm 20px; formalizes the fallback ki-card.css already consumes).
 - `--ki-card-padding-block`: dimension used by the card component for the surface block padding (16px carried by the card surface itself so stacked region paddings no longer double to 32px; formalizes the fallback ki-card.css already consumes).
 - `--ki-card-radius`: dimension used by the card component for radius (MarsUI card surfaces ride the big_component scale: Dashboard_info 400x128 binds radius_xs 16px; large Chart cards anchor radius_lg 28px).
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-elevation-e2`: MarsUI Elevation/e2 (cumulative: e1 layers plus 0/3/3/-1.5).
 - `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
@@ -985,6 +989,7 @@ Methods:
 - `show()` (Promise<void>): Opens the dialog modally. No-op when already open. Equivalent to adding the host `open` attribute. When to use: call from the invoker that should receive focus again after close. When NOT to use: do not call repeatedly to refresh content; update slotted content directly while open.
 
 CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-dialog-backdrop-bg`: color used by the dialog component for backdrop background.
 - `--ki-dialog-backdrop-blur`: backdrop blur used by the dialog component glass surface (MarsUI BACKGROUND_BLUR Blur/24 = CSS 12px; material3 resolves to blur none via the semantic override; perf-measure before enabling per DNA section 5).
 - `--ki-dialog-bg`: color used by the dialog component for background (flat fallback of the MarsUI glass gradient: Surface/Special/light-s0_dark-s2; components paint the gradient from ki.dialog.bg-start to ki.dialog.bg-end).
@@ -1290,6 +1295,8 @@ CSS custom properties:
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
 - `--ki-button-xl-radius`: dimension used by the button component for xl radius.
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-icon-button-lg-icon-size`: dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px).
 - `--ki-icon-button-lg-size`: dimension used by the icon button component for lg box (48px square).
 - `--ki-icon-button-md-icon-size`: dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3).
@@ -1440,6 +1447,8 @@ Events:
 Methods: none
 
 CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-input-border-block-end-width`: dimension used by the input component for border block end width.
 - `--ki-input-border-block-start-width`: dimension used by the input component for border block start width.
 - `--ki-input-border-inline-end-width`: dimension used by the input component for border inline end width.
@@ -1567,6 +1576,7 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-list-bg`: color used by the list component for background.
 - `--ki-list-gap`: dimension used by the list component for gap (MarsUI compositions stack rows contiguously; --ki-list-gap stays as the theme hook).
 - `--ki-list-item-divider-color`: color used by the list component for item divider color.
@@ -1642,6 +1652,9 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-inverse-white-alpha-3`: semantic color for inverse white alpha 3.
 - `--ki-inverse-white-alpha-6`: semantic color for inverse white alpha 6.
 - `--ki-list-item-gap`: dimension used by the list component for item gap (MarsUI md/lg rows: Space/xl 12px between start/content/end regions).
@@ -2190,6 +2203,9 @@ Events:
 Methods: none
 
 CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
 - `--ki-elevation-e1`: MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow.
 - `--ki-focus-danger`: MarsUI Focus/danger: persistent 3px spread ring of Outline/danger_base_em_alpha (danger-500 at 20% light / 40% dark) — the danger state signal on Input_field and Dropdown masters (measured rgb(252,220,219) over white). Pairs with a white fill and hairline border; Kimen keeps its opaque danger border on top as a declared a11y deviation.
@@ -2524,6 +2540,8 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-motion-distance-xs`: Motion travel distance xs (2px): hover-lift offsets.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
@@ -2620,6 +2638,7 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
 - `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
@@ -2765,6 +2784,8 @@ Events:
 Methods: none
 
 CSS custom properties:
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-text-danger-high-em`: semantic color for text danger high em.
@@ -2877,6 +2898,7 @@ Events: none
 Methods: none
 
 CSS custom properties:
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
 - `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.

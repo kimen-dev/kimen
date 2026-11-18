@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/043-preference-modes.json',
+      '../../changes/api/045-density.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -573,15 +573,20 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // the indeterminate checkbox alias so reduced transparency can make them
   // opaque while state washes keep their alpha. 1173 + 10 = 1183. Both modes
   // are published as their own contexts.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1183);
+  // The compact density (changes/api/045-density) adds three: the two
+  // document-inherited density tokens and the 24px target floor. 1183 + 3 =
+  // 1186. The compact level is published as its own context too.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1186);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1183,
+    1186,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
     [
+      'compact/dark',
+      'compact/light',
       'contrast-more/dark',
       'contrast-more/light',
       'dark',

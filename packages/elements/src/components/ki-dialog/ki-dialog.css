@@ -2,8 +2,8 @@
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
   --_ki-dialog-radius: var(--ki-dialog-radius);
-  --_ki-dialog-padding: var(--ki-dialog-padding);
-  --_ki-dialog-gap: var(--ki-dialog-gap);
+  --_ki-dialog-padding: calc(var(--ki-dialog-padding) * var(--ki-density-space-scale));
+  --_ki-dialog-gap: calc(var(--ki-dialog-gap) * var(--ki-density-space-scale));
   --_ki-dialog-min-width: var(--ki-dialog-min-width);
   --_ki-dialog-max-width: var(--ki-dialog-max-width);
   --_ki-dialog-bg: var(--ki-dialog-bg);

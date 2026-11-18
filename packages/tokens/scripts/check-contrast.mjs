@@ -183,7 +183,9 @@ function selectScheme(value, branch) {
 // every rule that declaration activates, in cascade order. The `@media` copy
 // of each mode carries the same declarations as its declaration rule — the
 // public token-surface gate holds the two equal — so it is skipped here.
-const MODE_DECLARATION = /data-ki-(?:contrast|transparency)/u;
+// Density rules (spec 045) reassign only document-inherited sizes, never a
+// colour: no context reads them.
+const MODE_DECLARATION = /data-ki-(?:contrast|transparency|density)/u;
 
 function topLevelRules(css) {
   const rules = [];

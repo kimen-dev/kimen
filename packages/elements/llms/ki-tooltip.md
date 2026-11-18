@@ -64,6 +64,7 @@ None.
 
 ## CSS custom properties
 
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
 - `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.

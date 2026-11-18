@@ -72,7 +72,13 @@ button {
      compensates to keep icon-to-text exactly at the composite. */
   gap: calc(var(--_ki-button-gap) - var(--ki-button-label-padding-inline));
   line-height: var(--_ki-button-line-height);
-  min-block-size: var(--_ki-button-height);
+
+  /* Density (spec 045): the region's step on top of the size, floored at the
+     WCAG 2.5.8 target minimum. */
+  min-block-size: max(
+    var(--ki-density-target-min),
+    calc(var(--_ki-button-height) + var(--ki-density-control-offset))
+  );
   min-inline-size: var(--_ki-button-min-target);
 
   /* Figma strokes are INNER: the 4px padding-block already contains the 1px

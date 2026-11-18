@@ -49,9 +49,15 @@ button {
      sizes — the 1px border stays inside the box (the calc(padding - border)
      mechanic of ki-button does not apply to a padding-less square;
      specs/022-ki-icon-button/design-extraction.md decision 3). */
-  block-size: var(--_ki-icon-button-size);
+  block-size: max(
+    var(--ki-density-target-min),
+    calc(var(--_ki-icon-button-size) + var(--ki-density-control-offset))
+  );
   box-sizing: border-box;
-  inline-size: var(--_ki-icon-button-size);
+  inline-size: max(
+    var(--ki-density-target-min),
+    calc(var(--_ki-icon-button-size) + var(--ki-density-control-offset))
+  );
   padding-block: 0;
   padding-inline: 0;
 }

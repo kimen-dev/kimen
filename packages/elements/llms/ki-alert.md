@@ -121,6 +121,7 @@ None.
 - `--ki-alert-warning-bg`: color used by the alert component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs).
 - `--ki-alert-warning-border`: color used by the alert component for warning border (MarsUI draws no tone border on any alert/note/toast surface).
 - `--ki-alert-warning-fg`: color used by the alert component for warning foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 5.5:1).
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
 - `--ki-effect-component-backdrop-blur`: MarsUI Blur/24 as the component glass backdrop. Components consume this semantic name for backdrop-filter: blur(...) — never the ki.blur primitive directly (primitive-css-consumption gate).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
 - `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.

@@ -250,5 +250,7 @@ None.
 - `--ki-button-xs-min-target`: dimension used by the button component for xs min target.
 - `--ki-button-xs-padding-inline`: dimension used by the button component for xs padding inline.
 - `--ki-button-xs-radius`: dimension used by the button component for xs radius.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.

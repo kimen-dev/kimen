@@ -74,6 +74,9 @@ None.
 
 ## CSS custom properties
 
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
+- `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-effect-component-secondary-default-shadow`: MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)).
 - `--ki-elevation-e1`: MarsUI Elevation/e1. Scheme-aware: every layer colors through ki.elevation.shadow.
 - `--ki-focus-danger`: MarsUI Focus/danger: persistent 3px spread ring of Outline/danger_base_em_alpha (danger-500 at 20% light / 40% dark) — the danger state signal on Input_field and Dropdown masters (measured rgb(252,220,219) over white). Pairs with a white fill and hairline border; Kimen keeps its opaque danger border on top as a declared a11y deviation.

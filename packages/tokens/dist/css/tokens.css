@@ -197,6 +197,9 @@
   --ki-space-24xl: 7.5rem;
   --ki-space-25xl: 9rem;
   --ki-space-26xl: 10rem;
+  --ki-space-minus-md: -0.5rem;
+  --ki-scale-unit: 1;
+  --ki-scale-compact: 0.75;
   --ki-radius-0: 0px;
   --ki-radius-xxs: 2px;
   --ki-radius-xs: 4px;
@@ -261,6 +264,7 @@
   --ki-shadow-inner-secondary-default: inset 0px var(--ki-shadow-effect-y) var(--ki-shadow-distance-2) 0px var(--ki-color-white-3);
   --ki-shadow-inner-secondary-hover: inset 0px var(--ki-shadow-effect-y) var(--ki-shadow-distance-2) 0px var(--ki-color-white-8);
   --ki-size-border-hairline: 1px;
+  --ki-size-target-min: 24px;
   --ki-size-qr: 8rem;
   --ki-size-surface-xxs: 18rem;
   --ki-size-surface-xs: 20rem;
@@ -877,6 +881,7 @@
   --ki-typography-letter-spacing-lg: var(--ki-font-letter-spacing-lg);
   --ki-spacing-inline: var(--ki-space-md);
   --ki-spacing-block: var(--ki-space-xl);
+  --ki-density-target-min: var(--ki-size-target-min);
   --ki-corner-control: var(--ki-radius-md);
   --ki-motion-duration-fast: var(--ki-duration-fast);
   --ki-motion-duration-short-1: var(--ki-duration-fast);
@@ -1773,6 +1778,21 @@
   --ki-video-focus-ring-width: var(--ki-focus-ring-width);
   --ki-video-focus-ring-offset: var(--ki-focus-ring-offset);
   --ki-video-motion-duration: var(--ki-motion-duration-fast);
+}
+
+:root {
+  --ki-density-control-offset: var(--ki-space-zero);
+  --ki-density-space-scale: var(--ki-scale-unit);
+}
+
+[data-ki-density='compact'] {
+  --ki-density-control-offset: var(--ki-space-minus-md);
+  --ki-density-space-scale: var(--ki-scale-compact);
+}
+
+[data-ki-density='default'] {
+  --ki-density-control-offset: var(--ki-space-zero);
+  --ki-density-space-scale: var(--ki-scale-unit);
 }
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {

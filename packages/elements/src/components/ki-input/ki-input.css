@@ -87,7 +87,10 @@
 
   /* MarsUI Input_field md cell measures min-height 40px — consumed as
      min-block-size (token-wave handoff) so the field can grow, never clip. */
-  min-block-size: var(--ki-input-height);
+  min-block-size: max(
+    var(--ki-density-target-min),
+    calc(var(--ki-input-height) + var(--ki-density-control-offset))
+  );
   padding-inline: var(--ki-input-padding-inline);
   background-color: var(--_ki-input-bg);
   border-block-start-width: var(--ki-input-border-block-start-width);
@@ -117,6 +120,10 @@
 /* MarsUI Text_wrap carries 4px (Space/xs) inline padding, giving the 8px
    visual icon-to-text distance next to adornments (4px gap + 4px pad). */
 [part="input"] {
+  /* The native input is the pointer target: it spans the whole field height,
+     not only its text line, so the field never offers a target under the
+     WCAG 2.5.8 24px minimum (material3's 20px line measured below it). */
+  align-self: stretch;
   min-inline-size: 0;
   flex: 1 1 auto;
   padding-block: 0;
