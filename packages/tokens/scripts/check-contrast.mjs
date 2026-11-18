@@ -31,6 +31,11 @@ const CONTRAST_PAIRS = [
   { text: '--ki-text-high-em', surface: '--ki-surface-s0' },
   { text: '--ki-text-med-em', surface: '--ki-surface-s0' },
   { text: '--ki-text-high-em', surface: '--ki-surface-s1' },
+  // Help and error lines under a form control (spec 042 FR-011) sit on the
+  // raised surface too, not only on the page; the tone-ink sweep below reads
+  // the danger ink against s0 alone.
+  { text: '--ki-text-med-em', surface: '--ki-surface-s1' },
+  { text: '--ki-text-danger-high-em', surface: '--ki-surface-s1' },
   { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
 ];
 

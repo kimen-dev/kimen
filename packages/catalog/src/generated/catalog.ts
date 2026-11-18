@@ -390,6 +390,14 @@ export const catalogData = {
           "description": "Prevents activation, removes the checkbox from keyboard reach, exposes the\nunavailable state, and excludes it from form data.\nWhen NOT to use: do not use disabled for validation errors or pending\nstate.",
           "default": false
         },
+        "error-text": {
+          "type": "string",
+          "description": "Message shown in place of the help text once a `required` checkbox is\nleft unchecked, and its `validationMessage`. Say what checking it means\n(\"Accept the terms to continue\"). Without it the browser's own message\nshows, in the browser's language. An error set with `setCustomValidity`\noutranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "One line of help under the checkbox, read with it as its description:\nwhat checking it means or commits to.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`."
+        },
         "indeterminate": {
           "type": "boolean",
           "description": "Presentation-only mixed state. It renders the dash mark, is forwarded to\nthe internal native input for mixed assistive-technology exposure, and\nnever changes the submitted value. Any user toggle clears it and removes\nthe reflected attribute.\nWhen NOT to use: do not submit or persist `indeterminate` as a third\nvalue; model data remains binary through `checked`.",
@@ -562,6 +570,14 @@ export const catalogData = {
           "type": "boolean",
           "description": "Prevents editing, removes the field from keyboard reach and exposes the\nunavailable state through the internal native input.\nWhen NOT to use: do not use disabled for readonly reference values.",
           "default": false
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "One line of help under the field, read with it as its description: the\nformat expected, or why the answer is asked. While an error shows, the\nerror takes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`."
         },
         "label": {
           "type": "string",
@@ -749,6 +765,14 @@ export const catalogData = {
           "description": "Makes the whole group unavailable, skips it in Tab order and removes its\nform entry.\nWhen NOT to use: do not use disabled for pending/loading semantics.",
           "default": false
         },
+        "error-text": {
+          "type": "string",
+          "description": "Message shown in place of the help text once a `required` group is left\nwithout a choice, and its `validationMessage` (\"Choose a plan\"). Without\nit the browser's own message shows, in the browser's language. An error\nset with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "One line of help under the options, read with the group as its\ndescription: what the choice decides. While an error shows, the error\ntakes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`."
+        },
         "label": {
           "type": "string",
           "description": "Visible label and accessible-name source for the radiogroup.\nWhen NOT to use: do not omit it; unlabeled groups fail accessibility gates.",
@@ -812,6 +836,14 @@ export const catalogData = {
           "type": "boolean",
           "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.",
           "default": false
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Message shown in place of the help text once a `required` select is left\nwithout a choice, and its `validationMessage` (\"Choose a country\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "One line of help under the trigger, read with it as the combobox\ndescription: what the choice decides. While an error shows, the error\ntakes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`."
         },
         "label": {
           "type": "string",
@@ -891,6 +923,10 @@ export const catalogData = {
           "type": "boolean",
           "description": "Prevents toggling, removes the switch from keyboard reach, excludes it\nfrom form data, and exposes the unavailable state to assistive technology.\nWhen to use: make a setting temporarily unavailable while preserving its\ncurrent state.\nWhen NOT to use: do not use disabled for pending or loading states.",
           "default": false
+        },
+        "help-text": {
+          "type": "string",
+          "description": "One line of help under the switch, read with it as its description: what\nturning it on changes.\nWhen NOT to use: do not repeat the label. A switch has no constraint of\nits own, so it takes no error text; an error the application sets with\n`setCustomValidity` shows in this line's place."
         },
         "name": {
           "type": "string",
@@ -991,6 +1027,14 @@ export const catalogData = {
           "type": "boolean",
           "description": "Disables editing, focus, validation and form-data contribution.\nWhen to use: make a field temporarily unavailable. When NOT to use: do not\nuse disabled for readonly review text that should submit.",
           "default": false
+        },
+        "error-text": {
+          "type": "string",
+          "description": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those."
+        },
+        "help-text": {
+          "type": "string",
+          "description": "One line of help under the field, read with it as its description: what\nto write, or how long. While an error shows, the error takes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`."
         },
         "label": {
           "type": "string",

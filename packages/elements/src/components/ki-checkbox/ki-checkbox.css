@@ -245,6 +245,12 @@ input:active:not([disabled], :state(fieldset-disabled)) ~ [part="control"] {
   min-inline-size: 0;
 }
 
+/* Help and error lines (spec 042) align with the label text, past the box. */
+[part="help"],
+[part="error"] {
+  padding-inline-start: calc(var(--ki-checkbox-control-size) + var(--ki-checkbox-gap));
+}
+
 /* Micro-motion (gated exactly like the pre-existing mark transition so the
    reduced-motion visual harness stays deterministic): surface/effect
    cross-fades ease with the standard curve, the press dip releases with the

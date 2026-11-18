@@ -241,6 +241,14 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
+          * Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+         */
+        "errorText"?: string;
+        /**
+          * One line of help under the checkbox, read with it as its description: what checking it means or commits to. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
+         */
+        "helpText"?: string;
+        /**
           * Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
           * @default false
          */
@@ -417,6 +425,14 @@ export namespace Components {
           * @default false
          */
         "disabled": boolean;
+        /**
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+         */
+        "errorText"?: string;
+        /**
+          * One line of help under the field, read with it as its description: the format expected, or why the answer is asked. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
+         */
+        "helpText"?: string;
         /**
           * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
          */
@@ -603,6 +619,14 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
+          * Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+         */
+        "errorText"?: string;
+        /**
+          * One line of help under the options, read with the group as its description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
+         */
+        "helpText"?: string;
+        /**
           * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
          */
         "label": string;
@@ -672,6 +696,14 @@ export namespace Components {
           * @default false
          */
         "disabled": boolean;
+        /**
+          * Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+         */
+        "errorText"?: string;
+        /**
+          * One line of help under the trigger, read with it as the combobox description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
+         */
+        "helpText"?: string;
         /**
           * Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
          */
@@ -754,6 +786,10 @@ export namespace Components {
           * @default false
          */
         "disabled": boolean;
+        /**
+          * One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `setCustomValidity` shows in this line's place.
+         */
+        "helpText"?: string;
         /**
           * Form-data key contributed while the switch is on. When to use: include the immediate setting in native form data when on. When NOT to use: omit when no form entry should be submitted.
           * @default undefined
@@ -856,6 +892,14 @@ export namespace Components {
           * @default false
          */
         "disabled": boolean;
+        /**
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+         */
+        "errorText"?: string;
+        /**
+          * One line of help under the field, read with it as its description: what to write, or how long. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
+         */
+        "helpText"?: string;
         /**
           * Visible label rendered by the component and used as the accessible name. When to use: always provide a concise label for the requested long-form text. When NOT to use: do not substitute placeholder text for the label.
          */
@@ -1790,9 +1834,17 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
+          * Message shown in place of the help text once a `required` checkbox is left unchecked, and its `validationMessage`. Say what checking it means ("Accept the terms to continue"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+         */
+        "errorText"?: string;
+        /**
           * The `id` of a `<form>` element to associate this element with.
          */
         "form"?: string;
+        /**
+          * One line of help under the checkbox, read with it as its description: what checking it means or commits to. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
+         */
+        "helpText"?: string;
         /**
           * Presentation-only mixed state. It renders the dash mark, is forwarded to the internal native input for mixed assistive-technology exposure, and never changes the submitted value. Any user toggle clears it and removes the reflected attribute. When NOT to use: do not submit or persist `indeterminate` as a third value; model data remains binary through `checked`.
           * @default false
@@ -1967,9 +2019,17 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`, `type`), and the field's `validationMessage`. Say how to fix the answer ("Enter an email address like name@example.com"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+         */
+        "errorText"?: string;
+        /**
           * The `id` of a `<form>` element to associate this element with.
          */
         "form"?: string;
+        /**
+          * One line of help under the field, read with it as its description: the format expected, or why the answer is asked. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
+         */
+        "helpText"?: string;
         /**
           * Visible label rendered next to the entry area and used as the accessible name. This is mandatory for valid usage. When NOT to use: never use `placeholder` as a label substitute.
          */
@@ -2156,9 +2216,17 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
+          * Message shown in place of the help text once a `required` group is left without a choice, and its `validationMessage` ("Choose a plan"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+         */
+        "errorText"?: string;
+        /**
           * The `id` of a `<form>` element to associate this element with.
          */
         "form"?: string;
+        /**
+          * One line of help under the options, read with the group as its description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
+         */
+        "helpText"?: string;
         /**
           * Visible label and accessible-name source for the radiogroup. When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
          */
@@ -2230,9 +2298,17 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
+          * Message shown in place of the help text once a `required` select is left without a choice, and its `validationMessage` ("Choose a country"). Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+         */
+        "errorText"?: string;
+        /**
           * The `id` of a `<form>` element to associate this element with.
          */
         "form"?: string;
+        /**
+          * One line of help under the trigger, read with it as the combobox description: what the choice decides. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
+         */
+        "helpText"?: string;
         /**
           * Visible label and accessible-name source for the combobox trigger. When NOT to use: do not omit it; unlabeled selects are invalid usage.
          */
@@ -2319,6 +2395,10 @@ declare namespace LocalJSX {
           * The `id` of a `<form>` element to associate this element with.
          */
         "form"?: string;
+        /**
+          * One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `setCustomValidity` shows in this line's place.
+         */
+        "helpText"?: string;
         /**
           * Form-data key contributed while the switch is on. When to use: include the immediate setting in native form data when on. When NOT to use: omit when no form entry should be submitted.
           * @default undefined
@@ -2426,9 +2506,17 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         /**
+          * Message shown in place of the help text once the person's answer fails a constraint (`required`), and the field's `validationMessage`. Say how to fix the answer. Without it the browser's own message shows, in the browser's language. An error set with `setCustomValidity` outranks it. When NOT to use: do not use it for server-side or cross-field errors; call `setCustomValidity` for those.
+         */
+        "errorText"?: string;
+        /**
           * The `id` of a `<form>` element to associate this element with.
          */
         "form"?: string;
+        /**
+          * One line of help under the field, read with it as its description: what to write, or how long. While an error shows, the error takes its place. When NOT to use: do not repeat the label, and do not use it for error messages; use `error-text`.
+         */
+        "helpText"?: string;
         /**
           * Visible label rendered by the component and used as the accessible name. When to use: always provide a concise label for the requested long-form text. When NOT to use: do not substitute placeholder text for the label.
          */
@@ -2549,6 +2637,8 @@ declare namespace LocalJSX {
         "required": boolean;
         "name": string;
         "value": string;
+        "helpText": string;
+        "errorText": string;
     }
     interface KiDialogAttributes {
         "open": boolean;
@@ -2580,6 +2670,8 @@ declare namespace LocalJSX {
         "readonly": boolean;
         "disabled": boolean;
         "autocomplete": string;
+        "helpText": string;
+        "errorText": string;
     }
     interface KiOptionAttributes {
         "value": string;
@@ -2606,6 +2698,8 @@ declare namespace LocalJSX {
         "label": string;
         "required": boolean;
         "disabled": boolean;
+        "helpText": string;
+        "errorText": string;
     }
     interface KiScrollerAttributes {
         "orientation": KiScrollerOrientation;
@@ -2618,6 +2712,8 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
         "required": boolean;
+        "helpText": string;
+        "errorText": string;
     }
     interface KiStatusAttributes {
         "tone": KiStatusTone;
@@ -2629,6 +2725,7 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "name": string;
         "value": string;
+        "helpText": string;
     }
     interface KiTabAttributes {
         "value": string;
@@ -2652,6 +2749,8 @@ declare namespace LocalJSX {
         "readonly": boolean;
         "disabled": boolean;
         "autocomplete": string;
+        "helpText": string;
+        "errorText": string;
     }
     interface KiTooltipAttributes {
         "label": string;

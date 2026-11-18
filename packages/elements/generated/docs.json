@@ -1239,6 +1239,14 @@
         },
         {
           "name": "part",
+          "text": "error - Error line shown in place of the help text while the checkbox is\ninvalid after the person toggled it or submitted; a polite live region, starting\nwith a decorative error symbol."
+        },
+        {
+          "name": "part",
+          "text": "help - Help line under the checkbox, read as its description."
+        },
+        {
+          "name": "part",
           "text": "label - Label wrapper around the default slot."
         },
         {
@@ -1304,6 +1312,58 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": true,
+          "docs": "Message shown in place of the help text once a `required` checkbox is\nleft unchecked, and its `validationMessage`. Say what checking it means\n(\"Accept the terms to continue\"). Without it the browser's own message\nshows, in the browser's language. An error set with `setCustomValidity`\noutranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "One line of help under the checkbox, read with it as its description:\nwhat checking it means or commits to.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -1439,6 +1499,14 @@
         {
           "name": "control",
           "docs": "Visual checkbox box, border, focus ring and currentColor marks."
+        },
+        {
+          "name": "error",
+          "docs": "Error line shown in place of the help text while the checkbox is\ninvalid after the person toggled it or submitted; a polite live region, starting\nwith a decorative error symbol."
+        },
+        {
+          "name": "help",
+          "docs": "Help line under the checkbox, read as its description."
         },
         {
           "name": "label",
@@ -2196,7 +2264,15 @@
         },
         {
           "name": "part",
+          "text": "error - Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
+        },
+        {
+          "name": "part",
           "text": "field - Enclosure wrapper for background, border, radius and focus ring."
+        },
+        {
+          "name": "part",
+          "text": "help - Help line under the field, read as the field's description."
         },
         {
           "name": "part",
@@ -2266,6 +2342,58 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": true,
+          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`, `type`), and the field's `validationMessage`. Say\nhow to fix the answer (\"Enter an email address like name@example.com\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "One line of help under the field, read with it as its description: the\nformat expected, or why the answer is asked. While an error shows, the\nerror takes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -2511,8 +2639,16 @@
       ],
       "parts": [
         {
+          "name": "error",
+          "docs": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
+        },
+        {
           "name": "field",
           "docs": "Enclosure wrapper for background, border, radius and focus ring."
+        },
+        {
+          "name": "help",
+          "docs": "Help line under the field, read as the field's description."
         },
         {
           "name": "input",
@@ -3205,6 +3341,14 @@
           "text": "label - Visible group label and accessible-name source."
         },
         {
+          "name": "part",
+          "text": "help - Help line under the options, read as the radiogroup description."
+        },
+        {
+          "name": "part",
+          "text": "error - Error line shown in place of the help text while the group is\ninvalid after the person submitted; a polite live region, starting with a\ndecorative error symbol."
+        },
+        {
           "name": "event",
           "text": "change - Fired once after the user selects a different radio, composed\nacross the shadow boundary; `value` is already current when listeners run.\nWhen to use: react to the committed choice. When NOT to use: do not expect\nit for programmatic `value` writes, which are silent."
         }
@@ -3238,6 +3382,58 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": true,
+          "docs": "Message shown in place of the help text once a `required` group is left\nwithout a choice, and its `validationMessage` (\"Choose a plan\"). Without\nit the browser's own message shows, in the browser's language. An error\nset with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "One line of help under the options, read with the group as its\ndescription: what the choice decides. While an error shows, the error\ntakes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -3361,6 +3557,14 @@
         }
       ],
       "parts": [
+        {
+          "name": "error",
+          "docs": "Error line shown in place of the help text while the group is\ninvalid after the person submitted; a polite live region, starting with a\ndecorative error symbol."
+        },
+        {
+          "name": "help",
+          "docs": "Help line under the options, read as the radiogroup description."
+        },
         {
           "name": "label",
           "docs": "Visible group label and accessible-name source."
@@ -3526,6 +3730,14 @@
           "text": "option - Mirrored option row rendered in this shadow root."
         },
         {
+          "name": "part",
+          "text": "help - Help line under the trigger, read as the combobox description."
+        },
+        {
+          "name": "part",
+          "text": "error - Error line shown in place of the help text while the select is\ninvalid after the person chose or submitted; a polite live region, starting with\na decorative error symbol."
+        },
+        {
           "name": "event",
           "text": "change - Fired once after the user commits a different option, composed\nacross the shadow boundary and preceded by `input`; `value` is already\ncurrent when listeners run. When to use: react to the committed choice.\nWhen NOT to use: do not expect it for programmatic `value` writes, which\nare silent."
         }
@@ -3559,6 +3771,58 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": true,
+          "docs": "Message shown in place of the help text once a `required` select is left\nwithout a choice, and its `validationMessage` (\"Choose a country\").\nWithout it the browser's own message shows, in the browser's language. An\nerror set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "One line of help under the trigger, read with it as the combobox\ndescription: what the choice decides. While an error shows, the error\ntakes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -3717,6 +3981,14 @@
         }
       ],
       "parts": [
+        {
+          "name": "error",
+          "docs": "Error line shown in place of the help text while the select is\ninvalid after the person chose or submitted; a polite live region, starting with\na decorative error symbol."
+        },
+        {
+          "name": "help",
+          "docs": "Help line under the trigger, read as the combobox description."
+        },
         {
           "name": "indicator",
           "docs": "Decorative dropdown indicator."
@@ -3930,6 +4202,14 @@
           "text": "label - Label wrapper around the default slot."
         },
         {
+          "name": "part",
+          "text": "help - Help line under the switch, read as its description."
+        },
+        {
+          "name": "part",
+          "text": "error - Line that shows, in place of the help text, an error the\napplication set with `setCustomValidity` once the form is submitted; a polite\nlive region, starting with a decorative error symbol."
+        },
+        {
           "name": "event",
           "text": "change - Fired once after a user toggle commits, composed across the shadow\nboundary; `checked` is already current when listeners run. When to use:\napply the on/off effect. When NOT to use: do not expect it for programmatic\n`checked` writes, which are silent."
         }
@@ -3992,6 +4272,32 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "One line of help under the switch, read with it as its description: what\nturning it on changes.\nWhen NOT to use: do not repeat the label. A switch has no constraint of\nits own, so it takes no error text; an error the application sets with\n`setCustomValidity` shows in this line's place.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -4061,7 +4367,13 @@
       ],
       "methods": [],
       "events": [],
-      "listeners": [],
+      "listeners": [
+        {
+          "event": "invalid",
+          "capture": false,
+          "passive": false
+        }
+      ],
       "styles": [],
       "slots": [
         {
@@ -4070,6 +4382,14 @@
         }
       ],
       "parts": [
+        {
+          "name": "error",
+          "docs": "Line that shows, in place of the help text, an error the\napplication set with `setCustomValidity` once the form is submitted; a polite\nlive region, starting with a decorative error symbol."
+        },
+        {
+          "name": "help",
+          "docs": "Help line under the switch, read as its description."
+        },
         {
           "name": "label",
           "docs": "Label wrapper around the default slot."
@@ -4470,7 +4790,15 @@
         },
         {
           "name": "part",
+          "text": "error - Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
+        },
+        {
+          "name": "part",
           "text": "field - The enclosure wrapper."
+        },
+        {
+          "name": "part",
+          "text": "help - Help line under the field, read as the field's description."
         },
         {
           "name": "part",
@@ -4540,6 +4868,58 @@
             }
           ],
           "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-text",
+          "reflectToAttr": true,
+          "docs": "Message shown in place of the help text once the person's answer fails a\nconstraint (`required`), and the field's `validationMessage`. Say how to\nfix the answer. Without it the browser's own message shows, in the\nbrowser's language. An error set with `setCustomValidity` outranks it.\nWhen NOT to use: do not use it for server-side or cross-field errors; call\n`setCustomValidity` for those.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "helpText",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "help-text",
+          "reflectToAttr": true,
+          "docs": "One line of help under the field, read with it as its description: what\nto write, or how long. While an error shows, the error takes its place.\nWhen NOT to use: do not repeat the label, and do not use it for error\nmessages; use `error-text`.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
           "required": false,
           "getter": false,
           "setter": false
@@ -4749,8 +5129,16 @@
       "slots": [],
       "parts": [
         {
+          "name": "error",
+          "docs": "Error line shown in place of the help text while the field is invalid\nafter the person answered or submitted; a polite live region, starting with a\ndecorative error symbol."
+        },
+        {
           "name": "field",
           "docs": "The enclosure wrapper."
+        },
+        {
+          "name": "help",
+          "docs": "Help line under the field, read as the field's description."
         },
         {
           "name": "label",

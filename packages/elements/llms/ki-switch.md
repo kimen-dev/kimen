@@ -40,6 +40,7 @@ User toggles dispatch composed `input` and `change` events — apply the setting
 
 - `checked` (boolean, default false): Live on/off state. Boolean presence semantics apply: any present `checked` attribute value, including `checked="false"` or malformed agent output, means on. Omit the attribute to express off. When to use: set the initial on state for a setting that applies immediately. When NOT to use: do not use a switch for choices saved only on submit; use ki-checkbox for that pattern.
 - `disabled` (boolean, default false): Prevents toggling, removes the switch from keyboard reach, excludes it from form data, and exposes the unavailable state to assistive technology. When to use: make a setting temporarily unavailable while preserving its current state. When NOT to use: do not use disabled for pending or loading states.
+- `help-text` (string | undefined): One line of help under the switch, read with it as its description: what turning it on changes. When NOT to use: do not repeat the label. A switch has no constraint of its own, so it takes no error text; an error the application sets with `setCustomValidity` shows in this line's place.
 - `name` (string | undefined): Form-data key contributed while the switch is on. When to use: include the immediate setting in native form data when on. When NOT to use: omit when no form entry should be submitted.
 - `value` (string | undefined): Form-data value submitted while on. Omit for native checkbox parity: the submitted value defaults to `on`. When to use: submit a domain-specific value instead of the default `on`. When NOT to use: do not set a value to represent off; off contributes nothing.
 
@@ -49,6 +50,8 @@ User toggles dispatch composed `input` and `change` events — apply the setting
 
 ## Parts
 
+- `error`: Line that shows, in place of the help text, an error the application set with `setCustomValidity` once the form is submitted; a polite live region, starting with a decorative error symbol.
+- `help`: Help line under the switch, read as its description.
 - `label`: Label wrapper around the default slot.
 - `thumb`: Traveling handle.
 - `track`: On/off channel.
@@ -109,9 +112,13 @@ None.
 - `--ki-switch-unchecked-rest-thumb`: color used by the switch component for unchecked rest thumb.
 - `--ki-switch-unchecked-rest-track`: color used by the switch component for unchecked rest track (MarsUI OFF track = surface/disabled_med_em #dddfe4 light / White-18 dark — a solid soft fill, not an outlined pill).
 - `--ki-text-base-em`: semantic color for text base em.
+- `--ki-text-danger-high-em`: semantic color for text danger high em.
 - `--ki-text-high-em`: semantic color for text high em.
 - `--ki-text-primary-on-primary-light`: semantic color for text primary on primary light.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
 - `--ki-typography-family-body`: semantic font family for typography family body.
 - `--ki-typography-line-height-body-2`: semantic dimension for typography line height body 2.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
 - `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
 - `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.

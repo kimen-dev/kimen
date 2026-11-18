@@ -53,6 +53,8 @@ test('contrast pair table covers the declared data-model pairs', () => {
       ['--ki-text-high-em', '--ki-surface-s0'],
       ['--ki-text-med-em', '--ki-surface-s0'],
       ['--ki-text-high-em', '--ki-surface-s1'],
+      ['--ki-text-med-em', '--ki-surface-s1'],
+      ['--ki-text-danger-high-em', '--ki-surface-s1'],
       ['--ki-text-primary-on-primary', '--ki-surface-primary-med-em'],
     ],
   );
