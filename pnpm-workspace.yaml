@@ -36,6 +36,13 @@ allowBuilds:
   # optional nx.json cloud url; nx.json has none) and package-json (env for
   # temporary installs) changed. 24.0.5 cleared minimumReleaseAge.
   'nx@24.0.5': true
+  # 24.0.6, reviewed for the dev-dependency group update: the postinstall
+  # command and dist/bin/post-install.js are byte-for-byte those of 24.0.5;
+  # of the modules it requires only update-manager (keeps the Nx Cloud client
+  # in a private owned directory instead of the shared temp dir; nx.json has
+  # no cloud config) and package-json (manifest lookup) changed, with no new
+  # network, exec or eval calls. 24.0.6 cleared minimumReleaseAge.
+  'nx@24.0.6': true
 
 # Resolution pins. These live here and not under `pnpm.overrides` in
 # package.json: pnpm 10 stopped reading that field, and a pin it does not read
