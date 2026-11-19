@@ -43,6 +43,24 @@ Beyond color, the token surface covers everything a theme wants to control:
 The authoritative list is always the generated reference, never prose —
 see [the token reference](/docs/tokens/reference/).
 
+## Optional theme fonts
+
+The typography tokens never fetch fonts. If you self-host your fonts, use
+the family tokens with your own `@font-face` rules.
+
+- **onmars v2** uses Instrument Sans for body text and Newsreader for display
+  text. Import `@kimen/tokens/css/onmars-fonts.css` alongside the tokens for
+  the upright Latin variable faces. Earlier onmars tokens use Inter.
+- **Material 3** uses Roboto for body and display text. Self-host it
+  alongside `@kimen/tokens/css/material3`. The optional
+  `@kimen/tokens/css/material3-fonts.css` provides a local
+  `'Roboto Fallback'` alias you can place between Roboto and `system-ui`.
+
+To preload a font used in the initial viewport, use the URL that your build
+emits in the stylesheet's `url()`, with `as="font"`, `type="font/woff2"`
+and `crossorigin` on the preload link. Find example stacks and a preload
+snippet in the [tokens package README](https://github.com/kimen-dev/kimen/blob/main/packages/tokens/README.md#optional-theme-fonts).
+
 ## Customizing
 
 Reassign tokens at `:root` for theme-wide changes, or on any subtree for a

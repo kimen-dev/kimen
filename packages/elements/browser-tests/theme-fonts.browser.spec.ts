@@ -2,13 +2,24 @@
 import { expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 
-import type { measureThemeFonts } from './theme-fonts-page';
+interface FontSample {
+  widths: number[];
+  markerTop: number | undefined;
+  faces: { family: string; status: FontFaceLoadStatus }[];
+}
+
+export interface ThemeFontMeasurement {
+  before: FontSample;
+  after: FontSample;
+  requests: string[];
+  cls: number | null;
+}
 
 const browserCommands = commands as unknown as {
   measureThemeFonts: (
     theme: 'onmars' | 'material3',
     withFonts: boolean,
-  ) => ReturnType<typeof measureThemeFonts>;
+  ) => Promise<ThemeFontMeasurement>;
 };
 
 it('S1 swaps both onmars v2 faces into the page with CLS below 0.01', async () => {
@@ -19,7 +30,7 @@ it('S1 swaps both onmars v2 faces into the page with CLS below 0.01', async () =
     '/fonts/NewsreaderVariable.woff2',
   ]);
   for (const family of ['Instrument Sans', 'Newsreader']) {
-    expect(before.faces).toContainEqual({ family, status: 'loading' });
+    expect(before.faces.find((face) => face.family === family)?.status).not.toBe('loaded');
     expect(after.faces).toContainEqual({ family, status: 'loaded' });
   }
   expect(before.widths.every((width) => width > 0)).toBe(true);

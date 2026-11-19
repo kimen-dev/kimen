@@ -2,6 +2,8 @@ import { fileURLToPath } from 'node:url';
 
 import type { Page } from 'playwright';
 
+import type { ThemeFontMeasurement } from '../browser-tests/theme-fonts.browser.spec';
+
 const origin = 'http://kimen-fonts.test';
 const tokenSheet = import.meta.resolve('@kimen/tokens/css');
 const packageRoot = new URL('../../', tokenSheet);
@@ -21,7 +23,7 @@ function fontPage(theme: 'onmars' | 'material3', withFonts: boolean) {
   // Preview the #341 family values with the adjusted aliases. This is a
   // consumer override; the published onmars defaults still use Inter.
   const onmarsPreview =
-    theme === 'onmars'
+    withFonts && theme === 'onmars'
       ? `--ki-typography-family-body: 'Instrument Sans', 'Instrument Sans Fallback', system-ui, sans-serif;
          --ki-typography-family-display: 'Newsreader', 'Newsreader Fallback', Georgia, serif;`
       : '';
@@ -34,12 +36,18 @@ ${themeSheet}
 ${fontSheet}
 <style>
   main { ${onmarsPreview} max-inline-size: 32rem; }
-  p { font-family: var(--ki-typography-family-body); }
-  h1 { font-family: var(--ki-typography-family-display); }
+  p {
+    font: var(--ki-typography-weight-body-normal) var(--ki-typography-size-body-1) /
+      var(--ki-typography-line-height-body-1) var(--ki-typography-family-body);
+  }
+  h1 {
+    font: var(--ki-typography-weight-display-normal) var(--ki-typography-size-heading-1) /
+      var(--ki-typography-line-height-heading-1) var(--ki-typography-family-display);
+  }
 </style>
 <main>
   <h1><span>Make room for good ideas</span></h1>
-  <p><span>Pick a theme and build with it. Both fonts are tested on a page built from the tokens.</span></p>
+  <p><span>Pick a theme and build with it. The same page can show a Newsreader heading and an Instrument Sans paragraph.</span></p>
   <hr>
 </main>`;
 }
@@ -47,7 +55,11 @@ ${fontSheet}
 async function measure(page: Page) {
   return page.evaluate(async () => {
     await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => { resolve(); })),
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          resolve();
+        }),
+      ),
     );
     const widths = [...document.querySelectorAll('main span')].map(
       (sample) => sample.getBoundingClientRect().width,
@@ -58,13 +70,6 @@ async function measure(page: Page) {
       faces: [...document.fonts].map(({ family, status }) => ({ family, status })),
     };
   });
-}
-
-interface ThemeFontMeasurement {
-  before: Awaited<ReturnType<typeof measure>>;
-  after: Awaited<ReturnType<typeof measure>>;
-  requests: string[];
-  cls: number | null;
 }
 
 export async function measureThemeFonts(
@@ -81,18 +86,22 @@ export async function measureThemeFonts(
   });
   try {
     await sample.setViewportSize({ width: 640, height: 480 });
-    await sample.route(origin + '/**', async (route) => {
+    await sample.route('**/*', async (route) => {
       const request = route.request();
-      const { pathname } = new URL(request.url());
+      const url = new URL(request.url());
+      const isFont = request.resourceType() === 'font' || url.pathname.endsWith('.woff2');
+      if (isFont) requests.push(url.origin === origin ? url.pathname : url.href);
+      if (url.origin !== origin) {
+        await route.abort();
+        return;
+      }
+      const { pathname } = url;
       if (pathname === '/') {
         await route.fulfill({ contentType: 'text/html', body: markup });
         return;
       }
-      if (request.resourceType() === 'font') {
-        requests.push(pathname);
-        await pendingFonts;
-      }
-      await route.fulfill({ path: fileURLToPath(new URL(pathname.slice(1), packageRoot)) });
+      if (isFont) await pendingFonts;
+      await route.fulfill({ path: fileURLToPath(new URL('.' + pathname, packageRoot)) });
     });
     await sample.goto(origin, { waitUntil: 'domcontentloaded' });
 

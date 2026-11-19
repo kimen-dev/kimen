@@ -4,7 +4,7 @@ import { basename, dirname, join } from 'node:path';
 import { defineBrowserCommand, playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
-import { measureThemeFonts } from './browser-tests/theme-fonts-page.ts';
+import { measureThemeFonts } from './scripts/measure-theme-fonts.ts';
 
 // The explicit .ts extension keeps this config importable by plain Node type
 // stripping (scripts/tests/browser-gates.test.mjs loads it without a bundler).

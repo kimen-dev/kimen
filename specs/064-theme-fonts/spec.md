@@ -14,8 +14,13 @@ paths, theme versions and preloading.
   defaults (agent's choice, pending founder confirmation).
 - The supplied Roboto v3.015 carries SIL OFL 1.1. The Material 3 stylesheet
   ships without that binary because the issue specifies Apache 2.0 and
-  limits the source to the reference files (agent's choice, pending founder
-  confirmation).
+  limits the source to the reference files. Its stylesheet provides a
+  local fallback alias for apps that self-host Roboto (agent's choice,
+  pending founder confirmation).
+- The adjusted local aliases are opt-in via the app's semantic family
+  stacks. Use Georgia for Newsreader and Arial as a fixed proxy for
+  the platform-dependent system-ui fallback, which has no local() name
+  (agent's choice, pending founder confirmation).
 
 ## Gherkin scenarios
 
