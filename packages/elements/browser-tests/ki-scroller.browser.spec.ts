@@ -18,6 +18,7 @@ import { commands, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-scroller.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { moveToNewParent } from './reconnect';
 
 type KiScrollerElement = HTMLElement & { orientation: string; label?: string };
 
@@ -448,5 +449,42 @@ describe('ki-scroller', () => {
     (document.activeElement as HTMLElement | null)?.blur();
     await userEvent.keyboard('{Tab}');
     expect(el.shadowRoot?.activeElement).toBe(viewport);
+  });
+
+  it('S14 a scroller moved to another parent still gains its Tab stop when its content grows', async () => {
+    cleanup();
+    const keeper = tallContent('40px');
+    const el = await mount(landmark(), { label: 'Chat messages' }, [keeper]);
+    el.style.blockSize = '120px';
+    const viewport = viewportOf(el);
+    expect(viewport.hasAttribute('tabindex')).toBe(false);
+
+    // The slotted element stays the same one, so only its size tells the
+    // scroller that the content now overflows.
+    moveToNewParent(el);
+    keeper.style.blockSize = '600px';
+
+    await waitUntil(
+      () => viewport.hasAttribute('tabindex') && viewport.scrollHeight > viewport.clientHeight,
+      'content growing after the move did not raise the Tab stop',
+    );
+  });
+
+  it('S14 a scroller whose content grew while it was out of the document is reachable once back', async () => {
+    cleanup();
+    const keeper = tallContent('40px');
+    const el = await mount(landmark(), { label: 'Chat messages' }, [keeper]);
+    el.style.blockSize = '120px';
+    const viewport = viewportOf(el);
+    expect(viewport.hasAttribute('tabindex')).toBe(false);
+
+    el.remove();
+    keeper.style.blockSize = '600px';
+    landmark().appendChild(el);
+
+    await waitUntil(
+      () => viewport.hasAttribute('tabindex') && viewport.scrollHeight > viewport.clientHeight,
+      'content that grew while detached did not raise the Tab stop',
+    );
   });
 });

@@ -9,6 +9,7 @@ import { defineCustomElement as defineKiOption } from '../dist/components/ki-opt
 import { defineCustomElement as defineKiSelect } from '../dist/components/ki-select.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { moveToNewParent } from './reconnect';
 
 type KiSelectElement = HTMLElement & {
   value: string;
@@ -108,6 +109,11 @@ function main(): HTMLElement {
     throw new Error('missing main');
   }
   return element;
+}
+
+/** An option whose value is assigned as a property, as framework wrappers do. */
+function propertyOption(value: string, label: string): HTMLElement {
+  return Object.assign(document.createElement('ki-option'), { value, textContent: label });
 }
 
 describe('ki-select in a real browser', () => {
@@ -260,6 +266,143 @@ describe('ki-select in a real browser', () => {
     await new Promise((resolve) => requestAnimationFrame(resolve));
     expect(el.value).toBe('fr');
     expect(valueText(el)).toBe('France');
+  });
+
+  it('S13 a tree built from properties before it is inserted preselects, shows and submits its value', async () => {
+    // What @kimen/react does: every prop is assigned as a property, on the
+    // options too, and the finished tree is inserted at once.
+    cleanup();
+    const style = document.createElement('style');
+    style.textContent = tokensCss;
+    const main = document.createElement('main');
+    const form = document.createElement('form');
+    const el = Object.assign(document.createElement('ki-select'), {
+      label: 'Country',
+      name: 'country',
+      placeholder: 'Choose a country',
+      value: 'fr',
+    }) as KiSelectElement;
+    el.append(
+      propertyOption('es', 'Spain'),
+      propertyOption('fr', 'France'),
+      propertyOption('pt', 'Portugal'),
+    );
+    form.append(el);
+    main.append(form);
+    document.body.append(style, main);
+
+    await expect.poll(() => valueText(el)).toBe('France');
+    expect(el.value).toBe('fr');
+    expect(new FormData(form).get('country')).toBe('fr');
+  });
+
+  it('S11 a requested value waits for its option while options carrying other values arrive first', async () => {
+    // Streamed generated UI and async lists: the value is set once, the
+    // options come one at a time, and nobody sets the value again.
+    cleanup();
+    const style = document.createElement('style');
+    style.textContent = tokensCss;
+    const main = document.createElement('main');
+    const el = Object.assign(document.createElement('ki-select'), {
+      label: 'Country',
+      placeholder: 'Choose a country',
+    }) as KiSelectElement;
+    main.append(el);
+    document.body.append(style, main);
+    await expect.poll(() => valueText(el)).toBe('Choose a country');
+    el.value = 'fr';
+
+    el.append(propertyOption('es', 'Spain'));
+    await expect.poll(() => rows(el)).toHaveLength(1);
+    expect(valueText(el)).toBe('Choose a country');
+    expect(el.value).toBe('');
+
+    el.append(propertyOption('fr', 'France'));
+
+    await expect.poll(() => valueText(el)).toBe('France');
+    expect(el.value).toBe('fr');
+  });
+
+  it('S25 an option that takes the requested value later becomes the selection', async () => {
+    const el = await mountSelect();
+    el.value = 'de';
+    await expect.poll(() => valueText(el)).toBe('Choose a country');
+
+    const portugal = el.querySelector<HTMLElement & { value?: string }>('ki-option[value="pt"]');
+    if (portugal === null) {
+      throw new Error('missing option');
+    }
+    portugal.value = 'de';
+
+    await expect.poll(() => valueText(el)).toBe('Portugal');
+    expect(el.value).toBe('de');
+  });
+
+  it('S5 a request replaced by another value is not honoured when its option arrives late', async () => {
+    const el = await mountSelect();
+    el.value = 'de';
+    el.value = 'es';
+
+    el.append(propertyOption('de', 'Germany'));
+
+    await expect.poll(() => rows(el)).toHaveLength(4);
+    expect(el.value).toBe('es');
+    expect(valueText(el)).toBe('Spain');
+  });
+
+  it('S1 the option the user chooses is not displaced by a late option that carries an earlier request', async () => {
+    const el = await mountSelect();
+    el.value = 'de';
+    await userEvent.click(trigger(el));
+    await userEvent.click(rowAt(el, 1));
+    expect(el.value).toBe('fr');
+
+    el.append(propertyOption('de', 'Germany'));
+
+    await expect.poll(() => rows(el)).toHaveLength(4);
+    expect(el.value).toBe('fr');
+    expect(valueText(el)).toBe('France');
+  });
+
+  it('S4 an option disabled after the select moved to another parent cannot be chosen', async () => {
+    const el = await mountSelect('value="es"');
+    moveToNewParent(el);
+
+    el.querySelector('ki-option[value="fr"]')?.setAttribute('disabled', '');
+
+    await expect.poll(() => rowAt(el, 1).getAttribute('aria-disabled')).toBe('true');
+    await userEvent.click(trigger(el));
+    rowAt(el, 1).click();
+    expect(el.value).toBe('es');
+    expect(valueText(el)).toBe('Spain');
+  });
+
+  it('S2 an option relabelled after the select moved to another parent shows its new text', async () => {
+    const el = await mountSelect('value="fr"');
+    moveToNewParent(el);
+
+    const france = el.querySelector('ki-option[value="fr"]');
+    if (france === null) {
+      throw new Error('missing option');
+    }
+    france.textContent = 'République française';
+
+    await expect.poll(() => valueText(el)).toBe('République française');
+    expect(rowAt(el, 1).textContent).toBe('République française');
+  });
+
+  it('S4 options edited while the select was out of the document are current when it returns', async () => {
+    const el = await mountSelect('value="es"');
+    const parent = el.parentElement;
+    if (parent === null) {
+      throw new Error('missing parent');
+    }
+
+    el.remove();
+    el.querySelector('ki-option[value="fr"]')?.setAttribute('disabled', '');
+    parent.prepend(el);
+
+    await expect.poll(() => rowAt(el, 1).getAttribute('aria-disabled')).toBe('true');
   });
 
   it('S25 clears value to "" when every option is removed after a selection (FR-004 edge)', async () => {

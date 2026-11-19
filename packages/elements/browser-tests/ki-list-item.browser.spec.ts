@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { defineCustomElement as defineKiList } from '../dist/components/ki-list.js';
 import { defineCustomElement } from '../dist/components/ki-list-item.js';
 import { expectAccessible } from './axe';
+import { moveToNewParent } from './reconnect';
 
 const STYLE_ID = 'ki-list-item-browser-token-style';
 
@@ -49,6 +50,50 @@ describe('ki-list-item anatomy in a real browser', () => {
     expect(
       item.shadowRoot?.querySelector('[part="content"] slot[name="secondary"]'),
     ).toBeInstanceOf(HTMLSlotElement);
+  });
+
+  it('shows secondary text that arrives after the item moved to another parent', async () => {
+    document.body.replaceChildren();
+    const item = document.createElement('ki-list-item');
+    item.innerHTML = 'Ana Garcia<span slot="secondary"></span>';
+    document.body.append(item);
+    await customElements.whenDefined('ki-list-item');
+    const secondary = (): HTMLElement | null | undefined =>
+      item.shadowRoot?.querySelector<HTMLElement>('.secondary');
+    await expect.poll(() => secondary()?.hidden).toBe(true);
+
+    // A reordered row keeps its slotted nodes, so no slotchange announces the
+    // text an async load writes into them afterwards.
+    moveToNewParent(item);
+    const text = item.querySelector('[slot="secondary"]');
+    if (text === null) {
+      throw new Error('missing secondary text');
+    }
+    text.textContent = 'ana@onmars.dev';
+
+    await expect.poll(() => secondary()?.hidden).toBe(false);
+    expect(text.checkVisibility()).toBe(true);
+  });
+
+  it('shows secondary text written while the item was out of the document', async () => {
+    document.body.replaceChildren();
+    const item = document.createElement('ki-list-item');
+    item.innerHTML = 'Ana Garcia<span slot="secondary"></span>';
+    document.body.append(item);
+    await customElements.whenDefined('ki-list-item');
+    const secondary = (): HTMLElement | null | undefined =>
+      item.shadowRoot?.querySelector<HTMLElement>('.secondary');
+    await expect.poll(() => secondary()?.hidden).toBe(true);
+
+    item.remove();
+    const text = item.querySelector('[slot="secondary"]');
+    if (text === null) {
+      throw new Error('missing secondary text');
+    }
+    text.textContent = 'ana@onmars.dev';
+    document.body.append(item);
+
+    await expect.poll(() => secondary()?.hidden).toBe(false);
   });
 
   it('S6 has zero axe violations for items composed inside a mounted list', async () => {

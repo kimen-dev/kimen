@@ -11,6 +11,7 @@ import { defineCustomElement as defineRadio } from '../dist/components/ki-radio.
 import { defineCustomElement as defineRadioGroup } from '../dist/components/ki-radio-group.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { moveToNewParent } from './reconnect';
 
 type KiRadioGroupElement = HTMLElement & {
   disabled: boolean;
@@ -141,6 +142,27 @@ describe('ki-radio-group in a real browser', () => {
     expect(radios(el).filter((input) => input.checked)).toHaveLength(1);
     expect(el.value).toBe('email');
     expect(events).toEqual(['input:true:email', 'change:true:email']);
+  });
+
+  it('S1 reports change in the same task as input, as a native radio does', async () => {
+    cleanup();
+    const el = await mount();
+    const events: string[] = [];
+    el.addEventListener('input', () => {
+      events.push(`input:${el.value}`);
+    });
+    el.addEventListener('change', () => {
+      events.push(`change:${el.value}`);
+    });
+
+    // Activation is synchronous: when click() returns, a native radio, a
+    // ki-checkbox and a ki-switch have all dispatched both events.
+    radioAt(el, 0).click();
+
+    expect(events).toEqual(['input:email', 'change:email']);
+    // And no second, deferred change follows.
+    await settleFrames();
+    expect(events).toEqual(['input:email', 'change:email']);
   });
 
   it('S2 selecting another option releases the previous option', async () => {
@@ -325,10 +347,7 @@ describe('ki-radio-group in a real browser', () => {
 
     expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(sms);
     expect(sms.checked).toBe(true);
-    // The group deliberately defers `change` to the next task so the native
-    // input event finishes first. Wait for that public ordering contract
-    // instead of assuming userEvent drains unrelated timers.
-    await expect.poll(() => events).toEqual(['input', 'change']);
+    expect(events).toEqual(['input', 'change']);
   });
 
   it('S7 Arrow navigation wraps and skips disabled options', async () => {
@@ -679,6 +698,68 @@ describe('ki-radio-group with another control composed inside it', () => {
 // Generated UI streams: the group can be in the document, already loaded,
 // before any of its options exist. Selection re-derives from the declared
 // value as options arrive (spec 007 edge case "Options inserted at runtime").
+// A keyed reorder in a framework, a drag between lists or a portal takes the
+// group out of the document and puts it back: one disconnect, one connect.
+describe('ki-radio-group moved to another parent', () => {
+  it('S2 still releases the previous option and reports the change', async () => {
+    cleanup();
+    const el = await mount({ value: 'email' });
+    moveToNewParent(el);
+    const events: string[] = [];
+    el.addEventListener('input', () => {
+      events.push(`input:${el.value}`);
+    });
+    el.addEventListener('change', () => {
+      events.push(`change:${el.value}`);
+    });
+
+    await userEvent.click(radioAt(el, 1));
+
+    expect(radios(el).map((input) => input.checked)).toEqual([false, true, false]);
+    expect(el.value).toBe('sms');
+    expect(events).toEqual(['input:sms', 'change:sms']);
+  });
+
+  it('S6 arrow keys still move focus and selection to the next option', async () => {
+    cleanup();
+    const el = await mount({ value: 'email' });
+    moveToNewParent(el);
+    radioAt(el, 0).focus();
+
+    await userEvent.keyboard('{ArrowDown}');
+
+    expect(el.querySelectorAll('ki-radio')[1]?.shadowRoot?.activeElement).toBe(radioAt(el, 1));
+    expect(radios(el).map((input) => input.checked)).toEqual([false, true, false]);
+    expect(el.value).toBe('sms');
+  });
+
+  it('S12 submits the option chosen after the move', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount({ name: 'contact', value: 'email' }, form);
+    moveToNewParent(el);
+
+    await userEvent.click(radioAt(el, 2));
+
+    expect(new FormData(form).getAll('contact')).toEqual(['phone']);
+  });
+
+  it('S24 an option disabled after the move withholds its entry and yields the tab stop', async () => {
+    cleanup();
+    const form = document.createElement('form');
+    document.body.append(form);
+    const el = await mount({ name: 'contact', value: 'email' }, form);
+    moveToNewParent(el);
+
+    el.querySelectorAll('ki-radio')[0]?.setAttribute('disabled', '');
+
+    await expect.poll(() => new FormData(form).has('contact')).toBe(false);
+    expect(el.value).toBe('email');
+    expect(radioAt(el, 1).tabIndex).toBe(0);
+  });
+});
+
 describe('ki-radio-group with options that arrive after the group', () => {
   async function mountEmpty(value: string): Promise<KiRadioGroupElement> {
     ensureTokens();

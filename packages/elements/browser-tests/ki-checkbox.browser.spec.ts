@@ -6,6 +6,7 @@ import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-checkbox.js';
 import { expectAccessible, parkPointer } from './axe';
 import { paintContrast } from './contracts';
+import { moveToNewParent } from './reconnect';
 
 type KiCheckboxElement = HTMLElement & {
   checked: boolean;
@@ -232,6 +233,19 @@ describe('ki-checkbox in a real browser', () => {
     el.removeAttribute('checked');
     await waitForStyles();
     expect(el.checked).toBe(false);
+  });
+
+  it('S4 keeps boolean presence semantics after the checkbox moves to another parent', async () => {
+    cleanup();
+    const el = await mount();
+    const input = inputOf(el);
+
+    moveToNewParent(el);
+    el.setAttribute('checked', 'false');
+
+    await expect.poll(() => el.checked).toBe(true);
+    await expect.poll(() => input.checked).toBe(true);
+    await expect.poll(() => el.getAttribute('checked')).toBe('');
   });
 
   it('S4 checked="false" in the markup renders the checkbox checked', async () => {

@@ -11,6 +11,7 @@ import { defineCustomElement } from '../dist/components/ki-switch.js';
 import { expectAccessible, settleEntryMotion } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
 import { paintContrast } from './contracts';
+import { moveToNewParent } from './reconnect';
 
 type KiSwitchElement = HTMLElement & {
   checked: boolean;
@@ -243,6 +244,18 @@ describe('ki-switch in a real browser', () => {
     await new Promise((resolve) => requestAnimationFrame(resolve));
     expect(el.checked).toBe(false);
     expect(el.hasAttribute('checked')).toBe(false);
+  });
+
+  it('S4 keeps boolean presence semantics after the switch moves to another parent', async () => {
+    const el = await mount();
+    const input = internalInput(el);
+
+    moveToNewParent(el);
+    el.setAttribute('checked', 'false');
+
+    await expect.poll(() => el.checked).toBe(true);
+    await expect.poll(() => input.checked).toBe(true);
+    await expect.poll(() => el.getAttribute('checked')).toBe('');
   });
 
   it('S5 Tab reaches the switch and its focus indication is visible', async () => {

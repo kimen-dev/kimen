@@ -12,6 +12,7 @@ import { defineCustomElement } from '../dist/components/ki-dialog.js';
 import { defineCustomElement as defineKiVideo } from '../dist/components/ki-video.js';
 import { expectAccessible } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { moveToNewParent } from './reconnect';
 
 type CloseReason = 'method' | 'escape' | 'backdrop';
 type KiCloseEvent = CustomEvent<{ reason: CloseReason }>;
@@ -543,6 +544,50 @@ describe('ki-dialog in a real browser', () => {
     }
   });
 
+  it('S1 a dialog moved to another parent while open stays modal and closes once', async () => {
+    cleanup();
+    const el = await mountDialog();
+    const events: CloseReason[] = [];
+    el.addEventListener('ki-close', (event) => {
+      events.push((event as KiCloseEvent).detail.reason);
+    });
+    await openDialog(el);
+
+    // Removal takes a native dialog out of the top layer and leaves it open:
+    // back in the document it would sit in the page flow, open and not modal.
+    moveToNewParent(el);
+
+    await waitFor(() => internalDialog(el).matches(':modal'), 'moved dialog is modal again');
+    expect(el.open).toBe(true);
+    expect(el.hasAttribute('open')).toBe(true);
+    expect(events).toEqual([]);
+
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => events.length === 1, 'moved dialog reported its close');
+    expect(events).toEqual(['escape']);
+    expect(el.open).toBe(false);
+    expect(internalDialog(el).open).toBe(false);
+  });
+
+  it('S15 a dialog closed while out of the document is closed when it returns and reports it once', async () => {
+    cleanup();
+    const el = await mountDialog();
+    const events: CloseReason[] = [];
+    el.addEventListener('ki-close', (event) => {
+      events.push((event as KiCloseEvent).detail.reason);
+    });
+    await openDialog(el);
+
+    el.remove();
+    await el.close();
+    document.body.append(el);
+
+    await waitFor(() => !internalDialog(el).open, 'dialog closed while detached is not shown');
+    await waitFor(() => events.length === 1, 'close while detached reported once');
+    expect(events).toEqual(['method']);
+    expect(el.open).toBe(false);
+  });
+
   it('S6 opening from the keyboard follows focus-entry priority with visible focus', async () => {
     cleanup();
     const opener = document.createElement('button');
@@ -1002,6 +1047,20 @@ describe('ki-dialog boolean presence in a real browser', () => {
     expect(el.open).toBe(true);
     expect(internalDialog(el).matches(':modal')).toBe(true);
     // Presence is normalized: the host attribute stays, with an empty value.
+    expect(el.getAttribute('open')).toBe('');
+    await el.close();
+  });
+
+  it('S16 open="false" written after the dialog moved to another parent opens it modally', async () => {
+    cleanup();
+    const el = await mountDialog();
+    moveToNewParent(el);
+
+    el.setAttribute('open', 'false');
+    await waitFor(() => internalDialog(el).open, 'moved dialog opened from open="false"');
+
+    expect(el.open).toBe(true);
+    expect(internalDialog(el).matches(':modal')).toBe(true);
     expect(el.getAttribute('open')).toBe('');
     await el.close();
   });
