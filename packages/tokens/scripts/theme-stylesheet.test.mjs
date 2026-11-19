@@ -18,6 +18,7 @@ import {
   combineSchemes,
   compositionDeclarations,
   DENSITIES,
+  densityRules,
   layeredOverrides,
   MODES,
   renderBaseStylesheet,
@@ -749,9 +750,14 @@ test('the two mode files reassign disjoint token sets, so they compose in any co
   );
 });
 
-// Density (spec 045): two tokens inherited from the document root, consumed by
-// component CSS, set on any element by a density declaration.
-const inheritedTokens = new Set(['--ki-density-control-offset', '--ki-density-space-scale']);
+// Density (spec 045): three tokens inherited from the document root, consumed
+// by component CSS, set on any element by a density declaration (the target
+// minimum joined the other two with touch, 045 Amendment A1).
+const inheritedTokens = new Set([
+  '--ki-density-control-offset',
+  '--ki-density-space-scale',
+  '--ki-density-target-min',
+]);
 
 test('document-inherited tokens are declared once on :root, never on a theme root, then each density level', () => {
   const css = renderBaseStylesheet(
@@ -818,6 +824,7 @@ test('a document-inherited token is one nothing aliases, and no theme or mode re
     ['--ki-a', '1px'],
     ['--ki-density-control-offset', 'var(--ki-a)'],
     ['--ki-density-space-scale', '1'],
+    ['--ki-density-target-min', '24px'],
   ]);
   assert.doesNotThrow(() =>
     assertInheritedTokens({ declarations: base, inherited: inheritedTokens }),
@@ -852,6 +859,64 @@ test('a document-inherited token is one nothing aliases, and no theme or mode re
   );
 });
 
+test('every density rule declares every density token a level changes, so the nearest declaration wins whatever it nests in', () => {
+  const base = new Map([
+    ['--ki-space-md', '0.5rem'],
+    ['--ki-density-control-offset', 'var(--ki-space-zero)'],
+    ['--ki-density-space-scale', 'var(--ki-scale-unit)'],
+    ['--ki-density-target-min', 'var(--ki-size-target-min)'],
+  ]);
+  const rules = densityRules(
+    [
+      {
+        level: 'compact',
+        declarations: new Map([
+          ['--ki-density-control-offset', 'var(--ki-space-minus-md)'],
+          ['--ki-density-space-scale', 'var(--ki-scale-compact)'],
+        ]),
+      },
+      {
+        level: 'touch',
+        declarations: new Map([
+          ['--ki-density-control-offset', 'var(--ki-space-xs)'],
+          ['--ki-density-target-min', 'var(--ki-size-target-touch)'],
+        ]),
+      },
+    ],
+    base,
+  );
+
+  assert.deepEqual(
+    rules.map(({ level, declarations }) => [level, [...declarations]]),
+    [
+      [
+        'compact',
+        [
+          ['--ki-density-control-offset', 'var(--ki-space-minus-md)'],
+          ['--ki-density-space-scale', 'var(--ki-scale-compact)'],
+          ['--ki-density-target-min', 'var(--ki-size-target-min)'],
+        ],
+      ],
+      [
+        'touch',
+        [
+          ['--ki-density-control-offset', 'var(--ki-space-xs)'],
+          ['--ki-density-space-scale', 'var(--ki-scale-unit)'],
+          ['--ki-density-target-min', 'var(--ki-size-target-touch)'],
+        ],
+      ],
+      [
+        'default',
+        [
+          ['--ki-density-control-offset', 'var(--ki-space-zero)'],
+          ['--ki-density-space-scale', 'var(--ki-scale-unit)'],
+          ['--ki-density-target-min', 'var(--ki-size-target-min)'],
+        ],
+      ],
+    ],
+  );
+});
+
 test('the shipped density levels change the inherited tokens and nothing else', async () => {
   const read = async (config) =>
     compositionDeclarations(
@@ -861,16 +926,25 @@ test('the shipped density levels change the inherited tokens and nothing else', 
     );
   const light = await read(lightConfig);
   const compact = await read(withDensity(lightConfig, 'compact'));
+  const touch = await read(withDensity(lightConfig, 'touch'));
   const inherited = new Set(
     [...light].filter(([, token]) => token.inherited).map(([name]) => name),
   );
 
   assert.deepEqual([...inherited].sort(), [...inheritedTokens].sort());
-  assert.deepEqual(DENSITIES, ['compact']);
-  const changed = [...compact]
-    .filter(([name, token]) => light.get(name).expression !== token.expression)
-    .map(([name]) => name);
-  assert.deepEqual(changed.sort(), [...inheritedTokens].sort());
+  assert.deepEqual(DENSITIES, ['compact', 'touch']);
+  const changed = (level) =>
+    [...level]
+      .filter(([name, token]) => light.get(name).expression !== token.expression)
+      .map(([name]) => name)
+      .sort();
+  assert.deepEqual(changed(compact), ['--ki-density-control-offset', '--ki-density-space-scale']);
   assert.equal(compact.get('--ki-density-control-offset').resolved, '-0.5rem');
   assert.equal(compact.get('--ki-density-space-scale').resolved, '0.75');
+  // Touch (045 A1): one +4px step and 44 x 44 targets; spacing stays default.
+  assert.deepEqual(changed(touch), ['--ki-density-control-offset', '--ki-density-target-min']);
+  assert.equal(touch.get('--ki-density-control-offset').resolved, '0.25rem');
+  assert.equal(touch.get('--ki-density-space-scale').resolved, '1');
+  assert.equal(touch.get('--ki-density-target-min').resolved, '44px');
+  assert.equal(light.get('--ki-density-target-min').resolved, '24px');
 });
