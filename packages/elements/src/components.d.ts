@@ -1116,7 +1116,7 @@ export namespace Components {
          */
         "label": string;
         /**
-          * How many toasts show at once: the newest ones. Older toasts wait, and come back with their full time as shown ones leave. A value below 1 or not a whole number shows 3.  When to use: lower it on small screens or busy applications. When NOT to use: do not raise it to show every toast; a tall stack covers the page.
+          * How many toasts show at once: the newest ones. Older toasts wait, and come back with their full time as shown ones leave. A toast holding focus keeps its place until focus leaves the toaster; the oldest other one waits instead. A value below 1 or not a whole number shows 3.  When to use: lower it on small screens or busy applications. When NOT to use: do not raise it to show every toast; a tall stack covers the page.
           * @default 3
           * @minimum 1
          */
@@ -2982,7 +2982,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * How many toasts show at once: the newest ones. Older toasts wait, and come back with their full time as shown ones leave. A value below 1 or not a whole number shows 3.  When to use: lower it on small screens or busy applications. When NOT to use: do not raise it to show every toast; a tall stack covers the page.
+          * How many toasts show at once: the newest ones. Older toasts wait, and come back with their full time as shown ones leave. A toast holding focus keeps its place until focus leaves the toaster; the oldest other one waits instead. A value below 1 or not a whole number shows 3.  When to use: lower it on small screens or busy applications. When NOT to use: do not raise it to show every toast; a tall stack covers the page.
           * @default 3
           * @minimum 1
          */

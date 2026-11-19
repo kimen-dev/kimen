@@ -59,8 +59,9 @@ export class KiToaster {
 
   /**
    * How many toasts show at once: the newest ones. Older toasts wait, and come
-   * back with their full time as shown ones leave. A value below 1 or not a
-   * whole number shows 3.
+   * back with their full time as shown ones leave. A toast holding focus keeps
+   * its place until focus leaves the toaster; the oldest other one waits
+   * instead. A value below 1 or not a whole number shows 3.
    *
    * When to use: lower it on small screens or busy applications.
    * When NOT to use: do not raise it to show every toast; a tall stack covers
@@ -123,6 +124,8 @@ export class KiToaster {
     if (options.action !== undefined) {
       const action = document.createElement(BUTTON_TAG);
       action.setAttribute('slot', 'action');
+      // Never the default submit: a toaster inside a form must not submit it.
+      action.setAttribute('type', 'button');
       action.setAttribute('size', 'sm');
       action.setAttribute('variant', 'ghost');
       action.textContent = options.action.label;
@@ -154,6 +157,7 @@ export class KiToaster {
       subtree: true,
     });
     this.host.addEventListener('focusin', this.handleFocusIn);
+    this.host.addEventListener('focusout', this.handleFocusOut);
     document.addEventListener('keydown', this.handleDocumentKeyDown);
   }
 
@@ -161,6 +165,7 @@ export class KiToaster {
     this.observer?.disconnect();
     this.observer = undefined;
     this.host.removeEventListener('focusin', this.handleFocusIn);
+    this.host.removeEventListener('focusout', this.handleFocusOut);
     document.removeEventListener('keydown', this.handleDocumentKeyDown);
   }
 
@@ -182,7 +187,8 @@ export class KiToaster {
   private arrange(): void {
     const toasts = this.toasts();
     const left = toasts.map((toast) => KiToaster.hasLeft(toast));
-    const queued = queuedFlags(left, normalizeMax(this.max));
+    const focused = toasts.findIndex((toast) => toast.matches(':focus-within'));
+    const queued = queuedFlags(left, normalizeMax(this.max), focused);
     toasts.forEach((toast, index) => {
       const next = queued[index] === true;
       if (toast.queued !== next) {
@@ -211,6 +217,19 @@ export class KiToaster {
 
   private readonly handleFocusIn = (event: FocusEvent): void => {
     rememberFocusOrigin(this.host, event.relatedTarget);
+  };
+
+  // A toast kept its place while it held focus (I-12): once focus leaves the
+  // toaster the newest toasts show again. Arranged after the focus change
+  // settles, when no toast matches :focus-within any more.
+  private readonly handleFocusOut = (event: FocusEvent): void => {
+    const to = event.relatedTarget;
+    if (to instanceof Node && this.host.contains(to)) {
+      return;
+    }
+    queueMicrotask(() => {
+      this.arrange();
+    });
   };
 
   // F6 moves focus to the first control of the newest shown toast (I-3),

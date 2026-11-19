@@ -14,9 +14,12 @@ export function normalizeMax(value: unknown): number {
 /**
  * Which toasts wait (FR-015, I-1): the toaster shows its newest `max` toasts
  * that have not left, in document order, and queues the older ones. A toast
- * that has left is never queued: it is simply gone.
+ * that has left is never queued: it is simply gone. A toast holding focus
+ * (`focused`, its index, or -1) keeps its place: when it would wait, the
+ * oldest other shown toast waits instead (I-12), so a newer toast never takes
+ * the control a person is working in away from them.
  */
-export function queuedFlags(dismissed: readonly boolean[], max: number): boolean[] {
+export function queuedFlags(dismissed: readonly boolean[], max: number, focused = -1): boolean[] {
   let shown = 0;
   const flags = dismissed.map(() => false);
   for (let index = dismissed.length - 1; index >= 0; index -= 1) {
@@ -25,6 +28,15 @@ export function queuedFlags(dismissed: readonly boolean[], max: number): boolean
     }
     shown += 1;
     flags[index] = shown > max;
+  }
+  if (flags[focused] === true) {
+    flags[focused] = false;
+    const oldestShown = flags.findIndex(
+      (queued, index) => !queued && index !== focused && dismissed[index] !== true,
+    );
+    if (oldestShown !== -1) {
+      flags[oldestShown] = true;
+    }
   }
   return flags;
 }

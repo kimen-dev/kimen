@@ -60,7 +60,7 @@ The distance from the viewport edges and the gap between toasts are tokens:
 ## Attributes
 
 - `label` (string, default 'Notifications'): Accessible name of the group the toaster exposes while it shows toasts. Override for localization. When to use: provide the name in the document language. When NOT to use: do not put a message here.
-- `max` (number, default 3, minimum 1): How many toasts show at once: the newest ones. Older toasts wait, and come back with their full time as shown ones leave. A value below 1 or not a whole number shows 3. When to use: lower it on small screens or busy applications. When NOT to use: do not raise it to show every toast; a tall stack covers the page.
+- `max` (number, default 3, minimum 1): How many toasts show at once: the newest ones. Older toasts wait, and come back with their full time as shown ones leave. A toast holding focus keeps its place until focus leaves the toaster; the oldest other one waits instead. A value below 1 or not a whole number shows 3. When to use: lower it on small screens or busy applications. When NOT to use: do not raise it to show every toast; a tall stack covers the page.
 - `placement` ("bottom-center" | "bottom-end" | "top-center" | "top-end" | string & {}, default 'bottom-end'): Corner or edge of the viewport the stack sits against; `end` follows the writing direction. On a coarse pointer and a viewport narrower than 40rem the stack always sits at the bottom center. Unknown values place the stack at the bottom end. When to use: keep toasts away from where the page's own controls live. When NOT to use: do not change it per toast; one toaster keeps one place.
 
 ## Slots

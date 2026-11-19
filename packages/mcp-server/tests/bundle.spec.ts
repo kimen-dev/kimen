@@ -13,6 +13,10 @@
 // when the binary measured 2,504,793 raw, 466,471 gzip and 347,334 brotli
 // (on top of #349): 2,334 bytes over the old brotli line, which moves to
 // about 5% above; raw and gzip are still inside theirs.
+// Raw re-based for spec 049 (ki-toast and ki-toaster) on top of #316 and
+// #428, with the founder's approval, when the binary measured 2,543,801 raw,
+// 475,961 gzip and 353,013 brotli: 801 bytes over the old raw line, which
+// moves to about 5% above; gzip and brotli are still inside theirs.
 import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -28,7 +32,7 @@ import { BUNDLE, PACKAGE } from './harness.js';
 const BUDGET = {
   brotli: 364_000,
   gzip: 482_000,
-  raw: 2_543_000,
+  raw: 2_671_000,
 };
 
 describe('Kimen MCP server: the shipped binary (038 S16)', () => {

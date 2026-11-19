@@ -186,6 +186,19 @@ Feature: Toast
     When the user activates that dismiss button from the keyboard
     Then focus lands on the dismiss button of "Photo uploaded"
 
+  # S44
+  Scenario: A toast holding keyboard focus keeps its place while a newer toast waits
+    Given a toaster with a maximum of 1 whose toast "Draft saved" has keyboard focus on its dismiss button
+    When the toast "Photo uploaded" arrives
+    Then "Draft saved" stays displayed with focus on its dismiss button
+    And "Photo uploaded" waits
+
+  # S45
+  Scenario: The newer toast takes the place once focus leaves the toaster
+    Given a toaster with a maximum of 1 where "Draft saved" kept its place under keyboard focus while "Photo uploaded" waits
+    When focus moves to the button "Save" outside the toaster
+    Then "Photo uploaded" is displayed and "Draft saved" waits
+
   # Family: assistive-tech outcome
   # S27
   Scenario Outline: Calm tones are exposed as polite status updates without moving focus

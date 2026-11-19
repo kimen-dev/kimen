@@ -54,10 +54,10 @@ const compat = readFileSync(join(process.cwd(), 'COMPAT.md'), 'utf8');
  * raw, 145 722 gzip, 118 102 brotli on macOS: over all three lines, so all
  * three move to about 5% above.
  * Re-based again for spec 049 (ki-toast and ki-toaster, two new catalog
- * components) on top of #316, when the document measured 670 766 raw,
- * 152 699 gzip, 123 340 brotli on macOS: over the gzip line, with raw and
- * brotli within less than CI adds over macOS, so all three move to about 5%
- * above.
+ * components) on top of #316, with the founder's approval, when the
+ * document measured 670 766 raw, 152 699 gzip, 123 340 brotli on macOS: over
+ * the gzip line, with raw and brotli within less than CI adds over macOS, so
+ * all three move to about 5% above.
  */
 const SIZE_BUDGET = { brotli: 129_500, gzip: 160_300, raw: 704_300 } as const;
 

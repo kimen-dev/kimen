@@ -398,6 +398,35 @@ describe('ki-toaster core behavior', () => {
     expect(toast.isConnected).toBe(false);
   });
 
+  it('S20 never submits a surrounding form from a show() action', async () => {
+    const form = document.createElement('form');
+    let submitted = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitted += 1;
+    });
+    document.body.append(form);
+    const toaster = await mountToaster();
+    form.append(toaster);
+    let undone = 0;
+
+    await toaster.show({
+      message: 'Message archived',
+      action: {
+        label: 'Undo',
+        onClick: () => {
+          undone += 1;
+        },
+      },
+    });
+    await settle();
+    await userEvent.click(page.getByRole('button', { name: 'Undo' }));
+    await settle();
+
+    expect(undone).toBe(1);
+    expect(submitted).toBe(0);
+  });
+
   it('S21 never covers the page beside its toasts', async () => {
     const toaster = await mountToaster({ placement: 'bottom-end' });
     await arrive(toaster, { message: 'Draft saved', duration: 0 });
@@ -494,6 +523,38 @@ describe('ki-toaster keyboard path', () => {
     expect(displayed(draft)).toBe(false);
     expect(document.activeElement).toBe(photo);
     expect(part(photo, 'dismiss').shadowRoot?.activeElement).toBe(dismissButton(photo));
+  });
+});
+
+describe('ki-toaster focus keeps its toast', () => {
+  it('S44 keeps a focused toast shown while a newer toast waits', async () => {
+    const toaster = await mountToaster({ max: '1' }, [{ message: 'Draft saved', duration: 0 }]);
+    const draft = named(toaster, 'Draft saved');
+    dismissButton(draft).focus();
+
+    const photo = await arrive(toaster, { message: 'Photo uploaded', duration: 0 });
+
+    expect(displayed(draft)).toBe(true);
+    expect(part(draft, 'dismiss').shadowRoot?.activeElement).toBe(dismissButton(draft));
+    expect(displayed(photo)).toBe(false);
+    expect(photo.queued).toBe(true);
+  });
+
+  it('S45 lets the newer toast take the place once focus leaves the toaster', async () => {
+    const save = button('Save');
+    document.body.append(save);
+    const toaster = await mountToaster({ max: '1' }, [{ message: 'Draft saved', duration: 0 }]);
+    const draft = named(toaster, 'Draft saved');
+    dismissButton(draft).focus();
+    const photo = await arrive(toaster, { message: 'Photo uploaded', duration: 0 });
+    expect(displayed(photo)).toBe(false);
+
+    save.focus();
+    await settle();
+
+    expect(displayed(photo)).toBe(true);
+    expect(displayed(draft)).toBe(false);
+    expect(document.activeElement).toBe(save);
   });
 });
 

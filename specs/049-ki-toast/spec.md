@@ -107,6 +107,12 @@ the toaster holds every toast in it.
   (the `ki.size.qr` precedent).
 - **I-10 Fill.** #353 names `surface-raised`, the deprecated alias of
   `surface.s1` (spec 041): `--ki-toast-bg` aliases `surface.s1` itself.
+- **I-12 Focus keeps its toast.** A newer toast never pushes the toast the
+  person is working in into the queue: moving their focus because a
+  notification arrived would be a change of context they did not ask for.
+  While a toast holds focus it stays shown and the oldest other shown toast
+  waits; once focus leaves the toaster the newest toasts show again (S44,
+  S45; found by review on PR #426).
 - **I-11 Budget.** These 22 tokens add about 120 B to the onmars tokens
   stylesheet; the founder approved a 12 kB limit for them on 2026-11-19, and
   #316 has since raised it to 12.4 kB, which holds them.
@@ -388,6 +394,19 @@ Feature: Toast
     When the user activates that dismiss button from the keyboard
     Then focus lands on the dismiss button of "Photo uploaded"
 
+  # S44
+  Scenario: A toast holding keyboard focus keeps its place while a newer toast waits
+    Given a toaster with a maximum of 1 whose toast "Draft saved" has keyboard focus on its dismiss button
+    When the toast "Photo uploaded" arrives
+    Then "Draft saved" stays displayed with focus on its dismiss button
+    And "Photo uploaded" waits
+
+  # S45
+  Scenario: The newer toast takes the place once focus leaves the toaster
+    Given a toaster with a maximum of 1 where "Draft saved" kept its place under keyboard focus while "Photo uploaded" waits
+    When focus moves to the button "Save" outside the toaster
+    Then "Photo uploaded" is displayed and "Draft saved" waits
+
   # Family: assistive-tech outcome
   # S27
   Scenario Outline: Calm tones are exposed as polite status updates without moving focus
@@ -514,7 +533,7 @@ Feature: Toast
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
 | Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21 | |
-| Keyboard path | S22, S23, S24, S25, S26 | |
+| Keyboard path | S22, S23, S24, S25, S26, S44, S45 | |
 | Assistive-tech outcome | S27, S28, S29, S30, S31, S32, S33, S34 | |
 | Form participation | N/A | Neither element is a form control: a toast reports an event and holds no value, and its action is the application's own button, which takes part in forms on its own terms. |
 | Theming | S35, S36, S37, S38, S39, S40, S41, S42, S43 | |
@@ -579,7 +598,9 @@ Feature: Toast
   (S14, S38).
 - **FR-015**: The toaster MUST stack its `ki-toast` children from the top
   down in document order (I-5) and show the newest `max` (3 by default) that
-  have not left, writing `queued` on the older ones (I-1, S18, S19).
+  have not left, writing `queued` on the older ones (I-1, S18, S19). A toast
+  holding focus keeps its place: the oldest other shown toast waits instead,
+  until focus leaves the toaster (I-12, S44, S45).
 - **FR-016**: The toaster MUST cover nothing but its stack and paint and
   expose nothing while it shows no toast (S21, S33).
 - **FR-017**: While it shows toasts the toaster MUST expose `role="group"`
@@ -643,7 +664,7 @@ Feature: Toast
 
 ### Measurable Outcomes
 
-- **SC-001**: All 43 scenarios trace to passing Chromium browser tests;
+- **SC-001**: All 45 scenarios trace to passing Chromium browser tests;
   `scripts/gates/gates-suite.sh` exits 0 (local macOS visual references
   aside).
 - **SC-002**: Zero axe violations for every tone, with and without heading,

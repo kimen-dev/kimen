@@ -37,3 +37,23 @@ describe('queuedFlags', () => {
     expect(queuedFlags([], 3)).toEqual([]);
   });
 });
+
+describe('queuedFlags with a focused toast', () => {
+  it('S44 keeps the focused toast shown and queues the oldest other shown toast', () => {
+    expect(queuedFlags([false, false], 1, 0)).toEqual([false, true]);
+    expect(queuedFlags([false, false, false], 2, 0)).toEqual([false, true, false]);
+  });
+
+  it('S44 changes nothing when the focused toast is already shown', () => {
+    expect(queuedFlags([false, false, false], 2, 2)).toEqual([true, false, false]);
+  });
+
+  it('S45 shows the newest toasts again once no toast holds focus', () => {
+    expect(queuedFlags([false, false], 1, -1)).toEqual([true, false]);
+    expect(queuedFlags([false, false], 1)).toEqual([true, false]);
+  });
+
+  it('S44 ignores a focused toast that has left', () => {
+    expect(queuedFlags([true, false], 1, 0)).toEqual([false, false]);
+  });
+});
