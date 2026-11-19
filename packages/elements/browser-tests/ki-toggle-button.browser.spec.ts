@@ -30,7 +30,7 @@ const SELECTED_ICON =
 const variants = ['primary', 'secondary', 'tertiary', 'quaternary', 'ghost', 'outline'] as const;
 
 const browserCommands = commands as unknown as {
-  emulateForcedColors: (forcedColors: 'active' | null) => Promise<void>;
+  emulateForcedColors: (forcedColors: 'active' | null) => Promise<boolean | undefined>;
   emulateReducedMotion: (reducedMotion: 'reduce' | null) => Promise<void>;
 };
 
@@ -241,13 +241,10 @@ it('S6 gives both toggles stable accessible names and exposes the pressed state'
   await expectAccessible(main);
 });
 
-it.each(tags)('S7 %s has distinct selected paint in forced colors', async (tag, test) => {
-  await browserCommands.emulateForcedColors('active');
+it.for(tags)('S7 %s has distinct selected paint in forced colors', async (tag, test) => {
+  const emulated = await browserCommands.emulateForcedColors('active');
   try {
-    if (
-      !matchMedia('(forced-colors: active)').matches &&
-      !navigator.userAgent.includes('Chrome/')
-    ) {
+    if (emulated === false) {
       test.skip('this engine cannot emulate forced colors');
     }
     await expect.poll(() => matchMedia('(forced-colors: active)').matches).toBe(true);

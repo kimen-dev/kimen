@@ -29,14 +29,19 @@ The public surface and ButtonGroup handoff are in the [button contract](contract
   selected slot. An inline default SVG takes a current-colour fill on selection.
   Glyphs that need different geometry can use the selected slot.
 - Agent's choice, pending founder confirmation. Toggle mode uses a
-  variant-specific palette. The 3:1 state difference takes precedence over
-  the preview's transparent selected ghost and low-emphasis selected secondary
-  where those pairs miss the threshold. Shape remains visible with reduced
-  motion, which suppresses the transition.
+  variant-specific palette independent of tone. The 3:1 state difference
+  calls for an accent-filled selected ghost and a mid-emphasis secondary
+  fill. The icon button changes from round to rounded square, and the text
+  button goes from rounded square to pill. Shape remains visible with
+  reduced motion, which suppresses the transition.
 - Agent's choice, pending founder confirmation. ButtonGroup owns its
   `selection="single" | "multiple"` policy. Its separately tracked component
   can observe a direct toggle child's `ki-change` and set its children's
   reflected `selected` values silently.
+- Agent's choice, pending founder confirmation. Catalog actions use
+  `ki-change` with live selection for toggle specs. Momentary specs keep
+  dispatching from click. The public API gate classifies the exported type
+  changes as major.
 
 ## Gherkin
 

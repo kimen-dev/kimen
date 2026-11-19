@@ -21,7 +21,9 @@ A token-styled, icon-only action button with native button semantics and a
 
 Use filled `primary` for the main action and outlined `secondary` (the default)
 for supporting actions. Use `quaternary` for neutral icon actions and `ghost`
-for accent icon actions. The `tone` prop carries intent.
+for accent icon actions. Use `outline` for a transparent outline at rest
+and a filled selected state in toggle mode. The `tone` prop carries intent
+for momentary actions in the primary, secondary, quaternary and ghost variants.
 
 <Demo
   code={`<ki-icon-button variant="primary" label="Add item"><span aria-hidden="true">+</span></ki-icon-button>
@@ -35,6 +37,28 @@ for accent icon actions. The `tone` prop carries intent.
 `tertiary` buttons share the `secondary` appearance in onmars and keep
 their legacy appearance in Material 3. Development builds warn when
 the deprecated variant is used.
+
+### Toggle mode
+
+Add `toggle` to let an icon button stay pressed after activation. Set
+`selected` to start pressed. Use the `selected` slot for a decorative icon
+to display while pressed. With the default inline SVG alone, an outline
+whose path inherits its fill becomes filled with `currentColor`.
+
+<Demo
+  code={`<ki-icon-button variant="outline" toggle label="Bookmark">
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M6 3h12v18l-6-4-6 4z" stroke="currentColor" stroke-width="2" />
+  </svg>
+  <svg slot="selected" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M6 3h12v18l-6-4-6 4z" />
+  </svg>
+</ki-icon-button>`}
+/>
+
+The accessible name stays "Bookmark" in both states. User activation emits
+a bubbling `ki-change` with `{ selected }`. Programmatic updates to
+`selected` are silent.
 
 ### With a tooltip
 

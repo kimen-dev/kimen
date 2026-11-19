@@ -148,6 +148,14 @@ export function declaredEvents(entry: CatalogEntry | undefined): readonly string
   return Object.keys(entry?.events ?? {});
 }
 
+/** These buttons use their declared change only when the spec enables toggle mode. */
+export function hasToggleActivation(entry: CatalogEntry | undefined): boolean {
+  return (
+    (entry?.tag === 'ki-button' || entry?.tag === 'ki-icon-button') &&
+    Object.hasOwn(entry.events, 'ki-change')
+  );
+}
+
 /**
  * Renderer-native guards over the already-catalog-validated tree (plain,
  * safe data): node-count and depth budgets, the tag grammar, the activation
@@ -284,7 +292,8 @@ function liveData(
   entry: CatalogEntry | undefined,
 ): Record<string, boolean | number | string> {
   const data: Record<string, boolean | number | string> = { ...props };
-  for (const name of LIVE_STATE_PROPS) {
+  const stateProps = hasToggleActivation(entry) ? ['selected'] : LIVE_STATE_PROPS;
+  for (const name of stateProps) {
     const constraint = ownEntry(entry?.props, name);
     if (constraint === undefined) {
       continue;
@@ -424,35 +433,38 @@ export function wireActivation(
 ): void {
   // The guard admitted at most one declared event (S19).
   const activation = declaredEvents(entry)[0] ?? DEFAULT_ACTIVATION_EVENT;
-  if (activation === DEFAULT_ACTIVATION_EVENT) {
-    // A click-activated node (S4) dispatches the spec's data payload and
-    // suppresses the native default (a submit button's form submission)
-    // and the bubbling, so no other callback or code path runs.
-    element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
-      if (!claim(event)) {
-        return;
-      }
-      event.preventDefault();
-      event.stopPropagation();
-      dispatch({ ...currentProps() });
-    });
+  const toggleActivation = hasToggleActivation(entry);
+  const clickActivation = activation === DEFAULT_ACTIVATION_EVENT;
+  element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
+    const props = currentProps();
+    // Always claim the interaction. A change-activated control must commit
+    // its own state, and its click must bypass an enclosing action (S4).
+    if (!claim(event) || (!clickActivation && (!toggleActivation || props['toggle'] === true))) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    dispatch({ ...props });
+  });
+  if (clickActivation || toggleActivation) {
     pinButtonType(element, entry, currentProps());
+  }
+  if (clickActivation) {
     return;
   }
   // A declared-event node (S17) dispatches on the event its catalog entry
   // declares, emitted by the component itself — a same-named event bubbling
-  // up from a descendant is not this control's activation (S18). Nothing is
-  // cancelled: the control must be able to change, and the payload carries
-  // its live state. The click that operates the control is claimed, never
-  // cancelled, so an enclosing click-bound node does not dispatch for it (S4).
-  element.addEventListener(DEFAULT_ACTIVATION_EVENT, (event: Event) => {
-    claim(event);
-  });
+  // up from a descendant is not this control's activation (S18).
   element.addEventListener(activation, (event: Event) => {
-    if (event.target !== element || !claim(event)) {
+    const props = currentProps();
+    if (
+      event.target !== element ||
+      (toggleActivation && props['toggle'] !== true) ||
+      !claim(event)
+    ) {
       return;
     }
-    dispatch(liveData(element, currentProps(), entry));
+    dispatch(liveData(element, props, entry));
   });
 }
 

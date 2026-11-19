@@ -38,7 +38,7 @@ import { catalogData, validateUiSpec } from '@kimen/catalog';
 
 // What may an agent emit? One entry per published element:
 catalogData.components['ki-button'].props.variant;
-// { type: 'enum', values: ['ghost', 'primary', 'quaternary', 'secondary'], ... }
+// { type: 'enum', values: ['ghost', 'outline', 'primary', 'quaternary', 'secondary'], ... }
 
 // Validate an agent-emitted UI spec before anything renders:
 const report = validateUiSpec({

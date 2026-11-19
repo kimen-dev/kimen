@@ -16,7 +16,7 @@ A token-styled action button with native button semantics.
 
 ### Variants
 
-Onmars uses four visual roles. `secondary` is the default.
+`secondary` is the default.
 
 | Variant | Role |
 | --- | --- |
@@ -24,12 +24,14 @@ Onmars uses four visual roles. `secondary` is the default.
 | `secondary` | Outlined surface for supporting actions |
 | `quaternary` | Neutral text for quiet actions |
 | `ghost` | Accent text for actions that need a little more emphasis |
+| `outline` | Outlined surface with a filled selected state in toggle mode |
 
 <Demo
   code={`<ki-button variant="primary">Primary</ki-button>
 <ki-button variant="secondary">Secondary</ki-button>
 <ki-button variant="quaternary">Quaternary</ki-button>
-<ki-button variant="ghost">Ghost</ki-button>`}
+<ki-button variant="ghost">Ghost</ki-button>
+<ki-button variant="outline">Outline</ki-button>`}
 />
 
 `tertiary` is deprecated. Use `secondary` for new buttons. Existing
@@ -39,14 +41,27 @@ the deprecated variant is used.
 
 ### Tones
 
-`tone` carries intent (confirming, destructive) independently of hierarchy —
-never use it for visual emphasis.
+`tone` carries intent such as confirming or destructive in the momentary
+primary, secondary, quaternary and ghost variants.
 
 <Demo
   code={`<ki-button variant="primary" tone="neutral">Neutral</ki-button>
 <ki-button variant="primary" tone="success">Success</ki-button>
 <ki-button variant="primary" tone="danger">Danger</ki-button>`}
 />
+
+### Toggle mode
+
+Add `toggle` for an action such as Pin or Bold that stays selected until the
+next activation. Set `selected` to start in the pressed state. Toggle colours
+follow the variant and selection state.
+
+<Demo code={`<ki-button variant="outline" toggle selected>Pin</ki-button>`} />
+
+User activation emits a bubbling `ki-change` event with `{ selected }`.
+Programmatic updates to `selected` are silent. Keep the visible label the
+same in both states so assistive technology announces the state under the
+same name.
 
 ### Sizes
 
@@ -73,10 +88,11 @@ accessible name.
 
 ### Form participation
 
-`ki-button` defaults to `type="submit"`, exactly like a native button: it
-submits the owning form, runs constraint validation and contributes
-`name`/`value` to the form data. Cancel a submission from the form's
-`submit` event, not from `click`.
+In momentary mode, `ki-button` defaults to `type="submit"`. It submits the
+owning form, runs constraint validation and contributes `name`/`value` to
+the form data. Cancel a submission from the form's `submit` event.
+Toggle mode takes precedence over `type` and acts independently of form
+submission and reset.
 
 <Demo
   layout="block"

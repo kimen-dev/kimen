@@ -1,4 +1,5 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ButtonStories from '../../src/components/ki-button/ki-button.stories';
 
 <Meta title="Docs/Components/ki-button" />
 
@@ -8,22 +9,24 @@ A token-styled action button with native button semantics.
 
 **When to use** — trigger the single main action of a view, supporting
 actions in descending hierarchy, or confirming/destructive actions through
-tone.
+tone. Use `toggle` for an action that stays pressed between activations.
 
-**When NOT to use** — navigation, icon-only actions, persistent toggles, or
-loading/progress semantics.
+**When NOT to use** — navigation, icon-only actions or progress of a page or
+region.
 
 ## Examples
 
 Use `primary` for the single main action. It has a filled background.
 Use the outlined `secondary` for supporting actions. It is the default.
 Use `quaternary` for neutral text actions and `ghost` for accent text actions.
+Use `outline` for an outline at rest and a filled selected state in toggle mode.
 
 ```html
 <ki-button variant="primary">Save changes</ki-button>
 <ki-button>Cancel</ki-button>
 <ki-button variant="quaternary">Skip</ki-button>
 <ki-button variant="ghost">Learn more</ki-button>
+<ki-button variant="outline">Print</ki-button>
 ```
 
 `tertiary` is deprecated. Use `secondary` for new buttons. Existing
@@ -31,8 +34,8 @@ Use `quaternary` for neutral text actions and `ghost` for accent text actions.
 their legacy appearance in Material 3. Development builds warn when
 the deprecated variant is used.
 
-Semantic intent comes from `tone` (default `neutral`), independent of
-hierarchy — never use `variant` to signal success or danger:
+In the momentary primary, secondary, quaternary and ghost variants, `tone`
+carries semantic intent such as success or danger. The default is `neutral`.
 
 ```html
 <ki-button variant="primary" tone="success">Confirm order</ki-button>
@@ -51,11 +54,20 @@ default slot stays the label because it is the accessible name source:
 </ki-button>
 ```
 
+## Toggle mode
+
+Set `toggle` to keep the button pressed until the next activation. Set
+`selected` to choose its starting state. The pressed state is announced
+under the same button label. Pointer, Space and Enter activation emit one
+`ki-change` with `{ selected }`. Programmatic `selected` updates are silent.
+Toggle colours follow the variant and selection state.
+
+<Canvas of={ButtonStories.Toggle} />
+
 ## Recipe: buttons in a form
 
-The default `type` is `submit`, matching the native button. To cancel a
-submission, call `preventDefault()` on the form's `submit` event — unlike a
-native button, `preventDefault()` on the `click` event does not cancel it:
+In momentary mode, `type` defaults to `submit`. To cancel a submission, call
+`preventDefault()` on the form's `submit` event.
 
 ```html
 <form id="profile">
@@ -72,7 +84,8 @@ native button, `preventDefault()` on the `click` event does not cancel it:
 </script>
 ```
 
-Use `type="button"` when the action must never submit a form.
+Use `type="button"` for an independent momentary action. Toggle mode takes
+precedence over `type` and acts independently of form submission and reset.
 
 ## Customization
 
@@ -90,6 +103,10 @@ and `--ki-button-{size}-*`, plus the fidelity-pass effect tokens:
 `--ki-button-{variant}-rest-border-bottom` (raised variants only —
 `quaternary` and `ghost` declare no bevel). Shadow parts: `::part(button)`
 (internal native button) and `::part(label)` (label wrapper).
+
+Toggle selection uses the `--ki-button-{variant}-selected-bg` and
+`--ki-button-{variant}-selected-fg` pairs. The selected shape is controlled
+by `--ki-button-toggle-selected-radius`.
 
 ## Accessibility
 

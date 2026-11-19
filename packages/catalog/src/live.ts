@@ -27,6 +27,7 @@ import {
   createNodeElement,
   DEFAULT_RENDER_BUDGETS,
   declaredEvents,
+  hasToggleActivation,
   type GuardState,
   guardNode,
   matchesConstraint,
@@ -130,7 +131,7 @@ export interface LiveSurface {
  * The props that are a control's own value channel: once the user changed
  * one (D5), an agent `set` may not overwrite it implicitly.
  */
-const USER_STATE_PROPS: ReadonlySet<string> = new Set(['checked', 'open', 'value']);
+const USER_STATE_PROPS: ReadonlySet<string> = new Set(['checked', 'open', 'selected', 'value']);
 
 // The interaction events that mark an element's user state as changed, on
 // top of the events its catalog entry declares.
@@ -679,7 +680,7 @@ function applySet(
     node.dom !== undefined &&
     node.action !== undefined &&
     Object.hasOwn(op.props, 'type') &&
-    declaredEvents(entry).length === 0
+    (declaredEvents(entry).length === 0 || hasToggleActivation(entry))
   ) {
     pinButtonType(node.dom, entry, node.props);
   }

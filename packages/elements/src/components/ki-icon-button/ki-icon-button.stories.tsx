@@ -2,7 +2,7 @@ import { h } from '@stencil/core';
 import type { Meta, StoryObj } from '@stencil/storybook-plugin';
 import type { JSX } from '../../components';
 
-const variants = ['primary', 'secondary', 'quaternary', 'ghost'] as const;
+const variants = ['primary', 'secondary', 'quaternary', 'ghost', 'outline'] as const;
 
 const closeIcon = (
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -28,6 +28,8 @@ const meta = {
     size: 'md',
     label: 'Close',
     disabled: false,
+    toggle: false,
+    selected: false,
   },
   argTypes: { variant: { control: 'select', options: [...variants] } },
 } satisfies Meta<JSX.KiIconButton>;
@@ -43,7 +45,7 @@ export const Primary: Story = {
   args: { variant: 'primary' },
 };
 
-/** The four recommended roles, with the same tone and size. */
+/** The five current variants, with the same tone and size. */
 export const Variants: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -85,4 +87,19 @@ export const Sizes: Story = {
 /** Disabled icon buttons keep their variant but drop interactivity. */
 export const Disabled: Story = {
   args: { disabled: true, label: 'Unavailable' },
+};
+
+/** The selected slot replaces the default glyph when the bookmark is pressed. */
+export const Toggle: Story = {
+  args: { toggle: true, variant: 'outline', label: 'Bookmark' },
+  render: (args) => (
+    <ki-icon-button {...args}>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 3h12v18l-6-4-6 4z" stroke="currentColor" stroke-width="2" />
+      </svg>
+      <svg slot="selected" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M6 3h12v18l-6-4-6 4z" />
+      </svg>
+    </ki-icon-button>
+  ),
 };

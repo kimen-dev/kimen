@@ -1,4 +1,14 @@
-import { AttachInternals, Component, Element, h, Prop, State, Watch } from '@stencil/core';
+import {
+  AttachInternals,
+  Component,
+  Element,
+  Event,
+  type EventEmitter,
+  h,
+  Prop,
+  State,
+  Watch,
+} from '@stencil/core';
 import { normalizeKiButtonType } from './ki-button.form';
 import {
   endKeyboardPress,
@@ -6,7 +16,13 @@ import {
   startKeyboardPress,
 } from '../../utils/keyboard-press';
 
-export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';
+export type KiButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'quaternary'
+  | 'ghost'
+  | 'outline';
 export type KiButtonTone = 'neutral' | 'success' | 'danger';
 export type KiButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type KiButtonType = 'submit' | 'reset' | 'button';
@@ -15,10 +31,11 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
  * A token-styled action button with native button semantics.
  *
  * @whenToUse trigger the single main action of a view, supporting actions
- * in descending hierarchy, or confirming/destructive actions through tone.
+ * in descending hierarchy, confirming/destructive actions through tone, or
+ * persistent actions such as Bold with `toggle`.
  * While the action a button started is in progress, set `loading` on that
  * button instead of disabling it.
- * @whenNotToUse navigation, icon-only actions, persistent toggles, or the
+ * @whenNotToUse navigation, icon-only actions, form values, or the
  * progress of a page or region (use ki-progress).
  *
  * @slot - Label content. This is the accessible name source.
@@ -31,7 +48,7 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
  */
 @Component({
   tag: 'ki-button',
-  styleUrls: ['ki-button.surface.css', 'ki-button.css'],
+  styleUrls: ['ki-button.surface.css', 'ki-button.toggle.css', 'ki-button.css'],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -42,7 +59,8 @@ export class KiButton {
   /**
    * Visual hierarchy for the action. Use filled `primary` for the single main
    * action, outlined `secondary` for supporting actions, `quaternary` for
-   * neutral text actions, and `ghost` for accent text actions.
+   * neutral text actions, `ghost` for accent text actions and `outline` for
+   * an unfilled action with a visible boundary.
    * When NOT to use: do not use variant to signal success or danger; use
    * `tone` for intent.
    *
@@ -53,7 +71,8 @@ export class KiButton {
 
   /**
    * Semantic intent for the action, independent of hierarchy. Use `success`
-   * for confirming actions and `danger` for destructive actions.
+   * for confirming actions and `danger` for destructive actions. Toggle
+   * palettes are specific to the variant.
    * When NOT to use: do not use tone for visual hierarchy; use `variant`.
    *
    * @default 'neutral'
@@ -70,9 +89,31 @@ export class KiButton {
   @Prop({ reflect: true }) size: KiButtonSize = 'md';
 
   /**
+   * Enables persistent press state for an action such as Bold. The native
+   * button exposes `aria-pressed` and each activation switches `selected`.
+   * Use the same label in both states. A toggle does not submit or reset a form.
+   *
+   * @default false
+   */
+  @Prop({ reflect: true }) toggle = false;
+
+  /**
+   * Current press state in toggle mode. Set this to initialize or synchronize
+   * the state programmatically without emitting a change.
+   *
+   * @default false
+   */
+  @Prop({ mutable: true, reflect: true }) selected = false;
+
+  /** Emitted after toggle activation with the new selected state. */
+  @Event({ eventName: 'ki-change', bubbles: true, composed: true, cancelable: false })
+  selectionChange!: EventEmitter<{ selected: boolean }>;
+
+  /**
    * Native form action type: `submit` submits the owning form (running
    * constraint validation and contributing `name`/`value` to the form data),
-   * `reset` restores field defaults, `button` never touches the form.
+   * `reset` restores field defaults, `button` never touches the form. Toggle
+   * mode takes precedence over this property.
    * Cancel a submission from the form's `submit` event (`preventDefault()`);
    * unlike a native button, `preventDefault()` on the `click` event does not
    * cancel it. During submission `event.submitter` is a transient native
@@ -216,7 +257,12 @@ export class KiButton {
       return;
     }
 
-    this.activateFormAction();
+    if (this.toggle) {
+      this.selected = !this.selected;
+      this.selectionChange.emit({ selected: this.selected });
+    } else {
+      this.activateFormAction();
+    }
   };
 
   formDisabledCallback(disabled: boolean): void {
@@ -274,6 +320,7 @@ export class KiButton {
         tabIndex={this.effectiveDisabled ? -1 : 0}
         disabled={this.effectiveDisabled}
         aria-disabled={loading ? 'true' : undefined}
+        aria-pressed={this.toggle ? (this.selected ? 'true' : 'false') : undefined}
         onClick={this.handleClick}
         onKeyDown={startKeyboardPress}
         onKeyUp={releaseKeyboardPress}

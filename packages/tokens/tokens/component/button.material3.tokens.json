@@ -391,6 +391,14 @@
             }
           }
         }
+      },
+      "ghost": {
+        "selected": {
+          "bg": {
+            "$value": "{ki.surface.primary-high-em}",
+            "$description": "Background of the selected ghost button toggle in Material 3."
+          }
+        }
       }
     }
   }

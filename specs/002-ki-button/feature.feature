@@ -119,10 +119,10 @@ Feature: Button
     Then the developer sees a deprecation warning recommending secondary
 
   # S18
-  Scenario: The catalog offers four recommended variants
+  Scenario: The catalog offers the current variants
     Given an agent choosing a button variant
     When the agent reads the catalog schema
-    Then the available variants are primary, secondary, quaternary and ghost
+    Then the available variants are primary, secondary, quaternary, ghost and outline
 
   # S19
   Scenario: A button can retain selection

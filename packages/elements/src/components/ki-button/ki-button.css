@@ -1,10 +1,16 @@
-/* What is ki-button's own. The variant x tone x state paint is the shared
- * button surface (ki-button.surface.css, loaded ahead of this sheet); here
- * are only the size ramp, the text box and the slotted content.
+/* Text-button sizing, toggle token mappings and slotted content. The shared
+ * surface and toggle rules load ahead of this sheet.
  *
  * Tokens only (Art. VI): every visual value resolves from a --ki-* token.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
+  --_ki-button-unselected-bg: var(--ki-button-secondary-unselected-bg);
+  --_ki-button-unselected-fg: var(--ki-button-secondary-unselected-fg);
+  --_ki-button-selected-bg: var(--ki-button-secondary-selected-bg);
+  --_ki-button-selected-fg: var(--ki-button-secondary-selected-fg);
+  --_ki-button-outline-border: var(--ki-button-toggle-border);
+  --_ki-button-toggle-radius: var(--ki-button-toggle-radius);
+  --_ki-button-selected-radius: var(--ki-button-toggle-selected-radius);
   --_ki-button-height: var(--ki-button-md-height);
   --_ki-button-padding-inline: var(--ki-button-md-padding-inline);
   --_ki-button-gap: var(--ki-button-md-gap);
@@ -64,6 +70,35 @@
   --_ki-button-icon-size: var(--ki-button-xl-icon-size);
   --_ki-button-min-target: var(--ki-button-xl-min-target);
   --_ki-button-spinner-size: var(--ki-button-xl-spinner-size);
+}
+
+:host([variant="primary"]) {
+  --_ki-button-unselected-bg: var(--ki-button-primary-unselected-bg);
+  --_ki-button-unselected-fg: var(--ki-button-primary-unselected-fg);
+  --_ki-button-selected-bg: var(--ki-button-primary-selected-bg);
+  --_ki-button-selected-fg: var(--ki-button-primary-selected-fg);
+}
+
+:host([variant="quaternary"]) {
+  --_ki-button-unselected-bg: var(--ki-button-quaternary-unselected-bg);
+  --_ki-button-unselected-fg: var(--ki-button-quaternary-unselected-fg);
+  --_ki-button-selected-bg: var(--ki-button-quaternary-selected-bg);
+  --_ki-button-selected-fg: var(--ki-button-quaternary-selected-fg);
+}
+
+:host([variant="ghost"]) {
+  --_ki-button-unselected-bg: var(--ki-button-ghost-unselected-bg);
+  --_ki-button-unselected-fg: var(--ki-button-ghost-unselected-fg);
+  --_ki-button-selected-bg: var(--ki-button-ghost-selected-bg);
+  --_ki-button-selected-fg: var(--ki-button-ghost-selected-fg);
+}
+
+:host([variant="outline"]) {
+  --_ki-button-unselected-bg: var(--ki-button-outline-rest-bg);
+  --_ki-button-unselected-fg: var(--ki-button-outline-rest-fg);
+  --_ki-button-selected-bg: var(--ki-button-outline-selected-bg);
+  --_ki-button-selected-fg: var(--ki-button-outline-selected-fg);
+  --_ki-button-outline-border: var(--ki-button-outline-rest-border);
 }
 
 button {
