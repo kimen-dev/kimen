@@ -48,6 +48,7 @@ deprecated token. In the table below, `{variant}` is `primary`, `secondary`,
 | `--ki-input-min-target` | `--ki-input-height` | The field's minimum block size is its height. |
 | `--ki-select-hover-bg` | `--ki-surface-hover-overlay-inverse` | On hover the trigger keeps its resting fill under the inverse hover overlay. |
 | `--ki-select-listbox-elevation` | `--ki-select-listbox-shadow` | The listbox shadow replaced the hand-composed elevation. |
+| `--ki-motion-easing-spring` | `--ki-motion-easing-emphasized-out` | Onmars now eases out without overshoot. Both names resolve to the theme's same curve until removal. |
 
 ### Backdrop blur lengths
 
@@ -57,9 +58,9 @@ For `*-backdrop-blur` tokens, change how you set and read the value.
   `--ki-button-backdrop-blur: 8px`. Use `none` to turn off the effect.
 - Read the complete value with `backdrop-filter: var(--ki-button-backdrop-filter)`.
 
-The deprecated lengths still drive the built-in glass defaults during the
-transition. A different complete filter takes precedence, including the
-`none` used by reduced transparency.
+The deprecated lengths still drive their original glass filters when a theme
+selects them. A different complete filter takes precedence, including the
+`none` used by Calma and reduced transparency.
 
 ### Dialog and tooltip background stops
 
@@ -77,6 +78,7 @@ per-component override, assign the complete image on that component.
 ## For contributors
 
 A deprecation is declared once, on the token's base definition in
+`packages/tokens/tokens/semantic.tokens.json` or
 `packages/tokens/tokens/component/*.tokens.json`, next to its `$description`:
 
 ```json

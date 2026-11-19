@@ -26,6 +26,7 @@ import { assertNoDeprecationDue, collectDeprecations } from './scripts/deprecati
 import {
   assertInheritedTokens,
   combineSchemes,
+  compactTokenStylesheet,
   compositionDeclarations,
   DENSITIES,
   densityRules,
@@ -40,6 +41,7 @@ import {
   lightConfig,
   material3DarkConfig,
   material3LightConfig,
+  sharedConfig,
   withDensity,
   withMode,
 } from './style-dictionary.config.mjs';
@@ -51,13 +53,12 @@ async function composition(config) {
   return compositionDeclarations(dictionary);
 }
 
-// Deprecations (spec 041) are declared on base definitions, so the default
-// light composition carries all of them. An incomplete deprecation, a
+// Deprecations (spec 041) are declared on shared base definitions. An incomplete deprecation, a
 // replacement that is not a live published token, or a deprecated token the
 // package still ships at its removal version fails the build.
 const { version } = JSON.parse(await readFile(new URL('./package.json', import.meta.url), 'utf8'));
 const deprecations = collectDeprecations(
-  (await new StyleDictionary(lightConfig).getPlatformTokens('css')).allTokens,
+  (await new StyleDictionary(sharedConfig).getPlatformTokens('css')).allTokens,
 );
 assertNoDeprecationDue(deprecations, version);
 
@@ -78,7 +79,8 @@ async function theme(name, mode, variant = (config) => config) {
 }
 
 const onmars = await theme('onmars');
-const material3 = themeOverrides({ base: onmars, theme: await theme('material3') });
+const material3Theme = await theme('material3');
+const material3 = themeOverrides({ base: onmars, theme: material3Theme });
 
 // Each mode is emitted as what the cascade below it does not already produce,
 // in cascade order: the default theme's mode rules follow the default rule
@@ -150,12 +152,19 @@ const baseWithBackdropDefaults = new Map([
 ]);
 await writeFile(
   new URL('tokens.css', dist),
-  renderBaseStylesheet(baseWithBackdropDefaults, {
-    deprecations,
-    modes: baseModes,
-    inherited,
-    densities,
-  }),
+  compactTokenStylesheet(
+    renderBaseStylesheet(baseWithBackdropDefaults, {
+      deprecations,
+      modes: baseModes,
+      inherited,
+      densities,
+    }),
+    {
+      declarations: onmars,
+      modes: baseModes,
+      inline: (name) => name.startsWith('--ki-foundation-'),
+    },
+  ),
 );
 
 const modeSummary = (modes) =>
@@ -166,7 +175,18 @@ console.log(
 
 await writeFile(
   new URL('tokens.material3.css', dist),
-  renderThemeStylesheet('material3', material3, { deprecations, modes: material3Modes }),
+  compactTokenStylesheet(
+    renderThemeStylesheet('material3', material3, { deprecations, modes: material3Modes }),
+    {
+      declarations: material3Theme,
+      modes: [...baseModes, ...material3Modes],
+      inline: (name) =>
+        /^--ki-foundation-(?:material3-(?:typescale|motion|shape)-|migrated-component-)/u.test(
+          name,
+        ),
+      foundationsLast: true,
+    },
+  ),
 );
 
 console.log(
@@ -181,7 +201,7 @@ console.log(
 // This sheet publishes NO tokens: it only consumes them. That is what keeps it
 // outside the public token surface (scripts/lib/css-token-surface.mjs).
 const pageContractCss = `:root {
-  background-color: var(--ki-surface-s0);
+  background-color: var(--ki-surface-base);
   color: var(--ki-text-high-em);
   font-family: var(--ki-typography-family-body);
 }

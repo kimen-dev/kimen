@@ -27,23 +27,23 @@ Feature: Optional background images on floating surfaces
       | select listbox |
 
   # S3
-  Scenario Outline: The shipped themes preserve their existing floating surface appearance
+  Scenario Outline: The shipped themes paint their floating surfaces without images
     Given the page uses the <theme> theme
     When the <surface> is shown
-    Then the surface keeps its existing appearance
+    Then the surface paints its theme fill without a background image
 
     Examples:
       | theme       | surface        |
-      | onmars v1   | dialog         |
-      | onmars v1   | tooltip        |
-      | onmars v1   | select listbox |
+      | onmars      | dialog         |
+      | onmars      | tooltip        |
+      | onmars      | select listbox |
       | Material 3 | dialog         |
       | Material 3 | tooltip        |
       | Material 3 | select listbox |
 
   # S4
   Scenario Outline: The onmars v1 glass image still uses the legacy stop colors
-    Given the onmars v1 theme supplies legacy start and end colors for the <surface>
+    Given the page opts the <surface> into its legacy glass image and supplies start and end colors
     When the <surface> is shown
     Then its default background image uses those colors
 

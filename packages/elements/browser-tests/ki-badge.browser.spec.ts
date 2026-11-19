@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { defineCustomElement } from '../dist/components/ki-badge.js';
 import { expectAccessible } from './axe';
+import { hasVisibleShadow } from './contracts';
 import { repaintedUnderForcedDark } from './color-scheme';
 
 type KiBadgeElement = HTMLElement & { tone: string; size: string };
@@ -231,18 +232,16 @@ describe('ki-badge', () => {
     expect(pillOf(sm).getBoundingClientRect().height).toBeCloseTo(24, 1);
   });
 
-  it('S2 draws the 1px secondary bevel and glass effects only on the neutral type', async () => {
+  it('S2 gives the neutral type a flat surface and a 1px border', async () => {
     cleanup();
     const neutral = await mount('Neutral');
     const neutralStyle = getComputedStyle(pillOf(neutral));
 
-    // MarsUI secondary Tag: hairline bevel (top ladder over bottom ladder),
-    // Component_effect/secondary_default shadow pair, glass backdrop blur.
     expect(neutralStyle.borderTopWidth).toBe('1px');
-    expect(neutralStyle.borderTopColor).not.toBe(neutralStyle.borderBottomColor);
-    expect(neutralStyle.boxShadow).not.toBe('none');
-    expect(neutralStyle.boxShadow).toContain('inset');
-    expect(neutralStyle.backdropFilter).toContain('blur(');
+    expect(neutralStyle.borderTopColor).toBe(neutralStyle.borderBottomColor);
+    expect(hasVisibleShadow(neutralStyle.boxShadow)).toBe(false);
+    // #342 lets Calma disable the filter entirely.
+    expect(neutralStyle.backdropFilter).toBe('none');
 
     // Tone tags carry width 0 and no effects in the default state.
     const success = await mount('Active', { tone: 'success' });

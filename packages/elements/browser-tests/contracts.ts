@@ -83,6 +83,10 @@ export function alphaOf(color: string): number {
   return parseColor(color).a;
 }
 
+export function hasVisibleShadow(shadows: string): boolean {
+  return [...shadows.matchAll(COLOR_PATTERN)].some(([color]) => alphaOf(color) > 0);
+}
+
 /**
  * The WCAG contrast ratio between two computed paints: `background` is laid
  * over white when it is translucent, and `foreground` over that.

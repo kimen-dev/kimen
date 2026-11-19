@@ -11,7 +11,8 @@ export default [
   {
     name: 'material3 tokens stylesheet',
     path: 'dist/css/tokens.material3.css',
-    limit: '5 KB',
+    // #316 and #341 together measured 5.30 kB after regeneration.
+    limit: '5.6 KB',
   },
   {
     name: 'page contract stylesheet',
