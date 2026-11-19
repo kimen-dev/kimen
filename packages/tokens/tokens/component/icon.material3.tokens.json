@@ -1,0 +1,26 @@
+{
+  "ki": {
+    "icon": {
+      "size": {
+        "$type": "dimension",
+        "sm": {
+          "$value": "{ki.glyph.size.sm}",
+          "$description": "Small ki-icon with the surrounding text ink."
+        },
+        "md": {
+          "$value": "{ki.glyph.size.md}",
+          "$description": "Medium ki-icon with the surrounding text ink."
+        },
+        "lg": {
+          "$value": "{ki.glyph.size.lg}",
+          "$description": "Large ki-icon with the surrounding text ink."
+        }
+      },
+      "stroke-width": {
+        "$type": "number",
+        "$value": "{ki.glyph.stroke-width}",
+        "$description": "Lucide stroke width in viewBox units, scaled with the glyph."
+      }
+    }
+  }
+}

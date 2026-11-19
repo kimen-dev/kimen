@@ -11,6 +11,7 @@ import {
   fieldValidationMessage,
 } from '../../utils/field-message';
 import { LabelHint } from '../../utils/label-hint';
+import { rovingTabIndex } from '../../utils/roving-focus';
 import { radioGroupFormValue } from './ki-radio-group.form';
 import { arrowDirection, nextEnabledIndex } from './ki-radio-group.keyboard';
 
@@ -532,7 +533,9 @@ export class KiRadioGroup {
       this.host.removeAttribute('data-ki-group-disabled');
     }
 
-    for (const radio of this.roster) {
+    const tabStop = this.tabStopRadio();
+    const tabStopIndex = tabStop ? this.roster.indexOf(tabStop) : -1;
+    for (const [index, radio] of this.roster.entries()) {
       // The group's own `disabled` reached the shadow input and the ARIA tree
       // and nothing else, because every disabled visual in ki-radio.css keys on
       // `:host([disabled])` and the host never got it — so a disabled group
@@ -552,7 +555,7 @@ export class KiRadioGroup {
       input.checked = radio === this.selectedRadio;
       input.disabled = unavailable;
       input.required = this.required && !this.selectedRadio && !this.effectiveDisabled;
-      input.tabIndex = unavailable || radio !== this.tabStopRadio() ? -1 : 0;
+      input.tabIndex = rovingTabIndex(index, tabStopIndex);
     }
 
     this.internals.setFormValue(radioGroupFormValue(this.selectedFormOption()));

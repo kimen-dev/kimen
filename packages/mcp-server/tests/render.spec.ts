@@ -1,4 +1,5 @@
 // @spec:038-mcp-server
+// @spec:069-ki-icon
 // Rendering goes only through the guarded renderer, inside an MCP Apps
 // surface (S9-S11): the server never paints; it returns the adapter's
 // surface result for the predeclared ui:// document, and a plain-text
@@ -64,6 +65,24 @@ describe('Kimen MCP server: render (038 S9-S11)', () => {
   it('S9: a spec sent as JSON text renders as the parsed spec', async () => {
     const result = await render(JSON.stringify(INVENTORY_SPEC));
     expect(result.structuredContent).toEqual({ [KIMEN_SURFACE_KEY]: { spec: INVENTORY_SPEC } });
+  });
+
+  it('S13: the binary renders the stock icon and reports an unbundled name', async () => {
+    const stock = { root: { component: 'ki-icon', props: { name: 'circle-check' } }, version: 1 };
+    const available = await render(stock);
+    expect(available.isError).not.toBe(true);
+    expect(available.structuredContent).toEqual({ [KIMEN_SURFACE_KEY]: { spec: stock } });
+
+    const unbundled = {
+      root: { component: 'ki-icon', props: { name: 'triangle-alert' } },
+      version: 1,
+    };
+    const refused = await render(unbundled);
+    expect(refused.isError).toBe(true);
+    expect(refused.structuredContent).toMatchObject({
+      ok: false,
+      issues: [expect.objectContaining({ code: 'unavailable-icon', path: 'root.props.name' })],
+    });
   });
 
   it('S10: a spec containing an "iframe" is never rendered: the validation issues come back instead', async () => {

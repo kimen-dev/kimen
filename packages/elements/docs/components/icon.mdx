@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Recipes/Using Lucide icons" />
+
+# Using Lucide icons
+
+Import each name before mounting the element or rendering the guarded surface.
+
+```js
+import '@kimen/elements/icons/chevron-down';
+import '@kimen/elements/icons/triangle-alert';
+import { defineCustomElement } from '@kimen/elements/ki-icon';
+
+defineCustomElement();
+```
+
+```html
+<button type="button">Details <ki-icon name="chevron-down"></ki-icon></button>
+<ki-icon name="triangle-alert" size="lg" label="Warning"></ki-icon>
+```
+
+For a component with a fixed internal glyph, put its import in that
+component's module. For a consumer-selected name, import it in the application
+and pass the name as a prop. The import path takes the exact spelling,
+including aliases. Each import adds only that glyph to the bundle.
+
+`--ki-icon-size-sm`, `--ki-icon-size-md`, `--ki-icon-size-lg` and
+`--ki-icon-stroke-width` can be changed on any theme or region. The inherited
+size is one em. Use the surrounding semantic text ink for colour.

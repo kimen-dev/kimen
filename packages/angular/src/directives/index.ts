@@ -11,6 +11,7 @@ export const DIRECTIVES = [
   d.KiCheckbox,
   d.KiDialog,
   d.KiDivider,
+  d.KiIcon,
   d.KiIconButton,
   d.KiIndicator,
   d.KiInput,
@@ -30,6 +31,8 @@ export const DIRECTIVES = [
   d.KiTabPanel,
   d.KiTabs,
   d.KiTextarea,
+  d.KiToast,
+  d.KiToaster,
   d.KiTooltip,
   d.KiVideo
 ];

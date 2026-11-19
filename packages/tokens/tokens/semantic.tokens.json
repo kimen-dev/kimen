@@ -1546,6 +1546,28 @@
         "$description": "Gap between typing dots."
       }
     },
+    "glyph": {
+      "size": {
+        "$type": "dimension",
+        "sm": {
+          "$value": "{ki.space.3xl}",
+          "$description": "Small glyph for dense layouts (16px at the default root size)."
+        },
+        "md": {
+          "$value": "{ki.space.5xl}",
+          "$description": "Medium glyph for body content (20px at the default root size)."
+        },
+        "lg": {
+          "$value": "{ki.space.7xl}",
+          "$description": "Large standalone glyph (24px at the default root size)."
+        }
+      },
+      "stroke-width": {
+        "$type": "number",
+        "$value": "{ki.scale.icon-stroke}",
+        "$description": "Weight of a line icon's outline in viewBox units."
+      }
+    },
     "density": {
       "$description": "Region density (spec 045). The three tokens are inherited from the document root, never redeclared on a theme root, and consumed directly by component CSS, so a density declaration on any element reaches every component inside it, in any theme. Nothing aliases them and no theme or mode reassigns them or what they reference (the build checks both).",
       "control-offset": {

@@ -85,14 +85,17 @@ protocol displays operable, token-styled Kimen components:
 
 | Part | Content | Size (raw / gzip) |
 | --- | --- | --- |
-| one inline `<style>` | the default theme's token stylesheet, light and dark (`@kimen/tokens/css`), and the page contract (`@kimen/tokens/css/base`), minified | 142 kB / 14 kB |
-| one inline `<script>` | the definition of every catalog component (29 `ki-*` elements from `@kimen/elements` and their runtime), the guarded renderer and the catalog validator (`@kimen/catalog`, spec 028), and the host bridge | 428 kB / 113 kB |
-| whole document | | 571 kB / 128 kB (106 kB brotli) |
+| one inline `<style>` | the default theme's token stylesheet, light and dark (`@kimen/tokens/css`), and the page contract (`@kimen/tokens/css/base`), minified | 128 kB / 15 kB |
+| one inline `<script>` | every catalog component definition, the stock `circle-check` glyph, the guarded renderer and catalog validator (`@kimen/catalog`, spec 028), and the host bridge | 516 kB / 132 kB |
+| whole document | | 644 kB / 148 kB (120 kB brotli) |
 
 - **The registered set is the catalog.** The generator reads the component
   list from `@kimen/catalog` at build time; nothing is hand-listed, so a
   component the guarded renderer may render always has its definition
   (scenario S18).
+- **One stock glyph.** The stock document and server preflight both import
+  `circle-check`. Other Lucide names produce `unavailable-icon` on
+  `ki-icon`'s `name` prop. Each custom surface selects its own per-icon imports.
 - **Content policy by digest.** The document's own policy is
   `default-src 'none'; script-src 'sha256-…'; style-src 'sha256-…'; img-src
   data:; base-uri 'none'; form-action 'none'`: the two digests are the inline
@@ -106,8 +109,8 @@ protocol displays operable, token-styled Kimen components:
 - **Reproducible.** Regeneration is byte-identical — no date, randomness or
   machine path reaches the document — so a host's cached audit stays valid.
   `node scripts/generate-surface.mjs --check` verifies it.
-- **Budgeted.** `tests/resource.spec.ts` fails above 600 kB raw, 135 kB gzip
-  or 112 kB brotli.
+- **Budgeted.** `tests/resource.spec.ts` enforces raw, gzip and brotli limits
+  calculated from the component inventory by `scripts/lib/bundle-size-budget.mjs`.
 
 Host↔surface traffic follows the wire vocabulary above, mediated by the
 host's audit path. The real-browser suite (`browser-tests/`, Chromium) loads

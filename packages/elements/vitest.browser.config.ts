@@ -28,20 +28,23 @@ if (!supportedBrowsers.some((browser) => browser === configuredBrowser)) {
 
 const browser = configuredBrowser as SupportedBrowser;
 const pointerCapabilitySpec = 'browser-tests/pointer-capability.browser.spec.ts';
-// Specs that change the page's input device through CDP touch emulation. They
-// share one isolated setup, never the ordinary light one: the pointer
-// capability audit, the touch text size of fields (spec 048) and of sized
-// fields (spec 050).
-const inputDeviceSpecs = [
-  pointerCapabilitySpec,
-  'browser-tests/touch-field-text.browser.spec.ts',
-  'browser-tests/touch-size-field-text.browser.spec.ts',
-  'src/components/ki-spinner/ki-spinner.pointer.browser.spec.ts',
-];
 const browserSpecPatterns = (suffix: string): string[] =>
   ['browser-tests', 'src/components/ki-*'].map(
     (directory) => `${directory}/**/${suffix}.browser.spec.{ts,tsx}`,
   );
+// Specs that change the page's input device through CDP touch emulation. They
+// share one isolated setup, never the ordinary light one: the pointer
+// capability audit, the touch text size of fields (spec 048) and of sized
+// fields (spec 050), and every component's `*.pointer` spec.
+// A component's own input-device spec is named `<tag>.pointer.browser.spec.ts`
+// and joins this setup by name, so new components never edit this list.
+const inputDeviceSpecs = [
+  pointerCapabilitySpec,
+  'src/components/ki-icon/ki-icon.browser.spec.ts',
+  'browser-tests/touch-field-text.browser.spec.ts',
+  'browser-tests/touch-size-field-text.browser.spec.ts',
+  ...browserSpecPatterns('*.pointer'),
+];
 const visualSpecPatterns = [
   ...browserSpecPatterns('*.visual'),
   ...browserSpecPatterns('*.visual.*'),

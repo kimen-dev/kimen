@@ -394,6 +394,54 @@ const BUTTON_VARIANTS: Readonly<Record<string, string>> = {
   primary: 'primary',
 };
 
+/** Basic-catalog Icon names whose Lucide names differ, in both A2UI versions. */
+const ICON_NAMES: Readonly<Record<string, string>> = {
+  accountCircle: 'circle-user-round',
+  add: 'plus',
+  arrowBack: 'arrow-left',
+  arrowForward: 'arrow-right',
+  attachFile: 'paperclip',
+  calendarToday: 'calendar-days',
+  call: 'phone',
+  close: 'x',
+  delete: 'trash-2',
+  edit: 'pencil',
+  error: 'circle-alert',
+  event: 'calendar',
+  fastForward: 'fast-forward',
+  favorite: 'heart',
+  favoriteOff: 'heart-off',
+  help: 'circle-question-mark',
+  locationOn: 'map-pin',
+  lockOpen: 'lock-open',
+  moreHoriz: 'ellipsis',
+  moreVert: 'ellipsis-vertical',
+  notifications: 'bell',
+  notificationsOff: 'bell-off',
+  payment: 'credit-card',
+  person: 'user-round',
+  photo: 'image',
+  print: 'printer',
+  refresh: 'refresh-cw',
+  shoppingCart: 'shopping-cart',
+  skipNext: 'skip-forward',
+  skipPrevious: 'skip-back',
+  starHalf: 'star-half',
+  starOff: 'star-off',
+  stop: 'square',
+  visibility: 'eye',
+  visibilityOff: 'eye-off',
+  volumeDown: 'volume-1',
+  volumeMute: 'volume',
+  volumeOff: 'volume-x',
+  volumeUp: 'volume-2',
+  warning: 'triangle-alert',
+};
+
+function isSvgPathIcon(value: unknown): boolean {
+  return isPlainObject(value) && Object.keys(value).length === 1 && Object.hasOwn(value, 'svgPath');
+}
+
 /** Per-type builders for every `mapped`, `inline` and `layout` basic-catalog type. */
 export const BUILDERS: Readonly<Record<string, Builder>> = {
   Button: (it) => {
@@ -459,6 +507,25 @@ export const BUILDERS: Readonly<Record<string, Builder>> = {
         [],
       ),
     ];
+  },
+  Icon: (it) => {
+    const raw = it.body['name'];
+    if (raw === undefined) {
+      throw it.malformed('name', 'Icon needs a name');
+    }
+    const name = isSvgPathIcon(raw) ? raw : it.value('name');
+    if (isSvgPathIcon(name)) {
+      throw new Degrade('unsupported-variant', 'svgPath');
+    }
+    // Data may arrive after the component list. Keep the binding for that update.
+    if (name === undefined) {
+      return [];
+    }
+    if (typeof name !== 'string') {
+      throw it.malformed('name', 'Icon name must resolve to a string');
+    }
+    const mapped = Object.hasOwn(ICON_NAMES, name) ? ICON_NAMES[name] : undefined;
+    return [node('ki-icon', { name: mapped ?? name }, [])];
   },
   List: (it) => [
     node(
