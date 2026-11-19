@@ -1,6 +1,19 @@
 {
-  "barePage": { "keyboardPressed": false },
-  "pointer": { "hoverWitness": false },
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
   "catalog": true,
-  "budgetGroup": { "members": ["ki-menu", "ki-menu-item", "ki-menu-group"] }
+  "budgetGroup": {
+    "members": ["ki-menu", "ki-menu-item", "ki-menu-group"]
+  },
+  "sizeBudget": {
+    "mcpApps": {
+      "raw": 24539,
+      "gzip": 6460,
+      "brotli": 4811
+    }
+  }
 }

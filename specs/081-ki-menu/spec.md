@@ -1,6 +1,7 @@
 # Action menu
 
-**Issue** #352  
+**Issue** #352
+
 **Component** `ki-menu`, with `ki-menu-item` and `ki-menu-group`
 
 Use an anchored menu for row actions, overflow commands or account actions.
@@ -25,6 +26,18 @@ or page for a long action list.
 - **Agent's choice, pending founder confirmation.** Outside-pointer dismissal preserves the destination of the click. Tab and Shift+Tab continue from the trigger in its own tab order.
 - **Agent's choice, pending founder confirmation.** Setting `open` directly displays the popup without requesting focus. Opening from the trigger moves focus into it.
 - **Agent's choice, pending founder confirmation.** The reference's 14rem minimum width is bounded by the viewport. Fine-pointer rows start at 2rem and grow with coarse-pointer or explicit touch density. The menu uses a native manual popover and measured anchor geometry with flip and viewport clamping. It has no opening animation. Supporting text follows the contrast mode’s supporting-ink role.
+
+## MCP Apps bundle measurement
+
+The same installed dependencies and Node 26 generated both documents. The
+base was rebuilt from `3426765` in an isolated directory, and the candidate
+was built with the three catalog components and their tokens.
+
+| Document | Raw bytes | Gzip bytes | Brotli bytes |
+| --- | ---: | ---: | ---: |
+| Base | 644,380 | 148,220 | 120,302 |
+| With Menu | 668,919 | 154,680 | 125,113 |
+| Menu allowance | 24,539 | 6,460 | 4,811 |
 
 ## Gherkin
 
