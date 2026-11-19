@@ -293,7 +293,18 @@ export class KiNumberInput {
 
   private readonly handleFocus = (): void => {
     this.editing = true;
-    this.syncEditor();
+    const input = this.input;
+    if (!input) return;
+
+    const text = this.editorText;
+    const { value, selectionStart, selectionEnd, selectionDirection } = input;
+    if (value === text) return;
+
+    input.value = text;
+    // Replacing the formatted text collapses any selection made before focus.
+    if (value.length > 0 && selectionStart === 0 && selectionEnd === value.length) {
+      input.setSelectionRange(0, text.length, selectionDirection ?? undefined);
+    }
   };
 
   private readonly handleBlur = (): void => {

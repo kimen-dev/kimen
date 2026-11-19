@@ -189,6 +189,7 @@ it('S6 commits a German percentage with Enter and submits the underlying ratio',
     .element(input)
     .toHaveValue(new Intl.NumberFormat('de-DE', { style: 'percent' }).format(0.25));
   await input.fill('12,5');
+  await expect.element(input).toHaveValue('12,5');
 
   await userEvent.keyboard('{Enter}');
   leave();
