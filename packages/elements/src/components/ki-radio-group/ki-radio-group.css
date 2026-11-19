@@ -6,6 +6,10 @@
   --_ki-radio-group-label-font-weight: var(--ki-radio-group-label-font-weight);
   --_ki-radio-group-label-line-height: var(--ki-radio-group-label-line-height);
 
+  /* The label hint (spec 047, utils/label-hint.css). */
+  --_ki-label-hint-fg: var(--ki-radio-group-label-hint-fg);
+  --_ki-label-hint-gap: var(--ki-radio-group-label-hint-gap);
+
   display: block;
   color: var(--ki-text-high-em);
   font-family: var(--ki-typography-family-body);
@@ -16,6 +20,9 @@
    <fieldset disabled>, which reflects nothing. Without it the group label
    stayed at full emphasis above a row of visibly disabled options. */
 :host([data-ki-group-disabled]) {
+  /* The label hint dims with the label (spec 047 D5). */
+  --_ki-label-hint-fg: var(--ki-text-med-em);
+
   color: var(--ki-text-med-em);
 }
 

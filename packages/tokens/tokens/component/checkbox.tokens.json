@@ -35,6 +35,14 @@
           "$description": "dimension used by the checkbox component for label line height (MarsUI body_2 24px)."
         }
       },
+      "label-hint-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "color used by the checkbox component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text)."
+      },
+      "label-hint-gap": {
+        "$value": "{ki.space.xs}",
+        "$description": "dimension used by the checkbox component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px)."
+      },
       "unchecked": {
         "rest": {
           "bg": {
