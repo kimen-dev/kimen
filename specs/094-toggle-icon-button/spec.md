@@ -1,6 +1,7 @@
 # Persistent selection for button and icon button
 
-**Issue** #376  
+**Issue** #376
+
 **Branch** feat/376-toggle-icon-button
 
 Bookmark, favourite and formatting controls can retain their state after

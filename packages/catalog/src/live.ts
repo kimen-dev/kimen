@@ -131,7 +131,12 @@ export interface LiveSurface {
  * The props that are a control's own value channel: once the user changed
  * one (D5), an agent `set` may not overwrite it implicitly.
  */
-const USER_STATE_PROPS: ReadonlySet<string> = new Set(['checked', 'open', 'selected', 'value']);
+const USER_STATE_PROPS: readonly string[] = ['checked', 'open', 'value'];
+const TOGGLE_BUTTON_USER_STATE_PROPS: readonly string[] = [...USER_STATE_PROPS, 'selected'];
+
+function userStateProps(entry: CatalogEntry | undefined): readonly string[] {
+  return hasToggleActivation(entry) ? TOGGLE_BUTTON_USER_STATE_PROPS : USER_STATE_PROPS;
+}
 
 // The interaction events that mark an element's user state as changed, on
 // top of the events its catalog entry declares.
@@ -431,7 +436,7 @@ function heldUserState(
       continue;
     }
     const entry = ownEntry(ctx.components, member.component);
-    for (const name of USER_STATE_PROPS) {
+    for (const name of userStateProps(entry)) {
       const constraint = ownEntry(entry?.props, name);
       if (constraint === undefined) {
         continue;
@@ -578,9 +583,10 @@ function userStateConflict(
   ctx: ApplyContext,
 ): RenderDiagnostic | null {
   const origin = node.origin;
-  const constraint = ownEntry(ownEntry(ctx.components, node.component)?.props, name);
+  const entry = ownEntry(ctx.components, node.component);
+  const constraint = ownEntry(entry?.props, name);
   if (
-    !USER_STATE_PROPS.has(name) ||
+    !userStateProps(entry).includes(name) ||
     origin?.dom === undefined ||
     !origin.touched ||
     constraint === undefined
@@ -657,7 +663,7 @@ function applySet(
     if (element === undefined) {
       continue;
     }
-    const overriding = force && ctx.allowUserStateOverride && USER_STATE_PROPS.has(name);
+    const overriding = force && ctx.allowUserStateOverride && userStateProps(entry).includes(name);
     const current = ownEntry(node.props, name);
     // A native layout element's props are CSSOM layout (spec 037 D4): the
     // whole layout is re-derived and only changed style properties written.
@@ -882,7 +888,7 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
   const trackUserState = (element: Element, entry: CatalogEntry | undefined, model: MNode) => {
     if (
       entry === undefined ||
-      ![...USER_STATE_PROPS].some((name) => Object.hasOwn(entry.props, name))
+      !userStateProps(entry).some((name) => Object.hasOwn(entry.props, name))
     ) {
       return;
     }
