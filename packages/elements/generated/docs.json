@@ -2420,9 +2420,15 @@
       "slots": [],
       "parts": [],
       "states": [],
-      "dependents": [],
+      "dependents": [
+        "ki-stepper"
+      ],
       "dependencies": [],
-      "dependencyGraph": {}
+      "dependencyGraph": {
+        "ki-stepper": [
+          "ki-icon"
+        ]
+      }
     },
     {
       "filePath": "src/components/ki-icon-button/ki-icon-button.tsx",
@@ -5704,6 +5710,597 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-step/ki-step.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-step",
+      "docs": "One authored step in a Stepper.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Place directly inside ki-stepper in task order. Its default slot\nis the step label and its properties describe the step to the owning list."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "Standalone or with interactive content in the label.\nA completed step can make the label itself a link."
+        },
+        {
+          "name": "slot",
+          "text": "- The visible label. Use text or passive inline markup."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-step-description-bg - Backing of the description text."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-step-description-fg - Description ink against its backing surface."
+        }
+      ],
+      "usage": {
+        "examples": "# Step examples\n\nPlace each step directly inside a `ki-stepper`. Use plain text or passive\ninline markup for the label and `description` for supporting text.\n\n```html\n<ki-stepper label=\"Checkout progress\" orientation=\"vertical\">\n  <ki-step state=\"done\" href=\"/checkout/address\">Address</ki-step>\n  <ki-step state=\"current\" description=\"Confirm the billing address.\">Billing</ki-step>\n  <ki-step>Review</ki-step>\n</ki-stepper>\n```\n"
+      },
+      "props": [
+        {
+          "name": "description",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "description",
+          "reflectToAttr": true,
+          "docs": "Optional supporting text displayed below the label.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "href",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "href",
+          "reflectToAttr": true,
+          "docs": "Destination for a completed step. Omit for a passive step.",
+          "docsTags": [
+            {
+              "name": "format",
+              "text": "url"
+            }
+          ],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "state",
+          "type": "\"current\" | \"done\" | \"error\" | \"upcoming\"",
+          "complexType": {
+            "original": "KiStepState",
+            "resolved": "\"current\" | \"done\" | \"error\" | \"upcoming\"",
+            "references": {
+              "KiStepState": {
+                "location": "local",
+                "path": "src/components/ki-step/ki-step.tsx",
+                "id": "src/components/ki-step/ki-step.tsx::KiStepState"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "state",
+          "reflectToAttr": true,
+          "docs": "The step's progress state. Mark the active step as current.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'upcoming'"
+            }
+          ],
+          "default": "'upcoming'",
+          "values": [
+            {
+              "value": "current",
+              "type": "string"
+            },
+            {
+              "value": "done",
+              "type": "string"
+            },
+            {
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "value": "upcoming",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "The visible label. Use text or passive inline markup."
+        }
+      ],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-stepper/ki-stepper.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-stepper",
+      "docs": "An ordered, responsive view of progress through named steps.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "Show the current place in onboarding, checkout or a wizard.\nProvide a label and direct ki-step children in task order."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "A percentage or indeterminate task, a carousel position,\nor navigation among peer views. The task owner updates step states."
+        },
+        {
+          "name": "slot",
+          "text": "- Direct ki-step children in task order. The stepper assigns each\nchild to its row automatically."
+        },
+        {
+          "name": "part",
+          "text": "list - The ordered list."
+        },
+        {
+          "name": "part",
+          "text": "summary - The compact disclosure button."
+        },
+        {
+          "name": "part",
+          "text": "step - A list item in the sequence."
+        },
+        {
+          "name": "part",
+          "text": "marker - The decorative step number or state glyph."
+        },
+        {
+          "name": "part",
+          "text": "title - The label, rendered as a link when a completed step has a destination."
+        },
+        {
+          "name": "part",
+          "text": "description - Optional supporting text below the label."
+        },
+        {
+          "name": "part",
+          "text": "connector - The decorative line leading to the next step."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-dot-size - Diameter of a step marker."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-done-bg - Fill of a completed marker."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-done-fg - Glyph ink of a completed marker."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-current-bg - Fill of the current marker."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-current-border - Edge of the current marker."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-current-fg - Number ink of the current marker."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-upcoming-bg - Fill of an upcoming marker."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-upcoming-border - Edge of an upcoming marker."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-upcoming-fg - Number and label ink of an upcoming step."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-error-bg - Fill of a marker for a step in error."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-error-border - Edge of a marker for a step in error."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-error-fg - Glyph ink of a marker for a step in error."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-label-fg - Default step label ink."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-label-bg - Backing of a step label."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-summary-fg - Compact disclosure button ink."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-summary-bg - Compact disclosure button backing."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-connector - Connector before an incomplete step."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-connector-done - Connector leaving a completed step."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-stroke - Width of a marker outline and connector."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-stepper-glyph-size - Size of the decorative marker and disclosure glyphs."
+        }
+      ],
+      "usage": {
+        "examples": "# Stepper examples\n\n## Setup wizard\n\n```html\n<ki-stepper label=\"Setup progress\">\n  <ki-step state=\"done\" href=\"/setup/account\">Account</ki-step>\n  <ki-step state=\"done\">Workspace</ki-step>\n  <ki-step state=\"current\">Invite team</ki-step>\n  <ki-step>Review</ki-step>\n</ki-stepper>\n```\n\nAt under 22rem of available inline size, the horizontal stepper shows\n**Step 3 of 4**. Activate the summary to open the ordered list and return\nto the Account step.\n\n## Vertical setup guide\n\n```html\n<ki-stepper label=\"Publish a surface\" orientation=\"vertical\">\n  <ki-step state=\"done\">Connect the repository</ki-step>\n  <ki-step state=\"current\">Choose a theme</ki-step>\n  <ki-step state=\"error\" description=\"Check the repository permissions.\">Run checks</ki-step>\n  <ki-step description=\"Publish when the checks pass.\">Publish</ki-step>\n</ki-stepper>\n```\n\n## Localized status and summary\n\n```html\n<ki-stepper\n  label=\"Avance de la configuración\"\n  done-label=\"Completado\"\n  current-label=\"Actual\"\n  upcoming-label=\"Sin empezar\"\n  error-label=\"Error\"\n  summary-label=\"Paso {current} de {total}\"\n  count-label=\"Pasos ({total})\"\n>\n  <ki-step state=\"done\">Cuenta</ki-step>\n  <ki-step state=\"current\">Equipo</ki-step>\n  <ki-step>Revisión</ki-step>\n</ki-stepper>\n```\n"
+      },
+      "props": [
+        {
+          "name": "countLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "count-label",
+          "reflectToAttr": false,
+          "docs": "Compact disclosure text without a current step. Include {total}.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Steps ({total})'"
+            }
+          ],
+          "default": "'Steps ({total})'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "currentLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "current-label",
+          "reflectToAttr": false,
+          "docs": "Localized text for the current step.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Current'"
+            }
+          ],
+          "default": "'Current'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "doneLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "done-label",
+          "reflectToAttr": false,
+          "docs": "Localized text for a completed step.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Completed'"
+            }
+          ],
+          "default": "'Completed'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "errorLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "error-label",
+          "reflectToAttr": false,
+          "docs": "Localized text for a step that has an error.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Error'"
+            }
+          ],
+          "default": "'Error'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Accessible name of the list. Use a localized description of the task.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "complexType": {
+            "original": "KiStepperOrientation",
+            "resolved": "\"horizontal\" | \"vertical\"",
+            "references": {
+              "KiStepperOrientation": {
+                "location": "local",
+                "path": "src/components/ki-stepper/ki-stepper.tsx",
+                "id": "src/components/ki-stepper/ki-stepper.tsx::KiStepperOrientation"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "orientation",
+          "reflectToAttr": false,
+          "docs": "Use vertical for a stacked list. Horizontal layout compacts below 22rem.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'horizontal'"
+            }
+          ],
+          "default": "'horizontal'",
+          "values": [
+            {
+              "value": "horizontal",
+              "type": "string"
+            },
+            {
+              "value": "vertical",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "summaryLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "summary-label",
+          "reflectToAttr": false,
+          "docs": "Compact disclosure text. Place {current} and {total} in the local order.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Step {current} of {total}'"
+            }
+          ],
+          "default": "'Step {current} of {total}'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "upcomingLabel",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "upcoming-label",
+          "reflectToAttr": false,
+          "docs": "Localized text for an upcoming step.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'Not started'"
+            }
+          ],
+          "default": "'Not started'",
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [
+        {
+          "name": "",
+          "docs": "Direct ki-step children in task order. The stepper assigns each\nchild to its row automatically."
+        }
+      ],
+      "parts": [
+        {
+          "name": "connector",
+          "docs": "The decorative line leading to the next step."
+        },
+        {
+          "name": "description",
+          "docs": "Optional supporting text below the label."
+        },
+        {
+          "name": "list",
+          "docs": "The ordered list."
+        },
+        {
+          "name": "marker",
+          "docs": "The decorative step number or state glyph."
+        },
+        {
+          "name": "step",
+          "docs": "A list item in the sequence."
+        },
+        {
+          "name": "summary",
+          "docs": "The compact disclosure button."
+        },
+        {
+          "name": "title",
+          "docs": "The label, rendered as a link when a completed step has a destination."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [
+        "ki-icon"
+      ],
+      "dependencyGraph": {
+        "ki-stepper": [
+          "ki-icon"
+        ]
+      }
+    },
+    {
       "filePath": "src/components/ki-switch/ki-switch.tsx",
       "encapsulation": "shadow",
       "tag": "ki-switch",
@@ -7772,6 +8369,16 @@
       "declaration": "export type KiStatusTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
       "docstring": "",
       "path": "src/components/ki-status/ki-status.tsx"
+    },
+    "src/components/ki-step/ki-step.tsx::KiStepState": {
+      "declaration": "export type KiStepState = 'done' | 'current' | 'upcoming' | 'error';",
+      "docstring": "",
+      "path": "src/components/ki-step/ki-step.tsx"
+    },
+    "src/components/ki-stepper/ki-stepper.tsx::KiStepperOrientation": {
+      "declaration": "export type KiStepperOrientation = 'horizontal' | 'vertical';",
+      "docstring": "",
+      "path": "src/components/ki-stepper/ki-stepper.tsx"
     },
     "src/components/ki-switch/ki-switch.tsx::KiSwitchSize": {
       "declaration": "export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';",
