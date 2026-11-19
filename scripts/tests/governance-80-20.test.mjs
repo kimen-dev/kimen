@@ -186,11 +186,12 @@ test('security scans are scheduled and dependency review is path-scoped', async 
 });
 
 test('SAST blocks inside the one required result on pinned rules, and explores on a schedule', async () => {
-  const [ci, security, gate, core] = await Promise.all([
+  const [ci, security, gate, core, engineLock] = await Promise.all([
     readRepositoryFile('.github/workflows/ci.yml'),
     readRepositoryFile('.github/workflows/security.yml'),
     readRepositoryFile('scripts/gates/semgrep-scan.sh'),
     readRepositoryFile('scripts/gates/gates-core.sh'),
+    readRepositoryFile('.semgrep/requirements.txt'),
   ]);
 
   // The scan is a gate in the suite, not a workflow step: `gates-suite.sh` is
@@ -199,7 +200,7 @@ test('SAST blocks inside the one required result on pinned rules, and explores o
   // engine.
   assert.match(core, /run_core_gate semgrep bash scripts\/gates\/semgrep-scan\.sh/u);
   assert.doesNotMatch(ci, /run: bash scripts\/gates\/semgrep-scan\.sh/u);
-  assert.match(ci, /pipx install semgrep==/u);
+  assert.match(ci, /run: bash scripts\/gates\/install-semgrep\.sh /u);
 
   // The required result scans the ruleset pinned in-tree, so its verdict is a
   // function of the tree alone: `p/default` resolves server-side, and an
@@ -222,11 +223,15 @@ test('SAST blocks inside the one required result on pinned rules, and explores o
   // evaluate the same rules differently, so the gate must not simply take it.
   assert.match(gate, /installed_version|--version/u);
 
-  // One engine version across all three anchors. Three places to pin is three
-  // places to drift, and a drifted local runner reports on different rules
-  // than the gate it is meant to predict.
+  // One engine version across its two anchors: the gate that demands it and
+  // the hash-locked requirements the workflows install from. The workflows
+  // name no version of their own, so there is nothing in them to drift; a
+  // drifted engine reports on different rules than the gate it is meant to
+  // predict.
   const pinned = (source) => /semgrep(?:_VERSION=['"]|[=@]=?)(\d+\.\d+\.\d+)/iu.exec(source)?.[1];
-  assert.equal(pinned(ci), pinned(security));
-  assert.equal(pinned(ci), pinned(gate));
-  assert.match(pinned(ci) ?? '', /^\d+\.\d+\.\d+$/u);
+  assert.equal(pinned(engineLock), pinned(gate));
+  assert.match(pinned(gate) ?? '', /^\d+\.\d+\.\d+$/u);
+  assert.equal(pinned(ci), undefined);
+  assert.equal(pinned(security), undefined);
+  assert.match(security, /run: bash scripts\/gates\/install-semgrep\.sh /u);
 });

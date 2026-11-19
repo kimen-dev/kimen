@@ -49,6 +49,8 @@ jobs:
             storage.googleapis.com:443
             archive.ubuntu.com:443
             security.ubuntu.com:443
+            pypi.org:443
+            files.pythonhosted.org:443
 
       - name: Check out exact candidate source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -81,6 +83,16 @@ jobs:
 
       - name: Prepare Chromium for core consumer validation
         run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
+
+      # The Semgrep scan is a gate inside gates-suite.sh (see ci.yml quality).
+      # A hosted runner has no semgrep on PATH, so the engine is installed
+      # here; without it the suite stops at the core gate before anything
+      # this workflow exists for has run. This job builds the bytes a release
+      # publishes, so the engine comes from .semgrep/requirements.txt, where
+      # every package is named with its hashes: pip resolves nothing and
+      # builds nothing here.
+      - name: Install Semgrep (hash-locked)
+        run: bash scripts/gates/install-semgrep.sh "$RUNNER_TEMP/semgrep"
 
       # Release validation runs the FULL fast suite (core + the Chromium
       # browser gate), not just the core gates a PR runs: the browser gate

@@ -42,8 +42,8 @@ jobs:
 
       # Engine pinned (Art. X determinism). Registry rulesets update server-side:
       # accepted for breadth; vendor rules locally if a flaky finding ever blocks.
-      - name: Install Semgrep (pinned)
-        run: pipx install semgrep==1.168.0
+      - name: Install Semgrep (hash-locked)
+        run: bash scripts/gates/install-semgrep.sh "$RUNNER_TEMP/semgrep"
 
       # `.semgrep` is excluded for the same reason the pinned scan excludes it:
       # rule files carry code patterns as data, and other rules match them. On
