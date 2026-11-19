@@ -86,11 +86,11 @@ slot::slotted(*) {
     transition-timing-function: var(--ki-motion-easing-out);
   }
 
-  button:active:not(:disabled) {
+  button:is(:active, [data-ki-pressed]):not(:disabled) {
     transform: scale(0.96);
   }
 
-  button:active:not(:disabled) [part="icon"] {
+  button:is(:active, [data-ki-pressed]):not(:disabled) [part="icon"] {
     transform: scale(0.92);
   }
 }

@@ -401,10 +401,15 @@ button:focus-visible {
  * hover paint while the same press from the keyboard or a touch screen
  * composed over rest, and one button looked two ways while held.
  *
+ * `[data-ki-pressed]` is the keyboard half of the same press: Firefox never
+ * matches `:active` on a button held with Space, so the component marks the
+ * inner button itself while the key is down (utils/keyboard-press.ts). Same
+ * specificity as `:active`, so the cascade below is unchanged.
+ *
  * Placed after the structural rules it now shares a target with, so
  * specificity still descends down the file (stylelint no-descending-
  * specificity). */
-button:active:not(:disabled) {
+button:is(:active, [data-ki-pressed]):not(:disabled) {
   --_ki-button-bg: var(--_ki-button-rest-bg);
   --_ki-button-fg: var(--_ki-button-rest-fg);
   --_ki-button-border: var(--_ki-button-rest-border);
@@ -450,14 +455,14 @@ button:active:not(:disabled) {
    two hover overlays this file already carries — a single pressed overlay
    would LIGHTEN the primary button on press and read as less pressed, not
    more. */
-:host([variant="primary"]) button:active:not(:disabled) {
+:host([variant="primary"]) button:is(:active, [data-ki-pressed]):not(:disabled) {
   --_ki-button-overlay: var(--ki-button-primary-active-overlay);
 }
 
 /* The non-glass bottom edge follows the border, but the host resolved that
    from the HOVER border; re-derive it here from the restored one. */
-:host([variant="quaternary"]) button:active:not(:disabled),
-:host([variant="ghost"]) button:active:not(:disabled) {
+:host([variant="quaternary"]) button:is(:active, [data-ki-pressed]):not(:disabled),
+:host([variant="ghost"]) button:is(:active, [data-ki-pressed]):not(:disabled) {
   --_ki-button-border-bottom: var(--_ki-button-border);
 }
 

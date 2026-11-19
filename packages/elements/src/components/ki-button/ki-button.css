@@ -108,7 +108,7 @@ slot[name="end"]::slotted(*) {
 
 /* The pressed dip; its transition is declared with the shared surface. */
 @media (prefers-reduced-motion: no-preference) {
-  button:active:not(:disabled) {
+  button:is(:active, [data-ki-pressed]):not(:disabled) {
     transform: scale(0.98);
   }
 }

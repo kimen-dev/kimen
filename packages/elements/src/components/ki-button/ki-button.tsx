@@ -1,5 +1,10 @@
 import { AttachInternals, Component, Element, h, Prop, State } from '@stencil/core';
 import { normalizeKiButtonType } from './ki-button.form';
+import {
+  endKeyboardPress,
+  releaseKeyboardPress,
+  startKeyboardPress,
+} from '../../utils/keyboard-press';
 
 export type KiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'ghost';
 export type KiButtonTone = 'neutral' | 'success' | 'danger';
@@ -201,6 +206,9 @@ export class KiButton {
         tabIndex={this.effectiveDisabled ? -1 : 0}
         disabled={this.effectiveDisabled}
         onClick={this.handleClick}
+        onKeyDown={startKeyboardPress}
+        onKeyUp={releaseKeyboardPress}
+        onBlur={endKeyboardPress}
       >
         <slot name="start" />
         <span part="label">

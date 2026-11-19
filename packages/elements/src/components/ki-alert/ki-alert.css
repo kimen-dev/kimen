@@ -109,7 +109,10 @@
   }
 }
 
-[part="dismiss"]:active {
+/* Pressed: `:active` from the pointer, `[data-ki-pressed]` while Space is
+ * held (utils/keyboard-press.ts: Firefox never matches `:active` on a button
+ * held from the keyboard). */
+[part="dismiss"]:is(:active, [data-ki-pressed]) {
   --_ki-alert-dismiss-fg: var(--ki-alert-dismiss-active-fg);
 }
 
@@ -171,7 +174,7 @@
       transform var(--ki-motion-duration-fast) var(--ki-motion-easing-standard);
   }
 
-  [part="dismiss"]:active {
+  [part="dismiss"]:is(:active, [data-ki-pressed]) {
     transform: scale(0.96);
   }
 }

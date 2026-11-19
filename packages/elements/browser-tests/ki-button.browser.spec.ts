@@ -153,7 +153,9 @@ function readPressedGround(el: KiButtonElement, button: HTMLButtonElement): Pres
     state: {
       focusRing: button.matches(':focus-visible'),
       hovered: el.matches(':hover'),
-      pressed: button.matches(':active'),
+      // `:active`, or the keyboard press the component marks itself where
+      // the engine never matches `:active` on a button held with Space.
+      pressed: button.matches(':active, [data-ki-pressed]'),
     },
   };
 }
@@ -189,18 +191,34 @@ async function holdWithPointer(
   return held;
 }
 
-/** Read the button while Space is held on it. */
+/**
+ * Read the button while Space is held on it, reached the way a keyboard user
+ * reaches it: with Tab. Focusing it from script after the pointer press would
+ * leave Firefox without a focus ring whatever key follows; Chromium shows one
+ * as soon as a key goes down, so only Tab is the same keyboard path everywhere.
+ */
 async function holdWithKeyboard(
   el: KiButtonElement,
   button: HTMLButtonElement,
 ): Promise<PressedGround> {
-  button.focus();
-  // `{ >}` holds the key down; the matching `{/ }` releases it.
-  await userEvent.keyboard('{ >}');
-  await nextFrames(2);
-  const held = readPressedGround(el, button);
-  await userEvent.keyboard('{/ }');
-  return held;
+  button.blur();
+  const before = document.createElement('button');
+  before.type = 'button';
+  before.textContent = 'Before';
+  el.before(before);
+  try {
+    before.focus();
+    await userEvent.keyboard('{Tab}');
+    expect(el.shadowRoot?.activeElement, 'Tab did not reach the button').toBe(button);
+    // `{ >}` holds the key down; the matching `{/ }` releases it.
+    await userEvent.keyboard('{ >}');
+    await nextFrames(2);
+    const held = readPressedGround(el, button);
+    await userEvent.keyboard('{/ }');
+    return held;
+  } finally {
+    before.remove();
+  }
 }
 
 describe('ki-button in a real browser', () => {
@@ -750,11 +768,15 @@ describe('ki-button in a real browser', () => {
     'a pointer press and a keyboard press paint the same resting ground: %s %s (#71)',
     async (variant, tone) => {
       cleanup();
-      // No transitions: every read below is a final frame, not a tween.
+      const el = await mount('Save', { variant, tone, type: 'button' });
+      const button = requireButton(el);
+      // No transitions: every read below is a final frame, not a tween. The
+      // preference changes with the button already in the document, as it
+      // does for a person who turns it on: WebKit re-evaluates a component's
+      // media queries only in the shadow roots present at the change, so a
+      // button mounted after it can keep the motion of one mounted before.
       await browserCommands.emulateReducedMotion('reduce');
       try {
-        const el = await mount('Save', { variant, tone, type: 'button' });
-        const button = requireButton(el);
         await parkPointer();
         await waitForStyles();
         const rest = readPressedGround(el, button);

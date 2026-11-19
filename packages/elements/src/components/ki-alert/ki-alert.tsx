@@ -1,4 +1,9 @@
 import { Component, Element, Event, type EventEmitter, h, Prop } from '@stencil/core';
+import {
+  endKeyboardPress,
+  releaseKeyboardPress,
+  startKeyboardPress,
+} from '../../utils/keyboard-press.js';
 import { focusThroughShadow } from '../../utils/shadow-focus.js';
 import { resolveDismissFocusTarget } from './ki-alert.focus.js';
 import { type KiAlertTone, liveExposureForTone } from './ki-alert.tone.js';
@@ -143,6 +148,9 @@ export class KiAlert {
             part="dismiss"
             aria-label={this.dismissLabel}
             onClick={this.handleDismiss}
+            onKeyDown={startKeyboardPress}
+            onKeyUp={releaseKeyboardPress}
+            onBlur={endKeyboardPress}
           >
             <svg aria-hidden="true" viewBox="0 0 16 16">
               <path
