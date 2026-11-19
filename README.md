@@ -147,7 +147,8 @@ Every component ships with real-browser tests (three engines at release),
 zero axe-core violations (WCAG 2.2 AA + EN 301 549 target), a single-digit-KB
 size budget, tokens-only styling (no hardcoded visual values), and RTL support
 by construction. Run `bash scripts/gates/gates-suite.sh` for full local checks
-before a pull request. CI requires visual validation.
+before a pull request. CI requires visual and cross-filesystem checks as part
+of the quality and release gates.
 
 For a quicker local pass, run `bash scripts/gates/gates-suite.sh --affected`.
 Nx selects projects and their dependents from committed, staged, unstaged and
@@ -158,7 +159,11 @@ such as root configuration or gate scripts, trigger the full suite. Affected
 runs provide local feedback only.
 
 On a non-Linux host the local browser suite reports how many visual specs it
-skips. Set `KIMEN_RUN_VISUALS=1` to run them with your host's baselines.
+skips. Set `KIMEN_RUN_VISUALS=1` to run them with your host's baselines. The local
+cross-filesystem documentation test skips if `TMPDIR` does not point to a
+writable directory on a different filesystem. To exercise that boundary on
+macOS, run `bash scripts/gates/cross-device-tmpdir.sh -- bash scripts/gates/gates-suite.sh`.
+A local skip contributes no release evidence.
 
 ### Share local caches across worktrees
 

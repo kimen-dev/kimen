@@ -2,8 +2,7 @@
 # Run a command with TMPDIR on a filesystem other than the repository's.
 #
 # The cross-device regressions (site-publication, cache-env-reentry) need the
-# caller to designate such a TMPDIR, and report a blocked prerequisite when it
-# does not. CI designates one in the workflow: a private tmpfs
+# caller to designate such a TMPDIR. CI designates one in the workflow: a private tmpfs
 # (.github/workflows/ci.yml). A macOS checkout has none: its TMPDIR, under
 # /var/folders, shares the repository's APFS volume. There this wrapper is the
 # local counterpart of that CI step: it creates a sparse APFS disk image in a
@@ -14,7 +13,7 @@
 # Anywhere else, and whenever the caller's TMPDIR already crosses a filesystem
 # boundary (CI, or a nested run of this wrapper), the command runs untouched.
 # If the image cannot be made, the command still runs with the caller's
-# TMPDIR, and the cross-device cases report their blocked prerequisite.
+# TMPDIR, and the cross-device cases report the missing prerequisite.
 set -uo pipefail
 umask 077
 

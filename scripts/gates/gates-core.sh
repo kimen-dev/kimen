@@ -49,8 +49,14 @@ run_core_gate() {
   shift
   echo "── CORE $name"
   if "$@"; then
-    record_core_evidence "$name" green
-    echo "── CORE $name: PASS"
+    if [ "$name" = 'infra-tests' ] &&
+      grep -Fxq $'skip\tcross-filesystem\tskipped' "$KIMEN_GATE_EVIDENCE_FILE"; then
+      record_core_evidence "$name" partial
+      echo "── CORE $name: PARTIAL (cross-filesystem check skipped)"
+    else
+      record_core_evidence "$name" green
+      echo "── CORE $name: PASS"
+    fi
   else
     record_core_evidence "$name" red
     echo "── CORE $name: FAIL"
@@ -123,4 +129,8 @@ run_core_gate budgets pnpm exec nx run-many -t size
 run_core_gate infra-tests pnpm run test:infra
 run_core_gate capabilities pnpm run check:capabilities
 run_core_gate test pnpm exec nx run-many -t test
-echo "CORE QUALITY GREEN"
+if grep -q $'\tpartial$' "$KIMEN_GATE_EVIDENCE_FILE"; then
+  echo 'CORE CHECKS PASSED WITH SKIPS'
+else
+  echo 'CORE QUALITY GREEN'
+fi

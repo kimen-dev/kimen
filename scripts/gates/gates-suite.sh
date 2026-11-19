@@ -17,10 +17,11 @@ esac
 
 # Allocate every writable tool cache before Nx or Playwright can consult
 # mutable user/global state. cache-env marks the one permitted re-entry.
-# First designate a TMPDIR on its own filesystem, as the CI workflow does: the
-# cross-device regressions need one, and a macOS checkout has none by default.
 if [ "${KIMEN_CACHE_ENV_READY:-}" != '1' ]; then
-  exec bash scripts/gates/cross-device-tmpdir.sh -- bash scripts/gates/cache-env.sh -- bash scripts/gates/gates-suite.sh "$@"
+  if [ -n "${CI:-}" ] || [ "${KIMEN_SANDBOX:-}" = '1' ]; then
+    exec bash scripts/gates/cross-device-tmpdir.sh -- bash scripts/gates/cache-env.sh -- bash scripts/gates/gates-suite.sh "$@"
+  fi
+  exec bash scripts/gates/cache-env.sh -- bash scripts/gates/gates-suite.sh "$@"
 fi
 bash scripts/gates/cache-env.sh --validate || exit 1
 
