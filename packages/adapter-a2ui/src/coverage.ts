@@ -92,8 +92,7 @@ export const A2UI_CLIENT_FUNCTION_ALLOWLIST: readonly string[] = [];
 /**
  * Properties every basic-catalog component may carry
  * (`common_types.json#/$defs/ComponentCommon`, `catalog.json#/$defs/
- * CatalogComponentCommon`). `accessibility` and `weight` are accepted and not
- * rendered (COMPAT.md, lossy mappings).
+ * CatalogComponentCommon`). Only Image reads `accessibility` when rendering.
  */
 export const A2UI_COMMON_PROPERTIES: readonly string[] = [
   'id',
@@ -200,7 +199,7 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     kind: 'mapped',
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', CHECKS],
   },
-  Image: { kind: 'unmapped', reason: 'no image component in the catalog' },
+  Image: { catalog: ['ki-image'], kind: 'mapped', properties: ['url', 'fit', 'variant'] },
   Icon: {
     kind: 'unmapped',
     reason: 'no named or path icon component in the catalog',
@@ -304,8 +303,8 @@ export const A2UI_V1_EVALUATED_FUNCTIONS: readonly string[] = [
 /**
  * Envelope keys every 1.0 component may carry (`common_types.json#/$defs/
  * ComponentCommon`), plus `weight`, which every 1.0 basic-catalog component
- * declares. `@accessibility` and `@metadata` are accepted and not rendered;
- * `@catalogId` must name the 1.0 basic catalog (S19).
+ * declares. Only Image reads `@accessibility` when rendering. `@catalogId`
+ * must name the 1.0 basic catalog (S19).
  */
 export const A2UI_V1_COMMON_PROPERTIES: readonly string[] = [
   'id',
@@ -360,7 +359,7 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     kind: 'mapped',
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', V1_CHECKS],
   },
-  Image: { kind: 'unmapped', reason: 'no image component in the catalog' },
+  Image: { catalog: ['ki-image'], kind: 'mapped', properties: ['url', 'fit', 'variant'] },
   Icon: {
     kind: 'unmapped',
     reason: 'no named or path icon component in the catalog',

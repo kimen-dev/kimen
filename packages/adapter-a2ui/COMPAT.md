@@ -113,7 +113,7 @@ type rejects the message (`unknown-property`, scenario S9).
 | TextField     | mapped    | ki-input, ki-textarea         |
 | CheckBox      | mapped    | ki-checkbox                   |
 | ChoicePicker  | mapped    | ki-radio-group, ki-radio      |
-| Image         | unmapped  | —                             |
+| Image         | mapped    | ki-image                      |
 | Icon          | unmapped  | —                             |
 | Video         | unmapped  | —                             |
 | AudioPlayer   | unmapped  | —                             |
@@ -178,6 +178,12 @@ A2UI 0.9.1 (the 1.0 differences are under [A2UI 1.0](#a2ui-10)).
   rendered; the order of children is kept.
 - `List.direction` and `align`: not rendered; each child becomes a
   `ki-list-item`.
+- `Image.url` becomes `ki-image` `src` and passes through the guarded URL
+  policy. `accessibility.label` supplies the alternative text and
+  `accessibility.hidden: true` marks the image as decorative. An informative
+  image with a missing or blank label uses the per-node fallback and reports
+  `missing-image-alt`. `cover` and `contain` pass through to `fit`. Other fit
+  values and the `variant` size hint use the `ki-image` defaults.
 - `Button.variant`: `primary` becomes `variant="primary"`, `borderless`
   becomes `variant="ghost"`, `default` keeps the catalog default.
 - `TextField.variant`: `longText` becomes `ki-textarea`, `obscured` becomes
@@ -186,8 +192,9 @@ A2UI 0.9.1 (the 1.0 differences are under [A2UI 1.0](#a2ui-10)).
 - `ChoicePicker`: `mutuallyExclusive` becomes `ki-radio-group` with the first
   selected value; `multipleSelection` degrades (reason `unsupported-variant`);
   `displayStyle` and `filterable` are not rendered.
-- `accessibility` is accepted and not rendered; `createSurface.theme` is
-  accepted and ignored (appearance stays token-driven, Art. VI).
+- `Image` consumes the accessibility label and hidden flag. All types
+  accept the remaining accessibility metadata. `createSurface.theme` is
+  accepted and appearance stays token-driven (Art. VI).
 
 ## A2UI 1.0
 
@@ -214,7 +221,7 @@ Every 1.0 component may carry the envelope keys `id`, `component`,
 | TextField     | mapped    | ki-input, ki-textarea         |
 | CheckBox      | mapped    | ki-checkbox                   |
 | ChoicePicker  | mapped    | ki-radio-group, ki-radio      |
-| Image         | unmapped  | —                             |
+| Image         | mapped    | ki-image                      |
 | Icon          | unmapped  | —                             |
 | Video         | unmapped  | —                             |
 | AudioPlayer   | unmapped  | —                             |
@@ -284,8 +291,9 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
 - `TextField.placeholder` becomes the `placeholder` of `ki-input` or
   `ki-textarea`; `TextField.variant` maps as in 0.9.1; `validationRegexp` no
   longer exists (`@checks` with `regex`).
-- `@accessibility` and `@metadata` are accepted and not rendered; `@checks`
-  is accepted and not evaluated.
+- `Image` reads its label and hidden flag from `@accessibility`. The
+  remaining `@accessibility` attributes and `@metadata` are accepted as
+  metadata. The adapter accepts `@checks` without evaluating them.
 - `Text.variant` (`caption`, `body`; 1.0 dropped the headings), `weight`,
   `Video.posterUrl` and `Slider.steps`: not rendered.
 - `sendDataModel` metadata travels under `a2uiRendererDataModel` with
@@ -310,12 +318,12 @@ function is agent-callable (`allowedCallers` defaults to `rendererOnly`).
   rejected.
 - **Surface deletion.** `deleteSurface` drops the adapter's state; the host
   owns the teardown of the surface element.
-- **Text, image and layout primitives (spec 037).** Until the catalog's
-  text, image and layout primitives merge, `Text` stays `inline`,
-  `Row`/`Column` stay `layout` and `Image` stays `unmapped` in both matrices;
-  when they land, both matrices switch those rows together.
+- **Text and layout primitives (spec 037).** `Text` renders inline, and
+  `Row` and `Column` flatten into their parent slot. Both matrices retain
+  these mappings pending the adapter's adoption of native primitives.
 - **1.0 accessibility attributes.** 1.0 asks renderers to plumb
-  `@accessibility` (label, description, live, hidden); it is accepted and not
-  rendered until the catalog exposes a neutral accessible-name channel.
+  `@accessibility` (label, description, live, hidden). The adapter maps
+  `Image` label and hidden into the element's image-specific API. Wider
+  support awaits a neutral accessibility channel in the catalog.
 - **No agent function calls.** The adapter neither answers
   `callRendererFunction` with a result nor issues `callAgentFunction`.

@@ -1,6 +1,10 @@
 {
   "ki": {
     "surface-image": {
+      "none": {
+        "$value": "none",
+        "$description": "A surface with a solid fill carries no background image."
+      },
       "dialog": {
         "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
@@ -1099,6 +1103,11 @@
       }
     },
     "effect": {
+      "no-backdrop-filter": {
+        "$type": "other",
+        "$value": "none",
+        "$description": "A surface that paints without filtering its backdrop."
+      },
       "component": {
         "backdrop-blur": {
           "$type": "dimension",
@@ -1527,8 +1536,23 @@
         }
       }
     },
+    "glyph": {
+      "$type": "dimension",
+      "media-size": {
+        "$value": "{ki.space.5xl}",
+        "$description": "Standard dimension of an inline media placeholder symbol."
+      },
+      "stroke-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Base stroke width for simple outlined symbols."
+      }
+    },
     "spacing": {
       "$type": "dimension",
+      "media-caption": {
+        "$value": "{ki.space.xs}",
+        "$description": "Block spacing between a media frame and its caption."
+      },
       "inline": {
         "$value": "{ki.space.md}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md."

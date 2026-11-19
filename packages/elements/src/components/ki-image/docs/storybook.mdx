@@ -1,0 +1,18 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ImageStories from '../ki-image.stories';
+
+<Meta of={ImageStories} name="Examples" />
+
+# Image examples
+
+## Image with a caption
+
+<Canvas of={ImageStories.Playground} />
+
+## Cover and contain
+
+<Canvas of={ImageStories.Fitting} />
+
+## Refused source
+
+<Canvas of={ImageStories.RefusedSource} />

@@ -15,13 +15,15 @@ Issue #362 adds `ki-image` for informative and decorative images in hand-authore
 ## Decisions pending founder confirmation
 
 - Agent's choice, pending founder confirmation. Default `auto` reserves the reference's 16:9 frame until the native dimensions are available, then follows the intrinsic ratio. Authors choose a fixed ratio to guarantee unchanged geometry.
-- Agent's choice, pending founder confirmation. Missing or blank alt on an informative image displays a generically named fallback and leaves the source unloaded. `decorative` suppresses the media semantics even if alt was supplied. An authored caption retains figure semantics.
+- Agent's choice, pending founder confirmation. Missing or blank alt on an informative image displays a generically named fallback and leaves the source unloaded. `decorative` suppresses the media semantics even if alt was supplied. An authored caption retains figure semantics. Catalog validation enforces the conditional alt requirement before rendering.
 - Agent's choice, pending founder confirmation. A localizable `fallback-label` defaults to “Image unavailable”. The element appends the nonblank alt after a colon for informative fallback states.
-- Agent's choice, pending founder confirmation. `ki-error` reports load failure or policy refusal once for each source attempt. The catalog applies any host origin list before rendering. A directly authored element applies the same default scheme rules.
+- Agent's choice, pending founder confirmation. `ki-error` reports load failure or policy refusal once for each source attempt. The catalog applies any host origin list before rendering. A directly authored element applies the same default scheme rules. A catalog author can explicitly bind the declared failure event to a declared action. The A2UI mapping creates no binding.
 - Agent's choice, pending founder confirmation. The image uses native lazy loading and async decoding. It sends no referrer, matching the catalog's native image handling.
-- Agent's choice, pending founder confirmation. The fallback is a centered image symbol with a solid theme surface. The caption uses the reference's caption scale and wraps with the surrounding writing direction.
+- Agent's choice, pending founder confirmation. The fallback is a centered image symbol with a solid theme surface. The caption uses the reference's caption scale and wraps with the surrounding writing direction. More contrast mode strengthens the fallback foreground to meet the contrast gate.
 
 - Agent's choice, pending founder confirmation. Both A2UI dialects use the accessibility label as alt and explicit accessibility hiding as decorative. An unlabeled informative image keeps the adapter's per-node fallback. Only cover and contain map to the fit prop. Other fit values and size hints use the element defaults.
+
+- Agent's choice, pending founder confirmation. The API declaration uses the gate's major classification for changes to the generated loader namespaces. The new component and tokens are additive.
 
 S4 covers the guardrail boundary and is flagged for founder review in the PR.
 

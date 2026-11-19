@@ -1,8 +1,6 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-const { offendingScheme } = await vi.importActual<{
-  offendingScheme: (source: string) => string | null;
-}>('../../utils/url-scheme');
+import { offendingScheme } from '../../utils/url-scheme';
 
 describe('image URL scheme policy', () => {
   it.each([

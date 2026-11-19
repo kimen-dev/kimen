@@ -80,6 +80,20 @@ it.each([
   expect(size(frame)[1]).toBeCloseTo(height, 1);
 });
 
+it('uses the native ratio for auto after loading a panoramic image', async () => {
+  const panoramic = new URL(
+    '../../../../catalog/browser-tests/fixtures/wide.svg?no-inline',
+    import.meta.url,
+  ).href;
+  const image = makeImage({ alt, loading: 'eager' });
+  fixture.append(image);
+  const frame = await part(image, 'frame');
+  expect(size(frame)).toEqual([320, 180]);
+
+  image.setAttribute('src', panoramic);
+  await expect.poll(() => size(frame)).toEqual([320, 80]);
+});
+
 it('S2: a caption is a figcaption after the media frame and collapses when removed', async () => {
   const image = makeImage({ src: hills, alt });
   const text = document.createElement('span');
@@ -183,6 +197,7 @@ it('S9: both decorative media states are absent from the accessibility tree', as
   expect(native.alt).toBe('');
   await part(refused, 'fallback');
   await expect.element(page.getByRole('img')).not.toBeInTheDocument();
+  await expect.element(page.getByRole('figure')).not.toBeInTheDocument();
   await expectAccessible(fixture);
 });
 
