@@ -334,6 +334,61 @@ describe('ki-tooltip pointer path in a real browser', () => {
     expect(hit).toBe(tooltip);
   });
 
+  // Under a transformed ancestor (a card that lifts or scales on hover, a
+  // zoomed preview, a panel sliding in) the bubble still opens next to its
+  // trigger. The bubble is in the top layer and placed against its anchor,
+  // which has to be the transformed box; Firefox resolves it against the
+  // untransformed one, so the bubble opened where the trigger would be
+  // without the transform. Measured against the host, the box it anchors to.
+  it.each([
+    ['top', 'translate(60px, 120px)'],
+    ['bottom', 'scale(1.5)'],
+    ['end', 'translate(-40px, 60px)'],
+  ] as const)(
+    'S1 a %s tooltip under a %s ancestor opens next to its trigger',
+    async (placement, transform) => {
+      const frame = document.createElement('div');
+      frame.style.cssText = `padding: 120px; transform: ${transform}; transform-origin: 0 0;`;
+      document.body.append(frame);
+      try {
+        const { host, trigger } = await mount({ placement }, frame);
+        await hoverTrigger(host, trigger);
+        await settleTooltip(host);
+
+        const anchor = host.getBoundingClientRect();
+        const bubble = requireTooltip(host).getBoundingClientRect();
+        const center = (from: number, size: number): number => from + size / 2;
+        if (placement === 'end') {
+          expect(bubble.left - anchor.right).toBeCloseTo(8, 0);
+          expect(center(bubble.top, bubble.height)).toBeCloseTo(
+            center(anchor.top, anchor.height),
+            0,
+          );
+        } else {
+          const gap = placement === 'top' ? anchor.top - bubble.bottom : bubble.top - anchor.bottom;
+          expect(gap).toBeCloseTo(8, 0);
+          expect(center(bubble.left, bubble.width)).toBeCloseTo(
+            center(anchor.left, anchor.width),
+            0,
+          );
+        }
+      } finally {
+        frame.remove();
+      }
+    },
+  );
+
+  // Where anchor positioning already places the bubble against the trigger
+  // (no transformed ancestor, or an engine that resolves the transformed
+  // box), the bubble carries no correction at all: it paints as before.
+  it('S1 a tooltip with no transformed ancestor adds no transform to its bubble', async () => {
+    const { host, trigger } = await mount({ style: { marginBlockStart: '160px' } });
+    await hoverTrigger(host, trigger);
+    await settleTooltip(host);
+
+    expect(getComputedStyle(requireTooltip(host)).transform).toBe('none');
+  });
+
   it('S10 honors a forced dark scheme: the shown tooltip repaints', async () => {
     const { host, trigger } = await mount();
     trigger.tabIndex = 0;

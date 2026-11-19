@@ -2,9 +2,29 @@ import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
 import { parseDelay } from './ki-tooltip.delay.js';
 import {
   normalizePlacement,
+  resolveAnchorCorrection,
   resolveTooltipPosition,
   type KiTooltipPlacement,
 } from './ki-tooltip.position.js';
+
+// A probe in the top layer, anchored like the bubble and as large as its
+// anchor: where anchor positioning resolves the host, in the bubble's frame.
+const ANCHOR_PROBE_STYLE = [
+  'position:fixed',
+  'position-anchor:--ki-tooltip-anchor',
+  'inset:auto',
+  'left:anchor(left)',
+  'top:anchor(top)',
+  'width:anchor-size(width)',
+  'height:anchor-size(height)',
+  'margin:0',
+  'padding:0',
+  'border:0',
+  'box-sizing:border-box',
+  'overflow:hidden',
+  'visibility:hidden',
+  'pointer-events:none',
+].join(';');
 
 /**
  * A transient, text-only description bubble for one slotted trigger.
@@ -55,6 +75,13 @@ export class KiTooltip {
   @State() private visible = false;
   @State() private effectivePlacement: KiTooltipPlacement = 'top';
   @State() private crossAxisShift = 0;
+  /**
+   * How far the bubble moves to sit against the trigger the person sees,
+   * where anchor positioning placed it against another box (Firefox under a
+   * transformed ancestor). Zero wherever the engine already gets it right.
+   */
+  @State() private anchorShiftX = 0;
+  @State() private anchorShiftY = 0;
 
   private pointerWithin = false;
   private focusWithin = false;
@@ -345,10 +372,11 @@ export class KiTooltip {
     }
 
     const dir = this.host.matches(':dir(rtl)') ? 'rtl' : 'ltr';
+    const triggerRect = this.host.getBoundingClientRect();
     const position = resolveTooltipPosition({
       placement: this.placement,
       dir,
-      triggerRect: this.host.getBoundingClientRect(),
+      triggerRect,
       tooltipRect: this.measureTooltip(tooltip),
       viewport: { width: window.innerWidth, height: window.innerHeight },
       offset: this.measureOffset(),
@@ -356,6 +384,47 @@ export class KiTooltip {
 
     this.effectivePlacement = position.effectivePlacement;
     this.crossAxisShift = position.crossAxisShift;
+    const resolvedAnchor = this.measureResolvedAnchor();
+    const correction = resolvedAnchor
+      ? resolveAnchorCorrection(position.effectivePlacement, dir, resolvedAnchor, triggerRect)
+      : { x: 0, y: 0 };
+    this.anchorShiftX = correction.x;
+    this.anchorShiftY = correction.y;
+  }
+
+  // The bubble opens in the top layer, placed with anchor() against the host.
+  // That has to be the host's transformed box, the one the flip and clamp
+  // above measure; Firefox resolves it against the box without the
+  // transforms of the host's ancestors. A probe anchored the same way says
+  // where the engine resolved the anchor, so the difference can be made up.
+  // Null where it cannot say: no anchor positioning, no popover, or a probe
+  // that did not take the anchor's size.
+  private measureResolvedAnchor(): DOMRect | null {
+    const root = this.host.shadowRoot;
+    if (
+      !root ||
+      typeof CSS === 'undefined' ||
+      !CSS.supports('top', 'anchor(top)') ||
+      !CSS.supports('width', 'anchor-size(width)')
+    ) {
+      return null;
+    }
+    const probe = this.host.ownerDocument.createElement('div');
+    if (typeof probe.showPopover !== 'function') {
+      return null;
+    }
+    probe.setAttribute('popover', 'manual');
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = ANCHOR_PROBE_STYLE;
+    root.appendChild(probe);
+    try {
+      probe.showPopover();
+      const rect = probe.getBoundingClientRect();
+      probe.hidePopover();
+      return rect.width > 0 && rect.height > 0 ? rect : null;
+    } finally {
+      probe.remove();
+    }
   }
 
   // The closed bubble generates no box (it must not widen the page), so it is
@@ -387,9 +456,16 @@ export class KiTooltip {
   }
 
   render() {
-    const tooltipStyle = {
+    const tooltipStyle: Record<string, string> = {
       '--_ki-tooltip-cross-shift': `${String(this.crossAxisShift)}px`,
     };
+    // Only where the engine misplaced the anchor: a transform on the bubble
+    // is otherwise absent, and every engine that gets it right paints exactly
+    // what it painted before. `transform` composes with the `translate` the
+    // placement and the motion use, so neither has to know about it.
+    if (this.anchorShiftX !== 0 || this.anchorShiftY !== 0) {
+      tooltipStyle.transform = `translate(${String(this.anchorShiftX)}px, ${String(this.anchorShiftY)}px)`;
+    }
 
     return (
       <Host>
