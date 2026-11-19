@@ -77,7 +77,10 @@
   border-radius: var(--ki-alert-shell-radius);
   background: var(--ki-alert-shell-bg);
   /* stylelint-disable-next-line property-no-vendor-prefix */
-  -webkit-backdrop-filter: var(--_ki-alert-shell-backdrop-filter, var(--ki-alert-shell-backdrop-filter));
+  -webkit-backdrop-filter: var(
+    --_ki-alert-shell-backdrop-filter,
+    var(--ki-alert-shell-backdrop-filter)
+  );
   backdrop-filter: var(--_ki-alert-shell-backdrop-filter, var(--ki-alert-shell-backdrop-filter));
 }
 
@@ -165,8 +168,14 @@
   background-image: var(--_ki-alert-dismiss-overlay-image, none);
   box-shadow: var(--ki-effect-component-secondary-default-shadow);
   /* stylelint-disable-next-line property-no-vendor-prefix */
-  -webkit-backdrop-filter: var(--_ki-alert-dismiss-backdrop-filter, var(--ki-alert-dismiss-backdrop-filter));
-  backdrop-filter: var(--_ki-alert-dismiss-backdrop-filter, var(--ki-alert-dismiss-backdrop-filter));
+  -webkit-backdrop-filter: var(
+    --_ki-alert-dismiss-backdrop-filter,
+    var(--ki-alert-dismiss-backdrop-filter)
+  );
+  backdrop-filter: var(
+    --_ki-alert-dismiss-backdrop-filter,
+    var(--ki-alert-dismiss-backdrop-filter)
+  );
   color: var(--_ki-alert-dismiss-fg);
   font: inherit;
 
