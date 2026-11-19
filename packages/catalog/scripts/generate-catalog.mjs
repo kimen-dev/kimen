@@ -291,10 +291,11 @@ if (
   mkdirSync(outputDir, { recursive: true });
   writeFileSync(join(outputDir, 'catalog.ts'), output, 'utf8');
   // The default scheme rules are shared with the element; the catalog adds
-  // host origin rules without importing the built elements package.
+  // host origin rules without importing the built elements package. Expose
+  // the control-character predicate here for the catalog-only origin check.
   writeFileSync(
     join(outputDir, 'url-scheme.ts'),
-    `// GENERATED from packages/elements/src/utils/url-scheme.ts.\n${schemePolicy}`,
+    `// GENERATED from packages/elements/src/utils/url-scheme.ts.\n${schemePolicy}\nexport { isControlOrSpace };\n`,
     'utf8',
   );
   process.stdout.write(

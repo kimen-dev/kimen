@@ -2,7 +2,7 @@
 const SUPPORTED_SCHEMES: ReadonlySet<string> = new Set(['http', 'https']);
 
 /** A C0 control or space, or a DEL/C1 control: what URL parsers trim or drop. */
-export function isControlOrSpace(code: number): boolean {
+function isControlOrSpace(code: number): boolean {
   return code <= 0x20 || (code >= 0x7f && code <= 0x9f);
 }
 
