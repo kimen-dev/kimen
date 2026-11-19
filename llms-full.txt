@@ -789,6 +789,121 @@ CSS custom properties:
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 
+### ki-button-group
+
+Arranges related actions as a spaced group, attached group, or keyboard toolbar.
+
+When to use: place two to five related actions together, present a primary
+action with a menu of alternatives, or give formatting tools one Tab stop.
+When NOT to use: for a single-choice setting, unrelated actions, or navigation.
+Use a segmented control for a single-choice setting and links for navigation.
+
+Examples:
+
+# Using ki-button-group
+
+## Spaced and attached groups
+
+Use a label that describes what the actions do together. In attached mode the
+first button provides the common variant and size. An explicit group size
+applies in both modes.
+
+```html
+<ki-button-group label="History">
+  <ki-button type="button">Undo</ki-button>
+  <ki-button type="button">Redo</ki-button>
+</ki-button-group>
+
+<ki-button-group label="Clipboard" attached size="sm">
+  <ki-button type="button">Copy</ki-button>
+  <ki-button type="button">Paste</ki-button>
+</ki-button-group>
+```
+
+## Formatting toolbar
+
+Import the glyphs used by your page. Give each icon button a tooltip using the
+same label. The application sets `pressed` as the formatting state changes. The native button exposes it as `aria-pressed`.
+
+```js
+import '@kimen/elements/icons/bold';
+import '@kimen/elements/icons/list';
+```
+
+```html
+<ki-button-group label="Formatting" toolbar size="sm">
+  <ki-tooltip label="Bold">
+    <ki-icon-button label="Bold" variant="ghost" pressed="true">
+      <ki-icon name="bold"></ki-icon>
+    </ki-icon-button>
+  </ki-tooltip>
+  <span role="separator" aria-orientation="vertical"></span>
+  <ki-tooltip label="Bulleted list">
+    <ki-icon-button label="Bulleted list" variant="ghost">
+      <ki-icon name="list"></ki-icon>
+    </ki-icon-button>
+  </ki-tooltip>
+</ki-button-group>
+```
+
+## Split button
+
+With a build that includes `ki-menu`, anchor the menu to the chevron action.
+Import `@kimen/elements/icons/chevron-down` before mounting the group. Handle the
+main button's click and menu selection as separate actions.
+
+```html
+<ki-button-group label="Save actions" attached>
+  <ki-button type="button" variant="primary">Save</ki-button>
+  <ki-tooltip label="More save options">
+    <ki-icon-button id="save-options" label="More save options" aria-haspopup="menu" expanded="false">
+      <ki-icon name="chevron-down"></ki-icon>
+    </ki-icon-button>
+  </ki-tooltip>
+</ki-button-group>
+
+<ki-menu anchor="save-options">
+  <ki-menu-item value="draft">Save as draft</ki-menu-item>
+  <ki-menu-item value="copy">Save a copy</ki-menu-item>
+</ki-menu>
+```
+
+Keep the icon button's `expanded` property in sync with the menu's `open`
+state. Its native button exposes that state as `aria-expanded`.
+
+Attributes:
+- `attached` (boolean, default false): Joins neighboring actions at their inner edges. Buttons share the first button's variant and use its size when the group has no explicit size. Use for a closely related set of actions or for a split button.
+- `label` (string, required): Required accessible name for the group or toolbar (for example, "Text formatting"). Provide a localized name that describes the actions' shared purpose.
+- `size` ("lg" | "md" | "sm" | "xl" | "xs" | undefined): Applies one token-backed size to each button while it belongs to the group. Omit it to keep individual sizes in spaced mode.
+- `toolbar` (boolean, default false): Gives the group toolbar semantics, a framed surface and one Tab stop. Horizontal arrows, Home and End move between the toolbar's actions.
+
+Slots:
+- (default): Related ki-button and ki-icon-button controls, in reading order. Wrap labeled icon actions in ki-tooltip with the same label to show the label on focus and hover. A toolbar can also include vertical separators.
+
+Parts:
+- `group`: The named group or toolbar surface.
+
+Events: none
+
+Methods: none
+
+CSS custom properties:
+- `--ki-button-group-attached-gap`: Gap between joined actions.
+- `--ki-button-group-attached-radius`: Radius of the logical corners along a shared button edge.
+- `--ki-button-group-backdrop-filter`: Complete optional backdrop filter for the toolbar surface.
+- `--ki-button-group-bg`: Toolbar surface colour.
+- `--ki-button-group-bg-image`: Optional decorative image over the toolbar surface.
+- `--ki-button-group-border-color`: Thin toolbar frame colour.
+- `--ki-button-group-border-width`: Thickness of the toolbar frame and divider.
+- `--ki-button-group-divider`: Decorative toolbar separator ink.
+- `--ki-button-group-divider-size`: Block size of a vertical toolbar separator.
+- `--ki-button-group-fg`: Default toolbar foreground on its raised surface.
+- `--ki-button-group-gap`: Gap between actions in a spaced group.
+- `--ki-button-group-padding`: Toolbar frame inset and divider margin.
+- `--ki-button-group-radius`: Logical outside radius of the toolbar frame.
+- `--ki-button-group-seam-overlap`: Shared-edge overlap between adjacent attached actions.
+- `--ki-button-group-toolbar-gap`: Gap between toolbar actions.
+
 ### ki-card
 
 A non-interactive card surface for grouping related content.
@@ -1267,7 +1382,7 @@ data-row actions. Always supply `label`; usually pair with ki-tooltip for
 sighted discoverability. While the action it started is in progress, set
 `loading` instead of disabling it.
 When NOT to use: whenever a visible label fits (use ki-button), toggling
-state (a future toggle icon button), navigation (use a link), or form
+state without supplying `pressed`, navigation (use a link), or form
 submit/reset (ki-icon-button is not form-associated; use ki-button, whose
 visible label communicates the consequence).
 
@@ -1323,9 +1438,11 @@ While the action it started is in progress, set `loading` instead of `disabled`:
 
 Attributes:
 - `disabled` (boolean, default false): Prevents activation, removes the icon button from keyboard reach, and exposes the unavailable state through the internal native button. Wins over `loading` when both are set. When NOT to use: do not use disabled for pending/loading semantics; use `loading`.
+- `expanded` (boolean | undefined): Application-owned disclosure state for a trigger that opens a popup. The native icon button exposes this as `aria-expanded`. Use with `aria-haspopup="menu"` for a menu trigger. Omit for other actions.
 - `label` (string, required): Accessible name of the internal focusable button ("Close", "Play"). Required in the catalog contract: the icon is presentational, so without a label the control exposes no name and fails the accessibility audit. The component never invents a fallback name. When NOT to use: never omit it; never duplicate it as visible text (a visible label means ki-button).
 - `loading` (boolean, default false): Pending state of the action this icon button started (refreshing, sending). While set, every activation is blocked (pointer, Enter and Space), but the icon button stays focusable, in the Tab order and at its size: the icon stays laid out, transparent, and a spinner is drawn in its place. The internal native button is exposed with `aria-disabled="true"` and keeps its `label`, and `loadingLabel` is announced as a polite status message. `disabled` wins over it. The application sets it when the action starts and clears it when the action ends. When to use: while the work a click on this icon button started is running, so a second activation cannot repeat it. When NOT to use: for an icon button the person cannot use yet (use `disabled`), or for the progress of a page or region (use ki-progress).
 - `loading-label` (string, default 'Loading'): Text of the polite status message announced while `loading` is set. Override for localization; the default English string is the icon button's only built-in user-visible text. When to use: provide a localized message whenever the document language is not English, or a more specific one ("Refreshing"). When NOT to use: do not repeat `label` here; the person already hears it on focus.
+- `pressed` (boolean | undefined): Application-owned toggle state. The native icon button exposes this as `aria-pressed`. Omit for a momentary action.
 - `size` ("lg" | "md" | "sm" | "xl" | "xs", default 'md'): Token-backed square size. Every size keeps at least the 24×24 minimum pointer target (`xs` sits exactly on it); choose the size that matches the density of the surrounding UI. When NOT to use: do not shrink below `xs` through tokens; no theme may go under the WCAG 2.2 pointer-target floor.
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
 - `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral icon actions, and `ghost` for accent icon actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.

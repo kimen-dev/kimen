@@ -7,6 +7,7 @@ export const DIRECTIVES = [
   d.KiAvatarGroup,
   d.KiBadge,
   d.KiButton,
+  d.KiButtonGroup,
   d.KiCard,
   d.KiCheckbox,
   d.KiDialog,
