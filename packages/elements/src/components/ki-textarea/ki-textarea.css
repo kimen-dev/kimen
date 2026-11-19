@@ -133,6 +133,16 @@
   color: var(--_ki-textarea-placeholder-fg);
 }
 
+/* Spec 048: under a coarse primary pointer the text a person types is at
+   least 16px, the size under which Safari on iOS zooms the page into the
+   focused field and leaves it zoomed. Only the native control (and so its
+   placeholder): the label and the help and error lines keep their size. */
+@media (pointer: coarse) {
+  [part="textarea"] {
+    font-size: var(--ki-textarea-font-size-touch);
+  }
+}
+
 /* Micro-motion (MarsUI soft-surface language): fill/border crossfade on
    hover, glow fade-in on focus and invalid — color/shadow only, no layout.
    Gated exactly like ki-checkbox so the reduced-motion harness stays

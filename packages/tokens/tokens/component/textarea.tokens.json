@@ -29,6 +29,10 @@
         "$value": "{ki.typography.size.body-1}",
         "$description": "dimension used by the textarea component for font size."
       },
+      "font-size-touch": {
+        "$value": "{ki.space.3xl}",
+        "$description": "dimension used by the textarea component for the text a person types under a coarse primary pointer: 16px, under which Safari on iOS zooms the page into the focused field (spec 048). The onmars type scale has no 16px step."
+      },
       "font-weight": {
         "$value": "{ki.typography.weight.body.normal}",
         "$description": "font weight used by the textarea component for font weight."

@@ -19,12 +19,12 @@
           "$description": "dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns)."
         },
         "font-size": {
-          "$value": "{ki.typography.size.caption-1}",
-          "$description": "dimension used by the button component for xs font size (MarsUI caption_1 10px)."
+          "$value": "{ki.typography.size.caption-2}",
+          "$description": "dimension used by the button component for xs font size: caption_2, 12px, the smallest size the library ships for informative text (spec 002 amendment A1, issue #321). The Figma Button master draws caption_1, 10px."
         },
         "line-height": {
-          "$value": "{ki.typography.line-height.caption-1}",
-          "$description": "dimension used by the button component for xs line height (MarsUI caption_1 16px)."
+          "$value": "{ki.typography.line-height.caption-2}",
+          "$description": "dimension used by the button component for xs line height (caption_2 16px, the same height as caption_1)."
         },
         "icon-size": {
           "$value": "{ki.space.2xl}",

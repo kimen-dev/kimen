@@ -142,6 +142,17 @@
   color: var(--_ki-input-placeholder-fg);
 }
 
+/* Spec 048: under a coarse primary pointer the text a person types is at
+   least 16px, the size under which Safari on iOS zooms the page into the
+   focused field and leaves it zoomed. Only the native control (and so its
+   placeholder): the label, the help and error lines, the adornments and the
+   field height keep their size. */
+@media (pointer: coarse) {
+  [part="input"] {
+    font-size: var(--ki-input-font-size-touch);
+  }
+}
+
 /* Adornments own the field's metrics, never the host page's: text affixes
    render at the cell type scale (13/24) in muted label emphasis — the state
    var keeps them on the disabled ladder automatically (harness audit,
