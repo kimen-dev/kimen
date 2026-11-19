@@ -22,6 +22,7 @@ import {
   fieldValidationMessage,
 } from '../../utils/field-message';
 import { LabelHint } from '../../utils/label-hint';
+import { extendTypeahead, typeaheadIndex } from '../../utils/typeahead';
 import {
   normalizeBooleanPresence,
   optionLabelText,
@@ -31,15 +32,7 @@ import {
   selectFormValue,
   selectValueMissing,
 } from './ki-select.form';
-import {
-  firstEnabled,
-  keyIntent,
-  lastEnabled,
-  moveHighlight,
-  openHighlight,
-  TYPEAHEAD_RESET_MS,
-  typeaheadIndex,
-} from './ki-select.keyboard';
+import { keyIntent, moveHighlight, openHighlight } from './ki-select.keyboard';
 
 export type KiSelectSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -215,8 +208,6 @@ export class KiSelect {
   // True while `value` is written to project the selection, so the watch does
   // not take the projection for a new request and drop the pending one.
   private projecting = false;
-  // Typeahead (APG select-only): the string being typed and when its last
-  // character arrived; a pause longer than TYPEAHEAD_RESET_MS starts a new one.
   private typed = '';
   private typedAt = 0;
 
@@ -439,26 +430,28 @@ export class KiSelect {
       event.preventDefault();
     }
 
-    if (intent === 'open-selected') {
-      this.openWithHighlight(openHighlight(this.roster, this.selectedIndex));
-    } else if (intent === 'open-first') {
-      this.openWithHighlight(firstEnabled(this.roster));
-    } else if (intent === 'open-last') {
-      this.openWithHighlight(lastEnabled(this.roster));
-    } else if (intent === 'next') {
-      this.highlight(moveHighlight(this.roster, this.highlightedIndex, 'next'));
-    } else if (intent === 'previous') {
-      this.highlight(moveHighlight(this.roster, this.highlightedIndex, 'previous'));
-    } else if (intent === 'first') {
-      this.highlight(firstEnabled(this.roster));
-    } else if (intent === 'last') {
-      this.highlight(lastEnabled(this.roster));
-    } else if (intent === 'commit') {
-      this.commit(this.highlightedIndex);
-    } else if (intent === 'type') {
+    if (intent === 'type') {
       this.typeahead(event.key);
-    } else {
+      return;
+    }
+    if (intent === 'close' || intent === 'tab') {
       this.close();
+      return;
+    }
+    if (!this.open && intent !== 'first' && intent !== 'last') {
+      this.handleTriggerClick();
+      return;
+    }
+    if (intent === 'activate') {
+      this.commit(this.highlightedIndex);
+      return;
+    }
+
+    const index = moveHighlight(this.roster, this.highlightedIndex, intent);
+    if (this.open) {
+      this.highlight(index);
+    } else {
+      this.openWithHighlight(index);
     }
   };
 
@@ -604,7 +597,7 @@ export class KiSelect {
 
   private typeahead(character: string): void {
     const now = performance.now();
-    this.typed = now - this.typedAt > TYPEAHEAD_RESET_MS ? character : this.typed + character;
+    this.typed = extendTypeahead(this.typed, character, now - this.typedAt);
     this.typedAt = now;
 
     // Closed, the search starts from the selection the popup would open on.

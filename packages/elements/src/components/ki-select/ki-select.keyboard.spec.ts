@@ -1,12 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import {
-  firstEnabled,
-  keyIntent,
-  lastEnabled,
-  moveHighlight,
-  openHighlight,
-  typeaheadIndex,
-} from './ki-select.keyboard';
+import { typeaheadIndex } from '../../utils/typeahead';
+import { firstEnabled, keyIntent, moveHighlight, openHighlight } from './ki-select.keyboard';
 
 // @spec:005-ki-select
 describe('ki-select keyboard helpers', () => {
@@ -19,7 +13,8 @@ describe('ki-select keyboard helpers', () => {
     ];
 
     expect(firstEnabled(options)).toBe(1);
-    expect(lastEnabled(options)).toBe(3);
+    expect(moveHighlight(options, -1, 'last')).toBe(3);
+    expect(moveHighlight(options, 3, 'first')).toBe(1);
     expect(openHighlight(options, 3)).toBe(3);
     expect(openHighlight(options, 0)).toBe(1);
     expect(moveHighlight(options, 1, 'next')).toBe(3);
@@ -29,19 +24,21 @@ describe('ki-select keyboard helpers', () => {
   });
 
   it('S7 S8 S9 S10 S21 S27 maps approved keys to intents and excludes the APG-optional ones', () => {
-    expect(keyIntent('ArrowDown', false)).toBe('open-selected');
-    expect(keyIntent('Home', false)).toBe('open-first');
-    expect(keyIntent('End', false)).toBe('open-last');
+    expect(keyIntent('ArrowDown', false)).toBe('next');
+    expect(keyIntent('Home', false)).toBe('first');
+    expect(keyIntent('End', false)).toBe('last');
     expect(keyIntent('ArrowDown', true)).toBe('next');
     expect(keyIntent('ArrowUp', true)).toBe('previous');
-    expect(keyIntent('Enter', true)).toBe('commit');
-    expect(keyIntent(' ', true)).toBe('commit');
+    expect(keyIntent('Enter', true)).toBe('activate');
+    expect(keyIntent(' ', true)).toBe('activate');
     expect(keyIntent('Escape', true)).toBe('close');
     expect(keyIntent('Tab', true)).toBe('tab');
     expect(keyIntent('f', true)).toBe('type');
     expect(keyIntent('F', false)).toBe('type');
     expect(keyIntent('7', true)).toBe('type');
-    expect(keyIntent(' ', false)).toBe('open-selected');
+    expect(keyIntent(' ', false)).toBe('activate');
+    expect(keyIntent('Tab', false)).toBeNull();
+    expect(keyIntent('Escape', false)).toBeNull();
     expect(keyIntent('PageDown', true)).toBeNull();
     expect(keyIntent('PageUp', false)).toBeNull();
     expect(keyIntent('Shift', true)).toBeNull();
