@@ -880,14 +880,15 @@ describe('ki-select in a real browser', () => {
     trigger(el).click();
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
-    // Dropmenu panel: radius 20px (Radius/big_component/radius_sm), content
-    // inset 12px (Space/xl), White/80 glass + BACKGROUND_BLUR Blur/48 (24px),
-    // Elevation/e3.
+    // Dropmenu panel (12127:30113): radius 16px (Radius/big-component/xs),
+    // Body padding 8px (Space/md), White/80 glass + BACKGROUND_BLUR Blur/48
+    // (24px), Elevation/e3.
     const listbox = el.shadowRoot?.querySelector('[part="listbox"]');
     expect(listbox).toBeInstanceOf(HTMLElement);
     const listboxCs = listbox ? getComputedStyle(listbox) : null;
-    expect(listboxCs?.borderTopLeftRadius).toBe('20px');
-    expect(listboxCs?.paddingBlockStart).toBe('12px');
+    expect(listboxCs?.borderTopLeftRadius).toBe('16px');
+    expect(listboxCs?.paddingBlockStart).toBe('8px');
+    expect(listboxCs?.paddingInlineStart).toBe('8px');
     expect(listboxCs?.backdropFilter).toBe('blur(24px)');
     expect(listboxCs?.backgroundColor).toBe('rgba(255, 255, 255, 0.8)');
     expect(listboxCs?.boxShadow).not.toBe('none');

@@ -115,8 +115,8 @@ None.
 - `--ki-button-ghost-success-rest-bg`: color used by the button component for ghost success rest background.
 - `--ki-button-ghost-success-rest-border`: color used by the button component for ghost success rest border.
 - `--ki-button-ghost-success-rest-fg`: color used by the button component for ghost success rest foreground.
-- `--ki-button-lg-radius`: dimension used by the button component for lg radius.
-- `--ki-button-md-radius`: dimension used by the button component for md radius.
+- `--ki-button-lg-radius`: dimension used by the button component for lg radius (Button master 8003:300 binds Radius/small-component/lg, the scale a radius mode reassigns).
+- `--ki-button-md-radius`: dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns).
 - `--ki-button-primary-active-overlay`: Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first.
 - `--ki-button-primary-danger-hover-bg`: color used by the button component for primary danger hover background (MarsUI: rest fill; hover lightening comes from the hover overlay).
 - `--ki-button-primary-danger-hover-border`: color used by the button component for primary danger hover border (MarsUI bevel top/inline edge).
@@ -195,7 +195,7 @@ None.
 - `--ki-button-secondary-success-rest-bg`: color used by the button component for secondary success rest background.
 - `--ki-button-secondary-success-rest-border`: color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait).
 - `--ki-button-secondary-success-rest-fg`: color used by the button component for secondary success rest foreground.
-- `--ki-button-sm-radius`: dimension used by the button component for sm radius.
+- `--ki-button-sm-radius`: dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns).
 - `--ki-button-tertiary-danger-hover-bg`: color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
 - `--ki-button-tertiary-danger-hover-border`: color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-danger-hover-fg`: color used by the button component for tertiary danger hover foreground.
@@ -221,8 +221,8 @@ None.
 - `--ki-button-tertiary-success-rest-bg`: color used by the button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
-- `--ki-button-xl-radius`: dimension used by the button component for xl radius.
-- `--ki-button-xs-radius`: dimension used by the button component for xs radius.
+- `--ki-button-xl-radius`: dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns).
+- `--ki-button-xs-radius`: dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns).
 - `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
 - `--ki-density-target-min`: The smallest pointer target any density may produce (WCAG 2.5.8 AA, 24 x 24 CSS px). Every scaled control floors its size at it: max(target-min, size + control-offset).
 - `--ki-icon-button-lg-icon-size`: dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px).

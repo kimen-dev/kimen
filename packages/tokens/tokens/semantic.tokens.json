@@ -337,7 +337,7 @@
       },
       "low-em": {
         "$value": "{ki.color.brand.low-em}",
-        "$description": "semantic color for text low em."
+        "$description": "semantic color for text low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
       },
       "base-em": {
         "$value": "{ki.color.brand.base-em}",
@@ -417,7 +417,7 @@
       },
       "primary-low-em": {
         "$value": "{ki.color.brand.300}",
-        "$description": "semantic color for text primary low em."
+        "$description": "semantic color for text primary low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
       },
       "primary-base-em": {
         "$value": "{ki.color.brand.100}",
@@ -429,11 +429,11 @@
       },
       "info-med-em": {
         "$value": "{ki.color.info.500}",
-        "$description": "semantic color for text info med em."
+        "$description": "semantic color for text info med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
       },
       "info-low-em": {
         "$value": "{ki.color.info.300}",
-        "$description": "semantic color for text info low em."
+        "$description": "semantic color for text info low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
       },
       "info-base-em": {
         "$value": "{ki.color.info.100}",
@@ -445,11 +445,11 @@
       },
       "success-med-em": {
         "$value": "{ki.color.success.500}",
-        "$description": "semantic color for text success med em."
+        "$description": "semantic color for text success med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
       },
       "success-low-em": {
         "$value": "{ki.color.success.300}",
-        "$description": "semantic color for text success low em."
+        "$description": "semantic color for text success low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
       },
       "success-base-em": {
         "$value": "{ki.color.success.100}",
@@ -461,11 +461,11 @@
       },
       "warning-med-em": {
         "$value": "{ki.color.warning.500}",
-        "$description": "semantic color for text warning med em."
+        "$description": "semantic color for text warning med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
       },
       "warning-low-em": {
         "$value": "{ki.color.warning.300}",
-        "$description": "semantic color for text warning low em."
+        "$description": "semantic color for text warning low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
       },
       "warning-base-em": {
         "$value": "{ki.color.warning.100}",
@@ -477,11 +477,11 @@
       },
       "danger-med-em": {
         "$value": "{ki.color.danger.500}",
-        "$description": "semantic color for text danger med em."
+        "$description": "semantic color for text danger med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
       },
       "danger-low-em": {
         "$value": "{ki.color.danger.300}",
-        "$description": "semantic color for text danger low em."
+        "$description": "semantic color for text danger low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone."
       },
       "danger-base-em": {
         "$value": "{ki.color.danger.100}",
@@ -504,8 +504,8 @@
         "$description": "Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted)."
       },
       "danger": {
-        "$value": "{ki.text.danger-med-em}",
-        "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.text.danger-med-em."
+        "$value": "{ki.text.danger-high-em}",
+        "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.text.danger-high-em, the danger ink that reads as text (4.9:1 or more on s0-s2). danger-med-em is under 4.5:1 on the light surfaces."
       },
       "primary-on-danger": {
         "$value": "{ki.color.white.100}",

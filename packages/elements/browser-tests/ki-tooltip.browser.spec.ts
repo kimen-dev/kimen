@@ -162,6 +162,19 @@ async function hoverTrigger(host: KiTooltipElement, trigger: HTMLButtonElement):
   await settleTooltip(host);
 }
 
+/** The arrow the bubble draws toward its trigger: its only element. */
+function arrowOf(host: KiTooltipElement): HTMLElement {
+  const arrow = requireTooltip(host).firstElementChild;
+  if (!(arrow instanceof HTMLElement)) {
+    throw new Error('ki-tooltip drew no arrow');
+  }
+  return arrow;
+}
+
+function centre(rect: DOMRect): { x: number; y: number } {
+  return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+}
+
 describe('ki-tooltip pointer path in a real browser', () => {
   it('S1 hovering the Send trigger shows Send immediately', async () => {
     const { host, trigger } = await mount();
@@ -593,6 +606,62 @@ describe('ki-tooltip pointer path in a real browser', () => {
     await expect.poll(() => isTooltipShown(host)).toBe(true);
     await userEvent.unhover(trigger);
     await expect.poll(() => isTooltipShown(host)).toBe(false);
+  });
+
+  // Tooltip master (12089:7621): every direction draws a pointer toward the
+  // trigger, 16px across and 8px deep. Drawn as a square turned 45 degrees and
+  // centred on the bubble edge, so its box is 16x16 and its centre on that edge.
+  it.each(placements)(
+    'S1 S11 a %s tooltip points its arrow at the centre of the trigger',
+    async (placement) => {
+      const { host, trigger } = await mount({
+        label: 'Sends now',
+        placement,
+        style: { margin: '120px 140px' },
+      });
+      trigger.focus();
+      await settleTooltip(host);
+      const bubble = requireTooltip(host).getBoundingClientRect();
+      const arrow = arrowOf(host).getBoundingClientRect();
+      const target = centre(trigger.getBoundingClientRect());
+      const tip = centre(arrow);
+
+      expect(arrow.width).toBeCloseTo(16, 0);
+      expect(arrow.height).toBeCloseTo(16, 0);
+      if (placement === 'top' || placement === 'bottom') {
+        expect(tip.x).toBeCloseTo(target.x, 0);
+        expect(tip.y).toBeCloseTo(placement === 'top' ? bubble.bottom : bubble.top, 0);
+      } else {
+        expect(tip.y).toBeCloseTo(target.y, 0);
+        expect(tip.x).toBeCloseTo(placement === 'start' ? bubble.right : bubble.left, 0);
+      }
+    },
+  );
+
+  it('S14 the arrow keeps pointing at the trigger when the bubble is pulled inside the viewport', async () => {
+    const { host, trigger } = await mount({
+      label: 'Sends the message to every recipient at once',
+      style: { marginBlockStart: '120px' },
+    });
+    trigger.focus();
+    await settleTooltip(host);
+    const bubble = requireTooltip(host).getBoundingClientRect();
+    const tip = centre(arrowOf(host).getBoundingClientRect());
+
+    // The bubble was shifted off-centre to stay on screen ...
+    expect(centre(bubble).x).toBeGreaterThan(centre(trigger.getBoundingClientRect()).x + 8);
+    // ... and the arrow did not move with it.
+    expect(tip.x).toBeCloseTo(centre(trigger.getBoundingClientRect()).x, 0);
+  });
+
+  it('S9 material3 draws no arrow: Material 3 plain tooltips have none', async () => {
+    ensureMaterial3Tokens();
+    document.documentElement.setAttribute('data-ki-theme', 'material3');
+    const { host, trigger } = await mount({ style: { margin: '120px' } });
+    trigger.focus();
+    await settleTooltip(host);
+
+    expect(arrowOf(host).getBoundingClientRect().width).toBe(0);
   });
 
   it('S9 preserves and restores a consumer-authored trigger aria-description', async () => {

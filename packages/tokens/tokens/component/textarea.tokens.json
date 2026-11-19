@@ -6,8 +6,8 @@
         "$description": "dimension used by the textarea component for padding inline (MarsUI 96px md textarea: 12px ink inset)."
       },
       "padding-block": {
-        "$value": "{ki.space.xl}",
-        "$description": "dimension used by the textarea component for padding block (MarsUI 96px md textarea: 12px ink inset)."
+        "$value": "{ki.space.md}",
+        "$description": "dimension used by the textarea component for padding block (Input-cell textarea md 8018:176: Space/md 8px)."
       },
       "label-gap": {
         "$value": "{ki.space.xs}",

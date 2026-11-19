@@ -1032,6 +1032,51 @@ describe('ki-dialog in a real browser', () => {
     expect(getComputedStyle(paragraph).lineHeight).toBe('20px');
   });
 
+  // Modal master, compact (16414:19665): the surface has no padding of its
+  // own; Modal-header pads 16/20 over a hairline, the body 20/20, and
+  // Modal-actions 24/20 under a hairline, its actions 12px apart (CTAs).
+  it('S1 splits the surface into the Modal master header, body and actions sections', async () => {
+    cleanup();
+    const el = await mountDialog();
+    await openDialog(el);
+    const shadow = el.shadowRoot;
+    if (!shadow) {
+      throw new Error('ki-dialog did not attach a shadow root');
+    }
+    const padding = (element: Element): string[] => {
+      const style = getComputedStyle(element);
+      return [
+        style.paddingBlockStart,
+        style.paddingBlockEnd,
+        style.paddingInlineStart,
+        style.paddingInlineEnd,
+      ];
+    };
+    const heading = requireEl(shadow, '[part="heading"]');
+    const body = bodyPart(el);
+    const footer = requireEl(shadow, '[part="footer"]');
+
+    expect(getComputedStyle(internalDialog(el)).paddingBlockStart).toBe('0px');
+    expect(padding(heading)).toEqual(['16px', '16px', '20px', '20px']);
+    expect(padding(body)).toEqual(['20px', '20px', '20px', '20px']);
+    expect(padding(footer)).toEqual(['24px', '24px', '20px', '20px']);
+
+    // Hairlines: below the header, above the actions, and nowhere else.
+    expect(getComputedStyle(heading).borderBlockEndWidth).toBe('1px');
+    expect(getComputedStyle(heading).borderBlockEndStyle).toBe('solid');
+    expect(getComputedStyle(footer).borderBlockStartWidth).toBe('1px');
+    expect(getComputedStyle(footer).borderBlockStartStyle).toBe('solid');
+    expect(getComputedStyle(body).borderBlockStartWidth).toBe('0px');
+
+    // The sections touch: the paddings alone space them.
+    expect(heading.getBoundingClientRect().bottom).toBeCloseTo(body.getBoundingClientRect().top, 0);
+    expect(body.getBoundingClientRect().bottom).toBeCloseTo(footer.getBoundingClientRect().top, 0);
+    const cancel = footerButton(el, 'Cancel').getBoundingClientRect();
+    const destroy = footerButton(el, 'Delete').getBoundingClientRect();
+    expect(destroy.left - cancel.right).toBeCloseTo(12, 0);
+    await el.close();
+  });
+
   it('S13 dialog actions follow the right-to-left writing direction', async () => {
     cleanup();
     document.documentElement.setAttribute('dir', 'rtl');

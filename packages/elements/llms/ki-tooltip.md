@@ -71,6 +71,8 @@ None.
 - `--ki-motion-duration-instant`: Zero-duration step: transitions that must complete immediately (reduced-motion fallbacks, instant handoffs).
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 - `--ki-motion-easing-standard-accelerate`: Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in).
+- `--ki-tooltip-arrow-radius`: dimension used by the tooltip component for the rounding of the arrow tip (Tooltip master pointer: 1.5px, nearest radius step).
+- `--ki-tooltip-arrow-size`: dimension used by the tooltip component for the depth of the arrow that points at the trigger; it is twice as wide (Tooltip master 12089:7621 pointer: 16x8). Zero removes it. Equal to offset, so the tip meets the trigger.
 - `--ki-tooltip-backdrop-blur`: backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override).
 - `--ki-tooltip-bg`: color used by the tooltip component for background (flat fallback of the MarsUI glass card gradient; the v1 inverse bubble predates the master — specs/013 correction block. material3 keeps the inverse bubble via its override).
 - `--ki-tooltip-bg-end`: color used by the tooltip component for the glass gradient end (MarsUI Surface/special/light-s0_dark-s2).

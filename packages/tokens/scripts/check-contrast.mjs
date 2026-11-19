@@ -36,6 +36,10 @@ const CONTRAST_PAIRS = [
   // the danger ink against s0 alone.
   { text: '--ki-text-med-em', surface: '--ki-surface-s1' },
   { text: '--ki-text-danger-high-em', surface: '--ki-surface-s1' },
+  // The deprecated `--ki-text-danger` reads as "the error colour": whoever
+  // still uses it sets text in it, so it must read as text.
+  { text: '--ki-text-danger', surface: '--ki-surface-s0' },
+  { text: '--ki-text-danger', surface: '--ki-surface-s1' },
   { text: '--ki-text-primary-on-primary', surface: '--ki-surface-primary-med-em' },
 ];
 

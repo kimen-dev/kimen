@@ -77,8 +77,7 @@
   background: linear-gradient(180deg, var(--_ki-tooltip-bg-start), var(--_ki-tooltip-bg-end));
   backdrop-filter: blur(var(--_ki-tooltip-backdrop-blur));
 
-  /* Bevel hairline: Outline/secondary_button_top on all four sides while no
-   * caret ships (suppress the caret side per placement once it exists). */
+  /* Bevel hairline: Outline/secondary_button_top on all four sides. */
   border: var(--ki-tooltip-border-width) solid var(--ki-tooltip-border-color);
   box-shadow: var(--_ki-tooltip-surface-shadow);
   color: var(--_ki-tooltip-fg);
@@ -134,6 +133,79 @@
 
 .tooltip.placement-end {
   inset-inline-start: calc(anchor(self-end) + var(--_ki-tooltip-offset));
+}
+
+/* The arrow of the Tooltip master (12089:7621): 16px across and 8px deep in
+ * every direction, pointing at the trigger. A square of side depth * sqrt(2)
+ * turned 45 degrees and centred on the bubble edge that faces the trigger,
+ * clipped to the half outside the bubble so it never doubles the bubble's
+ * translucent fill. Along the edge it sits at the trigger's centre: when the
+ * bubble is shifted to stay on screen, the arrow moves back by that shift.
+ * A zero size removes it. The rotation and the clip are physical, so the
+ * inline placements swap their halves under right-to-left. */
+.arrow {
+  --_ki-tooltip-arrow-side: calc(var(--ki-tooltip-arrow-size) * 1.4142);
+  --_ki-tooltip-arrow-out: calc(
+    var(--_ki-tooltip-arrow-side) /
+    -2 -
+    var(--ki-tooltip-border-width)
+  );
+  --_ki-tooltip-arrow-along: calc(50% - var(--_ki-tooltip-arrow-side) / 2);
+
+  position: absolute;
+  box-sizing: border-box;
+  inline-size: var(--_ki-tooltip-arrow-side);
+  block-size: var(--_ki-tooltip-arrow-side);
+  border-radius: var(--ki-tooltip-arrow-radius);
+  pointer-events: none;
+  rotate: 45deg;
+}
+
+.placement-top > .arrow,
+.placement-bottom > .arrow {
+  inset-inline-start: calc(
+    var(--_ki-tooltip-arrow-along) -
+    var(--_ki-tooltip-cross-shift) *
+    var(--_ki-tooltip-inline-sign)
+  );
+}
+
+.placement-start > .arrow,
+.placement-end > .arrow {
+  inset-block-start: calc(var(--_ki-tooltip-arrow-along) - var(--_ki-tooltip-cross-shift));
+  background: color-mix(in srgb, var(--_ki-tooltip-bg-start), var(--_ki-tooltip-bg-end));
+}
+
+/* Above the trigger: the arrow hangs from the bottom edge, in its colour. */
+.placement-top > .arrow {
+  inset-block-end: var(--_ki-tooltip-arrow-out);
+  background: var(--_ki-tooltip-bg-end);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.placement-bottom > .arrow {
+  inset-block-start: var(--_ki-tooltip-arrow-out);
+  background: var(--_ki-tooltip-bg-start);
+  clip-path: polygon(0 100%, 0 0, 100% 0);
+}
+
+/* Before the trigger: the arrow leaves the end edge; after it, the start edge. */
+.placement-start > .arrow {
+  inset-inline-end: var(--_ki-tooltip-arrow-out);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+.placement-end > .arrow {
+  inset-inline-start: var(--_ki-tooltip-arrow-out);
+  clip-path: polygon(100% 100%, 0 100%, 0 0);
+}
+
+:host(:dir(rtl)) .placement-start > .arrow {
+  clip-path: polygon(100% 100%, 0 100%, 0 0);
+}
+
+:host(:dir(rtl)) .placement-end > .arrow {
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -198,5 +270,10 @@
   .tooltip {
     background: Canvas;
     border: thin solid CanvasText;
+  }
+
+  /* On Canvas, the arrow is drawn in the text colour or it is not drawn. */
+  .tooltip > .arrow {
+    background: CanvasText;
   }
 }

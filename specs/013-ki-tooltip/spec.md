@@ -475,6 +475,12 @@ Feature: Tooltip
   its eight directional variants. The decision stands as written until
   re-derived against the master by the founder; the additive-MINOR path is
   the mechanism that will carry the arrow if it is adopted.
+  **Re-derived 2026-11-19 (founder decision, Figma fidelity pass):** the
+  onmars theme draws the master's pointer, 16×8 toward the trigger in every
+  placement, from `--ki-tooltip-arrow-size` and `--ki-tooltip-arrow-radius`
+  inside the existing `tooltip` part; no `arrow` part is added. material3
+  sets the size to zero and keeps the Material 3 plain tooltip without one.
+  It is appearance only: no scenario changes.
 - Description association crosses a shadow boundary: the trigger lives in
   light DOM (default slot) while the tooltip content renders inside the
   component, `aria-describedby` idrefs cannot cross shadow roots, and the
