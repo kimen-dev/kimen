@@ -11,7 +11,7 @@ import React from 'react';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import type { Components } from '@kimen/elements/components';
 import { KiAlert as KiAlertElement, defineCustomElement as defineKiAlert } from '@kimen/elements/components/ki-alert.js';
-import type { KiAlertCustomEvent } from '@kimen/elements';
+import type { KiAlertCustomEvent } from '@kimen/elements/components';
 import type { StencilReactComponent, EventName } from '@stencil/react-output-target/runtime';
 
 export type KiAlertEvents = {

@@ -1,0 +1,11 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/<%= name %>" />
+
+# <%= name %>
+
+{/* TODO(spec): document intended use, examples, customization and accessibility. */}
+
+```html
+<<%= name %> label="Example"></<%= name %>>
+```

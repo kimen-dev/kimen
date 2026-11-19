@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-
+import { generatedGroups, generatedOutputs } from '../gates/check-generated-sync.mjs';
 import {
   assertMutationThresholds,
   classifyChangedFiles,
@@ -11,7 +11,6 @@ import {
   MUTATION_SCOPE_SCHEMA_VERSION,
   MUTATION_THRESHOLD,
 } from '../lib/mutation-policy.mjs';
-import { generatedGroups, generatedOutputs } from '../gates/check-generated-sync.mjs';
 
 // @spec:018-project-integrity-hardening
 
@@ -85,6 +84,7 @@ describe('mutation policy classification', () => {
     ['.cache/result.js', /generated or vendored/i],
     ['scripts/tests/example.mjs', /test, fixture and story/i],
     ['scripts/foo.spec.mjs', /test, fixture and story/i],
+    ['packages/elements/src/components/ki-button/gallery.ts', /test, fixture and story/i],
     [
       'packages/elements/src/components/ki-button/ki-button.stories.tsx',
       /test, fixture and story/i,

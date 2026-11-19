@@ -2,6 +2,13 @@
 import { readFileSync } from 'node:fs';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
+import { componentSidebarItems } from './component-docs.mjs';
+
+// The local factory plugin links the already-built elements through their
+// public package exports. It is a repository build-time dependency.
+const { componentRegistrationPlugin } = await import(
+  new URL('../../packages/elements/scripts/component-registration-plugin.mjs', import.meta.url).href
+);
 
 const preserveBuildServerDirAdapter = {
   name: 'kimen-docs-preserve-build-server-dir',
@@ -51,6 +58,7 @@ const analyticsHead =
 export default defineConfig({
   site: 'https://kimen.dev',
   base: '/docs',
+  vite: { plugins: [componentRegistrationPlugin({ usePackageExports: true })] },
   integrations: [
     preserveBuildServerDirAdapter,
     starlight({
@@ -87,7 +95,7 @@ export default defineConfig({
         },
         {
           label: 'Components',
-          items: [{ autogenerate: { directory: 'components' } }],
+          items: componentSidebarItems(),
         },
         {
           label: 'Design Tokens',

@@ -4,7 +4,7 @@
 // fallback for hosts without interactive surfaces. Plus the compatibility
 // matrix's exact versions (S9) and the static audit of the packaged document:
 // its size budget, its content policy (S21) and its reproducibility.
-import { spawnSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -27,34 +27,11 @@ import {
 
 const compat = readFileSync(join(process.cwd(), 'COMPAT.md'), 'utf8');
 
-/**
- * The document's declared size budget in bytes (Art. IV, spec "Bundle
- * budget"): the renderer, the validator, every catalog component definition
- * and the default token stylesheets, inline. Set about 5% above the measured
- * document. Raising a number is a deliberate, reviewed act — the budget exists
- * so growth is noticed, not absorbed.
- *
- * First set at 570 671 raw, 128 341 gzip, 106 036 brotli with 29 components.
- * Re-based for spec 045 (compact density), when the document measured
- * 577 458 raw, 135 256 gzip, 110 877 brotli: the token deprecation and field
- * help of specs 041/042 had brought it to 134 418 gzip, the preference modes
- * of 043/044 added 434 bytes and the density rules and per-component sizing
- * of 045 another 404, 256 over the old gzip line.
- * Raw re-based for issues #317-#321 (button loading, field label hint, touch
- * density, touch-size field text), when the document measured 608 693 raw,
- * 141 120 gzip, 115 435 brotli: 2 693 bytes over the old raw line, with gzip
- * and brotli still inside theirs, so only raw moves, to about 5% above.
- * Gzip re-based for issue #349 (composed shadows) on top of #345 and #347,
- * when CI measured 142 140 gzip (a local macOS build of the same document
- * measures 611 265 raw, 141 560 gzip, 115 734 brotli): 140 bytes over the old gzip line,
- * with raw and brotli still inside theirs, so only gzip moves, to about 5%
- * above the CI figure.
- * Re-based for issue #316 (size axes of nine components, spec 050: 193
- * tokens and their CSS) on top of #349, when the document measured 644 092
- * raw, 145 722 gzip, 118 102 brotli on macOS: over all three lines, so all
- * three move to about 5% above.
- */
-const SIZE_BUDGET = { brotli: 124_000, gzip: 152_500, raw: 674_000 } as const;
+// Art. IV: budget the complete document, including the default token CSS.
+const budgetScript = join(process.cwd(), '../../scripts/lib/bundle-size-budget.mjs');
+const { mcpApps: SIZE_BUDGET } = JSON.parse(
+  execFileSync(process.execPath, [budgetScript], { encoding: 'utf8' }),
+) as { mcpApps: Record<'raw' | 'gzip' | 'brotli', number> };
 
 /**
  * XML namespace names the DOM requires verbatim (`createElementNS`): they are

@@ -1,0 +1,9 @@
+{
+  "barePage": {
+    "keyboardPressed": true
+  },
+  "pointer": {
+    "hoverWitness": true
+  },
+  "catalog": true
+}

@@ -1,5 +1,6 @@
+// @spec:068-component-discovery
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import {
@@ -7,6 +8,7 @@ import {
   renderCompositeEntry,
 } from '../../packages/elements/scripts/run-size-limit.mjs';
 import { checkPackaging, createAttwPlan } from '../gates/check-packaging.mjs';
+import { deriveBundleSizeBudgets } from '../lib/bundle-size-budget.mjs';
 
 const components = ['ki-alpha', 'ki-beta', 'ki-gamma'].map((tag) => ({
   tag,
@@ -24,7 +26,7 @@ test('ATTW component entrypoints are derived and sorted from inventory', () => {
   assert.deepEqual(plan.loaderEntrypoints, ['./loader']);
 });
 
-test('packaging invokes publint once per publishable package and derives one ATTW component batch', async () => {
+test('S1: packaging invokes publint once per publishable package and checks every component in one ATTW batch', async () => {
   const calls = [];
   await checkPackaging({
     workspaceRoot,
@@ -34,13 +36,22 @@ test('packaging invokes publint once per publishable package and derives one ATT
   });
 
   assert.equal(calls.filter(({ args }) => args[1] === 'publint').length, 7);
-  const componentAttw = calls.find(
-    ({ args }) => args[1] === 'attw' && args.includes('./ki-tooltip'),
+  const componentAttw = calls.filter(
+    ({ args }) => args[1] === 'attw' && args.some((arg) => arg.startsWith('./ki-')),
   );
-  // 29 direct component subpaths after Fase N wave 1 adds ki-divider,
-  // ki-status, ki-icon-button and the ki-avatar + ki-avatar-group pair,
-  // and wave 2 adds ki-scroller, ki-indicator, ki-video and ki-qr.
-  assert.equal(componentAttw.args.filter((argument) => argument.startsWith('./ki-')).length, 29);
+  assert.equal(componentAttw.length, 1);
+  const expectedSubpaths = (
+    await readdir(`${workspaceRoot}/packages/elements/src/components`, {
+      withFileTypes: true,
+    })
+  )
+    .filter((entry) => entry.isDirectory())
+    .map(({ name }) => `./${name}`)
+    .sort();
+  assert.deepEqual(
+    componentAttw[0].args.filter((argument) => argument.startsWith('./ki-')),
+    expectedSubpaths,
+  );
 });
 
 // The elements build names every file its declarations import (see
@@ -59,13 +70,44 @@ test('packaging runs ATTW over every elements entrypoint with no rule exempted',
   const elementsAttw = calls.filter(
     ({ args }) => args[1] === 'attw' && args.includes('packages/elements'),
   );
-  assert.deepEqual(
-    elementsAttw.map(({ args }) => args[args.indexOf('--entrypoints') + 1]),
-    ['.', './loader', './ki-alert'],
-  );
+  assert.equal(elementsAttw.length, 3);
+  const entrypoints = elementsAttw.map(({ args }) => args.slice(args.indexOf('--entrypoints') + 1));
+  assert.deepEqual(entrypoints.slice(0, 2), [['.'], ['./loader']]);
+  assert.ok(entrypoints[2].length > 0 && entrypoints[2].every((path) => path.startsWith('./ki-')));
   for (const { args } of elementsAttw) {
     assert.equal(args.includes('--ignore-rules'), false, args.join(' '));
   }
+});
+
+test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
+  assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
+    mcpApps: { raw: 674_000, gzip: 152_500, brotli: 124_000 },
+    mcpServer: { raw: 2_543_000, gzip: 482_000, brotli: 364_000 },
+    tokenStylesheets: { onmars: 12_400, material3: 5_600, base: 250 },
+  });
+});
+
+test('S4: each metric receives only its explicitly declared marginal byte allowances', () => {
+  const first = {
+    tag: 'ki-alpha',
+    metadata: {
+      sizeBudget: {
+        mcpApps: { raw: 1200, gzip: 180, brotli: 165 },
+        mcpServer: { raw: 1300, gzip: 190, brotli: 175 },
+        tokenStylesheets: { onmars: 100, material3: 50 },
+      },
+    },
+  };
+  const second = {
+    tag: 'ki-beta',
+    metadata: { sizeBudget: { mcpApps: { raw: 1000 }, tokenStylesheets: { onmars: 70 } } },
+  };
+
+  assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
+    mcpApps: { raw: 676_200, gzip: 152_680, brotli: 124_165 },
+    mcpServer: { raw: 2_544_300, gzip: 482_190, brotli: 364_175 },
+    tokenStylesheets: { onmars: 12_570, material3: 5_650, base: 250 },
+  });
 });
 
 test('standalone packaging re-enters through the isolated cache environment', async () => {

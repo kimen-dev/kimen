@@ -1,0 +1,13 @@
+{
+  "barePage": {
+    "keyboardPressed": false
+  },
+  "pointer": {
+    "hoverWitness": false
+  },
+  "catalog": true,
+  "budgetGroup": {
+    "members": ["ki-radio-group", "ki-radio"]
+  },
+  "formBinding": "select"
+}

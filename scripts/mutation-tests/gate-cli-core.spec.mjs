@@ -33,16 +33,15 @@ import {
   selectInfrastructureTestFiles,
 } from '../run-infra-tests.mjs';
 
-const requiredGroups = Object.freeze([
-  { id: 'ki-avatar-group', members: ['ki-avatar-group', 'ki-avatar'] },
-  { id: 'ki-radio-group', members: ['ki-radio-group', 'ki-radio'] },
-  { id: 'ki-select', members: ['ki-select', 'ki-option'] },
-  { id: 'ki-tabs', members: ['ki-tabs', 'ki-tab', 'ki-tab-panel'] },
-]);
+const group = { id: 'ki-alert', members: ['ki-alert', 'ki-button'] };
 
 const inventory = Object.freeze([
-  { tag: 'ki-alert', publicSubpath: './ki-alert' },
-  { tag: 'ki-button', publicSubpath: './ki-button' },
+  {
+    tag: 'ki-alert',
+    publicSubpath: './ki-alert',
+    metadata: { budgetGroup: { members: group.members } },
+  },
+  { tag: 'ki-button', publicSubpath: './ki-button', metadata: {} },
 ]);
 
 const rootContract = Object.freeze({
@@ -58,7 +57,6 @@ function inventoryDependencies(overrides = {}) {
     validateExports: () => undefined,
     resolveSubpaths: () => ['./ki-alert', './ki-button'],
     validateRoot: () => rootContract,
-    readGroups: async () => requiredGroups,
     ...overrides,
   };
 }
@@ -75,7 +73,7 @@ async function put(root, path, contents = `${path}\n`) {
   await writeFile(target, contents, 'utf8');
 }
 
-it('checks source inventory, package exports, frozen root symbols, and exact composites', async () => {
+it('checks source inventory, package exports, frozen root symbols, and declared composites', async () => {
   const calls = [];
   const dependencies = inventoryDependencies({
     validateExports: (exports) => calls.push(['exports', exports]),
@@ -98,7 +96,7 @@ it('checks source inventory, package exports, frozen root symbols, and exact com
     inventory,
     directSubpaths: ['./ki-alert', './ki-button'],
     rootContract,
-    groups: requiredGroups,
+    groups: [group],
   });
   expect(calls).toEqual([
     ['exports', { '.': './dist/index.js' }],
@@ -107,13 +105,21 @@ it('checks source inventory, package exports, frozen root symbols, and exact com
   ]);
 });
 
-it('rejects any composite budget exception drift', async () => {
+it('rejects a composite budget membership outside the source inventory', async () => {
   await expect(
     checkComponentInventory({
       workspaceRoot: '/workspace',
-      ...inventoryDependencies({ readGroups: async () => requiredGroups.slice(0, 2) }),
+      ...inventoryDependencies({
+        discoverInventory: async () => [
+          {
+            ...inventory[0],
+            metadata: { budgetGroup: { members: ['ki-alert', 'ki-missing'] } },
+          },
+          inventory[1],
+        ],
+      }),
     }),
-  ).rejects.toThrowError('Composite budget exceptions must be exactly');
+  ).rejects.toThrowError('Budget group ki-alert references unknown component ki-missing');
 });
 
 it('rejects incomplete direct package subpaths', async () => {
@@ -152,7 +158,7 @@ it('writes the human component inventory summary', async () => {
 
   expect(result.inventory).toHaveLength(2);
   expect(output).toEqual([
-    'GATE component-inventory: PASS (2 components, 4 composite groups, 2 frozen root symbols)\n',
+    'GATE component-inventory: PASS (2 components, 1 composite groups, 2 frozen root symbols)\n',
   ]);
 });
 

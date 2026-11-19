@@ -1,10 +1,11 @@
 import { existsSync, globSync, readFileSync } from 'node:fs';
-import { basename, dirname, join } from 'node:path';
+import { basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { defineBrowserCommand, playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
+import { componentRegistrationPlugin } from './scripts/component-registration-plugin.mjs';
 import { measureThemeFonts } from './scripts/measure-theme-fonts.ts';
 
 // The explicit .ts extension keeps this config importable by plain Node type
@@ -36,14 +37,21 @@ const inputDeviceSpecs = [
   'browser-tests/touch-field-text.browser.spec.ts',
   'browser-tests/touch-size-field-text.browser.spec.ts',
 ];
-const visualSpecPattern = 'browser-tests/**/*.visual.*browser.spec.{ts,tsx}';
+const browserSpecPatterns = (suffix: string): string[] =>
+  ['browser-tests', 'src/components/ki-*'].map(
+    (directory) => `${directory}/**/${suffix}.browser.spec.{ts,tsx}`,
+  );
+const visualSpecPatterns = [
+  ...browserSpecPatterns('*.visual'),
+  ...browserSpecPatterns('*.visual.*'),
+];
 const visualExcludes =
   process.platform !== 'linux' && !process.env['CI'] && process.env['KIMEN_RUN_VISUALS'] !== '1'
-    ? [visualSpecPattern]
+    ? visualSpecPatterns
     : [];
 if (visualExcludes.length > 0) {
   const cwd = fileURLToPath(new URL('.', import.meta.url));
-  const count = globSync(visualSpecPattern, { cwd, withFileTypes: true }).filter((entry) =>
+  const count = globSync(visualSpecPatterns, { cwd, withFileTypes: true }).filter((entry) =>
     entry.isFile(),
   ).length;
   console.warn(
@@ -69,9 +77,13 @@ const provider = playwright(
   browser === 'chromium' ? { launchOptions: { channel: 'chromium' } } : undefined,
 );
 
+const browserTestsDirectory = fileURLToPath(new URL('./browser-tests', import.meta.url));
+const visualBaselinePath = (spec: string, name: string, engine: string, platform: string): string =>
+  join(browserTestsDirectory, '__screenshots__', spec, `${name}-${engine}-${platform}.png`);
+
 export default defineConfig({
   ...(cacheDir ? { cacheDir } : {}),
-  plugins: [distSourceCoveragePlugin],
+  plugins: [distSourceCoveragePlugin, componentRegistrationPlugin()],
   optimizeDeps: {
     // dist/components imports @stencil/core/internal/client at runtime.
     // Pre-bundling it up front prevents the mid-run dependency discovery
@@ -82,7 +94,7 @@ export default defineConfig({
   },
   test: {
     name: `elements-browser-${browser}`,
-    include: ['browser-tests/**/*.browser.spec.{ts,tsx}'],
+    include: browserSpecPatterns('*'),
     // V8 coverage collection needs CDP, so it is only available on the
     // chromium engine (the ordinary local/PR engine, Art. III); the
     // firefox/webkit prerelease matrix runs never pass --coverage. Browser
@@ -95,6 +107,13 @@ export default defineConfig({
       headless: true,
       provider,
       screenshotFailures: false,
+      expect: {
+        toMatchScreenshot: {
+          // Keep established Linux artifact paths when the spec lives beside its component.
+          resolveScreenshotPath: ({ arg, browserName, platform, testFileName }) =>
+            visualBaselinePath(testFileName, arg, browserName, platform),
+        },
+      },
       commands: {
         measureThemeFonts: defineBrowserCommand(
           async ({ page }, theme: 'onmars' | 'material3', withFonts: boolean) =>
@@ -325,13 +344,12 @@ export default defineConfig({
           if (typeof screenshotName !== 'string' || testPath === undefined) {
             throw new TypeError('visualGateStatus requires a screenshot name and a test path');
           }
-          const testDirectory = dirname(testPath);
-          const armedMarker = join(testDirectory, 'visual/ARMED');
-          const baseline = join(
-            testDirectory,
-            '__screenshots__',
+          const armedMarker = join(browserTestsDirectory, 'visual/ARMED');
+          const baseline = visualBaselinePath(
             basename(testPath),
-            `${screenshotName}-${project.config.browser.name}-${process.platform}.png`,
+            screenshotName,
+            project.config.browser.name,
+            process.platform,
           );
           return {
             armed: readFileSync(armedMarker, 'utf8').trim() === 'true',
@@ -370,8 +388,8 @@ export default defineConfig({
           browser,
           name: `${browser}-light`,
           exclude: [
-            'browser-tests/**/*.dark.browser.spec.{ts,tsx}',
-            'browser-tests/**/*.motion.browser.spec.{ts,tsx}',
+            ...browserSpecPatterns('*.dark'),
+            ...browserSpecPatterns('*.motion'),
             ...inputDeviceSpecs,
             ...visualExcludes,
           ],
@@ -384,14 +402,14 @@ export default defineConfig({
         {
           browser,
           name: `${browser}-dark`,
-          include: ['browser-tests/**/*.dark.browser.spec.{ts,tsx}'],
+          include: browserSpecPatterns('*.dark'),
           ...(visualExcludes.length > 0 ? { exclude: visualExcludes } : {}),
           fileParallelism: false,
         },
         {
           browser,
           name: `${browser}-reduced-motion`,
-          include: ['browser-tests/**/*.motion.browser.spec.{ts,tsx}'],
+          include: browserSpecPatterns('*.motion'),
           ...(visualExcludes.length > 0 ? { exclude: visualExcludes } : {}),
           fileParallelism: false,
         },

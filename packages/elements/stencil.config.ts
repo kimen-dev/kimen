@@ -1,18 +1,14 @@
+import { resolve } from 'node:path';
+import { angularOutputTarget, type ValueAccessorConfig } from '@stencil/angular-output-target';
 import type { Config } from '@stencil/core';
-import { angularOutputTarget } from '@stencil/angular-output-target';
 import { reactOutputTarget } from '@stencil/react-output-target';
 import { vueOutputTarget } from '@stencil/vue-output-target';
 
-// The form components declare NO custom events by design: they re-dispatch
-// the native `input`/`change` events composed across the shadow boundary and
-// sync their mutable value/checked props (spec 034 research D3). The
-// framework form idioms therefore bind those native events — Vue-native
-// semantics: text entry on `input`, checked/select on `change`.
-const formValueBindings = [
-  { elements: ['ki-input', 'ki-textarea'], event: 'input', targetAttr: 'value' },
-  { elements: ['ki-checkbox', 'ki-switch'], event: 'change', targetAttr: 'checked' },
-  { elements: ['ki-select', 'ki-radio-group'], event: 'change', targetAttr: 'value' },
-];
+import { readComponentFormBindings } from './scripts/component-metadata.mjs';
+
+// Form controls re-dispatch native input/change events across the shadow
+// boundary. The component manifest selects the wrapper binding for its prop.
+const formValueBindings = readComponentFormBindings(resolve(__dirname, 'src/components'));
 
 // Kimen elements build (constitution Art. I, IV).
 // docs-json output feeds the Art. I pipeline: docs-json → CEM → catalog → llms.txt.
@@ -21,6 +17,10 @@ const formValueBindings = [
 // SSR/DSD bet stays deferred).
 export const config: Config = {
   namespace: 'kimen',
+  // Component-local browser specs consume dist, which does not exist on a
+  // cold build. The regular TypeScript gate still checks those specs and the
+  // gallery fixtures after the build has produced the public types.
+  tsconfig: 'tsconfig.stencil.json',
   outputTargets: [
     { type: 'dist', esmLoaderPath: '../loader' },
     { type: 'dist-custom-elements', customElementsExportBehavior: 'single-export-module' },
@@ -37,7 +37,11 @@ export const config: Config = {
       includeImportCustomElements: true,
       customElementsDir: 'components',
       esModules: true,
-      componentModels: formValueBindings,
+      componentModels: formValueBindings.map(({ tags, event, prop }) => ({
+        elements: tags,
+        event,
+        targetAttr: prop,
+      })),
     }),
     angularOutputTarget({
       componentCorePackage: '@kimen/elements',
@@ -45,26 +49,12 @@ export const config: Config = {
       directivesProxyFile: '../angular/src/directives/proxies.ts',
       directivesArrayFile: '../angular/src/directives/index.ts',
       customElementsDir: 'components',
-      valueAccessorConfigs: [
-        {
-          elementSelectors: ['ki-input', 'ki-textarea'],
-          event: 'input',
-          targetAttr: 'value',
-          type: 'text',
-        },
-        {
-          elementSelectors: ['ki-checkbox', 'ki-switch'],
-          event: 'change',
-          targetAttr: 'checked',
-          type: 'boolean',
-        },
-        {
-          elementSelectors: ['ki-select', 'ki-radio-group'],
-          event: 'change',
-          targetAttr: 'value',
-          type: 'select',
-        },
-      ],
+      valueAccessorConfigs: formValueBindings.map(({ tags, event, prop, type }) => ({
+        elementSelectors: tags,
+        event,
+        targetAttr: prop,
+        type: type as ValueAccessorConfig['type'],
+      })),
     }),
   ],
   sourceMap: true,

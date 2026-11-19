@@ -43,6 +43,13 @@
       "@kimen/elements"
     ],
     "targets": {
+      "test": {
+        "inputs": [
+          "default",
+          "^default",
+          "componentBudget"
+        ]
+      },
       "build": {
         "dependsOn": [
           "^build"

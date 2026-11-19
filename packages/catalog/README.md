@@ -1,17 +1,18 @@
 # @kimen/catalog
 
 The neutral runtime catalog of Kimen's GenUI layer (constitution Art. VIII):
-the machine-readable schema of what agents may emit — every published
-`ki-*` element with typed props, slots, events and when-to-use guidance —
+the machine-readable schema of what agents may emit. It includes opted-in
+`ki-*` elements with typed props, slots, events and when-to-use guidance,
 plus the validation entry point that accepts or rejects agent-emitted UI
 specs at the GenUI boundary. The catalog and the `<ki-*>` components are the
 durable assets; protocol adapters (A2UI, MCP Apps) are deliberately
 disposable and live in their own packages.
 
-The catalog artifact (`src/generated/catalog.ts`) is generated from the
-committed Custom Elements Manifest of `@kimen/elements` (Art. I) — never
-hand-maintained — and the `catalog-sync` gate fails any drift between the
-committed artifact and a fresh regeneration. It declares its own schema
+The catalog artifact (`src/generated/catalog.ts`) derives component contracts
+from the committed Custom Elements Manifest of `@kimen/elements` (Art. I).
+A component's `component.json` must declare `"catalog": true` to expose its
+contract to agents (Art. VIII). The `catalog-sync` gate fails any drift
+between the committed artifact and a fresh regeneration. It declares its own schema
 version (`catalogSchemaVersion`) and the elements version it derives from.
 
 ## When to use

@@ -1,7 +1,6 @@
 // @spec:027-runtime-catalog
 // Catalog derivation and neutrality contract. The generated artifact is the
-// subject; the committed Custom Elements Manifest is read as fixture DATA
-// (fs, never an import — scope:catalog cannot depend on scope:elements).
+// subject. The elements package's manifest and component opt-ins are fixtures.
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -37,21 +36,36 @@ const manifest = JSON.parse(
   readFileSync(join(packageRoot, '..', 'elements', 'generated', 'custom-elements.json'), 'utf8'),
 ) as { modules: { declarations?: ManifestDeclaration[] }[] };
 
+const componentsRoot = join(packageRoot, '..', 'elements', 'src', 'components');
+const optedInTags = readdirSync(componentsRoot, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map(({ name }) => name)
+  .filter((tag) => {
+    const metadata = JSON.parse(
+      readFileSync(join(componentsRoot, tag, 'component.json'), 'utf8'),
+    ) as { catalog?: boolean };
+    return metadata.catalog === true;
+  })
+  .sort();
+
 const manifestElements = manifest.modules
   .flatMap((module) => module.declarations ?? [])
   .filter(
     (declaration): declaration is ManifestDeclaration & { tagName: string } =>
-      declaration.customElement === true && typeof declaration.tagName === 'string',
+      declaration.customElement === true &&
+      typeof declaration.tagName === 'string' &&
+      optedInTags.includes(declaration.tagName),
   );
 
 describe('catalog derivation', () => {
-  it('S1 carries one entry per published custom element with tag, typed props, slots and events', () => {
+  it('S1 carries one entry per opted-in custom element with typed props, slots and events', () => {
     // The native primitives (spec 037) are not manifest elements.
     const catalogTags = Object.keys(catalogData.components)
       .filter((tag) => !NATIVE_PRIMITIVE_TAGS.includes(tag))
       .sort();
     const manifestTags = manifestElements.map((declaration) => declaration.tagName).sort();
-    expect(catalogTags).toEqual(manifestTags);
+    expect(manifestTags).toEqual(optedInTags);
+    expect(catalogTags).toEqual(optedInTags);
     for (const declaration of manifestElements) {
       const entry =
         catalogData.components[declaration.tagName as keyof typeof catalogData.components];

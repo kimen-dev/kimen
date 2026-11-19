@@ -30,7 +30,10 @@ export default defineConfig(async () => ({
           // screenshot galleries (.visual, .visual.dark), *.motion behavior
           // contracts, pointer-capability, flows, axe-settle and tokens-theming.
           // Adding those suites to mutation is a follow-up.
-          include: ['browser-tests/ki-+([a-z-]).browser.spec.ts'],
+          include: [
+            'browser-tests/ki-+([a-z-]).browser.spec.ts',
+            'src/components/ki-*/ki-+([a-z0-9-]).browser.spec.ts',
+          ],
           browser: {
             ...browserTest.browser,
             instances: [{ browser: 'chromium' as const, fileParallelism: false }],

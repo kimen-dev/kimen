@@ -235,33 +235,18 @@ export async function runGeneratorSmoke({
   const run = (command, args) => execute(command, args, { cwd: disposableRoot, env: environment });
   const rootPath = join(disposableRoot, 'packages/elements/src/index.ts');
   const componentRoot = join(disposableRoot, 'packages/elements/src/components', tag);
-  const browserSpec = join(
-    disposableRoot,
-    'packages/elements/browser-tests',
-    `${tag}.browser.spec.ts`,
-  );
-  const tokenSource = join(
-    disposableRoot,
-    'packages/tokens/tokens/component',
-    `${tag.slice(3)}.tokens.json`,
+  const browserSpec = `packages/elements/src/components/${tag}/${tag}.browser.spec.ts`;
+  const tokenSources = ['tokens.json', 'material3.tokens.json'].map(
+    (suffix) => `packages/tokens/tokens/component/${tag.slice(3)}.${suffix}`,
   );
   const beforeSha256 = sha256(await readFile(rootPath, 'utf8'));
 
   try {
-    run('pnpm', [
-      'exec',
-      'nx',
-      'g',
-      '@kimen/nx-plugin:component',
-      tag,
-      '--spec',
-      spec,
-      '--no-interactive',
-    ]);
+    run('pnpm', ['component:new', tag, '--spec', spec]);
     const afterSha256 = sha256(await readFile(rootPath, 'utf8'));
     await assertFile(join(componentRoot, `${tag}.tsx`));
-    await assertFile(browserSpec);
-    await assertFile(tokenSource);
+    await assertFile(join(disposableRoot, browserSpec));
+    await Promise.all(tokenSources.map((source) => assertFile(join(disposableRoot, source))));
 
     run('node', ['scripts/gates/check-tokens.mjs']);
     run('pnpm', ['exec', 'nx', 'run', '@kimen/elements:build', '--skipNxCache']);
@@ -308,7 +293,7 @@ export async function runGeneratorSmoke({
       'run',
       '--config',
       'vitest.browser.config.ts',
-      `browser-tests/${tag}.browser.spec.ts`,
+      relative('packages/elements', browserSpec),
     ]);
 
     const evidence = {
@@ -321,7 +306,7 @@ export async function runGeneratorSmoke({
       surfaces: {
         tokens: {
           status: 'passed',
-          discovered: [`packages/tokens/tokens/component/${tag.slice(3)}.tokens.json`],
+          discovered: tokenSources,
         },
         cem: { status: 'passed', discovered: [tag] },
         llms: { status: 'passed', discovered: [tag] },
@@ -334,7 +319,7 @@ export async function runGeneratorSmoke({
         budget: { status: 'passed', discovered: [tag] },
         browser: {
           status: 'passed',
-          discovered: [`packages/elements/browser-tests/${tag}.browser.spec.ts`],
+          discovered: [browserSpec],
         },
       },
     };

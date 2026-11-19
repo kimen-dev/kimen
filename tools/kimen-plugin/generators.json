@@ -6,7 +6,7 @@
     "component": {
       "factory": "./src/generators/component/generator",
       "schema": "./src/generators/component/schema.json",
-      "description": "Scaffold a ki-* Stencil component with tokens-only CSS, a component-token source, and unit plus real-browser contracts; derived consumers discover it from source."
+      "description": "Scaffold a ki-* Stencil component with both token themes, per-component metadata, test and gallery stubs, stories, and documentation."
     },
     "feature-spec": {
       "factory": "./src/generators/feature-spec/generator",

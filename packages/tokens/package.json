@@ -35,6 +35,13 @@
       "scope:tokens"
     ],
     "targets": {
+      "size": {
+        "inputs": [
+          "default",
+          "^default",
+          "componentBudget"
+        ]
+      },
       "build": {
         "outputs": [
           "{projectRoot}/dist",
