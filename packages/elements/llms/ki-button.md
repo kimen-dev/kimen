@@ -75,7 +75,7 @@ While the action a button started is in progress, set `loading` on it instead of
 - `tone` ("danger" | "neutral" | "success", default 'neutral'): Semantic intent for the action, independent of hierarchy. Use `success` for confirming actions and `danger` for destructive actions. When NOT to use: do not use tone for visual hierarchy; use `variant`.
 - `type` ("button" | "reset" | "submit", default 'submit'): Native form action type: `submit` submits the owning form (running constraint validation and contributing `name`/`value` to the form data), `reset` restores field defaults, `button` never touches the form. Cancel a submission from the form's `submit` event (`preventDefault()`); unlike a native button, `preventDefault()` on the `click` event does not cancel it. During submission `event.submitter` is a transient native button carrying this element's `name`/`value`, not the `ki-button` host. When NOT to use: use `button` when the action must never submit a form.
 - `value` (string | undefined): Form-data value paired with `name` when this button submits its form. When NOT to use: omit when the default empty submitter value is intended.
-- `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use `primary` for the single main action in a view and lower-emphasis variants for supporting actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
+- `variant` ("ghost" | "primary" | "quaternary" | "secondary" | "tertiary", default 'secondary'): Visual hierarchy for the action. Use filled `primary` for the single main action, outlined `secondary` for supporting actions, `quaternary` for neutral text actions, and `ghost` for accent text actions. When NOT to use: do not use variant to signal success or danger; use `tone` for intent.
 
 ## Slots
 
@@ -240,29 +240,30 @@ None.
 - `--ki-button-sm-spinner-size`: dimension used by the button component for the sm loading spinner box (16px, the sm icon size; spec 046 D5: no Figma source, the spinner takes the place of the content).
 - `--ki-button-spinner-duration`: duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference.
 - `--ki-button-spinner-stroke-width`: dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width).
-- `--ki-button-tertiary-danger-hover-bg`: color used by the button component for tertiary danger hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
+- `--ki-button-tertiary-danger-hover-bg`: Tertiary alias of the secondary danger hover background.
 - `--ki-button-tertiary-danger-hover-border`: color used by the button component for tertiary danger hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-danger-hover-fg`: color used by the button component for tertiary danger hover foreground.
-- `--ki-button-tertiary-danger-rest-bg`: color used by the button component for tertiary danger rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).
+- `--ki-button-tertiary-danger-rest-bg`: Tertiary alias of the secondary danger rest background.
 - `--ki-button-tertiary-danger-rest-border`: color used by the button component for tertiary danger rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-danger-rest-fg`: color used by the button component for tertiary danger rest foreground.
 - `--ki-button-tertiary-disabled-shadow`: value used by the button component for tertiary disabled shadow.
+- `--ki-button-tertiary-hover-overlay`: Hover overlay for neutral tertiary buttons, shared with secondary by default.
 - `--ki-button-tertiary-hover-shadow`: shadow used by the button component for tertiary hover shadow (MarsUI Component_effect/secondary_hover).
 - `--ki-button-tertiary-neutral-disabled-bg`: color used by the button component for tertiary neutral disabled background.
 - `--ki-button-tertiary-neutral-disabled-border`: color used by the button component for tertiary neutral disabled border.
 - `--ki-button-tertiary-neutral-disabled-fg`: color used by the button component for tertiary neutral disabled foreground.
-- `--ki-button-tertiary-neutral-hover-bg`: color used by the button component for tertiary neutral hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
+- `--ki-button-tertiary-neutral-hover-bg`: Tertiary alias of the secondary neutral hover background.
 - `--ki-button-tertiary-neutral-hover-border`: color used by the button component for tertiary neutral hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
-- `--ki-button-tertiary-neutral-hover-fg`: color used by the button component for tertiary neutral hover foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative).
-- `--ki-button-tertiary-neutral-rest-bg`: color used by the button component for tertiary neutral rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).
+- `--ki-button-tertiary-neutral-hover-fg`: Tertiary alias of the secondary neutral hover foreground.
+- `--ki-button-tertiary-neutral-rest-bg`: Tertiary alias of the secondary neutral rest background.
 - `--ki-button-tertiary-neutral-rest-border`: color used by the button component for tertiary neutral rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
-- `--ki-button-tertiary-neutral-rest-fg`: color used by the button component for tertiary neutral rest foreground (MarsUI tertiary label text/med_em gray — Kimen tertiary maps to Figma tertiary; the purple-label row is primary_flat, documented alternative).
+- `--ki-button-tertiary-neutral-rest-fg`: Tertiary alias of the secondary neutral rest foreground.
 - `--ki-button-tertiary-rest-border-bottom`: color used by the button component for the tertiary bevel bottom edge (MarsUI Outline/secondary_button_bottom — same bevel pair as secondary).
 - `--ki-button-tertiary-rest-shadow`: shadow used by the button component for tertiary rest shadow (MarsUI Component_effect/secondary_default — replaces the migrated M2-era stack, which the material3 theme keeps via its own override).
-- `--ki-button-tertiary-success-hover-bg`: color used by the button component for tertiary success hover background (one light step over the rest fill; dark keeps the rest fill — the hover signal is Component_effect/secondary_hover).
+- `--ki-button-tertiary-success-hover-bg`: Tertiary alias of the secondary success hover background.
 - `--ki-button-tertiary-success-hover-border`: color used by the button component for tertiary success hover border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-hover-fg`: color used by the button component for tertiary success hover foreground.
-- `--ki-button-tertiary-success-rest-bg`: color used by the button component for tertiary success rest background (MarsUI tertiary fill Surface/special/light-s0_dark-s2: White light, Dark/800 dark).
+- `--ki-button-tertiary-success-rest-bg`: Tertiary alias of the secondary success rest background.
 - `--ki-button-tertiary-success-rest-border`: color used by the button component for tertiary success rest border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair).
 - `--ki-button-tertiary-success-rest-fg`: color used by the button component for tertiary success rest foreground.
 - `--ki-button-xl-font-size`: dimension used by the button component for xl font size.

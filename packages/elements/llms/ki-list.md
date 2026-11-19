@@ -51,7 +51,7 @@ Rows are never click targets; interactivity lives in controls slotted into a reg
   <ki-list-item>
     Two-factor authentication
     <span slot="secondary">Enabled via authenticator app</span>
-    <ki-button slot="end" size="sm" variant="tertiary" type="button">Manage</ki-button>
+    <ki-button slot="end" size="sm" variant="secondary" type="button">Manage</ki-button>
   </ki-list-item>
 </ki-list>
 ```
