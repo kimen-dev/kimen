@@ -11,7 +11,7 @@ RED → GREEN → quality, as built.
 7. [x] Transversal suites, galleries and visual specs; stories, usage examples, docs pages (Storybook and site).
 8. [x] Regenerate manifests, llms, catalog and wrappers; React wrappers type events from `@kimen/elements/components`.
 9. [x] `changes/api/049-ki-toast.json`, sealed token and component counts.
-10. [x] Budgets: onmars tokens stylesheet 11 → 12 kB (founder decision); MCP Apps document and MCP server binary re-based to about 5% above their new measurements.
-11. [x] `scripts/gates/gates-suite.sh`: green apart from the armed visual-gate infra test, which needs the linux baselines of the four new captures.
-12. [ ] Linux visual baselines (`visual-baselines` workflow, founder decision).
+10. [x] Budgets: the onmars tokens stylesheet fits #316's 12.4 kB (the founder had approved 12 kB); MCP Apps document and MCP server binary re-based to about 5% above their new measurements.
+11. [x] `scripts/gates/gates-suite.sh`: core green; Chromium green apart from local macOS references made stale by #344.
+12. [x] Linux visual baselines (`visual-baselines` run 44605942374, founder go-ahead).
 13. [ ] Manual VoiceOver walkthrough.

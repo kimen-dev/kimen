@@ -107,9 +107,9 @@ the toaster holds every toast in it.
   (the `ki.size.qr` precedent).
 - **I-10 Fill.** #353 names `surface-raised`, the deprecated alias of
   `surface.s1` (spec 041): `--ki-toast-bg` aliases `surface.s1` itself.
-- **I-11 Budget.** The onmars tokens stylesheet budget rises from 11 kB to
-  12 kB (founder decision, 2026-11-19): `main` was 90 B from the old limit
-  and these 22 tokens add about 120 B.
+- **I-11 Budget.** These 22 tokens add about 120 B to the onmars tokens
+  stylesheet; the founder approved a 12 kB limit for them on 2026-11-19, and
+  #316 has since raised it to 12.4 kB, which holds them.
 
 ## User Scenarios & Testing *(mandatory)*
 
