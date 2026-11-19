@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 384 semantic
-and 1194 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 397 semantic
+and 1221 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -46,6 +46,12 @@ every component at once.
 | --- | --- | --- |
 | `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
+| `--ki-corner-feature-tile-circle` | `1000px` | Fully rounded corners of a circular feature tile. |
+| `--ki-corner-feature-tile-lg` | `12px` | Corner radius of a large square feature tile. |
+| `--ki-corner-feature-tile-md` | `10px` | Corner radius of a medium square feature tile. |
+| `--ki-corner-feature-tile-sm` | `8px` | Corner radius of a small square feature tile. |
+| `--ki-corner-feature-tile-xl` | `16px` | Corner radius of an extra-large square feature tile. |
+| `--ki-corner-feature-tile-xs` | `6px` | Corner radius of an extra-small square feature tile. |
 
 ### `ki.density`
 
@@ -62,6 +68,7 @@ every component at once.
 | `--ki-effect-component-backdrop-blur` | `0px` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-effect-component-backdrop-filter. MarsUI Blur/24 as the component glass backdrop. Legacy glass blur radius for the shared backdrop filter. |
 | `--ki-effect-component-backdrop-filter` | `none` | Complete backdrop filter for glass components. Use none to turn the effect off. |
 | `--ki-effect-component-listbox-backdrop-filter` | `none` | Complete listbox backdrop filter. The stronger onmars blur follows the original menu glass; flat themes can turn it off. |
+| `--ki-effect-component-no-backdrop-filter` | `none` | Flat component surfaces leave the backdrop unfiltered. |
 | `--ki-effect-component-primary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_default: drop 0/1/1/-0.5 plus inner White/12 0/3/3. Pair with --ki-effect-component-backdrop-filter — CSS cannot mix backdrop blur into box-shadow. |
 | `--ki-effect-component-primary-hover-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with --ki-effect-component-backdrop-filter. |
 | `--ki-effect-component-secondary-default-shadow` | `0 0 rgba(0, 0, 0, 0)` | MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with --ki-effect-component-backdrop-filter. |
@@ -281,6 +288,16 @@ every component at once.
 | `--ki-overlay-med-em` | `rgba(0, 0, 0, 0.24)` | semantic color for overlay med em. |
 | `--ki-overlay-med-em-inverse` | `rgba(255, 255, 255, 0.03)` | semantic color for overlay med em inverse. |
 
+### `ki.size`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-size-feature-tile-lg` | `3rem` | Large feature tile edge, 48px at the default root size. |
+| `--ki-size-feature-tile-md` | `2.5rem` | Medium feature tile edge, 40px at the default root size. |
+| `--ki-size-feature-tile-sm` | `2rem` | Small feature tile edge, 32px at the default root size. |
+| `--ki-size-feature-tile-xl` | `4rem` | Extra-large feature tile edge, 64px at the default root size. |
+| `--ki-size-feature-tile-xs` | `1.5rem` | Extra-small feature tile edge, 24px at the default root size. |
+
 ### `ki.spacing`
 
 | Token | Value (onmars light) | Description |
@@ -392,6 +409,7 @@ every component at once.
 | --- | --- | --- |
 | `--ki-surface-image-dialog` | `none` | Theme image layered over a dialog surface. |
 | `--ki-surface-image-listbox` | `none` | Theme image layered over a select listbox surface. |
+| `--ki-surface-image-none` | `none` | Flat surfaces paint their color without a background image. |
 | `--ki-surface-image-tooltip` | `none` | Theme image layered over a tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-end` | `initial` | End-edge arrow color for a themed tooltip surface. |
 | `--ki-surface-image-tooltip-arrow-start` | `initial` | Start-edge arrow color for a themed tooltip surface. |
@@ -1087,6 +1105,38 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-divider-radius` | `1000px` | dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps). |
 | `--ki-divider-spacing` | `0.5rem` | dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007). |
 | `--ki-divider-thickness` | `1px` | dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md). |
+
+### `ki-feature-icon`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-feature-icon-backdrop-filter` | `none` | Complete filter applied behind the feature icon tile. |
+| `--ki-feature-icon-bg` | `#f3f0eb` | Background color of a neutral feature icon tile. |
+| `--ki-feature-icon-bg-image` | `none` | Optional background image painted over the feature icon tile color. |
+| `--ki-feature-icon-circle-radius` | `1000px` | Corner radius of a circular feature icon tile. |
+| `--ki-feature-icon-danger-bg` | `#ffebeb` | Background color of a danger feature icon tile. |
+| `--ki-feature-icon-danger-fg` | `#c21a45` | Glyph color of a danger feature icon tile. |
+| `--ki-feature-icon-fg` | `#181613` | Glyph color of a neutral feature icon tile. |
+| `--ki-feature-icon-info-bg` | `#e6f1fb` | Background color of an info feature icon tile. |
+| `--ki-feature-icon-info-fg` | `#085268` | Glyph color of an info feature icon tile. |
+| `--ki-feature-icon-lg-radius` | `12px` | Corner radius of a large square feature icon tile. |
+| `--ki-feature-icon-lg-size` | `3rem` | Edge length of a large feature icon tile. |
+| `--ki-feature-icon-primary-bg` | `#1d1a16` | Background color of a primary feature icon tile. |
+| `--ki-feature-icon-primary-fg` | `#ffffff` | Glyph color of a primary feature icon tile. |
+| `--ki-feature-icon-primary-light-bg` | `#ffebe5` | Background color of a primary-light feature icon tile. |
+| `--ki-feature-icon-primary-light-fg` | `#9a3715` | Glyph color of a primary-light feature icon tile. |
+| `--ki-feature-icon-radius` | `10px` | Default corner radius of a square feature icon tile. |
+| `--ki-feature-icon-size` | `2.5rem` | Default edge length of a feature icon tile. |
+| `--ki-feature-icon-sm-radius` | `8px` | Corner radius of a small square feature icon tile. |
+| `--ki-feature-icon-sm-size` | `2rem` | Edge length of a small feature icon tile. |
+| `--ki-feature-icon-success-bg` | `#e4f4ea` | Background color of a success feature icon tile. |
+| `--ki-feature-icon-success-fg` | `#2c6a2b` | Glyph color of a success feature icon tile. |
+| `--ki-feature-icon-warning-bg` | `#fcf0dc` | Background color of a warning feature icon tile. |
+| `--ki-feature-icon-warning-fg` | `#945b05` | Glyph color of a warning feature icon tile. |
+| `--ki-feature-icon-xl-radius` | `16px` | Corner radius of an extra-large square feature icon tile. |
+| `--ki-feature-icon-xl-size` | `4rem` | Edge length of an extra-large feature icon tile. |
+| `--ki-feature-icon-xs-radius` | `6px` | Corner radius of an extra-small square feature icon tile. |
+| `--ki-feature-icon-xs-size` | `1.5rem` | Edge length of an extra-small feature icon tile. |
 
 ### `ki-icon`
 

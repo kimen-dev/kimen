@@ -11,6 +11,7 @@ export const DIRECTIVES = [
   d.KiCheckbox,
   d.KiDialog,
   d.KiDivider,
+  d.KiFeatureIcon,
   d.KiGrid,
   d.KiIcon,
   d.KiIconButton,

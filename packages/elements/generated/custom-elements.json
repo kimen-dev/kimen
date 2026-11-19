@@ -3466,6 +3466,233 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-feature-icon.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFeatureIcon",
+          "customElement": true,
+          "tagName": "ki-feature-icon",
+          "description": "A decorative glyph centered on a tinted tile.",
+          "whenToUse": "Place a decorative icon beside the visible heading of a feature,\nempty state or settings section. The heading carries the meaning.",
+          "whenNotToUse": "For an action (use ki-icon-button), a status (use ki-badge),\nor the sole label of a section.",
+          "attributes": [
+            {
+              "name": "shape",
+              "fieldName": "shape",
+              "type": {
+                "text": "\"circle\" | \"square\""
+              },
+              "default": "'square'",
+              "description": "Rounded square or circle. Unknown values use square."
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Tile size. At a 16px root, the steps are 24, 32, 40, 48 and 64px. Unknown values use md."
+            },
+            {
+              "name": "tone",
+              "fieldName": "tone",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Colour pair for the tile and its glyph. Unknown values use neutral."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "shape",
+              "privacy": "public",
+              "type": {
+                "text": "\"circle\" | \"square\""
+              },
+              "default": "'square'",
+              "description": "Rounded square or circle. Unknown values use square.",
+              "attribute": "shape",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "privacy": "public",
+              "type": {
+                "text": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\""
+              },
+              "default": "'md'",
+              "description": "Tile size. At a 16px root, the steps are 24, 32, 40, 48 and 64px. Unknown values use md.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "privacy": "public",
+              "type": {
+                "text": "\"danger\" | \"info\" | \"neutral\" | \"primary\" | \"primary-light\" | \"success\" | \"warning\""
+              },
+              "default": "'neutral'",
+              "description": "Colour pair for the tile and its glyph. Unknown values use neutral.",
+              "attribute": "tone",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "One Lucide glyph. Supply an inline SVG using currentColor or a ki-icon with inherited size. Guarded surfaces use a registered ki-icon."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "tile",
+              "description": "The painted tile that centers the glyph."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ki-feature-icon-backdrop-filter",
+              "description": "Complete filter applied behind the feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-bg",
+              "description": "Background color of a neutral feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-bg-image",
+              "description": "Optional background image painted over the feature icon tile color."
+            },
+            {
+              "name": "--ki-feature-icon-circle-radius",
+              "description": "Corner radius of a circular feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-danger-bg",
+              "description": "Background color of a danger feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-danger-fg",
+              "description": "Glyph color of a danger feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-fg",
+              "description": "Glyph color of a neutral feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-info-bg",
+              "description": "Background color of an info feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-info-fg",
+              "description": "Glyph color of an info feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-lg-radius",
+              "description": "Corner radius of a large square feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-lg-size",
+              "description": "Edge length of a large feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-primary-bg",
+              "description": "Background color of a primary feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-primary-fg",
+              "description": "Glyph color of a primary feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-primary-light-bg",
+              "description": "Background color of a primary-light feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-primary-light-fg",
+              "description": "Glyph color of a primary-light feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-radius",
+              "description": "Default corner radius of a square feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-size",
+              "description": "Default edge length of a feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-sm-radius",
+              "description": "Corner radius of a small square feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-sm-size",
+              "description": "Edge length of a small feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-success-bg",
+              "description": "Background color of a success feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-success-fg",
+              "description": "Glyph color of a success feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-warning-bg",
+              "description": "Background color of a warning feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-warning-fg",
+              "description": "Glyph color of a warning feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-xl-radius",
+              "description": "Corner radius of an extra-large square feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-xl-size",
+              "description": "Edge length of an extra-large feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-xs-radius",
+              "description": "Corner radius of an extra-small square feature icon tile."
+            },
+            {
+              "name": "--ki-feature-icon-xs-size",
+              "description": "Edge length of an extra-small feature icon tile."
+            },
+            {
+              "name": "--ki-typography-family-body",
+              "description": "semantic font family for typography family body."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFeatureIcon",
+          "declaration": {
+            "name": "KiFeatureIcon",
+            "module": "dist/components/ki-feature-icon.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-feature-icon",
+          "declaration": {
+            "name": "KiFeatureIcon",
+            "module": "dist/components/ki-feature-icon.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-grid.js",
       "declarations": [
         {

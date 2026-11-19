@@ -13,6 +13,7 @@ export { KiCard } from './ki-card.js';
 export { KiCheckbox } from './ki-checkbox.js';
 export { KiDialog } from './ki-dialog.js';
 export { KiDivider } from './ki-divider.js';
+export { KiFeatureIcon } from './ki-feature-icon.js';
 export { KiGrid } from './ki-grid.js';
 export { KiIcon } from './ki-icon.js';
 export { KiIconButton } from './ki-icon-button.js';
