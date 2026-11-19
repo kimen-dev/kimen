@@ -1,4 +1,4 @@
-import { Component, Element, h, Prop } from '@stencil/core';
+import { Component, Element, h, Prop, Watch } from '@stencil/core';
 import {
   endKeyboardPress,
   releaseKeyboardPress,
@@ -40,12 +40,14 @@ export class KiIconButton {
   @Element() private readonly host!: HTMLElement;
 
   /**
-   * Visual hierarchy for the action. Use `primary` for the single main action
-   * in a view and lower-emphasis variants for supporting actions.
+   * Visual hierarchy for the action. Use filled `primary` for the single main
+   * action, outlined `secondary` for supporting actions, `quaternary` for
+   * neutral icon actions, and `ghost` for accent icon actions.
    * When NOT to use: do not use variant to signal success or danger; use
    * `tone` for intent.
    *
    * @default 'secondary'
+   * @deprecatedValue tertiary
    */
   @Prop({ reflect: true }) variant: KiIconButtonVariant = 'secondary';
 
@@ -139,6 +141,20 @@ export class KiIconButton {
     // A description written while the button was out of the document. On the
     // first connection there is no inner button yet: componentDidLoad syncs.
     this.syncForwardedDescription();
+  }
+
+  componentWillLoad(): void {
+    this.warnDeprecatedVariant(this.variant);
+  }
+
+  @Watch('variant')
+  protected warnDeprecatedVariant(variant: KiIconButtonVariant): void {
+    // Stencil replaces NODE_ENV in both lazy and custom-element bundles.
+    if (process.env.NODE_ENV === 'development' && variant === 'tertiary') {
+      console.warn(
+        '[Kimen] ki-icon-button variant="tertiary" is deprecated. Use variant="secondary" instead.',
+      );
+    }
   }
 
   componentDidLoad(): void {

@@ -37,7 +37,7 @@ The `icon` slot takes a decorative glyph, drawn in the tone's colors in a round 
     <path fill="currentColor" d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm.75 4v4.5h-1.5V6h1.5Zm-.75 8.25a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
   </svg>
   Your session expires in one minute. Choose Stay signed in to keep working.
-  <ki-button slot="actions" type="button" variant="tertiary" size="sm">Sign out</ki-button>
+  <ki-button slot="actions" type="button" variant="secondary" size="sm">Sign out</ki-button>
   <ki-button slot="actions" type="button" variant="primary" size="sm">Stay signed in</ki-button>
 </ki-alert>
 ```

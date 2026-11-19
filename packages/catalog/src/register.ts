@@ -77,6 +77,7 @@ export type CatalogCreationResult =
 const propConstraintSchema = z.strictObject({
   allowEmpty: z.boolean().optional(),
   default: z.union([z.boolean(), z.number(), z.string()]).optional(),
+  deprecatedValues: z.array(z.string()).optional(),
   description: z.string(),
   documentedValues: z.array(z.string()).optional(),
   format: z.literal('url').optional(),
@@ -182,6 +183,21 @@ function checkConstraint(
     issues.push({
       code: 'malformed-constraint',
       message: `${tag} prop "${name}" declares values but is not an enum constraint`,
+      path,
+      value: name,
+    });
+  }
+  const deprecated = constraint.deprecatedValues;
+  if (
+    deprecated !== undefined &&
+    (constraint.type !== 'enum' ||
+      deprecated.length === 0 ||
+      new Set(deprecated).size !== deprecated.length ||
+      deprecated.some((value) => value.trim() === '' || constraint.values?.includes(value)))
+  ) {
+    issues.push({
+      code: 'malformed-constraint',
+      message: `${tag} prop "${name}" declares deprecatedValues outside a disjoint enum value set`,
       path,
       value: name,
     });
@@ -353,6 +369,7 @@ function normalizeConstraint(input: ParsedEntry['props'][string]): CatalogPropCo
     type: CatalogPropConstraint['type'];
     description: string;
     values?: readonly string[];
+    deprecatedValues?: readonly string[];
     documentedValues?: readonly string[];
     default?: boolean | number | string;
     required?: boolean;
@@ -363,6 +380,9 @@ function normalizeConstraint(input: ParsedEntry['props'][string]): CatalogPropCo
   } = { description: input.description, type: input.type };
   if (input.values !== undefined) {
     constraint.values = input.values;
+  }
+  if (input.deprecatedValues !== undefined) {
+    constraint.deprecatedValues = input.deprecatedValues;
   }
   if (input.documentedValues !== undefined) {
     constraint.documentedValues = input.documentedValues;

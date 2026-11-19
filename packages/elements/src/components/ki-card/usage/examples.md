@@ -5,7 +5,7 @@ The four regions — `media`, `header`, default body and `footer`; supply the he
   <img slot="media" src="/telemetry.png" alt="Orbit trajectory plot" />
   <h3 slot="header">Mission telemetry</h3>
   <p>Latest downlink completed at 14:02 UTC. All systems nominal.</p>
-  <ki-button slot="footer" type="button" variant="tertiary">View details</ki-button>
+  <ki-button slot="footer" type="button" variant="secondary">View details</ki-button>
 </ki-card>
 ```
 
