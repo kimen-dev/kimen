@@ -1,0 +1,17 @@
+{
+  "ki": {
+    "$description": "Touch density (spec 045 Amendment A1): one +4px step (medium controls 40 -> 44px), 44 x 44 CSS px pointer targets (WCAG 2.5.5, Apple HIG), container spacing at the default step. Declared with data-ki-density=\"touch\" on any element; opt-in only, never applied by a coarse pointer.",
+    "density": {
+      "control-offset": {
+        "$type": "dimension",
+        "$value": "{ki.space.xs}",
+        "$description": "Controls and rows 4px taller (40 -> 44 in onmars, 48 -> 52 for material3 fields); icon buttons keep their size."
+      },
+      "target-min": {
+        "$type": "dimension",
+        "$value": "{ki.size.target-touch}",
+        "$description": "Every interactive target reaches 44 x 44 CSS px; small controls extend their target without painting more."
+      }
+    }
+  }
+}
