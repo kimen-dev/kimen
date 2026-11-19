@@ -556,12 +556,33 @@ test('chroma separates neutral inks and surfaces from brand and tone colours', (
 // a named failure of that mode, and only of that mode.
 const built = (name) => readFileSync(new URL(`../dist/css/${name}`, import.meta.url), 'utf8');
 
-test('the built stylesheets pass every sweep in every context', () => {
+// @spec:060-onmars-v2
+test('S5 the built stylesheets pass every sweep in every context', () => {
   assert.deepEqual(evaluateCss('onmars', built('tokens.css')), []);
   assert.deepEqual(
     evaluateCss('material3', `${built('tokens.css')}\n${built('tokens.material3.css')}`),
     [],
   );
+});
+
+test('dark onmars requires the inverse neutral primary button in every mode', () => {
+  const failures = evaluateCss(
+    'onmars',
+    `${built('tokens.css')}\n:root {
+      --ki-button-primary-neutral-rest-bg: light-dark(var(--ki-surface-primary-med-em), var(--ki-surface-success-high-em));
+      --ki-button-primary-neutral-rest-fg: light-dark(var(--ki-text-primary-on-primary), var(--ki-text-primary-on-success));
+    }`,
+  );
+  for (const context of ['onmars', 'onmars+reduced-transparency', 'onmars+contrast-more']) {
+    assert.ok(
+      failures.some((failure) =>
+        failure.startsWith(
+          `${context}/dark --ki-button-primary-*-rest-bg: the onmars primary neutral`,
+        ),
+      ),
+      failures.join('\n'),
+    );
+  }
 });
 
 test('switch glyph contrast sweeps visible checked and unchecked glyphs against each thumb state', () => {
@@ -637,7 +658,8 @@ test('reduced transparency holds every content surface opaque and leaves state w
   const failures = evaluateCss(
     'onmars',
     `${built('tokens.css')}\n:root:where([data-ki-transparency='reduce'], [data-ki-contrast='more']) {
-      --ki-surface-special-secondary-alpha-base: rgba(242, 242, 244, 0.8);
+      --ki-badge-neutral-bg: rgba(242, 242, 244, 0.8);
+      --ki-button-secondary-neutral-hover-bg: rgba(242, 242, 244, 0.8);
     }`,
   );
   assert.ok(

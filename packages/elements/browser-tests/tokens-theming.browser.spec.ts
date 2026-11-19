@@ -73,9 +73,13 @@ function extractTokenNames(css: string): string[] {
 }
 
 /** Every published name must resolve: declared, and with no dangling reference. */
-function expectEveryTokenResolved(names: readonly string[]): void {
+function expectEveryTokenResolved(names: readonly string[], absent: readonly string[] = []): void {
   for (const name of names) {
     const value = readToken(name);
+    if (absent.includes(name)) {
+      expect(value, name).toBe('');
+      continue;
+    }
     expect(value, name).not.toBe('');
     // An unresolved reference would surface as a literal var() string —
     // a concrete value never contains one (clean-context review, round 1).
@@ -119,14 +123,19 @@ describe('S1 onmars light default tokens', () => {
   it('S1 resolves the onmars brand and base surface without configuration', () => {
     injectStylesheet(onmarsCss);
 
-    expectTokenColor('--ki-color-brand-500', '#845abe');
+    expectTokenColor('--ki-color-brand-500', '#bc4c26');
+    expectTokenColor('--ki-surface-base', '#f9f7f4');
     expectTokenColor('--ki-surface-s0', '#ffffff');
   });
 
-  it('S1 resolves every published token name to a concrete value', () => {
+  it('S1 resolves all required tokens and leaves the optional arrow colors unset', () => {
     injectStylesheet(onmarsCss);
 
-    expectEveryTokenResolved(extractTokenNames(onmarsCss));
+    // In Calma the tooltip arrow takes the bubble color through #343's fallback.
+    expectEveryTokenResolved(extractTokenNames(onmarsCss), [
+      '--ki-surface-image-tooltip-arrow-start',
+      '--ki-surface-image-tooltip-arrow-end',
+    ]);
   });
 });
 
@@ -135,7 +144,7 @@ describe('S3 onmars forced dark scheme', () => {
     injectStylesheet(onmarsCss);
     document.documentElement.setAttribute('data-ki-color-scheme', 'dark');
 
-    expectTokenColor('--ki-surface-s0', '#0a0a0a');
+    expectTokenColor('--ki-surface-base', '#1b1916');
   });
 });
 
@@ -171,7 +180,7 @@ describe('material3 theme and fallback', () => {
     injectStylesheet(onmarsCss);
     document.documentElement.setAttribute('data-ki-theme', 'acme');
 
-    expectTokenColor('--ki-color-brand-500', '#845abe');
+    expectTokenColor('--ki-color-brand-500', '#bc4c26');
   });
 });
 

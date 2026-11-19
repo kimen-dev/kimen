@@ -6,6 +6,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import tokensCss from '@kimen/tokens/css?raw';
 import { defineCustomElement } from '../dist/components/ki-radio.js';
 import { expectAccessible } from './axe';
+import { hasVisibleShadow } from './contracts';
 
 type KiRadioElement = HTMLElement & { disabled: boolean; value: string };
 
@@ -61,16 +62,14 @@ describe('ki-radio in a real browser', () => {
     el.remove();
   });
 
-  it('carries the MarsUI glass surface on the circle and the dark shadow on the dot', async () => {
+  it('draws a flat control with a shadow on the selected dot', async () => {
     document.body.replaceChildren();
     const el = await mount();
     const control = el.shadowRoot?.querySelector('[part="control"]');
     expect(control).toBeInstanceOf(HTMLElement);
     const style = getComputedStyle(control as HTMLElement);
 
-    // Component_effect/primary_default: drop 0/1/1/-0.5 + inner White/12.
-    expect(style.boxShadow).not.toBe('none');
-    expect(style.boxShadow).toContain('inset');
+    expect(hasVisibleShadow(style.boxShadow)).toBe(false);
 
     // Unselected rest: vertical Surface/Special gradient.
     expect(style.backgroundImage).toContain('linear-gradient');

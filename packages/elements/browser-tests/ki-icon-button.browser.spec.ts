@@ -12,7 +12,7 @@ import { defineCustomElement } from '../dist/components/ki-icon-button.js';
 import { expectAccessible, parkPointer } from './axe';
 import { expectTertiaryAlias, expectTertiaryWarning } from './button-variant';
 import { repaintedUnderForcedDark } from './color-scheme';
-import { alphaOf } from './contracts';
+import { alphaOf, hasVisibleShadow } from './contracts';
 import { moveToNewParent } from './reconnect';
 
 const browserCommands = commands as unknown as {
@@ -662,7 +662,7 @@ describe('ki-icon-button in a real browser', () => {
     expect(dark.disabled, 'dark disabled ink').not.toBe(dark.rest);
   });
 
-  it('exact squares, the icon ramp, glass effects and zero axe violations across the matrix (SC-003, SC-004)', async () => {
+  it('exact squares, the icon ramp, flat effects and zero axe violations across the matrix (SC-003, SC-004)', async () => {
     cleanup();
     ensureTokens();
     // Figma Icon_button set: exact squares per size and the icon ramp one
@@ -712,11 +712,8 @@ describe('ki-icon-button in a real browser', () => {
       }
       const style = getComputedStyle(button);
       if (variant === 'primary' || variant === 'secondary' || variant === 'tertiary') {
-        // Glass variants carry the MarsUI Blur/24 backdrop, exported as
-        // blur(12px) (002 §0; verified on the Icon_button set); tertiary
-        // joined the glass set in the pixel pass (Figma 10078:2975:
-        // TERTIARY fill light-s0_dark-s2 + Blur24).
-        expect(style.backdropFilter, `${variant} glass backdrop`).toContain('blur');
+        // #342 lets Calma disable the filter entirely.
+        expect(style.backdropFilter, `${variant} backdrop`).toBe('none');
       }
       if (variant === 'ghost' || variant === 'quaternary') {
         // Non-glass variants stay off the glass path entirely: computed
@@ -724,11 +721,8 @@ describe('ki-icon-button in a real browser', () => {
         expect(style.backdropFilter, `${variant} has no backdrop filter`).toBe('none');
       }
       if (variant === 'primary') {
-        // MarsUI bevel: the block-end border edge is darker than the
-        // block-start edge (Black/18 vs Black/8, 002 §2.1).
-        expect(style.borderBlockEndColor, 'primary bevel bottom differs from top').not.toBe(
-          style.borderBlockStartColor,
-        );
+        expect(alphaOf(style.borderBlockStartColor), 'primary edge at block start').toBe(0);
+        expect(alphaOf(style.borderBlockEndColor), 'primary edge at block end').toBe(0);
       }
       if (variant === 'tertiary') {
         // Pixel pass: tertiary carries the SECONDARY bevel pair
@@ -755,29 +749,23 @@ describe('ki-icon-button in a real browser', () => {
     await expectAccessible(document.body);
   });
 
-  it('focus-visible flattens the elevation to the ring-only shadow stack (Figma 10078:2975 focus column)', async () => {
+  it('focus-visible paints a ring over a flat resting surface', async () => {
     cleanup();
     ensureTokens();
     const el = await mount('Close', { variant: 'primary' });
     const button = requireButton(el);
     await waitForStyles();
     const restShadow = getComputedStyle(button).boxShadow;
-    expect(restShadow, 'primary rest carries an elevation stack').not.toBe('none');
+    expect(hasVisibleShadow(restShadow)).toBe(false);
 
     await userEvent.keyboard('{Tab}');
     expect(el.shadowRoot?.activeElement).toBe(button);
-    // The box-shadow micro-transition (fast motion token, 120ms) must settle
+    // The box-shadow micro-transition (fast motion token, 150ms) must settle
     // before reading the focused stack.
     await new Promise((resolve) => setTimeout(resolve, 300));
 
     const focusedShadow = getComputedStyle(button).boxShadow;
-    // Figma focus column: ALL drop shadows removed while focused, ring only.
-    // A drop shadow is offset from the edge; the ring is not.
-    expect(
-      shadowOffsets(restShadow).some(([x, y]) => x !== 0 || y !== 0),
-      'rest elevation drops',
-    ).toBe(true);
-    expect(focusedShadow, 'focused stack paints a ring').not.toBe('none');
+    expect(hasVisibleShadow(focusedShadow), 'focused stack paints a ring').toBe(true);
     expect(
       shadowOffsets(focusedShadow).every(([x, y]) => x === 0 && y === 0),
       'focused stack is the ring alone',

@@ -10,7 +10,7 @@
 - Agent's choice, pending founder confirmation. Keep a transparent backing for the onmars v1 dialog and tooltip so their translucent images composite as before. Material 3 uses the same opaque colors that its equal-stop gradients painted.
 - Agent's choice, pending founder confirmation. Deprecate the four existing stops in 0.1.0 with removal scheduled for 1.0.0, following spec 041. The onmars v1 default images use stop overrides on the scope that declares the theme.
 - Agent's choice, pending founder confirmation. Preserve the onmars v1 tooltip arrow's placement-specific fills through semantic color tokens whose theme defaults still follow the legacy stops. A theme can use the bubble fill for the arrow by leaving those overrides absent.
-- After #341, onmars supplies its new opaque fills and drops the v1 glass images and arrow color overrides.
+- Calma supplies opaque fills for dialog and tooltip and drops the v1 glass images and arrow color overrides. The select listbox keeps its reference tint as a single background color.
 
 ## Scenario family coverage
 
@@ -54,23 +54,23 @@ Feature: Optional background images on floating surfaces
       | select listbox |
 
   # S3
-  Scenario Outline: The shipped themes preserve their existing floating surface appearance
+  Scenario Outline: The shipped themes paint their floating surfaces without images
     Given the page uses the <theme> theme
     When the <surface> is shown
-    Then the surface keeps its existing appearance
+    Then the surface paints its theme fill without a background image
 
     Examples:
       | theme       | surface        |
-      | onmars v1   | dialog         |
-      | onmars v1   | tooltip        |
-      | onmars v1   | select listbox |
+      | onmars      | dialog         |
+      | onmars      | tooltip        |
+      | onmars      | select listbox |
       | Material 3 | dialog         |
       | Material 3 | tooltip        |
       | Material 3 | select listbox |
 
   # S4
   Scenario Outline: The onmars v1 glass image still uses the legacy stop colors
-    Given the onmars v1 theme supplies legacy start and end colors for the <surface>
+    Given the page opts the <surface> into its legacy glass image and supplies start and end colors
     When the <surface> is shown
     Then its default background image uses those colors
 

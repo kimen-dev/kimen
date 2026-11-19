@@ -3,9 +3,8 @@
 // (variants, tones, sizes, disabled, slots, programmatic focus-visible) so
 // each component x theme costs exactly one PNG. Hover and animated states
 // stay out of v1: the capture mechanism cannot make them deterministic.
-// ASCII-only content: any glyph outside the vendored font fixtures (Inter
-// for onmars, Roboto for material3) would resolve through platform font
-// fallback and reintroduce runner-image drift.
+// Keep gallery text within the vendored fonts' glyph coverage. Onmars uses
+// Instrument Sans and Newsreader, and Material 3 uses Roboto.
 
 export interface VisualGallery {
   /**
