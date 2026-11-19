@@ -20,6 +20,10 @@
       "tooltip": {
         "$value": "{ki.foundation.onmars-v1.tooltip-bg-image}",
         "$description": "Theme image layered over a tooltip surface."
+      },
+      "none": {
+        "$value": "none",
+        "$description": "Default for surfaces with no decorative image."
       }
     },
     "surface": {
@@ -1218,6 +1222,11 @@
               "$description": "MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with --ki-effect-component-backdrop-filter."
             }
           }
+        },
+        "no-backdrop-filter": {
+          "$type": "other",
+          "$value": "none",
+          "$description": "Default for component surfaces without a backdrop effect."
         }
       },
       "video-hover-opacity": {
@@ -1536,6 +1545,27 @@
       "block": {
         "$value": "{ki.space.xl}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl."
+      },
+      "action-gap": {
+        "$value": "{ki.space.md}",
+        "$description": "Gap between distinct actions in a horizontal group."
+      },
+      "action-compact-gap": {
+        "$value": "{ki.space.xxs}",
+        "$description": "Compact gap between adjacent toolbar actions."
+      },
+      "action-inset": {
+        "$value": "{ki.space.xs}",
+        "$description": "Interior space at the edge of an action surface or divider."
+      },
+      "action-joined-gap": {
+        "$value": "{ki.space.zero}",
+        "$description": "Space between actions that share an edge."
+      },
+      "action-hairline": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Width of the frame and divider in an action surface.",
+        "$type": "dimension"
       }
     },
     "glyph": {
@@ -1598,6 +1628,14 @@
       "control": {
         "$value": "{ki.radius.md}",
         "$description": "Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md."
+      },
+      "action-frame": {
+        "$value": "{ki.radius.component.md}",
+        "$description": "Outside corner of an action surface."
+      },
+      "action-seam": {
+        "$value": "{ki.radius.0}",
+        "$description": "Square corner at an edge shared by two actions."
       }
     },
     "motion": {

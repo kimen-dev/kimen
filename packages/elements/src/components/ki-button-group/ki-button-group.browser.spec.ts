@@ -13,6 +13,7 @@ const browserCommands = commands as unknown as {
   emulateReducedMotion: (motion: 'reduce' | 'no-preference' | null) => Promise<void>;
 };
 const tokens = document.createElement('style');
+let fixtureRoot: HTMLElement | undefined;
 const chevron =
   '<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor"/></svg>';
 
@@ -26,7 +27,8 @@ beforeAll(() => {
 });
 
 afterEach(async () => {
-  document.body.replaceChildren();
+  fixtureRoot?.remove();
+  fixtureRoot = undefined;
   await browserCommands.emulateForcedColors(null);
   await browserCommands.emulateReducedMotion(null);
   await parkPointer();
@@ -41,6 +43,7 @@ function mount(markup: string): HTMLElement {
   fixture.style.cssText = 'padding: 48px; background-color: var(--ki-surface-s0);';
   fixture.innerHTML = markup;
   document.body.append(fixture);
+  fixtureRoot = fixture;
   return fixture;
 }
 
@@ -184,7 +187,7 @@ describe('ki-button-group', () => {
       <ki-button-group attached label="Save options">
         <ki-button type="button" variant="primary">Save</ki-button>
         <ki-icon-button label="More save options" variant="primary"
-          aria-haspopup="menu" aria-expanded="false">${chevron}</ki-icon-button>
+          aria-haspopup="menu" expanded="false">${chevron}</ki-icon-button>
       </ki-button-group>
       <div id="save-options" role="menu" aria-label="Save as" popover="manual">
         <button role="menuitem">Save a copy</button>
@@ -199,7 +202,7 @@ describe('ki-button-group', () => {
     trigger.addEventListener('click', () => {
       requireElement(fixture, '#save-options').showPopover();
       requireElement(fixture, '[role="menuitem"]').focus();
-      trigger.setAttribute('aria-expanded', 'true');
+      trigger.setAttribute('expanded', 'true');
     });
 
     await expect.element(more).toHaveAttribute('aria-haspopup', 'menu');
@@ -321,7 +324,7 @@ describe('ki-button-group', () => {
       '',
       `
       <ki-tooltip label="Bold">
-        <ki-icon-button label="Bold" aria-pressed="false">${chevron}</ki-icon-button>
+        <ki-icon-button label="Bold" pressed="false">${chevron}</ki-icon-button>
       </ki-tooltip>
       <ki-icon-button label="Link">${chevron}</ki-icon-button>
     `,
@@ -329,7 +332,7 @@ describe('ki-button-group', () => {
     const bold = page.getByRole('button', { name: 'Bold' });
     const icon = requireElement(fixture, 'ki-icon-button');
     icon.addEventListener('click', () => {
-      icon.setAttribute('aria-pressed', 'true');
+      icon.setAttribute('pressed', 'true');
     });
     await expect.element(bold).toHaveAttribute('aria-pressed', 'false');
 
@@ -339,6 +342,7 @@ describe('ki-button-group', () => {
     await expect.element(page.getByRole('button', { name: 'Bold', pressed: true })).toBeVisible();
     await userEvent.keyboard('{ArrowRight}');
     await expectFocus('Link');
+    await expectAccessible(fixture);
   });
 
   it('S11 paints a framed toolbar and takes the authored divider colour', async () => {
