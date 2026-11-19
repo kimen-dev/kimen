@@ -661,7 +661,7 @@ function applySet(
     // A native layout element's props are CSSOM layout (spec 037 D4): the
     // whole layout is re-derived and only changed style properties written.
     if (previous !== current && !writeNativeLayout(element, node.component, node.props)) {
-      writeProp(element, name, current);
+      writeProp(element, name, current, ownEntry(entry?.props, name));
     }
     if (overriding) {
       const live = current ?? ownEntry(entry?.props, name)?.default;
@@ -909,8 +909,8 @@ export function createLiveSurface(options: LiveSurfaceOptions): LiveSurface {
       slots: new Map(),
       touched: false,
     };
-    writeProps(element, node.component, model.props);
     const entry = ownEntry(components, node.component);
+    writeProps(element, node.component, model.props, entry);
     if (node.action !== undefined && onAction !== undefined) {
       const action = node.action;
       wireActivation(

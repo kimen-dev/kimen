@@ -1,0 +1,141 @@
+:host {
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.popup {
+  --_ki-popover-padding: calc(var(--ki-popover-padding) * var(--ki-density-space-scale));
+  --_ki-popover-border: var(--ki-popover-border-width) solid var(--ki-popover-border);
+
+  position: fixed;
+  inset: auto;
+  margin: 0;
+
+  /* Keep the token as a computed CSS length for the overlay layout. */
+  scroll-margin-block: var(--ki-popover-gap);
+  box-sizing: border-box;
+  inline-size: max-content;
+  max-inline-size: min(var(--ki-popover-max-width), 100dvi);
+  max-block-size: 100dvb;
+  overflow: visible;
+  border: var(--_ki-popover-border);
+  border-radius: var(--ki-popover-radius);
+  background-color: var(--ki-popover-bg);
+  background-image: var(--ki-popover-bg-image);
+  backdrop-filter: var(--ki-popover-backdrop-filter);
+  box-shadow: var(--ki-popover-shadow);
+  color: var(--ki-popover-fg);
+  font-size: var(--ki-typography-size-body-1);
+  line-height: var(--ki-typography-line-height-para);
+}
+
+.popup:popover-open {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+}
+
+:host([hidden]) .popup {
+  display: none;
+}
+
+.content {
+  min-inline-size: 0;
+  padding: var(--_ki-popover-padding);
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+
+.arrow {
+  --_ki-popover-half-arrow: calc(var(--ki-popover-arrow-size) / 2);
+  --_ki-popover-arrow-out: calc(
+    -1 *
+    (var(--_ki-popover-half-arrow) + var(--ki-popover-border-width))
+  );
+  --_ki-popover-arrow-min: min(var(--ki-popover-radius), 50%);
+  --_ki-popover-arrow-along: calc(
+    clamp(
+      var(--_ki-popover-arrow-min),
+      var(--_ki-popover-arrow-center, 50%),
+      100% -
+      var(--_ki-popover-arrow-min)
+    ) -
+    var(--_ki-popover-half-arrow)
+  );
+
+  position: absolute;
+  box-sizing: border-box;
+  inline-size: var(--ki-popover-arrow-size);
+  block-size: var(--ki-popover-arrow-size);
+  background-color: var(--ki-popover-bg);
+  rotate: 45deg;
+  pointer-events: none;
+}
+
+.popup[data-side="top"] .arrow,
+.popup[data-side="bottom"] .arrow {
+  inset-inline-start: var(--_ki-popover-arrow-along);
+}
+
+.popup[data-side="start"] .arrow,
+.popup[data-side="end"] .arrow {
+  inset-block-start: var(--_ki-popover-arrow-along);
+}
+
+.popup[data-side="top"] .arrow {
+  inset-block-end: var(--_ki-popover-arrow-out);
+  border-block-end: var(--_ki-popover-border);
+  border-inline-end: var(--_ki-popover-border);
+}
+
+.popup[data-side="bottom"] .arrow {
+  inset-block-start: var(--_ki-popover-arrow-out);
+  border-block-start: var(--_ki-popover-border);
+  border-inline-start: var(--_ki-popover-border);
+}
+
+.popup[data-side="start"] .arrow {
+  inset-inline-end: var(--_ki-popover-arrow-out);
+  border-block-start: var(--_ki-popover-border);
+  border-inline-end: var(--_ki-popover-border);
+}
+
+.popup[data-side="end"] .arrow {
+  inset-inline-start: var(--_ki-popover-arrow-out);
+  border-block-end: var(--_ki-popover-border);
+  border-inline-start: var(--_ki-popover-border);
+}
+
+/* The diamond rotates physically. In RTL the painted diagonal reverses. */
+.popup:dir(rtl)[data-side="top"] .arrow,
+.popup:dir(rtl)[data-side="bottom"] .arrow,
+.popup:dir(rtl)[data-side="start"] .arrow,
+.popup:dir(rtl)[data-side="end"] .arrow {
+  rotate: -45deg;
+}
+
+.status {
+  position: absolute;
+  inline-size: var(--ki-popover-border-width);
+  block-size: var(--ki-popover-border-width);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  .popup {
+    --_ki-popover-border: var(--ki-popover-border-width) solid CanvasText;
+
+    background-color: Canvas;
+    background-image: none;
+    backdrop-filter: none;
+    color: CanvasText;
+  }
+
+  .arrow {
+    background-color: Canvas;
+  }
+}

@@ -338,9 +338,27 @@ export function attachText(
   return parent.insertBefore(holder, before);
 }
 
-/** Writes one validated prop as an attribute: booleans by presence. */
-export function writeProp(element: Element, name: string, value: Scalar | undefined): void {
-  if (value === undefined || value === false) {
+function hasKimenBooleanDefault(
+  element: Element,
+  name: string,
+  constraint: CatalogPropConstraint | undefined,
+): boolean {
+  const builtIn = ownEntry(ownEntry(builtInCatalog.components, element.localName)?.props, name);
+  return constraint?.type === 'boolean' && constraint.default === true && builtIn?.default === true;
+}
+
+/** Write validated attributes, preserving the default of Stencil boolean props. */
+export function writeProp(
+  element: Element,
+  name: string,
+  value: Scalar | undefined,
+  constraint?: CatalogPropConstraint,
+): void {
+  if (hasKimenBooleanDefault(element, name, constraint)) {
+    // Stencil accepts the literal "false". Removing a live attribute also
+    // becomes false, so materialize the true default on both render paths.
+    element.setAttribute(name, value === false ? 'false' : '');
+  } else if (value === undefined || value === false) {
     element.removeAttribute(name);
   } else if (value === true) {
     element.setAttribute(name, '');
@@ -369,12 +387,18 @@ export function writeProps(
   element: Element,
   component: string,
   props: Readonly<Record<string, Scalar>>,
+  entry: CatalogEntry | undefined,
 ): void {
   if (writeNativeLayout(element, component, props)) {
     return;
   }
   for (const [name, value] of Object.entries(props)) {
-    writeProp(element, name, value);
+    writeProp(element, name, value, ownEntry(entry?.props, name));
+  }
+  for (const [name, constraint] of Object.entries(entry?.props ?? {})) {
+    if (ownEntry(props, name) === undefined && hasKimenBooleanDefault(element, name, constraint)) {
+      writeProp(element, name, undefined, constraint);
+    }
   }
 }
 
@@ -446,7 +470,7 @@ export function wireActivation(
 
 /**
  * Builds one validated node into a detached element (FR-004): props become
- * attributes (booleans as presence), text children become inert text nodes
+ * attributes, text children become inert text nodes
  * (never `innerHTML`), and a bound action wires exactly one activation
  * listener — derived from the catalog entry (FR-003) — onto the renderer's
  * single channel. No spec string is ever evaluated.
@@ -460,12 +484,13 @@ function buildNode(
 ): Element {
   const element = createNodeElement(doc, node.component);
   const props = node.props ?? {};
-  writeProps(element, node.component, props);
+  const entry = ownEntry(entries, node.component);
+  writeProps(element, node.component, props, entry);
   if (node.action !== undefined && onAction !== undefined) {
     const action = node.action;
     wireActivation(
       element,
-      ownEntry(entries, node.component),
+      entry,
       () => props,
       (data) => {
         onAction({ action, data, path });

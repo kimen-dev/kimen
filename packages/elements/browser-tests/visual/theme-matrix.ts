@@ -3,5 +3,7 @@ export function visualGalleryThemes(
   name: string,
   scheme: 'light' | 'dark',
 ): readonly ('onmars' | 'material3')[] {
-  return scheme === 'light' || name === 'ki-icon' ? ['onmars', 'material3'] : ['onmars'];
+  return scheme === 'light' || name === 'ki-icon' || name === 'ki-popover'
+    ? ['onmars', 'material3']
+    : ['onmars'];
 }

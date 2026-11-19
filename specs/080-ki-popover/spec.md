@@ -73,7 +73,7 @@ Feature: ki-popover opens non-modal content beside a trigger
     When it opens with forced colours, reduced motion and coarse pointer density
     Then its inline start aligns with the trigger's inline start
     And the surface has a visible border and no motion
-    And its padding follows the coarse pointer density
+    And its padding follows the region's declared density
 
   # S11
   Scenario: Open and close through application state
@@ -120,3 +120,5 @@ Feature: ki-popover opens non-modal content beside a trigger
 - **Agent's choice, pending founder confirmation.** Prefer an eligible autofocus control, then the first eligible control in content order. Keep native Tab traversal, with no focus trap.
 - **Agent's choice, pending founder confirmation.** Use the same raised-surface semantics in both themes, scale padding with density, and render the surface without motion. The arrow uses a token-backed diamond at the edge facing the trigger. Omit the arrow with `arrow=false`.
 - **Agent's choice, pending founder confirmation.** Keep the guarded surface passive except for its declared open and close events. Authors supply a stable trigger ID and the default slot content.
+- **Agent's choice, pending founder confirmation.** Preserve the neutral catalog's one-event action binding rule. The catalog exposes both lifecycle events for host DOM listeners. Slotted controls can accept ordinary neutral action bindings. For a built-in boolean with a true default, the guarded renderer writes the explicit false value and restores the generated default on unset.
+- **Agent's choice, pending founder confirmation.** Use a major API declaration because the version comparator classifies the generated loader Components and JSX namespace changes as major. The Popover API is additive.

@@ -1,0 +1,66 @@
+{
+  "ki": {
+    "popover": {
+      "bg": {
+        "$type": "color",
+        "$value": "{ki.surface.raised}",
+        "$description": "Raised popover surface colour."
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{ki.text.high-em}",
+        "$description": "Popover content ink."
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{ki.outline.low-em}",
+        "$description": "Popover outline colour."
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": "{ki.elevation.e3}",
+        "$description": "Popover elevation."
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{ki.anchored-surface.gap}",
+        "$description": "Space between a floating surface and its trigger."
+      },
+      "padding": {
+        "$type": "dimension",
+        "$value": "{ki.anchored-surface.padding}",
+        "$description": "Interior padding for a small anchored surface."
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{ki.anchored-surface.radius}",
+        "$description": "Corner radius for a small anchored surface."
+      },
+      "arrow-size": {
+        "$type": "dimension",
+        "$value": "{ki.anchored-surface.arrow-size}",
+        "$description": "Side length of an anchored surface pointer before rotation."
+      },
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{ki.anchored-surface.border-width}",
+        "$description": "Outline thickness for a small anchored surface."
+      },
+      "max-width": {
+        "$type": "dimension",
+        "$value": "{ki.anchored-surface.max-width}",
+        "$description": "Maximum inline size of a small anchored surface."
+      },
+      "bg-image": {
+        "$type": "other",
+        "$value": "{ki.anchored-surface.bg-image}",
+        "$description": "Optional image layer over an anchored surface colour."
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.anchored-surface.backdrop-filter}",
+        "$description": "Complete backdrop filter behind an anchored surface."
+      }
+    }
+  }
+}

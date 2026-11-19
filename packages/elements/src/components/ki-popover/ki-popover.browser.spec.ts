@@ -39,7 +39,7 @@ afterAll(() => {
 async function mount(content = 'Open incidents', attributes = '') {
   fixture.innerHTML = `
     <ki-button id="filters" type="button" variant="secondary">Filters</ki-button>
-    <ki-popover for="filters" label="Incident filters" ${attributes}>${content}</ki-popover>
+    <ki-popover data-testid="test-popover" for="filters" label="Incident filters" ${attributes}>${content}</ki-popover>
     <button type="button">Next</button>
   `;
   const popover = required(fixture, 'ki-popover') as HTMLElement & { open: boolean };
@@ -84,7 +84,7 @@ it('S1 opens beside its trigger, expands it, and reports one open', async () => 
   expect(opened).toHaveBeenCalledTimes(1);
 });
 
-it('S2 dismisses natively on an outside click and leaves outside focus available', async () => {
+it('S2 dismisses natively on an outside click', async () => {
   const { popover, trigger } = await mount(search);
   const closed = vi.fn();
   popover.addEventListener('ki-close', closed);
@@ -142,7 +142,7 @@ it('S6 exposes the named non-modal dialog and passes axe', async () => {
 
 it('S7 updates a persistent status region and retains keyboard focus', async () => {
   const { trigger } = await mount('Logs are kept for 30 days.', 'kind="toggletip"');
-  const status = page.getByRole('status');
+  const status = page.getByTestId('test-popover').getByRole('status');
   await expect.element(status).toHaveTextContent('');
   trigger.element().focus();
 

@@ -18,6 +18,8 @@ export type OverlayPositioner = (
 interface AnchoredOverlayOptions {
   /** Omit to let component CSS own placement (including its sizing and flip policy). */
   position?: OverlayPositioner;
+  /** Native auto popovers use an invoker and can close independently of this session. */
+  source?: HTMLElement;
   /** An optional additional boundary treated as inside for outside pointer events. */
   outsidePointer?: true | Element;
   escape?: 'bubble' | 'capture';
@@ -35,8 +37,23 @@ export function resolveOverlayAnchor(host: Element, anchor: Element | string): E
     : null;
 }
 
-/** Mirror component state into a connected manual popover. */
-export function setOverlayOpen(popup: HTMLElement | undefined, open: boolean): void {
+/** Stencil's DOM declarations predate the Popover API's source option. */
+export function showOverlayPopover(popup: HTMLElement, source?: HTMLElement): void {
+  if (source) {
+    (popup as HTMLElement & { showPopover(options: { source: HTMLElement }): void }).showPopover({
+      source,
+    });
+  } else {
+    popup.showPopover();
+  }
+}
+
+/** Mirror component state into a connected native popover. */
+export function setOverlayOpen(
+  popup: HTMLElement | undefined,
+  open: boolean,
+  source?: HTMLElement,
+): void {
   if (
     !popup?.isConnected ||
     typeof popup.showPopover !== 'function' ||
@@ -45,7 +62,7 @@ export function setOverlayOpen(popup: HTMLElement | undefined, open: boolean): v
     return;
   }
   if (open) {
-    popup.showPopover();
+    showOverlayPopover(popup, source);
     return;
   }
   popup.hidePopover();
@@ -86,7 +103,7 @@ interface ActiveOverlay {
 
 const DEFAULT_OPTIONS: AnchoredOverlayOptions = {};
 
-/** One open session for a component-owned manual popover. */
+/** One positioning and dismissal session for an anchored popover. */
 export class AnchoredOverlay {
   private active: ActiveOverlay | undefined;
 
@@ -171,6 +188,7 @@ export class AnchoredOverlay {
         position?.cleanup();
       },
     };
+    setOverlayOpen(popup, true, options.source);
     this.reposition();
     return true;
   }
@@ -181,7 +199,15 @@ export class AnchoredOverlay {
     if (!active?.popup.isConnected) {
       return;
     }
-    setOverlayOpen(active.popup, true);
+    // Native light dismissal may close the surface before its toggle event
+    // tears down this session. A queued layout update must leave it closed.
+    if (active.options.source) {
+      if (!active.popup.matches(':popover-open')) {
+        return;
+      }
+    } else {
+      setOverlayOpen(active.popup, true);
+    }
     active.position?.update();
   }
 

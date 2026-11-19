@@ -64,7 +64,7 @@ Feature: ki-popover opens non-modal content beside a trigger
     When it opens with forced colours, reduced motion and coarse pointer density
     Then its inline start aligns with the trigger's inline start
     And the surface has a visible border and no motion
-    And its padding follows the coarse pointer density
+    And its padding follows the region's declared density
 
   # S11
   Scenario: Open and close through application state
