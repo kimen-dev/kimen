@@ -91,14 +91,13 @@ test('a notice file with two sections of the same title is rejected', () => {
 });
 
 // What a tarball must carry is decided by what is inside it. The packed
-// elements bundles contain two third-party works under MIT, whose terms ask
-// for the copyright and permission notice in every copy: the QR encoder
-// adapted from Project Nayuki, and the Stencil client runtime the
-// lazy-loading builds embed.
+// elements package ships the QR encoder, the embedded Stencil client runtime,
+// and the Lucide icon modules, including assets derived from Feather.
 test('the package notices include the third-party works shipped in each tarball', () => {
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/elements'], [
     'QR Code generator library (MIT)',
     'Stencil client runtime (MIT)',
+    'Lucide 1.63.0 and Feather icons (ISC and MIT)',
   ]);
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/tokens'], ['onmars theme fonts (SIL OFL 1.1)']);
 });

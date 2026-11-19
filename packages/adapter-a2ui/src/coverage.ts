@@ -201,10 +201,7 @@ export const A2UI_COVERAGE: Readonly<Record<string, A2uiCoverageEntry>> = {
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', CHECKS],
   },
   Image: { kind: 'unmapped', reason: 'no image component in the catalog' },
-  Icon: {
-    kind: 'unmapped',
-    reason: 'no named or path icon component in the catalog',
-  },
+  Icon: { catalog: ['ki-icon'], kind: 'mapped', properties: ['name'] },
   Video: {
     kind: 'unmapped',
     reason: 'ki-video needs a native video child the spec cannot carry',
@@ -361,10 +358,7 @@ export const A2UI_V1_COVERAGE: A2uiCoverageMatrix = {
     properties: ['label', 'variant', 'options', 'value', 'displayStyle', 'filterable', V1_CHECKS],
   },
   Image: { kind: 'unmapped', reason: 'no image component in the catalog' },
-  Icon: {
-    kind: 'unmapped',
-    reason: 'no named or path icon component in the catalog',
-  },
+  Icon: { catalog: ['ki-icon'], kind: 'mapped', properties: ['name'] },
   Video: {
     kind: 'unmapped',
     reason: 'ki-video needs a native video child the spec cannot carry',

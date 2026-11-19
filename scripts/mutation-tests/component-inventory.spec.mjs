@@ -396,6 +396,10 @@ describe('component inventory mutation boundary', () => {
         types: './dist/components/*.d.ts',
         import: './dist/components/*.js',
       },
+      './icons/*': {
+        types: './icons/*.d.ts',
+        import: './icons/*.js',
+      },
     };
 
     expect(validatePackageExportContract(valid)).toBe(true);
