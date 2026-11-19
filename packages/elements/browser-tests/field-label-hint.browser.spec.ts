@@ -277,6 +277,27 @@ describe('the label hint joins the label', () => {
     });
   }
 
+  it('S1 a ki-checkbox label made of several slotted nodes stays one inline run before the hint', async () => {
+    const fixture = await mount(
+      '<ki-checkbox name="terms" label-hint="(required)">Accept the <a href="#terms">terms</a></ki-checkbox>',
+    );
+    const field = found(fixture.querySelector<HTMLElement>('ki-checkbox'), 'the checkbox');
+
+    await expect.poll(() => shownHint(field)).toBe('(required)');
+
+    // The hint lays the label out as two items, the label and the hint. Were
+    // each slotted node an item of its own, the link would be blockified and
+    // the space after "Accept the" collapsed away.
+    const link = found(fixture.querySelector('a'), 'the terms link');
+    expect(getComputedStyle(link).display).toBe('inline');
+    expect(found(hintOf(field), 'the hint').getBoundingClientRect().left).toBeGreaterThan(
+      link.getBoundingClientRect().right,
+    );
+    if (IS_CHROMIUM) {
+      await expect.poll(() => namesOf('checkbox')).toEqual(['Accept the terms (required)']);
+    }
+  });
+
   for (const control of controls) {
     it(`S2 a required ${control} without a label hint shows no hint of its own`, async () => {
       const field = await mountControl(control, 'Email', 'required');
@@ -529,22 +550,17 @@ describe('the label hint reads clearly in every theme and mode', () => {
 
   for (const control of ['ki-input', 'ki-textarea', 'ki-select', 'ki-radio-group'] as const) {
     it(`S14 a disabled ${control}'s label hint follows the disabled ink of its label`, async () => {
-      const fixture = await mount(
-        markup(control, 'Email', 'disabled label-hint="(optional)"') +
-          markup(control, 'Email', 'label-hint="(optional)"'),
-      );
-      const [disabledField, enabledField] = [...fixture.querySelectorAll<HTMLElement>(control)];
-      const disabled = found(hintOf(found(disabledField, control)), 'the disabled hint');
-      const enabled = found(hintOf(found(enabledField, control)), 'the enabled hint');
+      const field = await mountControl(control, 'Email', 'disabled label-hint="(optional)"');
+      const hint = found(hintOf(field), 'the label hint');
 
-      expect(getComputedStyle(disabled).color).toBe(labelInk(found(disabledField, control)));
-      // A disabled ink can coincide with the enabled hint ink (the radio
-      // group label dims to med-em, the supporting role's own step). More
-      // contrast strengthens the enabled hint and leaves every disabled ink
-      // as it is (spec 043 D1), which tells the two apart for every control.
+      expect(getComputedStyle(hint).color).toBe(labelInk(field));
+      // A disabled ink can coincide with the supporting ink the hint takes
+      // when enabled (the radio group label dims to med-em, the supporting
+      // role's own step). More contrast strengthens the supporting ink and
+      // leaves every disabled ink as it is (spec 043 D1), so a hint that
+      // kept the supporting ink parts from its label here.
       document.documentElement.setAttribute('data-ki-contrast', 'more');
-      expect(getComputedStyle(disabled).color).toBe(labelInk(found(disabledField, control)));
-      expect(getComputedStyle(disabled).color).not.toBe(getComputedStyle(enabled).color);
+      expect(getComputedStyle(hint).color).toBe(labelInk(field));
     });
   }
 

@@ -18,6 +18,11 @@
   );
   --_ki-checkbox-shadow: var(--ki-effect-component-primary-default-shadow);
 
+  /* The label hint (spec 047, utils/label-hint.css). The label keeps its ink
+     when the checkbox is disabled, so the hint keeps its own. */
+  --_ki-label-hint-fg: var(--ki-checkbox-label-hint-fg);
+  --_ki-label-hint-gap: var(--ki-checkbox-label-hint-gap);
+
   display: inline-block;
   font-family: var(--ki-typography-family-body);
 }
@@ -290,8 +295,12 @@ input:active:not([disabled], :state(fieldset-disabled)) ~ [part="control"] {
     color: GrayText;
   }
 
+  /* The label hint (spec 047) says it with its label: a forced palette
+     repaints its own ink as text, not as the label's GrayText. */
   :host([disabled]) [part="label"],
-  :host(:state(fieldset-disabled)) [part="label"] {
+  :host([disabled]) [part="label-hint"],
+  :host(:state(fieldset-disabled)) [part="label"],
+  :host(:state(fieldset-disabled)) [part="label-hint"] {
     color: GrayText;
   }
 }

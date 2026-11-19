@@ -7,6 +7,10 @@
   --_ki-input-label-fg: var(--ki-input-rest-label-fg);
   --_ki-input-placeholder-fg: var(--ki-input-rest-placeholder-fg);
 
+  /* The label hint (spec 047, utils/label-hint.css). */
+  --_ki-label-hint-fg: var(--ki-input-label-hint-fg);
+  --_ki-label-hint-gap: var(--ki-input-label-hint-gap);
+
   display: inline-block;
   color: var(--_ki-input-fg);
   font-family: var(--ki-typography-family-body);
@@ -52,8 +56,10 @@
   --_ki-input-label-fg: var(--ki-input-disabled-label-fg);
   --_ki-input-placeholder-fg: var(--ki-input-disabled-placeholder-fg);
 
-  /* The help line dims with the label (spec 042 D9). */
+  /* The help line dims with the label (spec 042 D9), and so does the label
+     hint (spec 047 D5). */
   --_ki-field-help-fg: var(--ki-input-disabled-label-fg);
+  --_ki-label-hint-fg: var(--ki-input-disabled-label-fg);
 }
 
 :host(:state(user-invalid)) {

@@ -10,6 +10,7 @@ import {
   fieldText,
   fieldValidationMessage,
 } from '../../utils/field-message';
+import { LabelHint } from '../../utils/label-hint';
 import { radioGroupFormValue } from './ki-radio-group.form';
 import { arrowDirection, nextEnabledIndex } from './ki-radio-group.keyboard';
 
@@ -35,6 +36,8 @@ type KiRadioElement = HTMLElement & {
  *
  * @slot - `ki-radio` options. Document order is navigation order.
  * @part label - Visible group label and accessible-name source.
+ * @part label-hint - The `label-hint` text after the group label text, inside the label
+ * and part of the radiogroup's accessible name; rendered only while a hint is set.
  * @part help - Help line under the options, read as the radiogroup description.
  * @part error - Error line shown in place of the help text while the group is
  * invalid after the person submitted; a polite live region, starting with a
@@ -46,7 +49,7 @@ type KiRadioElement = HTMLElement & {
  */
 @Component({
   tag: 'ki-radio-group',
-  styleUrls: ['../../utils/field-message.css', 'ki-radio-group.css'],
+  styleUrls: ['../../utils/field-message.css', '../../utils/label-hint.css', 'ki-radio-group.css'],
   shadow: true,
   formAssociated: true,
 })
@@ -97,6 +100,17 @@ export class KiRadioGroup {
    * When NOT to use: do not omit it; unlabeled groups fail accessibility gates.
    */
   @Prop({ reflect: true }) label!: string;
+
+  /**
+   * Short text shown after the group label and read with it as part of the
+   * radiogroup name, so people know before submitting whether to choose:
+   * "(optional)" on the few optional questions of a mostly required form, or
+   * "(required)" the other way round, in the page's own language. It changes
+   * no validation; set `required` for that, and keep the two consistent.
+   * When NOT to use: do not put what the choice decides in it (use
+   * `help-text`), errors (use `error-text`), or a repeat of the label.
+   */
+  @Prop({ reflect: true }) labelHint?: string;
 
   /**
    * Requires one selected option for form submission. The group uses platform
@@ -625,6 +639,7 @@ export class KiRadioGroup {
       <div>
         <span part="label" id={this.labelId}>
           {this.label}
+          <LabelHint hint={fieldText(this.labelHint)} />
         </span>
         <div
           role="radiogroup"

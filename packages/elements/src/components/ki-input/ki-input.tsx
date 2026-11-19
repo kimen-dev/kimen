@@ -6,6 +6,7 @@ import {
   fieldText,
   fieldValidationMessage,
 } from '../../utils/field-message';
+import { LabelHint } from '../../utils/label-hint';
 import { normalizeKiInputType } from './ki-input.form';
 
 export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'search';
@@ -33,6 +34,8 @@ export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'searc
  * @part help - Help line under the field, read as the field's description.
  * @part input - Internal native input that owns entry text, caret and selection.
  * @part label - Visible label that provides the accessible name.
+ * @part label-hint - The `label-hint` text after the label text, inside the label and
+ * part of the accessible name; rendered only while a hint is set.
  * @event change - Fired when the user commits an edited value (native text-field
  * timing, such as on blur), composed across the shadow boundary; `value` is
  * already current when listeners run. When to use: react to a committed
@@ -41,7 +44,7 @@ export type KiInputType = 'text' | 'email' | 'password' | 'url' | 'tel' | 'searc
  */
 @Component({
   tag: 'ki-input',
-  styleUrls: ['../../utils/field-message.css', 'ki-input.css'],
+  styleUrls: ['../../utils/field-message.css', '../../utils/label-hint.css', 'ki-input.css'],
   shadow: { delegatesFocus: true },
   formAssociated: true,
 })
@@ -74,6 +77,17 @@ export class KiInput {
    * When NOT to use: never use `placeholder` as a label substitute.
    */
   @Prop({ reflect: true }) label!: string;
+
+  /**
+   * Short text shown after the label and read with it as part of the field's
+   * name, so people know before submitting whether to answer: "(optional)" on
+   * the few optional fields of a mostly required form, or "(required)" the
+   * other way round, in the page's own language. It changes no validation;
+   * set `required` for that, and keep the two consistent.
+   * When NOT to use: do not put instructions or formats in it (use
+   * `help-text`), errors (use `error-text`), or a repeat of the label.
+   */
+  @Prop({ reflect: true }) labelHint?: string;
 
   /**
    * Hint shown when the field is empty.
@@ -401,6 +415,7 @@ export class KiInput {
             (research D1 anatomy); for/id keeps click-to-focus. */}
         <label part="label" htmlFor={this.inputId}>
           {this.label}
+          <LabelHint hint={fieldText(this.labelHint)} />
         </label>
         <div part="field">
           <slot name="start" />
