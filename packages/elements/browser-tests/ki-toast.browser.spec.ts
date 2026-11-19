@@ -17,6 +17,7 @@ import { defineCustomElement as defineKiButton } from '../dist/components/ki-but
 import { defineCustomElement } from '../dist/components/ki-toast.js';
 import { expectAccessible, parkPointer } from './axe';
 import { repaintedUnderForcedDark } from './color-scheme';
+import { resolvedShadowToken } from './resolved-token';
 
 type KiToastElement = HTMLElement & {
   dismissed: boolean;
@@ -364,15 +365,16 @@ describe('ki-toast core behavior', () => {
   it('S2 is a flat raised surface with a hairline edge, no wider than 360px', async () => {
     await page.viewport(1280, 800);
     const el = await mountToast({ tone: 'info', message: 'Export ready' });
-    const surface = getComputedStyle(part(el, 'toast'));
+    const toast = part(el, 'toast');
+    const surface = getComputedStyle(toast);
 
     expect(surface.paddingBlockStart).toBe('12px');
     expect(surface.paddingInlineStart).toBe('12px');
     expect(surface.borderTopLeftRadius).toBe('16px');
     expect(surface.borderTopStyle).toBe('solid');
     expect(surface.borderTopWidth).toBe('1px');
-    // e4, read off its deepest layer.
-    expect(surface.boxShadow).toContain('0px 32px 32px -16px');
+    // e4 as the theme defines it, so a theme's new elevation values hold.
+    expect(surface.boxShadow).toBe(resolvedShadowToken(toast, '--ki-elevation-e4'));
     expect(surface.backdropFilter).toBe('none');
     expect(surface.backgroundImage).toBe('none');
     expect(surface.backgroundColor).toMatch(/^rgb\(/u);
