@@ -4,6 +4,7 @@
   --_ki-switch-track: var(--ki-switch-unchecked-rest-track);
   --_ki-switch-thumb: var(--ki-switch-unchecked-rest-thumb);
   --_ki-switch-border: var(--ki-switch-unchecked-rest-border);
+
   /* Thumb glyph inks (master 10023:1125): ON check = Text/primary_on_primary_light
      (Brand/600 light, brand-300 dark); disabled marks = Text/base_em
      (Gray/400 light, White/32 dark); OFF rest shows nothing. Each is a public
