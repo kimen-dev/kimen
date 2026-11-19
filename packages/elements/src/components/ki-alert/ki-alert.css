@@ -15,6 +15,7 @@
   --_ki-alert-border-width: var(--ki-alert-border-width);
   --_ki-alert-font-size: var(--ki-alert-font-size);
   --_ki-alert-line-height: var(--ki-alert-line-height);
+  --_ki-alert-heading-font-family: var(--ki-alert-heading-font-family);
   --_ki-alert-heading-font-size: var(--ki-alert-heading-font-size);
   --_ki-alert-heading-font-weight: var(--ki-alert-heading-font-weight);
   --_ki-alert-dismiss-fg: var(--ki-alert-dismiss-rest-fg);
@@ -239,6 +240,7 @@
 
 [part="heading"] {
   display: block;
+  font-family: var(--_ki-alert-heading-font-family);
   font-size: var(--_ki-alert-heading-font-size);
   font-weight: var(--_ki-alert-heading-font-weight);
   line-height: var(--_ki-alert-line-height);
