@@ -114,3 +114,10 @@ Feature: Icon button
     Given an agent choosing an icon button variant
     When the agent reads the catalog schema
     Then the available variants are primary, secondary, quaternary and ghost
+
+  # S19
+  Scenario: A icon button can retain selection
+    Given an unselected icon button in toggle mode
+    When the person activates it
+    Then the icon button becomes selected and reports the new pressed state
+    And the icon button emits a change carrying the new state

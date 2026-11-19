@@ -123,3 +123,10 @@ Feature: Button
     Given an agent choosing a button variant
     When the agent reads the catalog schema
     Then the available variants are primary, secondary, quaternary and ghost
+
+  # S19
+  Scenario: A button can retain selection
+    Given an unselected button in toggle mode
+    When the person activates it
+    Then the button becomes selected and reports the new pressed state
+    And the button emits a change carrying the new state
