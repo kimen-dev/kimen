@@ -20,7 +20,7 @@ contract. Use the Kimen CardVariants design-system preview as the design referen
 - A nonblank `href` takes precedence over `interactive`. A blank URL counts as
   absent. Action mode emits one bubbling, composed `ki-activate` with no payload.
   (agent's choice, pending founder confirmation)
-- A clickable card takes one nonempty text heading in `header` at the author's
+- A clickable card takes one nonempty plain-text heading in `header` at the author's
   h1–h6 level; the native title control renders that text at the same level.
   A missing or unsupported title leaves the card passive. Use the body or
   footer for separate controls. (agent's choice, pending founder confirmation)
@@ -31,6 +31,10 @@ contract. Use the Kimen CardVariants design-system preview as the design referen
   uses `surface.s2` and outlined uses `surface.s0` with the low-emphasis outline,
   as shown in the preview. Keep the shipped passive default hover treatment.
   (agent's choice, pending founder confirmation)
+
+- The renderer keeps legacy click bindings for existing passive card specs.
+  New action cards use the declared activation event and link cards keep
+  navigation precedence. (agent's choice, pending founder confirmation)
 
 ## Gherkin
 
@@ -128,7 +132,7 @@ Feature: Card variants and primary activation
 
   # S12
   Scenario: The card offers the full primary target on a coarse pointer
-    Given a device with a coarse pointer and an action card containing "Rebuild starts at midnight"
+    Given a device with a coarse pointer and an action card at touch density containing "Rebuild starts at midnight"
     When the user taps the supporting text
     Then the card reports one activation
     And the card does not retain hover feedback

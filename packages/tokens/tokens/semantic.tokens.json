@@ -1,6 +1,10 @@
 {
   "ki": {
     "surface-image": {
+      "none": {
+        "$value": "none",
+        "$description": "Solid surface with no decorative image."
+      },
       "dialog": {
         "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
@@ -1099,6 +1103,11 @@
       }
     },
     "effect": {
+      "backdrop-filter-none": {
+        "$type": "other",
+        "$value": "none",
+        "$description": "A surface that leaves the backdrop unfiltered."
+      },
       "component": {
         "backdrop-blur": {
           "$type": "dimension",

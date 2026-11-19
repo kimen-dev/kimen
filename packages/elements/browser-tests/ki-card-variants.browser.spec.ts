@@ -78,6 +78,12 @@ function surface(card: HTMLElement, required = true): HTMLElement | null {
   return node;
 }
 
+function focusBefore(): void {
+  const before = page.getByRole('button', { name: 'Before' }).element();
+  if (!(before instanceof HTMLButtonElement)) throw new Error('Focus sentinel did not render');
+  before.focus();
+}
+
 it('S1 follows the native destination when supporting text is clicked', async () => {
   await mount(link);
   await userEvent.click(page.getByText(copy, { exact: true }));
@@ -122,7 +128,7 @@ it('S4 tabs once to the title and each inner control, with a whole-card focus ri
     footer: '<button slot="footer" type="button">Bookmark</button>',
     after: '<button type="button">After</button>',
   });
-  await userEvent.click(page.getByRole('button', { name: 'Before' }));
+  focusBefore();
   await userEvent.tab();
   await expect.element(page.getByRole('link', { name: title, exact: true })).toHaveFocus();
   expect(getComputedStyle(surface(card)).outlineStyle).toBe('solid');
@@ -142,7 +148,7 @@ it.each(['{Enter}', '[Space]'])('S5 activates a focused title button with %s onc
   await mount('interactive', { before: '<button type="button">Before</button>' });
   const activate = vi.fn();
   document.querySelector('main')?.addEventListener('ki-activate', activate);
-  await userEvent.click(page.getByRole('button', { name: 'Before' }));
+  focusBefore();
   await userEvent.tab();
   await expect.element(page.getByRole('button', { name: title })).toHaveFocus();
   await userEvent.keyboard(key);
@@ -155,7 +161,7 @@ it.each([
 ] as const)(
   'S6 exposes the authored heading level and only its title as the %s name',
   async (attributes, role) => {
-    const card = await mount(attributes);
+    const card = await mount(attributes, { before: '<h2>Incidents</h2>' });
     const actual = await browserCommands.ariaSnapshot('#subject');
     expect(actual).toMatch(new RegExp(`heading "${title}" \\[level=3\\]:\\s+- ${role} "${title}"`));
     expect(actual).toContain(copy);
@@ -172,7 +178,9 @@ it('S7 activates inside a form without submitting it', async () => {
   const card = await mount('interactive');
   const form = document.createElement('form');
   const activate = vi.fn();
-  const submit = vi.fn((event: SubmitEvent) => { event.preventDefault(); });
+  const submit = vi.fn((event: SubmitEvent) => {
+    event.preventDefault();
+  });
   card.before(form);
   form.append(card);
   form.addEventListener('submit', submit);
@@ -225,7 +233,7 @@ it('S9 retains the border and full-card keyboard outline in forced colours', asy
     }
     expect(matchMedia('(forced-colors: active)').matches).toBe(true);
     const card = await mount(link, { before: '<button type="button">Before</button>' });
-    await userEvent.click(page.getByRole('button', { name: 'Before' }));
+    focusBefore();
     await userEvent.tab();
     await expect.element(page.getByRole('link', { name: title })).toHaveFocus();
     const styles = getComputedStyle(surface(card));
@@ -246,11 +254,13 @@ it('S10 shows clickable hover feedback without motion', async () => {
   const card = await mount('variant="outlined" interactive');
   const styles = getComputedStyle(surface(card));
   const restingShadow = styles.boxShadow;
+  const restingOverlay = getComputedStyle(surface(card), '::before').backgroundColor;
   expect(matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
   expect(getComputedStyle(card).animationName).toBe('none');
   expect(styles.transitionDuration).toBe('0s');
   await userEvent.hover(page.getByText(copy, { exact: true }));
   expect(styles.boxShadow).not.toBe(restingShadow);
+  expect(getComputedStyle(surface(card), '::before').backgroundColor).not.toBe(restingOverlay);
 });
 
 it('S11 keeps the title and body direction and activates in RTL', async () => {
@@ -284,7 +294,7 @@ it('S14 leaves a titleless action card out of the tab order', async () => {
     before: '<button type="button">Before</button>',
     after: '<button type="button">After</button>',
   });
-  await userEvent.click(page.getByRole('button', { name: 'Before' }));
+  focusBefore();
   await userEvent.tab();
   await expect.element(page.getByRole('button', { name: 'After' })).toHaveFocus();
 });

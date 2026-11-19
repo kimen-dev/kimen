@@ -45,6 +45,65 @@
       "footer-padding": {
         "$value": "{ki.space.3xl}",
         "$description": "Material 3 dimension used by the card component for footer padding."
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional decorative image over the card background."
+      },
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.backdrop-filter-none}",
+        "$description": "Complete card backdrop filter, off by default."
+      },
+      "elevated-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Raised card background."
+      },
+      "elevated-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on the elevated card background."
+      },
+      "elevated-shadow": {
+        "$value": "{ki.elevation.e1}",
+        "$description": "Resting shadow for an elevated card.",
+        "$type": "shadow"
+      },
+      "filled-bg": {
+        "$value": "{ki.surface.s2}",
+        "$description": "Tinted card background."
+      },
+      "filled-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on the filled card background."
+      },
+      "outlined-bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Page-coloured background for an outlined card."
+      },
+      "outlined-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text on the outlined card background."
+      },
+      "outlined-border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Boundary colour for an outlined card."
+      },
+      "outlined-border-width": {
+        "$value": "{ki.size.border.hairline}",
+        "$description": "Hairline width for an outlined card."
+      },
+      "hover-shadow": {
+        "$value": "{ki.elevation.e2}",
+        "$description": "Hover shadow of a primary-action card.",
+        "$type": "shadow"
+      },
+      "hover-overlay": {
+        "$value": "{ki.surface.hover-overlay}",
+        "$description": "Pointer hover state layer on a primary-action card."
+      },
+      "title-family": {
+        "$value": "{ki.typography.family.heading}",
+        "$description": "Family used for a clickable card title."
       }
     }
   }

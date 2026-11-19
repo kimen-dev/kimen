@@ -12,7 +12,9 @@
 
 ## Constitutional check
 
-The contract adds opt-in API as a MINOR change. The card retains its
+The card options are additive. The public API declaration is MAJOR under
+the gate's rule for changed module symbol signatures, including the card
+class and the generated loader type namespaces. The card retains its
 component budget and adds no runtime dependency. Native controls provide
 roles and keyboard behavior. Both themes derive new colour pairs from the
 semantic layer. Catalog activation uses the existing declared-action policy.

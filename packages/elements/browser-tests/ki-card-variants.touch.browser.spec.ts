@@ -39,7 +39,7 @@ it('S12 activates a coarse-pointer tap on the body without retaining hover feedb
   await expect.poll(() => matchMedia('(pointer: coarse) and (hover: none)').matches).toBe(true);
   await browserCommands.emulateReducedMotion('reduce');
   document.body.innerHTML = `
-    <ki-card interactive variant="outlined">
+    <ki-card interactive variant="outlined" data-ki-density="touch">
       <h3 slot="header">Search index rebuild</h3>
       <p id="touch-copy">Rebuild starts at midnight</p>
     </ki-card>
@@ -48,7 +48,10 @@ it('S12 activates a coarse-pointer tap on the body without retaining hover feedb
   const card = document.querySelector('ki-card');
   const surface = card?.shadowRoot?.querySelector('[part="card"]');
   if (!card || !surface) throw new Error('Card surface did not render');
-  const resting = getComputedStyle(surface).boxShadow;
+  const styles = getComputedStyle(surface);
+  expect(parseFloat(styles.minBlockSize)).toBeGreaterThanOrEqual(44);
+  expect(parseFloat(styles.minInlineSize)).toBeGreaterThanOrEqual(44);
+  const resting = styles.boxShadow;
   const activate = vi.fn();
   card.addEventListener('ki-activate', activate);
   await browserCommands.tapWithCoarsePointer('#touch-copy');

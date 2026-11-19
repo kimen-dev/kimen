@@ -10,5 +10,9 @@ export default {
     '</ki-card>',
     '<ki-card>Storage is almost full.</ki-card>',
     '<ki-card><h3 slot="header" style="margin:0;">Header only</h3><p style="margin:0;">Body copy.</p><button slot="footer" type="button">Close</button></ki-card>',
+    '<ki-card variant="elevated"><h3 slot="header" style="margin:0;">Elevated</h3><p style="margin:0;">Raised surface with a resting shadow.</p></ki-card>',
+    '<ki-card variant="filled"><h3 slot="header" style="margin:0;">Filled</h3><p style="margin:0;">Tinted surface for grouped content.</p></ki-card>',
+    '<ki-card variant="outlined" href="#incident-42"><h3 slot="header">Search index rebuild</h3><p style="margin:0;">Clickable outlined card.</p><button type="button" slot="footer">Bookmark</button></ki-card>',
+    '<ki-card variant="filled" interactive><h3 slot="header">Preview report</h3><p style="margin:0;">Clickable card with a primary action.</p></ki-card>',
   ].join(''),
 } satisfies VisualGallery;

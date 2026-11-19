@@ -650,4 +650,28 @@ describe('renderUiSpec — clickable ki-card', () => {
     card.dispatchEvent(new CustomEvent('ki-activate', { bubbles: true }));
     expect(onAction).toHaveBeenCalledTimes(1);
   });
+  it('lets a card destination take precedence over a declared action', () => {
+    const onAction = vi.fn<(event: ActionEvent) => void>();
+    const result = renderUiSpec(
+      {
+        version: 1,
+        actions: ['rebuild'],
+        root: {
+          component: 'ki-card',
+          action: 'rebuild',
+          props: { href: '/incidents/42', interactive: true },
+          slots: { header: [title] },
+        },
+      },
+      { surface, onAction },
+    );
+    expect(result.ok).toBe(true);
+    const card = surface.querySelector('ki-card');
+    if (!card) throw new Error('Card fixture did not render');
+    expect(card.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))).toBe(
+      true,
+    );
+    card.dispatchEvent(new CustomEvent('ki-activate', { bubbles: true }));
+    expect(onAction).not.toHaveBeenCalled();
+  });
 });

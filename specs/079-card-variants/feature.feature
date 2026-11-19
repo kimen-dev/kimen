@@ -91,7 +91,7 @@ Feature: Card variants and primary activation
 
   # S12
   Scenario: The card offers the full primary target on a coarse pointer
-    Given a device with a coarse pointer and an action card containing "Rebuild starts at midnight"
+    Given a device with a coarse pointer and an action card at touch density containing "Rebuild starts at midnight"
     When the user taps the supporting text
     Then the card reports one activation
     And the card does not retain hover feedback
