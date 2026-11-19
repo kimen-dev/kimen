@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 304 semantic
-and 869 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 317 semantic
+and 934 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -34,6 +34,14 @@ every component at once.
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
+
+### `ki.density`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-density-control-offset` | `0rem` | Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min. |
+| `--ki-density-space-scale` | `1` | Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). |
+| `--ki-density-target-min` | `24px` | The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). |
 
 ### `ki.effect`
 
@@ -67,6 +75,9 @@ every component at once.
 | `--ki-focus-danger` | `0 0 0 3px rgba(240, 81, 73, 0.2)` | MarsUI Focus/danger: persistent 3px spread ring of Outline/danger_base_em_alpha (danger-500 at 20% light / 40% dark) — the danger state signal on Input_field and Dropdown masters (measured rgb(252,220,219) over white). Pairs with a white fill and hairline border; Kimen keeps its opaque danger border on top as a declared a11y deviation. |
 | `--ki-focus-gray` | `0 0 0 3px rgba(0, 0, 0, 0.08)` | MarsUI Focus/gray: 3px spread focus ring of Outline/med_em (scheme-aware via the outline token). |
 | `--ki-focus-primary` | `0 0 0 3px rgba(132, 90, 190, 0.2)` | MarsUI Focus/primary: 3px spread focus ring of Outline/primary_base_em_alpha, read from the Figma master as #845abe33 = brand 500 at 20% (Kimen name: outline.primary-base-em-alpha / brand.500-alpha-2). The previous 40% (outline.primary-low-em-alpha / brand.500-alpha-4) came from specs/002-ki-button/design-extraction.md §2.5, which read the alpha off the Dark canvas mode and recorded it as the Light value; the ring shipped 2x too strong in light and 2.8x in dark across twelve components. |
+| `--ki-focus-ring-color` | `#845abe` | Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. |
+| `--ki-focus-ring-offset` | `0.125rem` | Gap between a focusable component and its keyboard focus ring. |
+| `--ki-focus-ring-width` | `0.125rem` | Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. |
 
 ### `ki.inverse-black`
 
@@ -227,6 +238,7 @@ every component at once.
 | `--ki-surface-danger-low-em` | `#ffebed` | semantic color for surface danger low em. |
 | `--ki-surface-danger-low-em-alpha` | `rgba(240, 81, 73, 0.2)` | semantic color for surface danger low em alpha. |
 | `--ki-surface-danger-med-em` | `#f05149` | semantic color for surface danger med em. |
+| `--ki-surface-danger-tint` | `rgba(240, 81, 73, 0.12)` | A danger tint that holds content (alert and badge fills, the indeterminate checkbox box): the translucent danger-base-em-alpha over the page. Distinct from a state wash, which draws from the same tint ramp directly: reduced transparency makes this one opaque and leaves the washes translucent (spec 044 D1). |
 | `--ki-surface-disabled-base-em` | `#f2f2f4` | semantic color for surface disabled base em. |
 | `--ki-surface-disabled-high-em` | `#afb3bb` | semantic color for surface disabled high em. |
 | `--ki-surface-disabled-low-em` | `#ececf0` | semantic color for surface disabled low em. |
@@ -239,6 +251,7 @@ every component at once.
 | `--ki-surface-info-low-em` | `#dff3ff` | semantic color for surface info low em. |
 | `--ki-surface-info-low-em-alpha` | `rgba(19, 185, 236, 0.2)` | semantic color for surface info low em alpha. |
 | `--ki-surface-info-med-em` | `#13b9ec` | semantic color for surface info med em. |
+| `--ki-surface-info-tint` | `rgba(19, 185, 236, 0.12)` | A info tint that holds content (alert and badge fills, the indeterminate checkbox box): the translucent info-base-em-alpha over the page. Distinct from a state wash, which draws from the same tint ramp directly: reduced transparency makes this one opaque and leaves the washes translucent (spec 044 D1). |
 | `--ki-surface-inverse-black` | `#ffffff` | semantic color for surface inverse black. |
 | `--ki-surface-inverse-white` | `#000000` | semantic color for surface inverse white. |
 | `--ki-surface-pressed-overlay-inverse` | `rgba(0, 0, 0, 0.05)` | Pressed interaction overlay for a surface whose fill is LIGHT, so the wash darkens: the next rung above hover-overlay-inverse (Black/3 -> Black/5 light, White/3 -> White/5 dark). The mirror of ki.state-layer.pressed, which is the next rung above hover-overlay and washes the other way. Two conventions exist because ki-button paints primary on a dark fill and secondary on a light one; a single pressed overlay would lighten one of them on press and read as less pressed, not more. |
@@ -250,6 +263,7 @@ every component at once.
 | `--ki-surface-primary-low-em-alpha` | `rgba(132, 90, 190, 0.2)` | semantic color for surface primary low em alpha. |
 | `--ki-surface-primary-med-em` | `#845abe` | semantic color for surface primary med em. |
 | `--ki-surface-primary-med-em-hover` | `#5f3993` | Hover of surface primary-med-em. Intensifies in the direction the scheme reads as 'more': darker on a light canvas (600), brighter on a dark one (400). Selection controls whose resting fill is the MarsUI default brand surface (brand-500) need a hover that is a real delta in BOTH schemes — primary-high-em collapses onto primary-med-em in dark. |
+| `--ki-surface-primary-tint` | `rgba(132, 90, 190, 0.2)` | A primary tint that holds content (alert and badge fills, the indeterminate checkbox box): the translucent primary-low-em-alpha over the page. Distinct from a state wash, which draws from the same tint ramp directly: reduced transparency makes this one opaque and leaves the washes translucent (spec 044 D1). |
 | `--ki-surface-raised` | `#f9f9fa` | Deprecated alias kept for pre-Fase-1 consumers; use ki.surface.s1. |
 | `--ki-surface-s0` | `#ffffff` | semantic color for surface s0. |
 | `--ki-surface-s1` | `#f9f9fa` | semantic color for surface s1. |
@@ -283,6 +297,7 @@ every component at once.
 | `--ki-surface-success-low-em` | `#e3f6e2` | semantic color for surface success low em. |
 | `--ki-surface-success-low-em-alpha` | `rgba(64, 155, 63, 0.2)` | semantic color for surface success low em alpha. |
 | `--ki-surface-success-med-em` | `#409b3f` | semantic color for surface success med em. |
+| `--ki-surface-success-tint` | `rgba(64, 155, 63, 0.12)` | A success tint that holds content (alert and badge fills, the indeterminate checkbox box): the translucent success-base-em-alpha over the page. Distinct from a state wash, which draws from the same tint ramp directly: reduced transparency makes this one opaque and leaves the washes translucent (spec 044 D1). |
 | `--ki-surface-tertiary-low-em` | `#ece4f5` | Tertiary container surface. M3 md.sys.color.tertiary-container (tertiary tone 90 light / 30 dark). onmars single-accent: resolves to the primary container equivalent. |
 | `--ki-surface-tertiary-med-em` | `#845abe` | Tertiary accent surface. M3 md.sys.color.tertiary (tertiary tone 40 light / 80 dark). onmars is a single-accent theme: the tertiary accent resolves to the primary accent surface. |
 | `--ki-surface-tint` | `#845abe` | Surface tint color mixed into elevated surfaces. M3 md.sys.color.surface-tint (= primary; tone 40 light, 80 dark via the brand ramp). onmars: the brand accent — MarsUI elevation is shadow-based, so the tint stays the primary accent. |
@@ -292,6 +307,7 @@ every component at once.
 | `--ki-surface-warning-low-em` | `#fdeace` | semantic color for surface warning low em. |
 | `--ki-surface-warning-low-em-alpha` | `rgba(248, 172, 58, 0.2)` | semantic color for surface warning low em alpha. |
 | `--ki-surface-warning-med-em` | `#f8ac3a` | semantic color for surface warning med em. |
+| `--ki-surface-warning-tint` | `rgba(248, 172, 58, 0.12)` | A warning tint that holds content (alert and badge fills, the indeterminate checkbox box): the translucent warning-base-em-alpha over the page. Distinct from a state wash, which draws from the same tint ramp directly: reduced transparency makes this one opaque and leaves the washes translucent (spec 044 D1). |
 | `--ki-surface-white` | `#ffffff` | semantic color for surface white. |
 
 ### `ki.text`
@@ -301,26 +317,26 @@ every component at once.
 | `--ki-text-base` | `#0a0c11` | Deprecated alias kept for pre-Fase-1 consumers; use ki.text.high-em. |
 | `--ki-text-base-em` | `#c3c6cc` | semantic color for text base em. |
 | `--ki-text-black` | `#000000` | semantic color for text black. |
-| `--ki-text-danger` | `#f05149` | Deprecated alias kept for pre-Fase-1 consumers; use ki.text.danger-med-em. |
+| `--ki-text-danger` | `#cd2118` | Deprecated alias kept for pre-Fase-1 consumers; use ki.text.danger-high-em, the danger ink that reads as text (4.9:1 or more on s0-s2). danger-med-em is under 4.5:1 on the light surfaces. |
 | `--ki-text-danger-base-em` | `#ffebed` | semantic color for text danger base em. |
 | `--ki-text-danger-high-em` | `#cd2118` | semantic color for text danger high em. |
-| `--ki-text-danger-low-em` | `#f19997` | semantic color for text danger low em. |
-| `--ki-text-danger-med-em` | `#f05149` | semantic color for text danger med em. |
+| `--ki-text-danger-low-em` | `#f19997` | semantic color for text danger low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
+| `--ki-text-danger-med-em` | `#f05149` | semantic color for text danger med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
 | `--ki-text-high-em` | `#0a0c11` | semantic color for text high em. |
 | `--ki-text-info-base-em` | `#dff3ff` | semantic color for text info base em. |
 | `--ki-text-info-high-em` | `#085268` | Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. |
-| `--ki-text-info-low-em` | `#71d5f4` | semantic color for text info low em. |
-| `--ki-text-info-med-em` | `#13b9ec` | semantic color for text info med em. |
+| `--ki-text-info-low-em` | `#71d5f4` | semantic color for text info low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
+| `--ki-text-info-med-em` | `#13b9ec` | semantic color for text info med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
 | `--ki-text-inverse-black` | `#ffffff` | semantic color for text inverse black. |
 | `--ki-text-inverse-primary` | `#b59cd8` | Primary accent legible on the inverse surface. M3 md.sys.color.inverse-primary (primary tone 80 light / 40 dark). onmars: the opposite-scheme primary text tone (brand 300 light, brand 600 dark). |
 | `--ki-text-inverse-white` | `#000000` | semantic color for text inverse white. |
-| `--ki-text-low-em` | `#8c929c` | semantic color for text low em. |
+| `--ki-text-low-em` | `#8c929c` | semantic color for text low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
 | `--ki-text-med-em` | `#5b616d` | semantic color for text med em. |
 | `--ki-text-muted` | `#5b616d` | Deprecated alias kept for pre-Fase-1 consumers; use ki.text.med-em. |
 | `--ki-text-none` | `rgba(255, 255, 255, 0)` | semantic color for text none. |
 | `--ki-text-primary-base-em` | `#ece4f5` | semantic color for text primary base em. |
 | `--ki-text-primary-high-em` | `#5f3993` | semantic color for text primary high em. |
-| `--ki-text-primary-low-em` | `#b59cd8` | semantic color for text primary low em. |
+| `--ki-text-primary-low-em` | `#b59cd8` | semantic color for text primary low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
 | `--ki-text-primary-med-em` | `#845abe` | semantic color for text primary med em. |
 | `--ki-text-primary-on-danger` | `#ffffff` | semantic color for text primary on danger. |
 | `--ki-text-primary-on-primary` | `#ffffff` | semantic color for text primary on primary. |
@@ -335,13 +351,14 @@ every component at once.
 | `--ki-text-secondary-on-success` | `rgba(255, 255, 255, 0.72)` | semantic color for text secondary on success. |
 | `--ki-text-success-base-em` | `#e3f6e2` | semantic color for text success base em. |
 | `--ki-text-success-high-em` | `#2c6a2b` | semantic color for text success high em. |
-| `--ki-text-success-low-em` | `#9cda9b` | semantic color for text success low em. |
-| `--ki-text-success-med-em` | `#409b3f` | semantic color for text success med em. |
+| `--ki-text-success-low-em` | `#9cda9b` | semantic color for text success low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
+| `--ki-text-success-med-em` | `#409b3f` | semantic color for text success med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
+| `--ki-text-supporting` | `#5b616d` | Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted). |
 | `--ki-text-text-on-neutral` | `#ffffff` | semantic color for text text on neutral. |
 | `--ki-text-warning-base-em` | `#fdeace` | semantic color for text warning base em. |
 | `--ki-text-warning-high-em` | `#945b05` | Darkened 600->800 in the light-scheme SOURCES (badge AA on the base-em tint; 010 D2 contingency, founder sign-off at merge). Reaches three of four contexts: onmars light, material3 light AND material3 dark — m3 defines no info/warning overrides, so its dark inherits these values by cascade; only onmars dark is pinned by the dark-mode file. |
-| `--ki-text-warning-low-em` | `#fbcb84` | semantic color for text warning low em. |
-| `--ki-text-warning-med-em` | `#f8ac3a` | semantic color for text warning med em. |
+| `--ki-text-warning-low-em` | `#fbcb84` | semantic color for text warning low em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
+| `--ki-text-warning-med-em` | `#f8ac3a` | semantic color for text warning med em. Not an ink for body text: under 4.5:1 on the light surfaces (s0-s2). Use it for large text (24px, or 18.66px bold), icons and decoration; body text takes the high-em ink of the tone. |
 | `--ki-text-white` | `#ffffff` | semantic color for text white. |
 
 ### `ki.transparent-inverse`
@@ -357,6 +374,7 @@ every component at once.
 | `--ki-typography-family-base` | `Inter, system-ui, sans-serif` | Deprecated alias kept for pre-Fase-1 consumers; use ki.typography.family.body. |
 | `--ki-typography-family-body` | `Inter, system-ui, sans-serif` | semantic font family for typography family body. |
 | `--ki-typography-family-display` | `Inter, system-ui, sans-serif` | semantic font family for typography family display. |
+| `--ki-typography-family-heading` | `Inter, system-ui, sans-serif` | Shared font family for component headings. Reassign it on a theme root to style headings independently of body copy. |
 | `--ki-typography-family-mono` | `'JetBrains Mono', ui-monospace, monospace` | semantic font family for typography family mono. |
 | `--ki-typography-family-serif` | `Merriweather, Georgia, serif` | semantic font family for typography family serif. |
 | `--ki-typography-letter-spacing-lg` | `-0.07em` | semantic dimension for typography letter spacing lg. |
@@ -417,10 +435,14 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-alert-border-width` | `0rem` | dimension used by the alert component for border width (MarsUI never strokes alert surfaces: Alert master, Info Notes and Toasts all carry width 0; tone lives in the fill and text. material3 keeps its 2px border via its override). |
-| `--ki-alert-danger-bg` | `rgba(240, 81, 73, 0.12)` | color used by the alert component for danger background (MarsUI Surface/danger_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs). |
+| `--ki-alert-actions-gap` | `0.75rem` | dimension used by the alert component for the gap between slotted actions (MarsUI Alert master CTAs gap Space/xl 12px). |
+| `--ki-alert-border-width` | `0rem` | dimension used by the alert component for the card border width (MarsUI never strokes alert surfaces: the Alert master card stroke is fully transparent. material3 keeps its 2px border via its override). |
+| `--ki-alert-card-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), 0 3px 3px -1.5px rgba(0, 0, 0, 0.03), 0 20px 20px -12px rgba(0, 0, 0, 0.03), 0 32px 32px -16px rgba(0, 0, 0, 0.03), 0 56px 56px -28px rgba(0, 0, 0, 0.03)` | shadow used by the alert component for the card elevation (MarsUI Alert master List_wrap: elevation ramp level e5). |
+| `--ki-alert-danger-bg` | `#ffffff` | color used by the alert component for the danger card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here). |
 | `--ki-alert-danger-border` | `rgba(255, 255, 255, 0)` | color used by the alert component for danger border (MarsUI draws no tone border on any alert/note/toast surface). |
-| `--ki-alert-danger-fg` | `#cd2118` | color used by the alert component for danger foreground. |
+| `--ki-alert-danger-fg` | `#0a0c11` | color used by the alert component for the danger card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). |
+| `--ki-alert-danger-icon-bg` | `rgba(240, 81, 73, 0.12)` | color used by the alert component for the danger icon frame (MarsUI Alert master Feature-icon Surface/danger-base-em-alpha at 12%). |
+| `--ki-alert-danger-icon-fg` | `#cd2118` | color used by the alert component for the danger icon glyph (MarsUI Alert master Feature-icon glyph Text/danger-high-em). |
 | `--ki-alert-dismiss-active-fg` | `#0a0c11` | color used by the alert component for dismiss active foreground. |
 | `--ki-alert-dismiss-border-width` | `1px` | dimension used by the alert component for the dismiss chip bevel stroke (MarsUI 24px raised circle: 1px Outline/secondary_button_top hairline). |
 | `--ki-alert-dismiss-hover-bg` | `rgba(0, 0, 0, 0.03)` | color used by the alert component for dismiss hover background (MarsUI hover mechanism: hover_overlay_inverse Black/3 wash — the dismiss chip previously had zero visible hover change). |
@@ -434,27 +456,43 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-alert-focus-ring-shadow` | `0 0 0 3px rgba(132, 90, 190, 0.2)` | shadow used by the alert dismiss control for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
 | `--ki-alert-focus-ring-width` | `0.125rem` | dimension used by the alert component for focus ring width. |
 | `--ki-alert-font-size` | `0.8125rem` | dimension used by the alert component for font size. |
-| `--ki-alert-gap` | `0.75rem` | dimension used by the alert component for gap (MarsUI Alert master card gap Space/xl 12px). |
+| `--ki-alert-gap` | `0.75rem` | dimension used by the alert component for the card stack gap between icon, text and actions (MarsUI Alert master List_wrap gap Space/xl 12px). |
+| `--ki-alert-heading-font-family` | `Inter, system-ui, sans-serif` | Font family for the alert heading. Override it to give alerts their own heading typeface. |
 | `--ki-alert-heading-font-size` | `0.9375rem` | dimension used by the alert component for heading font size. |
 | `--ki-alert-heading-font-weight` | `600` | font weight used by the alert component for heading font weight (MarsUI UI/Body 2/medium: weight 600 on the master heading). |
-| `--ki-alert-info-bg` | `rgba(19, 185, 236, 0.12)` | color used by the alert component for info background (MarsUI Surface/info_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs). |
+| `--ki-alert-icon-glyph-size` | `1.25rem` | dimension used by the alert component for the icon glyph inside the frame (MarsUI Alert master Feature-icon glyph 20px). |
+| `--ki-alert-icon-radius` | `1000px` | dimension used by the alert component for the icon frame radius (MarsUI Alert master Feature-icon: a circle). |
+| `--ki-alert-icon-size` | `2rem` | dimension used by the alert component for the icon frame (MarsUI Alert master Feature-icon size xs: 32px). |
+| `--ki-alert-info-bg` | `#ffffff` | color used by the alert component for the info card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here). |
 | `--ki-alert-info-border` | `rgba(255, 255, 255, 0)` | color used by the alert component for info border (MarsUI draws no tone border on any alert/note/toast surface). |
-| `--ki-alert-info-fg` | `#085268` | color used by the alert component for info foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 7.3:1). |
+| `--ki-alert-info-fg` | `#0a0c11` | color used by the alert component for the info card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). |
+| `--ki-alert-info-icon-bg` | `rgba(19, 185, 236, 0.12)` | color used by the alert component for the info icon frame (MarsUI Alert master Feature-icon Surface/info-base-em-alpha at 12%). |
+| `--ki-alert-info-icon-fg` | `#085268` | color used by the alert component for the info icon glyph (MarsUI Alert master Feature-icon glyph Text/info-high-em). |
 | `--ki-alert-line-height` | `1.5rem` | dimension used by the alert component for line height. |
 | `--ki-alert-message-line-height` | `1.25rem` | dimension used by the alert component for message line height (MarsUI description is 13/20 line_height/para; the heading keeps 15/24). |
-| `--ki-alert-neutral-bg` | `#f9f9fa` | color used by the alert component for neutral background. |
+| `--ki-alert-neutral-bg` | `#ffffff` | color used by the alert component for the neutral card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here). |
 | `--ki-alert-neutral-border` | `rgba(255, 255, 255, 0)` | color used by the alert component for neutral border. |
-| `--ki-alert-neutral-fg` | `#0a0c11` | color used by the alert component for neutral foreground. |
-| `--ki-alert-padding-block` | `0.75rem` | dimension used by the alert component for padding block (MarsUI Alert master card: 12px on all four sides). |
-| `--ki-alert-padding-inline` | `0.75rem` | dimension used by the alert component for padding inline (MarsUI Alert master card: 12px on all four sides). |
-| `--ki-alert-radius` | `10px` | dimension used by the alert component for radius (Info Notes pills measure component radius 8-10px; same 10px value, repointed to the component ramp so personality modes reach it. The card-form Alert master anchors 16px big_component/radius_xs — applies if ki-alert grows the icon-chip card form). |
-| `--ki-alert-success-bg` | `rgba(64, 155, 63, 0.12)` | color used by the alert component for success background (MarsUI Surface/success_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs). |
+| `--ki-alert-neutral-fg` | `#0a0c11` | color used by the alert component for the neutral card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). |
+| `--ki-alert-neutral-icon-bg` | `rgba(132, 90, 190, 0.12)` | color used by the alert component for the neutral icon frame (MarsUI Alert master Feature-icon Surface/primary-base-em-alpha at 12%: the master variable itself, not the heavier primary-tint content fill, so the primary glyph clears 4.5:1 in dark). |
+| `--ki-alert-neutral-icon-fg` | `#5f3993` | color used by the alert component for the neutral icon glyph (MarsUI Alert master Feature-icon glyph Text/primary-high-em). |
+| `--ki-alert-padding-block` | `0.75rem` | dimension used by the alert component for the card padding block (MarsUI Alert master List_wrap card: 12px on all four sides). |
+| `--ki-alert-padding-inline` | `0.75rem` | dimension used by the alert component for the card padding inline (MarsUI Alert master List_wrap card: 12px on all four sides). |
+| `--ki-alert-radius` | `16px` | dimension used by the alert component for the card radius (MarsUI Alert master List_wrap big_component/radius_xs 16px; the shell around it has its own radius). |
+| `--ki-alert-shell-backdrop-blur` | `12px` | backdrop blur used by the alert component behind the shell (MarsUI Alert master BACKGROUND_BLUR Blur/24 = CSS 12px; reduced transparency and material3 resolve to blur none through the semantic token). |
+| `--ki-alert-shell-bg` | `rgba(0, 0, 0, 0.03)` | color used by the alert component for the shell wash (MarsUI Alert master Inverse-white/alpha-2: the nearest step of the Kimen inverse-white ramp, Black/3 light and White/3 dark). |
+| `--ki-alert-shell-padding` | `0.75rem` | dimension used by the alert component for the shell padding around the card (MarsUI Alert master: 12px on all four sides). |
+| `--ki-alert-shell-radius` | `28px` | dimension used by the alert component for the shell radius (MarsUI Alert master big_component/radius_lg 28px). |
+| `--ki-alert-success-bg` | `#ffffff` | color used by the alert component for the success card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here). |
 | `--ki-alert-success-border` | `rgba(255, 255, 255, 0)` | color used by the alert component for success border (MarsUI draws no tone border on any alert/note/toast surface). |
-| `--ki-alert-success-fg` | `#2c6a2b` | color used by the alert component for success foreground. |
+| `--ki-alert-success-fg` | `#0a0c11` | color used by the alert component for the success card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). |
+| `--ki-alert-success-icon-bg` | `rgba(64, 155, 63, 0.12)` | color used by the alert component for the success icon frame (MarsUI Alert master Feature-icon Surface/success-base-em-alpha at 12%). |
+| `--ki-alert-success-icon-fg` | `#2c6a2b` | color used by the alert component for the success icon glyph (MarsUI Alert master Feature-icon glyph Text/success-high-em). |
 | `--ki-alert-text-gap` | `0.25rem` | dimension used by the alert component for the heading-to-message stack gap (MarsUI Text_wrap 4px, decoupled from the outer 12px card gap). |
-| `--ki-alert-warning-bg` | `rgba(248, 172, 58, 0.12)` | color used by the alert component for warning background (MarsUI Surface/warning_base_em_alpha: tone-500 at 12% light / alpha dark — the Info-Note tint, replacing the opaque 50/950 slabs). |
+| `--ki-alert-warning-bg` | `#ffffff` | color used by the alert component for the warning card background (MarsUI Alert master: the List_wrap card is Surface/special/light-s0-dark-s2 in every tone; the tone is drawn on the icon. Other themes may tint the card per tone here). |
 | `--ki-alert-warning-border` | `rgba(255, 255, 255, 0)` | color used by the alert component for warning border (MarsUI draws no tone border on any alert/note/toast surface). |
-| `--ki-alert-warning-fg` | `#945b05` | color used by the alert component for warning foreground (MarsUI brief §1 systematic em pattern: tone high-em text on tone base-em surface, matching the success/danger rows and the ki-badge tone matrix; AA 5.5:1). |
+| `--ki-alert-warning-fg` | `#0a0c11` | color used by the alert component for the warning card foreground: heading and message ink (MarsUI Alert master Text/high-em in every tone; the message keeps this 4.5:1 ink instead of the master Text/low-em, spec 011 A1-D8). |
+| `--ki-alert-warning-icon-bg` | `rgba(248, 172, 58, 0.12)` | color used by the alert component for the warning icon frame (MarsUI Alert master Feature-icon Surface/warning-base-em-alpha at 12%). |
+| `--ki-alert-warning-icon-fg` | `#945b05` | color used by the alert component for the warning icon glyph (MarsUI Alert master Feature-icon glyph Text/warning-high-em). |
 
 ### `ki-avatar`
 
@@ -611,7 +649,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-lg-line-height` | `1.5rem` | dimension used by the button component for lg line height. |
 | `--ki-button-lg-min-target` | `1.5rem` | dimension used by the button component for lg min target. |
 | `--ki-button-lg-padding-inline` | `0.75rem` | dimension used by the button component for lg padding inline. |
-| `--ki-button-lg-radius` | `12px` | dimension used by the button component for lg radius. |
+| `--ki-button-lg-radius` | `12px` | dimension used by the button component for lg radius (Button master 8003:300 binds Radius/small-component/lg, the scale a radius mode reassigns). |
+| `--ki-button-lg-spinner-size` | `1.25rem` | dimension used by the button component for the lg loading spinner box (20px, the lg icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). |
 | `--ki-button-md-font-size` | `0.8125rem` | dimension used by the button component for md font size. |
 | `--ki-button-md-gap` | `0.375rem` | dimension used by the button component for md gap (MarsUI effective icon-to-text gap 6px). |
 | `--ki-button-md-height` | `2.5rem` | dimension used by the button component for md height. |
@@ -619,7 +658,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-md-line-height` | `1.5rem` | dimension used by the button component for md line height. |
 | `--ki-button-md-min-target` | `1.5rem` | dimension used by the button component for md min target. |
 | `--ki-button-md-padding-inline` | `0.625rem` | dimension used by the button component for md padding inline. |
-| `--ki-button-md-radius` | `10px` | dimension used by the button component for md radius. |
+| `--ki-button-md-radius` | `10px` | dimension used by the button component for md radius (Button master 8003:300 binds Radius/small-component/md, the scale a radius mode reassigns). |
+| `--ki-button-md-spinner-size` | `1.125rem` | dimension used by the button component for the md loading spinner box (18px, the md icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). |
 | `--ki-button-padding-block` | `0.25rem` | dimension used by the button component for padding block (MarsUI: 4px in every size). |
 | `--ki-button-primary-active-overlay` | `rgba(255, 255, 255, 0.08)` | Pressed state layer for the primary button: primary paints on a dark brand fill, so its wash lightens: the next rung above ki.surface.hover-overlay (White/5 -> White/8 light). Replaces this variant's share of a 45-cell active bg/fg/border matrix whose values were documented mirrors of rest and which WITHDREW the hover overlay rather than deepening it, an appearance legible only to a pointer user who had hovered first. |
 | `--ki-button-primary-active-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), inset 0px 3px 3px 0px rgba(255, 255, 255, 0.12)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-primary-rest-shadow. shadow used by the button component for primary active shadow (MarsUI defines no pressed state; mirrors rest). |
@@ -748,13 +788,16 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-secondary-success-rest-border` | `rgba(0, 0, 0, 0.05)` | color used by the button component for secondary success rest border (MarsUI bevel top/inline edge, variant trait). |
 | `--ki-button-secondary-success-rest-fg` | `#2c6a2b` | color used by the button component for secondary success rest foreground. |
 | `--ki-button-sm-font-size` | `0.8125rem` | dimension used by the button component for sm font size. |
-| `--ki-button-sm-gap` | `0.25rem` | dimension used by the button component for sm gap (interpolated between xs and md effective gaps). |
+| `--ki-button-sm-gap` | `0.375rem` | dimension used by the button component for sm gap (Button master 8003:301: root gap Space/xxs 2px + Text_wrap inline padding Space/xs 4px = 6px icon-to-text). |
 | `--ki-button-sm-height` | `2rem` | dimension used by the button component for sm height. |
 | `--ki-button-sm-icon-size` | `1rem` | dimension used by the button component for sm icon size. |
 | `--ki-button-sm-line-height` | `1.5rem` | dimension used by the button component for sm line height. |
 | `--ki-button-sm-min-target` | `1.5rem` | dimension used by the button component for sm min target. |
 | `--ki-button-sm-padding-inline` | `0.5rem` | dimension used by the button component for sm padding inline. |
-| `--ki-button-sm-radius` | `8px` | dimension used by the button component for sm radius. |
+| `--ki-button-sm-radius` | `8px` | dimension used by the button component for sm radius (Button master 8003:300 binds Radius/small-component/sm, the scale a radius mode reassigns). |
+| `--ki-button-sm-spinner-size` | `1rem` | dimension used by the button component for the sm loading spinner box (16px, the sm icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). |
+| `--ki-button-spinner-duration` | `1600ms` | duration used by the button and icon button components for one turn of the loading spinner (spec 046 D5: the ki-progress indeterminate period). Applied only under prefers-reduced-motion: no-preference. |
+| `--ki-button-spinner-stroke-width` | `0.125rem` | dimension used by the button and icon button components for the loading spinner stroke (spec 046 D5: the circular ki-progress ring, drawn with a non-scaling stroke of this width). |
 | `--ki-button-tertiary-active-shadow` | `0 2px 1.5px -0.5px rgba(0, 0, 0, 0.03), inset 0px 2px 3px 0px rgba(255, 255, 255, 0.03)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-rest-shadow. shadow used by the button component for tertiary active shadow (MarsUI defines no pressed state; mirrors rest). |
 | `--ki-button-tertiary-danger-active-bg` | `#f2f2f4` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-bg. color used by the button component for tertiary danger active background (MarsUI defines no pressed state; one step beyond hover in both schemes). |
 | `--ki-button-tertiary-danger-active-border` | `rgba(0, 0, 0, 0.05)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-button-tertiary-danger-rest-border. color used by the button component for tertiary danger active border (MarsUI secondary bevel top/inline edge — tertiary carries the secondary_button outline pair). |
@@ -803,15 +846,17 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-button-xl-line-height` | `1.5rem` | dimension used by the button component for xl line height. |
 | `--ki-button-xl-min-target` | `1.5rem` | dimension used by the button component for xl min target. |
 | `--ki-button-xl-padding-inline` | `0.875rem` | dimension used by the button component for xl padding inline (MarsUI 14px). |
-| `--ki-button-xl-radius` | `14px` | dimension used by the button component for xl radius. |
-| `--ki-button-xs-font-size` | `0.625rem` | dimension used by the button component for xs font size (MarsUI caption_1 10px). |
+| `--ki-button-xl-radius` | `14px` | dimension used by the button component for xl radius (Button master 8003:300 binds Radius/small-component/xl, the scale a radius mode reassigns). |
+| `--ki-button-xl-spinner-size` | `1.5rem` | dimension used by the button component for the xl loading spinner box (24px, the xl icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). |
+| `--ki-button-xs-font-size` | `0.75rem` | dimension used by the button component for xs font size: caption_2, 12px, the smallest size the library ships for informative text (spec 002 amendment A1, issue #321). The Figma Button master draws caption_1, 10px. |
 | `--ki-button-xs-gap` | `0.25rem` | dimension used by the button component for xs gap (MarsUI effective icon-to-text gap 4px). |
 | `--ki-button-xs-height` | `1.5rem` | dimension used by the button component for xs height. |
 | `--ki-button-xs-icon-size` | `0.875rem` | dimension used by the button component for xs icon size (MarsUI 14px). |
-| `--ki-button-xs-line-height` | `1rem` | dimension used by the button component for xs line height (MarsUI caption_1 16px). |
+| `--ki-button-xs-line-height` | `1rem` | dimension used by the button component for xs line height (caption_2 16px, the same height as caption_1). |
 | `--ki-button-xs-min-target` | `1.5rem` | dimension used by the button component for xs min target. |
 | `--ki-button-xs-padding-inline` | `0.375rem` | dimension used by the button component for xs padding inline. |
-| `--ki-button-xs-radius` | `6px` | dimension used by the button component for xs radius. |
+| `--ki-button-xs-radius` | `6px` | dimension used by the button component for xs radius (Button master 8003:300 binds Radius/small-component/xs, the scale a radius mode reassigns). |
+| `--ki-button-xs-spinner-size` | `0.875rem` | dimension used by the button component for the xs loading spinner box (14px, the xs icon size; spec 046 D5: no Figma source, the spinner takes the place of the content). |
 
 ### `ki-card`
 
@@ -871,6 +916,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-checkbox-invalid-fg` | `#cd2118` | color used by the checkbox component for invalid foreground. |
 | `--ki-checkbox-label-font-size` | `0.9375rem` | dimension used by the checkbox component for label font size (MarsUI md pairing: body_2 15px for the 20px box). |
 | `--ki-checkbox-label-font-weight` | `500` | font weight used by the checkbox component for label font weight. |
+| `--ki-checkbox-label-hint-fg` | `#5b616d` | color used by the checkbox component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text). |
+| `--ki-checkbox-label-hint-gap` | `0.25rem` | dimension used by the checkbox component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-checkbox-label-line-height` | `1.5rem` | dimension used by the checkbox component for label line height (MarsUI body_2 24px). |
 | `--ki-checkbox-min-target` | `1.5rem` | dimension used by the checkbox component for min target. |
 | `--ki-checkbox-radius` | `6px` | dimension used by the checkbox component for radius (MarsUI Radius/radius_sm 6px bound on the box; Figma corner smoothing is an accepted rasterization gap). |
@@ -896,20 +943,33 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-dialog-bg` | `#ffffff` | color used by the dialog component for background (flat fallback of the MarsUI glass gradient: Surface/Special/light-s0_dark-s2; components paint the gradient from ki.dialog.bg-start to ki.dialog.bg-end). |
 | `--ki-dialog-bg-end` | `#ffffff` | color used by the dialog component for the glass gradient end (MarsUI Surface/Special/light-s0_dark-s2: white light / Dark/800 dark). |
 | `--ki-dialog-bg-start` | `rgba(255, 255, 255, 0.8)` | color used by the dialog component for the glass gradient start (MarsUI Surface/Special/blur_base_light White/80; dark resolves rgba(36,36,36,0.8)). Paint background: linear-gradient(180deg, var(--ki-dialog-bg-start), var(--ki-dialog-bg-end)). |
+| `--ki-dialog-body-padding-block-end` | `1.25rem` | dimension used by the dialog component for body section padding block end (Modal compact Body: Space/5xl 20px.) |
+| `--ki-dialog-body-padding-block-start` | `1.25rem` | dimension used by the dialog component for body section padding block start (Modal compact Body 16414:19668: Space/5xl 20px.) |
+| `--ki-dialog-body-padding-inline` | `1.25rem` | dimension used by the dialog component for body section padding inline (Modal compact Body: Space/5xl 20px.) |
 | `--ki-dialog-border` | `1px solid rgba(0, 0, 0, 0.03)` | border used by the dialog component for border (MarsUI 1px solid Outline/base_em Black/3 light / White/3 dark; retires the migrated Black/5 foundation reference). |
+| `--ki-dialog-divider-color` | `rgba(0, 0, 0, 0.03)` | color used by the dialog component for the dividers under the heading and above the footer (Outline/base-em). |
+| `--ki-dialog-divider-width` | `1px` | dimension used by the dialog component for the dividers under the heading and above the footer (Modal-header and Modal-actions 1px strokes). Zero removes them. |
 | `--ki-dialog-fg` | `#0a0c11` | color used by the dialog component for foreground. |
 | `--ki-dialog-focus-ring-color` | `#845abe` | color used by the dialog component for focus ring color. |
 | `--ki-dialog-focus-ring-offset` | `0.125rem` | dimension used by the dialog component for focus ring offset. |
 | `--ki-dialog-focus-ring-width` | `0.125rem` | dimension used by the dialog component for focus ring width. |
-| `--ki-dialog-gap` | `1.25rem` | dimension used by the dialog component for gap. |
+| `--ki-dialog-footer-padding-block-end` | `1.5rem` | dimension used by the dialog component for footer section padding block end (Modal-actions/CTAs: Space/7xl 24px.) |
+| `--ki-dialog-footer-padding-block-start` | `1.5rem` | dimension used by the dialog component for footer section padding block start (Modal-actions/CTAs 14158:28302: Space/7xl 24px, below the divider.) |
+| `--ki-dialog-footer-padding-inline` | `1.25rem` | dimension used by the dialog component for footer section padding inline (Modal-actions/CTAs: Space/5xl 20px.) |
+| `--ki-dialog-gap` | `0.75rem` | dimension used by the dialog component for the gap between its footer actions (Modal-actions/CTAs 14158:28302: Space/xl 12px). |
+| `--ki-dialog-heading-font-family` | `Inter, system-ui, sans-serif` | Font family for the dialog heading. Override it to give dialogs their own heading typeface. |
 | `--ki-dialog-heading-font-size` | `1.125rem` | dimension used by the dialog component for heading font size. |
 | `--ki-dialog-heading-font-weight` | `700` | font weight used by the dialog component for heading font weight. |
+| `--ki-dialog-heading-letter-spacing` | `0em` | Letter spacing for the dialog heading. Override it to tune tracking for the chosen heading typeface. |
 | `--ki-dialog-heading-line-height` | `1.5rem` | dimension used by the dialog component for heading line height. |
+| `--ki-dialog-heading-padding-block-end` | `1rem` | dimension used by the dialog component for heading section padding block end (Modal-header compact: Space/3xl 16px, above the divider.) |
+| `--ki-dialog-heading-padding-block-start` | `1rem` | dimension used by the dialog component for heading section padding block start (Modal-header compact 14156:25916: Space/3xl 16px.) |
+| `--ki-dialog-heading-padding-inline` | `1.25rem` | dimension used by the dialog component for heading section padding inline (Modal-header compact: Space/5xl 20px.) |
 | `--ki-dialog-max-width` | `32rem` | dimension used by the dialog component for max width (surface size scale; the former ki.space.26xl reference misused the spacing scale). |
 | `--ki-dialog-min-width` | `24rem` | dimension used by the dialog component for min width (surface size scale; the former ki.space.25xl reference misused the spacing scale). |
 | `--ki-dialog-motion-duration` | `240ms` | duration used by the dialog component for the enter transition (MarsUI moderate step 240ms; retires the migrated 0ms token that disabled the @starting-style fade). |
 | `--ki-dialog-motion-easing` | `cubic-bezier(0, 0, 0.58, 1)` | easing used by the dialog component for the enter transition (MarsUI decelerate curve; retires the migrated linear pair). |
-| `--ki-dialog-padding` | `1.5rem` | dimension used by the dialog component for padding. |
+| `--ki-dialog-padding` | `1.5rem` | dimension used by the dialog component for the room it keeps from the viewport edges when its width or height is clamped. Each section pads itself (heading, body and footer padding tokens). |
 | `--ki-dialog-radius` | `20px` | dimension used by the dialog component for radius (MarsUI compact Modal master 16414:19665: Radius/big_component/radius_sm 20px; the large variant anchors 24px big_component/radius_md). |
 | `--ki-dialog-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), 0 3px 3px -1.5px rgba(0, 0, 0, 0.03), 0 20px 20px -12px rgba(0, 0, 0, 0.03), 0 32px 32px -16px rgba(0, 0, 0, 0.03)` | Dialog elevation: MarsUI elevation ramp level e4 (brief §5, high modal surface; replaces the migrated approximation). material3 keeps its own e3 override (M3 dialog = level3). |
 
@@ -928,14 +988,19 @@ theme-wide change or on any subtree for a scoped one.
 | --- | --- | --- |
 | `--ki-icon-button-lg-icon-size` | `1.5rem` | dimension used by the icon button component for lg icon size (MarsUI Placeholder_lg 24px). |
 | `--ki-icon-button-lg-size` | `3rem` | dimension used by the icon button component for lg box (48px square). |
+| `--ki-icon-button-lg-spinner-size` | `1.5rem` | dimension used by the icon button component for the lg loading spinner box (24px, the lg icon size; spec 046 D5: the spinner takes the place of the icon). |
 | `--ki-icon-button-md-icon-size` | `1.25rem` | dimension used by the icon button component for md icon size (MarsUI Placeholder_md 20px — the button md icon is 18px, 002 §3). |
 | `--ki-icon-button-md-size` | `2.5rem` | dimension used by the icon button component for md box (40px square, Figma node 10078:3129). |
+| `--ki-icon-button-md-spinner-size` | `1.25rem` | dimension used by the icon button component for the md loading spinner box (20px, the md icon size; spec 046 D5: the spinner takes the place of the icon). |
 | `--ki-icon-button-sm-icon-size` | `1.125rem` | dimension used by the icon button component for sm icon size (MarsUI Placeholder_sm 18px). |
 | `--ki-icon-button-sm-size` | `2rem` | dimension used by the icon button component for sm box (32px square). |
+| `--ki-icon-button-sm-spinner-size` | `1.125rem` | dimension used by the icon button component for the sm loading spinner box (18px, the sm icon size; spec 046 D5: the spinner takes the place of the icon). |
 | `--ki-icon-button-xl-icon-size` | `1.75rem` | dimension used by the icon button component for xl icon size (MarsUI Placeholder_xl 28px). |
 | `--ki-icon-button-xl-size` | `3.5rem` | dimension used by the icon button component for xl box (56px square). |
+| `--ki-icon-button-xl-spinner-size` | `1.75rem` | dimension used by the icon button component for the xl loading spinner box (28px, the xl icon size; spec 046 D5: the spinner takes the place of the icon). |
 | `--ki-icon-button-xs-icon-size` | `1rem` | dimension used by the icon button component for xs icon size (MarsUI Icon/Placeholder_xs 16px — one step above the button xs icon). |
 | `--ki-icon-button-xs-size` | `1.5rem` | dimension used by the icon button component for xs box (24px square, Figma Space/7xl). |
+| `--ki-icon-button-xs-spinner-size` | `1rem` | dimension used by the icon button component for the xs loading spinner box (16px, the xs icon size; spec 046 D5: the spinner takes the place of the icon). |
 
 ### `ki-indicator`
 
@@ -978,6 +1043,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-input-focus-ring-shadow` | `0 0 0 3px rgba(132, 90, 190, 0.2)` | shadow used by the input component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
 | `--ki-input-focus-ring-width` | `0.125rem` | dimension used by the input component for focus ring width. |
 | `--ki-input-font-size` | `0.8125rem` | dimension used by the input component for font size. |
+| `--ki-input-font-size-touch` | `1rem` | dimension used by the input component for the text a person types under a coarse primary pointer: 16px, under which Safari on iOS zooms the page into the focused field (spec 048). The onmars type scale has no 16px step. |
 | `--ki-input-font-weight` | `500` | font weight used by the input component for font weight. |
 | `--ki-input-gap` | `0.25rem` | dimension used by the input component for gap. |
 | `--ki-input-height` | `2.5rem` | dimension used by the input component for height (MarsUI Input_field md cell: min-height 40px; consume as min-block-size so the field can grow). |
@@ -996,6 +1062,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-input-label-font-size` | `0.8125rem` | dimension used by the input component for label font size (MarsUI UI/Para/medium: body_1 13px). |
 | `--ki-input-label-font-weight` | `600` | font weight used by the input component for label font weight. |
 | `--ki-input-label-gap` | `0.25rem` | dimension used by the input component for label gap. |
+| `--ki-input-label-hint-fg` | `#5b616d` | color used by the input component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text). |
+| `--ki-input-label-hint-gap` | `0.25rem` | dimension used by the input component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-input-label-line-height` | `1.25rem` | dimension used by the input component for label line height (MarsUI line_height/para 20px). |
 | `--ki-input-label-padding-inline` | `0.125rem` | dimension used by the input component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius). |
 | `--ki-input-line-height` | `1.5rem` | dimension used by the input component for line height. |
@@ -1131,6 +1199,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-radio-group-gap` | `0.375rem` | dimension used by the radio group component for gap. |
 | `--ki-radio-group-label-font-size` | `0.8125rem` | dimension used by the radio group component for label font size. |
 | `--ki-radio-group-label-font-weight` | `600` | font weight used by the radio group component for label font weight. |
+| `--ki-radio-group-label-hint-fg` | `#5b616d` | color used by the radio group component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text). |
+| `--ki-radio-group-label-hint-gap` | `0.25rem` | dimension used by the radio group component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-radio-group-label-line-height` | `1.25rem` | dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement). |
 
 ### `ki-scroller`
@@ -1184,6 +1254,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-select-label-font-size` | `0.8125rem` | dimension used by the select component for label font size (MarsUI UI/Para/medium: body_1 13px). |
 | `--ki-select-label-font-weight` | `600` | font weight used by the select component for label font weight. |
 | `--ki-select-label-gap` | `0.25rem` | dimension used by the select component for label gap. |
+| `--ki-select-label-hint-fg` | `#5b616d` | color used by the select component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text). |
+| `--ki-select-label-hint-gap` | `0.25rem` | dimension used by the select component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-select-label-line-height` | `1.25rem` | dimension used by the select component for label line height (MarsUI line_height/para 20px). |
 | `--ki-select-label-padding-inline` | `0.125rem` | dimension used by the select component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input/ki-textarea). |
 | `--ki-select-line-height` | `1.5rem` | dimension used by the select component for the trigger value line height (MarsUI body_1 24px). |
@@ -1192,8 +1264,8 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-select-listbox-elevation` | `rgba(0, 0, 0, 0.05)` | Deprecated since 0.1.0, removed in 1.0.0. Use --ki-select-listbox-shadow. color used by the select component for listbox elevation. Legacy of the pre-ramp hand-composed listbox shadow, superseded by ki.select.listbox.shadow; kept published because the public-api contract requires deprecation metadata at least one minor before removal. |
 | `--ki-select-listbox-max-block-size` | `20rem` | dimension used by the select component for listbox max block size (surface size scale; the former ki.space.25xl reference misused the spacing scale). |
 | `--ki-select-listbox-offset` | `0.25rem` | dimension used by the select component for listbox offset. |
-| `--ki-select-listbox-padding` | `0.75rem` | dimension used by the select component for listbox padding (MarsUI Dropmenu content inset Space/xl 12px). |
-| `--ki-select-listbox-radius` | `20px` | dimension used by the select component for listbox radius (MarsUI Radius/big_component/radius_sm 20px bound on the Dropmenu panel). |
+| `--ki-select-listbox-padding` | `0.5rem` | dimension used by the select component for listbox padding (Dropmenu master Body: Space/md 8px on every side). |
+| `--ki-select-listbox-radius` | `16px` | dimension used by the select component for listbox radius (Dropmenu master 12127:30113: Radius/big-component/xs 16px). |
 | `--ki-select-listbox-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), 0 3px 3px -1.5px rgba(0, 0, 0, 0.03), 0 20px 20px -12px rgba(0, 0, 0, 0.03)` | shadow used by the select component for the listbox: MarsUI elevation ramp e3 (brief §5), the medium floating-surface level, replacing the former hand-composed offset/color shadow. Declared level: e3 (M3 analog: menu/dialog band; material3 overrides to e2 = md.sys.elevation.level2 for menus). |
 | `--ki-select-min-target` | `1.5rem` | dimension used by the select component for min target. |
 | `--ki-select-padding-inline` | `0.625rem` | dimension used by the select component for padding inline. |
@@ -1236,17 +1308,19 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-switch-checked-rest-border` | `rgba(255, 255, 255, 0)` | color used by the switch component for checked rest border. |
 | `--ki-switch-checked-rest-thumb` | `#ffffff` | color used by the switch component for checked rest thumb. |
 | `--ki-switch-checked-rest-track` | `#845abe` | color used by the switch component for checked rest track. |
+| `--ki-switch-control-height` | `1.75rem` | dimension used by the switch component for the control footprint height (Toggle md: Space/9xl 28px). The well pads the track by half of (control-height - track-height) on every side. |
+| `--ki-switch-control-width` | `3rem` | dimension used by the switch component for the control footprint width (Toggle md 10023:1368: Space/14xl 48px). The well is centred in it; set it to the track width, with control-height, to drop the well. |
 | `--ki-switch-focus-ring-color` | `#845abe` | color used by the switch component for focus ring color. |
 | `--ki-switch-focus-ring-offset` | `0.125rem` | dimension used by the switch component for focus ring offset. |
 | `--ki-switch-focus-ring-shadow` | `0 0 0 3px rgba(132, 90, 190, 0.2)` | shadow used by the switch component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
 | `--ki-switch-focus-ring-width` | `0.125rem` | dimension used by the switch component for focus ring width. |
-| `--ki-switch-gap` | `0.5rem` | dimension used by the switch component for gap (MarsUI sm label pairing: Space/md 8px). |
+| `--ki-switch-gap` | `0.75rem` | dimension used by the switch component for gap between the control and its label (Toggle-label md 10101:3996: Space/xl 12px, as checkbox and radio). |
 | `--ki-switch-glyph-dash-height` | `0.125rem` | dimension used by the switch component for the disabled dash glyph block size (Figma pointer exports: 8x2 rounded dash). |
 | `--ki-switch-glyph-height` | `0.375rem` | dimension used by the switch component for the thumb state glyph block size (Figma pointer exports: 4px check ink height). |
 | `--ki-switch-glyph-width` | `0.5rem` | dimension used by the switch component for the thumb state glyph inline size (Figma pointer exports: 8px check/dash ink box inside the thumb). |
 | `--ki-switch-min-target` | `1.75rem` | dimension used by the switch component for min target (MarsUI component frame is 28px tall for sm/md — the designed interactive footprint). |
 | `--ki-switch-thumb-inset` | `0.125rem` | dimension used by the switch component for thumb inset. |
-| `--ki-switch-thumb-radius` | `1000px` | dimension used by the switch component for thumb radius (MarsUI pointer corner radius is half the height with corner smoothing; radius_round clamps to the smoothed pill). |
+| `--ki-switch-thumb-radius` | `6px` | dimension used by the switch component for thumb radius (Toggle md Pointer 10023:1371: 22x18 with Radius/small-component/xs). |
 | `--ki-switch-thumb-size` | `1.125rem` | dimension used by the switch component for thumb size. |
 | `--ki-switch-thumb-width` | `1.375rem` | dimension used by the switch component for thumb inline size (MarsUI md pointer is 22x18 — wider than tall; thumb-size remains the block size). |
 | `--ki-switch-track-height` | `1.375rem` | dimension used by the switch component for track height. |
@@ -1264,6 +1338,9 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-switch-unchecked-rest-border` | `rgba(0, 0, 0, 0.48)` | color used by the switch component for unchecked rest border. |
 | `--ki-switch-unchecked-rest-thumb` | `#ffffff` | color used by the switch component for unchecked rest thumb. |
 | `--ki-switch-unchecked-rest-track` | `#dddfe4` | color used by the switch component for unchecked rest track (MarsUI OFF track = surface/disabled_med_em #dddfe4 light / White-18 dark — a solid soft fill, not an outlined pill). |
+| `--ki-switch-well-bg-end` | `#f9f9fa` | color used by the switch component for the bottom of the well gradient (Toggle md Base). |
+| `--ki-switch-well-bg-start` | `#ececf0` | color used by the switch component for the top of the well gradient (Toggle md Base: Surface/s3 to Surface/s1). Transparent drops the well. |
+| `--ki-switch-well-radius` | `10px` | dimension used by the switch component for the radius of the well that holds the track (Toggle md Base: Radius/small-component/md). |
 
 ### `ki-tab`
 
@@ -1345,6 +1422,7 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-focus-ring-shadow` | `0 0 0 3px rgba(132, 90, 190, 0.2)` | shadow used by the textarea component for the focus ring glow (MarsUI Focus/primary: 3px spread ring at 20% — see ki.focus.primary. specs/002-ki-button/design-extraction.md §2.5 recorded 40%, having read the alpha off the Dark canvas mode, same double mechanism as ki-button: glow plus the opaque indicator). |
 | `--ki-textarea-focus-ring-width` | `0.125rem` | dimension used by the textarea component for focus ring width. |
 | `--ki-textarea-font-size` | `0.8125rem` | dimension used by the textarea component for font size. |
+| `--ki-textarea-font-size-touch` | `1rem` | dimension used by the textarea component for the text a person types under a coarse primary pointer: 16px, under which Safari on iOS zooms the page into the focused field (spec 048). The onmars type scale has no 16px step. |
 | `--ki-textarea-font-weight` | `500` | font weight used by the textarea component for font weight. |
 | `--ki-textarea-hover-bg` | `#ececf0` | color used by the textarea component for hover background (MarsUI hover = s2 + Black/3 overlay; s3 is the nearest token). |
 | `--ki-textarea-hover-border` | `rgba(0, 0, 0, 0.56)` | color used by the textarea component for hover border. |
@@ -1360,11 +1438,13 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-textarea-label-font-size` | `0.8125rem` | dimension used by the textarea component for label font size (MarsUI UI/Para/medium: body_1 13px). |
 | `--ki-textarea-label-font-weight` | `600` | font weight used by the textarea component for label font weight. |
 | `--ki-textarea-label-gap` | `0.25rem` | dimension used by the textarea component for label gap. |
+| `--ki-textarea-label-hint-fg` | `#5b616d` | color used by the textarea component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text). |
+| `--ki-textarea-label-hint-gap` | `0.25rem` | dimension used by the textarea component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). |
 | `--ki-textarea-label-line-height` | `1.25rem` | dimension used by the textarea component for label line height (MarsUI line_height/para 20px). |
 | `--ki-textarea-label-padding-inline` | `0.125rem` | dimension used by the textarea component for label padding inline (MarsUI Input_label row 2px inset aligning the label ink with the cell radius; matches ki-input). |
 | `--ki-textarea-line-height` | `1.5rem` | dimension used by the textarea component for line height. |
 | `--ki-textarea-min-target` | `1.5rem` | dimension used by the textarea component for min target. |
-| `--ki-textarea-padding-block` | `0.75rem` | dimension used by the textarea component for padding block (MarsUI 96px md textarea: 12px ink inset). |
+| `--ki-textarea-padding-block` | `0.5rem` | dimension used by the textarea component for padding block (Input-cell textarea md 8018:176: Space/md 8px). |
 | `--ki-textarea-padding-inline` | `0.75rem` | dimension used by the textarea component for padding inline (MarsUI 96px md textarea: 12px ink inset). |
 | `--ki-textarea-radius` | `10px` | dimension used by the textarea component for radius (MarsUI Radius/component/radius_md 10px for the md size; component ramp so personality modes reach it). |
 | `--ki-textarea-readonly-bg` | `#ffffff` | color used by the textarea component for readonly background. |
@@ -1382,10 +1462,13 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-tooltip-arrow-radius` | `2px` | dimension used by the tooltip component for the rounding of the arrow tip (Tooltip master pointer: 1.5px, nearest radius step). |
+| `--ki-tooltip-arrow-size` | `0.5rem` | dimension used by the tooltip component for the depth of the arrow that points at the trigger; it is twice as wide (Tooltip master 12089:7621 pointer: 16x8). Zero removes it. Equal to offset, so the tip meets the trigger. |
 | `--ki-tooltip-backdrop-blur` | `12px` | backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override). |
 | `--ki-tooltip-bg` | `#ffffff` | color used by the tooltip component for background (flat fallback of the MarsUI glass card gradient; the v1 inverse bubble predates the master — specs/013 correction block. material3 keeps the inverse bubble via its override). |
 | `--ki-tooltip-bg-end` | `#ffffff` | color used by the tooltip component for the glass gradient end (MarsUI Surface/special/light-s0_dark-s2). |
 | `--ki-tooltip-bg-start` | `rgba(255, 255, 255, 0.8)` | color used by the tooltip component for the glass gradient start (MarsUI Surface/special/blur_base_light White/80; dark Dark/700 blur base). Paint background: linear-gradient(180deg, var(--ki-tooltip-bg-start), var(--ki-tooltip-bg-end)). |
+| `--ki-tooltip-border-color` | `rgba(0, 0, 0, 0.05)` | color used by the tooltip component for its edge (MarsUI hairline bevel, Outline/secondary_button_top); one token so a mode or a theme can strengthen it. |
 | `--ki-tooltip-border-width` | `1px` | dimension used by the tooltip component for the bevel outline width (MarsUI glass card 1px Outline/secondary_button_top stroke; replaces the 1px literal ki-tooltip.css shipped while the token was pending). |
 | `--ki-tooltip-fg` | `#0a0c11` | color used by the tooltip component for foreground (MarsUI title row Text/high_em; lands together with the glass background — white-on-glass would break contrast). |
 | `--ki-tooltip-font-size` | `0.8125rem` | dimension used by the tooltip component for font size (MarsUI Heading_top style UI/Para/medium: body_1 13px). |
