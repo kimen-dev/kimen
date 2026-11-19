@@ -1,4 +1,6 @@
 import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
+import { AnchoredOverlay } from '../../utils/anchored-overlay.js';
+import { measureCssAnchor } from '../../utils/anchored-overlay-layout.js';
 import { parseDelay } from './ki-tooltip.delay.js';
 import {
   normalizePlacement,
@@ -6,25 +8,6 @@ import {
   resolveTooltipPosition,
   type KiTooltipPlacement,
 } from './ki-tooltip.position.js';
-
-// A probe in the top layer, anchored like the bubble and as large as its
-// anchor: where anchor positioning resolves the host, in the bubble's frame.
-const ANCHOR_PROBE_STYLE = [
-  'position:fixed',
-  'position-anchor:--ki-tooltip-anchor',
-  'inset:auto',
-  'left:anchor(left)',
-  'top:anchor(top)',
-  'width:anchor-size(width)',
-  'height:anchor-size(height)',
-  'margin:0',
-  'padding:0',
-  'border:0',
-  'box-sizing:border-box',
-  'overflow:hidden',
-  'visibility:hidden',
-  'pointer-events:none',
-].join(';');
 
 /**
  * A transient, text-only description bubble for one slotted trigger.
@@ -92,7 +75,13 @@ export class KiTooltip {
   private authoredDescription: string | null = null;
   private tooltipEl: HTMLDivElement | undefined;
   private timer: ReturnType<typeof setTimeout> | undefined;
-  private listeningForEscape = false;
+  private readonly overlay = new AnchoredOverlay();
+  private readonly overlayOptions = {
+    escape: 'capture',
+    onDismiss: () => {
+      this.hideNow();
+    },
+  } as const;
 
   private get normalizedLabel(): string {
     // Typed as a string, yet a framework passes `undefined` for a prop it has
@@ -131,7 +120,7 @@ export class KiTooltip {
     this.host.removeEventListener('focusin', this.handleFocusIn);
     this.host.removeEventListener('focusout', this.handleFocusOut);
     this.clearTimer();
-    this.removeEscapeListener();
+    this.overlay.hide();
     this.clearTriggerDescription();
     // Leaving the document takes the pointer and the focus away without a
     // pointerleave or a focusout, and closes the popover: what was true of
@@ -246,16 +235,6 @@ export class KiTooltip {
     }
   };
 
-  private readonly handleDocumentKeyDown = (event: KeyboardEvent): void => {
-    if (event.key !== 'Escape' || !this.visible) {
-      return;
-    }
-
-    event.preventDefault();
-    event.stopPropagation();
-    this.hideNow();
-  };
-
   private clearTimer(): void {
     if (this.timer === undefined) {
       return;
@@ -279,52 +258,13 @@ export class KiTooltip {
 
     this.positionTooltip();
     this.visible = true;
-    this.syncPopover();
-    this.addEscapeListener();
+    this.overlay.show(this.tooltipEl, this.host, this.overlayOptions);
   }
 
   private hideNow(): void {
     this.clearTimer();
     this.visible = false;
-    this.syncPopover();
-    this.removeEscapeListener();
-  }
-
-  // The bubble is a manual popover: shown, it is painted in the top layer, so
-  // no ancestor that clips its overflow (a card, a scroll panel, a dialog body)
-  // can cut it off and no stacking context can paint over it. `manual` keeps
-  // the platform's light dismiss out of the way: `visible` stays the single
-  // source of truth for hover, focus and Escape, and is mirrored here.
-  private syncPopover(): void {
-    const tooltip = this.tooltipEl;
-    if (!tooltip?.isConnected || typeof tooltip.showPopover !== 'function') {
-      return;
-    }
-
-    const shown = tooltip.matches(':popover-open');
-    if (this.visible && !shown) {
-      tooltip.showPopover();
-    } else if (!this.visible && shown) {
-      tooltip.hidePopover();
-    }
-  }
-
-  private addEscapeListener(): void {
-    if (this.listeningForEscape) {
-      return;
-    }
-
-    document.addEventListener('keydown', this.handleDocumentKeyDown, { capture: true });
-    this.listeningForEscape = true;
-  }
-
-  private removeEscapeListener(): void {
-    if (!this.listeningForEscape) {
-      return;
-    }
-
-    document.removeEventListener('keydown', this.handleDocumentKeyDown, { capture: true });
-    this.listeningForEscape = false;
+    this.overlay.hide();
   }
 
   // While the tooltip has a label it owns the trigger's `aria-description`; on
@@ -384,47 +324,12 @@ export class KiTooltip {
 
     this.effectivePlacement = position.effectivePlacement;
     this.crossAxisShift = position.crossAxisShift;
-    const resolvedAnchor = this.measureResolvedAnchor();
+    const resolvedAnchor = measureCssAnchor(tooltip, '--ki-tooltip-anchor');
     const correction = resolvedAnchor
       ? resolveAnchorCorrection(position.effectivePlacement, dir, resolvedAnchor, triggerRect)
       : { x: 0, y: 0 };
     this.anchorShiftX = correction.x;
     this.anchorShiftY = correction.y;
-  }
-
-  // The bubble opens in the top layer, placed with anchor() against the host.
-  // That has to be the host's transformed box, the one the flip and clamp
-  // above measure; Firefox resolves it against the box without the
-  // transforms of the host's ancestors. A probe anchored the same way says
-  // where the engine resolved the anchor, so the difference can be made up.
-  // Null where it cannot say: no anchor positioning, no popover, or a probe
-  // that did not take the anchor's size.
-  private measureResolvedAnchor(): DOMRect | null {
-    const root = this.host.shadowRoot;
-    if (
-      !root ||
-      typeof CSS === 'undefined' ||
-      !CSS.supports('top', 'anchor(top)') ||
-      !CSS.supports('width', 'anchor-size(width)')
-    ) {
-      return null;
-    }
-    const probe = this.host.ownerDocument.createElement('div');
-    if (typeof probe.showPopover !== 'function') {
-      return null;
-    }
-    probe.setAttribute('popover', 'manual');
-    probe.setAttribute('aria-hidden', 'true');
-    probe.style.cssText = ANCHOR_PROBE_STYLE;
-    root.appendChild(probe);
-    try {
-      probe.showPopover();
-      const rect = probe.getBoundingClientRect();
-      probe.hidePopover();
-      return rect.width > 0 && rect.height > 0 ? rect : null;
-    } finally {
-      probe.remove();
-    }
   }
 
   // The closed bubble generates no box (it must not widen the page), so it is
