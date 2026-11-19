@@ -3,9 +3,8 @@ import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = fileURLToPath(new URL('../../../', import.meta.url));
 // The inventory belongs to the repository gates, outside the package graph.
-const { discoverComponents } = await import(
-  new URL('../../../scripts/lib/component-inventory.mjs', import.meta.url).href
-);
+const inventoryModule = new URL('../../../scripts/lib/component-inventory.mjs', import.meta.url)
+  .href;
 const registrations = 'virtual:kimen-component-registrations';
 const fixtures = 'virtual:kimen-component-fixtures';
 
@@ -24,6 +23,8 @@ export function componentRegistrationPlugin({
     async load(id) {
       if (id !== `\0${registrations}` && id !== `\0${fixtures}`) return null;
 
+      // The mutation config also loads this plugin from a CommonJS bundle.
+      const { discoverComponents } = await import(inventoryModule);
       const components = await discoverComponents({ workspaceRoot });
       if (id === `\0${fixtures}`) {
         const imports = components.map(({ sourceModule }, index) => {
