@@ -1,5 +1,10 @@
-# One required PR result. Dependency metadata uses Nx affected; source and CI
-# implementation changes retain the complete suite. Heavy or low-frequency
+# One required PR result: the `quality` job, green only when every part of the
+# suite is. Source and CI implementation changes retain the complete suite,
+# split into jobs that run side by side: `core` runs gates-core.sh, and the
+# `browser` shards together run gates-browser.sh chromium. That is exactly
+# gates-suite.sh, the command that defines local readiness, cut along its own
+# two gates and the elements suite's files so the slowest part sets the time,
+# not the sum. Dependency metadata uses Nx affected. Heavy or low-frequency
 # controls live in dedicated workflows.
 name: ci
 
@@ -15,7 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  quality:
+  core:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     permissions:
@@ -61,7 +66,7 @@ jobs:
           printf 'base=%s\n' "$comparison_base" >>"$GITHUB_OUTPUT"
           printf 'head=%s\n' "$KIMEN_HEAD_SHA" >>"$GITHUB_OUTPUT"
 
-      # The scan itself is a gate inside gates-suite.sh, not a step here, so the
+      # The scan itself is a gate inside gates-core.sh, not a step here, so the
       # command that defines local readiness runs exactly what this job does.
       # Only the engine is installed here: on a runner it is not on PATH, and
       # the gate would otherwise fetch it through uvx on every run.
@@ -127,18 +132,17 @@ jobs:
           needed="$(node scripts/gates/dependency-browser-impact.mjs --base "$KIMEN_BASE_SHA" --head "$KIMEN_HEAD_SHA")"
           printf 'needed=%s\n' "$needed" >>"$GITHUB_OUTPUT"
 
+      # The complete suite's browser gate runs in the `browser` jobs; only the
+      # dependency path, which runs its affected browser gate here, needs one.
       - name: Install Chromium
-        if: >-
-          github.event_name != 'pull_request' ||
-          steps.scope.outputs.scope == 'full' ||
-          steps.browser-impact.outputs.needed == 'true'
+        if: steps.browser-impact.outputs.needed == 'true'
         run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
 
-      - name: Consolidated quality
+      - name: Core quality
         if: >-
           github.event_name != 'pull_request' ||
           steps.scope.outputs.scope == 'full'
-        run: bash scripts/gates/gates-suite.sh
+        run: bash scripts/gates/gates-core.sh
 
       - name: Affected dependency quality
         if: steps.scope.outputs.scope == 'dependencies'
@@ -156,3 +160,146 @@ jobs:
       - name: Sandbox dependency handoff quality
         if: steps.scope.outputs.scope == 'sandbox'
         run: node --test scripts/tests/sandbox-static-contract.test.mjs
+
+  # The browser gate of the complete suite, its elements files split in two:
+  # each shard runs half of them, and the last one also the Chromium-only
+  # suites (scripts/gates/gates-browser.sh). Any other scope skips it.
+  browser:
+    name: browser (chromium ${{ matrix.shard }}/2)
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
+            registry.npmjs.org:443
+            cdn.playwright.dev:443
+            playwright.azureedge.net:443
+            playwright.download.prss.microsoft.com:443
+            packages.microsoft.com:443
+            dl.google.com:443
+            azure.archive.ubuntu.com:80
+            storage.googleapis.com:443
+            archive.ubuntu.com:443
+            security.ubuntu.com:443
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Classify pull request impact
+        if: github.event_name == 'pull_request'
+        id: scope
+        env:
+          KIMEN_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          KIMEN_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          comparison_base="$(git merge-base "$KIMEN_BASE_SHA" "$KIMEN_HEAD_SHA")"
+          scope="$(node scripts/gates/classify-ci-scope.mjs --base "$comparison_base" --head "$KIMEN_HEAD_SHA")"
+          printf 'scope=%s\n' "$scope" >>"$GITHUB_OUTPUT"
+
+      - name: Designate a temporary directory on its own filesystem
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full'
+        run: |
+          sudo mkdir -p /mnt/kimen-tmp
+          sudo mount -t tmpfs -o size=4g,mode=1777 tmpfs /mnt/kimen-tmp
+          printf 'TMPDIR=%s\n' /mnt/kimen-tmp >>"$GITHUB_ENV"
+
+      - name: Allocate isolated writable caches
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full'
+        run: bash scripts/gates/cache-env.sh --github-env "$GITHUB_ENV"
+
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full'
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          cache: ${{ (github.event_name != 'pull_request' || steps.scope.outputs.scope == 'full') && 'pnpm' || '' }}
+
+      - name: Install
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full'
+        run: pnpm install --frozen-lockfile
+
+      # The Chromium build of the pinned Playwright, kept between runs under
+      # the key of that exact version: a Playwright bump changes the key and
+      # downloads its own build. `playwright install` still runs, so the
+      # system libraries are installed and a missing or partial browser is
+      # fetched.
+      - name: Resolve the pinned Playwright version
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full'
+        id: playwright
+        run: >-
+          printf 'version=%s\n'
+          "$(node -p "require('./packages/elements/node_modules/playwright/package.json').version")"
+          >>"$GITHUB_OUTPUT"
+
+      - name: Restore the Chromium build of this Playwright
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium
+
+      - name: Install Chromium
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full'
+        run: pnpm --filter @kimen/elements exec playwright install --with-deps chromium
+
+      - name: Browser quality
+        if: >-
+          github.event_name != 'pull_request' ||
+          steps.scope.outputs.scope == 'full'
+        env:
+          KIMEN_BROWSER_SHARD: ${{ matrix.shard }}/2
+        run: bash scripts/gates/gates-browser.sh chromium
+
+  # The one required result. It waits for every part and is green only when
+  # each of them is; a part that was cancelled or skipped is not a pass.
+  quality:
+    needs: [core, browser]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        with:
+          egress-policy: block
+          allowed-endpoints: >-
+            github.com:443
+
+      - name: Every part of the suite passed
+        env:
+          CORE_RESULT: ${{ needs.core.result }}
+          BROWSER_RESULT: ${{ needs.browser.result }}
+        run: |
+          printf 'core: %s\nbrowser: %s\n' "$CORE_RESULT" "$BROWSER_RESULT"
+          [ "$CORE_RESULT" = 'success' ] && [ "$BROWSER_RESULT" = 'success' ]

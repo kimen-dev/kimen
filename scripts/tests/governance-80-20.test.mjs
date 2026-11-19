@@ -8,7 +8,7 @@ const isMissing = async (path) => {
   await assert.rejects(access(new URL(path, repositoryRoot)), /ENOENT/u);
 };
 
-test('PR quality is one required job without mutation or containment', async () => {
+test('PR quality is one required result without mutation or containment', async () => {
   const [workflow, ruleset] = await Promise.all([
     readRepositoryFile('.github/workflows/ci.yml'),
     readRepositoryFile('.github/rulesets/main.json').then(JSON.parse),
@@ -21,6 +21,57 @@ test('PR quality is one required job without mutation or containment', async () 
   assert.doesNotMatch(workflow, /^ {2}(?:mutation|containment):$/gmu);
   assert.doesNotMatch(workflow, /KIMEN_MUTATION/u);
   assert.deepEqual(requiredChecks, ['quality']);
+});
+
+// The complete suite runs as parallel jobs, and `quality` is the result that
+// the ruleset requires. It has to be green only when every part is, and the
+// parts together have to be exactly `gates-suite.sh`: the core gates, and the
+// Chromium browser gate split into shards that cover its files once each.
+test('the required result is green only when the core job and every browser shard are', async () => {
+  const [workflow, suite] = await Promise.all([
+    readRepositoryFile('.github/workflows/ci.yml'),
+    readRepositoryFile('scripts/gates/gates-suite.sh'),
+  ]);
+  const job = (name) => {
+    const start = workflow.search(new RegExp(`^ {2}${name}:$`, 'mu'));
+    assert.notEqual(start, -1, `ci.yml must declare jobs.${name}`);
+    const rest = workflow.slice(start + 1);
+    const end = rest.search(/^ {2}\S[^\n]*:$/mu);
+    return end === -1 ? rest : rest.slice(0, end);
+  };
+
+  // The suite is its two gates and nothing else...
+  assert.deepEqual(
+    [...suite.matchAll(/^run_gate (\S+) (.+)$/gmu)].map((match) => match[2]),
+    ['bash scripts/gates/gates-core.sh', 'bash scripts/gates/gates-browser.sh chromium'],
+  );
+  // ...the core job runs the first...
+  assert.match(job('core'), /^ {8}run: bash scripts\/gates\/gates-core\.sh$/mu);
+  // ...and the browser shards the second, one share of the files each.
+  const browser = job('browser');
+  assert.match(browser, /^ {8}run: bash scripts\/gates\/gates-browser\.sh chromium$/mu);
+  const shards = /^ {8}shard: \[([^\]]+)\]$/mu.exec(browser)?.[1].split(',').map(Number);
+  const count = Number(
+    /KIMEN_BROWSER_SHARD: \$\{\{ matrix\.shard \}\}\/(\d+)$/mu.exec(browser)?.[1],
+  );
+  assert.ok(count > 0, 'the browser job must pass its shard as <index>/<count>');
+  assert.deepEqual(
+    shards,
+    Array.from({ length: count }, (_, index) => index + 1),
+  );
+  assert.match(browser, /^ {6}fail-fast: false$/mu);
+
+  // The required result waits for both, also when one fails, and passes only
+  // when each succeeded.
+  const quality = job('quality');
+  assert.match(quality, /^ {4}needs: \[core, browser\]$/mu);
+  assert.match(quality, /^ {4}if: always\(\)$/mu);
+  assert.match(quality, /CORE_RESULT: \$\{\{ needs\.core\.result \}\}/u);
+  assert.match(quality, /BROWSER_RESULT: \$\{\{ needs\.browser\.result \}\}/u);
+  assert.match(
+    quality,
+    /\[ "\$CORE_RESULT" = 'success' \] && \[ "\$BROWSER_RESULT" = 'success' \]/u,
+  );
 });
 
 test('dependency-only PRs keep one required result and run affected quality', async () => {

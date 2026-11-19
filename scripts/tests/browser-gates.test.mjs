@@ -83,11 +83,11 @@ async function browserFixture(t, { preparedEngine } = {}) {
   };
 }
 
-function runBrowserGate(fixture, engine) {
+function runBrowserGate(fixture, engine, environment = {}) {
   return spawnSync('bash', [browserGate, engine], {
     cwd: repositoryRoot,
     encoding: 'utf8',
-    env: fixture.environment,
+    env: { ...fixture.environment, ...environment },
   });
 }
 
@@ -232,6 +232,50 @@ test('S6 browser gate typechecks then runs only the requested prepared engine', 
   ]);
   assert.match(evidence, /^browser\tconfig-typecheck\tgreen$/m);
   assert.match(evidence, /^browser\ttest-browser:firefox\tgreen$/m);
+});
+
+// CI splits the browser gate across parallel jobs. Every shard typechecks the
+// configs and resolves its engine; the elements suite runs its share of the
+// files; the smaller Chromium-only suites run once, in the last shard. Unset,
+// the gate is the whole suite in one invocation, as before.
+test('S6 browser gate runs one shard of the elements suite when asked', async (t) => {
+  const fixture = await browserFixture(t, { preparedEngine: 'chromium' });
+  const first = runBrowserGate(fixture, 'chromium', { KIMEN_BROWSER_SHARD: '1/2' });
+  const commands = (await readFile(fixture.commandLog, 'utf8')).trim().split('\n');
+  const evidence = await readFile(join(fixture.cacheRoot, 'gate-evidence/current-run.tsv'), 'utf8');
+
+  assert.equal(first.status, 0, diagnostic(first));
+  assert.deepEqual(commands, [
+    'chromium|exec tsc -p packages/elements/scripts/tsconfig.json --noEmit --pretty false',
+    'chromium|exec nx run @kimen/elements:test-browser --skipNxCache -- --shard=1/2',
+  ]);
+  assert.match(evidence, /^browser\ttest-browser:chromium:1\/2\tgreen$/m);
+});
+
+test('S6 the last browser shard also runs the Chromium-only suites, once', async (t) => {
+  const fixture = await browserFixture(t, { preparedEngine: 'chromium' });
+  const last = runBrowserGate(fixture, 'chromium', { KIMEN_BROWSER_SHARD: '2/2' });
+  const commands = (await readFile(fixture.commandLog, 'utf8')).trim().split('\n');
+
+  assert.equal(last.status, 0, diagnostic(last));
+  assert.deepEqual(commands, [
+    'chromium|exec tsc -p packages/elements/scripts/tsconfig.json --noEmit --pretty false',
+    'chromium|exec nx run @kimen/elements:test-browser --skipNxCache -- --shard=2/2',
+    'chromium|exec nx run-many -t test-browser-wrapper --skipNxCache',
+    'chromium|exec nx run @kimen/catalog:test-browser --skipNxCache',
+    'chromium|exec nx run @kimen/adapter-mcp-apps:test-browser --skipNxCache',
+  ]);
+});
+
+test('S6 browser gate rejects a shard that names no part of the suite', async (t) => {
+  for (const shard of ['0/2', '3/2', '2', '1/0', 'a/b', '1/2 ', '-1/2']) {
+    const fixture = await browserFixture(t, { preparedEngine: 'chromium' });
+    const result = runBrowserGate(fixture, 'chromium', { KIMEN_BROWSER_SHARD: shard });
+
+    assert.notEqual(result.status, 0, `${JSON.stringify(shard)} was accepted`);
+    assert.match(diagnostic(result), /KIMEN_BROWSER_SHARD/);
+    await assert.rejects(readFile(fixture.commandLog, 'utf8'), /ENOENT/u);
+  }
 });
 
 test('S6 local suite is exactly reusable core plus explicit Chromium', async () => {
