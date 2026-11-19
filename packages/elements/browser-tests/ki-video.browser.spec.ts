@@ -324,6 +324,26 @@ describe('ki-video', () => {
     await userEvent.unhover(playControlOf(el));
   });
 
+  it('S13 a theme can hide just the hover shadow', async () => {
+    cleanup();
+    const el = await mount(landmark(), { label: 'Play the product tour' });
+    el.style.setProperty('--ki-effect-video-hover-opacity', '0');
+    const control = el.shadowRoot?.querySelector<HTMLElement>('.control');
+    if (!control) {
+      throw new Error('ki-video did not render its glass container');
+    }
+    const restShadow = getComputedStyle(control).boxShadow;
+    expect(restShadow).toContain('inset');
+
+    await userEvent.hover(playControlOf(el));
+
+    await expect.poll(() => getComputedStyle(control).transform).toMatch(/^matrix\(1\.02/u);
+    expect(getComputedStyle(control).boxShadow).toBe(restShadow);
+    const hoverLayer = getComputedStyle(control, '::before');
+    expect(hoverLayer.opacity === '0' || hoverLayer.boxShadow === 'none').toBe(true);
+    await userEvent.unhover(playControlOf(el));
+  });
+
   it('S3 the video never plays on its own: nothing starts and nothing sounds after load', async () => {
     cleanup();
     const el = await mount(landmark(), { label: 'Play the product tour' });
