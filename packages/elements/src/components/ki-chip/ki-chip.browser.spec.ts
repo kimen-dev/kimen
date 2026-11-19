@@ -124,9 +124,16 @@ it('S11 uses the themed selected fill and removes transitions under reduced moti
   }
 });
 
-it('keeps the check and boundary in forced colors', async () => {
+it('keeps the check and boundary in forced colors', async ({ skip }) => {
   try {
     await media.emulateForcedColors('active');
+    const forced = () => matchMedia('(forced-colors: active)').matches;
+    if (navigator.userAgent.includes('Chrome/')) {
+      await expect.poll(forced).toBe(true);
+    } else if (!forced()) {
+      skip('This engine does not emulate forced colors');
+      return;
+    }
     fixture.innerHTML =
       '<ki-chip selected>Design</ki-chip><ki-chip type="input" removable>Ana</ki-chip>';
     await expect
