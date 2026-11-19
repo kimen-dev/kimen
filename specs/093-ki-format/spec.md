@@ -47,6 +47,9 @@ Each decision below is an agent's choice, pending founder confirmation.
 - **API declaration.** The public API gate classifies the expanded Stencil loader
   `Components` and `JSX` namespaces as major, as for the Layout components.
   Declare the change at that level.
+- **MCP server budget.** The three catalog entries and their renderer assets
+  add 13,578 raw bytes and 3,978 gzip bytes to the built server. Record their
+  measured joint allowance on the date formatter's discovery entry.
 
 ## Gherkin contract
 
