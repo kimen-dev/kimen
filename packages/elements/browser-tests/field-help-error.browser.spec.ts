@@ -13,7 +13,7 @@ import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 
 import { defineAllComponents } from './all-components';
-import { expectAccessible } from './axe';
+import { expectAccessible, userAgentControls } from './axe';
 
 interface AxNode {
   readonly role: string;
@@ -620,7 +620,9 @@ describe('help and error lines pass axe in every theme and scheme', () => {
         await expect
           .poll(() => fields.filter((field) => shown(field, 'error') === 'Answer this question'))
           .toHaveLength(validatingControls.length);
-        await expectAccessible(form);
+        // The form's native submit and reset buttons are the user agent's
+        // paint, not a help or error line (userAgentControls).
+        await expectAccessible({ include: [form], exclude: userAgentControls(form) });
       });
     }
   }

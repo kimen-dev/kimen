@@ -130,14 +130,21 @@ function isTooltipShown(host: KiTooltipElement): boolean {
 
 // The enter fade runs under no-preference; geometry and axe assertions must
 // observe the settled bubble (opacity 1, slide finished), never a mid-fade
-// frame.
+// frame. One read of opacity 1 is not "settled": right after the bubble
+// appears, Firefox reports the final opacity once and only then starts the
+// fade from its starting style. Settled is opacity 1 with no transition
+// running, on two frames in a row.
 async function settleTooltip(host: KiTooltipElement): Promise<void> {
   const tooltip = requireTooltip(host);
+  const settledNow = (): boolean =>
+    getComputedStyle(tooltip).opacity === '1' && tooltip.getAnimations().length === 0;
   const deadline = Date.now() + 2000;
-  while (getComputedStyle(tooltip).opacity !== '1' && Date.now() < deadline) {
+  let settledFrames = 0;
+  while (settledFrames < 2 && Date.now() < deadline) {
+    settledFrames = settledNow() ? settledFrames + 1 : 0;
     await nextFrame();
   }
-  expect(getComputedStyle(tooltip).opacity).toBe('1');
+  expect(settledFrames, 'the tooltip did not settle at full opacity').toBe(2);
 }
 
 // Under an installed fake clock, Stencil's queued render (rAF) does not run
@@ -275,8 +282,10 @@ describe('ki-tooltip pointer path in a real browser', () => {
       await settleTooltip(host);
       const tooltipRect = requireTooltip(host).getBoundingClientRect();
       expect(tooltipRect.width).toBeGreaterThan(trigger.getBoundingClientRect().width);
-      expect(tooltipRect.left).toBeGreaterThanOrEqual(0);
-      expect(tooltipRect.right).toBeLessThanOrEqual(window.innerWidth);
+      // Within half a pixel: the anchored inset is laid out in the engine's
+      // own unit (Firefox: 1/60 px), the clamp in CSS pixels.
+      expect(tooltipRect.left).toBeGreaterThanOrEqual(-0.5);
+      expect(tooltipRect.right).toBeLessThanOrEqual(window.innerWidth + 0.5);
 
       // Closed again, the page is back to its own width.
       trigger.blur();
@@ -348,6 +357,9 @@ describe('ki-tooltip pointer path in a real browser', () => {
       style: { marginBlockStart: '160px', marginInlineStart: '160px' },
     });
     await hoverTrigger(host, trigger);
+    // The distance below is measured on the settled bubble: mid-slide it is
+    // still the motion distance away from where it comes to rest.
+    await settleTooltip(host);
     const tooltip = requireTooltip(host);
     const style = getComputedStyle(tooltip);
 

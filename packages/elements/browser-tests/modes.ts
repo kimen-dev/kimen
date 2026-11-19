@@ -27,6 +27,19 @@ export type Scheme = (typeof SCHEMES)[number];
 
 const SETTLE_DEADLINE_MS = 2000;
 const STYLE_IDS = ['modes-tokens', 'modes-material3-tokens'] as const;
+const PROBE_ID = 'modes-media-probe';
+/**
+ * One custom property per emulated preference, set by a stylesheet that is
+ * already in the document when the emulation changes. It tells whether the
+ * emulation reached existing stylesheets or only `matchMedia`.
+ */
+const MEDIA_PROBES = [
+  ['(prefers-contrast: more)', '--modes-probe-contrast-more'],
+  ['(prefers-reduced-transparency: reduce)', '--modes-probe-transparency-reduce'],
+] as const;
+const PROBE_CSS = MEDIA_PROBES.map(
+  ([query, property]) => `@media ${query} { :root { ${property}: 1; } }`,
+).join('\n');
 /** The engine of the PR gate: an emulation that does not apply there is a failure, not a skip. */
 const MUST_EMULATE = navigator.userAgent.includes('Chrome/');
 
@@ -50,8 +63,8 @@ export interface Rgba {
 export async function installKimen(): Promise<void> {
   await modeCommands.emulateReducedMotion('reduce');
   defineAllComponents();
-  for (const [index, css] of [tokensCss, material3Css].entries()) {
-    const id = STYLE_IDS[index];
+  for (const [index, css] of [tokensCss, material3Css, PROBE_CSS].entries()) {
+    const id = [...STYLE_IDS, PROBE_ID][index];
     if (id === undefined || document.getElementById(id) !== null) continue;
     const style = document.createElement('style');
     style.id = id;
@@ -62,7 +75,7 @@ export async function installKimen(): Promise<void> {
 
 export async function uninstallKimen(): Promise<void> {
   await modeCommands.emulateReducedMotion(null);
-  for (const id of STYLE_IDS) document.getElementById(id)?.remove();
+  for (const id of [...STYLE_IDS, PROBE_ID]) document.getElementById(id)?.remove();
 }
 
 /** Clear every declaration a test may have left on the document root. */
@@ -180,7 +193,40 @@ async function settleMedia(
   } else if (!settled) {
     test.skip(`${navigator.userAgent} cannot emulate ${query} = ${String(expected)}`);
   }
+  await reparseStaleStylesheets();
   await settleAnimations();
+}
+
+/** Whether a stylesheet already in the document disagrees with `matchMedia`. */
+function stylesheetsAreStale(): boolean {
+  if (document.getElementById(PROBE_ID) === null) return false;
+  const root = getComputedStyle(document.documentElement);
+  return MEDIA_PROBES.some(
+    ([query, property]) =>
+      matchMedia(query).matches !== (root.getPropertyValue(property).trim() === '1'),
+  );
+}
+
+/**
+ * Firefox applies an emulated contrast preference to `matchMedia` and to
+ * stylesheets parsed after it, but not to the ones already in the document,
+ * so the page keeps its standard paint under "more contrast" and its strong
+ * paint once the emulation is cleared. A person who changes the setting gets
+ * every stylesheet evaluated again; the emulation does not do that. When the
+ * probe shows existing stylesheets lagging behind `matchMedia`, every
+ * stylesheet of the document is parsed again, in place. Where the emulation
+ * reaches existing stylesheets (Chromium, the PR gate) the probe agrees and
+ * nothing is parsed again, so that engine still measures the live switch.
+ */
+async function reparseStaleStylesheets(): Promise<void> {
+  if (!stylesheetsAreStale()) return;
+  for (const style of document.querySelectorAll('style')) {
+    const css = style.textContent;
+    style.textContent = '';
+    style.textContent = css;
+  }
+  await nextFrame();
+  expect(stylesheetsAreStale(), 'stylesheets parsed again still miss the preference').toBe(false);
 }
 
 export async function underContrast(
@@ -208,6 +254,7 @@ export async function resetPreferences(): Promise<void> {
   await modeCommands.emulateContrast(null);
   await modeCommands.emulateReducedTransparency(null);
   await modeCommands.emulateColorScheme(null);
+  await reparseStaleStylesheets();
 }
 
 /** Every element under `root`, descending into open shadow roots. */

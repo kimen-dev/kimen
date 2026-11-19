@@ -15,7 +15,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { commands, page } from 'vitest/browser';
 
 import { componentTags, defineAllComponents } from './all-components';
-import { expectAccessible } from './axe';
+import { expectAccessible, userAgentControls } from './axe';
 import {
   applyTextSpacing,
   clippedText,
@@ -140,7 +140,9 @@ describe.each(combinations)('contracts in %s / %s', (...combination) => {
     applyCombination(combination);
     const wrapper = await mountGallery(component);
 
-    await expectAccessible(wrapper);
+    // The gallery's own native buttons are the user agent's paint, not the
+    // component's (userAgentControls): the audit covers what Kimen paints.
+    await expectAccessible({ include: [wrapper], exclude: userAgentControls(wrapper) });
     // WCAG 2.5.8 (AA since 2.2): axe ships this rule disabled by default.
     const targets = await axe.run(wrapper, { runOnly: { type: 'rule', values: ['target-size'] } });
     expect(
@@ -152,7 +154,7 @@ describe.each(combinations)('contracts in %s / %s', (...combination) => {
     applyCombination(combination);
     const wrapper = await mountGallery(component);
 
-    const failing = textMeasurements(wrapper)
+    const failing = textMeasurements(wrapper, { exclude: userAgentControls(wrapper) })
       .filter((measurement) => measurement.ratio < measurement.required - 0.005)
       .map(
         (measurement) =>

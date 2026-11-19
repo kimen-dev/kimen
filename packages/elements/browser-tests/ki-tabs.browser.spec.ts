@@ -991,12 +991,15 @@ describe('ki-tabs theming behavior in a real browser', () => {
   });
 
   it('S17 switches panels without transition or animation under reduced motion', async () => {
+    const tabs = await mount(fixture());
+    // Reduced motion is switched on with the component in the document, as a
+    // person turns it on: WebKit re-evaluates a component's media queries
+    // only in the shadow roots present at the change, so an instance mounted
+    // after it can keep the motion of one mounted before.
     // Restored in `finally`: the emulation belongs to the Playwright page,
     // not to this file, so a leak reaches whichever spec runs next.
     await browserCommands.emulateReducedMotion('reduce');
     try {
-      const tabs = await mount(fixture());
-
       await userEvent.click(tab(tabs, 'notifications'));
 
       const visiblePanel = panel(tabs, 'notifications');
