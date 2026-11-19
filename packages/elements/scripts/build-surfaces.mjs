@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -11,6 +11,7 @@ import {
   buildManifest,
   buildRootLlmsTxt,
   normalizeDocs,
+  packageSummaryFromSiteSummary,
   serializeJson,
   validateDocs,
   validateGenUiSurfaces,
@@ -24,6 +25,27 @@ const workspaceRoot = resolve(packageRoot, '../..');
 // and the manifest path is where the assembler copies custom-elements.json.
 const SITE_ORIGIN = 'https://kimen.dev/';
 const SITE_MANIFEST_PATH = 'assets/elements/custom-elements.json';
+
+export async function preparePackageSummary({
+  packageRoot: selectedPackageRoot = packageRoot,
+  workspaceRoot: selectedWorkspaceRoot = workspaceRoot,
+} = {}) {
+  const target = resolve(selectedPackageRoot, 'llms-full.txt');
+  try {
+    await access(target);
+    return;
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+  // Stencil validates package.json's file list before the normal surfaces
+  // build regenerates both summaries from the fresh component metadata.
+  const siteSummary = await readFile(resolve(selectedWorkspaceRoot, 'llms-full.txt'), 'utf8');
+  try {
+    await writeFile(target, packageSummaryFromSiteSummary(siteSummary), { flag: 'wx' });
+  } catch (error) {
+    if (error.code !== 'EEXIST') throw error;
+  }
+}
 
 export async function runBuildSurfaces(options = {}) {
   const selectedPackageRoot = options.packageRoot ?? packageRoot;
@@ -421,13 +443,17 @@ function formatViolations(violations) {
 // not — compare real filesystem paths so a checkout under a path with spaces
 // or non-ASCII characters cannot silently skip generation (S6).
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const result = await runBuildSurfaces({
-    wrapperDirectories: ['react', 'vue'].map((name) =>
-      resolve(workspaceRoot, 'packages', name, 'src'),
-    ),
-  });
-  if (!result.ok) {
-    process.stderr.write(result.stderr);
-    process.exit(1);
+  if (process.argv[2] === '--prepare-package-summary') {
+    await preparePackageSummary();
+  } else {
+    const result = await runBuildSurfaces({
+      wrapperDirectories: ['react', 'vue'].map((name) =>
+        resolve(workspaceRoot, 'packages', name, 'src'),
+      ),
+    });
+    if (!result.ok) {
+      process.stderr.write(result.stderr);
+      process.exit(1);
+    }
   }
 }

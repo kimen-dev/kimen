@@ -1,7 +1,7 @@
 // @spec:017-agent-surfaces
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
@@ -31,6 +31,30 @@ const publishedTags = async () => {
 
 const genUiDirectories = async () =>
   (await readRepositoryJson('docs/genui-surfaces.json')).packages.map(({ directory }) => directory);
+
+test('a cold elements build prepares the package summary before Stencil validates its file list', async (t) => {
+  const { preparePackageSummary } = await import(
+    '../../packages/elements/scripts/build-surfaces.mjs'
+  );
+  const root = await mkdtemp(join(tmpdir(), 'kimen-cold-summary-'));
+  t.after(() => rm(root, { force: true, recursive: true }));
+  const target = join(root, 'packages/elements');
+  await mkdir(target, { recursive: true });
+  await writeFile(join(root, 'llms-full.txt'), 'Elements.\n\n## GenUI layer\n\nSite guidance.\n');
+  await preparePackageSummary({ packageRoot: target, workspaceRoot: root });
+  assert.equal(await readFile(join(target, 'llms-full.txt'), 'utf8'), 'Elements.\n');
+
+  const { files, scripts } = await readRepositoryJson('packages/elements/package.json');
+  assert.ok(files.includes('llms-full.txt'));
+  assert.match(
+    scripts.build,
+    /^node scripts\/build-surfaces\.mjs --prepare-package-summary && stencil build\b/u,
+  );
+  assert.match(
+    await readRepositoryFile('scripts/gates/build-mutation-elements.sh'),
+    /^node packages\/elements\/scripts\/build-surfaces\.mjs --prepare-package-summary\npnpm --filter @kimen\/elements exec stencil build$/mu,
+  );
+});
 
 test('S5 the surfaces sync gate covers both indexes, the site summary and every linked document', async () => {
   const { required, scopes } = generatedGroups.surfaces;

@@ -4,6 +4,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+import { packageSummaryFromSiteSummary } from '../../packages/elements/scripts/agent-surfaces.mjs';
+
 // The token reference and three exported stylesheets. The build writes no
 // intermediate per-scheme files: a theme's two schemes are one stylesheet.
 const tokens = Object.freeze([
@@ -165,8 +167,7 @@ function validatePackageSummary(root) {
     });
   }
   const siteSummary = readFileSync(resolve(root, siteFullSummary), 'utf8');
-  const genUiStart = siteSummary.lastIndexOf('\n## GenUI layer\n');
-  if (genUiStart < 0 || packageSummary !== siteSummary.slice(0, genUiStart)) {
+  if (packageSummary !== packageSummaryFromSiteSummary(siteSummary)) {
     throw new Error(
       `generated sync surfaces: ${packageFullSummary} must match the elements portion of ${siteFullSummary}`,
     );
