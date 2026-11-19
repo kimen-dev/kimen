@@ -12,11 +12,10 @@ Feature: Neutral runtime catalog
     Then the catalog carries one entry per published custom element with its tag, typed props, slots and events
 
   # S2
-  Scenario: The catalog offers supported enum values and preserves deprecated inputs
-    Given the manifest documents "tertiary" as a deprecated button variant
+  Scenario: Enum-documented attributes become closed constraints
+    Given the manifest documents ki-button's "tone" with three declared values
     When the catalog is generated
-    Then the catalog offers exactly "primary", "secondary", "quaternary" and "ghost" for both button variants
-    And existing UI specs using "tertiary" still validate and render
+    Then the catalog constrains "tone" to exactly "neutral", "success" and "danger"
 
   # S3
   Scenario: Usage guidance flows verbatim into the catalog
@@ -176,3 +175,11 @@ Feature: Neutral runtime catalog
     And a UI spec setting ki-qr's "value" to "https://other.example.org/menu"
     When the spec is validated against the catalog
     Then validation accepts the spec
+
+  # Family: core behavior — deprecated enum values (#344)
+  # S23
+  Scenario: A deprecated enum value is not offered to agents but still validates
+    Given the manifest documents "tertiary" as a deprecated button variant
+    When the catalog is generated
+    Then the catalog offers exactly "primary", "secondary", "quaternary" and "ghost" for both button variants
+    And existing UI specs using "tertiary" still validate and render

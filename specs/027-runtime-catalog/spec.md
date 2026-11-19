@@ -55,11 +55,14 @@ the emitted spec mechanically against the catalog.
 1. **Given** the elements package's committed manifest, **When** the catalog
    is generated, **Then** it carries one entry per published custom element
    with tag, typed props, slots and events.
-2. **Given** the manifest marks `tertiary` as a deprecated button variant,
-   **When** the catalog is generated, **Then** the agent is offered the four
-   recommended variants and existing specs using `tertiary` still work.
+2. **Given** ki-button's enum-documented `tone` attribute, **When** the
+   catalog is generated, **Then** the constraint is closed over exactly the
+   three documented values.
 3. **Given** a manifest entry with when-to-use guidance, **When** the catalog
    is generated, **Then** the guidance appears verbatim in the entry.
+4. **Given** the manifest marks `tertiary` as a deprecated button variant,
+   **When** the catalog is generated, **Then** the agent is offered the four
+   recommended variants and existing specs using `tertiary` still work (S23).
 
 ---
 
@@ -174,7 +177,8 @@ types/identifiers; read the generated artifact's version metadata.
 Agent's choice, pending founder confirmation: publish catalog schema 1.4.0
 with optional deprecated enum metadata. Existing declarations with
 `variant="tertiary"` remain valid for both button components. Prompts and
-generated JSON Schema offer the four recommended variants.
+generated JSON Schema offer the four recommended variants (S23). S2 keeps
+the general rule, now shown on `tone`, whose values are all offered.
 
 ## Gherkin Scenarios *(mandatory, Art. II)*
 
@@ -193,11 +197,10 @@ Feature: Neutral runtime catalog
     Then the catalog carries one entry per published custom element with its tag, typed props, slots and events
 
   # S2
-  Scenario: The catalog offers supported enum values and preserves deprecated inputs
-    Given the manifest documents "tertiary" as a deprecated button variant
+  Scenario: Enum-documented attributes become closed constraints
+    Given the manifest documents ki-button's "tone" with three declared values
     When the catalog is generated
-    Then the catalog offers exactly "primary", "secondary", "quaternary" and "ghost" for both button variants
-    And existing UI specs using "tertiary" still validate and render
+    Then the catalog constrains "tone" to exactly "neutral", "success" and "danger"
 
   # S3
   Scenario: Usage guidance flows verbatim into the catalog
@@ -357,6 +360,14 @@ Feature: Neutral runtime catalog
     And a UI spec setting ki-qr's "value" to "https://other.example.org/menu"
     When the spec is validated against the catalog
     Then validation accepts the spec
+
+  # Family: core behavior — deprecated enum values (#344)
+  # S23
+  Scenario: A deprecated enum value is not offered to agents but still validates
+    Given the manifest documents "tertiary" as a deprecated button variant
+    When the catalog is generated
+    Then the catalog offers exactly "primary", "secondary", "quaternary" and "ghost" for both button variants
+    And existing UI specs using "tertiary" still validate and render
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
@@ -369,7 +380,7 @@ in specs 002–016.
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22, S23 | |
 | Keyboard path | | N/A — no interactive surface; the catalog is data consumed by machines |
 | Assistive-tech outcome | | N/A — nothing renders; accessibility contracts live in the component specs the catalog describes |
 | Form participation | | N/A — no form control is introduced; form components are described by entries, not implemented here |

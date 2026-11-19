@@ -71,10 +71,16 @@ describe('catalog derivation', () => {
     }
   });
 
+  it('S2 closes ki-button tone over exactly the three documented values', () => {
+    const tone = catalogData.components['ki-button'].props.tone;
+    expect(tone.type).toBe('enum');
+    expect([...tone.values].sort()).toEqual(['danger', 'neutral', 'success']);
+  });
+
   it.each([
     ['ki-button', 'S18'],
     ['ki-icon-button', 'S17'],
-  ] as const)('S2 %s %s offers four variants and preserves specs using tertiary', (component) => {
+  ] as const)('S23 %s %s offers four variants and preserves specs using tertiary', (component) => {
     const variant = catalogData.components[component].props.variant;
     expect(variant.type).toBe('enum');
     expect([...variant.values].sort()).toEqual(['ghost', 'primary', 'quaternary', 'secondary']);

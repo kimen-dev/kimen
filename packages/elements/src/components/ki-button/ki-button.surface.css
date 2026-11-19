@@ -45,8 +45,11 @@
   --_ki-button-border-bottom: var(--ki-button-primary-rest-border-bottom);
 }
 
-/* Tertiary keeps its theme hooks and shares the secondary bevel and glass
-   backdrop by default. */
+/* Tertiary is deprecated (#344, spec 002 S16-S18): it keeps its own theme
+   hooks, whose defaults alias the secondary ones, so it renders like
+   secondary. It carries the SECONDARY bevel pair (Figma 8003:300: stroke 1px
+   Outline/secondary_button_top with the secondary_button_bottom edge) and
+   keeps the glass backdrop from the :host defaults. */
 :host([variant="tertiary"]) {
   --_ki-button-border-bottom: var(--ki-button-tertiary-rest-border-bottom);
 }
@@ -286,7 +289,10 @@
     --_ki-button-shadow: var(--ki-button-ghost-hover-shadow);
   }
 
-  /* These variants and tones swap the hover fill, so remove the generic overlay. */
+  /* Variants whose hover swaps the fill instead of compositing an overlay
+     never take the hover overlay set by the generic :host(:hover) base block
+     above. Neutral tertiary composites its own overlay token instead
+     (--ki-button-tertiary-hover-overlay), so Material 3 keeps its hover. */
   :host([variant="tertiary"]:not([tone="neutral"]):hover),
   :host([variant="quaternary"]:hover),
   :host([variant="ghost"]:hover) {
