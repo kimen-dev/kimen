@@ -491,7 +491,7 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     [
       '../../changes/api/baselines/0.0.0.json',
       '../../packages/elements/generated/public-api.json',
-      '../../changes/api/011-ki-alert-anatomy.json',
+      '../../changes/api/317-321-loading-hint-touch.json',
     ].map(async (path) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))),
   );
 
@@ -584,11 +584,17 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // the shell padding, radius, wash and blur, the card elevation, the icon
   // frame size, radius and glyph size, the actions gap, and an icon fill and
   // ink for each of the five tones. 1204 + 19 = 1223.
-  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1223);
+  // Issues #317-#321 (changes/api/317-321-loading-hint-touch) add
+  // twenty-four: the loading spinner of ki-button and ki-icon-button (a size
+  // per button size for each, its stroke width and its period: twelve), the
+  // label hint ink and gap of the five field controls (ten), and the
+  // touch-screen text size of ki-input and ki-textarea (two). The touch
+  // density is published as its own context. 1223 + 24 = 1247.
+  assert.equal(Object.keys(candidate.surface.packages['@kimen/tokens'].tokens).length, 1247);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1223,
+    1247,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
@@ -601,6 +607,8 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
       'light',
       'reduced-transparency/dark',
       'reduced-transparency/light',
+      'touch/dark',
+      'touch/light',
     ],
   );
   const published = candidate.surface.packages['@kimen/tokens'].tokens;
