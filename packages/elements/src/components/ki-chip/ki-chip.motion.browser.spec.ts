@@ -13,7 +13,17 @@ const fixture = document.createElement('main');
 
 beforeAll(async () => {
   await emulateReducedMotion('reduce');
-  await expect.poll(() => matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true);
+  // expect.poll only runs inside a test, so wait for the media query here.
+  for (
+    let frame = 0;
+    frame < 60 && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    frame += 1
+  ) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    throw new Error('reduced motion did not apply');
+  }
   defineAllComponents();
   styles.textContent = tokensCss;
   document.head.append(styles);
