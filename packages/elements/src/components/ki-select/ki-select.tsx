@@ -620,11 +620,8 @@ export class KiSelect {
   private openWithHighlight(index: number): void {
     this.open = true;
     setOverlayOpen(this.listboxElement, this.open);
-    this.highlightedIndex = index;
+    this.highlight(index);
     document.addEventListener('pointerdown', this.handleOutsidePointerDown);
-    requestAnimationFrame(() => {
-      this.scrollHighlightedIntoView();
-    });
   }
 
   private close(): void {
@@ -642,9 +639,6 @@ export class KiSelect {
   }
 
   private scrollHighlightedIntoView(): void {
-    if (this.highlightedIndex < 0) {
-      return;
-    }
     const id = this.roster[this.highlightedIndex]?.id;
     if (!id) {
       return;
@@ -723,8 +717,7 @@ export class KiSelect {
   render() {
     const selected = this.selectedOption;
     const displayValue = selected?.label ?? this.placeholder;
-    const activeId =
-      this.open && this.highlightedIndex >= 0 ? this.roster[this.highlightedIndex]?.id : undefined;
+    const activeId = this.open ? this.roster[this.highlightedIndex]?.id : undefined;
     const messages = {
       help: fieldText(this.helpText),
       error: this.userInvalid ? this.message : '',
