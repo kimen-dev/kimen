@@ -198,6 +198,9 @@ touch values on the page root in your own stylesheet:
 
 Leave room between small touch controls: an extended target reserves no
 space, so two controls closer than 44px centre to centre share the overlap.
+The target is centred on what the control paints, so it also reaches past
+the control's leading edge (up to 13px for an 18px checkbox) and can lie over
+content right before it; an ancestor that clips its overflow cuts it.
 
 ## Surfaces
 
