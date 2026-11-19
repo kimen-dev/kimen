@@ -292,6 +292,54 @@ export const catalogData = {
       "whenNotToUse": "feedback that must be announced (that is\nki-alert's job — the badge has no live region), an interactive\nchip, filter or button, empty content (the label IS the meaning), or a\nnotification-counter overlay (a future, separate concern).",
       "whenToUse": "annotate an entity with short status text (a state, a\ncategory) whose meaning is carried by the label itself; the tone color\nonly reinforces the text, it never replaces it."
     },
+    "ki-breadcrumb": {
+      "description": "A path of ancestor links ending at the current page, with optional overflow.",
+      "events": {},
+      "props": {
+        "label": {
+          "type": "string",
+          "description": "Accessible name of the navigation landmark.",
+          "default": "Breadcrumb"
+        },
+        "max-items": {
+          "type": "number",
+          "description": "Optional overflow threshold. Above it, keep the first and last two levels\nvisible. Positive values are rounded down and clamped to four. Omit this\nprop, or pass a non-positive or non-finite value, to show the full trail."
+        },
+        "more-label": {
+          "type": "string",
+          "description": "Localizable name of the overflow control. Use {n} for the hidden level count.",
+          "default": "Show {n} more levels"
+        }
+      },
+      "slots": {
+        "": "Direct ki-breadcrumb-item children in hierarchy order."
+      },
+      "tag": "ki-breadcrumb",
+      "whenNotToUse": "switch between peer routes, toggle peer panels, or display progress through a form.",
+      "whenToUse": "show the current page in a deeper hierarchy using direct ki-breadcrumb-item children ordered from root to current."
+    },
+    "ki-breadcrumb-item": {
+      "description": "One declarative level in a breadcrumb path.",
+      "events": {},
+      "props": {
+        "current": {
+          "type": "boolean",
+          "description": "Explicitly marks the final level as current. The owning breadcrumb treats\nits final level as current by position, including when this marker is omitted.",
+          "default": false
+        },
+        "href": {
+          "type": "string",
+          "description": "Native destination for an ancestor level. Leaves the label as text when omitted.\nThe final level never links away from the current page.",
+          "format": "url"
+        }
+      },
+      "slots": {
+        "": "Plain-text label mirrored by the owning breadcrumb."
+      },
+      "tag": "ki-breadcrumb-item",
+      "whenNotToUse": "render a standalone link or display an interactive control inside the label.",
+      "whenToUse": "declare a direct child of ki-breadcrumb in hierarchy order. Give ancestors an href and use short text labels. The last level is the current page."
+    },
     "ki-button": {
       "description": "A token-styled action button with native button semantics.",
       "events": {},

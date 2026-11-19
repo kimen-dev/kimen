@@ -10,6 +10,8 @@ import { defineCustomElement as defineKiAlert } from '@kimen/elements/components
 import { defineCustomElement as defineKiAvatar } from '@kimen/elements/components/ki-avatar.js';
 import { defineCustomElement as defineKiAvatarGroup } from '@kimen/elements/components/ki-avatar-group.js';
 import { defineCustomElement as defineKiBadge } from '@kimen/elements/components/ki-badge.js';
+import { defineCustomElement as defineKiBreadcrumb } from '@kimen/elements/components/ki-breadcrumb.js';
+import { defineCustomElement as defineKiBreadcrumbItem } from '@kimen/elements/components/ki-breadcrumb-item.js';
 import { defineCustomElement as defineKiButton } from '@kimen/elements/components/ki-button.js';
 import { defineCustomElement as defineKiCard } from '@kimen/elements/components/ki-card.js';
 import { defineCustomElement as defineKiCheckbox } from '@kimen/elements/components/ki-checkbox.js';
@@ -144,6 +146,52 @@ export class KiBadge {
 
 
 export declare interface KiBadge extends Components.KiBadge {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiBreadcrumb,
+  inputs: ['label', 'maxItems', 'moreLabel']
+})
+@Component({
+  selector: 'ki-breadcrumb',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['label', 'maxItems', 'moreLabel'],
+})
+export class KiBreadcrumb {
+  protected el: HTMLKiBreadcrumbElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiBreadcrumb extends Components.KiBreadcrumb {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiBreadcrumbItem,
+  inputs: ['current', 'href']
+})
+@Component({
+  selector: 'ki-breadcrumb-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['current', 'href'],
+})
+export class KiBreadcrumbItem {
+  protected el: HTMLKiBreadcrumbItemElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiBreadcrumbItem extends Components.KiBreadcrumbItem {}
 
 
 @ProxyCmp({
