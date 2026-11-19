@@ -410,3 +410,39 @@ export function renderThemeStylesheet(theme, declarations, { deprecations, modes
     .filter((block) => block !== '')
     .join('\n');
 }
+
+// CSS custom property values retain whitespace during minification. Compact
+// the generated values and substitute fixed private foundations while keeping
+// their declarations and every reference to a public token.
+export function compactTokenStylesheet(css, { declarations, modes, inline, foundationsLast }) {
+  const reassigned = new Set(modes.flatMap(({ declarations }) => [...declarations.keys()]));
+  const literals = new Map(
+    [...declarations].filter(
+      ([name, value]) =>
+        inline(name) && !reassigned.has(name) && !/\b(?:var|light-dark)\(/u.test(value),
+    ),
+  );
+  const compactValue = (value) =>
+    value.replaceAll(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|, +/gu, (part) =>
+      part.startsWith(',') ? ',' : part,
+    );
+  const compacted = css.replaceAll(
+    /^( +)(--ki-[\w-]+): ([^\r\n;]+);/gmu,
+    (_, indent, name, value) => {
+      const inlined = value.replaceAll(
+        /"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|var\((--ki-[\w-]+)\)/gu,
+        (part, reference) => literals.get(reference) ?? part,
+      );
+      return `${indent}${name}:${compactValue(inlined)};`;
+    },
+  );
+  if (!foundationsLast) return compacted;
+
+  // Keeping the opt-in theme's restored private values together compresses
+  // better. Declaration order within each rule does not affect the cascade.
+  return compacted.replaceAll(/(?:^ +--ki-[^\r\n]+\n)+/gmu, (block) => {
+    const lines = block.trimEnd().split('\n');
+    const isFoundation = (line) => line.trimStart().startsWith('--ki-foundation-');
+    return `${[...lines.filter((line) => !isFoundation(line)), ...lines.filter(isFoundation)].join('\n')}\n`;
+  });
+}

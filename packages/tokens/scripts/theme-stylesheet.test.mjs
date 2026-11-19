@@ -17,6 +17,7 @@ import { collectDeprecations } from './deprecation.mjs';
 import {
   assertInheritedTokens,
   combineSchemes,
+  compactTokenStylesheet,
   compositionDeclarations,
   DENSITIES,
   densityRules,
@@ -45,6 +46,27 @@ const primitives = {
   '--ki-size-hairline': ['1px'],
   '--ki-size-thick': ['2px'],
 };
+
+test('the shipped CSS compacts fixed foundations while keeping public and mode-dependent aliases', () => {
+  const declarations = new Map([
+    ['--ki-foundation-fixed', "'Label, Detail', serif"],
+    ['--ki-foundation-mode', '#111111'],
+    ['--ki-fg', 'var(--ki-foundation-mode)'],
+    ['--ki-label-font', 'var(--ki-foundation-fixed)'],
+    ['--ki-copy-font', 'var(--ki-label-font)'],
+  ]);
+  const modes = [{ mode: MODES[1], declarations: new Map([['--ki-foundation-mode', '#222222']]) }];
+  const css = compactTokenStylesheet(renderBaseStylesheet(declarations, { modes }), {
+    declarations,
+    modes,
+    inline: (name) => name.startsWith('--ki-foundation-'),
+  });
+
+  assert.match(css, /--ki-label-font:'Label, Detail',serif;/u);
+  assert.match(css, /--ki-copy-font:var\(--ki-label-font\);/u);
+  assert.match(css, /--ki-fg:var\(--ki-foundation-mode\);/u);
+  assert.match(css, /--ki-foundation-mode:#222222;/u);
+});
 
 test('a token with the same expression in both schemes is emitted once, unchanged', () => {
   const light = composition({ ...primitives, '--ki-space-md': ['1rem'] });

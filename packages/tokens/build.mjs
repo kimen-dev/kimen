@@ -26,6 +26,7 @@ import { assertNoDeprecationDue, collectDeprecations } from './scripts/deprecati
 import {
   assertInheritedTokens,
   combineSchemes,
+  compactTokenStylesheet,
   compositionDeclarations,
   DENSITIES,
   densityRules,
@@ -78,7 +79,8 @@ async function theme(name, mode, variant = (config) => config) {
 }
 
 const onmars = await theme('onmars');
-const material3 = themeOverrides({ base: onmars, theme: await theme('material3') });
+const material3Theme = await theme('material3');
+const material3 = themeOverrides({ base: onmars, theme: material3Theme });
 
 // Each mode is emitted as what the cascade below it does not already produce,
 // in cascade order: the default theme's mode rules follow the default rule
@@ -143,7 +145,14 @@ const densities = densityRules(levels, onmars);
 
 await writeFile(
   new URL('tokens.css', dist),
-  renderBaseStylesheet(onmars, { deprecations, modes: baseModes, inherited, densities }),
+  compactTokenStylesheet(
+    renderBaseStylesheet(onmars, { deprecations, modes: baseModes, inherited, densities }),
+    {
+      declarations: onmars,
+      modes: baseModes,
+      inline: (name) => name.startsWith('--ki-foundation-'),
+    },
+  ),
 );
 
 const modeSummary = (modes) =>
@@ -154,7 +163,18 @@ console.log(
 
 await writeFile(
   new URL('tokens.material3.css', dist),
-  renderThemeStylesheet('material3', material3, { deprecations, modes: material3Modes }),
+  compactTokenStylesheet(
+    renderThemeStylesheet('material3', material3, { deprecations, modes: material3Modes }),
+    {
+      declarations: material3Theme,
+      modes: [...baseModes, ...material3Modes],
+      inline: (name) =>
+        /^--ki-foundation-(?:material3-(?:typescale|motion|shape)-|migrated-component-)/u.test(
+          name,
+        ),
+      foundationsLast: true,
+    },
+  ),
 );
 
 console.log(

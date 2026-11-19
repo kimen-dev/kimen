@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
+// eslint-disable-next-line @nx/enforce-module-boundaries -- Use the API gate's resolver to check the published CSS.
 import { buildPublicStylesheetSurface } from '../../../scripts/lib/css-token-surface.mjs';
 
 const base = await readFile(new URL('../dist/css/tokens.css', import.meta.url), 'utf8');

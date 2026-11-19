@@ -70,3 +70,6 @@ Feature: Onmars v2 theme values
   bundle uses 13px from the separate type-scale proposal.
 - Agent's choice, pending founder confirmation. The opt-in page stylesheet
   reads the page surface role, so the canvas uses paper in onmars light.
+- Agent's choice, pending founder confirmation. Compact the CSS and inline
+  references to fixed private foundations to stay within the existing
+  stylesheet budgets. Keep their declarations and the public aliases.
