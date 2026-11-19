@@ -102,7 +102,7 @@ export namespace Components {
      * @whenNotToUse as a clickable control (compose the avatar inside an
      * interactive host such as ki-button), for logos or arbitrary illustrations
      * (plain `img`), or unlabeled when no adjacent text names the identity.
-     * Use the counter slot for a decorative presence dot.
+     * Use the counter slot for a decorative count or presence dot.
      */
     interface KiAvatar {
         /**
@@ -1178,7 +1178,7 @@ declare global {
      * @whenNotToUse as a clickable control (compose the avatar inside an
      * interactive host such as ki-button), for logos or arbitrary illustrations
      * (plain `img`), or unlabeled when no adjacent text names the identity.
-     * Use the counter slot for a decorative presence dot.
+     * Use the counter slot for a decorative count or presence dot.
      */
     interface HTMLKiAvatarElement extends Components.KiAvatar, HTMLStencilElement {
     }
@@ -1831,7 +1831,7 @@ declare namespace LocalJSX {
      * @whenNotToUse as a clickable control (compose the avatar inside an
      * interactive host such as ki-button), for logos or arbitrary illustrations
      * (plain `img`), or unlabeled when no adjacent text names the identity.
-     * Use the counter slot for a decorative presence dot.
+     * Use the counter slot for a decorative count or presence dot.
      */
     interface KiAvatar {
         /**
@@ -3129,7 +3129,7 @@ declare module "@stencil/core" {
              * @whenNotToUse as a clickable control (compose the avatar inside an
              * interactive host such as ki-button), for logos or arbitrary illustrations
              * (plain `img`), or unlabeled when no adjacent text names the identity.
-             * Use the counter slot for a decorative presence dot.
+             * Use the counter slot for a decorative count or presence dot.
              */
             "ki-avatar": LocalJSX.IntrinsicElements["ki-avatar"] & JSXBase.HTMLAttributes<HTMLKiAvatarElement>;
             /**

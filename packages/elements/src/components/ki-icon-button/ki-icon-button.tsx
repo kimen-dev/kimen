@@ -209,41 +209,45 @@ export class KiIconButton {
     // The status region is rendered always, empty until the button loads: a
     // polite region created together with its text is not announced (042
     // D6). It sits outside the native button, next to it (046 D7).
+    // Keep visible capped counts beside the button too, so they stay separate
+    // from the control's own label.
     return [
-      <button
-        ref={(el) => {
-          this.button = el;
-        }}
-        part="button"
-        type="button"
-        tabIndex={this.disabled ? -1 : 0}
-        disabled={this.disabled}
-        aria-disabled={loading ? 'true' : undefined}
-        aria-label={this.label}
-        onClick={this.handleClick}
-        onKeyDown={startKeyboardPress}
-        onKeyUp={releaseKeyboardPress}
-        onBlur={endKeyboardPress}
-      >
-        <span part="icon" aria-hidden="true">
-          <slot />
-        </span>
-        {loading ? (
-          // The circular ki-progress geometry (015), as in ki-button.
-          <svg part="spinner" viewBox="0 0 40 40" aria-hidden="true">
-            <circle
-              cx="20"
-              cy="20"
-              r="18"
-              pathLength="100"
-              fill="none"
-              stroke="currentColor"
-              vector-effect="non-scaling-stroke"
-            />
-          </svg>
-        ) : null}
+      <span class="control">
+        <button
+          ref={(el) => {
+            this.button = el;
+          }}
+          part="button"
+          type="button"
+          tabIndex={this.disabled ? -1 : 0}
+          disabled={this.disabled}
+          aria-disabled={loading ? 'true' : undefined}
+          aria-label={this.label}
+          onClick={this.handleClick}
+          onKeyDown={startKeyboardPress}
+          onKeyUp={releaseKeyboardPress}
+          onBlur={endKeyboardPress}
+        >
+          <span part="icon" aria-hidden="true">
+            <slot />
+          </span>
+          {loading ? (
+            // The circular ki-progress geometry (015), as in ki-button.
+            <svg part="spinner" viewBox="0 0 40 40" aria-hidden="true">
+              <circle
+                cx="20"
+                cy="20"
+                r="18"
+                pathLength="100"
+                fill="none"
+                stroke="currentColor"
+                vector-effect="non-scaling-stroke"
+              />
+            </svg>
+          ) : null}
+        </button>
         <slot name="counter" />
-      </button>,
+      </span>,
       <span class="status" role="status">
         {loading ? this.loadingLabel : null}
       </span>,

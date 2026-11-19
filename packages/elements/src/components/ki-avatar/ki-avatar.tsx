@@ -14,10 +14,10 @@ export type KiAvatarSize = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * @whenNotToUse as a clickable control (compose the avatar inside an
  * interactive host such as ki-button), for logos or arbitrary illustrations
  * (plain `img`), or unlabeled when no adjacent text names the identity.
- * Use the counter slot for a decorative presence dot.
+ * Use the counter slot for a decorative count or presence dot.
  *
- * @slot counter - Decorative ki-counter in the block-end inline-end corner.
- * Include its meaning in the avatar label.
+ * @slot counter - Decorative ki-counter. Counts sit at block-start inline-end
+ * and dots at block-end inline-end. Include its meaning in the avatar label.
  * @part avatar - The avatar box: size, shape, surface, border and typography.
  * @part image - The portrait image when `src` is set and loads.
  * @part initials - The verbatim initials text of the second fallback step.

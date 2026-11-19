@@ -94,7 +94,7 @@ export class KiCounter {
       <Host aria-hidden="true" data-empty={empty ? '' : undefined}>
         {!empty && (
           <span part="indicator" dir="ltr">
-            {count}
+            {count === undefined ? null : <span>{count}</span>}
           </span>
         )}
       </Host>

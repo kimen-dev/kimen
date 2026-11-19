@@ -314,11 +314,11 @@
         },
         {
           "name": "whenNotToUse",
-          "text": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), or unlabeled when no adjacent text names the identity.\nUse the counter slot for a decorative presence dot."
+          "text": "as a clickable control (compose the avatar inside an\ninteractive host such as ki-button), for logos or arbitrary illustrations\n(plain `img`), or unlabeled when no adjacent text names the identity.\nUse the counter slot for a decorative count or presence dot."
         },
         {
           "name": "slot",
-          "text": "counter - Decorative ki-counter in the block-end inline-end corner.\nInclude its meaning in the avatar label."
+          "text": "counter - Decorative ki-counter. Counts sit at block-start inline-end\nand dots at block-end inline-end. Include its meaning in the avatar label."
         },
         {
           "name": "part",
@@ -502,7 +502,7 @@
       "slots": [
         {
           "name": "counter",
-          "docs": "Decorative ki-counter in the block-end inline-end corner.\nInclude its meaning in the avatar label."
+          "docs": "Decorative ki-counter. Counts sit at block-start inline-end\nand dots at block-end inline-end. Include its meaning in the avatar label."
         }
       ],
       "parts": [

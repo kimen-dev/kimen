@@ -15,7 +15,7 @@ stack with overflow.
 as a clickable control (compose the avatar inside an
 interactive host such as ki-button), for logos or arbitrary illustrations
 (plain `img`), or unlabeled when no adjacent text names the identity.
-Use the counter slot for a decorative presence dot.
+Use the counter slot for a decorative count or presence dot.
 
 ## Examples
 
@@ -50,7 +50,7 @@ Beside a visible name the avatar is decorative — omit `label` so assistive tec
 
 ## Slots
 
-- `counter`: Decorative ki-counter in the block-end inline-end corner. Include its meaning in the avatar label.
+- `counter`: Decorative ki-counter. Counts sit at block-start inline-end and dots at block-end inline-end. Include its meaning in the avatar label.
 
 ## Parts
 
@@ -94,5 +94,6 @@ None.
 - `--ki-avatar-xxs-font-size`: dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px).
 - `--ki-avatar-xxs-icon-size`: dimension used by the avatar component for the xxs generic-figure glyph (MarsUI Icon/User 14px, Space/2xl).
 - `--ki-avatar-xxs-size`: dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md).
+- `--ki-counter-ring-width`: Thickness of the separating ring.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.

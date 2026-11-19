@@ -123,7 +123,12 @@
 
 slot[name="counter"]::slotted(:not([for])) {
   position: absolute;
-  inset-block-end: 0;
-  inset-inline-end: 0;
+  inset-block-start: calc(-1 * var(--ki-counter-ring-width));
+  inset-inline-end: calc(-1 * var(--ki-counter-ring-width));
   pointer-events: none;
+}
+
+slot[name="counter"]::slotted([dot]:not([for])) {
+  inset-block: auto 0;
+  inset-inline-end: 0;
 }

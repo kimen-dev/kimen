@@ -5,7 +5,8 @@
     "@kimen/tokens": "0.0.0"
   },
   "deltas": {
-    "/packages/@kimen~1elements/components/ki-avatar/slots/counter": "2ac8e3723effe6fcde8e65eb1f6ee42a22407ce570cd3e6dbaddd1dd42a71a22",
+    "/packages/@kimen~1elements/components/ki-avatar/cssProperties/--ki-counter-ring-width": "f36171820ec2050cba7e0a945f39138d1339349ca76bb0abf6ff748ddee6d12c",
+    "/packages/@kimen~1elements/components/ki-avatar/slots/counter": "6662874043a6b0aa5fe0d9e26f021f0c1dda7431717d6c8462905298c8ce350a",
     "/packages/@kimen~1elements/components/ki-counter": "f4fa58c1e91872fefae98be4b0d57320cb43adb878e4eb6e02074529d76455cf",
     "/packages/@kimen~1elements/components/ki-counter/attributes/dot": "22c7549c764bce6a376d49e303cf55ea41d4f5d931d6b5fdf42c06b9f0eb739c",
     "/packages/@kimen~1elements/components/ki-counter/attributes/for": "ea7751bd23953680226a9e0532bc844534ee9003206730f2c13bf41a6692cd37",
@@ -604,7 +605,7 @@
     "@kimen/elements",
     "@kimen/tokens"
   ],
-  "reason": "Add Counter, its theme tokens and opt-in host slots. The API gate classifies changes to the generated loader Components and JSX namespaces as major.",
+  "reason": "Add Counter, theme tokens, and opt-in host slots. Avatar counts use block-start and dots use block-end. The gate classifies the generated loader Components and JSX namespace changes as major.",
   "release": "major",
   "schemaVersion": 2
 }

@@ -31,13 +31,19 @@ export function observeCounterAnchor(host: HTMLElement, id: string): (() => void
     host.setAttribute('data-anchor-positioned', '');
   };
 
-  const visibility = new IntersectionObserver((entries) => {
-    const entry = entries.at(-1);
-    if (entry?.target === anchor) {
-      intersects = entry.isIntersecting;
-      move();
-    }
-  });
+  // Edge contact can leave isIntersecting true at zero area. A positive
+  // threshold also reports the transition from visible pixels to that edge.
+  const visibility = new IntersectionObserver(
+    (entries) => {
+      const entry = entries.at(-1);
+      if (entry?.target === anchor) {
+        const { width, height } = entry.intersectionRect;
+        intersects = width > 0 && height > 0;
+        move();
+      }
+    },
+    { threshold: Number.EPSILON },
+  );
 
   const bind = (): void => {
     const next = resolveOverlayAnchor(host, id);

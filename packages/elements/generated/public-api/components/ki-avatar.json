@@ -235,6 +235,14 @@
         "required": false,
         "type": null
       },
+      "--ki-counter-ring-width": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Thickness of the separating ring.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-motion-duration-fast": {
         "default": null,
         "deprecatedSince": null,
@@ -327,7 +335,7 @@
       "counter": {
         "default": null,
         "deprecatedSince": null,
-        "description": "Decorative ki-counter in the block-end inline-end corner.\nInclude its meaning in the avatar label.",
+        "description": "Decorative ki-counter. Counts sit at block-start inline-end\nand dots at block-end inline-end. Include its meaning in the avatar label.",
         "replacement": null,
         "required": false,
         "type": null

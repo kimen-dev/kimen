@@ -92,6 +92,11 @@ slot:not([name])::slotted(*) {
   inline-size: var(--_ki-icon-button-icon-size);
 }
 
+.control {
+  display: inline-flex;
+  position: relative;
+}
+
 slot[name="counter"]::slotted(:not([for])) {
   position: absolute;
   inset-block-start: calc(-1 * var(--ki-counter-ring-width));

@@ -226,7 +226,7 @@ stack with overflow.
 When NOT to use: as a clickable control (compose the avatar inside an
 interactive host such as ki-button), for logos or arbitrary illustrations
 (plain `img`), or unlabeled when no adjacent text names the identity.
-Use the counter slot for a decorative presence dot.
+Use the counter slot for a decorative count or presence dot.
 
 Examples:
 
@@ -259,7 +259,7 @@ Attributes:
 - `src` (string | undefined, URL): Portrait URL, the first step of the fallback chain. When it fails to load — initially or at runtime — the avatar silently falls back to the initials (or the generic figure) with no error, no layout change and no event (FR-001). Loading policy follows the platform image defaults.
 
 Slots:
-- `counter`: Decorative ki-counter in the block-end inline-end corner. Include its meaning in the avatar label.
+- `counter`: Decorative ki-counter. Counts sit at block-start inline-end and dots at block-end inline-end. Include its meaning in the avatar label.
 
 Parts:
 - `avatar`: The avatar box: size, shape, surface, border and typography.
@@ -297,6 +297,7 @@ CSS custom properties:
 - `--ki-avatar-xxs-font-size`: dimension used by the avatar component for xxs initials (MarsUI UI/Caption 1: 10px).
 - `--ki-avatar-xxs-icon-size`: dimension used by the avatar component for the xxs generic-figure glyph (MarsUI Icon/User 14px, Space/2xl).
 - `--ki-avatar-xxs-size`: dimension used by the avatar component for the xxs box (20px circle, Figma Space/5xl; specs/019-ki-avatar/design-extraction.md).
+- `--ki-counter-ring-width`: Thickness of the separating ring.
 - `--ki-motion-duration-fast`: Fast interaction transition duration.
 - `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
 
