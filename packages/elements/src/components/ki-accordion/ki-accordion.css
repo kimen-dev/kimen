@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  font-family: var(--ki-typography-family-body);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+[part="group"] {
+  border: var(--ki-details-border-width) solid var(--ki-details-border);
+  border-radius: var(--ki-details-radius);
+  overflow: clip;
+}
+
+::slotted(ki-details:not(:first-of-type)) {
+  border-block-start: var(--ki-accordion-divider-width) solid var(--ki-details-border);
+}
+
+@media (forced-colors: active) {
+  [part="group"],
+  ::slotted(ki-details) {
+    border-color: CanvasText;
+  }
+}

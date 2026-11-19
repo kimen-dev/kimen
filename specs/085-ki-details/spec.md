@@ -41,6 +41,11 @@ reader needs it. An accordion presents related disclosures as one visual group.
   row separators for an accordion and a complete outline for a standalone
   disclosure, following the design-system preview.
 
+- **Agent's choice, pending founder confirmation.** Declare the public API
+  as major because the protected baseline classifies changes to the generated
+  loader `Components` and `JSX` namespaces that way. The new component APIs
+  are additive.
+
 ## Scenario Family Coverage
 
 | Family | Scenarios | Justification |

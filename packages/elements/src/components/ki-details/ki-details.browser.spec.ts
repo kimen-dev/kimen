@@ -10,6 +10,7 @@ const styles = document.createElement('style');
 const fixture = document.createElement('main');
 
 const browserCommands = commands as unknown as {
+  accessibilityTree: () => Promise<{ name: string; expanded: boolean | null }[] | null>;
   ariaSnapshot: (selector: string) => Promise<string>;
   emulateReducedMotion: (value: 'reduce' | 'no-preference' | null) => Promise<void>;
 };
@@ -81,8 +82,15 @@ it('S2 reflects open property writes without replaying a toggle', async () => {
   await expect.element(answer).toBeVisible();
 
   for (const open of [false, true]) {
-    const nativeChange = new Promise<void>((resolve) => { panel.addEventListener('toggle', () => { resolve(); }, { once: true }); },
-    );
+    const nativeChange = new Promise<void>((resolve) => {
+      panel.addEventListener(
+        'toggle',
+        () => {
+          resolve();
+        },
+        { once: true },
+      );
+    });
     host.open = open;
     await nativeChange;
     await expect.poll(() => host.hasAttribute('open')).toBe(open);
@@ -143,18 +151,29 @@ it('S8 tabs past a disabled summary to visible focus', async () => {
 });
 
 it('S9 preserves the rich heading and exposes native expansion without a named icon', async () => {
-  const { summary } = await mount(
+  const { panel, summary } = await mount(
     '<ki-details id="rich" summary="Fallback label"><h2 slot="summary">Workspace settings</h2>' +
       '<p>Change who can join the workspace.</p></ki-details>',
   );
   expect(summary.querySelector('h2')?.textContent).toBe('Workspace settings');
   expect(summary.querySelector('ki-icon')?.getAttribute('aria-hidden')).toBe('true');
   expect(summary.hasAttribute('aria-expanded')).toBe(false);
-  expect(await browserCommands.ariaSnapshot('#rich')).not.toContain('[expanded]');
+  const expectExpanded = async (expanded: boolean): Promise<void> => {
+    expect(panel.open).toBe(expanded);
+    const tree = await browserCommands.accessibilityTree();
+    // The Chromium AX tree exposes the browser's disclosure state. Other
+    // engines still exercise native semantics and the rich summary.
+    if (tree) {
+      expect(
+        tree.some((node) => node.name === 'Workspace settings' && node.expanded === expanded),
+      ).toBe(true);
+    }
+  };
 
+  await expectExpanded(false);
   await userEvent.click(summary);
+  await expectExpanded(true);
   const snapshot = await browserCommands.ariaSnapshot('#rich');
-  expect(snapshot).toContain('[expanded]');
   expect(snapshot).toContain('Workspace settings');
   expect(snapshot).not.toContain('Fallback label');
   await expectAccessible(fixture);
@@ -177,6 +196,24 @@ it('S10 reflects a native reveal of the closed answer', async () => {
   await expect.poll(() => host.hasAttribute('open')).toBe(true);
   await expect.poll(() => states.slice()).toEqual([true]);
 });
+
+it.skipIf(!navigator.userAgent.includes('Chrome/'))(
+  'S10 reveals a closed native disclosure during fragment navigation',
+  async () => {
+    const { host } = await mount(
+      '<a href="#details-find-target">Go to permissions</a>' +
+        '<ki-details summary="Permissions"><p id="details-find-target">Guests inherit access.</p></ki-details>',
+    );
+    const initialUrl = window.location.href;
+    try {
+      await page.getByRole('link', { name: 'Go to permissions' }).click();
+      await expect.poll(() => host.open).toBe(true);
+      await expect.element(page.getByText('Guests inherit access.')).toBeVisible();
+    } finally {
+      window.history.replaceState(null, '', initialUrl);
+    }
+  },
+);
 
 it('S11 reads the surface, backdrop and hover color from theme tokens', async () => {
   const image = 'linear-gradient(rgb(255, 255, 255), rgb(220, 220, 220))';

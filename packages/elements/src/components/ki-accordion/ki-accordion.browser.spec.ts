@@ -111,7 +111,9 @@ it('S4 reconciles initial and live exclusivity and follows a moved member', asyn
 it('S5 allows independent panels and keeps isolated groups open', async () => {
   await mount(`
     <ki-accordion>
-      <ki-details id="permissions" open summary="Permissions">Invite users.</ki-details>
+      <ki-details id="permissions" open summary="Permissions">
+        <ki-details id="nested" open summary="Invitations">Invite users.</ki-details>
+      </ki-details>
       <ki-details id="exports" summary="Exports">Make a backup.</ki-details>
     </ki-accordion>
     <ki-accordion exclusive>
@@ -122,6 +124,12 @@ it('S5 allows independent panels and keeps isolated groups open', async () => {
   await expect.poll(() => member('exports').host.open).toBe(true);
   expect(member('permissions').host.open).toBe(true);
   expect(member('billing').host.open).toBe(true);
+  const nested = member('nested');
+  expect(nested.panel.name).toBe('');
+  expect(nested.host.open).toBe(true);
+  expect(Number.parseFloat(getComputedStyle(nested.panel).borderBlockStartWidth)).toBeGreaterThan(
+    0,
+  );
 });
 
 it('S6 works as native HTML with scripting disabled', async () => {
@@ -131,8 +139,15 @@ it('S6 works as native HTML with scripting disabled', async () => {
   frame.srcdoc = `<!doctype html>
     <details name="faq" open><summary>Permissions</summary>Invite users.</details>
     <details name="faq"><summary>Exports</summary>Make a backup.</details>`;
-  const loaded = new Promise<void>((resolve) => { frame.addEventListener('load', () => { resolve(); }, { once: true }); },
-  );
+  const loaded = new Promise<void>((resolve) => {
+    frame.addEventListener(
+      'load',
+      () => {
+        resolve();
+      },
+      { once: true },
+    );
+  });
   fixture.append(frame);
   await loaded;
 

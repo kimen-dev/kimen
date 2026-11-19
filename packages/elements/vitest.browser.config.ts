@@ -254,7 +254,7 @@ export default defineConfig({
           },
         ),
         // The engine's own computed accessibility tree of the tester frame,
-        // flattened: role, name, DESCRIPTION, invalid and live-region state
+        // flattened: role, name, DESCRIPTION, expanded, invalid and live-region state
         // of every node the tree does not ignore, and for a live region the
         // text it holds (Chromium marks only the region root as live, and a
         // generic root has no name of its own). Playwright's ariaSnapshot
@@ -320,6 +320,7 @@ export default defineConfig({
                   live,
                   text: live === null ? '' : textOf(node),
                   focused: property('focused') === true,
+                  expanded: property('expanded') ?? null,
                   // Unavailable and still reachable: what a pending button
                   // exposes through aria-disabled (spec 046).
                   disabled: property('disabled') === true,

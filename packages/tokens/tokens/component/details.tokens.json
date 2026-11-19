@@ -1,0 +1,78 @@
+{
+  "ki": {
+    "details": {
+      "bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Color of the disclosure surface.",
+        "$type": "color"
+      },
+      "fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text color on the disclosure surface.",
+        "$type": "color"
+      },
+      "bg-image": {
+        "$value": "{ki.surface-image.none}",
+        "$description": "Optional image painted over the disclosure surface."
+      },
+      "backdrop-filter": {
+        "$value": "{ki.effect.backdrop-filter-none}",
+        "$description": "Complete filter for the backdrop behind the disclosure surface."
+      },
+      "border": {
+        "$value": "{ki.outline.low-em}",
+        "$description": "Color of the disclosure frame and accordion separators.",
+        "$type": "color"
+      },
+      "border-width": {
+        "$value": "{ki.outline.hairline-width}",
+        "$description": "Width of the disclosure or accordion frame."
+      },
+      "radius": {
+        "$value": "{ki.corner.panel}",
+        "$description": "Corners of a standalone disclosure or the accordion frame."
+      },
+      "padding": {
+        "$value": "{ki.spacing.standard-inset}",
+        "$description": "Inline inset of the summary and inset of the panel body."
+      },
+      "summary-padding-block": {
+        "$value": "{ki.spacing.compact-inset}",
+        "$description": "Block inset of the summary."
+      },
+      "summary-hover-bg": {
+        "$value": "{ki.surface.s1}",
+        "$description": "Surface color of a hovered summary.",
+        "$type": "color"
+      },
+      "summary-hover-fg": {
+        "$value": "{ki.text.high-em}",
+        "$description": "Text and icon color of a hovered summary.",
+        "$type": "color"
+      },
+      "body-bg": {
+        "$value": "{ki.surface.s0}",
+        "$description": "Surface color of the disclosure body.",
+        "$type": "color"
+      },
+      "body-fg": {
+        "$value": "{ki.text.supporting}",
+        "$description": "Supporting text color of the disclosure body.",
+        "$type": "color"
+      },
+      "disabled-fg": {
+        "$value": "{ki.text.med-em}",
+        "$description": "Text and icon color of a disabled summary.",
+        "$type": "color"
+      },
+      "motion-duration": {
+        "$value": "{ki.motion.duration.fast}",
+        "$description": "Duration of the chevron rotation."
+      },
+      "motion-easing": {
+        "$value": "{ki.motion.easing.standard}",
+        "$description": "Easing of the chevron rotation."
+      }
+    }
+  }
+}
