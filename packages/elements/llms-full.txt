@@ -2693,7 +2693,7 @@ Slots:
 - (default): `ki-tab` and `ki-tab-panel` children. Tabs are auto-assigned to an internal named slot as managed output.
 
 Parts:
-- `tablist`: Internal strip carrying the `tablist` role.
+- `tablist`: Internal row around the tab strip: gap, alignment and the divider. The strip inside it carries the `tablist` role.
 
 Events:
 - `ki-change` (CustomEvent<{ value: string }>): Fired once after a user-driven selection change from pointer or keyboard navigation. `detail.value` is the resolved selected value and `value` is already current when listeners run. Programmatic `value` writes and first-render fallback are silent.

@@ -11011,7 +11011,7 @@
               "tablist": {
                 "default": null,
                 "deprecatedSince": null,
-                "description": "Internal strip carrying the `tablist` role.",
+                "description": "Internal row around the tab strip: gap, alignment and the divider. The strip inside it carries the `tablist` role.",
                 "replacement": null,
                 "required": false,
                 "type": null
@@ -43267,5 +43267,5 @@
       }
     }
   },
-  "surfaceSha256": "e402a4a9f12f06ca3d8524271c484e74f0a760e8efbca44d9ba707a85c0eb7bd"
+  "surfaceSha256": "48594fe367e6e69283ed43c79cf22726a8f494888523ddcb4854bfd4f4321673"
 }

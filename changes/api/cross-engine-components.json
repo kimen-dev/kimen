@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "48594fe367e6e69283ed43c79cf22726a8f494888523ddcb4854bfd4f4321673",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Components that work the same in Chromium, Firefox and WebKit (bug fixes), cumulative since baseline 0.0.0 and superseding declaration reconnect-and-property-children (its deltas, and those of every declaration it supersedes, remain as declared there). No published name, prop, event, part, slot or token is added, renamed or removed, and no token value changes. The only snapshot delta is the description of the ki-tabs part tablist: the part stays on the same box (the row around the tabs, with its gap, alignment and divider), and the tablist role moves to the scrolling strip inside it, which leaves the Tab order so that Firefox no longer stops on it before the selected tab. Behaviour, pinned by regression tests: (1) ki-tabs: one Tab stop in Firefox when the tabs overflow; (2) ki-video: the slotted media stays out of the Tab order behind the facade and gets back the consumer's own tabindex at activation; (3) ki-dialog: its size limits are percentages of the viewport it opens in, not viewport units, which WebKit kept from an earlier window size; (4) ki-button, ki-icon-button, the ki-alert dismiss button and the ki-video play button show their pressed appearance while Space is held in Firefox too, which never matches :active on a button held from the keyboard. No class signature changes; the cumulative delta since 0.0.0 was already MAJOR, so this candidate is declared major. Zero removals, no root growth. Nothing is published yet (0.0.0, private).",
+  "release": "major",
+  "schemaVersion": 1
+}

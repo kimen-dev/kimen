@@ -40,7 +40,7 @@ let nextId = 0;
  * internal named slot as managed output.
  * @managedSlot tab - The group stamps `slot="tab"` on its `ki-tab` children so
  * the tablist owns them; coordination, not authoring surface (spec 014).
- * @part tablist - Internal strip carrying the `tablist` role.
+ * @part tablist - Internal row around the tab strip: gap, alignment and the divider. The strip inside it carries the `tablist` role.
  */
 @Component({
   tag: 'ki-tabs',
@@ -490,8 +490,26 @@ export class KiTabs {
         onFocusin={this.handleFocusIn}
         onFocusout={this.handleFocusOut}
       >
-        <div part="tablist" role="tablist" aria-label={this.label}>
-          <slot name="tab" ref={this.setTabStripRef} onSlotchange={this.handleSlotChange} />
+        <div part="tablist">
+          {/* The strip scrolls when the tabs overflow, and Firefox makes a
+              scroll container a Tab stop of its own: Tab from the control
+              above would land on the strip before the selected tab, a second
+              stop in a tablist that has one (APG). The arrow keys already
+              bring every tab into view, so the strip leaves the Tab order in
+              every engine. Two things decide where that tabindex can go: a
+              slot that leaves the Tab order takes every tab assigned to it
+              along, and a focusable element between the tablist and its tabs
+              is a child a tablist does not allow. So the strip itself is the
+              tablist. */}
+          <div
+            class="strip"
+            role="tablist"
+            aria-label={this.label}
+            tabIndex={-1}
+            ref={this.setTabStripRef}
+          >
+            <slot name="tab" onSlotchange={this.handleSlotChange} />
+          </div>
         </div>
         <slot onSlotchange={this.handleSlotChange} />
       </Host>
