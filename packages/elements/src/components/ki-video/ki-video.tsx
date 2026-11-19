@@ -6,6 +6,35 @@ import {
 } from '../../utils/keyboard-press';
 
 /**
+ * The media elements a facade holds out of the Tab order, each with the
+ * facade holding it and the `tabindex` its consumer wrote (null: none).
+ * Module-wide, not per instance: media moved unplayed from one ki-video to
+ * another must not hand the second the first one's temporary -1 as the
+ * consumer's value, whichever of the two hears its slot change first.
+ */
+const heldMedia = new WeakMap<HTMLVideoElement, { authored: string | null; owner: object }>();
+
+function holdOutOfTabOrder(media: HTMLVideoElement, owner: object): void {
+  const held = heldMedia.get(media);
+  heldMedia.set(media, { authored: held ? held.authored : media.getAttribute('tabindex'), owner });
+  media.setAttribute('tabindex', '-1');
+}
+
+/** Gives the media its consumer's tabindex back, if `owner` is the facade holding it. */
+function releaseToTabOrder(media: HTMLVideoElement, owner: object): void {
+  const held = heldMedia.get(media);
+  if (held?.owner !== owner) {
+    return;
+  }
+  heldMedia.delete(media);
+  if (held.authored === null) {
+    media.removeAttribute('tabindex');
+  } else {
+    media.setAttribute('tabindex', held.authored);
+  }
+}
+
+/**
  * A themed video surface: a calm poster facade with exactly one accessible
  * play control over a slotted native `<video>` element. From the first
  * activation on, playback, scrubbing, volume, captions and fullscreen belong
@@ -59,11 +88,8 @@ export class KiVideo {
 
   private frame: HTMLDivElement | undefined;
 
-  /**
-   * The consumer's own `tabindex` on each slotted media element (null: none),
-   * held while the facade keeps the media out of the Tab order.
-   */
-  private readonly authoredTabIndex = new WeakMap<HTMLVideoElement, string | null>();
+  /** The media this facade holds out of the Tab order, until it plays or leaves. */
+  private held: HTMLVideoElement | undefined;
 
   private readonly setFrameRef = (frame?: HTMLDivElement): void => {
     this.frame = frame;
@@ -94,6 +120,11 @@ export class KiVideo {
       return;
     }
     const media = this.slottedMedia();
+    // Media that left the slot unplayed is its consumer's again.
+    if (this.held !== undefined && this.held !== media) {
+      releaseToTabOrder(this.held, this);
+      this.held = undefined;
+    }
     if (!media) {
       return;
     }
@@ -103,25 +134,15 @@ export class KiVideo {
     media.removeAttribute('controls');
     // Firefox keeps a <video> in the Tab order even without controls, so Tab
     // would stop on the inert media behind the facade before reaching the
-    // play control (S6). It leaves the Tab order until activation, which
-    // gives back whatever tabindex the consumer wrote.
-    if (!this.authoredTabIndex.has(media)) {
-      this.authoredTabIndex.set(media, media.getAttribute('tabindex'));
-    }
-    media.setAttribute('tabindex', '-1');
+    // play control (S6). It leaves the Tab order until activation, or until
+    // it leaves the slot, which gives back whatever tabindex the consumer
+    // wrote.
+    holdOutOfTabOrder(media, this);
+    this.held = media;
     if (!media.paused) {
       media.pause();
     }
   };
-
-  private restoreMediaTabIndex(media: HTMLVideoElement): void {
-    const authored = this.authoredTabIndex.get(media);
-    if (authored === null || authored === undefined) {
-      media.removeAttribute('tabindex');
-    } else {
-      media.setAttribute('tabindex', authored);
-    }
-  }
 
   /**
    * First activation (pointer, or Enter/Space via native button semantics):
@@ -151,7 +172,8 @@ export class KiVideo {
     // everything else on the media element passes through untouched
     // (sources, poster, tracks, events — FR-005).
     media.controls = true;
-    this.restoreMediaTabIndex(media);
+    releaseToTabOrder(media, this);
+    this.held = undefined;
     // The facade button leaves the Tab order as it yields, and focus left on
     // it would fall to the document. The play button is this shadow root's
     // only focusable, so an active element here means the person activated

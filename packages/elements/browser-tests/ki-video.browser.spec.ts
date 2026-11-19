@@ -488,6 +488,40 @@ describe('ki-video', () => {
     expect(media.getAttribute('tabindex')).toBe('0');
   });
 
+  // The facade holds the media out of the Tab order only while it slots it.
+  // Taken out unplayed, the media is the consumer's again, tabindex included.
+  it('S6 media taken out of the facade unplayed gets the consumer tabindex back', async () => {
+    cleanup();
+    const media = mediaFixture();
+    media.setAttribute('tabindex', '0');
+    await mount(landmark(), { label: 'Play the tour' }, media);
+    expect(media.getAttribute('tabindex')).toBe('-1');
+
+    landmark().append(media);
+
+    await waitUntil(() => media.getAttribute('tabindex') === '0', 'the tabindex did not come back');
+  });
+
+  // Moved unplayed into another facade, the media keeps the consumer's value:
+  // the second facade must not take the first one's temporary -1 for it.
+  it('S6 media moved unplayed to another facade keeps the consumer tabindex', async () => {
+    cleanup();
+    const media = mediaFixture();
+    media.setAttribute('tabindex', '0');
+    await mount(landmark(), { label: 'Play the tour' }, media);
+    const second = await mount(landmark(), { label: 'Play the other tour' }, mediaFixture());
+    second.replaceChildren(media);
+    await waitUntil(
+      () => media.getAttribute('tabindex') === '-1' && !media.controls,
+      'the second facade did not take the media',
+    );
+
+    playControlOf(second).click();
+
+    await waitUntil(() => media.controls, 'the native player did not take over');
+    expect(media.getAttribute('tabindex')).toBe('0');
+  });
+
   // Whoever asks for the video's focus stop on the very next keystroke (a
   // ki-dialog wrapping Tab) must not be handed the control on its way out:
   // focus sent there falls to the document body once the facade hides. The
