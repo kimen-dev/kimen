@@ -40,8 +40,12 @@ const compat = readFileSync(join(process.cwd(), 'COMPAT.md'), 'utf8');
  * help of specs 041/042 had brought it to 134 418 gzip, the preference modes
  * of 043/044 added 434 bytes and the density rules and per-component sizing
  * of 045 another 404, 256 over the old gzip line.
+ * Raw re-based for issues #317-#321 (button loading, field label hint, touch
+ * density, touch-size field text), when the document measured 608 693 raw,
+ * 141 120 gzip, 115 435 brotli: 2 693 bytes over the old raw line, with gzip
+ * and brotli still inside theirs, so only raw moves, to about 5% above.
  */
-const SIZE_BUDGET = { brotli: 116_500, gzip: 142_000, raw: 606_000 } as const;
+const SIZE_BUDGET = { brotli: 116_500, gzip: 142_000, raw: 639_000 } as const;
 
 /**
  * XML namespace names the DOM requires verbatim (`createElementNS`): they are
