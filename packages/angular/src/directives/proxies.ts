@@ -140,14 +140,14 @@ export declare interface KiBadge extends Components.KiBadge {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiButton,
-  inputs: ['disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant']
+  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant']
 })
 @Component({
   selector: 'ki-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant'],
+  inputs: ['command', 'commandfor', 'disabled', 'loading', 'loadingLabel', 'name', 'size', 'tone', 'type', 'value', 'variant'],
 })
 export class KiButton {
   protected el: HTMLKiButtonElement;
@@ -232,7 +232,7 @@ export declare interface KiDialog extends Components.KiDialog {
   /**
    * Post-close notification for every close path. Footer actions report
 `method` when they call `close()`, Escape reports `escape`, and opt-in
-backdrop dismissal reports `backdrop`.
+backdrop dismissal reports `backdrop`. Invoker dismissals report `command`.
 When to use: update application state after the dialog is already closed
 and focus has returned through the native mechanism.
 When NOT to use: do not expect this event to veto closing; it is not
@@ -266,14 +266,14 @@ export declare interface KiDivider extends Components.KiDivider {}
 
 @ProxyCmp({
   defineCustomElementFn: defineKiIconButton,
-  inputs: ['disabled', 'label', 'loading', 'loadingLabel', 'size', 'tone', 'variant']
+  inputs: ['command', 'commandfor', 'disabled', 'label', 'loading', 'loadingLabel', 'size', 'tone', 'variant']
 })
 @Component({
   selector: 'ki-icon-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['disabled', { name: 'label', required: true }, 'loading', 'loadingLabel', 'size', 'tone', 'variant'],
+  inputs: ['command', 'commandfor', 'disabled', { name: 'label', required: true }, 'loading', 'loadingLabel', 'size', 'tone', 'variant'],
 })
 export class KiIconButton {
   protected el: HTMLKiIconButtonElement;

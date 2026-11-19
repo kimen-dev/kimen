@@ -1,6 +1,22 @@
 {
   "component": {
     "attributes": {
+      "command": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
+        "replacement": null,
+        "required": false,
+        "type": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
+      },
+      "commandfor": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
@@ -1378,6 +1394,22 @@
       }
     },
     "properties": {
+      "command": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Dialog action to run for `commandfor`. Use `show-modal` to open,\n`close` for direct dismissal, or `request-close` for guarded dismissal.\nChoose a command for local dialog control and omit it for other actions.",
+        "replacement": null,
+        "required": false,
+        "type": "\"close\" | \"request-close\" | \"show-modal\" | undefined"
+      },
+      "commandfor": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "ID of a ki-dialog in the same document or shadow tree as this button.\nSet it together with `command` to connect a dialog declaratively.",
+        "replacement": null,
+        "required": false,
+        "type": "string | undefined"
+      },
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
