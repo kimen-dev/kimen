@@ -2,6 +2,9 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
+
+import { ESLint } from 'eslint';
 
 import { createFixtureRepo } from './helpers/fixture-repo.mjs';
 
@@ -31,4 +34,10 @@ test('S5 ordinary outputs stay ignored and force-add names one exact evidence fi
   const staged = await fixture.run('git', ['diff', '--cached', '--name-only']);
   assert.equal(staged.code, 0, staged.stderr);
   assert.equal(staged.stdout.trim(), policy.evidencePath);
+});
+
+test('lint checks the icon generator and ignores its built icon modules', async () => {
+  const eslint = new ESLint({ cwd: fileURLToPath(new URL('../../', import.meta.url)) });
+  assert.equal(await eslint.isPathIgnored('packages/elements/scripts/generate-icons.mjs'), false);
+  assert.equal(await eslint.isPathIgnored('packages/elements/icons/circle-check.js'), true);
 });

@@ -1,0 +1,29 @@
+---
+import { Code } from '@astrojs/starlight/components';
+
+const example = `<span><ki-icon name="circle-check"></ki-icon> Confirmed</span>
+<ki-icon name="triangle-alert" label="Warning" size="lg"></ki-icon>`;
+---
+
+<div class="ki-icon-demo" set:html={example} />
+<Code code={example} lang="html" />
+
+<script>
+  import '@kimen/elements/icons/circle-check';
+  import '@kimen/elements/icons/triangle-alert';
+  import { defineCustomElement } from '@kimen/elements/ki-icon';
+
+  defineCustomElement();
+</script>
+
+<style>
+  .ki-icon-demo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ki-space-3xl);
+    padding: var(--ki-space-7xl);
+    color: var(--ki-text-high-em);
+    background: var(--ki-surface-s0);
+  }
+</style>

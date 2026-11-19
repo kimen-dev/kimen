@@ -32,9 +32,15 @@ const browserSpecPatterns = (suffix: string): string[] =>
   ['browser-tests', 'src/components/ki-*'].map(
     (directory) => `${directory}/**/${suffix}.browser.spec.{ts,tsx}`,
   );
-// CDP touch emulation is page-level, so pointer specs share an isolated setup.
+// Specs that change the page's input device through CDP touch emulation. They
+// share one isolated setup, never the ordinary light one: the pointer
+// capability audit, the touch text size of fields (spec 048) and of sized
+// fields (spec 050), and every component's `*.pointer` spec.
+// A component's own input-device spec is named `<tag>.pointer.browser.spec.ts`
+// and joins this setup by name, so new components never edit this list.
 const inputDeviceSpecs = [
   pointerCapabilitySpec,
+  'src/components/ki-icon/ki-icon.browser.spec.ts',
   'browser-tests/touch-field-text.browser.spec.ts',
   'browser-tests/touch-size-field-text.browser.spec.ts',
   ...browserSpecPatterns('*.pointer'),

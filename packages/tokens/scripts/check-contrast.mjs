@@ -1154,7 +1154,12 @@ function evaluateContext(theme, scheme, declarations) {
 
   // A translucent component cell composites over the page. Inline links
   // can also sit directly on higher surface levels, including inside cards.
-  for (const pair of [...CONTRAST_PAIRS, ...swept]) {
+  // A component's -icon ink sits on its -bg at the non-text minimum.
+  const icons = swept.flatMap(({ surface }) => {
+    const ink = surface.replace(/-bg$/u, '-icon');
+    return declarations.has(ink) ? [{ text: ink, surface, minRatio: NON_TEXT_MIN_RATIO }] : [];
+  });
+  for (const pair of [...CONTRAST_PAIRS, ...swept, ...icons]) {
     const text = parseColor(resolveCustomProperty(pair.text, declarations));
     const rawSurface = parseColor(resolveCustomProperty(pair.surface, declarations));
     const backdrops =

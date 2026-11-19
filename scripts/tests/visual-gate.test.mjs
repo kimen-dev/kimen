@@ -5,12 +5,14 @@
 // - disarmed -> the README must document the two-step bootstrap that leads
 //   to arming, so the disarmed state is always a documented transition and
 //   never a silent permanent hole.
+// @spec:069-ki-icon
 import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { visualGalleryThemes } from '../../packages/elements/browser-tests/visual/theme-matrix.ts';
 import { discoverComponents } from '../lib/component-inventory.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
@@ -39,25 +41,20 @@ function parseArmedMarker(content) {
   return value === 'true';
 }
 
-// Light uses both themes. A component may opt into Material 3 dark through its
-// discovery metadata, which the browser harness also reads.
-function expectedLinuxBaselines(specFileName, engine = 'chromium', material3Dark = new Set()) {
+// The harness and audit read the same matrix. The screenshot matcher appends
+// the browser and platform to the capture name.
+function expectedLinuxBaselines(specFileName, engine = 'chromium') {
   const scheme = specFileName.endsWith('.visual.dark.browser.spec.ts') ? 'dark' : 'light';
   const component = specFileName.replace(/\.visual(?:\.dark)?\.browser\.spec\.ts$/u, '');
-  const themes =
-    scheme === 'light' || material3Dark.has(component) ? ['onmars', 'material3'] : ['onmars'];
-  return themes.map((theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`);
+  return visualGalleryThemes(component, scheme).map(
+    (theme) => `${component}-${theme}-${scheme}-gallery-${engine}-linux.png`,
+  );
 }
 
-function missingLinuxBaselines(
-  specFileNames,
-  existingBaselinesBySpec,
-  engines = ENGINES,
-  material3Dark = new Set(),
-) {
+function missingLinuxBaselines(specFileNames, existingBaselinesBySpec, engines = ENGINES) {
   return engines.flatMap((engine) =>
     specFileNames.flatMap((spec) =>
-      expectedLinuxBaselines(spec, engine, material3Dark)
+      expectedLinuxBaselines(spec, engine)
         .filter((baseline) => !(existingBaselinesBySpec.get(spec)?.has(baseline) ?? false))
         .map((baseline) => `${spec}/${baseline}`),
     ),
@@ -100,16 +97,20 @@ test('the expected baseline names mirror the harness capture matrix', () => {
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.dark.browser.spec.ts'), [
     'ki-button-onmars-dark-gallery-chromium-linux.png',
   ]);
-  assert.deepEqual(
-    expectedLinuxBaselines('ki-link.visual.dark.browser.spec.ts', 'chromium', new Set(['ki-link'])),
-    [
-      'ki-link-onmars-dark-gallery-chromium-linux.png',
-      'ki-link-material3-dark-gallery-chromium-linux.png',
-    ],
-  );
   assert.deepEqual(expectedLinuxBaselines('ki-button.visual.browser.spec.ts', 'webkit'), [
     'ki-button-onmars-light-gallery-webkit-linux.png',
     'ki-button-material3-light-gallery-webkit-linux.png',
+  ]);
+});
+
+test('S12 the icon gallery requires both themes in both schemes', () => {
+  assert.deepEqual(expectedLinuxBaselines('ki-icon.visual.browser.spec.ts'), [
+    'ki-icon-onmars-light-gallery-chromium-linux.png',
+    'ki-icon-material3-light-gallery-chromium-linux.png',
+  ]);
+  assert.deepEqual(expectedLinuxBaselines('ki-icon.visual.dark.browser.spec.ts'), [
+    'ki-icon-onmars-dark-gallery-chromium-linux.png',
+    'ki-icon-material3-dark-gallery-chromium-linux.png',
   ]);
 });
 
@@ -170,16 +171,7 @@ test('an armed visual gate keeps every committed linux baseline', async () => {
     // companion test below pins the documented path OUT of this state.
     return;
   }
-  const components = await discoverComponents({ workspaceRoot: repositoryRoot });
-  const material3Dark = new Set(
-    components.filter(({ metadata }) => metadata.visual?.material3Dark).map(({ tag }) => tag),
-  );
-  const missing = missingLinuxBaselines(
-    specs,
-    await committedLinuxBaselines(specs),
-    ENGINES,
-    material3Dark,
-  );
+  const missing = missingLinuxBaselines(specs, await committedLinuxBaselines(specs));
   assert.deepEqual(
     missing,
     [],

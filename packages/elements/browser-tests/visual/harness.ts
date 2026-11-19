@@ -27,6 +27,7 @@ import { defineAllComponents } from '../all-components';
 import robotoWoff2Url from './fonts/RobotoVariable.woff2?url';
 import type { VisualComponent, VisualGallery } from './galleries';
 import { fixtureFor } from './galleries';
+import { visualGalleryThemes } from './theme-matrix';
 
 type Scheme = 'dark' | 'light';
 type Theme = 'material3' | 'onmars';
@@ -203,12 +204,8 @@ export async function mountGallery(gallery: Gallery, theme: Theme): Promise<HTML
 export function runVisualSuite(options: VisualSuiteOptions): void {
   const { define, scheme } = options;
   const name = 'name' in options ? options.name : options.component;
-  const { gallery, material3Dark } =
-    'gallery' in options
-      ? { gallery: options.gallery, material3Dark: false }
-      : fixtureFor(options.component);
-  const themes: readonly Theme[] =
-    scheme === 'light' || material3Dark ? ['onmars', 'material3'] : ['onmars'];
+  const gallery = 'gallery' in options ? options.gallery : fixtureFor(options.component).gallery;
+  const themes = visualGalleryThemes(name, scheme);
 
   describe(`${name} visual gallery [${scheme}]`, () => {
     beforeAll(async () => {

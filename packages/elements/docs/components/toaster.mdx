@@ -1,0 +1,51 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Components/ki-toaster" />
+
+# ki-toaster
+
+The one place toasts appear: it paints its `ki-toast` children in the top
+layer at a corner of the viewport, stacks them in arrival order, shows the
+newest few and queues the older ones, without covering the page beside them.
+
+**When to use** — once per page (or once inside a modal `ki-dialog`), as the
+place every `ki-toast` appears in: append toasts to it, or call `show()`.
+
+**When NOT to use** — for anything but `ki-toast` elements, or for persistent
+content, which belongs in the page or in `ki-alert`.
+
+## Examples
+
+```html
+<ki-toaster placement="bottom-end" max="3"></ki-toaster>
+<script>
+  document.querySelector('ki-toaster').show({
+    tone: 'success',
+    title: 'Changes saved',
+    message: 'Workspace settings are up to date.',
+    action: { label: 'Undo', onClick: undo },
+  });
+</script>
+```
+
+`placement` accepts `top-center`, `top-end`, `bottom-center` and
+`bottom-end` (default); `end` follows the writing direction, and a narrow
+touch screen always uses the bottom center.
+
+## Customization
+
+| Token                        | Controls                                |
+| ---------------------------- | --------------------------------------- |
+| `--ki-toaster-inset-block`   | Distance from the top or bottom edge    |
+| `--ki-toaster-inset-inline`  | Distance from the end edge              |
+| `--ki-toaster-gap`           | Gap between stacked toasts              |
+
+## Accessibility
+
+- While it shows toasts the toaster is a group named by `label`
+  (`Notifications` by default), not a landmark: keep it inside one of the
+  page's landmarks, such as `main`. An empty toaster exposes nothing.
+- F6 moves focus into the toaster; Escape on a toast returns focus to where
+  it was.
+- Toasts stack from the top down in arrival order, so the visual order and
+  the Tab order agree.

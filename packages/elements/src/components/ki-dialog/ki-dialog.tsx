@@ -29,7 +29,7 @@ interface EventEmitter<T> {
  * provide a `heading`, place actions in the `footer` slot, wire each footer
  * action to `close()`, and in destructive confirmations put `autofocus` on
  * the least destructive action.
- * @whenNotToUse non-blocking feedback (`ki-alert`, future `ki-toast`),
+ * @whenNotToUse non-blocking feedback (`ki-alert`, `ki-toast`),
  * supplementary hints (`ki-tooltip`), long forms or multi-step flows
  * (navigate or use a future full-screen variant), menus, or pickers.
  *

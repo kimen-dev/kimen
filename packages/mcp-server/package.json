@@ -15,7 +15,8 @@
   },
   "files": [
     "dist/kimen-mcp.mjs",
-    "COMPAT.md"
+    "COMPAT.md",
+    "NOTICE"
   ],
   "engines": {
     "node": ">=22"
@@ -58,7 +59,8 @@
           "{projectRoot}/**/*",
           "!{projectRoot}/src/generated/**",
           "^default",
-          "{workspaceRoot}/packages/elements/generated/custom-elements.json"
+          "{workspaceRoot}/packages/elements/generated/custom-elements.json",
+          "{workspaceRoot}/scripts/lib/stock-surface-icons.mjs"
         ],
         "outputs": [
           "{projectRoot}/dist",
