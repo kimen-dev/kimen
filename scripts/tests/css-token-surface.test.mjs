@@ -82,6 +82,19 @@ test('[S10] stylesheet surface resolves aliases and light-dark() in the light an
   });
 });
 
+test('the private backdrop defaults are excluded from the public stylesheet surface', () => {
+  const withPrivateDefaults = stylesheet.replace(
+    '--ki-zero: 0px;',
+    '--ki-zero: 0px; --_ki-backdrop-filter-default: blur(var(--ki-zero));',
+  );
+
+  assert.deepEqual(build(withPrivateDefaults), build());
+  assert.throws(
+    () => build(withPrivateDefaults.replace('--_ki-backdrop-filter-default', '--_ki-unknown')),
+    /unsupported declaration --_ki-unknown/u,
+  );
+});
+
 test('[S10] stylesheet surface resolves light-dark() inside a composite and across aliases', () => {
   const surface = build(
     stylesheet.replace(

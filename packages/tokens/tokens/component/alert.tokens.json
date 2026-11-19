@@ -168,6 +168,11 @@
         }
       },
       "dismiss": {
+        "backdrop-filter": {
+          "$type": "other",
+          "$value": "{ki.effect.component.backdrop-filter}",
+          "$description": "Complete backdrop filter behind the alert dismiss button."
+        },
         "border-width": {
           "$value": "{ki.size.border.hairline}",
           "$description": "dimension used by the alert component for the dismiss chip bevel stroke (MarsUI 24px raised circle: 1px Outline/secondary_button_top hairline)."
@@ -234,7 +239,20 @@
         "backdrop-blur": {
           "$value": "{ki.effect.component.backdrop-blur}",
           "$type": "dimension",
-          "$description": "backdrop blur used by the alert component behind the shell (MarsUI Alert master BACKGROUND_BLUR Blur/24 = CSS 12px; reduced transparency and material3 resolve to blur none through the semantic token)."
+          "$description": "backdrop blur used by the alert component behind the shell (MarsUI Alert master BACKGROUND_BLUR Blur/24 = CSS 12px; reduced transparency and material3 resolve to blur none through the semantic token).",
+          "$deprecated": "Use a complete filter value so a flat theme can turn compositing off.",
+          "$extensions": {
+            "dev.kimen.deprecation": {
+              "since": "0.1.0",
+              "removal": "1.0.0",
+              "replacement": "--ki-alert-shell-backdrop-filter"
+            }
+          }
+        },
+        "backdrop-filter": {
+          "$type": "other",
+          "$value": "{ki.effect.component.backdrop-filter}",
+          "$description": "Complete backdrop filter behind the alert shell."
         }
       },
       "card": {

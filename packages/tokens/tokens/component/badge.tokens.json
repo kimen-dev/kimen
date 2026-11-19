@@ -1,6 +1,11 @@
 {
   "ki": {
     "badge": {
+      "backdrop-filter": {
+        "$type": "other",
+        "$value": "{ki.effect.component.backdrop-filter}",
+        "$description": "Complete backdrop filter for the neutral badge surface."
+      },
       "sm": {
         "height": {
           "$value": "{ki.space.7xl}",

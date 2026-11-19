@@ -1,0 +1,12 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersion": "0.0.0",
+  "candidateSha256": "275f41a4d209c798e999c964fbb565970ddccdcccc1848d63a551b9bfba959e8",
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Optional background images for the dialog, tooltip and select listbox (issue #343, spec 062), cumulative since baseline 0.0.0 and superseding declaration 317-321-loading-hint-touch. Adds three component image tokens and six semantic tokens for surface images, tooltip arrow edge colors and a transparent backing. Deprecates the dialog and tooltip bg-start and bg-end tokens since 0.1.0 with removal scheduled for 1.0.0. Onmars v1 keeps the existing gradients over a transparent dialog and tooltip backing, so the effective bg token values become transparent in that theme. Material 3 paints the original opaque fill colors. The select listbox keeps its existing fill in both themes. The cumulative delta since 0.0.0 remains MAJOR, with zero removals and no root growth. It supersedes 349-composed-shadows and carries forward its declared changes.",
+  "release": "major",
+  "schemaVersion": 1
+}

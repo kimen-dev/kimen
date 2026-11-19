@@ -74,6 +74,11 @@ function modeSelectors(mode, theme) {
 }
 const SCHEMES = ['light', 'dark'];
 const CUSTOM_PROPERTY = /^--ki-[a-z0-9]+(?:-[a-z0-9]+)*$/u;
+// Private comparison values for the spec 061 compatibility bridge.
+const BACKDROP_DEFAULTS = new Set([
+  '--_ki-backdrop-filter-default',
+  '--_ki-listbox-backdrop-filter-default',
+]);
 const ZERO_DIMENSION =
   /(^|[^a-zA-Z0-9_.-])[-+]?0(?:\.0+)?(?:ch|cm|dvh|dvw|em|ex|in|lh|mm|pc|pt|px|q|rem|rlh|svh|svw|vh|vmax|vmin|vw)(?=$|[^a-zA-Z0-9_-])/giu;
 const LENGTH =
@@ -223,15 +228,16 @@ function plainDeclarations(body, label) {
   return result;
 }
 
-function declarations(body, label) {
+function declarations(body, label, privateNames = new Set()) {
   const result = new Map();
   for (const [name, value] of plainDeclarations(body, label)) {
-    if (!CUSTOM_PROPERTY.test(name) || value === '') {
+    if ((!CUSTOM_PROPERTY.test(name) && !privateNames.has(name)) || value === '') {
       throw new Error(`${label} contains unsupported declaration ${name || '<empty>'}`);
     }
     if (result.has(name)) throw new Error(`${label} declares ${name} more than once`);
     result.set(name, value);
   }
+  for (const name of privateNames) result.delete(name);
   if (result.size === 0) throw new Error(`${label} contains no Kimen custom properties`);
   return result;
 }
@@ -534,7 +540,11 @@ function defaultThemeDeclarations(css, label) {
   if (tokens?.selector !== DEFAULT_THEME_SELECTOR) {
     throw new Error(`${label} must declare its tokens in one ${DEFAULT_THEME_SELECTOR} rule`);
   }
-  const contextual = declarations(tokens.body, `${label} rule ${tokens.prelude}`);
+  const contextual = declarations(
+    tokens.body,
+    `${label} rule ${tokens.prelude}`,
+    BACKDROP_DEFAULTS,
+  );
   let index = SCHEME_CONTRACT.length + 1;
   // Document-inherited tokens (spec 045): one `:root` rule, then each density
   // level and `default`, each reassigning only those tokens.

@@ -590,21 +590,26 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
   // label hint ink and gap of the five field controls (ten), and the
   // touch-screen text size of ki-input and ki-textarea (two). The touch
   // density is published as its own context. 1223 + 24 = 1247.
-  // Issue #346 adds no token: it publishes two font stylesheet exports.
+  // Issue #347 adds the shared heading family, the two component heading
+  // families, and the dialog heading letter spacing. 1247 + 4 = 1251.
+  // Issue #345 adds three switch glyph colors. 1251 + 3 = 1254.
+  // Issue #349 adds the video hover shadow opacity. 1254 + 1 = 1255.
+  // Issue #343 adds three component image tokens and six semantic tokens for
+  // images, tooltip arrow colors and transparent backing. 1255 + 9 = 1264.
+  // Issue #342 adds ten full-filter tokens: two semantic and eight component.
+  // 1264 + 10 = 1274.
+  // Issue #346 adds two font stylesheet exports outside the effective token
+  // surface. The token total and deprecation count stay at main's totals.
   const tokenPackage = candidate.surface.packages['@kimen/tokens'];
   for (const subpath of ['./css/onmars-fonts.css', './css/material3-fonts.css']) {
     assert.equal(tokenPackage.exports[subpath].target, subpath);
     assert.equal(Object.hasOwn(tokenPackage.stylesheets, subpath), false);
   }
-  // Issue #347 adds the shared heading family, the two component heading
-  // families, and the dialog heading letter spacing. 1247 + 4 = 1251.
-  // Issue #345 adds three switch glyph colors. 1251 + 3 = 1254.
-  // Issue #349 adds the video hover shadow opacity. 1254 + 1 = 1255.
-  assert.equal(Object.keys(tokenPackage.tokens).length, 1255);
+  assert.equal(Object.keys(tokenPackage.tokens).length, 1274);
   assert.equal(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts.light)
       .length,
-    1255,
+    1274,
   );
   assert.deepEqual(
     Object.keys(candidate.surface.packages['@kimen/tokens'].stylesheets['./css'].contexts),
@@ -634,10 +639,11 @@ test('[S10] sealed repository candidate is digest-bound without removals or root
     assert.equal(Object.hasOwn(published, name), false, `${name} is no longer published`);
   }
   // The token deprecation (changes/api/041-token-deprecation) keeps the 85
-  // component leaves nothing reads published, each with deprecatedSince 0.1.0
-  // and a replacement, so a later major can remove them.
+  // component leaves published. Issue #343 adds four legacy gradient stops.
+  // All 89 entries carry deprecatedSince 0.1.0 and a live replacement.
   const deprecated = Object.values(published).filter(({ deprecatedSince }) => deprecatedSince);
-  assert.equal(deprecated.length, 85);
+  // Issue #342 also deprecates seven legacy backdrop blur lengths. 89 + 7 = 96.
+  assert.equal(deprecated.length, 96);
   assert.ok(
     deprecated.every(
       ({ deprecatedSince, replacement }) => deprecatedSince === '0.1.0' && replacement,
