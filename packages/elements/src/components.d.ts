@@ -842,6 +842,35 @@ export namespace Components {
         "value": string;
     }
     /**
+     * A compact status for an indeterminate wait.
+     * @whenToUse show brief inline activity such as saving a change or running a
+     * tool. Choose typing dots for an assistant that is thinking. Set a localized
+     * label that names the activity and mount the spinner when the wait starts.
+     * @whenNotToUse use ki-progress for page-level work or a known fraction of
+     * a task. Use ki-alert for persistent notices.
+     */
+    interface KiSpinner {
+        /**
+          * Localized name of the ongoing activity, such as "Saving changes". Supply a meaningful label for every spinner, even when the text is hidden. Use the activity's name whenever it can be more specific than "Loading".
+         */
+        "label": string;
+        /**
+          * Display the label beside the graphic when sighted users also need the activity description. The same text names the status in either case.
+          * @default false
+         */
+        "showLabel": boolean;
+        /**
+          * Diameter of the ring. Choose the size that fits the surrounding content. Dots use a fixed size. Unrecognized values draw the medium ring.
+          * @default 'md'
+         */
+        "size": 'sm' | 'md' | 'lg';
+        /**
+          * Use a ring for general inline activity and dots for assistant typing or thinking. Unrecognized values draw a ring.
+          * @default 'ring'
+         */
+        "variant": 'ring' | 'dots';
+    }
+    /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
      * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
      * on) the item it describes: presence on an avatar, health of a service
@@ -1664,6 +1693,20 @@ declare global {
         new (): HTMLKiSelectElement;
     };
     /**
+     * A compact status for an indeterminate wait.
+     * @whenToUse show brief inline activity such as saving a change or running a
+     * tool. Choose typing dots for an assistant that is thinking. Set a localized
+     * label that names the activity and mount the spinner when the wait starts.
+     * @whenNotToUse use ki-progress for page-level work or a known fraction of
+     * a task. Use ki-alert for persistent notices.
+     */
+    interface HTMLKiSpinnerElement extends Components.KiSpinner, HTMLStencilElement {
+    }
+    var HTMLKiSpinnerElement: {
+        prototype: HTMLKiSpinnerElement;
+        new (): HTMLKiSpinnerElement;
+    };
+    /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
      * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
      * on) the item it describes: presence on an avatar, health of a service
@@ -1907,6 +1950,7 @@ declare global {
         "ki-radio-group": HTMLKiRadioGroupElement;
         "ki-scroller": HTMLKiScrollerElement;
         "ki-select": HTMLKiSelectElement;
+        "ki-spinner": HTMLKiSpinnerElement;
         "ki-status": HTMLKiStatusElement;
         "ki-switch": HTMLKiSwitchElement;
         "ki-tab": HTMLKiTabElement;
@@ -2730,6 +2774,35 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     /**
+     * A compact status for an indeterminate wait.
+     * @whenToUse show brief inline activity such as saving a change or running a
+     * tool. Choose typing dots for an assistant that is thinking. Set a localized
+     * label that names the activity and mount the spinner when the wait starts.
+     * @whenNotToUse use ki-progress for page-level work or a known fraction of
+     * a task. Use ki-alert for persistent notices.
+     */
+    interface KiSpinner {
+        /**
+          * Localized name of the ongoing activity, such as "Saving changes". Supply a meaningful label for every spinner, even when the text is hidden. Use the activity's name whenever it can be more specific than "Loading".
+         */
+        "label": string;
+        /**
+          * Display the label beside the graphic when sighted users also need the activity description. The same text names the status in either case.
+          * @default false
+         */
+        "showLabel"?: boolean;
+        /**
+          * Diameter of the ring. Choose the size that fits the surrounding content. Dots use a fixed size. Unrecognized values draw the medium ring.
+          * @default 'md'
+         */
+        "size"?: 'sm' | 'md' | 'lg';
+        /**
+          * Use a ring for general inline activity and dots for assistant typing or thinking. Unrecognized values draw a ring.
+          * @default 'ring'
+         */
+        "variant"?: 'ring' | 'dots';
+    }
+    /**
      * A tiny, non-interactive status dot that marks the state of a nearby item.
      * @whenToUse mark a state with minimal footprint adjacent to (or overlaid
      * on) the item it describes: presence on an avatar, health of a service
@@ -3241,6 +3314,12 @@ declare namespace LocalJSX {
         "helpText": string;
         "errorText": string;
     }
+    interface KiSpinnerAttributes {
+        "label": string;
+        "variant": 'ring' | 'dots';
+        "size": 'sm' | 'md' | 'lg';
+        "showLabel": boolean;
+    }
     interface KiStatusAttributes {
         "tone": KiStatusTone;
         "ring": boolean;
@@ -3327,6 +3406,7 @@ declare namespace LocalJSX {
         "ki-radio-group": Omit<KiRadioGroup, keyof KiRadioGroupAttributes> & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes]?: KiRadioGroup[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `attr:${K}`]?: KiRadioGroupAttributes[K] } & { [K in keyof KiRadioGroup & keyof KiRadioGroupAttributes as `prop:${K}`]?: KiRadioGroup[K] } & OneOf<"label", KiRadioGroup["label"], KiRadioGroupAttributes["label"]>;
         "ki-scroller": Omit<KiScroller, keyof KiScrollerAttributes> & { [K in keyof KiScroller & keyof KiScrollerAttributes]?: KiScroller[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `attr:${K}`]?: KiScrollerAttributes[K] } & { [K in keyof KiScroller & keyof KiScrollerAttributes as `prop:${K}`]?: KiScroller[K] } & OneOf<"label", KiScroller["label"], KiScrollerAttributes["label"]>;
         "ki-select": Omit<KiSelect, keyof KiSelectAttributes> & { [K in keyof KiSelect & keyof KiSelectAttributes]?: KiSelect[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `attr:${K}`]?: KiSelectAttributes[K] } & { [K in keyof KiSelect & keyof KiSelectAttributes as `prop:${K}`]?: KiSelect[K] } & OneOf<"label", KiSelect["label"], KiSelectAttributes["label"]>;
+        "ki-spinner": Omit<KiSpinner, keyof KiSpinnerAttributes> & { [K in keyof KiSpinner & keyof KiSpinnerAttributes]?: KiSpinner[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `attr:${K}`]?: KiSpinnerAttributes[K] } & { [K in keyof KiSpinner & keyof KiSpinnerAttributes as `prop:${K}`]?: KiSpinner[K] } & OneOf<"label", KiSpinner["label"], KiSpinnerAttributes["label"]>;
         "ki-status": Omit<KiStatus, keyof KiStatusAttributes> & { [K in keyof KiStatus & keyof KiStatusAttributes]?: KiStatus[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `attr:${K}`]?: KiStatusAttributes[K] } & { [K in keyof KiStatus & keyof KiStatusAttributes as `prop:${K}`]?: KiStatus[K] };
         "ki-switch": Omit<KiSwitch, keyof KiSwitchAttributes> & { [K in keyof KiSwitch & keyof KiSwitchAttributes]?: KiSwitch[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `attr:${K}`]?: KiSwitchAttributes[K] } & { [K in keyof KiSwitch & keyof KiSwitchAttributes as `prop:${K}`]?: KiSwitch[K] };
         "ki-tab": Omit<KiTab, keyof KiTabAttributes> & { [K in keyof KiTab & keyof KiTabAttributes]?: KiTab[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `attr:${K}`]?: KiTabAttributes[K] } & { [K in keyof KiTab & keyof KiTabAttributes as `prop:${K}`]?: KiTab[K] };
@@ -3651,6 +3731,15 @@ declare module "@stencil/core" {
              * are silent.
              */
             "ki-select": LocalJSX.IntrinsicElements["ki-select"] & JSXBase.HTMLAttributes<HTMLKiSelectElement>;
+            /**
+             * A compact status for an indeterminate wait.
+             * @whenToUse show brief inline activity such as saving a change or running a
+             * tool. Choose typing dots for an assistant that is thinking. Set a localized
+             * label that names the activity and mount the spinner when the wait starts.
+             * @whenNotToUse use ki-progress for page-level work or a known fraction of
+             * a task. Use ki-alert for persistent notices.
+             */
+            "ki-spinner": LocalJSX.IntrinsicElements["ki-spinner"] & JSXBase.HTMLAttributes<HTMLKiSpinnerElement>;
             /**
              * A tiny, non-interactive status dot that marks the state of a nearby item.
              * @whenToUse mark a state with minimal footprint adjacent to (or overlaid

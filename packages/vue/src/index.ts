@@ -27,6 +27,7 @@ export { KiRadio } from './ki-radio.js';
 export { KiRadioGroup } from './ki-radio-group.js';
 export { KiScroller } from './ki-scroller.js';
 export { KiSelect } from './ki-select.js';
+export { KiSpinner } from './ki-spinner.js';
 export { KiStatus } from './ki-status.js';
 export { KiSwitch } from './ki-switch.js';
 export { KiTab } from './ki-tab.js';

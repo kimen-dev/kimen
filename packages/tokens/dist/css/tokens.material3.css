@@ -586,6 +586,7 @@
   --ki-select-sm-radius:var(--ki-radius-component-xs);
   --ki-select-lg-radius:var(--ki-radius-component-xs);
   --ki-select-xl-radius:var(--ki-radius-component-xs);
+  --ki-spinner-indicator:var(--ki-surface-inverse-white);
   --ki-status-size:var(--ki-space-sm);
   --ki-status-shadow:0 0 0 0 var(--ki-color-transparent-black);
   --ki-switch-track-width:var(--ki-space-15xl);

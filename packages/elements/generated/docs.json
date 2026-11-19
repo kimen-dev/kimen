@@ -4711,6 +4711,186 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-spinner/ki-spinner.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-spinner",
+      "docs": "A compact status for an indeterminate wait.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "show brief inline activity such as saving a change or running a\ntool. Choose typing dots for an assistant that is thinking. Set a localized\nlabel that names the activity and mount the spinner when the wait starts."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "use ki-progress for page-level work or a known fraction of\na task. Use ki-alert for persistent notices."
+        },
+        {
+          "name": "part",
+          "text": "ring - Rotating ring with a track and indicator, in the ring variant."
+        },
+        {
+          "name": "part",
+          "text": "dots - Group of three animated dots, in the dots variant."
+        },
+        {
+          "name": "part",
+          "text": "label - Activity text, adjacent to the graphic when show-label is set."
+        }
+      ],
+      "usage": {
+        "examples": "# ki-spinner examples\n\n## Inline save status\n\nInsert the spinner when the save begins. Remove it when the save ends.\n\n```html\n<ki-spinner size=\"sm\" label=\"Saving changes…\" show-label></ki-spinner>\n```\n\n## Assistant status\n\nUse a visually hidden label when the surrounding UI already describes the\nactivity.\n\n```html\n<ki-spinner variant=\"dots\" label=\"Assistant is thinking\"></ki-spinner>\n```\n\n## Custom-elements entry point\n\n```ts\nimport { defineCustomElement } from '@kimen/elements/ki-spinner';\n\ndefineCustomElement();\n```\n"
+      },
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "label",
+          "reflectToAttr": false,
+          "docs": "Localized name of the ongoing activity, such as \"Saving changes\".\nSupply a meaningful label for every spinner, even when the text is hidden.\nUse the activity's name whenever it can be more specific than \"Loading\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": true,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "showLabel",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "show-label",
+          "reflectToAttr": false,
+          "docs": "Display the label beside the graphic when sighted users also need the\nactivity description. The same text names the status in either case.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "size",
+          "type": "\"lg\" | \"md\" | \"sm\"",
+          "complexType": {
+            "original": "'sm' | 'md' | 'lg'",
+            "resolved": "\"lg\" | \"md\" | \"sm\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "size",
+          "reflectToAttr": true,
+          "docs": "Diameter of the ring. Choose the size that fits the surrounding content.\nDots use a fixed size. Unrecognized values draw the medium ring.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'md'"
+            }
+          ],
+          "default": "'md'",
+          "values": [
+            {
+              "value": "lg",
+              "type": "string"
+            },
+            {
+              "value": "md",
+              "type": "string"
+            },
+            {
+              "value": "sm",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "variant",
+          "type": "\"dots\" | \"ring\"",
+          "complexType": {
+            "original": "'ring' | 'dots'",
+            "resolved": "\"dots\" | \"ring\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "variant",
+          "reflectToAttr": false,
+          "docs": "Use a ring for general inline activity and dots for assistant typing or\nthinking. Unrecognized values draw a ring.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'ring'"
+            }
+          ],
+          "default": "'ring'",
+          "values": [
+            {
+              "value": "dots",
+              "type": "string"
+            },
+            {
+              "value": "ring",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [
+        {
+          "name": "dots",
+          "docs": "Group of three animated dots, in the dots variant."
+        },
+        {
+          "name": "label",
+          "docs": "Activity text, adjacent to the graphic when show-label is set."
+        },
+        {
+          "name": "ring",
+          "docs": "Rotating ring with a track and indicator, in the ring variant."
+        }
+      ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-status/ki-status.tsx",
       "encapsulation": "shadow",
       "tag": "ki-status",

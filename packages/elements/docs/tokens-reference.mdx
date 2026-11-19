@@ -16,8 +16,8 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 334 semantic
-and 1168 component tokens. Values are the resolved **onmars light**
+Every custom property in the public styling contract: 350 semantic
+and 1191 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -29,10 +29,22 @@ two layers below is the whole re-theming surface.
 Meaning, not appearance. This is the layer a brand reassigns to re-theme
 every component at once.
 
+### `ki.activity-size`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-activity-size-dot` | `0.375rem` | Diameter of a typing dot at its full size. |
+| `--ki-activity-size-ring-lg` | `2rem` | Large inline activity ring diameter. |
+| `--ki-activity-size-ring-md` | `1.25rem` | Medium inline activity ring diameter. |
+| `--ki-activity-size-ring-sm` | `1rem` | Small inline activity ring diameter. |
+| `--ki-activity-size-stroke` | `2px` | Stroke of a small or medium activity ring. |
+| `--ki-activity-size-stroke-lg` | `3px` | Stroke of a large activity ring. |
+
 ### `ki.corner`
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-corner-activity-mark` | `1000px` | Round corners for rings and typing dots. |
 | `--ki-corner-control` | `8px` | Deprecated alias kept for pre-Fase-1 consumers; use ki.radius.md. |
 
 ### `ki.density`
@@ -139,6 +151,10 @@ every component at once.
 | `--ki-motion-distance-md` | `0.5rem` | Motion travel distance md (8px): entrance slide offsets (e.g. dialog rise). |
 | `--ki-motion-distance-sm` | `0.25rem` | Motion travel distance sm (4px): small slide/settle offsets. |
 | `--ki-motion-distance-xs` | `0.125rem` | Motion travel distance xs (2px): hover-lift offsets. |
+| `--ki-motion-duration-activity-pulse` | `1200ms` | Period of an indeterminate typing pulse. |
+| `--ki-motion-duration-activity-rotation` | `800ms` | Period of an indeterminate activity rotation. |
+| `--ki-motion-duration-activity-rotation-reduced` | `2400ms` | Period of an indeterminate activity rotation with reduced motion. |
+| `--ki-motion-duration-activity-stagger` | `150ms` | Stagger between neighboring marks of an activity pulse. |
 | `--ki-motion-duration-fast` | `150ms` | Fast interaction transition duration. |
 | `--ki-motion-duration-instant` | `0ms` | Zero-duration step: transitions that must complete immediately (reduced-motion fallbacks, instant handoffs). |
 | `--ki-motion-duration-long-1` | `380ms` | M3 md.sys.motion.duration.long1 (450ms). onmars: MarsUI slow step (360ms, 3x the 120ms base). |
@@ -153,6 +169,8 @@ every component at once.
 | `--ki-motion-duration-short-2` | `150ms` | M3 md.sys.motion.duration.short2 (100ms). onmars: MarsUI 120ms (ki.duration.fast). |
 | `--ki-motion-duration-short-3` | `150ms` | M3 md.sys.motion.duration.short3 (150ms). onmars: MarsUI 120ms (ki.duration.fast). |
 | `--ki-motion-duration-short-4` | `150ms` | M3 md.sys.motion.duration.short4 (200ms). onmars: MarsUI 120ms (ki.duration.fast). |
+| `--ki-motion-easing-activity-pulse` | `cubic-bezier(0.42, 0, 0.58, 1)` | Symmetric easing for fluctuations in a typing pulse. |
+| `--ki-motion-easing-activity-rotation` | `cubic-bezier(0, 0, 1, 1)` | Constant speed for an activity rotation. |
 | `--ki-motion-easing-emphasized` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Expressive hero-transition curve. M3 md.sys.motion.easing.emphasized. onmars: the MarsUI standard curve (single-curve language). |
 | `--ki-motion-easing-emphasized-accelerate` | `cubic-bezier(0.42, 0, 1, 1)` | Expressive exit curve. M3 md.sys.motion.easing.emphasized-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in). |
 | `--ki-motion-easing-emphasized-decelerate` | `cubic-bezier(0, 0, 0.58, 1)` | Expressive entrance curve. M3 md.sys.motion.easing.emphasized-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out). |
@@ -162,6 +180,7 @@ every component at once.
 | `--ki-motion-easing-standard` | `cubic-bezier(0.25, 0.1, 0.25, 1)` | Standard interaction transition easing curve. |
 | `--ki-motion-easing-standard-accelerate` | `cubic-bezier(0.42, 0, 1, 1)` | Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in). |
 | `--ki-motion-easing-standard-decelerate` | `cubic-bezier(0, 0, 0.58, 1)` | Utility entrance curve. M3 md.sys.motion.easing.standard-decelerate. onmars: the MarsUI decelerate curve (ki.easing.out). |
+| `--ki-motion-scale-activity-pulse-min` | `0.7` | Smallest visual scale of an activity pulse. |
 
 ### `ki.outline`
 
@@ -227,6 +246,8 @@ every component at once.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
+| `--ki-spacing-activity-dot-gap` | `0.25rem` | Gap between typing dots. |
+| `--ki-spacing-activity-label-gap` | `0.5rem` | Gap between an inline activity mark and its label. |
 | `--ki-spacing-block` | `0.75rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.xl. |
 | `--ki-spacing-inline` | `0.5rem` | Deprecated alias kept for pre-Fase-1 consumers; use ki.space.md. |
 
@@ -1433,6 +1454,34 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-select-xs-line-height` | `1rem` | dimension used by the select component for xs line height (caption-2, Input-cell 8016:286 xs, composed by Dropdown 12041:1595). |
 | `--ki-select-xs-padding-inline` | `0.375rem` | dimension used by the select component for xs padding inline (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Space/sm, 6px). |
 | `--ki-select-xs-radius` | `6px` | dimension used by the select component for xs radius (Input-cell 8016:286 xs, composed by Dropdown 12041:1595: Radius/small-component/xs). |
+
+### `ki-spinner`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-spinner-dot-delay` | `150ms` | Delay between consecutive typing dots. |
+| `--ki-spinner-dot-duration` | `1200ms` | Typing pulse period. |
+| `--ki-spinner-dot-easing` | `cubic-bezier(0.42, 0, 0.58, 1)` | Easing of the typing pulse. |
+| `--ki-spinner-dot-gap` | `0.25rem` | Gap between dots. |
+| `--ki-spinner-dot-scale-min` | `0.7` | Smallest scale of a dot during the pulse. |
+| `--ki-spinner-dot-size` | `0.375rem` | Diameter of each dot at full size. |
+| `--ki-spinner-indicator` | `#0f0d0a` | Ink of the revolving ring segment. |
+| `--ki-spinner-label-bg` | `rgba(0, 0, 0, 0)` | Background of the inline activity label. |
+| `--ki-spinner-label-fg` | `#5e5953` | Ink of the visible label and the typing dots. |
+| `--ki-spinner-label-font-family` | `'Instrument Sans', system-ui, sans-serif` | Font family of the visible label. |
+| `--ki-spinner-label-font-size` | `0.8125rem` | Font size of the visible label. |
+| `--ki-spinner-label-gap` | `0.5rem` | Gap between the graphic and the visible label. |
+| `--ki-spinner-label-line-height` | `1.5rem` | Line height of the visible label. |
+| `--ki-spinner-radius` | `1000px` | Round corners of the ring and dots. |
+| `--ki-spinner-ring-duration` | `800ms` | Standard ring rotation period. |
+| `--ki-spinner-ring-duration-reduced` | `2400ms` | Ring rotation period when reduced motion is requested. |
+| `--ki-spinner-ring-easing` | `cubic-bezier(0, 0, 1, 1)` | Easing for ring rotation. |
+| `--ki-spinner-size` | `1.25rem` | Default ring diameter. |
+| `--ki-spinner-size-lg` | `2rem` | Large ring diameter. |
+| `--ki-spinner-size-sm` | `1rem` | Small ring diameter. |
+| `--ki-spinner-stroke` | `2px` | Stroke width of the small and medium rings. |
+| `--ki-spinner-stroke-lg` | `3px` | Stroke width of the large ring. |
+| `--ki-spinner-track` | `rgba(0, 0, 0, 0.48)` | Ink of the ring track. |
 
 ### `ki-status`
 

@@ -28,6 +28,7 @@ import { defineCustomElement as defineKiRadio } from '@kimen/elements/components
 import { defineCustomElement as defineKiRadioGroup } from '@kimen/elements/components/ki-radio-group.js';
 import { defineCustomElement as defineKiScroller } from '@kimen/elements/components/ki-scroller.js';
 import { defineCustomElement as defineKiSelect } from '@kimen/elements/components/ki-select.js';
+import { defineCustomElement as defineKiSpinner } from '@kimen/elements/components/ki-spinner.js';
 import { defineCustomElement as defineKiStatus } from '@kimen/elements/components/ki-status.js';
 import { defineCustomElement as defineKiSwitch } from '@kimen/elements/components/ki-switch.js';
 import { defineCustomElement as defineKiTab } from '@kimen/elements/components/ki-tab.js';
@@ -563,6 +564,29 @@ export class KiSelect {
 
 
 export declare interface KiSelect extends Components.KiSelect {}
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineKiSpinner,
+  inputs: ['label', 'showLabel', 'size', 'variant']
+})
+@Component({
+  selector: 'ki-spinner',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [{ name: 'label', required: true }, 'showLabel', 'size', 'variant'],
+})
+export class KiSpinner {
+  protected el: HTMLKiSpinnerElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface KiSpinner extends Components.KiSpinner {}
 
 
 @ProxyCmp({

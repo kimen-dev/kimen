@@ -518,6 +518,10 @@
       "compact": {
         "$value": 0.75,
         "$description": "Compact density spacing multiplier (spec 045): 16px -> 12px."
+      },
+      "activity-pulse-min": {
+        "$value": 0.7,
+        "$description": "Smallest scale for a typing dot during a pulse."
       }
     },
     "radius": {
@@ -812,6 +816,14 @@
         "hairline": {
           "$value": "1px",
           "$description": "MarsUI hairline stroke: 1px divider/border width."
+        },
+        "thin": {
+          "$value": "2px",
+          "$description": "Thin stroke for small and medium activity rings."
+        },
+        "medium": {
+          "$value": "3px",
+          "$description": "Medium stroke for large activity rings."
         }
       },
       "target-min": {
@@ -2614,6 +2626,22 @@
       "instant": {
         "$value": "0ms",
         "$description": "Zero-duration step: state changes that must not animate (reduced-motion fallbacks, immediate handoffs)."
+      },
+      "activity-rotation": {
+        "$value": "800ms",
+        "$description": "One revolution of the standard activity ring."
+      },
+      "activity-rotation-reduced": {
+        "$value": "2400ms",
+        "$description": "One revolution of the activity ring with reduced motion."
+      },
+      "activity-pulse": {
+        "$value": "1200ms",
+        "$description": "One pulse of a typing dot."
+      },
+      "activity-stagger": {
+        "$value": "150ms",
+        "$description": "Delay between consecutive typing dots."
       }
     },
     "easing": {
@@ -2631,6 +2659,14 @@
       "spring": {
         "$value": [0.34, 1.56, 0.64, 1],
         "$description": "Gentle overshoot curve for glass pops and playful state transfers (completes the MarsUI single-curve family; no Figma motion variable exists)."
+      },
+      "linear": {
+        "$value": [0, 0, 1, 1],
+        "$description": "Constant speed for continuous rotation."
+      },
+      "in-out": {
+        "$value": [0.42, 0, 0.58, 1],
+        "$description": "Symmetric easing for a pulse that returns to its starting size."
       }
     }
   }
