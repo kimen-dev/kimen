@@ -1518,6 +1518,9 @@
   --ki-divider-color:var(--ki-outline-base-em);
   --ki-divider-radius:var(--ki-radius-round);
   --ki-divider-spacing:var(--ki-space-md);
+  --ki-format-date-font-family:var(--ki-typography-family-body);
+  --ki-format-number-font-family:var(--ki-typography-family-body);
+  --ki-relative-time-font-family:var(--ki-typography-family-body);
   --ki-icon-button-xs-size:var(--ki-space-7xl);
   --ki-icon-button-xs-icon-size:var(--ki-space-3xl);
   --ki-icon-button-xs-spinner-size:var(--ki-space-3xl);

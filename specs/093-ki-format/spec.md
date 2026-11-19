@@ -27,7 +27,9 @@ Each decision below is an agent's choice, pending founder confirmation.
   retain their day in every zone. Offsetless date-times use local time. Date-only
   formatting defaults to a medium date when neither style is set. Invalid inputs
   or incompatible options produce an empty result. An invalid locale falls back
-  to the platform locale.
+  to the platform locale. Formatters resolve the language on each render.
+  The date formatter maps its typed `locale` property to the native `lang`
+  attribute.
 - **Relative wording.** Default to `numeric="auto"` and a static render. Select
   the largest elapsed unit and truncate toward zero. Units span seconds through
   years, using fixed durations of 7, 30 and 365 days for weeks, months and years.
@@ -42,6 +44,9 @@ Each decision below is an agent's choice, pending founder confirmation.
   and inherit surrounding color, size, line height and direction.
 - **Source layout.** Scaffold each shipped tag in its discovery directory, as
   with Layout, and use one shared Format token pair and overview page.
+- **API declaration.** The public API gate classifies the expanded Stencil loader
+  `Components` and `JSX` namespaces as major, as for the Layout components.
+  Declare the change at that level.
 
 ## Gherkin contract
 

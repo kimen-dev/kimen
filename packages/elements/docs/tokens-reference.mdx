@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 384 semantic
-and 1194 component tokens. Values are the resolved **onmars light**
+and 1197 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1087,6 +1087,14 @@ theme-wide change or on any subtree for a scoped one.
 | `--ki-divider-radius` | `1000px` | dimension used by the divider component for the end caps: the MarsUI ends axis is a pure-appearance, per-theme choice (FR-006); onmars keeps the rounded hairline (ends=rounded, pill caps). |
 | `--ki-divider-spacing` | `0.5rem` | dimension used by the divider component for the reserved gutter: the 8px MarsUI variant frame with the rule centered inside it (FR-007). |
 | `--ki-divider-thickness` | `1px` | dimension used by the divider component for the rule thickness: the MarsUI 1px hairline verified on the Divider_horizontal/Divider_vertical sets (specs/020-ki-divider/design-extraction.md). |
+
+### `ki-format`
+
+| Token | Value (onmars light) | Description |
+| --- | --- | --- |
+| `--ki-format-date-font-family` | `'Instrument Sans', system-ui, sans-serif` | Default body font family for ki-format-date on a bare page. |
+| `--ki-format-number-font-family` | `'Instrument Sans', system-ui, sans-serif` | Default body font family for ki-format-number on a bare page. |
+| `--ki-relative-time-font-family` | `'Instrument Sans', system-ui, sans-serif` | Default body font family for ki-relative-time on a bare page. |
 
 ### `ki-icon`
 

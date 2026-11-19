@@ -2019,6 +2019,444 @@
       "dependencyGraph": {}
     },
     {
+      "filePath": "src/components/ki-format-date/ki-format-date.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-format-date",
+      "docs": "Displays an ISO date or timestamp in the reader's language.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "For raw date and timestamp values in tables, records and prose."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For an editable date or an elapsed time that should change as the clock advances."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-format-date-font-family - Font family for the formatted text. Defaults to the body family."
+        }
+      ],
+      "usage": {
+        "examples": "# Format a date\n\nUse a calendar date when the day is the value, and send an offset or `Z` when\nthe value is a timestamp. Set `lang` on the surrounding document or section.\n\n```html\n<section lang=\"es-ES\">\n  <ki-format-date date=\"2026-11-19\" date-style=\"long\"></ki-format-date>\n  <ki-format-date\n    date=\"2026-11-19T23:41:00Z\"\n    date-style=\"long\"\n    time-style=\"short\"\n    time-zone=\"Europe/Madrid\"\n  ></ki-format-date>\n</section>\n```\n"
+      },
+      "props": [
+        {
+          "name": "date",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "date",
+          "reflectToAttr": false,
+          "docs": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "dateStyle",
+          "type": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined",
+          "complexType": {
+            "original": "DateTimeStyle",
+            "resolved": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined",
+            "references": {
+              "DateTimeStyle": {
+                "location": "global",
+                "id": "global::DateTimeStyle"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "date-style",
+          "reflectToAttr": false,
+          "docs": "Date detail. Defaults to medium when neither date style nor time style is supplied.",
+          "docsTags": [],
+          "values": [
+            {
+              "value": "full",
+              "type": "string"
+            },
+            {
+              "value": "long",
+              "type": "string"
+            },
+            {
+              "value": "medium",
+              "type": "string"
+            },
+            {
+              "value": "short",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "locale",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "lang",
+          "reflectToAttr": true,
+          "docs": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "timeStyle",
+          "type": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined",
+          "complexType": {
+            "original": "DateTimeStyle",
+            "resolved": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined",
+            "references": {
+              "DateTimeStyle": {
+                "location": "global",
+                "id": "global::DateTimeStyle"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "time-style",
+          "reflectToAttr": false,
+          "docs": "Time detail. Omit to show the date alone.",
+          "docsTags": [],
+          "values": [
+            {
+              "value": "full",
+              "type": "string"
+            },
+            {
+              "value": "long",
+              "type": "string"
+            },
+            {
+              "value": "medium",
+              "type": "string"
+            },
+            {
+              "value": "short",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "timeZone",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "time-zone",
+          "reflectToAttr": false,
+          "docs": "IANA time zone for a timestamp. A calendar date keeps its day in every zone.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-format-number/ki-format-number.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-format-number",
+      "docs": "Displays a raw number using local number conventions and tabular figures.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "For numeric data, currency amounts, ratios and measurements in content."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For numeric input or values that already include localized formatting."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-format-number-font-family - Font family for the formatted text. Defaults to the body family."
+        }
+      ],
+      "usage": {
+        "examples": "# Format a number\n\nPass raw numbers and let the nearest `lang` declaration select the separators,\nspacing and symbols. A percent takes a ratio.\n\n```html\n<section lang=\"es-ES\">\n  <ki-format-number value=\"1284.5\"></ki-format-number>\n  <ki-format-number value=\"49\" currency=\"EUR\"></ki-format-number>\n  <ki-format-number value=\"0.496\" format-style=\"percent\" maximum-fraction-digits=\"1\"></ki-format-number>\n  <ki-format-number value=\"23\" format-style=\"unit\" unit=\"celsius\"></ki-format-number>\n  <ki-format-number value=\"59320\" notation=\"compact\"></ki-format-number>\n</section>\n```\n"
+      },
+      "props": [
+        {
+          "name": "currency",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "currency",
+          "reflectToAttr": false,
+          "docs": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "formatStyle",
+          "type": "\"decimal\" | \"percent\" | \"unit\" | undefined",
+          "complexType": {
+            "original": "'decimal' | 'percent' | 'unit'",
+            "resolved": "\"decimal\" | \"percent\" | \"unit\" | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "format-style",
+          "reflectToAttr": false,
+          "docs": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.",
+          "docsTags": [],
+          "values": [
+            {
+              "value": "decimal",
+              "type": "string"
+            },
+            {
+              "value": "percent",
+              "type": "string"
+            },
+            {
+              "value": "unit",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "maximumFractionDigits",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "maximum-fraction-digits",
+          "reflectToAttr": false,
+          "docs": "Maximum number of fraction digits.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "minimumFractionDigits",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "minimum-fraction-digits",
+          "reflectToAttr": false,
+          "docs": "Minimum number of fraction digits.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "notation",
+          "type": "\"compact\" | undefined",
+          "complexType": {
+            "original": "'compact'",
+            "resolved": "\"compact\" | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "notation",
+          "reflectToAttr": false,
+          "docs": "Use compact notation for abbreviated large numbers. Omit for standard notation.",
+          "docsTags": [],
+          "values": [
+            {
+              "value": "compact",
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "unit",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "unit",
+          "reflectToAttr": false,
+          "docs": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\".",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "value",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "value",
+          "reflectToAttr": false,
+          "docs": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
       "filePath": "src/components/ki-grid/ki-grid.tsx",
       "encapsulation": "shadow",
       "tag": "ki-grid",
@@ -4453,6 +4891,161 @@
           "docs": "The `label-hint` text after the group label text, inside the label\nand part of the radiogroup's accessible name; rendered only while a hint is set."
         }
       ],
+      "states": [],
+      "dependents": [],
+      "dependencies": [],
+      "dependencyGraph": {}
+    },
+    {
+      "filePath": "src/components/ki-relative-time/ki-relative-time.tsx",
+      "encapsulation": "shadow",
+      "tag": "ki-relative-time",
+      "docs": "Displays the elapsed or remaining time for a timestamp in the reader's language.",
+      "docsTags": [
+        {
+          "name": "whenToUse",
+          "text": "For timestamps whose distance from the present matters, such as timeline entries or recent changes."
+        },
+        {
+          "name": "whenNotToUse",
+          "text": "For an interactive countdown or a date that should always show an absolute value."
+        },
+        {
+          "name": "cssprop",
+          "text": "--ki-relative-time-font-family - Font family for the formatted text. Defaults to the body family."
+        }
+      ],
+      "usage": {
+        "examples": "# Format a relative timestamp\n\nUse `sync` to update the visible wording as time passes. A threshold of\n86,400 seconds switches to the formatted timestamp at one day's distance.\nAssistive technology and the tooltip expose the absolute timestamp throughout.\n\n```html\n<ki-relative-time date=\"2026-11-19T08:41:00Z\" sync threshold=\"86400\"></ki-relative-time>\n```\n"
+      },
+      "props": [
+        {
+          "name": "date",
+          "type": "string | undefined",
+          "complexType": {
+            "original": "string",
+            "resolved": "string | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "date",
+          "reflectToAttr": false,
+          "docs": "ISO calendar date or date-time. A timestamp without an offset uses local time.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "numeric",
+          "type": "\"always\" | \"auto\"",
+          "complexType": {
+            "original": "'auto' | 'always'",
+            "resolved": "\"always\" | \"auto\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "numeric",
+          "reflectToAttr": false,
+          "docs": "Auto can show words such as yesterday. Always uses a number.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "'auto'"
+            }
+          ],
+          "default": "'auto'",
+          "values": [
+            {
+              "value": "always",
+              "type": "string"
+            },
+            {
+              "value": "auto",
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "sync",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "sync",
+          "reflectToAttr": false,
+          "docs": "Refresh the visible wording as the clock crosses a formatting boundary.",
+          "docsTags": [
+            {
+              "name": "default",
+              "text": "false"
+            }
+          ],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false,
+          "getter": false,
+          "setter": false
+        },
+        {
+          "name": "threshold",
+          "type": "number | undefined",
+          "complexType": {
+            "original": "number",
+            "resolved": "number | undefined",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "threshold",
+          "reflectToAttr": false,
+          "docs": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
+          "docsTags": [
+            {
+              "name": "minimum",
+              "text": "0"
+            }
+          ],
+          "values": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "undefined"
+            }
+          ],
+          "optional": true,
+          "required": false,
+          "getter": false,
+          "setter": false
+        }
+      ],
+      "methods": [],
+      "events": [],
+      "listeners": [],
+      "styles": [],
+      "slots": [],
+      "parts": [],
       "states": [],
       "dependents": [],
       "dependencies": [],

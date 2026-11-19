@@ -3466,6 +3466,330 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/components/ki-format-date.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFormatDate",
+          "customElement": true,
+          "tagName": "ki-format-date",
+          "description": "Displays an ISO date or timestamp in the reader's language.",
+          "whenToUse": "For raw date and timestamp values in tables, records and prose.",
+          "whenNotToUse": "For an editable date or an elapsed time that should change as the clock advances.",
+          "attributes": [
+            {
+              "name": "date",
+              "fieldName": "date",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time."
+            },
+            {
+              "name": "date-style",
+              "fieldName": "dateStyle",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Date detail. Defaults to medium when neither date style nor time style is supplied."
+            },
+            {
+              "name": "lang",
+              "fieldName": "locale",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted."
+            },
+            {
+              "name": "time-style",
+              "fieldName": "timeStyle",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Time detail. Omit to show the date alone."
+            },
+            {
+              "name": "time-zone",
+              "fieldName": "timeZone",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "date",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.",
+              "attribute": "date",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "dateStyle",
+              "privacy": "public",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Date detail. Defaults to medium when neither date style nor time style is supplied.",
+              "attribute": "date-style",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Language tag for the formatted date. Inherits the nearest HTML lang declaration when omitted.",
+              "attribute": "lang",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "timeStyle",
+              "privacy": "public",
+              "type": {
+                "text": "\"full\" | \"long\" | \"medium\" | \"short\" | undefined"
+              },
+              "description": "Time detail. Omit to show the date alone.",
+              "attribute": "time-style",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "timeZone",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "IANA time zone for a timestamp. A calendar date keeps its day in every zone.",
+              "attribute": "time-zone",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-format-date-font-family",
+              "description": "Default body font family for ki-format-date on a bare page."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFormatDate",
+          "declaration": {
+            "name": "KiFormatDate",
+            "module": "dist/components/ki-format-date.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-format-date",
+          "declaration": {
+            "name": "KiFormatDate",
+            "module": "dist/components/ki-format-date.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-format-number.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiFormatNumber",
+          "customElement": true,
+          "tagName": "ki-format-number",
+          "description": "Displays a raw number using local number conventions and tabular figures.",
+          "whenToUse": "For numeric data, currency amounts, ratios and measurements in content.",
+          "whenNotToUse": "For numeric input or values that already include localized formatting.",
+          "attributes": [
+            {
+              "name": "currency",
+              "fieldName": "currency",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted."
+            },
+            {
+              "name": "format-style",
+              "fieldName": "formatStyle",
+              "type": {
+                "text": "\"decimal\" | \"percent\" | \"unit\" | undefined"
+              },
+              "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal."
+            },
+            {
+              "name": "maximum-fraction-digits",
+              "fieldName": "maximumFractionDigits",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum number of fraction digits.",
+              "minimum": 0
+            },
+            {
+              "name": "minimum-fraction-digits",
+              "fieldName": "minimumFractionDigits",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Minimum number of fraction digits.",
+              "minimum": 0
+            },
+            {
+              "name": "notation",
+              "fieldName": "notation",
+              "type": {
+                "text": "\"compact\" | undefined"
+              },
+              "description": "Use compact notation for abbreviated large numbers. Omit for standard notation."
+            },
+            {
+              "name": "unit",
+              "fieldName": "unit",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\"."
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "currency",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.",
+              "attribute": "currency",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "formatStyle",
+              "privacy": "public",
+              "type": {
+                "text": "\"decimal\" | \"percent\" | \"unit\" | undefined"
+              },
+              "description": "Decimal, percent or unit output. Without this option, currency selects currency output and other values use decimal.",
+              "attribute": "format-style",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "maximumFractionDigits",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Maximum number of fraction digits.",
+              "attribute": "maximum-fraction-digits",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "minimumFractionDigits",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Minimum number of fraction digits.",
+              "attribute": "minimum-fraction-digits",
+              "reflects": false,
+              "minimum": 0
+            },
+            {
+              "kind": "field",
+              "name": "notation",
+              "privacy": "public",
+              "type": {
+                "text": "\"compact\" | undefined"
+              },
+              "description": "Use compact notation for abbreviated large numbers. Omit for standard notation.",
+              "attribute": "notation",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "unit",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Intl unit identifier, such as celsius or kilometer. Use with format-style=\"unit\".",
+              "attribute": "unit",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Raw finite number. A percent uses a ratio, so 0.49 displays as 49%.",
+              "attribute": "value",
+              "reflects": false
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-format-number-font-family",
+              "description": "Default body font family for ki-format-number on a bare page."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiFormatNumber",
+          "declaration": {
+            "name": "KiFormatNumber",
+            "module": "dist/components/ki-format-number.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-format-number",
+          "declaration": {
+            "name": "KiFormatNumber",
+            "module": "dist/components/ki-format-number.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/components/ki-grid.js",
       "declarations": [
         {
@@ -6955,6 +7279,134 @@
           "declaration": {
             "name": "KiRadioGroup",
             "module": "dist/components/ki-radio-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/components/ki-relative-time.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "KiRelativeTime",
+          "customElement": true,
+          "tagName": "ki-relative-time",
+          "description": "Displays the elapsed or remaining time for a timestamp in the reader's language.",
+          "whenToUse": "For timestamps whose distance from the present matters, such as timeline entries or recent changes.",
+          "whenNotToUse": "For an interactive countdown or a date that should always show an absolute value.",
+          "attributes": [
+            {
+              "name": "date",
+              "fieldName": "date",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date or date-time. A timestamp without an offset uses local time."
+            },
+            {
+              "name": "numeric",
+              "fieldName": "numeric",
+              "type": {
+                "text": "\"always\" | \"auto\""
+              },
+              "default": "'auto'",
+              "description": "Auto can show words such as yesterday. Always uses a number."
+            },
+            {
+              "name": "sync",
+              "fieldName": "sync",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Refresh the visible wording as the clock crosses a formatting boundary."
+            },
+            {
+              "name": "threshold",
+              "fieldName": "threshold",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
+              "minimum": 0
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "date",
+              "privacy": "public",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "ISO calendar date or date-time. A timestamp without an offset uses local time.",
+              "attribute": "date",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "numeric",
+              "privacy": "public",
+              "type": {
+                "text": "\"always\" | \"auto\""
+              },
+              "default": "'auto'",
+              "description": "Auto can show words such as yesterday. Always uses a number.",
+              "attribute": "numeric",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "sync",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Refresh the visible wording as the clock crosses a formatting boundary.",
+              "attribute": "sync",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "threshold",
+              "privacy": "public",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "Display an absolute timestamp when the distance reaches this many seconds.\nOmit to keep relative wording at any distance.",
+              "attribute": "threshold",
+              "reflects": false,
+              "minimum": 0
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [],
+          "cssProperties": [
+            {
+              "name": "--ki-relative-time-font-family",
+              "description": "Default body font family for ki-relative-time on a bare page."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "KiRelativeTime",
+          "declaration": {
+            "name": "KiRelativeTime",
+            "module": "dist/components/ki-relative-time.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ki-relative-time",
+          "declaration": {
+            "name": "KiRelativeTime",
+            "module": "dist/components/ki-relative-time.js"
           }
         }
       ]
