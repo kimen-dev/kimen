@@ -13,8 +13,8 @@
   --_ki-tooltip-max-inline-size: var(--ki-tooltip-max-inline-size);
   --_ki-tooltip-offset: var(--ki-tooltip-offset);
   --_ki-tooltip-bg: var(--ki-tooltip-bg);
-  --_ki-tooltip-arrow-bg-start: var(--ki-tooltip-arrow-bg-start, var(--_ki-tooltip-bg));
-  --_ki-tooltip-arrow-bg-end: var(--ki-tooltip-arrow-bg-end, var(--_ki-tooltip-bg));
+  --_ki-tooltip-arrow-bg-start: var(--ki-surface-image-tooltip-arrow-start, var(--_ki-tooltip-bg));
+  --_ki-tooltip-arrow-bg-end: var(--ki-surface-image-tooltip-arrow-end, var(--_ki-tooltip-bg));
   --_ki-tooltip-backdrop-blur: var(--ki-tooltip-backdrop-blur);
   --_ki-tooltip-fg: var(--ki-tooltip-fg);
   --_ki-tooltip-font-size: var(--ki-tooltip-font-size);

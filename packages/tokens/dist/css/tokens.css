@@ -548,10 +548,6 @@
   --ki-easing-out: cubic-bezier(0, 0, 0.58, 1);
   --ki-easing-in: cubic-bezier(0.42, 0, 1, 1);
   --ki-easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ki-floating-surface-image-dialog: var(--ki-foundation-onmars-v1-dialog-bg-image);
-  --ki-floating-surface-image-tooltip-arrow-start: var(--ki-foundation-onmars-v1-tooltip-arrow-start);
-  --ki-floating-surface-image-tooltip-arrow-end: var(--ki-foundation-onmars-v1-tooltip-arrow-end);
-  --ki-floating-surface-image-tooltip: var(--ki-foundation-onmars-v1-tooltip-bg-image);
   --ki-font-family-display: var(--ki-foundation-migrated-themes-onmars-font-family-body);
   --ki-font-family-body: var(--ki-foundation-migrated-themes-onmars-font-family-body);
   --ki-font-family-serif: var(--ki-foundation-migrated-themes-onmars-font-family-serif);
@@ -603,11 +599,11 @@
   --ki-font-letter-spacing-sm: var(--ki-foundation-migrated-themes-onmars-font-letter-spacing-sm);
   --ki-font-letter-spacing-md: var(--ki-foundation-migrated-themes-onmars-font-letter-spacing-md);
   --ki-font-letter-spacing-lg: var(--ki-foundation-migrated-themes-onmars-font-letter-spacing-lg);
-  --ki-surface-image-dialog: var(--ki-floating-surface-image-dialog);
+  --ki-surface-image-dialog: var(--ki-foundation-onmars-v1-dialog-bg-image);
   --ki-surface-image-listbox: none;
-  --ki-surface-image-tooltip-arrow-start: var(--ki-floating-surface-image-tooltip-arrow-start);
-  --ki-surface-image-tooltip-arrow-end: var(--ki-floating-surface-image-tooltip-arrow-end);
-  --ki-surface-image-tooltip: var(--ki-floating-surface-image-tooltip);
+  --ki-surface-image-tooltip-arrow-start: var(--ki-foundation-onmars-v1-tooltip-arrow-start);
+  --ki-surface-image-tooltip-arrow-end: var(--ki-foundation-onmars-v1-tooltip-arrow-end);
+  --ki-surface-image-tooltip: var(--ki-foundation-onmars-v1-tooltip-bg-image);
   --ki-surface-transparent: var(--ki-color-transparent-black);
   --ki-surface-s0: light-dark(var(--ki-color-white-100), var(--ki-color-dark-950));
   --ki-surface-s1: light-dark(var(--ki-color-gray-50), var(--ki-color-dark-900));
@@ -1824,8 +1820,6 @@
   --ki-tooltip-max-inline-size: var(--ki-size-surface-xxs);
   --ki-tooltip-offset: var(--ki-space-md);
   --ki-tooltip-arrow-size: var(--ki-space-md);
-  --ki-tooltip-arrow-bg-start: var(--ki-surface-image-tooltip-arrow-start);
-  --ki-tooltip-arrow-bg-end: var(--ki-surface-image-tooltip-arrow-end);
   --ki-tooltip-arrow-radius: var(--ki-radius-xxs);
   --ki-tooltip-bg: var(--ki-surface-transparent);
   --ki-tooltip-border-width: var(--ki-size-border-hairline);

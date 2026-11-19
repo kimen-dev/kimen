@@ -1,6 +1,12 @@
 {
   "ki": {
     "surface-image": {
+      "dialog": {
+        "$value": "none"
+      },
+      "tooltip": {
+        "$value": "none"
+      },
       "tooltip-arrow-start": {
         "$value": "{ki.surface.inverse-white}"
       },

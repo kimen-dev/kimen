@@ -9,7 +9,7 @@
 - Agent's choice, pending founder confirmation. The select listbox already paints a single color at `bb7dd94` and has no legacy gradient stops. Its onmars v1 default stays a single color. Its image token lets a theme opt into an image.
 - Agent's choice, pending founder confirmation. Keep a transparent backing for the onmars v1 dialog and tooltip so their translucent images composite as before. Material 3 uses the same opaque colors that its equal-stop gradients painted.
 - Agent's choice, pending founder confirmation. Deprecate the four existing stops in 0.1.0 with removal scheduled for 1.0.0, following spec 041. The onmars v1 default images use stop overrides on the scope that declares the theme.
-- Agent's choice, pending founder confirmation. Preserve the onmars v1 tooltip arrow's placement-specific fills through live color tokens whose theme defaults still follow the legacy stops. A theme can use the bubble fill for the arrow by leaving those overrides absent.
+- Agent's choice, pending founder confirmation. Preserve the onmars v1 tooltip arrow's placement-specific fills through semantic color tokens whose theme defaults still follow the legacy stops. A theme can use the bubble fill for the arrow by leaving those overrides absent.
 - After #341, onmars supplies its new opaque fills and drops the v1 glass images and arrow color overrides.
 
 ## Scenario family coverage

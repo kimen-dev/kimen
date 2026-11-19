@@ -2,7 +2,7 @@
   "ki": {
     "surface-image": {
       "dialog": {
-        "$value": "{ki.floating-surface-image.dialog}",
+        "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
       },
       "listbox": {
@@ -10,15 +10,15 @@
         "$description": "Theme image layered over a select listbox surface."
       },
       "tooltip-arrow-start": {
-        "$value": "{ki.floating-surface-image.tooltip-arrow-start}",
+        "$value": "{ki.foundation.onmars-v1.tooltip-arrow-start}",
         "$description": "Start-edge arrow color for a themed tooltip surface."
       },
       "tooltip-arrow-end": {
-        "$value": "{ki.floating-surface-image.tooltip-arrow-end}",
+        "$value": "{ki.foundation.onmars-v1.tooltip-arrow-end}",
         "$description": "End-edge arrow color for a themed tooltip surface."
       },
       "tooltip": {
-        "$value": "{ki.floating-surface-image.tooltip}",
+        "$value": "{ki.foundation.onmars-v1.tooltip-bg-image}",
         "$description": "Theme image layered over a tooltip surface."
       }
     },

@@ -8781,12 +8781,12 @@
               "description": "Utility exit curve. M3 md.sys.motion.easing.standard-accelerate. onmars: the MarsUI accelerate curve (ki.easing.in)."
             },
             {
-              "name": "--ki-tooltip-arrow-bg-end",
-              "description": "Color of the tooltip arrow at the bubble's block-end edge. Defaults to the bubble fill when omitted."
+              "name": "--ki-surface-image-tooltip-arrow-end",
+              "description": "End-edge arrow color for a themed tooltip surface."
             },
             {
-              "name": "--ki-tooltip-arrow-bg-start",
-              "description": "Color of the tooltip arrow at the bubble's block-start edge. Defaults to the bubble fill when omitted."
+              "name": "--ki-surface-image-tooltip-arrow-start",
+              "description": "Start-edge arrow color for a themed tooltip surface."
             },
             {
               "name": "--ki-tooltip-arrow-radius",

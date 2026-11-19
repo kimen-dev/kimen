@@ -25,14 +25,6 @@
         "$value": "{ki.space.md}",
         "$description": "dimension used by the tooltip component for the depth of the arrow that points at the trigger; it is twice as wide (Tooltip master 12089:7621 pointer: 16x8). Zero removes it. Equal to offset, so the tip meets the trigger."
       },
-      "arrow-bg-start": {
-        "$value": "{ki.surface-image.tooltip-arrow-start}",
-        "$description": "Color of the tooltip arrow at the bubble's block-start edge. Defaults to the bubble fill when omitted."
-      },
-      "arrow-bg-end": {
-        "$value": "{ki.surface-image.tooltip-arrow-end}",
-        "$description": "Color of the tooltip arrow at the bubble's block-end edge. Defaults to the bubble fill when omitted."
-      },
       "arrow-radius": {
         "$value": "{ki.radius.xxs}",
         "$description": "dimension used by the tooltip component for the rounding of the arrow tip (Tooltip master pointer: 1.5px, nearest radius step)."

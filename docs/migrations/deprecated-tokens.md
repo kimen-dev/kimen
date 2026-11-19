@@ -56,7 +56,7 @@ CSS `linear-gradient()` assigned to `--ki-dialog-bg-image`. Use
 `--ki-tooltip-bg-image` the same way for the tooltip. For a solid surface,
 set the image to `none` and set `--ki-dialog-bg` or `--ki-tooltip-bg` to the
 fill color. A theme can set the tooltip arrow's edge colors through
-`--ki-tooltip-arrow-bg-start` and `--ki-tooltip-arrow-bg-end`.
+`--ki-surface-image-tooltip-arrow-start` and `--ki-surface-image-tooltip-arrow-end`.
 
 During the deprecation window, the onmars v1 default gradients still take
 their legacy colors from the element that declares the theme. For a

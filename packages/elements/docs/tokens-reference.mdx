@@ -17,7 +17,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > generated manually and is not verified by a CI gate.
 
 Every custom property in the public styling contract: 322 semantic
-and 936 component tokens. Values are the resolved **onmars light**
+and 934 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
 *Docs → Tokens & theming* for the model). Primitive tokens are internal and
@@ -1471,8 +1471,6 @@ theme-wide change or on any subtree for a scoped one.
 
 | Token | Value (onmars light) | Description |
 | --- | --- | --- |
-| `--ki-tooltip-arrow-bg-end` | `var(--ki-tooltip-bg-end)` | Color of the tooltip arrow at the bubble's block-end edge. Defaults to the bubble fill when omitted. |
-| `--ki-tooltip-arrow-bg-start` | `var(--ki-tooltip-bg-start)` | Color of the tooltip arrow at the bubble's block-start edge. Defaults to the bubble fill when omitted. |
 | `--ki-tooltip-arrow-radius` | `2px` | dimension used by the tooltip component for the rounding of the arrow tip (Tooltip master pointer: 1.5px, nearest radius step). |
 | `--ki-tooltip-arrow-size` | `0.5rem` | dimension used by the tooltip component for the depth of the arrow that points at the trigger; it is twice as wide (Tooltip master 12089:7621 pointer: 16x8). Zero removes it. Equal to offset, so the tip meets the trigger. |
 | `--ki-tooltip-backdrop-blur` | `12px` | backdrop blur used by the tooltip component glass card (MarsUI BACKGROUND_BLUR 24 = CSS 12px; material3 resolves to blur none via the semantic override). |
