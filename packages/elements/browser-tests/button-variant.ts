@@ -51,8 +51,8 @@ export async function expectTertiaryWarning(
   tag: 'ki-button' | 'ki-icon-button',
   mount: (variant: ButtonVariant) => Promise<ButtonHost>,
 ): Promise<void> {
-  const env = (import.meta as ImportMeta & { env: Record<string, string | undefined> }).env;
-  const developmentBuild = env['VITE_KIMEN_DEV_BUILD'] === '1';
+  const env = (import.meta as ImportMeta & { env: { VITE_KIMEN_DEV_BUILD?: string } }).env;
+  const developmentBuild = env.VITE_KIMEN_DEV_BUILD === '1';
   const message = `[Kimen] ${tag} variant="tertiary" is deprecated. Use variant="secondary" instead.`;
   const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   try {
