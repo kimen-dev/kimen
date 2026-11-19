@@ -7748,6 +7748,26 @@
       "docstring": "",
       "path": "src/components/ki-select/ki-select.tsx"
     },
+    "src/components/ki-stack/ki-stack.tsx::KiStackDirection": {
+      "declaration": "export type KiStackDirection = 'column' | 'row';",
+      "docstring": "",
+      "path": "src/components/ki-stack/ki-stack.tsx"
+    },
+    "src/utils/layout-gap.ts::KiLayoutGap": {
+      "declaration": "\"xxs\" | \"xs\" | \"sm\" | \"md\" | \"lg\" | \"xl\" | \"zero\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\"",
+      "docstring": "",
+      "path": "src/utils/layout-gap.ts"
+    },
+    "src/components/ki-stack/ki-stack.tsx::KiStackAlign": {
+      "declaration": "export type KiStackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';",
+      "docstring": "",
+      "path": "src/components/ki-stack/ki-stack.tsx"
+    },
+    "src/components/ki-stack/ki-stack.tsx::KiStackJustify": {
+      "declaration": "export type KiStackJustify = 'start' | 'center' | 'end' | 'between';",
+      "docstring": "",
+      "path": "src/components/ki-stack/ki-stack.tsx"
+    },
     "src/components/ki-status/ki-status.tsx::KiStatusTone": {
       "declaration": "export type KiStatusTone = 'neutral' | 'success' | 'danger' | 'info' | 'warning';",
       "docstring": "",
@@ -7777,26 +7797,6 @@
       "declaration": "export type KiTooltipPlacement = 'top' | 'bottom' | 'start' | 'end';",
       "docstring": "",
       "path": "src/components/ki-tooltip/ki-tooltip.position.ts"
-    },
-    "src/utils/layout-gap.ts::KiLayoutGap": {
-      "declaration": "\"xxs\" | \"xs\" | \"sm\" | \"md\" | \"lg\" | \"xl\" | \"zero\" | \"2xl\" | \"3xl\" | \"4xl\" | \"5xl\" | \"6xl\" | \"7xl\" | \"8xl\" | \"9xl\" | \"10xl\" | \"11xl\" | \"12xl\" | \"13xl\" | \"14xl\" | \"15xl\" | \"16xl\" | \"17xl\" | \"18xl\" | \"19xl\" | \"20xl\" | \"21xl\" | \"22xl\" | \"23xl\" | \"24xl\" | \"25xl\" | \"26xl\"",
-      "docstring": "",
-      "path": "src/utils/layout-gap.ts"
-    },
-    "src/components/ki-stack/ki-stack.tsx::KiStackDirection": {
-      "declaration": "export type KiStackDirection = 'column' | 'row';",
-      "docstring": "",
-      "path": "src/components/ki-stack/ki-stack.tsx"
-    },
-    "src/components/ki-stack/ki-stack.tsx::KiStackAlign": {
-      "declaration": "export type KiStackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';",
-      "docstring": "",
-      "path": "src/components/ki-stack/ki-stack.tsx"
-    },
-    "src/components/ki-stack/ki-stack.tsx::KiStackJustify": {
-      "declaration": "export type KiStackJustify = 'start' | 'center' | 'end' | 'between';",
-      "docstring": "",
-      "path": "src/components/ki-stack/ki-stack.tsx"
     },
     "src/components/ki-toast/ki-toast.timing.ts::KiToastTone": {
       "declaration": "export type KiToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';",
