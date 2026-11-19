@@ -3,6 +3,7 @@ const CSS_EXPORT = /^\.\/css(?:\/([a-z0-9]+(?:-[a-z0-9]+)*))?$/u;
 const DEFAULT_THEME_EXPORT = './css';
 /** The one exported stylesheet that consumes tokens instead of publishing them. */
 const PAGE_CONTRACT_EXPORT = './css/base';
+const THEME_FONT_EXPORTS = new Set(['./css/onmars-fonts.css', './css/material3-fonts.css']);
 /**
  * The colour-scheme contract the default stylesheet opens with, in this order.
  * Scheme-dependent tokens are `light-dark()` values: without these rules they
@@ -260,7 +261,7 @@ function spacedPrelude(prelude) {
 }
 
 /** The top-level rules of a theme stylesheet. It has no conditional rules at all. */
-function parseRules(source, label) {
+function parseRules(source, label, { allowFontFace = false } = {}) {
   const rules = [];
   let cursor = 0;
   while (cursor < source.length) {
@@ -272,7 +273,7 @@ function parseRules(source, label) {
     if (prelude === '') throw new Error(`${label} contains a block without a prelude`);
     const closing = matchingBrace(source, opening, label);
     const selector = canonicalPrelude(prelude);
-    if (selector.startsWith('@')) {
+    if (selector.startsWith('@') && !(allowFontFace && prelude === '@font-face')) {
       // The scheme is `color-scheme` plus `light-dark()`, never a media query:
       // a conditional rule here would be a second, divergent scheme switch.
       // The only conditional rules are the preference blocks of the modes.
@@ -698,6 +699,18 @@ function onePageContract({ subpath, target, css }) {
   return { target, pageContract: true };
 }
 
+function assertFontStylesheet(css, label) {
+  const rules = parseRules(stripComments(css, label), label, { allowFontFace: true });
+  if (rules.length === 0 || rules.some(({ prelude }) => prelude !== '@font-face')) {
+    throw new Error(`${label} must contain only @font-face rules`);
+  }
+  for (const { body } of rules) {
+    if (plainDeclarations(body, label).some(([name]) => name.startsWith('--'))) {
+      throw new Error(`${label} must not declare custom properties`);
+    }
+  }
+}
+
 /** Build the effective public-token contract of each exported combined stylesheet. */
 export function buildPublicStylesheetSurface({
   packageExports,
@@ -747,8 +760,15 @@ export function buildPublicStylesheetSurface({
     );
     return defaultTheme;
   };
+  const tokenExports = cssExports.filter(([subpath]) => {
+    if (!THEME_FONT_EXPORTS.has(subpath)) return true;
+    // The package export is sealed with the other entry points. A face-only
+    // sheet has no effective token values to add to the stylesheet snapshot.
+    assertFontStylesheet(sourceOf(subpath), `${subpath} stylesheet`);
+    return false;
+  });
   return sortedObject(
-    cssExports.map(([subpath, entry]) => {
+    tokenExports.map(([subpath, entry]) => {
       const target = entry.target;
       const css = sourceOf(subpath);
       const label = `${subpath} stylesheet`;

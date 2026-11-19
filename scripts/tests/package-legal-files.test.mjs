@@ -95,12 +95,12 @@ test('a notice file with two sections of the same title is rejected', () => {
 // for the copyright and permission notice in every copy: the QR encoder
 // adapted from Project Nayuki, and the Stencil client runtime the
 // lazy-loading builds embed.
-test('the elements package answers for both third-party works its bundles contain', () => {
+test('the package notices include the third-party works shipped in each tarball', () => {
   assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/elements'], [
     'QR Code generator library (MIT)',
     'Stencil client runtime (MIT)',
   ]);
-  assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/tokens'], []);
+  assert.deepEqual(PACKAGE_NOTICE_SECTIONS['@kimen/tokens'], ['onmars theme fonts (SIL OFL 1.1)']);
 });
 
 test('the Stencil notice reproduces the licence the installed runtime ships with', async () => {

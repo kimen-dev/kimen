@@ -1,0 +1,17 @@
+/*
+ * The supplied Roboto v3.015 is SIL OFL 1.1. Material 3 currently requires a
+ * separate Roboto source. Use this local fallback after a self-hosted Roboto
+ * in the font stack and keep system-ui as the final platform fallback.
+ */
+/* stylelint-disable scale-unlimited/declaration-strict-value -- Font-face descriptors name installed fonts. */
+@font-face {
+  font-family: "Roboto Fallback";
+  src: local("Arial");
+
+  /* Roboto v3.015 against Arial, calculated as in onmars-fonts.css. */
+  size-adjust: 99.8564%;
+  ascent-override: 92.9068%;
+  descent-override: 24.4492%;
+  line-gap-override: 0%;
+}
+/* stylelint-enable scale-unlimited/declaration-strict-value */
