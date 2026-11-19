@@ -1,6 +1,10 @@
 {
   "ki": {
     "surface-image": {
+      "none": {
+        "$value": "none",
+        "$description": "Flat surfaces carry no background image by default."
+      },
       "dialog": {
         "$value": "{ki.foundation.onmars-v1.dialog-bg-image}",
         "$description": "Theme image layered over a dialog surface."
@@ -1117,6 +1121,11 @@
           "$type": "other",
           "$value": "blur({ki.effect.component.backdrop-blur})",
           "$description": "Complete backdrop filter for glass components. Use none to turn the effect off."
+        },
+        "backdrop-filter-none": {
+          "$type": "other",
+          "$value": "none",
+          "$description": "Complete no-op backdrop filter for flat component surfaces."
         },
         "listbox-backdrop-filter": {
           "$type": "other",

@@ -29,7 +29,9 @@ describe('formatStatNumber', () => {
 
   it.each([undefined, Number.NaN, Infinity, -Infinity])(
     'omits an invalid or absent reading (%s)',
-    (value) => { expect(formatStatNumber(value, 'en-US', 'ms')).toBeUndefined(); },
+    (value) => {
+      expect(formatStatNumber(value, 'en-US', 'ms')).toBeUndefined();
+    },
   );
 
   it('S2 leaves the signed trend to the glyph and word even if the format requests a sign', () => {

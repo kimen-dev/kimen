@@ -43,6 +43,15 @@ though its change points down.
   paragraph, and the chart retains its own accessible content. Use the shipped trend glyphs
   and provide overridable `up-label` and `down-label` props for translation.
 
+- **Agent's choice, pending founder confirmation.** Use the supporting text
+  semantic ink, which reaches the enhanced-contrast threshold. Check each Stat
+  foreground against its shared surface so themed images can paint continuously.
+  Material 3 uses the medium card radius.
+
+- **Agent's choice, pending founder confirmation.** Use the API gate's major
+  classification for the new members of Stencil's existing `Components` and
+  `JSX` namespaces.
+
 ## Scenario family coverage
 
 | Family | Scenarios | Justification when N/A |
