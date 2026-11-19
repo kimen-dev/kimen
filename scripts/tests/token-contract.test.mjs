@@ -14,6 +14,9 @@ const paths = Object.freeze({
   componentOverride: 'packages/tokens/tokens/component/button.material3.tokens.json',
   config: 'packages/tokens/style-dictionary.config.mjs',
   css: 'packages/elements/src/components/ki-button/ki-button.css',
+  defaultCss: 'packages/tokens/dist/css/tokens.css',
+  materialCss: 'packages/tokens/dist/css/tokens.material3.css',
+  tokenPackage: 'packages/tokens/package.json',
   dark: 'packages/tokens/tokens/modes/dark.tokens.json',
   materialDark: 'packages/tokens/tokens/modes/material3.dark.tokens.json',
   materialSemantic: 'packages/tokens/tokens/semantic/material3.tokens.json',
@@ -219,6 +222,91 @@ function assertRejected(result, { code, filePath, offendingValue }) {
 
 test('@spec:018-project-integrity-hardening S11 accepts four base-before-override compositions', async (t) => {
   const root = await createFixture(t);
+
+  const result = runTokenGate(root);
+
+  assert.equal(result.status, 0, diagnostic(result));
+});
+
+function shadowListFiles({ material3Shadow, shadowDeclaration }) {
+  return {
+    [paths.semantic]: semanticTokens({
+      shadow: {
+        $type: 'shadow',
+        base: token('none', 'Shadow behind the test surface'),
+        alias: token('{ki.shadow.base}', 'Alias for the test surface shadow'),
+      },
+    }),
+    [paths.tokenPackage]: json({
+      exports: {
+        './css': './dist/css/tokens.css',
+        './css/material3': './dist/css/tokens.material3.css',
+      },
+    }),
+    [paths.defaultCss]: `
+:where(:root) { color-scheme: light dark; }
+[data-ki-color-scheme='light'] { color-scheme: light; }
+[data-ki-color-scheme='dark'] { color-scheme: dark; }
+:root, :where([data-ki-theme]) {
+  --ki-shadow-base: 0 0 #0000;
+  --ki-shadow-alias: var(--ki-shadow-base);
+}
+`,
+    [paths.materialCss]: `
+:root[data-ki-theme='material3'], [data-ki-theme='material3'] {
+  --ki-shadow-base: ${material3Shadow};
+}
+`,
+    [paths.css]: `
+:host {
+  --_test-shadow: var(--ki-shadow-alias, 0 0 transparent);
+  --_test-shadow-layer: var(--_test-shadow);
+  box-shadow: ${shadowDeclaration};
+}
+`,
+  };
+}
+
+test('rejects an emitted shadow-list token that resolves through aliases to none', async (t) => {
+  const root = await createFixture(
+    t,
+    shadowListFiles({
+      material3Shadow: 'none',
+      shadowDeclaration: 'var(--_test-shadow-layer), 0 0 transparent',
+    }),
+  );
+
+  const result = runTokenGate(root);
+
+  assertRejected(result, {
+    code: 'none-in-shadow-list',
+    filePath: paths.css,
+    offendingValue: '--ki-shadow-alias ./css/material3',
+  });
+});
+
+test('accepts a normalized transparent layer in a shadow list', async (t) => {
+  const root = await createFixture(
+    t,
+    shadowListFiles({
+      material3Shadow: '0 0 #0000',
+      shadowDeclaration: 'var(--_test-shadow-layer), 0 0 transparent',
+    }),
+  );
+
+  const result = runTokenGate(root);
+
+  assert.equal(result.status, 0, diagnostic(result));
+});
+
+test('allows standalone none when the only comma is inside a var() fallback', async (t) => {
+  const root = await createFixture(
+    t,
+    shadowListFiles({
+      material3Shadow: 'none',
+      shadowDeclaration: 'var(--ki-shadow-alias, 0 0 transparent)',
+    }),
+  );
 
   const result = runTokenGate(root);
 

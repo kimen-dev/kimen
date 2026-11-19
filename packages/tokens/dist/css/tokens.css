@@ -819,6 +819,7 @@
   --ki-effect-component-primary-hover-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), var(--ki-shadow-inner-primary-hover);
   --ki-effect-component-secondary-default-shadow: 0 var(--ki-shadow-effect-y) var(--ki-shadow-effect-blur) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), var(--ki-shadow-inner-secondary-default);
   --ki-effect-component-secondary-hover-shadow: 0 var(--ki-shadow-distance-1) var(--ki-shadow-distance-1) var(--ki-shadow-spread-1) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-2) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow), 0 var(--ki-shadow-distance-3) var(--ki-shadow-distance-3) var(--ki-shadow-spread-3) var(--ki-elevation-shadow), var(--ki-shadow-inner-secondary-hover);
+  --ki-effect-video-hover-opacity: var(--ki-scale-unit);
   --ki-effect-small-dark-shadow: 0 var(--ki-shadow-effect-y) var(--ki-shadow-distance-2) var(--ki-shadow-spread-2) var(--ki-elevation-shadow-dark);
   --ki-focus-primary: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-primary-base-em-alpha);
   --ki-focus-gray: 0 0 0 var(--ki-shadow-ring) var(--ki-outline-med-em);

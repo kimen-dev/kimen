@@ -8958,6 +8958,10 @@
               "description": "MarsUI Component_effect/primary_hover: drops 0/20/20/-12 + 0/3/3/-1.5 + 0/1/1/-0.5 plus inner White/18 0/3/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur))."
             },
             {
+              "name": "--ki-effect-video-hover-opacity",
+              "description": "Opacity of the added play-container shadow on hover. onmars shows the full primary hover effect over the resting shadow."
+            },
+            {
               "name": "--ki-motion-duration-fast",
               "description": "Fast interaction transition duration."
             },

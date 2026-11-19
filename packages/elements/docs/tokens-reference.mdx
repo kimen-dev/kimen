@@ -16,7 +16,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 > `pnpm --filter @kimen/tokens run reference` and commit the result. It is
 > generated manually and is not verified by a CI gate.
 
-Every custom property in the public styling contract: 317 semantic
+Every custom property in the public styling contract: 318 semantic
 and 937 component tokens. Values are the resolved **onmars light**
 values; dark mode and the material3 theme reassign the same custom properties,
 so the names and descriptions on this page apply to every theme (see
@@ -53,6 +53,7 @@ every component at once.
 | `--ki-effect-component-secondary-default-shadow` | `0 2px 1.5px -0.5px rgba(0, 0, 0, 0.03), inset 0px 2px 3px 0px rgba(255, 255, 255, 0.03)` | MarsUI Component_effect/secondary_default: drop 0/2/1.5/-0.5 plus inner White/3 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). |
 | `--ki-effect-component-secondary-hover-shadow` | `0 1px 1px -0.5px rgba(0, 0, 0, 0.03), 0 3px 3px -1.5px rgba(0, 0, 0, 0.03), 0 20px 20px -12px rgba(0, 0, 0, 0.03), inset 0px 2px 3px 0px rgba(255, 255, 255, 0.08)` | MarsUI Component_effect/secondary_hover: drops as primary_hover plus inner White/8 0/2/3. Pair with backdrop-filter blur(var(--ki-effect-component-backdrop-blur)). |
 | `--ki-effect-small-dark-shadow` | `0 2px 3px -1.5px rgba(0, 0, 0, 0.32)` | MarsUI Small_dark_shadow: drop 0/2/3/-1.5 in Elevation/shadow_dark (Black/32 light, Black/48 dark). Lifts small light glyphs off saturated fills — the radio selected dot and the switch pointer carry it in the masters. |
+| `--ki-effect-video-hover-opacity` | `1` | Opacity of the added play-container shadow on hover. onmars shows the full primary hover effect over the resting shadow. |
 
 ### `ki.elevation`
 
