@@ -31,11 +31,12 @@ const pointerCapabilitySpec = 'browser-tests/pointer-capability.browser.spec.ts'
 // Specs that change the page's input device through CDP touch emulation. They
 // share one isolated setup, never the ordinary light one: the pointer
 // capability audit, the touch text size of fields (spec 048) and of sized
-// fields (spec 050).
+// fields (spec 050), and the counter on a touch trigger (spec 072).
 const inputDeviceSpecs = [
   pointerCapabilitySpec,
   'browser-tests/touch-field-text.browser.spec.ts',
   'browser-tests/touch-size-field-text.browser.spec.ts',
+  'browser-tests/ki-counter.pointer.browser.spec.ts',
 ];
 const browserSpecPatterns = (suffix: string): string[] =>
   ['browser-tests', 'src/components/ki-*'].map(
